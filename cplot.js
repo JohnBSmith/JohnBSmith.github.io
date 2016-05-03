@@ -72,7 +72,7 @@ var cftabn = {
   "sp": cspsys, "grid": csetgridtype,
   "save": save, "vline": cfvline, "hline": cfhline,
   "color": ccolor, "bcolor": cbcolor,
-  "ani": animate
+  "ani": animate, "scatter": cscatter, "box": cbox
 };
 
 function complex(a,b){
@@ -866,6 +866,34 @@ function cfhline(stack,argc){
   }
 }
 
+function cscatter(stack,argc){
+  var i,j,t;
+  for(i=0; i<argc; i++){
+    t=stack.pop();
+    if(Array.isArray(t[0])){
+      for(j=0; j<t.length; j++){
+        scatter_list.push([t[j][0].re,t[j][1].re]);
+      }
+    }else{
+      scatter_list.push([t[0].re,t[1].re]);
+    }
+  }
+}
+
+function cbox(stack,argc){
+  var i,j,t;
+  for(i=0; i<argc; i++){
+    t=stack.pop();
+    if(Array.isArray(t[0])){
+      for(j=0; j<t.length; j++){
+        box_list.push([t[j][0].re,t[j][1].re]);
+      }
+    }else{
+      box_list.push([t[0].re,t[1].re]);
+    }
+  }
+}
+
 function calc_cop(stack,t){
   var x,y;
   var c=t.s;
@@ -1262,11 +1290,10 @@ function cfplot(){
       for(x=x0; x<x2; x+=dx){
         gcv1=complex(x,0);
         y=evalvc(a).re;
-        px = getpx(x-x1,1/wx);
-        py = getpy(y-y1,1/wy);
-        psets(data,px,py);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   s = gets("inputg");
@@ -1278,11 +1305,10 @@ function cfplot(){
       for(x=x0; x<x2; x+=dx){
         gcv1=complex(x,0);
         y=evalvc(a).re;
-        px = getpx(x-x1,1/wx);
-        py = getpy(y-y1,1/wy);
-        psets(data,px,py);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   s = gets("inputh");
@@ -1294,11 +1320,10 @@ function cfplot(){
       for(x=x0; x<x2; x+=dx){
         gcv1=complex(x,0);
         y=evalvc(a).re;
-        px = getpx(x-x1,1/wx);
-        py = getpy(y-y1,1/wy);
-        psets(data,px,py);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   context.putImageData(img,0,0);
@@ -1339,8 +1364,9 @@ function cpplot(){
     for(t=t1; t<t2; t+=dt){
       gcv1=complex(t,0);
       w=evalvc(af);
-      point(w.re,w.im);
+      spoint(w.re,w.im);
     }
+    flush();
   }
 
   context.putImageData(img,0,0);

@@ -37,10 +37,23 @@ function shiftphip(){
   input.value = phi.toFixed(2);
 }
 
+function point3d(m,c,s,x,y,z){
+  var xt,yt,xp,yp,px,py;
+  xt = c*x-s*y;
+  yt = s*x+c*y;
+  xp = -xt+yt;
+  yp = z-xt/2-yt/2;
+  // px = getpx(xp*m,0.1);
+  // py = getpy(yp*m,0.1);
+  // psets(data,px,py);
+  px = psx+0.1*360*xp*m;
+  py = psy-0.1*360*yp*m;
+  fpsets(px,py);
+}
+
 function plotfn3d(a){
-  var x,y,z,xt,yt,px,py;
+  var x,y,z;
   var d,n,shift;
-  var xp,yp;
   var w,m,c,s;
 
   pma = getnum("inputa");
@@ -57,26 +70,14 @@ function plotfn3d(a){
     for(x=-10; x<=10; x+=shift){
       gv1=w*x; gv2=w*y;
       z = evalv(a);
-      xt = c*x-s*y;
-      yt = s*x+c*y;
-      xp = -xt+yt;
-      yp = z/w-xt/2-yt/2;
-      px = getpx(xp*m,0.1);
-      py = getpy(yp*m,0.1);
-      psets(data,px,py);
+      point3d(m,c,s,x,y,z/w);
     }
   }
   for(x=-10; x<=10; x+=d){
     for(y=-10; y<=10; y+=shift){
       gv1=w*x; gv2=w*y;
       z = evalv(a);
-      xt = c*x-s*y;
-      yt = s*x+c*y;
-      xp = -xt+yt;
-      yp = z/w-xt/2-yt/2;
-      px = getpx(xp*m,0.1);
-      py = getpy(yp*m,0.1);
-      psets(data,px,py);
+      point3d(m,c,s,x,y,z/w);
     }
   }
 }
@@ -110,10 +111,8 @@ function switchdg(){
 }
 
 function pplot3d(){
-  var u,v;
-  var x,y,z,xt,yt,px,py;
+  var u,v,x,y,z;
   var i,d,input,shift;
-  var xp,yp;
   var m,c,s;
   var ax,ay,az;
   var nu,nv,u1,u2,v1,v2;
@@ -154,13 +153,7 @@ function pplot3d(){
       x = evalv(ax);
       y = evalv(ay);
       z = evalv(az);
-      xt = c*x-s*y;
-      yt = s*x+c*y;
-      xp = -xt+yt;
-      yp = z-xt/2-yt/2;
-      px = getpx(xp*m,0.1);
-      py = getpy(yp*m,0.1);
-      psets(data,px,py);
+      point3d(m,c,s,x,y,z);
     }
     v+=d;
   }
@@ -174,13 +167,7 @@ function pplot3d(){
       x = evalv(ax);
       y = evalv(ay);
       z = evalv(az);
-      xt = c*x-s*y;
-      yt = s*x+c*y;
-      xp = -xt+yt;
-      yp = z-xt/2-yt/2;
-      px = getpx(xp*m,0.1);
-      py = getpy(yp*m,0.1);
-      psets(data,px,py);
+      point3d(m,c,s,x,y,z);
     }
     u+=d;
   }
@@ -355,14 +342,13 @@ function solve(data,s,m,h){
     v.push(0);
   }
   adg = compile(s);
+  vcr=cr1; vcg=cg1; vcb=cb1;
   vx.value=x0;
   for(i=0; i<n; i++){
     vy[i].value=vy0[i];
   }
   for(i=1; i<m; i++){
-    px = getpx(vx.value-x1,1/wx);
-    py = getpy(vy[0].value-y1,1/wy);
-    psets(data,px,py);
+    spoint(vx.value,vy[0].value);
     vx.value=x0+h*i;
     v[n-1] = evalv(adg)*h+vy[n-1].value;
     for(j=n-2; j>=0; j--){
@@ -384,9 +370,7 @@ function solve(data,s,m,h){
     for(j=0; j<n; j++){
       vy[j].value=v[j];
     }
-    px = getpx(vx.value-x1,1/wx);
-    py = getpy(vy[0].value-y1,1/wy);
-    psets(data,px,py);
+    spoint(vx.value,vy[0].value);
   }
   delete vtab.x;
   delete vtab.y;
@@ -427,9 +411,9 @@ function dplot(){
   system();
 
   s = gets("input1");
-  vcr=cr1; vcg=cg1; vcb=cb1;
   if(s.length>0 && s[0]!='#'){
     solve(data,s,m,h);
+    flush();
   }
 
   s = gets("inputf");
@@ -441,9 +425,10 @@ function dplot(){
       for(x=x0; x<x2; x+=dx){
         gv1=x;
         y=evalv(a);
-        point(x,y);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   context.putImageData(img,0,0);
@@ -564,16 +549,12 @@ function euler_system(data,s1,s2,m,h,x0,y0,v0){
   vv.value=v0;
   for(i=1; i<m; i++){
     if(dsplot_type=="yx"){
-      px = getpx(vx.value-x1,1/wx);
-      py = getpy(vy.value-y1,1/wy);
+      spoint(vx.value,vy.value);
     }else if(dsplot_type=="vx"){
-      px = getpx(vx.value-x1,1/wx);
-      py = getpy(vv.value-y1,1/wy);
+      spoint(vx.value,vv.value);
     }else{
-      px = getpx(vy.value-x1,1/wx);
-      py = getpy(vv.value-y1,1/wy);
+      spoint(vy.value,vv.value);
     }
-    psets(data,px,py);
     vx.value=x0+h*i;
     ty = evalv(ay)*h+vy.value;
     tv = evalv(av)*h+vv.value;
@@ -587,16 +568,12 @@ function euler_system(data,s1,s2,m,h,x0,y0,v0){
     tv = -evalv(av)*h+vv.value;
     vy.value=ty; vv.value=tv;
     if(dsplot_type=="yx"){
-      px = getpx(vx.value-x1,1/wx);
-      py = getpy(vy.value-y1,1/wy);
+      spoint(vx.value,vy.value);
     }else if(dsplot_type=="vx"){
-      px = getpx(vx.value-x1,1/wx);
-      py = getpy(vv.value-y1,1/wy);
+      spoint(vx.value,vv.value);
     }else{
-      px = getpx(vy.value-x1,1/wx);
-      py = getpy(vv.value-y1,1/wy);
+      spoint(vy.value,vv.value);
     }
-    psets(data,px,py);
   }
   delete vtab.x;
   delete vtab.y;
@@ -646,9 +623,7 @@ function dsplot(){
       for(x=x1-wx; x<x2; x+=dx){
         gv1=x;
         y=evalv(a);
-        px = getpx(x-x1,1/wx);
-        py = getpy(y-y1,1/wy);
-        psets(data,px,py);
+        spoint(x,y);
       }
     }
   }

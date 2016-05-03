@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="main.css">
@@ -113,6 +113,7 @@ max(a)........Maximum von allen Elementen aus a
 min(a)........Minimum von allen Elementen aus a
 rev(a)........umgedrehte Liste
 ipp(a)........Interpolationspolynom, a=[[x0,y0],...,[xn,yn]]
+fn(a).........stückweise lineare Interpolation
 map(f,a)......appliziert die Funktion f auf alle Elemente aus a
 filter(f,a)...filtert Elemente aus a mit der Testfunktion f aus
 reduce(f,a)...reduziert a mit f(x,y)
@@ -450,7 +451,7 @@ Nehmen wir die rekursive Definition
 als Beispiel. Die Eingabe dafür lautet
   f(n) = if(n=0,1,2f(n-1)).
 In der Taschenrechnerzeile schreibt man stattdessen
-  fac:=fix({f,n|if(n=0,1,2f(n-1))}).
+  p:=fix({f,n|if(n=0,1,2f(n-1))}).
 Die Funktion fix wird die Werte memoisieren. Definiere
   fib:=fix({f,n|if(n=1|n=2,1,f(n-1)+f(n-2))}).
 Nun wird fib(40) effizient berechnet. Andernfalls
@@ -637,6 +638,36 @@ f(mx) auswerten.
 Um zusätzlich zur Funktion f(x) = 1/(x-2)/(x-4) an den Stellen zwei
 und vier jeweils eine vertikale Linie zu zeichnen, schreibt man
   f(x) = 1/(x-2)/(x-4); vline(2,4).
+
+<b>Unstetigkeiten</b>
+Das Beispiel
+  f(x) = sgn(x); scatter([0,0]); box([0,1],[0,-1])
+veranschaulicht singuläre Punkte und die Abwesenheit von Punkten.
+Ein komplizierteres Beispiel:
+  f(x) = floor(x);
+    scatter(map({x|[x,x]},-6:6)),
+    box(map({x|[x+1,x]},-6:6))
+
+<b>Stückweise lineare Interpolation</b>
+Beispiel:
+  f(x) = p(x); p:=fn([[0,0],[1,1],[2,0],[3,-1],[4,0]])
+
+<b>Lineare Regression</b>
+Sei a eine Liste von Punkten [x,y].
+Nun berechnet t:=rl(a) eine lineare Regression und es ist:
+  y = t.ax*x+t.bx = t.ax*(x-t.mx)+t.my
+  x = t.ay*y+t.bx = t.ay*(y-t.my)+t.mx
+  t.mx: Mittelwert der x-Werte
+  t.my: Mittelwert der y-Werte
+  t.c: [t.mx,t.my] (Schwerpunkt)
+  r: Korrelationskoeffizient
+
+Beispiel:
+  f(x) = p(x);
+    a:=[[0,0],[1,2],[2,1],[3,4],[4,3],[5,4]],
+    p:=fn(a), scatter(a), t:=rl(a), box(t.c)
+  g(x) = t.ax*x+t.bx
+  h(x) = (x-t.by)/t.ay
 
 <b>Speichern</b>
 Mit dem Befehl save() wird ein Bild von der Zeichenfläche erstellt,

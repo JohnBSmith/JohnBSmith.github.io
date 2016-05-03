@@ -5,7 +5,7 @@
 
 // "use strict";
 // background color
-var bcr=0xfc, bcg=0xfd, bcb=0xfa;
+var bcr=0xff, bcg=0xff, bcb=0xff;
 
 // line color 1
 var cr1=0, cg1=0, cb1=0x80;
@@ -33,14 +33,15 @@ Targ=8,
 Tfapp=9,
 Tvapp=10,
 Tnfapp=11,
-Tif=12;
+Tif=12,
+Tstring=13;
 
 var
 ADD=0, SUB=1, MPY=2, DIV=3,
 GT=4, LT=5, GE=6, LE=7,
 POW=10, NEG=11, AND=12, OR=13,
 EQ=20, NE=21, DEF=22, APP=24, MOD=26,
-THEN=30, ELSE=31, RANGE=32;
+THEN=30, ELSE=31, RANGE=32, DOT=34;
 
 var canvas,context;
 var img,data;
@@ -99,7 +100,7 @@ var ftab = {
   "min": fmin, "max": fmax,
   "factor": factor, "lambda": carmichael,
   "pcf": pcf, "fix": fix, "rev": rev, "size": size,
-  "ipp": ipp
+  "ipp": ipp, "fn": interpolate, "rl": reg_linear
 };
 
 var ftab2 = {
@@ -160,7 +161,8 @@ var ftab4 = {
   "inv": invab, "gauss6": gauss6,
   "J": fint, "J2": fint2,
   "pmfH": pmfH, "cdfH": cdfH,
-  "pow": frac_pow_fix
+  "pow": frac_pow_fix,
+  "interpolate": interpolate_fn
 };
 
 var ftabn = {
@@ -170,7 +172,8 @@ var ftabn = {
   "vline": fvline, "hline": fhline,
   "grid": setgridtype, "setp": setp,
   "short": short, "save": save,
-  "ani": animate, "hsl": colorHSL
+  "ani": animate, "hsl": colorHSL,
+  "scatter": scatter, "box": box
 };
 
 function isalpha(s){
@@ -1490,6 +1493,31 @@ function cdfBeta(p,q,x){
   return riBeta(x,p,q);
 }
 
+function reg_linear(a){
+  var mx,my,sx,sy;
+  var qx,qy,qxy,rxy;
+  var i;
+  sx=0; sy=0;
+  for(i=0; i<a.length; i++){
+    sx+=a[i][0]; sy+=a[i][1];
+  }
+  mx=sx/a.length;
+  my=sy/a.length;
+  qx=0; qy=0; qxy=0;
+  for(i=0; i<a.length; i++){
+    qx+=(a[i][0]-mx)*(a[i][0]-mx);
+    qy+=(a[i][1]-my)*(a[i][1]-my);
+    qxy+=(a[i][0]-mx)*(a[i][1]-my);
+  }
+  rxy = qxy/Math.sqrt(qx*qy);
+  return {
+    "mx": mx, "my": my, "c": [mx,my],
+    "ax": qxy/qx, "ay": qxy/qy,
+    "bx": my-qxy/qx*mx, "by": mx-qxy/qy*my,
+    "r": rxy
+  };
+}
+
 function color256(x){
   x=Math.round(x);
   if(x<0) x=0;
@@ -1611,6 +1639,55 @@ function save(stack,argc){
   body[0].innerHTML+=img;
 }
 
+var scatter_list=[];
+var box_list=[];
+
+function scatter(stack,argc){
+  var i,j,t;
+  for(i=0; i<argc; i++){
+    t=stack.pop();
+    if(Array.isArray(t[0])){
+      for(j=0; j<t.length; j++){
+        scatter_list.push(t[j]);
+      }
+    }else{
+      scatter_list.push(t);
+    }
+  }
+}
+
+function box(stack,argc){
+  var i,j,t;
+  for(i=0; i<argc; i++){
+    t=stack.pop();
+    if(Array.isArray(t[0])){
+      for(j=0; j<t.length; j++){
+        box_list.push(t[j]);
+      }
+    }else{
+      box_list.push(t);
+    }
+  }
+}
+
+function flush(){
+  var i;
+  if(scatter_list.length>0){
+    for(i=0; i<scatter_list.length; i++){
+      t=scatter_list[i];
+      scatter_point(t[0],t[1]);
+    }
+    scatter_list=[];
+  }
+  if(box_list.length>0){
+    for(i=0; i<box_list.length; i++){
+      t=box_list[i];
+      box_draw(t[0],t[1]);
+    }
+    box_list=[];
+  }
+}
+
 function invab(f,x,a,b){
   var m,s,a1=a,b1=b;
   s = sgn(f(b)-f(a));
@@ -1691,6 +1768,41 @@ function Fc(f,x){
 function Fs(f,x){
   var g = function(t){return f(t)*Math.sin(2*Math.PI*x*t);};
   return gauss(g,-10,10,6);
+}
+
+// Interpolate piecwise linear
+function interpolate(t){
+  return function(x){
+    if(t.length==0) return NaN;
+    var a=0;
+    var b=t.length-1;
+    var i,p1,p2;
+    if(x<t[a][0] || x>t[b][0]){
+      return NaN;
+    }
+    while(a<=b){
+      i = a+Math.round((b-a)/2);
+      if(x<t[i][0]){
+        b=i-1;
+      }else{
+        a=i+1;
+      }
+    }
+    i=a;
+    if(i>0){
+      p1=t[i-1]; p2=t[i];
+      return (p2[1]-p1[1])/(p2[0]-p1[0])*(x-p2[0])+p2[1];
+    }else{
+      return NaN;
+    }
+  }
+}
+
+function interpolate_fn(f,a,b,d){
+  var a = ranged(a,b,d).map(function(x){
+    return [x,f(x)];
+  });
+  return interpolate(a);
 }
 
 // Interpolation polynomial
@@ -1880,6 +1992,7 @@ function type_tos(type){
   else if(type==Tvapp) return "vapp";
   else if(type==Tnfapp) return "nfapp";
   else if(type==Tif) return "if";
+  else if(type==Tstring) return "string";
   else return "?";
 }
 
@@ -1995,6 +2108,7 @@ function scan(s,d){
   var a,i,j,s2,p,vid,args,argv;
   var stack=[];
   var bind;
+  var str=false;
   a = [];
   i=0;
   while(i<s.length){
@@ -2038,7 +2152,17 @@ function scan(s,d){
         }
         i++;
       }else{
-        push_token(a,Tid,s2);
+        if(str){
+          push_token(a,Tstring,s2);
+          str=false;
+        }else{
+          push_token(a,Tid,s2);
+        }
+      }
+      if(i<s.length && s[i]=='.'){
+        push_token(a,Top,".");
+        str=true;
+        i++;
       }
     }else if((s[i]=='+' || s[i]=='-') && (a.length==0 ||
       a[a.length-1].s=='(' || a[a.length-1].type==Top ||
@@ -2168,6 +2292,11 @@ function scan(s,d){
     }else if(s[i]==']'){
       push_token(a,Tbr,")");
       i++;
+    }else if(s[i]=='"'){
+      i++; j=i;
+      while(s[i]!='"') i++;
+      push_token(a,Tstring,s.slice(j,i));
+      i++;
     }else{
       error("Unexpected character: \""+s[i]+"\"");
     }
@@ -2188,25 +2317,27 @@ function precedence(op){
   if(op=="um") return 60;
   if(op=="^") return 70;
   if(op=="\\") return 80;
+  if(op==".") return 90;
 }
 
 function postfix(a){
-  var i,stack,a2;
+  var i,stack,a2,type;
   var argc,jstack;
   a2=[];
   stack=[];
   argc=[];
   jstack=[];
   for(i=0; i<a.length; i++){
-    if(a[i].type==Tid || a[i].type==Tnumber || a[i].type==Tfun){
-      if(a[i].type==Tid && i+1<a.length && a[i+1].s==":="){
+    type=a[i].type;
+    if(type==Tid || type==Tnumber || type==Tfun || type==Tstring){
+      if(type==Tid && i+1<a.length && a[i+1].s==":="){
         a[i+1].id = a[i].s;
         stack.push(a[i+1]);
         i++;
       }else{
         a2.push(a[i]);
       }
-    }else if(a[i].type==Tif){
+    }else if(type==Tif){
       if(a[i].s=="then"){
         a[i].s=THEN;
         a2.push(a[i]);
@@ -2220,7 +2351,7 @@ function postfix(a){
         jstack[jstack.length-1].a=a2.length;
         jstack.pop();
       }
-    }else if(a[i].type==Top){
+    }else if(type==Top){
       while(stack.length>0 && stack[stack.length-1].type==Top){
         if(precedence(a[i].s) > precedence(stack[stack.length-1].s)){
           break;
@@ -2228,7 +2359,7 @@ function postfix(a){
         a2.push(stack.pop());
       }
       stack.push(a[i]);
-    }else if(a[i].type==Tfid){
+    }else if(type==Tfid){
       stack.push(a[i]);
       if(i+2<a.length && a[i+2].s==")"){
         argc.push(0);
@@ -2249,7 +2380,7 @@ function postfix(a){
         a2.push(stack.pop());
         a2[a2.length-1].argc = argc.pop();
       }
-    }else if(a[i].type==Tsep){
+    }else if(type==Tsep){
       while(stack.length>0 && stack[stack.length-1].s!="("){
         a2.push(stack.pop());
       }
@@ -2302,6 +2433,7 @@ function encode(a,d,bcpx){
       else if(t.s=="|") t.s=OR;
       else if(t.s=="\\") t.s=APP;
       else if(t.s==":") t.s=RANGE;
+      else if(t.s==".") t.s=DOT;
       else if(t.s==":="){
         t.s=DEF;
         if(!pvtab.hasOwnProperty(t.id)){
@@ -2387,6 +2519,8 @@ function encode(a,d,bcpx){
       else{
         error("Undefined identifier: "+t.s+".");
       }
+    }else if(t.type==Tstring){
+      t.type=Tnumber;
     }
   }
   return {"clist": clist, "alist": alist};
@@ -2465,6 +2599,14 @@ function calc_op(stack,t){
     y = stack.pop();
     x = stack.pop();
     stack.push(range(x,y));
+  }else if(c==DOT){
+    y = stack.pop();
+    x = stack.pop();
+    if(x.hasOwnProperty(y)){
+      stack.push(x[y]);
+    }else{
+      error("Error in x."+y+": "+y+" is not in x.");
+    }
   }
 }
 
@@ -2603,11 +2745,77 @@ function gety(py,m){
   return -(py-psy)/(360*m);
 }
 
+function pseta(data,x,y,a){
+  var r,g,b,i;
+  if(x>=0 && x<dw && y>=0 && y<dh){
+    i=(x+y*dw)*4;
+    r = data[i+0];
+    g = data[i+1];
+    b = data[i+2];
+    data[i+0]=Math.min((vcr-255)*a/255+255,r);
+    data[i+1]=Math.min((vcg-255)*a/255+255,g);
+    data[i+2]=Math.min((vcb-255)*a/255+255,b);
+  }
+}
+
+function pseta2(data,x,y,a){
+  var r,g,b,i,m;
+  if(x>=0 && x<dw && y>=0 && y<dh){
+    i=(x+y*dw)*4;
+    r = data[i+0];
+    g = data[i+1];
+    b = data[i+2];
+    m = a/10;
+    if((vcr-255)*a/255+255<r){
+      data[i+0]=(vcr-r)*m/255+r;
+    }
+    if((vcg-255)*a/255+255<g){
+      data[i+1]=(vcg-g)*m/255+g;
+    }
+    if((vcb-255)*a/255+255<b){
+      data[i+2]=(vcb-b)*m/255+b;
+    }
+  }
+}
+
+function fade(x){
+  return Math.exp(-0.4*x*x*x);
+}
+
+function psetdiff(rx,ry,px,py){
+  var dx = Math.abs(px-rx);
+  var dy = Math.abs(py-ry);
+  var d = Math.sqrt(dx*dx+dy*dy);
+  pseta(data,px,py,255*fade(d));
+}
+
+function fpsets(rx,ry){
+  var i,j,px,py;
+  px = Math.floor(rx);
+  py = Math.floor(ry);
+  for(i=-2; i<=2; i++){
+    for(j=-2; j<=2; j++){
+      psetdiff(rx,ry,px+i,py+j);
+    }
+  }
+}
+
+// Set a smooth point by overwriting.
 function point(x,y){
   var px,py;
   px = getpx(x-x1,1/wx);
   py = getpy(y-y1,1/wy);
   psets(data,px,py);
+}
+
+// Set a smooth point by subtractive color mixing.
+// This one has a much better antialiasing algorithm
+// than 'point', but does not work on dark background.
+function spoint(x,y){
+  var rx,ry;
+  rx=psx+1/wx*360*(x-x1);
+  ry=psy-1/wy*360*(y-y1);
+  fpsets(rx,ry);
 }
 
 function cpoint(x,y){
@@ -2637,6 +2845,63 @@ function cpoint(x,y){
   psets(data,px+1,py+2);
 }
 
+function scatter_fade(x){
+  var a=3;
+  return x<a?1:Math.exp(-0.2*(x-a)*(x-a)*(x-a));
+}
+
+function scatter_diff(rx,ry,px,py){
+  var dx = Math.abs(px-rx);
+  var dy = Math.abs(py-ry);
+  var d = Math.sqrt(dx*dx+dy*dy);
+  pseta(data,px,py,255*scatter_fade(d));
+}
+
+function scatter_pset(rx,ry){
+  var i,j,px,py;
+  px = Math.floor(rx);
+  py = Math.floor(ry);
+  for(i=-5; i<=5; i++){
+    for(j=-5; j<=5; j++){
+      scatter_diff(rx,ry,px+i,py+j);
+    }
+  }
+}
+
+function scatter_point(x,y){
+  var rx,ry;
+  rx=psx+1/wx*360*(x-x1);
+  ry=psy-1/wy*360*(y-y1);
+  scatter_pset(rx,ry);
+}
+
+function erase(px,py,w,h){
+  var i,j,r,g,b;
+  px = Math.floor(px);
+  py = Math.floor(py);
+  r=vcr; g=vcg; b=vcb;
+  vcr=bcr; vcg=bcg; vcb=bcb;
+  for(i=0; i<w; i++){
+    for(j=0; j<h; j++){
+      pset(data,px+i,py+j,255);
+    }
+  }
+  vcr=r; vcg=g; vcb=b;
+}
+
+function box_draw(x,y){
+  var rx,ry;
+  rx=psx+1/wx*360*(x-x1);
+  ry=psy-1/wy*360*(y-y1);
+  erase(rx-3,ry-3,7,7);
+  var i;
+  for(i=-4; i<=4; i++){
+    fpsets(rx+4,ry+i);
+    fpsets(rx-4,ry+i);
+    fpsets(rx+i,ry+4);
+    fpsets(rx+i,ry-4);
+  }
+}
 
 function format(x){
  if(Math.abs(x)<0.1 || Math.abs(x)>=100){
@@ -2871,13 +3136,13 @@ function system(){
   if(gridtype<0) return;
   var a=160;
   if(gridtype==1){
-    vcr=0x90; vcg=0x90; vcb=0x6a;
+    vcr=0xb0; vcg=0xb0; vcb=0x70;
     grid(60); a=220;
   }else if(gridtype==2){
     vcr=0xa0; vcg=0xa0; vcb=0x8a;
     mgrid(); a=220;
   }
-  vcr=0x90; vcg=0x90; vcb=0x80;
+  vcr=0x90; vcg=0x90; vcb=0x8a;
   hlinea(data,psy,a);
   hlinea(data,psy-1,a);
   vlinea(data,psx,a);
@@ -2945,9 +3210,10 @@ function fplot(){
       for(x=x0; x<x2; x+=dx){
         gv1=x;
         y=evalv(a);
-        point(x,y);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   s = gets("inputg");
@@ -2959,9 +3225,10 @@ function fplot(){
       for(x=x0; x<x2; x+=dx){
         gv1=x;
         y=evalv(a);
-        point(x,y);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   s = gets("inputh");
@@ -2973,9 +3240,10 @@ function fplot(){
       for(x=x0; x<x2; x+=dx){
         gv1=x;
         y=evalv(a);
-        point(x,y);
+        spoint(x,y);
       }
     }
+    flush();
   }
 
   context.putImageData(img,0,0);
@@ -3016,8 +3284,9 @@ function pplot(){
       gv1=t;
       x=evalv(ax);
       y=evalv(ay);
-      point(x,y);
+      spoint(x,y);
     }
+    flush();
   }
 
   context.putImageData(img,0,0);
@@ -3060,6 +3329,7 @@ function iplot(){
     }
   }
 
+  flush();
   context.putImageData(img,0,0);
   axisx(context,x1,0.1*wx);
   axisy(context,y1,0.1*wy);
@@ -3215,11 +3485,14 @@ function ftos(x,n){
 }
 
 function str(x){
-  if(typeof(x)=="boolen"){
+  var type=typeof x;
+  if(type=="boolen"){
     error("Error in str(x): x is of type boolen.");
-  }else if(typeof(x)=="function"){
+  }else if(type=="function"){
     return "function";
-  }else if(typeof(x)=="object"){
+  }else if(type=="string"){
+    return '"'+x+'"';
+  }else if(type=="object"){
     if(x.im<0){
       return str(x.re)+"-"+str(-x.im)+"i";
     }else{
