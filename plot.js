@@ -1671,7 +1671,7 @@ function box(stack,argc){
 }
 
 function flush(){
-  var i;
+  var i,t;
   if(scatter_list.length>0){
     for(i=0; i<scatter_list.length; i++){
       t=scatter_list[i];
@@ -3294,29 +3294,31 @@ function pplot(){
   axisy(context,y1,0.1*wy);
 }
 
-function iplot(){
-  var x,y,px,py,h,z;
-  var a,dwq,dhq;
-  x1=0; y1=0;
-
-  pma = getnum("inputa");
-  x1 = getnum("inputx");
-  y1 = getnum("inputy");
-  wx = getnum("inputwx");
-  wy = getnum("inputwy");
-  h = getnum("inputh");
-  getgridtype();
-  getgridpos();
-
-  init();
-  system();
-
-  define("f",gets("inputf"));
-  a = gva;
-  vcr=cr1; vcg=cg1; vcb=cb1;
+function iplot_rec(a,x,y,w,h,n){
+  var z;
   eqepsilon=h;
-  dwq=dw/4; dhq=dh/4;
+  gv1=x; gv2=y;
+  z=evalv(a);
+  w=w/2;
+  if(z!=0){
+    if(n==0){
+      spoint(x,y);
+    }else{
+      h=h/3.2;
+      iplot_rec(a,x,y,w,h,n-1);
+      iplot_rec(a,x+w,y,w,h,n-1);
+      iplot_rec(a,x,y+w,w,h,n-1);
+      iplot_rec(a,x+w,y+w,w,h,n-1);
+    }
+  }
+}
+
+function iplot_fast(h){
+  var x,y,z,px,py,a;
+  var dwq,dhq;
   var psxh=psx/2, psyh=psy/2;
+  a=gva; dwq=dw/4; dhq=dh/4;
+  eqepsilon=h;
   for(px=0; px<dwh; px++){
     for(py=0; py<dhh; py++){
       x = x1+(px-psxh)*wx/dwq;
@@ -3327,6 +3329,71 @@ function iplot(){
         pset4(data,2*px,2*py,200);
       }
     }
+  }  
+}
+
+function iplot_smooth(h){
+  var x,y,z,px,py,a;
+  var dwq,dhq;
+  var psxh=psx/2, psyh=psy/2;
+  a=gva; dwq=dw/4; dhq=dh/4;
+  eqepsilon=h;
+  for(px=0; px<dwh; px+=0.5){
+    for(py=0; py<dhh; py+=0.5){
+      x = x1+(px-psxh)*wx/dwq;
+      y = y1-(py-psyh)*wy/dwq;
+      gv1=x; gv2=y;
+      z = evalv(a);
+      if(z!=0){
+        spoint(x,y);
+      }
+    }
+  }
+}
+
+function iplot_hq(h,n){
+  var x,y,z,px,py,a;
+  var dwq,dhq;
+  var psxh=psx/2, psyh=psy/2;
+  a=gva; dwq=dw/4; dhq=dh/4;
+  var w=wx/dwq;
+  
+  for(px=0; px<dwh; px++){
+    for(py=0; py<dhh; py++){
+      x = x1+(px-psxh)*wx/dwq;
+      y = y1-(py-psyh)*wy/dwq;
+      iplot_rec(a,x,y,w,h,n);
+    }
+  }  
+}
+
+function iplot(){
+  var ptype,h;
+  x1=0; y1=0;
+  pma = getnum("inputa");
+  x1 = getnum("inputx");
+  y1 = getnum("inputy");
+  wx = getnum("inputwx");
+  wy = getnum("inputwy");
+  h = getnum("inputh");
+  ptype = document.getElementById("ptype").value;
+  getgridtype();
+  getgridpos();
+
+  init();
+  system();
+
+  define("f",gets("inputf"));
+  vcr=cr1; vcg=cg1; vcb=cb1;
+
+  if(ptype=="fast"){
+    iplot_fast(h);
+  }else if(ptype=="smooth"){
+    iplot_smooth(h);
+  }else if(ptype=="better"){
+    iplot_hq(10*h,4);
+  }else if(ptype=="best"){
+    iplot_hq(20*h,6);
   }
 
   flush();
