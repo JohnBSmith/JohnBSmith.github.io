@@ -230,6 +230,14 @@ function clickiso(event){
   + " | f(x,y)="+ftos(z,6);
 }
 
+function color_from_to(x,c1,c2){
+  if(x<0) x=0;
+  else if(x>1) x=1;
+  vcr=c1[0]*(1-x)+c2[0]*x;
+  vcg=c1[1]*(1-x)+c2[1]*x;
+  vcb=c1[2]*(1-x)+c2[2]*x;
+}
+
 function line(a,x1,y1,x2,y2){
   var x,y,t;
   var dx,dy,r,d;
@@ -246,9 +254,9 @@ function line(a,x1,y1,x2,y2){
 function arrow(data,xp,yp,phi){
   var x,y,px,py,c,s;
   var a=[];
-  line(a,0,0,0.4,0);
-  line(a,0.4,0,0.3,0.1);
-  line(a,0.4,0,0.3,-0.1);
+  line(a,0,0,0.34,0);
+  line(a,0.34,0,0.24,0.07);
+  line(a,0.34,0,0.24,-0.07);
   c = Math.cos(phi);
   s = Math.sin(phi);
   for(var i=0; i<a.length; i++){
@@ -279,8 +287,11 @@ function vplot(){
   wx = getnum("inputwx");
   wy = getnum("inputwy");
   m = getnum("inputm");
+  getgridtype();
+  getgridpos();
 
   init();
+  system();
   s = gets("input1");
   define2("fx",s);
   afx=gva;
@@ -288,22 +299,28 @@ function vplot(){
   define2("fy",s);
   afy=gva;
   vcr=40; vcg=40; vcb=40;
+
   var x,y;
-  for(y=-10; y<10; y+=1){
-    for(x=-10; x<10; x+=1){
+  for(y=-10; y<10; y+=0.5){
+    for(x=-10; x<10; x+=0.5){
       gv1=0.1*wx*x+x1;
       gv2=0.1*wy*y+y1
       fx = evalv(afx);
       fy = evalv(afy);
       r = Math.sqrt(fx*fx+fy*fy);
       phi = getphi(fx,fy,r);
-      c = (1-tanh(0.1*m*r))*220;
-      vcr=c; vcg=c; vcb=0;
+      color_from_to(0.1*m*r,[200,200,255],[255,100,100]);
       arrow(data,x,y,phi);
     }
   }
-
+  
+  vcr=0; vcg=0; vcb=0;
+  flush();
+  axiscolor="#000000";
+  axiscolor2="#000000";
   context.putImageData(img,0,0);
+  axisx(context,x1,0.1*wx);
+  axisy(context,y1,0.1*wy);
 }
 
 function clickvplot(event){

@@ -1574,9 +1574,9 @@ function colorHSL(stack,argc){
   H=stack.pop();
   H=mod(H,2*Math.PI);
   c=get_rgb(H,S,L);
-  vcr=color256(c.r);
-  vcg=color256(c.g);
-  vcb=color256(c.b);
+  vcr=color256(256*c.r);
+  vcg=color256(256*c.g);
+  vcb=color256(256*c.b);
 }
 
 function evalv1(a,x){
@@ -2903,12 +2903,25 @@ function box_draw(x,y){
   }
 }
 
-function format(x){
- if(Math.abs(x)<0.1 || Math.abs(x)>=100){
-   return x.toExponential(2).toUpperCase();
- }else{
-   return x.toFixed(2);
- }
+function format(x,w){
+  w=Math.abs(w);
+  if(Math.abs(x)<0.1 || Math.abs(x)>=100){
+    if(w>1E-12 && Math.round(x*1E14)==0){
+      return x.toFixed(2);
+    }
+    return x.toExponential(2).toUpperCase();
+  }else{
+    if(w<0.09){
+      if(w<0.0009){
+        if(w<0.00009){
+          return x.toFixed(6);
+        }
+        return x.toFixed(5);
+      }
+      return x.toFixed(4);
+    }
+    return x.toFixed(2);
+  }
 }
 
 function xbar(x,a,context){
@@ -2928,7 +2941,7 @@ function ybar(y,a,context){
 function xlabel(x,a,context){
   var px = getpx(x,0.1);
   if(px>44 && px<dw-44){
-    var s = format(a);
+    var s = format(a,wx);
     context.fillText(s,px-10,psy+20);
   }
 }
@@ -2936,7 +2949,7 @@ function xlabel(x,a,context){
 function ylabel(y,a,context){
   var py = getpy(y,0.1);
   if(py>16 && py<dh-16){
-    var s = format(a);
+    var s = format(a,wy);
     context.fillText(s,psx+10,py);
   }
 }
@@ -2998,6 +3011,7 @@ function statements(s){
 }
 
 var axiscolor="#909080";
+var axiscolor2="#404020";
 function axisx(context,x1,shiftx){
   if(gridtype<0) return;
   context.fillStyle = axiscolor;
@@ -3008,7 +3022,7 @@ function axisx(context,x1,shiftx){
     if(getpx(i,0.1)>dw && getpx(-i,0.1)<0) break;
   }
   if(gridtype>0 && bcr>120){
-    context.fillStyle = "#404020";
+    context.fillStyle = axiscolor2;
   }
   for(i=2; true; i+=2){
     xlabel(i,x1+i*shiftx,context);
@@ -3027,7 +3041,7 @@ function axisy(context,y1,shifty){
     if(getpy(i,0.1)<0 && getpy(-i,0.1)>dh) break;
   }
   if(gridtype>0 && bcr>120){
-    context.fillStyle = "#404020";
+    context.fillStyle = axiscolor2;
   }
   for(i=1; true; i++){
     ylabel(i,y1+i*shifty,context);
