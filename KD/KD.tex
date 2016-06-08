@@ -1,0 +1,164 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+\usepackage[utf8]{inputenc}
+%
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+%\usepackage{geometry}
+%\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\usepackage[all]{xy}
+\begin{document}
+
+\section*{Kommutative Diagramme}
+
+Eine Funktion wird für gewöhnlich in der Notation
+\(f{:}\;A\rightarrow B\) notiert. Das sagt uns erstmal nur,
+dass \(f\) irgendeine Funktion mit Definitionsbereich
+\(D(f)=A\) und Zielmenge \(Z(f)=B\) ist. Äquivalent hierzu ist
+die Notation \(f{\in}B^A\) wobei mit
+\(B^A=\mathrm{Abb}(A,B)\) die Menge der Abbildungen mit
+Definitionsbereich \(A\) und Zielmenge \(B\) ist.
+
+Diese Notation schreibt man nun in der Form
+\[\xymatrix{A \ar[r]^f & B}.\]
+Schreibt man nun also
+\[\xymatrix{A \ar[r]^f & B \ar[r]^g & C}\]
+so lassen sich folgende Informationen daraus lesen:
+\begin{gather*}
+D(f)=A,\quad Z(f)=B,\quad D(g)=B,\quad Z(g)=C.
+\end{gather*}
+Daher ist \(Z(f)=D(g)\). Das sagt uns aber nicht, dass etwa die
+Bildmenge \(\mathrm{Bild}(f)\) mit \(D(g)\) übereinstimmt.
+Über die Bildmenge von \(f\) können wir nur die Aussage
+\(\mathrm{Bild}(f)\subseteq D(g)\) treffen.
+
+Nun betrachten wir das folgende Diagramm:
+\[\xymatrix{A \ar[r]^f \ar[dr]_h & B\ar[d]^g\\
+& C}
+\]
+Aus diesem Diagramm lassen sich erstmal nur folgende
+Informationen herauslesen:
+\begin{gather*}
+D(f)=A,\quad Z(f)=B,\\
+D(g)=B,\quad Z(g)=C,\\
+D(h)=A,\quad Z(h)=C.
+\end{gather*}
+Die Komposition zweier Funktionen ist folgendermaßen definiert:
+\[(g\circ f)(x):=g(f(x)).\]
+Man sagt nun, \textit{das Diagramm kommutiert}, wenn die Komposition
+\(g\circ f\) mit \(h\) übereinstimmt. D.h. es ist \(h=g\circ f\).
+Funktionen vergleicht man \textit{extensional}. Damit meint man
+\[h=g\circ f \quad\Longleftrightarrow\quad \forall x{\in}A{:}\;\;
+h(x)=g(f(x)).\]
+
+Wenn man schreibt \(f{:}\; A\rightarrow A\), so meint man damit
+schlicht, dass \(A\) der Definitionsbereich von \(f\) ist und
+mit der Zielmenge von \(f\) übereinstimmt, kurz \(D(f)=Z(f)=A\). Als Diagramm lässt sich
+dies ausdrücken durch:
+\[\xymatrix{A\ar[r]^f & A}\]
+oder auch durch:
+\[\xymatrix{\ar@(ul,dl)_f}A\]
+Schreibt man
+\[\xymatrix{\ar@(ul,dl)_{\mathrm{id}}}A\]
+so ist mit dem Pfeil die identische Abbildung \(\mathrm{id}_A\)
+gemeint. Das Diagramm
+\[\xymatrix{A \ar@/^/[r]^f & \ar@/^/[l]^g B}\]
+sagt uns nur
+\begin{gather*}
+D(f)=A,\quad Z(f)=B,\quad D(g)=B,\quad Z(g)=A.
+\end{gather*}
+Es kann nicht kommutieren, da es keine zwei Wege gibt.
+Wir können zwar die Verkettung \(h=g\circ f\) bilden. Aber das
+bedeutet nur, dass \(D(h)=A\) und \(Z(h)=A\) ist.
+
+Betrachten wir nun folgenes Diagramm:
+\[\xymatrix{\ar@(ul,dl)_{\mathrm{id}}}
+\xymatrix{A \ar@/^/[r]^f & \ar@/^/[l]^g B}\]
+Wenn dieses Diagramm kommutiert, dann ist \(\mathrm{id}_A=g\circ f\).
+
+Was sagt uns das jetzt? Nun, weil \(\mathrm{id}_A\) eine Bijektion
+ist, muss schon mal \(g\) surjektiv und \(f\) injektiv sein.
+Es kann aber Elemente in \(B\) geben, die nicht in
+\(\mathrm{Bild}(f)\) enthalten sind. Da \(B\) dann
+aber mehr Elemente hat als \(A\), kann \(g\) nicht injektiv sein.
+
+Betrachten wir nun folgendes Diagramm:
+\[\xymatrix{\ar@(ul,dl)_{\mathrm{id}}}
+\xymatrix{A \ar@/^/[r]^f & \ar@/^/[l]^g B}
+\xymatrix{\ar@(ur,dr)^{\mathrm{id}}}\]
+Wenn dieses Diagramm kommutiert, dann ist \(\mathrm{id}_A=g\circ f\)
+und \(\mathrm{id}_B=f\circ g\). Das heißt \(f\) und \(g\) sind
+bijektiv und invers zueinander. Man sagt, \(g\) ist die
+Umkehrfunktion zu \(f\) und schreibt \(f^{-1}:=g\).
+
+Beispiel:
+\[\xymatrix{\ar@(ul,dl)_{\mathrm{id}}}
+\xymatrix{\mathbb R \ar@/^/[r]^{\mathrm{exp}} & \ar@/^/[l]^{\mathrm{ln}} \mathbb R_+}
+\xymatrix{\ar@(ur,dr)^{\mathrm{id}}}\]
+Mit \(\mathbb R_+\) ist die Menge \(\{y\in\mathbb R|\; y>0\}\)
+gemeint.
+
+Betrachten wir folgendes Diagramm:
+\[\xymatrix{A \ar[r]^f \ar[d]^p & \ar[d]^q B\\
+C \ar[r]^g & D}
+\]
+Falls dieses Diagramm kommutiert, gilt
+\[q\circ f = g\circ p.\]
+Nehmen wir mal ein großen Diagramm:
+\[\xymatrix{A\ar[r]^f\ar[d]^{p_1} & B \ar[r]^g
+\ar[d]^{p_2} & C \ar[r]^h\ar[d]^{p_3} & \ar[d]^{p_4} D\\
+A' \ar[r]^{f'} & B' \ar[r]^{g'}& C' \ar[r]^{h'} & D'}
+\]
+Falls dieses Diagramm kommutiert, gilt
+\begin{gather*}
+p_2\circ f = f'\circ p_1,\\
+p_3\circ g = g'\circ p_2,\\
+p_4\circ h = h'\circ p_3,\\
+p_3\circ g\circ f = g'\circ f'\circ p_1
+= g'\circ p_2\circ f,\\
+p_4\circ h\circ g = h'\circ g'\circ p_2
+= h'\circ p_3\circ g\\
+\end{gather*}
+und
+\begin{gather*}
+p_4\circ h\circ g\circ f\\
+= h'\circ g'\circ f'\circ p_1\\
+= h'\circ g'\circ p_2\circ f\\
+= h'\circ p_3\circ g\circ f.
+\end{gather*}
+In diesem Fall ist das Diagramm wesentlich
+übersichtlicher.
+
+Anmerkung: Die letzte Gleichungskette hat so viele Terme,
+wie es bei einer Manhatten-Metrik kürzeste
+Wege von \(A\) nach \(D'\) gibt. Die Pfeile
+geben dabei genau an, in welche Richtungen
+man laufen darf, um auf dem kürzesten Weg
+zu bleiben.
+
+Man kann aber auch einfache Rechenregeln umständlich
+mit einem solchen Diagramm formulieren. Nehmen wir mal
+das Kommutativgesetz \(ab=ba\). Dazu definiert man erstmal
+die Funktion \(f{:}\;\mathbb R^2\rightarrow\mathbb R\) mit
+\(f((a,b)):=ab\). Sei außerdem
+\(\sigma{:}\;\mathbb R^2\rightarrow\mathbb R^2\)
+mit \(\sigma((a,b)):=(b,a)\). D.h. \(\sigma\) vertauscht die
+Komponenten eines geordneten Paares. Das Kommutativgesetz lässt sich
+nun durch das kommutierende Diagramm
+\[\xymatrix{\mathbb R^2 \ar[r]^\sigma \ar[dr]_f &\ar[d]^f \mathbb R^2\\
+& \mathbb R}\]
+ausdrücken.
+
+Das bedeutet es ist \(f=f\circ\sigma\). Daher ergibt sich
+\[ab = f((a,b))=f(\sigma((a,b))) = f((b,a)) = ba.\]
+
+\end{document}
+
+
+
