@@ -450,19 +450,18 @@ end
 </pre>
 <p>Now one can write <code>(f+g)(x)</code>.</p>
 
-<p>The function application operator is a special case of
-the function called <code>call</code>. And <code>call</code> is itself
-a special case of <code>apply</code>.
+<p>If <code>t</code> is a pair, one can write
+<code>f[t]</code> instead of <code>f(t[0],t[1])</code>.
+That is a more general way of function application,
+because one can always write
+<code>f[[t[0],t[1]]]</code>. Thus we have
 </p>
 
 <pre class="moss">
-  f(x,y) == f.call(null,x,y) == f.apply(null,[x,y])
-a.m(x,y) == a.m.call(a,x,y)  == a.m.apply(a,[x,y])
+  f(x,y) == f[[x,y]],
+a.m(x,y) == a.m.call(a,x,y)  == a.m[a,[x,y]].
 </pre>
 
-<p>Frankly speaking we can call apply a general method of
-application.
-</p>
 
 <h2 id="return">Multiple return values
 </h2>

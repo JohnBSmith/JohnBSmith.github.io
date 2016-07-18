@@ -79,7 +79,7 @@ var ftab = {
   "exp": Math.exp, "sqrt": Math.sqrt,
   "ln": Math.log, "lg": lg, "ld": ld,
   "sin": Math.sin, "cos": Math.cos, "tan": Math.tan, "cot": cot,
-  "sec": sec, "csc": csc,
+  "sec": sec, "csc": csc, "sinc": sinc,
   "sinh": sinh, "cosh": cosh, "tanh": tanh, "coth": coth,
   "asin": Math.asin, "acos": Math.acos, "atan": Math.atan, "acot": acot,
   "arcsin": Math.asin, "arccos": Math.acos,
@@ -108,7 +108,7 @@ var ftab2 = {
   "diff": diff, "map": map, "filter": filter, "reduce": reduce,
   "count": count, "forall": forall, "exists": exists, "cat": cat,
   "rand": rand, "range": range, "hypot": hypot, "angle": angle,
-  "mod": mod, "agm": agm,
+  "mod": mod, "agm": agm, "magm": magm,
   "twave": twave, "sqwave": sqwave, "stwave": stwave,
   "ptwave": ptwave, "psqwave": psqwave, "pstwave": pstwave,
   "apply": fapply, "F": eiF, "E": eiE2,
@@ -606,6 +606,11 @@ function gd(x){
   return Math.atan(sinh(x));
 }
 
+function sinc(x){
+  return x==0?1:Math.sin(Math.PI*x)/(Math.PI*x);
+}
+
+// Lanczos approximation
 function gammapx(x){
   var p=[0.99999999999980993, 676.5203681218851, -1259.1392167224028,
   771.32342877765313, -176.61502916214059, 12.507343278686905,
@@ -627,6 +632,7 @@ function gamma(x){
   }
 }
 
+// Lanczos approximation
 function lngammapx(x){
   var p=[0.99999999999980993, 676.5203681218851, -1259.1392167224028,
   771.32342877765313, -176.61502916214059, 12.507343278686905,
@@ -670,25 +676,42 @@ function rfac(n,k){
   return gamma(n+k)/gamma(n);
 }
 
+// Arithmetic-geometric mean
 function agm(a,b){
-  var i,a2,b2;
-  for(i=0; i<10; i++){
-    a2 = (a+b)/2;
-    b2 = Math.sqrt(a*b);
-    a=a2; b=b2;
+  var ah,bh;
+  for(var i=0; i<20; i++){
+    ah = (a+b)/2;
+    bh = Math.sqrt(a*b);
+    a=ah; b=bh;
+    if(Math.abs(a-b)<1E-15) break;
   }
   return a;
 }
 
-function eiK(x){
-  return 0.5*Math.PI/agm(1-x,1+x);
+// Modified arithmetic-geometric mean, see
+// Semjon Adlaj: "An eloquent formula for the perimeter
+// of an ellipse", Notices of the AMS 59(8) (2012), p. 1094-1099
+function magm(x,y){
+  var z=0;
+  var xh,yh,zh,r;
+  for(var i=0; i<20; i++){
+    xh=0.5*(x+y);
+    r=Math.sqrt((x-z)*(y-z));
+    yh=z+r; zh=z-r;
+    x=xh; y=yh; z=zh;
+    if(Math.abs(x-y)<2E-15) break;
+  }
+  return x;
 }
 
-function eiE(x){
-  if(x==0) return Math.PI/2;
-  var h=0.00004;
-  var a=((eiK(x-2*h)-eiK(x+2*h))/4+2*(eiK(x+h)-eiK(x-h)))/(3*h);
-  return (a+eiK(x)/x)*x*(1-x*x);
+function eiK(m){
+  return 0.5*Math.PI/agm(1,Math.sqrt(1-m));
+}
+
+function eiE(m){
+  var M=agm(1,Math.sqrt(1-m));
+  var N=magm(1,1-m);
+  return 0.5*Math.PI*N/M;
 }
 
 function RF(x,y,z){
@@ -699,11 +722,6 @@ function RF(x,y,z){
     xk=(xk+a)/4; yk=(yk+a)/4; zk=(zk+a)/4;
   }
   return 1/Math.sqrt(xk);
-}
-
-function eiF(phi,k){
-  var s=Math.sin(phi), c=Math.cos(phi);
-  return s*RF(c*c,1-k*k*s*s,1);
 }
 
 function RC(x,y){
@@ -731,14 +749,19 @@ function RD(x,y,z){
   return RJ(x,y,z,z);
 }
 
-function eiE2(phi,x){
+function eiF(phi,m){
   var s=Math.sin(phi), c=Math.cos(phi);
-  return s*RF(c*c,1-x*x*s*s,1)-1/3*x*x*s*s*s*RJ(c*c,1-x*x*s*s,1,1);
+  return s*RF(c*c,1-m*s*s,1);
 }
 
-function eiPi(phi,n,x){
+function eiE2(phi,m){
   var s=Math.sin(phi), c=Math.cos(phi);
-  return s*RF(c*c,1-x*x*s*s,1)+1/3*n*s*s*s*RJ(c*c,1-x*x*s*s,1,1-n*s*s);
+  return s*RF(c*c,1-m*s*s,1)-1/3*m*s*s*s*RJ(c*c,1-m*s*s,1,1);
+}
+
+function eiPi(phi,n,m){
+  var s=Math.sin(phi), c=Math.cos(phi);
+  return s*RF(c*c,1-m*s*s,1)+1/3*n*s*s*s*RJ(c*c,1-m*s*s,1,1-n*s*s);
 }
 
 function lambertw(x){
@@ -809,32 +832,38 @@ function Laguerre(n,a,x){
   return y;
 }
 
-function RP(n,m,x){
-  if(m<2){
-    if(n==0){
-      if(m==0) return 1;
-      if(m==1) return 0;
-    }else if(n==1){
-      if(m==0) return x;
-      if(m==1) return -Math.sqrt(1-x*x);
-    }
-    return ((2*n-1)*x*RP(n-1,m,x)-(n+m-1)*RP(n-2,m,x))/(n-m);
+function ALP(n,m,x){
+  if(n==m){
+    return Math.sqrt(Math.PI)/gamma(0.5-n)*Math.pow(2*Math.sqrt(1-x*x),n);
+  }else if(n-1==m){
+    return x*(2.0*n-1)*ALP(m,m,x);
   }else{
-    return -2*(m-1)*x/Math.sqrt(1-x*x)*RP(n,m-1,x)-(n+m-1)*(n-m+2)*RP(n,m-2,x)
+    var a=ALP(m,m,x);
+    var b=ALP(m+1,m,x);
+    var h;
+    for(var k=m+2; k<=n; k++){
+      h=((2.0*k-1)*x*b-(k-1.0+m)*a)/(k-m);
+      a=b; b=h;
+    }
+    return b;
   }
 }
 
 function Legendre(n,m,x){
-  n = Math.round(n);
-  m = Math.round(m);
-  if(Math.abs(m)>n) return 0;
-  if(n<0){
-    return Legendre(-n-1,m,x);
+  n=Math.round(n);
+  m=Math.round(m);
+  if(n<0) n=-n-1;
+  if(Math.abs(m)>n){
+    return 0;
+  }else if(m<0){
+    m=-m;
+    return((m%2<0.5?1:-1)*
+      Math.exp(lngammapx(n-m+1)-lngammapx(n+m+1))*
+      ALP(n,m,x)
+    );
+  }else{
+    return ALP(n,m,x);
   }
-  if(m<0){
-    return Math.cos(Math.PI*m)*fac(n+m)/fac(n-m)*RP(n,-m,x);
-  }
-  return RP(n,m,x);
 }
 
 function cfGamma(a,x,n){
@@ -979,7 +1008,7 @@ function F21(a1,a2,b,x){
 }
 
 function Fmn(a,b,x){
-  var i,k,m,n,x;
+  var i,k,m,n;
   m=a.length; n=b.length;
   var s=1,p=1;
   for(k=0; k<80; k++){

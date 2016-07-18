@@ -123,10 +123,10 @@ define = sub|s,f|
   gtab()[s]=f
 end
 
-define("fac",sub|n|
+define("fac",|n|
   If(eq(n,0),
-    begin 1 end,
-    begin mpy(n,fac(minus(n,1))) end) end)
+    || 1,
+    || mpy(n,fac(minus(n,1)))))
 
 # Tacit programming
 compose = |f| |g| |x| f(g(x))
@@ -155,6 +155,17 @@ fib = memo(fib)
 # Functional iteration
 Fib = |x| [x[0]+x[1],x[0]]
 fib = |n| (Fib^(n-1))([1,1])[1]
+
+# By a general algorithm for
+# a(n):=f(n,a(n-2),a(n-1))
+rec = |a0,a1,f| sub|n|
+  x,y=a0,a1
+  for k in n
+    x,y=y,f(k,x,y)
+  end
+  return x
+end
+fib = rec(0,1,|n,x,y| x+y)
 </pre>
 
 
@@ -177,10 +188,10 @@ first = |f,x| |y| f(x,y)
 second = |f,y| |x| f(x,y)
 
 # variadic, fix first arguments
-first = |f,*a| |*b| f.apply(null,a+b)
+first = |f,*a| |*b| f[a+b]
 
 # variadic, fix last arguments
-last = |f,*a| |*b| f.apply(null,b+a)
+last = |f,*a| |*b| f[b+a]
 </pre>
 
 <h2 id="currying">Currying</h2>
@@ -188,12 +199,16 @@ last = |f,*a| |*b| f.apply(null,b+a)
 curry = sub|f|
   n=f.argc()
   a=list(0..n-1)
-  g = sub|x| a[n-1]=x; f.apply(null,a) end
+  g = sub|x| a[n-1]=x; f[a] end
   for i in 2..n
     g = sub|x| a[n-i]=x; g end
   end
   return g
 end
+
+curry = sub|f| n=f.argc(); a=list(0..n-1)
+  return (2..n).reduce(sub|x| a[n-1]=x; f[a]
+  end, |g,i| sub|x| a[n-i]=x; g end) end
 
 uncurry = |f| |*a| a.reduce(f,|g,x| g(x))
 </pre>

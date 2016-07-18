@@ -36,6 +36,7 @@ var cftab = {
   "sum": csumlist, "prod": cprodlist,
   "zeta": czeta, "B": cbn,
   "erf": cerf, "Ei": cEi,
+  "K": eiK, "E": eiE,
   "G": cBarnesG, "hyperK": chyperK,
   "compose": compose, "rev": rev,
   "size": csize, "isprime": cisprime
@@ -54,7 +55,7 @@ var cftab2 = {
   "map": map, "filter": cfilter, "reduce": reduce,
   "rand": crand, "get": cfget, "cat": cat,
   "count": ccount, "forall": cforall, "exists": cexists,
-  "L": cLaplace
+  "L": cLaplace, "agm": cagm
 };
 
 var cftab3 = {
@@ -106,6 +107,14 @@ function neg(a){
 
 function addr(x,r){
   return {re: x.re+r, im: x.im};
+}
+
+function subr(x,r){
+  return {re: x.re-r, im: x.im};
+}
+
+function rsub(r,x){
+  return {re: r-x.re, im: -x.im};
 }
 
 function mpyr(x,r){
@@ -343,6 +352,7 @@ function cdiffn(f,x,n){
   }
 }
 
+// Lanczos approximation
 function cgammapx(x){
   var p=[0.99999999999980993, 676.5203681218851, -1259.1392167224028,
   771.32342877765313, -176.61502916214059, 12.507343278686905,
@@ -640,21 +650,74 @@ function ccint(f,gamma){
   return ccintN(f,gamma,10);
 }
 
-var vertex1, vertex2;
+var vint_a, vint_d;
 function vintN(f,a,N){
   var g = function(t){
-    return add(mpy(sub(vertex2,vertex1),t),vertex1);
+    return f(add(vint_a,mpy(vint_d,t)));
   }
   var y=complex(0,0);
+  var t0=complex(0,0);
+  var t1=complex(1,0);
   for(var k=0; k+1<a.length; k++){
-    vertex1=a[k]; vertex2=a[k+1];
-    y=add(y,ccintN(f,g,N));
+    vint_a=a[k]; vint_d=sub(a[k+1],a[k]);
+    y=add(y,mpy(vint_d,cintN(g,t0,t1,N)));
   }
   return y;
 }
 
 function vint(f,a){
   return vintN(f,a,10);
+}
+
+function cagm(a,b){
+  var ah,bh;
+  for(var i=0; i<20; i++){
+    ah = mpyr(add(a,b),0.5);
+    bh = csqrt(mpy(a,b));
+    a=ah; b=bh;
+    if(cabs(sub(a,b))<1E-15) break;
+  }
+  return a;
+}
+
+// Branch cut Re(z)>0, Im(z)=0
+function csqrta(z){
+  return z.im>=0? csqrt(z): neg(csqrt(z));
+}
+
+// Branch cut Re(z)>0, Im(z)=0
+function csqrtb(z){
+  return z.im<=0? csqrt(z): neg(csqrt(z));
+}
+
+function cmagm(x,y){
+  var z={re:0,im:0};
+  var xh,yh,zh,r;
+  if(y.im<0){
+    root = csqrtb;
+  }else{
+    root = csqrta;
+  }
+  for(var i=0; i<20; i++){
+    xh=mpyr(add(x,y),0.5);
+    r=root(mpy(sub(x,z),sub(y,z)));
+    yh=add(z,r); zh=sub(z,r);
+    x=xh; y=yh; z=zh;
+    if(cabs(sub(x,y))<2E-15) break;
+  }
+  return x;
+}
+
+function eiK(m){
+  return div({re:0.5*Math.PI,im:0},cagm({re:1,im:0},csqrt(rsub(1,m))));
+}
+
+function eiE(m){
+  var a={re:1,im:0}
+  var b=rsub(1,m);
+  var M=cagm(a,csqrt(b));
+  var N=cmagm(a,b);
+  return div(mpyr(N,0.5*Math.PI),M);
 }
 
 function theta1(z,q){

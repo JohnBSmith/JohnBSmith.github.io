@@ -693,6 +693,15 @@ moss -unsafe alpha
   operating system user account.
 </pre>
 
+<p>The file name extension of a Moss source code file is
+"<code>.mf</code>" (<code><u>m</u>oss <u>f</u>ile</code>),
+but the interpreter
+does not care about file name extensions. Thus it could be
+<code>".src"</code>, <code>".txt"</code> or completely omitted.
+Only a multi language IDE needs a file name extension to determine
+the programming language.
+</p>
+
 <h2 id="comments">Comments</h2>
 
 <pre class="moss">
@@ -1006,6 +1015,10 @@ f = |x| m.sin(m.pi*x)
 # qualified alias import
 import math: pi, s=sin, c=cos
 f = |x| s(pi*x)
+
+# qualify everything from math
+import math:*
+f = |x| sin(pi*x)
 
 # show what is contained in math
 expose = |m| print(record(m).keys().sort().join(", "))
