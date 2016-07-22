@@ -26,6 +26,7 @@
 <li><a href="#sets">Set theory</a>
 <li><a href="#comb">Combinatorics</a>
 <li><a href="#numerics">Numerics</a>
+<li><a href="#Euler">Euler method</a>
 <li><a href="#la">Linear algebra</a>
 <li><a href="#nt">Number theory</a>
 <li><a href="#lex">Lexical analysis</a>
@@ -412,6 +413,49 @@ N = sub|f,x|
 end
 </pre>
 
+<h2 id="Euler">Euler method</h2>
+
+<pre class="moss">
+import na: interpolate
+
+# f'(x)=g(x,f(x))
+# h: step size
+# N: number of steps
+sub euler(g,x0,y0,h,N)
+  x=x0; y=y0
+  a=[[x,y]]
+  for k in 1..N
+    y = y+h*g(x,y)
+    x = x0+k*h
+    a.push([x,y])
+  end
+  return interpolate(a)
+end
+
+# f^(m)(x) = g(x,y)
+# y = [f(x),f'(x),...,f^(m-1)(x)]
+sub euler_any_order(g,x0,y0,h,N)
+  x=x0; y=copy(y0)
+  m=size(y)
+  a=[[x,y[0]]]
+  for k in 1..N
+    hg = h*g(x,y)
+    for i in 0..m-2
+      y[i] = y[i]+h*y[i+1]
+    end
+    y[m-1] = y[m-1]+hg
+    x = x0+k*h
+    a.push([x,y[0]])
+  end
+  return interpolate(a)
+end
+
+exp = euler(|x,y| y,
+  0, 1, 0.01, 1000)
+sin = euler_any_order(|x,y| -y[0],
+  0, [0,1], 0.01, 1000)
+</pre>
+
 
 <h2 id="la">Linear algebra</h2>
 
@@ -612,6 +656,7 @@ fft = sub|a| if size(a)<=1 then return a end
   return (L.map(|k| even[k]+T[k])+
           L.map(|k| even[k]-T[k])) end
 </pre>
+
 
 
 </body>
