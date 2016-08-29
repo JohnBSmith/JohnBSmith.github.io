@@ -81,12 +81,16 @@ var ftab = {
   "sin": Math.sin, "cos": Math.cos, "tan": Math.tan, "cot": cot,
   "sec": sec, "csc": csc, "sinc": sinc,
   "sinh": sinh, "cosh": cosh, "tanh": tanh, "coth": coth,
+  "sech": sech, "csch": csch,
   "asin": Math.asin, "acos": Math.acos, "atan": Math.atan, "acot": acot,
+  "asec": asec, "acsc": acsc,
   "arcsin": Math.asin, "arccos": Math.acos,
   "arctan": Math.atan, "arccot": acot,
   "asinh": asinh, "acosh": acosh, "atanh": atanh, "acoth": acoth,
+  "asech": asech, "acsch": acsch,
   "gamma": gamma, "fac": fac, "digamma": digamma,
-  "erf": erf, "norm": norm, "gd": gd, "K": eiK, "E": eiE,
+  "erf": erf, "erfc": erfc, "norm": norm, "gd": gd,
+  "K": eiK, "E": eiE,
   "H": step, "W": lambertw, "Wm1": lambertwm1,
   "d": fnan, "Ei": Ei, "li": li, "Li": Li,
   "Si": Si, "Ci": Ci, "Ai": Ai, "Bi": Bi,
@@ -552,6 +556,10 @@ function log(x,b){
   return Math.log(x)/Math.log(b);
 }
 
+function cot(x){
+  return Math.cos(x)/Math.sin(x);
+}
+
 function sec(x){
   return 1/Math.cos(x);
 }
@@ -560,12 +568,16 @@ function csc(x){
   return 1/Math.sin(x);
 }
 
-function cot(x){
-  return Math.cos(x)/Math.sin(x);
-}
-
 function acot(x){
   return Math.PI/2-Math.atan(x);
+}
+
+function asec(x){
+  return Math.acos(1/x);
+}
+
+function acsc(x){
+  return Math.asin(1/x);
 }
 
 function sinh(x){
@@ -586,6 +598,14 @@ function coth(x){
   return 1/tanh(x);
 }
 
+function sech(x){
+  return 1/cosh(x);
+}
+
+function csch(x){
+  return 1/sinh(x);
+}
+
 function asinh(x){
   return Math.log(x+Math.sqrt(x*x+1));
 }
@@ -600,6 +620,14 @@ function atanh(x){
 
 function acoth(x){
   return 0.5*Math.log((x+1)/(x-1));
+}
+
+function asech(x){
+  return acosh(1/x);
+}
+
+function acsch(x){
+  return asinh(1/x);
 }
 
 function gd(x){
@@ -912,6 +940,10 @@ function erf(x){
   return sgn(x)*y/Math.sqrt(Math.PI);
 }
 
+function erfc(x){
+  return 1-erf(x);
+}
+
 function norm(x){
   return 0.5+0.5*erf(x/Math.SQRT2);
 }
@@ -937,6 +969,10 @@ function Li(x){
   return li(x)-li(2);
 }
 
+// Abramowitz and Stegun: "Handbook of Mathematical Functions
+// [...]", Chapter 5: "Exponential Integral and Related Functions",
+// "Asymptotic Expansions" (5.2.34-35),
+// "Rational Approximations" (5.2.36-39)
 function hf(x){
   var a1,a2,b1,b2;
   a1=7.241163; b1=9.068580;
@@ -1114,6 +1150,9 @@ function Lerch(z,s,x){
   return y;
 }
 
+// Fredrik Johansson: "Rigorous high-precision computation of the
+// Hurwitz zeta function and its derivatives", Sep. 2013,
+// arXiv:1309.2877 [cs.SC]
 function hzeta(s,a){
   var y=0, N=18, Npa=N+a;
   for(var k=a; k<Npa; k++){

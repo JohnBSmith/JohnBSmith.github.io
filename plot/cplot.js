@@ -35,7 +35,7 @@ var cftab = {
   "next": next, "rand": pick,
   "sum": csumlist, "prod": cprodlist,
   "zeta": czeta, "B": cbn,
-  "erf": cerf, "Ei": cEi,
+  "erf": cerf, "erfc": cerfc, "Ei": cEi,
   "K": eiK, "E": eiE,
   "G": cBarnesG, "hyperK": chyperK,
   "compose": compose, "rev": rev,
@@ -437,6 +437,10 @@ function cerf(x){
   }else{
     return y;
   }
+}
+
+function cerfc(x){
+  return rsub(1,cerf(x));
 }
 
 function cEn(n,x){
