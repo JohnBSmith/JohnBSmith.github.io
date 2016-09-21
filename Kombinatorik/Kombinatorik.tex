@@ -31,8 +31,8 @@ Mengen beschränken.
 \section{Grundlegende Prinzipien}
 \subsection{Permutationen}
 Eine Permutation kann als Umordnung eines Tupels verstanden
-werden. Die identische Umordnung (die alles so lässt wie es ist)
-wollen wir auch als Umordnung zulässig ansehen. Ein Tupel aus
+werden. Die identische Umordnung (die alles so lässt wie es ist),
+wollen wir auch als Umordnung zulässt ansehen. Ein Tupel aus
 einem einzigen Element hat daher die identische Permutation als
 einzige Umordnung. Ein Tupel mit zwei Elementen hat zwei
 Permutationen. Ein Tupel mit drei Elementen hat schon sechs.
@@ -43,20 +43,28 @@ mit $n$ Elementen als $n!$. Fixiert man nun aber ein Element,
 so gibt es für die restlichen Elemente noch $n-1$ Permutationen.
 Bedenkt man, dass das Element an jeder der $n$ Stellen stehen
 kann, so ergibt sich die Rekursionsformel
-\[n! = n(n-1)!.\]
+\begin{equation}
+n! = n(n-1)!.
+\end{equation}
 Bentutzt man diese Rekursionsformel wiederholt, so ist
-\[n! = \prod_{k=1}^n k = 1\times 2\times\ldots\times(n-1)\times n\]
+\begin{equation}
+n! = \prod_{k=1}^n k = 1\times 2\times\ldots\times(n-1)\times n
+\end{equation}
 unmittelbar einsichtig. Eine Permutation ist nun aber nichts
-anderes als eine bijektive Selbstabbildung. Das heißt folgendes:
+anderes als eine bijektive Selbstabbildung. Das heißt folgendes.
 Alle Elemente des Tupels bilden eine Menge $M$ mit $|M|=n$.
 Eine Permutation ist nun eine bijektive Funktion aus
 $\mathrm{Abb}(M,M)$. Von den Funktionen in $\mathrm{Abb}(M,M)$
 sind also genau $|M|!$ bijektiv. Bezeichnet man die Menge
 der Bijektionen aus $\mathrm{Abb(M,M)}$ mit
-$\mathrm{Bjn}(M,M)$, so lautet dieser Zusammenhang
-\[|M|! = |\mathrm{Bjn}(M,M)|.\]
+$\mathrm{Bij}(M,M)$, so ergibt sich die Formel
+\begin{equation}
+|M|! = \mathrm{Bjn}(M,M).
+\end{equation}
 Daher kann man
-\[M!:=\mathrm{Bjn}(M,M)\]
+\begin{equation}
+M!:=\mathrm{Bjn}(M,M)
+\end{equation}
 definieren.
 
 \subsection{Variationen}
@@ -70,23 +78,33 @@ muss als der Definitionsbereich $D$. Von der Zielmenge zurück
 zum Definitionsbereich ist wie das Ablegen von $n=|Z|$
 unterschiedlichen Objekten auf $k=|D|$ freie Plätze. Die elementare
 Kombinatorik lehrt, dass es dafür
-\[V(n,k) = \frac{n!}{(n-k)!} = n^{\underline k}\]
+\begin{equation}
+V(n,k) = \frac{n!}{(n-k)!} = n^{\underline k}
+\end{equation}
 Möglichkeiten gibt. Setzt man jetzt $n=k$ so ergibt sich wegen
 $0!=1$ wieder $n!$. Daher gilt auch $n^{\underline n}=n!$.
 
 Wenn man Wiederholungen erlaubt, so gilt stattdessen die
 Formel
-\[V_w(n,k) = n^k.\]
+\begin{equation}
+V_w(n,k) = n^k.
+\end{equation}
 Wenn man das gleiche Element aus $Z$ nun aber auf mehrere
 frei Plätze von $D$ legen kann, so bedeutet das umgekehrt,
 dass die Funktion nicht mehr injektiv zu sein braucht.
 Stattdessen ergibt sich die Menge aller Funktionen. Daher
 gilt
-\[|Z|^{|D|} = |\mathrm{Abb}(D,Z)|.\]
+\begin{equation}
+|Z|^{|D|} = |\mathrm{Abb}(D,Z)|.
+\end{equation}
 Aus diesem Grund definiert man
-\[Z^D := \mathrm{Abb}(D,Z)\]
+\begin{equation}
+Z^D := \mathrm{Abb}(D,Z)
+\end{equation}
 sowie
-\[Z^{\underline D}:=\mathrm{Ijn}(D,Z).\]
+\begin{equation}
+Z^{\underline D}:=\mathrm{Ijn}(D,Z).
+\end{equation}
 
 \subsection{Zahlen}
 Es ist sinnvoll, auch die natürlichen Zahlen durch Mengen
@@ -156,24 +174,36 @@ einer Äquivalenzklasse zusammengefasst. Über der Menge der
 injektiven Funktionen ergibt sich eine Zerlegung in disjunkte
 Teilmengen. Man spricht von einer Partition, auch Quotientenmenge
 genannt. Die Zahl der Äquivalenzklassen ist
-\[C(n,k) = \frac{V(n,k)}{k!} = \frac{n!}{k!\,(n-k)!}
-= \frac{n^{\underline k}}{k!}.\]
+\begin{equation}
+C(n,k) = \frac{V(n,k)}{k!} = \frac{n!}{k!\,(n-k)!}
+= \frac{n^{\underline k}}{k!}.
+\end{equation}
 So definiert man auch den Binomialkoeffizient, es ist
-\[\binom{n}{k} := \frac{n^{\underline k}}{k!}.\]
+\begin{equation}
+\binom{n}{k} := \frac{n^{\underline k}}{k!}.
+\end{equation}
 Jetzt stellt sich noch die Frage, wie das Vergessen der Reihenfolge
 als Formel dargestellt werden kann, um eine klare
 Berechnungsvorschrift für die Quotientenmenge zu erhalten.
 
-Dazu bedenken wir, dass zwei Funktionen als äquivalent angesehen
-werden sollen, falls es eine Permutation auf dem
-Definitionsbereich $D$ gibt, denn es ist ja $k=|D|$. Bezeichnen
-wir eine solche Permutation mit $\sigma$, so soll also gelten
-$f\sim f\circ\sigma$, wobei mit $\sim$ die Äquivalenzrelation
-und mit $\circ$ die Komposition gemeint ist.
+Die injektive Funktion ordnet ja nun jedem Platz genau eine Karte
+zu, wobei jeder Pfeil auf eine andere Karte zeigt. Wenn die
+Reihenfolge der Plätze keine Rolle spielen soll, so muss man
+alle Funktionen mit permutiertem Definitionsbereich als gleich
+ansehen. Bezeichnen wir mit $\sigma$ eine Permutation
+aus $D!$. Nun definieren man die Äquivalenzrelation
+\begin{equation}
+f\sim g  := \exists \sigma{:}\; f\circ\sigma = g.
+\end{equation}
+Mit $\circ$ ist die Komposition gemeint, welche durch
+\begin{equation}
+(f\circ \sigma)(x) := f(\sigma(x))
+\end{equation}
+definiert ist.
 
 Alle Permutationen bilden bezüglich der Komposition eine Gruppe,
 die symmetrische Gruppe $S_k$ genannt wird. Es gilt also
-$S_k=D!$. Weiterhin handelt es sich bei $f\circ\sigma$ um eine
+$D!=S_k$. Weiterhin handelt es sich bei $f\circ\sigma$ um eine
 Gruppenaktion. Die Permutation $\sigma$ aus der symmetrischen
 Gruppe wirkt hierbei auf $f$. Man definiert nun die Menge
 \[f\circ S_k := \{f\circ\sigma\;|\;\sigma\in S_k\}.\]
@@ -182,14 +212,20 @@ Bei den ebend besprochenen Äquivalenzklassen handelt es sich
 um eben diese Orbits.
 
 Die Quotientenmenge ist nun genau die Menge unterschiedlicher
-Orbits. Das heißt es ist
-\[C(n,k) = |\{f\circ S_k\;|\;f\in\mathrm{Ijn}(D,Z)\}|.\]
+Bahnen und wird daher als Bahnenraum bezeichnet. Die Kardinalität
+des Bahnenraumes ist die Anzahl der möglichen Kombinationen.
+Das heißt es ist
+\begin{equation}
+C(n,k) = |\{f\circ S_k\;|\;f\in Z^{\underline D}\}|.
+\end{equation}
 An dieser Stelle tut sich eine höchst interessante Frage auf,
 auf welche wir jetzt noch nicht eingehen wollen. Die symmetrische
 Gruppe $S_k$ hat Untergruppen $U$, die Permutationsgruppen
 genannt werden. Nun stellt sich aber die Frage, welche Formeln
 sich für
-\[|\{f\circ U\;|\;f\in\mathrm{Ijn}(D,Z)\}|\]
+\begin{equation}
+|\{f\circ U\;|\;f\in Z^{\underline D}\}|
+\end{equation}
 ergeben. Die Antwort ist, dass diese Formeln wahrscheinlich
 beliebig kompliziert werden. Nach dem Satz von Cayley lässt sich
 nämlich jede Gruppe als Permutationsgruppe interpretieren. Und
@@ -201,35 +237,45 @@ ein Teiler von $|S_k|=k!$ sein muss.
 
 Allgemeiner gibt es beliebige Teilmengen $T$ von $S_k$ wo man
 eine Formel für
-\[|\{f\circ T\;|\;f\in\mathrm{Ijn}(D,Z)\}|\]
+\[|\{f\circ T\;|\;f\in Z^{\underline D}\}|\]
 angeben möchte, sofern $T$ auch durch eine Formel
 beschrieben ist. Wir diskutieren nun, in welchen Fällen die
 Formel
-\[|\{f\circ T\;|\;f\in\mathrm{Ijn}(D,Z)\}|
-= \frac{|\mathrm{Ijn}(D,Z)|}{|T|}\]
-gilt. Zunächst wollen wir uns auf Gruppen beschränken.
+\begin{equation}
+|\{f\circ T\;|\;f\in Z^{\underline D}\}|
+= \frac{|Z^{\underline D}|}{|T|}
+\end{equation}
+gilt, wobei wir uns auf Gruppen beschränken.
 Bei diesen gilt die Bahnformel
-\[|U| = |f\circ U|\,|U_f|,\]
+\begin{equation}
+|U| = |f\circ U|\,|U_f|,
+\end{equation}
 wobei mit $U_f$ die Fixgruppe (auch Stabilisator genannt) von $U$
 gemeint ist. Diese ist definiert durch
-\[U_f := \{\sigma\in U\;|\; f\circ\sigma = f\}.\]
+\begin{equation}
+U_f := \{\sigma\in U\;|\; f\circ\sigma = f\}.
+\end{equation}
 Nun sei bei $U$ die Fixgruppe trivial. So sagt man,
 wenn diese nur aus der identischen Permutation $\mathrm{id}$,
 dem neutralen Element, besteht. In diesem Fall gilt $|f\circ U|=|U|$.
 Das bedeutet, jeder Orbit ist gleich groß und hat $|U|$ Elemente.
 Die Gesamtzahl ist aber die Anzahl der Orbits mal die Anzahl der
 Elemente im Orbit. Daher ergibt sich
-\[|\{f\circ U\;|\;f\in\mathrm{Ijn}(D,Z)\}|\,|U|
-= |\mathrm{Ijn}(D,Z)|.\]
+\begin{equation}
+|\{f\circ U\;|\;f\in Z^{\underline D}\}|\,|U|
+= |Z^{\underline D}|.
+\end{equation}
 Damit die Formel gültig ist, reicht es also aus, wenn die
 Fixgruppe für jedes beliebige $f$ trivial ist. Bei injektiven
 Funktionen ist das aber immer der Fall.
 
 Die Quotientenmenge wird auch kurz als $X/U$ bezeichnet,
-wobei $X$ die Menge sein soll, auf welche die Gruppenaktion wirkt.
+wobei $X$ die Menge sein soll, auf welche die Gruppeaktion wirkt.
 Daher ergibt sich nun die hübsche Formel
-\[|\mathrm{Ijn}(D,Z)/U| = \frac{|\mathrm{Ijn}(D,Z)|}{|U|}
-= \frac{n^{\underline k}}{|U|}.\qquad(k=|D|,\;n=|Z|)\]
+\begin{equation}
+|Z^{\underline D}/U| = \frac{|Z^{\underline D}|}{|U|}
+= \frac{n^{\underline k}}{|U|}.\qquad(k=|D|,\;n=|Z|)
+\end{equation}
 %
 Betrachten wir nun Kombinationen mit zurücklegen.
 Hier wir die Bedingung aufgehoben, dass die Funktionen injektiv
@@ -240,13 +286,17 @@ auf den $k$ freien Plätzen die Funktion für einige Permutationen
 
 Mit der Methode {\glqq}Stars and bars{\grqq} findet man vielmehr
 die Formel
-\[C_w(n,k) = \binom{n+k-1}{k}.\]
+\begin{equation}
+C_w(n,k) = \binom{n+k-1}{k}.
+\end{equation}
 
 \subsection{Vereinigungsmenge}
 Ein grundlegendes Prinzip ist das Prinzip von Inklusion und
 Exklusion. Für die Anzahl der Elemente einer Vereinigung
 gilt
-\[|A\cup B| = |A|+|B|+|A\cap B|.\]
+\begin{equation}
+|A\cup B| = |A|+|B|+|A\cap B|.
+\end{equation}
 Bei einer disjunkten Vereinigung gilt daher
 \[|A\sqcup B| = |A|+|B|.\]
 Mit diesem Prinzip zerlegt man nun auch
@@ -261,12 +311,19 @@ Hiermit ergibt sich
 Beachtet man nun noch
 \[(A\cap B)\cap (B\cap C) = A\cap B\cap C\]
 so erhält man
-\[|A\cup B\cup C|=|A|+|B|+|C|-|A\cap B|-|A\cap C|-|B\cap C|
-+|A\cap B\cap C|.\]
+\begin{equation}
+\begin{split}
+|A\cup B\cup C| &= |A|+|B|+|C|\\
+&-|A\cap B|-|A\cap C|-|B\cap C|\\
+&+|A\cap B\cap C|.
+\end{split}
+\end{equation}
 Man erkennt das folgende allgemeine Muster. Es lautet
-\[\bigg|\bigcup_{i=1}^n A_i\bigg|
+\begin{equation}
+\bigg|\bigcup_{i=1}^n A_i\bigg|
 = \sum_{k=1}^n (-1)^{k-1} \sum_{i_1<\ldots<i_k}
-|A_{i_1}\cap\ldots\cap A_{i_k}|.\]
+|A_{i_1}\cap\ldots\cap A_{i_k}|.
+\end{equation}
 
 \subsection{Partitionen}
 
@@ -316,20 +373,28 @@ entsprechen genau den Partitionen in zwei Teilmengen.
 Sei $n:=|Z|$ und $k:=|D|$. Bezeichne mit $\mathrm{Sjn}(D,Z)$
 die Menge der Surjektionen von $D$ nach $Z$. Eine Partition
 lässt sich nun als Orbit
-\[S_n\circ f := \{\sigma\circ f\;|\;\sigma\in S_n\}\]
+\begin{equation}
+S_n\circ f := \{\sigma\circ f\;|\;\sigma\in S_n\}
+\end{equation}
 ausdrücken, wobei $f$ eine surjektive Funktion sein soll. 
 Die Menge der Partitionen ist daher beschrieben durch
-\[\{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}.\]
+\begin{equation}
+\{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}.
+\end{equation}
 Die Zahlen
-\[\begin{Bmatrix}
+\begin{equation}
+\begin{Bmatrix}
 k\\ n
 \end{Bmatrix}
-:=|\{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}|\]
+:=|\{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}|
+\end{equation}
 heißen Stirling-Zahlen zweiter Art. Wir wollen sie
 als Partitionszahlen bezeichnen. Die Zahlen
-\[B_k:=\sum_{n=0}^k \begin{Bmatrix}
+\begin{equation}
+B_k:=\sum_{n=0}^k \begin{Bmatrix}
 k\\ n
-\end{Bmatrix}\]
+\end{Bmatrix}
+\end{equation}
 werden als Bellzahlen bezeichnet. Die Bellzahl $B_k$ ist
 die gesamte Anzahl an Möglichkeiten, eine Menge in disjunkte
 Teilmengen zu zerlegen. 
@@ -337,13 +402,17 @@ Teilmengen zu zerlegen.
 Bei den Partitionen von Zahlen muss die Reihenfolge des
 Definitionsbereiches auch noch vergessen werden. Somit ergibt
 sich die Darstellung
-\[p\begin{pmatrix}k\\ n\end{pmatrix}
-:=|\{S_n\circ f\circ S_k\;|\; f\in\mathrm{Sjn}(D,Z)\}|.\]
+\begin{equation}
+p\begin{pmatrix}k\\ n\end{pmatrix}
+:=|\{S_n\circ f\circ S_k\;|\; f\in\mathrm{Sjn}(D,Z)\}|.
+\end{equation}
 Die Funktion $p(k,n)$ gibt die Anzahl der Möglichkeiten an, die
 Zahl $k$ in $n$ Summanden zu zerlegen. Die Funktion
-\[p(k) := \sum_{n=1}^k p\begin{pmatrix}
+\begin{equation}
+p(k) := \sum_{n=1}^k p\begin{pmatrix}
 k\\ n
-\end{pmatrix}\]
+\end{pmatrix}
+\end{equation}
 wird als Partitionsfunktion bezeichnet. Die Zahl $p(k)$ ist
 die gesamte Anzahl an Möglichkeiten, die Zahl $k$ in Summanden
 zu zerlegen.
@@ -363,31 +432,27 @@ als Dreiecksschema anordnen kann. Dies beruht im wesentlichen
 auf einer Rekursionsformel in zwei Variablen.
 
 Binomialkoeffizienten:
-\[\binom{n}{k} = \binom{n-1}{k-1}+\binom{n-1}{k}\]
+\begin{equation}
+\binom{n}{k} = \binom{n-1}{k-1}+\binom{n-1}{k}
+\end{equation}
 Zykelzahlen (Stirling-Zahlen erster Art):
-\[\begin{bmatrix}
-n\\ k
-\end{bmatrix} = \begin{bmatrix}
-n-1\\ k-1
-\end{bmatrix} + (n-1)\begin{bmatrix}
-n-1\\ k
-\end{bmatrix}\]
+\begin{equation}
+\begin{bmatrix} n\\ k\end{bmatrix}
+= \begin{bmatrix} n-1\\ k-1\end{bmatrix}
++ (n-1)\begin{bmatrix} n-1\\ k \end{bmatrix}
+\end{equation}
 Partitionszahlen (Stirling-Zahlen zweiter Art):
-\[\begin{Bmatrix}
-n\\ k
-\end{Bmatrix} = \begin{Bmatrix}
-n-1\\ k-1
-\end{Bmatrix} + k\begin{Bmatrix}
-n-1\\ k
-\end{Bmatrix}\]
+\begin{equation}
+\begin{Bmatrix} n\\ k \end{Bmatrix}
+= \begin{Bmatrix} n-1\\ k-1 \end{Bmatrix}
++ k\begin{Bmatrix} n-1\\ k \end{Bmatrix}
+\end{equation}
 Zahlpartitionen:
-\[p\begin{pmatrix}
-n\\ k
-\end{pmatrix} = p\begin{pmatrix}
-n-1\\ k-1
-\end{pmatrix} + p\begin{pmatrix}
-n-k\\ k
-\end{pmatrix}\]
+\begin{equation}
+p\begin{pmatrix} n\\ k \end{pmatrix}
+= p\begin{pmatrix} n-1\\ k-1 \end{pmatrix}
++ p\begin{pmatrix} n-k\\ k \end{pmatrix}
+\end{equation}
 Es gibt ziemlich viele Formeln für diese Zahlen. Einige davon
 drücken Beziehungen zwischen den unterschiedlichen Dreieckszahlen
 aus. In \textit{Concrete Mathematics} beschäftigt sich ein
@@ -403,12 +468,14 @@ daher auch als Punkt im Koordinatenraum der Dimension vier darstellen.
 Die kanonische Basis lässt sich mit der Polynombasis identifizieren.
 Daher lässt sich das Tupel als Linearkombination
 \[a_0X^0+a_1X^1+a_2X^2+a_3X^3\]
-schreiben. Die endliche Folge ist damit als ein Element
-des Polynomringes $R[X]$ mit $a_k\in R$ interpretierbar.
+schreiben. Die endliche Folge lässt damit als ein Element
+des Polynomringes $R[X]$ mit $a_k\in R$ interpretieren.
 
 Diese Linearkombination wird nun ins unendliche forgesetzt.
 D.h. man bildet
-\[G\{a_k\}(X) := \sum_{k=0}^\infty a_kX^k.\]
+\begin{equation}
+G\{a_k\}(X) := \sum_{k=0}^\infty a_kX^k.
+\end{equation}
 Die Menge der Folgen wird damit als Menge der formalen
 Potenzreihen $R[[X]]$ interpretiert.
 
@@ -421,17 +488,17 @@ Variable $x$ ersetzen und die entstehende Funktion betrachten.
 Diese nennt man dann erzeugende Funktion der Folge. Macht man anstelle
 von $X=x$ die Substitution $X=1/z$, so ergibt sich die
 Z-Transformation. Behandelt man $X$ jedoch formal und
-benutzt nur Identitäten über formale Potenzreihen, so spielen
-Konvergenzfragen keine Rolle.
+benutzt sich formale Identitäten, so spielen Konvergenzfragen
+keine rolle.
 
 Tatsächlich gelten viele Identitäten auch formal, so dass eine
-solche Substitution $X=x$ nicht notwendig ist. Dazu muss man aber
-erstmal klären wie man formale Potenzreihen multipliziert.
+solche Substitution nicht notwendig ist. Dazu muss man aber erstmal
+klären wie man formale Potenzreihen multipliziert.
 
 Die Multiplikation ergibt sich in völliger Analogie zur
 Multiplikation von Polynomen und ist mit dieser kompatibel.
 Diese Erweiterung der Multiplikation auf Potenzreihen wird
-als \textit{Cauchy-Produkt} bezeichnet.
+als Cauchy-Produkt bezeichnet.
 
 Weitere Informationen findet man im englischen Wikipediaartikel
 \textit{Formal power series}.
@@ -445,21 +512,33 @@ Zusammenhänge herausstellen. Anstelle von $a_k$ wollen wir
 hier $f(k)$ schreiben.
 
 Der Identitätsoperator ist definiert durch
-\[(If)(k) := f(k).\]
+\begin{equation}
+(If)(k) := f(k).
+\end{equation}
 Der Translationsoperator ist definiert durch
-\[(T_n f)(k) := f(k+n).\]
+\begin{equation}
+(T_n f)(k) := f(k+n).
+\end{equation}
 Der Differenzenoperator ist definiert durch
-\[(\Delta_n f)(k) := f(k+n)-f(k).\]
+\begin{equation}
+(\Delta_n f)(k) := f(k+n)-f(k).
+\end{equation}
 Arithmetische Operationen mit Operatoren erklärt man Punktweise.
 Sind z.B. $A,B$ zwei Operatoren, so difiniert man die Summe $A+B$
 durch
-\[((A+B)f)(k):=(A f)(k)+(B f)(k).\]
+\begin{equation}
+((A+B)f)(k):=(A f)(k)+(B f)(k).
+\end{equation}
 Somit ergibt sich die Operatorengleichung
-\[\Delta_n = T_n-I.\]
+\begin{equation}
+\Delta_n = T_n-I.
+\end{equation}
 Ferner gilt nun
-\[\Delta_n^2 = (T_n-I)^2
+\begin{equation}
+\Delta_n^2 = (T_n-I)^2
 = T_n^2-T_nI-IT_n+I^2
-= T_{2n}-2T_n+I.\]
+= T_{2n}-2T_n+I.
+\end{equation}
 Für jeden Operator $A$ setzt man $A^0:=I$. So ist auch $T_n^0=T_0=I$.
 Da Translationsoperator und Identitätsoperator kommutieren, kann
 man den binomischen Lehrsatz verwenden. Es ergibt sich
@@ -467,17 +546,19 @@ man den binomischen Lehrsatz verwenden. Es ergibt sich
 = \sum_{k=0}^m \binom{m}{k} T_n^k (-I)^{m-k}
 = \sum_{k=0}^m (-1)^{m-k}\binom{m}{k} T_{kn}.\]
 Den formalen Ableitungsoperator erklärt man durch
-\[D\Big(\sum_{k=0}^\infty a_kX^k\Big)
-:= \sum_{k=0}^\infty a_k kX^{k-1}.\]
+\begin{equation}
+D\Big(\sum_{k=0}^\infty a_kX^k\Big)
+:= \sum_{k=0}^\infty a_k kX^{k-1}.
+\end{equation}
 
 
 % \renewcommand{\refname}{Literatur}
 \begin{thebibliography}{10}
 \setlength{\itemsep}{0pt}
-\bibitem{CM} Graham, Knuth, Patashnik: \textit{Concrete Mathematics}.
-\bibitem{EC} Richard P. Stanley: \textit{Enumerative Combinatorics}. (online)
-\bibitem{AK} Michael Stoll: \textit{Abzählende Kombinatorik}. (online)
-\bibitem{FPS} Wikipedia: \textit{Formal power series}.
+\bibitem{CM} Graham, Knuth, Patashnik: Concrete Mathematics.
+\bibitem{EC} Richard P. Stanley: Enumerative Combinatorics. (online)
+\bibitem{AK} Michael Stoll: Abzählende Kombinatorik. (online)
+\bibitem{FPS} Wikipedia: Formal power series.
 \end{thebibliography}
 
 \end{document}
