@@ -157,7 +157,8 @@ var ftab3 = {
   "pdfF": pdfF, "cdfF": cdfF,
   "pdfW": pdfW, "cdfW": cdfW,
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
-  "pdfBeta": pdfBeta, "cdfBeta": cdfBeta
+  "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
+  "fs": fsa
 };
 
 var ftab4 = {
@@ -166,7 +167,8 @@ var ftab4 = {
   "J": fint, "J2": fint2,
   "pmfH": pmfH, "cdfH": cdfH,
   "pow": frac_pow_fix,
-  "interpolate": interpolate_fn
+  "interpolate": interpolate_fn,
+  "fs": fs
 };
 
 var ftabn = {
@@ -1836,6 +1838,28 @@ function Fc(f,x){
 function Fs(f,x){
   var g = function(t){return f(t)*Math.sin(2*Math.PI*x*t);};
   return gauss(g,-10,10,6);
+}
+
+// Fourier series
+function fs(a0,a,b,x){
+  var s=0.5*a0;
+  for(k=1; k<=a.length; k++){
+    s+=a[k-1]*Math.cos(k*x);
+  }
+  for(k=1; k<=b.length; k++){
+    s+=b[k-1]*Math.sin(k*x);
+  }
+  return s;
+}
+
+function fsa(a0,a,x){
+  var s=0.5*a0;
+  var t;
+  for(k=1; k<=a.length; k++){
+    t=a[k-1];
+    s+=t[0]*Math.cos(k*x-t[1]);
+  }
+  return s;
 }
 
 // Interpolate piecwise linear
