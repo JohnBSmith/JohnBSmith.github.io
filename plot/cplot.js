@@ -62,7 +62,8 @@ var cftab3 = {
   "pow": cfpow, "range": cranged,
   "sum": csum, "prod": cprod,
   "int": cint, "if": cfif,
-  "diff": cdiffn, "Phi": cLerch
+  "diff": cdiffn, "Phi": cLerch,
+  "fc": fc
 };
 
 var cftab4 = {
@@ -877,6 +878,20 @@ function cisprime(x){
   return complex(isprime(x.re),0);
 }
 
+function fc(f,i,j){
+  var pi=Math.PI;
+  var a=[];
+  var y;
+  i=i.re; j=j.re;
+  for(var k=i; k<=j; k++){
+    y=cintN(function(t){
+      return mpy(f(t),cexp({re:0,im:-k*t.re}));
+    },{re:-pi,im:0},{re:pi,im:0},4);
+    a.push(mpyr(y,1/(2*pi)));
+  }
+  return a;
+}
+
 function ccolor(stack,argc){
   if(argc!=3){
     error("Error: color(r,g,b) takes exactly three arguments.");
@@ -1558,7 +1573,7 @@ function calc(){
     var y = evalvc(a);
     if(y!=null){
       if(Array.isArray(y)){
-        ans.innerHTML = "ans =<br>"+tabtos(y);
+        ans.innerHTML = ["ans =<br>[",tabtos(y),"]"].join("");
       }else{
         ans.innerHTML = "ans = "+str(y);
         cvtab["ans"]={value: y};

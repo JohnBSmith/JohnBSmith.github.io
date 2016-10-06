@@ -158,7 +158,7 @@ var ftab3 = {
   "pdfW": pdfW, "cdfW": cdfW,
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
   "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
-  "fs": fsa
+  "fs": fsa, "fa": fa, "fb": fb
 };
 
 var ftab4 = {
@@ -1841,7 +1841,7 @@ function Fs(f,x){
 }
 
 // Fourier series
-function fs(a0,a,b,x){
+function fs(x,a0,a,b){
   var s=0.5*a0;
   for(k=1; k<=a.length; k++){
     s+=a[k-1]*Math.cos(k*x);
@@ -1852,7 +1852,7 @@ function fs(a0,a,b,x){
   return s;
 }
 
-function fsa(a0,a,x){
+function fsa(x,a0,a){
   var s=0.5*a0;
   var t;
   for(k=1; k<=a.length; k++){
@@ -1861,6 +1861,30 @@ function fsa(a0,a,x){
   }
   return s;
 }
+
+function fa(f,i,j){
+  var pi=Math.PI;
+  var a=[];
+  for(var k=i; k<=j; k++){
+    a.push(1/pi*gauss(function(t){
+      return f(t)*Math.cos(k*t);
+    },-pi,pi,2));
+  }
+  return a;
+}
+
+function fb(f,i,j){
+  var pi=Math.PI;
+  var b=[];
+  for(var k=i; k<=j; k++){
+    b.push(1/pi*gauss(function(t){
+      return f(t)*Math.sin(k*t);
+    },-pi,pi,4));
+  }
+  return b;
+}
+
+
 
 // Interpolate piecwise linear
 function interpolate(t){
@@ -3737,7 +3761,7 @@ function tabtos(a){
       v.push(str(a[i]));
     }
   }
-  return v.join(",<br>");
+  return v.join("<br>,");
 }
 
 function calc(){
@@ -3749,7 +3773,7 @@ function calc(){
     var y = evals(input.value);
     if(y!=null){
       if(Array.isArray(y)){
-        ans.innerHTML = "ans = <br>"+tabtos(y);
+        ans.innerHTML = ["ans = <br>[",tabtos(y),"]"].join();
       }else{
         ans.innerHTML = "ans = "+str(y);
         vtab["ans"]={value: y};
