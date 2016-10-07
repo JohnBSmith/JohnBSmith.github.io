@@ -158,7 +158,8 @@ var ftab3 = {
   "pdfW": pdfW, "cdfW": cdfW,
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
   "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
-  "fs": fsa, "fa": fa, "fb": fb
+  "fs": fsa, "fa": fa, "fb": fb,
+  "comb": comb,
 };
 
 var ftab4 = {
@@ -1228,6 +1229,10 @@ function BarnesG(x){
 function delta(x,a){
   var t=Math.sqrt(Math.PI)*a*x;
   return a*Math.exp(-t*t);
+}
+
+function comb(x,a,T){
+  return delta(mod(x+0.5*T,T)-0.5*T,a);
 }
 
 function fnan(x){
@@ -3773,7 +3778,7 @@ function calc(){
     var y = evals(input.value);
     if(y!=null){
       if(Array.isArray(y)){
-        ans.innerHTML = ["ans = <br>[",tabtos(y),"]"].join();
+        ans.innerHTML = ["ans = <br>[",tabtos(y),"]"].join("");
       }else{
         ans.innerHTML = "ans = "+str(y);
         vtab["ans"]={value: y};
