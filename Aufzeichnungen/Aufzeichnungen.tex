@@ -1,0 +1,140 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\usepackage[utf8]{inputenc}
+%
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+\begin{document}
+\section*{Aufzeichnungen\\
+zur Mathematik}
+John Smith, 2016\\
+Lizenz: CC0
+
+\tableofcontents
+
+\section{Logik}
+\subsection{Zerlegung des Allquantors}
+Eine periodische Funktion $f$ erfüllt die Gleichung
+\begin{equation}
+f(x) = f(x+T)
+\end{equation}
+definiert. Macht man eine Substitution $x:=u-T$, so ergibt sich
+\begin{equation}
+f(u-T) = f((u-T)+T) = f(u).
+\end{equation}
+Somit gilt auch $f(x)=f(x-T)$. Diese Folgerung war sehr kurz,
+eigentlich zu kurz um wissenschaftlich zu sein.
+
+Eine Funktion $f{:}\;\mathbb R\rightarrow\mathbb R$
+heißt periodisch mit Periode $T$, falls die
+Funktionalgleichung
+\begin{equation}
+\forall x{\in}\mathbb R{:}\;\; f(x) = f(x+T)
+\end{equation}
+erfüllt ist. Für die Gleichung ergibt sich zunächst
+der folgende abstrakte Syntaxbaum (AST):
+\begin{verbatim}
+  (=
+      (f x)
+      (f (+ x T)))
+\end{verbatim}
+Aber was ist mit dem Allquantor? Der Allquantor ist eingetliche
+eine Funktion in zwei Variablen. Das erste Argument ist eine Menge $M$,
+das zweite ein Prädikat $p$. Der Allquantor überprüft nun, ob das
+Prädikat $p$ für alle Elemente von $M$ gültig ist. Wir wandeln nun
+die Schreibweise durch
+\begin{equation}
+\forall x{\in}M{:}\;\; p(x)\quad\longrightarrow\quad
+\mathrm{all}(M,p)
+\end{equation}
+um. Die Funktionalgleichung wird als nun in der Form
+\begin{equation}\label{periodisch-all}
+\mathrm{all}(\mathbb R,\lambda x. f(x) = f(x+T))
+\end{equation}
+dargestellt. Dazu gehört folgender AST:
+\begin{verbatim}
+  (all IR
+      (lambda (x)
+          (=
+              (f x)
+              (f (+ x T)))))
+\end{verbatim}
+Unter einer \textit{freien Substitution} versteht man nun den
+Austausch jedes Vorkommens einer \textit{freien Variable}
+durch einen AST. Durch den $\lambda$-Term wird die
+Variable $x$ nun gebunden, ist also nicht mehr frei.
+Daher können wir nicht einfach eine freie Substition
+$[x{:=}u{-}T]$ durchführen.
+
+Viel mehr gilt die folgende Regel. Ist $g$ eine passende
+Bijektion, so gilt
+\begin{equation}\label{all-Umformung}
+\mathrm{all}(M,p) = \mathrm{all}(g^{-1}(M),\;p\circ g).
+\end{equation}
+Z.B. wählt man $M:=\{1,2,3\}$ und $p(x):=(x{<}4)$
+sowie $g(x):=x/2$. Somit ergibt sich
+\begin{gather*}
+(\forall x{\in}\{1,2,3\}{:}\;\; x<4)\\
+= (\forall x{\in}\{2,4,6\}{:}\;\; x/2<4).
+\end{gather*}
+Sei nun $g(x):=x-T$. Nun ist $g^{-1}(\mathbb R)=\mathbb R$.
+Wendet man das nun auf (\ref{periodisch-all}) an, so ergibt
+sich
+\begin{equation}
+\mathrm{all}(\mathbb R, \lambda x.f(x-T)=f(x)).
+\end{equation}
+Es handelt sich also eigentlich nicht um eine Substitution,
+sondern um die Verkettung des Prädikats mit einer Funktion.
+Sicherlich lässt sich eine solche durch eine Substitution
+darstellen, aber das ist sehr schwammig. Und diese Schwammigkeit
+fällt erst auf, wenn der Allquantor auch ausgeschrieben wird.
+Im Allquantor ist ja, wie wir gesehen haben, eine Variablenbindung
+enthalten.
+
+Doch warum darf man (\ref{all-Umformung}) eigentlich anwenden?
+Nun, hierzu zerlegen wir den Allquantor weiter. Es ist nämlich
+\begin{equation}
+\mathrm{all}(M,p) = (p(M)=\{\mathrm{true}\}).
+\end{equation}
+Sei $\mathrm{id}$ die identische Funktion. Nun ist aber
+$p$ das selbe wie $p\circ \mathrm{id}$. Außerdem gilt ja
+$\mathrm{id} = g\circ g^{-1}$. Somit ergibt sich
+\begin{gather*}
+p(M) = (p\circ g\circ g^{-1})(M)\\
+= (p\circ g)(g^{-1}(M)).
+\end{gather*}
+In der letzten Gleichung wurde $(f\circ g)(M)=f(g(M))$
+verwendet. Das soll noch schnell gezeigt werden. Es gilt
+\begin{gather*}
+(f\circ g)(M)\\
+= \{(f\circ g)(x)|\;x\in M\}\\
+= \{f(y)|\; y=g(x) \wedge x\in M\}\\
+= \{f(y)|\; y\in g(M)\}
+= f(g(M)).
+\end{gather*}
+Nun gut, das ist auch ein Pseudobeweis. Wir können hier noch
+\begin{equation}
+\bigcup_{i\in I} f(A_i)
+= f(\bigcup_{i\in I} A_i)
+\end{equation}
+verwenden. Dann gilt aber
+\begin{gather*}
+(f\circ g)(M) = \bigcup_{x\in M} \{f(g(x))\}
+= \bigcup_{x\in M} f(\{g(x)\})\\
+= f(\bigcup_{x\in M}\{g(x)\})
+= f(g(M)).
+\end{gather*}
+
+
+\end{document}
+
+
