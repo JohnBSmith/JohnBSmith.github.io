@@ -135,6 +135,62 @@ verwenden. Dann gilt aber
 \end{gather*}
 
 
+\section{Analysis}
+\subsection{Halley-Verfahren}
+Im Folgenden wird die Herleitung des Halley"=Verfahrens unter
+Verwendung einer Padé"=Approximation dargestellt.
+Die Padé"=Approximation \(R[m,0]\) ist die Taylorreihe. Sei
+\begin{gather*}
+a_k = \frac{1}{k!} f^{(k)}(x_0).
+\end{gather*}
+Die Taylorreihe ist
+\begin{gather*}
+R[m,0] = \sum_{k=0}^m a_k(x-x_0)^k.
+\end{gather*}
+Sei\\
+\(A=\begin{vmatrix}
+a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
+\ldots & \ldots & \ldots & \ldots\\
+a_m & a_{m+1} & \ldots & a_{m+n}\\
+\sum\limits_{i=n}^m a_{i-n}x^i &
+\sum\limits_{i=n-1}^m a_{i-n+1}x^i
+&\ldots & \sum\limits_{i=0}^m a_i x^i
+\end{vmatrix}\)\\
+und\\
+\(B=\begin{vmatrix}
+a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
+\ldots &\ldots &\ldots &\ldots\\
+a_m & a_{m+1} &\ldots & a_{m+n}\\
+x^n & x^{n-1} &\ldots & x^0
+\end{vmatrix}\).\\
+Es ist \(R[m,n]=A/B\).
+Ersetze dann \(x\) gegen\\
+\(x-x_0\). Es ist
+\begin{gather*}
+R[1,1] = \frac{a_1(a_0+a_1 x)-a_0a_2x}{a_1-a_2x}\\
+= \frac{a_0a_1+(a_1^2-a_0a_2)x}{a_1-a_2x}.
+\end{gather*}
+Die Nullstelle von \(f\) ist gesucht, und die Approximation
+muss dort auch ungefähr null sein. Setzt man also \(R[1,1](x)=0\),
+so folgt
+\begin{gather*}
+0=a_0a_1+(a_1^2-a_0a_2)x.
+\end{gather*}
+Ersetzt man noch \(x\) gegen \(x-x_0\) und formt danach um,
+so erhält man
+\begin{gather*}
+x=x_0-\frac{a_0a_1}{a_1^2-a_0a_2}.
+\end{gather*}
+Ausgeschrieben bekommt man also \(x=\varphi(x_0)\) mit
+\begin{gather*}
+\varphi(x) = x-\frac{2f(x)f'(x)}{2f'(x)^2-f(x)f''(x)}.
+\end{gather*}
+Das Halley"=Verfahren ist dann die Fixpunktiteration
+\(x_{n+1}=\varphi(x_n)\).
+Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
+übergeht, wenn man \(f(x)f''(x)\) verschwinden lässt.
+
+
 \end{document}
 
 
