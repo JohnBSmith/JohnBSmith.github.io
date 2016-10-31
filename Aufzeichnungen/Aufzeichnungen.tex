@@ -13,6 +13,7 @@
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
+\numberwithin{equation}{section}
 \begin{document}
 \section*{Aufzeichnungen\\
 zur Mathematik}
@@ -108,19 +109,23 @@ Nun, hierzu zerlegen wir den Allquantor weiter. Es ist nämlich
 Sei $\mathrm{id}$ die identische Funktion. Nun ist aber
 $p$ das selbe wie $p\circ \mathrm{id}$. Außerdem gilt ja
 $\mathrm{id} = g\circ g^{-1}$. Somit ergibt sich
-\begin{gather*}
-p(M) = (p\circ g\circ g^{-1})(M)\\
-= (p\circ g)(g^{-1}(M)).
-\end{gather*}
+\begin{equation}
+\begin{split}
+& p(M) = (p\circ g\circ g^{-1})(M)\\
+& = (p\circ g)(g^{-1}(M)).
+\end{split}
+\end{equation}
 In der letzten Gleichung wurde $(f\circ g)(M)=f(g(M))$
 verwendet. Das soll noch schnell gezeigt werden. Es gilt
-\begin{gather*}
-(f\circ g)(M)\\
-= \{(f\circ g)(x)|\;x\in M\}\\
-= \{f(y)|\; y=g(x) \wedge x\in M\}\\
-= \{f(y)|\; y\in g(M)\}
+\begin{equation}
+\begin{split}
+&(f\circ g)(M)\\
+&= \{(f\circ g)(x)|\;x\in M\}\\
+&= \{f(y)|\; y=g(x) \wedge x\in M\}\\
+&= \{f(y)|\; y\in g(M)\}
 = f(g(M)).
-\end{gather*}
+\end{split}
+\end{equation}
 Nun gut, das ist auch ein Pseudobeweis. Wir können hier noch
 \begin{equation}
 \bigcup_{i\in I} f(A_i)
@@ -134,19 +139,40 @@ verwenden. Dann gilt aber
 = f(g(M)).
 \end{gather*}
 
+Für den Existenzquantor gilt analog
+\begin{equation}
+\exists x{\in}A{:}\;p(x)\quad\text{gdw.}\quad\mathrm{true}\in p(A).
+\end{equation}
+Für die Beschreibung von Mengen gilt
+außerdem
+\begin{equation}
+\begin{split}
+&\{x{\in}A|\;p(x)\} = \mathrm{filter}(A,p)\\
+&= p^{-1}(\{\mathrm{true}\}).
+\end{split}
+\end{equation}
+Die Beschreibung von Mengen lässt sich also als
+Urbildmenge darstellen.
 
+Für den Anzahlquantor gilt außerdem
+\begin{equation}
+\exists^{=n} x{\in}A{:}\; p(x)
+\quad\text{gdw.}\quad \#\mathrm{filter}(A,p)=n
+\end{equation}
+
+\newpage
 \section{Analysis}
 \subsection{Halley-Verfahren}
 Im Folgenden wird die Herleitung des Halley"=Verfahrens unter
 Verwendung einer Padé"=Approximation dargestellt.
 Die Padé"=Approximation \(R[m,0]\) ist die Taylorreihe. Sei
-\begin{gather*}
+\begin{equation}
 a_k = \frac{1}{k!} f^{(k)}(x_0).
-\end{gather*}
+\end{equation}
 Die Taylorreihe ist
-\begin{gather*}
+\begin{equation}
 R[m,0] = \sum_{k=0}^m a_k(x-x_0)^k.
-\end{gather*}
+\end{equation}
 Sei\\
 \(A=\begin{vmatrix}
 a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
@@ -166,25 +192,27 @@ x^n & x^{n-1} &\ldots & x^0
 Es ist \(R[m,n]=A/B\).
 Ersetze dann \(x\) gegen\\
 \(x-x_0\). Es ist
-\begin{gather*}
-R[1,1] = \frac{a_1(a_0+a_1 x)-a_0a_2x}{a_1-a_2x}\\
-= \frac{a_0a_1+(a_1^2-a_0a_2)x}{a_1-a_2x}.
-\end{gather*}
+\begin{equation}
+\begin{split}
+& R[1,1] = \frac{a_1(a_0+a_1 x)-a_0a_2x}{a_1-a_2x}\\
+& = \frac{a_0a_1+(a_1^2-a_0a_2)x}{a_1-a_2x}.
+\end{split}
+\end{equation}
 Die Nullstelle von \(f\) ist gesucht, und die Approximation
 muss dort auch ungefähr null sein. Setzt man also \(R[1,1](x)=0\),
 so folgt
-\begin{gather*}
+\begin{equation}
 0=a_0a_1+(a_1^2-a_0a_2)x.
-\end{gather*}
+\end{equation}
 Ersetzt man noch \(x\) gegen \(x-x_0\) und formt danach um,
 so erhält man
-\begin{gather*}
+\begin{equation}
 x=x_0-\frac{a_0a_1}{a_1^2-a_0a_2}.
-\end{gather*}
+\end{equation}
 Ausgeschrieben bekommt man also \(x=\varphi(x_0)\) mit
-\begin{gather*}
+\begin{equation}
 \varphi(x) = x-\frac{2f(x)f'(x)}{2f'(x)^2-f(x)f''(x)}.
-\end{gather*}
+\end{equation}
 Das Halley"=Verfahren ist dann die Fixpunktiteration
 \(x_{n+1}=\varphi(x_n)\).
 Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
