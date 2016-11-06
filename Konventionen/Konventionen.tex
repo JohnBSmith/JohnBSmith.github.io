@@ -1,0 +1,161 @@
+\documentclass[a4paper,11pt,fleqn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,60}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{huge}
+\noindent
+\textbf{Empfehlungen zum mathematischen Sprachgebrauch}
+\par
+\end{huge}
+
+\tableofcontents
+
+\subsection*{Vorwort}
+Dieses Dokument beschreibt Empfehlungen zum mathematischen
+Sprachgebrauch. Darin enthalten sind sowohl Schreibweisen als
+auch inhaltliche Definitionen. Die Empfehlungen stehen niemals
+in der Luft, sondern werden immer vollständig begründet.
+Das Dokument ist nicht dogmatisch zu verstehen.
+
+\section{Geometrie und lineare Algebra}
+\subsection{Notation für Quadranten}
+Im ebenen kartesischen Koordinatensystem werden Quadranten für
+gewöhnlich gegen den Uhrzeitsinn mit den römischen Zahlen
+I, II, III, IV nummeriert. Man startet bei $x>0$, $y>0$.
+
+Diese Praxis erscheint mir äußert fragwürdig, weil sie in höheren
+Dimensionen sehr unübersichtlich wird. Außerdem ist nicht von
+vornherein klar, ob im oder gegen den Uhrzeitsinn nummeriert wird.
+Weiterhin ist nicht von vornherein klar, in welchem Quadrant
+die Nummerierung gestartet wird.
+
+Ich schlage deshalb vor, die Quadranten durch PP, NP, NN, PN
+zu identifizieren. Hierbei ist P als Abkürzung für \emph{positiv}
+und N als Abkürzung für \emph{negativ} gemeint. Diese Abkürzungen sind
+auch im Englischen und anderen europäischen Sprachen gültig.
+Die Stellen in der Identifikation stehen dabei für die Stellen
+im Koordinatentupel. Bei Oktanten hat man dementsprechend PPP, PPN
+usw.
+
+Weiterhin ergibt sich jetzt der Vorteil, dass die Halbebenen durch
+PX, NX, XP, XN dargestellt werden können.
+
+\subsection{Notation für Skalarprodukte}
+Für das Skalarprodukt zweier Vektoren $v,w$ gibt es eine Vielzahl von
+Schreibweisen, die Verwendung finden. Darunter sind $vw$, $v\circ w$,
+$v\cdot w$, $v\bullet w$, $v*w$ und $\langle v,w\rangle$,
+$(v,w)$, $[v,w]$. Außerdem gibt es noch $v|w$, $\langle v|w\rangle$,
+$(v|w)$, $[v|w]$.
+
+Ich schlage vor, $\langle v,w\rangle$ (einschließlich
+$\langle v|w\rangle$) als einzige Schreibweise zu verwenden.
+
+Das Skalarprodukt ist nicht assoziativ, und $\langle v,w\rangle$
+hebt diesen Mangel im Gegensatz zu Schreibweisen mit Infixoperator
+hervor.
+
+Gegen die Schreibweisen $vw$ und $v\cdot w$ spricht, dass sie
+bei Funktionenräumen mit dem punktweisen Produkt verwechselt
+werden können. Außerdem wird mit $vw$ auch das Produkt einer
+Clifford-Algebra bezeichnet.
+
+Gegen die Schreibweise $v\circ w$ spricht, dass sie bei
+Funktionenräumen mit der Komposition verwechselt werden kann.
+
+Bei $(v,w)$ denkt man zuerst an ein Tupel, bei $[v,w]$
+an ein Tupel oder ein geschlossenes Intervall. Würde man diese
+Schreibweisen allgemein für Skalarprodukte verwenden, so wären sie
+stark überladen.
+
+\subsection{Adjungierte Matrix}
+Für die adjungierte Matrix von A wird manchmal die Notation $A^*$ ver-
+wendet. Bei dieser Notation besteht jedoch Verwechslungsgefahr mit
+der konjugierten Matrix $\overline{A}$ wo manchmal ebenfalls die
+Notation $A^*$ verwendet wird. 
+
+Die Notation mit dem Dolch, $A^\dagger$, finde ich nicht so schön,
+weil einige $A^t$ anstelle von $A^T$ für die transponierte Matrix
+benutzen. Im Drucksatz kann das noch unterschieden werden,
+aber bei Handschrift kann es schlimm sein.
+
+Ich finde die Notation $A^H$ für die adjungierte Matrix daher
+am besten. Die Notationen $A^H$ und $\overline{A}$ sind m.\,E.
+unmissverständlich.
+
+\subsection{Standardskalarprodukt}
+Ich würde das Standardskalarprodukt für $v,w\in\mathbb C^n$
+am besten semilinear im ersten Argument definieren:
+\begin{equation}
+\langle v,w\rangle := \sum_{k=1}^{n} \overline{v_k}\,w_k.
+\end{equation}
+Diese Variante ist kompatibel mit der Bra-Ket-Notation.
+Nachteile sind mir keine bewusst.
+
+Das Standardskalarprodukt für die Fourieranalysis würde ich
+am besten durch
+\begin{equation}\label{eq:FourierSP}
+\langle f,g\rangle := \frac{1}{T}\int_{t_0}^{t_0+T}
+\overline{f(t)}\,g(t)\,\mathrm dt
+\end{equation}
+definieren. Mit $T$ ist die Periodendauer gemeint.
+
+Würde man den Normierungsfaktor $1/T$ weglassen, so würde
+$\|f\|:=\sqrt{\langle f,f\rangle}$ nicht mehr mit Formel
+für den klassischen Effektivwert übereinstimmen.
+
+Würde man den Normierungsfaktor $1/T$ weglassen, so könnte man
+nicht einfach schreiben:
+\begin{equation}
+f(t) = \sum_{k=-\infty}^\infty \langle b_k,f\rangle b_k(t).
+\qquad (b_k(t):=\ee^{k\ui t})
+\end{equation}
+Man müsste dann schreiben:
+\begin{equation}
+f(t) = \sum_{k=-\infty}^{\infty} \langle b_k,f\rangle b_k(t).
+\qquad(b_k(t):=\tfrac{1}{\sqrt{T}}\ee^{k\ui t})
+\end{equation}
+Das Problem ist hier jetzt, dass es sich bei $c_k:=\langle b_k,f\rangle$
+nicht mehr um den klassischen Fourierkoeffizienten handelt, weil
+der Faktor $\sqrt{T}$ herumgegeben wird.
+
+Eine weitere Alternative ist
+\begin{equation}
+\langle f,g\rangle := \int_0^1 \overline{f(x)}\,g(x)\,\mathrm dx.
+\end{equation}
+Hier müsste man $b_k(x):=\ee^{k\ui Tx}$ verwenden. Diese Variante
+scheint unüblich zu sein. Sie ist aber kompatibel zu
+\eqref{eq:FourierSP}, wenn man alle beteiligten Funktionen
+und Operatoren in $x$ mit $t=Tx$ darstellt.
+
+Semilinear im ersten Argument ist das Skalarprodukt deshalb, weil
+diese Variante kompatibel zur Bra-Ket-Notation ist. Nachteile sind
+mir keine bekannt.
+
+\section{Analysis}
+\subsection{Differenz von Funktionswerten}
+Für Differenz $F(b)-F(a)$ finde ich die Notation $[F(x)]_a^b$
+am besten. Wenn man ganz pedantisch ist, so bemerkt man, dass
+$x$ im Ausdruck eine gebundene Variable ist und schreibt besser
+$[F(x)]_{x=a}^{x=b}$.
+
+Die Notation $F(x)|_a^b$ finde ich ambivalent. Man muss z.B.
+\[[2+F(x)]_a^b = (2+F(b))-(2+F(a)) = F(b)-F(a)\]
+von
+\[2+[F(x)]_a^b = 2+F(b)-F(a)\]
+unterscheiden können. Bei der Notation $F(x)|_a^b$ müsste
+man dafür extra ein Paar Klammern setzen.
+
+\end{document}
+
+
