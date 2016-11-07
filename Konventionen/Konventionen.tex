@@ -83,6 +83,115 @@ implementiert ist.
 Wenn ein positiver Winkel gefordert wird, muss man
 anschließend nur $2\pi$ zu $\varphi$ addieren.
 
+
+\subsection{Kugelkoordinaten}
+
+Kugelkoordinaten können verwirrend sein, weil es verschiedene
+Bezeichnungs- und Darstellungskonventionen gibt. Anstelle sich auf eine
+Darstellungskonvention festzulegen, will ich hier alle Konventionen
+miteinander verbinden. Das hört sich jetzt kompliziert an. Aber in
+diesem Fall kommt nach kompliziert tatsächlich einfach.
+
+Mit $\lambda$ bezeichnen wir die Länge (in der Astronomie der
+Azimutwinkel). Man definiert für gewöhnlich $0\le\lambda<2\pi$ oder
+$-\pi<\lambda\le\pi$. Welche der beiden Festlegungen man verwendet,
+ist eigentlich belanglos, weil Winkel eigentlich nur modulo $2\pi$
+bestimmt sind und man bei negativen Winkeln daher $2\pi$ addieren
+kann, wenn man will.
+
+Mit $\beta$ bezeichnen wir die Breite. Man definiert
+$-\pi/2\le\beta\le\pi/2$.
+Außerdem bezeichnen wir mit $\theta$ die Kobreite (auch Polarwinkel
+genannt). Es gilt $\theta=\pi/2-\beta$ und $0\le\theta\le\pi$.
+
+Man geht also zuerst mit $\lambda$ auf dem Äquator entlang und
+bewegt sich dann mit $\beta$ nach oben oder unten. Alternativ
+kommt man mit $\theta$ vom Nordpol (in der Astronomie der Zenit)
+herunter.
+
+Mit $r$ wird der Radius der Kugel bezeichnet. Mit $r_{xy}$ wird
+der Radius bezeichnet, welcher sich bei der Projektion eines Punktes
+der Kugeloberfläche auf die $xy$-Ebene ergibt. Das ist eine
+Hilfsgröße, die gleich gebraucht wird.
+
+Für das Dreieck in der $xy$-Ebene gilt nun
+\begin{equation}
+  \begin{split}
+  x &= r_{xy}\cos\lambda,\\
+  y &= r_{xy}\sin\lambda.
+  \end{split}
+\end{equation}
+Die $z$-Achse und der Radiusvektor zu $r$ spannen ein
+Dreieck auf. Für dieses gilt
+\begin{equation}
+  \begin{split}
+  z &= r\cos\theta,\\
+  r_{xy} &= r\sin\theta.
+  \end{split}
+\end{equation}
+Wenn man beide Formeln kombiniert, so erhält man
+\begin{equation}
+  \begin{split}
+  x &= r\cos\lambda\sin\theta,\\
+  y &= r\sin\lambda\sin\theta,\\
+  z &= r\cos\theta.
+  \end{split}
+\end{equation}
+Man sollte sich die Formeln $\sin(\pi/2-x)=\cos x$
+und $\cos(\pi/2-x)=\sin x$ merken. Wenn man diese benutzt, so
+ergibt sich sofort die alternative Darstellung
+\begin{equation}
+  \begin{split}
+  x &= r\cos\lambda\cos\beta,\\
+  y &= r\sin\lambda\cos\beta,\\
+  z &= r\sin\beta.
+  \end{split}
+\end{equation}
+Für $\lambda=\mathrm{const}$ erhält man Längenhalbkreise, für
+$\beta=\mathrm{const}$ Breitenkreise.
+
+Ich erachte es als besser, die unterschiedlichen Konventionen so
+darzustellen, dass sie ohne Konflikte verbunden werden können.
+Anstelle von zwei Variablen wurden daher die drei Variablen
+$\lambda,\beta,\theta$ definiert.
+
+Oft wird auch die Bezeichnung $\varphi=\lambda$ verwendet.
+Das kommt daher, dass in der $xy$-Ebene die Polarkoordinaten
+mit der Transformation
+\begin{equation}
+  \begin{split}
+  x &= r_{xy}\cos\varphi,\\
+  y &= r_{xy}\sin\varphi
+  \end{split}
+\end{equation}
+enthalten sind. Das $\varphi$ steht hierbei für \emph{Phase}.
+
+Es stellt sich noch die Frage, welche Reihenfolge man für die
+Funktionsargumente verwendet. Sollte man die oft in
+der Physik anzutreffende Reihenfolge $f(r,\theta,\varphi)$
+mit $\varphi=\lambda$ übernehmen? Wesentlich vernünftiger ist m.\,E.
+die Reihenfolge $f(r,\varphi,\theta)$. Das harmoniert besser mit
+den Hyperkugelkoordinaten. Im $n$-dimensionalen Raum ergibt sich
+nämlich
+\begin{equation}\label{eq:Hyperkugel}
+f(r,\varphi,\theta_1,\theta_2,\ldots,\theta_{n-2}),
+\end{equation}
+wobei sich das Intervall für $\varphi$ über einen Vollkreis
+erstreckt, die Intervalle für die $\theta_k$ aber nur jeweils
+über einen Halbkreis.
+
+Außerdem hat man bei Zylinderkoordinaten auch immer die
+Reihenfolge%
+\begin{equation}\label{eq:Zylinder}
+f(r,\varphi,z)
+\end{equation}
+und nicht $f(r,z,\varphi)$.
+
+Bei ebenen Polarkoordinaten ergibt sich $f(r,\varphi)$
+außerdem als Spezialfall von \eqref{eq:Hyperkugel}
+und als Bestandteil von \eqref{eq:Zylinder}.
+
+
 \subsection{Notation für Skalarprodukte}
 Für das Skalarprodukt zweier Vektoren $v,w$ gibt es eine Vielzahl von
 Schreibweisen, die Verwendung finden. Darunter sind $vw$, $v\circ w$,
@@ -214,7 +323,7 @@ Das ist sehr langatmig. Deshalb schlage ich die Kurznotation
 [x{=}]\quad b_0+\frac{a_1}{b_1+x},\,\frac{a_2}{b_2+x},\,\ldots,\,
 \frac{a_n}{b_n+x},\,x_0
 \end{equation}
-vor. Ist nun $T_k\colon X\to X$ irgendeine Funktion, so
+vor. Sind nun die Funktionen $T_k\colon X\to X$ gegeben, so
 kann man schreiben
 \begin{equation}
 \begin{split}
