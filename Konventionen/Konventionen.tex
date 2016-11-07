@@ -9,6 +9,7 @@
 
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
+\renewcommand*\ttdefault{pcr}
 
 \begin{document}
 \thispagestyle{empty}
@@ -31,12 +32,12 @@ Das Dokument ist nicht dogmatisch zu verstehen.
 \section{Geometrie und lineare Algebra}
 \subsection{Notation für Quadranten}
 Im ebenen kartesischen Koordinatensystem werden Quadranten für
-gewöhnlich gegen den Uhrzeitsinn mit den römischen Zahlen
+gewöhnlich gegen den Uhrzeigersinn mit den römischen Zahlen
 I, II, III, IV nummeriert. Man startet bei $x>0$, $y>0$.
 
 Diese Praxis erscheint mir äußert fragwürdig, weil sie in höheren
 Dimensionen sehr unübersichtlich wird. Außerdem ist nicht von
-vornherein klar, ob im oder gegen den Uhrzeitsinn nummeriert wird.
+vornherein klar, ob im oder gegen den Uhrzeigersinn nummeriert wird.
 Weiterhin ist nicht von vornherein klar, in welchem Quadrant
 die Nummerierung gestartet wird.
 
@@ -51,6 +52,37 @@ usw.
 Weiterhin ergibt sich jetzt der Vorteil, dass die Halbebenen durch
 PX, NX, XP, XN dargestellt werden können.
 
+\subsection{Polarkoordinaten}
+Seien $(x,y)$ die kartesischen Koordinaten und $(r,\varphi)$
+die Polarkoordinaten. Die Berechnung von $\varphi$ in
+Abhängigkeit von $x,y$ geschieht m.\,E. entweder nach
+einem umständlichen Algorithmus oder fehlerhaft.
+Folgende Formel lässt sich jedoch leicht merken und deckt
+alle Fälle ab:
+\begin{equation}
+\varphi = \overline{\mathrm{sgn}}(y)\,\arccos\Big(\frac{x}{r}\Big).
+\end{equation}
+Hierbei ist $\overline{\mathrm{sgn}}$ die rechtsstetige
+Signumfunktion. Sie ist definiert durch
+\begin{equation}
+\overline{\mathrm{sgn}}(x):=
+\begin{cases}
+x{\ge}0\colon\,1,\\
+x{<}0\colon\,{-}1.
+\end{cases}
+\end{equation}
+Oder alternativ via Iverson-Klammern:
+\begin{equation}
+\overline{\mathrm{sgn}}(x):=[x{\ge}0]-[x{<}0].
+\end{equation}
+Steht ein Computer zur Verfügung, und das ist der Normalfall geworden,
+so wird man direkt oder indirekt \verb|atan2(y,x)| verwenden.
+Man kann sich darauf verlassen dass \verb|atan2| möglichst präzise
+implementiert ist.
+
+Wenn ein positiver Winkel gefordert wird, muss man
+anschließend nur $2\pi$ zu $\varphi$ addieren.
+
 \subsection{Notation für Skalarprodukte}
 Für das Skalarprodukt zweier Vektoren $v,w$ gibt es eine Vielzahl von
 Schreibweisen, die Verwendung finden. Darunter sind $vw$, $v\circ w$,
@@ -60,6 +92,8 @@ $(v|w)$, $[v|w]$.
 
 Ich schlage vor, $\langle v,w\rangle$ (einschließlich
 $\langle v|w\rangle$) als einzige Schreibweise zu verwenden.
+Hat man nur Plain-Text zur Verfügung (z.B. im Chat), so
+kann man \verb|<v,w>| schreiben.
 
 Das Skalarprodukt ist nicht assoziativ, und $\langle v,w\rangle$
 hebt diesen Mangel im Gegensatz zu Schreibweisen mit Infixoperator
@@ -78,9 +112,9 @@ an ein Tupel oder ein geschlossenes Intervall. Würde man diese
 Schreibweisen allgemein für Skalarprodukte verwenden, so wären sie
 stark überladen.
 
-\subsection{Adjungierte Matrix}
-Für die adjungierte Matrix von A wird manchmal die Notation $A^*$ ver-
-wendet. Bei dieser Notation besteht jedoch Verwechslungsgefahr mit
+\subsection{Notation für adjungierte Matrizen}
+Für die adjungierte Matrix von A wird manchmal die Notation $A^*$
+verwendet. Bei dieser Notation besteht jedoch Verwechslungsgefahr mit
 der konjugierten Matrix $\overline{A}$ wo manchmal ebenfalls die
 Notation $A^*$ verwendet wird. 
 
@@ -88,10 +122,15 @@ Die Notation mit dem Dolch, $A^\dagger$, finde ich nicht so schön,
 weil einige $A^t$ anstelle von $A^T$ für die transponierte Matrix
 benutzen. Im Drucksatz kann das noch unterschieden werden,
 aber bei Handschrift kann es schlimm sein.
+Gegen den Dolch spricht weiter, dass diese Notation nicht
+verwendet werden kann, wenn man nur Plain-Text zur Verfügung
+hat.
 
 Ich finde die Notation $A^H$ für die adjungierte Matrix daher
 am besten. Die Notationen $A^H$ und $\overline{A}$ sind m.\,E.
-unmissverständlich.
+unmissverständlich. Hat man nur Plain-Text zur Verfügung
+(z.B. im Chat), so kann man \verb|A^H| und \verb|conj(A)|
+schreiben.
 
 \subsection{Standardskalarprodukt}
 Ich würde das Standardskalarprodukt für $v,w\in\mathbb C^n$
@@ -155,6 +194,66 @@ von
 \[2+[F(x)]_a^b = 2+F(b)-F(a)\]
 unterscheiden können. Bei der Notation $F(x)|_a^b$ müsste
 man dafür extra ein Paar Klammern setzen.
+
+\subsection{Notation für Kettenbrüche}
+Man schreibt für gewöhnlich
+\begin{equation}
+b_0 + \frac{a_1|}{|b_1} + \frac{a_2|}{|b_2} + \ldots
+\quad:=\quad b_0+\frac{a_1}{b_1+\frac{a_2}{b_2+\ldots}}.
+\end{equation}
+Diese Notation ist der Beschränkung unterworfen, dass sich damit
+nur Kettenbrüche, jedoch keine anderen Kettenausdrücke formulieren
+lassen. Man würde daher lieber notieren:
+\begin{equation}
+b_0+\Big(x\mapsto\frac{a_1}{b_1+x}\Big)
+\circ\Big(x\mapsto\frac{a_2}{b_2+x}\Big)
+\circ\ldots\circ\Big(x\mapsto\frac{a_n}{b_n+x}\Big)(x_0).
+\end{equation}
+Das ist sehr langatmig. Deshalb schlage ich die Kurznotation
+\begin{equation}
+[x{=}]\quad b_0+\frac{a_1}{b_1+x},\,\frac{a_2}{b_2+x},\,\ldots,\,
+\frac{a_n}{b_n+x},\,x_0
+\end{equation}
+vor. Ist nun $T_k\colon X\to X$ irgendeine Funktion, so
+kann man schreiben
+\begin{equation}
+\begin{split}
+& [x{=}]\quad T_1(x),\,T_2(x),\,\ldots,\,T_n(x),\,x_0\\
+&= (T_1\circ T_2\circ\ldots\circ T_n)(x_0).
+\end{split}
+\end{equation}
+Alternativ gibt es noch
+\begin{equation}
+\begin{split}
+& [{=}x]\quad x_0,\, T_1(x),\, T_2(x),\,\ldots,\, T_n(x)\\
+&= (T_n\circ\ldots\circ T_2\circ T_1)(x_0).
+\end{split}
+\end{equation}
+
+
+\section{Algebra}
+\subsection{Notation für Körpererweiterungen}
+
+Ich schlage für Körpererweiterungen die Notation $L/\!/K$
+vor.
+
+Körpererweiterungen werden zuweilen durch $L/K$ notiert, um
+auszudrücken, dass $L$ ein Erweiterungskörper von $K$ ist.
+Man denkt sich dabei, dass $L$ über $K$ steht. Die Notation
+$M/A$ ist aber eigentlich schon für Quotientenmengen vergeben,
+wenn durch $A$ auf irgendeine Art eine Äquivalenzrelation
+gegeben ist. Sowohl Quotientenmengen also auch Körpererweiterungen
+kommen ausgerechnet in der Algebra sehr häufig vor.
+Um die Dringlichkeit deutlich zu machen, hier ein Beispiel
+wo beides in einer Formel vorkommt:
+\begin{equation}
+\mathbb R[X]/(X^2+1)/\!/\mathbb R.
+\end{equation}
+Man könnte auch auf die Idee kommen, einen Körpererweiterung
+durch $K\le L$ zu symbolisieren, weil ja $K\subseteq L$ ist.
+Das ist aber eine schlechte Idee, weil hiermit schon
+Untergruppenbeziehungen symbolisiert werden und Körper ja
+additive Gruppenstruktur enthalten.
 
 \end{document}
 
