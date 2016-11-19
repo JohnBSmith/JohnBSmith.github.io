@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,fleqn,onecolumn,twoside]{book}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,openany]{book}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -30,14 +30,18 @@
 \newenvironment{ttsection}{\ttfamily}{\par}
 \newcommand{\strong}[1]{\textbf{#1}}
 
+% table header bold font
+\newcommand{\thbf}[1]{\textbf{#1}}
+
 % \ui: imaginäre Einheit
 % \ue: Einheitsvektor
+% \ue: eulersche Zahl
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ue}{e}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\ee}{\mathrm e}
 
 \begin{document}
-% \thispagestyle{empty}
-
 \begin{titlepage}
 \centering
 \phantom{x}
@@ -49,6 +53,8 @@ Mathematik}}
 \vspace{2em}
 {\Large November 2016}\\
 \end{titlepage}
+
+\thispagestyle{empty}
 
 \noindent
 Dieses Buch ist unter der Lizenz\\
@@ -93,29 +99,80 @@ $\cos(x-y) = \cos x\cos y + \sin x\sin y$
 \end{ttsection}
 
 
-
 \tableofcontents
 
-\begin{multicols}{2}
+
+
 \chapter{Grundlagen}
 \section{Komplexe Zahlen}
 \subsection{Rechenoperationen}
 
 \begin{gather}
-z_1+z_2 = (a_1+a_2)+(b_1+b_2)\ui\\
-z_1-z_2 = (a_1-a_2)+(b_1-b_2)\ui\\
-z_1 z_2 = (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui\\
 \frac{z_1}{z_2}
-= \frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
-+ \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui\\
-\frac{1}{z} = \frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui
+= \frac{z_1\overline z_2}{z_2\overline z_2}
+= \frac{z_1\overline z_2}{|z_2|^2}\\
+\frac{1}{z} = \frac{\overline z}{z\overline z}
+= \frac{\overline z}{|z|^2}
 \end{gather}
 
-\end{multicols}
+\begin{table*}[t]
+\bgroup
+\def\arraystretch{1.4}
+\begin{tabular}{|r|l|l|l|}
+\hline
+  \thbf{Operation}
+& \thbf{Polarform}
+& \thbf{kartesische Form}
+& \thbf{Name}\\
+\hline
+  $z_1+z_2$ &
+& $= (a_1+a_2)+(b_1+b_2)\ui$
+& Addition\\
+\hline
+$z_1-z_2$ &
+& $= (a_1-a_2)+(b_1-b_2)\ui$
+& Subtraktion\\
+\hline
+  $z_1 z_2$
+& $= r_1 r_2 \ee^{\ui(\varphi_1+\varphi_2)}$
+& $= (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui$
+& Multiplikation\\
+\hline
+  $\displaystyle\frac{z_1}{z_2}$
+& $\displaystyle =\frac{r_1}{r_2}\ee^{\ui(\varphi_1-\varphi_2)}$
+& $\displaystyle =\frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
+   + \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui$
+& Division\\
+\hline
+  $\displaystyle\frac{1}{z}$
+& $\displaystyle =\frac{1}{r}\ee^{-\ui\varphi}$
+& $\displaystyle =\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$
+& Kehrwert\\
+\hline
+  $\operatorname{Re}(z)$
+& $=\cos\varphi$
+& $=a$
+& Realteil\\
+\hline
+  $\operatorname{Re}(z)$
+& $=\sin\varphi$
+& $=b$
+& Imaginärteil\\
+\hline
+  $\overline{z}$
+& $=r\ee^{-\varphi\ui}$
+& $=a-b\ui$
+& Konjugation\\
+\hline
+\end{tabular}
+\egroup
+\end{table*}
+
 \section{Mengenlehre}
 \subsection{Boolesche Algebra}
+\begin{table*}[t]
 \begin{tabular}{l|l|l}
-\strong{Vereinigung} & \strong{Schnitt} &\\
+\thbf{Vereinigung} & \thbf{Schnitt} &\\
   $A\cup A = A$
 & $A\cap A = A$
 & Idempotenzgesetze\\
@@ -141,10 +198,10 @@ z_1 z_2 = (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui\\
   $A\cup (A\cap B) = A$
 & $A\cap (A\cup B) = A$
 & Absorptionsgesetze\\
-\end{tabular}
-\begin{multicols}{2}
-\noindent
-$G$: Grundmenge\\
+\end{tabular}\\
+\\
+$G$: Grundmenge
+\end{table*}
 
 \noindent
 \strong{Distributivgesetze}:
@@ -169,9 +226,46 @@ Kontraposition:
 \begin{equation}
 A\subseteq B = \overline B\subseteq \overline A
 \end{equation}
-\end{multicols}
 
 \chapter{Anhang}
+\section{Mathematische Konstanten}
+\begin{enumerate}
+\item Kreiszahl\\
+$\pi = 3.14159\;26535\;89793\;23846\;26433\;83279\ldots$
+
+\item Eulersche Zahl\\
+$\ee = 2.71828\;18284\;59045\;23536\;02874\;71352\ldots$
+
+\item Euler-Mascheroni-Konstante\\
+$\gamma = 0.57721\;56649\;01532\;86060\;65120\;90082\ldots$
+
+\item Goldener Schnitt, $(1+\sqrt{5})/2$\\
+$\varphi = 1.61803\;39887\;49894\;84820\;45868\;34365\ldots$
+
+\item 1. Feigenbaum-Konstante\\
+$\delta = 4.66920\;16091\;02990\;67185\;32038\;20466\ldots$
+
+\item 2. Feigenbaum-Konstante\\
+$\alpha = 2.50290\;78750\;95892\;82228\;39028\;73218\ldots$
+\end{enumerate}
+
+\section{Physikalische Konstanten}
+
+\begin{enumerate}
+\item Lichtgeschwindigkeit im Vakuum\\
+$c=299\:792\:458\:\unit{m/s}$
+
+\item Elektrische Feldkonstante\\
+$\varepsilon_0 = 8.854\:187\:817\:620\:39\times 10^{-12}\:\unit{F/m}$
+
+\item Magnetische Feldkonstante\\
+$\mu_0 = 4\pi\times 10^{-7}\:\unit{H/m}$
+
+\item Elementarladung\\
+$e = 1.602\:176\:6208(98)\times 10^{-19}\:\unit{C}$
+\end{enumerate}
+
+\newpage
 \section{Griechisches Alphabet}
 
 \begin{tabular}{l|l}
