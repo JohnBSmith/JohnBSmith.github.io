@@ -1,0 +1,123 @@
+\documentclass[a4paper,10pt,fleqn,onecolumn,twoside]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage[toc]{multitoc}
+\setcounter{secnumdepth}{4}
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+  {\normalfont\huge\bfseries}{\thechapter}{1em}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{10pt}
+\titleformat{\section}[block]
+  {\normalfont\Large\bfseries}{\thesection}{1em}{\Large}
+\titleformat{\subsection}[block]
+  {\normalfont\large\bfseries}{\thesubsection}{1em}{\large}
+\titleformat{\subsubsection}[block]
+  {\normalfont\large\bfseries}{\thesubsubsection}{1em}{\large}
+
+\numberwithin{equation}{chapter}
+\newcommand{\strong}[1]{\textbf{#1}}
+
+% \ui: imaginäre Einheit
+% \ue: Einheitsvektor
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ue}{e}
+
+\begin{document}
+
+\section*{Formelsammlung\\
+Mathematik}
+Rumil, 2016\\
+Lizenz: CC0
+
+\tableofcontents
+
+\begin{multicols}{2}
+\chapter{Grundlagen}
+\section{Komplexe Zahlen}
+\subsection{Rechenoperationen}
+
+\begin{gather}
+z_1+z_2 = (a_1+a_2)+(b_1+b_2)\ui\\
+z_1-z_2 = (a_1-a_2)+(b_1-b_2)\ui\\
+z_1 z_2 = (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui\\
+\frac{z_1}{z_2}
+= \frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
++ \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui\\
+\frac{1}{z} = \frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui
+\end{gather}
+
+\end{multicols}
+\section{Mengenlehre}
+\subsection{Boolesche Algebra}
+\begin{tabular}{l|l|l}
+\strong{Vereinigung} & \strong{Schnitt} &\\
+  $A\cup A = A$
+& $A\cap A = A$
+& Idempotenzgesetze\\
+  $A\cup \{\} = A$
+& $A\cap G = A$
+& Neutralitätsgesetze\\
+  $A\cup G = G$
+& $A\cap \{\} = \{\}$
+& Extremalgesetze\\
+  $A\cup \overline A = G$
+& $A\cap \overline A = \{\}$
+& Komplementärgesetze\\
+\noalign{\vspace{1em}}
+  $A\cup B = B\cup A$
+& $A\cap B = B\cap A$
+& Kommutativgesetze\\
+  $(A\cup B)\cup C = A\cup (B\cup C)$
+& $(A\cap B)\cap C = A\cap (B\cap C)$
+& Assoziativgesetze\\
+  $\overline{A\cup B} = \overline A\cap\overline B$
+& $\overline{A\cap B} = \overline A\cup\overline B$
+& De Morgansche Regeln\\
+  $A\cup (A\cap B) = A$
+& $A\cap (A\cup B) = A$
+& Absorptionsgesetze\\
+\end{tabular}
+\begin{multicols}{2}
+\noindent
+$G$: Grundmenge\\
+
+\noindent
+\strong{Distributivgesetze}:
+\begin{gather}
+M\cup (A\cap B) = (M\cup A)\cap (M\cup B)\\
+M\cap (A\cup B) = (M\cap A)\cup (M\cap B)
+\end{gather}
+\subsection{Teilmengenrelation}
+Zerlegung der Gleichheit:
+\begin{equation}
+A=B \iff A\subseteq B \land B\subseteq A
+\end{equation}
+Umschreibung der Teilmengenrelation:
+\begin{equation}
+\begin{split}
+A\subseteq B &\iff A\cap B=A\\
+& \iff A\cup B=B\\
+& \iff A\setminus B=\{\}
+\end{split}
+\end{equation}
+Kontraposition:
+\begin{equation}
+A\subseteq B = \overline B\subseteq \overline A
+\end{equation}
+\end{multicols}
+
+\end{document}
+
+
