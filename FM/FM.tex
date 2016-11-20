@@ -9,29 +9,51 @@
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
-\setlength{\columnsep}{6mm}
+\geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{4mm}
 \usepackage{lipsum}
 \usepackage{multicol}
+
 \usepackage[toc]{multitoc}
 \setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{2}
+\usepackage{tocloft}
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsubsecindent}{23pt}
+\setlength{\cftsubsubsecindent}{55pt}
+\renewcommand{\cftchapfont}{\normalfont\sffamily\bfseries}
+\renewcommand{\cftsecfont}{\normalfont\sffamily}
+\renewcommand{\cftsubsecfont}{\normalfont\sffamily}
+\renewcommand\cftchappagefont{\normalfont\sffamily\bfseries}
+\renewcommand\cftsecpagefont{\normalfont\sffamily}
+\renewcommand\cftsubsecpagefont{\normalfont\sffamily}
+
 \usepackage{titlesec}
 \titleformat{\chapter}[block]
-  {\normalfont\huge\bfseries}{\thechapter}{1em}{\Huge}
-\titlespacing*{\chapter}{0pt}{0pt}{10pt}
+  {\normalfont\sffamily\huge\bfseries}{\thechapter}{1em}{\Huge}
 \titleformat{\section}[block]
-  {\normalfont\Large\bfseries}{\thesection}{1em}{\Large}
+  {\normalfont\sffamily\Large\bfseries}{\thesection}{1em}{\Large}
 \titleformat{\subsection}[block]
-  {\normalfont\large\bfseries}{\thesubsection}{1em}{\large}
+  {\normalfont\sffamily\large\bfseries}{\thesubsection}{1em}{\large}
 \titleformat{\subsubsection}[block]
-  {\normalfont\large\bfseries}{\thesubsubsection}{1em}{\large}
+  {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
+
+\titlespacing*{\chapter}{0pt}{0pt}{10pt}
+\titlespacing*{\section}{0pt}{0pt}{4pt}
+\titlespacing*{\subsection}{0pt}{2pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{2pt}{2pt}
+
+\usepackage[justification=RaggedRight,singlelinecheck=off]{caption}
 
 \numberwithin{equation}{chapter}
+
+\renewcommand{\baselinestretch}{0.90}
+
 \newenvironment{ttsection}{\ttfamily}{\par}
-\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\strong}[1]{{\sffamily\bfseries #1}}
 
 % table header bold font
-\newcommand{\thbf}[1]{\textbf{#1}}
+\newcommand{\thbf}[1]{{\sffamily\bfseries #1}}
 
 % \ui: imaginäre Einheit
 % \ue: Einheitsvektor
@@ -42,12 +64,17 @@
 \newcommand{\ee}{\mathrm e}
 
 \begin{document}
+\setlength{\abovedisplayskip}{6pt}
+\setlength{\belowdisplayskip}{6pt}
+\setlength{\abovedisplayshortskip}{6pt}
+\setlength{\belowdisplayshortskip}{6pt}
+
 \begin{titlepage}
 \centering
 \phantom{x}
 
 \vspace{20em}
-{\noindent\Huge\textbf{Formelsammlung\\
+{\noindent\Huge\sffamily\textbf{Formelsammlung\\
 Mathematik}}
 
 \vspace{2em}
@@ -98,319 +125,12 @@ $\cos(x-y) = \cos x\cos y + \sin x\sin y$
 \end{tabular}
 \end{ttsection}
 
-
+\renewcommand{\contentsname}{\sffamily Inhaltsverzeichnis}
 \tableofcontents
 
+\input{Grundlagen.tex}
+\input{Anhang.tex}
 
-
-\chapter{Grundlagen}
-\section{Komplexe Zahlen}
-\subsection{Rechenoperationen}
-
-\begin{gather}
-\frac{z_1}{z_2}
-= \frac{z_1\overline z_2}{z_2\overline z_2}
-= \frac{z_1\overline z_2}{|z_2|^2},\\
-\frac{1}{z} = \frac{\overline z}{z\overline z}
-= \frac{\overline z}{|z|^2}.
-\end{gather}
-
-\subsection{Betrag}
-Für alle $z_1,z_2\in\mathbb C$ gilt:
-\begin{gather}
-|z_1z_2| = |z_1|\,|z_2|,\\
-z_2\ne 0\implies \Big|\frac{z_1}{z_2}\Big|
-= \frac{|z_1|}{|z_2|},\\
-z\,\overline z = |z|^2.
-\end{gather}
-
-\subsection{Konjugation}
-Für alle $z_1,z_2\in\mathbb C$ gilt:
-\begin{gather}
-\overline{z_1+z_2} = \overline z_1+\overline z_2,\qquad
-\overline{z_1-z_2} = \overline z_1-\overline z_2,\\
-\overline{z_1 z_2} = \overline z_1\,\overline z_2,\qquad
-z_2\ne 0 \implies \overline{\Big(\frac{z_1}{z_2}\Big)}
-= \frac{\overline z_1}{\overline z_2},\\
-\overline{\overline z}=z,\qquad
-|\overline{z}| = |z|,\qquad
-z\,\overline z = |z|^2,\\
-\operatorname{Re}(z) = \frac{z+\overline z}{2},\qquad
-\operatorname{Im}(z) = \frac{z-\overline z}{2\ui},\\
-\overline{\cos(z)} = \cos(\overline z),\qquad
-\overline{\sin(z)} = \sin(\overline z),\\
-\overline{\exp(z)} = \exp(\overline z).
-\end{gather}
-
-\begin{table*}[t]
-\bgroup
-\def\arraystretch{1.4}
-\begin{tabular}{|l|r|l|l|}
-\hline
-  \thbf{Name}
-& \thbf{Operation}
-& \thbf{Polarform}
-& \thbf{kartesische Form}\\
-\hline
-  Identität
-& $z$ & $=r\ee^{\ui\varphi}$
-& $= a+b\ui$\\
-\hline
-  Addition
-& $z_1+z_2$ &
-& $= (a_1+a_2)+(b_1+b_2)\ui$\\
-\hline
-  Subtraktion
-& $z_1-z_2$ &
-& $= (a_1-a_2)+(b_1-b_2)\ui$\\
-\hline
-  Multiplikation
-& $z_1 z_2$
-& $= r_1 r_2 \ee^{\ui(\varphi_1+\varphi_2)}$
-& $= (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui$\\
-\hline
-  Division
-& $\displaystyle\frac{z_1}{z_2}$
-& $\displaystyle =\frac{r_1}{r_2}\ee^{\ui(\varphi_1-\varphi_2)}$
-& $\displaystyle =\frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
-   + \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui$\\
-\hline
-  Kehrwert
-& $\displaystyle\frac{1}{z}$
-& $\displaystyle =\frac{1}{r}\ee^{-\ui\varphi}$
-& $\displaystyle =\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\
-\hline
-  Realteil
-& $\operatorname{Re}(z)$
-& $=\cos\varphi$
-& $=a$\\
-\hline
-  Imaginärteil
-& $\operatorname{Im}(z)$
-& $=\sin\varphi$
-& $=b$\\
-\hline
-  Konjugation
-& $\overline{z}$
-& $=r\ee^{-\varphi\ui}$
-& $=a-b\ui$\\
-\hline
-Betrag
-& $|z|$
-& $=r$
-& $=\sqrt{a^2+b^2}$\\
-\hline
-  Argument
-& $\arg(z)$
-& $=\varphi$
-& $=s(b)\arccos(a/r)$\\
-\hline
-\end{tabular}
-\egroup\\
-\\
-$s(b):=\begin{cases}
-+1 & \text{wenn}\;b\ge 0,\\
--1 & \text{wenn}\;b<0
-\end{cases}$
-\end{table*}
-
-\section{Mengenlehre}
-\subsection{Boolesche Algebra}
-\begin{table*}[t]
-\begin{tabular}{l|l|l}
-\thbf{Vereinigung} & \thbf{Schnitt} &\\
-  $A\cup A = A$
-& $A\cap A = A$
-& Idempotenzgesetze\\
-  $A\cup \{\} = A$
-& $A\cap G = A$
-& Neutralitätsgesetze\\
-  $A\cup G = G$
-& $A\cap \{\} = \{\}$
-& Extremalgesetze\\
-  $A\cup \overline A = G$
-& $A\cap \overline A = \{\}$
-& Komplementärgesetze\\
-\noalign{\vspace{1em}}
-  $A\cup B = B\cup A$
-& $A\cap B = B\cap A$
-& Kommutativgesetze\\
-  $(A\cup B)\cup C = A\cup (B\cup C)$
-& $(A\cap B)\cap C = A\cap (B\cap C)$
-& Assoziativgesetze\\
-  $\overline{A\cup B} = \overline A\cap\overline B$
-& $\overline{A\cap B} = \overline A\cup\overline B$
-& De Morgansche Regeln\\
-  $A\cup (A\cap B) = A$
-& $A\cap (A\cup B) = A$
-& Absorptionsgesetze\\
-\end{tabular}\\
-\\
-$G$: Grundmenge
-\end{table*}
-
-\noindent
-\strong{Distributivgesetze}:
-\begin{gather}
-M\cup (A\cap B) = (M\cup A)\cap (M\cup B)\\
-M\cap (A\cup B) = (M\cap A)\cup (M\cap B)
-\end{gather}
-
-\subsection{Teilmengenrelation}
-Zerlegung der Gleichheit:
-\begin{equation}
-A=B \iff A\subseteq B \land B\subseteq A
-\end{equation}
-Umschreibung der Teilmengenrelation:
-\begin{equation}
-\begin{split}
-A\subseteq B &\iff A\cap B=A\\
-& \iff A\cup B=B\\
-& \iff A\setminus B=\{\}
-\end{split}
-\end{equation}
-Kontraposition:
-\begin{equation}
-A\subseteq B = \overline B\subseteq \overline A
-\end{equation}
-
-\subsection{Induktive Mengen}
-Mengentheoretisches Modell der natürlichen Zahlen:
-\begin{equation}
-\begin{split}
-& 0:=\{\},\quad 1:=\{0\},\quad 2:=\{0,1\},\\
-& 3:=\{0,1,2\},\quad \text{usw.}
-\end{split}
-\end{equation}
-Nachfolgerfunktion:
-\begin{equation}
-x' := x\cup\{x\}
-\end{equation}
-Vollständige Induktion: Ist $A(n)$ mit $n\in\mathbb N$
-eine Aussageform, so gilt:
-\begin{equation}
-\begin{split}
-& A(n_0)\land \forall n\ge n_0\,[A(n)\Rightarrow A(n+1)]\\
-& \implies \forall n\ge n_0\,[A(n)].
-\end{split}
-\end{equation}
-
-\chapter{Anhang}
-\section{Mathematische Konstanten}
-\begin{enumerate}
-\item Kreiszahl\\
-$\pi = 3.14159\;26535\;89793\;23846\;26433\;83279\ldots$
-
-\item Eulersche Zahl\\
-$\ee = 2.71828\;18284\;59045\;23536\;02874\;71352\ldots$
-
-\item Euler-Mascheroni-Konstante\\
-$\gamma = 0.57721\;56649\;01532\;86060\;65120\;90082\ldots$
-
-\item Goldener Schnitt, $(1+\sqrt{5})/2$\\
-$\varphi = 1.61803\;39887\;49894\;84820\;45868\;34365\ldots$
-
-\item 1. Feigenbaum-Konstante\\
-$\delta = 4.66920\;16091\;02990\;67185\;32038\;20466\ldots$
-
-\item 2. Feigenbaum-Konstante\\
-$\alpha = 2.50290\;78750\;95892\;82228\;39028\;73218\ldots$
-\end{enumerate}
-
-\section{Physikalische Konstanten}
-
-\begin{enumerate}
-\item Lichtgeschwindigkeit im Vakuum\\
-$c=299\:792\:458\:\unit{m/s}$
-
-\item Elektrische Feldkonstante\\
-$\varepsilon_0 = 8.854\:187\:817\:620\:39\times 10^{-12}\:\unit{F/m}$
-
-\item Magnetische Feldkonstante\\
-$\mu_0 = 4\pi\times 10^{-7}\:\unit{H/m}$
-
-\item Elementarladung\\
-$e = 1.602\:176\:6208(98)\times 10^{-19}\:\unit{C}$
-\end{enumerate}
-
-\newpage
-\section{Griechisches Alphabet}
-
-\begin{tabular}{l|l}
-\begin{tabular}[t]{lll}
-$\mathrm A$ & $\alpha$   & Alpha\\
-$\mathrm B$ & $\beta$    & Beta\\
-$\Gamma$    & $\gamma$   & Gamma\\
-$\Delta$    & $\delta$   & Delta\\
-\noalign{\vspace{1em}}
-$\mathrm E$ & $\varepsilon$ & Epsilon\\
-$\mathrm Z$ & $\zeta$    & Zeta\\
-$\mathrm H$ & $\eta$     & Eta\\
-$\Theta$    & $\theta$   & Theta\\
-\noalign{\vspace{1em}}
-$\mathrm I$ & $\iota$    & Jota\\
-$\mathrm K$ & $\kappa$   & Kappa\\
-$\Lambda$   & $\lambda$  & Lambda\\
-$\mathrm M$ & $\mu$      & My
-\end{tabular}
-&
-\begin{tabular}[t]{lll}
-$\mathrm N$ & $\nu$      & Nu\\
-$\Xi$       & $\xi$      & Xi\\
-$\mathrm O$ & $o$        & Omikron\\
-$\Pi$       & $\pi$      & Pi\\
-\noalign{\vspace{1em}}
-$\mathrm R$ & $\rho$     & Rho\\
-$\Sigma$    & $\sigma$   & Sigma\\
-$\mathrm T$ & $\tau$     & Tau\\
-$\mathrm Y$ & $y$        & Ypsilon\\
-\noalign{\vspace{1em}}
-$\Phi$      & $\varphi$  & Phi\\
-$\mathrm X$ & $\chi$     & Chi\\
-$\Psi$      & $\psi$     & Psi\\
-$\Omega$    & $\omega$   & Omega 
-\end{tabular}
-\end{tabular}
-
-\section{Frakturbuchstaben}
-\begin{tabular}{l|l}
-\begin{tabular}[t]{l@{\hskip 2pt}ll@{\hskip 2pt}l}
-A & a & $\mathfrak A$ & $\mathfrak a$\\
-B & b & $\mathfrak B$ & $\mathfrak b$ \\
-C & c & $\mathfrak C$ & $\mathfrak c$\\
-D & d & $\mathfrak D$ & $\mathfrak d$\\
-\noalign{\vspace{1em}}
-E & e & $\mathfrak E$ & $\mathfrak e$\\
-F & f & $\mathfrak F$ & $\mathfrak f$\\
-G & g & $\mathfrak G$ & $\mathfrak g$\\
-H & h & $\mathfrak H$ & $\mathfrak h$\\
-\noalign{\vspace{1em}}
-I & i & $\mathfrak I$ & $\mathfrak i$\\
-J & j & $\mathfrak J$ & $\mathfrak j$\\
-K & k & $\mathfrak K$ & $\mathfrak k$\\
-L & l & $\mathfrak L$ & $\mathfrak l$\\
-\noalign{\vspace{1em}}
-M & m & $\mathfrak M$ & $\mathfrak m$\\
-N & n & $\mathfrak N$ & $\mathfrak n$
-\end{tabular}
-&
-\begin{tabular}[t]{l@{\hskip 2pt}ll@{\hskip 2pt}l}
-O & o & $\mathfrak O$ & $\mathfrak o$\\
-P & p & $\mathfrak P$ & $\mathfrak p$\\
-Q & q & $\mathfrak Q$ & $\mathfrak q$\\
-R & r & $\mathfrak R$ & $\mathfrak r$\\
-\noalign{\vspace{1em}}
-S & s & $\mathfrak S$ & $\mathfrak s$\\
-T & t & $\mathfrak T$ & $\mathfrak t$\\
-U & u & $\mathfrak U$ & $\mathfrak u$\\
-V & v & $\mathfrak V$ & $\mathfrak v$\\
-\noalign{\vspace{1em}}
-W & w & $\mathfrak W$ & $\mathfrak w$\\
-X & x & $\mathfrak X$ & $\mathfrak x$\\
-Y & y & $\mathfrak Y$ & $\mathfrak y$\\
-Z & z & $\mathfrak Z$ & $\mathfrak z$
-\end{tabular}
-\end{tabular}
 
 \end{document}
 

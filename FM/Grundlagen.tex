@@ -1,0 +1,340 @@
+
+\chapter{Grundlagen}
+\section{Komplexe Zahlen}
+\subsection{Rechenoperationen}
+
+\begin{gather}
+\frac{z_1}{z_2}
+= \frac{z_1\overline z_2}{z_2\overline z_2}
+= \frac{z_1\overline z_2}{|z_2|^2},\\
+\frac{1}{z} = \frac{\overline z}{z\overline z}
+= \frac{\overline z}{|z|^2}.
+\end{gather}
+
+\subsection{Betrag}
+Für alle $z_1,z_2\in\mathbb C$ gilt:
+\begin{gather}
+|z_1z_2| = |z_1|\,|z_2|,\\
+z_2\ne 0\implies \Big|\frac{z_1}{z_2}\Big|
+= \frac{|z_1|}{|z_2|},\\
+z\,\overline z = |z|^2.
+\end{gather}
+
+\subsection{Konjugation}
+Für alle $z_1,z_2\in\mathbb C$ gilt:
+\begin{gather}
+\overline{z_1+z_2} = \overline z_1+\overline z_2,\qquad
+\overline{z_1-z_2} = \overline z_1-\overline z_2,\\
+\overline{z_1 z_2} = \overline z_1\,\overline z_2,\qquad
+z_2\ne 0 \implies \overline{\Big(\frac{z_1}{z_2}\Big)}
+= \frac{\overline z_1}{\overline z_2},\\
+\overline{\overline z}=z,\qquad
+|\overline{z}| = |z|,\qquad
+z\,\overline z = |z|^2,\\
+\operatorname{Re}(z) = \frac{z+\overline z}{2},\qquad
+\operatorname{Im}(z) = \frac{z-\overline z}{2\ui},\\
+\overline{\cos(z)} = \cos(\overline z),\qquad
+\overline{\sin(z)} = \sin(\overline z),\\
+\overline{\exp(z)} = \exp(\overline z).
+\end{gather}
+
+\begin{table*}[t]
+\caption{Rechenoperationen}
+\bgroup
+\def\arraystretch{1.4}
+\begin{tabular}{|l|r|l|l|}
+\hline
+  \thbf{Name}
+& \thbf{Operation}
+& \thbf{Polarform}
+& \thbf{kartesische Form}\\
+\hline
+  Identität
+& $z$ & $=r\ee^{\ui\varphi}$
+& $= a+b\ui$\\
+\hline
+  Addition
+& $z_1+z_2$ &
+& $= (a_1+a_2)+(b_1+b_2)\ui$\\
+\hline
+  Subtraktion
+& $z_1-z_2$ &
+& $= (a_1-a_2)+(b_1-b_2)\ui$\\
+\hline
+  Multiplikation
+& $z_1 z_2$
+& $= r_1 r_2 \ee^{\ui(\varphi_1+\varphi_2)}$
+& $= (a_1 a_2 - b_1 b_2)+(a_1 b_2+a_2 b_1)\ui$\\
+\hline
+  Division
+& $\displaystyle\frac{z_1}{z_2}$
+& $\displaystyle =\frac{r_1}{r_2}\ee^{\ui(\varphi_1-\varphi_2)}$
+& $\displaystyle =\frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
+   + \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui$\\
+\hline
+  Kehrwert
+& $\displaystyle\frac{1}{z}$
+& $\displaystyle =\frac{1}{r}\ee^{-\ui\varphi}$
+& $\displaystyle =\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\
+\hline
+  Realteil
+& $\operatorname{Re}(z)$
+& $=\cos\varphi$
+& $=a$\\
+\hline
+  Imaginärteil
+& $\operatorname{Im}(z)$
+& $=\sin\varphi$
+& $=b$\\
+\hline
+  Konjugation
+& $\overline{z}$
+& $=r\ee^{-\varphi\ui}$
+& $=a-b\ui$\\
+\hline
+Betrag
+& $|z|$
+& $=r$
+& $=\sqrt{a^2+b^2}$\\
+\hline
+  Argument
+& $\arg(z)$
+& $=\varphi$
+& $\displaystyle =s(b)\arccos\Big(\frac{a}{r}\Big)$\\
+\hline
+\end{tabular}
+\egroup\\
+\\
+$s(b):=\begin{cases}
++1 & \text{wenn}\;b\ge 0,\\
+-1 & \text{wenn}\;b<0
+\end{cases}$
+\end{table*}
+
+
+
+\section{Logik}
+\subsection{Aussagenlogik}
+\subsubsection{Boolesche Algebra}
+\begin{table*}[t]
+\caption{Boolesche Algebra}
+\begin{tabular}{l|l|l}
+\thbf{Disjunktion} & \thbf{Konjunktion} &\\
+  $A\lor A \Leftrightarrow A$
+& $A\land A \Leftrightarrow A$
+& Idempotenzgesetze\\
+  $A\lor 0 \Leftrightarrow A$
+& $A\land 1 \Leftrightarrow A$
+& Neutralitätsgesetze\\
+  $A\lor 1 \Leftrightarrow 1$
+& $A\land 0 = 0$
+& Extremalgesetze\\
+  $A\lor \overline A \Leftrightarrow 1$
+& $A\land \overline A \Leftrightarrow 0$
+& Komplementärgesetze\\
+\noalign{\vspace{1em}}
+  $A\lor B \Leftrightarrow B\lor A$
+& $A\land B \Leftrightarrow B\land A$
+& Kommutativgesetze\\
+  $(A\lor B)\lor C \Leftrightarrow A\lor (B\lor C)$
+& $(A\land B)\land C \Leftrightarrow A\land (B\land C)$
+& Assoziativgesetze\\
+  $\overline{A\lor B} \Leftrightarrow \overline A\land\overline B$
+& $\overline{A\land B} \Leftrightarrow \overline A\lor\overline B$
+& De Morgansche Regeln\\
+  $A\lor (A\land B) \Leftrightarrow A$
+& $A\land (A\lor B) \Leftrightarrow A$
+& Absorptionsgesetze\\
+\end{tabular}
+\end{table*}
+
+\noindent
+\strong{Distributivgesetze}:
+\begin{gather}
+A\lor (B\land C) = (A\lor B)\land (A\lor C),\\
+A\land (B\lor C) = (A\land B)\lor (A\land C).
+\end{gather}
+
+\subsubsection{Zweistellige Funktionen}
+Es gibt 16 zweistellige boolesche\\
+Funktionen.
+
+\begin{tabular}{r|l}
+\textbf{\texttt{AB}} & \thbf{Wert}\\
+\texttt{00} & \texttt{a}\\
+\texttt{01} & \texttt{b}\\
+\texttt{10} & \texttt{c}\\
+\texttt{11} & \texttt{d}
+\end{tabular}
+
+\begin{tabular}{r|l|l|l}
+\thbf{Nr.}& \textbf{\texttt{dcba}} & \thbf{Fkt.} & \thbf{Name}\\
+ 0 & \texttt{0000} & 0 & Kontradiktion\\
+ 1 & \texttt{0001} & $\overline{A\lor B}$ & NOR\\
+ 2 & \texttt{0010} & $\overline{B\Rightarrow A}$\\
+ 3 & \texttt{0011} & $\overline A$\\
+ 4 & \texttt{0100} & $\overline{A\Rightarrow B}$\\
+ 5 & \texttt{0101} & $\overline{B}$\\
+ 6 & \texttt{0110} & $A\oplus B$ & Kontravalenz\\
+ 7 & \texttt{0111} & $\overline{A\land B}$ & NAND\\
+ 8 & \texttt{1000} & $A\land B$ & Konjunktion\\
+ 9 & \texttt{1001} & $A\Leftrightarrow B$ & Äquivalenz\\
+10 & \texttt{1010} & $B$ & Projektion\\
+11 & \texttt{1011} & $A\Rightarrow B$ & Implikation\\
+12 & \texttt{1100} & $A$ & Projektion\\
+13 & \texttt{1101} & $B\Rightarrow A$ & Implikation\\
+14 & \texttt{1110} & $A\lor B$ & Disjunktion\\
+15 & \texttt{1111} & $1$ & Tautologie
+\end{tabular}
+
+\subsection{Prädikatenlogik}
+\subsubsection{Rechenregeln}
+Verneinnung (De Morgansche Regeln):
+\begin{gather}
+\overline{\forall x[P(x)]}\iff \exists x[\overline{P(x)}],\\
+\overline{\exists x[P(x)]}\iff \forall x[\overline{P(x)}].
+\end{gather}
+Verallgemeinerte Distributivgesetze:
+\begin{gather}
+P\lor\forall x[Q(x)] \iff \forall x[P\lor Q(x)],\\
+P\land\exists x[Q(x)] \iff \exists x[P\land Q(x)].
+\end{gather}
+Äquivalenzen:
+\begin{gather}
+\hspace{-2em}\forall x\forall y[P(x,y)] \iff \forall y\forall x[P(x,y)],\\
+\hspace{-2em}\exists x\exists y[P(x,y)] \iff \exists y\exists x[P(x,y)],\\
+\hspace{-2em}\forall x[P(x)\land Q(x)] \iff \forall x[P(x)]\land\forall x[Q(x)],\\
+\hspace{-2em}\exists x[P(x)]\lor Q(x)] \iff \forall x[P(x)]\lor\forall x[Q(x)],\\
+\hspace{-2em}\forall x[P(x)\Rightarrow Q] \iff \exists x[P(x)]\Rightarrow Q,\\
+\hspace{-2em}\forall x[P\Rightarrow Q(x)] \iff P\Rightarrow\forall x[Q(x)],\\
+\hspace{-2em}\exists x[P(x)\Rightarrow Q(x)]
+  \iff\forall x[P(x)]\Rightarrow\exists x[Q(x)].
+\end{gather}
+Implikationen:
+\begin{gather}
+\hspace{-2em}\exists x\forall y[P(x,y)]\implies \forall y\exists x[P(x,y)],\\
+\hspace{-2em}\forall x[P(x)]\lor\forall x[Q(x)]\implies\forall x[P(x)\lor Q(x)],\\
+\hspace{-2em}\exists x[P(x)\land Q(x)]\implies
+  \exists x[P(x)]\land \exists x[Q(x)],\\
+\hspace{-2em}\forall x[P(x)\Rightarrow Q(x)]\implies
+  (\forall x[P(x)]\Rightarrow\forall x[Q(x)]),\\
+\hspace{-2em}\forall x[P(x)\Leftrightarrow Q(x)]\implies
+  (\forall x[P(x)]\Leftrightarrow\forall x[Q(x)]).
+\end{gather}
+
+\subsubsection{Endliche Mengen}
+Sei $M=\{x_1,\ldots,x_n\}$. Es gilt:
+\begin{gather}
+\forall x{\in}M\,[P(x)]\iff P(x_1)\land\ldots\land P(x_n),\\
+\exists x{\in}M\,[P(x)]\iff P(x_1)\lor\ldots\lor P(x_n).
+\end{gather}
+
+
+\section{Mengenlehre}
+\subsection{Definitionen}
+Teilmengenrelation:
+\begin{equation}
+A\subseteq B\;:\Longleftrightarrow\; \forall x\,[x\in A\implies x\in B].
+\end{equation}
+Gleichheit:
+\begin{equation}
+A=B\;:\Longleftrightarrow\; \forall x\,[x\in A\iff x\in B].
+\end{equation}
+Vereinigungsmenge:
+\begin{equation}
+A\cup B:=\{x\mid x\in A\lor x\in B\}.
+\end{equation}
+Schnittmenge:
+\begin{equation}
+A\cap B:=\{x\mid x\in A\land x\in B\}.
+\end{equation}
+Differenzmenge:
+\begin{equation}
+A\setminus B:=\{x\mid x\in A\land x\not\in B\}.
+\end{equation}
+Symmetrische Differenz:
+\begin{equation}
+A\triangle B:=\{x\mid x\in A\oplus x\in B\}.
+\end{equation}
+
+\subsection{Boolesche Algebra}
+\begin{table*}[t]
+\caption{Boolesche Algebra}
+\begin{tabular}{l|l|l}
+\thbf{Vereinigung} & \thbf{Schnitt} &\\
+  $A\cup A = A$
+& $A\cap A = A$
+& Idempotenzgesetze\\
+  $A\cup \{\} = A$
+& $A\cap G = A$
+& Neutralitätsgesetze\\
+  $A\cup G = G$
+& $A\cap \{\} = \{\}$
+& Extremalgesetze\\
+  $A\cup \overline A = G$
+& $A\cap \overline A = \{\}$
+& Komplementärgesetze\\
+\noalign{\vspace{1em}}
+  $A\cup B = B\cup A$
+& $A\cap B = B\cap A$
+& Kommutativgesetze\\
+  $(A\cup B)\cup C = A\cup (B\cup C)$
+& $(A\cap B)\cap C = A\cap (B\cap C)$
+& Assoziativgesetze\\
+  $\overline{A\cup B} = \overline A\cap\overline B$
+& $\overline{A\cap B} = \overline A\cup\overline B$
+& De Morgansche Regeln\\
+  $A\cup (A\cap B) = A$
+& $A\cap (A\cup B) = A$
+& Absorptionsgesetze\\
+\end{tabular}\\
+\\
+$G$: Grundmenge
+\end{table*}
+
+\noindent
+\strong{Distributivgesetze}:
+\begin{gather}
+M\cup (A\cap B) = (M\cup A)\cap (M\cup B),\\
+M\cap (A\cup B) = (M\cap A)\cup (M\cap B).
+\end{gather}
+
+\subsection{Teilmengenrelation}
+Zerlegung der Gleichheit:
+\begin{equation}
+A=B \iff A\subseteq B \land B\subseteq A.
+\end{equation}
+Umschreibung der Teilmengenrelation:
+\begin{equation}
+\begin{split}
+A\subseteq B &\iff A\cap B=A\\
+& \iff A\cup B=B\\
+& \iff A\setminus B=\{\}.
+\end{split}
+\end{equation}
+Kontraposition:
+\begin{equation}
+A\subseteq B = \overline B\subseteq \overline A.
+\end{equation}
+
+\subsection{Induktive Mengen}
+Mengentheoretisches Modell der natürlichen Zahlen:
+\begin{equation}
+\begin{split}
+& 0:=\{\},\quad 1:=\{0\},\quad 2:=\{0,1\},\\
+& 3:=\{0,1,2\},\quad \text{usw.}
+\end{split}
+\end{equation}
+Nachfolgerfunktion:
+\begin{equation}
+x' := x\cup\{x\}.
+\end{equation}
+Vollständige Induktion: Ist $A(n)$ mit $n\in\mathbb N$
+eine Aussageform, so gilt:
+\begin{equation}
+\begin{split}
+& A(n_0)\land \forall n\ge n_0\,[A(n)\Rightarrow A(n+1)]\\
+& \implies \forall n\ge n_0\,[A(n)].
+\end{split}
+\end{equation}
+
