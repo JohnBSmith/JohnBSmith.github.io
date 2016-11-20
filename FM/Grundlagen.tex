@@ -189,7 +189,7 @@ Funktionen.
 
 \subsection{Prädikatenlogik}
 \subsubsection{Rechenregeln}
-Verneinnung (De Morgansche Regeln):
+Verneinung (De Morgansche Regeln):
 \begin{gather}
 \overline{\forall x[P(x)]}\iff \exists x[\overline{P(x)}],\\
 \overline{\exists x[P(x)]}\iff \forall x[\overline{P(x)}].
@@ -198,6 +198,25 @@ Verallgemeinerte Distributivgesetze:
 \begin{gather}
 P\lor\forall x[Q(x)] \iff \forall x[P\lor Q(x)],\\
 P\land\exists x[Q(x)] \iff \exists x[P\land Q(x)].
+\end{gather}
+Verallgemeinerte Idempotenzgesetze:
+\begin{gather}
+\begin{split}
+\exists x{\in}M\,[P] & \iff
+(M\ne\{\})\land P\\
+& \iff\begin{cases}
+P & \text{wenn}\; M\ne\{\},\\
+0 & \text{wenn}\; M=\{\}.
+\end{cases}
+\end{split}\\
+\begin{split}
+\forall x{\in}M\,[P]& \iff
+(M=\{\})\lor P\\
+&\iff\begin{cases}
+P & \text{wenn}\; M\ne\{\},\\
+1 & \text{wenn}\; M=\{\}.
+\end{cases}
+\end{split}
 \end{gather}
 Äquivalenzen:
 \begin{gather}
@@ -228,6 +247,58 @@ Sei $M=\{x_1,\ldots,x_n\}$. Es gilt:
 \forall x{\in}M\,[P(x)]\iff P(x_1)\land\ldots\land P(x_n),\\
 \exists x{\in}M\,[P(x)]\iff P(x_1)\lor\ldots\lor P(x_n).
 \end{gather}
+
+\subsubsection{Beschränkte Quantifizierung}
+\begin{gather}
+\begin{split}
+& \forall x{\in}M\,[P(x)]\;:\Longleftrightarrow\;\forall x[x\notin M\lor P(x)]\\
+& \quad\iff\forall x[x\in M\Rightarrow P(x)],
+\end{split}\\
+\exists x{\in}M\,[P(x)]\;:\Longleftrightarrow\;\exists x[x\in M\land P(x)],\\
+\forall x{\in}M{\setminus}N\,[P(x)]\iff \forall x[x\notin N\Rightarrow P(x)].
+\end{gather}
+
+\subsubsection{Quantifizierung\\
+über Produktmengen}
+\begin{gather}
+\forall(x,y)\,[P(x,y)]\iff \forall x\forall y[P(x,y)],\\
+\exists(x,y)\,[P(x,y)]\iff \exists x\exists y[P(x,y)].
+\end{gather}
+Analog gilt
+\begin{gather}
+\forall(x,y,z)\,\iff \forall x\forall y\forall z,\\
+\exists(x,y,z)\,\iff \exists x\exists y\exists z
+\end{gather}
+usw.
+
+\subsubsection{Alternative Darstellung}
+Sei $P\colon G\to\{0,1\}$ und $M\subseteq G$.
+Mit $P(M)$ ist die Bildmenge von $P$ bezüglich $M$ gemeint.
+Es gilt
+\begin{equation}
+\begin{split}
+&\forall x{\in}M\,[P(x)] \iff P(M)=\{1\}\\
+& \iff M\subseteq\{x{\in}G\mid P(x)\}
+\end{split}
+\end{equation}
+und
+\begin{equation}
+\begin{split}
+& \exists x{\in}M\,[P(x)] \iff \{1\}\subseteq P(M)\\
+& \iff M\cap\{x{\in}G\mid P(x)\}\ne\{\}.
+\end{split}
+\end{equation}
+
+\subsubsection{Eindeutigkeit}
+Quantor für eindeutige Existenz:
+\begin{equation}
+\begin{split}
+&\exists!x\,[P(x)]\\
+&:\Longleftrightarrow\; \exists x\,[P(x)\land \forall y\,[P(y)\Rightarrow x=y]]\\
+&\iff \exists x\,[P(x)]\land \forall x\forall y[P(x)\land P(y)\Rightarrow x=y].
+\end{split}
+\end{equation}
+
 
 
 \section{Mengenlehre}
