@@ -3789,6 +3789,12 @@ function calc(){
   }
 }
 
+function handle_keys(event){
+  if(event.keyCode==13){
+    plot();
+  }
+}
+
 window.onload = initclick;
 
 
