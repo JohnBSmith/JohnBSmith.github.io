@@ -100,14 +100,14 @@ Betrag
   Argument
 & $\arg(z)$
 & $=\varphi$
-& $\displaystyle =s(b)\arccos\Big(\frac{a}{r}\Big)$\\
+& $\displaystyle = s(b)\arccos\Big(\frac{a}{r}\Big)$\\
 \hline
 \end{tabular}
 \egroup\\
 \\
 $s(b):=\begin{cases}
-+1 & \text{wenn}\;b\ge 0,\\
--1 & \text{wenn}\;b<0
++1 & \text{if}\;b\ge 0,\\
+-1 & \text{if}\;b<0
 \end{cases}$
 \end{table*}
 
@@ -187,6 +187,64 @@ Funktionen.
 15 & \texttt{1111} & $1$ & Tautologie
 \end{tabular}
 
+\subsubsection{Darstellung mit Negation, Konjunktion und Disjunktion}
+\begin{gather}
+A\Rightarrow B \iff \overline A\lor B,\\
+(A\Leftrightarrow B) \iff
+  (\overline A\land\overline B)\lor(A\land B),\\
+A\oplus B \iff (\overline A\land B)\lor(A\land\overline B).
+\end{gather}
+
+\subsubsection{Tautologien}
+Modus ponens:
+\begin{equation}
+(A\Rightarrow B)\land A\implies B
+\end{equation}
+Modus tollens:
+\begin{equation}
+(A\Rightarrow B)\land\overline B\implies\overline A
+\end{equation}
+Modus tollendo ponens:
+\begin{equation}
+(A\lor B)\land\overline A \implies B
+\end{equation}
+Modus ponendo tollens:
+\begin{equation}
+\overline{A\land B}\land A\implies\overline B
+\end{equation}
+Kontraposition:
+\begin{equation}
+A\Rightarrow B \iff \overline B\Rightarrow \overline A
+\end{equation}
+Beweis durch Widerspruch:
+\begin{equation}
+(\overline A\Rightarrow B\land\overline B)\implies A
+\end{equation}
+Zerlegung einer Äquivalenz:
+\begin{equation}
+(A\Leftrightarrow B) \iff (A\Rightarrow B)\land(B\Rightarrow A)
+\end{equation}
+Kettenschluss:
+\begin{equation}
+(A\Rightarrow B)\land(B\Rightarrow C)\implies (A\Rightarrow C)
+\end{equation}
+Ringschluss:
+\begin{equation}
+\begin{split}
+&(A\Rightarrow B)\land (B\Rightarrow C)\land(C\Rightarrow A)\\
+&\implies (A\Leftrightarrow B)\land(A\Leftrightarrow C)\land(B\Leftrightarrow C)
+\end{split}
+\end{equation}
+Ringschluss, allgemein:
+\begin{equation}
+\begin{split}
+& (A_1{\Rightarrow }A_2)\land\ldots\land(A_{n-1}{\Rightarrow}A_n)
+\land(A_n{\Rightarrow}A_1)\\
+& \implies \forall i,j\,[A_i\Leftrightarrow A_j]
+\end{split}
+\end{equation}
+
+
 \subsection{Prädikatenlogik}
 \subsubsection{Rechenregeln}
 Verneinung (De Morgansche Regeln):
@@ -223,7 +281,7 @@ P & \text{wenn}\; M\ne\{\},\\
 \hspace{-2em}\forall x\forall y[P(x,y)] \iff \forall y\forall x[P(x,y)],\\
 \hspace{-2em}\exists x\exists y[P(x,y)] \iff \exists y\exists x[P(x,y)],\\
 \hspace{-2em}\forall x[P(x)\land Q(x)] \iff \forall x[P(x)]\land\forall x[Q(x)],\\
-\hspace{-2em}\exists x[P(x)]\lor Q(x)] \iff \forall x[P(x)]\lor\forall x[Q(x)],\\
+\hspace{-2em}\exists x[P(x)\lor Q(x)] \iff \forall x[P(x)]\lor\forall x[Q(x)],\\
 \hspace{-2em}\forall x[P(x)\Rightarrow Q] \iff \exists x[P(x)]\Rightarrow Q,\\
 \hspace{-2em}\forall x[P\Rightarrow Q(x)] \iff P\Rightarrow\forall x[Q(x)],\\
 \hspace{-2em}\exists x[P(x)\Rightarrow Q(x)]
