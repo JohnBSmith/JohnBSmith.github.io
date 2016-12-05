@@ -1,0 +1,84 @@
+
+\chapter{Kombinatorik}
+\section{Kombinatorische Funktionen}
+\subsection{Faktorielle}\index{Faktorielle}
+\subsubsection{Fakultät}\index{Fakultät}
+\strong{Definition.} Für $n\in\mathbb Z, n\ge 0$:
+\begin{equation}
+n! := \prod_{k=1}^n k.
+\end{equation}
+Rekursionsgleichung:
+\begin{equation}
+(n+1)! = n!\,(n+1)
+\end{equation}
+Die Gammafunktion ist eine Verallgemeinerung der Fakultät:
+\begin{equation}
+n! = \Gamma(n+1).
+\end{equation}
+
+\subsubsection{Fallende Faktorielle}
+\strong{Definition.} Für $a\in\mathbb C$ und $k\ge 0$:
+\begin{equation}\label{eq:FF}
+a^{\underline k} := \prod_{j=0}^{k-1} (a-j).
+\end{equation}
+Für $n\ge k$ und $k\ge 0$ gilt:
+\begin{equation}
+n^{\underline k} = \frac{n!}{(n-k)!}.
+\end{equation}
+Für $a\in\mathbb C\setminus\{-1,-2,\ldots\}$
+und $k\in\mathbb C$ gilt:
+\begin{equation}
+a^{\underline k} = \frac{\Gamma(a+1)}{\Gamma(a-k+1)}.
+\end{equation}
+
+\subsubsection{Steigende Faktorielle}
+\strong{Definition.} Für $a\in\mathbb C$ und $k\ge 0$:
+\begin{equation}
+a^{\overline k} := \prod_{j=0}^{k-1} (a+j).
+\end{equation}
+Für $n\ge 1$ und $n+k\ge 1$ gilt:
+\begin{equation}
+n^{\overline k} = \frac{(n+k-1)!}{(n-1)!}.
+\end{equation}
+
+\subsection{Binomialkoeffizienten}\index{Binomialkoeffizient}
+\strong{Definition.} Für $a\in\mathbb C$
+und $k\in\mathbb Z$:
+\begin{equation}
+\binom{a}{k} := \begin{cases}
+\frac{a^{\underline k}}{k!} & \text{wenn}\;k>0,\\
+1 & \text{wenn}\;k=0,\\
+0 & \text{wenn}\;k<0.
+\end{cases}
+\end{equation}
+Für $a\in\mathbb C\setminus\{-1,-2,\ldots\}$ und $b\in\mathbb C$:
+\begin{equation}\label{eq:bc-allg}
+\binom{a}{b} := \frac{\Gamma(a+1)}{\Gamma(b+1)\Gamma(a-b+1)}.
+\end{equation}
+Es gilt die Symmetriebeziehung
+\begin{equation}
+\binom{a}{b} = \binom{a}{a-b}
+\end{equation}
+und die Rekursionsgleichung
+\begin{equation}
+\binom{a+1}{b+1} = \binom{a}{b+1}+\binom{a}{b}.
+\end{equation}
+Für $a\in\mathbb C$ und $k\in\mathbb Z$ gilt:
+\begin{equation}
+\binom{-a}{k} = (-1)^k \binom{a+k-1}{k}.
+\end{equation}
+
+\section{Formale Potenzreihen}
+\subsection{Binomische Reihe}
+\strong{Definition.} Für $a\in\mathbb C$:
+\begin{equation}
+(1+X)^a := \sum_{k=0}^\infty \binom{a}{k} X^k
+\end{equation}
+Es gilt:
+\begin{equation}
+(1+X)^{a+b} = (1+X)^a (1+X)^b 
+\end{equation}
+und
+\begin{equation}
+(1+X)^{ab} = ((1+X)^a)^b.
+\end{equation}
