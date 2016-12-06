@@ -1,7 +1,31 @@
 
 \chapter{Lineare Algebra}
-\section{Skalarprodukt}\index{Skalarprodukt}
-\subsection{Axiome}
+\section{Grundbegriffe}
+\subsection{Norm}\index{Norm}
+\strong{Definition.} Eine Abbildung $v\mapsto\|v\|$ von einem
+$\mathbb K$-Vektorraum $V$ in die nichtnegativen reellen Zahlen heißt
+\emdef{Norm}, wenn für alle $v,w\in V$ und $a\in\mathbb K$
+die drei Axiome%
+\begin{gather}
+\|v\|=0 \implies v=0,\\
+\|av\| = |a|\,\|v\|,\\
+\|v+w\| \le \|v\|+\|w\|
+\end{gather}
+erfüllt sind.
+
+Eigenschaften:
+\begin{gather}
+\|v\|=0\iff v=0,\\
+\|-v\|=\|v\|,\\
+\|v\|\ge 0.
+\end{gather}
+Umgekehrte Dreiecksungleichung:
+\begin{equation}
+|\|v\|-\|w\||\le \|v-w\|.
+\end{equation}
+
+\subsection{Skalarprodukt}\index{Skalarprodukt}
+\subsubsection{Axiome}
 Axiome für $v,w$ aus einem reellen Vektorraum und $\lambda$ ein Skalar:
 \begin{gather}
 \langle v,w\rangle = \langle w,v\rangle,\\
@@ -19,17 +43,36 @@ Axiome für $v,w$ aus einem komplexen Vektorraum und $\lambda$ ein Skalar:
 \langle v,v\rangle\ge 0,\\
 \langle v,v\rangle=0 \iff v=0.
 \end{gather}
-\subsection{Rechenregeln}
+\subsubsection{Rechenregeln}
 Das Skalarprodukt ist eine bilineare Abbildung.
 
 Ist $\varphi$ der Winkel zwishen $v$ und $w$, so gilt:
 \begin{equation}
 \langle v,w\rangle = \|v\|\,\|w\|\,\cos\varphi.
 \end{equation}
-Definition \textit{Orthogonal}:\index{Orthogonal}
+\strong{Definition.} Orthogonal:\index{Orthogonal}
 \begin{equation}
 v\perp w \;:\Longleftrightarrow\; \langle v,w\rangle=0.
 \end{equation}
+
+\subsubsection{Orthogonale Projektion}
+Orthogonale Projektion von $v$ auf $w$:
+\begin{equation}
+P[w](v) := \frac{\langle v,w\rangle}{\langle w,w\rangle}\,w.
+\end{equation}
+\subsubsection{Gram-Schmidt-Verfahren}
+Für linear unabhängige Vektoren $w_1,\ldots,w_n$
+wird durch%
+\begin{equation}
+v_k := w_k - \sum_{i=1}^{k-1} P[v_i](w_k)
+\end{equation}
+ein Orthogonalsystem $v_1,\ldots,v_n$ berechnet.
+
+Speziell für zwei nicht kollineare Vektoren $w_1,w_2$ gilt
+\begin{gather}
+v_1=w_1,\\
+v_2=w_2-P[v_1](w_2).
+\end{gather}
 
 \section{Analytische Geometrie}
 \subsection{Geraden}\index{Gerade}
