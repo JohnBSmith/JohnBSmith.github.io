@@ -3,8 +3,8 @@
 \section{Grundbegriffe}
 \subsection{Norm}\index{Norm}
 \strong{Definition.} Eine Abbildung $v\mapsto\|v\|$ von einem
-$\mathbb K$-Vektorraum $V$ in die nichtnegativen reellen Zahlen heißt
-\emdef{Norm}, wenn für alle $v,w\in V$ und $a\in\mathbb K$
+$\K$-Vektorraum $V$ in die nichtnegativen reellen Zahlen heißt
+\emdef{Norm}, wenn für alle $v,w\in V$ und $a\in\K$
 die drei Axiome%
 \begin{gather}
 \|v\|=0 \implies v=0,\\
@@ -43,10 +43,13 @@ Axiome für $v,w$ aus einem komplexen Vektorraum und $\lambda$ ein Skalar:
 \langle v,v\rangle\ge 0,\\
 \langle v,v\rangle=0 \iff v=0.
 \end{gather}
-\subsubsection{Rechenregeln}
-Das Skalarprodukt ist eine bilineare Abbildung.
 
-Ist $\varphi$ der Winkel zwishen $v$ und $w$, so gilt:
+\subsubsection{Eigenschaften}
+Das reelle Skalarprodukt ist eine symmetrische bilineare Abbildung.
+
+\subsubsection{Winkel und Längen}
+\strong{Definition.} Der Winkel $\varphi$ zwischen $v$ und $w$
+ist definiert durch die Beziehung:
 \begin{equation}
 \langle v,w\rangle = \|v\|\,\|w\|\,\cos\varphi.
 \end{equation}
@@ -54,6 +57,54 @@ Ist $\varphi$ der Winkel zwishen $v$ und $w$, so gilt:
 \begin{equation}
 v\perp w \;:\Longleftrightarrow\; \langle v,w\rangle=0.
 \end{equation}
+Ein Skalarprodukt $\langle v,w\rangle$ induziert die Norm
+\begin{equation}
+\|v\| := \sqrt{\langle v,v\rangle}.
+\end{equation}
+
+\subsubsection{Orthonormalbasis}
+\index{Orthogonalsystem}\index{Orthogonalbasis}
+\index{Orthonormalsystem}\index{Orthonormalbasis}
+Sei $B=(b_k)_{k=1}^n$ eine Basis eines endlichdimensionalen
+Vektorraumes.
+
+\strong{Definition.} Gilt $\langle b_i,b_j\rangle=0$
+für alle $i,j$ mit $i\ne j$, so wird $B$ \emdef{Orthogonalbasis}
+genannt. Ist $B$ nicht unbedingt eine Basis, so spricht man von einem 
+\emdef{Orthogonalsystem}.
+
+\strong{Definition.} Ist $B$ eine Orthogonalbasis und gilt
+zusätzlich $\langle b_k,b_k\rangle=1$ für alle $k$, so wird
+$B$ \emdef{Orthonormalbasis} (ONB) genannt. Ist $B$ nicht unbedingt
+eine Basis,  so spricht man von einem \emdef{Orthonormalsystem}.
+
+Sei $v=\sum_k v_kb_k$ und $w=\sum_k w_kb_k$.
+Mit $\sum_k$ ist immer $\sum_{k=1}^n$ gemeint.
+
+Ist $B$ eine Orthonormalbasis, so gilt:
+\begin{equation}
+\langle v,w\rangle = \sum_k \overline{v_k}\,w_k.
+\end{equation}
+Ist $B$ nur eine Orthogonalbasis, so gilt:
+\begin{equation}
+\langle v,w\rangle = \sum_k \langle b_k,b_k\rangle \overline{v_k}\,w_k
+\end{equation}
+Allgemein gilt:
+\begin{equation}
+\langle v,w\rangle = \sum_{i,j} g_{ij} \overline{v_i}\,w_j
+\end{equation}
+mit $g_{ij}=\langle b_i,b_j\rangle$. In reellen Vektorräumen
+ist die komplexe Konjugation wirkungslos und kann somit entfallen.
+
+Ist $B$ eine Orthogonalbasis und $v=\sum_k v_k b_k$, so gilt:
+\begin{equation}
+v_k = \frac{\langle b_k,v\rangle}{\langle b_k,b_k\rangle}.
+\end{equation}
+Ist $B$ eine Orthonormalbasis, so gilt speziell:
+\begin{equation}
+v_k = \langle b_k,v\rangle.
+\end{equation}
+
 
 \subsubsection{Orthogonale Projektion}
 Orthogonale Projektion von $v$ auf $w$:
@@ -61,40 +112,92 @@ Orthogonale Projektion von $v$ auf $w$:
 P[w](v) := \frac{\langle v,w\rangle}{\langle w,w\rangle}\,w.
 \end{equation}
 \subsubsection{Gram-Schmidt-Verfahren}
-Für linear unabhängige Vektoren $w_1,\ldots,w_n$
+Für linear unabhängige Vektoren $v_1,\ldots,v_n$
 wird durch%
 \begin{equation}
-v_k := w_k - \sum_{i=1}^{k-1} P[v_i](w_k)
+w_k := v_k - \sum_{i=1}^{k-1} P[w_i](v_k)
 \end{equation}
-ein Orthogonalsystem $v_1,\ldots,v_n$ berechnet.
+ein Orthogonalsystem $w_1,\ldots,w_n$ berechnet.
 
-Speziell für zwei nicht kollineare Vektoren $w_1,w_2$ gilt
+Speziell für zwei nicht kollineare Vektoren $v_1,v_2$ gilt
 \begin{gather}
-v_1=w_1,\\
-v_2=w_2-P[v_1](w_2).
+w_1=v_1,\\
+w_2=v_2-P[w_1](v_2).
+\end{gather}
+
+\section{Matrizen}
+\subsection{Quadratische Matrizen}
+Eine quadratiche Matrix $A=(a_{ij})$ heißt symmetrisch,
+falls gilt $a_{ij}=a_{ji}$ bzw. $A^T=A$.
+
+Jede reelle symmetrische Matrix besitzt ausschließlich reelle
+Eigenwerte und die algebraischen Vielfachheiten stimmen mit den
+geometrischen Vielfachheiten überein.
+
+Jede reelle symmetrische Matrix $A$ ist diagonalisierbar, d.\,h. es gibt
+eine invertierbare Matrix $T$ und eine Diagonalmatrix $D$, so dass
+$A=TDT^{-1}$ gilt.
+
+Sei $V$ ein $K$-Vektorraum und $(b_k)_{k=1}^n$ eine Basis von $V$.
+Für jede symmetrische Bilinearform $f\colon V^2\to K$ ist die
+Darstellungsmatrix
+\begin{equation}
+A = (f(b_i,b_j))
+\end{equation}
+symmetrisch. Ist $A\in K^{n\times n}$ eine symmetrische Matrix, so
+ist
+\begin{equation}\label{eq:symmBf}
+f(x,y) = x^T A y.
+\end{equation}
+eine symmetrische Bilinearform für  $x,y\in K^n$.
+Ist $K=\R$ und $A$ positiv definit, so ist
+\eqref{eq:symmBf} ein Skalarprodukt auf $\R^n$.
+
+\subsection{Determinanten}
+Für Matrizen $A,B\in K^{n\times n}$ und $r\in K$ gilt:
+\begin{gather}
+\det(AB) = \det(A)\det(B),\\
+\det(A^T) = \det(A),\\
+\det(rA) = r^n\det(A),\\
+\det(A^{-1}) = \det(A)^{-1}.
+\end{gather}
+Für eine Diagonalmatrix $D=\operatorname{diag}(d_1,\ldots,d_n)$ gilt:
+\begin{gather}
+\det(D) = \prod_{k=1}^n d_k.
+\end{gather}
+Eine linke Dreiecksmatrix ist eine Matrix der Form
+$(a_{ij})$ mit $a_{ij}=0$ für $i<j$. Eine rechte
+Dreiecksmatrix ist die Transponierte einer linken
+Dreiecksmatrix.
+
+Für eine linke oder rechte Dreiecksmatrix $A=(a_{ij})$ gilt:
+\begin{gather}
+\det(A) = \prod_{k=1}^n a_{kk}.
 \end{gather}
 
 \section{Analytische Geometrie}
 \subsection{Geraden}\index{Gerade}
-\subsubsection{Darstellung}
+\subsubsection{Parameterdarstellung}
 
-Punktrichtungsform einer Geraden:
+\strong{Punktrichtungsform:}
 \begin{equation}
 p(t) = p_0+t\underline v,
 \end{equation}
 $p_0$: Stützpunkt, $\underline v$: Richtungsvektor.
+Die Gerade ist dann die Menge $g=\{p(t)\mid t\in\R\}$.
 
 Der Vektor $\underline v$ repräsentiert außerdem die Geschwindigkeit,
-mit der diese Parameterdarstellung durchlaufen wird: $p'(t)=v$.
+mit der diese Parameterdarstellung durchlaufen wird:
+$p'(t)=\underline v$.
 
-\subsubsection{Gerade durch zwei Punkte}
+\strong{Gerade durch zwei Punkte:}
 Sind zwei Punkte $p_1,p_2$ mit $p_1\ne p_2$ gegeben, so ist
 durch die beiden Punkte eine Gerade gegeben. Für diese Gerade ist
 \begin{equation}
 p(t) = p_1+t(p_2-p_1)
 \end{equation}
 eine Punktrichtungsform\index{Punktrichtungsform}.
-Durch Umformung ergibt sich die Zweipunkteform:
+Durch Umformung ergibt sich die \strong{Zweipunkteform:}
 \begin{equation}\label{eq:Zweipunkteform}
 p(t) = (1-t)p_1+tp_2.
 \end{equation}
@@ -102,6 +205,36 @@ Bei \eqref{eq:Zweipunkteform} handelt es sich um eine
 Affinkombination. Gilt $t\in[0,1]$, so ist \eqref{eq:Zweipunkteform}
 eine Konvexkombination: eine Parameterdarstellung für die Strecke
 von $p_1$ nach $p_2$.
+
+\subsubsection{Parameterfreie Darstellung}
+Sei $\uv v\wedge\uv w$ das äußere Produkt.
+
+\strong{Plückerform:}
+\begin{equation}
+g = \{p\mid (p-p_0)\wedge \underline v=0\}
+\end{equation}
+In der Ebene gilt speziell:
+\begin{equation}\label{eq:Gerade-Ebene}
+g = \{(x,y)\mid (x-x_0)\Delta y = (y-y_0)\Delta x\}
+\end{equation}
+mit $\underline v=(\Delta x,\Delta y)$.
+
+Sei $a:=\Delta y$ und $b:=-\Delta x$ und $c:=ax_0+by_0$.
+Aus \eqref{eq:Gerade-Ebene} ergibt sich:
+\begin{equation}
+g = \{(x,y)\mid ax+by=c\}.
+\end{equation}
+Im Raum ergibt sich ein Gleichungssystem:
+\begin{equation}
+g = \{\begin{pmatrix}x\\ y\\ z\end{pmatrix}
+\mid
+\begin{vmatrix}
+(x-x_0)\Delta y = (y-y_0)\Delta x\\
+(y-y_0)\Delta z = (z-z_0)\Delta y\\
+(x-x_0)\Delta z = (z-z_0)\Delta x
+\end{vmatrix}\}
+\end{equation}
+mit $\underline v=(\Delta x,\Delta y,\Delta z)$.
 
 \subsubsection{Abstand Punkt zu Gerade}
 Sei $p(t):=p_0+t\underline v$ die Punktrichtungsform einer Geraden und
@@ -120,13 +253,21 @@ t = \frac
 \end{equation}
 
 \subsection{Ebenen}\index{Ebene}
-\subsubsection{Darstellung}
+\subsubsection{Parameterdarstellung}
 Seien $\uv u, \uv v$ zwei nicht kollineare Vektoren.
 
 Punktrichtungsform:
 \begin{equation}
 p(s,t) = p_0+s\uv u+t\uv v.
 \end{equation}
+
+\subsubsection{Parameterfreie Darstellung}
+Seien $\uv v, \uv w$ zwei nicht kollineare Vektoren.
+Durch
+\begin{equation}
+E = \{p\mid (p-p_0)\wedge\uv v\wedge\uv w=0\}.
+\end{equation}
+wird eine Ebene beschrieben.
 
 \subsubsection{Abstand Punkt zu Ebene}
 Sei $p(s,t):=p_0+s\uv u+t\uv v$ die Punktrichtungsform einer Ebene
