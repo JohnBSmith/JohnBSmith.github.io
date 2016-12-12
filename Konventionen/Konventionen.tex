@@ -60,20 +60,24 @@ einem umständlichen Algorithmus oder fehlerhaft.
 Folgende Formel lässt sich jedoch leicht merken und deckt
 alle Fälle ab:
 \begin{equation}
-\varphi = \overline{\mathrm{sgn}}(y)\,\arccos\Big(\frac{x}{r}\Big).
+\varphi = s(y)\,\arccos\Big(\frac{x}{r}\Big).
 \end{equation}
-Hierbei ist $\overline{\mathrm{sgn}}$ die rechtsstetige
+Hierbei ist $s(y)$ die rechtsstetige
 Signumfunktion. Sie ist definiert durch
 \begin{equation}
-\overline{\mathrm{sgn}}(x):=
+s(y):=
 \begin{cases}
-x{\ge}0\colon\,1,\\
-x{<}0\colon\,{-}1.
+y{\ge}0\colon\,1,\\
+y{<}0\colon\,{-}1.
 \end{cases}
 \end{equation}
 Oder alternativ via Iverson-Klammern:
 \begin{equation}
-\overline{\mathrm{sgn}}(x):=[x{\ge}0]-[x{<}0].
+s(y):=[y{\ge}0]-[y{<}0].
+\end{equation}
+Oder alternativ durch einen Trick:
+\begin{equation}
+s(y) := \operatorname{sgn}(y)+1-|\operatorname{sgn}(y)|.
 \end{equation}
 Steht ein Computer zur Verfügung, und das ist der Normalfall geworden,
 so wird man direkt oder indirekt \verb|atan2(y,x)| verwenden.
@@ -354,6 +358,17 @@ durch $K\le L$ zu symbolisieren, weil ja $K\subseteq L$ ist.
 Das ist aber eine schlechte Idee, weil hiermit schon
 Untergruppenbeziehungen symbolisiert werden und Körper ja
 additive Gruppenstruktur enthalten.
+
+\section{Notation}
+\subsection{Bindungsstärke von Operatoren}
+Die Schreibweisen $\forall x\colon P(x)$ und $\exists x\colon P(x)$
+für die Quantoren binden ihr Prädikat schwächer als alle anderen
+Operatoren, so dass alles nach dem Doppelpunkt zum Prädikat gehört.
+Diese Regel ist aber nicht allen bewusst. M.\,E. ist die Notation
+\begin{equation}
+\forall x[P(x)]
+\end{equation}
+besser geeignet, da hier explizit sichtbar ist, wo das Prädikat endet.
 
 \end{document}
 
