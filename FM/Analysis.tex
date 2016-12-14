@@ -2,21 +2,6 @@
 \chapter{Analysis}
 \section{Konvergenz}
 \subsection{Umgebungen}\index{Umgebung}
-Sei $(X,d)$ ein metrischer Raum und $x\in X$.
-
-\noindent
-\strong{Definition.} $\varepsilon$-\emdef{Umgebung}:
-\begin{equation}
-U_\varepsilon(x) := \{y\in X\mid d(x,y)<\varepsilon\}.
-\end{equation}
-\emdef{Punktierte $\varepsilon$-Umgebung}:
-\begin{equation}
-\dot U_\varepsilon(x) := U_\varepsilon(x)\setminus\{x\}.
-\end{equation}
-Für einen normierten Raum ist durch $d(x,y):=\|x-y\|$ eine
-Metrik gegeben. Speziell für $X=\R$ oder $X=\C$ wird fast immer
-$d(x,y):=|x-y|$ verwendet.
-
 Sei $(X,T)$ ein topologischer Raum und $x\in X$.
 
 \noindent
@@ -27,7 +12,36 @@ Sei $(X,T)$ ein topologischer Raum und $x\in X$.
 \end{equation}
 Ein $U\in\mathfrak U(x)$ wird Umgebung von $x$ genannt.
 
+\noindent
+\strong{Definition.} Eine Menge $\mathfrak B(x)\subseteq \mathfrak U(x)$
+heißt \emdef{Umgebungsbasis} gdw.
+\begin{equation}
+\forall U{\in}\mathfrak U(x)\,\exists B{\in}\mathfrak B(x)\colon
+B\subseteq U.
+\end{equation}
+Sei $(X,d)$ ein metrischer Raum und $x\in X$.
+
+\noindent
+\strong{Definition.} $\varepsilon$-\emdef{Umgebung}:
+\begin{equation}\label{eq:epsilon-Umgebung}
+U_\varepsilon(x) := \{y\in X\mid d(x,y)<\varepsilon\}.
+\end{equation}
+\emdef{Punktierte $\varepsilon$-Umgebung}:
+\begin{equation}
+\dot U_\varepsilon(x) := U_\varepsilon(x)\setminus\{x\}.
+\end{equation}
+Bei
+\begin{equation}
+\mathfrak B(x) = \{U_\varepsilon(x)\mid\varepsilon>0\}
+\end{equation}
+handelt es sich um eine Umgebungsbasis.
+
+Für einen normierten Raum ist durch $d(x,y):=\|x-y\|$ eine
+Metrik gegeben. Speziell für $X=\R$ oder $X=\C$ wird fast immer
+$d(x,y):=|x-y|$ verwendet.
+
 \subsection{Konvergente Folgen}\index{konvergente Folge}
+\strong{Definition.}
 Eine Folge $(a_n)\colon \N\to X$ heißt \emdef{konvergent} gegen $g$, wenn%
 \begin{equation}\label{eq:konvergent}
 \forall U{\in}\mathfrak B(g)\,\exists n_0\,\forall n{>}n_0\colon\;
@@ -38,9 +52,33 @@ $g$ als Grenzwert\index{Grenzwert}.
 
 Für eine Folge $(a_n)\colon\N\to\R$ wird \eqref{eq:konvergent} zu:
 \begin{equation}
-\forall\varepsilon{>}0\,\exists n_0\,\forall n{>}n_0\colon\;
+\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\colon\;
 |a_n-g|<\varepsilon.
 \end{equation}
+
+\subsection{Häufungspunkte}\index{Häufungspunkt}
+\strong{Definition.}
+Eine Punkt $h$ heißt \emdef{Häufungspunkt} einer Folge $(a_n$), wenn
+\begin{equation}
+\forall U{\in}\mathfrak B(h)\;\forall n_0\;\exists n{>}n_0\colon\;
+a_n\in U.
+\end{equation}
+Besitzt eine Folge $(a_n)$ einen Grenzwert $g$, so ist $g$ auch ein
+Häufungspunkt von $(a_n)$.
+
+\subsection{Cauchy-Folge}\index{Cauchy-Folge}
+Sei $(X,d)$ ein metrischer Raum.
+
+\noindent
+\strong{Definition.} Eine Folge $(a_n)$ heißt \emdef{Cauchy-Folge}
+gdw.
+\begin{equation}
+\forall\varepsilon{>}0\;\exists N{\in}\N\;\forall m,n>N\colon\;
+d(a_m,a_n)<\varepsilon.
+\end{equation}
+Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}, wenn jede
+Cauchy-Folge von Punkten aus $X$ einen Grenzwert $g$ mit $g\in X$
+besitzt.
 
 \section{Ableitungen}\index{Ableitung}
 \subsection{Differentialquotient}\index{Differentialquotient}
