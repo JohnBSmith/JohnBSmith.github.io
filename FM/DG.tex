@@ -2,7 +2,8 @@
 \chapter{Differentialgeometrie}
 \section{Kurven}
 \subsection{Parameterkurven}\index{Weg}\index{Kurve}
-\strong{Definition.} Sei $X$ ein topologischer Raum und
+\begin{Definition}
+Sei $X$ ein topologischer Raum und
 $I$ ein reelles Intervall, auch offen oder halboffen, auch unbeschränkt.
 Eine stetige Funktion
 \begin{equation}
@@ -10,13 +11,14 @@ f\colon I\to X
 \end{equation}
 heißt \emdef{Parameterdarstellung einer Kurve}, kurz
 \emdef{Parameterkurve}. Die Bildmenge $f(I)$ heißt \emdef{Kurve}.
+\end{Definition}
 
 Eine Parameterdarstellung mit einem kompakten Intervall $I=[a,b]$
 heißt \emdef{Weg}.
 
 Für einen Weg mit $I=[a,b]$ heißt $f(a)$ \emdef{Anfangspunkt}
 und $f(b)$ \emdef{Endpunkt}. Ein Weg mit $f(a)=f(b)$
-heißt \emdef{geschlossen}. Ein Weg dessen Einschränkung auf $[a,b)$
+heißt \emdef{geschlossen}. Ein Weg, dessen Einschränkung auf $[a,b)$
 injektiv ist, heißt \emdef{einfach}, auch \emdef{doppelpunktfrei} oder
 \emdef{Jordan-Weg}.
 
@@ -41,10 +43,12 @@ f(t):=\begin{bmatrix}
 Die Kurve ist eine Achterschleife.
 
 \subsection{Differenzierbare Parameterkurven}
-\strong{Definition.} Eine Parameterkurve $f\colon (a,b)\to\R^n$ heißt
+\begin{Definition}
+Eine Parameterkurve $f\colon (a,b)\to\R^n$ heißt
 \emdef{differenzierbar}, wenn die Ableitung $f'(t)$ an jeder Stelle
 $t$ existiert. Die Ableitung $f'(t)$ wird
 \emdef{Tangentialvektor} an die Kurve an der Stelle $t$ genannt.
+\end{Definition}
 
 Ein \emdef{$C^k$-Kurve} ist ein Parameterkurve, dessen $k$-te Ableitung
 eine stetige Funktion ist. Ein unendlich oft differenzierbare
@@ -55,8 +59,46 @@ Eine Parameterkurve heißt \emdef{regulär}, wenn:
 \forall t\colon f'(t)\ne 0.
 \end{equation}
 
+\section{Mannigfaltigkeiten}
+\subsection{Grundbegriffe}
+\begin{Definition}
+Seien $U,V$ offene Mengen. Eine Abbildung
+\begin{equation}
+\varphi\colon (U\subseteq\R^m)\to(V\subseteq\R^n)
+\end{equation}
+heißt \emdef{regulär}, wenn
+\begin{equation}
+\forall u\in U\colon \operatorname{rg}((D\varphi)(u))=\min(m,n)
+\end{equation}
+gilt. Mit $(D\varphi)(u)$ ist dabei die Jacobi-Matrix an der Stelle
+$u$ gemeint:
+\begin{equation}
+((D\varphi)(u))_{ij} := \bigg(\frac{\partial\varphi_i(u)}{\partial u_j}\bigg).
+\end{equation}
+\end{Definition}
+\noindent
+Für $(D\varphi)(u)\colon\R^m\to\R^n$ gilt:
+\begin{gather}
+m{\ge}n\implies\forall u\colon (D\varphi)(u)\;\text{ist surjektiv},\\
+m{<}n\implies\forall u\colon (D\varphi)(u)\;\text{ist injektiv}.
+\end{gather}
 
-
-
-
+\begin{Definition}
+Sei $m,n\in\N, m<n$ und sei $M\subseteq\R^n$.
+Eine Abbildung $\varphi$ von einer offenen Menge $U'\subseteq\R^m$
+in eine offene Menge $U\subseteq M$ heißt \emdef{Karte},
+wenn $\varphi$ ein Homöomorphismus und $\varphi\colon U'\to\R^n$
+eine reguläre Abbildung ist. Ist $U$ eine offene Umgebung von
+$p\in M$, so heißt $\varphi$ \emdef{lokale Karte} bezüglich $p$.
+\end{Definition}
+\pagebreak[1]
+\begin{Definition}
+Sei $m,n\in\N, m<n$. Eine Menge $M\subseteq\R^n$ heißt
+\emdef{$m$-dimensionale Untermannigfaltigkeit} des $\R^n$, wenn
+es zu jedem Punkt $p\in M$ eine lokale Karte
+\begin{equation}
+\varphi\colon (U'\subseteq R^m)\to (U\subseteq M\subseteq\R^n)
+\end{equation}
+gibt.
+\end{Definition}
 
