@@ -87,8 +87,58 @@ Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}, wenn jede
 Cauchy-Folge von Punkten aus $X$ einen Grenzwert $g$ mit $g\in X$
 besitzt.
 
-\section{Ableitungen}\index{Ableitung}
-\subsection{Differentialquotient}\index{Differentialquotient}
+\section{Reihen}\index{Reihe}
+\begin{Definition}
+Sei $(a_n)$ eine Folge. Die Folge $(s_n)$ von
+Partialsummen\index{Partialsumme}
+\begin{equation}
+s_n = \sum_{k=0}^n a_k
+\end{equation}
+wird \emdef{Reihe} genannt. Der Grenzwert
+\begin{equation}
+\sum_{k=0}^\infty a_k := \lim_{n\to\infty}\sum_{k=0}^n a_k
+\end{equation}
+wird als \emdef{Summe} der Reihe bezeichnet.
+\end{Definition}
+Jede beliebige Folge $(a_n)$ lässt sich durch
+\begin{equation}
+b_0:=a_0,\quad b_k:=a_k-a_{k-1}
+\end{equation}
+als Reihe
+\begin{equation}\label{eq:Teleskopsumme}
+a_n = \sum_{k=0}^n b_k = a_0+\sum_{k=1}^n (a_k-a_{k-1})
+\end{equation}
+darstellen. Die Summe auf der rechten Seite von \eqref{eq:Teleskopsumme}
+wird als \emdef{Teleskopsumme}\index{Teleskopsumme} bezeichnet.
+
+\subsection{Konvergenzkriterien}\index{Konvergenzkriterium}
+\subsubsection{Quotientenkriterium}\index{Quotientenkriterium}
+Gegeben ist eine unendliche Reihe $s_n=\sum_{k=0}^n a_k$, wobei
+die $a_k$ reelle oder komplexe Zahlen sind und $a_k\ne 0$ ab einem
+gewissen $k$ ist. Gilt
+\begin{equation}
+\exists q{<}1\;\exists k_0\;\forall k{>}k_0\colon \bigg|\frac{a_{k+1}}{a_k}\bigg|\le q,
+\end{equation}
+so ist $(s_n)$ absolut konvergent. Gilt jedoch
+\begin{equation}
+\exists k_0\;\forall k{>}k_0\colon\bigg|\frac{a_{k+1}}{a_k}\bigg|\ge 1,
+\end{equation}
+so ist $(s_n)$ divergent.
+
+Existiert der Grenzwert
+\begin{equation}
+g = \lim_{k\to\infty}\bigg|\frac{a_{k+1}}{a_k}\bigg|,
+\end{equation}
+so gilt:
+\begin{gather}
+g<1\implies(s_n)\;\text{ist absolut konvergent},\\
+g>1\implies(s_n)\;\text{ist divergent},\\
+g=0\implies\;\text{keine Aussage}.
+\end{gather}
+
+\newpage
+\section{Differentialrechnung}\index{Differentialrechnung}
+\subsection{Differentialquotient}\index{Differentialquotient}\index{Ableitung}
 Sei $U\subseteq\R$ ein offenes Intervall
 und sei $f\colon U\to\R$. Die Funktion $f$ heißt
 differenzierbar\index{differenzierbar}
@@ -141,13 +191,13 @@ c_k[f+g] = c_k[f]+c_k[g],\\
 c_k[\lambda f] = \lambda c_k[f].
 \end{gather}
 \strong{Reelle Fourier-Koeffizienten:}
-\begin{gather}
-a_k[s] = \frac{2}{T}\int_{t_0}^{t_0+T} \cos(k\omega t)\,s(t)\,\mathrm dt,\\
-b_k[s] = \frac{2}{T}\int_{t_0}^{t_0+T} \sin(k\omega t)\,s(t)\,\mathrm dt.
-\end{gather}
+\begin{align}
+a_k[s] &= \frac{2}{T}\int_{t_0}^{t_0+T} \cos(k\omega t)\,s(t)\,\mathrm dt,\\
+b_k[s] &= \frac{2}{T}\int_{t_0}^{t_0+T} \sin(k\omega t)\,s(t)\,\mathrm dt.
+\end{align}
 Nach Normierung $x:=\omega t$, $f(x):=s(x/\omega)$:
-\begin{gather}
-a_k[f] = \frac{1}{\pi}\int_{-\pi}^{\pi} \cos(kx)\,f(x)\,\mathrm dx,\\
-b_k[f] = \frac{1}{\pi}\int_{-\pi}^{\pi} \sin(kx)\,f(x)\,\mathrm dx.
-\end{gather}
+\begin{align}
+a_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \cos(kx)\,f(x)\,\mathrm dx,\\
+b_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \sin(kx)\,f(x)\,\mathrm dx.
+\end{align}
 
