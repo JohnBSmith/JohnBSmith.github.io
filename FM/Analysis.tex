@@ -83,9 +83,10 @@ d(a_m,a_n)<\varepsilon.
 \end{equation}
 \end{Definition}
 \noindent
-Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}, wenn jede
-Cauchy-Folge von Punkten aus $X$ einen Grenzwert $g$ mit $g\in X$
-besitzt.
+Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}\index{vollständig},
+wenn jede Cauchy-Folge von Punkten aus $X$ einen Grenzwert $g$
+mit $g\in X$ besitzt. Ein vollständiger normierter Raum heißt
+\emdef{Banachraum}\index{Banachraum}.
 
 \section{Reihen}\index{Reihe}
 \begin{Definition}
@@ -111,6 +112,28 @@ a_n = \sum_{k=0}^n b_k = a_0+\sum_{k=1}^n (a_k-a_{k-1})
 darstellen. Die Summe auf der rechten Seite von \eqref{eq:Teleskopsumme}
 wird als \emdef{Teleskopsumme}\index{Teleskopsumme} bezeichnet.
 
+\subsection{Absolute Konvergenz}\index{absolut konvergent}
+Sei $X$ ein normierter Raum.
+\begin{Definition}
+Eine Reihe $s_n=\sum_{k=0}^n a_k$ mit $a_k\in X$
+heißt \emdef{absolut konvergent}, wenn
+\begin{equation}\label{eq:absolut-convergence}\textstyle
+\sum_{k=0}^\infty \|a_k\| < \infty.
+\end{equation}
+\end{Definition}
+\noindent
+Es gilt: $X$ ist ein Banachraum gdw. jede absolute konvergente
+Reihe konvergent ist.
+
+Ist $X$ ein Banachraum und $s_n=\sum_{k=0}^n a_k$ eine
+absolut konvergente Reihe mit $a_k\in X$, so gilt:
+\begin{equation}\label{eq:unconditional-convergence}
+\sum_{k=0}^\infty a_k = \sum_{k=0}^\infty a_{\sigma(k)},\quad
+\sigma\in\operatorname{Sym}(\N_0).
+\end{equation}
+Eine konvergente Reihe, für die \eqref{eq:unconditional-convergence}
+gilt, heißt \emdef{unbedingt konvergent}\index{unbedingt konvergent}.
+
 \subsection{Konvergenzkriterien}\index{Konvergenzkriterium}
 \subsubsection{Quotientenkriterium}\index{Quotientenkriterium}
 Gegeben ist eine unendliche Reihe $s_n=\sum_{k=0}^n a_k$, wobei
@@ -119,7 +142,8 @@ gewissen $k$ ist. Gilt
 \begin{equation}
 \exists q{<}1\;\exists k_0\;\forall k{>}k_0\colon \bigg|\frac{a_{k+1}}{a_k}\bigg|\le q,
 \end{equation}
-so ist $(s_n)$ absolut konvergent. Gilt jedoch
+so ist $(s_n)$ absolut konvergent. S.\,\eqref{eq:absolut-convergence}.
+Gilt jedoch
 \begin{equation}
 \exists k_0\;\forall k{>}k_0\colon\bigg|\frac{a_{k+1}}{a_k}\bigg|\ge 1,
 \end{equation}
@@ -136,31 +160,28 @@ g>1\implies(s_n)\;\text{ist divergent},\\
 g=0\implies\;\text{keine Aussage}.
 \end{gather}
 
-\subsection{Cauchy-Produkt}
+\subsection{Cauchy-Produkt}\index{Cauchy-Produkt}
+Sei
+\begin{gather}
+\textstyle A_m:=\sum_{n=0}^m a_n,\quad A:=\lim_{m\to\infty} A_m,\\
+\textstyle B_m:=\sum_{n=0}^m b_n,\quad B:=\lim_{m\to\infty} B_m,\\
+\textstyle C_m:=\sum_{n=0}^m c_n,\quad C:=\lim_{m\to\infty} C_m.
+\end{gather}
 \begin{Definition}
-Das \emdef{Cauchy-Produkt} von zwei Reihen $A_m=\sum_{n=0}^m a_n$
-und $B_m=\sum_{n=0}^m b_n$ ist definiert durch
+Das \emdef{Cauchy-Produkt} von zwei Reihen $(A_m)$
+und $(B_m)$ ist definiert durch
 \begin{equation}
-(A_m)(B_m):=\sum_{n=0}^m c_n
-\;\text{mit}\;
+C_m:=\sum_{n=0}^m c_n
+\quad\text{mit}\enspace
 c_n := \sum_{k=0}^n a_k b_{n-k}.
 \end{equation}
 \end{Definition}
 \noindent
-Das Cauchy-Produkt von zwei absolut konvergenten Reihen ist
-absolut konvergent und es gilt
+Das Cauchy-Produkt von zwei reellen oder komplexen
+absolut konvergenten Reihen ist absolut konvergent und es gilt
 \begin{equation}\label{eq:cauchy-product-limits}
-\hspace{-1em}
-\lim_{m\to\infty}((A_m)(B_m))_m
-= (\lim_{m\to\infty} A_m)(\lim_{m\to\infty} B_m)
+C = AB.
 \end{equation}
-was als
-\begin{equation}
-\bigg(\sum_{n=0}^\infty c_n\bigg)
-=  \bigg(\sum_{n=0}^\infty a_n\bigg)\bigg(\sum_{n=0}^\infty b_n\bigg).
-\end{equation}
-notiert wird.
-
 \strong{Satz von Mertens:}
 Das Cauchy-Produkt von reellen oder komplexen konvergenten Reihen,
 eine davon absolut konvergent, ist konvergent und es gilt
