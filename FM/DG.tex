@@ -59,6 +59,46 @@ Eine Parameterkurve heißt \emdef{regulär}, wenn:
 \forall t\colon f'(t)\ne 0.
 \end{equation}
 
+\section{Koordinatensysteme}
+\subsection{Polarkoordinaten}\index{Polarkoordinaten}
+Polarkoordinaten $r,\varphi$ sind gegeben durch
+eine Abbildung
+\begin{equation}
+\begin{bmatrix}x\\ y\end{bmatrix}
+=f(r,\varphi)
+:=\begin{bmatrix}
+r\cos\varphi\\
+r\sin\varphi
+\end{bmatrix}
+\end{equation}
+mit $r>0$ und $0\le\varphi<2\pi$.
+
+Umkehrabbildung für $(x,y)\ne (0,0)$:
+\begin{equation}
+\begin{bmatrix}r\\ \varphi\end{bmatrix}
+= f^{-1}(x,y)
+= \begin{bmatrix}
+r\\
+\displaystyle s(y)\arccos\Big(\frac{x}{r}\Big)
+\end{bmatrix}
+\end{equation}
+mit $r=\sqrt{x^2+y^2}$\\
+und $s(y)=\sgn(y)+1-|\sgn(y)|$.
+
+Jacobi-Determinante:
+\begin{equation}
+\det J = \det((Df)(r,\varphi)) =r.
+\end{equation}
+
+\pagebreak[3]\noindent
+Darstellung des metrischen Tensors in Polarkoordinaten:%
+\begin{equation}
+(g_{ij}) = J^T J = \begin{bmatrix}
+1 & 0\\
+0 & r^2
+\end{bmatrix}.
+\end{equation}
+
 \section{Mannigfaltigkeiten}
 \subsection{Grundbegriffe}
 \begin{Definition}
@@ -101,4 +141,19 @@ es zu jedem Punkt $p\in M$ eine lokale Karte
 \end{equation}
 gibt.
 \end{Definition}
+
+\subsection{Vektorfelder}
+\subsubsection{Christoffel-Symbole}\index{Christoffel-Symbole}
+Sei $(M,g)$ eine pseudo-riemannsche Mannigfaltigkeit.
+
+Es gilt:
+\begin{align}
+\Gamma_{ab}^k &= \frac{1}{2} g^{kc}
+(\partial_a g_{bc}+\partial_b g_{ac}-\partial_c g_{ab}),\\
+\Gamma_{cab} &= \frac{1}{2}
+(\partial_a g_{bc}+\partial_b g_{ac}-\partial_c g_{ab}),\\
+\partial_a g_{bc} &= \Gamma_{bac}+\Gamma_{cab},\\
+\Gamma_{ab}^k &= \Gamma_{ba}^k.
+\end{align}
+
 
