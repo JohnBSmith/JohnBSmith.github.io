@@ -3795,6 +3795,12 @@ function handle_keys(event){
   }
 }
 
+function calc_keys(event){
+  if(event.keyCode==13){
+    calc();
+  }
+}
+
 window.onload = initclick;
 
 
