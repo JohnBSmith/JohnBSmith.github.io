@@ -266,11 +266,20 @@ differenzierbar an der Stelle $x_0$ und es gilt
 \begin{equation}
 (f\circ g)'(x_0) = (f'\circ g)(x_0)\, g'(x_0).
 \end{equation}
+\subsection{Tangente und Normale}
+Tangente der Funktion $f$ an der Stelle $x_0$:
+\begin{equation}
+T(x) = f(x_0)+f'(x_0)(x-x_0).
+\end{equation}
+Normale der Funktion $f$ an der Stelle $x_0$:
+\begin{equation}
+N(x) = f(x_0)+\frac{1}{f'(x_0)}(x-x_0).
+\end{equation}
 
-\subsection{Richtungsableitungen}
+\section{Skalarfelder}
 Sei $x:=(x_k)_{k=1}^n$ und $a:=(a_k)_{k=1}^n$. Sei $f\colon G\to\R$
 wobei $G\subseteq\R^n$ eine offene Menge ist.
-\subsubsection{Partielle Ableitungen}
+\subsection{Partielle Ableitungen}
 \begin{Definition}
 Die \emdef{partiellen Ableitungen}\index{partielle Ableitung}
 von $f$ an der Stelle $a\in G$ sind definiert durch
@@ -286,7 +295,7 @@ Kurzschreibweisen:
 (D_k f)(a),\quad (\partial_k f)(a).
 \end{equation}
 \end{Definition}
-\subsubsection{Gradient}
+\subsection{Gradient}
 Sei $(\ue_k)_{k=1}^n$ die kanonische Basis des $\R^n$.
 \begin{Definition} \emdef{Gradient} an der Stelle $a$:
 \begin{equation}
@@ -300,22 +309,87 @@ Formale Schreibweise:
 \nabla := \textstyle\sum_{k=1}^n \ue_k D_k.
 \end{equation}
 \end{Definition}
-\subsubsection{Richtungsableitung}
+\noindent
+Ist $(\nabla f)(x)$ stetig bei $x=a$, so
+ist $f$ bei $a$ differenzierbar.
+
+\subsubsection{Tangentialraum}
+Ist $f\colon G\to\R$ in einer Umgebung von $x_0\in G$
+differenzierbar, so existiert bei $x_0$ auf eindeutige Art
+ein Tangentialraum, der durch
+\begin{equation}
+T(x) = f(x_0)+\langle(\nabla f)(x_0),\,x-x_0\rangle
+\end{equation}
+beschrieben wird.
+
+\subsection{Richtungsableitung}
 \begin{Definition} \emdef{Richtungsableitung} an der Stelle $a$
 in Richtung $v$:
 \begin{equation}
 \begin{split}
-& (D_v f)(a) := \frac{\mathrm d}{\mathrm dt} f(a+tv)\bigg|_{t=0}\\
+& (D_v f)(a) := \frac{\mathrm d}{\mathrm dt} f(a+tv)\Big|_{t=0}\\
 & = \lim_{h\to 0} \frac{f(a+hv)-f(a)}{h}.
 \end{split}
 \end{equation}
 \end{Definition}
 \noindent
-Ist $f$ an der Stelle $a$ total differenzierbar, so gilt:
+Die partiellen Ableitungen sind die Richtungsableitungen
+bezüglich der Standardbasis $(e_k)$:
+\begin{equation}
+(D_{\displaystyle e_k}f)(a) = (D_k f)(a).
+\end{equation}
+Ist $f$ an der Stelle $a$ differenzierbar, so gilt:
 \begin{equation}
 (D_v f)(a) = \langle v,(\nabla f)(a)\rangle
 = \sum_{k=1}^n v_k (D_k f)(a).
 \end{equation}
+Sind $f,g$ an der Stelle $a$ differenzierbar, so gilt dort:
+\begin{align}
+D_v (f+g) &= D_v f+D_v g,\\
+\forall r\in\R\colon D_v (rf) &= rD_v f,\\
+D_v (fg) &= gD_v f+fD_v g,\\
+D_{v+w} f &= D_v f+D_w f.
+\end{align}
+
+\section{Vektorfelder}
+Sei $f\colon G\to\R^m$ wobei $G\subseteq\R^n$ eine offene Menge ist.
+\begin{Definition} \emdef{Jacobi-Matrix} an der Stelle $a$:
+\begin{equation}
+(J[f](a))_{ij} := (D_j f_i)(a).
+\end{equation}
+Schreibweisen:
+\begin{equation}
+J[f](a) = (Df)(a) = (\nabla\otimes f)^T(a)
+\end{equation}
+und
+\begin{equation}
+J[f](x) = \frac{\partial f(x)}{\partial x}
+= \frac{\partial(f_1,\ldots,f_m)}{\partial(x_1,\ldots,x_n)}.
+\end{equation}
+\end{Definition}
+
+\subsection{Tangentialraum}
+Ist $f\colon (G\subseteq\R^n)\to\R^m$ bei $x_0\in G$ differenzierbar,
+so gibt es dort einen Tangentialraum, der durch
+\begin{equation}
+T(x) = f(x_0)+(Df)(x_0)\,(x-x_0)
+\end{equation}
+beschrieben wird.
+
+\subsection{Richtungsableitung}
+\begin{Definition} \emdef{Richtungsableitung} von $f$ an der
+Stelle $a$:
+\begin{equation}
+(D_v f)(a) := \frac{\mathrm d}{\mathrm dt}f(a+tv)\Big|_{t=0}.
+\end{equation}
+\end{Definition}
+\noindent
+Ist $f\colon (G\subseteq\R^n)\to\R^m$ bei $a\in G$ differenzierbar,
+so gilt:%
+\begin{equation}
+(D_v f)(a) = (\langle v,\nabla\rangle f)(a) = J[f](a)\,v,
+\end{equation}
+kurz $D_v = \langle v,\nabla\rangle$.
 
 \section{Fourier-Analysis}
 \subsection{Fourierreihen}\index{Fourierreihe}
