@@ -1,0 +1,194 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,openany]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{textcomp}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\definecolor{c2}{RGB}{20,60,100}
+\definecolor{c3}{RGB}{80,120,180}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{4mm}
+\usepackage{lipsum}
+\usepackage{multicol}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+\usepackage{tocloft}
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsubsecindent}{15pt}
+\setlength{\cftsubsubsecindent}{23pt}
+\renewcommand{\cftsecfont}{\normalfont\sffamily\bfseries}
+\renewcommand{\cftsubsecfont}{\normalfont\sffamily}
+\renewcommand{\cftsubsubsecfont}{\normalfont\sffamily}
+\renewcommand\cftsecpagefont{\normalfont\sffamily\bfseries}
+\renewcommand\cftsubsecpagefont{\normalfont\sffamily}
+\renewcommand\cftsubsubsecpagefont{\normalfont\sffamily}
+
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\normalfont\sffamily\LARGE\bfseries}{\thesection}{1em}{\LARGE}
+\titleformat{\subsection}[block]
+  {\normalfont\sffamily\Large\bfseries}{\thesubsection}{1em}{\Large}
+\titleformat{\subsubsection}[block]
+  {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
+
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{2pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{2pt}{2pt}
+
+\usepackage[justification=RaggedRight,singlelinecheck=off]{caption}
+
+\numberwithin{equation}{section}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\newcommand{\strong}[1]{{\sffamily\bfseries #1}}
+
+% \ui: imaginäre Einheit
+% \ue: Einheitsvektor
+% \ue: eulersche Zahl
+% \uv{x}: unterstrichener Vektor
+
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\uv}[1]{\underline{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\Real}{Re}
+\DeclareMathOperator*{\Imag}{Im}
+\DeclareMathOperator*{\rg}{rg}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\Eig}{Eig}
+
+\theoremstyle{definition}
+\newtheorem{Definition}{Definition}
+
+\begin{document}
+\setlength{\abovedisplayskip}{6pt}
+\setlength{\belowdisplayskip}{6pt}
+\setlength{\abovedisplayshortskip}{6pt}
+\setlength{\belowdisplayshortskip}{6pt}
+
+\begin{titlepage}
+\centering
+\phantom{x}
+
+\vspace{20em}
+{\noindent\Huge\sffamily\textbf{Differentialgleichungen}}
+
+\vspace{2em}
+{\Large Dezember 2016}\\
+\end{titlepage}
+
+\thispagestyle{empty}
+
+\noindent
+Dieses Heft ist unter der Lizenz\\
+Creative Commons CC0 veröffentlicht.
+
+\renewcommand{\contentsname}{
+\normalfont\sffamily\bfseries\LARGE
+Inhaltsverzeichnis}
+\tableofcontents
+
+\section{Vorbereitungen}
+\subsection{Begriffe}
+Was ist eine Differentialgleichung? Um diesen Begriff besser in den
+allgemeinen mathematischen Rahmen einordnen zu können, wollen wir eine
+Differentialgleichung (DGL) als Spezialfall einer Funktionalgleichung
+beschreiben. Eine Funktionalgleichung ist nun informell eine Gleichung,
+deren Lösungsmenge nicht aus Zahlen besteht, sondern aus Funktionen.
+
+\begin{Definition}
+Sei $f\colon D\to Z$. Eine \emph{Funktionalgleichung} ist
+eine Bestimmungsgleichung der Form
+\begin{equation}\label{eq:Funktionalgleichung}
+\forall x{\in}D\colon\;H(x,f)=0
+\end{equation}
+mit $g\colon D\times\operatorname{Abb}(D,Z)\to G^m$ wobei $(G,+)$
+eine abelsche Gruppe ist. Gefunden werden soll die
+Lösungsmenge%
+\begin{equation}
+L = \{f\mid\forall x\colon H(x,f)=0\}.\;\Box
+\end{equation}
+\end{Definition}
+\noindent
+Man beachte, dass in dieser Definition auch Systeme
+von Funktionalgleichungen
+mit eingeschlossen sind. Außerdem kann z.\,B. $D=\R^n$ sein, womit
+sich Funktionen in mehreren Variablen beschreiben lassen.
+
+Gleichung \eqref{eq:Funktionalgleichung} ist sehr abstrakt und
+beschreibt eine unheimliche Vielfalt an Funktionen.
+Wir wollen uns daher zunächst auf reelle Funktionen beschränken.
+
+An dieser Stelle sei noch angemerkt, dass
+\eqref{eq:Funktionalgleichung} auch eine Verallgemeinerung der
+impliziten Beschreibung einer Funktion ist. Man spezifiziert dazu
+\begin{equation}
+H(x,f) := F(x,f(x)),\quad F\colon D\times Z\to G^m.
+\end{equation}
+Auch Rekursionsgleichungen sind Spezialfälle von
+Funktionalgleichungen. Wähle dazu $f\colon\N\to Z$, d.\,h. $f$ soll
+eine Folge sein. Eine Rekursionsgleichung erster Ordnung erhält man
+nun durch die Festlegung
+\begin{equation}
+H(x,f) := f(x)-g(x,f(x-1)).
+\end{equation}
+Es ist nun so, dass irgendwo in der Berechnung von $H(x,f)$
+Differentialoperatoren enthalten sein können. Wir wollen nun,
+dass ausschließlich solche Operatoren verwendet werden
+und schränken die Struktur von \eqref{eq:Funktionalgleichung}
+durch die Festlegung
+\begin{equation}
+H(x,f) := g(x,(Df)(x),(D^2 f)(x),\ldots,(D^n f)(x))
+\end{equation}
+stark ein, wobei $D$ der gewöhnliche Ableitungsoperator sein soll,
+der einer Funktion ihre erste Ableitung zuordnet. Dann ist $D^2$ die
+zweite Ableitung usw. Eine solche Gleichung wird dann als
+\emph{Differentialgleichung} bezeichnet. Wichtig ist hierbei,
+dass nur die Ableitungen an der Stelle $x$ betrachtet werden.
+Z.\,B. sind Funktionalgleichungen der Form
+\begin{equation}
+H(x,f) := g(x,(Df)(x),(Df)(x-1))
+\end{equation}
+darin nicht enthalten.
+\begin{Definition}
+Eine \emph{implizite Differentialgleichung} der Ordnung $n$
+ist eine Gleichung der Form
+\begin{equation}
+\forall x\colon g(x,y_0,y_1,y_2,\ldots,y_n)=0.
+\end{equation}
+mit $y_k=(D^k f)(x)$. Dabei sollen zunächst nur solche Funktionen $f$
+in Frage kommen, die auf einem offenen Definitionsbereich
+definiert und dort differenzierbar sind. $\Box$
+\end{Definition}
+\noindent
+Manchmal lässt sich eine implizite Differentialgleichung
+in eine explizite Form bringen.
+\begin{Definition}
+Eine \emph{explizite Differentialgleichung} der Ordnung $n$
+ist eine Gleichung der Form
+\begin{equation}
+\forall x\colon y_n = g(x,y_0,y_1,\ldots,y_{n-1})
+\end{equation}
+mit $y_k:=(D^k f)(x)$. $\Box$
+\end{Definition}
+
+
+\end{document}
+
+
