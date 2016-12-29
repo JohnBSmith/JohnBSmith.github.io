@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Flächen</title>
+  <style>
+body{
+  margin-left: 10%;
+  margin-bottom: 10em;
+  max-width: 40em;
+  font-family: "DejaVu Sans", sans-serif;
+}
+a{
+  color: #004060;
+  text-decoration: none;
+}
+a:href{
+  text-decoration: underline;
+}
+pre{
+  font-family: "FreeMono", monospace;
+}
+  </style>
+</head>
+<body>
+
+<br>
+<h1>Liste von Flächen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ul>
+<li><a href="#Rotation">Rotationsflächen</a>
+<li><a href="#Rest">Rest</a>
+</ul>
+
+<h2 id="Rotation">Rotationsflächen</h2>
+
+<pre>
+# <b>Sphäre (Kugeloberfläche)</b>
+# r: Radius
+# u: geografische Länge
+# v: Kobreite (Winkel zwischen Punkt und Nordpol)
+x = r*cos(u)sin(v)
+y = r*sin(u)sin(v)
+z = r*cos(v)
+u in [0,2pi)
+v in [0,pi]
+r^2=x^2+y^2+z^2
+
+# <b>Torus</b>
+# R: Radius der Mittellinie
+# r: Radius des Ringquerschnittes
+# u: Winkel des R-Vektors
+# v: Winkel des r-Vektors
+x = r*cos(u)sin(v)+R*cos(u)
+y = r*sin(u)sin(v)+R*sin(u)
+z = r*cos(v)
+u in [0,2pi), v in [0,2pi)
+r^2=(R-sqrt(x^2+y^2))^2+z^2
+4R^2(x^2+y^2)=(x^2+y^2+z^2+R^2-r^2)^2
+</pre>
+
+<h2 id="Rest">Rest</h2>
+
+<pre>
+# <b>Dini-Fläche</b>
+x = a*cos(u)sin(v)
+y = a*sin(u)sin(v)
+z = a*(cos(v)+ln(tan(v/2)))+b*u
+a=1, b=1/10
+u in [0,2k*pi), v in (0,pi/2]
+</pre>
+
+
+</body>
+</html>
+
