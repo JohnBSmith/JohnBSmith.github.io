@@ -1,9 +1,7 @@
 \documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
 \usepackage[utf8]{inputenc}
-%
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-%
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -11,9 +9,13 @@
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
-\setlength{\columnsep}{6mm}
+\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=32mm}
+\setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
+
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\R}{\mathbb R}
+
 \begin{document}
 \section*{Aufzeichnungen\\
 zur Mathematik}
@@ -218,6 +220,74 @@ Das Halley"=Verfahren ist dann die Fixpunktiteration
 Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
 übergeht, wenn man \(f(x)f''(x)\) verschwinden lässt.
 
+\newpage
+\section{Lineare Algebra}
+\subsection{Hodge-Stern-Operator}
+\subsubsection{Orientierung}
+Sei $V$ ein $\R$-Vektorraum und sei $B=(b_k)_{k=1}^n$ eine Basis
+von $V$, die wir positiv orientiert nennen. Ist $B'$ eine andere
+Basis, so gibt es eine Basiswechselmatrix $T_{B'}^B$. Sei nun
+\begin{equation}
+s := \sgn(\det(T_{B'}^B)).
+\end{equation}
+Die Basis $B'$ heißt nun \emph{positiv orientiert}, wenn
+$s>0$ ist und \emph{negativ orientiert}, wenn $s<0$ ist.
+
+Im Koordinatenraum soll natürlich die Standardbasis positiv
+orientiert sein.
+
+Beachte, dass für das äußere Produkt gilt:
+\begin{equation}
+\bigwedge_{k=1}^n b_k' = \det(T_B^{B'}) \bigwedge_{k=1}^n b_k.
+\end{equation}
+Angenommen, die Basis $B'$ ist nun eine Permutation von $B=(b_k)$,
+also die Festlegung
+\begin{equation}
+B' := (b_{\sigma(k)})_{k=1}^n, \quad \sigma\in\operatorname{Sym}(n).
+\end{equation}
+Die Basiswechselmatrix ist nun die Permutationsmatrix und somit gilt:
+\begin{equation}
+\det(T_{B'}^B) = \sgn(\sigma).
+\end{equation}
+
+\subsection{Skalarprodukträume}
+Ist $V$ ein Skalarproduktraum und ist
+$B=(e_k)_{k=1}^n$ eine Orthonormalbasis von $V$,
+so ist der Hodge-Stern-Operator eine lineare Abbildung,
+definiert durch%
+\begin{equation}
+\begin{split}
+&*(e_{\sigma(1)}\wedge\ldots\wedge e_{\sigma(k)})\\
+&:= \sgn(\sigma)\,s(B)\,e_{\sigma(k+1)}\wedge\ldots\wedge e_{\sigma(n)}
+\end{split}
+\end{equation}
+mit $*\colon \Lambda^k(V)\to\Lambda^{n-k}(V)$,
+wobei $0\le k\le n$ gilt.
+
+Dabei ist $s(B)=+1$, wenn $B$ positiv orientiert ist,
+und $s(B)=-1$, wenn $B$ negativ orientiert ist.
+
+Sei $B=(b_k)$ nun eine Orthogonalbasis. Man definiert nun
+$g_{ij}:=\langle b_i,b_j\rangle$. Jetzt lassen sich den
+Basisvektoren durch
+\begin{equation}
+e_k := \frac{b_k}{\|b_k\|} = \frac{b_k}{\sqrt{g_{kk}}}
+\end{equation}
+normierte Basisvektoren zuordnen. Damit ergibt sich
+\begin{equation}
+\begin{split}
+&*(b_{\sigma(1)}\wedge\ldots\wedge b_{\sigma(k)}) =\\
+&= r \sgn(\sigma)\,s(B)\,b_{\sigma(k+1)}\wedge\ldots\wedge b_{\sigma(n)}
+\end{split}
+\end{equation}
+mit
+\begin{equation}
+\begin{split}
+r &= \frac{\sqrt{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}}
+{\sqrt{g_{\sigma(k+1)\sigma(k+1)}\ldots g_{\sigma(n)\sigma(n)}}}\\
+&=\frac{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}{\sqrt{\det g}}.
+\end{split}
+\end{equation}
 
 \end{document}
 
