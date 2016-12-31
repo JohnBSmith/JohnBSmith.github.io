@@ -17,8 +17,24 @@ a{
 a:href{
   text-decoration: underline;
 }
-pre{
+pre, dt, dd{
   font-family: "FreeMono", monospace;
+}
+dt{
+  font-weight: bold;
+}
+dd{
+  margin-bottom: 2em;
+  white-space: nowrap;
+  border: 2px solid #d0d0ca;
+  background-color: #f0f6ff;
+  margin-left: 0em;
+  padding-left: 1em;
+}
+pre.box{
+  border: 2px solid #d0d0ca;
+  background-color: #f0f6ff;
+  padding-left: 1em;
 }
   </style>
 </head>
@@ -35,41 +51,43 @@ pre{
 
 <h2 id="Rotation">Rotationsflächen</h2>
 
-<pre>
-# <b>Sphäre (Kugeloberfläche)</b>
-# r: Radius
-# u: geografische Länge
-# v: Kobreite (Winkel zwischen Punkt und Nordpol)
-x = r*cos(u)sin(v)
-y = r*sin(u)sin(v)
-z = r*cos(v)
-u in [0,2pi)
-v in [0,pi]
-r^2=x^2+y^2+z^2
+<dl>
+<dt>Sphäre (Kugeloberfläche)
+<dd>x = r*cos(u)sin(v)
+<br>y = r*sin(u)sin(v)
+<br>z = r*cos(v)
+<br>u in [0,2pi)
+<br>v in [0,pi]
+<br>r^2=x^2+y^2+z^2
+<br>
+<br>u: geografische Länge
+<br>v: Kobreite (Winkel zwischen Punkt und Nordpol)
+<br>r: Radius
 
-# <b>Torus</b>
-# R: Radius der Mittellinie
-# r: Radius des Ringquerschnittes
-# u: Winkel des R-Vektors
-# v: Winkel des r-Vektors
-x = r*cos(u)sin(v)+R*cos(u)
-y = r*sin(u)sin(v)+R*sin(u)
-z = r*cos(v)
-u in [0,2pi), v in [0,2pi)
-r^2=(R-sqrt(x^2+y^2))^2+z^2
-4R^2(x^2+y^2)=(x^2+y^2+z^2+R^2-r^2)^2
-</pre>
+<dt>Torus
+<dd>x = r*cos(u)sin(v)+R*cos(u)
+<br>y = r*sin(u)sin(v)+R*sin(u)
+<br>z = r*cos(v)
+<br>u in [0,2pi), v in [0,2pi)
+<br>r^2=(R-sqrt(x^2+y^2))^2+z^2
+<br>4R^2(x^2+y^2)=(x^2+y^2+z^2+R^2-r^2)^2
+<br>
+<br>R: Radius der Mittellinie
+<br>r: Radius des Ringquerschnittes
+<br>u: Winkel des R-Vektors
+<br>v: Winkel des r-Vektors
+</dl>
 
 <h2 id="Rest">Rest</h2>
 
-<pre>
-# <b>Dini-Fläche</b>
-x = a*cos(u)sin(v)
-y = a*sin(u)sin(v)
-z = a*(cos(v)+ln(tan(v/2)))+b*u
-a=1, b=1/10
-u in [0,2k*pi), v in (0,pi/2]
-</pre>
+<dl>
+<dt>Dini-Fläche
+<dd>x = a*cos(u)sin(v)
+<br>y = a*sin(u)sin(v)
+<br>z = a*(cos(v)+ln(tan(v/2)))+b*u
+<br>a=1, b=1/10
+<br>u in [0,2k*pi), v in (0,pi/2]
+</dl>
 
 
 </body>
