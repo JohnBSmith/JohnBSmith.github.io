@@ -1,0 +1,82 @@
+\documentclass[a4paper,11pt,fleqn,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{60,0,40}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=14mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{4mm}
+
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\newcommand{\unit}[1]{\mathrm{#1}}
+
+\begin{document}
+
+\thispagestyle{empty}
+\section*{Physikalische Chemie}
+\section{Thermodynamik}
+\subsection{Heizwert und Verbrennungsenthalpie}
+
+In einem Tafelwerk für die Oberstufe sind Tabellen zum
+(unteren) Heizwert $H$ und an anderer Stelle zur
+molaren Standardverbrennungsenthalpie $\Delta_c H_m^0$ auszumachen.
+Dabei stellt sich natürlich die Frage, ob und wie beides zusammenhängt.
+
+Einfaches Umrechnen über die molare Masse $M$ bringt gewisse
+Abweichungen. Tatsächlich handelt es sich dabei um den \emph{Brennwert}
+$B$, welcher auch als \emph{oberer Heizwert} bezeichnet wird.
+Es gilt also
+\begin{equation}\label{eq:Brennwert}
+mB = nMB = n\,|\Delta_c H_m^0|
+\end{equation}
+mit $m$: Masse, $n$: Stoffmenge.
+
+Nun ist aber zu beachten, dass bei einer typischen Verbrennung
+einer organischen Substanz Wasser entstehen wird.
+Die Reaktionsgleichung für die Verbrennung von Ethanol ist z.\,B.
+\begin{equation}
+\mathrm{C_2H_5OH + 3O_2 \longrightarrow 3 H_2O + 2 CO_2.}
+\end{equation}
+Man muss nun beachten, dass das Wasser nach der Reaktion verdampft,
+wofür Verdampfungswärme aufgebracht werden muss.
+
+Als Ansatz macht man die Energiebilanz:
+\begin{equation}\label{eq:Energiebilanz}
+mH = mB-m(\mathrm{H_2O})\,q_v(\mathrm{H_2O})
+\end{equation}
+mit $q_v$: spezifische Verdampfungswärme.
+
+Nun interessieren uns aber gerade keine Masse, sondern wir wollen
+alle Rechnungen molar durchführen. Formt man
+\eqref{eq:Energiebilanz} mit $M=m/n$ um und setzt \eqref{eq:Brennwert}
+für $B$ ein, so ergibt sich
+\begin{equation}
+MH = |\Delta_c H_m^0| - \frac{n(\mathrm{H_2O})}{n}
+M(\mathrm{H_2O})\,q_v(\mathrm{H_2O}).
+\end{equation}
+Hierbei sind $n(\mathrm{H_2O})$ und $n$ der Reaktionsgleichung
+zu entnehmen.
+Bei der Verbrennung von Ethanol gilt z.\,B.
+\[\begin{split}
+n(\mathrm{H_2O}) &= 3\,\unit{mol},\\
+n(\mathrm{C_2H_5OH}) &= 1\,\unit{mol},\\
+M(\mathrm{H_2O}) &= 0{,}018015\:\unit{kg/mol},\\
+M(\mathrm{C_2H_5OH}) &= 0{,}046068\:\unit{kg/mol},\\
+q_v(\mathrm{H_2O}) &= 2260\:\unit{kJ/kg},\\
+\Delta_c H_m^0 &= -1364\:\unit{kJ/mol}.
+\end{split}
+\]
+Damit ergibt sich $H\approx 26{,}96\:\unit{MJ/kg}$.
+In Tabellen findet man Werte von $26{,}8$ bis $26{,}9$.
+
+\vfill
+
+\noindent
+{\small Dieser Text steht unter der Lizenz Creative Commons CC0.}
+
+\end{document}
