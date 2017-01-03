@@ -41,7 +41,7 @@ ADD=0, SUB=1, MPY=2, DIV=3,
 GT=4, LT=5, GE=6, LE=7,
 POW=10, NEG=11, AND=12, OR=13,
 EQ=20, NE=21, DEF=22, APP=24, MOD=26,
-THEN=30, ELSE=31, RANGE=32, DOT=34;
+THEN=30, ELSE=31, RANGE=32, RANGED=33, DOT=34;
 
 var canvas,context;
 var img,data;
@@ -159,7 +159,7 @@ var ftab3 = {
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
   "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
   "fs": fsa, "fa": fa, "fb": fb,
-  "comb": comb,
+  "comb": comb, "clamp": clamp
 };
 
 var ftab4 = {
@@ -467,6 +467,10 @@ function MLE(a,b,x){
 
 function fnot(x){
   return 1-x;
+}
+
+function clamp(x,a,b){
+  return Math.min(Math.max(x,a),b);
 }
 
 function int(f,a,b){
@@ -2432,7 +2436,7 @@ function precedence(op){
   if(op=="=" || op=="!=") return 24;
   if(op==">" || op=="<") return 30;
   if(op==">=" || op=="<=") return 30;
-  if(op==":") return 34;
+  if(op==":" || op=="::") return 34;
   if(op=="+" || op=="-") return 40;
   if(op=="*" || op=="/" || op=="%") return 50;
   if(op=="um") return 60;
@@ -2478,6 +2482,13 @@ function postfix(a){
           break;
         }
         a2.push(stack.pop());
+      }
+      if(a[i].s==':'){
+        var m = a2.length;
+        if(m>0 && a2[m-1].type==Top && a2[m-1].s==':'){
+          a2.pop();
+          a[i].s="::";
+        }
       }
       stack.push(a[i]);
     }else if(type==Tfid){
@@ -2554,6 +2565,7 @@ function encode(a,d,bcpx){
       else if(t.s=="|") t.s=OR;
       else if(t.s=="\\") t.s=APP;
       else if(t.s==":") t.s=RANGE;
+      else if(t.s=="::") t.s=RANGED;
       else if(t.s==".") t.s=DOT;
       else if(t.s==":="){
         t.s=DEF;
@@ -2720,6 +2732,10 @@ function calc_op(stack,t){
     y = stack.pop();
     x = stack.pop();
     stack.push(range(x,y));
+  }else if(c==RANGED){
+    y = stack.pop();
+    x = stack.pop();
+    stack.push(ranged(stack.pop(),x,y));
   }else if(c==DOT){
     y = stack.pop();
     x = stack.pop();
