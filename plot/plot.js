@@ -3422,7 +3422,7 @@ function fplot(){
 
 function pplot(){
   var x,y,px,py;
-  var s,ax,ay;
+  var sx,sy,ax,ay;
   var t,t1,t2,n,dt;
   x1=0; y1=0;
 
@@ -3441,19 +3441,40 @@ function pplot(){
   init();
   system();
 
-  s = gets("input1");
-  if(s.length>0){
-    define("x",s);
+  sx = gets("inputfx");
+  if(sx.length>0){
+    define("fx",sx);
     ax=gva;
-    s = gets("input2");
-    define("y",s);
+    sy = gets("inputfy");
+    define("fy",sy);
     ay=gva;
     vcr=cr1; vcg=cg1; vcb=cb1;
-    for(t=t1; t<t2; t+=dt){
-      gv1=t;
-      x=evalv(ax);
-      y=evalv(ay);
-      spoint(x,y);
+    if(sx[0]!='#'){
+      for(t=t1; t<t2; t+=dt){
+        gv1=t;
+        x=evalv(ax);
+        y=evalv(ay);
+        spoint(x,y);
+      }
+    }
+    flush();
+  }
+
+  sx = gets("inputgx");
+  if(sx.length>0){
+    define("gx",sx);
+    ax=gva;
+    sy = gets("inputgy");
+    define("gy",sy);
+    ay=gva;
+    vcr=cr2; vcg=cg2; vcb=cb2;
+    if(sx[0]!='#'){
+      for(t=t1; t<t2; t+=dt){
+        gv1=t;
+        x=evalv(ax);
+        y=evalv(ay);
+        spoint(x,y);
+      }
     }
     flush();
   }
