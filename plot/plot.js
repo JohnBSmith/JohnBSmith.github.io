@@ -126,7 +126,7 @@ var ftab2 = {
   "zeta": hzeta, "Li": pLi, "B": Beta,
   "inv": inv, "En": En,
   "PT": ChebyshevT, "PU": ChebyshevU, "PH": Hermite,
-  "cdf": cdf, "bracket": bracket, "brace": brace,
+  "cdf": cdf, "s1": s1, "s2": s2, "bracket": s1, "brace": s2,
   "gcd": gcd, "lcm": lcm,
   "sigma": sigma,
   "min": Math.min, "max": Math.max,
@@ -1114,37 +1114,55 @@ function Bi(x){
 }
 
 function bc(x,k){
-  var y=1;
   if(k!=Math.round(k)){
     return gamma(x+1)/gamma(k+1)/gamma(x-k+1);
+  }else if(k<0){
+    return 0;
   }
+  var y=1;
   for(var i=1; i<=k; i++){
     y=y*(x-i+1)/i;
   }
   return y;
 }
 
-function bracket(n,k){
-  n = Math.round(n);
-  k = Math.round(k);
+function stirling1(n,k){
   if(n==k){
     return 1;
   }else if(n<=0 || k<=0){
     return 0;
   }else{
-    return bracket(n-1,k-1)+(n-1)*bracket(n-1,k);
+    return (n-1)*stirling1(n-1,k)+stirling1(n-1,k-1);
   }
 }
 
-function brace(n,k){
-  n = Math.round(n);
-  k = Math.round(k);
+function stirling2(n,k){
   if(n==k){
     return 1;
   }else if(n<=0 || k<=0){
     return 0;
   }else{
-    return k*brace(n-1,k)+brace(n-1,k-1);
+    return k*stirling2(n-1,k)+stirling2(n-1,k-1);
+  }
+}
+
+function s1(n,k){
+  n = Math.round(n);
+  k = Math.round(k);
+  if(n<0 && k<0){
+    return s2(-k,-n);
+  }else{
+    return n<k? 0: stirling1(n,k);
+  }
+}
+
+function s2(n,k){
+  n = Math.round(n);
+  k = Math.round(k);
+  if(n<0 && k<0){
+    return s1(-k,-n);
+  }else{
+    return n<k? 0: stirling2(n,k);
   }
 }
 
