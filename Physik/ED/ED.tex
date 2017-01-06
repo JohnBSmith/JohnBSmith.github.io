@@ -1,0 +1,537 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,60}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=34mm}
+\setlength{\columnsep}{4.8mm}
+
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\normalfont\sffamily\LARGE\bfseries}{\thesection}{1em}{\LARGE}
+\titleformat{\subsection}[block]
+  {\normalfont\sffamily\Large\bfseries}{\thesubsection}{1em}{\Large}
+\titleformat{\subsubsection}[block]
+  {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
+  
+\newcommand{\ui}{\mathrm i}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{huge}
+\noindent
+\textbf{\sffamily Elektrodynamik}
+\par
+\end{huge}
+\vspace{1em}
+
+\noindent
+Dieser Text steht unter der\\
+Creative-Commons-Lizenz CC0.
+
+\tableofcontents
+%\newpage
+
+\section{Elektrostatisches Feld}
+\subsection{Coulombsches Gesetz}
+
+Man denke sich den dreidimensionalen euklidischen Punktraum.
+Weiterhin wird im Modell gefordert, dass jeder Punkt von Vakuum oder
+Luft umgeben ist, ohne näher zu beschreiben, was damit gemeint sein
+soll.
+
+Legt man zwei Punktladungen in den Raum, so wirkt auf eine der
+Ladungen gemäß dem coulombschen Gesetz eine Kraft.
+Der Betrag der Kraft ist
+\begin{equation}\label{Coulomb}
+|F|=\frac{1}{4\pi\varepsilon_0}\frac{|q_1q_2|}{r^2}.
+\end{equation}
+und die Wirkung ist in Richtung der jeweils anderen Punktladung,
+falls beide ein unterschiedliches Vorzeichen haben. Bei gleichem
+Vorzeichen zeigt die Kraft genau in die entgegengesetzte Richtung.
+Hierbei sind $q_1,q_2$ die Werte der Punktladungen, $r$ der
+Abstand beider und $\varepsilon_0$ eine experimentell bestimmbare
+Konstante. Dieses experimentell überprüfbare Gesetz soll unsere
+axiomatische Grundlage für alle weiteren Betrachtungen bilden.
+
+Nach Newton wirken auf beide Punktladungen Kräfte, die gleich groß
+und genau entgegengesetzt sind. Das heißt es gilt $F_1=-F_2$.
+
+Mit $x_1,x_2$ sollen nun die beiden Punkte bezeichnet werden,
+bei denen die Punktladungen liegen. Nach der Wahl eines
+Koordinatenursprungs und einer Orthonormalbasis können die
+Punkte auch mit den Koordinatentupeln $x_k=(x_{k1},x_{k2},x_{k3})$
+identifiziert werden.
+
+Sei $r_{ij}:=x_i-x_j$. Bei $r_{ij}$ handelt es sich um ein
+Element des euklidischen Vektorraumes, und von einem solchen lässt
+sich der Betrag bilden. Das gibt Motivation zu folgender
+Definition: sei $\hat r_{ij}:=\frac{r_{ij}}{|r_{ij}|}$.
+Außerdem ist $r=|r_{12}|=|r_{21}|$.
+
+Bei $r_{21}$ handelt es sich nun um den Verschiebungsvektor,
+welcher von $q_1$ aus nach $q_2$ verschiebt. Entsprechend
+ist $\hat r_{21}$ der Richtungsvektor, welcher von $q_1$ aus
+nach $q_2$ zeigt. Kraft ist nun das Produkt aus Richtung und
+Betrag. Daher gilt
+\[F_1=-\mathrm{sgn}(q_1q_2)\,\hat r_{21}|F_1|.\]
+Rechnet man $\mathrm{sgn}(q_1q_2)\,|q_1q_2|=q_1q_2$ so ergibt sich
+also
+\[F_1=-\frac{q_1q_2}{4\pi\varepsilon_0}\frac{\hat r_{21}}{r^2}
+=-\frac{q_1q_2}{4\pi\varepsilon_0}\frac{r_{21}}{|r_{21}|^3}.\]
+Bei mehreren Ladungen werden sich die Kräfte überlagern. Gibt es
+also mehrere Ladungen $q_1$ bis $q_n$, so ergibt sich
+\[F_j = \sum_{i\ne j} F_{ij}.\]
+wobei $F_{ij}$ die Kraft ist, welche von $q_j$ aus auf
+$q_i$ zeigt. Damit ergibt sich
+\[F_j = -\sum_{i\ne j} \frac{q_iq_j}{4\pi\varepsilon_0}
+\frac{r_{ij}}{|r_{ij}|^3}.\]
+Alles Faktoren, die nicht vom Laufindex $i$ abhängig sind, lassen
+sich aus der Summe herausbringen. Man erhält
+\[F_j = -\frac{q_j}{4\pi\varepsilon_0}
+\sum_{i\ne j} q_i\frac{r_{ij}}{|r_{ij}|^3}.\]
+Nun hängt der Rest in der Summe aber nicht von $q_j$ ab.
+Das gibt Motivation zur Definition der \emph{elektrischen Feldstärke}.
+Ist $q$ eine Probepunktladung und $F$ die Kraft auf diese Ladung,
+so gilt
+\[E := \frac{F}{q}.\]
+Jeder Punkt $x$ im Punktraum erhält damit eine elektrische
+Feldstärke $E(x)$. Dieses Vektorfeld bezeichnen wir als das
+\emph{elektrostatische Feld}.
+
+Für eine diskrete Verteilung von Punktladungen gilt demnach
+\begin{equation}\label{eq:ESumme}
+E(x) = \frac{1}{4\pi\varepsilon_0}
+\sum_{k=1}^n q_k\frac{x-x_k}{|x-x_k|^3}.
+\end{equation}
+Diese Formel ist mathematisch praktischer, aber immer noch äquivalent
+zum coulombschen Gesetz. Wenn $E(x)$ berechnet ist, so ist
+damit auch $F=qE(x)$ bekannt. Mit $E(x)$ als Ausgangspunkt
+soll nun die mathematische Struktur des elektrostatischen Feldes
+untersucht werden. Dazu beschränken wir uns zur Vereinfachung
+zunächst auf eine einzige Punktladung $q_0$. Demnach gilt nun
+\begin{equation}\label{eq:E-Feld}
+E(x) = \frac{q_0}{4\pi\varepsilon_0}\frac{(x-x_0)}{|x-x_0|^3}.
+\end{equation}
+Erkenntnisbringend ist nun die Feststellung, dass $E(x)$ --
+dem Anschein der Formel nach -- an allen Stellen außer $x=x_0$
+differenzierbar ist. D.\,h. alle partiellen Ableitungen sind
+für $x\ne x_0$ stetig.
+
+Somit können wir $E(x)$ mit Hilfe von Differentialoperatoren
+untersuchen. Wir wählen nun ein orthonormales Koordinatensystem
+mit dem Ursprung bei $x_0$. Somit ist $x_0=0$. Die Rotation
+ist
+\begin{gather*}
+\nabla\wedge E(x)
+= \frac{q_0}{4\pi\varepsilon_0}\nabla\wedge\frac{x}{|x|^3}\\
+= \sum_{i<j} \Big(D_i\frac{x_j}{|x|^3}-D_j\frac{x_i}{|x|^3}\Big)
+e_i\wedge e_j.
+\end{gather*}
+Mit $\nabla$ ist der Nabla-Operator gemeint, mit $a\wedge b$
+das äußere Produkt und $D_k$ ist die partielle Ableitung nach
+Variable Nr. $k$. Nun gilt mit der Produktregel
+\[D_i \frac{x_j}{|x|^3}
+= \frac{1}{|x|^3}D_i x_j+x_jD_i\frac{1}{|x|^3}.\]
+Wegen $i\ne j$ verschwindet der erste Summand aber.
+Für den zweiten Summand gilt
+\[D_i\frac{1}{|x|^3} = -\frac{3}{|x|^4}D_i|x|\]
+und
+\[D_i|x| = \frac{1}{2|x|}D_i\langle x,x\rangle
+= \frac{1}{2|x|} 2x_i.\]
+Damit ergibt sich insgesamt
+\[D_i \frac{x_j}{|x|^3}
+= -\frac{3x_ix_j}{|x|^5}.\]
+Der Ausdruck ist nun aber symmetrisch bezüglich Vertauschung
+von $i$ und $j$. Daher verschwindet die Differenz
+$D_i\frac{x_j}{|x|^3}-D_j\frac{x_i}{|x|^3}$
+und es gilt
+\begin{equation}
+\nabla\wedge E(x)=0.\qquad (x\ne 0)
+\end{equation}
+Das elektrische Feld einer Punktladung ist also rotationsfrei
+und damit ein Potentialfeld. Dieses Resultat ist wesentlich, es
+ermöglicht die Applikation weitreichender mathematischer Hilfsmittel
+aus der Potentialtheorie. Für mehrere Punktladungen ist
+$E(x)$ eine Überlagerung der einzelnen Felder. Es gilt
+\[E(x) = \sum_{i=1}^n E_i(x).\]
+Somit gilt an allen Stellen außer den Quellen:
+\[\nabla\wedge E(x) = \sum_{i=1}^n \nabla\wedge E_i(x)=0.\]
+Das elektrostatische Feld ist also sogar immer ein
+Potentialfeld. Als nächste mathematische Abstraktion wollen wir
+also nicht mehr mit dem elektrischen Vektorfeld, sondern mit
+dem zugrundeliegenden skalaren Potential $\varphi$ arbeiten.
+Wir definieren $\varphi(x)$ implizit, indem wir verlangen, dass die
+Gleichung
+\begin{equation}\label{eq:phi-implizit}
+E(x)=-\nabla\varphi(x)
+\end{equation}
+gültig ist. Daher lässt sich $\varphi$ vertikal verschieben, da
+jeder konstante Summand beim bilden des Gradienten entfällt.
+Man wählt das konventionell so, dass
+\[\lim_{|x|\rightarrow\infty}\varphi(x)=0\]
+gilt. Man hat dann einen Potentialtrichter bzw.
+ein Potentialgewölbe mit Nullniveau im unendlichen.
+
+Wir brauchen nun eine Funktion dessen Ableitung
+$x/|x|^3$ ist. Das eindimensionale Analogon
+ist $1/x^2$ und davon ist $-1/x$ eine Stammfunktion.
+Daher kommt man auf die Idee zunächst den Ansatz
+$-1/|x|$ zu probieren. In der Tat ist
+unter Verwendung der Kettenregel
+\begin{gather*}
+\nabla\frac{1}{|x|} = -\frac{1}{|x|^2}\nabla |x|
+= -\frac{1}{|x|^2}\frac{1}{2|x|}\nabla\langle x,x\rangle\\
+= -\frac{1}{|x|^2}\frac{1}{2|x|}2x
+= -\frac{x}{|x|^3}.
+\end{gather*}
+Das Feld um eine Punktladung $q_0$ ist damit
+\begin{equation}\label{eq:Potential-Raum}
+\varphi(x) = \frac{q_0}{4\pi\varepsilon_0|x|}.
+\end{equation}
+Wenn die Ladung nicht im Koordinatenursprung liegt, so ergibt
+sich allgemein
+\[\varphi(x) = \frac{q_0}{4\pi\varepsilon_0|x-x_0|}.\]
+Mehrere Potentialfelder überlagern sich, da man summandenweise
+ableiten kann und dabei das elektrische Feld erhält.
+Damit ist
+\[\varphi(x) = \frac{1}{4\pi\varepsilon_0}
+\sum_{k=1}^n \frac{q_k}{|x-x_k|}.\]
+Die Isoflächen (Niveauflächen)
+des Potentials werden \emph{Äquipotentialflächen} genannt.
+Beschränkt man sich auf die Ebene, so hat man Isolinien die
+entsprechend \emph{Äquipotentiallinien} genannt werden.
+
+Für das elektrostatische Feld ergeben sich Feldlinien, so dass
+die elektrische Feldstärke $E(x)$ der Tangentialvektor
+einer Feldlinie am Punkt $x$ ist. Wenn die Feldlinie als
+Ortskurve $x(s)$ gegeben, so gilt also
+\[x'(s)=E(x(s)).\]
+Sei $\hat E:=\frac{E}{|E|}$. Wenn $s$ eine Parametrisierung nach
+der Bogenlänge sein soll, dann muss $|x'(s)|=1$ für alle $s$ sein.
+Man setzt dann also
+\[x'(s)=\hat E(x(s)).\]
+Die Feldlinien stehen überall senkrecht zu den Äquipotentialflächen,
+da $E(x)$ proportional zum Gradienten von $\varphi(x)$ ist.
+
+Zur Bestimmung der Divergenz des elektrostatischen Feldes macht man
+nun folgende Rechnung:
+\begin{gather*}
+\langle\nabla,\frac{x}{|x|^3}\rangle
+= \sum_{k=1}^n D_k\frac{x_k}{|x|^3}
+= \sum_{k=1}^n \bigg(\frac{1}{|x|^3}+x_kD_k\frac{1}{|x|^3}\bigg)\\
+= \sum_{k=1}^n \bigg(\frac{1}{|x|^3}-3\frac{x_k^2}{|x|^5}\bigg)
+= \frac{n}{|x|^3}-3\frac{|x|^2}{|x|^5}
+= \frac{n-3}{|x|^3}.
+\end{gather*}
+Für $n=3$ ergibt sich nun
+\begin{equation}\label{eq:quellenfrei}
+\langle\nabla,E(x)\rangle = 0.\qquad (x\ne 0)
+\end{equation}
+Das elektrische Feld im Raum ist also quellenfrei.
+Die Bedingung $n=3$ impliziert interessanterweise, dass elektrische
+Felder in der Ebene entweder nicht quellenfrei sind, oder dass
+die Gleichungen \eqref{eq:E-Feld} und \eqref{eq:Potential-Raum} für
+ebene Felder nicht stimmen. Da das erstgenannte absurd erscheint,
+müsste letzteres der Fall sein.
+
+Ebene Felder erscheinen für den Leser zunächst schlecht realisierbar,
+treten aber tatsächlich z.\,B. im dünnen Elektrolyt auf einem
+Isolator und bei Querschnitten von parallelen Linienladungen auf.
+Prinzipiell sind auch Felder auf einer gekrümmten Oberfläche
+denkbar. Man könnte z.\,B. eine dünne Schicht leitfähiges Gel
+auf einen Torus schmieren. Hierzu müsste die Laplace-Gleichung
+\eqref{eq:Laplace-Gleichung} für ein gekrümmtes Koordinatensystem
+auf dem Torus betrachtet werden.
+
+Man betrachte zunächst das Potential.
+Als Abkürzung definiert man nun den sogenannten \emph{Laplace-Operator}
+\begin{equation}
+\Delta\varphi := \langle\nabla,\nabla\varphi\rangle.
+\end{equation}
+Gleichung
+\eqref{eq:phi-implizit} in Verbindung mit Gleichung
+\eqref{eq:quellenfrei} bringt die sogenannte \emph{Laplace-Gleichung}
+\begin{equation}\label{eq:Laplace-Gleichung}
+\Delta\varphi = 0.
+\end{equation}
+Diese partielle Differentialgleichung wird für alle weiteren
+Betrachtungen der Elektrostatik wesentlich sein.
+
+Man betrachte die Laplace-Gleichung in der Ebene.
+Speziell in dieser zweiten Dimension ist nun möglich,
+Mittel der Funktionentheorie zu verwenden,
+was sich als die virtuoseste Beschreibung von ebenen Feldern
+herausstellen wird.
+
+Die elektrische Feldstärke soll ab jetzt allgemeiner durch
+\eqref{eq:phi-implizit} definiert sein.
+
+Aus der Laplace-Gleichung ergibt sich nun umgekehrt, dass $E(x,y)$
+ein quellenfreies Feld ist. Weiterhin lässt sich die
+informelle Rechnung
+\begin{equation}
+\nabla\wedge E
+= -\nabla\wedge\nabla\varphi
+= -(\underbrace{\nabla\wedge\nabla}_{=0})\varphi =0
+\end{equation}
+machen. Diese lässt sich mathematisch verifizieren und bedeutet,
+dass $E$ ein Potentialfeld sein muss, also rotationsfrei ist.
+Die quellenfreies und rotationsfreies Vektorfeld ist nun aber
+äquivalent zu den Cauchy-Riemannschen Differentialgleichungen
+(CRDG). Sei dazu
+\begin{equation}
+z:=x+\ui y=(x,y)
+\end{equation}
+und
+\begin{equation}
+f(z)=f(x,y):=E_x(x,y)-\mathrm{i}E_y(x,y).
+\end{equation}
+Sei nun $u:=E_x$ und $v:=-E_y$.
+
+Quellenfreiheit:
+\begin{equation}
+D_x E_x+D_y E_y=0\implies D_x u=D_y v.
+\end{equation}
+
+Rotationsfreiheit:
+\begin{equation}
+\begin{split}
+&(D_x E_y-D_y E_x)(e_x\wedge e_y)=0\\
+&\implies D_x E_y-D_y E_x=0\\
+&\implies D_x v = -D_y u.
+\end{split}
+\end{equation}
+Somit ist $f(z)$ eine holomorphe Funktion.
+
+Weiterhin ist $\varphi$ eine harmonische Funktion, da
+$\varphi$ also Lösung der Laplace-Gleichung
+$\Delta\varphi=0$ ist. Denkt man sich die ursächlichen Punktladungen
+weg, so kann man $\varphi$ als Lösung eines Randwertproblems
+erhalten. Dabei wird Information über $\varphi$ auf dem Rand
+des Teilraumes vorausgesetzt um $\varphi$ insgesamt zu bestimmen.
+
+
+\subsection{Die Energiedichte}
+
+Um Ladungen aus dem unendlichen zusammen zu bringen, muss man Arbeit
+aufwenden. Daher speichert eine Konstellation von Punktladungen
+Energie. Aber prinzipiell könnte man eine Punktladung als zwei
+Punktladungen betrachten, die sehr dicht beieinander sind.
+Dort steckt noch Energie drin die prinzipiell beliebig groß ist.
+Das ist natürlich problematisch. Stattdessen wollen wir uns
+vorstellen, die Energie ist überall im elektrostatischen Feld
+gespeichert. Dazu machen wir folgenden Ansatz.
+
+In einem kleinen Volumenelement ist das elektrostatische Feld
+homogen. Man stelle sich nun vor, die Ladungen wurden aus
+dem Vakuum erzeugt (da sich positive und negative Ladungen ja
+aufheben). Dann werden die Ladungen getrennt und mit diesen
+zwei Kondensatorplatten in einem kleinen Abstand $d$ geladen.
+Dazu bedarf es der Energie
+\[W=\frac{1}{2}CU^2.\]
+Für den Plattenkondensator gilt nun
+$C=\varepsilon_0 A/d$. Zusammen mit $U=Ed$ ergibt sich dann
+\[W=\frac{1}{2}\varepsilon_0 E^2\frac{A}d.\]
+Mit $V=Ad$ erhält man die Energiedichte
+\[w:=\frac{W}{V} = \frac{1}{2}\varepsilon_0 E^2.\]
+Betrachtet man das Feld nun allgemein, so ist jedem
+Punkt $x$ die Energiedichte
+\[w=\frac{1}{2}\varepsilon_0|E(x)|^2
+=\frac{1}{2}\varepsilon_0|\nabla\varphi(x)|^2\]
+zugeordnet. Ein stabiles elektrostatisches Feld sollte ein Minimum
+an Energie haben. Das heißt, es sollte
+\[W = \int_V w\,\mathrm dV = \mathrm{min}\]
+sein. Damit kann die Energiedichte als Lagrangedichte aufgefasst
+werden. Sei $D[a]:=\frac{\partial}{\partial a}$ und $D_k:=D[x_k]$.
+Für eine stationäre Energiedichte gilt
+\[D[\varphi]w-\sum_{k=1}^3 D_k D[D_k\varphi]w=0.\]
+Setzt man für $w$ ein, so ergibt sich
+\begin{gather*}
+D[D_k\varphi]w=\frac{1}{2}\varepsilon_0 D[D_k\varphi]|\nabla\varphi|^2\\
+= \frac{1}{2}\varepsilon_0 D[D_k\varphi]\sum_{i=1}^3 (D_i\varphi)^2
+= \varepsilon_0 D_k\varphi.
+\end{gather*}
+Weiterhin ist $D[\varphi]w=0$.
+Damit ergibt sich
+\[-\varepsilon_0(D_1^2\varphi+D_2^2\varphi+D_3^2\varphi)=0.\]
+Nach dem Kürzen und Zusammenfassen ergibt sich die Laplace-Gleichung
+\[\Delta\varphi=0.\]
+
+\subsection{Verpflanzung}
+
+Kommen wir zurück auf ebene Felder in einem ladungsfreien Gebiet
+$G$ der Ebene. Den Rand von $G$ wollen wir mit $R(G)$ bezeichnen.
+Solche Felder sind über $f(z)=E_x(z)-\ui E_y(z)$ durch holomorphe
+Funktionen beschreibbar. Aus praktischen Gründen soll aber
+die Darstellung $f(z)=E_x(z)+\ui E_y(z)$ gewählt werden.
+
+Da das Addieren von Komponenten dem Addieren von Realteilen und
+Imaginärteilen entspricht, überträgt sich das Superpositionsprinzip
+sofort auf die Darstellung als komplexe Funktion.
+
+Meist ist das Feld $f(z)$ am Rand $R(G)$. bekannt.
+Man denke sich z.\,B. ein Metallstück. Dort laufen die Feldlinien
+rechtwinklig rein, und das Potential kann man (in Bezug zu einem
+beliebig gewählten Nullpotential) messen. Das Potential ist dabei
+homogen für das gesamte Metallstück.
+
+Ist das Gebiet nun einfach zusammenhängend und das Feld auf dem
+Rand bekannt, so ist das Feld damit auf dem gesamten Gebiet bekannt.
+Nehmen wir nun an, dass diese Umformung des Randes $T(z)$ bijektiv
+und holomorph ist. Die Verkettung von zwei
+holomorphen Funktionen ist nun auch holomorph. Nach der
+Transformation ist das Randfeld auf den neuen Rand
+$T(R(G))$ verlegt. Und damit ist das Feld auch im gesamten neuen
+Gebiet $T(G)$ bekannt.
+
+Damit lässt sich für ein Feld $f(z)$ die Zerlegung
+\[f(z) = g(T(z))\]
+formulieren. Damit lassen sich aus einem bekannten Feld $g(z)$
+mittels Transformationen $T(z)$ viele neue Felder $f(z)$ bauen.
+
+Die umgekehrte Aufgabe ist schwieriger. Falls $f(z)$ auf dem
+Rand $T(R(G))$ bekannt ist, so muss ein $g$ und eine passende
+Transformation $T$ gefunden werden. Als Rand kann und wird man eine
+Äquipotentiallinie wählen. Folgendes bleibt aber schwierig: Der
+Feldstärkevektor steht zwar senkrecht zur Äquipotentiallinie,
+aber sein Betrag muss beim durchlaufen der Äquipotentiallinie
+nicht konstant bleiben.
+
+Holomorphe Funktionen sind zur allgemeinen Beschreibung von
+elektrostatischen Feldern noch zu speziell. Das Feld $f(z)$ hat
+an dem Ort, wo eine Punktladung angeheftet ist, ja eine Polstelle.
+Aber das ist genau die Eigenschaft einer meromorphen Funktion. Solche
+sind überall dort holomorph, wo sie keine Polstelle haben.
+
+
+\subsection{Komplexes Potential}
+
+Da das elektrische Potenzial $\varphi(x,y)$ eine harmonische
+Funktion ist, kann es als Realteil einer komplexen Funktion $f(z)$
+betrachtet werden, die dann als komplexes Potential bezeichnet wird.
+Wir machen also den Ansatz
+\[f(z) = \varphi(z)+\ui\psi(z).\]
+Aus der Theorie der harmonischen Funktionen weiß man, dass die
+Funktion $\psi(z)$ ebenfalls ein Potential und bis auf eine
+Konstante eindeutig ist. Wir nennen $\psi(z)$ das konjugiert
+harmonische Potential. Außerdem stehen die Linien $\varphi(z)=\mathrm{const}$
+und $\psi(z)=\mathrm{const}$, falls sie sich treffen,
+rechtwinklig aufeinander.
+
+Für komplexe Funktionen allgemein gilt die Gleichung
+\[f'(z) = D_x\varphi(z)+D_x\psi(z).\]
+Mit den Cauchy-Riemannschen Gleichungen erhält man
+\begin{gather*}
+-E(z) = \nabla\varphi = D_x\varphi+\ui D_y\varphi\\
+= D_x\varphi-\ui D_x\psi = \overline{f'(z)}.
+\end{gather*}
+Was bringt uns diese Beschreibung nun? Es ist so, dass
+$\psi(z)=\mathrm{const}$ die Feldlinien beschreibt. D.h. die
+Äquipotentiallinien des konjugiert harmonischen Potentials sind
+die Feldlinien.
+
+Mit folgender Technik lassen sich Feldlinienbilder mit wenig
+Berechnungsaufwand visualisieren: Die Umkehrfunktion von $f(z)$
+formt das kartesische Koordinatensystem mit waagerechten Feldlinien
+und senkrechten Äquipotentiallinien in das Feldlinienbild
+von $f(z)$ um.
+
+Was man nun leider noch sagen muss, ist, dass sich elektrostatische
+Felder in der Ebene von denen im Raum unterscheiden. Macht man
+einen Schnitt im Raum durch die Punktladung, so wird sich das
+Potential der Punktladung
+in der Schnittebene vom Potential einer Punktladung in der Ebene
+unterscheiden. Das Analogon im Raum zur Punktladung in der Ebene ist
+vielmehr das Feld einer unendlich langen Linienladung.
+
+Unter anderem erfüllt das Feld in der Schnittebene nicht mehr die
+ebene Laplace-Gleichung. Damit können holomorphe Funktionen nicht mehr
+für das Feld in der Schnittebene benutzt werden. Das ist leider ein
+deutlicher Abschlag zur bisher so eleganten Theorie.
+
+Wie sieht nun das komplexe Potential einer Punktladung in der Ebene
+aus? Bei einer negativen Punktladungen laufen die Feldlinien
+strahlenförmig in ein Zentrum hinein. Dann muss das Potential
+im Kreis von $0$ bis $2\pi$ linear zunehmen. Damit
+gilt
+\[\psi(z) = \psi(1)\,\mathrm{arg}(z).\]
+
+\subsection{Ladungsdichten}
+
+Betrachten wir eine Ladung $Q$ auf einer Geraden. Auf dieser wählt
+man ein eindimensionales Koordinatensystem. Für das elektrische
+Feld gilt dann
+\begin{equation}
+E(x) = \frac{1}{4\pi\varepsilon_0} Q\frac{x-x_0}{|x-x_0|^3}.
+\end{equation}
+Nun wird die Ladung auf einem Intervall der Geraden verschmiert.
+Die Gesamtladung soll dabei die Summe aller Teilladungen sein.
+Wenn es bei der Verschmierung aber unendlich viele unendlich
+kleine Teilladungen gibt, so muss man eine Ladungsdichte
+einführen. Es gilt dann
+\begin{equation}
+Q = \int_a^b \lambda(x)\,\mathrm dx,
+\end{equation}
+wobei mit $\lambda(x)$ die Linienladungsdichte am Ort $x$ gemeint
+ist. Konzentriert man die gesamte Ladung am Ort $x_0$, so muss
+man eine Deltadistribution benutzen. Es ist dann
+\begin{equation}
+\lambda(x) = Q\delta(x-x_0).
+\end{equation}
+Beim Summieren der elektrischen Feldstärken ergibt sich
+die gleiche Situation. Jede infinitesimale Ladung trägt
+einen infinitesimalen Teil zum Feld bei. Hier ergibt sich
+\begin{equation}
+E(x) = \frac{1}{4\pi\varepsilon_0}\int_a^b
+\lambda(x')\frac{x-x'}{|x-x'|^3}\,\mathrm dx'.
+\end{equation}
+Verwendet man Deltadistributionen, so lässt sich diese Formel
+mit \eqref{eq:ESumme} vereinheitlichen. Die Linienladungsdichte teilt
+sich dabei in einen diskreten und einen kontinuierlichen Teil
+auf, was durch die Formel
+\begin{equation}
+\lambda(x) = \lambda_c(x)+\sum_{k=1}^n q_k\delta(x-x_k)
+\end{equation}
+beschrieben werden kann. Analoge Formeln gelten bei der
+Flächenladungsdichte $\sigma(x)$ und der Raumladungsdichte $\rho(x)$.
+Bei dieser ist dann
+\begin{equation}
+E(x) = \frac{1}{4\pi\varepsilon_0}\iiint_V
+\rho(x')\frac{x-x'}{|x-x'|^3}\,\mathrm dx_1'
+\mathrm dx_2'\mathrm dx_3'.
+\end{equation}
+Mit dem Satz von Fubini als Begründung können wir das Integral
+abstrakter schreiben, so dass es die Form
+\begin{equation}
+E(x) = \frac{1}{4\pi\varepsilon_0}\int_V
+\rho(x')\frac{x-x'}{|x-x'|^3}\,\mathrm dx'.
+\end{equation}
+annimmt.
+
+\subsection{Gaußsche Größen}
+Neben den hier verwendeten Größen werden in der Elektrodynamik
+auch gaußsche Größen benutzt. Damit ist gemeint, dass ein Teil
+der Größen anders definiert ist. Um die Unterschiede präzise
+herausstellen zu können, bezeichnen wir mit $X^g$ die gaußsche Größe,
+wenn mit $X$ die normale Größe gemeint ist.
+Für die elektrische Feldstärke gilt z.B.
+$E^g := \sqrt{4\pi\varepsilon_0}\,E$.
+Die gaußsche Ladung ist durch
+$q^g:=q/\sqrt{4\pi\varepsilon_0}$ definiert. Hiermit lassen
+sich einige Gleichungen kürzer schreiben, z.B. bekommt
+(\ref{Coulomb}) die Form
+\begin{equation}
+|F|r^2 = |q_1^g q_2^g|.
+\end{equation}
+
+\end{document}
+
+
