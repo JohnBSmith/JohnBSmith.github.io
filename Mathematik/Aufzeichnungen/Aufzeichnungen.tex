@@ -20,7 +20,7 @@
 \section*{Aufzeichnungen\\
 zur Mathematik}
 John Smith, 2016\\
-Lizenz: CC0
+Lizenz: Creative Commons CC0
 
 \tableofcontents
 
@@ -50,7 +50,7 @@ der folgende abstrakte Syntaxbaum (AST):
       (f x)
       (f (+ x T)))
 \end{verbatim}
-Aber was ist mit dem Allquantor? Der Allquantor ist eigentliche
+Aber was ist mit dem Allquantor? Der Allquantor ist eigentlich
 eine Funktion in zwei Variablen. Das erste Argument ist eine Menge $M$,
 das zweite ein Prädikat $p$. Der Allquantor überprüft nun, ob das
 Prädikat $p$ für alle Elemente von $M$ gültig ist. Wir wandeln nun
@@ -161,6 +161,102 @@ Für den Anzahlquantor gilt außerdem
 \exists^{=n} x{\in}A{:}\; p(x)
 \quad\text{gdw.}\quad \#\mathrm{filter}(A,p)=n.
 \end{equation}
+
+\subsection[Allquantifizierung über Produktmengen]%
+{Allquantifizierung über\\Produktmengen}
+Sei $M:=A\times B$. Sei $M_x:=\pi_1^{-1}(\{x\})$, das ist die
+Faser von $x$ für die Projektion $\pi_1(x,y):=x$. Es gilt nun
+\begin{equation}
+M=\bigcup_{x\in A} M_x.
+\end{equation}
+Es gilt außerdem (was zu zeigen ist)
+\begin{equation}\label{eq:forall-union}
+\forall t{\in}\bigcup_{i\in I} A_i\,[P(t)]
+\iff\forall i{\in}I\,\forall t{\in}A_i\,[P(t)].
+\end{equation}
+Daher ist
+\begin{equation}
+\begin{split}
+&\forall (x,y){\in}M\,[P(x,y)]\\
+&\iff\forall x{\in}A\,\forall (x,y){\in}M_x\,[P(x,y)].
+\end{split}
+\end{equation}
+Wegen
+\begin{equation}
+\begin{split}
+M_x &= \{x\}\times B\\
+&= \{(x,y)\mid x\in\{x\}\land y\in B\}\\
+&= \{(x,y)\mid y\in B\}
+\end{split}
+\end{equation}
+gilt nun
+\begin{equation}
+(x,y)\in M_x\iff y\in B.
+\end{equation}
+Somit gilt
+\begin{equation}
+\begin{split}
+&\forall (x,y){\in}M\,[P(x,y)]\\
+&\iff\forall x{\in}A\;\forall y{\in}B\,[P(x,y)].
+\end{split}
+\end{equation}
+Verwendet man $\pi_2$ anstelle von $\pi_1$, so gelangt man
+zu der Erkenntnis $\forall x\forall y\iff\forall y\forall x$.
+
+Betrachten wir nun \eqref{eq:forall-union} für endliche
+Zerlegungen. Sei dazu $I(n):=\{1,...,n\}$ und $U_n:=U_{n-1}\cup A_n$
+mit Anfang $U_1:=A_1$. Nun gilt $U_n=\bigcup_{i\in I(n)}A_i$.
+
+Es ist nun
+\begin{equation}
+\begin{split}
+&\forall t\in U_n\,[P(t)]\\
+&\iff\forall t\in U_{n-1}\cup A_n\,[P(t)]\\
+&\iff\forall t\in U_{n-1}\,[P(t)]\;\land\;\forall t\in A_n\,[P(t)]
+\end{split}
+\end{equation}
+Falls \eqref{eq:forall-union} für $n-1$ gilt (Induktionsvoraussetzung),
+so ist
+\begin{equation}
+\begin{split}
+& \forall t\in U_{n-1}\,[P(t)]\\
+& \iff\forall i{\in}I(n-1)\;\forall t{\in}A_i\,[P(t)].
+\end{split}
+\end{equation}
+Zusammenführen, d.\,h.
+\begin{equation}
+\begin{split}
+& \forall t{\in}A_n\,[P(t)]\;\land\;
+\forall i{\in}I(n-1)\;\forall t{\in}A_i\,[P(t)]\\
+&\iff\forall i{\in}I(n)\;\forall t{\in}A_i\,[P(t)],
+\end{split}
+\end{equation}
+bringt \eqref{eq:forall-union} für $n$.
+Die Induktion beginnen wir zunächst bei $n=1$, um möglichen
+Problemen mit der leeren Menge aus dem Weg zu gehen.
+
+Im allgemeinen Fall verwenden wir zunächst die prädikatenlogische
+Definition der Vereinigungsmenge:
+\begin{equation}\label{eq:union-def}
+\bigcup_{i\in I}A_i := \{x\mid\exists i{\in}I\,[x\in A_i]\}.
+\end{equation}
+Nun gilt
+\begin{equation}
+\begin{split}
+&\forall t\in\bigcup_{i\in I} A_i\,[P(t)]\\
+&\iff\forall t[t\in\bigcup_{i\in I}A_i\implies P(t)]\\
+&\iff\forall t[\exists i\,[t\in A_i]\implies P(t)]\\
+&\iff\forall t[\forall i\,[t\in A_i\implies P(t)]]\\
+&\stackrel{?!}{\iff}\forall i\,\forall t[t\in A_i\implies P(t)]\\
+&\iff\forall i\forall t{\in}A_i[P(t)].
+\end{split}
+\end{equation}
+Was noch zu zeigen ist, ist die Regel
+\begin{equation}
+\forall x\forall y\,[P(x,y)]
+\iff \forall y\forall x\,[P(x,y)].
+\end{equation}
+
 
 \newpage
 \section{Analysis}
