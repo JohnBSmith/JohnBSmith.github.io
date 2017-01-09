@@ -1,0 +1,84 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=32mm}
+\setlength{\columnsep}{4mm}
+\numberwithin{equation}{section}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+  {\normalfont\sffamily\huge\bfseries}{\thechapter}{1em}{\Huge}
+\titleformat{\section}[block]
+  {\normalfont\sffamily\Large\bfseries}{\thesection}{1em}{\Large}
+\titleformat{\subsection}[block]
+  {\normalfont\sffamily\large\bfseries}{\thesubsection}{1em}{\large}
+\titleformat{\subsubsection}[block]
+  {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
+
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\strong}[1]{\textbf{#1}}
+
+\theoremstyle{definition}
+\newtheorem{Aufgabe}{\sffamily Aufgabe}[section]
+
+\begin{document}
+\thispagestyle{empty}
+\section*{Aufgaben}
+
+Lizenz: Creative Commons CC0
+
+\tableofcontents
+
+\section{Analysis}
+\subsection{Konvergenz}
+\begin{Aufgabe}
+Berechne
+\[g = \lim_{x\to 0}\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}.
+\qquad(\forall k\colon a_k\ne 0)\]
+\end{Aufgabe}
+\noindent
+Lösung:
+Wegen $x\ne 0$ kann der Bruch mit $\frac{bx}{bx}$ erweitert
+werden. Damit ergibt sich
+\[\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}
+= \underbrace{\bigg(\frac{bx}{\sin(bx)}\bigg)}_{\to 1}
+\underbrace{\bigg(\frac{a_1}{b}+\sum_{k=2}^n\frac{a_k}{b}x^{k-1}\bigg)}_{\to a_1/b}.
+\]
+Nach den Grenzwertsätzen ist der gesamte Ausdruck konvergent, wenn
+die beiden Faktoren konvergent sind und $g$ ist das Produkt
+der Grenzwerte der Faktoren. Somit ist $g=a_1/b$. $\Box$
+
+Verwende alternativ die Regel von L'Hôpital.
+
+\begin{Aufgabe}
+Berechne
+\[g = \lim_{x\to\frac{\pi}{4}} \frac{1-\sin(ax)}{(\pi-2ax)^2}.
+\qquad(a\ne 0)\]
+\end{Aufgabe}
+\noindent
+Lösung:
+Verwende die Substitution $x=\frac{\pi}{2a}-\frac{u}{a}$.
+Nun ist
+\[\begin{split}
+&\frac{1-\sin(ax)}{(\pi-2ax)^2}
+= \frac{1-\sin(\frac{\pi}{2}-u)}{4u^2}
+= \frac{1-\cos u}{4u^2}\\
+& = \frac{\frac{u^2}{2!}+\frac{u^4}{4!}+\ldots}{4u^2}
+= \frac{1}{4} \Big(\frac{1}{2!}+\frac{u^2}{4!}+\ldots\Big).
+\end{split}\]
+Wenn $x\to\pi/4$ geht, muss $u\to 0$ gehen.
+
+Somit ist $g=1/8$. $\Box$
+\end{document}
+
+
