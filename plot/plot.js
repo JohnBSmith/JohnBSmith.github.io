@@ -2437,7 +2437,7 @@ function scan(s,d){
       i++;
     }else if(s[i]=='"'){
       i++; j=i;
-      while(s[i]!='"') i++;
+      while(i<s.length && s[i]!='"') i++;
       push_token(a,Tstring,s.slice(j,i));
       i++;
     }else{

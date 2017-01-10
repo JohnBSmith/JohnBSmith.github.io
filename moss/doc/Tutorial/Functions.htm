@@ -117,7 +117,7 @@ control structures. A basic for loop is written without much effort.
 <pre class="moss">
 For = sub|a,b,f|
   i=a
-  while i<=b
+  while i&lt;=b
     f(i)
     i++
   end
@@ -396,7 +396,7 @@ self argument. Viewed this way, <code>m</code> is called
 &gt; f = |a,b| [self,a,b]
 &gt; f(1,2)
 [null, 1, 2]
-&gt; f(0; 1,2)
+&gt; f(0;1,2)
 [0, 1, 2]
 </pre>
 
@@ -433,6 +433,39 @@ function, simply create such a function.
 "TREE"
 </pre>
 
+<p>There is still a little thing to be noted:
+One can choose a unique name instead of "self".
+Let us use "x" instead of "self". Then the example from above
+reads:
+</p>
+<pre class="moss">
+&gt; f = |x;a,b| [x,a,b]
+&gt; f(0;1,2)
+[0,1,2]
+</pre>
+<p>This is needed in case an inner function literal shadows
+an outer one. So, for example
+</p>
+<pre class="moss">
+function.type.ADD = |g| |x| self(x)+g(x)
+</pre>
+<p>will no work as intended. Instead one has to state
+this as</p>
+<pre class="moss">
+function.type.ADD = |f;g| |x| f(x)+g(x)
+</pre>
+<p>wich, in this case, also looks clearly more likeable.
+One could have written:
+</p>
+<pre class="moss">
+function.type.ADD = sub|g|
+  f = self
+  return |x| f(x)+g(x)
+end
+</pre>
+<p>But that is not for the sake of brevity.
+</p>
+
 <h2 id="app">Function application
 </h2>
 
@@ -462,9 +495,7 @@ a[k](x) means a[k] applied to x
 Look what that means.
 </p>
 <pre class="moss">
-function.type.ADD = sub|g| f=self
-  return |x| f(x)+g(x)
-end
+function.type.ADD = |f;g| |x| f(x)+g(x)
 </pre>
 <p>Now one can write <code>(f+g)(x)</code>.</p>
 
