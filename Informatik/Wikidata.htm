@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wikidata</title>
+  <style>
+body{
+  margin-left: 10%;
+  margin-top: 1em;
+  margin-bottom: 10em;
+  max-width: 46em;
+  font-family: "DejaVu Sans", sans-serif;
+  color: #30302a;
+}
+code,pre{
+  font-family: "FreeMono", "Courier New", monospace;
+}
+  </style>
+</head>
+<body>
+<br>
+<h2>Wikidata-Einführung</h2>
+<p>Ein möglichst einfaches Beispiel für einen Wikidata-Query
+ist z.B. »zeige mir alle Bundesländer von Deutschland«.
+Nun, Deutschland (Q183) ist Wikidata zwar bekannt, aber nicht
+»ist Bundesland von«. Aber es gibt P150, der etwas abstrakter
+gehalten ist. Im Query kommt nun ein Tripel der Form
+Subjekt Prädikat Objekt vor, oder auch Objekt Prädikat Subjekt,
+wobei Subjekt das sein soll, wonach wir suchen. Ein Fragezeichen
+vor einem Bezeichner sagt aus, dass dieser Bezeichner eine Variable
+sein soll. Man schreibt dann:
+<pre>
+SELECT ?Subjekt WHERE {
+  Objekt Prädikat ?Subjekt
+}
+</pre>
+
+<p>Ein Rautezeichen leitet einen Kommentar bis zum Ende der Zeile
+ein. Und hier nun das Beispiel:
+<pre>
+# Q183: Germany
+# P150: contains administrative territorial entity
+
+SELECT ?B WHERE {
+  wd:Q183 wdt:P150 ?B
+}
+</pre>
+
+<p>Wörtliche Übersetzung: »Wähle alle B aus für die gilt: Deutschland
+enthält B als administrative territoriale Einheit«. Die Ausgabe
+besteht aus 16 Resultaten, also offensichtlich die Bundesländer
+einschließlich der Stadtstaaten Berlin, Hamburg und Bremen.
+
+<p>Nun stehen dort nur die Datenbank-Identifizierer Q64, Q980, Q985
+usw. Wir wollen stattdessen nun die Namen dieser Bundesländer wissen.
+Dazu muss für jeden Datenbank-Identifizierer das label extrahiert
+werden, was mit einer <code>SERVICE</code>-Anweisung geschieht.
+Dann kann mit SubjektLabel darauf zugegriffen werden.
+<pre>
+SELECT ?B ?BLabel WHERE {
+  wd:Q183 wdt:P150 ?B.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de"
+  }
+}
+</pre>
+<p>Der Punkt zwischen zwei Ausdrücken bedeutet die logische
+Konjunktion dieser Ausdrücke. Steht nach dem Punkt kein
+Ausdruck mehr, so ist der Punkt wirkungslos.
+
+<p>Wir wollen die Bundesländer noch alphabetisch anordnen:
+<pre>
+SELECT ?B ?BLabel WHERE {
+  # ...
+} ORDER BY ?BLabel
+</pre>
+
+<p>Nun kann die Ausgabe unter anderem im JSON-Format heruntergeladen
+und in eigene Programme eingebunden werden. Die Daten stehen
+unter der Creative-Commons-Lizenz CC0.
+
+</body>
+</html>
