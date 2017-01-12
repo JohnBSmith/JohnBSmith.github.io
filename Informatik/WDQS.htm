@@ -15,6 +15,13 @@ body{
 code,pre{
   font-family: "FreeMono", "Courier New", monospace;
 }
+a{
+  color: #204060;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
   </style>
 </head>
 <body>
@@ -78,6 +85,62 @@ SELECT ?B ?BLabel WHERE {
 <p>Nun kann die Ausgabe unter anderem im JSON-Format heruntergeladen
 und in eigene Programme eingebunden werden. Die Daten stehen
 unter der Creative-Commons-Lizenz CC0.
+
+<p>Von jedem Bundesland würde man nun gerne die Einwohnerzahl
+(Population) erfahren. Dazu betrachten wir zunächst Berlin.
+<pre>
+# Q64: Berlin
+# P1082: population
+
+SELECT ?pop WHERE {
+  # Berlin hat die Population ?pop
+  wd:Q64 wdt:P1082 ?pop
+}
+</pre>
+<p>Das Ergebnis ist 3469849 (Abruf am 12. Januar 2017), das ist
+die Population am letzten bekannten Zeitpunkt, den 31. Dezember 2014.
+Problematisch ist hierbei, dass sich die Population mit der Zeit
+verändern kann. Man würde also auch gerne die Population zu
+einem bestimmten Zeitpunkt erfahren.
+</p>
+<p>Zunächst gibt wird durch das Präfix <code>wdt:</code> immer
+ein Objekt ausgedrückt. Zu diesem Objekt gehört ein
+Anweisungsknoten, welcher durch das Präfix <code>p:</code>
+ausgedrückt wird. Zu einem Anweisungsknoten drückt das
+Präfix <code>ps:</code> (property statement) drückt eine
+Eigenschafts-Anweisung aus, das Präfix <code>pq:</code>
+(property qualifier) einen Qualifizierer.
+Der Query
+</p>
+<pre>
+SELECT ?pop ?value WHERE {
+  wd:Q64 p:P1082 ?pop.
+  ?pop ps:P1082 ?value
+}
+</pre>
+<p>gibt nun eine ganze Liste von Zahlen zurück. Das ist die
+Population zu unterschiedlichen Zeitpunkten in der Geschichte.
+Nun soll eine Liste von Einträgen (Zeit, Einwohnerzahl) erstellt
+werden, die der Zeit nach geordnet ist.
+</p>
+<pre>
+# P585: point in time
+
+SELECT ?time ?value WHERE {
+  wd:Q64 p:P1082 ?pop.
+  ?pop ps:P1082 ?value.
+  ?pop pq:P585 ?time
+} ORDER BY ?time
+</pre>
+
+<h2>Literatur</h2>
+<ol>
+<li>TweetsFactsAndQueries:
+  »<a href="https://www.wikidata.org/wiki/User:TweetsFactsAndQueries/A_Guide_To_WDQS"
+  >A Guide To WDQS</a>«.
+<li>Steve Harris (Hg.): »<a href="https://www.w3.org/TR/sparql11-query/"
+  >SPARQL 1.1 Query Language</a>«.
+</ol>
 
 </body>
 </html>
