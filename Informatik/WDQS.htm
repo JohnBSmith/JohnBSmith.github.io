@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Wikidata</title>
+  <title>WDQS</title>
   <style>
 body{
   margin-left: 10%;
@@ -26,7 +26,8 @@ a:hover{
 </head>
 <body>
 <br>
-<h2>Wikidata-Einführung</h2>
+<h2>Einführung in Wikidata-Query-Service</h2>
+
 <p>Ein möglichst einfaches Beispiel für einen Wikidata-Query
 ist z.B. »zeige mir alle Bundesländer von Deutschland«.
 Nun, Deutschland (Q183) ist Wikidata zwar bekannt, aber nicht
@@ -102,7 +103,7 @@ die Population am letzten bekannten Zeitpunkt, den 31. Dezember 2014.
 Problematisch ist hierbei, dass sich die Population mit der Zeit
 verändern kann. Man würde also auch gerne die Population zu
 einem bestimmten Zeitpunkt erfahren.
-</p>
+
 <p>Zunächst gibt wird durch das Präfix <code>wdt:</code> immer
 ein Objekt ausgedrückt. Zu diesem Objekt gehört ein
 Anweisungsknoten, welcher durch das Präfix <code>p:</code>
@@ -111,18 +112,17 @@ Präfix <code>ps:</code> (property statement) drückt eine
 Eigenschafts-Anweisung aus, das Präfix <code>pq:</code>
 (property qualifier) einen Qualifizierer.
 Der Query
-</p>
 <pre>
 SELECT ?pop ?value WHERE {
   wd:Q64 p:P1082 ?pop.
   ?pop ps:P1082 ?value
 }
 </pre>
+
 <p>gibt nun eine ganze Liste von Zahlen zurück. Das ist die
 Population zu unterschiedlichen Zeitpunkten in der Geschichte.
 Nun soll eine Liste von Einträgen (Zeit, Einwohnerzahl) erstellt
 werden, die der Zeit nach geordnet ist.
-</p>
 <pre>
 # P585: point in time
 
@@ -131,6 +131,64 @@ SELECT ?time ?value WHERE {
   ?pop ps:P1082 ?value.
   ?pop pq:P585 ?time
 } ORDER BY ?time
+</pre>
+
+<p>Es folgt der Query für die Liste der Einträge
+(Bundesland, Einwohnerzahl) nach der Einwohnerzahl geordnet.
+<pre>
+SELECT ?BLabel ?pop WHERE {
+  wd:Q183 wdt:P150 ?B.
+  ?B wdt:P1082 ?pop.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de"
+  }
+} ORDER BY ?pop
+</pre>
+
+<p>Das ergab am 12. Januar 2017 aber nur 15 Resultate. Ist von
+einem Bundesland die Einwohnerzahl nicht bekannt, so wird
+es auch nicht mit in die Liste aufgenommen.
+
+<p>Der Zeitpunkt für die Erhebung der Einwohnerzahl
+soll auch mit angegeben werden.
+<pre>
+SELECT ?BLabel ?value ?time WHERE {
+  wd:Q183 wdt:P150 ?B.
+  ?B p:P1082 ?pop.
+  ?pop ps:P1082 ?value.
+  ?pop pq:P585 ?time.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de"
+  }
+}
+</pre>
+
+<p>Hierbei wird jedoch wieder die Liste der Einwohnerzahl zu allen
+bekannten Zeitpunkten angegeben, was prinzipiell legitim ist,
+aber zu einem sehr großen Datensatz führen kann.
+Am 12. Januar 2017 ergab das 78 Resultate.
+
+<p>Mit zusätzlicher Syntax lässt sich das letzte Beispiel etwas
+verkürzen. Zunächst lässt sich
+<pre>
+  ?pop ps:P1082 ?value.
+  ?pop pq:P585 ?time
+</pre>
+
+<p>verkürzen zu
+<pre>
+  ?pop ps:P1082 ?value; pq:P585 ?time
+</pre>
+
+<p>Nun lässt sich
+<pre>
+  ?B p:P1082 ?pop.
+  ?pop ps:P1082 ?value; pq:P585 ?time
+</pre>
+
+<p>weiter verkürzen zu
+<pre>
+  ?B p:P1082 [ps:P1082 ?value; pq:P585 ?time]
 </pre>
 
 <h2>Literatur</h2>
