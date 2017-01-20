@@ -6,11 +6,19 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
-\definecolor{c1}{RGB}{60,00,40}
+\definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
+
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\C}{\mathbb C}
+\newcommand{\uv}[1]{\underline{#1}}
+
 \begin{document}
 %\thispagestyle{empty}
 
@@ -23,7 +31,7 @@ Werkzeugkasten}
 \vspace{1em}
 \noindent
 John Smith, 2014--2015\\
-Lizenz: CC0
+Lizenz: Creative Commons CC0
 
 \tableofcontents
 
@@ -43,15 +51,15 @@ Lizenz: CC0
 
 Die Winkelfunktionen stehen zur Exponentialfunktion
 in Beziehung. Es ist
-\[\sin x = \frac{1}{2i}(\mathrm{e}^{ix}-\mathrm{e}^{-ix}),\]
-\[\cos x = \frac{1}{2}(\mathrm{e}^{ix}+\mathrm{e}^{-ix}).\]
+\[\sin x = \frac{1}{2\ui}(\mathrm{e}^{\ui x}-\mathrm{e}^{-\ui x}),\]
+\[\cos x = \frac{1}{2}(\mathrm{e}^{\ui x}+\mathrm{e}^{-\ui x}).\]
 %
 Mit diesen Formeln lassen sich die Ableitungen der Winkelfunktionen
 gewinnen. Z.B. ist
 \begin{gather*}
-\sin' x = \frac{1}{2i}(\mathrm{e}^{ix}-\mathrm{e}^{-ix})'
-= \frac{1}{2i}(i\mathrm{e}^{ix}+i\mathrm{e}^{-ix})\\
-= \frac{1}{2}(\mathrm{e}^{ix}+\mathrm{e}^{-ix})
+\sin' x = \frac{1}{2\ui}(\ee^{\ui x}-\ee^{-\ui x})'
+= \frac{1}{2\ui}(\ui\ee^{\ui x}+\ui\ee^{-\ui x})\\
+= \frac{1}{2}(\ee^{\ui x}+\ee^{-\ui x})
 = \cos x.
 \end{gather*}
 Auch die Additionstheoreme lassen sich über die Exponentialfunktion
@@ -59,7 +67,7 @@ herleiten. Die Sinusschwingung
 \[u = \hat u\sin(\omega t+\varphi_0)\]
 %
 lässt sich alternativ schreiben als
-\[\underline u = \hat u\,\mathrm{e}^{i\omega t+i\varphi_0}.\]
+\[\underline u = \hat u\,\ee^{\ui\omega t+\ui\varphi_0}.\]
 %
 Die ursprüngliche Schwingung ist dann gegeben durch den Imaginärteil
 \[u = \mathrm{Im}(\underline u).\]
@@ -79,7 +87,7 @@ Zeitpunkt $t=0$. Selbst diese Zeiger kodieren sämtliche Information
 über die Schwingung, nämlich die Anfangsphase und die Amplitude. Man
 muss also lediglich die Summe
 \[\underline{u}_1(0)+\underline{u}_2(0)
-= \hat u_1\mathrm{e}^{i\varphi_1}+\hat u_2\mathrm{e}^{i\varphi_2}\]
+= \hat u_1\ee^{\ui\varphi_1}+\hat u_2\ee^{\ui\varphi_2}\]
 berechnen. Dazu ist es notwendig die komplexen Zahlen von der
 Polarform in die algebraische Form umzurechnen.
 Dann kann man sie einfach addieren. Die Summe muss anschließend wieder
@@ -118,9 +126,9 @@ Man kann die Berechnung von Funktionswerten der komplexen
 Exponentialfunktion auf die Berechnung von Funktionswerten
 der reellen Exponentialfunktion zurückführen.
 Sei $a:=\mathrm{Re}(z)$ und $b:=\mathrm{Im}(z)$. Es ist
-\[e^z = e^{(a+bi)} = e^a e^{bi} = e^a(\cos b+i\sin b).\]
-Damit hat man also $\mathrm{Re}(e^z) = e^a\cos b$ und
-$\mathrm{Im}(e^z) = e^a\sin b$ gewonnen. Realteil und Imaginärteil
+\[\ee^z = \ee^{(a+b\ui)} = \ee^a \ee^{b\ui} = \ee^a(\cos b+\ui\sin b).\]
+Damit hat man also $\mathrm{Re}(\ee^z) = \ee^a\cos b$ und
+$\mathrm{Im}(\ee^z) = \ee^a\sin b$ gewonnen. Realteil und Imaginärteil
 können separat ausgerechnet werden, ohne komplexe Zahlen benutzen
 zu müssen. Die eulersche Formel hat uns diese Zurückfüh"-rung
 ermöglicht.
@@ -130,8 +138,8 @@ auf die Berechnung des reellen Logarithmus zurückführen. Dazu stellt
 man $z$ in Polarform dar. Sei also $r=|z|$ und
 $\varphi = \mathrm{arg}(z)$. Es ist
 \begin{gather*}
-w = \ln(z) = \ln(re^{i\varphi})
-= \ln(r)+\ln(e^{i\varphi})\\
+w = \ln(z) = \ln(r\ee^{\ui\varphi})
+= \ln(r)+\ln(\ee^{\ui\varphi})\\
 = \ln(r)+i\varphi.
 \end{gather*}
 Ersetzt man $\varphi$ gegen $\varphi+2\pi$, so erhält man
@@ -139,15 +147,15 @@ ebenfalls $z$, jedoch ein anderes $w$. Das Ergebnis der
 Logarithmusfunktion ist also nicht eindeutig. Sie hat unendlich
 viele sogenannte Zweige. Man verlangt nun $-\pi<\varphi$ und
 $\varphi\le\pi$. Dann definiert man den Hauptzweig als
-\[\ln(z):=\ln(r)+i\varphi.\]
+\[\ln(z):=\ln(r)+\ui\varphi.\]
 Die mengenwertige Logarithmusfunktion mit allen Zweigen ist dann
-\[\mathrm{Ln}(z):=\ln(z)+2\pi ki.\quad(k\in\mathbf Z)\]
+\[\mathrm{Ln}(z):=\ln(z)+2\pi k\ui.\quad(k\in\mathbf Z)\]
 Man muss beachten, dass die Regeln $\ln(xy)=\ln(x)+\ln(y)$
 und $\ln(x^y)=y\ln(x)$ im Allgemeinen nicht mehr gültig sind.
 Die hier dargestellte Rechnung für den Logarithmus funktioniert aber.
 Man kann sich durch die Probe überzeugen. Es ist
-\[e^w = e^{\ln(r)+i\varphi+2\pi ki}
-= e^{\ln(r)}e^{i\varphi}e^{2\pi ki} = re^{i\varphi} = z.\]
+\[\ee^w = \ee^{\ln(r)+\ui\varphi+2\pi ki}
+= \ee^{\ln(r)}\ee^{\ui\varphi}\ee^{2\pi ki} = r\ee^{\ui\varphi} = z.\]
 
 \subsection{Das Skalarprodukt}
 
@@ -160,25 +168,50 @@ $\mathbf{R}\times\mathbf{R}$ gehört genau ein Vektor, der vom
 Koordinatenursprung auf diesen Punkt zeigt. Zu jedem Punkt gehört
 außerdem genau eine komplexe Zahl.
 
-Mit einer Orthonormalbasis $B=(\underline e_1,\underline e_2)$
-können wir jeden Vektor als
-\[\underline a = a_1\underline e_1+a_2\underline e_2\]
-darstellen. Dabei sind $\underline e_1$ und $\underline e_2$ die
-Basisvektoren. Diesen Vektor kann man als komplexe Zahl
-\[\underline a = a_1+a_2i\]
-interpretieren. Die Basisvektoren sind 1 und $i$.
+Sei $V$ ein zweidimensionaler reeller Vektorraum mit einem Skalarprodukt
+$V\times V\to\R$, welches für $a,b\in V$
+mit $\langle a,b\rangle$ notiert wird.
+Wie dieses spezifiziert ist, ist egal, solange es die
+Skalarproduktaxiome erfüllt.
 
-Wenn wir eine Orthonormalbasis verwenden, so ist das Skalarprodukt
-zweier Vektoren
-\[\langle \underline a, \underline b\rangle = a_1b_2+a_2b_2.\]
-\noindent
-Allgemeiner gilt die Formel
-\[\langle \underline a, \underline b\rangle
-= |\underline a||\underline b|\cos\varphi\]
+Für jeden Vektorraum lässt sich eine Basis finden. (Das schließt
+wegen \emph{vacuous truth} auch den Nullvektorraum mit ein, was
+aber eine Nebensächlichkeit darstellt). Über das Gram-Schmidt-Verfahren
+lässt sich daher jedem Skalarproduktraum eine Orthonormalbasis geben.
+
+Sei $B:=(e_1,e_2)$ eine Orthonormalbasis des reellen Vektorraumes $V$.
+Jeder Vektor $a\in V$ kann als
+\begin{equation}
+a = a_1 e_1+a_2 e_2
+\end{equation}
+dargestellt werden und es gilt $a_k=\langle e_k,a\rangle$.
+
+Ist $a:=a_1 e_1+a_2e_2$ und $b:=b_1 e_1+b_2 e_2$, so gilt
+\begin{equation}\label{eq:dim2SP}
+\langle a,b\rangle = a_1b_2+a_2 b_2.
+\end{equation}
+Ein Vektor $a\in V$ lässt sich auch als komplexe Zahl
+\begin{equation}
+a = a_1+a_2\ui
+\end{equation}
+interpretieren, wobei man $e_1:=1$ und $e_2:=\ui$ setzt.
+Für $a,b\in\C$ muss hierbei
+\begin{equation}
+\langle a,b\rangle := \mathrm{Re}(\overline ab).
+\end{equation}
+sein, um Formel \eqref{eq:dim2SP} zu erhalten.
+
+Weiterhin gilt die Formel
+\begin{equation}
+\langle a, b\rangle
+= |a||b|\cos\varphi
+\end{equation}
 wobei $\varphi$ der Winkel zwischen den beiden Vektoren ist.
 Die Betrag eines Vektors ist
-\[|\underline a| = \sqrt{\langle \underline a, \underline a\rangle}
-= \sqrt{a_1^2+a_2^2}.\]
+\begin{equation}
+|a| = \sqrt{\langle a,a\rangle}
+= \sqrt{a_1^2+a_2^2}.
+\end{equation}
 Der Betrag eines Vektors ist die Länge dieses Vektors. Die Formel wird
 durch den Satz des Pythagoras motiviert. Der Betrag einer komplexen
 Zahl stimmt mit dem Betrag des Vektors überein, wenn man die komplexe
@@ -186,22 +219,26 @@ Zahl als Vektor interpretiert. Es ist der Abstand vom
 Koordinatenursprung zu dem Punkt, welcher durch die komplexe Zahl
 gegeben ist.
 
-Der Abstand von zwei Punkten $\underline a$ und $\underline b$
-ist gegeben durch
-\[d = |\underline a-\underline b|.\]
-\noindent
+Zwei Vektoren $a$ und $b$ lassen sich auch als Punkte in einem
+Raum interpretieren. Der Abstand ist dann gegeben durch
+\begin{equation}
+d(a,b) = |a-b|.
+\end{equation}
+Diese erfüllen die Metrik-Axiome. Somit ist $d(a,b)$ eine
+vernünftige Metrik und $(V,d)$ wird zu einem metrischen Raum.
+
 Den hier vorgestellten Formalismus kann man nun sofort auf den
 $n$"=dimen"-sionalen euklidischen Vektorraum $\mathbf{R}^n$
 verallgemeinern. Jeder Vektor lässt sich als Linearkombination
-\[\underline a = a_1\underline e_1+\dots+a_n\underline e_n\]
+\[a = a_1 e_1+\dots+a_n e_n\]
 darstellen. Das Skalarprodukt ist
-\[\langle \underline a, \underline b\rangle = a_1b_2+\dots+a_nb_n.\]
+\[\langle a,b\rangle = a_1b_2+\dots+a_nb_n.\]
 Die Formeln
-$\langle \underline a, \underline b\rangle
-= |\underline a||\underline b|\cos\varphi$
-und
-$|\underline a| = \sqrt{\langle \underline a, \underline a\rangle}$
-sowie $d = |\underline a-\underline b|$
+\begin{gather}
+\langle a,b\rangle = |a||b|\cos\varphi,\\
+|a| = \sqrt{\langle a,a\rangle},\\
+d(a,b) = |a-b|
+\end{gather}
 bleiben weiterhin gültig.
 
 Für das Skalarprodukt gibt es wichtige Rechenregeln. Es ist kommutativ
@@ -230,15 +267,15 @@ schreiben.
 
 Ein weiteres wichtiges Produkt ist das äußere Produkt.
 Es lässt sich mit der Formel
-\[\underline a\wedge\underline b
-= (a_1b_2-a_2b_1)\underline e_1\wedge\underline e_2\]
+\[\uv a\wedge\uv b
+= (a_1b_2-a_2b_1)\uv e_1\wedge\uv e_2\]
 berechnen. Das äußere Produkt ist antikommutativ, es ist
-\[\underline a\wedge\underline b = -\underline b\wedge\underline a.\]
+\[\uv a\wedge\uv b = -\uv b\wedge\uv a.\]
 \noindent
-Damit ergibt sich $\underline a\wedge\underline a = 0$.
+Damit ergibt sich $\uv a\wedge\uv a = 0$.
 Allgemeiner ist
-$\underline a\wedge\underline b = 0$,
-wenn $\underline a$ und $\underline b$ kollinear sind.
+$\uv a\wedge\uv b = 0$,
+wenn $\uv a$ und $\uv b$ kollinear sind.
 Zwei Vektoren sind kollinear, wenn sie in die selbe Richtung oder
 die entgegengesetzte Richtung zeigen.
 
@@ -246,7 +283,7 @@ Das äußere Produkt ist außerdem bilinear und assoziativ.
 Diese Rechenregeln genügen, um mit dem äußeren Produkt zu rechnen.
 Ein Beispiel.
 \begin{gather*}
-\underline a\wedge\underline b
+\uv a\wedge\uv b
 = (a_1e_1+a_2e_2) \wedge (b_1e_1+b_2e_2)\\
 = a_1e_1\wedge (b_1e_1+b_2e_2) + a_2e_2\wedge (b_1e_1+b_2e_2)\\
 = a_1e_1\wedge b_1e_1+a_1e_1\wedge b_2e_2\\
@@ -258,8 +295,8 @@ Ein Beispiel.
 \end{gather*}
 \noindent
 Für das äußere Produkt gilt die Formel
-\[\underline a\wedge\underline b= |\underline a||\underline b|
-(\sin\varphi)\,\underline e_1\wedge\underline e_2.\]
+\[\uv a\wedge\uv b= |\uv a||\uv b|
+(\sin\varphi)\,\uv e_1\wedge\uv e_2.\]
 \noindent
 Das äußere Produkt ist der Flächeninhalt des Parallelogramms,
 welches die beiden Vektoren aufspannen.
@@ -267,9 +304,9 @@ welches die beiden Vektoren aufspannen.
 \subsection{Das geometrische Produkt}
 
 Das geometrische Produkt ist definiert als
-\[\underline a\underline b =
-\langle\underline a,\underline b\rangle
-+\underline a\wedge\underline b.\]
+\[\uv a\uv b =
+\langle\uv a,\uv b\rangle
++\uv a\wedge\uv b.\]
 \noindent
 Das geometrische Produkt ist bilinear und assoziativ. Es ist jedoch
 weder kommutativ noch antikommutativ.
@@ -299,9 +336,9 @@ Diese Vereinfachungen muss man ständig machen, wenn man mit dem
 geometrischen Produkt rechnet. Multivektoren der Form
 \[a+b\,e_1e_2\]
 sind isomorph zu den komplexen Zahlen.
-Es ist $e_1e_2 = e_1\wedge e_2 = i$. Z.B. ist
+Es ist $e_1e_2 = e_1\wedge e_2 = \ui$. Z.\,B. ist
 \begin{gather*}
-i^2 = (e_1e_2)^2 = (e_1e_2)(e_1e_2) = e_1e_2e_1e_2\\
+\ui^2 = (e_1e_2)^2 = (e_1e_2)(e_1e_2) = e_1e_2e_1e_2\\
 = -e_1e_1e_2e_2 = -1.
 \end{gather*}
 \noindent
@@ -313,8 +350,8 @@ Mit der eulerschen Formel kann man schreiben
 = |\underline a||\underline b|\cos\varphi
 + e_1e_2|\underline a||\underline b|\sin\varphi\\
 = |\underline a||\underline b|\cos\varphi
-+ i|\underline a||\underline b|\sin\varphi
-= |\underline a||\underline b|e^{i\varphi}.
++ \ui|\underline a||\underline b|\sin\varphi
+= |\underline a||\underline b|e^{\ui\varphi}.
 \end{gather*}
 \noindent
 Mit dem äußeren Produkt können wir einen Formalismus aufbauen,
@@ -325,26 +362,26 @@ Was das soll? Nun ja, man kann jetzt austesten, was passiert,
 wenn man einen gewöhnlichen Vektor mit der imaginären Einheit
 multipliziert. Es ist
 \begin{gather*}
-i(a_1e_1+a_2e_2) = e_1e_2(a_1e_1+a_2e_2)\\
+\ui(a_1e_1+a_2e_2) = e_1e_2(a_1e_1+a_2e_2)\\
 = a_1e_1e_2e_1+a_2e_1e_2e_2 = -a_1e_1e_1e_2+a_2e_1\\
 = -a_1e_2+a_2e_1 = a_2e_1-a_1e_2.
 \end{gather*}
 \noindent
 bzw.
-\[i\begin{pmatrix}a_1\\ a_2\end{pmatrix}
+\[\ui\begin{pmatrix}a_1\\ a_2\end{pmatrix}
 = \begin{pmatrix}a_2\\ -a_1\end{pmatrix}.\]
 \noindent
 Der Vektor wird um 90~Grad im Uhrzeigersinn gedreht. Das geometrische
-Produkt ist nicht kommutativ. Wenn man von der anderen Seite mit $i$
+Produkt ist nicht kommutativ. Wenn man von der anderen Seite mit $\ui$
 multipliziert, so dreht man gegen den Uhrzeigersinn. Bei komplexen
 Zahlen ist es egal, weil die Multiplikation ja kommutativ ist. Es ist
 \begin{gather*}
-i(a_1+a_2i) = e_1e_2(a_1+a_2e_1e_2)\\
-= a_1e_1e_2-a_2 = a_1i-a_2 = -a_2+a_1i
+\ui(a_1+a_2\ui) = e_1e_2(a_1+a_2e_1e_2)\\
+= a_1e_1e_2-a_2 = a_1\ui-a_2 = -a_2+a_1\ui
 \end{gather*}
 \noindent
 Die komplexe Zahl wird um 90~Grad gegen den Uhrzeigersinn gedreht.
-Multipliziert man von der anderen Seite mit $i$, so erhält man das
+Multipliziert man von der anderen Seite mit $\ui$, so erhält man das
 selbe Ergebnis. Die komplexen Zahlen sind ein Spezialfall, für den
 das geometrische Produkt kommutativ ist, obwohl es im Allgemeinen
 nicht kommutativ ist.
