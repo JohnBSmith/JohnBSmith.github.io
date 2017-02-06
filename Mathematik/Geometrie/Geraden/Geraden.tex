@@ -1,0 +1,563 @@
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+
+\newcommand{\R}{\mathbb R}
+\begin{document}
+
+\noindent
+{\huge\bfseries Geraden}
+
+\tableofcontents
+
+\section{Innere Geomerie}
+\subsection{Geraden als affine Räume}
+Stellen wir uns eine Gerade vor. Die Position dieser Geraden im Raum
+ist ja unbedeutsam, und so können wir uns auch eine Gerade als Raum
+selbst vorstellen. Die Gerade könnte auch in einen Raum eingebettet
+werden. Aber dieser Raum könnte wiederum in einen höherdimensionalen
+Raum eingebettet werden. Dieser Prozess läuft ad infinitmum weiter.
+Da es keine ausgezeichnete Einbettung gibt, lässt man es am besten
+gleich ganz bleiben. Und wenn eine Einbettung doch stattfinden soll,
+so muss man eben eine bijektive affine Abbildung von der Geraden zu
+ihrer Einbettung angeben und damit hat sich's.
+
+Wie beschreibt man nun die Gerade? Die Gerade kann doch als affiner
+Raum angesehen werden. An jedem Punkt lässt sich ein Vektorraum
+anheften. Man spricht von einem sogenannten Vektorraumbündel. Durch
+jeden dieser Vektorräume ist ein Ursprung festgelegt, so dass die
+Gerade zu einer Ursprungsgeraden wird.
+
+Wählt man nun einen Vektorraum und für diesen eine Orthonormalbasis,
+so ergibt sich die Zahlengerade. Das ist ein eindimensionales
+Koordinatensystem. Jedem Punkt auf der Geraden kann damit bijektiv
+eine reelle Zahl zugeordnet werden. Die Bijektion ist nur durch den
+Anheftungspunkt $P$ und den Basisvektor $e$ bestimmt. Auf der
+Geraden gibt es nur zwei entgegen gesetzte Richtungen. Somit gibt es
+auch nur zwei normierte Basisvektoren $v_1,v_2$ mit der
+Beziehung $v_1=-v_2$. Man kann $e=v_1$ wählen oder auch $e=v_2$.
+
+Die Bijektion $f$ kann jetzt explizit angegeben werden. Es ist
+\begin{equation}
+f(x) = P+xe.
+\end{equation}
+Der Definitionsbereich ist $\R$ und die Zielmenge ist die Gerade.
+Wenn $P$ und $e$ in einen höherdimensionalen Raum eingebettet
+werden, so auch die Gerade selbst. Bei $e$ handelt es sich dann
+um einen normierten Richtungsvektor.
+
+Die Zahlengerade, das ist die Menge der reellen Zahlen $\R$.
+Mit der Bijektion können wir nun aber $\R$ selbst als eine
+Gerade ansehen. Die lineare Funktion $f(x)=mx$ kann als lineare
+Abbildung auf dem Vektorraum $V$ angesehen werden, welcher am
+Punkt $P$ angeheftet ist. Es ist die Transformation, die zu einem
+Basiswechsel gehört.
+
+Die Addition einer Zahl $n$ entspricht einer Verschiebung,
+bei $n$ handelt es sich um einen Verschiebungsvektor. Damit ist
+die affine Funktion $f(x)=mx+n$ eine Transformation zwischen zwei
+Koordinatensystemen auf dem affinen Raum.
+
+\subsection{Geraden als offene Intervalle}
+Die Gerade kann rechnerisch sehr schön durch $\R$ beschrieben
+werden. Aber es gibt noch weitere Beschreibungen. Das Intervall
+$(0,1)$ beschreibt nämlich ebenso die Gerade. Das klingt seltsam,
+da das Intervall doch endlich ist, die Gerade jedoch unendlich weit
+reicht. Als Beispiel wählt man z.\,B. die Bijektion
+\begin{equation}
+f(x) = 1-\frac{1}{\exp(x)+1}.
+\end{equation}
+Damit wird jeder reellen Zahl eine Zahl auf dem Intervall $(0,1)$
+zugeordnet. Mit der Bijektion
+\begin{equation}
+g(x) = a+(b-a)x
+\end{equation}
+kann man dem Intervall $(0,1)$ dann jedes andere Intervall
+$(a,b)$ zuordnen. Eine Gerade kann also durch ein beliebiges offenes
+Intervall beschrieben werden. Da $f$ und $g$ Homeomorphismen sind,
+ist eine Gerade sogar homeomorph zu jedem offenen Intervall.
+
+Nun kann man aber mit einem offenen Intervall einen offenen Abschnitt
+einer gekrümmten Kurve parameterisieren. Man nimmt dazu am besten
+einen Homeomorphismus. Damit kann doch jeder solche Abschnitt als
+Gerade aufgefasst werden. Es bietet sich daher an, auch einen Kreis
+als Gerade aufzufassen. Dabei ergibt sich jedoch ein Problem: Der
+Kreis kann nicht geschlossen werden, ein Punkt muss immer fehlen.
+Das ist natürlich höchstgradig unästhetisch. Um diesen Mangel zu
+beheben, müssen wir ein neues Konzept einführen, den
+\textit{projektiven Abschluss}.
+
+\subsection{Projektive Geometrie}
+
+Man kann die reellen Zahlen noch mit den Punkten $-\infty$
+und $\infty$ erweitern. Die beiden Punkte macht man nun äquivalent,
+d.h. man setzt per Definition $-\infty:=\infty$. Die erweiterte
+Gerade wird dabei zu einem Kreis gebogen und bei $-\infty$ und
+$\infty$ verklebt. Das Ergebnis ist der projektive Abschluss der
+reellen Zahlen. Dieser projektive Raum wird als projektive Gerade
+bezeichnet und kann jetzt als Kreis aufgefasst werden. Dabei soll
+kein Punkt auf dem Kreis ausgzeichnet sein, so wie kein Punkt auf
+dem affinen Raum ausgezeichnet ist. Alle Punkte auf dem Kreis werden
+völlig gleich behandelt. Jeder Punkt auf der projektiven Geraden kann
+nun mit einem Winkel $\varphi$ auf dem Intervall $[0,2\pi)$
+beschrieben werden. Dabei denkt man sich jedoch wieder einen
+Winkelursprung, der beliebig gewählt werden kann. Zum Winkel kann
+außerdem ein Drehwinkel addiert werden, das entspricht einer Drehung
+auf dem Kreis. Der Drehwinkel ist analog zum Verschiebungsvektor im
+affinen Raum.
+
+Gibt es auch eine konkrete Bijektion vom Kreis zu
+$(\R,\infty)$? Ja die gibt es. Ein Beispiel ist die
+stereographische Projektion. Wir nehmen zunächst die Ebene
+$\R^2$. Dort sollen die Punkte $x,y$ auf einem Kreis
+um den Koordinatenursprung liegen. Das kann man durch die Bijektion
+\begin{gather}
+x=\cos\varphi,\\
+y=\sin\varphi
+\end{gather}
+erreichen. Dabei ist $\varphi\in{[0,2\pi)}$ der besagte Winkel.
+Die stereographische Projektion ist nun die Funktion
+\begin{equation}
+p(x,y) := \frac{x}{1-y}.
+\end{equation}
+Für den Fall $\varphi=\pi/2$ definiert man $p(x,y):=\infty$.
+
+Verkettet man die beiden Funktionen, so erhält man
+\begin{equation}
+p(\varphi) = \frac{\cos\varphi}{1-\sin\varphi}
+= \tan\Big(\frac{\varphi}{2}+\frac{\pi}{4}\Big).
+\end{equation}
+
+\subsection{Mächtigkeiten}
+
+Nun, wenn wir eine Bijektion von einer Geraden auf eine andere Menge
+$M$ angeben können, so kann $M$ als die Gerade selbst aufgefasst
+werden. Das heißt jede zu den reellen Zahlen gleichmächtige Menge
+kann als Gerade aufgefasst werden. Ein offenes Intervall $I$ ist
+aber gleichmächtig zum kartesischen Produkt $I\times I$. Jedes
+offene Quadrat ist damit nicht von einer Geraden unterscheidbar.
+Zwischen dem offenen Quadrat und $\R\times\R$ gibt
+es wieder eine einfache Bijektion. Man nimmt einfach die Bijektion
+zwischen $(0,1)$ und $\R$ komponentenweise.
+
+Damit ist eine Gerade das selbe wie die Ebene. Allgemeiner sind die
+reellen Zahlen gleichmächtig zum $\R^n$. Das ist natürlich
+eine außerordentlich absonderliche Vorstellung. Man wird nun nach
+einer konkreten Konstruktion einer solchen Bijektion fragen, und
+da geraten wir in Schwierigkeiten.
+
+Eine Gerade ist das selbe wie eine Ebene. Oder nicht? Nun, die reellen
+Zahlen haben ja eine Totalordnung, die Punkte des $\R^2$
+jedoch nicht. Eigentlich müsste das doch gehen, zu jedem Punkt
+im $\R^2$ gibt es doch genau eine Zahl in $\R$. Wo
+liegt der Denkfehler? Die fundamentale Beobachtung ist nun, dass eine
+Bijektion offensichtlich nicht ausreicht. Das ist unanschaulich, aber
+es kann nicht anders sein. Eine Bijektion genügt nicht, um die
+Ordnungsstruktur zu übertragen. Sei $f$ die Bijektion von
+$\R$ nach $\R^2$. Die Ordnungsrelation auf der
+Bildmenge definieren wir durch die Äquivalenz
+\begin{equation}
+f(x)<f(y)\quad:\Longleftrightarrow\quad x<y.
+\end{equation}
+Die linke Seite wird jedoch unmöglich den Axiomen der Totalordnung
+genügen. Wäre das der Fall, so würde es sich bei $f$ um einen
+Ordnungsisomorphismus handeln. Dass es nicht geht, hat offenbar etwas
+damit zu tun, dass $\R$ überabzählbar ist.
+
+Unser neues Weltbild geht nun davon aus, dass die Gerade mehr
+Struktur hat als nur die Mächtigkeit. Für verschiedene Strukturen
+gibt es sogennante Isomorphismen, welche zwei Mengen als strukturgleich
+herausstellen. Homeomorphismen sind z.\,B. Isomorphismen bezüglich der
+topologischen Struktur.
+
+
+\subsection{Homeomorphismen}
+
+Anschaulicher als allgemeine Bijektionen sind Homeomorphismen. Man
+stellt sich dabei ein offenes Intervall als ein Kaugummi vor, das
+auseinander gezogen werden kann. Das verlängerte Kaugummi lässt sich
+dann biegen bzw. auf einen Gegenstand aufwickeln. Jedoch wird das
+Kaugummi dabei an keiner Stelle zerissen. Das entspricht eher der
+Vorstellung einer Geraden als eine Zersplitterung in unendlich
+viele Teile.
+
+Man stellt sich nun alles das als Gerade vor, was homeomorph zum
+Intervall $(0,1)$ ist. Wenn man die Gerade um die Punkte
+$-\infty$ und $\infty$ erweitert, so ist diese Erweiterung
+homeomorph zum Intervall $[0,1]$. Die projektive Gerade ist
+homeomorph zum Kreis.
+
+\subsection{Symmetrie}
+
+Wie misst man auf der Zahlengeraden Abstände? Nun, die Punkte null
+und eins sollen doch die Entfernung eins haben. Bezeichnen wir
+diese Entfernung mit $d$. Es ist also $d(0,1)=1$. Die Zahl zwei
+ist anschaulich doppelt so weit entfernt. Also ist $d(0,2)=2$ und
+allgemeiner $d(0,x)=x$. Aber wenn $x<0$ ist, so erhält man den
+gleichen Abstand. Damit gilt allgemein $d(0,x)=|x|$. Zwischen $a$
+und $a+x$ soll der Abstand aber auch $|x|$ betragen. Wir verlangen
+also
+\begin{equation}
+d(a,a+x)=|x|.
+\end{equation}
+Man definiert nun $b:=a+x$. Dann ist aber $x=b-a$ und somit ergibt sich
+\begin{equation}
+d(a,b)=|b-a|.
+\end{equation}
+Auf der Geraden gibt es symmetrische Teilmengen. Beschränken wir uns
+dabei auf solche Symmetrien, bei denen Abstände erhalten bleiben.
+Solche werden Isometrien genannt. Eine Funktion $f$ auf der Geraden
+ist eine Isometrie, wenn
+\begin{equation}
+d(a,b)=d(f(a),f(b))
+\end{equation}
+ist. Die Menge aller Isometrien, die ein Objekt hat, ist immer eine
+Gruppe. Diese Gruppe nennen wir folglich Isometriegruppe. Man kann nun
+nach der Isometriegruppe einer diskreten Teilmenge der Zahlengerade
+fragen, ja. Aber man kann auch nach der Isometriegruppe der gesamten
+Zahlengerade fragen.
+
+Zunächst betrachten wir die Verschiebung
+\begin{equation}
+f(x) = x+n.
+\end{equation}
+Diese Funktion ist eine Isometrie, denn
+\begin{gather}
+d(a+n,b+n) = |(b+n)-(a+n)|\\
+= |b-a| = d(a,b).
+\end{gather}
+Für $n=0$ erhält man die identische Verschiebung.
+Die Verkettung von zwei Verschiebungen ist wieder
+eine Verschiebung, denn es ist
+\begin{equation}
+(x+n_1)+n_2 = x+(n_1+n_2) = x+n_3.
+\end{equation}
+Damit bilden die Verschiebungen bereits eine Gruppe.
+Ist das die Isometriegruppe der Zahlengerade? Nein, denn es gibt
+Isometrien, die nicht in der Gruppe der Verschiebungen enthalten
+sind. Es ist ja
+\begin{equation}
+g(x) = -x
+\end{equation}
+auch eine Isometrie. Man rechnet
+\begin{gather}
+d(-a,-b) = |(-b)-(-a)|\\
+= |a-b| = |b-a| = d(a,b).
+\end{gather}
+Verkettet man die Negation mit sich selbst, so erhält man die
+identische Funktion. Weitere Verkettungen von diesen beiden Funktion
+führen nicht aus der Menge heraus, und so erhält man wieder eine
+Untergruppe. Die Negation ist die Spiegelung der Geraden am Ursprung.
+Da kein Punkt ausgzeichnet ist, soll es solche Spiegelungen auch an
+allen anderen Punkten geben. Eine Spiegelung am Punkt $a$
+bewerkstelligt die Funktion
+\begin{equation}
+s_a(x) = -(x-a)+a.
+\end{equation}
+Diese Funktion ist die Verkettung von zwei Verschiebungen und der
+Spiegelung am Ursprung. Eine Verkettung der Spiegelung am Ursprung
+und einer Verschiebung reicht jedoch schon aus, denn es ist
+\begin{equation}
+-(x-a)+a = -x+2a.
+\end{equation}
+Woher wissen wir, ob wir wirklich alle Isometrien haben?
+Wir brauchen die gesamte Lösungsmenge der Funktionalgleichung
+\begin{equation}
+|f(b)-f(a)| = |b-a|.
+\end{equation}
+Setzt man zunächst $a=0$, so erhält man
+\begin{equation}
+|f(b)-f(0)|=|b|.
+\end{equation}
+Daraus erhält man
+\begin{gather}
+f(b) = \frac{\mathrm{sgn}(b)}{\mathrm{sgn}(f(b)-f(0))} b+f(0)\\
+= s(b,f)b+f(0).
+\end{gather}
+Damit ergibt sich
+\begin{equation}
+f(b)-f(a) = s(b,f)b-s(a,f)a.
+\end{equation}
+Aus der Bedingung
+\begin{equation}
+|s(b,f)b-s(a,f)a| = |b-a|
+\end{equation}
+erhält man nun die Forderung
+\begin{equation}
+s(b,f)=s(a,f).
+\end{equation}
+Damit ist das Vorzeichen nur von $f$ abhängig. Somit ergibt sich
+\begin{equation}
+f(b) = s(f)b+f(0).
+\end{equation}
+Somit lässt sich jede Isometrie in der Form
+\begin{equation}
+f(x) = sx+c
+\end{equation}
+darstellen, wobei $s$ ein konstantes Vorzeichen ist und $c$ eine
+Konstante ist.
+
+Betrachten wir nochmals die Untergruppe der Verschiebungen. Wenn
+$P$ ein Punkt auf der Geraden ist, dann ist $P+n$ ein neuer Punkt
+auf der Geraden. Aber $n$ entstammt dabei aus dem Vektorraum
+$\R$, welcher ja selbst eine Gruppe ist. Die Verschiebung
+\begin{equation}
+f(n,P) = P+n
+\end{equation}
+ist eine Gruppenaktion, denn es ist $f(a+b,P)=f(a,f(b,P))$ und $f(0,P)=P$.
+
+Die Untergruppe der Verschiebungen wird daher durch den
+Vektorraum $\R$ abstrahiert.
+
+\section{Äußere Geometrie}
+\subsection{Affine Funktionen}
+
+Anschaulich ist uns klar, was eine Gerade ist. Jedoch muss dieser
+anschauliche Geradenbegriff erstmal in eine präzise rechnerische Form
+übersetzt werden. Die einfachste Beschreibung von Geraden erfolgt in
+einem Koordinatensystem.
+
+Da je eine Gerade durch zwei unterschiedliche Punkte
+$(x_1,y_1)$ und $(x_2,y_2)$ verläuft, genügen diese beiden
+Punkte, um eine Gerade eindeutig zu spezifizieren. Es stellt
+sich nun die Frage wie man überprüft ob ein weiterer Punkt
+$(x,y)$ auf der Geraden liegt. Man bezeichnet das als Inzidenztest.
+
+Man denke sich eine Funktion $f(x)$. Die Funktion $f(x)+n$ hat
+den gleichen Graphen wie $f(x)$, mit dem Unterschied einer
+senkrechten Verschiebung um $n$. Bei der Funktion $f(x)=0$
+handelt es sich um die $x$-Achse. Somit ist $g(x)=n$ eine
+Gerade, die parallel zur $x$-Achse ist. Mit jeder Zahl $n$ lässt
+sich je eine waagerechte Gerade beschreiben.
+
+Wir wollen aber auch Geraden beschreiben, die nicht waagerecht sind.
+Zunächst verlangen wir, dass die Gerade durch den Koordinatenursprung $(0,0)$
+geht. Als weiterer Punkt ist $(x_2,y_2)$ gegeben. Mit dem Punkt
+$(x_2,0)$ zusammen bilden die drei Punkte ein Dreieck. Beim Dreieck
+mit den Punkten $(2x_2,0)$ und $(2x_2,2y_2)$ handelt es sich
+um das zentrisch gestreckte Dreieck. Dann ist $(2x_2,2y_2)$ doch
+aber auch ein Punkt auf der Geraden.
+
+Formal muss man zur Überprüfung die Ähnlichkeitssätze bzw. die
+Strahlensätze benutzen. Bei $x_2$ und $y_2$ handelt es sich ja
+um die Seitenlängen des Dreiecks.
+
+Allgemein liegt also für verschiedene reelle Zahlen $r$
+jeder Punkt $(rx_2,ry_2)$ auf ein und der selben Geraden.
+Wenn man nun $x_2\ne 0$ und $r\ne 0$ verlangt, so kann man
+den Quotient
+\begin{equation}
+m = \frac{ry_2}{rx_2} = \frac{y_2}{x_2}
+\end{equation}
+bilden. Der Quotient $m$ ist nicht von $r$ abhängig.
+Durch Umformen erhält man $y_2=mx_2$. Jede Gerade, die nicht
+senkrecht ist, kann also durch eine Funktion der Form
+\begin{equation}
+f(x)=mx
+\end{equation}
+beschrieben werden. Senkrechte Geraden sind wegen der Forderung
+$x_2\ne 0$ nicht möglich. Für je zwei verschiedene Quotienten
+$m_1$ und $m_2$ erhält man außerdem unterschiedliche Geraden,
+da der Quotient ja nicht vom Punkt auf der Geraden abhängig ist.
+
+Umgekehrt wird auch durch jede
+Funktion $y=mx$ eine Gerade beschrieben. Multipliziert man auf
+beiden Seiten mit $r$, so erhält man $ry=mrx$. Und von den Punkten
+$(x,y)$ und $(rx,ry)$ wissen wir, dass sie auf einer Geraden liegen.
+
+Nun kann man eine solche Gerade auch senkrecht verschieben. Allgemein
+wird eine Gerade also durch die affine Funktion
+\begin{equation}
+f(x) = mx+n
+\end{equation}
+beschrieben. Zum Test, ob ein Punkt $(x,y)$ auf der Geraden liegt,
+überprüft man einfach die Gleichung $y=f(x)$. Der Punkt liegt
+genau dann auf der Geraden, wenn diese Gleichung wahr ist. Der
+Inzidenztest ist bei der Beschreibung mit affinen Funktionen also
+außerordentlich trivial, was besonders schön ist.
+
+Aber wie kommt man nun von zwei gegebenen Punkten $(x_1,y_2)$ und
+$(x_2,y_2)$ auf die Zahlen $m$ und $n$? Die Gleichung der
+Funktion ist $y=mx+n$. Zunächst beobachtet man, dass man das $n$
+loswerden kann, indem man die Differenz von zwei Funktionswerten
+bildet. Es ist
+\begin{gather}
+y_2-y_1 = mx_2+n - mx_1-n\\
+= m(x_2-x_1).
+\end{gather}
+Da die Punkte unterschiedlich sein müssen und die Gerade nicht
+senkrecht sein darf, ist $x_2-x_1\ne 0$. Durch Division
+auf beiden Seiten erhält man den Quotient
+\begin{equation}
+m = \frac{y_2-y_1}{x_2-x_1}.
+\end{equation}
+Das $n$ bekommt nun durch Umformung einer der beiden Gleichungen
+$y_1=mx_1+n$ und $y_2=mx_2+n$. Wählen wir die erste Gleichung.
+Somit ist $n=y_1-mx_1$. Einsetzen in die Funktionsgleichung bringt
+\begin{gather}
+y = mx+n = mx+y_1-mx_1\\
+= m(x-x_1)+y_1.
+\end{gather}
+Die Funktionsgleichung kann damit sofort in der Form
+\begin{equation}
+y = \frac{y_2-y_1}{x_2-x_1}(x-x_1)+y_1
+\end{equation}
+angegeben werden.
+
+\subsection{Implizite Form}
+
+Dass senkrechte Geraden nicht beschrieben werden können, ist ein
+Mangel. Dieses Problem kann gelöst werden. Umformung der
+Funktionsgleichung bringt
+\begin{equation}
+y-y_1 = \frac{y_2-y_1}{x_2-x_1}(x-x_1).
+\end{equation}
+Durch Multiplikation erhält man
+\begin{equation}
+(y-y_1)(x_2-x_1) = (y_2-y_1)(x-x_1).
+\end{equation}
+Eine Division durch null kommt nicht mehr vor, da kein Quotient
+gebildet wird. Tatsächlich wird damit auch das Problem der
+senkrechten Geraden gelöst. Diese implizite Form der Beschreibung
+kann man daher als elegant betrachten. Der Nachteil ist, dass keine
+explizite Funktionsgleichung vorliegt.
+
+Die explizite Gleichung wird für einen Inzidenztest jedoch auch
+nicht benötigt, und damit ist der Nachteil kein wirklicher.
+Außerdem sind $x$ und $y$ jetzt völlig gleichberechtigt. Man
+könnte auch nach $x$ umstellen und so eine Funktion $x=g(y)$
+erhalten.
+
+Sei $a:=y_2-y_1$ und $b:=x_1-x_2$. Durch Ausmultiplizieren
+erhält man
+\begin{equation}
+by_1-by=ax-ax_1.
+\end{equation}
+Umformen bringt
+\begin{equation}
+ax+by=ax_1+by_1.
+\end{equation}
+Sei noch $c:=ax_1+by_1$. Damit erhält man
+\begin{equation}
+ax+by=c.
+\end{equation}
+Da diese Gleichung ohne weitere Voraussetzungen nur durch Umbenennung,
+Ausmultiplizieren und
+Äquivalenzumformung hervorgebracht wurde, kann jede Gerade auch
+in dieser Form
+beschrieben werden. Es können nie Gleichzeitig $a$
+und $b$ null sein. Die Darstellung ist außerdem nicht eindeutig.
+Man kann beide Seiten der Gleichung mit einer Zahl außer null
+multiplizieren, ohne dass sich der Aussagengehalt der Gleichung
+ändert. Man wird je nach Situation $a$ oder $b$ auf eins
+normieren. Nach Umformung ergibt sich dann wieder die explizite
+Form.
+
+Mit der impliziten Form ist die Beschreibung von Geraden im Raum
+nicht möglich. Stattdessen müsste man Ebenen im Raum
+in der Form
+\begin{equation}
+ax+by+cz=d
+\end{equation}
+beschreiben und eine Gerade als Schnittmenge von zwei Ebenen
+formulieren. Die vektorielle Beschreibung ist etwas einfacher
+handhabbar.
+
+\subsection{Vektorielle Form}
+
+Ein Ort kann durch den Ortsvektor $b$ beschrieben werden.
+Addiert man zu $b$ einen Richtungsvektor $a$,
+so gelangt man zu einem neuen Ort. Der Richtungsvektor kann auch vorher
+skaliert werden. Zeichnet man nun den Ort bezüglich allen Skalierungen ein, so liegen
+die Punkte auf einer Geraden. Eine Gerade wird also beschrieben
+durch die Parmeterkurve
+\begin{equation}
+g(t) = at+b
+\end{equation}
+mit dem Parameter $t$. Die Gerade ist dann einfach die Bildmenge
+dieser Parameterkurve. In der Ebene lässt sich die Gleichung
+der Geraden in die zwei Gleichungen
+\begin{equation}
+\begin{split}
+x &= a_1 t+b_1,\\
+y &= a_2 t+b_2
+\end{split}
+\end{equation}
+aufspalten. Falls $a_1\ne 0$ ist, bringt Umformung der ersten
+Gleichung nun $t = (x-b_1)/a_1$.
+Damit ergibt sich
+\begin{equation}
+y = \frac{a_2}{a_1}(x-b_1)+b_2.
+\end{equation}
+Die Beschreibung in der expliziten Form ist also als Spezialfall
+in der vektoriellen Form enthalten.
+
+Mit der vektoriellen Form kann man Geraden in Räumen beliebiger
+endlicher Dimension beschreiben. Das wird jedoch dadurch erkauft,
+dass der Inzidenztest nun etwas komplizierter ist.
+
+\subsection{Geraden als Äquivalenzklassen}
+
+Angenommen man will überprüfen, ob zwei Geraden $g_1,g_2$ gleich sind.
+Dann müsste man überprüfen ob jeder Punkt aus $g_1$ in $g_2$
+enthalten ist und jeder Punkt aus $g_2$ in $g_1$ enthalten ist.
+Das ist insofern problematisch, dass eine Gerade aus unendlich vielen
+Punkten besteht.
+
+Aus dieser Misere kommt man heraus, indem man die Geraden als
+Äquivalenzklassen betrachtet, nachdem man den möglichen Schnittpunkt
+entfernt hat. Man nimmt nun zwei unterschiedliche Repräsentanten
+$p_1,p_2$ aus $g_1$ und überpüft ob beide auch Repräsentanten
+von $g_2$ sind. Schon dann weiß man, dass beide Geraden gleich sein müssen.
+Ein einziger Repräsentant würde nicht ausreichen, denn es könnte
+zufällig der möglicherweise vorhandene Schnittpunkt sein.
+
+Betrachten wir z.\,B. die Ursprungsgeraden, wobei wir uns den
+Ursprung als problematischen Schnittpunkt wegdenken. Jede Gerade
+mit Ausnahme der senkrechten wird durch genau eine Funktion
+$f(x)=mx$ bzw. durch genau ein $m$ angegeben.
+Will man nun überprüfen ob zwei Ursprungsgeraden $g_1,g_2$ gleich
+sind, so kann stattdessen auch überprüfen, ob $m_1=m_2$ ist.
+
+Da für $m$ keine Beschränkungen gelten, gibt es zu jeder
+Ursprungsgeraden mit Ausnehme der senkrechten genau eine reelle Zahl.
+Nimmt man noch den projektiven Abschluss $m=\infty$ hinzu, so
+gibt es keine Ausnahme. Die Menge der Ursprungsgeraden ist also
+gewissermaßen das selbe wie der Kreis. Darauf kann man auch einfacher
+kommen: zu jeder Ursprungsgeraden gibt es genau eine Richtung.
+
+
+\subsection{Geodäten}
+
+In einem flachen Raum sind Geraden die kürzeste Verbindung zwischen
+zwei Punkten. Diese Eigenschaft ist dazu geeignet den Begriff der
+Geraden auf Räume zu übertragen, wo es eingentlich keine Geraden
+gibt. Befindet man sich z.\,B. in einem Labyrinth, so können alle
+Strecken als gerade aufgefasst werden, die die kürzeste Verbindung
+zwischen zwei Orten im Labyrinth darstellen. Die Geraden auf der
+Kugeloberfläche sind Großkreise.
+Gerade im Kleinen stimmen die Großkreise der Erdoberfläche sehr gut mit
+Geraden überein, z.\,B. besser als ein Kreis mit dem Radius $1\,\mathrm{km}$.
+Das rechtfertigt den Begriff kürzesten Verbindung als Gerade.
+
+Solche Verallgemeinerungen von Geraden und Strecken werden als
+\textit{Geodäten} bezeichnet. Dieses Konzept lässt sich in einem
+beliegen metrischen Raum formulieren. Und die Menge der metrischen
+Räume ist sehr groß, auch in praktischer Hinsicht.
+
+
+\end{document}
+
+
+
