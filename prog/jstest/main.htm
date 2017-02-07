@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>jstest</title>
+  <style>
+body{
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 100%;
+  margin-left: 10%;
+  margin-top: 2em;
+}
+a{
+  color: #004060;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+  </style>
+  <script>
+function readTextFile(file)
+{
+    var text;
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                return text=allText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return text;
+}
+
+function main(){
+  var la = document.getElementById("la");
+  la.innerHTML = readTextFile("la/la.txt");
+}
+  </script>
+</head>
+<body>
+
+<input type="button" value="load" onclick="main();">
+
+<br><br>
+<div id="la">
+</div>
+
+</body>
+</html>
