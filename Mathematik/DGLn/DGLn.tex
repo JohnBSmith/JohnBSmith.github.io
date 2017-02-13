@@ -369,7 +369,7 @@ y=\sum_{k=0}^\infty a_0\frac{x^k}{k!} = a_0e^x.
 \end{equation}
 Alternativ kann man auch nach folgender Methode rechnen.
 Wenn sich die Funktion $y$ an der Stelle $x_0$ in eine Potenzreihe
-entwickeln lässt, so ist nach dam Satz von Taylor
+entwickeln lässt, so ist nach dem Satz von Taylor
 \begin{equation}
 y = \sum_{k=0}^\infty \frac{1}{k!}y^{(k)}(x_0)(x-x_0)^k.
 \end{equation}
@@ -380,6 +380,64 @@ y = \sum_{k=0}^\infty \frac{1}{k!}y(0)x^k
 = y(0)\sum_{k=0}^\infty \frac{x^k}{k!}
 = y(0)e^x.
 \end{equation}
+
+\subsection{Laplace-Transformation}
+
+Bei linearen DGLn mit konstanten Koeffizienten kann man die
+Laplace-Transformation zur Lösung verwenden. Man Transformiert
+erst die DGL, wobei eine algebraische Gleichung entsteht. Diese
+wird gelöst. Die Lösung kann man anschließend zurück transformieren.
+
+Als Beispiel soll wieder die DGL $y'=y$ dienen. Mit der Rechenregel
+$L\{y'\} = pL\{y\}-y_0$ erhält man
+\begin{equation}
+pL\{y\}-y_0 = L\{y\}.
+\end{equation}
+Umformen bringt
+\begin{equation}
+L\{y\} = \frac{y_0}{p-1}.
+\end{equation}
+Es ist $L\{x\} = 1/p$. Zusammen mit dem Dämpfungssatz erhält man
+\begin{equation}
+L\{e^x\} = \frac{1}{p-1}.
+\end{equation}
+Man rechnet nun
+\begin{equation}
+L\{y_0e^x\} = y_0L\{e^x\} = \frac{y_0}{p-1}.
+\end{equation}
+Die Lösung $y=y_0e^x$ lässt sich ablesen.
+
+\subsection{Eigenwertgleichung}
+
+Die Gleichung $y'=y$ schreibt man auch $Dy=y$. Mit $\lambda=1$
+kann man $Dy=\lambda y$ schreiben. Das ist analog zum Eigenwertproblem
+$Av=\lambda v$ in der linearen Algebra. Die Rolle der Matrix übernimmt
+der Differentialoperator $D$. Wie findet man die Eigenvektoren?
+Man macht den Ansatz $y_b=e^{\lambda x}$. In diesem Fall ist
+also $y_b=e^x$.
+
+Der Eigenvektor $y_b$ bildet nun die Basis eines eindimensionalen
+Vektorraums. Alle Lösungen lassen sich als Linearkombination von $y_b$
+darstellen. Linearkombinationen sind z.\,B. $2y_b$ oder $y_b+3y_b$.
+Allgemein erhält man%
+\begin{equation}
+y = Ky_b = Ke^x.
+\end{equation}
+Nehmen wir als zweites Beispiel die Gleichung $y''=-4y$. Bezüglich
+des Differentialoperators $D'=D^2$ ist der Eigenwert $\lambda'=-4$.
+Zunächst macht man aber bei linearen DGLn mit konstanten Koeffizienten
+immer den Ansatz $y_b=e^{\lambda x}$. Dieser  wird in die DGL
+eingesetzt und man erhält $\lambda^2 e^{\lambda x} = -4e^{\lambda x}$.
+Division durch $e^{\lambda x}$ bringt dann $\lambda^2 = -4$.
+Man erhält die Lösungen $\lambda_1 = -2i$ und $\lambda_2 = 2i$.
+Die Linearkombinationen sind
+\begin{equation}
+y=K_1e^{-2ix}+K_2e^{2ix}.
+\end{equation}
+Die Eigenwerte $\lambda_k$ aus dem Ansatz muss man vom
+Eigenwert $\lambda'$ des Differentialoperators $D'$ unterscheiden,
+wenn es sich nicht um den gewöhnlichen Differentialoperator $D$
+handelt.
 
 
 \end{document}
