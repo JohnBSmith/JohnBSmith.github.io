@@ -106,13 +106,13 @@ Inhaltsverzeichnis}
 
 \section{Vorbereitungen}
 \subsection{Notation}
-Manchmal werden aus pragmatischen Gründen unpräzsise Schreibweisen
+Manchmal werden aus pragmatischen Gründen unpräzise Schreibweisen
 gewählt. Wenn eine Variable beim bestimmten Integral sowohl als Grenze
 als auch als Integrationsvariable auftaucht, so definiert man
 \begin{equation}
 \int_a^x f(x)\,\mathrm dx := \int_a^x f(t)\,\mathrm dt.
 \end{equation}
-Es gibt auch Ausdrücke, wo eine solche ungenaue Schreibweise garnicht
+Es gibt auch Ausdrücke, wo eine solche ungenaue Schreibweise gar nicht
 möglich ist. Z.\,B. bei
 \begin{equation}
 \int_a^x f(xt)\,\mathrm dt.
@@ -132,7 +132,7 @@ g'(x)\,\mathrm dx = u'(x)\,\mathrm dx
 Bei dieser ungenauen Schreibweise wird $\mathrm dx$ einfach
 {\glqq}gekürzt{\grqq}. Hier darf die Substitution bei den
 Integralgrenzen nicht vergessen werden. Wird $u=g(x)$ substituiert,
-so ist $g^{-1}(u)=x$ und man schreibt präzsier
+so ist $g^{-1}(u)=x$ und man schreibt präziser
 \begin{equation}
 \int_a^b = \int_{x=a}^{x=b} = \int_{g^{-1}(u)=a}^{g^{-1}(u)=b}
 = \int_{u=g(a)}^{u=g(b)}
@@ -245,6 +245,141 @@ ist eine Gleichung der Form
 \end{equation}
 mit $y_k:=(D^k f)(x)$. $\Box$
 \end{Definition}
+
+\section{Lösungsmethoden}
+Man betrachte das Anfangswertproblem
+\begin{equation}\label{eq:AWP-exp}
+f'(x) = f(x), \quad f(0)=1,
+\end{equation}
+dessen Lösung gefunden werden soll. Die Gleichung lässt sich
+beschreiben durch
+\begin{equation}
+y' = g(x,y)
+\end{equation}
+mit $g(x,y):=y$. Die Lipschitz-Bedingung führt hier auf%
+\begin{equation}
+|g(x,y_2)-g(x,y_1)| = |y_2-y_1|\le L|y_2-y_1|,
+\end{equation}
+also $L\ge 1$. Somit ist $g$ global Lipschitz-stetig. Daher muss
+es eine eindeutige Lösung der DGL geben.
+
+\subsection{Klassische Methode}
+Wir fordern zunächst, dass $f(x)$ keine Nullstellen habe. Somit
+lässt sich die Gleichung \eqref{eq:AWP-exp} in die Form
+\begin{equation}\label{eq:AWP-exp-Umformung}
+\frac{f'(x)}{f(x)}=1
+\end{equation}
+bringen. Man verwendet nun die Substitutionsregel in der Form
+\begin{equation}
+\int_a^b h(f(x))\,f'(x)\,\mathrm dx
+= \int_{f(a)}^{f(b)} h(u)\,\mathrm du.
+\end{equation}
+Hier ist $h(u)=1/u$. Somit ergibt sich
+\begin{equation}
+\int_0^x \frac{f'(x)}{f(x)}\,\mathrm dx
+= \int_{f(0)}^{f(x)} \frac{1}{u}\,\mathrm du
+= \ln|f(x)|-\ln|f(0)|.
+\end{equation}
+Diese Rechnung wird auch als \emph{logarithmische Integration}
+bezeichnet. Es ist an dieser Stelle praktisch, die Abkürzungen
+$y:=f(x)$ und $y_0:=f(0)$ zu verwenden.
+
+Auf der anderen Seite von \eqref{eq:AWP-exp-Umformung} erhalten wir
+\begin{equation}
+\int_0^x 1\,\mathrm dx = x.
+\end{equation}
+Integriert man Gleichung \eqref{eq:AWP-exp-Umformung} auf beiden
+Seiten, so erhält man nun
+\begin{equation}
+\ln|y|-\ln|y_0| = x.
+\end{equation}
+Umformung dieser Gleichung bringt
+\begin{equation}
+|y| = |y_0|\,\ee^x.
+\end{equation}
+Verwendet man nun die allgemeine Regel
+\begin{equation}
+|y|=y\sgn(y),
+\end{equation}
+so ergibt sich
+\begin{equation}
+y\sgn(y) = y_0\sgn(y_0)\,\ee^x.
+\end{equation}
+Wenn $y$ nun differenzierbar sein soll, so muss $y$ auch stetig sein.
+Weil wir fordern, dass $y$ keine Nullstellen hat, muss aus
+Stetigkeitsgründen entweder $y>0$ für alle $x$ oder $y<0$ für alle
+$x$ sein. Daher ist $\sgn(y)=\sgn(y_0)$. Man erhält
+\begin{equation}
+y = y_0\,\ee^x.
+\end{equation}
+Was ist, wenn die Funktion $y$ eine Nullstelle besitzt? Wenn $a$
+eine Nullstelle ist, so wird dort wegen der DGL \eqref{eq:AWP-exp}
+auch $y^{(n)}(a)=0$ sein. Setzt man voraus, dass $y$ analytisch ist,
+so kann die Taylorreihe an der Stelle $a$ gebildet werden und man
+erhält die Funktion
+\begin{equation}
+\forall x\colon y(x)=0.
+\end{equation}
+Das Anfangswertproblem kann hiermit nicht erfüllt werden, d.\,h.
+die Lösungsmenge ist leer.
+
+\subsection{Picard-Iteration}
+
+Als Beispiel soll wieder die DGL $y'=y$ dienen.
+Diese integriert man auf beiden Seiten und erhält
+\begin{equation}
+y=y(0)+\int_0^x y\,\mathrm dx.
+\end{equation}
+Diese Umformung bringt uns eigentlich nicht weiter.
+Der Ansatz ist nun, zu erkennen, dass es sich um eine
+Fixpunktgleichung handelt. Sei $K:=y(0)$.
+Wir wählen nun $y_1:=0$ und iterieren gemäß
+\begin{equation}
+y_{n+1} = K+\int_0^x y_n\,\mathrm dx.
+\end{equation}
+Der Anfang dieser Iteration ist:
+\begin{gather}
+y_2 = K,\\
+y_3 = K+Kx,\\
+y_4 = K+Kx+\frac{1}{2}Kx^2,\\
+y_5 = K+Kx+\frac{1}{2}Kx^2+\frac{1}{6}Kx^3.
+\end{gather}
+Das geht immer so weiter, der Grenzwert ist
+\begin{equation}
+y = K\sum_{k=0}^{\infty} \frac{x^k}{k!} = Ke^x.
+\end{equation}
+
+\subsection{Potenzreihenmethode}
+
+Als Beispiel soll wieder die DGL $y'=y$ dienen.
+Wenn sich die Funktion $y(x)$ als Potenzreihe darstellen lässt, so ist
+\begin{equation}
+y=\sum_{k=0}^\infty a_k(x-x_0)^k.
+\end{equation}
+Wir wählen den Entwicklungspunkt $x_0=0$. Die Potenzreihe setzt man
+nun in die DGL ein und erhält
+\begin{equation}
+\sum_{k=1}^\infty ka_kx^k = \sum_{k=0}^\infty a_kx^k.
+\end{equation}
+Mit einem Koeffizientenvergleich erhält man $ka_k=a_{k-1}$.
+Über die Rekursionsformel für die Fakultät erhält man $k!a_k=a_0$.
+Einsetzen von $a_k$ in den allgemeinen Potenzreihenansatz bringt dann
+\begin{equation}
+y=\sum_{k=0}^\infty a_0\frac{x^k}{k!} = a_0e^x.
+\end{equation}
+Alternativ kann man auch nach folgender Methode rechnen.
+Wenn sich die Funktion $y$ an der Stelle $x_0$ in eine Potenzreihe
+entwickeln lässt, so ist nach dam Satz von Taylor
+\begin{equation}
+y = \sum_{k=0}^\infty \frac{1}{k!}y^{(k)}(x_0)(x-x_0)^k.
+\end{equation}
+Entwickelt man nun an der Stelle $x_0=0$ und verwendet die DGL,
+so erhält man
+\begin{equation}
+y = \sum_{k=0}^\infty \frac{1}{k!}y(0)x^k
+= y(0)\sum_{k=0}^\infty \frac{x^k}{k!}
+= y(0)e^x.
+\end{equation}
 
 
 \end{document}

@@ -306,12 +306,12 @@ end
 <h2 id="msort">Mergesort</h2>
 
 <pre class="moss">
-msort = |a| if size(a)<=1 then copy(a) else
+msort = |a| if size(a)&lt;=1 then copy(a) else
   merge(msort(a[1..:2]),msort(a[0..:2])) end
 
 merge = sub|L,R| y=[]
   while size(L)!=0 and size(R)!=0
-    y.push(if L[-1]>R[-1] then L else R end.pop())
+    y.push(if L[-1]&gt;R[-1] then L else R end.pop())
   end
   return L+R+y.rev()
 end
