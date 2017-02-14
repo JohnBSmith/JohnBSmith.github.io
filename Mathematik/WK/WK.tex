@@ -2365,44 +2365,82 @@ Für eine quadratische Jacobi-Matrix bekommt man allgemein
 Das Ableiten von Skalarfeldern ist unproblematisch. Beim Ableiten von
 Vektorfeldern muss man jedoch beachten, dass die Basisvektoren nun
 vom Ort abhängig sind. Daher verwendet man die Produktregel der
-Differentialrechnung. Man erhält
-\[D_i v = D_i\sum_{j}v^je_j
-= \sum_{j}(e_jD_i v^j+v^jD_i e_j).\]
-Man kommt jetzt auf die Idee, die Ableitungen $D_ie_j$ als
-Linearkombination der Basisvektoren $e_k$ darzustellen. Das sollte
-möglich sein, weil die Ableitung eins Vektors wieder ein Vektor sein
-wird. Die gekrümmte Fläche $x(u)$ wird mit der Orthonormalbasis
-$(b_k)$ dargestellt. Man schreibt
-\begin{gather*}
-e_j = D_jx = D_j\sum_{l} b_lx_l\\
-= \sum_{l}b_l D_jx_l
-= \sum_{l}\frac{\partial x}{\partial x_l}D_jx_l.
-\end{gather*}
+Differentialrechnung.
+
+Wir betrachten dazu eine $n$-dimensionale differenzierbare
+Mannigfaltigkeit $M$, die man sich zunächst als in den $\R^m$ eingebettet
+vorstellen kann. Sei dazu
+\begin{equation}
+\varphi\colon (\tilde U\subseteq \R^n)\to U\subseteq M\subseteq\R^m
+\end{equation}
+eine lokale Karte. Mit dieser Karte lässt sich eine Tangentialbasis
+von $T_p M$ bilden, deren Basisvektoren die%
+\begin{equation}
+b_j = (D_j\varphi)(a)
+= \frac{\partial\varphi(u)}{\partial u^j}\bigg|_{u=a=\varphi^{-1}(p)}.
+\end{equation}
+sind. Man betrachte nun ein Vektorfeld $v\colon M\to TM$, dessen
+Einschränkung auf $U$ mit der Tangentialbasis als
+\begin{equation}
+v(p) = \sum_{j} v^j(p)\,b_j
+\end{equation}
+beschrieben werden kann. Wir wollen stattessen nun das Vektorfeld
+$v\circ\varphi$ betrachten, also die Einsetzung $p=\varphi(u)$.
+Nun ist sowohl $v\circ\varphi$ als auch $b_j$ von $u$ abhängig
+und lässt sich somit nach $u$ ableiten. Unter Heranziehung der
+Produktregel ergibt sich
+\begin{equation}
+D_i v = D_i\sum_{j}v^j b_j
+= \sum_{j}(b_jD_i v^j+v^jD_i b_j).
+\end{equation}
+Man kommt jetzt auf die Idee, die Ableitungen $D_ib_j$ als
+Linearkombination der Basisvektoren $b_k$ darzustellen. Das sollte
+möglich sein, weil die partielle Ableitung eins Vektors wieder ein
+Vektor sein wird. Die Mannigfaltigkeit (z.\,B. eine gekrümmte Fläche)
+wird durch die Karte $\varphi(u)$ dargestellt. Das ist für jedes
+$u$ ein Ortsvektor $x=\varphi(u)\in\R^m$. Dieser Ortsvektor lässt
+sich als Linearkombination bezüglich der konstanten
+Orthonormalbasis $(e_k)$ bilden. Man rechnet
+\begin{gather}
+D_i b_j = D_i D_j x = D_i D_j\sum_{l} e_l x_l\\
+= \sum_{l}e_l D_i D_j x_l
+= \sum_{l}\frac{\partial x}{\partial x_l}D_i D_j x_l.
+\end{gather}
 Mit der Kettenregel erhält man
-\[D_ie_j = \sum_{k,l}\frac{\partial x}{\partial u^k}
-\frac{\partial u^k}{\partial x_l}D_iD_jx_l
-= \sum_{k,l}e_k\frac{\partial u^k}{\partial x_l}D_iD_jx_l.\]
+\begin{equation}
+D_ib_j = \sum_{k,l}\frac{\partial x}{\partial u^k}
+\frac{\partial u^k}{\partial x_l}D_iD_j x_l
+= \sum_{k,l}b_k\frac{\partial u^k}{\partial x_l}D_iD_j x_l.
+\end{equation}
 Man definiert nun die Abkürzung
-\[\Gamma_{ij}^k := \sum_{l}\frac{\partial u^k}
-{\partial x_l}D_iD_jx_l.\]
+\begin{equation}
+\Gamma_{ij}^k := \sum_{l}\frac{\partial u^k}
+{\partial x_l}D_iD_j x_l.
+\end{equation}
 Die $\Gamma_{ij}^k$ werden als Christoffelsymbole bezeichnet.
-Damit ist die Linearkombination
-\[D_ie_j = \sum_{k} \Gamma_{ij}^k e_k.\]
+Mit dieser Abkürzung bekommt die Linearkombination die Form
+\begin{equation}
+D_ib_j = \sum_{k} \Gamma_{ij}^k b_k.
+\end{equation}
 Die Ableitung des Vektorfeldes ist hiermit
-\begin{gather*}
-D_i v  = \sum_{j}(e_jD_i v^j+v^j\sum_{k} \Gamma_{ij}^k e_k)\\
-= \sum_{j}e_jD_i v^j+\sum_{k,j}v^j \Gamma_{ij}^k e_k.
-\end{gather*}
+\begin{gather}
+D_i v  = \sum_{j}(b_jD_i v^j+v^j\sum_{k} \Gamma_{ij}^k b_k)\\
+= \sum_{j}b_jD_i v^j+\sum_{k,j}v^j \Gamma_{ij}^k b_k.
+\end{gather}
 Da der Index $j$ in der ersten Summe durch die Summe gebunden ist,
 kann man ihn durch $k$ austauschen. Man erhält
-\begin{gather*}
-D_i v = \sum_{k}e_kD_i v^k+\sum_{k,j}v^j \Gamma_{ij}^k e_k\\
-= \sum_{k}e_k(D_i v^k+\sum_{j}v^j\Gamma_{ij}^k).
-\end{gather*}
+\begin{gather}
+D_i v = \sum_{k}b_kD_i v^k+\sum_{k,j}v^j \Gamma_{ij}^k b_k\\
+= \sum_{k}b_k(D_i v^k+\sum_{j}v^j\Gamma_{ij}^k).
+\end{gather}
 Man definiert nun die kovariante Ableitung
-\[\nabla_i v^k := D_i v^k+\sum_{j}v^j\Gamma_{ij}^k.\]
+\begin{equation}
+\nabla_i v^k := D_i v^k+\sum_{j}v^j\Gamma_{ij}^k.
+\end{equation}
 Damit ist
-\[D_i v = \sum_{k}e_k\nabla_i v^k.\]
+\begin{equation}
+D_i v = \sum_{k}b_k\nabla_i v^k.
+\end{equation}
 Die Schreibweise $\nabla_i v^k$ ist etwas unglücklich, da die
 Information des gesamten Vektorfeldes notwendig ist, um die Ableitung
 bilden zu können. Die Komponente $v^k$ allein reicht dafür nicht
@@ -2414,10 +2452,10 @@ werden. Sei $a$ ein Vektor. Für ein Skalarfeld $f$ ist die
 Richtungsableitung
 \begin{gather*}
 {D_a}f = \langle a,\mathrm{grad}\,f\rangle
-= \langle \sum_k a^ke_k,\sum_k e^k D_k f\rangle\\
+= \langle \sum_k a^kb_k,\sum_k b^k D_k f\rangle\\
 = \sum_k a^k D_k f.
 \end{gather*}
-Obwohl der Gradient die $e^k\equiv\mathrm dx^k$ enthält, ist es bei
+Obwohl der Gradient die $b^k\equiv\mathrm dx^k$ enthält, ist es bei
 der Richtungsableitung wieder unerheblich, ob man kartesische
 Koordinaten hat oder nicht.
 
@@ -2427,30 +2465,46 @@ komponentenweise bildet. D.h. man kann die Komponenten eines
 Vektorfeldes als Skalarfelder betrachten. Bei gekrümmten Koordinaten
 macht meine eine Rechnung, die zur Rechnung oben analog ist.
 Man erhält zunächst
-\[D_a e_j = \sum_{k,i}a^i \Gamma_{ij}^k e_k.\]
+\begin{equation}
+D_a b_j = \sum_{k,i}a^i \Gamma_{ij}^k b_k.
+\end{equation}
 Man definiert
-\[\nabla_a v^k := D_a(v^k) + \sum_{i,j}a^i v^j \Gamma_{ij}^k.\]
+\begin{equation}
+\nabla_a v^k := D_a(v^k) + \sum_{i,j}a^i v^j \Gamma_{ij}^k.
+\end{equation}
 Damit hat man
-\[D_a v = \sum_k e_k \nabla_a v^k.\]
-%
-Man kann nachrechnen, dass $\nabla_{e_i}v^k=\nabla_i v^k$ ist.
-Um das zu überprüfen macht man die Rechnung
-$(e^i)^l = \langle e^i,e_l\rangle = \delta_{il}.$
-Damit ist
-\[\nabla_{e_i} v^k = D_{e_i}(v^k)
-+ \sum_{l,j}(e^i)^l v^j \Gamma_{il}^k
-= D_i v^k + \sum_{j} v^j\Gamma_{ij}^k.\]
+\begin{equation}
+D_a v = \sum_k b_k \nabla_a v^k.
+\end{equation}
+Man kann nachrechnen, dass $\nabla_{b_i}v^k=\nabla_i v^k$ ist.
+Um das zu überprüfen, vergegenwärtigt man sich, dass $(b_i)^l$
+die Komponenten bezüglich der Linearkombination 
+\begin{equation}
+b_i = \sum_{l} (b_i)^l b_l
+\end{equation}
+sind und somit $(b_i)^l=\delta_{il}$ gilt. Damit ist
+\begin{equation}
+\nabla_{b_i} v^k = D_{b_i}(v^k)
++ \sum_{l,j}(b_i)^l v^j \Gamma_{il}^k
+= D_i v^k + \sum_{j} v^j\Gamma_{ij}^k.
+\end{equation}
 Wir wollen nun herausfinden, wie man Kovektoren ableitet.
-Mit der Formel $D_ie_j=\sum_k\Gamma_{ij}^k e_k$ lassen sich
+Mit der Formel $D_ib_j=\sum_k\Gamma_{ij}^k b_k$ lassen sich
 umgekehrt die Christoffelsymbole als Projektion darstellen. Es ist
-$\Gamma_{ij}^k = \langle e^k,D_ie_j\rangle.$
+$\Gamma_{ij}^k = \langle b^k,D_ib_j\rangle.$
 Mit der Produktregel ist weiterhin
-\[0=D_i\langle e^k,e_j\rangle
-= \langle D_ie^k,e_j\rangle + \langle e^k,D_ie_j\rangle.\]
+\begin{equation}
+0=D_i\langle b^k,b_j\rangle
+= \langle D_ib^k,b_j\rangle + \langle b^k,D_ib_j\rangle.
+\end{equation}
 Damit erhält man
-\[D_ie^k = -\sum_{j}\Gamma_{ij}^ke^j\]
+\begin{equation}
+D_ib^k = -\sum_{j}\Gamma_{ij}^kb^j
+\end{equation}
 Mit dieser Formel findet man
-\[\nabla_i v_k = D_iv_k-\sum_{j}v_j\Gamma_{ik}^j.\]
+\begin{equation}
+\nabla_i v_k = D_iv_k-\sum_{j}v_j\Gamma_{ik}^j.
+\end{equation}
 
 \subsection{Die Volumenform}
 
