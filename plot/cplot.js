@@ -36,7 +36,7 @@ var cftab = {
   "sum": csumlist, "prod": cprodlist,
   "zeta": czeta, "B": cbn,
   "erf": cerf, "erfc": cerfc, "Ei": cEi,
-  "K": eiK, "E": eiE,
+  "K": ceiK, "E": ceiE,
   "G": cBarnesG, "hyperK": chyperK,
   "compose": compose, "rev": rev,
   "size": csize, "isprime": cisprime
@@ -706,11 +706,11 @@ function cmagm(x,y){
   return x;
 }
 
-function eiK(m){
+function ceiK(m){
   return div({re:0.5*Math.PI,im:0},cagm({re:1,im:0},csqrt(rsub(1,m))));
 }
 
-function eiE(m){
+function ceiE(m){
   var a={re:1,im:0}
   var b=rsub(1,m);
   var M=cagm(a,csqrt(b));
@@ -762,8 +762,8 @@ function sn(z,k){
   var k1,K,K1,q,w;
   k=k.re;
   k1=Math.sqrt(1-k*k);
-  K=eiK(k);
-  K1=eiK(k1);
+  K=eiK(k*k);
+  K1=eiK(k1*k1);
   q={re: Math.exp(-Math.PI*K1/K), im: 0};
   w=div(mpyr(z,Math.PI),{re: 2*K, im: 0});
   return mpyr(div(theta1(w,q),theta4(w,q)),1/Math.sqrt(k));
@@ -773,8 +773,8 @@ function cn(z,k){
   var k1,K,K1,q,w;
   k=k.re;
   k1=Math.sqrt(1-k*k);
-  K=eiK(k);
-  K1=eiK(k1);
+  K=eiK(k*k);
+  K1=eiK(k1*k1);
   q={re: Math.exp(-Math.PI*K1/K), im: 0};
   w=div(mpyr(z,Math.PI),{re: 2*K, im: 0});
   return mpyr(div(theta2(w,q),theta4(w,q)),Math.sqrt(k1/k));
@@ -784,8 +784,8 @@ function dn(z,k){
   var k1,K,K1,q,w;
   k=k.re;
   k1=Math.sqrt(1-k*k);
-  K=eiK(k);
-  K1=eiK(k1);
+  K=eiK(k*k);
+  K1=eiK(k1*k1);
   q={re: Math.exp(-Math.PI*K1/K), im: 0};
   w=div(mpyr(z,Math.PI),{re: 2*K, im: 0});
   return mpyr(div(theta3(w,q),theta4(w,q)),Math.sqrt(k1));
