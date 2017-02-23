@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog</title>
+  <link href="blog.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="content">
+<header id="header">
+<h1>Blog</h1>
+<a href="../de.htm">Home</a><!--
+--><a href="../Rest/Portal.htm">Portal</a>
+</header>
+
+<div id="main-aside">
+<main id="main">
+
+<h2>Inhaltsverzeichnis</h2>
+<ul>
+<li><span class="date">[2015-12-12]</span>
+  <a href="#Passwoerter">Kryptische Passwörter</a>
+<li><span class="date">[2017-02-22]</span>
+  <a href="#Index">Index clientseitig durchsuchen</a>
+</ul>
+
+<h2 id="Passwoerter">Kryptische Passwörter</h2>
+<div class="date">12. Dezember 2015</div>
+
+<p>Ich las gerade einen Zeitungsartikel über Passwörter. Dort wurden
+einem wie üblich Tipps genannt, um sich solche sicher zu erstellen.
+Die Darstellung war simplifiziert und hob unwesentliche Dinge hervor.
+Es wurde dann empfohlen, mindestens 12 Zeichen mit
+Zufallskombinationen zu verwenden. Aber was soll das
+<em>mindestens</em>? Warum nicht einfach
+eine exakte Zahl von Zeichen? Viele Dienste wollen dann auch noch
+unbedingt Sonderzeichen und große Buchstaben, andernfalls wird
+das Passwort abgewiesen. Das ist natürlich ein ziemlicher Bullshit.
+Ich will erklären warum.
+
+<p>Gehen wir zunächst einmal von dem aus, was sicher ist. Man kann
+durch theoretische Überlegungen leicht feststellen, dass ein
+128bit-Passwort sicher ist. Falls Quantencomputer verwendet werden,
+so soll man nach Meinung von Forschern die Passwortlänge verdoppeln,
+also ein 256bit-Passwort verwenden.
+
+<p>Nun kann man so ein Passwort zu einer bestimmten Basis
+darstellen, wenn man es als Zahl im Stellenwertsystem auffasst.
+Die Basis <code>B</code> ist dabei eine geordnete Menge von Ziffern.
+Die Länge der Basis, d.h die Anzahl der Ziffern, bezeichnen wir
+mit <code>b</code>. Im Dezimalsystem hat man folgende Basis.
+
+<pre>
+  B = {0,1,2,3,4,5,6,7,8,9}
+  b = |B| = 10
+</pre>
+
+
+<p>Eigentlich ist ein Passwort keine Zahl, sondern nur
+ein Symbolwort. Man nennt die Basis dann
+Symbolalphabet. Aber das sind abstraktere
+Begriffe, die nur für Informatiker verständlich sind. Die
+nötige Passwortlänge wollen wir nun mit <code>L</code> bezeichnen,
+präziser mit <code>L(b)</code>, da es sich um eine von <code>b</code>
+abhängige Funktion handelt.
+
+<p>Für eine einzelne Ziffer gibt es nun <code>b</code> Möglichkeiten,
+für zwei sind es <code>b*b</code> und für <code>L</code> Ziffern sind
+es <code>b^L</code>. Die Zahl
+<pre>
+  S = b^L
+</pre>
+<p>bezeichnet man als Schlüsselraumgröße.
+Ein bit hat zwei Möglichkeiten. Dann hat ein
+128bit Passwort also <code>2^128</code> Möglichkeiten.
+Damit erhält man die Gleichung
+<pre>
+  b^L = 2^128.
+</pre>
+<p>Logarithmieren auf beiden Seiten und Umformung bringt
+<pre>
+  L = 128 lg(2)/lg(b).
+</pre>
+<p>Zur Sicherheit wollen wir Aufrunden. Somit erhält man
+für die notwendige Passwortlänge die Formel
+<pre>
+  L = ceil(128 lg(2)/lg(b)).
+</pre>
+<p>Hier sind nun einige Basen bzw. Alphabete wie sie praktisch
+verwendet werden.
+<table class="bt">
+<tr><th>b<th>Basis
+<tr><td>10<td>dezimale Ziffern
+<tr><td>16<td>hexadezimale Ziffern
+<tr><td>26<td>kleine Buchstaben
+<tr><td>36<td>Buchstaben und Ziffern
+<tr><td>62<td>kleine und große Buchstaben sowie Ziffern
+<tr><td>90<td>druckbare ASCII-Zeichen
+</table>
+
+<p>Nun eine Tabelle mit der notwendigen Passwortlänge.
+<pre>
+    b |   L
+    2 | 128
+    3 |  81
+    4 |  64
+    6 |  50
+   10 |  39
+   16 |  32
+   26 |  28
+   36 |  25
+   62 |  22
+   90 |  20
+  100 |  20
+  128 |  19
+  256 |  16
+  999 |  13
+</pre>
+<p>Man sieht, dass die notwendige Passwortlänge erst schnell und
+dann immer langsamer abnimmt. Nur um fünf Zeichen zu sparen, muss
+man aber nicht große Buchstaben und Sonderzeichen verwenden.
+Selbst wenn man 1000 Hanzi verwenden würde, wäre die Passwortlänge
+immer noch 13 Zeichen.
+
+<p>Es ist nun am sichersten, (exakt gleichverteilte) zufällige Zeichen
+zu benutzen. Diese ordnet man zur Lesbarkeit in Vierergruppen
+an. Bei 24 kleinen Buchstaben und Ziffern sind das sechs Gruppen.
+Ein Passwort sieht dann z.B. so aus:
+
+<pre>
+  b4ma 2kwq wmco piht ujx8 r37g
+</pre>
+
+<p>Leerzeichen sollten vom Eingabeparser
+entfernt werden. Ich finde es sehr fehleranfällig, wenn
+Eingabeparser so etwas nicht machen. 
+
+<p>Das mit den nicht notwendigen Sonderzeichen lässt sich auch
+so veranschaulichen: wenn man zwei hexadezimale Ziffern zu einem
+Symbol zusammenfasst, hat man schon <code>b=256</code>.
+Anstelle noch so kryptische Zeichen zu verwenden, kann man also auch
+einfach die Passwortlänge verdoppeln und dabei nur hexadezimale
+Ziffern benutzen.
+
+<p>Für einen Account bei einem Server sollten sich <code>2^128</code>
+Schlüssel aber nicht Brute-Force durchprobieren lassen. So etwas
+wäre ja höchst auffällig. Nehmen wir mal an, jemand loggt sich
+maximal 100 mal am Tag ein und der Account besteht maximal
+für 100 Jahre. Dann ist die maximale Anzahl der Versuche
+100*365*100. Man will nun eine Wahrscheinlichkeit von eins
+zu einer Mio., dass jemand hierbei Zufällig den richtigen
+Schlüssel findet. Man benötigt daher einen Schlüsselraum von
+<pre>
+  100*356*100*10^6 = 3.65*10^12
+  = 1.66*2^41.
+</pre>
+
+<p>Bei <code>2^42</code> ergibt sich ein Passwort von
+neun Buchstaben und Ziffern. Zur Sicherheit kann man 12 verwenden.
+Ein Passwort wie
+<pre>
+  b4ma 2kwq wmco
+</pre>
+<p>sollte also ausreichend sicher sein. Ein Problem welches
+sich jetzt ergibt, ist, dass von Passwörtern nur gesalzene
+Hashwerte gespeichert werden sollten. Es kann möglich sein,
+dass dabei zwei unterschiedliche Passwörter zur gleichen Hashwerte
+führen. Bei SHA-256-Hashwerten ist so etwas aber fast
+ausgeschlossen.
+
+<p>Und damit ist nun klar, dass man weder Sonderzeichen
+noch Großbuchstaben verwenden muss. Verängstigte können
+die Passwortlänge einfach von 12 auf 16 erhöhen,
+das bringt mehr als noch so kryptische Sonderzeichen.
+Warum? Weil <code>36^16</code> größer ist als <code>90^12</code>.
+
+<p>Um es mathematisch zu präzisieren: Wächst die Basis, so
+ergibt sich für die Schlüsselraumgröße die Potenzfunktion
+<code>S(x)=x^L</code>. Wächst jedoch die Schlüssellänge, so ergibt
+sich für die Schlüsselraumgröße die Exponentialfunktion
+<code>S(x)=b^x</code>. Exponentialfunktionen wachsen aber
+wesentlich schneller als Potenzfunktionen.
+
+<h2 id="Index">Index clientseitig durchsuchen</h2>
+<div class="date">22. Februar 2017</div>
+
+<p>Interessanterweise lässt sich unter Verwendung von clientseitigem
+Javascript auch ein Index auf einem Server durchsuchen.
+Das Problem ist zunächst, dass der Index irgendwann größer wird als
+ca. vier MB. Als Lösung wird der Index nun jedoch als Baumstruktur
+gespeichert, wobei die Knoten der ersten Ebenen in unterschiedlichen
+Dateien stehen. Über <code>XMLHttpRequest</code> lassen sich die
+Dateien dann per Lazy Evaluation lesen. Angenommen man hat einen
+1&nbsp;GB großen Suchbaum. Bei zwei Ebenen mit je 26 Buchstaben lässt
+sich der Index dann auf 1,5&nbsp;MB große Dateien verteilen.
+
+<p>Ein weiteres Problem, welches sich dabei ergibt, ist nun aber
+die Suche von Teilzeichenketten im Index. Dazu müsste der gesamte
+Index geladen und durchsucht werden. Man könnte nun auf die Idee
+kommen, aus dem Index einen Meta-Index zu erzeugen. Aber die
+Teilzeichenketten sind im Normalfall über den gesamten Index verteilt,
+sodass man doch wieder alle Dateien laden müsste.
+
+<p>Stattdessen ist es vorteilhaft, gleich einen Index zu erzeugen,
+der auch die Teilzeichenketten umfasst. Dieser wird dann wohl
+etwas größer werden. Aber das ist nicht so schlimm, auch wenn der Index
+so groß werden würde wie der gesamte Text der Website. Solange beim
+Auswerten des Suchbaumes nur zwei bis drei kleine Dateien geladen
+werden müssen, ist das kein Nachteil. Man beachte, dass das
+Text-Daten sind, das ist eigentlich sehr wenig Festplattenplatz.
+
+<p>Ich hätte gerne eine Volltextsuche für
+<a href="https://de.wikipedia.org/wiki/Project_Gutenberg"
+>Project Gutenberg</a>. Die Website verwendet seit einiger Zeit
+schon TLS. Man muss aber einen https-Link verwenden.
+
+</main>
+
+<aside id="right-aside">
+</aside>
+</div>
+
+</div>
+
+</body>
+</html>
