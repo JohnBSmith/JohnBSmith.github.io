@@ -159,7 +159,8 @@ var ftab3 = {
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
   "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
   "fs": fsa, "fa": fa, "fb": fb,
-  "comb": comb, "clamp": clamp
+  "comb": comb, "clamp": clamp,
+  "fn": interpolate_equidistant
 };
 
 var ftab4 = {
@@ -169,7 +170,7 @@ var ftab4 = {
   "pmfH": pmfH, "cdfH": cdfH,
   "pow": frac_pow_fix,
   "interpolate": interpolate_fn,
-  "fs": fs
+  "fs": fs, "sma": sma
 };
 
 var ftabn = {
@@ -1938,7 +1939,7 @@ function interpolate(t){
     }else{
       return NaN;
     }
-  }
+  };
 }
 
 function interpolate_fn(f,a,b,d){
@@ -1946,6 +1947,18 @@ function interpolate_fn(f,a,b,d){
     return [x,f(x)];
   });
   return interpolate(a);
+}
+
+// Interpolate piecewise linear,
+// equidistant nodes
+function interpolate_equidistant(x0,d,t){
+  return function(x){
+    var k = Math.floor((x-x0)/d);
+    if(k<0 || k+1>=t.length){
+      return NaN;
+    }
+    return (t[k+1]-t[k])/d*(x-x0-k*d)+t[k];
+  };
 }
 
 // Interpolation polynomial
@@ -2120,6 +2133,14 @@ function fix(F){
       return y;
     }
   };
+}
+
+function sma(f,x,n,h){
+  var y=0;
+  for(var k=-n; k<=n; k++){
+    y+=f(x+k*h);
+  }
+  return y/(2*n+1);
 }
 
 function type_tos(type){
