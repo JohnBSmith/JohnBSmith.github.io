@@ -30,6 +30,7 @@ var cftab = {
   "arcsin": casin, "arccos": cacos, "arctan": catan, "arccot": cacot,
   "sinh": csinh, "cosh": ccosh, "tanh": ctanh, "coth": ccoth,
   "asinh": casinh, "acosh": cacosh, "atanh": catanh, "acoth": cacoth,
+  "arsinh": casinh, "arcosh": cacosh, "artanh": catanh, "arcoth": cacoth,
   "gamma": cgamma, "fac": cfac, "digamma": cdigamma,
   "f": funf, "g": fung, "h": funh,
   "next": next, "rand": pick,

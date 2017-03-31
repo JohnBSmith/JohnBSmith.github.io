@@ -15,6 +15,7 @@
 
 \newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\R}{\mathbb R}
+\newcommand{\ee}{\mathrm e}
 
 \begin{document}
 \section*{Aufzeichnungen\\
@@ -315,6 +316,45 @@ Das Halley"=Verfahren ist dann die Fixpunktiteration
 \(x_{n+1}=\varphi(x_n)\).
 Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
 übergeht, wenn man \(f(x)f''(x)\) verschwinden lässt.
+
+\newpage
+\subsection{Integral der Potenzfunktion}
+Ich will eine ungewöhnliche Methode zur Berechnung des Integrals
+\begin{equation}
+\int x^n\,\mathrm dx
+\end{equation}
+vorführen. Wähle die Substitution $x=\ee^u$. Es gilt nun
+\begin{equation}
+\frac{\mathrm dx}{\mathrm du}=\frac{\mathrm d}{dx}\ee^u=\ee^u
+\end{equation}
+und somit $\mathrm dx = \ee^u\,\mathrm du$. Man hätte auch
+\begin{equation}
+x^n = \ee^{\ln(x)n} = \ee^{un}
+\end{equation}
+rechnen können, was vielleicht eher
+\begin{equation}
+\frac{\mathrm du}{\mathrm dx} = \frac{\mathrm d}{\mathrm dx}\ln(x) = \frac{1}{x}
+\end{equation}
+suggeriert hätte. Hier muss man bedenken, dass die Substitution
+nochmals ausgeführt werden kann, dass also
+\begin{equation}
+\frac{1}{x} = \frac{1}{\ee^u}
+\end{equation}
+gilt. Nach Substitutionsregel ergibt sich nun
+\begin{equation}
+\begin{split}
+&\int x^n\,\mathrm dx = \int \ee^{nu}\ee^u\mathrm du
+= \int \ee^{(n+1)u}\,\mathrm du\\
+&= \frac{1}{n+1}\ee^{(n+1)u} = \frac{x^{n+1}}{n+1}.
+\end{split}
+\end{equation}
+Es geht noch weiter. Im Fall $n=-1$ gilt
+\begin{equation}
+\int \frac{1}{x}\,\mathrm dx
+= \int\frac{1}{\ee^u}\,\ee^u\mathrm du
+= \int\mathrm du = u.
+\end{equation}
+Aber Umformen der Substitution ergibt ja $u=\ln x$.
 
 \newpage
 \section{Lineare Algebra}

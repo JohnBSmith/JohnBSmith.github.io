@@ -30,6 +30,7 @@
 <li><a href="#Euler">Euler method</a>
 <li><a href="#Lorenz">Lorenz attractor</a>
 <li><a href="#la">Linear algebra</a>
+<li><a href="#dg">Differential geometry</a>
 <li><a href="#nt">Number theory</a>
 <li><a href="#basic">Basic algorithms</a>
 <li><a href="#ms">Mandelbrot set</a>
@@ -112,27 +113,14 @@ fac = sub|n|
   end))
 end
 
-# Recursive, Lisp style
-eq = |a,b| a==b
-mpy = |a,b| a*b
-minus = |a,b| a-b
-If = |c,f,g| if c then f() else g() end
-define = sub|s,f|
-  gtab()[s]=f
-end
-
-define("fac",|n|
-  If(eq(n,0),
-    || 1,
-    || mpy(n,fac(minus(n,1)))))
 
 # Tacit programming
 compose = |f| |g| |x| f(g(x))
-r = |a| |b| list(a..b)
-mpy = |x,y| x*y
-reduce = |f| |e| |a| a.reduce(e,f)
+reduce  = |f| |e| |a| a.reduce(e,f)
+range   = |a| |b| list(a..b)
+mpy     = |x,y| x*y
 
-fac = compose(reduce(mpy)(1))(r(1))
+fac = compose(reduce(mpy)(1))(range(1))
 </pre>
 
 <h2 id="fib">Fibonacci sequence</h2>
@@ -173,11 +161,8 @@ compose = |f,g| |x| f(g(x))
 f = |x| 2*x
 print(compose(f,f)(10))
 
-function.type.o = sub|g|
-  f = self
-  return |x| f(g(x))
-end
-print(f.o(f).o(f)(10))
+function.type.MPY = |f;g| |x| f(g(x))
+print((f*f*f)(10))
 </pre>
 
 
@@ -234,18 +219,18 @@ print(mean(1..4))
 print(mean(rand(0,1).list(1000)))
 
 # Estimated standard deviation
-sigma = sub|a| m=mean(a)
+sub sigma(a) m=mean(a)
   sqrt(a.sum(|x| (x-m)^2)/(size(a)-1))
 end
 
 # Variance
-var = sub|a| m=mean(a)
+sub var(a) m=mean(a)
   a.sum(|x| (x-m)^2)/size(a)
 end
 
 # Covariance
-cov = sub|a,b| ma=mean(a); mb=mean(b)
-  map(a,b,sub|x,y| (x-ma)*(y-mb) end).sum()/size(a)
+sub cov(a,b) ma=mean(a); mb=mean(b)
+  map(a,b,|x,y| (x-ma)*(y-mb)).sum()/size(a)
 end
 
 # Covariance matrix
@@ -287,9 +272,6 @@ qsort = |a| if size(a)==0 then [] else
   qsort(a[1..].filter(|x| x&lt;a[0]))+[a[0]]+
   qsort(a[1..].filter(|x| x&gt;=a[0])) end
 
-# Brevity for brevity's sake
-q=|a|a==[]?[]:q(a[1..](|x|x&lt;a[0]))+[a[0]]+q(a[1..](|x|x&gt;=a[0]))
-
 # Test function
 issorted = |a| (0..size(a)-2).all(|i| a[i]&lt;=a[i+1])
 
@@ -298,8 +280,8 @@ sub qsort(a)
   size(a)==0?[]:begin
     R,L=[],[]
     a[1..].each(|x|(x&lt;a[0]?R:L).push(x))
-    return [R,L].map(qsort)
-  end().reduce(|R,L| R+[a[0]]+L)
+    [R,L].map(qsort)
+  end.reduce(|R,L| R+[a[0]]+L)
 end
 </pre>
 
@@ -354,13 +336,12 @@ uniq = |a| list(set(a))
 # Quotient set
 partition = |a,R| set(list(a).chunks(R))
 
-# Get equivalence relation
+# Obtain the equivalence relation
 # from a quotient set Q
 relation = |Q| |x,y| Q.any(|a| x in a and y in a)
 
-# Get equivalence class
-# from a quotient set Q
-# and representative x
+# Obtain the equivalence class
+# from a quotient set Q and representative x
 class = |Q,x| Q.find(|a| x in a)
 </pre>
 
@@ -402,11 +383,11 @@ perm(list("abc")).map(|a| a.join()).each(print)
 
 <pre class="moss">
 # Square root
-sqrt = |a| (sub|x| 0.5*(x+a/x) end^10)(1)
+sqrt = |a| ((|x| 0.5*(x+a/x))^10)(1)
 
 # Differential operator
-D = sub|f| h=0.001
-  return |x| (f(x+h)-f(x-h))/(2*h)
+D = begin h=0.001
+  |f| |x| (f(x+h)-f(x-h))/(2*h)
 end
 
 f = |x| x^3+2*x
@@ -554,33 +535,133 @@ A = hm([1,2],[3,4])
 B = exp(A)
 </pre>
 
+<h2 id="dg">Differential geometry</h2>
+<pre class="moss">
+# Tangential and normal vector
+use plotlib: system
+use math: exp, sqrt, pi, sin, cos
+use la: hv, hm, ha
+use na: diff, integral
+
+# Rotation matrix
+rot = |phi| hm(
+  [cos(phi),-sin(phi)],
+  [sin(phi), cos(phi)]
+)
+
+# Unit vector
+unit = |v| v/sqrt(v*v)
+
+TN = begin R=rot(90*pi/180)
+  |f| [|t| unit(diff(f,t)),|t| R*unit(diff(f,t))]
+end
+
+f = |t| 2*hv(cos(t),sin(t))
+T,N = TN(f)
+
+s = system({t1=0, t2=2*pi})
+s.vplot([f,T])
+s.idle()
+
+# Arc length
+# g: representation matrix of a metric tensor
+sub length(I,g,f)
+  integral(I[0],I[1],sub|t| v=diff(f,t); sqrt(g(f(t))*v*v) end)
+end
+# One could define g as a function and use
+# g(f(t),v,v) or g(f(t))(v,v) instead of g(f(t))*v*v.
+# But note, this is a bogus abstraction, because v is a
+# representation that is induced by a coordinate chart.
+# So g has to be given for the frame that is induced by the
+# same coordinate chart.
+
+# Directional derivative
+D = |v,f,x| diff(|t| f(x+t*v),0)
+
+# One can expand this to:
+D = begin h=0.001
+  |v,f,x| (f(x+h*v)-f(x-h*v))/(2*h)
+end
+
+# Standard basis
+sub basis(n,k)
+  v=[0]*n; v[k]=1
+  return ha(v)
+end
+
+# Jacobian matrix
+sub Jacobi(m,n)
+  E = list(0..n-1).map(|k| basis(n,k))
+  return |F,u| ha(
+    list(0..m-1).map(|i|
+      list(0..n-1).map(|j| D(E[j],F[i],u))))
+end
+
+# Metric tensor
+sub metric(m,n,F)
+  D = Jacobi(m,n)
+  return sub|u|
+    J = D(F,u)
+    return J.T()*J
+  end
+end
+
+# Polar coordinates
+# u = hv(r,phi)
+F = [
+  |u| u[0]*cos(u[1]),
+  |u| u[0]*sin(u[1])
+]
+g = metric(2,2,F)
+
+# Logarithmic spiral
+# r(phi) = a*exp(k*phi)
+# a=1, k=0.2
+f = |t| hv(exp(0.2*t),t)
+
+# lim(n to inf) length([-2*n*pi,0],g,f)
+# = sqrt(1+k^2)/k = 5.0990... 
+L = length([-200*pi,0],g,f)
+print(L)
+</pre>
 
 
 <h2 id="nt">Number theory</h2>
 
 <pre class="moss">
-isprime = |n| n&gt;1 and (2..n-1).all(|k| n%k!=0)
-print(list(1..100).filter(isprime))
-
 # A prime is a number that has two divisors.
 isprime = |n| (1..n).count(|k| n%k==0)==2
+
+# A slightly faster algorithm.
+isprime = |n| n&gt;1 and (2..n-1).all(|k| n%k!=0)
+
+# The basic idea to speed it up.
+isprime = |n| n&gt;1 and (2..).until(|k| k*k&gt;n).all(|k| n%k!=0)
+
+# Print all the primes in 1..100.
+print(list(1..100).filter(isprime))
+
+# Print the first 100 primes.
+print((1..).filter(isprime).list(100))
 
 sieve = |a| if size(a)==0 then [] else
   [a[0]]+sieve(a[1..].filter(|x| x%a[0]!=0)) end
 
 print(sieve(list(2..100)))
 
+# Greatest common divisor
 gcd = |a,b| if b==0 then a else gcd(b,a%b) end
 
-gcd = sub|a,b|
+sub gcd(a,b)
   while b!=0 do a,b=b,a%b end
   return a
 end
 
+# Least common multiple
 lcm = |a| a.reduce(|x,y| x*y//gcd(x,y))
 
 # (a^n)%m (built-in as pow(a,n,m))
-powmod = sub|a,n,m|
+sub powmod(a,n,m)
   y=1; a=a%m
   while n&gt;0
     if n%2==0
@@ -666,7 +747,7 @@ use math: pi
 use cmath: exp
 
 # size(a) is a power of two
-fft = sub|a| if size(a)<=1 then return a end
+fft = sub|a| if size(a)&gt;=1 then return a end
   even = fft(a[0..:2]); odd = fft(a[1..:2])
   N = size(a); L = list(0..N//2-1)
   T = L.map(|k| exp(-2i*pi*k/N)*odd[k])
@@ -732,10 +813,13 @@ scan = |s| regex.list(s)
 use re
 unary={"~": |x| -x}; binary={"+": |x,y| x+y, "-": |x,y| x-y,
   "*": |x,y| x*y, "/": |x,y| x/y, "^": |x,y| x^y}
+
 regex = re.compile("{d}+({.}{d}*)?|[+-*/^~]")
+
 calc = |s| regex.list(s).reduce([],|a,x| x[0].isdigit()?
   a+[float(x)]: x in unary? a[..-2]+[unary[x](a[-1])]:
   a[..-3]+[binary[x](a[-2],a[-1])])[-1]
+
 (|| calc(input("&gt;\s"))).each(print)
 </pre>
 

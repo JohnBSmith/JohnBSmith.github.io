@@ -160,7 +160,7 @@ so gilt:
 \begin{gather}
 g<1\implies(s_n)\;\text{ist absolut konvergent},\\
 g>1\implies(s_n)\;\text{ist divergent},\\
-g=0\implies\;\text{keine Aussage}.
+g=1\implies\;\text{keine Aussage}.
 \end{gather}
 
 \subsection{Cauchy-Produkt}\index{Cauchy-Produkt}
@@ -256,11 +256,11 @@ f'(x_0),\,\qquad (Df)(x_0),\qquad \frac{\mathrm df(x)}{\mathrm dx}\Big|_{x=x_0}.
 Sind $f,g$ differenzierbare Funktionen und ist $a$ eine reelle Zahl,
 so gilt
 \begin{gather}
-(af)' = af',\\
-(f+g)' = f'+g',\\
-(f-g)' = f'-g',\\
-(fg)' = f'g+g'f,\\
-\Big(\frac{f}{g}\Big)'(x) = \frac{(f'g-g'f)(x)}{g(x)^2}.
+(af)'(x) = af'(x),\\
+(f+g)'(x) = f'(x)+g'(x),\\
+(f-g)'(x) = f'(x)-g'(x),\\
+(fg)'(x) = f'(x)g(x)+g'(x)f(x),\\
+\Big(\frac{f}{g}\Big)'(x) = \frac{f'(x)g(x)-g'(x)f(x)}{g(x)^2}.
 \end{gather}
 \subsubsection{Kettenregel}
 Ist $g$ differenzierbar an der Stelle $x_0$ und
@@ -270,13 +270,35 @@ differenzierbar an der Stelle $x_0$ und es gilt
 (f\circ g)'(x_0) = (f'\circ g)(x_0)\, g'(x_0).
 \end{equation}
 \subsection{Tangente und Normale}
-Tangente der Funktion $f$ an der Stelle $x_0$:
+Funktionsgleichung der Tangente an den Graphen von
+$f$ an der Stelle $x_0$:
 \begin{equation}
 T(x) = f(x_0)+f'(x_0)(x-x_0).
 \end{equation}
-Normale der Funktion $f$ an der Stelle $x_0$:
+Funktionsgleichung der Normale an den Graphen von $f$
+an der Stelle $x_0$:
 \begin{equation}
 N(x) = f(x_0)+\frac{1}{f'(x_0)}(x-x_0).
+\end{equation}
+
+\subsubsection{Taylorreihe}
+Sei $f$ eine an der Stelle $a$ unendlich oft differenzierbare
+reelle Funktion.
+\begin{Definition}
+\emdef{Taylorreihe} von $f$ an der Stelle $a$:
+\begin{equation}
+\begin{split}
+&f[a](x) :=  (\exp((x-a)D)f)(a)\\
+&= \sum_{k=0}^\infty\frac{(D^k f)(a)}{k!}\cdot (x-a)^k\\
+&=f(a)+f'(a)\cdot (x-a)+\frac{f''(a)}{2}\cdot (x-a)^2+\ldots
+\end{split}
+\end{equation}
+mit $f^{(k)}(a)=(D^k f)(a)$.
+\end{Definition}
+
+Für Polynomfunktionen und für $\exp$, $\sin$, $\cos$ gilt
+\begin{equation}
+\forall x\colon\; f[a](x)=f(x).
 \end{equation}
 
 \section{Integralrechnung}
