@@ -36,12 +36,14 @@ var htm_print = {
     }
   },
   mpy: function(t,op){
-    var sx = this.ast(t[1][0],"*");
-    var sy = this.ast(t[1][1],"*");
-    if(typeof t[1][0]=="number" && sy.length>=1 && !isdigit(sy.slice(0,1))){
-      s=sx+sy;
+    var a = [];
+    for(var i=0; i<t[1].length; i++){
+      a.push(this.ast(t[1][i],"*"));
+    }
+    if(typeof t[1][0]=="number" && a[1].length>=1 && !isdigit(a[1].slice(0,1))){
+      s=a[0]+a.slice(1,a.length).join("<span class='sop'>&middot;</span>");
     }else{
-      s=[sx,"<span class='sop'>&middot;</span>",sy].join("");
+      s=a.join("<span class='sop'>&middot;</span>");
     }
     if(this.order[op]>this.order["*"]){
       return "("+s+")";
@@ -180,7 +182,7 @@ var htm_print = {
     }
   },
   htm: function(t){
-    return this.ast(t,"");
+    return ["<div class='math'>", this.ast(t,""), "</div>"].join("");
   }
 };
 
@@ -201,12 +203,14 @@ var mathml_print = {
     }
   },
   mpy: function(t,op){
-    var sx = this.ast(t[1][0],"*");
-    var sy = this.ast(t[1][1],"*");
-    if(typeof t[1][0]=="number" && sy.length>=4 && sy.slice(0,4)!="<mn>"){
-      s=sx+sy;
+    var a = [];
+    for(var i=0; i<t[1].length; i++){
+      a.push(this.ast(t[1][i],"*"));
+    }
+    if(typeof t[1][0]=="number" && a[1].length>=4 && a[1].slice(0,4)!="<mn>"){
+      s=a[0]+a.slice(1,a.length).join("<mo>&middot;</mo>");
     }else{
-      s=[sx,"<mo>&middot;</mo>",sy].join("");
+      s=a.join("<mo>&middot;</mo>");
     }
     if(this.order[op]>this.order["*"]){
       return "<mo>(</mo>"+s+"<mo>)</mo>";

@@ -54,7 +54,7 @@ fac = sub|n|
 end
 
 # Recursive
-fac = |n| if n==0 then 1 else n*fac(n-1) end
+fac = |n| 1 if n==0 else n*fac(n-1)
 
 # Functional
 fac = |n| (1..n).reduce(1,|x,y| x*y)
@@ -69,12 +69,12 @@ f = sub|n| i=0; (sub|x| i=i+1; x*i end^n)(1) end
 # As a product
 fac = |n| (1..n).prod()
 
-# Recursive, with fixed-point combinator
+# Recursive, by application of the fixed-point combinator
 fix = |F| sub g|n| F(g,n) end
-fac = fix(|f,n| if n==0 then 1 else n*f(n-1) end)
+fac = fix(|f,n| 1 if n==0 else n*f(n-1))
 
 # Tail-recursive
-call = sub|f,m,n|
+sub call(f,m,n)
   x=f(m,n)
   while type(x) is function.type
     x=x()
@@ -82,11 +82,11 @@ call = sub|f,m,n|
   return x
 end
 
-Fac = |m,n| n==0? m: || Fac(m*n,n-1)
+Fac = |m,n| m if n==0 else || Fac(m*n,n-1)
 fac = |n| call(Fac,1,n)
 
 # Solve the functional equation
-solve = sub|g,m,f0|
+sub solve(g,m,f0)
   a = list(0..m)
   a[0]=f0
   f = |x| a[x]
@@ -107,12 +107,7 @@ fac = sub|m|
 end
 
 # Construct the list of permutations
-fac = sub|n|
-  size((list(1..n)^n).filter(sub|t|
-    (1..n).all(|x| x in t)
-  end))
-end
-
+fac = |n| size((list(1..n)^n).filter(|t| (1..n).all(|x| x in t)))
 
 # Tacit programming
 compose = |f| |g| |x| f(g(x))
@@ -127,7 +122,7 @@ fac = compose(reduce(mpy)(1))(range(1))
 
 <pre class="moss">
 # Recursive
-memo = sub|f|
+sub memo(f)
   m={}
   return sub|n|
     if n not in m then m[n]=f(n) end
@@ -135,7 +130,7 @@ memo = sub|f|
   end
 end
 
-fib = |n| if n==1 or n==2 then 1 else fib(n-1)+fib(n-2) end
+fib = |n| 1 if n in 1..2 else fib(n-1)+fib(n-2)
 fib = memo(fib)
 
 # Functional iteration
@@ -201,9 +196,11 @@ uncurry = |f| |*a| a.reduce(f,|g,x| g(x))
 
 <h2 id="rn">Random numbers</h2>
 <pre class="moss">
-a = list(1..100).map(|x| rand(0,9))
+# 100 samples of a standard dice
+a = rand(1..6).list(100)
 print(a)
 
+# shuffle a list
 a = list(1..100).shuffle()
 print(a)
 </pre>
@@ -268,18 +265,18 @@ end
 <h2 id="qsort">Quicksort</h2>
 
 <pre class="moss">
-qsort = |a| if size(a)==0 then [] else
+qsort = |a| ([] if size(a)==0 else
   qsort(a[1..].filter(|x| x&lt;a[0]))+[a[0]]+
-  qsort(a[1..].filter(|x| x&gt;=a[0])) end
+  qsort(a[1..].filter(|x| x&gt;=a[0])))
 
 # Test function
 issorted = |a| (0..size(a)-2).all(|i| a[i]&lt;=a[i+1])
 
 # Alternative form
 sub qsort(a)
-  size(a)==0?[]:begin
+  [] if size(a)==0 else begin
     R,L=[],[]
-    a[1..].each(|x|(x&lt;a[0]?R:L).push(x))
+    a[1..].each(|x| (R if x&lt;a[0] else L).push(x))
     [R,L].map(qsort)
   end.reduce(|R,L| R+[a[0]]+L)
 end
@@ -288,12 +285,12 @@ end
 <h2 id="msort">Mergesort</h2>
 
 <pre class="moss">
-msort = |a| if size(a)&lt;=1 then copy(a) else
-  merge(msort(a[1..:2]),msort(a[0..:2])) end
+msort = |a| (copy(a) if size(a)&lt;=1 else
+  merge(msort(a[1..:2]),msort(a[0..:2])))
 
 merge = sub|L,R| y=[]
   while size(L)!=0 and size(R)!=0
-    y.push(if L[-1]&gt;R[-1] then L else R end.pop())
+    y.push((L if L[-1]&gt;R[-1] else R).pop())
   end
   return L+R+y.rev()
 end
@@ -336,12 +333,11 @@ uniq = |a| list(set(a))
 # Quotient set
 partition = |a,R| set(list(a).chunks(R))
 
-# Obtain the equivalence relation
-# from a quotient set Q
+# Obtain the equivalence relation of a quotient set Q
 relation = |Q| |x,y| Q.any(|a| x in a and y in a)
 
 # Obtain the equivalence class
-# from a quotient set Q and representative x
+# of a quotient set Q and representative x
 class = |Q,x| Q.find(|a| x in a)
 </pre>
 
@@ -578,7 +574,7 @@ end
 # Directional derivative
 D = |v,f,x| diff(|t| f(x+t*v),0)
 
-# One can expand this to:
+# One can expand this into:
 D = begin h=0.001
   |v,f,x| (f(x+h*v)-f(x-h*v))/(2*h)
 end
@@ -644,13 +640,14 @@ print(list(1..100).filter(isprime))
 # Print the first 100 primes.
 print((1..).filter(isprime).list(100))
 
-sieve = |a| if size(a)==0 then [] else
-  [a[0]]+sieve(a[1..].filter(|x| x%a[0]!=0)) end
+# Sieve of Eratosthenes
+sieve = |a| ([] if size(a)==0 else
+  [a[0]]+sieve(a[1..].filter(|x| x%a[0]!=0)))
 
 print(sieve(list(2..100)))
 
 # Greatest common divisor
-gcd = |a,b| if b==0 then a else gcd(b,a%b) end
+gcd = |a,b| a if b==0 else gcd(b,a%b)
 
 sub gcd(a,b)
   while b!=0 do a,b=b,a%b end
@@ -684,6 +681,18 @@ sigma0 = |n| (1..n).count(|k| n%k==0)
 # Prime factorization
 factor = |n| (list(2..n).filter(|k| n%k==0 and isprime(k))
   .map(|p| [p,(1..).until(|k| n%(p^k)!=0).count()]))
+
+# Zeller's congruence
+day_of_the_week = begin
+  w = ["Satur", "Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri"]
+  return sub|d,m,a|
+    J = a//100
+    K = (a if m in 3..12 else a-1)%100
+    m = (m if m in 3..12 else m+12)
+    n = (d + (m+1)*13//5 + K + K//4 + J//4 - 2*J)%7
+    return w[n]+"day"
+  end
+end
 </pre>
 
 
@@ -692,10 +701,10 @@ factor = |n| (list(2..n).filter(|k| n%k==0 and isprime(k))
 <pre class="moss">
 # Any base
 integer = |s,b| s.reduce(0,|x,c| b*x+ord(c)-ord('0'))
-base = |n,b| x==0? "0": base(n//b,b)+chr(n%b+ord('0'))
+base = |n,b| "0" if x==0 else base(n//b,b)+chr(n%b+ord('0'))
 
 base = sub|n,b|
-  s = n==0? "0": ""
+  s = "0" if n==0 else ""
   while n!=0
     s=chr(n%b+ord('0'))+s
     n=n//b
@@ -704,11 +713,11 @@ base = sub|n,b|
 end
 
 # Abstract version (mathematically pure)
-base = |n,b| n==0? []: base(n//b,b)+[n%b]
+base = |n,b| [] if n==0 else base(n//b,b)+[n%b]
 
 # Custom digits
 base = sub|n,s| b=size(s)
-  n&lt;b? s[n]: base(n//b,s)+s[n%b]
+  s[n] if n&lt;b else base(n//b,s)+s[n%b]
 end
 
 # Reverse
@@ -727,7 +736,7 @@ end
 <pre class="moss">
 (0..25).map(|x|
   (0..39).map(sub|y| c = (x/10-2)+(y/10-2)*1i
-    abs((sub|z| z^2+c end^10)(0))&lt;2? "*": "\s"
+    "*" if abs((sub|z| z^2+c end^10)(0))&lt;2 else "\s"
   end).join()).each(print)
 </pre>
 
@@ -735,9 +744,13 @@ end
 <h2 id="rot13">ROT13</h2>
 
 <pre class="moss">
-rot13 = |s| s.map(|c|
-  c in 'a'..'z'? chr((ord(c)-97+13)%26+97):
-  c in 'A'..'Z'? chr((ord(c)-65+13)%26+65): c).join()
+rot13 = begin
+  a = ord('a'); A = ord('A')
+  return |s| s.map(|c|
+    chr((ord(c)-a+13)%26+a) if c in 'a'..'z' else
+    chr((ord(c)-A+13)%26+A) if c in 'A'..'Z' else
+    c).join()
+end
 </pre>
 
 <h2 id="fft">FFT</h2>
@@ -816,9 +829,11 @@ unary={"~": |x| -x}; binary={"+": |x,y| x+y, "-": |x,y| x-y,
 
 regex = re.compile("{d}+({.}{d}*)?|[+-*/^~]")
 
-calc = |s| regex.list(s).reduce([],|a,x| x[0].isdigit()?
-  a+[float(x)]: x in unary? a[..-2]+[unary[x](a[-1])]:
-  a[..-3]+[binary[x](a[-2],a[-1])])[-1]
+calc = |s| regex.list(s).reduce([],|a,x|
+  a+[float(x)] if x[0].isdigit() else
+  a[..-2]+[unary[x](a[-1])] if x in unary else
+  a[..-3]+[binary[x](a[-2],a[-1])]
+)[-1]
 
 (|| calc(input("&gt;\s"))).each(print)
 </pre>
