@@ -371,8 +371,9 @@ function main(){
     if(a[0].type!="."){
       var t = ast(a,input.value);
       t = cas.evaluate(t);
-      output.innerHTML = htm_expression(cas.output_form(t));
-      output.innerHTML += "<ul class='ast'><li>"+ast_tos(t)+"</ul>";
+      var out = cas.output_form(t);
+      output.innerHTML = htm_expression(out);
+      output.innerHTML += "<ul class='ast'><li>"+ast_tos(out)+"</ul>";
     }else{
       output.innerHTML="";
     }

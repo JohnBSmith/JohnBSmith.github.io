@@ -35,16 +35,38 @@ var htm_print = {
       return s;
     }
   },
+  mpy_invisible: function(t){
+    if(typeof t=="string"){
+      return true;
+    }else if(cas.is_app(t)){
+      if(t[0]==="+" || t[0]==="-"){
+        return 1;
+      }else if(t[0]==="*" || t[0]==="^" ||
+        typeof t[0]==="string" && isalpha(t[0])
+      ){
+        return this.mpy_invisible(t[1][0]);
+      }
+    }
+    return false;
+  },
   mpy: function(t,op){
     var a = [];
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],"*"));
     }
-    if(typeof t[1][0]=="number" && a[1].length>=1 && !isdigit(a[1].slice(0,1))){
-      s=a[0]+a.slice(1,a.length).join("<span class='sop'>&middot;</span>");
-    }else{
-      s=a.join("<span class='sop'>&middot;</span>");
+    var b=[a[0]];
+    for(var i=1; i<t[1].length; i++){
+      if(htm_print.mpy_invisible(t[1][i])){
+        if(typeof t[1][i-1]=="number"){
+          b.push(a[i]);
+        }else{
+          b.push("<span class='sop'>&middot;</span>",a[i]);
+        }
+      }else{
+        b.push("<span class='sop'>&middot;</span>",a[i]);
+      }
     }
+    s=b.join("");
     if(this.order[op]>this.order["*"]){
       return "("+s+")";
     }else{
@@ -131,7 +153,7 @@ var htm_print = {
         }else if(s=="%"){
           return this.operator(t,"%",op,"%");
         }else if(s=="+"){
-          return this.operator(t,"+",op,"<span class='sop'>+</span>");
+          return this.operator(t,"+",op,"&thinsp;+&thinsp;");
         }else if(s=="-"){
           return this.operator(t,"-",op,"<span class='sop'>&minus;</span>");
         }else if(s=="neg"){
@@ -207,11 +229,19 @@ var mathml_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],"*"));
     }
-    if(typeof t[1][0]=="number" && a[1].length>=4 && a[1].slice(0,4)!="<mn>"){
-      s=a[0]+a.slice(1,a.length).join("<mo>&middot;</mo>");
-    }else{
-      s=a.join("<mo>&middot;</mo>");
+    var b=[a[0]];
+    for(var i=1; i<t[1].length; i++){
+      if(htm_print.mpy_invisible(t[1][i])){
+        if(typeof t[1][i-1]=="number"){
+          b.push(a[i]);
+        }else{
+          b.push("<mo>&middot;</mo>",a[i]);
+        }
+      }else{
+        b.push("<mo>&middot;</mo>",a[i]);
+      }
     }
+    s=b.join("");
     if(this.order[op]>this.order["*"]){
       return "<mo>(</mo>"+s+"<mo>)</mo>";
     }else{

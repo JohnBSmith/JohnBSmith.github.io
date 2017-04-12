@@ -2,22 +2,21 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>d/dx</title>
+  <title>expand</title>
   <link href="main.css" rel="stylesheet">
   <script src="cas.js"></script>
   <script src="print.js"></script>
   <script src="compiler.js"></script>
   <script>
 function main(){
-  var input = document.getElementById("diff");
+  var input = document.getElementById("input");
   var output = document.getElementById("output");
   try{
     var a = scan(input.value);
     if(a[0].type!="."){
       var t = ast(a,input.value);
-      var d = ["diff",[t,"x"]];
-      t = cas.simplify_sf(2,cas.evaluate(d));
-      t = ["=",[d,t]];
+      var t2 = cas.simplify_sf(1,cas.expand_sf(cas.evaluate(t)));
+      t = cas.output_form(["=",[t,t2]]);
       output.innerHTML = htm_expression(t);
     }else{
       output.innerHTML="";
@@ -32,10 +31,9 @@ function main(){
 </head>
 <body>
 
-<br><br>
-<input type="button" onclick="main();" value="d/dx">
-<br><br>
-<code>f(x) = </code><input type="text" id="diff"
+<br><br><br>
+<input type="button" onclick="main();" value="expand">
+<code></code><input type="text" id="input"
   onkeyup="handle_keys(event);" style="width: 400px">
 <br><br>
 <div class="output" id="output">

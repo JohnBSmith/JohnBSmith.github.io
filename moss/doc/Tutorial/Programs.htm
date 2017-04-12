@@ -125,7 +125,7 @@ end
 sub list_to_str(a)
   a.map(sub|x|
     x.chunks(3).map(sub|y|
-      y.map(|d| if d==0 then '.' else str(d) end).join()
+      y.map(|d| '.' if d==0 else str(d)).join()
     end).join("|")
   end).chunks(3).map(sub|y|
     y.join("\n")
