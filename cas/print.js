@@ -7,13 +7,18 @@
 
 var htm_print = {
   order: {
-    "app": 60,
-    "^": 40,
-    "neg": 30,
-    "*": 20, "/": 20, "%": 20,
-    "+": 10, "-": 10,
-    "=": 8, "in": 8,
-    "<": 4, ">": 4, "<=": 4, ">=": 4, 
+    "app": 80,
+    "^": 70,
+    "neg": 60,
+    "*": 50, "/": 50, "%": 50,
+    "+": 40, "-": 40,
+    "..": 30,
+    "=": 20, "in": 20,
+    "<": 10, ">": 10, "<=": 10, ">=": 10,
+    "and": 8,
+    "or": 6,
+    "=>": 4,
+    "<=>": 2,
     "": 0,
   },
   alt_name: {
@@ -42,7 +47,7 @@ var htm_print = {
       if(t[0]==="+" || t[0]==="-"){
         return 1;
       }else if(t[0]==="*" || t[0]==="^" ||
-        typeof t[0]==="string" && isalpha(t[0])
+        typeof t[0]==="string" && compiler.isalpha(t[0])
       ){
         return this.mpy_invisible(t[1][0]);
       }
@@ -158,7 +163,7 @@ var htm_print = {
           return this.operator(t,"-",op,"<span class='sop'>&minus;</span>");
         }else if(s=="neg"){
           return this.unary(t,"neg",op,"&minus;");
-        }else if(s=="list"){
+        }else if(s=="[]"){
           return this.list(t);
         }else if(s=="="){
           return this.operator(t,"=",op,"&nbsp;=&nbsp;");
@@ -214,7 +219,11 @@ var mathml_print = {
   alt_name: {
     "e": "<mi mathvariant='normal'>e</mi>",
     "i": "<mi mathvariant='normal'>i</mi>",
-    "lambda": "&lambda;"
+    "lambda": "&lambda;",
+    "sum": "&sum;",
+    "all": "&forall;",
+    "any": "&exists;",
+    "inf": "&infin;"
   },
   power: function(t,op){
     var s = "<msup><mrow>"+this.ast(t[1][0],"^")+"</mrow><mrow>"+this.ast(t[1][1],"")+"</mrow></msup>";
@@ -273,7 +282,7 @@ var mathml_print = {
       this.ast(t[1][1],""), "</mrow></mfrac>"
     ].join("");
     if(this.order[op]>this.order["/"]){
-      return "("+s+")";
+      return "<mo>(</mo>"+s+"<mo>)</mo>";
     }else{
       return s;
     }
@@ -295,7 +304,13 @@ var mathml_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],""));
     }
-    return this.ast(t[0],"app")+"<mo>(</mo>"+a.join("<mo>,</mo>")+"<mo>)</mo>";
+    var f;
+    if(cas.is_app(t[0])){
+      f = "<mo>(</mo>"+this.ast(t[0],"")+"<mo>)</mo>";
+    }else{
+      f = this.ast(t[0],"app");
+    }
+    return f+"<mo>(</mo>"+a.join("<mo>,</mo>")+"<mo>)</mo>";
   },
   diff: function(t,op){
     var s = ["<mfrac><mi mathvariant='normal'>d</mi><mrow>",
@@ -315,10 +330,19 @@ var mathml_print = {
     }else{
       args = t[1][0];
     }
-    return ["<mo>(</mo>",this.ast(args,""),
-      "<mo>&mapsto;</mo>", this.ast(t[1][1],""),
-      "<mo>)</mo>"
+    return [this.ast(args,""),
+      "<mo>&mapsto;</mo>", this.ast(t[1][1],"")
     ].join("");
+  },
+  sum: function(t,op){
+    s=[
+      "<munder><mo>&sum;</mo><mrow>", this.ast(t[1][0],""), "</mrow></munder>", this.ast(t[1][1],"")
+    ].join("");
+    if(this.order[op]>this.order["+"]){
+      return "<mo>(</mo>"+s+"<mo>)</mo>";
+    }else{
+      return s;
+    }
   },
   ast: function(t,op){
     var T;
@@ -339,7 +363,7 @@ var mathml_print = {
           return this.operator(t,"-",op,"<mo>&minus;</mo>");
         }else if(s=="neg"){
           return this.unary(t,"neg",op,"<mo>&minus;</mo>");
-        }else if(s=="list"){
+        }else if(s=="[]"){
           return this.list(t);
         }else if(s=="="){
           return this.operator(t,"=",op,"<mo>=</mo>");
@@ -357,12 +381,20 @@ var mathml_print = {
           return this.operator(t,">=",op,"<mo>&ge;</mo>");
         }else if(s=="and"){
           return this.operator(t,"and",op,"<mo>&and;</mo>");
+        }else if(s=="or"){
+          return this.operator(t,"or",op,"<mo>&or;</mo>");
+        }else if(s=="=>"){
+          return this.operator(t,"or",op,"<mo>&rArr;</mo>");
+        }else if(s=="range"){
+          return this.operator(t,"..",op,"<mo>..</mo>");
         }else if(s=="sqrt"){
           return this.sqrt(t);
         }else if(s=="diff"){
           return this.diff(t,op);
         }else if(s=="lambda"){
           return this.lambda(t);
+        }else if(s=="sum"){
+          return this.sum(t,op);
         }
       }
       return this.app(t);
@@ -383,7 +415,7 @@ var mathml_print = {
     }
   },
   htm: function(t){
-    return ["<math>", this.ast(t,""), "</math>"].join("");
+    return ["<math displaystyle='true'>", this.ast(t,""), "</math>"].join("");
   }
 };
 

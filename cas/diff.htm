@@ -12,13 +12,13 @@ function main(){
   var input = document.getElementById("diff");
   var output = document.getElementById("output");
   try{
-    var a = scan(input.value);
+    var a = compiler.scan(input.value);
     if(a[0].type!="."){
-      var t = ast(a,input.value);
+      var t = compiler.ast(a,input.value);
       var d = ["diff",[t,"x"]];
       t = cas.simplify_sf(2,cas.evaluate(d));
       t = ["=",[d,t]];
-      output.innerHTML = htm_expression(t);
+      output.innerHTML = compiler.htm_expression(t);
     }else{
       output.innerHTML="";
     }
@@ -26,6 +26,7 @@ function main(){
     if(typeof e=="string"){
       output.innerHTML=["<div class='mono'>",e,"</div>"].join("");
     }
+    throw e;
   }
 }
   </script>

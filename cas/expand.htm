@@ -12,12 +12,12 @@ function main(){
   var input = document.getElementById("input");
   var output = document.getElementById("output");
   try{
-    var a = scan(input.value);
+    var a = compiler.scan(input.value);
     if(a[0].type!="."){
-      var t = ast(a,input.value);
+      var t = compiler.ast(a,input.value);
       var t2 = cas.simplify_sf(2,cas.expand_sf(cas.evaluate(t)));
       t = cas.output_form(["=",[t,t2]]);
-      output.innerHTML = htm_expression(t);
+      output.innerHTML = compiler.htm_expression(t);
     }else{
       output.innerHTML="";
     }
@@ -25,6 +25,7 @@ function main(){
     if(typeof e=="string"){
       output.innerHTML=["<div class='mono'>",e,"</div>"].join("");
     }
+    throw e;
   }
 }
   </script>

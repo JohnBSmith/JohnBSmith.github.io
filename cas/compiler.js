@@ -1,6 +1,8 @@
 
 "use strict";
 
+var compiler = (function(){
+
 function isalpha(s){
   return /^[a-z]+$/i.test(s);
 }
@@ -42,6 +44,7 @@ function scan(s){
     }else if(isdigit(c)){
       j=i; hcol=col;
       while(i<n && (isdigit(s[i]) || s[i]=='.')){
+        if(s[i]=='.' && i+1<n && s[i+1]=='.') break;
         i++; col++;
       }
       a.push(token("number",s.slice(j,i),line,hcol));
@@ -73,6 +76,12 @@ function scan(s){
       i++; col++;
     }else if(c=="!" && i+1<n && s[i+1]=="="){
       a.push(token("op","!=",line,col));
+      i+=2; col+=2;
+    }else if(c=="=" && i+1<n && s[i+1]==">"){
+      a.push(token("op","=>",line,col));
+      i+=2; col+=2;
+    }else if(c=="." && i+1<n && s[i+1]=="."){
+      a.push(token("op","..",line,col));
       i+=2; col+=2;
     }else{
       a.push(token("op",c,line,col));
@@ -125,14 +134,14 @@ function list(i){
   var t = get_token(i);
   if(t.type=="bracket" && t.value=="]"){
     i.index++;
-    return ["list",a];
+    return ["[]",a];
   }
   while(1){
     a.push(expression(i));
     t = get_token(i);
     if(t.type=="bracket" && t.value=="]"){
       i.index++;
-      return ["list",a];
+      return ["[]",a];
     }else if(t.type=="sep" && t.value==","){
       i.index++;
       continue;
@@ -162,7 +171,7 @@ function function_literal(i){
   i.index++;
   var a = formal_arguments(i);
   var x = expression(i);
-  return ["lambda",[["list",a],x]];
+  return ["lambda",[["[]",a],x]];
 }
 
 function atomic_expression(i){
@@ -270,7 +279,7 @@ function pm_term(i){
 function range_term(i){
   var x = pm_term(i);
   var t = get_token(i);
-  if(t.type=="op" && t.value==":"){
+  if(t.type=="op" && t.value==".."){
     i.index++;
     var y = pm_term(i);
     t = get_token(i);
@@ -323,8 +332,32 @@ function and_expression(i){
   return x;
 }
 
+function or_expression(i){
+  var x = and_expression(i);
+  var t = get_token(i);
+  while(t.type=="op" && (t.value=="or")){
+    i.index++;
+    var y = and_expression(i);
+    x=[t.value,[x,y]];
+    t = get_token(i);
+  }
+  return x;
+}
+
+function implication(i){
+  var x = or_expression(i);
+  var t = get_token(i);
+  while(t.type=="op" && (t.value=="=>")){
+    i.index++;
+    var y = or_expression(i);
+    x=[t.value,[x,y]];
+    t = get_token(i);
+  }
+  return x;
+}
+
 function expression(i){
-  return and_expression(i);
+  return implication(i);
 }
 
 function ast(a,s){
@@ -362,18 +395,27 @@ function htm_expression(t){
   }
 }
 
+return{
+  isalpha: isalpha, isdigit: isdigit,
+  htm_expression: htm_expression,
+  scan: scan, ast_tos: ast_tos,
+  ast: ast
+}
+
+})();
+
 function main(){
   var input = document.getElementById("input1");
   var output = document.getElementById("output1");
   try{
-    var a = scan(input.value);
+    var a = compiler.scan(input.value);
     // alert(vtoken_tos(a));
     if(a[0].type!="."){
-      var t = ast(a,input.value);
+      var t = compiler.ast(a,input.value);
       t = cas.evaluate(t);
       var out = cas.output_form(t);
-      output.innerHTML = htm_expression(out);
-      output.innerHTML += "<ul class='ast'><li>"+ast_tos(out)+"</ul>";
+      output.innerHTML = compiler.htm_expression(out);
+      output.innerHTML += "<ul class='ast'><li>"+compiler.ast_tos(out)+"</ul>";
     }else{
       output.innerHTML="";
     }
@@ -381,6 +423,7 @@ function main(){
     if(typeof e=="string"){
       output.innerHTML=e;
     }
+    throw e;
   }
 }
 
