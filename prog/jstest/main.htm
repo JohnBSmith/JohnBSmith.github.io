@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -23,6 +23,7 @@ function readTextFile(file)
 {
     var text;
     var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("text/plain");
     rawFile.open("GET", file, false);
     rawFile.onreadystatechange = function ()
     {
@@ -39,9 +40,27 @@ function readTextFile(file)
     return text;
 }
 
+function load_async(URL,callback){
+  var r = new XMLHttpRequest();
+  r.overrideMimeType("text/plain");
+  r.open("GET",URL,true);
+  r.onreadystatechange = function(){
+    if(r.readyState === XMLHttpRequest.DONE){
+      if(r.status === 200){
+        callback(r.responseText);
+      }else{
+        throw ["Error: could not load '", URL, "'."].join("");
+      }
+    }
+  };
+  r.send(null);
+}
+
 function main(){
-  var la = document.getElementById("la");
-  la.innerHTML = readTextFile("la/la.txt");
+  load_async("la/la.txt", function(text){
+    var la = document.getElementById("la");
+    la.innerHTML = text;
+  });
 }
   </script>
 </head>
