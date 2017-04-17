@@ -33,9 +33,9 @@ var htm_print = {
     "lambda": "&lambda;"
   },
   power: function(t,op){
-    var s = this.ast(t[1][0],"^")+"<sup>"+this.ast(t[1][1],"")+"</sup>";
+    var s = [this.ast(t[1][0],"^"), "<sup>", this.ast(t[1][1],""), "</sup>"].join("");
     if(this.order[op]>=this.order["^"]){
-      return "("+s+")";
+      return ["(", s, ")"].join("");
     }else{
       return s;
     }
@@ -73,7 +73,7 @@ var htm_print = {
     }
     s=b.join("");
     if(this.order[op]>this.order["*"]){
-      return "("+s+")";
+      return ["(", s, ")"].join("");
     }else{
       return s;
     }
@@ -84,7 +84,7 @@ var htm_print = {
       a.push(this.ast(t[1][i],op));
     }
     if(this.order[cop]>this.order[op]){
-      return "("+a.join(p)+")";
+      return ["(", a.join(p), ")"].join("");
     }else{
       return a.join(p);
     }
@@ -92,7 +92,7 @@ var htm_print = {
   unary: function(t,op,context,p){
     var s = p+this.ast(t[1][0],op);
     if(this.order[context]>this.order[op]){
-      return "("+s+")";
+      return ["(", s, ")"].join("");
     }else{
       return s;
     }    
@@ -103,7 +103,7 @@ var htm_print = {
       this.ast(t[1][1],""), "</span></span></span>"
     ].join("");
     if(this.order[op]>this.order["/"]){
-      return "("+s+")";
+      return ["(", s, ")"].join("");
     }else{
       return s;
     }
@@ -113,14 +113,14 @@ var htm_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],""));
     }
-    return "["+a.join(",")+"]";
+    return ["[", a.join(","), "]"].join("");
   },
   app: function(t){
     var a=[];
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],""));
     }
-    return this.ast(t[0],"app")+"("+a.join(",")+")";
+    return [this.ast(t[0],"app"), "(", a.join(","), ")"].join("");
   },
   diff: function(t,op){
     var s = ["<span class='frac'><span class='tr'>",
@@ -128,7 +128,7 @@ var htm_print = {
       this.ast(t[1][1],"app"), "</span></span></span><span class='ts'></span>",
       this.ast(t[1][0],"*")].join("");
     if(this.order[op]>this.order["*"]){
-      return "("+s+")";
+      return ["(", s, ")"].join("");
     }else{
       return s;
     }
@@ -226,9 +226,12 @@ var mathml_print = {
     "inf": "&infin;"
   },
   power: function(t,op){
-    var s = "<msup><mrow>"+this.ast(t[1][0],"^")+"</mrow><mrow>"+this.ast(t[1][1],"")+"</mrow></msup>";
+    var s = [
+      "<msup><mrow>", this.ast(t[1][0],"^"),
+      "</mrow><mrow>", this.ast(t[1][1],""), "</mrow></msup>"
+    ].join("");
     if(this.order[op]>=this.order["^"]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }
@@ -252,7 +255,7 @@ var mathml_print = {
     }
     s=b.join("");
     if(this.order[op]>this.order["*"]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }
@@ -263,7 +266,7 @@ var mathml_print = {
       a.push(this.ast(t[1][i],op));
     }
     if(this.order[cop]>this.order[op]){
-      return "<mo>(</mo>"+a.join(p)+"<mo>)</mo>";
+      return ["<mo>(</mo>", a.join(p), "<mo>)</mo>"].join("");
     }else{
       return a.join(p);
     }
@@ -271,7 +274,7 @@ var mathml_print = {
   unary: function(t,op,context,p){
     var s = p+this.ast(t[1][0],op);
     if(this.order[context]>this.order[op]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }    
@@ -282,7 +285,7 @@ var mathml_print = {
       this.ast(t[1][1],""), "</mrow></mfrac>"
     ].join("");
     if(this.order[op]>this.order["/"]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }
@@ -297,7 +300,7 @@ var mathml_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],""));
     }
-    return "<mo>[</mo>"+a.join("<mo>,</mo>")+"<mo>]</mo>";
+    return ["<mo>[</mo>", a.join("<mo>,</mo>"), "<mo>]</mo>"].join("");
   },
   app: function(t){
     var a=[];
@@ -306,11 +309,11 @@ var mathml_print = {
     }
     var f;
     if(cas.is_app(t[0])){
-      f = "<mo>(</mo>"+this.ast(t[0],"")+"<mo>)</mo>";
+      f = ["<mo>(</mo>", this.ast(t[0],""), "<mo>)</mo>"].join("");
     }else{
       f = this.ast(t[0],"app");
     }
-    return f+"<mo>(</mo>"+a.join("<mo>,</mo>")+"<mo>)</mo>";
+    return [f, "<mo>(</mo>", a.join("<mo>,</mo>"), "<mo>)</mo>"].join("");
   },
   diff: function(t,op){
     var s = ["<mfrac><mi mathvariant='normal'>d</mi><mrow>",
@@ -318,7 +321,7 @@ var mathml_print = {
       this.ast(t[1][1],"app"), "</mrow></mfrac>",
       this.ast(t[1][0],"*")].join("");
     if(this.order[op]>this.order["*"]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }
@@ -339,7 +342,7 @@ var mathml_print = {
       "<munder><mo>&sum;</mo><mrow>", this.ast(t[1][0],""), "</mrow></munder>", this.ast(t[1][1],"")
     ].join("");
     if(this.order[op]>this.order["+"]){
-      return "<mo>(</mo>"+s+"<mo>)</mo>";
+      return ["<mo>(</mo>", s, "<mo>)</mo>"].join("");
     }else{
       return s;
     }

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Probleme von Javascript</title>
+  <style>
+body{
+  margin-top: 2em;
+  margin-left: 10%;
+  margin-bottom: 10em;
+  max-width: 40em;
+  font-family: "DejaVu Sans", "Verdana", sans-serif;
+  color: #404030;
+}
+@media(max-width: 46em){
+  body{margin-left: 6%; margin-left: 4%;}
+}
+@media(max-width: 26em){
+  body{margin-left: 2%; margin-right: 1%;}
+  ol, ul{padding-left: 2em;}
+}
+h1,h2,h3,h4{color: #463c20;}
+a{color: #20506a; text-decoration: none;}
+a:hover{color: #102a40; text-decoration: underline;}
+pre, code{
+  font-family: "FreeMono", "Courier New", monospace;
+  color: #403020;
+}
+table.bt{border-collapse: collapse;}
+table.bt td, table.bt th{
+  border: 1px solid #b0b0a0;
+  padding-left: 0.2em;
+  text-align: left;
+  vertical-align: top;
+}
+table.bt th{
+  background-color: #e0e0c0;
+}
+
+.keyword{color: #204080; font-weight: bold;}
+.string{color: #a00060;}
+.comment{color: #604000;}
+.symbol{color: #202020; font-weight: bold;}
+.bracket{color: #006060; font-weight: bold;}
+.number{color: #204040;}
+  </style>
+  <script>
+function isalpha(s){
+  return /^[a-z]+$/i.test(s);
+}
+
+function isdigit(s){
+  return /^\d+$/.test(s);
+}
+
+var keyword = {
+  "break": 0,
+  "case": 0, "catch": 0, "class": 0, "const": 0, "continue": 0,
+  "debugger": 0, "default": 0, "delete": 0, "do": 0,
+  "else": 0, "export": 0, "extends": 0,
+  "finally": 0, "for": 0, "function": 0,
+  "if": 0, "import": 0, "in": 0, "instanceof": 0,
+  "new": 0, "return": 0, "super": 0, "switch": 0,
+  "this": 0, "throw": 0, "try": 0, "typeof": 0,
+  "var": 0, "void": 0,
+  "while": 0, "with": 0,
+  "yield": 0,
+};
+
+function js_syntax(s){
+  var id,s2,st,c;
+  s2="";
+  var i=0;
+  while(i<s.length){
+    c=s[i];
+    if(isalpha(c) || s[i]=='_'){
+      id="";
+      while(i<s.length && (isalpha(s[i]) || isdigit(s[i]) || s[i]=='_')){
+        id+=s[i];
+        i++;
+      }
+      if(keyword.hasOwnProperty(id)){
+        s2+="<span class='keyword'>"+id+"</span>";
+      }else{
+        s2+=id;
+      }
+    }else if(isdigit(c)){
+      st="";
+      while(i<s.length && isdigit(s[i])){
+        st+=s[i];
+        i++;
+      }
+      s2+="<span class='number'>"+st+"</span>";
+    }else if(c=='"'){
+      st="<span class='string'>\"";
+      i++;
+      while(i<s.length && s[i]!='"'){
+        st+=s[i];
+        i++;
+      }
+      i++;
+      st+="\"</span>";
+      s2+=st;
+    }else if(c=="'"){
+      st="<span class='string'>'";
+      i++;
+      while(i<s.length && s[i]!="'"){
+        st+=s[i];
+        i++;
+      }
+      i++;
+      st+="'</span>";
+      s2+=st;
+    }else if(c=='#'){
+      st="<span class='preprocessor'>";
+      while(i<s.length && s[i]!='\n'){
+        st+=s[i];
+        i++;
+      }
+      st+="</span>";
+      s2+=st;
+    }else if(c=='/' && i+1<s.length && s[i+1]=='/'){
+      st="<span class='comment'>";
+      while(i<s.length && s[i]!='\n'){
+        st+=s[i];
+        i++;
+      }
+      st+="</span>";
+      s2+=st;
+    }else if(c=='/' && i+1<s.length && s[i+1]=='*'){
+      st="<span class='comment'>/*";
+      i+=2;
+      while(i+1<s.length && s[i]!='*' && s[i+1]!='/'){
+        st+=s[i];
+        i++;
+      }
+      i+=2;
+      st+="*/</span>";
+      s2+=st;
+    }else if(c=='&'){
+      st="";
+      while(i<s.length && s[i]!=';'){
+        st+=s[i];
+        i++;
+      }
+      s2+="<span class='symbol'>"+st+";</span>";
+      i++;
+    }else if(c=='(' || c==')' || c=='[' || c==']' || c=='{' || c=='}'){
+      s2+="<span class='bracket'>"+c+"</span>";
+      i++;
+    }else if(c=='+' || c=='-' || c=='*' || c=='/' || c=='|' ||
+      c=='.' || c=='=' || c=='!' || c==':' || c=='%' || c=='^' ||
+      c=='~'
+    ){
+      s2+="<span class='symbol'>"+c+"</span>";
+      i++;
+    }else{
+      s2+=c;
+      i++;
+    }
+  }
+  return s2;
+}
+
+function main(){
+  var a = document.getElementsByClassName("js");
+  for(var i=0; i<a.length; i++){
+    a[i].innerHTML = js_syntax(a[i].innerHTML);
+  }
+}
+
+window.onload = main;
+  </script>
+</head>
+<body>
+
+<h1>Probleme von Javascript</h1>
+<h2>Umwandlung von Arrays in Zeichenketten</h2>
+<p>Normalerweise sollte die Umwandlung eines Arrays in eine
+Zeichenkette auch genau so ausschauen wie das Literal.
+Aber in Javascript fehlen die eckigen Klammern:
+<pre class="js">
+&gt; String([1,2])
+"1,2"
+</pre>
+<p>Man kann sich denken: »Gut, die kann ich ja noch hinzufügen«.
+Aber bei verschachtelten Arrays wird es schlimmer:
+<pre class="js">
+&gt; String([[1,2],[3,4]])
+&gt; "1,2,3,4"
+</pre>
+
+<h2>Schwache Typisierung</h2>
+<pre class="js">
+&gt; [1,2]+3
+"1,23"
+</pre>
+<p>Was passiert hier? Nun, das Array wird vor der Addition implizit
+in eine Zeichenkette umgewandelt. Wie wir schon gesehen haben, wird
+bei der Umwandlung eines Arrays in eine Zeichenkette die Klammerung
+ausgelassen.
+
+</body>
+</html>
+
