@@ -361,10 +361,10 @@ self argument. Viewed this way, <code>m</code> is called
 
 <p>A simple example shows how self arguments work.
 <pre class="moss">
-&gt; f = |a,b| [self,a,b]
-&gt; f(1,2)
+&gt; m = |a,b| [self,a,b]
+&gt; m(1,2)
 [null, 1, 2]
-&gt; f(0;1,2)
+&gt; m(0;1,2)
 [0, 1, 2]
 </pre>
 
@@ -400,8 +400,8 @@ One can choose a unique name instead of "self".
 Let us use "x" instead of "self". Then the example from above
 reads:
 <pre class="moss">
-&gt; f = |x;a,b| [x,a,b]
-&gt; f(0;1,2)
+&gt; m = |x;a,b| [x,a,b]
+&gt; m(0;1,2)
 [0,1,2]
 </pre>
 
@@ -539,7 +539,7 @@ c3 = copy(c2)
 It is secure against any kind of misuse.
 <pre class="moss">
 sub new_counter(c)
-  return begin
+  return sub||
     c++
     return c
   end
@@ -617,7 +617,7 @@ sub delay(f)
   table[lazy_type] call=f end
 end
 sub force(x)
-  type(x) is lazy_type? x.call(): x
+  x.call() if type(x) is lazy_type else x
 end
 
 t = delay(|| 1+2)
@@ -628,7 +628,7 @@ print([force(2), force(t)])
 In such cases we can simply check for a function.
 <pre class="moss">
 sub force(x)
-  type(x) is function.type? x(): x
+  x() if type(x) is function.type else x
 end
 print([force(2), force(|| 1+2)])
 </pre>
