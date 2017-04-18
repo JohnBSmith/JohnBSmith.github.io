@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Probleme von Javascript</title>
+  <title>Probleme von JavaScript</title>
   <style>
 body{
   margin-top: 2em;
@@ -174,11 +174,20 @@ window.onload = main;
 </head>
 <body>
 
-<h1>Probleme von Javascript</h1>
-<h2>Umwandlung von Arrays in Zeichenketten</h2>
+<br>
+<h1>Probleme von JavaScript</h1>
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol class="toc">
+<li><a href="#Umwandlung">Umwandlung von Arrays in Zeichenketten</a>
+<li><a href="#Typisierung">Schwache Typisierung</a>
+<li><a href="#Operatoren">Operatorüberladung</a>
+<li><a href="#this">Das this-Argument</a>
+</ol>
+
+<h2 id="Umwandlung">Umwandlung von Arrays in Zeichenketten</h2>
 <p>Normalerweise sollte die Umwandlung eines Arrays in eine
 Zeichenkette auch genau so ausschauen wie das Literal.
-Aber in Javascript fehlen die eckigen Klammern:
+Aber in JavaScript fehlen die eckigen Klammern:
 <pre class="js">
 &gt; String([1,2])
 "1,2"
@@ -190,7 +199,7 @@ Aber bei verschachtelten Arrays wird es schlimmer:
 &gt; "1,2,3,4"
 </pre>
 
-<h2>Schwache Typisierung</h2>
+<h2 id="Typisierung">Schwache Typisierung</h2>
 <pre class="js">
 &gt; [1,2]+3
 "1,23"
@@ -199,6 +208,65 @@ Aber bei verschachtelten Arrays wird es schlimmer:
 in eine Zeichenkette umgewandelt. Wie wir schon gesehen haben, wird
 bei der Umwandlung eines Arrays in eine Zeichenkette die Klammerung
 ausgelassen.
+
+<p>Man wird es kaum glauben: JavaScript ist typsicher. Ist ein
+JavaScript-Interpreter korrekt implementiert, so kann kein
+JavaScript-Programm die Speichersicherheit gefärden.
+Nur weil JavaScript typsicher ist, heißt das aber nicht, dass es
+auch streng typisiert ist.
+
+<h2 id="Operatoren">Operatorüberladung</h2>
+<p>In JavaScript ist Operatorüberladung leider nicht möglich, obwohl
+es trivial zu implementieren wäre. Es kommt stattdessen folgends
+Verhalten zustande:
+<pre class="js">
+&gt; x = {}; y = {}
+&gt; x+y
+"[object Object][object Object]"
+</pre>
+<p>Der Interpreter überprüft ja schon zur Laufzeit, welchen Datentyp
+die Variablen <code>x,y</code> besitzen. Falls der Datentyp kein
+einfacher ist, werden die Objekte in diesem Residualfall einfach
+implizit in Zeichenketten umgewandelt. Genau in diesem Residualfall
+wäre es aber möglich gewesen, eine zugehörige Methode <code>add</code>
+im Objekt <code>x</code> oder in dessen Prototypenkette aufzurufen:
+<pre class="js">
+  x+y == x.add(y)
+</pre>
+
+<h2 id="this">Das this-Argument</h2>
+<p>In JavaScript lässt sich unter Zuhilfenahme von Closures der
+Kompositionsoperator formulieren:
+<pre class="js">
+function compose(g,f){
+  return function(x){return g(f(x));};
+}
+</pre>
+<p>Diesen Operator möchten wir nun als Methode einer Funktion
+haben. Man macht folgenden Ansatz:
+<pre class="js">
+Function.prototype.o = function(f){
+  return function(x){return this(f(x));};
+}
+</pre>
+<p>Hier ergibt sich das Problem, dass das <code>this</code>-Argument
+zur inneren Funktion gehört, und nicht zur äußeren.
+Stattdessen ist man gezwungen zu:
+<pre class="js">
+Function.prototype.o = function(f){
+  var g = this;
+  return function(x){return g(f(x));};
+}
+</pre>
+<p>Es wäre sinnvoll, wenn es in JavaScript eine Möglichkeit geben
+würde, den Namen des <code>this</code>-Arguments individuell
+festzulegen, wie bei jeder anderen gewöhnlichen Variable auch. Z.B. so:
+<pre class="js">
+Function.prototype.o = function(g;f){
+  return function(x){return g(f(x));};
+}
+</pre>
+
 
 </body>
 </html>
