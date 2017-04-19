@@ -19,6 +19,7 @@
 <li><a href="#Classes">Character classes</a>
 <li><a href="#All">Finding all</a>
 <li><a href="#Groups">Groups</a>
+<li><a href="#Examples">Examples</a>
 </ol>
 </div>
 
@@ -269,6 +270,42 @@ end
 
 # Date: 2016-10-14
 # ["2016", "10", "14"]
+</pre>
+
+<h2 id="Examples">Examples</h2>
+<p>
+<pre class="moss">
+# A very simple tokenizer generator
+
+use re
+
+sub tokenizer(d)
+  r = re.compile(d["r"])
+  f = d["f"] if "f" in d else null
+  return sub|s|
+    a = r.list(s)
+    return a if f is null else a.map(f)
+  end
+end
+
+words = tokenizer({
+  r = "{a}+"
+})
+
+integers = tokenizer({
+  r = "{d}+",
+  f = int
+})
+
+numbers = tokenizer({
+  r = "({d}|{.})+",
+  f = |x| float(x) if '.' in x else int(x)
+})
+
+for line in input
+  a = numbers(line)
+  print(a)
+end
 </pre>
 
 </body>

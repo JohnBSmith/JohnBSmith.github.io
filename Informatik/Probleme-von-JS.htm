@@ -191,6 +191,7 @@ window.onload = main;
 <li><a href="#Variablen">Globale Variablen</a>
 <li><a href="#Operatoren">Operatorüberladung</a>
 <li><a href="#this">Das this-Argument</a>
+<li><a href="#Woerterbuch">Wörterbuch-Syntax</a>
 </ol>
 
 <h2 id="Umwandlung">Umwandlung von Arrays in Zeichenketten</h2>
@@ -297,6 +298,46 @@ Function.prototype.o = function(g;f){
 }
 </pre>
 
+
+<h2 id="Woerterbuch">Wörterbuch-Syntax</h2>
+<p>In JavaScript koinzidieren Wörterbücher mit strukturierten
+Objekten. Die Syntax von Wörterbuch- bzw. Objekt-Literalen besitzt
+das Manko, dass zunächst keine Ausdrücke als Schlüssel möglich sind.
+Weil nämlich die Schreibweisen
+<pre class="js">
+  t = {"a": 1, "b": 2};
+  t = {a: 1, b: 2};
+</pre>
+<p>äquivalent sind, wäre die letztere Schreibweise zweideutig, wenn
+Ausdrücke als Schlüssel auf der linken Seite zugelassen wären.
+Man hat diesen Umstand durch die Notation
+<pre class="js">
+  t = {["a"]: 1, ["b"]: 2};
+</pre>
+<p>behoben. Diese Notation ist umständlich lang und schaut
+dahingehend seltsam aus, dass die Schlüssel doch eigentlich auch
+Arrays sein könnten:
+<pre class="js">
+  t = {[[1,2]]: 1, [[3,4]]: 2};
+</pre>
+<p>Hier ergibt sich ein weiteres Problem: alle Schlüssel werden
+implizit in Zeichenketten umgewandelt. Zumindest bei Ganzzahlen
+ergibt das keinen Sinn, da das direkte hashen von Ganzzahlen
+wesentlich effizienter ist, als Zeichenketten neu zu erzeugen.
+Problematisch ist weiterhin, dass die eckigen Klammern bei der
+Umwandlung verloren gehen, die Schlüssel
+<pre class="js">
+  [1,[2,3]] und [1,2,3]
+</pre>
+<p>somit gleich sind.
+
+<p>Meines erachtens wäre folgende Syntax sinnvoller gewesen:
+<pre class="js">
+  t = {"x": 1, "y": 2};
+  t = {x=1, y=2};
+</pre>
+<p>Hiermit lassen sich auch recht angenehm Schlüsselwort-Argumente
+(wie sie in Python und&nbsp;R zu finden sind) simulieren.
 
 </body>
 </html>
