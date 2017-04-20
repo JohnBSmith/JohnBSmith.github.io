@@ -95,7 +95,7 @@ die Ersetzung jedes Vorkommens der Variable \texttt{x} im Baum
 Syntaxbäume, so müssen dabei jedoch im Zusammenhang mit Vorrangregeln
 die Regeln der Klammersetzung beachtet werden. Z.\,B. ist
 \begin{equation}
-  a*b\;[b:=x+y] = a*(x+y)
+  (a*b)\;[b:=x+y] = a*(x+y)
 \end{equation}
 und nicht $a*x+y$.
 
@@ -138,7 +138,7 @@ die Klammerung immer auf der rechten Seite gesetzt wird. Z.\,B. ist
 Ein lambda-Ausdruck lässt sich nun auf einen AST \emph{applizieren}.
 Man definiert
 \begin{equation}
-(|x|\; t)(u) \;=\; t\;[x:=u].
+(|x|\; t)(u) \;:=\; (t\;[x:=u]).
 \end{equation}
 Z.\,B. ist
 \begin{equation}
@@ -148,13 +148,115 @@ und
 \begin{equation}
 \begin{split}
 & (|x,y|\;x\cdot y)(a+b,c+d)\\
-&= x\cdot y\;[x:=a+b,\;y:=c+d]\\
+&= (x\cdot y)\;[x:=a+b,\;y:=c+d]\\
 &= (a+b)(c+d).
 \end{split}
 \end{equation}
 Applikation ist linksassoziativ. D.\,h. es gilt
 \begin{equation}
 f(x)(y) = (f(x))(y).
+\end{equation}
+Man kann nun die freie Variablensubstitution präzise definieren.
+Für Ausdrücke $s,t,u$ und Variablen $x,y$ gelten folgende Regeln:
+
+(s1) $x\;[x:=u] = u$.
+
+(s2) $y\;[x:=u] = y$ wenn $x\ne y$.
+
+(s3) $s(t)\;[x:=u] = (s[x:=u])(t[x:=u])$.
+
+(s4) $(|x|\;t)\;[x:=u] = |x|\;t$.
+
+(s5) $(|y|\;t)\;[x:=u] = |y|\;(t[x:=u])$ wenn $x\ne y$
+und $\mathrm{FV}(u)$ disjunkt zu $\mathrm{BV}(|y|\;t)$ ist.
+
+Mit $\mathrm{FV}(t)$ bezeichnet man die Menge der \emph{freien Variablen}
+von $t$, engl. \emph{free variables}. Dieser Operator ist wie folgt
+definiert:
+
+1. $\mathrm{FV}(x) = \{x\}$ für jede Variable $x$.
+
+2. $\mathrm{FV}(s(t)) = \mathrm{FV}(s)\cup\mathrm{FV}(t)$.
+
+3. $\mathrm{FV}(|x|\; t) = \mathrm{FV}(t)\setminus\{x\}$.
+
+\noindent
+Mit $\mathrm{BV}(t)$ bezeichnet man die Menge der \emph{gebundenen
+Variablen} von $t$, engl. \emph{bounded variables}.
+Dieser Operator ist wie folgt definiert:
+
+1. $\mathrm{BV}(x) = \{\}$ für jede Variable $x$.
+
+2. $\mathrm{BV}(s(t)) = \mathrm{BV}(s)\cup\mathrm{BV}(t)$.
+
+3. $\mathrm{BV}(|x|\; t) = \mathrm{BV}(t)\cup\{x\}$.
+
+\noindent
+Entsprechend können wir noch $\mathrm{AV}(t)$, die Menge aller
+Variablen von $t$ definieren:
+
+1. $\mathrm{AV}(x) = \{x\}$ für jede Variable $x$.
+
+2. $\mathrm{AV}(s(t)) = \mathrm{AV}(s)\cup\mathrm{AV}(t)$.
+
+3. $\mathrm{AV}(|x|\; t) = \mathrm{AV}(t)\cup\{x\}$.
+
+\newpage
+
+\noindent
+Außerdem definieren wir noch $\mathrm{PV}(t)$, die Menge der
+in Ausdrücken präsenten Variablen, wie folgt:
+
+1. $\mathrm{PV}(x) = \{x\}$ für jede Variable $x$.
+
+2. $\mathrm{PV}(s(t)) = \mathrm{PV}(s)\cup\mathrm{PV}(t)$.
+
+3. $\mathrm{PV}(|x|\; t) = \mathrm{PV}(t)$.
+
+\noindent
+[Wir hatten gesagt, eine freie Variable sei eine solche, die
+nicht gebunden ist. Damit ist natürlich gemeint, dass $\mathrm{AV}(t)$
+disjunkt in $\mathrm{FV}(t)$ und $\mathrm{BV}(t)$ zerlegt werden
+kann.] [und wenn frei und gebunden vorkommt?]
+
+Nun gibt es auch lambda-Ausdrücke mit mehr als einem Argument.
+Wir können nun
+\begin{equation}
+(|x,y|\; t) := (|x|\;|y|\;t)
+\end{equation}
+definieren. Man bezeichnet eine solche Umformung als \emph{Currying}
+oder \emph{Schönfinkeln}.
+
+Bei mehr als einem Argument muss man in solchen Fällen aufpassen,
+wo die selben Variablen sowohl frei als auch gebunden vorkommen.
+Der Ausdruck
+\begin{equation}
+(|x,y|\; x+y)(y,x)
+\end{equation}
+unterscheidet sich z.\,B. von
+\begin{equation}
+((x+y)[x:=y])[y:=x].
+\end{equation}
+Hier müssen beide Substitutionen »gleichzeitig« vorgenommen werden.
+Präziser gesagt müssen die gebundenen Variablen vor der Substitution
+umbenannt werden. Betrachten wir nämlich den geschönfinkelten
+Ausdruck
+\begin{equation}
+(|x|\;|y|\;x+y)(y)(x).
+\end{equation}
+Hier erhält man nach Definition nun
+\begin{equation}
+((|y| x+y)[x:=y])(x),
+\end{equation}
+aber die Substitution kann wegen Regel (s5) nicht ausgeführt
+werden, denn $\mathrm{FV}(y)=\{y\}$ ist nicht disjunkt zu
+$\mathrm{BV}(|y|\;x+y)=\{y\}$. Benennt man die gebundene Variable
+$y$ nun in $a$ um, so ergibt sich
+\begin{equation}
+\begin{split}
+&((|a|\;x+a)[x:=y])(x)\\
+&= (|a|\;y+a)(x) = y+x.
+\end{split}
 \end{equation}
 
 \end{document}
