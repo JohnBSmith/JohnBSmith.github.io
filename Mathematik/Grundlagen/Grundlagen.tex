@@ -1,0 +1,165 @@
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% \usepackage{lmodern}
+\usepackage{mathptmx}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,60}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+\numberwithin{equation}{section}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{huge}
+\noindent
+\textbf{Grundlagen\\
+der Mathematik}
+\par
+\end{huge}
+
+\tableofcontents
+
+\section{Formale Sprachen}
+\subsection{Abstrakte Syntaxbäume}
+
+Wenn ein mathematischer Ausdruck syntaktisch analysiert
+wurde, kann das Ergebnis dieser Analyse als ein sogenannter
+\emph{abstrakter Syntaxbaum}, kurz \emph{AST} für engl.
+\emph{abstract syntax tree} dargestellt werden.
+
+Dem Ausdruck »$2x$« ordnen wir z.\,B. den AST
+\begin{verbatim}
+  (*,2,x)
+\end{verbatim}
+zu und »$2x+4$« ist dementsprechend
+\begin{verbatim}
+  (+,(*,2,x),4).
+\end{verbatim}
+Hier ein paar Beispiele:
+
+1. $f(x)$ wird zu \verb|(f,x)|,
+
+2. $f(x,y)$ wird zu \verb|(f,x,y)|,
+
+3. $x^2+a$ wird zu \verb|(+,(^,x,2),a)|,
+
+4. $2(a+b)$ wird zu \verb|(*,2,(+,a,b))|,
+
+5. $a+b+c$ wird zu \verb|(+,(+,a,b),c)|,
+
+6. $a+b+c$ wird zu \verb|(+,a,b,c)|,
+
+7. $x^2=x$ wird zu \verb|(=,(^,x,2),x)|,
+
+8. $A\land B$ wird zu \verb|(and,A,B)|.
+
+\noindent
+Bei der Darstellung von abstrakten Syntaxbäumen im Computer gibt
+es zunächst zwei Varianten. In Lisp wird der AST zum Ausdruck »$f(x,y)$«
+als verkettete Liste
+\begin{verbatim}
+  (f x y)
+\end{verbatim}
+dargestellt. Hier kann nämlich mit \texttt{first}
+(auch \texttt{car} genannt) der Funktionsbezeichner \texttt{f}
+erhalten werden und mit \texttt{rest} (auch \texttt{cdr} genannt)
+die Liste der Argumente.
+
+Bei der Verwendung von dynamischen Feldern anstelle von verketteten
+Listen sind die Operationen \texttt{first} und \texttt{rest} eventuell
+etwas ineffizienter. Hier ist die Darstellung
+\begin{verbatim}
+  ["f", ["x", "y"]]
+\end{verbatim}
+sinnvoller. In einer effizienten statisch typisierten
+Programmiersprache ließe sich natürlich ein Datentyp für AST-Knoten
+formulieren, der auf extra die Bedürfnisse, welche sich ergeben,
+zugeschnitten ist.
+
+\section{Lambda-Kalkül}
+\subsection{Variablensubstitution}
+Angenommen, bei \texttt{t} und \texttt{u} handelt es sich um Ausdrücke
+bzw. abstrakte Syntaxbäume. Dann bedeutet die Schreibweise
+\begin{verbatim}
+  t [x:=u]
+\end{verbatim}
+die Ersetzung jedes Vorkommens der Variable \texttt{x} im Baum
+\texttt{t} durch den Baum \texttt{u}. Verwendet man keine abstrakten
+Syntaxbäume, so müssen dabei jedoch im Zusammenhang mit Vorrangregeln
+die Regeln der Klammersetzung beachtet werden. Z.\,B. ist
+\begin{equation}
+  a*b\;[b:=x+y] = a*(x+y)
+\end{equation}
+und nicht $a*x+y$.
+
+Eine solche Variablensubstitution soll außerdem nur für
+Variablen durchgeführt werden, welche \emph{frei}, d.\,h. ungebunden
+vorkommen. Man spricht daher von einer
+\emph{freien Variablensubstitution}. Variablen können ausschließlich
+durch lambda-Ausdrücke gebunden werden. Was ein lambda-Ausdruck ist,
+wird später erklärt.
+
+\subsection{Lambda-Ausdrücke}
+Einer Liste wie \verb|[a,b,c,d]| ordnen wir den AST
+\begin{verbatim}
+  ([],a,b,c,d)
+\end{verbatim}
+zu. Somit gehört zur einelementigen Liste \verb|[x]| der Baum
+\verb|([],x)|. Zur leeren Liste \verb|[]| gehört der Baum \verb|([])|,
+wobei die runden Klammern obligatorisch sind.
+Der Begriff \emph{Liste} ist gleichbedeutend mit \emph{Tupel}.
+
+Einen AST der Form
+\begin{verbatim}
+  (lambda, ([], x), t)
+\end{verbatim}
+bzw. einen Ausdruck
+\begin{equation}
+\lambda([x],t)
+\end{equation}
+wobei \texttt{t} ein beliebiger AST ist,
+wollen wir als lambda-Ausdruck bezeichnen. Anstelle von
+»$\lambda([x],t)$« schreiben wir kürzer »$|x|\;t$«. Alternative
+Schreibweisen sind »$\lambda x.\,t$« oder »$x\mapsto t$«.
+
+Dabei verlangt man nun, dass $|x|$ schwächer bindet als alle anderen
+Operationen und rechtsassoziativ ist. Rechtsassoziativ bedeutet, dass
+die Klammerung immer auf der rechten Seite gesetzt wird. Z.\,B. ist
+\begin{equation}
+|x|\;|y|\; x+y = |x|\;(|y|\;x+y).
+\end{equation}
+Ein lambda-Ausdruck lässt sich nun auf einen AST \emph{applizieren}.
+Man definiert
+\begin{equation}
+(|x|\; t)(u) \;=\; t\;[x:=u].
+\end{equation}
+Z.\,B. ist
+\begin{equation}
+(|x|\;x^2)(4) = 4^2 = 16
+\end{equation}
+und
+\begin{equation}
+\begin{split}
+& (|x,y|\;x\cdot y)(a+b,c+d)\\
+&= x\cdot y\;[x:=a+b,\;y:=c+d]\\
+&= (a+b)(c+d).
+\end{split}
+\end{equation}
+Applikation ist linksassoziativ. D.\,h. es gilt
+\begin{equation}
+f(x)(y) = (f(x))(y).
+\end{equation}
+
+\end{document}
+
+
+
+
+
