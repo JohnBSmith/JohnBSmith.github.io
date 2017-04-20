@@ -258,6 +258,31 @@ $y$ nun in $a$ um, so ergibt sich
 &= (|a|\;y+a)(x) = y+x.
 \end{split}
 \end{equation}
+Wir hatten gesagt, Variablen können ausschließlich durch
+lambda-Ausdrücke gebunden werden. Variablenbindungen ohne
+lambda-Bindung müssen immer in solche mit lambda-Bindung umformuliert
+werden. Z.\,B. ist
+\begin{equation}
+\sum_{k=m}^n a_k = \mathrm{sum}(m,n,|k|\;a_k)
+\end{equation}
+und
+\begin{equation}
+\int_a^b f(x)\,\mathrm dx = \mathrm{integral}(a,b,|x|\;f(x)).
+\end{equation}
+Für die Quantoren der Prädikatenlogik ergibt sich:
+\begin{gather}
+\forall x{\in}M\,[P(x)] = \mathrm{all}(M,|x|\;P(x)),\\
+\exists x{\in}M\,[P(x)] = \mathrm{any}(M,|x|\;P(x)).
+\end{gather}
+Das bedeutet beim Allquantor z.\,B., dass der Baum
+\begin{verbatim}
+  (all, (in,x,M), (P,x))
+\end{verbatim}
+zum Baum
+\begin{verbatim}
+  (all, M, (lambda, ([],x), (P,x)))
+\end{verbatim}
+umformuliert wird.
 
 \end{document}
 
