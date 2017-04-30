@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Algorithmen</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script src="../moss/doc/js/csyntax.js"></script>
+  <script>
+ckeyword["size_t"]="typedef";
+ckeyword["uint"]="typedef";
+ckeyword["ulong"]="typedef";
+ckeyword["Element"]="typedef";
+  </script>
+  <style>
+.keyword{color: #204080; font-weight: bold;}
+.typedef{color: #800020; font-weight: bold;}
+.string{color: #a00060;}
+.comment{color: #604000;}
+.symbol{color: #202020; font-weight: bold;}
+.bracket{color: #006060; font-weight: bold;}
+.number{color: #204040;}
+ol.toc > li{font-weight: bold;}
+ol.toc > li ol{font-weight: normal;}
+  </style>
+</head>
+<body>
+
+<br>
+<h1>Algorithmen in C/C++</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+
+<ol class="toc">
+<li><a href="#Funktionen">Funktionen</a>
+  <ol>
+  <li><a href="#Potenzfunktion">Potenzfunktion</a>
+  </ol>
+<li><a href="#Kombinatorik">Kombinatorik</a>
+  <ol>
+  <li><a href="#Binomialkoeffizient">Binomialkoeffizient</a>
+  </ol>
+<li><a href="#ZT">Zahlentheorie</a>
+  <ol>
+  <li><a href="#ggT">Größter gemeinsamer Teiler</a>
+  <li><a href="#kgV">Kleinstes gemeinsames Vielfaches</a>
+  <li><a href="#Primzahlen">Primzahlen</a>
+  </ol>
+<li><a href="#Zufall">Zufallszahlen</a>
+<li><a href="#Sortierung">Sortierung</a>
+  <ol>
+  <li><a href="#Bubblesort">Bubblesort</a>
+  <li><a href="#Quicksort">Quicksort</a>
+  </ol>
+<li><a href="#Eingabe">Eingabe und Ausgabe</a>
+<li><a href="#Zeichenketten">Zeichenketten</a>
+<li><a href="#Suche">Suchalgorithmen</a>
+  <ol>
+  <li><a href="#Teilzeichenketten">Teilzeichenketten</a>
+  <li><a href="#binaere-Suche">Binäre Suche</a>
+  </ol>
+</ol>
+
+<h2 id="Funktionen"
+>Funktionen</h2>
+
+<h3 id="Potenzfunktion"
+>Potenzfunktion</h3>
+
+<pre class="c">
+// naiver Algorithmus
+
+long pow(long a, unsigned int n){
+  long y=1;
+  for(unsigned int i=0; i&lt;n; i++){
+    y*=a;
+  }
+  return y;
+}
+
+// Expandiert man den folgenden kompakten Algorithmus,
+// so merkt man, dass der Exponent in eine binäre Darstellung
+// zerlegt wird.
+
+long pow(long a, unsigned int n){
+  long y=1;
+  while(n&gt;0){
+    if(n%2==0){
+      n/=2; a*=a;
+    }else{
+      n--; y*=a;
+    }
+  }
+  return y;
+}
+
+// Da Zahlen schon in binärer Darstellung gespeichert sind,
+// ist die Division n/2 eigentlich nicht notwendig.
+// Man kann n/2 gegen n&gt;&gt;1 und n%2 gegen n&amp;1 ersetzen,
+// die Bedingung n&gt;0 lässt sich gegen n ersetzen,
+// was aber alles vom optimierenden Compiler automatisch gemacht
+// werden sollte.
+
+long pow(long a, unsigned int n){
+  long y=1;
+  while(n){
+    if(n&amp;1){
+      n--; y*=a;
+    }else{
+      n&gt;&gt;=1; a*=a;
+    }
+  }
+  return y;
+}
+
+// modulare Potenzfunktion
+// y = a^n mod m
+
+typedef unsigned long ulong;
+
+ulong powmod(ulong a, ulong n, ulong m){
+  ulong y=1;
+  a=a%m;
+  while(n&gt;0){
+    if(n%2==0){
+      n/=2; a=(a*a)%m;
+    }else{
+      n--; y=(y*a)%m;
+    }
+  }
+  return y;
+}
+</pre>
+
+
+<h2 id="Kombinatorik"
+>Kombinatorik</h2>
+
+<h3 id="Binomialkoeffizient"
+>Binomialkoeffizient</h3>
+
+<pre class="c">
+long choose(long n, long k){
+  long y,i;
+  if(k&gt;n) return 0;
+  if(k&gt;n-k) k=n-k;
+  y=1; k--;
+  for(i=0; i&lt;=k; i++){
+    y = y*(n-i)/(i+1);
+  }
+  return y;
+}
+
+// pascalsches Dreieck
+
+void Pascal(){
+  for(long i=0; i&lt;=12; i++){
+    for(long j=0; j&lt;=i; j++){
+      printf("%4i",choose(i,j));
+    }
+    printf("\n");
+  }
+}
+</pre>
+
+<h2 id="ZT"
+>Zahlentheorie</h2>
+
+<h3 id="ggT">Größter gemeinsamer Teiler</h3>
+<pre class="c">
+// Euklidischer Algorithmus
+
+long gcd(long a, long b){
+  if(b==0) return a;
+  else if(a==0) return b;
+  else if(a&gt;b) return gcd(a-b,b);
+  else return gcd(a,b-a);
+}
+
+long gcd(long a, long b){
+  if(a==0) return b;
+  while(b!=0){
+    if(a&gt;b) a=a-b;
+    else b=b-a;
+  }
+  return a;
+}
+
+long gcd(long a, long b){
+  if(b==0) return a;
+  else return gcd(b,a%b);
+}
+
+long gcd(long a, long b){
+  long h;
+  while(b!=0){
+    h = a%b; a=b; b=h;
+  }
+  return a;
+}
+</pre>
+
+<h3 id="kgV">Kleinstes gemeinsames Vielfaches</h3>
+
+<pre class="c">
+long lcm(long a, long b){
+  return a*b/gcd(a,b);
+}
+</pre>
+
+<h3 id="Primzahlen">Primzahlen</h3>
+
+<pre class="c">
+// naiver Primzahltest
+
+long isprime(long n){
+  long i;
+  for(i=2; i&lt;n; i++){
+    if(n%i==0) return 0;
+  }
+  return 1;
+}
+
+
+// verbesserter Primzahltest
+
+long isprime(long n){
+  long i;
+  for(i=2; i*i&lt;=n; i++){
+    if(n%i==0) return 0;
+  }
+  return 1;
+}
+
+
+// fermatscher Primzahltest
+
+long fermat(long n){
+  long i;
+  if(n&lt;6){
+    return isprime(n);
+  }
+  for(i=2; i&lt;6; i++){
+    if(powmod(i,n-1,n)!=1) return 0;
+  }
+  return 1;
+}
+</pre>
+
+<h2 id="Zufall"
+>Zufallszahlen</h2>
+
+<pre class="c">
+// Zufallszahl von eingeschlossen a bis
+// eingeschlossen b.
+
+int random(int a, int b){
+  return rand()%(b-a+1)+a;
+}
+
+
+// Mischen
+
+void shuffle(long* a, long n){
+  long i,j,h;
+  for(i=n-1; i&gt;0; i--){
+    j=rand()%(i+1);
+    h=a[j];
+    a[j]=a[i];
+    a[i]=h;
+  }
+}
+</pre>
+<br>
+
+<h2 id="Sortierung"
+>Sortierung</h2>
+
+<h3 id="Bubblesort"
+>Bubblesort</h3>
+
+<pre class="c">
+typedef long Element;
+
+void swap(Element* a, Element* b){
+  Element h;
+  h=*b; *b=*a; *a=h;
+}
+
+void bubblesort(Element* a, size_t n){
+  size_t i,j;
+  for(j=0; j&lt;n; j++){
+    for(i=0; i+1&lt;n; i++){
+      if(a[i+1]&lt;a[i]) swap(a+i,a+i+1);
+    }
+  }
+}
+</pre>
+<br>
+
+<h3 id="Quicksort"
+>Quicksort</h3>
+
+<pre class="c">
+size_t partition(Element* a, size_t n, size_t k){
+  Element pivot = a[k];
+  swap(a+k,a+n-1);
+  size_t i=0;
+  for(size_t j=0; j+1&lt;n; j++){
+    if(a[j]&lt;=pivot){
+      swap(a+i,a+j);
+      i++;
+    }
+  }
+  swap(a+i,a+n-1);
+  return i;
+}
+
+void quicksort(Element* a, size_t n){
+  if(n&lt;2) return;
+  size_t i = partition(a,n,0);
+  quicksort(a,i);
+  quicksort(a+i+1,n-i-1);
+}
+
+
+// Quicksort, polymorph
+
+void memory_swap(char* a, char* b, int size){
+  char h;
+  for(int i=0; i&lt;size; i++){
+    h=b[i]; b[i]=a[i]; a[i]=h;
+  }
+}
+
+void quicksort(void* p, int n, int size, int compare(void*,void*)){
+  int i,j=0;
+  char* a = (char*)p;
+  if(n&lt;2) return;
+  memory_swap(a+n/2*size,a+(n-1)*size,size);
+  for(i=0; i&lt;n-1; i++){
+    if(compare(a+i*size,a+(n-1)*size)&lt;=0){
+      memory_swap(a+i*size,a+j*size,size);
+      j++;
+    }
+  }
+  memory_swap(a+j*size,a+(n-1)*size,size);
+  quicksort(a,j,size,compare);
+  quicksort(a+(j+1)*size,n-j-1,size,compare);
+}
+
+int compare_int(void* a, void* b){
+  return *(int*)a-*(int*)b;
+}
+
+void sort(int* a, int n){
+  qsort(a,n,sizeof(int),compare_int);
+}
+</pre>
+<br>
+
+<h2 id="Eingabe"
+>Eingabe und Ausgabe</h2>
+
+<pre class="c">
+// Ausgabe einer Zahl
+// zur Basis b mit 2&lt;=b&lt;=10.
+
+void puti(int n, int b){
+  int a=n/b;
+  if(a!=0) puti(a,b);
+  putc(n%b+'0');
+}
+
+// Ausgabe einer Zahl zur Basis b.
+// Keine Beschränkung auf b&lt;=10.
+
+void puti(int n, int b){
+  int a=n/b;
+  if(a!=0) puti(a,b);
+  printf("(%i)",n%b);
+}
+
+// Eingabe einer Zahl
+
+int getnum(){
+  char a[20];
+  fgets(a,20,stdin);
+  return atoi(a);
+}
+</pre>
+
+
+<h2 id="Zeichenketten"
+>Zeichenketten</h2>
+
+<pre class="c">
+// Umwandlung einer Zeichenkette
+// in eine Zahl.
+
+int stoi(const char* s){
+  int i,y,sgn;
+  i=0; y=0; sgn=1;
+  if(s[i]=='-'){
+    i++; sgn=-1;
+  }
+  while(isdigit(s[i])){
+    y=10*y+s[i]-48;
+    i++;
+  }
+  return sgn*y;
+}
+</pre>
+
+<h2 id="Suche"
+>Suchalgorithmen</h2>
+
+<h3 id="Teilzeichenketten"
+>Teilzeichenketten</h3>
+
+<pre class="c">
+// Suche von einer Teilzeichenkette
+// in einer Zeichenkette.
+// Naiver Algorithmus.
+
+int find(const char* a, int n, const char* sub, int subn){
+  int i,j,m,found;
+  m=n-subn+1;
+  for(j=0; j&lt;m; j++){
+    found=1;
+    for(i=0; i&lt;subn; i++){
+      if(a[j+i]!=sub[i]){
+        found=0;
+        break;
+      }
+    }
+    if(found) return j;
+  }
+  return -1;
+}
+</pre>
+
+<h3 id="binaere-Suche"
+>Binäre Suche</h3>
+
+<pre class="c">
+int bfind(const int* p, int n, int x){
+  int a,b,m;
+  a=0; b=n-1;
+  while(a&lt;=b){
+    m = (a+b)/2;
+    if(p[m]==x) return m;
+    if(p[m]&lt;x) a=m+1;
+    else b=m-1;
+  }
+  return -1;
+}
+
+// Binäre Suche, polymorph
+
+int bfind(const void* data, int n, int size, void* x,
+  int compare(const void*,const void*)
+){
+  const char* p = (const char*)data;
+  int a,b,m;
+  a=0; b=n-1;
+  while(a&lt;=b){
+    m = (a+b)/2;
+    if(compare(p+m*size,x)==0) return m;
+    if(compare(p+m*size,x)&lt;0) a=m+1;
+    else b=m-1;
+  }
+  return -1;
+}
+
+int compare_int(const void* a, const void* b){
+  return *(int*)a-*(int*)b;
+}
+
+int find(const int* a, int n, int x){
+  return bfind(a,n,sizeof(int),&amp;x,compare_int);
+}
+</pre>
+
+</body>
+</html>
+
