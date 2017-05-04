@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#fac">Factorial</a>
 <li><a href="#fib">Fibonacci sequence</a>
+<li><a href="#collatz">Collatz conjecture</a>
 <li><a href="#fc">Function composition</a>
 <li><a href="#pa">Partial application</a>
 <li><a href="#currying">Currying</a>
@@ -60,8 +61,12 @@ fac = |n| 1 if n==0 else n*fac(n-1)
 fac = |n| (1..n).reduce(1,|x,y| x*y)
 
 # Functional iteration
-Fac = |x| [x[0]*x[1],x[1]+1]
-fac = |n| (Fac^n)([1,1])[0]
+Fac = |t| [t[0]+1,t[1]*(t[0]+1)]
+fac = |n| (Fac^n)([0,1])[1]
+
+# Corecursion
+Fac = |t| [t[0]+1,t[1]*(t[0]+1)]
+fac = |n| Fac.orbit([0,1]).omit(n)()[1]
 
 # Semifunctional iteration
 f = sub|n| i=0; (sub|x| i=i+1; x*i end^n)(1) end
@@ -149,6 +154,47 @@ end
 fib = rec(0,1,|n,x,y| x+y)
 </pre>
 
+<h2 id="collatz">Collatz conjecture</h2>
+<pre class="moss">
+Collatz = |n| n//2 if n%2==0 else 3*n+1
+
+for x in 1..20
+  a = Collatz.orbit(x).until(|n| n==1).list()
+  print(a)
+end
+
+sub tab(m)
+  d = {}
+  for x in 1..m
+    i = Collatz.orbit(x)
+    a = i()
+    for b in i
+      if b in d
+        d[b].add(a)
+        break
+      end
+      d[b] = {a}
+      a = b
+    end
+  end
+  d[4] = {8}
+  return d
+end
+
+sub tree(n,d,s,max)
+  if s&lt;max
+    print("| "*s,n)
+    if n in d
+      for x in list(d[n]).sort()
+        tree(x,d,s+1,max)
+      end
+    end
+  end
+end
+
+tree(1,tab(100),0,20)
+</pre>
+
 
 <h2 id="fc">Function composition</h2>
 <pre class="moss">
@@ -167,10 +213,10 @@ first = |f,x| |y| f(x,y)
 second = |f,y| |x| f(x,y)
 
 # variadic, fix first arguments
-first = |f,*a| |*b| f[a+b]
+first = |f,*a| |*b| f.apply(a+b)
 
 # variadic, fix last arguments
-last = |f,*a| |*b| f[b+a]
+last = |f,*a| |*b| f.apply(b+a)
 </pre>
 
 
@@ -179,7 +225,7 @@ last = |f,*a| |*b| f[b+a]
 curry = sub|f|
   n=f.argc()
   a=list(0..n-1)
-  g = sub|x| a[n-1]=x; f[a] end
+  g = sub|x| a[n-1]=x; f.apply(a) end
   for i in 2..n
     g = sub|x| a[n-i]=x; g end
   end
@@ -187,7 +233,7 @@ curry = sub|f|
 end
 
 curry = sub|f| n=f.argc(); a=list(0..n-1)
-  return (2..n).reduce(sub|x| a[n-1]=x; f[a]
+  return (2..n).reduce(sub|x| a[n-1]=x; f.apply(a)
   end, |g,i| sub|x| a[n-i]=x; g end) end
 
 uncurry = |f| |*a| a.reduce(f,|g,x| g(x))
@@ -274,10 +320,10 @@ issorted = |a| (0..size(a)-2).all(|i| a[i]&lt;=a[i+1])
 
 # Alternative form
 sub qsort(a)
-  [] if size(a)==0 else begin
+  return [] if size(a)==0 else begin
     R,L=[],[]
     a[1..].each(|x| (R if x&lt;a[0] else L).push(x))
-    [R,L].map(qsort)
+    return [R,L].map(qsort)
   end.reduce(|R,L| R+[a[0]]+L)
 end
 </pre>
@@ -760,7 +806,7 @@ use math: pi
 use cmath: exp
 
 # size(a) is a power of two
-fft = sub|a| if size(a)&gt;=1 then return a end
+fft = sub|a| if size(a)&lt;=1 then return a end
   even = fft(a[0..:2]); odd = fft(a[1..:2])
   N = size(a); L = list(0..N//2-1)
   T = L.map(|k| exp(-2i*pi*k/N)*odd[k])

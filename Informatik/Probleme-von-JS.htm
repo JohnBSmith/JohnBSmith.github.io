@@ -192,7 +192,14 @@ window.onload = main;
 <li><a href="#Operatoren">Operatorüberladung</a>
 <li><a href="#this">Das this-Argument</a>
 <li><a href="#Woerterbuch">Wörterbuch-Syntax</a>
+<li><a href="#Module">Module</a>
 </ol>
+
+<p><b>Zusammenfassung:</b> Dieser Text handelt von Problemen der
+Programmiersprache JavaScript. Dabei werden sowohl Entwurfsfehler
+erläutert als auch solche welche eher konzeptueller Natur sind.
+Es wird jeweils darauf eingegangen, wie eine Lösung ausschauen kann
+oder hätte ausschauen können.
 
 <h2 id="Umwandlung">Umwandlung von Arrays in Zeichenketten</h2>
 <p>Normalerweise sollte die Umwandlung eines Arrays in eine
@@ -338,6 +345,145 @@ Umwandlung verloren gehen, die Schlüssel
 </pre>
 <p>Hiermit lassen sich auch recht angenehm Schlüsselwort-Argumente
 (wie sie in Python und&nbsp;R zu finden sind) simulieren.
+
+<h2 id="Module">Module</h2>
+<p>Möchte man in JavaScript ein wiederverwendbares Modul schreiben,
+so sollten dessen Funktionen in einem eigenen Namensraum stehen.
+Betrachten wir folgende Funtkionen die zunächst flach im
+Hauptnamesraum stehen:
+<pre class="js">
+function f(x){return 2*x;}
+function g(x){return 3*x;}
+</pre>
+
+<p>Das Modul möchten wir nun als <code>M</code> bezeichnen. Die
+erste Idee ist, die Funktionen einfach als Slots eines Objektes
+<code>M</code> aufzufassen.
+<pre class="js">
+var M = {
+  f: function(x){return 2*x;},
+  g: function(x){return 3*x;}
+};
+</pre>
+<p>Falls das Modul nun statische Variablen besitzt, kann auf diese
+über das this-Argument zugegriffen werden:
+<pre class="js">
+var M = {
+  name: "M",
+  f: function(){return this.name;}
+};
+</pre>
+<p>Hiermit ist es auch möglich, Funktionen aus dem Modul innerhalb
+des Moduls aufzurufen. Hier ein Beispiel mit Rekursion:
+<pre class="js">
+var M = {
+  f: function(x){return x==0? 1: 2*this.g(x-1);},
+  g: function(x){return x==0? 1: 3*this.f(x-1);}
+}
+</pre>
+<p>Leider kommen wir nun in einen Konflikt, wenn wir eine Funktion
+aus dem Modul als Argument an eine andere Funktion übergeben wollen.
+<pre class="js">
+var M = {
+  beta: 2,
+  f: function(x){return this.beta*x;},
+  g: function(a){return a.map(this.f);}
+};
+</pre>
+<p>Dieses Beispiel wird nicht wie erwartet funktionieren.
+Bei der Übergabe von <code>f</code> an <code>map</code> geht
+nämlich das this-Argument von <code>f</code> verloren. Somit
+kann nicht mehr auf <code>beta</code> zugegriffen werden.
+
+<p>Die Direkte Lösung dieses Problems ist die feste Bindung des
+this-Argumentes an <code>f</code>. Dies geschieht durch Hinzufügen
+von:
+<pre class="js">
+M.f = M.f.bind(M);
+</pre>
+<p>Man könnte anstelle des this-Argumentes auch direkt auf die
+Modulvariable zugreifen:
+<pre class="js">
+var M = {
+  beta: 2,
+  f: function(x){return M.beta*x;},
+  g: function(a){return a.map(M.f);}
+};
+</pre>
+<p>Hier muss aber beachtet werden, dass der Inhalt der Variable
+<code>M</code> nicht mehr verändert werden darf. Folgendes
+ist also nicht möglich:
+<pre class="js">
+var M2 = M;
+M = undefined;
+</pre>
+<p>Die Lösung besteht darin, eine lokale Variable für
+das Modul einzuführen.
+<pre class="js">
+var M = (function(){
+  var M = {
+    beta: 2,
+    f: function(x){return M.beta*x;},
+    g: function(a){return a.map(M.f);}
+  };
+  return M;
+})();
+</pre>
+<p>Man hätte auch alle Funktionen und Variablen direkt als lokale
+Variablen schreiben können.
+<pre class="js">
+var M = (function(){
+  var beta = 2;
+  var f = function(x){return beta*x;};
+  var g = function(a){return a.map(f);};
+  var Interface = {g: g};
+  return Interface;
+})();
+</pre>
+<p>Hier ist alles privat, was sich nicht im Interface befindet.
+Leider ist jetzt eine nachträgliche Manipulation des Moduls nicht mehr
+möglich, z.&nbsp;B. wenn man das Modul mit <code>M.beta=4</code>
+konfigurieren möchte. Es ist aber möglich, konfigurierbare Eigenschaften
+des Moduls explizit zum Interface mit aufzunehmen.
+<pre class="js">
+var M = (function(){
+  var config = {beta: 2};
+  var f = function(x){return config.beta*x;};
+  var g = function(a){return a.map(f);};
+  var Interface = {g: g, config: config};
+  return Interface;
+})();
+
+M.config.beta=4;
+</pre>
+<p>Bisher haben wir nicht beachtet, dass es auch mehrere Instanzen
+eines Moduls geben könnte. Z.&nbsp;B. würde man von einem Modul
+gerne eine shallow copy machen und diese Kopie modifizieren.
+Alternativ kann das Prototypensystem hierfür verwendet werden.
+
+<p>Möchte man eine nachträgliche Manipulation verbieten, so kann
+das Modul als Factory formuliert werden. Eine solche nimmt eine
+Konfiguration und erzeugt aus dieser ein konfiguriertes Modul:
+<pre class="js">
+var M = (function(config){
+  var beta = config.beta;
+  var f = function(x){return beta*x;};
+  var g = function(a){return a.map(f);};
+  var Interface = {g: g};
+  return Interface;
+});
+
+var M1 = M({beta: 4});
+</pre>
+
+
+<h2 id="Literatur">Literatur</h2>
+<ol>
+<li>Henning Thielemann: »<a href="http://www.parallelnetz.de/ScriptingHater.html"
+  >Skriptsprachen-Hassen leichtgemacht</a>«. (2002).
+<li>Henning Thielemann: »<a href="http://www.parallelnetz.de/CHater.html"
+  >C-Hasser in 10 Tagen</a>«. (2002).
+</ol>
 
 </body>
 </html>

@@ -34,11 +34,7 @@ function csyntax(s){
         i++;
       }
       if(ckeyword.hasOwnProperty(id)){
-        if(ckeyword[id]==="typedef"){
-          s2+="<span class='typedef'>"+id+"</span>";
-        }else{
-          s2+="<span class='keyword'>"+id+"</span>";
-        }
+        s2+="<span class='keyword'>"+id+"</span>";
       }else{
         s2+=id;
       }
