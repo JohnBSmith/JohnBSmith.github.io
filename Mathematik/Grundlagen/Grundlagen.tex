@@ -1,7 +1,6 @@
 \documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% \usepackage{lmodern}
 \usepackage{mathptmx}
 \usepackage{ngerman}
 \usepackage{amsmath}
@@ -283,6 +282,60 @@ zum Baum
   (all, M, (lambda, ([],x), (P,x)))
 \end{verbatim}
 umformuliert wird.
+
+\subsection{Auswertung}
+
+Bei der Auswertung von lambda-Termen kann es sein, dass wir in
+einen sogenannten \emph{infiniten Regress} gelangen. Man betrachte
+z.\,B.
+\begin{verbatim}
+  Regress = (|x| x(x))(|x| x(x)).
+\end{verbatim}
+Die Auswertung führt wieder auf den ursprünglichen Term, wird also
+niemals enden. Oder man betrachte:
+\begin{verbatim}
+  (|x| 1+x(x))(|x| 1+x(x))
+= 1+(|x| 1+x(x))(|x| 1+x(x))
+= 1+(1+(|x| 1+x(x))(|x| 1+x(x)))
+= usw.
+= 1+(1+(1+(...))).
+\end{verbatim}
+Das Ergebnis dieser Auswertung wäre ein unendlich großer AST.
+Es ist nun aber so, dass bei einer bestimmten Auswertung ein AST
+nicht benötigt wird, weil er bei der Auswertung einfach entfällt.
+Solches kann z.\,B. bei einer Projektion geschehen. Die Funktion
+\begin{verbatim}
+  p := |x| |y| x
+\end{verbatim}
+projiziert auf das erste Argument. Daher ist
+\begin{verbatim}
+  p(0)(Regress) = 0,
+\end{verbatim}
+obwohl der problematische Term \texttt{Regress} vorkommt.
+Wertet man zuerst \texttt{Regress} aus, so gelangt man in den
+infiniten Regress. Wertet man hier aber von links nach rechts aus,
+so gelangt man zu
+\begin{verbatim}
+  (|x| |y| x)(0)(Regress)
+  = (|y| 0)(Regress) = 0.
+\end{verbatim}
+Wir wollen hierbei von einer sogenannten \emph{Lazy Evaluation}
+(dt. \emph{Bedarfsauswertung}) sprechen, die sich von der
+normalen \emph{Eager Evaluation} unterscheidet.
+
+Normalerweise werden in $p(x,y)$ die Argumente $x,y$ auszuwertet
+und danach wird $p$ auf die Werte appliziert. Der Ansatz für die
+alternative Vorgehensweise ist wie folgt: Zuerst wird $p$ auf die
+Argumente appliziert, wobei jedes Vorkommen einer Variablen in $p$
+gegen eine Referenz (einen »Zeiger«) auf den entsprechenden AST
+ausgetauscht wird. Nun wird das Ergebnis weiter ausgewertet, wobei
+problematische Terme eventuell durch Projektionen verloren gegangen
+sind.
+
+Ein Problem hierbei ist jedoch, dass sich der Rechenaufwand bei
+mehrfachem Vorkommen einer Variablen erhöht. Man tut daher folgendes:
+Bei der ersten Auswertung des ASTs wird dieser für alle Referenzen
+gegen das Ergebnis der Auswertung ausgetauscht.
 
 \end{document}
 
