@@ -25,6 +25,8 @@
   <a href="#Index">Index clientseitig durchsuchen</a>
 <li><span class="date">[2017-03-19]</span>
   <a href="#Midi">Probleme mit Midi auf Linux</a>
+<li><span class="date">[2017-05-09]</span>
+  <a href="#Int">Ganzzahldatentypen</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -242,7 +244,129 @@ Jedenfalls braucht jemand in Zukunft nicht mehr unbedingt Noten
 schreiben. Es geht wesentlich schneller, mit einem Keyboard eine
 Midi-Datei aufzunehmen und die dann mit Linthesia abspielen zu lassen.
 
+<h2 id="Int">Ganzzahldatentypen</h2>
+<div class="date">9. Mai 2017</div>
+<p>Wart ihr euch schon einmal unsicher, welchen der vielen
+Ganzzahldatentypen ihr in C benutzen sollt? Meines Erachtens
+können die eingebauten Datentypen von einem Compiler sinnvollerweise
+so definiert werden:
+<pre>
+  unsigned char  == uint_fast8_t
+  unsigned short == uint_fast16_t
+  unsigned int   == uint_fast16_t
+  unsigned long  == uint_fast32_t
+</pre>
+<p>Prinzipiell könnte ein Compiler auch so konfiguriert werden,
+dass er möglichst viel Speicher spart (meistens nicht sinnvoll).
+Zum Beispiel könnte man auch auf solches stoßen:
+<pre>
+  unsigned char  == uint_least8_t
+  unsigned short == uint_least16_t
+  unsigned int   == uint_fast16_t
+  unsigned long  == uint_least32_t
+</pre>
+<p>Angenommen man will nun eine UTF-8- oder eine UTF-32-Zeichenkette
+speichern. Man könnte jetzt auf die Idee kommen, dafür ein Feld von
+<code>uint8_t</code> bzw. <code>uint32_t</code> zu verwenden.
+Es kann aber auf seltenen Architekturen der Fall sein, dass das nicht
+sinnvoll oder nicht möglich ist. Vielmehr möchte man für diesen Zweck
+eigentlich <code>uint_least8_t</code> bzw. <code>uint_least32_t</code>
+verwenden.
 
+<p>Die Dinge fangen nun an kompliziert zu werden, wenn man ein
+<code>uint32_t</code> als Feld von vier <code>uint8_t</code>
+betrachten möchte:
+<pre>
+  uint32_t x = 0xcafebabe;
+  uint8_t* p = (uint8_t*)&amp;x;
+  printf("%02x %02x %02x %02x\n",p[3],p[2],p[1],p[0]);
+</pre>
+<p>Möchte man Daten aus einer Datei lesen oder in eine Datei
+schreiben, so kommt dabei aber <code>uint8_t*</code> nicht vor.
+Vielmehr stößt man auf <code>char*</code>, welcher zunächst in
+<code>unsigned char*</code> umgecastet werden sollte. Es muss
+jedoch nicht unbedingt <code>sizeof uint8_t == sizeof unsigned char</code>
+sein. Das ist problematisch, wenn man z.B. eine
+<code>uint_least32_t</code>-Zahl aus einer Datei auslesen möchte.
+Die Zahl ist über ein Feld von vier <code>unsigned char</code>
+verteilt. Der naive Ansatz wäre folgender:
+<pre>
+  unsigned char* Daten;
+  uint8_t* pu8 = (unsigned char*)Daten; // Aua! (1)
+  unsigned long x = *(uint32_t*)(pu8+POSITION);
+</pre>
+<p>Fast genau so naiv ist folgender Ansatz:
+<pre>
+  unsigned char* Daten;
+  unsigned char* p = Daten+POSITION;
+  unsigned long x;
+  x = *(unsigned long*)p; // Aua! (2)
+  x = *(uint32_t*)p; // Aua! (3)
+</pre>
+<p>Wenn z.B. <code>sizeof unsinged char == sizeof unsigned long</code>
+ist, dann geht alles schief. Das Feld schaut dann folgendermaßen
+aus:
+<pre>
+  B X X X B X X X B X X X B X X X ...
+  ^       ^       ^       ^
+  p[0]    p[1]    p[2]    p[3]
+</pre>
+<p>wobei die <code>B</code> die Bytes der Zahl sind und <code>X</code>
+beliebiger Datenmüll ist. Schauen wir uns an, was mit <code>pu8</code>
+passiert:
+<pre>
+  B == pu8[0]
+  X == pu8[1]
+  X == pu8[2]
+  X == pu8[3]
+  B == pu8[4]
+  X == pu8[5]
+  usw.
+</pre>
+<p>Bei (3) schaut es so aus:
+<pre>
+  B X X X == *(uint32_t*)(p+POSITION)
+</pre>
+
+<p>Bei (2) nehmen wir an, dass <code>unsigned long == uint64_t</code>
+gilt:
+<pre>
+  B X X X B X X X == *(unsigned long*)(p+POSITION)
+</pre>
+<p>Der Ausdruck (2) ist ausgesprochen schlimm, denn selbst
+wenn <code>unsigned char</code> einem Byte entspräche, wäre
+<pre>
+  B B B B X X X X == *(unsigned long*)(p+POSITION)
+</pre>
+wo Datenmüll <code>XXXX</code> im Datum liegt. Das Problem ist hier,
+dass das nicht portabel ist und Leute es eventuell erst bemerken,
+wenn das Programm nach dem Portieren von <code>ILP32</code> auf
+<code>LP64</code> an irgendeiner Stelle abstürzt oder sinnlose
+Ergebnisse liefert.
+
+<p>Dass alles nicht schon genug ist, ergibt sich außerdem noch
+das Problem, dass die Daten in der Datei im Little-Endian-Format
+gespeichert sind, die Computer-Architektur aber die
+Big-Endian-Konvention verwenden könnte.
+
+<p>Eine portable Lösung schaut wie folgt aus:
+<pre>
+  unsigned char* Daten;
+  unsinged char* p = Daten+POSITION;
+  unsigned long x;
+  x = ((unsigned long)p[3] &amp; 0xff)&lt;&lt;24
+    | ((unsigned long)p[2] &amp; 0xff)&lt;&lt;16
+    | ((unsigned long)p[1] &amp; 0xff)&lt;&lt; 8
+    | ((unsigned long)p[0] &amp; 0xff);
+</pre>
+<p>Zur Optimierung verwendet man ein Makro oder eine inline-Funktion.
+
+<p>Die Programmiersprache&nbsp;C kann als Mischung aus Hochsprache
+und Assembler betrachtet werden. Programmierung in&nbsp;C sollte
+zu Gunsten von typsicheren Programmiersprachen möglichst vermieden
+werden. Als nächstes wird man sich also fragen, wie das Lesen von
+Daten in den effizienten Programmiersprachen Ada, D, Rust und OCaml
+ermöglicht wird.
 </main>
 
 <aside id="right-aside">
