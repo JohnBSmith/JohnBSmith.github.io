@@ -148,7 +148,7 @@ arguments. Then we have:
   function.type.o = |f;g| |x| f(g(x))
 </pre>
 
-<h3 data-date="20170509" id="load"
+<h3 data-date="20170509" id="about-modules"
 >About modules</h3>
 
 <p>What is the difference between what follows? Firstly:
@@ -177,6 +177,90 @@ take an additional argument that specifies information about
 the environment. For example, global variable of the environment
 are used by default by <code>eval</code>. If a module would be loaded,
 <code>eval</code> had to take an empty environment.
+
+<h3 data-date="20170509" id="default-arguments"
+>Default arguments</h3>
+
+<p>The interpreter already supports default arguments for
+build in functions. Now a function's argument count can simply be
+a range. Not given arguments will be filled out with
+<code>null</code>. Now
+<pre class="moss">
+  sub f(x,y=expression)
+</pre>
+<p>is simply syntatic sugar for
+<pre class="moss">
+  sub f(x,y=null)
+    if y is null then y=expression end
+</pre>
+<p>An implementation is straightforward:
+<ol>
+<li>Let argument count be a range.
+<li>Take the assignment AST and obtain that desired if-AST from it.
+<li>Insert this if-AST before function body. To be more precise:
+At first, the function body is parsed, and then we have both:
+if-AST and body-AST.
+</ol>
+<p>Now construct:
+<pre>
+  * block-node
+    * if-node-1
+    * if-node-2
+      ...
+    * if-node-n
+    * body-node
+</pre>
+<p>Easy going. At next, default named arguments are stated as follows:
+<pre class="moss">
+  sub f(x,d={})
+    a = d["a"] if "a" in d else a0
+    b = d["b"] if "b" in d else b0
+    # ...
+  end
+</pre>
+<p>That's clumsy. I believe, default named arguments are very important
+for usability and thus should be supported by the language. Now let
+<pre class="moss">
+  {a=a0, b=b0} = d
+</pre>
+<p>be syntactic shugar for
+<pre class="moss">
+  a = d["a"] if "a" in d else a0
+  b = d["b"] if "b" in d else b0
+</pre>
+<p>Without default arguments it should be more strict: Let
+<pre class="moss">
+  {a,b} = d
+</pre>
+<p>be syntactic shugar for
+<pre class="moss">
+  a = d["a"]; b = d["b"]
+</pre>
+<p>I call this the <em>dictionary unpacking statement</em>.
+
+<p>It took me 100 lines of C&nbsp;code to implement dictionary
+unpacking, including construction of a temporary variable if the right
+hand side is an expression. I think it was a worthwhile effort.
+
+<p>Finally it could be moved into the arguments list:
+<pre class="moss">
+  sub f(x,{a=a0,b=b0})
+    # ...
+  end
+</pre>
+<p>Furthermore,
+<pre class="moss">
+  sub f([x,y])
+    # ...
+  end
+</pre>
+<p>could be
+<pre class="moss">
+  sub f(_t0_)
+    x,y = _t0_
+    # ...
+  end
+</pre>
 
 </body>
 </html>

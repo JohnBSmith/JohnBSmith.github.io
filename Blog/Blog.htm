@@ -130,7 +130,7 @@ immer noch 13 Zeichen.
 <p>Es ist nun am sichersten, (exakt gleichverteilte) zufällige Zeichen
 zu benutzen. Diese ordnet man zur Lesbarkeit in Vierergruppen
 an. Bei 24 kleinen Buchstaben und Ziffern sind das sechs Gruppen.
-Ein Passwort sieht dann z.B. so aus:
+Ein Passwort sieht dann z.&nbsp;B. so aus:
 
 <pre>
   b4ma 2kwq wmco piht ujx8 r37g
@@ -286,7 +286,7 @@ schreiben, so kommt dabei aber <code>uint8_t*</code> nicht vor.
 Vielmehr stößt man auf <code>char*</code>, welcher zunächst in
 <code>unsigned char*</code> umgecastet werden sollte. Es muss
 jedoch nicht unbedingt <code>sizeof uint8_t == sizeof unsigned char</code>
-sein. Das ist problematisch, wenn man z.B. eine
+sein. Das ist problematisch, wenn man z.&nbsp;B. eine
 <code>uint_least32_t</code>-Zahl aus einer Datei auslesen möchte.
 Die Zahl ist über ein Feld von vier <code>unsigned char</code>
 verteilt. Der naive Ansatz wäre folgender:
@@ -295,7 +295,7 @@ verteilt. Der naive Ansatz wäre folgender:
   uint8_t* pu8 = (unsigned char*)Daten; // Aua! (1)
   unsigned long x = *(uint32_t*)(pu8+POSITION);
 </pre>
-<p>Fast genau so naiv ist folgender Ansatz:
+<p>Nicht weniger naiv ist folgender Ansatz:
 <pre>
   unsigned char* Daten;
   unsigned char* p = Daten+POSITION;
@@ -303,9 +303,9 @@ verteilt. Der naive Ansatz wäre folgender:
   x = *(unsigned long*)p; // Aua! (2)
   x = *(uint32_t*)p; // Aua! (3)
 </pre>
-<p>Wenn z.B. <code>sizeof unsinged char == sizeof unsigned long</code>
-ist, dann geht alles schief. Das Feld schaut dann folgendermaßen
-aus:
+<p>Wenn z.&nbsp;B. <code>sizeof unsinged char == sizeof unsigned
+long</code> ist, dann geht alles schief. Das Feld schaut dann
+folgendermaßen aus:
 <pre>
   B X X X B X X X B X X X B X X X ...
   ^       ^       ^       ^
@@ -359,7 +359,18 @@ Big-Endian-Konvention verwenden könnte.
     | ((unsigned long)p[1] &amp; 0xff)&lt;&lt; 8
     | ((unsigned long)p[0] &amp; 0xff);
 </pre>
-<p>Zur Optimierung verwendet man ein Makro oder eine inline-Funktion.
+<p>Zur Optimierung verwendet man ein Makro oder eine Inline-Funktion.
+Die high-end-Compiler <code>gcc</code> und <code>clang</code>
+beherrschen natürlich das Inlinen von Funktionen. Für billige
+Compiler ist ein Makro aber besser.
+
+<p>Falls <code>unsigned char</code>
+mit <code>uint8_t</code> koinzidiert, kann <code>&amp; 0xff</code>
+entfallen. Das ist eine ganz banale Optimierung. Wenn ein Compiler
+das nicht wegoptimiert, solltet ihr den Compiler besser in den
+Mülleimer werfen. Man darf diese Optimierung auch für
+Embedded-Compiler erwarten, weil dort die Verwendung von
+Bitarithmetik maßgeblich ist.
 
 <p>Die Programmiersprache&nbsp;C kann als Mischung aus Hochsprache
 und Assembler betrachtet werden. Programmierung in&nbsp;C sollte
