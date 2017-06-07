@@ -25,7 +25,7 @@ Lizenz: Creative Commons CC0
 
 \tableofcontents
 
-\section{Logik}
+\section{Grundlagen}
 \subsection{Zerlegung des Allquantors}
 Eine periodische Funktion $f$ erfüllt die Gleichung
 \begin{equation}
@@ -258,13 +258,64 @@ Was noch zu zeigen ist, ist die Regel
 \iff \forall y\forall x\,[P(x,y)].
 \end{equation}
 
+\subsection{Zahlen als Mengen}
+Die Potenzmenge einer Menge $M$ wird auch als $2^M$ notiert, weil
+$|2^M| = 2^{|M|}$ gilt falls $M$ endlich ist. Nach dem Von-Neumann-Modell
+ist aber $2:=\{0,1\}$. Daher entspricht $2^M$ der Menge
+\begin{equation}
+\{f\mid f\colon M\to\{0,1\}\}.
+\end{equation}
+Jeder Teilmenge entspricht eine Funktion $f$, welche für jedes
+$x\in M$ auswählt, ob $x$ vorkommen soll oder nicht.
+Die Potenzmenge kann daher auch als Menge aller charakteristischen
+Funktionen von $M$ gesehen werden.
+
+Die bisherige Betrachtung ermöglicht nun in Erfahrung zu bringen, was
+$3^M$, $4^M$, usw. bedeutet. Bei $n^M$ handelt es sich um die
+Menge der Funktionen
+\begin{equation}
+\{f\mid f\colon M\to\{0,1,\ldots,n-1\}\}.
+\end{equation}
+Eine Funktion $f$ zählt also für jedes $x\in M$ wie oft es vorkommen
+soll, wobei $n-1$ die Maximale Anzahl ist. Somit kann $n^M$ als
+Menge von Multimengen interpretiert werden.
+
+Man definiert normalerweise $A^1:=A$ und $A^{n+1}:=A\times A^n$.
+Jetzt stellt sich aber die Frage, was denn $A^0$ ist. Weiterhin
+gültig sein sollte
+\begin{equation}
+|A^0| = |A|^0 = 1.
+\end{equation}
+Daher müsste sich eine einelementige Menge ergeben. Die einfachste
+einelementige Menge ist $\{0\}$. Andererseits ist $A^n$ eine Menge
+von $n$-Tupeln. Also müsste $A^0$ das leere Tupel enthalten. Somit
+müsste $0=\{\}=()$ sein. Das kartesische Produkt ist eigentlich nicht
+assoziativ. Aus diesem Grund definiert man explizit
+\begin{equation}
+(x,y,z) := (x,(y,z))
+\end{equation}
+und so weiter. Beginnt man mit der leeren Menge, so ergeben sich
+die alternativen Darstellungen:
+\begin{gather}
+() := \{\},\\
+(a) := (a,\{\}),\\
+(a,b) := (a,(b,\{\})),\\
+(a,b,c) := (a,(b,(c,\{\}))),
+\end{gather}
+und so weiter. Dies entspricht der Darstellung von Listen
+in Lisp, also einfach verketteten Listen.
+
+Bei $f\colon A^0\to B$ handelt es sich somit um eine Funktion, welche
+dem leeren Tupel einen Wert zuordnet. Eine solche nullstellige
+Funktion entspricht einer Konstante. In der Informatik muss die
+»Funktion« natürlich zusätzlich referenziell transparent sein.
 
 \newpage
 \section{Analysis}
 \subsection{Halley-Verfahren}
 Im Folgenden wird die Herleitung des Halley"=Verfahrens unter
 Verwendung einer Padé"=Approximation dargestellt.
-Die Padé"=Approximation \(R[m,0]\) ist die Taylorreihe. Sei
+Die Padé"=Approximation $R[m,0]$ ist die Taylorreihe. Sei
 \begin{equation}
 a_k = \frac{1}{k!} f^{(k)}(x_0).
 \end{equation}
@@ -288,34 +339,34 @@ a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
 a_m & a_{m+1} &\ldots & a_{m+n}\\
 x^n & x^{n-1} &\ldots & x^0
 \end{vmatrix}\).\\
-Es ist \(R[m,n]=A/B\).
-Ersetze dann \(x\) gegen\\
-\(x-x_0\). Es ist
+Es ist $R[m,n]=A/B$.
+Ersetze dann $x$ gegen\\
+$x-x_0$. Es ist
 \begin{equation}
 \begin{split}
 & R[1,1] = \frac{a_1(a_0+a_1 x)-a_0a_2x}{a_1-a_2x}\\
 & = \frac{a_0a_1+(a_1^2-a_0a_2)x}{a_1-a_2x}.
 \end{split}
 \end{equation}
-Die Nullstelle von \(f\) ist gesucht, und die Approximation
-muss dort auch ungefähr null sein. Setzt man also \(R[1,1](x)=0\),
+Die Nullstelle von $f$ ist gesucht, und die Approximation
+muss dort auch ungefähr null sein. Setzt man also $R[1,1](x)=0$,
 so folgt
 \begin{equation}
 0=a_0a_1+(a_1^2-a_0a_2)x.
 \end{equation}
-Ersetzt man noch \(x\) gegen \(x-x_0\) und formt danach um,
+Ersetzt man noch $x$ gegen $x-x_0$ und formt danach um,
 so erhält man
 \begin{equation}
 x=x_0-\frac{a_0a_1}{a_1^2-a_0a_2}.
 \end{equation}
-Ausgeschrieben bekommt man also \(x=\varphi(x_0)\) mit
+Ausgeschrieben bekommt man also $x=\varphi(x_0)$ mit
 \begin{equation}
 \varphi(x) = x-\frac{2f(x)f'(x)}{2f'(x)^2-f(x)f''(x)}.
 \end{equation}
 Das Halley"=Verfahren ist dann die Fixpunktiteration
-\(x_{n+1}=\varphi(x_n)\).
+$x_{n+1}=\varphi(x_n)$.
 Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
-übergeht, wenn man \(f(x)f''(x)\) verschwinden lässt.
+übergeht, wenn man $f(x)f''(x)$ verschwinden lässt.
 
 \newpage
 \subsection{Integral der Potenzfunktion}
