@@ -1,0 +1,149 @@
+\documentclass[a4paper,12pt,fleqn,twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{sfmath}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=34mm,right=30mm,top=20mm,bottom=28mm}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\emdef}[1]{\emph{#1}}
+
+\theoremstyle{definition}
+\newtheorem{Definition}{Definition}
+
+\theoremstyle{theorem}
+\newtheorem{Satz}{Satz}
+\newtheorem{Korollar}[Satz]{Koroallar}
+
+\begin{document}
+
+\phantom{x}
+\vspace{2em}
+{\center\LARGE\bfseries Fourier-Analysis\par}
+
+\tableofcontents
+
+\section{Vorbereitungen}
+\subsection{Periodische Funktionen}
+
+\begin{Definition}
+Eine Funktion $f\colon\R\to\R$ heißt \emdef{periodisch}, wenn es eine
+Zahl $P\ne 0$ gibt, so dass
+\begin{equation}\label{eq:periodisch}
+\forall x\in\R\colon\, f(x+P)=f(x)
+\end{equation}
+gilt. Eine solche Zahl $P$ wird \emdef{Periode} oder
+\emdef{Periodenlänge} genannt.
+\end{Definition}
+
+\begin{Korollar}
+Wenn eine Funktion die Periode $P$ besitzt, so hat sie auch die
+Perioden $kP$ für jede ganze Zahl $k\ne 0$.
+\end{Korollar}
+\noindent
+\textbf{Beweis.} Für $k=2$ ist
+\begin{equation}
+f(x+2P) = f(x+P+P) \stackrel{\eqref{eq:periodisch}}=
+f(x+P) \stackrel{\eqref{eq:periodisch}}= f(x).
+\end{equation}
+Für $k=-1$ ist außerdem
+\begin{equation}
+f(x-P) \stackrel{\eqref{eq:periodisch}}= f(x-P+P) = f(x).
+\end{equation}
+Und jetzt noch einmal allgemein. Für $n\ge 0$ ergibt sich der
+Induktionsschritt
+\begin{equation}
+f(x+(n+1)P) = f(x+nP+P) \stackrel{\eqref{eq:periodisch}}= f(x+nP).
+\end{equation}
+Für $n\ge 0$ ergibt sich außerdem der Induktionsschritt
+\begin{equation}
+f(x-(n+1)P) = f(x-nP-P) \stackrel{\eqref{eq:periodisch}}=
+f(x-nP-P+P) = f(x-nP).
+\end{equation}
+Per Induktion ergibt sich nun die Gleichung $f(x+kP) = f(x)$. $\Box$
+
+\begin{Korollar}
+Ist eine $P$-periodische Funktion $f\colon\R\to\R$ auf jedem
+kompakten Intervall integrierbar, so gilt
+\begin{equation}
+\int_0^P f(x)\,\mathrm dx = \int_a^{a+P} f(x)\,\mathrm dx.
+\end{equation}
+\end{Korollar}
+\noindent
+\textbf{Beweis.} Verwende die Substitutionsregel:
+\begin{equation}
+\int_{x=g(0)}^{x=g(a)} f(x)\,\mathrm dx = \int_{u=0}^{u=a}
+f(g(u))g'(u)\,\mathrm du
+\end{equation}
+mit $x=g(u)=u+P$.
+
+Das Integral wird aufgetrennt:
+\begin{equation}
+\begin{split}
+\int_{a}^{a+P}f(x)\,\mathrm dx
+=\int_{a}^{P}f(x)\,\mathrm dx+&\underbrace{\int_{P}^{a+P}f(x)\,\mathrm dx}.\\
+&\int_0^a f(u+P)\,\mathrm du
+\stackrel{\eqref{eq:periodisch}}{=} \int_0^a f(u)\,\mathrm du
+\end{split}
+\end{equation}
+Nun wird es wieder zusammengeführt:
+\begin{equation}
+\int_0^a f(x)\,\mathrm dx+\int_a^P f(x)\,\mathrm dx
+= \int_0^P f(x)\,\mathrm dx.\;\Box
+\end{equation}
+Oft setzt man $P:=2\pi$ und $a:=-\pi$.
+
+\subsection{Signale}
+Eine Funktion $f\colon\R\to\R$ lässt sich auch als ein Signal
+interpretieren. Darunter versteht man einfach, dass der
+Definitionsbereich von $f$ die Zeit ist. Man schreibt nun $t:=x$,
+wobei $t$ für \emph{time} steht. Außerdem schreibt man $T:=P$ und
+spricht von \emdef{Periodendauer} anstelle von Periodenlänge.
+Die Abkürzung $\omega:=2\pi/T$ ist praktisch, da dieser Ausdruck öfters
+auftauchen wird. Die Größe $\omega$ wird \emdef{Kreisfrequenz}
+genannt. Die einfache Frequenz $f:=1/T$ wird zugunsten der
+Kreisfrequenz keine Verwendung finden. Das ist kein Problem, da
+zwischen beiden der einfache Zusammenhang $\omega = 2\pi f$
+besteht.
+
+\subsection{Harmonische Schwingungen}
+Der Begriff der Schwingung ist sehr allgemein. Darunter versteht
+man ein Signal, welches sich zeitlich auf eine gewisse Art und
+Weise wiederholt. Es ist schwierig, eine genaue Definition
+anzugeben. Wir wollen uns nun zunächst auf die harmonischen
+Schwingungen beschränken, einfachsten Art von Schwingung.
+
+\begin{Definition}
+Eine \emdef{harmonische Schwingung} ist ein Signal von der Form
+\begin{equation}
+f(t) := A\sin(\varphi(t))+B,\quad f\colon\R\to\R
+\end{equation}
+mit
+\begin{equation}
+\varphi(t) := \omega t+\varphi_0
+\end{equation}
+Hierbei nennt man $A$ die \emdef{Amplitude}, $B$ den \emdef{Gleichwert},
+$\varphi(t)$ die Phase und $\varphi_0$ die Anfangsphase.
+Mit $\omega$ ist die Kreisfrequenz gemeint.
+\end{Definition}
+\noindent
+Eine harmonische Schwingung erfüllt die Differentialgleichung
+\begin{equation}
+y'' = \omega^2 B-\omega^2 y,
+\end{equation}
+wie man durch Einsetzen leicht feststellen kann.
+
+
+\vfill\noindent
+Dieser Text steht unter der Creative-Commons-Lizenz CC0.
+
+\end{document}
