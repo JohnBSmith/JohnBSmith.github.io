@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Chemie</title>
+  <style>
+body{
+  font-family: "DejaVu Sans Mono", "Consolas", monospace;
+  margin-left: 20%;
+  margin-top: 4em;
+  font-size: 140%;
+  color: #3a3a30;
+}
+@media(max-width: 38em){
+  body{
+    margin-left: 6%;
+    margin-right: 4%;
+    font-size: 120%;
+    margin-top: 2em;
+  }
+}
+input{font-size: 100%;}
+input[type="text"]{
+  font-family: "DejaVu Sans Mono", "Consolas", monospace;
+}
+.modest{
+  color: #808072;
+}
+ul{
+  list-style-type: square;
+}
+  </style>
+  <script>
+function isalpha(s){
+  return /^[a-z]+$/i.test(s);
+}
+
+function islower(s){
+  return /^[a-z]+$/.test(s);
+}
+
+function isdigit(s){
+  return /^\d+$/.test(s);
+}
+
+function isspace(s){
+  return s==' ' || s=='\t' || s=='\n';
+}
+
+function format_de(s){
+  a=[];
+  superscript=false;
+  for(i=0; i<s.length; i++){
+    if(s[i]=='.'){
+      a.push(",");
+    }else if(s[i]=='e'){
+      a.push("&nbsp;&times;&nbsp;10<sup>");
+      superscript=true;
+    }else if(s[i]=='-'){
+      a.push("&minus;");
+    }else{
+      a.push(s[i]);
+    }
+  }
+  if(superscript){
+    a.push("</sup>");
+  }
+  return a.join("");
+}
+
+function digits(error){
+  return Math.ceil(-Math.log10(error))+1;
+}
+
+var element_mass = {
+  "H":   [1.00794,  0.00013],
+  "He":  [4.002602, 0.0000020],
+
+  "Li":  [6.94, 0.030],
+  "Be":  [9.0121831, 0.00000050],
+  "B":  [10.81, 0.0075],
+  "C":  [12.0107, 0.0010],
+  "N":  [14.0067, 0.00043],
+  "O":  [15.9994, 0.00037],
+  "F":  [18.998403163, 0.0000000060],
+  "Ne": [20.1797, 0.00060],
+  
+  "Na": [22.98976928, 0.000000020],
+  "Mg": [24.305, 0.0015],
+  "Cl": [35.45, 0.0055]
+};
+
+function parse(s){
+  var a = [];
+  var i=0;
+  while(i<s.length){
+    if(i<s.length && isalpha(s[i])){
+      var c = s[i];
+      i++;
+      while(i<s.length && islower(s[i])){
+        c+=s[i];
+        i++;
+      }
+      while(i<s.length && isspace(s[i])) i++;
+      var j=i;
+      while(i<s.length && isdigit(s[i])){
+        i++;
+      }
+      var n = s.slice(j,i);
+      if(n.length==0) n="1";
+      a.push([c,parseFloat(n)]);
+    }else if(isspace(s[i]) || s[i]=='-'){
+      i++;
+    }else{
+      throw "Fehler: unerwartetes Zeichen: "+s[i];
+    }
+  }
+  return a;
+}
+
+function calc(a){
+  var s=0;
+  var Delta=0;
+  var elements={};
+  for(i=0; i<a.length; i++){
+    var element = a[i][0];
+    var n = a[i][1];
+    if(elements.hasOwnProperty(element)){
+      elements[element]+=n;
+    }else{
+      elements[element]=n;
+    }
+    if(element_mass.hasOwnProperty(element)){
+      s+=n*element_mass[element][0];
+      Delta+=n*element_mass[element][1];
+    }else{
+      throw "Fehler: unbekanntes Element: "+element;
+    }
+  }
+  return [s,Delta,elements];
+}
+
+function mass_fractions(m,elements){
+  var a = [];
+  for(x in elements){
+    a.push(
+      "<li><var>w</var>("+x+") = "
+      + format_de((elements[x]*element_mass[x][0]/m*100).toFixed(2)+"%")
+    );
+  }
+  return a.join("");  
+}
+  
+function molar_mass(){
+  var input = document.getElementById("input");
+  var output = document.getElementById("output");
+  try{
+    var a = parse(input.value);
+    var t = calc(a);
+    output.innerHTML = ("Molare Masse:<br><br><var>M</var> = "
+      + format_de(t[0].toFixed(digits(t[1])))+" g/mol");
+    output.innerHTML += ("<br><br>"+"&plusmn; "
+      + format_de(t[1].toExponential(1))+" g/mol");
+    output.innerHTML += ("<br><br><div class='modest'>Massenanteile:<ul>"
+      + mass_fractions(t[0],t[2])+"</ul></div>");
+  }catch(e){
+    if(typeof e==="string"){
+      output.innerHTML = e;
+    }else{
+      throw e;
+    }
+  }
+}
+  
+function handle_keys(event){
+  if(event.keyCode==13){
+    molar_mass();
+  }
+}
+  </script>
+</head>
+<body>
+
+Summenformel:
+<br><br>
+<input type="button" value="calc" onclick="molar_mass()">
+<input type="text" id="input" onkeyup="handle_keys(event);">
+
+<br><br><br>
+<div id="output">
+</div>
+
+
+</body>
+</html>
+
