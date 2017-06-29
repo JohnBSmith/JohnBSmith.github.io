@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\documentclass[a4paper,12pt,fleqn,twoside]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -10,7 +10,7 @@
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=32mm}
+\geometry{a4paper,left=35mm,right=20mm,top=28mm,bottom=46mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
 
@@ -26,16 +26,17 @@
 
 \newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\R}{\mathbb R}
-\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\strong}[1]{{\sf\bfseries #1}}
+\newcommand{\entspricht}{\;\;\hat =\;}
 
 \theoremstyle{definition}
 \newtheorem{Aufgabe}{\sffamily Aufgabe}[section]
 
 \begin{document}
 \thispagestyle{empty}
-\section*{Aufgaben}
 
-Lizenz: Creative Commons CC0
+\noindent
+{\huge\sf\bfseries Aufgaben}
 
 \tableofcontents
 
@@ -47,7 +48,7 @@ Berechne
 \qquad(\forall k\colon a_k\ne 0)\]
 \end{Aufgabe}
 \noindent
-Lösung:
+Lösung.
 Wegen $x\ne 0$ kann der Bruch mit $\frac{bx}{bx}$ erweitert
 werden. Damit ergibt sich
 \[\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}
@@ -66,16 +67,16 @@ Berechne
 \qquad(a\ne 0)\]
 \end{Aufgabe}
 \noindent
-Lösung:
+Lösung.
 Verwende die Substitution $x=\frac{\pi}{2a}-\frac{u}{a}$.
 Nun ist
-\[\begin{split}
-&\frac{1-\sin(ax)}{(\pi-2ax)^2}
+\[
+\frac{1-\sin(ax)}{(\pi-2ax)^2}
 = \frac{1-\sin(\frac{\pi}{2}-u)}{4u^2}
 = \frac{1-\cos u}{4u^2}\\
-& = \frac{\frac{u^2}{2!}+\frac{u^4}{4!}+\ldots}{4u^2}
+= \frac{\frac{u^2}{2!}+\frac{u^4}{4!}+\ldots}{4u^2}
 = \frac{1}{4} \Big(\frac{1}{2!}+\frac{u^2}{4!}+\ldots\Big).
-\end{split}\]
+\]
 Wenn $x\to\pi/4$ geht, muss $u\to 0$ gehen.
 
 Somit ist $g=1/8$. $\Box$
@@ -87,11 +88,10 @@ Bestimme
 \[g=\lim_{x\downarrow 0} x^x.\]
 \end{Aufgabe}
 \noindent
-Lösung: Es ist $x^x=\exp(x\ln x)$. Wegen der Stetigkeit von $\exp$
+Lösung. Es ist $x^x=\exp(x\ln x)$. Wegen der Stetigkeit von $\exp$
 gilt nun
 \[\lim_{x\to 0}\exp(f(x)) = \exp(\lim_{x\to 0} f(x)).\]
-Nun ist
-\[x\ln x = \frac{\ln x}{\frac{1}{x}}.\]
+Nun ist $x\ln x = (\ln x)/(1/x).$
 Mit der Regel von L'Hôpital ergibt sich
 \[\lim_{x\downarrow 0} \frac{\ln x}{\frac{1}{x}}
 = \lim_{x\downarrow 0} \frac{\frac{1}{x}}{-\frac{1}{x^2}}
@@ -104,7 +104,7 @@ Bestimme
 \[g=\lim_{x\downarrow 0} x^{1/x}.\]
 \end{Aufgabe}
 \noindent
-Lösung: Es ist $x^{1/x}=\exp(\frac{\ln x}{x})$.
+Lösung. Es ist $x^{1/x}=\exp(\frac{\ln x}{x})$.
 Nun gilt
 \[\lim_{x\downarrow 0}\frac{\ln x}{x}
 \stackrel{\text{L'H}}= \lim_{x\downarrow 0}\frac{1}{x}
@@ -112,6 +112,307 @@ Nun gilt
 Somit ist
 \[g = \exp(\lim_{x\downarrow -\infty} x)
 = \lim_{x\downarrow -\infty} \exp(x) = 0.\;\Box\]
+
+\section{Kombinatorik}
+\subsection{Rekursionsgleichungen}
+
+\begin{Aufgabe}\label{qPotenzen}
+Gegeben ist die Rekursionsgleichung $a_{n+1} = qa_n$
+mit der Anfangsbedingung $a_0=A.$
+Gesucht ist die explizite Form von $a_n$.
+\end{Aufgabe}
+
+\begin{Aufgabe}
+Gegeben ist die Rekursionsgleichung
+$a_{n+1} = qa_n+r$
+mit der Anfangsbedingung
+$a_0=A.$
+Gesucht ist die explizite Form von $a_n$.
+\end{Aufgabe}
+
+\noindent
+Bemerkung. Es gilt:
+\[\sum_{k=0}^n q^{n-k} = \sum_{0\le k\le n} q^{n-k}
+\quad\stackrel{k:=(n-k)}=\quad\sum_{0\le (n-k)\le n} q^{n-(n-k)}
+= \sum_{0\le (n-k)\le n} q^k.
+\]
+Nun besteht aber $0\le n-k\le n$ aus den beiden Ungleichungen
+\[0\le n-k\quad\text{und}\quad n-k\le n.\]
+Multipliziert man beide Seiten einer Ungleichung mit $-1$, so dreht
+sich das Relationszeichen um:
+\[0\ge -(n-k)\quad\text{und}\quad -(n-k)\ge -n.\]
+Somit ergibt sich:
+\[0\ge k-n\quad\text{und}\quad k-n\ge -n.\]
+Addiere jetzt $n$ auf beiden Seiten der jeweiligen Ungleichung:
+\[n\ge k\quad\text{und}\quad k\ge 0.\]
+Somit ergibt sich $0\le k\le n$ und daher
+\[\sum_{k=0}^n q^{n-k} = \sum_{k=0}^n q^k.\]
+Einfach ausgedrückt heißt das, dass die Reihenfolge egal ist:
+\[\sum_{k=0}^3 q^{3-k} = q^3+q^2+q^1+q^0 = q^0+q^1+q^2+q^3 = \sum_{k=0}^3 q^k.\]
+Voraussetzung ist, dass das Kommutativgesetz gilt. Bei unendlichen
+Reihen darf man nur endliche Partialsummen umordnen, es sei denn
+die Reihe ist absolut konvergent.
+
+\strong{Ansatz.} Sei
+\[s_b := \sum_{k=a}^{b-1} q^k.\]
+Nun gilt:
+\[qs_b = q\sum_{k=a}^{b-1} q^k = \sum_{k=a}^{b-1} q^{k+1}
+\quad\stackrel{k:=k-1}=\quad\sum_{k=a+1}^b q^k.\]
+Es ergibt sich:
+\[qs_b-s_b = (q^{a+1}+q^{a+2}+\ldots+q^{b})-(q^a+q^{a+1}+\ldots+q^{b-1}) = q^b-q^a.\]
+D.\,h. alle Summanden $q^{a+1}$ bis $q^{b-1}$ kommen sowohl im Minuend als auch im Subtrahend vor und
+entfallen somit.
+
+Mit $qs_b-s_b=(q-1)s_b$ ergibt sich nun
+\[\sum_{k=a}^{b-1} q^k = \frac{q^b-q^a}{q-1}.\]
+Bemerkung. Hinter diesem \emph{Trick} verbirgt sich ein mathematischer
+Formalismus. Was eben beschrieben wurde, nennt sich
+\emph{Teleskopsumme}. \emph{Teleskopieren} nennt man die Rechenregel:
+\[\sum_{k=a}^{b-1} f_{k+1} - \sum_{k=a}^{b-1} f_k
+= \sum_{k=a}^{b-1} (f_{k+1}-f_k) = f_b-f_a,\]
+welche für eine beliebige Folge $f_k$ gilt. In diesem Fall ist
+$f_k=q^k$. Man muss bestimmte Eigenschaften einer Partialsummen-Folge
+ausnutzen, um sie in Teleskopform bringen zu können. Das ist aber nicht
+immer möglich.
+
+Hinter Teleskopsummen verbigt sich nun ein kleiner mathematischer
+Formalimus. Zunächst definiere die \emph{Vorwärts-Differenz}:
+\[\Delta f_k\equiv (\Delta f)_k := f_{k+1}-f_k.\]
+Nun gilt:
+\[\sum_{k=a}^{b-1} (\Delta f)_k = f_b-f_a.\]
+In dieser Form ist die Teleskopsummen-Regel völlig analog zu
+\[\int_a^b \frac{\mathrm df(x)}{\mathrm dx}\,\mathrm dx
+= \int_a^b \mathrm df(x) = f(b)-f(a).\]
+Es gibt weitere Rechenregeln. Man spricht von \emph{Differenzenrechnung}
+(engl. \emph{finite calculus}). Dieser Kalkül ist unter anderem
+im Buch »Concrete Mathematics« beschrieben.
+
+\strong{Homogene Koordinaten.}
+Ein alternatives Verfahren zur Lösung der Aufgabe zeigen.
+Was im Gegensatz zu Aufgabe \ref{qPotenzen}
+jetzt stört, ist der Summand $r$. Es gibt nun ein Verfahren, um
+Additionen in Multiplikationen umzuwandeln, das allgemein für die
+Addition von Vektoren funktioniert.
+
+Zunächst führt man auf folgede Weise homogene Koordinaten ein:
+\[ x\entspricht\begin{bmatrix}x\\ 1\end{bmatrix}.\]
+Es ergibt sich nun
+\[ qx\entspricht\begin{bmatrix}qx\\ 1\end{bmatrix}
+= \begin{bmatrix}
+q & 0\\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}x\\ 1\end{bmatrix}
+\quad\text{und}\quad
+x+r\entspricht\begin{bmatrix}x+r\\ 1\end{bmatrix}
+= \begin{bmatrix}
+1 & r\\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}x\\ 1\end{bmatrix}.\]
+Beide Operationen zusammen:
+\[\begin{bmatrix}qx+r\\ 1\end{bmatrix}
+= \begin{bmatrix}
+1 & r\\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+q & 0\\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}x\\ 1\end{bmatrix}
+= \begin{bmatrix}
+q & r\\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}x\\ 1\end{bmatrix}.\]
+Die Aufgabe lässt sich nun in der Form
+$\underline a_{n+1} = Q\underline a_n$
+mit
+\[ Q:=\begin{bmatrix}
+q & r\\
+0 & 1
+\end{bmatrix},\quad
+\underline a_n := \begin{bmatrix}a_n\\ 1\end{bmatrix}\]
+formulieren, was aber Aufgabe~\ref{qPotenzen} entspricht. Die
+Lösung ist demnach
+$\underline a_n = Q^n\underline a_0.$
+Jetzt muss man einen Weg finden, die Matrixpotenz $Q^n$ zu berechnen.
+Dazu wird eine Diagonalzerlegung $Q = TDT^{-1}$ vorgenommen.
+Bei
+\[Q^n = QQQ\ldots Q = TDT^{-1} TDT^{-1} TDT^{-1} \ldots TDT^{-1}\]
+können die Faktoren $T^{-1}T$ nämlich gekürzt werden. Man erhält
+somit
+\[Q^n = TD^n T^{-1}.\]
+Zunächst bestimmt man die Eigenwerte von $Q$. Die Eigenwerte
+sind die Lösungen der Gleichung
+\[P(\lambda) = \det(Q-\lambda E)=0.\]
+Man nennt $P(\lambda)$ das \emph{charakteristische Polynom}.
+
+In diesem Fall ist
+\[\begin{split}
+P(\lambda) &= \det\left(\begin{bmatrix}
+q & r\\
+0 & 1
+\end{bmatrix}-\lambda\begin{bmatrix}
+1 & 0\\
+0 & 1
+\end{bmatrix}\right)
+= \det\left(\begin{bmatrix}
+q-\lambda & r\\
+0 & 1-\lambda
+\end{bmatrix}\right)\\
+&= (q-\lambda)(1-\lambda)
+= \lambda^2 -(q+1)\lambda+q.\end{split}
+\]
+Die Lösungen dieser quadratischen Gleichung sind
+\[\lambda = \frac{1}{2}(q+1\pm\sqrt{(q+1)^2-4q})
+= \frac{1}{2}(q+1\pm\sqrt{(q-1)^2}),\]
+also $\lambda_1 = q$ und $\lambda_2=1.$
+
+Nun ergeben sich aus dem Eigenwertproblem $Qv = \lambda v$ zwei linear
+unabhängige Eigenvektoren, die den Eigenraum aufspannen. Diese beiden
+Eigenvektoren sind die Spaltenvektoren der Transformationsmatrix $T$.
+
+Aus dem Eigenwertproblem ergibt sich das Gleichungssystem
+\[\left|
+\begin{array}{rcl}
+qx+ry &=& \lambda x\\
+y &=& \lambda y
+\end{array}\right|.\]
+Die untere Gleichung lässt sich umformulieren:
+\[y=\lambda y \iff y=0\lor \lambda=1.\]
+Gehen wir nun von $y=0$ aus, so haben wir den Fall $\lambda_1=q$.
+Für $x$ können wir uns etwas aussuchen und nehmen sinnvollerweise
+$x=1$. Natürlich wäre $x=0$ noch schöner, aber das darf nicht sein,
+weil beim Eigenwertproblem der Nullvektor verboten ist. Für
+den zweiten Eigenvektor soll betrachten wir nun den Fall $\lambda_2=1$.
+Hier ergibt sich die Gleichung $qx+ry=x$. Wählt man nun $y=1$, so
+ergibt sich $x=r/(1-q)$. Somit ist
+\[
+Q = TDT^{-1}
+= T\begin{bmatrix}
+\lambda_1 & 0\\
+0 & \lambda_2
+\end{bmatrix}T^{-1}
+= \begin{bmatrix}
+1 & \frac{r}{1-q}\\
+0 & 1
+\end{bmatrix}\begin{bmatrix}
+q & 0\\
+0 & 1
+\end{bmatrix}\begin{bmatrix}
+1 & \frac{r}{1-q}\\
+0 & 1
+\end{bmatrix}^{-1}.
+\]
+Zur Matrix-Inversion einer $2{\times}2$-Matrix verwendet man nun noch
+die Formel
+\[
+\begin{bmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{bmatrix}^{-1}
+= \frac{1}{a_{11}a_{22}-a_{12}a_{21}}
+\begin{bmatrix}
+a_{22} & -a_{12}\\
+-a_{21} & a_{11}
+\end{bmatrix}.
+\]
+Es ergibt sich nun
+\[Q^n = TD^nT^{-1}
+= \begin{bmatrix}
+1 & \frac{r}{1-q}\\
+0 & 1
+\end{bmatrix}\begin{bmatrix}
+q^n & 0\\
+0 & 1
+\end{bmatrix}\begin{bmatrix}
+1 & \frac{r}{q-1}\\
+0 & 1
+\end{bmatrix}
+= \begin{bmatrix}
+q^n & \frac{rq^n-r}{q-1}\\
+0 & 1
+\end{bmatrix}.
+\]
+Es ergibt sich
+\[\underline a_n = Q^n\underline a_0
+= \begin{bmatrix}
+q^n & \frac{rq^n-r}{q-1}\\
+0 & 1
+\end{bmatrix}\begin{bmatrix} A\\ 1\end{bmatrix}
+= \begin{bmatrix}
+Aq^n + \frac{rq^n-r}{q-1}\\
+1\end{bmatrix}.\]
+Die Lösung ist somit
+\[a_n = Aq^n + \frac{rq^n-r}{q-1}.\]
+Jetzt muss man noch die pathologischen Fälle untersuchen und entsprechende
+Fallunterscheidungen dazu vornehmen. In diesem Fall ist nur $q=1$
+problematisch. $\Box$
+
+Das wesentliche Vorgehen besteht hier also aus zwei Schritten:
+
+1. Formulierung des Problems bezüglich homogenen Koordinaten.
+
+2. Berechnung von Matrixpotenzen via Eigenzerlegung.
+
+\strong{Erzeugende Funktionen.} Jetzt kommt noch ein Verfahren.
+Für eine Folge $a_n$ definiert man die \emph{erzeugende Funktion}
+\[G\{a_n\}(x) := \sum_{k=0}^\infty a_k x^k.\]
+Man definiert außerdem den Translationsoperator
+\[T^h\{a_n\} := a_{n+h}.\]
+Der Operator $G$ ist linear:
+\begin{align*}
+G\{a_n+b_n\} &= G\{a_n\}+G\{b_n\},\\
+G\{ra_n\} &= rG\{a_n\}.
+\end{align*}
+Es gilt außerdem
+\[G\{T^h\{a_n\}\}(x) = G\{a_{n+h}\}(x)
+= \sum_{k=0}^\infty a_{k+h} x^k.\]
+Somit gilt
+\[x^h G\{a_{n+h}\}(x) = \sum_{k=0}^\infty a_{k+h} x^{k+h}
+= G\{a_n\}(x) - \sum_{k=0}^{h-1} a_k x^k.\]
+Speziell gilt
+\[xG\{a_{n+1}\}(x) = G\{a_n\}(x) - a_0.\]
+Durch Polynomdivision findet man zunächst die grundlegende erzeugende Funktion
+\[ G\{q^n\}(x) = \frac{1}{1-qx} = \sum_{k=0}^\infty q^k x^k\]
+mit Spezialfall
+\[ G\{1\}(x) = \frac{1}{1-x} = \sum_{k=0}^\infty x^k.\]
+Jetzt betrachten wir die Rekursionsgleichung
+\[ a_{n+1} = qa_n+r. \]
+Auf beiden Seiten der Gleichung wendet man den Operator $G$ an:
+\[ G\{a_{n+1}\}(x) = qG\{a_n\}(x) + rG\{1\}(x).\]
+Auf beiden Seiten multipliziert man nun noch mit $x$ und erhält
+\[ xG\{a_{n+1}\}(x) = qxG\{a_n\}(x) + rxG\{1\}(x).\]
+Mit $y=G\{a_n\}(x)$ gilt nun
+\[ y-a_0 = qxy+\frac{rx}{1-x}.\]
+Umformen nach $y$ bringt
+\[ y = \frac{a_0}{1-qx} + \frac{rx}{(1-x)(1-qx)}.\]
+Jetzt appliziert man den Umkehroperator $G^{-1}$ auf beiden Seiten
+der Gleichung. Es ergibt sich
+\[ a_n = a_0 G^{-1}\bigg\{\frac{1}{1-qx}\bigg\}_n
++ rG^{-1}\bigg\{\frac{x}{(1-x)(1-qx)}\bigg\}_n.\]
+Beachte nun die Regel
+\[ G^{-1}\{xf(x)\}_n = T^{-1} G^{-1}\{f(x)\}_n = G^{-1}\{f(x)\}_{n-1}.\]
+Für den übrigen Ausdruck muss eine Partialbruchzerlegung vorgenommen
+werden. Der Ansatz ist
+\[ \frac{1}{(1-x)(1-qx)} = \frac{A}{1-x} + \frac{B}{1-qx}.\]
+Damit ist
+\[ 1 = A(1-qx) + B(1-x) = A+B-Aqx-Bx = A+B-(Aq+B)x.\]
+Koeffizientenvergleich von linker und rechter Seite bringt
+$A+B=1$ und $Aq+B=0$. Beachte dabei $1=0x^0+1x^1$.
+
+Die Lösungen dieses linearen Gleichungssystems
+sind $A=1/(1-q)$ und $B=q/(q-1)$. Nun ergibt sich
+\[ a_n = a_0q^n + rT^{-1} \underbrace{G^{-1}\bigg\{\frac{A}{1-x} + \frac{B}{1-qx}\bigg\}}_{A+Bq^n}.\]
+Hierbei ist
+\[ A+Bq^n = \frac{1}{1-q}+\frac{q}{q-1}q^n = \frac{q^{n+1}-1}{q-1}.\]
+Insgesamt ergibt sich
+\[ a_n = a_0q^n + r\frac{q^n-1}{q-1}.\;\Box\]
+
+\vfill
+Dieses Heft steht unter der Creative-Commons-Lizenz CC0.
 
 \end{document}
 
