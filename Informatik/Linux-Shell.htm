@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/main.css">
+  <title>Linux-Shell</title>
+  <style>
+dl.code dt {
+  font-family: "FreeMono", "Courier New", monospace;
+}
+dl.code dd {
+  margin-top: 0.2em;
+  margin-bottom: 1em;
+}
+  </style>
+</head>
+<body>
+
+<br>
+<h2>Linux-Shell</h2>
+<h3>Inhaltsverzeichnis</h3>
+<ol>
+<li><a href="#Grundlagen">Grundlagen</a>
+<li><a href="#Suche">Suche</a>
+<li><a href="#Kompression">Dateien verpacken</a>
+<li><a href="#Dateivergleich">Dateivergleich, Prüfsummen</a>
+<li><a href="#Kryptografie">Kryptografie</a>
+</ol>
+
+<h3 id="Grundlagen">Grundlagen</h3>
+<dl class="code">
+<dt>man Programm
+<dd>Bedienungsanleitung für das angegebene Programm.
+
+<dt>Programm | less
+<dd>Leitet die Ausgabe des Programms nach <code>less</code> weiter.
+Sehr lange Ausgaben sollte man besser mit <code>less</code> betrachten.
+
+<dt>Programm > info.txt
+<dd>Schreibt die Ausgabe des Programms in die Datei <code>info.txt</code>.
+Vorsicht: Man könnte versehentlich eine Datei mit dem gleichen
+Namen überschreiben.
+
+<dt>pwd
+<dd>Gibt das aktuelle Verzeichnis aus.
+
+<dt>cd Verzeichnis
+<dd>Wechselt in das angegebene Verzeichnis.
+
+<dt>ls
+<dd>Listet alle Dateien auf.
+
+<dt>ls *.txt
+<dd>Listet alle Dateien mit der Endung <code>.txt</code> auf.
+
+<dt>history
+<dd>Zeigt alle Eingaben der Vergangenheit an.
+
+<dt>hexdump -C Datei
+<dd>Erzeugt eine hexadezimale Darstellung der Binärdaten.
+</dl>
+
+<h3 id="Suche">Suche</h3>
+<dl class="code">
+<dt>find -name Datei.txt
+<dd>Sucht Datei.txt im aktuellen Verzeichnis-Teilbaum.
+
+<dt>find -iname "*.txt"
+<dd>Sucht alle Dateien mit der Endung <code>.txt</code>
+  im aktuellen Verzeichnis-Teilbaum ohne Beachtung
+  der Großschreibung.
+
+<dt>find
+<dd>Gibt den aktuellen Verzeichnis-Teilbaum aus.
+
+<dt>grep -n "Zeichenkette" Datei.txt
+<dd>Durchsucht Datei.txt nach einem Muster.
+  Die Option <code>-n</code> dient der Ausgabe der Zeilennummer der
+  Zeile, in welcher das Muster gefunden wurde.
+
+<dt>grep -rn "Zeichenkette" Verzeichnis
+<dd>Durchsucht alle Dateien im angegebenen Verzeichnis-Teilbaum
+  nach einem Muster.
+<pre>
+grep -rni "Zeichenkette" Verzeichnis
+grep -rnw "Wort" Verzeichnis
+grep -rnE "Muster" Verzeichnis
+  () | [] . * ? {n} {n,} {n,} {,m} {n,m}
+  ^ $ \&lt; \&gt; \w \b
+</pre>
+
+<dt>whereis Programm
+<dd>Findet den Ort, an welchem das angegebene Programm
+  gespeichert ist.
+
+<dt>locate -i Dateiname
+<dd>Findet eine Datei im Dateisystem. Das Programm arbeitet besonders
+  schnell, weil es eine automatisch erstellte Datenbank durchsucht.
+</dl>
+
+<h3 id="Kompression">Dateien verpacken</h3>
+
+<dl class="code">
+<dt>tar cf Verzeichnis.tar Verzeichnis
+<dd>Wandelt ein Verzeichnis in die Datei
+  <code>Verzeichnis.tar</code> um. Die Operation ist auch
+  über die Betätigung der sekundären Maustaste auf das Verzeichnis
+  verfügbar. Dieser Befehl dient zum Verpacken, ohne eine
+  Datenkompression zu bemühen.
+
+<dt>tar xf Verzeichnis.tar
+<dd>Wandelt <code>Verzeichnis.tar</code> in ein Verzeichnis um.
+
+<dt>gzip Datei.tar
+<dd>Komprimiert <code>Datei.tar</code>.
+
+<dt>gunzip Datei.tar.gz
+<dd>Dekomprimiert <code>Datei.tar.gz</code>.
+
+<dt>bzip2 Datei.tar
+<dd>Komprimiert <code>Datei.tar</code>. Die Operation ist
+  auch über die Betätigung der sekundären Maustaste auf das
+  Verzeichnis verfügbar. Die Kompression ist stärker als die
+  von <code>gzip</code>.
+
+<dt>bunzip2 Datei.tar.bz2
+<dd>Dekomprimiert <code>Datei.tar.bz2</code>.
+
+<dt>xz Datei.tar
+<dd>Komprimiert <code>Datei.tar</code>.
+
+<dt>unxz Datei.tar.xz
+<dd>Dekomprimiert <code>Datei.tar.xz</code>.
+
+<dt>base64 Datei > Text.txt
+<dd>Binärdaten als Text.
+
+<dt>base64 -d Text.txt > Datei
+<dd>Rücktransformation von base64.
+
+<dt>xxd -p Datei > Text.txt
+<dd>Hexdump einer Datei.
+
+<dt>xxd -p -r Text.txt > Datei
+<dd>Rücktransformation von <code>xxd -p</code>.
+</dl>
+
+<h3 id="Dateivergleich">Dateivergleich, Prüfsummen</h3>
+<dl class="code">
+<dt>wc -c Datei.txt
+<dd>Gibt die Anzahl der Bytes von Datei.txt aus.
+
+<dt>du -b Datei.txt
+<dd>Gibt die Anzahl der Bytes von Datei.txt aus.
+  Kann auch auf Verzeichnisse appliziert werden.
+
+<dt>diff DateiA.txt DateiB.txt
+<dd>Listet die Gemeinsamkeiten bzw. Unterschiede
+  zwischen zwei Dateien auf.
+
+<dt>cksum Datei.txt
+<dd>Berechnet eine CRC-Prüfsumme von <code>Datei.txt</code>.
+  Die zweite Zahl ist die Anzahl der Bytes von <code>Datei.txt</code>.
+
+<dt>md5sum Datei.txt
+<dd>Berechnet die MD5-Hashsumme von <code>Datei.txt</code>.
+
+<dt>sha1sum Datei.txt
+<dd>Berechnet die SHA-1-Hashsumme von <code>Datei.txt</code>.
+
+<dt>sha256sum Datei.txt
+<dd>Berechnet die SHA-256-Hashsumme von <code>Datei.txt</code>.
+</dl>
+
+<h3 id="Kryptografie">Kryptografie</h3>
+<dl class="code">
+<dt>gpg -c Datei.txt
+<dd>Verschlüsselt <code>Datei.txt</code> symmetrisch.
+
+<dt>gpg -e Datei.txt
+<dd>Verschlüsselt <code>Datei.txt</code>.
+  Man muss einen public key auswählen.
+
+<dt>gpg -d Datei.txt.gpg
+<dd>Entschlüsselt <code>Datei.txt.gpg</code>.
+  Man muss einen private key auswählen.
+
+<dt>gpg -es Datei.txt
+<dd>Signiert und verschlüsselt <code>Datei.txt</code>.
+  Man muss einen private pey und einen public key auswählen.
+
+<dt>gpg -k
+<dd>Listet alle public keys auf.
+
+<dt>gpg -K
+<dd>Listet alle private keys auf.
+
+<dt>gpg --delete-key name
+<dd>Löscht den public key.
+
+<dt>gpg --delete-secret-key name
+<dd>Löscht den private key.
+
+<dt>gpg -a --export name &gt; pubname.asc
+<dd>Exportiert public key.
+
+<dt>gpg -a --export-secret-keys name &gt; secname.asc
+<dd>Exportiert private key.
+
+<dt>gpg --with-fingerprint pubname.asc
+<dd>Listet alle public keys in der Datei <code>pubname.asc</code> auf.
+</dl>
+
+</body>
+</html>
+

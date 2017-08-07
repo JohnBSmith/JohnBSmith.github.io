@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="../css/main.css" rel="stylesheet" >
+  <title>LaTeX-Befehle</title>
+  <style>
+table.tex {
+  border-collapse: collapse;
+}
+table.tex td {
+  border: 2px solid #a0a080;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  vertical-align: top;
+}
+table.tex pre {
+  margin: 0em;
+}
+
+dl.tt dt {
+  font-family: "FreeMono", "Courier New", monospace;
+  margin-bottom: 0.2em;
+}
+dl.tt dd {
+  margin-bottom: 1em;
+}
+  </style>
+</head>
+<body>
+
+<br>
+<h1>LaTeX-Befehle</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><b><a href="#Formelsatz">Formelsatz</a></b>
+  <ol>
+  <li><a href="#Schreibweisen">Schreibweisen</a>
+  <li><a href="#Operatoren">Operatoren</a>
+  <li><a href="#Relationen">Relationen</a>
+  <li><a href="#Pfeile">Pfeile</a>
+  <li><a href="#Akzente">Akzente</a>
+  <li><a href="#Symbole">Symbole</a>
+  <li><a href="#Schriften">Schriften</a>
+  <li><a href="#Matrizen">Matrizen</a>
+  <li><a href="#Umgebungen">Umgebungen</a>
+  <li><a href="#Zusatz-Mathematik">Zusatzpakete</a>
+  </ol>
+<li><b><a href="#Textsatz">Textsatz</a></b>
+  <ol>
+  <li><a href="#Abstaende">Abstände</a>
+  <li><a href="#Seiten">Seiten</a>
+  <li><a href="#Abseatze">Absätze</a>
+  <li><a href="#Gestaltungselemente">Gestaltungselemente</a>
+  <li><a href="#Farben">Farben</a>
+  <li><a href="#Schrift">Schrift</a>
+  <li><a href="#Fonts">Fonts</a>
+  <li><a href="#Zusatz">Zusatzpakete</a>
+  </ol>
+<li><b><a href="#Auszeichnung">Auszeichnung</a></b>
+  <ol>
+  <li><a href="#Ueberschriften">Überschriften</a>
+  <li><a href="#Inhaltsverzeichnis">Inhaltsverzeichnis</a>
+  <li><a href="#Literaturverzeichnis">Literaturverzeichnis</a>
+  <li><a href="#Listen">Listen</a>
+  </ol>
+<li><b><a href="#Programmierung">Programmierung</a></b>
+  <ol>
+  <li><a href="#Definition">Definition von Makros</a>
+  <li><a href="#Dateien">Dateien</a>
+  </ol>
+</ol>
+
+<h2 id="Formelsatz">Formelsatz</h2>
+
+<h3 id="Schreibweisen">Schreibweisen</h3>
+
+<pre>
+\sqrt{a}........Wurzel aus a
+\sqrt[n]{a}.....n-te Wurzel aus a
+\frac{a}{b}.....Bruch a/b, automatische Größe
+\tfrac{a}{b}....Bruch a/b, kleine Größe
+\dfrac{a}{b}....Bruch a/b, große Größe
+\cfrac{a}{b}....Für Kettenbrüche
+\binom{n}{k}....Binomialkoeffizient n über k, automatische Größe
+\tbinom{n}{k}...Binomialkoeffizient n über k, kleine Größe
+\dbinom{n}{k}...Binomialkoeffizient n über k, große Größe
+\sum............Summenzeichen
+\sum_{k=1}^n....Summe (k=1 bis n)
+\int............Integralzeichen
+\int_a^b........Integral (a bis b)
+\iint...........zwei Integral-Zeichen
+\iiint..........drei Integral-Zeichen
+\iiiint.........vier Integral-Zeichen
+\prod...........Produktzeichen
+\prod_{k=1}^n...Produkt (k=1 bis n)
+\mathrm dx......Differential
+</pre>
+
+<dl class="tt">
+<dt>\stackrel{a}{=}
+<dd>Stellt <code>a</code> über die Relation <code>=</code>.
+
+<dt>\overset{x}{a}
+<dd>Stellt <code>x</code> über den Ausdruck <code>a</code>.
+
+<dt>\underset{x}{a}
+<dd>Stellt <code>x</code> unter den Ausdruck <code>a</code>.
+
+<dt>\text{Text}
+<dd>Ermöglicht Text innerhalb der mathematischen Umgebung.
+
+<dt>\underbrace{a}
+<dd>Stellt eine geschweifte Klammer unter den Ausdruck <code>a</code>.
+
+<dt>\underbrace{a}_{x}
+<dd>Stellt eine geschweifte Klammer unter den Ausdruck <code>a</code>.
+und <code>x</code> unter die Klammer.
+
+<dt>\overbrace{a}
+<dd>Stellt eine geschweifte Klammer über den Ausdruck <code>a</code>.
+
+<dt>\overbrace{a}^{x}
+<dd>Stellt eine geschweifte Klammer über den Ausdruck <code>a</code>
+und <code>x</code> über die Klammer.
+</dl>
+
+<h3 id="Operatoren">Operatoren</h3>
+
+<pre>
+\pm.............plusminus
+\mp.............minusplus
+\ast............Asterisk
+\star...........Stern
+\cdot...........Malpunkt
+\times..........Malkreuz
+\circ...........Kreis, Komposition
+\bullet.........ausgefülltes \circ
+\diamond........Raute
+\oplus..........Plus im Kreis
+\otimes.........Mal-Kreuz im Kreis
+\land...........logisches UND
+\lor............logisches ODER
+\wedge..........wie \land, aber ohne logische Interpretation
+\vee............wie \lor, aber ohne logische Interpretation
+\setminus.......Zeichen für die Differenzmenge
+\cap............Mütze, geschnitten mit
+\cup............Tasse, vereinigt mit
+\uplus..........\cup mit einem plus
+\bigcap.........großes \cap
+\bigcup.........großes \cup
+\sqcap..........eckiges \cap
+\sqcup..........eckiges \cup
+\bigsqcap.......großes \sqcap
+\bigsqcup.......großes \sqcup
+</pre>
+
+<h3 id="Relationen">Relationen</h3>
+
+<pre>
+\le.............kleiner oder gleich
+\ge.............größer oder gleich
+\ll.............viel kleiner
+\gg.............viel größer
+\triangleleft...Dreieck nach links
+\triangleright..Dreieck nach rechts
+\perp...........rechtwinklig zu
+\bot............wie \perp
+\top............umgedrehtes \bot
+\vdash..........syntaktische Implikation
+\dashv..........umgedrehtes \vdash
+\in.............Element von
+\subset.........Teilmenge von
+\supset.........Obermenge von
+\subseteq.......Teilmenge oder gleich
+\supseteq.......Obermenge oder gleich
+\equiv..........gleich mit drei Strichen
+\approx.........näherungsweise gleich
+\sim............Tilde
+\simeq..........gerader Strich und Tilde
+\cong...........Gleichheitszeichen mit Tilde
+\ne.............ungleich
+\mid............senkrechter Strich
+\parallel.......parallel zu
+</pre>
+
+<h3 id="Pfeile">Pfeile</h3>
+
+<pre>
+\leftarrow......Pfeil nach links
+\rightarrow.....Pfeil nach rechts
+\uparrow........Pfeil nach oben
+\downarrow......Pfeil nach unten
+\Leftarrow......Doppelpfeil nach links
+\Rightarrow.....Doppelpfeil nach rechts
+\Uparrow........Doppelpfeil nach oben
+\Downarrow......Doppelpfeil nach unten
+\nearrow........»north east arrow«, Pfeil nach oben rechts
+\searrow........»south east arrow«, Pfeil nach unten rechts
+\nwarrow........»north west arrow«, Pfeil nach oben links
+\swarrow........»south west arrow«, Pfeil nach unten links
+
+\longleftarrow........langer Pfeil nach links
+\longrightarrow.......langer Pfeil nach rechts
+\Longleftarrow........langer Doppelpfeil nach links
+\Longrightarrow.......langer Doppelpfeil nach rechts
+
+\leftrightarrow.......Pfeil nach links und rechts
+\Leftrightarrow.......Doppelpfeil nach links und rechts
+\longleftrightarrow...langer Pfeil nach links und rechts
+\Longleftrightarrow...langer Doppelpfeil nach links und rechts
+\updownarrow..........Pfeil nach oben und unten
+\Updownarrow..........Doppelpfeil nach oben und unten
+
+\implies........impliziert
+\iff............genau dann, wenn
+\to.............zu
+\mapsto.........wird abgebildet auf
+\longmapsto.....langes \mapsto
+</pre>
+
+<dl class="tt">
+<dt>\xleftarrow[a]{b}
+<dd>Stellt <code>a</code> unter und <code>b</code> über einen
+Pfeil nach links. Der Pfeil verlängert sich automatisch.
+
+<dt>\xrightarrow[a]{b}
+<dd>Stellt <code>a</code> unter und <code>b</code> über einen
+Pfeil nach rechts. Der Pfeil verlängert sich automatisch.
+
+<dt>\overleftarrow{a}
+<dd>Stellt einen Pfeil nach links über <code>a</code>.
+Der Pfeil verlängert sich automatisch.
+
+<dt>\overrightarrow{a}
+<dd>Stellt einen Pfeil nach rechts über <code>a</code>.
+Der Pfeil verlängert sich automatisch.
+</dl>
+
+<h3 id="Akzente">Akzente</h3>
+
+<pre>
+a'..............a Strich
+\hat a..........a Zirkumflex
+\check a........a Hatchek
+\dot a..........a Punkt
+\ddot a.........a Punkt Punkt
+\bar a..........a quer
+\hbar...........h quer
+\b a............a mit Unterstrich
+\overline{a}....horizontale Linie über a
+\underline{a}...horizontale Linie unter a
+\tilde a........a Tilde
+\vec a..........a mit Vektorpfeil
+\acute a........a Akut
+\grave a........a Gravis
+</pre>
+
+<h3 id="Symbole">Symbole</h3>
+<pre>
+\forall.........Allquantor
+\exists.........Existenzquantor
+\emptyset.......leere Menge
+\wp.............Weierstraß-p
+\flat...........musikalisches Versetzungszeichen
+\sharp..........musikalisches Versetzungszeichen
+\natural........musikalisches Auflösungszeichen
+\partial........partielles Differential
+\nabla..........Nablaoperator
+\ell............l in Schreibschrift
+\triangle.......Dreieck
+\angle..........Winkel
+\infty..........unendlich
+\Re.............Realteil, R in Frakturschrift, 
+\Im.............Imaginärteil, I in Frakturschrift
+\mid............vertikaler Strich mit Abständen links und rechts
+\backslash......umgedrehter Schrägstrich
+
+\ulcorner.......obere linke Ecke
+\urcorner.......obere rechte Ecke
+\llcorner.......untere linke Ecke
+\lrcorner.......rechte obere Ecke
+\checkmark......Häckchen
+\square.........Kasten
+\blacksquare....ausgefüllter Kasten
+</pre>
+
+<h3 id="Schriften">Schriften</h3>
+<dl class="tt">
+<dt>\mathrm a
+<dd>Aufrechte Schrift.
+
+<dt>\mathbf a
+<dd>Aufrechte fette Schrift.
+
+<dt>\mathcal A
+<dd>Kalligrafische Schrift. Nur für Versalien.
+
+<dt>\mathfrak a
+<dd>Frakturschrift.
+
+<dt>\mathbb A
+<dd>Blackboard Bold. Nur für Versalien.
+
+<dt>\mathsf a
+<dd>Serifenlose Schrift.
+</dl>
+
+<h3 id="Matrizen">Matrizen</h3>
+
+<table class="tex">
+<tr><td><pre>
+\begin{pmatrix}
+a\\ b
+\end{pmatrix}
+</pre>
+<td>Vektor mit runden Klammern.
+
+<tr><td><pre>
+\begin{bmatrix}
+a\\ b
+\end{bmatrix}
+</pre>
+<td>Vektor mit eckigen Klammern.
+
+<tr><td><pre>
+\begin{matrix}
+a &amp; b\\
+c &amp; d
+\end{matrix}
+</pre>
+<td>Matrix ohne Klammern.
+
+<tr><td><pre>
+\begin{pmatrix}
+a &amp; b\\
+c &amp; d
+\end{pmatrix}
+</pre>
+<td>Matrix mit runden Klammern.
+
+<tr><td><pre>
+\begin{bmatrix}
+a &amp; b\\
+c &amp; d
+\end{bmatrix}
+</pre>
+<td>Matrix mit eckigen Klammern.
+
+<tr><td><pre>
+\begin{Bmatrix}
+a &amp; b\\
+c &amp; d
+\end{Bmatrix}
+</pre>
+<td>Matrix mit geschweiften Klammern.
+
+<tr><td><pre>
+\begin{vmatrix}
+a &amp; b\\
+c &amp; d
+\end{vmatrix}
+</pre>
+<td>Matrix mit Strichen.
+
+<tr><td><pre>
+\begin{Vmatrix}
+a &amp; b\\
+c &amp; d
+\end{Vmatrix}
+</pre>
+<td>Matrix mit Doppelstrichen.
+</table>
+
+<h3 id="Umgebungen">Umgebungen</h3>
+
+<table class="tex">
+<tr><td><pre>
+\[\begin{split}
+&amp;\exp(x+y)\\
+&amp;=\exp(x)\exp(y)
+\end{split}\]
+</pre>
+<td>Mehrzeilige Formeln.
+
+<tr><td><pre>
+\begin{equation}
+\begin{split}
+&amp;\exp(x+y)\\
+&amp;=\exp(x)\exp(y)
+\end{split}
+\end{equation}
+</pre>
+<td>Nummerierte mehrzeilige Formeln.
+
+<tr><td><pre>
+\begin{gather*}
+(a+b)^2 = a^2+2ab+b^2,\\
+(a-b)^2 = a^2-2ab+b^2
+\end{gather*}
+</pre>
+<td>Gruppen von Formeln.
+
+<tr><td><pre>
+\begin{gather}
+(a+b)^2 = a^2+2ab+b^2,\\
+(a-b)^2 = a^2-2ab+b^2
+\end{gather}
+</pre>
+<td>Gruppen von nummerierten Formeln.
+
+<tr><td><pre>
+\begin{align*}
+(a+b)^2 &amp;= a^2+2ab+b^2,\\
+(a-b)^2 &amp;= a^2-2ab+b^2
+\end{align*}
+</pre>
+<td>Angeordnete Formeln.
+
+<tr><td><pre>
+\begin{align}
+(a+b)^2 &amp;= a^2+2ab+b^2,\\
+(a-b)^2 &amp;= a^2-2ab+b^2
+\end{align}
+</pre>
+<td>Angeordnete nummerierte Formeln.
+
+<tr><td><pre>
+\begin{equation}
+\bigg|\,\begin{aligned}
+a_{11}x_1+a_{12}x_2 &amp;= b_1\\
+a_{21}x_1+a_{22}x_2 &amp;= b_2
+\end{aligned}\,\bigg|
+\end{equation}
+</pre>
+<td>Anordnungen innerhalb einer Formel.
+
+</table>
+
+<h3 id="Zusatz-Mathematik">Zusatzpakete</h3>
+<dl class="tt">
+<dt>amssymb
+<dd>Mehr mathematische Symbole.
+
+<dt>mathtools
+<dd>Befehle für besseren Formelsatz.
+
+<dt>xy
+<dd>Zum Zeichnen von kommutativen Diagrammen.
+</dl>
+
+<h2 id="Textsatz">Textsatz</h2>
+<h3 id="Abstaende">Abstände</h3>
+<dl class="tt">
+<dt>x\!x\,x\:x\;x{\enspace}x{\quad}x{\qquad}x
+<dd>Leerzeichen wachsender Breite. Auch im Formelsatz möglich.
+
+<dt>\!
+<dd>Schmaler negativer Abstand.
+
+<dt>\quad
+<dd>Geviert-Abstand.
+
+<dt>\qquad
+<dd>Doppelter Geviert-Abstand.
+
+<dt>\hspace{2mm}
+<dd>Horizontaler Abstand von 2mm. Negative Werte sind möglich.
+
+<dt>\vspace{20mm}
+<dd>Vertikaler Abstand von 20mm.
+
+<dt>Horizontaler Abstand nach einem Zeilenumbruch.
+<dd>{\hglue 4em}
+
+<dt>\vglue 8em
+<dd>Vertikaler Abstand am Anfang einer Seite.
+
+<dt>\hfil
+<dd>Füllt die Zeile mit Leerraum auf, so dass der nachfolgende
+Text zentriert steht.
+
+<dt>\hfill
+<dd>Füllt die Zeile mit Leerraum auf, so dass der nachfolgende
+Text rechtsbündig am Ende der Zeile steht.
+
+<dt>\vfil
+<dd>Füllt die Seite mit Leerraum auf, so dass der nachfolgende
+Text vertikal zentriert steht.
+
+<dt>\vfill
+<dd>Füllt die Seite mit Leerraum auf, so dass der nachfolgende
+Text am Ende der Seite steht.
+
+<dt>\setlength{\parindent}{4em}
+<dd>Legt den Einzug bei neuen Absätzen fest.
+
+<dt>\setlength{\parskip}{10pt}
+<dd>Legt den Abstand zwischen zwei Absätzen fest.
+
+<dt>\setlength{\baselineskip}{20pt}
+<dd>Legt den Abstand von Zeilenbasislinie zu Zeilenbasislinie
+fest. Dieser Befehl muss nach <code>\begin{document}</code>
+erscheinen.
+
+<dt>\setlength{\abovedisplayskip}{6pt}
+<br>\setlength{\belowdisplayskip}{6pt}
+<br>\setlength{\abovedisplayshortskip}{6pt}
+<br>\setlength{\belowdisplayshortskip}{6pt}
+<dd>Verändert die Abstände über und unter Formeln.
+</dl>
+
+<h3 id="Seiten">Seiten</h3>
+<dl class="tt">
+<dt>\thispagestyle{empty}
+<dd>Unterdrückt die Seitennummer auf der aktuellen Seite.
+
+<dt>\pagestyle{empty}
+<dd>Schaltet die Seitennummerierung aus.
+
+<dt>\newpage
+<dd>Erzwingt einen Seitenumbruch.
+
+<dt>\usepackage{geometry}
+<br>\geometry{a4paper,left=30mm,right=20mm,top=20mm,bottom=28mm}
+<dd>Manuelle Festlegung der Seitenränder.
+
+<dt>\lipsum[1-40]
+<dd>Erzeugt ein langen Text »Lorem ipsum [...]« zum Testen.
+Benötigt <code>\usepackage{lipsum}</code>.
+</dl>
+
+<h3 id="Abseatze">Absätze</h3>
+<dl class="tt">
+<dt>\par
+<dd>Neuer Absatz. Wird automatisch durch eine leere Quelltextzeile
+  erzeugt.
+
+<dt>\noindent
+<dd>Verhindert den Einzug am Anfang eines neuen Absatzes.
+</dl>
+
+<h3 id="Gestaltungselemente">Gestaltungselemente</h3>
+<dl class="tt">
+<dt>\hrule
+<dd>Erzeugt eine horizontale Trennlinie.
+
+<dt>\dots
+<dd>drei Punkte
+
+<dt>\dotfill
+<dd>Füllt den Rest der Zeile mit Punkten auf. Folgt noch Text,
+so wird er rechtsbündig gesetzt.
+
+<dt>\hrulefill
+<dd>Füllt den Rest der Zeile mit einer Linie auf. Folgt noch Text,
+so wird er rechtsbündig gesetzt.
+
+<dt>\rightarrowfill
+<dd>Füllt den Rest der Zeile mit einem Pfeil nach rechts auf.
+
+<dt>\leftarrowfill
+<dd>Füllt den Rest der Zeile mit einem Pfeil nach links auf.
+
+<dt>\raise 4pt\hbox{Text}
+<dd>Hebt einen Text an.
+
+<dt>\lower 4pt\hbox{Text}
+<dd>Stellt einen Text niedriger.
+</dl>
+
+<h3 id="Farben">Farben</h3>
+<dl class="tt">
+<dt>\definecolor{Blau}{RGB}{0,0,80}
+<dd>Definiert eine neue Farbe.
+Benötigt <code>\usepackage{color}</code>. Die Farbanteile
+Rot, Grün, Blau jeweils von 0 bis 255.
+
+<dt>{\color{Blau}Text}
+<dd>Setzt den Text in Blau. 
+
+<dt>\colorbox{Blue}{Text}
+<dd>Erzeugt eine Box mit der Hintergrundfarbe Blau.
+
+<dt>\pagecolor{Blau}
+<dd>Legt die Hintergrundfarbe der Seite auf Blau fest.
+</dl>
+
+<h3 id="Schrift">Schrift</h3>
+<dl class="tt">
+<dt>\textrm{Text}, {\rmfamily Text}
+<dd>»roman family«, normale Schrift.
+
+<dt>\texttt{Text}, {\ttfamily Text}
+<dd>»teletype family«, Schreibmaschinenschrift.
+
+<dt>\textsf{Text}, {\sffamily Text}
+<dd>»sans font family«, serifenlose Schrift.
+
+<dt>\textit{Text}, {\itshape Text}
+<dd>»italic shape«, kursive Schrift.
+
+<dt>\textup{Text}, {\upshape Text}
+<dd>»up shape«, aufrechte Schrift.
+
+<dt>\textsl{Text}, {\slshape Text}
+<dd>»slanted shape«, unechte kursive Schrift.
+
+<dt>\textsc{Text}, {\scshape Text}
+<dd>»small capitals«, Kapitälchen.
+
+<dt>\textmd{Text}, {\mdseries Text}
+<dd>»medium series«, schaltet den Fettdruck aus.
+
+<dt>\textbf{Text}, {\bfseries Text}
+<dd>»bold font series«, fette Schrift.
+
+<dt>\textit{\textbf{\textsf{Text}}}
+<dd>Kombination. Benötigt aber einen voll ausgebauten Font, was
+  bei Unicode sehr aufwendig werden kann.
+
+<dt>\textsuperscript{Text}
+<dd>Hochgestellter Text.
+
+<dt>\textsubscript{Text}
+<dd>Tiefgestellter Text.
+</dl>
+
+<h3 id="Fonts">Fonts</h3>
+<dl class="tt">
+<dt>\usepackage{lmodern}
+<dd>Computer Modern, Standardschrift von TeX.
+Latin Modern ist die neue Vektorgrafik-Version
+von Computer Modern.
+
+<dt>\usepackage{times}
+<br>\usepackage{mathptmx}
+<dd>Times Roman. Enthält Helvetica als serifenlose Schrift
+und Courier New als Schreibmaschinenschrift.
+Das Paket <code>mathptmx</code> ist
+für den mathematischen Formelsatz.
+
+<dt>\usepackge{charter}
+<dd>Bitstream Charter von Mathew Charter.
+
+<dt>\usepackage{palatino}
+<br>\usepackage{euler}
+<dd>Palatino. AMS Euler für mathematische Formeln.
+
+<dt>\usepackage{bookman}
+<dd>Bookman.
+
+<dt>\font\fonta = ptmr
+<br>{\fonta Text}
+<dd>Manuelle Font-Auswahl. Bei <code>ptmr</code> handelt es sich
+um ein Kürzel für Times Roman.
+</dl>
+
+<h4>Postscript-Fonts</h4>
+<pre>
+pagk......AvantGarde-Book
+pagko.....AvantGarde-BookOblique
+pagd......AvantGarde-Demi
+pagdo.....AvantGarde-DemiOblique
+pbkd......Bookman-Demi
+pbkdi.....Bookman-DemiItalic
+pbkl......Bookman-Light
+pbkli.....Bookman-LightItalic
+pcrb......Courier-Bold
+pcrbo.....Courier-BoldOblique
+pcrr......Courier
+pcrro.....Courier-Oblique
+phvb......Helvetica-Bold
+phvbo.....Helvetica-BoldOblique
+phvbrn....Helvetica-NarrowBold
+phvbon....Helvetica-NarrowBoldOblique
+phvr......Helvetica
+phvro.....Helvetica-Oblique
+phvrrn....Helvetica-Narrow
+phvron....Helvetica-NarrowOblique
+pncb......NewCenturySchlbk-Bold
+pncbi.....NewCenturySchlbk-BoldItalic
+pncri.....NewCenturySchlbk-Italic
+pncr......NewCenturySchlbk-Roman
+pplb......Palatino-Bold
+pplbi.....Palatino-BoldItalic
+pplri.....Palatino-Italic
+pplr......Palatino-Roman
+psyr......Symbol
+ptmb......Times-Bold
+ptmbi.....Times-BoldItalic
+ptmri.....Times-Italic
+ptmr......Times-Roman
+pzcmi.....ZapfChancery-MediumItalic
+pzdr......ZapfDingbats 
+</pre>
+
+<h3 id="Zusatz">Zusatzpakete</h3>
+<dl class="tt">
+<dt>microtype
+<dd>Schaltet die Mikrotypografie-Engine ein.
+
+<dt>multicol
+<dd>Für Texte mit mehreren Spalten oder zweispaltigen Abschnitten.
+
+<dt>beamer
+<dd>Für Folien.
+
+<dt>hyperref
+<dd>Für anklickbare Querverweise und anklickbare Einträge
+im Inhaltsverzeichnis.
+</dl>
+
+<h2 id="Auszeichnung">Auszeichnung</h2>
+<h3 id="Ueberschriften">Überschriften</h3>
+<table class="tex">
+<tr><th>HTML<th>TeX
+<tr><td><code>&lt;h1&gt;Text&lt;/h1&gt;</code>
+<td><code>\chapter{Text}</code>
+<tr><td><code>&lt;h2&gt;Text&lt;/h2&gt;</code>
+<td><code>\section{Text}</code>
+<tr><td><code>&lt;h3&gt;Text&lt;/h3&gt;</code>
+<td><code>\subsection{Text}</code>
+<tr><td><code>&lt;h4&gt;Text&lt;/h4&gt;</code>
+<td><code>\subsubsection{Text}</code>
+</table>
+<p>Den Befehl <code>\chapter{Text}</code> gibt es nur bei
+der Dokumentklasse <code>book</code>.
+
+<h3 id="Inhaltsverzeichnis">Inhaltsverzeichnis</h3>
+<dl class="tt">
+<dt>\tableofcontents
+<dd>Erzeugt automatisch ein Inhaltsverzeichnis.
+  Die Überschrift »Inhaltsverzeichnis« wird automatisch gesetzt.
+<dt>\renewcommand{\contentsname}{{\it Inhaltsverzeichnis}}
+<dd>Ändert die Überschrift. Der Befehl <code>\it</code> bewirkt
+  z.B. kursive Schrift ohne Fettdruck.
+</dl>
+
+<h3 id="Literaturverzeichnis">Literaturverzeichnis</h3>
+<pre>
+\begin{thebibliography}{xx}
+\bibitem{Name} Vorname, Nachname: »Titel«. Verlag, Ort Zeit.
+\bibitem{Name} Vorname, Nachname: »Titel«. Verlag, Ort Zeit.
+\end{thebibliography}
+</pre>
+<p>Die Überschrift »Literatur« wird automatisch gesetzt.
+
+<h3 id="Listen">Listen</h3>
+<pre>
+\begin{itemize}
+\item Pfefferminztee
+\item Kräutertee
+\item Darjeeling
+\end{itemize}
+
+\begin{enumerate}
+\item Hamburg
+\item Kiel
+\item Bremen
+\end{enumerate}
+</pre>
+<p>Alternative Stichpunkte und kleine Zeilenabstände:
+<pre>
+\newcommand{\bitem}{\color{Blau}\item[$\small\blacksquare$]}
+\newcommand{\tightlist}{%
+  \setlength{\parskip}{0pt}%
+  \setlength{\baselineskip}{10pt}}
+...
+\begin{itemize}\tightlist
+\bitem Pfefferminztee
+\bitem Kräutertee
+\bitem Darjeeling
+\end{itemize}
+</pre>
+
+<h2 id="Programmierung">Programmierung</h2>
+<h3 id="Definition">Definition von Makros</h3>
+
+<dl class="tt">
+<dt>\newcommand{\Bezeichner}{Text}
+<dd>Definiert ein neues Makro ohne Parameter.
+
+<dt>\newcommand{\Bezeichner}[2]{Text #1 Text #2 Text}
+<dd>Definiert ein neues Makro mit zwei Parametern.
+
+<dt>\renewcommand{\Bezeichner}{Text}
+<dd>Ersetzt ein schon vorhandenes Makro durch eine neue Definition.
+
+<dt>\DeclareMathOperator{\op}{op}
+<dd>Definiert einen neuen mathematischen Operator wie <code>\exp</code>.
+
+<dt>\DeclareMathOperator*{\op}{op}
+<dd>Definiert einen neuen mathematischen Operator wie <code>\lim</code>,
+wo das Subscript unter den Operator gestellt wird.
+</dl>
+
+<h3 id="Dateien">Dateien</h3>
+<dl class="tt">
+<dt>\input{Datei.tex}
+<dd>Fügt den Inhalt von <code>Datei.txt</code> an der angegebenen
+Stelle sein.
+</dl>
+
+<h2>Literatur</h2>
+<ol>
+<li>Philip S. Hirschhorn: »Getting up and running with AMS-LaTeX«.
+<li>American Mathematical Society: »User's Guide for the amsmath Package«.
+</ol>
+
+</body>
+</html>

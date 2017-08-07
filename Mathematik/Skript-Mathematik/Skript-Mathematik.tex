@@ -1,0 +1,1280 @@
+\documentclass[a4paper,11pt,fleqn,twoside]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=38mm,right=22mm,top=24mm,bottom=40mm}
+\setlength{\columnsep}{4mm}
+\numberwithin{equation}{section}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\id}{\operatorname{id}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\sur}{\operatorname{sur}}
+\newcommand{\strong}[1]{{\sf\bfseries #1}}
+
+\newenvironment{Definition}{\strong{Definition.}}{\par}
+
+\begin{document}
+\thispagestyle{empty}
+
+\noindent
+{\huge\sf\bfseries
+Skript zum\hfill {\normalsize\rmfamily\mdseries 7. August 2017}
+\par\noindent
+Mathematik-Studium
+\par}
+
+\tableofcontents
+
+\newpage
+\section*{Formeln}
+\strong{Additionstheoreme}
+\begin{align*}
+\sin(x+y) &= \sin x\cos y + \cos x\sin y,\\
+\cos(x+y) &= \cos x\cos y - \sin x\sin y
+\end{align*}
+\strong{Polarkoordinaten}
+\begin{align*}
+x &= r\cos\varphi,\\
+y &= r\sin\varphi,\\
+r &= \sqrt{x^2+y^2},\\
+\varphi &= \operatorname{sgn}(y)\arccos\Big(\frac{x}{r}\Big)\qquad (\varphi\ne\pi)
+\end{align*}
+\strong{Inverse Matrix}
+\[
+\begin{bmatrix}
+a & b\\
+c & d
+\end{bmatrix}^{-1}
+= \frac{1}{ad-bc} \begin{bmatrix}
+d & -b\\
+-c & a
+\end{bmatrix}
+\]
+
+\newpage
+
+\section{Grundlagen}
+\subsection{Prädikatenlogik}
+Sei $M$ eine endliche Menge und $(x_k)_{k=1}^n$ eine bijektive
+Abzählung von $M$, die jedem $k$ ein Element von $M$ zuordnet.
+Man definiert nun\index{Allquantor}
+\begin{equation}
+\forall x{\in}M\;[P(x)] := \bigwedge_{k=1}^n P(x_k) := x_1\land x_2\land\ldots\land x_n
+\end{equation}
+und\index{Existenzquantor}
+\begin{equation}
+\exists x{\in}M\;[P(x)] := \bigvee_{k=1}^n P(x_k) := x_1\lor x_2\lor\ldots\lor x_n.
+\end{equation}
+Formale Beweise lassen sich induktiv führen. Hierfür ist es notwendig,
+die rechten Seiten wie beim Summenzeichen rekursiv zu formalisieren:
+\begin{equation}
+\bigwedge_{k=1}^1 P(x_k) := P(x_1),\qquad
+\bigwedge_{k=1}^n P(x_k) := P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k).
+\end{equation}
+Nun lässt sich die Regel $C\lor (A\land B)=(C\lor A)\land(C\lor B)$
+auf den Allquantor übertragen. Der Induktionsanfang ist
+\begin{equation}
+C\lor\bigwedge_{k=1}^1 P(x_k) = C\lor P(x_1) = \bigwedge_{k=1}^1 (C\lor P(x_1)).
+\end{equation}
+Der Induktionsschritt ist
+\begin{align}
+& C\lor\!\bigwedge_{k=1}^n P(x_k)
+= C\lor\bigg(P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k)\bigg)
+= (C\lor P(x_n))\land\bigg(C\lor\!\bigwedge_{k=1}^{n-1} P(x_k)\bigg)\\
+&= (C\lor P(x_n))\land\bigwedge_{k=1}^{n-1} (C\lor P(x_k))
+= \bigwedge_{k=1}^{n} (C\lor P(x_k)).
+\end{align}
+\subsection{Mengenlehre}
+Regeln zur Mengenbau"=Schreibweise\index{Mengenbau-Schreibweise}:
+\begin{align}
+& x\in\{u\mid P(u)\} \iff P(x),\\
+& \{f(x)\mid P(x)\} := \{y\mid y=f(x)\land P(x)\},\\
+& \{x\in M\mid P(x)\} := \{x\mid x\in M\land P(x)\}.
+\end{align}
+\begin{Definition}
+\emph{Gleichheit} und \emph{Teilmengenrelation}\index{Teilmenge}
+von Mengen:
+\begin{align}
+A=B &\;:\Longleftrightarrow\;\forall x\,[x\in A\iff x\in B],\\
+A\subseteq B &\;:\Longleftrightarrow\;\forall x\,[x\in A\implies x\in B].
+\end{align}
+\end{Definition}
+\noindent
+\begin{Definition}
+Grundlegende Operationen:
+\index{Vereinigung}\index{Schnittmenge}
+\index{Differenzmenge}\index{symmetrische Differenz}
+\begin{align}
+A\cup B &:= \{x\mid x\in A\lor x\in B\},\qquad (\text{\emph{Vereinigung}})\\
+A\cap B &:= \{x\mid x\in A\land x\in B\},\qquad (\text{\emph{Schnitt}})\\
+A\setminus B &:= \{x\mid x\in A\land x\notin B\},\qquad (\text{\emph{Differenz}})\\
+A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emph{symmetrische Differenz}})
+\end{align}
+\end{Definition}
+
+\subsection{Funktionen}
+\begin{Definition}\index{Bildmenge}
+\emph{Bildmenge} von $M\subseteq A$ unter $f\colon A\to B$:
+\begin{equation}
+f(M) := \{f(x)\mid x\in M\}.
+\end{equation}
+Die maximale Bildmenge $f(A)$ wird einfach \emph{Bildmenge} von $f$ genannt.
+\end{Definition}
+Die Regel $f(M\cup N)=f(M)\cup f(N)$ ist allgemeingültig, denn:
+\begin{align}
+&f(M\cup N) = \{f(x)\mid x\in M\lor x\in N\}
+= \{y\mid y=f(x)\land(x\in M\lor x\in N)\}\\
+&= \{y\mid y=f(x)\land x\in M\lor y=f(x)\land x\in N\}\\
+&= \{y\mid y\in\{f(x)\mid x\in M\}\lor y\in\{f(x)\mid x\in N\}\}\\
+&= \{y\mid y\in f(M)\lor y\in f(N)\}
+= \{y\mid y\in f(M)\}\cup \{y\mid y\in f(N)\}\\
+&= f(M)\cup f(N).
+\end{align}
+Auch $f(M\cap N)=f(M)\cap f(N)$ gilt:
+\begin{align}
+&f(M\cap N) = \{f(x)\mid x\in M\land x\in N\}
+= \{y\mid y=f(x)\land x\in M\land x\in N\}\\
+&= \{y\mid y=f(x)\land y=f(x)\land x\in M\land x\in N\}\\
+&= \{y\mid y\in\{f(x)\mid x\in M\}\land y\in\{f(x)\mid x\in N\}\}\\
+&= \{y\mid y\in f(M)\land y\in f(N)\}
+= \{y\mid y\in f(M)\}\cap \{y\mid y\in f(N)\}\\
+&= f(M)\cap f(N).
+\end{align}
+Hierbei wurde $A=A\land A$ sowie das Kommutativ- und das
+Assoziativgesetz zunutze gemacht.
+
+Es gilt sogar die allgemeine Regel
+\begin{equation}
+f(\bigcup_{i\in I} M_i) = \bigcup_{i\in I} f(M_i).
+\end{equation}
+Man rechnet nach:
+\begin{align}
+&f(\bigcup_{i\in I} M_i)
+= \{y\mid y=f(x)\land x\in\bigcup_{i\in I} M_i\}
+= \{y\mid y=f(x)\land\exists i{\in}I\,[x\in M_i]\}\\
+&= \{y\mid\exists i{\in}I\,[\underbrace{y=f(x)\land x\in M_k}_{y\in f(M_k)}]\}
+= \bigcup_{i\in I} f(M_i).
+\end{align}
+
+\begin{Definition}\index{Injektion}
+Eine Funktion $f\colon A\to B$ heißt \emph{surjektiv}, wenn $f(A)=B$ ist.
+\end{Definition}
+
+\begin{Definition}\index{Surjektion}
+Eine Funktion $f\colon A\to B$ heißt \emph{injektiv}, wenn
+\begin{equation}
+\forall x_1,x_2\in A\,[f(x_1)=f(x_2)\implies x_1=x_2]
+\end{equation}
+gilt.
+\end{Definition}
+
+\begin{Definition}\index{Verkettung}\index{Komposition}
+Für zwei Funktionen $f\colon A\to B$ und $g\colon B\to C$ wird
+die Funktion
+\begin{equation}
+(g\circ f)\colon A\to C,\quad (g\circ f)(x):=g(f(x))
+\end{equation}
+als \emph{Verkettung} oder \emph{Komposition} von $g$ und $f$
+bezeichnet. Man spricht \emph{$g$ nach $f$}.
+\end{Definition}
+
+Zu beachten ist, dass die Zielmenge von $f$ mit der Definitionsmenge
+von $g$ übereinstimmen muss. Für die Situation $f\colon A\to B$
+und $g\colon D\to C$ mit $B\subseteq D$ kann $g$ natürlich auf
+$B$ eingeschränkt werden. Die korrekte Notation lautet somit
+$g|_B\circ f$.
+
+Die Verkettung von zwei Surjektionen ist wieder surjektiv
+und die Verkettung von zwei Injektionen ist wieder injektiv. Somit
+ist die Verkettung von zwei Bijektionen wieder bijektiv.
+
+Die Surjektivität können wir für $f\colon A\to B$ und $g\colon B\to C$
+einfach nachrechnen:
+\begin{align}
+(g\circ f)(A) &= \{g(f(x))\mid x\in A\} = \{g(y)\mid y=f(x)\wedge x\in A\}\\
+&= \{g(y)\mid y\in\{f(x)\mid x\in A\}\} = \{g(y)\mid y\in f(A)\}\\
+&= \{g(y)\mid y\in B\} = g(B) = C.
+\end{align}
+Die Injektivität lässt sich auch einfach nachrechnen:
+\begin{align}
+&(g\circ f)(x_1) = (g\circ f)(x_2)
+\iff g(f(x_1)) = g(f(x_2))\\
+& \implies f(x_1) = f(x_2)
+\implies x_1=x_2.
+\end{align}
+
+\section{Lineare Algebra}
+\subsection{Vektorräume}
+\strong{Untervektorraum-Kriterium.}\index{Untervektorraum-Kriterium}
+Ist $V$ ein Vektorraum über
+dem Körper $K$ und $U\subseteq V$, so ist $U$ auch ein Vektorraum,
+falls
+\begin{equation}
+v,w\in U\implies v+w\in U
+\quad\text{und}\quad
+v\in U\implies \lambda v\in U
+\end{equation}
+für $\lambda\in K$ gilt. Die beiden Bedingungen sind die Bausteine von
+Linearkombinationen. Das Kriterium sagt also aus, dass $U$
+abgeschlossen bezüglich jeder Linearkombination sein muss.
+Das heißt, dass sich das Ergebnis jeder Linearkombination wieder
+in $U$ befinden muss.
+
+Wenn $K$ ein Körper und
+$M$ eine nichtleere Menge ist, so ist $K^M$ ein Vektorraum bezüglich
+punktweiser Addition als Vektoraddition und punktweiser Multiplikation
+mit einer Konstanten als Ska"-larmultiplikation. Ein Spezialfall davon
+ist also $\R^\R$. Es ist nun so, dass $C^1(\R\to\R)$ ein Untervektorraum
+von $C(\R\to\R)$ und dieser ein Untervektorraum von $\R^\R$ ist.
+
+Betrachte dazu das Untervektorraum"=Kriterium. Wenn zwei Funktionen
+stetig sind, so ist auch deren Summe und Produkt stetig. Die Skalare
+können als konstante Funktionen betrachtet werden. Wenn zwei
+Funktionen stetig differenzierbar sind, so auch deren Summe und
+Produkt. Wenn eine Funktion stetig differenzierbar ist, so ist sie
+erst recht stetig.
+
+Bemerkung: Die Menge $M$ darf nicht leer sein, weil $K^M$ mindestens
+die Nullabbildung enthalten muss, welche als Nullvektor verwendet
+wird. Wäre $M$ leer, so wäre $|K^M|=|K|^0=0$, wobei $|K|\ne 0$
+vorausgesetzt werden kann, weil ein Körper nicht leer sein darf.
+Nun würde $K^M$ keinen einzigen Vektor enthalten, was nicht sein darf,
+weil jeder Vektorraum mindestens den Nullvektor enthalten muss.
+
+\subsection{Lineare Abhängigkeit}
+\begin{Definition}\index{linear unabhängig}
+Eine Menge $\{v_k\}_{k=1}^n$ von Vektoren $v_k\in V$ heißt
+\emph{linear unabhängig}, wenn $\sum_{k=1}^n \lambda_k v_k=0$ nur
+gilt, falls alle $\lambda_k=0$ sind. Andernfalls heißen die Vektoren
+\emph{linear abhängig}.
+\end{Definition}
+
+Das Definition ist äquivalent dazu, dass sich keiner der Vektoren
+als Linearkombination der anderen darstellen lässt.
+
+Sei nun zunächst $n=2$. Sind $v_1,v_2$ linear abhängig, so gilt
+\begin{equation}
+\lambda_1 v_1+\lambda_2 v_2 = 0
+\end{equation}
+und nach Umformung gilt $v_2=\lambda v_1$ mit
+$\lambda=-\lambda_1/\lambda_2$.
+
+Da die Vektoren dem gleichen Vektorraum entstammen, kann ihr
+äußeres Produkt gebildet werden. Es gilt nun
+\begin{equation}
+v_1\wedge v_2 = v_1\wedge (\lambda v_1) = \lambda v_1\wedge v_1 = 0.
+\end{equation}
+Tatsächlich ist die Menge $\{v_k\}_{k=1}^n$ genau dann linear
+abhängig, wenn
+\begin{equation}
+v_1\wedge v_2\wedge\ldots\wedge v_n = 0
+\end{equation}
+gilt. Es genügt, dies am Beispiel $n=3$ zu verifizieren. Sei also
+ohne Beschränkung der Allgemeinheit $v_3=\lambda_1 v_1+\lambda_2 v_2$.
+Nun ist:
+\begin{align}
+&v_1\wedge v_2\wedge v_3
+= v_1\wedge v_2\wedge(\lambda_1 v_1+\lambda_2 v_2)
+= \lambda_1 v_1\wedge v_2\wedge v_1
++ \lambda_2 v_1\wedge v_2\wedge v_2\\
+&= -\lambda_1 (\underbrace{v_1\wedge v_1}_{=0})\wedge v_2
++ \lambda_2 v_1\wedge (\underbrace{v_2\wedge v_2}_{=0})
+= 0.
+\end{align}
+Das Prinzip ist klar: Jeder Vektor der Linearkombination steckt
+im Faktor $A=v_1\wedge v_2$. Weil sowohl $A\wedge v_1=0$ als auch
+$A\wedge v_2=0$ gilt, verschwindet auch die gesamte Linearkombination.
+
+\subsection{Lineare Abbildungen}
+
+\begin{Definition}\index{lineare Abbildung}
+Sind $V$ und $W$ Vektorräume über dem selben Körper $K$, so heißt
+eine Abbildung $f\colon V\to W$ \emph{linear}, wenn sie additiv
+und homogen ist. \emph{Additiv} bedeutet, dass für alle $v,w\in V$
+gilt:
+\begin{equation}
+f(v+w) = f(v)+f(w)
+\end{equation}
+und \emph{homogen} bedeutet, dass für alle $\lambda\in K$ und $v\in V$
+gilt:
+\begin{equation}
+f(\lambda v) = \lambda f(v).
+\end{equation}
+\end{Definition}
+
+\strong{Beispiel.} $f(x):=2x$, $f\colon\R\to\R$. Bei $\R$ handelt
+es sich natürlich um einen Vektorraum, denn $\R^n$ ist ja ein
+Vektorraum und $\R^1=\R$.
+
+\strong{Beispiel.} $D\colon C^1(\R\to\R)\to C(\R\to\R)$ mit
+\begin{equation}
+D(f):=x\mapsto\frac{\mathrm df(x)}{\mathrm dx}.
+\end{equation}
+
+\strong{Beispiel.} $I\colon C([a,b]\to\R)\to C^1([a,b]\to\R)$ mit
+\begin{equation}
+I(f):=x\to\int_a^x f(x)\,\mathrm dx,
+\end{equation}
+wobei $a$ fest aber beliebig ist.
+
+Die Menge der linearen Abbildungen:
+\begin{equation}
+\operatorname{Hom}_K(V,W)
+:= \{f\mid f\colon V\to W, f\;\text{ist linear}\}.
+\end{equation}
+Bei $\operatorname{Hom}_K(V,W)$ handelt es sich selbst wieder
+um einen Vektorraum über dem Körper $K$. Man definiert dafür
+\begin{equation}
+(f+g)(v) := f(v)+g(v),\qquad
+(\lambda f)(v) := \lambda f(v).
+\end{equation}
+Die Beweisskizze hierfür:
+\[\begin{split}
+&(f+g)(v+w) = f(v+w)+g(v+w) = f(v)+f(w)+g(v)+g(w)\\
+&= f(v)+g(v)+f(w)+g(w) = (f+g)(v)+(f+g)(w).
+\end{split}\]
+Die restlichen Axiome können als kleine Übung vom Leser
+überprüft werden.
+
+Bemerkung: Wegen $f(v)\in W$ muss $\lambda$ bei $\lambda f(v)$ aus
+dem Körper von $W$ sein. Somit sind alle betrachteten Vektorräume
+über dem Körper $K$.
+
+\strong{Frage.} \emph{Ist eine additive Abbildung auch homogen?}
+
+Man bemerkt zunächst
+\begin{equation}
+f(2v) = f(v+v) = f(v)+f(v) = 2f(v).
+\end{equation}
+Allgemein ergibt sich bei dieser Betrachtung $f(nv) = nf(v)$ für jede
+natürliche Zahl $n\ge 1$. Dies soll zur Übung noch mal formal
+verifiziert werden. Man definiert dazu für eine gegebene Folge
+von Vektoren $(v_k)_{k=1}^n$ das Summenzeichen rekursiv:
+\begin{equation}
+\sum\nolimits_{k=1}^1 v_k := v_1,\qquad
+\sum\nolimits_{k=1}^n v_k := \sum\nolimits_{k=1}^{n-1} v_k+v_n.
+\end{equation}
+Der Induktionsanfang ist einfach
+\begin{equation}
+f\Big(\sum\nolimits_{k=1}^1 v_k\Big) = f(v_k).
+\end{equation}
+Der Induktionsschritt ist
+\begin{equation}
+\begin{split}
+&f\Big(\sum\nolimits_{k=1}^n v_k\Big)
+= f\Big(\sum\nolimits_{k=1}^{n-1} v_k\Big)+f(v_n)\\
+&=\sum\nolimits_{k=1}^{n-1} f(v_k)+f(v_n)
+= \sum\nolimits_{k=1}^n f(v_k).
+\end{split}
+\end{equation}
+Setzt man nun $v_k=v$ für alle $k$, so ergibt sich
+\begin{equation}
+f(nv) = f\bigg(\sum_{k=1}^n v\bigg) = \sum_{k=1}^n f(v) = nf(v).
+\end{equation}
+Weiterhin gilt
+\begin{equation}
+f(0v) = f(0) = f(0+0) = f(0) + f(0).
+\end{equation}
+Aus $f(0)=f(0)+f(0)$ folgt $f(0)=0=0f(v)$.
+
+Beachte nun
+\begin{equation}
+0 = f(\underbrace{-v+v}_{=0}) = f(-v)+f(v).
+\end{equation}
+Daraus folgt $f(-v) = -f(v)$.
+Nach den bisherigen Ausführungen ergibt sich $f(nv) = nf(v)$ für alle
+$n\in\Z$.
+
+Die Fragestellung lässt sich auch für rationale Zahlen bejahen.
+Die grundlegende Feststellung dazu ist
+\begin{equation}
+f(v) = f(\tfrac{1}{2}v+\tfrac{1}{2}v) = f(\tfrac{1}{2}v) + f(\tfrac{1}{2}v)
+= 2f(\tfrac{1}{2}v).
+\end{equation}
+Division durch zwei bringt $\tfrac{1}{2}f(v) = f(\tfrac{1}{2}v)$.
+Allgemein gilt wieder $\frac{1}{n}f(v) = f(\tfrac{1}{n}v)$ für
+$n\in\N$ mit $n\ge 1$. Ist $q$ nun eine rationale Zahl, so gibt
+es die Darstellung $q=\frac{m}{n}$ mit $m\in\Z$ und $n\in\N, n\ge 1$.
+Es gilt nun
+\begin{equation}
+f(qv) = f(m\cdot\tfrac{1}{n}\cdot v) = m\cdot f(\tfrac{1}{n}\cdot v)
+= m\cdot\tfrac{1}{n}\cdot f(v) = qf(v).
+\end{equation}
+Was ist nun mit reellen Zahlen? Sei dazu $s_n:=\sum_{k=0}^n q_k$
+eine Reihe von rationalen Zahlen $q_k$, welche gegen eine reelle
+Zahl $r$ konvergiert. Am besten $q_k = \frac{d_k}{10^k}$ mit
+$q_0\in\Z$ und $q_{k\ne 0}\in\{0\ldots 9\}$.
+
+Nun gilt
+\begin{equation}
+\begin{split}
+&f(rv) = f\bigg(\bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k\bigg)v\bigg)
+\stackrel{?}= f\bigg(\lim_{n\to\infty}\bigg(\sum_{k=0}^n q_k\bigg)v\bigg)
+= f\bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k v\bigg)\\
+&\stackrel{??}= \lim_{n\to\infty} f\bigg(\sum_{k=0}^n q_k v\bigg)
+= \lim_{n\to\infty}\sum_{k=0}^n q_k f(v)
+= \lim_{n\to\infty}\bigg(\sum_{k=0}^n q_k\bigg) f(v)\\
+&\stackrel{?}= \bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k\bigg) f(v)
+= r f(v).
+\end{split}
+\end{equation}
+Um die Fragezeichen zu klären, nimmt man nun an, dass $V$ und $W$
+mit einer Norm ausgestattet und somit metrische Räume sind.
+Der folgende elementare Satz ist jetzt aufschlussgebend.
+
+\textbf{Satz.} Eine Abbildung $f\colon X\to Y$ zwischen metrischen
+Räumen $(X,d_x)$ und $(Y,d_y)$ ist genau dann stetig, wenn für
+jede konvergente Folge $(x_n)$ mit $x_n\in X$ die Eigenschaft
+\begin{equation}
+f\Big(\lim_{n\to\infty} x_n\Big) = \lim_{n\to\infty} f(x_n)
+\end{equation}
+gilt.
+
+\subsection{Darstellungsmatrizen}\index{Darstellungsmatrix}
+Wird in $V$ die Basis $B$ ausgewählt und in $W$ die Basis $B'$,
+so ist dadurch der eindeutige Isomorphismus
+\begin{equation}
+M_{B'}^B\colon \operatorname{Hom}_K(V,W)\to K^{\dim W\times\dim V}
+\end{equation}
+bestimmt. Man nennt $M_{B'}^B(f)$ die \emph{Darstellungsmatrix}
+von $f$. Bei $M_{B'}^B$ handelt es sich als Isomorphismus zwischen
+Vektorräumen um eine bijektive lineare Abbildung.
+
+Das Problem mit dem Isomorphismus $M_{B'}^B$ ist, dass dieser nicht
+kanonisch ist, weil er von den Basen $B$ und $B'$ abhängt, die
+willkürlich gewählt werden können.
+Nun gibt es aber den Koordinatenraum $K^n$, welcher die Standardbasis
+als kanonische Basis besitzt.
+
+Die Tatsache, dass die Verkettung zweier linearer Abbildungen
+selbst wieder linear ist, kann dazu verwendet werden, eine
+lineare Abbildung in eine Verkettung zu zerlegen. Das veranlasst
+uns dazu, bei der Bildung der Darstellungsmatrix einen
+Zwischenschritt einzufügen. Somit ist
+\begin{equation}\label{eq:Zwischenschritt}
+\operatorname{Hom}_K(V,W)
+\xrightarrow{\displaystyle\quad F_{B'}^B\quad}\operatorname{Hom}_K (K^{\dim V},K^{\dim W})
+\xrightarrow{\displaystyle\quad\varphi\quad}K^{\dim W\times\dim V},
+\end{equation}
+sodass $M_{B'}^B = \varphi\circ F_{B'}^B$ gilt. Bei $\varphi$
+handelt es sich nun um einen kanonischen Isomorphismus, sodass
+eine lineare Abbildung zwischen Koordinatenräumen mit ihrer
+Darstellungsmatrix identifiziert werden kann. Man kann also
+bedenkenlos
+\begin{equation}\label{eq:Matrizenraum-Identifikation}
+\operatorname{Hom}_K (K^n,K^m) = K^{m\times n}
+\end{equation}
+setzen.
+
+Kleine Bauchschmerzen bereitet \eqref{eq:Matrizenraum-Identifikation}
+aber doch, denn es können ja trotzdem andere Basen als die
+Standardbasen gewählt werden. Es genügt hierfür aber,
+\eqref{eq:Zwischenschritt} zu spezialisieren. Man erhält
+\begin{equation}
+\operatorname{Hom}_K(K^n,K^m)
+\xrightarrow{\displaystyle\quad F_{B'}^B\quad}\operatorname{Hom}_K (K^n,K^m)
+\xrightarrow{\displaystyle\quad\varphi\quad}K^{m\times n}.
+\end{equation}
+Bei $F_{B'}^B$ handelt es sich jetzt um einen Automorphismus.
+Bei einem Automorphismus muss es sich aber zwangsweise um einen
+Basiswechsel handeln. Hierbei werden $B$ und $B'$ zu einer
+gemeinsamen Basis $(B,B')$ zusammengefasst. Von dieser gemeinsamen
+Basis wird nun in die gemeinsame Standardbasis $(E,E')$
+gewechselt.
+
+Zuweilen findet man oft Angaben wie
+\begin{equation}
+f\begin{bmatrix}x\\ y\end{bmatrix}
+:=\begin{bmatrix}2x+4y\\ 4x\end{bmatrix}
+\end{equation}
+vor. Solche Angaben sind eigentlich recht sinnfrei, weil $f$ wegen
+\eqref{eq:Matrizenraum-Identifikation}
+auch gleich als Matrix beschrieben werden kann:
+\begin{equation}
+f\begin{bmatrix}x\\ y\end{bmatrix}
+:=\begin{bmatrix}2x+4y\\ 4x\end{bmatrix}
+= \begin{bmatrix}2 & 4\\ 4 & 0\end{bmatrix}
+\begin{bmatrix}x\\ y\end{bmatrix}.
+\end{equation}
+Die Tupelschreibweise und die Koordinaten $(x,y)$ suggerieren, dass
+wir es hier mit dem Koordinatenraum und seiner Standardbasis
+zu tun haben. Man wollte eine lineare Abbildung direkt, aber
+ohne Festlegung auf Basen beschreiben. Das ist jedoch gar nicht
+möglich, weil die direkte Beschreibung immer die rechte Seite
+von \eqref{eq:Matrizenraum-Identifikation} bedingt.
+
+Die Festlegung auf andere Basen bedeutet nun, dass die
+Darstellungsmatrix transformiert werden muss. Viele Aufgaben der
+linearen Algebra mit konkreten linearen Abbildungen können somit
+vollständig durch Matrizenrechnung gelöst werden.
+
+\subsection{Gruppen}\label{sub:LA-Gruppen}
+Betrachte die Menge der Selbstabbildungen $X^X:=\{f\mid f\colon X\to X\}$.
+Die Menge der bijektiven Selbstabbildungen wird
+\emph{symmetrische Gruppe}\index{symmetrische Gruppe}
+$S(X)$ genannt und bildet bezüglich der
+Verkettung von Abbildungen die Gruppe $(S(X),\circ)$.
+
+\strong{(Axiom E)} Abgeschlossenheit gilt, weil die Verkettung zweier
+bijektiver Abbildungen auch wieder bijektiv ist und $S(X)$ alle
+bijektiven Selbstabbildungen umfassen soll.
+
+\strong{(Axiom A)} Das Assoziativgesetz
+$(h\circ g)\circ f = h\circ (g\circ f)$
+gilt für \emph{alle} Abbildungen.
+
+\strong{(Axiom N)} Auf \emph{jeder} Menge $X$ gibt es die identische
+Abbildung $\id_X$, so dass $f\circ\id_X = f$ und $\id_X\circ f=f$.
+
+\strong{(Axiom I)} Da die Abbildungen als bijektiv vorausgesetzt sind,
+gibt es zu jeder Abbildung $f$ ein $g$, so dass
+$f\circ g = \id_X$ und $g\circ f=\id_X$.
+
+Betrachte nun $K^{n\times n}$, den Matrizenraum der quadratischen
+Matrizen mit Einträgen aus dem Körper $K$. Man definiert nun
+die Menge der regulären quadratischen Matrizen:
+\begin{equation}
+\mathrm{GL}(n,K) := \{A\mid A\in K^{n\times n}\wedge\det(A)\ne 0\}.
+\end{equation}
+Bei $\mathrm{GL}(n,K)$ handelt es sich auch um eine Gruppe. Das
+neutrale Element ist die Einheitsmatrix $E_n$, die durch
+\begin{equation}
+E_2 := \begin{bmatrix}
+1 & 0\\
+0 & 1
+\end{bmatrix},\quad
+E_3 := \begin{bmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{bmatrix},\quad\text{u.s.w.}
+\end{equation}
+definiert ist.
+
+Nun lässt sich aber ein Vektorraum der Dimension $n$ über dem
+Körper $K$ betrachten. Nach Wahl einer Basis $B$ gibt es nun
+\begin{equation}
+M_B^B\colon \operatorname{Hom}_K(V,V)\to K^{\dim V\times\dim V}.
+\end{equation}
+Eine linearen Selbstabbildung wird als
+\emph{Endomorphismus}\index{Endomorphismus}
+bezeichnet. Eine bijektive lineare Selbstabbildung wird
+\emph{Automorphismus}\index{Automorphismus}
+genannt.
+
+Wenn $M_B^B$ auch ein Gruppenisomorphismus bezüglich der
+multiplikativen Struktur ist, so ergibt sich
+\begin{equation}
+M_B^B\colon \operatorname{Aut}_K(V)\to\operatorname{GL}(\dim V,K).
+\end{equation}
+Dann ist $\operatorname{Aut}_K(V)$ aber eine Gruppe, und
+zwar eine Untergruppe von $S(V)$. Man spricht bei
+$\operatorname{Aut}_K(V)$ von der \emph{Automorphismengruppe}.
+Zur Übersicht ergibt sich folgendes Diagramm:
+\begin{equation}
+\begin{matrix}
+\operatorname{Aut}_K(V) & \subseteq & \operatorname{Hom}_K(V,V)\\
+M_B^B\bigg\downarrow\qquad & & M_B^B\bigg\downarrow\qquad\\
+\mathrm{GL}(\dim V,K) & \subseteq & K^{\dim V\times\dim V}
+\end{matrix}
+\end{equation}
+
+\subsection{Quadratische Matrizen}
+Die Multiplikation von Matrizen kann nach dem \emph{falkschen Schema}
+ausgeführt werden:\\
+
+\qquad\begin{tabular}{rr|ll}
+& & $b_{11}$ & $b_{12}$\\
+& & $b_{21}$ & $b_{22}$\\
+\hline
+$a_{11}$ & $a_{12}$ & $\sum$ & $\sum$\\
+$a_{21}$ & $a_{22}$ & $\sum$ & $\sum$
+\end{tabular}\\
+\phantom{x}
+
+\strong{Problem.} \emph{Zu einer gegebenen regulären
+Matrix $A$ soll die Matrix
+$B$ gefunden werden, sodass $AB=E_2$ gilt.}
+
+Es gibt drei Ansätze zur Lösung.
+
+Der \strong{erste Ansatz}
+ist die Trennung der Matrizengleichung in vier Gleichungen, wodurch
+sich zwei LGS ergeben. Zunächst lautet die Matrizengleichung:%
+\begin{equation}
+\begin{bmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{bmatrix}
+\begin{bmatrix}
+b_{11} & b_{12}\\
+b_{21} & b_{22}
+\end{bmatrix}
+= \begin{bmatrix}
+a_{11}b_{11}+a_{12}b_{21} & a_{11}b_{12}+a_{12}b_{22}\\
+a_{21}b_{11}+a_{22}b_{21} & a_{21}b_{12}+a_{22}b_{22}
+\end{bmatrix}
+= \begin{bmatrix}
+1 & 0\\
+0 & 1
+\end{bmatrix}.
+\end{equation}
+Hierdurch ergeben sich die beiden LGS:
+\begin{equation}
+\bigg|\,\begin{matrix}
+a_{11}b_{11}+a_{12}b_{21} &=& 1\\
+a_{21}b_{11}+a_{22}b_{21} &=& 0
+\end{matrix}\,\bigg|,\qquad
+\bigg|\,\begin{matrix}
+a_{11}b_{12}+a_{12}b_{22} &=& 0\\
+a_{21}b_{12}+a_{22}b_{22} &=& 1
+\end{matrix}\,\bigg|.
+\end{equation}
+
+Der \strong{zweite Ansatz}
+ist die Verwendung des Gauß"=Jordan"=Verfahrens
+um $[E_2|B]$ aus $[A|E_2]$ zu gewinnen.
+
+Der \strong{dritte Ansatz} ist die Anwendung der Lösungsformel
+\begin{equation}
+\begin{bmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{bmatrix}^{-1}
+= \frac{1}{a_{11}a_{22}-a_{12}a_{21}}\begin{bmatrix}
+a_{22} & -a_{12}\\
+-a_{21} & a_{11}
+\end{bmatrix}.
+\end{equation}
+Bei Matrizen vom Typ $3\times 3$ oder $4\times 4$ ist nur noch
+das Gauß"=Jordan"=Verfahren sinnvoll. Ab $5\times 5$ oder bei
+$\C^{n\times n}$ anstelle von $\R^{n\times n}$ wird man Matlab/Octave
+verwenden.
+
+\section{Algebra}
+\subsection{Gruppen}
+Man betrachte die Menge $M=\{A,B,C\}$, wobei $\triangle ABC$ ein
+gleichseitiges Dreieck sein soll. Außerdem definiert man
+\begin{equation}
+S(M) := \{f\mid f\colon M\to M,\;\text{$f$ ist bijektiv}\}.
+\end{equation}
+In Abschnitt \ref{sub:LA-Gruppen} wurde schon festgestellt,
+dass $(S(M),\circ)$ eine Gruppe ist. Außerdem muss $S(M)$ eine
+Anzahl von $3!=6$ Elementen besitzen, wie aus der elementaren
+Kombinatorik bekannt ist. Nun definieren wir
+\begin{equation}
+d_1 := (A \mapsto B \mapsto C\mapsto A),\qquad d_2:=(A\mapsto C\mapsto B\mapsto A).
+\end{equation}
+Wir finden nun folgende Gesetzmäßigkeiten heraus:
+\begin{equation}
+d_1^2 = d_1\circ d_1 = d_2, \qquad d_1^3 = d_2\circ d_1 = \id, \qquad d_1^{-1}=d_2,\qquad d_2^{-1}=d_1.
+\end{equation}
+Weiteres Herumspielen führt uns aber nicht zu den drei anderen
+Elementen in $S(M)$, egal wie sehr wir uns bemühen. Trotzdem
+haben wir zu jedem Element ein inverses, wobei man beachtet,
+dass $\id$ zu sich selbst invers ist. Auch $\id$ ist enthalten,
+und die restlichen Gruppenaxiome gelten auch. Somit handelt es sich
+bei
+\begin{equation}\label{eq:Drehungen}
+H := \{\id,d_1,d_2\}
+\end{equation}
+um eine Untergruppe von $S(X)$.
+
+\begin{Definition}
+Ist $(G,*)$ eine Gruppe und $H\subseteq G$, so heißt $H$
+\emph{Untergruppe} von $G$, wenn $(H,*)$ auch wieder eine Gruppe
+bildet. Man schreibt dann $H\le G$.
+\end{Definition}
+Drei Elemente haben wir aus dem Teich $S(M)$ gefischt, drei
+stecken noch im Schlamm. Aber der Teich ist nicht besonders tief,
+mehr eine Pfütze als ein Teich. Was aus dem Wasser gezogen wird,
+möchten wir aber sogleich beschauen.
+
+\strong{Korollar aus den Gruppenaxiomen.} \emph{Jede Gruppe
+besitzt genau ein neutrales Element. Zu jedem Element gibt
+es genau ein inverses.}
+
+Nähere Überlegung führt zu der Erkenntnis, dass es ausgeschlossen
+ist dass zwei unterschiedliche Elemente das selbe inverse besitzen.
+Wenn $b$ nämlich
+zu $a_1$ und zu $a_2$ invers ist, so sind $a_1$ und $a_2$ auch invers
+zu $b$. Weil das inverse Element zu $b$ aber eindeutig bestimmt sein
+muss, gilt zwingend $a_1=a_2$.
+
+Jedes Element besitzt also seinen inversen Partner,
+wobei ein Element aber auch zu sich selbst invers sein darf.
+
+Die restlichen Elemente von $S(M)$ müssen sich zu solchen
+Partnerschaften gruppieren lassen. Dann müssen zwei Elemente
+ein Paar bilden und eines ist zu sich selbst invers? Falsch.
+Alle drei sind zu sich selbst invers. Das sind
+\begin{align}\label{eq:Spiegelung1}
+s_1&:= (A)(BC) = (A\mapsto A)(B\mapsto C\mapsto B),\\
+s_2&:= (B)(AC) = (B\mapsto B)(A\mapsto C\mapsto A),\\
+s_3&:= (C)(AB) = (C\mapsto C)(A\mapsto B\mapsto A).
+\end{align}
+Alle Operation lassen sich bei $\triangle ABC$ deuten.
+Es handelt sich um Kongruenzabbildungen, welche das Dreieck
+auf sich selbst abbilden, so dass man keinen Unterschied
+bemerkt, außer dass zwei oder alle drei Ecken vertauscht sind.
+Das Element $d_1$ ist eine Drehung um $120^\circ$ und $d_2$ ist
+eine Drehung um $240^\circ = -120^\circ$. Das Element $\id$
+ist eine Drehung um $0^\circ = 360^\circ$. Bei $s_1,s_2,s_3$
+handelt es sich um Spiegelungen mit den Winkelhalbierenden
+als Spiegelaxen.
+
+Man könnte nun auf die Idee kommen, dass auch bei einen Quadrat
+die Symmetrien genau die Elemente der symmetrischen Gruppe sind.
+Die Gruppe hat aber $4!=24$ Elemente, eine solche Anzahl von
+Symmetrien scheint fragwürdig. Ein Gegenbeispiel ist sofort
+ersichtlich:
+\begin{equation}
+f := (A)(B)(CD) = (A\mapsto A)(B\mapsto B)(C\mapsto D\mapsto C).
+\end{equation}
+Da müsste das Quadrat auseinandergeschnitten, eines der Stücke
+umgedreht, und dann beide Stücke wieder zusammengeklebt werden.
+
+Tatsächlich bilden die Symmetrien des Quadrates aber eine Gruppe,
+die aus diesem Grund als \emph{Symmetriegruppe} bezeichnet wird.
+Die Übereinstimmung der Symmetriegruppe des Dreiecks mit der
+symmetrischen Gruppe der Ecken stellt sich als Koinzidenz heraus.
+
+\subsection{Zyklische Gruppen}
+Die Gruppe \eqref{eq:Drehungen} ist von besonderer Gestalt.
+Sie lässt sich von nur einem einzigen Element erzeugen.
+
+\begin{Definition}\index{zyklische Gruppe}
+Eine Gruppe heißt \emph{zyklisch}, wenn sie die Form
+\begin{equation}
+\langle g\rangle := \{g^n\mid n\in\Z\}
+\end{equation}
+besitzt. Man nennt $g$ den \emph{Erzeuger}\index{Erzeuger}
+und die Gruppe $\langle g\rangle$ das \emph{Erzeugnis} von $g$.
+\end{Definition}
+Es ergibt sich nun:
+\begin{equation}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c}
+$n$ & $-5$ & $-4$ & $-3$ & $-2$ & $-1$
+& $0$ & $1$ & $2$ & $3$ & $4$ & $5$\\
+\hline
+$d_1^n$ & $d_1$ & $d_2$ & $\id$ & $d_1$ & $d_2$
+& $\id$ & $d_1$ & $d_2$ & $\id$ & $d_1$ & $d_2$
+\end{tabular}
+\end{equation}
+Die Elemente wiederholen sich immer. Es gibt einen Zyklus
+der Länge drei. Es ist
+\begin{equation}
+\langle d_1\rangle = \{\id,d_1,d_2\},\qquad\langle d_2\rangle = \{\id,d_1,d_2\}.
+\end{equation}
+Die Regel $\langle g^{-1}\rangle = \langle g\rangle$ gilt natürlich
+immer. Für viele Gruppenelemente ist aber
+$\langle g^2\rangle\ne \langle g\rangle$. Als Beispiel lässt sich die
+Spiegelung $s_1$, die an der Stelle \eqref{eq:Spiegelung1} definiert
+wurde, heranziehen. Es gilt $s_1^2=\id$ und daher:
+\begin{equation}
+\langle s_1^2\rangle = \langle\id\rangle
+= \{\id\} \ne \langle s_1\rangle = \{\id,s_1\}.
+\end{equation}
+
+\section{Analysis}
+\subsection{Grenzwert einer Funktion}\index{Grenzwert!einer Funktion}
+\begin{Definition}
+Sei $D\subseteq\R$ und $a$ ein Berührpunkt von $D$.
+Sei $f\colon D\to\R$. Es sei $\lim_{x\to a} f(x)=L$ genau dann,
+wenn für jede Folge $(x_n)$, $x_n\in D$ mit $x_n\to a$ die
+Bilderfolge $f(x_n)$ gegen $L$ geht. Wie bei Folgen wird $L$ als
+\emph{Grenzwert} bezeichnet.
+\end{Definition}
+Diese Definition wirkt zunächst außerordentlich unhandlich, da
+zunächst nicht klar ist, wie man etwas für alle beliebigen
+Folgen überprüfen soll. Dies ist für einfache Beispiele aber nicht
+sonderlich schwer, da man einfach eine Variable verwenden
+kann, welche für alle möglichen Folgen steht.
+
+Ein einführendes Beispiel. Betrachtet wird die Funktion $f(x):=x^2$
+mit $f\colon\R\to\R$. Wir würden gerne $L=\lim_{x\to 2} f(x)$
+berechnen. Nun sei $(x_n)$ eine beliebige Folge mit $x_n\to 2$. Es
+gilt nun
+\begin{equation}
+\lim_{n\to\infty} f(x_n)
+= \lim_{n\to\infty} x_n^2
+= \lim_{n\to\infty} (x_n\cdot x_n)
+= \Big(\lim_{n\to\infty} x_n\Big)\cdot\Big(\lim_{n\to\infty} x_n\Big)
+= 2\cdot 2 = 4.
+\end{equation}
+Da die Folge $(x_n)$ konvergent ist, konnten wir den Grenzwertsatz
+für Summen anwenden. Somit muss $L=4$ sein.
+
+Solche Rechnungen müssen für einfache Beispiele nicht weiter
+durchgeführt werden, denn die Zusammenhänge sind hier so direkt, dass
+sich die Grenzwertsätze für Folgen gleich auf Grenzwerte für
+Funktionen übertragen lassen.
+
+Angenommen es gilt $\lim_{x\to a} f(x)=A$ und
+$\lim_{x\to a} g(x) = B$. Sei $x_n\to a$. Dann konvergieren
+$f(x_n)\to A$ und $g(x_n)\to B$. Somit ist
+\begin{equation}
+\lim_{n\to\infty} (f(x_n)\cdot g(x_n))
+= \Big(\lim_{n\to\infty} f(x_n)\Big)\cdot \Big(\lim_{n\to a} g(x_n)\Big)
+= AB.
+\end{equation}
+Es ergibt sich
+\begin{equation}
+\lim_{x\to a} (f(x)\cdot g(x)) = AB.
+\end{equation}
+Die anderen Grenzwertsätze lassen sich auf die gleiche Art
+verifizieren.
+
+Jetzt können wir einfach
+\begin{equation}\label{eq:Grenzwert-Quadrat}
+\lim_{x\to a} x^2 = \lim_{x\to a} (x\cdot x)
+= \Big(\lim_{x\to a} x\Big)\cdot\Big(\lim_{x\to a} x\Big) = a^2
+\end{equation}
+rechnen, ohne den Umweg über eine Folge gehen zu müssen.
+
+Diese Zusammenhänge ermöglichen es, Grenzwerte für eine große
+Klasse von Funktionen sofort in die Hand geschenkt zu bekommen.
+
+\subsection{Stetige Funktionen}
+\begin{Definition}
+Eine Funktion $f\colon D\to\R$ heißt \emph{stetig} an der Stelle
+$a\in D$, wenn $\lim_{x\to a} f(x)=f(a)$ gilt. Man nennt $f$ stetig
+in $D$, wenn $f$ an jeder Stelle von $D$ stetig ist.
+\end{Definition}
+\strong{Beispiel.} Die Funktion $f(x):=x^2$ mit $f\colon\R\to\R$
+ist stetig. Denn es gilt
+\begin{equation}
+\lim_{x\to a} f(x) = \lim_{x\to a} x^2 \stackrel{\eqref{eq:Grenzwert-Quadrat}}= \Big(\lim_{x\to a} x\Big)^2
+= a^2 = f(a)
+\end{equation}
+für jedes $a\in\R$.
+
+Ist $f\colon D\to\R$ eine stetige Funktion, so folgt sofort
+\begin{equation}
+\lim_{n\to\infty} f(x_n) = f(\lim_{n\to\infty} x_n)
+\end{equation}
+für jede konvergente Folge $(x_n)$, $x_n\in D$ mit $x_n\to a\in D$.
+
+\subsection{Die Richtungsableitung}
+Man stelle sich einen affinen Raum $A$ vor, auf welchem eine
+Funktion $f_A\colon A\to\R$ definiert ist.
+Um eine solche Funktion konkret angeben zu können, benötigen
+wir eine \emph{Koordinatendarstellung} von $f_A$. Dazu wählt man
+eine affine Basis $(p_0,B)$, die ein Koordinatensystem%
+\begin{equation}
+\varphi\colon \R^n\to A,\quad\varphi(x) := p_0+\sum_{k=1}^n x_k b_k
+\end{equation}
+mit $x=(x_k)_{k=1}^n$ und $B=(b_k)_{k=1}^n$ induziert. Man beachte,
+dass $\varphi$ eine invertierbare affine Abbildung ist. Ein
+Koordinatensystem ist also eine invertierbare affine Abbildung
+zwischen dem Koordinatenraum und einem affinen Raum.
+
+Wählt man speziell $A=\R^n$, so kann $B$ als Matrix aus
+Spaltenvektoren $b_k=(b_{ik})$ dargestellt werden. Dann ist
+\begin{equation}
+y = \varphi(x) = p_0+Bx.
+\end{equation}
+Die Matrix $B$ muss nun regulär sein, damit die Umformung
+\begin{equation}
+x = B^{-1}(y-p_0) = \varphi^{-1}(y)
+\end{equation}
+formuliert werden kann. Betrachtet man einen affinen Raum $A$ als
+abstraktes Objekt, so ist dieser nicht über ein Koordinatensystem
+$\varphi$ erfassbar, weil $A$ selbst nicht erfassbar ist. Denkt
+man sich aber zwei Koordinatensysteme $\varphi,\psi$, so ist
+der Koordinatensystemwechsel $T=\varphi^{-1}\circ\psi$ sehr
+wohl erfassbar. Den Raum $A$ können wir nun völlig außer acht lassen.
+Alle Darstellungen von Funktionen können sich somit auf
+den $\R^n$ beziehen und über
+\begin{equation}
+T\colon\R^n\to\R^n,\quad T(x) := p+Ax
+\end{equation}
+mit einer Matrix $A\in\operatorname{GL}(\R,n)$ transformiert werden.
+Man beachte
+hierzu, dass die Inverse einer affinen Abbildung und die Verkettung
+von zwei affinen Abbildungen wieder eine affine Abbildung ist. Somit
+muss $T=\varphi^{-1}\circ\psi$ auch wieder eine affine Abbildung
+sein.
+
+Anstelle von $f_A$ betrachtet man stattdessen
+die konkrete Funktion
+\begin{equation}
+f\colon\R^n\to\R,\quad f := f_A\circ\varphi.
+\end{equation}
+Bei einer Koordinatentransformation ergibt sich nun
+\begin{equation}
+f\circ T = f_A\circ\varphi\circ\varphi^{-1}\circ\psi
+= f_A\circ\psi,
+\end{equation}
+was als gleichberechtigte Darstellung von $f_A$ angesehen werden
+darf.
+
+Bei $f$ handelt es sich um eine Funktion in mehreren Variablen.
+Wir würden gerne auch für $f$ so etwas wie eine Ableitung definieren,
+um auch für solche Funktionen eine Differentialrechnung entwickeln
+zu können.
+
+Betrachte dazu eine Gerade $g\in\R^n$ und einen Punkt $p\in\R^n$.
+Für die Anschauung sei $n=2$. Man definiert nun die Projektion
+\begin{equation}
+\pi\colon\R^n\times\R\to\R^n,\quad \pi(x,y):=x,
+\end{equation}
+die einen Punkt $(x,y)$ senkrecht auf die Stelle $x$
+herunterprojiziert.
+
+Zu beachten ist, dass $x=(x_k)_{k=1}^n$ ein
+Tupel, $y$ aber nur eine reelle Zahl ist.
+
+Man betrachte nun die Ebene $\pi^{-1}(g)$. Die
+Schnittmenge
+\begin{equation}
+G=\operatorname{Graph}(f)\cap\pi^{-1}(g)
+\end{equation}
+ist eine Kurve, die als Graph einer Funktion $s\colon\R\to\R$
+dargestellt werden kann. Aber $s$ lässt sich mit dem herkömmlichen
+Differentialquotient ableiten. Wählt man auf $g$ nun eine affine
+Basis $(p,v)$, so wird dadurch das Koordinatensystem
+\begin{equation}
+\varphi\colon\R\to\R^n,\quad\varphi(t):=p+tv
+\end{equation}
+induziert. Ein solches Koordinatensystem für einen eindimensionalen
+Raum wird auch als \emph{Lineal} bezeichnet.
+
+Nun gibt es eine Darstellung $s=f\circ\varphi$.
+
+\begin{Definition}
+\emph{Richtungsableitung} von $f$ in Richtung $v$
+an der Stelle $p$:
+\begin{equation}
+(D_v f)(p) := (f\circ\varphi)'(0).
+\end{equation}
+\end{Definition}
+\noindent
+Aus der Definition können wir sofort eine Analogiebetrachtung
+bei den Differentialquotienten extrahieren:
+\begin{align}
+f'(x) = \lim_{h\to 0}\frac{f(x+h)-f(x)}{h},\qquad
+(D_v f)(p) = \lim_{h\to 0}\frac{f(p+hv)-f(p)}{h}.
+\end{align}
+Der Koordinatenraum $\R^n$ besitzt die kanonische Basis $(e_k)_{k=1}^n$.
+Die Basisvektoren lassen sich natürlich als Richtungsvektoren
+verwenden, und diesen Richtungsableitungen kommt eine besondere
+Bedeutung zu.
+
+\begin{Definition}
+Die Richtungsableitungen bezüglich
+der kanonischen Basis werden als \emph{partielle Ableitungen}
+bezeichnet:
+\begin{equation}
+(D_k f)(p) := (D_{e_k} f)(p).
+\end{equation}
+Bemerkung: Es gibt die alternativen Schreibweisen
+\begin{equation}
+(D_v f)(p) \equiv \frac{\partial f(x)}{\partial v}\Big|_{x=p},\qquad
+(D_k f)(p) \equiv \frac{\partial f(x)}{\partial x_k}\Big|_{x=p}.
+\end{equation}
+\end{Definition}
+\noindent
+Außerdem gibt es eine zweite Vorstellung von Differenzierbarkeit.
+Diese Vorstellung ist, dass an der Stelle $p$ eine Tangentialebene
+an den Graphen von $f$ gelegt werden kann. Eine solche
+Tangentialebene muss die Funktionsgleichung
+\begin{equation}
+T(x_1,x_2) = f(p)+a_1(x_1-p_1)+a_2(x_2-p_2)
+\end{equation}
+besitzen, wobei $a_1,a_2$ zwei zu bestimmende Parameter sind.
+Die Tangentialebene soll die Funktion $f$ an der Stelle $p$ nun
+möglichst gut approximieren. Für ein kleines $h$ soll also
+\begin{equation}
+f(p+h)-T(p+h)\approx 0
+\end{equation}
+sein. Schärfer soll sogar
+\begin{equation}
+\lim_{h\to 0}\frac{f(p+h)-T(p+h)}{\|h\|}=0
+\end{equation}
+gelten.
+
+\begin{Definition}
+Eine Funktion $f\colon\R^n\to\R$ heißt
+\emph{total differenzierbar} an der Stelle $p$, wenn
+\begin{equation}
+\lim_{h\to 0}\frac{f(p+h)-f(p)-\langle a,x-p\rangle}{\|h\|}=0
+\end{equation}
+ist. Der Koordinatenvektor $a$ ist hierdurch eindeutig bestimmt und
+wird Ableitung von $f$ genannt. Man nennt%
+\begin{equation}
+(\mathrm df)(p) = \sum_{k=1}^n a_k\,\mathrm dx^k(p)
+\end{equation}
+das \emph{totale Differenzial} von $f$. Hiernach ergibt sich
+\begin{equation}
+\langle a,x-p\rangle = (\mathrm df)(p)(x-p)
+\end{equation}
+über duale Paarung, wobei die linke Seite bezüglich Koordinatentupeln
+gemeint ist und dich rechte bezüglich tatsächlichen Vektoren.
+\end{Definition}
+
+Das wirkt zunächst wie eine zweite unnötige Schreibweise. Betrachtet
+man aber $f_A$ anstelle von $f$, so muss es nicht unbedingt ein
+Skalarprodukt $\langle a,x-p\rangle$ geben, weil $x-p$ als
+Differenz zweier Punkte $x,p\in A$ im Verschiebungsvektorraum
+$V$ liegt. Und auf $V$ braucht kein Skalarprodukt definiert zu sein.
+Stattdessen entstammt $(\mathrm df)(p)$ aus dem Dualraum $V^\ast$
+und ist bezüglich der dualen Basis $(\mathrm dx^k)_{k=1}^n$ definiert,
+so dass $(\mathrm df)(p)$ und $x-p$ dual gepaart werden können.
+
+Noch eine Bermerkung zum Definitionsbereich von $f$: Es reicht aus,
+wenn $f$ auf einer offenen Umgebung des betrachteten Punktes $p$
+definiert ist. Die Umgebung sollte aber offen sein, man sich bei
+Grenzwertbildungen aus jeder Richtung dem Punkt $p$ nähern kann.
+Sonst würde man einen Ableitungsbegriff benötigen, der bestimmte
+Richtungen ausschließt, was unnötigen
+technischen Balast darstellt.
+
+\section{Dynamische Systeme}
+\subsection{Fixpunkt-Methode}
+Betrachte eine Iteration
+\begin{equation}\label{eq:Fixpunkt-Iteration}
+x_{n+1}=\varphi(x_n)
+\end{equation}
+mit einem Startwert $x_0$. Z.\,B.
+\begin{equation}
+\varphi(x) = \frac{1}{a+x},\quad a\in\N
+\end{equation}
+mit beliebigem Startwert. Man stellt numerisch fest, dass die
+Folge $(x_n)$ bei diesem Beispiel (es handelt sich um Kettenbrüche)
+offenbar immer gegen eine Zahl konvergiert. Außerdem
+scheint der Startwert dafür unbedeutsam zu sein. Bei $a=2$ erkennt
+ein Rechenmeister mit geschultem Blick noch, dass die Folge
+gegen $\sqrt{2}-1$ konvergiert, bei $a=1$ gegen den goldenen Schnitt.
+Aber bei $a=3$ ist der Wert zunächst von einem dunklen Schleier
+umgeben.
+
+Eine weitere Beobachtung ist nun, dass sich die Werte der Folge
+immer weniger voneinander unterscheiden, wenn $n$ wächst.
+Es gilt also $x_n\approx x_{n+1}$ bzw. $x_n\approx \varphi(x_n)$
+für große $n$. Für den Grenzwert $x=\lim_{n\to\infty} x_n$ müsste
+dann
+\begin{equation}
+x = \varphi(x)
+\end{equation}
+gelten. Eine solche Gleichung wird als \emph{Fixpunktgleichung}
+bezeichnet, die dazu gehörige Iteration \eqref{eq:Fixpunkt-Iteration}
+als \emph{Fixpunkt-Iteration}.
+
+Setzt man nun das Beispiel mit $a=2$ ein, so ergibt
+sich
+\begin{equation}
+x = \frac{1}{2+x},
+\end{equation}
+was zur quadratischen Gleichung
+\begin{equation}
+x^2+2x-1 = 0
+\end{equation}
+führt, deren eine Lösung $\sqrt{2}-1$ ist. Warum es eine zweite
+Lösung gibt, und diese nicht Ergebnis der Iteration ist, ist
+zunächst unklar.
+
+Die Beispiele
+\begin{equation}
+\varphi(x) = \frac{1}{1-bx},\quad b\in\{1,2\}
+\end{equation}
+scheinen niemals zu konvergierten. Für $b=1$ ergibt sich eine
+periodische Folge, und bei $b=2$ scheint die Folge recht
+chaotisch zu sein. Die zugehörigen Fixpunkt-Gleichungen führen
+auf quadratische Gleichungen, welche keine reellen Lösungen
+besitzen.
+
+Wenn also der Fixpunkt eine komplexe Zahl ist, so kann die Folge
+niemals gegen den Fixpunkt konvergieren, weil der Wert von $\varphi$
+niemals eine komplexe Zahl sein wird, wenn als Argument eine
+reelle Zahl gegeben wurde. Würden wir mit einem komplexen Startwert
+beginnen, so hätten wir eine Chance auf Konvergenz. Ein Plotter
+für die komplexe Ebene zeigt aber, dass für fast alle
+Zahlen bis auf einzelne offenbar keine Konvergenz vorliegt.
+Das Beispiel $b=1$ ist für fast alle komplexen Startwerte periodisch
+mit Periodenlänge drei.
+
+Beim Beispiel $a=2$ scheinen die Folgenwerte von der zweiten
+Lösung der quadratischen Gleichung abgestoßen zu werden
+und zur ersten Lösung zu wandern, was klar wird wenn man die
+Iteration ganz in der Nähe der zweiten Lösung beginnt.
+Man hat es hier mit einem abstoßenden und einem anziehenden
+Fixpunkt zu tun. Das Abstoßen geschieht um so schneller, je weiter
+der der Iterationswert vom abstoßenden Fixpunkt entfernt ist.
+
+Bei den Beispielen $b=1$ und $b=2$ ergibt sich jedoch, dass sich
+die Folgenwerte um die Fixpunkte herum bewegen, ohne sie in
+absehbarer Zeit zu erreichen. Bei $b=2$ liegen die Werte
+von $(x_n)$ auf einem Kreis um einen der Fixpunkte, dessen
+Mittelpunkt aber nicht der Fixpunkt sein muss. Für
+$\Im(x_0)=0$ entartet der Radius des Kreises ins unendliche. Die
+beiden Fixpunkte sind zueinander komplex Konjugiert, und so kann
+sich die Folge bei $\Im(x_0)=0$ nicht für die Umkreisung von einem
+der beiden Fixpunkte entscheiden.
+
+Bei $b=2+\ui/2$ ergibt sich noch ein viel seltsameres Gebilde.
+Die Folgenwerte werden wieder von einem der beiden Fixpunkte
+angezogen und von dem anderen abgestoßen. Dabei bilden sich
+jedoch Strudel mit fünf Armen aus, wobei die Arme des abstoßenden
+Fixpunktes mit denen des anziehenden Fixpunktes verbunden sind.
+
+Doch da ist noch viel mehr. Nehmen wir das Beispiel
+$\varphi(x)=x^2-1$. Damit Konvergenz vorliegt, dürfen die Folgenwerte
+notwendigerweise einen bestimmten Betrag nicht überschreiten, denn
+nach der umgekehrten Dreiecksungleichung gilt:
+\begin{equation}
+|\varphi(x)| = |x^2-1| \ge ||x^2|-|1|| = ||x|^2-1|.
+\end{equation}
+Für $|x|\ge 2$ ergibt sich $|x|^2\ge 4$ und $|x|^2-1\ge 3$.
+Somit ist
+\begin{equation}
+||x|^2-1| = |x|^2-1
+\end{equation}
+und $|\varphi(x)|\ge 3$.
+Man beachtet jetzt
+\begin{equation}
+|\varphi(x)|\ge |x|^2-1 \implies \sqrt{|\varphi(x)|+1}\ge |x|.
+\end{equation}
+Nun ist aber $|\varphi(x)|>\sqrt{|\varphi(x)|+1}$ für
+$|\varphi(x)|\ge (\sqrt{5}+1)/2$, was bei $|x|\ge 2$ erfüllt ist.
+Insgesamt ergibt sich $|\varphi(x)|>|x|$, was folglich die Divergenz
+der Folge zur Folge hat.
+
+Die Menge der Startwerte $x_0\in\C$, so dass
+$(x_n)$ mit $x_{n+1}=x_n^2+c$ beschränkt bleibt,
+heißt \emph{Julia-Menge} zur Konstanten $c$. Die Menge zu $c=-1$,
+die innerhalb des Kreises $|x|=2$ liegt, ist ein außerordentlich
+seltsames Gebilde, welches dem Augenschein nach
+fraktale Strukturen besitzt.
+
+Für einen Startwert $x_0$ wird die Folge $(x_n)$ nach
+\eqref{eq:Fixpunkt-Iteration} auch als \emph{Orbit}
+von $x_0$ bezeichnet. Im Fall, dass negative $n$ nicht zugelassen
+sind, spricht man auch von einem \emph{Semiorbit}. Dieser Begriff
+ist mit dem Gruppentheoretischen Begriff \emph{Orbit} deckungsgleich,
+denn die Iterierten $\varphi^n$ bilden bezüglich Verkettung
+eine Gruppe und erwirken eine Gruppenaktion $\varphi^n(x_0)$.
+Sind negative $n$ nicht zugelassen,
+so handelt es sich nicht um eine Gruppe, sondern um ein Monoid,
+dessen Elemente eine Monoidaktion anstelle einer Gruppenaktion
+erwirken.
+
+\begin{Definition}
+Die Struktur $(T,X,\Phi)$ mit
+\begin{equation}
+\Phi\colon T\times X\to X,\quad\Phi(t,x):=\varphi^t(x)
+\end{equation}
+wird als \emph{dynamisches System} bezeichnet. Das System heißt
+\emph{diskret}, wenn $t\in\N$ bzw. $t\in\Z$ ist. Die Fixpunkte
+von $\varphi$ werden auch \emph{Ruhelagen} von $\Phi$ genannt.
+\end{Definition}
+
+\section{Tricks}
+\subsection{Matrizen vom Typ $2\times 2$}
+Matrizen der Form
+\begin{equation}\label{eq:Drehstreckung}
+\begin{bmatrix}
+a & -b\\
+b & a
+\end{bmatrix} = r\begin{bmatrix}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{bmatrix}
+\end{equation}
+sind isomorph zu den komplexen Zahlen $a+b\ui = r\ee^{\ui\theta}$.
+Das erscheint
+zunächst wie eine unwesentliche Tatsache, aber es ermöglicht,
+Matrizenrechnungen gegen Rechnungen mit komplexen Zahlen
+auszutauschen. Der Isomorphismus ist
+\begin{equation}
+\varphi\colon M\to\C,\quad
+\varphi(\begin{bmatrix}
+a & -b\\
+b & a
+\end{bmatrix}) := a+b\ui.
+\end{equation}
+Zunächst verifiziert man, dass $M$ und $\C$ Körper sind, indem
+die Gültigkeit der Körperaxiome nachgewiesen wird. Hierbei ergibt
+sich, dass $M\setminus\{0\}$ eine abelsche Gruppe ist. Es gilt
+insbesondere $M\setminus\{0\}\le\operatorname{GL}(2,\R)$.
+
+\begin{Definition}
+Sind $(K,+,\bullet)$ und $(K',+',\bullet')$ zwei Körper, so wird
+$\varphi\colon K\to K'$ als \emph{Körperhomomorphismus} bezeichnet,
+wenn
+\begin{align}
+\varphi(a+b) &= \varphi(a)+'\varphi(b),\\
+\varphi(a\bullet b) &= \varphi(a)\bullet'\varphi(b)
+\end{align}
+für alle $a,b\in K$ gilt und $\varphi(1)=1$ ist.
+\end{Definition}
+Ein bijektiver Körperhomomorphismus ist ein \emph{Körperisomorphismus}.
+
+Nun kommutiert das folgende Diagramm:
+\begin{equation}
+\begin{matrix}
+M & \xrightarrow{\quad\text{Berechnung}\quad} & M\\
+\varphi\Big\downarrow\hspace{1em} & & \hspace{1.4em}\Big\uparrow\varphi^{-1}\\
+\C & \xrightarrow{\quad\text{Berechnung}\quad} & \C
+\end{matrix}
+\end{equation}
+Zunächst ergeben sich ein paar Zusammehänge, die ein wenig
+verblüffend erscheinen:
+\begin{equation}
+\varphi(A^T) = \overline{\varphi(A)},\qquad
+|\varphi(A)| = \sqrt{\det A},\qquad
+\operatorname{Spur}(A) = 2\Re(\varphi(A)).
+\end{equation}
+Wichtiger sind Regeln wie
+\begin{equation}\label{eq:Inverse-Potenz}
+A^{-1} = \varphi^{-1}\bigg(\frac{1}{\varphi(A)}\bigg),\qquad
+A^n = \varphi^{-1}(\varphi(A)^n).
+\end{equation}
+So lassen sich Matrizen einfach invertieren und große
+Matrixpotenzen berechnen. Aber das bringt uns auf eine seltsame
+Idee. Wir definieren nun
+\begin{equation}
+f(A) := \varphi^{-1}(f(\varphi(A))) = (\varphi^{-1}\circ f\circ\varphi)(A)
+\end{equation}
+für jede Funktion $f\colon G\to\C$ mit $\varphi(A)\in G$.
+Diese Definition erweitert \eqref{eq:Inverse-Potenz}.
+
+Für eine Matrix $A\in M$ lassen sich jetzt eine Reihe scheinbar
+absurder Dinge berechnen:%
+\begin{equation}
+\sqrt{A},\quad A^{3/2},\quad A^\ui, \quad A^A,\quad \frac{1}{A+1},
+\quad \ee^A, \quad \ln(A), \quad \sin(A).
+\end{equation}
+Einige würden jetzt den Nutzen solcher Operationen, ja sogar die
+Operationen selbst in Frage stellen. Aber das hat man bei den
+komplexen Zahlen zunächst auch getan. Tatsächlich ist $\sqrt{A}$ eine
+Teilantwort auf das Problem, dass zu einer Matrix $A$ die Matrix $X$
+mit $X^2=A$ gefunden werden soll.
+
+Die nächste Frage besteht nun darin, ob sich Operationen
+wie $f(x)=\ee^x$ auch auf Matrizen übertragen lassen,
+die nicht in der Form \eqref{eq:Drehstreckung} vorliegen.
+
+\vfill
+\texttt{Dieses Heft steht unter der Creative"=Commons"=Lizenz CC0.}
+\end{document}
+
+
+

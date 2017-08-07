@@ -14,8 +14,12 @@
 \numberwithin{equation}{section}
 
 \newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
 \newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
 
 \begin{document}
 \section*{Aufzeichnungen\\
@@ -409,6 +413,89 @@ Aber Umformen der Substitution ergibt ja $u=\ln x$.
 
 \newpage
 \section{Lineare Algebra}
+\subsection{Lineare Abbildungen}
+Seien $V,W$ zwei Vektorräume über dem Körper $K$. Eine Abbildung
+$f\colon V\to W$ heißt \emph{additiv}, wenn für alle $v,w\in V$ gilt:
+\begin{equation}
+f(v+w) = f(v)+f(w)
+\end{equation}
+und \emph{homogen}, wenn für alle $v\in V$ und $\lambda\in K$ gilt:
+\begin{equation}
+f(\lambda v) = \lambda f(v).
+\end{equation}
+Ist eine additive Abbildung auch homogen? Man bemerkt zunächst
+\begin{equation}
+f(2v) = f(v+v) = f(v)+f(v) = 2f(v).
+\end{equation}
+Allgemein ergibt sich bei dieser Betrachtung $f(nv) = nf(v)$ für jede
+natürliche Zahl $n\ge 1$. Weiterhin gilt
+\begin{equation}
+f(0v) = f(0) = f(0+0) = f(0) + f(0).
+\end{equation}
+Aus $f(0)=f(0)+f(0)$ folgt $f(0)=0=0f(v)$.
+
+Beachte nun
+\begin{equation}
+0 = f(\underbrace{-v+v}_{=0}) = f(-v)+f(v).
+\end{equation}
+Daraus folgt $f(-v) = -f(v)$.
+Nach den bisherigen Ausführungen ergibt sich $f(nv) = nf(v)$ für alle
+$n\in\Z$.
+
+Die Fragestellung lässt sich auch für rationale Zahlen bejahen.
+Die grundlegende Feststellung dazu ist
+\begin{equation}
+f(v) = f(\tfrac{1}{2}v+\tfrac{1}{2}v) = f(\tfrac{1}{2}v) + f(\tfrac{1}{2}v)
+= 2f(\tfrac{1}{2}v).
+\end{equation}
+Division durch zwei bringt $\tfrac{1}{2}f(v) = f(\tfrac{1}{2}v)$.
+Allgemein gilt wieder $\frac{1}{n}f(v) = f(\tfrac{1}{n}v)$ für
+$n\in\N$ mit $n\ge 1$. Ist $q$ nun eine rationale Zahl, so gibt
+es die Darstellung $q=\frac{m}{n}$ mit $m\in\Z$ und $n\in\N, n\ge 1$.
+Es gilt nun
+\begin{equation}
+\begin{split}
+f(qv) &= f(m\cdot\tfrac{1}{n}\cdot v) = m\cdot f(\tfrac{1}{n}\cdot v)\\
+&= m\cdot\tfrac{1}{n}\cdot f(v) = qf(v).
+\end{split}
+\end{equation}
+Was ist nun mit reellen Zahlen? Sei dazu $s_n:=\sum_{k=0}^n q_k$
+eine Reihe von rationalen Zahlen $q_k$, welche gegen eine reelle
+Zahl $r$ konvergiert. Am besten $q_k = \frac{d_k}{10^k}$ mit
+$q_0\in\Z$ und $q_{k\ne 0}\in\{0\ldots 9\}$.
+
+Nun gilt
+\begin{equation}
+\begin{split}
+&f(rv) = f\bigg(\bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k\bigg)v\bigg)
+\stackrel{?}= f\bigg(\lim_{n\to\infty}\bigg(\sum_{k=0}^n q_k\bigg)v\bigg)\\
+&= f\bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k v\bigg)
+\stackrel{??}= \lim_{n\to\infty} f\bigg(\sum_{k=0}^n q_k v\bigg)
+= \lim_{n\to\infty}\sum_{k=0}^n q_k f(v)\\
+&= \lim_{n\to\infty}\bigg(\sum_{k=0}^n q_k\bigg) f(v)
+\stackrel{?}= \bigg(\lim_{n\to\infty}\sum_{k=0}^n q_k\bigg) f(v)
+= r f(v).
+\end{split}
+\end{equation}
+Um die Fragezeichen zu klären, nimmt man nun an, dass $V$ und $W$
+mit einer Norm ausgestattet und somit metrische Räume sind.
+Der folgende elementare Satz ist jetzt aufschlussgebend.
+
+\textbf{Satz.} Eine Abbildung $f\colon X\to Y$ zwischen metrischen
+Räumen $(X,d_x)$ und $(Y,d_y)$ ist genau dann stetig, wenn für
+jede konvergente Folge $(x_n)$ mit $x_n\in X$ die Eigenschaft
+\begin{equation}
+f\Big(\lim_{n\to\infty} x_n\Big) = \lim_{n\to\infty} f(x_n)
+\end{equation}
+gilt.
+
+Wenn kein metrischer Raum vorliegt, lassen sich die Begriffe
+Cauchy-Folge und Vollständigkeit nicht mehr formulieren und es
+liegt eventuell nicht einmal mehr ein Hausdorff-Raum vor, was eine
+sehr komische Situation darstellt. Sind die Vektorräume nicht
+topologisch, so lässt sich nicht einmal mehr der Begriff des
+Grenzwertes formulieren.
+
 \subsection{Hodge-Stern-Operator}
 \subsubsection{Orientierung}
 Sei $V$ ein $\R$-Vektorraum und sei $B=(b_k)_{k=1}^n$ eine Basis

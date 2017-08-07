@@ -7,6 +7,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{textcomp}
+\usepackage{microtype}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -94,10 +95,6 @@
 \end{titlepage}
 
 \thispagestyle{empty}
-
-\noindent
-Dieses Heft ist unter der Lizenz\\
-Creative Commons CC0 veröffentlicht.
 
 \renewcommand{\contentsname}{
 \normalfont\sffamily\bfseries\LARGE
@@ -346,7 +343,7 @@ y_5 = K+Kx+\frac{1}{2}Kx^2+\frac{1}{6}Kx^3.
 \end{gather}
 Das geht immer so weiter, der Grenzwert ist
 \begin{equation}
-y = K\sum_{k=0}^{\infty} \frac{x^k}{k!} = Ke^x.
+y = K\sum_{k=0}^{\infty} \frac{x^k}{k!} = K\ee^x.
 \end{equation}
 
 \subsection{Potenzreihenmethode}
@@ -365,7 +362,7 @@ Mit einem Koeffizientenvergleich erhält man $ka_k=a_{k-1}$.
 Über die Rekursionsformel für die Fakultät erhält man $k!a_k=a_0$.
 Einsetzen von $a_k$ in den allgemeinen Potenzreihenansatz bringt dann
 \begin{equation}
-y=\sum_{k=0}^\infty a_0\frac{x^k}{k!} = a_0e^x.
+y=\sum_{k=0}^\infty a_0\frac{x^k}{k!} = a_0\ee^x.
 \end{equation}
 Alternativ kann man auch nach folgender Methode rechnen.
 Wenn sich die Funktion $y$ an der Stelle $x_0$ in eine Potenzreihe
@@ -378,7 +375,7 @@ so erhält man
 \begin{equation}
 y = \sum_{k=0}^\infty \frac{1}{k!}y(0)x^k
 = y(0)\sum_{k=0}^\infty \frac{x^k}{k!}
-= y(0)e^x.
+= y(0)\ee^x.
 \end{equation}
 
 \subsection{Laplace-Transformation}
@@ -399,13 +396,13 @@ L\{y\} = \frac{y_0}{p-1}.
 \end{equation}
 Es ist $L\{x\} = 1/p$. Zusammen mit dem Dämpfungssatz erhält man
 \begin{equation}
-L\{e^x\} = \frac{1}{p-1}.
+L\{\ee^x\} = \frac{1}{p-1}.
 \end{equation}
 Man rechnet nun
 \begin{equation}
-L\{y_0e^x\} = y_0L\{e^x\} = \frac{y_0}{p-1}.
+L\{y_0\ee^x\} = y_0L\{\ee^x\} = \frac{y_0}{p-1}.
 \end{equation}
-Die Lösung $y=y_0e^x$ lässt sich ablesen.
+Die Lösung $y=y_0\ee^x$ lässt sich ablesen.
 
 \subsection{Eigenwertgleichung}
 
@@ -413,32 +410,95 @@ Die Gleichung $y'=y$ schreibt man auch $Dy=y$. Mit $\lambda=1$
 kann man $Dy=\lambda y$ schreiben. Das ist analog zum Eigenwertproblem
 $Av=\lambda v$ in der linearen Algebra. Die Rolle der Matrix übernimmt
 der Differentialoperator $D$. Wie findet man die Eigenvektoren?
-Man macht den Ansatz $y_b=e^{\lambda x}$. In diesem Fall ist
-also $y_b=e^x$.
+Man macht den Ansatz $y_b=\ee^{\lambda x}$. In diesem Fall ist
+also $y_b=\ee^x$.
 
 Der Eigenvektor $y_b$ bildet nun die Basis eines eindimensionalen
 Vektorraums. Alle Lösungen lassen sich als Linearkombination von $y_b$
 darstellen. Linearkombinationen sind z.\,B. $2y_b$ oder $y_b+3y_b$.
 Allgemein erhält man%
 \begin{equation}
-y = Ky_b = Ke^x.
+y = Ky_b = K\ee^x.
 \end{equation}
 Nehmen wir als zweites Beispiel die Gleichung $y''=-4y$. Bezüglich
 des Differentialoperators $D'=D^2$ ist der Eigenwert $\lambda'=-4$.
-Zunächst macht man aber bei linearen DGLn mit konstanten Koeffizienten
-immer den Ansatz $y_b=e^{\lambda x}$. Dieser  wird in die DGL
-eingesetzt und man erhält $\lambda^2 e^{\lambda x} = -4e^{\lambda x}$.
-Division durch $e^{\lambda x}$ bringt dann $\lambda^2 = -4$.
+Zunächst macht man aber bei linearen DGLn mit konstanten
+Koeffizienten immer den Ansatz $y_b=\ee^{\lambda x}$. Dieser
+wird in die DGL eingesetzt und man erhält
+$\lambda^2 \ee^{\lambda x} = -4\ee^{\lambda x}$.
+Division durch $\ee^{\lambda x}$ bringt dann $\lambda^2 = -4$.
 Man erhält die Lösungen $\lambda_1 = -2i$ und $\lambda_2 = 2i$.
 Die Linearkombinationen sind
 \begin{equation}
-y=K_1e^{-2ix}+K_2e^{2ix}.
+y=K_1\ee^{-2ix}+K_2\ee^{2ix}.
 \end{equation}
 Die Eigenwerte $\lambda_k$ aus dem Ansatz muss man vom
 Eigenwert $\lambda'$ des Differentialoperators $D'$ unterscheiden,
 wenn es sich nicht um den gewöhnlichen Differentialoperator $D$
 handelt.
 
+\subsection{Tricks}
+Spezielle Typen von Differentialgleichungen lassen sich mit
+speziellen Tricks Lösen. Dazu gehören z.\,B. Substitutionen.
+
+\section{Lineare GDG mit konstanten Koeffizienten}
+\subsection{Erste Ordnung, homogen}
+Zu lösen ist die Gleichung
+\begin{equation}
+y' = ay.
+\end{equation}
+Lösungsmethoden für diesen Typ wurden schon ausführlich besprochen.
+Es ergibt sich
+\begin{equation}
+y = K\ee^{ax}.
+\end{equation}
+Das AWP $y'(x_0) = y_0$ führt auf
+\begin{equation}
+K=\frac{y_0}{a\ee^{ax_0}}.
+\end{equation}
+
+\subsection{Erste Ordnung, inhomogen}
+Zu lösen ist die Gleichung
+\begin{equation}
+y' = ay+b.\quad (a\ne 0)
+\end{equation}
+Wähle die Substitution $y=u+c$, wobei
+$c$ eine Konstante ist. Nun gilt
+\begin{align}
+y' &= (u+c)' = u',\\
+ay+b &= a\cdot (u+c)+b = au+ac+b.
+\end{align}
+Wir wollen nun $ac+b$ verschwinden lassen, d.\,h. wir setzen
+$ac+b=0$. Somit ergibt sich $c=-b/a$. Als neue DGL ergibt sich
+$u' = au$. Diese Gleichung lässt sich aber über die Trennung
+der Variablen lösen, wobei sich $u=K\ee^{ax}$ ergibt. Resubstitution
+führt zu
+\begin{equation}
+y = K\ee^{ax}-\tfrac{b}{a}.
+\end{equation}
+Die Probe durch Einsetzen in die DGL bestätigt die Lösung.
+Für das AWP $y'(x_0)=y_0$ ergibt sich
+\begin{equation}
+K = \frac{y_0}{a\ee^{ax_0}}.
+\end{equation}
+
+\begin{thebibliography}{x}
+\bibitem{Heuser} Harro Heuser: »\emph{Gewöhnliche
+Differentialgleichungen}«. Teubner, Wiesbaden 1989, 4. Auflage 2004.
+
+\bibitem{Strehmel} Karl Strehmel, Rüdiger Weiner, Helmut Podhaisky:
+»\emph{Numerik gewöhnlicher Differentialgleichungen}«. Springer
+Fachmedien, Wiesbaden 1995, 2. Auflage 2012.
+
+\bibitem{Dieudonne} J. Dieudonné:
+»\emph{Grundzüge der modernen Analysis}«, Band 4.
+Vieweg, Braunschweig 1976.
+\end{thebibliography}
+
+\vfill
+\noindent
+\texttt{Dieses Heft ist unter der Creative-\\
+Commons-Lizenz CC0 veröffentlicht.}
 
 \end{document}
 
