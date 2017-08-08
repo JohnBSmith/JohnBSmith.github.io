@@ -523,6 +523,40 @@ eine Aussageform, so gilt:
 \end{equation}
 
 \section{Funktionen}
+\subsection{Surjektionen}\index{surjektiv}
+\begin{Definition}
+Eine Funktion $f\colon A\to B$ heißt \emdef{surjektiv},\\
+wenn $f(A)=B$ ist. Damit ist gemeint, dass jedes Element
+der Zielmenge wenigstens einmal der Funktionswert von einem
+Element der Definitionsmenge ist.
+\end{Definition}
+
+\subsection{Injektionen}\index{injektiv}
+\begin{Definition}
+Eine Funktion $f\colon A\to B$ heißt \emdef{injektiv},\\
+wenn
+\begin{equation}
+\forall x_1,x_2\in A\,[f(x_1)=f(x_2)\implies x_1=x_2]
+\end{equation}
+gilt.
+\end{Definition}
+
+\subsection{Bijektionen}\index{bijektiv}
+\begin{Definition}
+Eine Funktion $f\colon A\to B$ heißt \emdef{bijektiv},
+wenn sie injektiv und surjektiv ist.
+
+Eine Funktion $f\colon A\to B$ ist genau dann bijektiv, wenn es
+ein $g$ mit
+\begin{equation}
+g\circ f = \id_A\quad\text{und}\quad f\circ g = \id_B
+\end{equation}
+gibt. Wenn $f$ bijektiv ist, so gibt es $g$ genau einmal und
+$g$ wird die \emph{Umkehrfunktion}\index{Umkehrfunktion}
+oder \emph{Inverse}
+von $f$ genannt und als $f^{-1}$ notiert.
+\end{Definition}
+
 \subsection{Komposition}\index{Komposition}
 \begin{Definition} Für zwei Funktionen $f\colon A\to B$
 und $g\colon B\to C$ ist die \emdef{Komposition}
@@ -587,21 +621,45 @@ Es gilt
 g\circ (f|_M) = (g\circ f)|_M.
 \end{equation}
 
-\subsection{Bild, Urbild}
+\subsection{Bild}\index{Bild}
 \begin{Definition} Ist $f\colon A\to B$ und $M\subseteq A$, so wird
 \begin{equation}
 f(M) := \{f(x)\mid x\in M\}
 \end{equation}
-\emdef{Bild}\index{Bild} von $M$ unter $f$ genannt. Die Menge
-\begin{equation}
-f^{-1}(N) := \{x\in A\mid f(x)\in N\}.
-\end{equation}
-heißt \emdef{Urbild}\index{Urbild} von $N$ unter $f$.
+das \emdef{Bild} von $M$ unter $f$ genannt.
 \end{Definition}
 Es gilt
 \begin{align}
-f(M\cup N) &= f(M)\cup f(N),\\
-f(M\cap N) &= f(M)\cap f(N).
+&f(M\cup N) = f(M)\cup f(N),\\
+&f(M\cap N) = f(M)\cap f(N),\\
+&f\Big(\bigcup_{i\in I}M_i\Big) = \bigcup_{i\in I} f(M_i),\\
+&I\ne\emptyset\implies f\Big(\bigcap_{i\in I} M_i\Big) = \bigcap_{i\in I} f(M_i),\\
+&M\subseteq N\implies f(M)\subseteq f(N),\\
+&f(\emptyset) = \emptyset,\\
+&(g\circ f)(M) = g(f(M)).
+\end{align}
+
+\subsection{Urbild}\index{Urbild}
+\begin{Definition}
+Ist $f\colon A\to B$, so wird
+\begin{equation}
+f^{-1}(M) := \{x\in A\mid f(x)\in M\}.
+\end{equation}
+das \emdef{Urbild} von $M$ unter $f$ genannt.
+\end{Definition}
+Es gilt
+\begin{align}
+& f^{-1}(M\cup N) = f^{-1}(M)\cup f^{-1}(N),\\
+& f^{-1}(M\cap N) = f^{-1}(M)\cap f^{-1}(N),\\
+& f^{-1}\Big(\bigcup_{i\in I}M_i\Big) = \bigcup_{i\in I} f^{-1}(M_i),\\
+& I\ne\emptyset\implies f^{-1}\Big(\bigcap_{i\in I} M_i\Big) = \bigcap_{i\in I}f^{-1}(M_i),\\
+& M\subseteq N\implies f^{-1}(M)\subseteq f^{-1}(N),\\
+& f^{-1}(\emptyset) = \emptyset,\\
+& f^{-1}(B) = A,\\
+& f^{-1}(M\setminus N) = f^{-1}(M)\setminus f^{-1}(N),\\
+& f^{-1}(B\setminus M) = B\setminus f^{-1}(M),\\
+& (g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M)),\\
+& (f|_M)^{-1}(N) = M\cap f^{-1}(N).
 \end{align}
 
 \section{Mathematische Strukturen}
@@ -617,7 +675,7 @@ f(M\cap N) &= f(M)\cap f(N).
 
 \bsf{K}: Kommutativgesetz.
 
-\bsf{I*}: zu jedem Element außer dem additiven neutralen Element
+\bsf{I*}: Zu jedem Element außer dem additiven neutralen Element
 gibt es ein Inverses.
 
 \bsf{Dl}: Linksdistributivgestz.
