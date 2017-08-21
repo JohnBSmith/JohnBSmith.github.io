@@ -2,7 +2,7 @@
 \chapter{Dynamische Systeme}
 \section{Grundbegriffe}
 
-\begin{Definition}
+{\definition}
 Ein Tupel $(T,M,\Phi)$ mit $\Phi\colon T\times M\to M$ heißt
 \emdef{dynamisches System}\index{dynamisches System},
 wenn für alle $t_1,t_2\in T$ und $x\in M$ gilt:
@@ -17,7 +17,7 @@ Ein System mit $T=\Z$ oder $T=\R$ heißt \emdef{invertierbar}.
 
 Die Menge $M$ heißt \emdef{Zustandsraum}\index{Zustandsraum},
 ihre Elemente werden \emdef{Zustände}\index{Zustand} genannt.
-\end{Definition}
+
 Für ein invertierbares System handelt es sich bei $\Phi$
 um eine Gruppenaktion (s. \ref{Gruppenaktion})
 der additiven Gruppe $(T,+)$.
@@ -26,7 +26,45 @@ Die Menge
 \begin{equation}
 \Phi(T,x) := \{\Phi(t,x)\mid t\in T\}
 \end{equation}
-heißt \emdef{Orbit} von $x$. S.\,a. \eqref{eq:Orbit}.
+heißt \emdef{Orbit}\index{Orbit!unter einem dynamischen System}
+von $x$. S.\,a. \eqref{eq:Orbit}.
 
+\section{Iterationen}
 
+{\definition}
+Für eine Selbstabbildung $\varphi\colon M\to M$ lassen sich
+die \emdef{Iterationen} gemäß
+\begin{equation}
+\varphi^0:=\id,\quad \varphi^n:=\varphi^{n-1}\circ\varphi
+\end{equation}
+formulieren. Mit $\id$ ist die identische Abbildung
+\begin{equation}
+\id\colon M\to M,\quad \id(x):=x
+\end{equation}
+und mit $g\circ f$ die Komposition \eqref{eq:composition} gemeint.
+Für ein bijektives $\varphi$ wird zusätzlich
+\begin{equation}
+\varphi^{-n}:=(\varphi^{-1})^n
+\end{equation}
+definiert.
 
+Die Iterationen bilden ein dynamisches System gemäß%
+\begin{equation}
+\Phi(n,x):=\varphi^n(x),\quad\Phi\colon\N_0\times M\to M.
+\end{equation}
+Bei einem bijektiven $\varphi$ lässt sich das System zum invertierbaren
+System
+\begin{equation}
+\Phi(n,x):=\varphi^n(x),\quad\Phi\colon\Z\times M\to M
+\end{equation}
+erweitern.
+
+{\definition}
+Für eine Funktion $\varphi\colon A\to A$ wird der Operator
+\begin{equation}
+C_\varphi (g) := g\circ\varphi,\quad C_\varphi\colon B^A\to B^A
+\end{equation}
+\emdef{Kompositionsoperator}\index{Kompositionsoperator} genannt
+
+Wenn $B^A$ ein Funktionenraum ist, dann ist der Kompositionsoperator
+ein linearer Operator.

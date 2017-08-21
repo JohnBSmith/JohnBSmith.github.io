@@ -1,5 +1,45 @@
 
 \chapter{Analysis}
+\section{Ungleichungen}
+\subsection{Dreiecksungleichung}
+In einem metrischen Raum $(X,d)$ gilt für $x,y,z\in X$
+die allgemeine Dreiecksungleichung:
+\begin{gather}
+d(x,z) \le d(x,y)+d(y,z),\\
+|d(x,y)-d(y,z)|\le d(x,z).
+\end{gather}
+Ist $X$ ein normierter Raum, so wird durch $d(x,y) := \|x-y\|$
+eine Metrik induziert. Somit gilt
+\begin{gather}
+\|x-z\| \le \|x-y\|+\|y-z\|,\\
+|\|x-y\|-\|y-z\|| \le \|x-z\|.
+\end{gather}
+Wird nun $x:=x_1$, $z:=-x_2$ und $y:=0$ gesetzt, so ergibt sich
+die Dreiecksungleichung für normierte Räume:
+\begin{gather}
+\|x_1+x_2\| \le \|x_1\|+\|x_2\|,\\
+|\|x_1\|-\|x_2\||\le \|x_1-x_2\|.
+\end{gather}
+Normen sind z.\,B. $\|x\|=|x|$ für $x\in\R$ und $\|z\|=|z|$ für
+$z\in\C$. Allgemeiner
+\begin{equation}
+\|v\|^2 = \sum_{k=1}^n v_k^2
+\end{equation}
+für einen Koordinatenvektor $v\in\R^n$, $v=(v_k)_{k=1}^n$.
+
+Ist $\langle v,w\rangle$ ein Skalarprodukt, so wird durch
+\begin{equation}
+\|v\| := \sqrt{\langle v,v\rangle}
+\end{equation}
+eine Norm induziert.
+
+\subsection{Bernoullische Ungleichung}
+Für $x\in\R$, $x\ge -1$ und $n\in\Z$, $n\ge 1$ gilt
+\begin{equation}
+(1+x)^n \ge 1+nx.
+\end{equation}
+Die Ungleichung wird nur für $n=1$ oder $x=0$ zu einer Gleichung.
+
 \section{Konvergenz}
 \subsection{Umgebungen}\index{Umgebung}
 Sei $(X,T)$ ein topologischer Raum und $x\in X$.
@@ -59,7 +99,7 @@ Für eine Folge $(a_n)\colon\N\to\R$ wird \eqref{eq:konvergent} zu:
 \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\colon\;
 |a_n-g|<\varepsilon.
 \end{equation}
-\strong{Sandwichsatz:} Seien $(a_n)$ und $(b_n)$ reelle Folgen
+\strong{Sandwichsatz.} Seien $(a_n)$ und $(b_n)$ reelle Folgen
 mit $a_n\to g$ und $b_n\to g$. Gilt $a_n\le c_n\le b_n$ für fast alle
 $n$, so konvergiert $(c_n)$ auch gegen $g$.
 
@@ -185,7 +225,7 @@ absolut konvergenten Reihen ist absolut konvergent und es gilt
 \begin{equation}\label{eq:cauchy-product-limits}
 C = AB.
 \end{equation}
-\strong{Satz von Mertens:}
+\strong{Satz von Mertens.}
 Das Cauchy-Produkt von reellen oder komplexen konvergenten Reihen,
 eine davon absolut konvergent, ist konvergent und es gilt
 \eqref{eq:cauchy-product-limits}.
@@ -219,7 +259,7 @@ Intervall. Die Funktion $f$ ist stetig bei $x_0\in I$ gdw.
 Sind $f,g$ stetige Funktion, so ist auch $g\circ f$ stetig.
 
 \noindent
-\strong{Zwischenwertsatz:}\index{Zwischenwertsatz}
+\strong{Zwischenwertsatz.}\index{Zwischenwertsatz}
 Sei $f\colon [a,b]\to\R$ eine stetige Funktion und sei
 $a<b$. Bei $f(a)<f(b)$ gilt:
 \begin{equation}
@@ -230,7 +270,7 @@ Bei $f(a)>f(b)$ gilt:
 \forall y\in [f(b),f(a)]\enspace\exists x\in [a,b]\colon y=f(x).
 \end{equation}
 
-\newpage
+% \newpage
 \section{Differentialrechnung}\index{Differentialrechnung}
 \subsection{Differentialquotient}\index{Differentialquotient}\index{Ableitung}
 \begin{Definition}
@@ -253,14 +293,14 @@ f'(x_0),\,\qquad (Df)(x_0),\qquad \frac{\mathrm df(x)}{\mathrm dx}\Big|_{x=x_0}.
 \end{Definition}
 
 \subsection{Ableitungsregeln}
-Sind $f,g$ differenzierbare Funktionen und ist $a$ eine reelle Zahl,
-so gilt
+Sind $f,g,h$ an der Stelle $x$ differenzierbare Funktionen,
+ist $h(x)\ne 0$ und ist $a$ eine reelle Zahl, so gilt
 \begin{gather}
 (af)'(x) = af'(x),\\
 (f+g)'(x) = f'(x)+g'(x),\\
 (f-g)'(x) = f'(x)-g'(x),\\
 (fg)'(x) = f'(x)g(x)+g'(x)f(x),\\
-\Big(\frac{f}{g}\Big)'(x) = \frac{f'(x)g(x)-g'(x)f(x)}{g(x)^2}.
+\Big(\frac{f}{h}\Big)'(x) = \frac{f'(x)h(x)-h'(x)f(x)}{h(x)^2}.
 \end{gather}
 \subsubsection{Kettenregel}
 Ist $g$ differenzierbar an der Stelle $x_0$ und
@@ -284,7 +324,8 @@ N(x) = f(x_0)+\frac{1}{f'(x_0)}(x-x_0).
 \subsubsection{Taylorreihe}
 Sei $f$ eine an der Stelle $a$ unendlich oft differenzierbare
 reelle Funktion.
-\begin{Definition}
+
+{\definition}
 \emdef{Taylorreihe} von $f$ an der Stelle $a$:
 \begin{equation}
 \begin{split}
@@ -294,11 +335,10 @@ reelle Funktion.
 \end{split}
 \end{equation}
 mit $f^{(k)}(a)=(D^k f)(a)$.
-\end{Definition}
 
 Für Polynomfunktionen und für $\exp$, $\sin$, $\cos$ gilt
 \begin{equation}
-\forall x\colon\; f[a](x)=f(x).
+\forall x{\in}\R\colon\; f[a](x)=f(x).
 \end{equation}
 
 \section{Integralrechnung}
@@ -309,12 +349,11 @@ so gilt:
 \begin{equation}
 \int_a^b T(x)\,\mathrm dx = \sum_{k=0}^{n-1} (x_{k+1}-x_k)\,t_k.
 \end{equation}
-\begin{Definition}
+{\definition}
 Eine Funktion $f\colon[a,b]\to\R$ heißt
 \emdef{Regelfunktion}\index{Regelfunktion}, wenn es eine
 Folge von Treppenfunktionen gibt, die gleichmäßig gegen $f$
 konvergiert.
-\end{Definition}
 
 Ist $(T_n)$ eine gleichmäßig gegen die Regelfunktion $f$ konvergente
 Folge von Treppenfunktionen, so gilt:
@@ -346,14 +385,126 @@ Es gilt:
 \end{equation}
 
 \subsection{Hauptsatz}\index{Hauptsatz der Analysis}
-\begin{Definition} \emdef{Integralfunktion}:
-\begin{equation}
-F(x):=\int_a^x f(x)\,\mathrm dx.
-\end{equation}
-\end{Definition}
+Sei $I$ ein Intervall, offen, halboffen, geschlossen oder unendlich.
+Sei $f\colon I\to\R$ stetig.
 
-\newpage
-\section{Skalarfelder}
+{\definition}
+\emdef{Integralfunktion}:
+\begin{equation}
+F(x):=\int_a^x f(x)\,\mathrm dx,\quad F\colon I\to\R.
+\end{equation}
+
+{\definition}
+Gilt $F'=f$, so wird $F$ \emdef{Stammfunktion} von $f$ genannt.
+
+\theorem{Satz}
+Die Integralfunktion ist differenzierbar und es gilt $F'=f$.
+Ist $f\colon I\to\R$ stetig und $F$ eine Stammfunktion von $f$,
+so gilt
+\begin{equation}\label{eq:Hauptsatz}
+\int_a^b f(x)\,\mathrm dx = [F(x)]_{a}^{b} = F(b)-F(a)
+\end{equation}
+für $a,b\in I$.
+
+\subsection{Integrationsregeln}
+\subsubsection{Linearität}
+Für integrierbare Funktionen $f,g\colon [a,b]\to\R$ und eine
+Konstante $c\in\R$ gilt die Additivität:
+\begin{equation}
+\int_a^b f(x)+g(x)\,\mathrm dx
+= \int_a^b f(x)\,\mathrm dx+\int_a^b g(x)\,\mathrm dx\\
+\end{equation}
+und die Homogenität:
+\begin{equation}
+\int_a^b c f(x)\,\mathrm dx
+= c\int_a^b f(x)\,\mathrm dx.
+\end{equation}
+
+\subsubsection{Substitutionsregel}
+Für $f\in C(I\to\R)$ und
+$\varphi\in C^1([a,b]\to\R)$\\
+mit $\varphi([a,b])\subseteq I$ gilt%
+\begin{equation}
+\int_a^b f(\varphi(t))\,\varphi'(t)\,\mathrm dt
+= \int_{\varphi(a)}^{\varphi(b)} f(x)\,\mathrm dx.
+\end{equation}
+\subsubsection{Partielle Integration}
+Für $f,g\in C^1([a,b]\to\R)$ gilt
+\begin{equation}
+\int_a^b f(x)\,g'(x)\,\mathrm dx = [f(x)g(x)]_a^b
+- \int_a^b g(x)f'(x)\,\mathrm dx.
+\end{equation}
+
+\subsection{Integral bei Polstellen}
+Bei Polstellen im Integrationsintervall ist Vorsicht geboten.
+Man könnte z.\,B. auf die Idee kommen, dass einfach%
+\begin{equation}
+\int_{-1}^1 \frac{1}{x^3}\,\mathrm dx
+= \Big[-\frac{1}{2x^2}\Big]_{-1}^1 = 0
+\end{equation}
+gerechnet werden kann. Die Funktion $f(x):=x^{-3}$ besitzt jedoch eine
+Polstelle bei $x=0$, ist dort somit nicht definiert und die Lücke
+ist auch nicht stetig behebbar. Der Hauptsatz \eqref{eq:Hauptsatz}
+setzt aber einen stetigen Integranden voraus. 
+
+Um solche Situationen angehen zu können, ist eine Erweiterung
+des Integralbegriffs notwendig.
+
+{\definition}
+\emdef{Cauchy-Hauptwert}\index{Cauchy Hauptwert}
+(kurz CH, engl. PV für \emdef{principial value}\index{principial value})
+bei einer Definitionslücke $x=c$\,:
+\begin{equation}
+\begin{split}
+&\mathrm{PV}\int_a^b f(x)\,\mathrm dx :=\\
+&\quad\lim_{\varepsilon\to 0}\bigg(\int_a^{c-\varepsilon} f(x)\,\mathrm dx
++\int_{c+\varepsilon}^b f(x)\,\mathrm dx\bigg).
+\end{split}
+\end{equation}
+Nun gilt:
+\begin{equation}
+\mathrm{PV}\int_{-1}^1 \frac{1}{x^3}\,\mathrm dx = 0.
+\end{equation}
+Die Flächeninhalte auf beiden Seiten der Polstelle sind
+von unterschiedlichem Vorzeichen und heben sich gegenseitig auf.
+
+Eine alternative Erweiterung
+ist die Erweiterung des Integranden auf einen komplexen
+Definitionsbereich. Da die Funktion $f(z):=z^{-3}$ meromorph
+ist, lässt sich der Integrationsweg um die Polstelle herumführen
+und es gilt%
+\begin{equation}
+\int_{-1}^1 \frac{1}{z^3}\,\mathrm dz = 0.
+\end{equation}
+Zu beachten ist aber, dass z.\,B.
+\begin{equation}
+\int_{-1}^1 \frac{1}{z^2}\,\mathrm dz = -2
+\end{equation}
+ist, obwohl
+\begin{equation}
+\mathrm{PV}\int_{-1}^1 \frac{1}{x^2}\,\mathrm dx
+\end{equation}
+nicht existiert.
+
+Man beachte auch, dass in der komplexen Ebene der Umlaufsinn um
+die Polstelle unter Umständen eine Rolle spielt, denn die
+Wegunabhängigkeit des Integrals für einen holomorphen Integranden
+ist nur für einfach zusammenhängende Gebiete
+sichergestellt. Z.\,B. ist
+\begin{equation}
+\int_{-1}^1 \frac{1}{z}\,\mathrm dz = -\pi\ui
+\end{equation}
+für den Integrationsweg oberhalb der Polstelle,
+\begin{equation}
+\int_{-1}^1 \frac{1}{z}\,\mathrm dz = +\pi\ui
+\end{equation}
+für den Integrationsweg unterhalb der Polstelle und
+\begin{equation}
+\mathrm{PV}\int_{-1}^1 \frac{1}{x}\,\mathrm dx = 0.
+\end{equation}
+
+% \newpage
+\section{Skalarfelder}\index{Skalarfeld!auf dem Koordinatenraum}
 Sei $x:=(x_k)_{k=1}^n$ und $a:=(a_k)_{k=1}^n$. Sei $f\colon G\to\R$
 wobei $G\subseteq\R^n$ eine offene Menge ist.
 \subsection{Partielle Ableitungen}
@@ -372,7 +523,7 @@ Kurzschreibweisen:
 (D_k f)(a),\quad (\partial_k f)(a).
 \end{equation}
 \end{Definition}
-\subsection{Gradient}
+\subsection{Gradient}\index{Gradient}
 Sei $(\ue_k)_{k=1}^n$ die kanonische Basis des $\R^n$.
 \begin{Definition} \emdef{Gradient} an der Stelle $a$:
 \begin{equation}
@@ -428,9 +579,10 @@ D_v (fg) &= gD_v f+fD_v g,\\
 D_{v+w} f &= D_v f+D_w f.
 \end{align}
 
-\section{Vektorfelder}
+\section{Vektorfelder}\index{Vektorfeld!auf dem Koordinatenraum}
 Sei $f\colon G\to\R^m$ wobei $G\subseteq\R^n$ eine offene Menge ist.
-\begin{Definition} \emdef{Jacobi-Matrix} an der Stelle $a$:
+\begin{Definition} \emdef{Jacobi-Matrix}\index{Jacobi-Matrix}
+an der Stelle $a$:
 \begin{equation}
 (J[f](a))_{ij} := (D_j f_i)(a).
 \end{equation}

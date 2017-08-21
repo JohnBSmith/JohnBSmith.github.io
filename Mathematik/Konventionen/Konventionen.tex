@@ -7,6 +7,10 @@
 \definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
 \renewcommand*\ttdefault{pcr}
@@ -51,6 +55,41 @@ usw.
 
 Weiterhin ergibt sich jetzt der Vorteil, dass die Halbebenen durch
 PX, NX, XP, XN dargestellt werden können.
+
+Wünschenswert wären nun Möglichkeiten zur genaueren und allgemeineren
+Formulierung. Die Sprache der Mengenlehre bietet dafür aber genau
+die notwendigen Operationen an. Zunächst definiert man
+\begin{align}
+\R^+ &= \{x\in\R\mid x>0\}\qquad(\text{positive reelle Zahlen}),\\
+\R^- &= \{x\in\R\mid x<0\}\qquad(\text{negative reelle Zahlen}),\\
+\R_0^+ &= \{x\in\R\mid x\ge 0\}\qquad(\text{nichtnegative reelle Zahlen}),\\
+\R_0^- &= \{x\in\R\mid x\le 0\}\qquad(\text{nichtpositive reelle Zahlen}).
+\end{align}
+Nun ist
+\begin{equation}
+\begin{split}
+\mathrm{PP}:=\R^+\times\R^+,\quad\mathrm{NP}:=\R^-\times\R^+,\\
+\mathrm{NN}:=\R^-\times\R^-,\quad\mathrm{PN}:=\R^+\times\R^-.
+\end{split}
+\end{equation}
+Die waagerechten Achsen lassen sich durch $\R\times\{b\}$
+und die senkrechten durch $\{a\}\times\R$ angeben.
+Der die komplexen Zahlen ohne Standardbranchcut sind
+$\C\setminus\R_0^+$. Mit $p,q:=p+\R(q-p)$ wird lässt sich die Gerade durch
+zwei unterschiedliche Punkte bzw. komplexe Zahlen $p,q$ modellieren.
+Mit $p+\R v$ eine Gerade die in $p$ eingehängt ist, und in
+Richtung $v$ zeigt. Mit $p+\R_0^+v$ ein Strahl.
+Mit $\R_0^+\ee^{\ui\varphi}$ Strahlen vom
+Ursprung aus in Richtung $\varphi$. Eine Kreislinie mit Mittelpunkt
+$p$ und Radius $r$ lässt sich mit $p+r\ee^{\ui\R}$ notieren.
+Mit $S_1:=\ee^{\ui\R}$ verkürzt sich die Notation auf $p+rS_1$.
+Kugeloberflächen sind $p+rS_2$.
+
+Da sich komplexe Zahlen multiplizieren lassen, dürfen die
+Buchstaben nicht mehr einfach aneinandergereiht werden.
+Sie werden dann einfach mit einem Komma getrennt.
+Die Strecke von $\overline{AB}$ wird dann als $\overline{a,b}:=|a-b|$
+notiert.
 
 \subsection{Polarkoordinaten}
 Seien $(x,y)$ die kartesischen Koordinaten und $(r,\varphi)$
@@ -205,7 +244,7 @@ $(v|w)$, $[v|w]$.
 
 Ich schlage vor, $\langle v,w\rangle$ (einschließlich
 $\langle v|w\rangle$) als einzige Schreibweise zu verwenden.
-Hat man nur Plain-Text zur Verfügung (z.B. im Chat), so
+Hat man nur Plain-Text zur Verfügung (z.\,B. im Chat), so
 kann man \verb|<v,w>| schreiben.
 
 Das Skalarprodukt ist nicht assoziativ, und $\langle v,w\rangle$
@@ -242,7 +281,7 @@ hat.
 Ich finde die Notation $A^H$ für die adjungierte Matrix daher
 am besten. Die Notationen $A^H$ und $\overline{A}$ sind m.\,E.
 unmissverständlich. Hat man nur Plain-Text zur Verfügung
-(z.B. im Chat), so kann man \verb|A^H| und \verb|conj(A)|
+(z.\,B. im Chat), so kann man \verb|A^H| und \verb|conj(A)|
 schreiben.
 
 \subsection{Standardskalarprodukt}
@@ -292,7 +331,7 @@ am besten. Wenn man ganz pedantisch ist, so bemerkt man, dass
 $x$ im Ausdruck eine gebundene Variable ist und schreibt besser
 $[F(x)]_{x=a}^{x=b}$.
 
-Die Notation $F(x)|_a^b$ finde ich ambivalent. Man muss z.B.
+Die Notation $F(x)|_a^b$ finde ich ambivalent. Man muss z.\,B.
 \[[2+F(x)]_a^b = (2+F(b))-(2+F(a)) = F(b)-F(a)\]
 von
 \[2+[F(x)]_a^b = 2+F(b)-F(a)\]
@@ -334,6 +373,10 @@ Alternativ gibt es noch
 \end{split}
 \end{equation}
 
+\subsection{Dualraum}
+Für den Dualraum zum Vektorraum $V$ scheint mir die Notation $V^\ast$
+besser als $V'$, da mit $V'$ oft irgendein zweiter Vektorraum
+bezeichnet wird.
 
 \section{Algebra}
 \subsection{Notation für Körpererweiterungen}
@@ -360,6 +403,22 @@ Untergruppenbeziehungen symbolisiert werden und Körper ja
 additive Gruppenstruktur enthalten. Man müsste wenigstens
 $K\le_K L$ schreiben, aber im Englischen heißt es dann $K\le_F L$.
 
+\subsection{Kanonische Isomorphie}
+Kanonische Isomorphismen kommen recht häufig vor.
+Bei kanonischer Isomorphie könnte die Notation $A\cong B$
+anstelle von $A\simeq B$ gewählt werden. Das Gleichzeichen sagt
+uns dabei, dass wir irgendwie $A=B$ setzen können und die Tilde
+erinnert uns daran, dass die Isomorphie eine Äquivalenzrelation
+ist.
+
+Bei Unklarheit, ob Isomorphismen zwischen Gruppen, Ringen, Körpern,
+Vektorräumen oder topologischen Räumen gemeint sind, ist die
+Notation
+\begin{equation}
+\simeq_G,\quad\simeq_R,\quad\simeq_K,\quad\simeq_V,\quad\simeq_T
+\end{equation}
+sinnvoll, oder der Zusammenhang wird in Worten formuliert.
+
 \section{Notation}
 \subsection{Bindungsstärke von Operatoren}
 Die Schreibweisen $\forall x\colon P(x)$ und $\exists x\colon P(x)$
@@ -382,6 +441,37 @@ Bei längeren Ausdrücken lassen sich die Klammern ja bunt anmalen.
 Das ist hier mein Kontrapunkt, dass sie die Klammern ja bunt
 anmalen lassen.
 
+\subsection{Natürliche Zahlen}
+Längere Zeit der Frustation bewog mich ich, einen Schlussstrich
+zu ziehen und
+\begin{equation}
+\N_a := \{n\in\Z\mid a\le n\}
+\end{equation}
+zu definieren. Man konnte sich nie einigen, ob denn
+$\N:=\N_0$ oder $\N:=\N_1$ sein soll. Im Fall $\N:=\N_1$
+gibt es dann
+\begin{equation}
+\N^\ast = \N_1^\ast := \N_1\setminus\{0\} = \N_0.
+\end{equation}
+Das Zeichen $\N$ wird nun mit einer neuen Bedeutung versehen.
+Es sagt aus, dass es nicht von Bedeutung ist, ob $\N_0$ oder $\N_1$
+verwendet wird.
+
+Alternative Notation:
+\begin{align}
+[a..b] &:= \{n\in\Z\mid a\le n\wedge n\le b\},\\
+[a..]  &:= \{n\in\Z\mid a\le n\},\\
+[..b]  &:= \{n\in\Z\mid n\le b\}.
+\end{align}
+Somit ist $\N_0=[0..]$ und $\N_1=[1..]$.
+Ich würde außerdem $\omega=\N_0$ setzen, weil das am ehesten
+dem Von-Neumann-Modell entspricht. Ohne $2=\{0,1\}$ lässt
+sich $2^A$ nicht als Abbildung in die Wahrheitswerte
+interpretieren.
+
+Hübsch aussehen tut das nicht unbedingt. Aber zumindest gibt
+es nun kein Herumgezetere mehr, welche Definition denn die bessere
+sei.
 \end{document}
 
 

@@ -4,8 +4,8 @@
 \subsection{Norm}\index{Norm}
 \begin{Definition}
 Eine Abbildung $v\mapsto\|v\|$ von einem
-$\K$-Vektorraum $V$ in die nichtnegativen reellen Zahlen heißt
-\emdef{Norm}, wenn für alle $v,w\in V$ und $a\in\K$
+Vektorraum $V$ über dem Körper $K$ in die nichtnegativen reellen
+Zahlen heißt \emdef{Norm}, wenn für alle $v,w\in V$ und $a\in K$
 die drei Axiome%
 \begin{gather}
 \|v\|=0 \implies v=0,\\
@@ -21,13 +21,18 @@ Eigenschaften:
 \|-v\|=\|v\|,\\
 \|v\|\ge 0.
 \end{gather}
-Umgekehrte Dreiecksungleichung:
+Dreiecksungleichung nach unten:
 \begin{equation}
 |\|v\|-\|w\||\le \|v-w\|.
 \end{equation}
 
 \subsection{Skalarprodukt}\index{Skalarprodukt}
+
 \subsubsection{Axiome}
+{\definition}
+Eine Abbildung heißt \emdef{Skalarprodukt},
+wenn folgende Axiome erfüllt sind.
+
 Axiome für $v,w$ aus einem reellen Vektorraum und $\lambda$ ein Skalar:
 \begin{gather}
 \langle v,w\rangle = \langle w,v\rangle,\\
@@ -50,15 +55,14 @@ Axiome für $v,w$ aus einem komplexen Vektorraum und $\lambda$ ein Skalar:
 Das reelle Skalarprodukt ist eine symmetrische bilineare Abbildung.
 
 \subsubsection{Winkel und Längen}
-\begin{Definition}
-Der Winkel $\varphi$ zwischen $v$ und $w$
+{\definition}
+Der \emdef{Winkel} $\varphi$ zwischen $v$ und $w$
 ist definiert durch die Beziehung:
 \begin{equation}
 \langle v,w\rangle = \|v\|\,\|w\|\,\cos\varphi.
 \end{equation}
-\end{Definition}
-\begin{Definition}
-Orthogonal:\index{Orthogonal}
+{\definition}
+\emdef{Orthogonal}:\index{Orthogonal}
 \begin{equation}
 v\perp w \;:\Longleftrightarrow\; \langle v,w\rangle=0.
 \end{equation}
@@ -66,26 +70,24 @@ Ein Skalarprodukt $\langle v,w\rangle$ induziert die Norm
 \begin{equation}
 \|v\| := \sqrt{\langle v,v\rangle}.
 \end{equation}
-\end{Definition}
 
-\subsubsection{Orthonormalbasis}
+\subsubsection{Orthonormalbasis}\label{sec:ONB}
 \index{Orthogonalsystem}\index{Orthogonalbasis}
 \index{Orthonormalsystem}\index{Orthonormalbasis}
 Sei $B=(b_k)_{k=1}^n$ eine Basis eines endlichdimensionalen
-Vektorraumes.
+Vektorraumes über den reellen oder komplexen Zahlen.
 
-\begin{Definition}
+{\definition}
 Gilt $\langle b_i,b_j\rangle=0$
 für alle $i,j$ mit $i\ne j$, so wird $B$ \emdef{Orthogonalbasis}
 genannt. Ist $B$ nicht unbedingt eine Basis, so spricht man von einem 
 \emdef{Orthogonalsystem}.
-\end{Definition}
-\begin{Definition}
+
+{\definition}
 Ist $B$ eine Orthogonalbasis und gilt
 zusätzlich $\langle b_k,b_k\rangle=1$ für alle $k$, so wird
 $B$ \emdef{Orthonormalbasis} (ONB) genannt. Ist $B$ nicht unbedingt
 eine Basis,  so spricht man von einem \emdef{Orthonormalsystem}.
-\end{Definition}
 
 Sei $v=\sum_k v_kb_k$ und $w=\sum_k w_kb_k$.
 Mit $\sum_k$ ist immer $\sum_{k=1}^n$ gemeint.
@@ -133,10 +135,149 @@ Speziell für zwei nicht kollineare Vektoren $v_1,v_2$ gilt
 w_1=v_1,\\
 w_2=v_2-P[w_1](v_2).
 \end{gather}
+\section{Koordinatenvektoren}
+\subsection{Koordinatenraum}
+Addition von $a,b\in K^n$:
+\begin{equation}\label{eq:Koordinatenraum-Addition}
+\begin{bmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{bmatrix}
++\begin{bmatrix}
+b_1\\
+\vdots\\
+b_n
+\end{bmatrix}
+:= \begin{bmatrix}
+a_1+b_1\\
+\vdots\\
+a_n+b_n
+\end{bmatrix}.
+\end{equation}
+Subtraktion:
+\begin{equation}
+\begin{bmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{bmatrix}
+-\begin{bmatrix}
+b_1\\
+\vdots\\
+b_n
+\end{bmatrix}
+:= \begin{bmatrix}
+a_1-b_1\\
+\vdots\\
+a_n-b_n
+\end{bmatrix}.
+\end{equation}
+Skalarmultiplikation von $\lambda\in K$ mit $a\in K^n$:
+\begin{align}\label{eq:Koordinatenraum-Skalarmultiplikation}
+\lambda\begin{bmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{bmatrix}
+:= \begin{bmatrix}
+\lambda a_1\\
+\vdots\\
+\lambda a_n
+\end{bmatrix}.
+\end{align}
+Ist $K$ ein Körper, so bildet die Menge
+\begin{equation}
+K^n = \{(a_1,\ldots,a_n)\mid \forall k\colon a_k\in K\}
+\end{equation}
+bezüglich der Addition \eqref{eq:Koordinatenraum-Addition}
+und der Multiplikation \eqref{eq:Koordinatenraum-Skalarmultiplikation}
+einen Vektorraum, der \emdef{Koordinatenraum} genannt wird.
+Das Tupel $E_n=(e_1,\ldots,e_n)$ mit
+\begin{equation}\label{eq:kanonische-Basis}
+\begin{split}
+e_1 &:= (1,0,0,0,\ldots, 0),\\
+e_2 &:= (0,1,0,0,\ldots, 0),\\
+e_3 &:= (0,0,1,0,\ldots, 0),\\
+\ldots\\
+e_n &:= (0,0,0,0,\ldots, 1)
+\end{split}
+\end{equation}
+bildet eine geordnete Basis von $K^n$, die \emdef{kanonische Basis}
+genannt wird. Es gilt
+\begin{equation}
+a = (a_1,\ldots,a_n) = a_1 e_1+\ldots+a_n e_n.
+\end{equation}
+
+\subsection{Kanonisches Skalarprodukt}
+\begin{Definition}
+Für $a,b\in\R^n$:
+\begin{equation}
+\langle a,b\rangle := \sum_{k=1}^n a_k b_k.
+\end{equation}
+Für $a,b\in\C^n$:
+\begin{equation}
+\langle a,b\rangle := \sum_{k=1}^n \overline{a_k}\,b_k
+\end{equation}
+\end{Definition}
+\noindent
+Die kanonische Basis \eqref{eq:kanonische-Basis} ist eine
+Orthonormalbasis bezüglich diesem Skalarprodukt, s. \ref{sec:ONB}.
+Das Skalarprodukt induziert die Norm
+\begin{equation}
+|a| := \sqrt{\langle a,a\rangle} = \sqrt{\textstyle \sum_{k=1}^n |a_k|^2},
+\end{equation}
+die \emdef{Vektorbetrag} genannt wird.
+
+Jedem Koordinatenvektor $a\ne 0$ lässt sich ein Einheitsvektor
+$\hat a:=\frac{a}{|a|}$ zuordnen, der in Richtung von $a$ zeigt
+und die Eigenschaft $|\hat a|=1$ besitzt.
+
 
 \section{Matrizen}\index{Matrix}
-\subsection{Quadratische Matrizen}\index{quadratische Matrix}
-Eine quadratiche Matrix $A=(a_{ij})$ heißt symmetrisch,
+\subsection{Quadratische Matrizen}%
+\index{Matrix!quadratische}\index{quadratische Matrix}
+\subsubsection{Matrizenring}%
+\index{Ring!Matrizenring}\index{Matrizenring}
+Mit $K^{n\times n}$ wird die Menge quadratischen Matrizen
+\begin{equation}
+(a_{ij}) = \begin{bmatrix}
+a_{11} & \ldots & a_{1n}\\
+\ldots & \ddots & \ldots\\
+a_{n1} & \ldots & a_{nn}
+\end{bmatrix}
+\end{equation}
+mit Einträgen $a_{ij}$ aus dem Körper $K$ bezeichnet.
+
+Die Menge $K^{n\times n}$ bildet bezüglich Addition
+und Multiplikation von Matrizen einen Ring (s. \ref{sec:Strukturen}).
+
+Das neutrale Element der Multiplikation
+ist die Einheitsmatrix
+\begin{equation}
+E_n = (\delta_{ij}),\quad
+\delta_{ij}:=\begin{cases}
+1 & \text{wenn}\;i=j,\\
+0 & \text{sonst}.
+\end{cases}
+\end{equation}
+Das sind
+\begin{equation}
+E_2 = \begin{bmatrix}
+1 & 0\\
+0 & 1
+\end{bmatrix},\quad
+E_3 = \begin{bmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{bmatrix},
+\quad\text{usw.}
+\end{equation}
+
+\subsubsection{Symmetrische Matrizen}
+Eine quadratiche Matrix $A=(a_{ij})$ heißt
+symmetrisch\index{symmetrische Matrix},
 falls gilt $a_{ij}=a_{ji}$ bzw. $A^T=A$.
 
 Jede reelle symmetrische Matrix besitzt ausschließlich reelle
@@ -148,7 +289,8 @@ eine invertierbare Matrix $T$ und eine Diagonalmatrix $D$, so dass
 $A=TDT^{-1}$ gilt.
 
 Sei $V$ ein $K$-Vektorraum und $(b_k)_{k=1}^n$ eine Basis von $V$.
-Für jede symmetrische Bilinearform $f\colon V^2\to K$ ist die
+Für jede symmetrische Bilinearform\index{symmetrische Bilinearform}
+$f\colon V^2\to K$ ist die
 Darstellungsmatrix
 \begin{equation}
 A = (f(b_i,b_j))
@@ -161,6 +303,75 @@ f(x,y) = x^T A y.
 eine symmetrische Bilinearform für  $x,y\in K^n$.
 Ist $K=\R$ und $A$ positiv definit, so ist
 \eqref{eq:symmBf} ein Skalarprodukt auf $\R^n$.
+
+\subsubsection{Reguläre Matrizen}\index{inverse Matrix}
+Eine quadratische Matrix $A\in K^{n\times n}$ heißt \emdef{regulär}
+oder \emdef{invertierbar}, wenn es eine inverse Matrix $A^{-1}$ gibt,
+so dass
+\begin{equation}
+A^{-1}A = E_n \quad (\iff AA^{-1} = E_n)
+\end{equation}
+gilt, wobei mit $E_n$ die Einheitsmatrix gemeint ist. Jede
+reguläre Matrix besitzt genau eine inverse Matrix. Eine Matrix $A$
+ist genau dann regulär, wenn $\det(A)\ne 0$ gilt. Die Menge
+der regulären Matrizen bildet bezüglich Matrizenmultiplikation
+eine Gruppe, die
+\emdef{allgemeine lineare Gruppe}\index{allgemeine lineare Gruppe}
+\begin{equation}
+\operatorname{GL}(n,K) := \{A\in K^{n\times n}\mid\det(A)\ne 0\}.
+\end{equation}
+Ist $V$ ein Vektorraum über dem Körper $K$, so bilden die
+Automorphismen bezüglich Verkettung eine Gruppe, die
+\emph{Automorphismengruppe}
+\begin{equation}
+\operatorname{GL}(V) = \operatorname{Aut}(V).
+\end{equation}
+Ein \emdef{Endomorphismus}\index{Endomorphismus!auf einem Vektorraum}
+ist eine lineare Abbildung, welche eine Selbstabbildung ist.
+Ein \emdef{Automorphismus}\index{Automorphismus!auf einem Vektorraum}
+ist eine bijektiver Endomorphismus.
+
+Wählt man auf $V$ eine Basis
+$B$, so ist die Zuordnung der Darstellungsmatrix
+\begin{equation}
+M_B^B\colon \operatorname{Aut}(V)\to\operatorname{GL}(\dim V,K)
+\end{equation}
+eine Gruppenisomorphismus.
+
+Eine quadratische Matrix, die nicht regulär ist, heißt
+\emdef{singulär}. Endomorphismen, die nicht bijektiv sind, lassen
+die Dimension ihrer Definitionsmenge schrumpfen:
+\begin{equation}
+f{\in}\operatorname{End}(V){\setminus}\operatorname{Aut}(V)
+\Longleftrightarrow \dim f(V)<\dim V.
+\end{equation}
+Für Matrizen $A\in K^{n\times n}$ bedeutet das, dass sie nicht
+den vollen Rang besitzen:
+\begin{equation}
+\det A=0\iff \operatorname{rk}(A) < n = \dim K^n.
+\end{equation}
+Inversionsformel:
+\begin{equation}
+\begin{bmatrix}
+a & b\\
+c & d
+\end{bmatrix}^{-1}
+= \frac{1}{ad-bc}\begin{bmatrix}
+d & -b\\
+-c & a
+\end{bmatrix}.
+\end{equation}
+\begin{Definition}
+Wird in der Matrix $A$ die Zeile $i$ und die Spalte $j$ entfernt,
+so entsteht eine neue Matrix $[A]_{ij}$, die
+\emdef{Streichungsmatrix}\index{Streichungsmatrix}
+von $A$ genannt wird.
+\end{Definition}
+Laplacescher Entwicklungssatz:
+\begin{align}
+\det A = \sum_{i=1}^n (-1)^{i+j}a_{ij}\det([A]_{ij}),\\
+\det A = \sum_{j=1}^n (-1)^{i+j}a_{ij}\det([A]_{ij}).
+\end{align}
 
 \subsection{Determinanten}\index{Determinante}
 Für Matrizen $A,B\in K^{n\times n}$ und $r\in K$ gilt:

@@ -1,0 +1,140 @@
+
+\chapter{Funktionentheorie}
+\section{Holomorphe Funktionen}
+
+{\definition}
+Sei $U\subseteq\C$ eine offene Menge und $f\colon U\to\C$.
+Die Funktion $f$ wird \emdef{holomorph}\index{holomorph} an der
+Stelle $z_0\in U$ genannt, wenn der Grenzwert
+\begin{equation}
+f'(z_0) := \lim_{z\to z_0} \frac{f(z)-f(z_0)}{z-z_0}
+\end{equation}
+existiert.
+
+Das Argument und Bild von $f$ werden nun in Real- und Imaginärteil
+zerlegt. Das sind die Zerlegungen $z=x+y\ui$ und $f(z)=u(x,y)+v(x,y)\ui$.
+Die Funktion $f(z)$ ist genau dann holomorph an der Stelle
+$z_0=x_0+y_0\ui$, wenn bei $(x_0,y_0)$ die partiellen Ableitungen
+stetig sind und die \emdef{Cauchy-Riemann-Gleichungen}
+\begin{equation}\label{eq:Cauchy-Riemann-Gleichungen}
+\frac{\partial u}{\partial x}=\frac{\partial v}{\partial y},
+\quad \frac{\partial u}{\partial y}=-\frac{\partial v}{\partial x}
+\qquad\text{bei}\;(x_0,y_0)
+\end{equation}
+gelten. Bei
+\begin{equation}
+\uv v := (u,-v) = (v_x,v_y) = v_x e_x+v_y e_y
+\end{equation}
+handelt es sich um ein Vektorfeld
+auf dem Koordinatenraum. Die Gleichungen
+\eqref{eq:Cauchy-Riemann-Gleichungen} lassen sich nun als
+Quellenfreiheit
+\begin{equation}
+0=\langle\nabla,\uv v\rangle = \frac{\partial v_x}{\partial x}+\frac{\partial v_y}{\partial y}
+\end{equation}
+und Rotationsfreiheit
+\begin{equation}
+0=\nabla\wedge \uv v = \Big(\frac{\partial v_y}{\partial x}-\frac{\partial v_x}{\partial y}\Big)\,e_x\wedge e_y
+\end{equation}
+interpretieren.
+
+Für totale Differential
+\begin{equation}
+\mathrm df = \frac{\partial f}{\partial x}\mathrm dx+\frac{\partial f}{\partial y}\mathrm dy
+\end{equation}
+gibt es die Umformulierung
+\begin{equation}\label{eq:Differential-Wirtinger-Operatoren}
+\mathrm df = \frac{\partial f}{\partial z}\mathrm dz+\frac{\partial f}{\partial\overline z}\mathrm d\overline z.
+\end{equation}
+Hierbei ist $\mathrm dz=\mathrm dx+\ui\,\mathrm dy$ und $\mathrm d\overline{z}=\mathrm dx-\ui\,\mathrm dy$.
+
+Die Ableitungsoperatoren
+\begin{align}
+\frac{\partial f}{\partial z}
+&:= \frac{1}{2}\bigg(\frac{\partial f}{\partial x}-\ui\frac{\partial f}{\partial y}\bigg),\\
+\frac{\partial f}{\partial\overline z}
+&:= \frac{1}{2}\bigg(\frac{\partial f}{\partial x}+\ui\frac{\partial f}{\partial y}\bigg)
+\end{align}
+mit $\partial f=\partial u+\ui\,\partial v$ heißen \emdef{Wirtinger-Operatoren}.
+
+Die Gleichungen \eqref{eq:Cauchy-Riemann-Gleichungen} lassen sich nun
+zur Gleichung
+\begin{equation}\label{eq:Cauchy-Riemann-Wirtinger}
+\frac{\partial f}{\partial\overline z}(z_0)=0
+\end{equation}
+zusammenfassen. Für holomorphe Funktionen reduziert sich das
+Differential \eqref{eq:Differential-Wirtinger-Operatoren} wegen
+\eqref{eq:Cauchy-Riemann-Wirtinger} auf die Form
+\begin{equation}
+\mathrm df = \frac{\partial f}{\partial z}\mathrm dz.
+\end{equation}
+
+\section{Harmonische Funktionen}
+\begin{Definition}
+Sei $U\subseteq\R^2$ eine offene Menge.
+Eine Funktion $\Phi\colon U\to\R$ heißt \emdef{harmonisch}
+an der Stelle $(x_0,y_0)$, wenn die \emdef{Laplace-Gleichung}
+$(\Delta\Phi)(x_0,y_0)=0$ mit dem \emdef{Laplace-Operator}
+\begin{equation}
+\Delta\Phi := \frac{\partial^2\Phi}{\partial x\partial x}+\frac{\partial^2\Phi}{\partial y\partial y}
+\end{equation}
+erfüllt ist.
+\end{Definition}
+
+Ist $f=u+v\ui$ an der Stelle $z_0$ holomorph, so sind der
+Realteil $u$ und der Imaginärteil $v$
+an der Stelle $(x_0,y_0)=(\real z_0,\imag z_0)$ harmonisch.
+Das heißt es gilt
+\begin{equation}
+(\Delta u)(x_0,y_0) = 0,\quad (\Delta v)(x_0,y_0)=0.
+\end{equation}
+Ist eine Funktion $u$ auf einem einfach zusammenhängenden Gebiet
+harmonisch, so lässt sich stets eine harmonische Funktion $v$
+finden, so dass $f=u+v\ui$ holomorph ist. Die Funktion $v$ ist
+bis auf eine additive reelle Konstante $c$ eindeutig bestimmt.
+Das heißt, $v$ darf auch durch $v+c$ ersetzt werden.
+
+Die Funktion $v$ wird die \emdef{harmonisch Konjugierte}
+zu $u$ genannt. An jeder Stelle $(x_0,y_0)$ treffen die Linien
+\begin{align}
+&\{(x,y)\mid u(x,y)=u(x_0,y_0)\},\\
+&\{(x,y)\mid v(x,y)=v(x_0,y_0)\} 
+\end{align}
+senkrecht aufeinander.
+
+\section{Wegintegrale}
+\strong{Integral einer komplexwertigen Funktion.}
+
+Für $f\colon [a,b]\to\C$ mit $f=u+\ui v$ ist
+\begin{equation}
+\int_a^b f(t)\,\mathrm dt
+= \int_a^b u(t)\,\mathrm dt+\ui\int_a^b v(t)\,\mathrm dt,
+\end{equation}
+wenn $u$ und $v$ integrierbar sind.
+
+{\definition}
+Ist $\gamma\colon [a,b]\to\C$ ein differenzierbarer Weg
+\eqref{eq:Parameterkurve}, so wird
+\begin{equation}
+\int_\gamma f(z)\,\mathrm dz := \int_a^b f(\gamma(t))\,\gamma'(t)\,\mathrm dt
+\end{equation}
+das \emdef{Kurvenintegral} über $f$ entlang von $\gamma$ genannt.
+
+\strong{Integralsatz von Cauchy.}
+Ist $G$ ein einfach zusammenhängendes Gebiet und $f\colon G\to\C$
+holomorph, so gilt für jeden Weg $\gamma$ von $\gamma(a)$ nach
+$\gamma(b)$ die Formel
+\begin{equation}
+\int_\gamma f(z)\,\mathrm dz = F(\gamma(b))-F(\gamma(a)),
+\end{equation}
+wobei die Funktion $F$ nicht vom gewählten Weg abhängig ist.
+Außerdem ist $F$ eine Stammfunktion zu $f$, das heißt es gilt
+$F'(z)=f(z)$ für alle $z\in G$.
+
+Sind die Voraussetzungen für den Integralsatz erfüllt,
+dann motiviert Wegunabhängigkeit die Definition
+\begin{equation}
+\int_{z_1}^{z_2} f(z)\,\mathrm dz := F(z_2)-F(z_1),
+\end{equation}
+bei der auf Wege gänzlich verzichtet wird.
+

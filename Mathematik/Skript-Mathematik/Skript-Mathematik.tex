@@ -15,6 +15,7 @@
 \geometry{a4paper,left=38mm,right=22mm,top=24mm,bottom=40mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
+\setcounter{tocdepth}{2}
 
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
@@ -28,7 +29,8 @@
 \newcommand{\sur}{\operatorname{sur}}
 \newcommand{\strong}[1]{{\sf\bfseries #1}}
 
-\newenvironment{Definition}{\strong{Definition.}}{\par}
+\newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
+\newcommand{\emdef}[1]{\emph{#1}}
 
 \begin{document}
 \thispagestyle{empty}
@@ -76,40 +78,59 @@ Sei $M$ eine endliche Menge und $(x_k)_{k=1}^n$ eine bijektive
 Abzählung von $M$, die jedem $k$ ein Element von $M$ zuordnet.
 Man definiert nun\index{Allquantor}
 \begin{equation}
-\forall x{\in}M\;[P(x)] := \bigwedge_{k=1}^n P(x_k) := x_1\land x_2\land\ldots\land x_n
+\forall x{\in}M\;[P(x)] :\Longleftrightarrow \bigwedge_{k=1}^n P(x_k) :\Longleftrightarrow x_1\land x_2\land\ldots\land x_n
 \end{equation}
 und\index{Existenzquantor}
 \begin{equation}
-\exists x{\in}M\;[P(x)] := \bigvee_{k=1}^n P(x_k) := x_1\lor x_2\lor\ldots\lor x_n.
+\exists x{\in}M\;[P(x)] :\Longleftrightarrow \bigvee_{k=1}^n P(x_k) :\Longleftrightarrow x_1\lor x_2\lor\ldots\lor x_n.
 \end{equation}
+Hierbei ist zu beachten, dass es nicht auf die Reihenfolge der
+Abzählung ankommt, da für UND und ODER das Kommutativgesetz gilt.
+
 Formale Beweise lassen sich induktiv führen. Hierfür ist es notwendig,
 die rechten Seiten wie beim Summenzeichen rekursiv zu formalisieren:
 \begin{equation}
-\bigwedge_{k=1}^1 P(x_k) := P(x_1),\qquad
-\bigwedge_{k=1}^n P(x_k) := P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k).
+\bigwedge_{k=1}^1 P(x_k) :\Longleftrightarrow P(x_1),\qquad
+\bigwedge_{k=1}^n P(x_k) :\Longleftrightarrow P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k).
 \end{equation}
-Nun lässt sich die Regel $C\lor (A\land B)=(C\lor A)\land(C\lor B)$
+Nun lässt sich die Regel $C\lor (A\land B)\iff (C\lor A)\land(C\lor B)$
 auf den Allquantor übertragen. Der Induktionsanfang ist
 \begin{equation}
-C\lor\bigwedge_{k=1}^1 P(x_k) = C\lor P(x_1) = \bigwedge_{k=1}^1 (C\lor P(x_1)).
+C\lor\bigwedge_{k=1}^1 P(x_k) \iff C\lor P(x_1) \iff \bigwedge_{k=1}^1 (C\lor P(x_1)).
 \end{equation}
 Der Induktionsschritt ist
 \begin{align}
 & C\lor\!\bigwedge_{k=1}^n P(x_k)
-= C\lor\bigg(P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k)\bigg)
-= (C\lor P(x_n))\land\bigg(C\lor\!\bigwedge_{k=1}^{n-1} P(x_k)\bigg)\\
-&= (C\lor P(x_n))\land\bigwedge_{k=1}^{n-1} (C\lor P(x_k))
-= \bigwedge_{k=1}^{n} (C\lor P(x_k)).
+\iff C\lor\bigg(P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k)\bigg)\\
+&\iff (C\lor P(x_n))\land\bigg(C\lor\!\bigwedge_{k=1}^{n-1} P(x_k)\bigg)\\
+&\iff (C\lor P(x_n))\land\bigwedge_{k=1}^{n-1} (C\lor P(x_k))
+\iff \bigwedge_{k=1}^{n} (C\lor P(x_k)).
 \end{align}
 \subsection{Mengenlehre}
-Regeln zur Mengenbau"=Schreibweise\index{Mengenbau-Schreibweise}:
-\begin{align}
-& x\in\{u\mid P(u)\} \iff P(x),\\
-& \{f(x)\mid P(x)\} := \{y\mid y=f(x)\land P(x)\},\\
-& \{x\in M\mid P(x)\} := \{x\mid x\in M\land P(x)\}.
-\end{align}
+
 \begin{Definition}
-\emph{Gleichheit} und \emph{Teilmengenrelation}\index{Teilmenge}
+\emdef{Aufzählende Schreibweise}\index{aufzählende Schreibweise}:
+\begin{equation}
+a\in\{x_1\,\ldots,x_n\} \quad:\Longleftrightarrow\quad
+a=x_1\lor\ldots\lor a=x_n.
+\end{equation}
+\end{Definition}
+
+\noindent
+Ein Prädikat $P(x)$ ist das selbe wie eine Aussageform, das ist eine
+Funktion, die jedem $x$ aus einer beliebigen Definitionsmenge
+einen Wert aus der Zielmenge $\{0,1\}$ zuordnet.
+
+\begin{Definition}
+\emph{Mengenbau-Schreibweise}\index{Mengenbau-Schreibweise}:
+\begin{align}
+& a\in\{x\mid P(x)\} :\Longleftrightarrow P(a)\qquad(\text{unbeschränkter Mengenbau}),\\
+& \{x\in M\mid P(x)\} := \{x\mid x\in M\land P(x)\}\qquad(\text{beschränkter Mengenbau}),\\
+& \{f(x)\mid P(x)\} := \{y\mid y=f(x)\land P(x)\}.
+\end{align}
+\end{Definition}
+\begin{Definition}
+\emph{Gleichheit} und \emdef{Teilmengenrelation}\index{Teilmenge}
 von Mengen:
 \begin{align}
 A=B &\;:\Longleftrightarrow\;\forall x\,[x\in A\iff x\in B],\\
@@ -122,10 +143,10 @@ Grundlegende Operationen:
 \index{Vereinigung}\index{Schnittmenge}
 \index{Differenzmenge}\index{symmetrische Differenz}
 \begin{align}
-A\cup B &:= \{x\mid x\in A\lor x\in B\},\qquad (\text{\emph{Vereinigung}})\\
-A\cap B &:= \{x\mid x\in A\land x\in B\},\qquad (\text{\emph{Schnitt}})\\
-A\setminus B &:= \{x\mid x\in A\land x\notin B\},\qquad (\text{\emph{Differenz}})\\
-A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emph{symmetrische Differenz}})
+A\cup B &:= \{x\mid x\in A\lor x\in B\},\qquad (\text{\emdef{Vereinigung}})\\
+A\cap B &:= \{x\mid x\in A\land x\in B\},\qquad (\text{\emdef{Schnitt}})\\
+A\setminus B &:= \{x\mid x\in A\land x\notin B\},\qquad (\text{\emdef{Differenz}})\\
+A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emdef{symmetrische Differenz}})
 \end{align}
 \end{Definition}
 
@@ -135,7 +156,7 @@ A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emph{symmetrische 
 \begin{equation}
 f(M) := \{f(x)\mid x\in M\}.
 \end{equation}
-Die maximale Bildmenge $f(A)$ wird einfach \emph{Bildmenge} von $f$ genannt.
+Die maximale Bildmenge $f(A)$ wird einfach \emdef{Bildmenge} von $f$ genannt.
 \end{Definition}
 Die Regel $f(M\cup N)=f(M)\cup f(N)$ ist allgemeingültig, denn:
 \begin{align}
@@ -740,7 +761,7 @@ ist eine Drehung um $0^\circ = 360^\circ$. Bei $s_1,s_2,s_3$
 handelt es sich um Spiegelungen mit den Winkelhalbierenden
 als Spiegelaxen.
 
-Man könnte nun auf die Idee kommen, dass auch bei einen Quadrat
+Man könnte nun auf die Idee kommen, dass auch bei einem Quadrat
 die Symmetrien genau die Elemente der symmetrischen Gruppe sind.
 Die Gruppe hat aber $4!=24$ Elemente, eine solche Anzahl von
 Symmetrien scheint fragwürdig. Ein Gegenbeispiel ist sofort
@@ -1046,6 +1067,238 @@ Grenzwertbildungen aus jeder Richtung dem Punkt $p$ nähern kann.
 Sonst würde man einen Ableitungsbegriff benötigen, der bestimmte
 Richtungen ausschließt, was unnötigen
 technischen Balast darstellt.
+
+\section{Kombinatorik}
+\subsection{Funktionen Zählen}
+Man definiert
+\begin{equation}
+Y^X := \{f\colon X\to Y\},
+\end{equation}
+das ist die Menge der Funktionen mit Definitionsmenge $X$ und
+Zielmenge $Y$. Sind $X$ und $Y$ endlich, so kann auch die
+Anzahl der Funktionen bestimmt werden. Hierfür ergibt sich
+\begin{equation}
+|Y^X| = |Y|^{|X|}.
+\end{equation}
+
+\subsubsection{Permutationen Zählen}
+\begin{Definition}
+Eine bijektive Selbstabbildung $\sigma\colon X\to X$ heißt
+\emdef{Permutation}. Die Menge aller Permutationen auf $X$ wird mit
+$S(X)$ bezeichnet und \emdef{symmetrische Gruppe} genannt.
+\end{Definition}
+Sei $n:=|X|$. Wir haben nun $n$ freie Plätze, auf die $n$
+unterschiedliche Stifte gelegt werden sollen. Bei $n=1$ gibt es
+eine Möglichkeit, bei $n=2$ sind es zwei und bei $n=3$ gibt es schon
+sechs Möglichkeiten. Das Zählen der Möglichkeiten wird schnell
+unübersichtlich. Um Übersicht zu gewinnen, überlegt man sich das
+folgende systematische Prinzip. Zunächst soll $n!$ die Anzahl der
+Möglichkeiten für $n$ Stifte auf $n$ freie Plätze bezeichnen.
+Für den ersten Stift gibt es nun $n$ freie Plätze, und für jede
+dieser Möglichkeiten bleiben $n-1$ Plätze übrig, für die es jeweils
+$(n-1)!$ Möglichkeiten gibt. Das sind insgesamt $n\cdot (n-1)!$
+Möglichkeiten.
+
+\begin{Definition}
+\emdef{Fakultät}:
+\begin{equation}
+1!:=1,\qquad n! := n\cdot (n-1)!.
+\end{equation}
+\end{Definition}
+\noindent
+Wird die Rekursionsgleichung bis zum Rekursionsanfang ausgeführt,
+so ergibt sich
+\begin{equation}
+n! = \prod_{k=1}^n k,
+\qquad\prod_{k=m}^m a_k:=a_m,
+\qquad\prod_{k=m}^n a_k := a_n\prod_{k=m}^{n-1} a_k.
+\end{equation}
+Der Induktionsanfang ist trivial. Der Induktionsschritt ist
+\begin{equation}
+n! = n\cdot (n-1)! = n\prod_{k=1}^{n-1} k = \prod_{k=1}^n k.
+\end{equation}
+
+\subsection{Endliche Summen}
+\begin{Definition}
+Das \emdef{Summenzeichen} (der \emdef{Summierungsoperator}) wird rekursiv
+definiert:
+\begin{equation}
+\sum_{k=m}^m a_k := a_1,\qquad \sum_{k=m}^{n} := a_n+\sum_{k=m}^{n-1} a_k.
+\end{equation}
+\end{Definition}
+
+\noindent
+\strong{Rechenregel.} \emph{Die Summierung lässt sich auf Summanden verteilen}:
+\begin{equation}
+\sum_{k=m}^n (a_k+b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.
+\end{equation}
+Induktionsanfang:
+\begin{equation}
+\sum_{k=m}^m (a_k+b_k) = a_m+b_m = \sum_{k=m}^m a_k+\sum_{k=m}^m b_k.
+\end{equation}
+Induktionsschritt:
+\begin{equation}
+\begin{split}
+&\sum_{k=m}^n (a_k+b_k) = (a_n+b_n)+\sum_{k=m}^{n-1} (a_k+b_k)
+= a_n+b_n+\sum_{k=m}^{n-1} a_k+\sum_{k=m}^{n-1}b_k\\
+&= \Big(a_n+\sum_{k=m}^{n-1} a_k\Big)+\Big(b_n+\sum_{k=m}^{n-1} b_k\Big)
+= \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.
+\end{split}
+\end{equation}
+\strong{Rechenregel.} \emph{Ein konstanter Faktor lässt sich aus dem
+aus der Summierung herausziehen (Distributivgesetz)}:
+\begin{equation}
+\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.
+\end{equation}
+Induktionsanfang:
+\begin{equation}
+\sum_{k=m}^m ca_k = ca_m = c\sum_{k=m}^m a_k.
+\end{equation}
+Induktionsschritt:
+\begin{equation}
+\sum_{k=m}^n ca_k = ca_n+\sum_{k=m}^{n-1} ca_k = ca_n+c\sum_{k=m}^{n-1} a_k
+= c\Big(a_n+\sum_{k=m}^{n-1} a_k\Big) = c\sum_{k=m}^n a_k.
+\end{equation}
+\strong{Rechenregel.} \emph{Konstante Summanden}:
+\begin{equation}
+\sum_{k=m}^n c = (n{-}m{+}1)\,c.
+\end{equation}
+Induktionsanfang:
+\begin{equation}
+\sum_{k=m}^m c = c = (m{-}m{+}1)\,c.
+\end{equation}
+Induktionsschritt:
+\begin{equation}
+\sum_{k=m}^n c = c+\sum_{k=m}^{n-1} c
+= c+(n{-}1{-}m{+}1)\,c = c+(n{-}m)\,c = (n{-}m{+}1)\,c.
+\end{equation}
+\strong{Formel.} \emph{Partialsumme der geometrischen Reihe}:
+\begin{equation}\label{eq:Partialsumme-geometrische-Reihe}
+\sum_{k=1}^n q^k = \frac{q^{n+1}-q}{q-1}.
+\end{equation}
+Herleitung.
+\begin{equation}
+\sum_{k=1}^n q^k = q\sum_{k=1}^n q^{k-1}
+= q\sum_{k=0}^{n-1} q^k
+= q\cdot\bigg(1-q^n+\sum_{k=1}^n q^k\bigg).
+\end{equation}
+Setze nun $y:=\sum_{k=1}^n q^k$, um Schreibaufwand zu sparen.
+Die Gleichung
+\begin{equation}
+y = q\cdot (1-q^n+y) = q-q^{n+1}+qy
+\end{equation}
+wird nun nach $y$ umgestellt. Es ergibt sich
+\begin{equation}
+y = \frac{q^{n+1}-q}{q-1}.
+\end{equation}
+\strong{Formel.} \emph{Es gilt}:
+\begin{equation}\label{eq:diff-Partialsumme-geometrische-Reihe}
+\sum_{k=m}^{n-1} k^p q^k = \bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^p\;\frac{q^n-q^m}{q-1}.
+\end{equation}
+Der Induktionsanfang $p=0$ ist  \eqref{eq:Partialsumme-geometrische-Reihe}. Beim Induktionsschritt
+gehen wir von der Gültigkeit von
+\begin{equation}
+\sum_{k=m}^{n-1} k^{p-1} q^k = \bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^{p-1}\;\frac{q^n-q^m}{q-1}.
+\end{equation}
+aus. Auf beiden Seiten der Gleichung wird nun $q\frac{\mathrm d}{\mathrm dq}$ appliziert,
+womit sich \eqref{eq:diff-Partialsumme-geometrische-Reihe} ergibt.
+
+Bemerkung: Mit Ausnahme von Spezialfällen ist
+\begin{equation}
+\bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^p \ne q^p \frac{\mathrm d^p}{\mathrm dq^p},
+\end{equation}
+da das Produkt mit $q$ nach dem Differentialoperator vom nächsten Differentialoperator mit abgeleitet werden muss.
+
+Aus \eqref{eq:diff-Partialsumme-geometrische-Reihe} wird mit $p=1$ nun
+z.\,B. die Formel
+\begin{equation}
+\sum_{k=m}^{n-1} kq^k = \frac{nq^n-mq^m}{q-1} - \frac{q^{n+1}-q^{m+1}}{(q-1)^2}
+\end{equation}
+gewonnen.
+
+\subsection{Formale Potenzreihen}
+Zwischen Potenzreihen und formalen Potenzreihen besteht
+ein großer Unterschied. Die Notation
+\begin{equation}
+\sum_{k=0}^\infty a_k x^k := \lim_{n\to\infty}\sum_{k=0}^n a_k x^k
+\end{equation}
+bedeutet bei Potenzreihen den Wert der Reihe, das ist der
+Grenzwert der Partialsummenfolge. Die Partialsummenfolge sollte
+dafür konvergent oder zumindest bestimmt divergent sein.
+Die Notation
+\begin{equation}
+\sum_{k=0}^\infty a_k X^k := (a_k)_{k=0}^\infty
+\end{equation}
+ist bei formalen Potenzreihen bloß eine andere
+Schreibweise für die Folge $(a_k)$.
+
+Die Addition von zwei formalen Potenzreihen wird
+wie die Addition von zwei Polynomen erklärt:
+\begin{equation}\label{eq:Addition-formale-Potenzreihen}
+\sum_{k=0}^\infty a_k X^k + \sum_{k=0}^\infty b_k X^k
+:= \sum_{k=0}^\infty (a_k+b_k)X^k.
+\end{equation}
+Die Multiplikation von zwei Polynomen lautet allgemein:
+\begin{align}
+\bigg(\sum_{i=0}^m a_i X^i\bigg)\bigg(\sum_{j=0}^n b_j X^j\bigg)
+= \sum_{i=0}^m \bigg(\sum_{j=0}^n b_j X^j\bigg) a_i X^i
+= \sum_{i=0}^m \sum_{j=0}^n \underbrace{a_i X^i b_j X^j}_{\displaystyle a_ib_j X^{i+j}}.
+\end{align}
+Bei der Summation ist die Reihenfolge aber beliebig, da im Ring
+bezüglich der Addition das Kommutativgesetz und das Assoziativgesetz
+gültig ist. Multipliziert man zwei Polynome aus und gruppiert
+die Summanden nach dem Grad, so ergibt sich nun
+\begin{equation}
+\begin{split}
+\sum_{i=0}^m \sum_{j=0}^n a_ib_j X^{i+j}
+&= a_0 b_0 X^0 \,+\, (a_0 b_1 + a_1 b_0) X^1\,+\,
+(a_0 b_2 + a_1 b_1 + a_2 b_0) X^2\\
+&+\,(a_0 b_3 + a_1 b_2 + a_2 b_1 + a_3 b_0) X^3\,+\,\ldots
+\end{split}
+\end{equation}
+Das Monom vom Grad $k$ ist offenbar immer von der Form
+\begin{equation}
+\bigg(\sum_{i=0}^k a_i b_{k-i}\bigg) X^k
+= (a_0 b_k + a_1 b_{k-1} + \ldots + a_{k-1} b_1 + a_k b_0) X^k.
+\end{equation}
+Als Grad des Produktes ergibt sich $m+n$, wenn der Ring
+nullteilerfrei ist, sonst maximal $m+n$. Insgesamt ergibt sich
+die Formel
+\begin{equation}\label{eq:Produkt-Polynome}
+\bigg(\sum_{i=0}^m a_i X^i\bigg)\bigg(\sum_{j=0}^n b_j X^j\bigg)
+= \sum_{k=0}^{m+n}\bigg(\sum_{i=0}^k a_i b_{k-i}\bigg) X^k.
+\end{equation}
+Die inneren Summen sind auch bei unendlichen Reihen endlich, was
+die folgende Definition motiviert.
+
+\begin{Definition}
+\emdef{Produkt} von zwei formalen Potenzreihen:
+\begin{equation}\label{eq:Produkt-formale-Potenzreihen}
+\bigg(\sum_{i=0}^\infty a_i X^i\bigg)\bigg(\sum_{j=0}^\infty b_j X^j\bigg)
+:= \sum_{k=0}^\infty\bigg(\sum_{i=0}^k a_i b_{k-i}\bigg) X^k.
+\end{equation}
+Das Produkt der formalen Potenzreihen zu $(a_k)$ und $(b_k)$ wird
+auch \emdef{Faltung} der Folgen $(a_k)$ und $(b_k)$ genannt.
+Zu dieser alternativen Sprechweise gehört die alternative
+Schreibweise%
+\begin{equation}
+(a_k)\ast (b_k) := (c_k),\quad c_k:=\sum_{i=0}^k a_i b_{k-i}.
+\end{equation}
+\end{Definition}
+\noindent
+Die Polynome lassen sich in die Menge der formalen Potenzreihen
+einbetten, indem $a_k:=0$ für $k>m$ und $b_k:=0$ für $k>n$
+gesetzt wird. Aus Formel \eqref{eq:Produkt-formale-Potenzreihen}
+wird dann \eqref{eq:Produkt-Polynome}.
+
+Die Menge aller Potenzreihen mit Koeffizienten aus dem Ring $R$:
+\begin{equation}\textstyle
+R[[X]] := \{\sum_{k=0}^\infty a_k X^k\mid a_k\in R\}.
+\end{equation}
+Die Menge $R[[X]]$ bildet bezüglich der Addition
+\eqref{eq:Addition-formale-Potenzreihen} und der Multiplikation
+\eqref{eq:Produkt-formale-Potenzreihen}
+einen Ring.
 
 \section{Dynamische Systeme}
 \subsection{Fixpunkt-Methode}

@@ -1,6 +1,132 @@
 
 \chapter{Grundlagen}
 \section{Arithmetik}
+\subsection{Zahlenbereiche}
+Natürliche Zahlen ab null:
+\begin{equation}
+\N_0 := \{0,1,2,3,4,\ldots\}.
+\end{equation}
+Natürliche Zahlen ab eins:
+\begin{equation}
+\N_1 := \{1,2,3,4,5,\ldots\}.
+\end{equation}
+Natürliche Zahlen:
+\begin{equation}
+\begin{split}
+&\text{$\N$, wenn es keine Rolle spielt,}\\
+&\text{ob $\N:=\N_0$ oder $\N:=\N_1$}.
+\end{split}
+\end{equation}
+Ganze Zahlen:
+\begin{equation}
+\Z := \{\ldots -3,-2,-1,0,1,2,3,\ldots\}.
+\end{equation}
+Rationale Zahlen:
+\begin{equation}
+\Q := \{\tfrac{z}{n}\mid z\in\Z,n\in\N_0\}.
+\end{equation}
+Reelle Zahlen:
+\begin{equation}
+\R := \overline{\Q}\enspace\text{bezüglich}\; d(x,y)=|x-y|.
+\end{equation}
+Positive reelle Zahlen:
+\begin{equation}
+\R^+ := \{x\in\R\mid x>0\}.
+\end{equation}
+Nichtnegative reelle Zahlen:
+\begin{equation}
+\R_0^+ := \{x\in\R\mid x\ge 0\}.
+\end{equation}
+Negative reelle Zahlen:
+\begin{equation}
+\R^- := \{x\in\R\mid x<0\}.
+\end{equation}
+Nichtpositive reelle Zahlen:
+\begin{equation}
+\R_0^- := \{x\in\R\mid x\le 0\}.
+\end{equation}
+Komplexe Zahlen:
+\begin{equation}
+\C := \{a+b\ui\mid a,b\in\R\}.
+\end{equation}
+Quaternionen:
+\begin{equation}
+\mathbb H := \{a+b\ui+c\uj+d\uk\mid a,b,c,d\in\R\}.
+\end{equation}
+Algebraische Zahlen:
+\begin{equation}
+\mathbb A := \{a\in\C\mid \exists P{\in}\Q[X]\colon P(a)=0\}.
+\end{equation}
+Irrationale Zahlen:
+\begin{equation}
+\R\setminus\Q = \{\sqrt{2},\sqrt{3},\pi,\ee,\ldots\}.
+\end{equation}
+Transzendente Zahlen:
+\begin{equation}
+\R\setminus\mathbb A = \{\pi,\ee,\ldots\}.
+\end{equation}
+Es gelten die folgenden Teilmengenbeziehungen:
+\begin{equation}
+\N\subset\Z\subset\Q\subset\R\subset\C\subset\mathbb H.
+\end{equation}
+Es gilt die folgende Abstufung der Mächtigkeit:
+\begin{equation}
+|\N| = |\Z| = |\Q| = |\mathbb A| < |\R| = |\C|.
+\end{equation}
+
+\newpage
+\subsection{Intervalle}
+Abgeschlossene Intervalle:
+\begin{equation}
+[a,b] := \{x\in\R\mid a\le x\le b\}.
+\end{equation}
+Offene Intervalle:
+\begin{equation}
+(a,b) := \{x\in\R\mid a<x<b\}.
+\end{equation}
+Halboffene Intervalle:
+\begin{align}
+(a,b] &:= \{x\in\R\mid a<x\le b\},\\
+[a,b) &:= \{x\in\R\mid a\le x<b\}.
+\end{align}
+Unbeschränkte Intervalle:
+\begin{align}
+[a,\infty) &:= \{x\in\R\mid a\le x\},\\
+(a,\infty) &:= \{x\in\R\mid a<x\},\\
+(-\infty,b] &:= \{x\in\R\mid x\le b\},\\
+(-\infty,b) &:= \{x\in\R\mid x<b\}.
+\end{align}
+
+\subsection{Summen}
+\begin{Definition} Für eine Folge $(a_n)$:
+\begin{align}
+\sum_{k=m}^{m-1} a_k &:= 0,\qquad(\text{leere Summe})\\
+\sum_{k=m}^n a_k &:= \sum_{k=m}^{n-1} a_k.\qquad(n\ge m)
+\end{align}
+\end{Definition}
+\noindent
+Für eine Konstante $c$ gilt:
+\begin{equation}
+\sum_{k=m}^n c = (n-m+1)\,c.
+\end{equation}
+Der Summierungsoperator ist linear:
+\begin{align}
+\sum_{k=m}^n (a_k+b_k) &= \sum_{k=m}^n a_k + \sum_{k=m}^n b_k,\\
+\sum_{k=m}^n ca_k &= c\sum_{k=m}^n a_k.
+\end{align}
+Indexverschiebung ist möglich:
+\begin{equation}
+\sum_{k=m}^n a_k = \sum_{k=m-j}^{n-j} a_{k+j} = \sum_{k=m+j}^{n+j} a_{k-j}.
+\end{equation}
+Aufspaltung ist möglich:
+\begin{equation}
+\sum_{k=m}^n a_k = \sum_{k=m}^p a_k + \sum_{k=p+1}^n a_k.
+\end{equation}
+Vertauschung der Reihenfolge bei Doppelsummen:
+\begin{equation}
+\sum_{i=p}^m \sum_{j=q}^n a_{ij} = \sum_{j=q}^n \sum_{i=p}^m a_{ij}.
+\end{equation}
+
 \subsection{Binomischer Lehrsatz}\index{binomischer Lehrsatz}
 Sei $R$ ein unitärer Ring. 
 Für $a,b\in R$ mit $ab=ba$ gilt:%
@@ -65,8 +191,8 @@ z_2\ne 0 \implies \overline{\Big(\frac{z_1}{z_2}\Big)}
 \overline{\overline z}=z,\qquad
 |\overline{z}| = |z|,\qquad
 z\,\overline z = |z|^2,\\
-\Re(z) = \frac{z+\overline z}{2},\qquad
-\Im(z) = \frac{z-\overline z}{2\ui},\\
+\real(z) = \frac{z+\overline z}{2},\qquad
+\imag(z) = \frac{z-\overline z}{2\ui},\\
 \overline{\cos(z)} = \cos(\overline z),\qquad
 \overline{\sin(z)} = \sin(\overline z),\\
 \overline{\exp(z)} = \exp(\overline z).
@@ -112,12 +238,12 @@ z\,\overline z = |z|^2,\\
 & $\displaystyle =\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\
 \hline
   Realteil
-& $\Re(z)$
+& $\real(z)$
 & $=\cos\varphi$
 & $=a$\\
 \hline
   Imaginärteil
-& $\Im(z)$
+& $\imag(z)$
 & $=\sin\varphi$
 & $=b$\\
 \hline
@@ -144,8 +270,6 @@ $s(b):=\begin{cases}
 -1 & \text{if}\;b<0
 \end{cases}$
 \end{table*}
-
-
 
 \section{Logik}
 \subsection{Aussagenlogik}\index{Aussagenlogik}
@@ -185,8 +309,8 @@ $s(b):=\begin{cases}
 \noindent
 \strong{Distributivgesetze}:
 \begin{gather}
-A\lor (B\land C) = (A\lor B)\land (A\lor C),\\
-A\land (B\lor C) = (A\land B)\lor (A\land C).
+A\lor (B\land C) \iff (A\lor B)\land (A\lor C),\\
+A\land (B\lor C) \iff (A\land B)\lor (A\land C).
 \end{gather}
 
 \subsubsection{Zweistellige Funktionen}
@@ -209,15 +333,15 @@ Funktionen.
  3 & \texttt{0011} & $\overline A$\\
  4 & \texttt{0100} & $\overline{A\Rightarrow B}$\\
  5 & \texttt{0101} & $\overline{B}$\\
- 6 & \texttt{0110} & $A\oplus B$ & Kontravalenz\\
+ 6 & \texttt{0110} & $A\oplus B$ & Kontravalenz\index{Kontravalenz}\\
  7 & \texttt{0111} & $\overline{A\land B}$ & NAND\\
- 8 & \texttt{1000} & $A\land B$ & Konjunktion\\
+ 8 & \texttt{1000} & $A\land B$ & Konjunktion\index{Konjunktion}\\
  9 & \texttt{1001} & $A\Leftrightarrow B$ & Äquivalenz\\
 10 & \texttt{1010} & $B$ & Projektion\\
 11 & \texttt{1011} & $A\Rightarrow B$ & Implikation\\
 12 & \texttt{1100} & $A$ & Projektion\\
 13 & \texttt{1101} & $B\Rightarrow A$ & Implikation\\
-14 & \texttt{1110} & $A\lor B$ & Disjunktion\\
+14 & \texttt{1110} & $A\lor B$ & Disjunktion\index{Disjunktion}\\
 15 & \texttt{1111} & $1$ & Tautologie
 \end{tabular}
 
@@ -246,11 +370,11 @@ Modus ponendo tollens:
 \begin{equation}
 \overline{A\land B}\land A\implies\overline B.
 \end{equation}
-Kontraposition:
+Kontraposition:\index{Kontraposition}
 \begin{equation}
 A\Rightarrow B \iff \overline B\Rightarrow \overline A.
 \end{equation}
-Beweis durch Widerspruch:
+Beweis durch Widerspruch:\index{Widerspruch}
 \begin{equation}
 (\overline A\Rightarrow B\land\overline B)\implies A.
 \end{equation}
@@ -332,6 +456,7 @@ P & \text{wenn}\; M\ne\{\},\\
 \end{cases}
 \end{split}
 \end{gather}
+\newpage\noindent
 Äquivalenzen:
 \begin{gather}
 \hspace{-2em}\forall x\forall y[P(x,y)] \iff \forall y\forall x[P(x,y)],\\
@@ -343,6 +468,7 @@ P & \text{wenn}\; M\ne\{\},\\
 \hspace{-2em}\exists x[P(x)\Rightarrow Q(x)]
   \iff\forall x[P(x)]\Rightarrow\exists x[Q(x)].
 \end{gather}
+% \newpage\noindent
 Implikationen:
 \begin{gather}
 \hspace{-2em}\exists x\forall y[P(x,y)]\implies \forall y\exists x[P(x,y)],\\
@@ -372,7 +498,8 @@ Sei $M=\{x_1,\ldots,x_n\}$. Es gilt:
 \forall x{\in}M{\setminus}N\,[P(x)]\iff \forall x[x\notin N\Rightarrow P(x)].
 \end{gather}
 
-\subsubsection{Quantifizierung über Produktmengen}
+\subsubsection[Quantifizierung über Produktmengen]{\\
+Quantifizierung über Produktmengen}
 \begin{gather}
 \forall(x,y)\,[P(x,y)]\iff \forall x\forall y[P(x,y)],\\
 \exists(x,y)\,[P(x,y)]\iff \exists x\exists y[P(x,y)].
@@ -412,10 +539,19 @@ Quantor für eindeutige Existenz:
 \end{split}
 \end{equation}
 
-
-
+\newpage
 \section{Mengenlehre}
 \subsection{Definitionen}
+Aufzählende Notation:
+\begin{equation}
+a\in\{x_1,\ldots,x_n\} :\Leftrightarrow a=x_1\lor\ldots\lor a=x_n.
+\end{equation}
+Beschreibende Notation:
+\begin{gather}
+a\in\{x\mid P(x)\}\;:\Longleftrightarrow\; P(a),\\
+\{x\in M\mid P(x)\} := \{x\mid x\in M\land P(x)\},\\
+\{f(x)\mid P(x)\} := \{y\mid y=f(x)\land P(x)\}.
+\end{gather}
 Teilmengenrelation:
 \begin{equation}
 A\subseteq B\;:\Longleftrightarrow\; \forall x\,[x\in A\implies x\in B].
@@ -440,6 +576,19 @@ Symmetrische Differenz:
 \begin{equation}
 A\triangle B:=\{x\mid x\in A\oplus x\in B\}.
 \end{equation}
+Komplementärmenge:
+\begin{equation}
+A^\comp := G\setminus A.\qquad (\text{$G$: Grundmenge})
+\end{equation}
+Vereinigung über indizierte Mengen:
+\begin{equation}
+\bigcup_{i\in I} A_i := \{x\mid\exists i{\in}I\,[x\in A_i]\}.
+\end{equation}
+Schnitt über indizierte Mengen:
+\begin{equation}
+\bigcap_{i\in I} A_i := \{x\mid\forall i{\in}I\,[x\in A_i]\}.
+\end{equation}
+
 
 \subsection{Boolesche Algebra}
 \begin{table*}[t]
@@ -498,10 +647,11 @@ A\subseteq B &\iff A\cap B=A\\
 \end{equation}
 Kontraposition:
 \begin{equation}
-A\subseteq B = \overline B\subseteq \overline A.
+A\subseteq B = B^\comp\subseteq A^\comp.
 \end{equation}
 
-\subsection{Induktive Mengen}
+\subsection{Natürliche Zahlen}
+\subsubsection{Von-Neumann-Modell}
 Mengentheoretisches Modell der natürlichen Zahlen:
 \begin{equation}
 \begin{split}
@@ -513,7 +663,8 @@ Nachfolgerfunktion:
 \begin{equation}
 x' := x\cup\{x\}.
 \end{equation}
-Vollständige Induktion: Ist $A(n)$ mit $n\in\N$
+\subsubsection{Vollständige Induktion}
+Ist $A(n)$ mit $n\in\N$
 eine Aussageform, so gilt:
 \begin{equation}
 \begin{split}
@@ -521,6 +672,101 @@ eine Aussageform, so gilt:
 & \implies \forall n\ge n_0\,[A(n)].
 \end{split}
 \end{equation}
+Die Aussage $A(n_0)$ ist der \emph{Induktionsanfang}.
+
+Die Implikation
+\begin{equation}
+A(n)\Rightarrow A(n+1)
+\end{equation}
+heißt \emph{Induktionsschritt}. Beim Induktionsschritt muss
+$A(n+1)$ gezeigt werden, wobei $A(n)$ als gültig vorausgesetzt werden
+darf.
+
+\newpage
+\subsection{ZFC-Axiome}
+
+Axiom der Bestimmtheit:
+\begin{equation}
+\forall A\forall B\,[A=B\iff\forall x\,[x\in A\Leftrightarrow x\in B]].
+\end{equation}
+Axiom der leeren Menge:
+\begin{equation}
+\exists M\forall x\,[x\notin M].
+\end{equation}
+Axiom der Paarung:
+\begin{equation}
+\forall x\forall y\exists M\forall a\,[a\in M\iff x=a\lor y=a].
+\end{equation}
+Axiom der Vereinigung:
+\begin{equation}
+\forall S\exists M\forall x\,[x\in M\iff\exists A{\in}S\,[x\in A]].
+\end{equation}
+Axiom der Aussonderung:
+\begin{equation}
+\forall A\exists M\forall x\,[x\in M\iff x\in A\land\varphi(x)].
+\end{equation}
+Axiom des Unendlichen:
+\begin{equation}
+\exists M\,[\{\}\in M\land\forall x{\in}M\,[x\cup\{x\}\in M]].
+\end{equation}
+Axiom der Potenzmenge:
+\begin{equation}
+\forall A\exists M\forall T\,[T\in M\iff T\subseteq A].
+\end{equation}
+Axiom der Ersetzung:
+\begin{equation}
+\begin{split}
+&\forall a{\in}A\;\exists^{=1} b\,[\varphi(a,b)]\\
+&\implies\exists B\,\forall b\,[b\in B\iff\exists a{\in}A\,[\varphi(a,b)]].
+\end{split}
+\end{equation}
+Axiom der Fundierung:
+\begin{equation}
+\forall A\,[A\ne\{\}\implies\exists x{\in}A\,[x\cap A=\{\}]].
+\end{equation}
+Auswahlaxiom:
+\begin{equation}
+\begin{split}
+&\forall x,y{\in}A\,[x\ne y\implies x\cap y=\{\}]\\
+&\quad\land\forall x{\in}A\,[x\ne\{\}]\\
+&\implies\exists M\;\forall x{\in}A\;\exists^{=1}u{\in}x\,[u\in M].
+\end{split}
+\end{equation}
+
+\newpage
+\subsection{Kardinalität}
+\begin{Definition}
+Zwei Mengen $M,N$ heißen \emdef{gleichmächtig}, notiert als
+$|M|=|N|$, wenn es eine bijektive Abbildung $f\colon M\to N$ gibt.
+
+Eine Menge $M$ heißt \emdef{weniger mächtig oder gleichmächtig},
+notiert als $|M|\le|N|$, wenn es eine injektive Abbildung
+$f\colon M\to N$ gibt. Äquivalent dazu ist, dass es eine
+surjektive Abbildung $g\colon N\to M$ gibt.
+
+Eine Menge heißt \emdef{abzählbar unendlich}, wenn sie gleichmächtig
+zu den natürlichen Zahlen ist.
+\end{Definition}
+Gleichmächtigkeit ist eine Äquivalenzrelation.
+\begin{Definition}
+Die Äquivalenzklassen
+\begin{equation}
+|M| := \{N\mid\;{\scriptstyle |M|=|N|}\}
+\end{equation}
+heißen \emdef{Kardinalzahlen}.
+\end{Definition}
+
+\strong{Satz von Cantor-Bernstein.}
+
+Aus $|M|\le |N|$ und $|N|\le |M|$ folgt $|M|=|N|$.
+
+\subsubsection{Potenzmengen}
+
+\strong{Satz von Cantor.}
+Für jede Menge gilt $|M|<|2^M|$.
+
+Ist $M$ endlich, dann gilt $|M|=2^{|M|}$.
+
 
 \section{Funktionen}
 \subsection{Surjektionen}\index{surjektiv}
@@ -562,7 +808,7 @@ von $f$ genannt und als $f^{-1}$ notiert.
 und $g\colon B\to C$ ist die \emdef{Komposition}
 ($g$ nach $f$)
 durch
-\begin{equation}
+\begin{equation}\label{eq:composition}
 g\circ f\colon A\to C,\quad (g\circ f)(x) := g(f(x))
 \end{equation}
 definiert.
@@ -596,15 +842,6 @@ Für eine Funktion $\varphi\colon A\to A$ wird
 \end{equation}
 \emdef{Iteration}\index{Iteration} von $\varphi$ genannt.
 \end{Definition}
-\begin{Definition}
-Für eine Funktion $\varphi\colon A\to A$ wird der Operator
-\begin{equation}
-C_\varphi (g) := g\circ\varphi,\quad C_\varphi\colon B^A\to B^A
-\end{equation}
-\emdef{Kompositionsoperator}\index{Kompositionsoperator} genannt
-\end{Definition}
-Ist $B^A$ ein Funktionenraum, so ist der Kompositionsoperator
-ein linearer Operator.
 
 \subsection{Einschränkung}\index{Einschränkung}
 \begin{Definition} Sei $f\colon A\to B$ und $M\subseteq A$.
@@ -620,7 +857,7 @@ Es gilt
 \begin{equation}
 g\circ (f|_M) = (g\circ f)|_M.
 \end{equation}
-
+%\newpage
 \subsection{Bild}\index{Bild}
 \begin{Definition} Ist $f\colon A\to B$ und $M\subseteq A$, so wird
 \begin{equation}
@@ -662,34 +899,48 @@ Es gilt
 & (f|_M)^{-1}(N) = M\cap f^{-1}(N).
 \end{align}
 
-\section{Mathematische Strukturen}
-\strong{Axiome:}
+\newpage
+\section{Mathematische Strukturen}\label{sec:Strukturen}
+\subsubsection*{Axiome}
 
-\bsf{E}: Abgeschlossenheit.
+\noindent\bsf{E:} Abgeschlossenheit.
+\ibox{Die Verknüpfung führt nicht aus der Menge heraus.}
 
-\bsf{A}: Assoziativgesetz.
+\noindent\bsf{A:} Assoziativgesetz.
+\ibox{$\forall a,b,c\bright (a*b)*c = a*(b*c)\bleft$.}
 
-\bsf{N}: Existenz des neutralen Elements.
+\noindent\bsf{N:} Existenz des neutralen Elements.
+\ibox{$\exists e\forall a\bright e*a=a*e=a\bleft$.}
 
-\bsf{I}: Zu jedem Element gibt es ein Inverses.
+\noindent\bsf{I:} Existenz der inversen Elemente.
+\ibox{$\forall a\exists b\bright a*b=b*a=e\bleft$.}
 
-\bsf{K}: Kommutativgesetz.
-
-\bsf{I*}: Zu jedem Element außer dem additiven neutralen Element
-gibt es ein Inverses.
-
-\bsf{Dl}: Linksdistributivgestz.
-
-\bsf{Dr}: Rechtsdistributivgesetz.
-
-\bsf{D}: Dl und Dr.
-
-\bsf{T}: Nullteilerfreiheit
-
-\bsf{U}: Die neutralen Elemente bezüglich Addition und
-  Multiplikation sind unterschiedlich.\\
+\noindent\bsf{K:} Kommutativgesetz.
+\ibox{$\forall a,b\bright a*b=b*a\bleft.$}
 
 \noindent
+\bsf{I*:} Existenz der multiplikativ inversen Elemente.
+\ibox{$\forall a{\ne}0\;\exists b\bright a*b=b*a=1\bleft$.}
+
+\noindent\bsf{Dl:} Linksdistributivgestz.
+\ibox{$\forall a,x,y\bright a*(x+y) = a*x+a*y\bleft$.}
+
+\noindent\bsf{Dr:} Rechtsdistributivgesetz.
+\ibox{$\forall a,x,y\bright (x+y)*a = x*a+y*a\bleft$.}
+
+\noindent\bsf{D:} Distributivgesetze.
+\ibox{Dl und Dr.}
+
+\noindent\bsf{T:} Nullteilerfreiheit.
+\ibox{$\forall a,b\bright a\ne 0\land b\ne 0\implies a*b\ne 0\bleft$}
+\ibox{bzw. die Kontraposition}
+\ibox{$\forall a,b\bright a*b=0\implies a=0\lor b=0\bleft$.}
+
+\noindent\bsf{U:} Unterscheibarkeit von Null- und Einselement.
+\ibox{Die neutralen Elemente bezüglich Addition und}
+\ibox{Multiplikation sind unterschiedlich.}
+
+\subsubsection*{Strukturen}
 Strukturen mit einer inneren Verknüpfung:\\
 \begin{tabular}{l|l}
 \bsf{EA} & Halbgruppe\\
@@ -708,3 +959,39 @@ Strukturen mit zwei inneren Verknüpfungen:\\
 \bsf{EANIK, EANI*K, DTU} & Körper
 \end{tabular}
 
+\newpage
+\subsubsection*{Axiome für Relationen}
+
+\noindent\bsf{R:} Reflexivität.
+\ibox{$\forall a\,(a R a)$.}
+
+\noindent\bsf{S:} Symmetrie.
+\ibox{$\forall a,b\,(aRb\iff bRa)$.}
+
+\noindent\bsf{T:} Transitivität.
+\ibox{$\forall a,b,c\,(aRb\land bRc\implies aRc)$.}
+
+\noindent\bsf{An:} Antisymmetrie.
+\ibox{$\forall a,b\,(aRb\land bRa\implies a=b)$.}
+
+\noindent\bsf{L:} Linearität.
+\ibox{$\forall a,b\,(aRb\lor bRa)$.}
+
+\noindent\bsf{Ri:} Irrreflexivität.
+\ibox{$\forall a\,(\neg aRa)$.}
+
+\noindent\bsf{A:} Asymmetrie.
+\ibox{$\forall a,b\,(aRb\implies \neg bRa)$.}
+
+\noindent\bsf{Min:} Existenz der Minimalelemente.
+\ibox{$\forall T{\subseteq}M, T{\ne}\emptyset\;\exists x{\in}T\;\forall y{\in}T{\setminus}\{x\}\,(x<y)$.}
+
+\subsubsection*{Relationen}
+\begin{tabular}{l|l}
+\bsf{RST}\dotfill & Äquivalenzrelation\\
+\bsf{RAnT}\dotfill & Halbordnung\\
+\bsf{RAnTL}\dotfill & Totalordnung\\
+\bsf{RiAT}\dotfill & strenge Halbordnung\\
+\bsf{RiATL}\dotfill & strenge Totalordnung\\
+\bsf{RiATLMin} & Wohlordnung
+\end{tabular}

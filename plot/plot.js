@@ -143,7 +143,8 @@ var ftab2 = {
   "pmfLog": pmfLog, "cdfLog": cdfLog,
   "pdfExp": pdfExp, "cdfExp": cdfExp,
   "pdfchisq": pdfchisq, "cdfchisq": cdfchisq,
-  "pdfst": pdfst, "cdfst": cdfst
+  "pdfst": pdfst, "cdfst": cdfst,
+  "primes": primes, "cprod": cartesian_prod
 };
 
 var ftab3 = {
@@ -1395,6 +1396,16 @@ function prodlist(a){
   return p;
 }
 
+function cartesian_prod(a,b){
+  var p=[];
+  for(var i=0; i<a.length; i++){
+    for(var j=0; j<a.length; j++){
+      p.push([a[i],b[j]]);
+    }
+  }
+  return p;
+}
+
 function compose(a){
   var f = function(x){
     var y=x;
@@ -2057,6 +2068,14 @@ function isprime(n){
     if(n%k==0) return 0;
   }
   return 1;
+}
+
+function primes(m,n){
+  var a = [];
+  for(var i=m; i<=n; i++){
+    if(isprime(i)) a.push(i);
+  }
+  return a;
 }
 
 function pcf(x){

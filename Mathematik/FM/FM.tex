@@ -2,15 +2,21 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{ngerman}
+% \usepackage{ngerman}
+\usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{textcomp}
+\usepackage{microtype}
+% \usepackage{multicol}
+\usepackage{lipsum}
 
 \usepackage{color}
-\definecolor{c1}{RGB}{00,40,80}
+\definecolor{c1}{RGB}{0,40,80}
 \definecolor{c2}{RGB}{20,60,100}
 \definecolor{c3}{RGB}{80,120,180}
+\definecolor{c4}{RGB}{140,0,60}
+\definecolor{bc1}{RGB}{236,236,250}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
@@ -59,7 +65,12 @@
 \newcommand{\strong}[1]{{\sffamily\bfseries #1}}
 \newcommand{\bsf}[1]{{\sffamily\bfseries #1}}
 
+\newcommand{\definition}{\strong{Definition.}}
+\newcommand{\theorem}[1]{\strong{#1.}}
 \newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
+\newenvironment{Satz}{\par\noindent\strong{Satz.}}{\par}
+
+\newcommand{\ibox}[1]{\par\hbox{\hsize=22em\hglue 1em\vbox{{\noindent}#1}}}
 
 % parametric strut
 \newcommand{\pstrut}[1]{\rule{0pt}{\dimexpr 8pt+#1}}
@@ -76,10 +87,15 @@
 % \uv{x}: unterstrichener Vektor
 
 \newcommand{\ui}{\mathrm i}
+\newcommand{\uj}{\mathrm j}
+\newcommand{\uk}{\mathrm k}
 \newcommand{\ue}{e}
 \newcommand{\unit}[1]{\mathrm{#1}}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\comp}{\textsf{C}}
+\newcommand{\bright}{\texttt{[}}
+\newcommand{\bleft}{\texttt{]}}
 
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
@@ -93,8 +109,8 @@
 \DeclareMathOperator*{\rg}{rg}
 \DeclareMathOperator*{\diag}{diag}
 \DeclareMathOperator*{\Eig}{Eig}
-\renewcommand{\Re}{\operatorname{Re}}
-\renewcommand{\Im}{\operatorname{Im}}
+\DeclareMathOperator{\real}{Re}
+\DeclareMathOperator{\imag}{Im}
 
 \usepackage{makeidx}
 \renewcommand\indexname{Stichwortverzeichnis}
@@ -115,7 +131,7 @@
 Mathematik}}
 
 \vspace{2em}
-{\Large Dezember 2016}\\
+{\Large Juli 2017}\\
 \end{titlepage}
 
 \thispagestyle{empty}
@@ -206,9 +222,11 @@ $\sin\theta=\cos\beta$
 \input{Analysis.tex}
 \input{LA.tex}
 \input{DG.tex}
+\input{Funktionentheorie}
 \input{DS.tex}
 \input{Kombinatorik.tex}
 \input{Algebra.tex}
+\input{Tabellen.tex}
 \input{Anhang.tex}
 
 \printindex

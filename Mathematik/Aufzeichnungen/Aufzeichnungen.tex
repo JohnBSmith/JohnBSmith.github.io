@@ -411,6 +411,47 @@ Es geht noch weiter. Im Fall $n=-1$ gilt
 \end{equation}
 Aber Umformen der Substitution ergibt ja $u=\ln x$.
 
+\subsection{Zum Basler Problem}
+Betrachte die Summenformel
+\begin{equation}
+\sum_{k=m}^{n-1} q^k = \frac{q^n-q^m}{q-1}.\qquad (q\ne 1)
+\end{equation}
+Mit Differentialrechnung lässt sich daraus die Formel
+\begin{equation}
+\sum_{k=m}^{n-1} k^p q^k 
+= \Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p\;\frac{q^n-q^m}{q-1}
+\end{equation}
+gewinnen, das ist eine bekannte Technik. Man beachte dabei
+\begin{equation}
+\Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p
+\ne q^p \Big(\frac{\mathrm d}{\mathrm dq}\Big)^p.\qquad (p\ge 2)
+\end{equation}
+Die Vorgehensweise wird nun umgedreht, so dass integriert wird,
+anstelle zu differenzieren:
+\begin{gather}
+\int_0^q \frac{1}{q}\sum_{k=m}^{n-1} q^k \mathrm dq = \int_0^q\bigg(\frac{1}{q}\bigg)\frac{q^n-q^m}{q-1}\,\mathrm dq.
+\end{gather}
+Es ergibt sich
+\begin{equation}
+\sum_{k=m}^{n-1}\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{q^n-q^m}{q^2-q}\,\mathrm dq\,\mathrm dq.
+\end{equation}
+Man setzt nun $m=1$ und lässt $n\to\infty$ gehen.
+Das bringt
+\begin{equation}
+\sum_{k=1}^\infty\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{1}{1-q}\,\mathrm dq\,\mathrm dq.
+\end{equation}
+Um die Polstelle lässt sich in der komplexen Ebene herumintegerieren.
+Dabei ergibt sich
+\begin{equation}
+\sum_{k=1}^\infty\frac{q^k}{k^2} = \int_q^0 \frac{\ln(1-q)}{q}\,\mathrm dq,
+\end{equation}
+und somit
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2} = \lim_{q\to 1}\int_q^0 \frac{\ln(1-z)}{z}\,\mathrm dz.
+\end{equation}
+Die Definitionslücke bei $z=0$ lässt sich stetig beheben. Dann muss
+aber auch das Integral existieren.
+
 \newpage
 \section{Lineare Algebra}
 \subsection{Lineare Abbildungen}
