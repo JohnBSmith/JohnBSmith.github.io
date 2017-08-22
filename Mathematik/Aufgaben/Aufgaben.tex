@@ -14,18 +14,12 @@
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
 
-%\usepackage{titlesec}
-%\titleformat{\chapter}[block]
-%  {\normalfont\sffamily\huge\bfseries}{\thechapter}{1em}{\Huge}
-%\titleformat{\section}[block]
-%  {\normalfont\sffamily\Large\bfseries}{\thesection}{1em}{\Large}
-%\titleformat{\subsection}[block]
-%  {\normalfont\sffamily\large\bfseries}{\thesubsection}{1em}{\large}
-%\titleformat{\subsubsection}[block]
-%  {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
-
 \newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
 \newcommand{\strong}[1]{{\sf\bfseries #1}}
 \newcommand{\entspricht}{\;\;\hat =\;}
 
@@ -40,7 +34,334 @@
 
 \tableofcontents
 
+
 \section{Analysis}
+\subsection{Integralrechnung}
+\begin{Aufgabe}
+Berechne $\displaystyle\int x^2\sin x\,\mathrm dx$.
+\end{Aufgabe}
+\noindent\strong{Lösung.}
+Die partielle Integration lautet
+\begin{equation}
+\int f(x)g'(x)\,\mathrm dx = fg-\int f'(x)g(x)\,\mathrm dx.
+\end{equation}
+Für $f(x)=x^2$ und $g(x)=\sin x$ bekommt man
+\begin{equation}
+\int x^2\sin x\,\mathrm dx = x^2(-\cos x) - \int 2x(-\cos x)\,\mathrm dx.
+\end{equation}
+und weiter
+\begin{equation}
+\int x\cos x\,\mathrm dx = x\sin x - \int \sin x\,\mathrm dx = x\sin x + \cos x.
+\end{equation}
+Zusammen ergibt das
+\begin{equation}
+\int x^2\sin x\,\mathrm dx = -x^2\cos x +2x\sin x+2\cos x.
+\end{equation}
+Probe durch Ableiten: ok. $\Box$
+
+\begin{Aufgabe}
+Berechne $\displaystyle\int\ee^x\sin x\,\mathrm dx$.
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+Mit partieller Integration ergibt sich
+\begin{align}
+\int \ee^x\sin x\,\mathrm dx &= \ee^x\sin x - \int \ee^x\cos x\,\mathrm dx,\\
+\int \ee^x\cos x\,\mathrm dx &= \ee^x\cos x + \int \ee^x\sin x\,\mathrm dx.
+\end{align}
+Zusammen ist das ein Gleichungssystem. Die Aussage der unteren
+Gleichung wird in die obere eingesetzt. Somit ergibt sich
+\begin{equation}
+\int \ee^x\sin x\,\mathrm dx = \ee^x\sin x - \ee^x\cos x - \int \ee^x\sin x\,\mathrm dx.
+\end{equation}
+Umformen ergibt
+\begin{equation}
+2\int \ee^x\sin x = \ee^x\sin x-\ee^x\cos x
+\end{equation}
+und somit
+\begin{equation}
+\int \ee^x\sin x\,\mathrm dx = \frac{1}{2}\ee^x(\sin x-\cos x)
+\end{equation}
+Probe durch Ableiten: ok. $\Box$
+
+Auf diese Art lässt sich auch $\displaystyle\int \ee^{ax}\sin x\,\mathrm dx$
+berechnen.
+
+\strong{Alternative Lösung.}
+Ansatz: Substitution $x:=\ui u$. Das bringt
+\begin{equation}
+\ee^x\sin x = \ee^{\ui u}\sin(\ui u).
+\end{equation}
+Nun gilt aber
+\begin{equation}
+\sin(\ui u)=\ui\sinh u = \frac{\ui}{2}(\ee^u-\ee^{-u}).
+\end{equation}
+Somit ergibt sich
+\begin{equation}
+\ee^x\sin x = \frac{\ui}{2}\ee^{\ui u}(\ee^u-\ee^{-u}).
+\end{equation}
+Nun ist $\frac{\mathrm dx}{\mathrm du}=\ui$, also
+$\mathrm dx=\ui\mathrm du$. Damit ergibt sich
+\begin{equation}
+\int \ee^x\sin x\,\mathrm dx
+= \frac{\ui^2}{2}\int \ee^{\ui u}(\ee^u-\ee^{-u})\,\mathrm du
+\end{equation}
+Kurze Kosmetik: Setze noch schnell $\ui^2=-1$. Mit dem Minus wird
+die Differenz im Integral umgedreht. Dann das Produkt mit dem
+Faktor $\ee^{\ui u}$ ausmultiplizieren. Es ergibt sich
+\begin{equation}
+\int \ee^x\sin x\,\mathrm dx
+= \frac{1}{2}\int (\ee^{\ui u}\ee^{-u}-\ee^{\ui u}\ee^u)\,\mathrm du
+\end{equation}
+Nun ist aber $\ee^a e^b=\ee^{a+b}$. Somit ergibt sich
+für den Term im Integral
+\begin{equation}
+\ee^{\ui u-u}-\ee^{\ui u+u} = \ee^{(\ui-1)u}-\ee^{(\ui+1)u}.
+\end{equation}
+Jetzt können wir straight forward durchintegrieren, ohne
+die partielle Integration bemühen zu müssen. Es ergibt sich
+\begin{equation}
+\int \ee^x\sin x
+= \frac{1}{2}\bigg[
+\frac{1}{\ui-1}\ee^{(\ui-1)u}-\frac{1}{\ui+1}\ee^{(\ui+1)u}
+\bigg]
+\end{equation}
+Nun gilt $\frac{1}{\ui-1}=-\frac{1}{2}-\frac{1}{2}\ui$ und
+$\frac{1}{\ui+1} = \frac{1}{2}-\frac{1}{2}\ui$. Damit ergibt sich
+\begin{align}
+\int \ee^x\sin x\,\mathrm dx
+&= \frac{1}{4}\Big[(-1-\ui)\ee^{u(\ui-1)}-(1-\ui)\ee^{u(\ui+1)}\Big]\\
+&= \frac{\ee^{u\ui}}{4}\Big[(-1-\ui)\ee^{-u}-(1-\ui)\ee^u\Big]
+= \frac{\ee^{u\ui}}{4}\Big[(\ui-1)\ee^u-(\ui+1)\ee^{-u}\Big]\\
+&= \frac{\ee^{u\ui}}{4}\Big[\ui(\ee^u-\ee^{-u})-(\ee^u+\ee^{-u})\Big]
+= \frac{\ee^{u\ui}}{2}\Big[\ui\sinh u-\cosh u\Big]\\
+&= \frac{\ee^{u\ui}}{2}\Big[\sin(\ui u)-\cos(\ui u)\Big].
+\end{align}
+Jetzt kann man Resubstituieren und bekommt
+\begin{equation}
+\int \ee^x\sin x\,\mathrm dx = \frac{\ee^x}{2}(\sin x-\cos x).
+\end{equation}
+Alternativ kann auch
+\begin{equation}
+\sin x = -\ui\sinh(ix) = \frac{1}{\ui}\sinh(\ui x)
+=\frac{\ee^{\ui x}-\ee^{-\ui x}}{2\ui}
+\end{equation}
+benutzt werden. Dabei ergibt sich eine äquivalente
+Rechnung. Man braucht in diesem Fall aber keine Substitution.
+
+Der Kern dieser Rechnungen sind die
+\emph{eulersche Formel}\footnote{Bei der eulerschen Formel handelt
+es sich um eine Identität. Aus historischen Gründen wird nur der
+Spezialfall $x=\pi$ als \emph{eulersche Identät} bezeichnet.}
+\begin{equation}
+\ee^{\ui x}=\cos x+\ui\sin x
+\end{equation}
+und die Zerlegung
+\begin{equation}
+\ee^{x}=\cosh x+\sinh x.
+\end{equation}
+Daneben braucht man die Gleichung
+\begin{equation}
+\ee^{a+b}=\ee^a \ee^b.
+\end{equation}
+
+\strong{Zweite alternative Lösung.}
+Mir ist jetzt noch eine wesentlich radikalere Technik eingefallen.
+Verwende die Substitution $\ee^x=u$. Nun ist
+$\frac{\mathrm du}{\mathrm dx}=\ee^x$ und daher
+$\mathrm du=\ee^x \mathrm dx$.
+
+Man rechnet nun
+\begin{align}
+&\int \ee^x\sin x\,\mathrm dx
+ = \int \sin x\,\mathrm du = \int\frac{\ee^{\ui x}-\ee^{-\ui x}}{2\ui}\mathrm du
+ = \frac{1}{2\ui}\int (u^\ui-u^{-\ui})\mathrm du\\
+&= \frac{1}{2\ui}\bigg(\frac{u^{\ui+1}}{\ui+1}-\frac{u^{-\ui+1}}{-\ui+1}\bigg)
+ = \frac{u}{2\ui}\bigg(\frac{u^\ui}{\ui+1}+\frac{u^{-\ui}}{\ui-1}\bigg)\\
+&= \frac{u}{2\ui}\bigg[\bigg(\frac{1}{2}-\frac{1}{2}\ui\bigg)u^\ui
+   +\bigg(-\frac{1}{2}-\frac{1}{2}\ui\bigg)u^{-\ui}\bigg]
+ = \frac{u}{2}\bigg[\frac{u^\ui-u^{-\ui}}{2\ui}-\frac{u^\ui+u^{-\ui}}{2}\bigg]\\
+&= \frac{\ee^x}{2}\bigg[\frac{\ee^{\ui x}-\ee^{-\ui x}}{2\ui}-\frac{\ee^{\ui x}+e^{-\ui x}}{2}\bigg]
+ = \frac{\ee^x}{2}(\sin x-\cos x).\;\Box
+\end{align}
+
+\strong{Dritte alternative Lösung.}
+\emph{Es war gestern aber schon sehr spät geworden, sodass ich es
+gestern nicht mehr aufschreiben wollte.}
+Mir war die Idee gekommen, dass $\ee^x$ bei der Laplace-Transformation
+vielleicht wegfällt. Das klappt auf eine gewisse Art tatsächlich.
+
+Also pass auf. Bei Integration im Originalbereich erhält man eine
+Division durch die abhängige Variable im Bildbereich. Du siehst also,
+Integrieren ist im Bildbereich ganz einfach. Bezeichnen wir mit
+$L(f)$ die Laplace-Trafo. Die macht aus einer Funktion eine neue
+Funktion. Man schreibt daher $F(p)=L\{f(t)\}(p)$. Hier ist
+$f(t)$ die Originalfunktion und $F(p)$ die Bildfunktion.
+
+Was ich nun gesagt habe, lässt sich so ausdrücken:
+\begin{equation}
+L\bigg\{\int_0^t f(x)\,\mathrm dx\bigg\}(p) = \frac{1}{p}L\{f(t)\}(p).
+\end{equation}
+
+Somit ergibt sich
+\begin{equation}
+L\bigg\{\int_0^t \ee^x\sin x\;\mathrm dx\bigg\}(p)
+=\frac{1}{p}L\{\ee^t\sin t\}(p).
+\end{equation}
+
+Jetzt brauchen wir die Definitionsformel für die
+Laplace-Trafo:
+\begin{equation}
+L\{f(t)\}(p):=\int_0^{\infty} \ee^{-pt}f(t)\,\mathrm dt.
+\end{equation}
+Damit ergibt sich
+\begin{equation}
+L\{\ee^t\sin t\}(p)
+= \int_0^{\infty} \ee^{-pt}\ee^t\sin t\,\mathrm dt
+= \int_0^{\infty} \ee^{-(p-1)t}\sin t\,\mathrm dt
+= L\{\sin t\}(p-1).
+\end{equation}
+Die Laplace-Trafo der Sinus-Funktion kann als bekannt
+vorausgesetzt werden. Dem Bronstein entnimmt man
+\begin{equation}
+L\{\sin(at)\}(p) = \frac{a}{p^2+a^2}.
+\end{equation}
+Damit ergibt sich
+\begin{equation}
+L\{\sin t\}(p-1) = \frac{1}{(p-1)^2+1}.
+\end{equation}
+Also insgesamt
+\begin{equation}
+L\bigg\{\int_0^t \ee^x\sin x\;\mathrm dx\bigg\}(p)
+= \frac{1}{p}\bigg[\frac{1}{(p-1)^2+1}\bigg].
+\end{equation}
+Jetzt wendest du auf beiden Seiten die Umkehr-Trafo an. Es ist
+$L^{-1}L=\mathrm{id}$. Somit ergibt sich%
+\begin{equation}
+\int_0^t \ee^x\sin x\;\mathrm dx
+= L^{-1}\bigg\{\frac{1}{p}\bigg[\frac{1}{(p-1)^2+1}\bigg]\bigg\}(t).
+\end{equation}
+Der Bruch wird nun einer Partialbruchzerlegung unterworfen.
+In Maxima bringt die Eingabe
+\begin{verbatim}
+    Term: partfrac(1/p*1/((p-1)^2+1),p);
+    expand(Term);
+\end{verbatim}
+das Ergebnis
+\begin{equation}
+\frac{1}{p^2-2p+2}-\frac{p/2}{p^2-2p+2}+\frac{1}{2p}.
+\end{equation}
+Leider verwendet Maxima dabei keine komplexen Zahlen. Dann würden
+auch die Terme mit quadratischen Divisoren in Partialbrüche
+mit linearen Divisoren zerlegt werden.
+
+Aber wir können auch hiermit weiterarbeiten, da der Bronstein
+die Rücktrafo für diese Terme enthält. Dabei ergibt sich
+\begin{gather*}
+\ee^t\sin t - \frac{1}{2}(\cos t+\sin t)\ee^t + \frac{1}{2}
+\end{gather*}
+Kürzen führt uns zu
+\begin{equation}
+\frac{\ee^t}{2}(\sin t-\cos t)+\frac{1}{2}.
+\end{equation}
+Also ist
+\begin{equation}
+\int_0^t \ee^x\sin x\;\mathrm dx
+= \frac{\ee^t}{2}(\sin t-\cos t)+\frac{1}{2}.\;\Box
+\end{equation}
+%
+\strong{Vierte alternative Lösung.}
+
+Mir ist jetzt noch etwas eingefallen.
+Sieh mal, die Funktionen
+\begin{equation}
+s[A,d](x):=A\sin(x+d)
+\end{equation}
+bilden einen Funktionenraum
+der gegen Differentiation und Integration abgeschlossen ist. D.\,h.
+dass die Ableitung und eine Stammfunktion wieder
+von der Form $A\sin(x+d)$ sein wird. Die Suche eines Integrals
+kann damit auf die Suche von $A,d$ beschränkt werden. Zwei Zahlen
+sind viel einfacher zu finden als eine ganze Funktion.
+
+Nun rechnet man folgendes:
+\begin{align}
+&\frac{\mathrm d}{\mathrm dx}(\ee^x\sin x)
+= \ee^x\sin x+\ee^x\cos x = \ee^x\,(\sin x+\cos x)\\
+&= \ee^x \sqrt{2}\sin(x+\pi/4)
+= \ee^x A\sin(x+d).
+\end{align}
+Das legt die Vermutung nahe, dass auch die Funktionen
+\begin{equation}
+\ee^x A\sin(x+d)
+\end{equation}
+einen gegen Integration und Ableitung abgeschlossenen
+Funktionenraum bilden.
+
+Wir machen daher den Ansatz
+\begin{equation}
+\int \ee^x\sin x\;\mathrm dx = \ee^x A\sin(x+d).
+\end{equation}
+Leitet man nun auf beiden Seiten ab, so ergibt sich
+\begin{equation}
+\ee^x\sin x = \ee^x A\sin(x+d)+\ee^x A\cos(x+d).
+\end{equation}
+Da $\ee^x>0$ für alle $x$ ist, können wir $\ee^x$ sorgenlos
+rausdividieren. Somit erhält man
+\begin{equation}
+\frac{1}{A}\sin x = \sin(x+d)+\cos(x+d).
+\end{equation}
+Jetzt benutzt man die Additionstheoreme
+\begin{align}
+\sin(x+d) &= \sin x\cos d + \cos x\sin d,\\
+\cos(x+d) &= \cos x\cos d - \sin x\sin d.
+\end{align}
+Damit ergibt sich
+\begin{equation}
+\frac{1}{A}\sin x = (\cos d-\sin d)\sin x+(\sin d+\cos d)\cos x.
+\end{equation}
+Da auf der linken Seite kein Kosinus-Term ist, würden wir den
+Kosinusterm auf der rechten Seite gerne zum verschwinden bringen.
+
+Dann muss aber $\sin d+\cos d=0$ sein.
+Man kann nun die Identität
+\begin{equation}
+\sin d+\cos d=\sqrt{2}\sin(d+\pi/4)
+\end{equation}
+benutzen, die schon weiter oben vorkam. Damit ergibt sich
+\begin{equation}
+\sin(d+\pi/4)=0.
+\end{equation}
+Da Sinus periodisch ist, gibt es unendlich viele Lösungen. Davon
+nehmen wir die einfachste Lösung, also $d=-\pi/4$.
+
+Somit erhalten wir
+\begin{equation}
+\sin x = A\sin (x-\pi/4)+A\cos(x-\pi/4).
+\end{equation}
+Um $A$ zu bestimmen, können wir uns jetzt ein $x$ aussuchen.
+Man beobachtet, dass $x=0$ nichts bringt. Stattdessen nimmt
+man $x=\pi/4$. Damit ergibt sich
+\begin{equation}
+\frac{1}{\sqrt{2}} = \sin(\pi/4) = A\sin(0)+A\cos(0) = A.
+\end{equation}
+Damit erhalten wir
+\begin{equation}
+\int \ee^x\sin x\;\mathrm dx = \frac{\ee^x}{\sqrt{2}}\sin(x-\pi/4).
+\end{equation}
+Mit dem Additionstheorem ergibt sich
+\begin{align}
+\sin(x-\pi/4) &= \sin x\cos(-\pi/4)+\cos x\sin(-\pi/4)\\
+&= \sin x\cos(\pi/4)-\cos x\sin(\pi/4)\\
+&= \frac{\sin x}{\sqrt{2}}-\frac{\cos x}{\sqrt{2}}
+= \frac{1}{\sqrt{2}}(\sin x-\cos x).
+\end{align}
+Einsetzen bringt
+\begin{equation}
+\int \ee^x\sin x\;\mathrm dx = \frac{\ee^x}{2}(\sin x-\cos x).\;\Box
+\end{equation}
+
+
 \subsection{Konvergenz}
 \begin{Aufgabe}
 Berechne
@@ -48,7 +369,7 @@ Berechne
 \qquad(\forall k\colon a_k\ne 0)\]
 \end{Aufgabe}
 \noindent
-Lösung.
+\strong{Lösung.}
 Wegen $x\ne 0$ kann der Bruch mit $\frac{bx}{bx}$ erweitert
 werden. Damit ergibt sich
 \[\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}
@@ -67,7 +388,7 @@ Berechne
 \qquad(a\ne 0)\]
 \end{Aufgabe}
 \noindent
-Lösung.
+\strong{Lösung.}
 Verwende die Substitution $x=\frac{\pi}{2a}-\frac{u}{a}$.
 Nun ist
 \[
@@ -88,7 +409,7 @@ Bestimme
 \[g=\lim_{x\downarrow 0} x^x.\]
 \end{Aufgabe}
 \noindent
-Lösung. Es ist $x^x=\exp(x\ln x)$. Wegen der Stetigkeit von $\exp$
+\strong{Lösung.} Es ist $x^x=\exp(x\ln x)$. Wegen der Stetigkeit von $\exp$
 gilt nun
 \[\lim_{x\to 0}\exp(f(x)) = \exp(\lim_{x\to 0} f(x)).\]
 Nun ist $x\ln x = (\ln x)/(1/x).$
@@ -104,7 +425,7 @@ Bestimme
 \[g=\lim_{x\downarrow 0} x^{1/x}.\]
 \end{Aufgabe}
 \noindent
-Lösung. Es ist $x^{1/x}=\exp(\frac{\ln x}{x})$.
+\strong{Lösung.} Es ist $x^{1/x}=\exp(\frac{\ln x}{x})$.
 Nun gilt
 \[\lim_{x\downarrow 0}\frac{\ln x}{x}
 \stackrel{\text{L'H}}= \lim_{x\downarrow 0}\frac{1}{x}
@@ -118,7 +439,7 @@ Somit ist
 \begin{Aufgabe}
 Vereinfache $\displaystyle\sum_{k=1}^n (2k+4)$.
 \end{Aufgabe}
-Lösung.
+\strong{Lösung.}
 \begin{equation}
 \sum_{k=1}^n (2k+4) = 2\sum_{k=1}^n k + \sum_{k=1}^n 4
 = 2\cdot\frac{n}{2}(n+1)+4n = n^2+n+4n = n^2+5n.
@@ -163,7 +484,7 @@ Voraussetzung ist, dass das Kommutativgesetz gilt. Bei unendlichen
 Reihen darf man nur endliche Partialsummen umordnen, es sei denn
 die Reihe ist absolut konvergent.
 
-\strong{Ansatz.} Sei
+\strong{Lösung.} Sei
 \[s_b := \sum_{k=a}^{b-1} q^k.\]
 Nun gilt:
 \[qs_b = q\sum_{k=a}^{b-1} q^k = \sum_{k=a}^{b-1} q^{k+1}
@@ -174,7 +495,7 @@ D.\,h. alle Summanden $q^{a+1}$ bis $q^{b-1}$ kommen sowohl im Minuend als auch 
 entfallen somit.
 
 Mit $qs_b-s_b=(q-1)s_b$ ergibt sich nun
-\[\sum_{k=a}^{b-1} q^k = \frac{q^b-q^a}{q-1}.\]
+\[\sum_{k=a}^{b-1} q^k = \frac{q^b-q^a}{q-1}.\;\Box\]
 Bemerkung. Hinter diesem \emph{Trick} verbirgt sich ein mathematischer
 Formalismus. Was eben beschrieben wurde, nennt sich
 \emph{Teleskopsumme}. \emph{Teleskopieren} nennt man die Rechenregel:
@@ -428,8 +749,8 @@ kürzesten Weg. Wie viele kürzeste Wege von Knoten $(0,0)$ zu Knoten
 $(m,n)$ gibt es auf einem diskreten Gitter mit Manhatten-Metrik?
 \end{Aufgabe}
 
-\vfill
-Dieses Heft steht unter der Creative-Commons-Lizenz CC0.
+\vfill\noindent
+\texttt{Dieses Heft steht unter der Creative-Commons-Lizenz CC0.}
 
 \end{document}
 
