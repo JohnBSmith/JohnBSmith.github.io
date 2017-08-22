@@ -1,0 +1,242 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\definecolor{c1}{RGB}{00,40,60}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{4mm}
+\numberwithin{equation}{section}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\begin{document}
+
+\noindent
+{\LARGE\sffamily\bfseries Aufzeichnungen zur Physik}
+\tableofcontents
+
+\section{Quantenmechanik}
+\subsection{Schrödingergleichung}
+
+Man geht davon aus, dass eine Materiewelle der Wellengleichung
+\begin{equation}
+D_x^2\Psi = \frac{1}{c^2}D_t^2\Psi
+\end{equation}
+genügt. Nun wählt man eine stehende harmonische Welle als Ansatz.
+Es ist dann
+\begin{equation}
+\Psi(x,t) = \Psi(x)\,\ee^{-\ui\omega t}.
+\end{equation}
+Die Ableitung nach der Zeit ist
+\begin{equation}
+D_t\Psi(x,t) = -\ui\omega\Psi(x)\,\ee^{-\ui\omega t}
+= -\ui\omega\Psi(x,t).
+\end{equation}
+Für die Materiewelle gilt nun $\lambda=h/p=h/(mc)$. Damit rechnet
+man nun
+\begin{equation}
+\frac{1}{c^2} = \frac{1}{(\lambda f)^2}
+= \frac{m^2 c^2}{h^2 f^2}.
+\end{equation}
+Nun gilt aber
+\begin{equation}
+E=T+V=\frac{1}{2}mc^2+V
+\end{equation}
+und somit $2m(E-V)=m^2 c^2$. Setzt man noch $E=hf=\hbar\omega$,
+so ergibt sich
+\begin{equation}
+\frac{1}{c^2} = \frac{2m(\hbar\omega-V)}{(hf)^2}.
+\end{equation}
+Damit ist dann
+\begin{equation}
+D_x^2\Psi
+= -\ui\omega\frac{2m(\hbar\omega-V)}{(\hbar\omega)^2}D_t\Psi.
+\end{equation}
+Multipliziert man aus und benutzt $VD_t\Psi=-\ui\omega V\Psi$,
+so ergibt sich
+\begin{equation}
+\frac{D_x^2\Psi}{2m}
+= \frac{D_t\Psi}{\ui\hbar}+\frac{1}{\hbar^2}V\Psi.
+\end{equation}
+Man formt noch in die Standardform um und erhält die
+\emph{Schrödingergleichung}
+\begin{equation}
+D_t\Psi = \frac{1}{i\hbar}\Big(-\frac{\hbar^2}{2m}D_x^2+V\Big)\Psi.
+\end{equation}
+Man definiert nun
+\begin{equation}
+\hat H := -\frac{\hbar^2}{2m}D_x^2+V.
+\end{equation}
+Somit kürzt sich die Gleichung ab zu
+\begin{equation}
+D_t\Psi = \frac{1}{\ui\hbar}\hat H\Psi.
+\end{equation}
+Der Satz von Taylor lautet in Operatorschreibweise
+\begin{equation}
+\Psi(x,t)=\exp(tD_t)\Psi(x,0).
+\end{equation}
+Verwendet man nun die Schrödingergleichung, so ergibt sich
+der Zeitentwicklungsoperator zu
+\begin{equation}
+\hat U = \exp(tD_t) = \exp\Big(\frac{t\hat H}{\ui\hbar}\Big).
+\end{equation}
+
+\subsection[Zeitunabhängige Schrödingergleichung]
+{Zeitunabhängige\\
+Schrödingergleichung}
+
+Man geht wieder von der Wellengleichung
+\begin{equation}
+D_x^2\Psi=\frac{1}{c^2}D_t^2\Psi
+\end{equation}
+aus und nimmt den entkoppelten Ansatz
+\begin{equation}
+\Psi(x,t)=\Psi(x)\sin(\omega t),
+\end{equation}
+der sich für eine stehende Welle ergibt. Eingesetzt in
+die Wellengleichung ergibt sich zunächst
+\begin{equation}
+\sin(\omega t)\Psi''(x)=-\frac{\omega^2}{c^2}\sin(\omega t)\Psi(x).
+\end{equation}
+Nach dem Kürzen bleibt
+\begin{equation}
+\Psi''(x) + \frac{\omega^2}{c^2}\Psi(x)
+\end{equation}
+übrig. Man nutzt nun wieder
+\begin{equation}
+\frac{1}{c^2} = \frac{m^2 c^2}{h^2 f^2}
+= \frac{2m(E-V)}{h^2 f^2}
+= \frac{2m(E-V)}{\hbar^2 \omega^2}.
+\end{equation}
+Somit ergibt sich
+\begin{equation}
+\Psi''(x) + \frac{2m}{\hbar^2}(E-V)\Psi(x) = 0.
+\end{equation}
+Das ist die \emph{zeitunabhängige Schrödingergleichung}.
+
+\newpage
+\section{Metrologie}
+\subsection{Abweichungen}
+
+Physikalische Größen gibt man als Produkt von Zahlenwert und Einheit
+an. Nun wird man sich fragen, wie viele Dezimalstellen man überhaupt
+bei der Messung einer Größe aufschreiben muss. Dazu muss ersteinmal
+präzise definiert werden, was man unter
+\textit{signifikanten Stellen} überhaupt versteht. Dazu schreibt man
+den Zahlenwert in der Darstellung
+\begin{equation}
+z = m\times 10^{e}
+\end{equation}
+wobei $m$ die Mantisse und $e$ der Exponent ist. Der Exponent
+ist nun so zu wählen, dass für die Mantisse $m<1$ und $m\ge 0.1$
+gilt. Die Anzahl der signifikanten Stellen ist dann einfach die
+Anzahl der Nachkomma"-stellen.
+
+Die signifikanten Stellen sind nun die Dezimalstellen, welche bei
+wiederholter Messung nicht oder nur sehr gering schwanken.
+
+Das ist natürlich eine recht schwammige Definition. Aufgrund der
+Angabe der signifikanten Stellen kennt man nur die Zehnerpotenz
+der Fehlergrenze. Man kann also nicht sagen, ob eine Stelle schwach
+geschwankt hat oder gar nicht. Dieser Umstand ist recht unzulänglich
+und wir führen daher die Begriffe \emph{Abweichung} und
+\emph{Grenzabweichung} ein. Synonyme dafür sind \emph{Fehler} und
+\emph{Fehlergrenze}.
+
+Wir nehmen nun ein Lineal und werden damit versuchen, eine Länge
+von $100\,\mathrm{mm}$
+zwischen zwei Punkten auf einem Blatt Papier zu messen. Wir gehen
+außerdem davon aus, dass die Skala des Lineals bei der Herstellung
+hinreichend genau kalibriert wurde.
+
+Bezeichnen wir mit $w=100\,\mathrm{mm}$ den wahren Wert der Länge.
+Den Messwert bezeichnen wir mit $x$. Mit dem Lineal können wir
+die Länge schätzungsweise auf etwa $\frac{1}{2}\mathrm{mm}$ genau
+messen. Diese Abweichung bezeichnen wir als Grenzabweichung $G$,
+es ist
+\begin{equation}
+G = 0.5\,\mathrm{mm}.
+\end{equation}
+Der Messerwert $x$ wird um den wahren Wert herum schwanken. Es ist
+\begin{equation}
+x\in [w-G,w+G].
+\end{equation}
+Den Wert $\Delta x := x-w$ bezeichnet man als Abweichung. Da wir
+den wahren Wert nicht kennen, können wir weder das Intervall noch
+die Abweichung angeben. Das Intervall kann man jedoch als
+\begin{equation}
+w-G\le x\le w+G.
+\end{equation}
+schreiben. Durch Umformen dieser Ungleichungen gelangt man zu
+$x-G\le w\le x+G.$
+
+Damit ist $w\in [x-G,x+G]$. Das Notiert man in der Kurzschreibweise
+\begin{equation}
+w = x\pm G.
+\end{equation}
+Mit dem Lineal werden wir z.\,B. eine Länge von $9.8\,\mathrm{mm}$
+messen. Die Angabe ist dann
+\begin{equation}
+L = 9.8\,\mathrm{mm}\pm 0.5\,\mathrm{mm}
+= (99.8\pm 0.5)\,\mathrm{mm}.
+\end{equation}
+Die tatsächliche Abweichung, die wir nicht ermitteln können, ist
+\begin{equation}
+\Delta x = 99.8\,\mathrm{mm}-100.0\,\mathrm{mm}
+= -0.2\,\mathrm{mm}.
+\end{equation}
+
+\subsection{Rechnen mit Messwerten}
+
+Beim Rechnen mit Messwerten wird man auf die Frage stoßen, auf wie viele
+signifikante Stellen man das Ergebnis angibt. Angenommen wir haben
+eine Masse von $10\,\mathrm g$ mit der Grenzabweichung
+$1\,\mathrm g$ gemessen. Bei Division durch drei
+erhält man das Ergebnis $3\,\mathrm g$. Ausführen der
+Umkehroperation bringt $9\,\mathrm g$. Die Abweichung durch das
+Runden ist also genauso groß geworden, wie die Grenzabweichung selbst.
+Diese Unzulänglichkeit beheben wir sofort, indem wir das Ergebnis
+der Rechnung auf eine signifikante Stelle mehr als den Messwert
+angeben.
+
+Bei Funktionen mit sehr flachem Anstieg ist der Effekt noch stärker.
+Die Umkehrfunktion hat dann einen sehr hohen Anstieg. Kleine
+Abweichungen der Argumente führen dann zu großen Abweichungen
+der Funktionswerte. Nehmen wir die Zahl vier und die Grenz
+abweichung eins. Es ist z.\,B.
+\begin{equation}
+4^{1/10} = 1.14869 \approx 1.15 \approx 1.1 \approx 1.
+\end{equation}
+Wendet man die Umkehrfunktion auf die ungenauste Rundung an, so erhält
+man den Wert 1. Der nächst bessere ist 2.59 und dann 4.05. Für ein
+zuverlässiges Rechenergebnis muss man also zwei Stellen mehr angeben,
+als gemessen wurden.
+
+Wenn man bei einer beliebigen Rechnung eine bzw. zwei Stellen mehr
+angibt, so kann das Ergebnis der Rechnung unter Umständen scheingenau werden. Man
+steht dann vor dem Dilemma: eventuelle Scheingenauigkeit oder eventuell großer
+Rundungsfehler. Daher sollte die Grenzabweichung immer mit angegeben
+werden.
+
+Beim Rechnen mit Fehlerfortpflanzungsgesetzen besteht das gleiche
+Problem. Daher sollte man für die Grenzabweichung, welche sich ergibt,
+auch eine Stelle mehr angeben. Die Grenzabweichung kann in den
+allermeisten Situationen also mit zwei signifikanten Stellen angegeben
+werden.
+
+Die Stellenwerte der minderwertigsten Stellen von Wert und
+Grenzabweichung sollten natürlich übereinstimmen.
+Wenn man z.\,B. eine Spannung von $9.24\,\mathrm V$ mit der
+Grenzabweichung $0.4\,\mathrm V$ errechnet hat, so kann man
+anstelle von $(9.2\pm 0.4)\mathrm V$ auch angeben
+\begin{equation}
+(9.24\pm 0.40)\mathrm V.
+\end{equation}
+Diese Angabe ist \textit{nicht} scheingenau, da die Grenzabweichung
+mit angegeben ist.
+
+\end{document}
+
