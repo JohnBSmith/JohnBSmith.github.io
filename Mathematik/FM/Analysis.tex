@@ -42,62 +42,32 @@ Die Ungleichung wird nur für $n=1$ oder $x=0$ zu einer Gleichung.
 
 \section{Konvergenz}
 \subsection{Umgebungen}\index{Umgebung}
-Sei $(X,T)$ ein topologischer Raum und $x\in X$.
-\begin{Definition}
-\emdef{Umgebungsfilter}:\index{Umgebungsfilter}
-\begin{equation}
-\mathfrak U(x) := \{U\subseteq X\mid x\in O\land O\in T
-\land O\subseteq U\}.
-\end{equation}
-Ein $U\in\mathfrak U(x)$ wird Umgebung von $x$ genannt.
-\end{Definition}
-\begin{Definition}
-Eine Menge $\mathfrak B(x)\subseteq \mathfrak U(x)$
-heißt \emdef{Umgebungsbasis} gdw.
-\begin{equation}
-\forall U{\in}\mathfrak U(x)\,\exists B{\in}\mathfrak B(x)\colon
-B\subseteq U.
-\end{equation}
-\end{Definition}
 
-\noindent
-Sei $(X,d)$ ein metrischer Raum und $x\in X$.
-\begin{Definition}
-$\varepsilon$-\emdef{Umgebung}:
-\begin{equation}\label{eq:epsilon-Umgebung}
-U_\varepsilon(x) := \{y\in X\mid d(x,y)<\varepsilon\}.
-\end{equation}
-\emdef{Punktierte $\varepsilon$-Umgebung}:
-\begin{equation}
-\dot U_\varepsilon(x) := U_\varepsilon(x)\setminus\{x\}.
-\end{equation}
-\end{Definition}
-\noindent
-Bei
-\begin{equation}
-\mathfrak B(x) = \{U_\varepsilon(x)\mid\varepsilon>0\}
-\end{equation}
-handelt es sich um eine Umgebungsbasis.
+Sei $(X,d)$ ein metrischer Raum und $p\in X$.
 
-Für einen normierten Raum ist durch $d(x,y):=\|x-y\|$ eine
-Metrik gegeben. Speziell für $X=\R$ oder $X=\C$ wird fast immer
-$d(x,y):=|x-y|$ verwendet.
+{\definition}
+\emdef{Offene $r$-Umgebung von $p$}:
+\begin{equation}
+U_r(p) := \{q\mid d(p,q)<r\}.\qquad (r>0)
+\end{equation}
+Standardmetrik:
+\begin{align}
+d(p,q) &:= |p-q|,\quad\; (\text{$X=\R$ oder $X=\C$})\\
+d(p,q) &:=\|p-q\|.\quad (\text{normierte Räume})
+\end{align}
 
 \subsection{Konvergente Folgen}\index{konvergente Folge}
-\begin{Definition}
+{\definition}
 Eine Folge $(a_n)\colon \N\to X$ heißt \emdef{konvergent} gegen $g$, wenn%
 \begin{equation}\label{eq:konvergent}
-\forall U{\in}\mathfrak B(g)\,\exists n_0\,\forall n{>}n_0\colon\;
-a_n\in U.
+\forall r{>}0\enspace\exists n_0\enspace\forall n{>}n_0\colon\;
+a_n\in U_r(g).
 \end{equation}
 Man schreibt dann $\lim\limits_{n\to\infty} a_n=g$ und bezeichnet
 $g$ als \emdef{Grenzwert}\index{Grenzwert}.
-\end{Definition}
-
-Für eine Folge $(a_n)\colon\N\to\R$ wird \eqref{eq:konvergent} zu:
+Hierbei gilt
 \begin{equation}
-\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\colon\;
-|a_n-g|<\varepsilon.
+a_n\in U_r(g)\iff d(a_n,g)<r.
 \end{equation}
 \strong{Sandwichsatz.} Seien $(a_n)$ und $(b_n)$ reelle Folgen
 mit $a_n\to g$ und $b_n\to g$. Gilt $a_n\le c_n\le b_n$ für fast alle
@@ -107,8 +77,8 @@ $n$, so konvergiert $(c_n)$ auch gegen $g$.
 \begin{Definition}
 Eine Punkt $h$ heißt \emdef{Häufungspunkt} einer Folge $(a_n$), wenn
 \begin{equation}
-\forall U{\in}\mathfrak B(h)\;\forall n_0\;\exists n{>}n_0\colon\;
-a_n\in U.
+\forall r{>}0\enspace\forall n_0\enspace\exists n{>}n_0\colon\;
+a_n\in U_r(h).
 \end{equation}
 \end{Definition}
 \noindent
@@ -116,20 +86,57 @@ Besitzt eine Folge $(a_n)$ einen Grenzwert $g$, so ist $g$ auch ein
 Häufungspunkt von $(a_n)$.
 
 \subsection{Cauchy-Folge}\index{Cauchy-Folge}
+{\definition}
 Sei $(X,d)$ ein metrischer Raum.
-\begin{Definition}
-Eine Folge $(a_n)$ heißt \emdef{Cauchy-Folge}
-gdw.
+Eine Folge $(a_n)$ heißt \emdef{Cauchy-Folge},
+wenn
 \begin{equation}
-\forall\varepsilon{>}0\;\exists N{\in}\N\;\forall m,n>N\colon\;
-d(a_m,a_n)<\varepsilon.
+\forall r{>}0\enspace\exists N{\in}\N\enspace\forall m,n>N\colon\;
+d(a_m,a_n)<r.
 \end{equation}
-\end{Definition}
 \noindent
 Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}\index{vollständig},
 wenn jede Cauchy-Folge von Punkten aus $X$ einen Grenzwert $g$
 mit $g\in X$ besitzt. Ein vollständiger normierter Raum heißt
 \emdef{Banachraum}\index{Banachraum}.
+
+\subsection{Beschränkte Folgen}
+{\definition}
+Eine Teilmenge $M\subseteq\R$ heißt \emdef{nach oben beschränkt},
+wenn
+\begin{equation}\label{eq:Schranke-oben}
+\exists S_o\,\forall x{\in}M\,(x\le S_o).
+\end{equation}
+und \emdef{nach unten beschränkt}, wenn
+\begin{equation}
+\exists S_u\forall x{\in M}\,(x\ge S_u).
+\end{equation}
+Die Zahl $S_o$ heißt \emdef{obere Schranke}
+und $S_u$ heißt \emdef{untere Schranke}. Eine Folge heißt
+\emdef{beschränkt}, wenn sowohl eine untere als auch
+eine obere Schranke existiert.
+
+{\definition} \emdef{Supremum}:
+\begin{equation}
+\sup(M) := \min\{S_o\mid \forall x{\in}M\,(x\le S_o)\}.
+\end{equation}
+\emdef{Infimum}:
+\begin{equation}\label{eq:Infimum}
+\inf(M) := \max\{S_u\mid \forall x{\in}M\,(x\ge S_u)\}.
+\end{equation}
+
+{\definition}
+Bei einer Folge $(a_n)\colon\N\to\R$ sind die
+Begriffe \eqref{eq:Schranke-oben}
+bis \eqref{eq:Infimum} bezüglich der Bildmenge
+von $(a_n)$ definiert.
+
+Jede nach oben beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Supremum.
+Jede nach unten beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Infimum.
+Jede beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Infimum und ein Supremum.
 
 \section{Reihen}\index{Reihe}
 \begin{Definition}
@@ -321,7 +328,7 @@ an der Stelle $x_0$:
 N(x) = f(x_0)+\frac{1}{f'(x_0)}(x-x_0).
 \end{equation}
 
-\subsubsection{Taylorreihe}
+\subsection{Taylorreihe}
 Sei $f$ eine an der Stelle $a$ unendlich oft differenzierbare
 reelle Funktion.
 
@@ -340,6 +347,22 @@ Für Polynomfunktionen und für $\exp$, $\sin$, $\cos$ gilt
 \begin{equation}
 \forall x{\in}\R\colon\; f[a](x)=f(x).
 \end{equation}
+
+\subsection{Kurvendiskussion}
+\subsubsection{Extrempunkte}
+
+{\definition}
+Sei $D$ eine offene Menge und $f\colon D\to\R$. Ein Wert $f(x_0)$
+heißt \emdef{lokales Maximum}, wenn
+\begin{equation}
+\exists r{>}0\;\forall x\in U_r(x_0)\colon f(x)\le f(x_0).
+\end{equation}
+Ein Wert $f(x_0)$ heißt \emdef{lokales Minimum}, wenn
+\begin{equation}
+\exists r{>}0\;\forall x\in U_r(x_0)\colon f(x)\ge f(x_0).
+\end{equation}
+Ist $f(x)=f(x_0)$ nur bei $x=x_0$, dann spricht man von einem
+\emdef{strengen} lokalen Minimum bzw. Maximum.
 
 \section{Integralrechnung}
 \subsection{Regelfunktionen}

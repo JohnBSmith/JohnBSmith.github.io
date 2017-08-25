@@ -813,6 +813,81 @@ wurde, heranziehen. Es gilt $s_1^2=\id$ und daher:
 \langle s_1^2\rangle = \langle\id\rangle
 = \{\id\} \ne \langle s_1\rangle = \{\id,s_1\}.
 \end{equation}
+\subsection{Ringe}
+\subsubsection{Elementare Eigenschaften.}
+Ein Ring ist eine Struktur $(R,+,*)$.
+
+Axiome: EANIK, EA, D.
+
+\strong{Definition.} $a-b:=a+(-b)$.
+
+Es gilt
+\begin{equation}
+a*0=0.
+\end{equation}
+
+Beweis.
+\begin{align}
+a*0 = a*(0+0) &= a*0+a*0\qquad\qquad\qquad\qquad (\text{Axiome N, D})\\
+\iff \underbrace{a*0-a*0}_{=0} &= a*0+\underbrace{a*0-a*0}_{=0}.\;\Box
+\qquad\quad\; (\text{Axiome A, I})
+\end{align}
+Es gilt
+\begin{equation}\label{eq:minus-minus-plus}
+a*(-b) = -(a*b),\qquad (-a)*b = -(a*b).
+\end{equation}
+Beweis.
+\begin{align}
+0 = a*0 = a*(b+(-b)) &= a*b+a*(-b)\\
+\iff  -(a*b) &= a*(-b).\;\Box
+\end{align}
+Die Rechnung für die zweite Gleichung ist analog.
+
+Es gilt
+\begin{equation}
+(-a)*(-b) = a*b.
+\end{equation}
+Beweis.
+\begin{equation}
+(-a)*(-b) \stackrel{\eqref{eq:minus-minus-plus}}= -(a*(-b))
+\stackrel{\eqref{eq:minus-minus-plus}}= -(-(a*b)) = a*b.
+\end{equation}
+\subsubsection{Ringhomomorphismen}
+\begin{Definition}
+Seien $(R,+,*)$ und $(R',+',*')$ zwei Ringe. Eine Abbildung
+$\varphi\colon R\to R'$ heißt \emdef{Ringhomomorphismus},
+wenn gilt:
+\begin{equation}
+\varphi(a+b) = \varphi(a)+\varphi(b),\qquad
+\varphi(a*b) = \varphi(a)*\varphi(b),\qquad
+\varphi(1) = 1.
+\end{equation}
+\end{Definition}
+\subsubsection{Beispiele}
+Für jeden Ring $R$ ist $R^{n\times n}$ bezüglich
+Addition $(a_{ij})+(b_{ij}):=(a_{ij}+b_{ij})$
+und Multiplikation $(a_{ij})(b_{ij}):=(\sum_k a_{ik}b_{kj})$
+von Matrizen wieder ein Ring.
+
+Im Wesentlichen müssen das Assoziativgesetz und die beiden
+Distributivgesetze überprüft werden. Es ergibt sich
+\begin{equation}
+(\sum_k a_{ik}b_{kj})(c_{ij})
+= \sum_\ell \sum_k a_{ik}b_{k\ell}c_{\ell j}
+= \sum_k \sum_{\ell} \ldots
+= (a_{ij})(\sum_\ell b_{i\ell}c_{\ell j})
+\end{equation}
+und
+\begin{gather}
+\hspace{-2.2em}(a_{ij})(x_{ij}{+}y_{ij})
+= \sum_k a_{ik} (x_{kj}{+}y_{kj})
+= \sum_k a_{ik} x_{kj}{+}\sum_k a_{ik}y_{kj}
+= (a_{ij})(x_{ij}){+}(a_{ij})(y_{ij}),\\
+\hspace{-2.2em}(x_{ij}{+}y_{ij})(a_{ij})
+= \sum_k (x_{kj}{+}y_{kj})a_{ik} 
+= \sum_k x_{kj}a_{ik}{+}\sum_k y_{kj}a_{ik}
+= (x_{ij})(a_{ij}){+}(y_{ij})(a_{ij}).
+\end{gather}
 
 \section{Analysis}
 \subsection{Grenzwert einer Funktion}\index{Grenzwert!einer Funktion}
