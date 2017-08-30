@@ -7,9 +7,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[all]{xy}
+\usepackage{enumitem}
 
 \usepackage{color}
-\definecolor{c1}{RGB}{00,40,80}
+\definecolor{c1}{RGB}{0,40,80}
+\definecolor{gray1}{RGB}{80,80,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
 \geometry{a4paper,left=38mm,right=22mm,top=24mm,bottom=40mm}
@@ -27,17 +29,20 @@
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\sur}{\operatorname{sur}}
+\newcommand{\defiff}{\;:\Longleftrightarrow\;}
 \newcommand{\strong}[1]{{\sf\bfseries #1}}
 
 \newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
 \newcommand{\emdef}[1]{\emph{#1}}
+\newcommand{\pstrut}[1]{\rule{0pt}{\dimexpr 8pt+#1}}
+\newcommand{\bitem}{\item[\scriptsize\color{gray1}$\blacksquare$]}
 
 \begin{document}
 \thispagestyle{empty}
 
 \noindent
 {\huge\sf\bfseries
-Skript zum\hfill {\normalsize\rmfamily\mdseries 7. August 2017}
+Skript zum\hfill {\normalsize\rmfamily\mdseries 30. August 2017}
 \par\noindent
 Mathematik-Studium
 \par}
@@ -73,6 +78,158 @@ d & -b\\
 \newpage
 
 \section{Grundlagen}
+\subsection{Formale Systeme}
+\subsubsection{Formale Sprachen}
+Zum Ausdrücken von mathematischen Sachverhalten wird eine Sprache
+benötigt. Die Sprache soll jeder Repräsentation einen bestimmten
+Sachverhalt zuordnen. Hierbei ist ein schrittweises Vorgehen
+sinnvoll.
+
+Zunächst wird eine Menge von \emdef{Symbolen} festgelegt, aus denen
+\emdef{Symbolewörter} durch Aneinanderreihung der Symbole aufgebaut
+werden dürfen. Die Menge der zulässigen Symbole wird als
+\emdef{Alphabet} $\Sigma$ bezeichnet. Die Menge aller möglichen
+Aneinanderreihungen aus Symbolewörtern aus dem Alphabet heißt
+\emdef{kleensche Hülle} $\Sigma^*$. Dabei ist auch das
+\emdef{leere Wort} $\varepsilon$ zugelassen.
+
+Beispiel. $\Sigma:=\{0,1\}$. Es ergibt sich
+\begin{equation}
+\Sigma^* = \{\varepsilon,0,1,00,01,10,11,000,001,010,011,100,101,110,111,0000,\ldots\}.
+\end{equation}
+Jede Teilmenge $L\subseteq\Sigma^*$ heißt \emdef{formale Sprache}.
+
+\subsection{Aussagenlogik}
+\subsubsection{Syntax der Aussagenlogik}
+Zunächst wird eine Menge von Variablen definiert:
+\begin{equation}
+V:=\{A_1,A_2,A_3,\ldots\}.
+\end{equation}
+Alternativ ist z.\,B. auch $A,B,C$ anstelle von $A_1,A_2,A_3$ möglich.
+Es sollen bloß abzählbar unendlich viele Variablen sein, damit
+für jede endliche Formel immer genügend Variablen zur Verfügung
+stehen. Wie diese Variablen benannt sind, ist unwichtig.
+
+Die Aussagenlogik besitzt das Alphabet
+\begin{equation}
+\Sigma := V\cup\{0,1,(,),\neg,\land,\lor,\rightarrow,\leftrightarrow\}.
+\end{equation}
+Nun definieren wir Produktionsregeln, da die Menge der wohlgeformten
+Formeln unendlich groß ist und daher nicht als endliche Liste
+aufgelistet werden kann. Die Produktionsregeln sind:
+\begin{itemize}[noitemsep,topsep=2pt]
+\setlength\itemsep{4pt}
+\bitem 0 und 1 sind Formeln.
+\bitem Jede Variable aus $V$ ist eine Formel.
+\bitem Sind $\varphi$ und $\psi$ Formeln, dann sind es auch
+   $(\neg \varphi)$, $(\varphi\land\psi)$, $(\varphi\lor\psi)$,
+   $(\varphi\rightarrow\psi)$, $(\varphi\leftrightarrow\psi)$.
+\end{itemize}
+Auf die Klammerung kann verzichtet werden, die Produktionsregeln
+werden hierdurch aber komplizierter. Eine für die Programmierung
+praktische Angabe ist die \emdef{Backus-Naur-Form}. Die
+Produktionsregeln für die Aussagenlogik mit optionalen Klammern sind:
+\begin{itemize}[noitemsep,topsep=2pt]
+\setlength\itemsep{4pt}
+\bitem $0$, $1$ und jede Variable aus $V$ sind Atome.
+\bitem R = Atom | $(\varphi)$.
+\bitem N = R | $\neg$ R.
+\bitem K = N | N $\land$ N.
+\bitem D = K | K $\lor$ K.
+\bitem I = D | D $\rightarrow$ D.
+\bitem $\varphi$ = I | I $\leftrightarrow$ I.
+\end{itemize}
+\pagebreak[2]
+Hier muss zwischen unterschiedlichen Formelvariablen unterschieden
+werden, welche als \emdef{Nonterminalsymbole} bezeichnet werden.
+Die Nonterimalsymbole sind $\varphi$, Atom, N, K, D, I.
+Symbole aus dem Alphabet $\Sigma$ werden \emdef{Terminalsymbole}
+genannt. Die Terminalsymbole können auch nach belieben in einfache
+oder doppelte Anführungszeichen gesetzt werden, um sie besser
+von den Nonterminalsymbolen zu unterscheiden.
+
+Man wendet nun ausgehend vom \emdef{Startsymbol} $\varphi$
+solange die Produktionsregeln an, bis sich eine Formel ergibt,
+die nur noch aus Terminalsymbolen besteht.
+
+Die Produktionsregeln können auch durch eine andere Art von
+Relation beschrieben werden. Aber die Beschreibung mittels
+Backus-Naur-Form lässt sich am einfachsten als
+\emdef{rekursiver Abstieg} umsetzen, da sie diesem entspricht.
+
+Die Technik des rekursiven Abstiegs ermöglicht es uns für
+eine große Klasse von formalen Sprachen auf systematische
+und übersichtliche Art eine syntaktische Analyse umzusetzen.
+Die Aufgabe der syntaktischen Analyse ist zum einen die Überprüfung,
+ob eine Formel wohlgeformt ist und zum anderen die Überführung
+einer Formel in einen abstrakten Syntaxbaum (engl. AST für
+abstract syntax tree).
+
+Eine Spitzfindigkeit ist nun noch, dass die Konjunktion $A\land B$
+und die Disjunktion $A\lor B$ das Assoziativgesetz erfüllen.
+Die Produktionsregeln lassen sich so formulieren, dass ungeklammerte
+Operationen links- oder rechtsassoziativ sind. Die formale Sprache
+erfährt hierdurch keine Änderung, da für diese nur die
+Wohlgeformtheit der Symbolketten wichtig ist. Jedoch gehören zu
+den unterschiedlichen Formulierungen unterschiedliche abstrakte
+Syntaxbäume. D.\,h., praktische formulierte Produktionsregeln können
+auch die Gestalt der abstrakten Syntaxbäume wiedergeben.
+
+An den Produktionsregeln werden folgende Modifikationen vorgenommen:
+\begin{itemize}[noitemsep,topsep=4pt]
+\setlength\itemsep{4pt}
+\bitem K = N | K $\land$ N.
+\bitem D = K | D $\lor$ K.
+\end{itemize}
+
+\subsubsection{Interpretation der Aussagenlogik}
+\begin{Definition}
+Sei $\varphi$ eine aussagenlogische Formel. Mit $V$ ist die
+Menge aller Variablen gemeint, mit $\operatorname{V}(\varphi)$ die
+Menge der Variablen, die in der Formel $\varphi$ vorkommen.
+Jede Abbildung%
+\begin{equation}
+I\colon V\to\{0,1\}\quad\text{bzw.}\quad
+I\colon\operatorname{V}(\varphi)\to\{0,1\}
+\end{equation}
+heißt \emdef{Interpretation} von $\varphi$.
+
+Die Interpretation lässt sich zu $I\colon L\to\{0,1\}$
+erweitern, wobei mit $L$ die Menge der aussagenlogischen Formeln
+ist. Man definiert:
+\begin{align}
+I(\neg\varphi) &= \neg I(\varphi),\\
+I(\varphi\land\psi) &= I(\varphi)\land I(\psi),\\
+I(\varphi\lor\psi) &= I(\varphi)\lor I(\psi),\\
+I(\varphi\rightarrow\psi) &= I(\varphi)\rightarrow I(\psi),\\
+I(\varphi\leftrightarrow\psi) &= I(\varphi)\leftrightarrow I(\psi),
+\end{align}
+wobei die rechten Seiten gemäß der Wertetabelle zu berechnen sind.
+\end{Definition}
+
+\subsubsection*{Wertetabelle}
+\begin{tabular}{c|c|c|c|c|c|c|c|c}
+& & UND & ODER & impl. & gdw. & XOR & NAND & NOR\\
+$A$ & $B$ & $A\land B$ & $A\lor B$
+& $A\rightarrow B$ & $A\leftrightarrow B$
+& $A\oplus B$ & $A\uparrow B$ & $A\downarrow B$\\
+\hline\pstrut{4pt}%
+0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1\\
+0 & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 0\\
+1 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0\\
+1 & 1 & 1 & 1 & 1 & 1 & 0 & 0 & 0
+\end{tabular}
+
+\vspace{10pt}
+\begin{Definition}
+\emdef{Modellrelation}:
+\begin{equation}
+(I\models\varphi) \defiff (I(\varphi)=1).
+\end{equation}
+Man sagt, $I$ \emdef{modelliert} $\varphi$ oder
+$I$ \emdef{ist ein Modell von} $\varphi$.
+\end{Definition}
+
 \subsection{Prädikatenlogik}
 Sei $M$ eine endliche Menge und $(x_k)_{k=1}^n$ eine bijektive
 Abzählung von $M$, die jedem $k$ ein Element von $M$ zuordnet.
@@ -1302,7 +1459,7 @@ Grenzwert der Partialsummenfolge. Die Partialsummenfolge sollte
 dafür konvergent oder zumindest bestimmt divergent sein.
 Die Notation
 \begin{equation}
-\sum_{k=0}^\infty a_k X^k := (a_k)_{k=0}^\infty
+\sum_{k=0}^\infty a_k X^k := (a_k)_{k=0}^\infty = (a_0,a_1,a_2,a_3,\ldots)
 \end{equation}
 ist bei formalen Potenzreihen bloß eine andere
 Schreibweise für die Folge $(a_k)$.
