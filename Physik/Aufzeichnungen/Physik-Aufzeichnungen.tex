@@ -3,6 +3,8 @@
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{microtype}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
@@ -12,6 +14,7 @@
 \numberwithin{equation}{section}
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
+\newcommand{\sgn}{\operatorname{sgn}}
 \begin{document}
 
 \noindent
@@ -74,7 +77,7 @@ Somit kürzt sich die Gleichung ab zu
 \begin{equation}
 D_t\Psi = \frac{1}{\ui\hbar}\hat H\Psi.
 \end{equation}
-Der Satz von Taylor lautet in Operatorschreibweise
+Die Taylorformel lautet in Operatorschreibweise
 \begin{equation}
 \Psi(x,t)=\exp(tD_t)\Psi(x,0).
 \end{equation}
@@ -237,6 +240,103 @@ anstelle von $(9.2\pm 0.4)\mathrm V$ auch angeben
 \end{equation}
 Diese Angabe ist \textit{nicht} scheingenau, da die Grenzabweichung
 mit angegeben ist.
+
+\newpage
+\section{Regelungstechnik}
+\subsection{Inertgaseinleitung}
+In einen Raum mit Volumen $V$ wird während einer kleinen
+Zeit $\Delta t$ ein Inertgas mit Volumen $\Delta V$ eingeleitet.
+Das selbe Volumen entweicht dabei aus dem Raum. Im Inertgas
+befindet sich Stickstoff mit einem erhöhten Volumenanteil $\varphi_c$.
+Wie verändert sich der Volumenanteil $\varphi$ im Raum mit der Zeit?
+
+Zunächst ist
+\begin{equation}
+\varphi = \frac{V(\mathrm{N_2})}{V}
+= \frac{V(\mathrm{N_2})}{V(\mathrm{N_2})+V(\mathrm{Rest})}.
+\end{equation}
+Es ist
+\begin{equation}
+\begin{split}
+\Delta\varphi &= \frac{V_2(\mathrm{N_2})}{V}-\frac{V_1(\mathrm{N_2})}{V}\\
+&= \frac{V_2(\mathrm{N_2})-V_1(\mathrm{N_2})}{V} = \frac{\Delta V(\mathrm{N_2})}{V}.
+\end{split}
+\end{equation}
+Außerdem gilt
+\begin{equation}
+\varphi_c = \frac{\Delta V(\mathrm{N_2})}{\Delta V}.
+\end{equation}
+Als Ansatz wird für jeden kleinen Zeitabschnitt $\Delta t$ eine
+Mischungsrechnung aufgestellt. Die Bilanz ist, dass vor der
+Mischung und nach der Mischung das selbe Volumen $V(\mathrm{N_2})$
+vorliegt:
+\begin{align}
+\overset{(\mathrm{nachher})}{V(\mathrm{N_2})} &= \overset{(\mathrm{vorher})}{V(\mathrm{N_2})},\\
+V\varphi_{n+1} &= (V-\Delta V)\varphi_n +\varphi_c\Delta V,\\
+V\varphi_{n+1} &= V\varphi_n-(\varphi_c-\varphi_n)\Delta V,\\
+\label{eq:Inertgas-Euler-Verfahren}
+\varphi_{n+1} &= \varphi_n-(\varphi_c-\varphi_n)\frac{\Delta V}{V}.
+\end{align}
+Es ist nun so, dass \eqref{eq:Inertgas-Euler-Verfahren} gerade
+dem Euler-Verfahren bezüglich einer Dgl. entspricht. Mit
+\begin{equation}
+\Delta\varphi = \varphi_{n+1}-\varphi_{n}
+\end{equation}
+ergibt sich
+\begin{equation}
+\frac{\Delta\varphi}{\Delta t} = (\varphi_c-\varphi_n)\frac{1}{V}\frac{\Delta V}{\Delta t}.
+\end{equation}
+Im Grenzwertfall $\Delta t\to 0$ ergibt sich die Dgl.
+\begin{equation}
+\varphi'(t) = (\varphi_c-\varphi)\frac{V'(t)}{V}.
+\end{equation}
+Hierbei sind $\varphi_c$, das Gesamtvolumen $V$ und der
+Volumenstrom $V'(t)$ konstante Parameter.
+Mathematisch betrachtet ist die Dgl. daher von der Gestalt
+\begin{equation}
+y' = ay+b
+\end{equation}
+mit
+\begin{equation}
+a:=-\frac{V'(t)}{V},\quad b:=\frac{V'(t)}{V}\varphi_c,\quad y:=\varphi.
+\end{equation}
+Es liegt eine lineare Dgl. erster Ordnung mit konstanten
+Koeffizienten vor. Das AWP kann in der Form
+\begin{equation}
+y' = f(x,y),\qquad y(t_0)=y_0
+\end{equation}
+mit $f(x,y)=ay+b$ geschrieben werden. Die Funktion $f(x,y)$
+ist stetig bezgülich $x$. Sie bestitzt eine stetige partielle
+Ableitung nach $y$ und ist somit erst recht Lipschitz-stetig
+bezüglich $y$. Nach dem Satz von Picard-Lindelöf muss das AWP
+eine eindeutig bestimmte globale Lösung besitzen.
+
+Das AWP lässt sich mit der Trennung der Veränderlichen bzw.
+der Substitutionsregel lösen. Es ergibt sich%
+\begin{align}
+\int_{y_0}^y \frac{\mathrm dy}{ay+b} &= \int_{t_0}^t\mathrm{dt},\\
+\frac{1}{a}\ln\Big|\frac{ay+b}{ay_0+b}\Big| &= t-t_0,\\
+|ay+b| &= |ay_0+b|\,\ee^{a(t-t_0)}.
+\end{align}
+Betrachte nun die Substitution $u:=ay+b$. Beim Integrieren über
+$1/u$ darf nicht über die Polstelle integriert werden. Das
+Integrationsintervall liegt also auf einer Seite der Polstelle.
+Da die Funktion $g(u)=1/u$ keine Nullstellen besitzt, ist
+$\sgn(u)=\sgn(u_0)$. Aus
+\begin{align}
+|u| &= |u_0|\,\ee^{a(t-t_0)},\\
+\sgn(u)u &= \sgn(u_0)u_0\,\ee^{a(t-t_0)}
+\end{align}
+kann das konstante Vorzeichen also herausdividiert werden.
+Das bringt
+\begin{align}
+ay+b &= (ay_0+b)\,\ee^{a(t-t_0)},\\
+y &= (y_0+\tfrac{b}{a})\,\ee^{a(t-t_0)}-\tfrac{b}{a}.
+\end{align}
+Nach Resubstitution ergibt sich die Lösung
+\begin{equation}
+\varphi(t) = (\varphi(t_0)-\varphi_c)\,\ee^{(V'/V)(t_0-t)}+\varphi_c.
+\end{equation}
 
 \end{document}
 
