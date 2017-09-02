@@ -7,9 +7,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{textcomp}
+\usepackage{lipsum}
 \usepackage{microtype}
 % \usepackage{multicol}
-\usepackage{lipsum}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{0,40,80}
@@ -21,8 +21,6 @@
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{4mm}
-\usepackage{lipsum}
-\usepackage{multicol}
 
 \usepackage[toc]{multitoc}
 \setcounter{secnumdepth}{4}
@@ -41,13 +39,25 @@
 \renewcommand\cftsubsubsecpagefont{\normalfont\sffamily}
 
 \usepackage{titlesec}
-\titleformat{\chapter}[block]
+
+% \titleformat{...}[hang]
+% is broken in TeX Live Ubuntu 16.04 LTS.
+% So a patch is used until an update is available.
+% BEGIN PATCH
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
+% END PATCH
+
+\titleformat{\chapter}[hang]
   {\normalfont\sffamily\huge\bfseries}{\thechapter}{1em}{\Huge}
-\titleformat{\section}[block]
+\titleformat{\section}[hang]
   {\normalfont\sffamily\Large\bfseries}{\thesection}{1em}{\Large}
-\titleformat{\subsection}[block]
+\titleformat{\subsection}[hang]
   {\normalfont\sffamily\large\bfseries}{\thesubsection}{1em}{\large}
-\titleformat{\subsubsection}[block]
+\titleformat{\subsubsection}[hang]
   {\normalfont\sffamily\large\bfseries}{\thesubsubsection}{1em}{\large}
 
 \titlespacing*{\chapter}{0pt}{0pt}{10pt}

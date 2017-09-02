@@ -1,10 +1,12 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{microtype}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
@@ -12,6 +14,7 @@
 \geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=32mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
+\setcounter{tocdepth}{2}
 
 \newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\N}{\mathbb N}
@@ -22,10 +25,12 @@
 \newcommand{\ui}{\mathrm i}
 
 \begin{document}
-\section*{Aufzeichnungen\\
-zur Mathematik}
-John Smith, 2016\\
-Lizenz: Creative Commons CC0
+
+\noindent
+{\LARGE\sffamily\bfseries Aufzeichnungen
+{\mdseries\rmfamily\large\hfill Dezember 2016}\\
+zur Mathematik\par}
+
 
 \tableofcontents
 
@@ -81,7 +86,7 @@ Austausch jedes Vorkommens einer \textit{freien Variable}
 durch einen AST. Durch den $\lambda$-Term wird die
 Variable $x$ nun gebunden, ist also nicht mehr frei.
 Daher können wir nicht einfach eine freie Substitution
-$[x{:=}u{-}T]$ durchführen.
+$x{:=}u{-}T$ durchführen.
 
 Viel mehr gilt die folgende Regel. Ist $g$ eine passende
 Bijektion, so gilt
@@ -168,7 +173,7 @@ Für den Anzahlquantor gilt außerdem
 \end{equation}
 
 \subsection[Allquantifizierung über Produktmengen]%
-{Allquantifizierung über\\Produktmengen}
+{Allquantifizierung\newline über Produktmengen}
 Sei $M:=A\times B$. Sei $M_x:=\pi_1^{-1}(\{x\})$, das ist die
 Faser von $x$ für die Projektion $\pi_1(x,y):=x$. Es gilt nun
 \begin{equation}
@@ -391,7 +396,7 @@ rechnen können, was vielleicht eher
 \frac{\mathrm du}{\mathrm dx} = \frac{\mathrm d}{\mathrm dx}\ln(x) = \frac{1}{x}
 \end{equation}
 suggeriert hätte. Hier muss man bedenken, dass die Substitution
-nochmals ausgeführt werden kann, dass also
+nochmals ausgeführt werden kann, dass also%
 \begin{equation}
 \frac{1}{x} = \frac{1}{\ee^u}
 \end{equation}
@@ -436,7 +441,7 @@ Es ergibt sich
 \sum_{k=m}^{n-1}\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{q^n-q^m}{q^2-q}\,\mathrm dq\,\mathrm dq.
 \end{equation}
 Man setzt nun $m=1$ und lässt $n\to\infty$ gehen.
-Das bringt
+Das bringt%
 \begin{equation}
 \sum_{k=1}^\infty\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{1}{1-q}\,\mathrm dq\,\mathrm dq.
 \end{equation}
@@ -603,6 +608,10 @@ r &= \frac{\sqrt{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}}
 &=\frac{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}{\sqrt{\det g}}.
 \end{split}
 \end{equation}
+
+\vfill\noindent
+\texttt{Dieses Heft steht unter der\\
+Creative-Commons-Lizenz CC0.}
 
 \end{document}
 

@@ -253,9 +253,9 @@ Wie verändert sich der Volumenanteil $\varphi$ im Raum mit der Zeit?
 Zunächst ist
 \begin{equation}
 \varphi = \frac{V(\mathrm{N_2})}{V}
-= \frac{V(\mathrm{N_2})}{V(\mathrm{N_2})+V(\mathrm{Rest})}.
+= \frac{V(\mathrm{N_2})}{V(\mathrm{N_2})+V(\mathrm{Rest})}
 \end{equation}
-Es ist
+und
 \begin{equation}
 \begin{split}
 \Delta\varphi &= \frac{V_2(\mathrm{N_2})}{V}-\frac{V_1(\mathrm{N_2})}{V}\\
@@ -272,10 +272,11 @@ Mischung und nach der Mischung das selbe Volumen $V(\mathrm{N_2})$
 vorliegt:
 \begin{align}
 \overset{(\mathrm{nachher})}{V(\mathrm{N_2})} &= \overset{(\mathrm{vorher})}{V(\mathrm{N_2})},\\
+\label{eq:Intertgas-Differenzengleichung}
 V\varphi_{n+1} &= (V-\Delta V)\varphi_n +\varphi_c\Delta V,\\
-V\varphi_{n+1} &= V\varphi_n-(\varphi_c-\varphi_n)\Delta V,\\
+V\varphi_{n+1} &= V\varphi_n+(\varphi_c-\varphi_n)\Delta V,\\
 \label{eq:Inertgas-Euler-Verfahren}
-\varphi_{n+1} &= \varphi_n-(\varphi_c-\varphi_n)\frac{\Delta V}{V}.
+\varphi_{n+1} &= \varphi_n+(\varphi_c-\varphi_n)\frac{\Delta V}{V}.
 \end{align}
 Es ist nun so, dass \eqref{eq:Inertgas-Euler-Verfahren} gerade
 dem Euler-Verfahren bezüglich einer Dgl. entspricht. Mit
@@ -311,7 +312,7 @@ Ableitung nach $y$ und ist somit erst recht Lipschitz-stetig
 bezüglich $y$. Nach dem Satz von Picard-Lindelöf muss das AWP
 eine eindeutig bestimmte globale Lösung besitzen.
 
-Das AWP lässt sich mit der Trennung der Veränderlichen bzw.
+Das AWP lässt sich mit der Trennung der Veränderlichen und
 der Substitutionsregel lösen. Es ergibt sich%
 \begin{align}
 \int_{y_0}^y \frac{\mathrm dy}{ay+b} &= \int_{t_0}^t\mathrm{dt},\\
@@ -321,11 +322,11 @@ der Substitutionsregel lösen. Es ergibt sich%
 Betrachte nun die Substitution $u:=ay+b$. Beim Integrieren über
 $1/u$ darf nicht über die Polstelle integriert werden. Das
 Integrationsintervall liegt also auf einer Seite der Polstelle.
-Da die Funktion $g(u)=1/u$ keine Nullstellen besitzt, ist
-$\sgn(u)=\sgn(u_0)$. Aus
+Da die Funktion $g(u):=1/u$ keine Nullstellen besitzt, ist
+$\sgn(1/u)=\sgn(1/u_0)$ und daher auch $\sgn(u)=\sgn(u_0)$. Aus
 \begin{align}
 |u| &= |u_0|\,\ee^{a(t-t_0)},\\
-\sgn(u)u &= \sgn(u_0)u_0\,\ee^{a(t-t_0)}
+\sgn(u)\,u &= \sgn(u_0)\,u_0\,\ee^{a(t-t_0)}
 \end{align}
 kann das konstante Vorzeichen also herausdividiert werden.
 Das bringt
@@ -334,9 +335,76 @@ ay+b &= (ay_0+b)\,\ee^{a(t-t_0)},\\
 y &= (y_0+\tfrac{b}{a})\,\ee^{a(t-t_0)}-\tfrac{b}{a}.
 \end{align}
 Nach Resubstitution ergibt sich die Lösung
-\begin{equation}
+\begin{equation}\label{eq:Volumenanteil-Dgl-Loesung}
 \varphi(t) = (\varphi(t_0)-\varphi_c)\,\ee^{(V'/V)(t_0-t)}+\varphi_c.
 \end{equation}
+Die Betrachtung des Grenzwertfalls lässt sich auch verzögern.
+Die Rekursionsgleichung \eqref{eq:Intertgas-Differenzengleichung}
+wird nun den Substitutionen $q:=(V-\Delta V)/V$ und
+$c:=(\varphi_c\Delta V)/V$ unterzogen. Es ergibt sich
+\begin{equation}
+\varphi_{n+1} = q\varphi_n+c.
+\end{equation}
+Das ist eine lineare Differenzengleichung erster Ordnung.
+Es gibt mehrere Methoden zur Lösung der Gleichung -- wir wählen
+die einfachste davon.
+
+Der Gleichung kann am einfachsten durch die Substitution
+$\varphi_n=u_n+d$ beigekommen werden. Es ergibt sich%
+\begin{equation}
+u_{n+1}+d = q(u_n+d)+c
+\end{equation}
+und weiter
+\begin{equation}
+u_{n+1} = qu_n+(q-1)d+c.
+\end{equation}
+Das $d$ dürfen wir frei wählen und wollen es gerade so tun,
+dass der Term $(q-1)d+c$ verschwindet. Dann muss $d=\frac{c}{1-q}$
+sein. Die Differenzengleichung $u_{n+1}=qu_n$ ist sehr leicht
+zu lösen und bestitzt die Lösung $u_n = q^n u_0$.
+
+Resubstitution ergibt
+\begin{align}
+\varphi_n-d &= q^n (\varphi_0-d),\\
+\varphi_n &= q^n\varphi_0-q^n d+d,\\
+\varphi_n &= q^n\varphi_0+(1-q^n)d,\\
+\varphi_n &= q^n\varphi_0+c\,\frac{1-q^n}{1-q}.
+\end{align}
+Nun wird der Gedanke präzisiert, dass umso mehr Iterationen
+gebraucht werden, je kleiner $\Delta V$ gewählt wird.
+Nach der Zeitspanne $t-t_0$ soll ein Volumen von $(t-t_0)V'(t)$
+zusammengekommen sein, wobei beachtet wird, dass der Volumenstrom
+$V'(t)$ konstant ist. Dann gilt $\Delta V = (t-t_0)V'(t)/n$.
+Sezte nun $x:=(t-t_0)V'(t)/V$, so dass $(\Delta V)/V=x/n$ gilt.
+ 
+Der Grenzfall $\Delta V\to 0$ bedeutet $n\to\infty$.
+Wir betrachten nun den Ausdruck $q^n$. Für diesen ergibt sich%
+\begin{equation}
+\lim_{n\to\infty} q^n = \lim_{n\to\infty} \Big(1-\frac{x}{n}\Big)^n
+= \ee^{-x}.
+\end{equation}
+Mit $q=1-x/n$ und $c=\varphi_c x/n$ ist
+\begin{equation}
+c\,\frac{1-q^n}{1-q}
+= \varphi_c -\varphi_c\big(1-\tfrac{x}{n}\big)^n
+\end{equation}
+und es ergibt sich
+\begin{equation}
+\lim_{n\to\infty}\varphi_n = \varphi_0\,\ee^{-x}+\varphi_c-\varphi_c\,\ee^{-x}.
+\end{equation}
+Nach Ausklammern und Resubstitution findet man
+\begin{equation}
+\varphi = (\varphi_0-\varphi_c)\,\ee^{(V'/V)(t_0-t)}+\varphi_c,
+\end{equation}
+was mit \eqref{eq:Volumenanteil-Dgl-Loesung} übereinstimmt.
+
+Die Rechnung
+\begin{equation}
+\lim_{t\to\infty}\varphi(t) = \varphi_c
+\end{equation}
+Untermauert die intuitive Vermutung. Wenn nur lange genug gewartet
+wird, wird sich der Stickstoffanteil im Raum dem Stickstoffanteil des
+Inertgases angeglichen haben.
 
 \end{document}
 
