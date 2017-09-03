@@ -1,6 +1,7 @@
 
-mkdir -p /tmp/ED
-pdflatex -output-directory /tmp/ED ED.tex 
-mv /tmp/ED/ED.pdf ./
+name=ED
+path=/tmp/$name-452b
 
-
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

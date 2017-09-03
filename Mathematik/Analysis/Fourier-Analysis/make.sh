@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Fourier-Analysis
-pdflatex -output-directory /tmp/Fourier-Analysis Fourier-Analysis.tex
-mv /tmp/Fourier-Analysis/Fourier-Analysis.pdf ./
+name=Fourier-Analysis
+path=/tmp/$name-42a3
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

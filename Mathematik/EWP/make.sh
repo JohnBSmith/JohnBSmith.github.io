@@ -1,5 +1,8 @@
 
-mkdir -p /tmp/EWP
-pdflatex -output-directory /tmp/EWP EWP.tex
-mv /tmp/EWP/EWP.pdf ./
+name=EWP
+path=/tmp/$name-f92c
+
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./
 

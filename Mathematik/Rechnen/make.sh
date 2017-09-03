@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Rechnen
-pdflatex -output-directory /tmp/Rechnen Rechnen.tex
-mv /tmp/Rechnen/Rechnen.pdf ./
+name=Rechnen
+path=/tmp/$name-9d21
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

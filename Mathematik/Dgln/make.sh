@@ -1,8 +1,7 @@
 
-mkdir -p /tmp/Dgln
-pdflatex -output-directory /tmp/Dgln Dgln.tex
+name=Dgln
+path=/tmp/$name-57b2
 
-# (cd /tmp/Dgln && makeindex Dgln.idx)
-# mv /tmp/Dgln/Dgln.ind ./
-mv /tmp/Dgln/Dgln.pdf ./
-
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

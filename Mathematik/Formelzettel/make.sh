@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Formelzettel
-pdflatex -output-directory /tmp/Formelzettel Formelzettel.tex 
-mv /tmp/Formelzettel/Formelzettel.pdf ./
+name=Formelzettel
+path=/tmp/$name-d43a
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

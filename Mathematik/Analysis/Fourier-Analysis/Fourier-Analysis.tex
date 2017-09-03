@@ -1,20 +1,43 @@
-\documentclass[a4paper,12pt,fleqn,twoside]{article}
+\documentclass[a4paper,11pt,fleqn,twoside]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\renewcommand\familydefault{\sfdefault}
-\usepackage{sfmath}
-\usepackage{ngerman}
+\usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+
+\iffalse
+  \usepackage{lmodern}
+\else
+% \renewcommand\familydefault{\sfdefault}
+% \usepackage{sfmath}
+% \usepackage[scaled=.87]{helvet}
+% \usepackage[charter]{mathdesign}
+  \usepackage[libertine,cmintegrals]{newtxmath}
+  \usepackage{libertine}
+  \renewcommand\ttdefault{lmtt}
+\fi
+
+% == patch: cmintegrals for mathdesign ==
+% \DeclareSymbolFont{rmlargesymbols}{OMX}{cmex}{m}{n}
+% \DeclareMathSymbol{\rmintop}{\mathop}{rmlargesymbols}{82}
+% \renewcommand{\int}{\rmintop\nolimits}
+
 \usepackage{color}
-\definecolor{c1}{RGB}{00,40,80}
+\definecolor{c1}{RGB}{0,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=34mm,right=30mm,top=20mm,bottom=28mm}
+\geometry{a4paper,left=36mm,right=30mm,top=26mm,bottom=34mm}
 
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
 \newcommand{\emdef}[1]{\emph{#1}}
 
 \theoremstyle{definition}
@@ -24,10 +47,12 @@
 \newtheorem{Satz}{Satz}
 \newtheorem{Korollar}[Satz]{Koroallar}
 
-\begin{document}
+\numberwithin{equation}{section}
 
-\phantom{x}
-\vspace{2em}
+\begin{document}
+\thispagestyle{empty}
+
+\vglue 2em
 {\center\LARGE\bfseries Fourier-Analysis\par}
 
 \tableofcontents
@@ -156,6 +181,6 @@ wie man durch Einsetzen leicht feststellen kann.
 
 
 \vfill\noindent
-Dieser Text steht unter der Creative-Commons-Lizenz CC0.
+\texttt{Dieser Text steht unter der Creative-Commons-Lizenz CC0.}
 
 \end{document}

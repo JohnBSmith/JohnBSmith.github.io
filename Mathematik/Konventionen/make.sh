@@ -1,6 +1,7 @@
 
-mkdir -p /tmp/Konventionen
-pdflatex -output-directory /tmp/Konventionen Konventionen.tex 
-mv /tmp/Konventionen/Konventionen.pdf ./
+name=Konventionen
+path=/tmp/$name-10a0
 
-
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

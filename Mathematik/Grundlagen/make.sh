@@ -1,7 +1,10 @@
 
+name=Grundlagen
+path=/tmp/$name-b421
 
-mkdir -p /tmp/Grundlagen
-pdflatex -output-directory /tmp/Grundlagen Grundlagen.tex
-mv /tmp/Grundlagen/Grundlagen.pdf ./
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./
+
 
 

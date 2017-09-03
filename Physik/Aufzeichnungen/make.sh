@@ -1,6 +1,7 @@
 
-mkdir -p /tmp/Physik-Aufzeichnungen
-pdflatex -output-directory /tmp/Physik-Aufzeichnungen Physik-Aufzeichnungen.tex 
-mv /tmp/Physik-Aufzeichnungen/Physik-Aufzeichnungen.pdf ./
+name=Physik-Aufzeichnungen
+path=/tmp/$name-013c
 
-
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

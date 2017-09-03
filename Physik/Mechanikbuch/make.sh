@@ -1,6 +1,7 @@
 
-mkdir -p /tmp/Mechanik
-pdflatex -output-directory /tmp/Mechanik Mechanik.tex 
-mv /tmp/Mechanik/Mechanik.pdf ./
+name=Mechanik
+path=/tmp/$name-c824
 
-
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

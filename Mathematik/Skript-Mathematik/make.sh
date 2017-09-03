@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Skript-Mathematik
-pdflatex -output-directory /tmp/Skript-Mathematik Skript-Mathematik.tex
-mv /tmp/Skript-Mathematik/Skript-Mathematik.pdf ./
+name=Skript-Mathematik
+path=/tmp/$name-87a1
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

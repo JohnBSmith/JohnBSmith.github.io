@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Ableitung
-pdflatex -output-directory /tmp/Ableitung Ableitung.tex
-mv /tmp/Ableitung/Ableitung.pdf ./
+name=Ableitung
+path=/tmp/$name-dc40
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

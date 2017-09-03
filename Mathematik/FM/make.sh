@@ -1,7 +1,10 @@
 
-mkdir -p /tmp/FM
-pdflatex -output-directory /tmp/FM FM.tex
-(cd /tmp/FM && makeindex FM.idx)
-mv /tmp/FM/FM.ind ./
-mv /tmp/FM/FM.pdf ./
+name=FM
+path=/tmp/$name-e2fa
+
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+(cd $path && makeindex $name.idx)
+mv $path/$name.ind ./
+mv $path/$name.pdf ./
 

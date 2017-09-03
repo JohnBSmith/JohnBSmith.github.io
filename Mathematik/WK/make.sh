@@ -1,4 +1,7 @@
 
-mkdir -p /tmp/WK
-pdflatex -output-directory /tmp/WK WK.tex
-mv /tmp/WK/WK.pdf ./
+name=WK
+path=/tmp/$name-1482
+
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

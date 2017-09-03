@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Algebra
-pdflatex -output-directory /tmp/Algebra Algebra.tex
-mv /tmp/Algebra/Algebra.pdf ./
+name=Algebra
+path=/tmp/$name-d46c
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./

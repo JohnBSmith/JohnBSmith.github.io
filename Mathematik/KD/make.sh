@@ -1,5 +1,9 @@
 
-mkdir -p /tmp/KD
-pdflatex -output-directory /tmp/KD KD.tex
-mv /tmp/KD/KD.pdf ./
+name=KD
+path=/tmp/$name-7143
+
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./
+
 

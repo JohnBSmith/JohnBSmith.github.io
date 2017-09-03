@@ -1,5 +1,7 @@
 
-mkdir -p /tmp/Aufzeichnungen
-pdflatex -output-directory /tmp/Aufzeichnungen Aufzeichnungen.tex 
-mv /tmp/Aufzeichnungen/Aufzeichnungen.pdf ./
+name=Aufzeichnungen
+path=/tmp/$name-d3ca
 
+mkdir -p $path
+pdflatex -output-directory $path $name.tex
+mv $path/$name.pdf ./
