@@ -19,6 +19,7 @@ ckeyword["Element"]="typedef";
 .symbol{color: #202020; font-weight: bold;}
 .bracket{color: #006060; font-weight: bold;}
 .number{color: #204040;}
+.preprocessor{color: #006060; font-weight: bold;}
 ol.toc > li{font-weight: bold;}
 ol.toc > li ol{font-weight: normal;}
   </style>
@@ -57,6 +58,15 @@ ol.toc > li ol{font-weight: normal;}
   <ol>
   <li><a href="#Teilzeichenketten">Teilzeichenketten</a>
   <li><a href="#binaere-Suche">Binäre Suche</a>
+  </ol>
+<li><a href="#Allokation">Allokation</a>
+  <ol>
+  <li><a href="#Buddy">Buddy-Allokator</a>
+  </ol>
+<li><a href="#Datenstrukturen">Datenstrukturen</a>
+  <ol>
+  <li><a href="#Listen">Listen</a>
+  <li><a href="#Hashtabellen">Hashtabellen</a>
   </ol>
 </ol>
 
@@ -301,6 +311,8 @@ void bubblesort(Element* a, size_t n){
 >Quicksort</h3>
 
 <pre class="c">
+typedef long Element;
+
 size_t partition(Element* a, size_t n, size_t k){
   Element pivot = a[k];
   swap(a+k,a+n-1);
@@ -480,6 +492,528 @@ int find(const int* a, int n, int x){
   return bfind(a,n,sizeof(int),&amp;x,compare_int);
 }
 </pre>
+
+<h2 id="Allokation">Allokation</h2>
+<h3 id="Buddy">Buddy-Allokator</h3>
+<pre class="c">
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+struct node{
+  struct node* next;
+};
+
+struct free_list{
+  struct node* first;
+};
+
+typedef struct node node;
+typedef struct free_list free_list;
+
+// 257*2^8
+char mem[257*256];
+int imax=8;
+free_list free_tab[9];
+
+int exp2i(int n){
+  return 1&lt;&lt;n;
+}
+
+void print_free_tab(){
+  node* p;
+  int i;
+  for(i=imax; i&gt;=0; i--){
+    printf("%.2i|",i);
+    for(p=free_tab[i].first; p!=0; p=p-&gt;next){
+      printf("*");
+    }
+    printf("\n");
+  }
+}
+
+int bsize(void* p){
+  return *((char*)p-1);
+}
+
+int getindex(int n){
+  int i,k;
+  i=256;
+  k=0;
+  while(1){
+    if(n&lt;=i) return k;
+    i*=2;
+    k++;
+  }
+}
+
+void append(free_list* a, node* p1){
+  node* p=a-&gt;first;
+  if(p==0){
+    a-&gt;first=p1;
+  }else{
+    while(p-&gt;next!=0) p=p-&gt;next;
+    p-&gt;next=p1;
+  }
+  p1-&gt;next=0;
+}
+
+node* getn(int n){
+  if(n&gt;imax) return 0;
+  node* p = free_tab[n].first;
+  if(p==0){
+    p = getn(n+1);
+    if(p!=0){
+      append(&amp;free_tab[n],(node*)((char*)p+257*exp2i(n)));
+    }
+    return p;
+  }else{
+    free_tab[n].first=p-&gt;next;
+    return p;
+  }
+}
+
+void* bmalloc(int n){
+  n=getindex(n);
+  char* p = (char*)getn(n);
+  if(p==0) return 0;
+  *p=n;
+  return p+1;
+}
+
+void erase(int index, int size, int n){
+  node* p = free_tab[n].first;
+  int ibuddy = index^exp2i(n);
+  node* block = (node*)(mem+ibuddy*257);
+  node* prev=p;
+  while(p!=0){
+    if(p==block){
+      if(ibuddy&lt;index) index=ibuddy;
+      if(n&lt;imax) erase(index,size*2,n+1);
+      if(p==prev) free_tab[n].first=p-&gt;next;
+      else prev-&gt;next=p-&gt;next;
+      return;
+    }
+    prev=p;
+    p=p-&gt;next;
+  }
+  append(&amp;free_tab[n],(node*)(mem+index*257));
+}
+
+void bfree(void* p){
+  int index,n,size;
+  if(p==0) return;
+  index = ((char*)p-mem-1)/257;
+  n = *((char*)p-1);
+  size = 257*exp2i(n);
+  erase(index,size,n);
+}
+
+int main(){
+  free_tab[imax].first = (node*)mem;
+  char* s = bmalloc(10);
+  bfree(s);
+}
+</pre>
+
+<h2 id="Datenstrukturen">Datenstrukturen</h3>
+<h3 id="Listen">Listen</h3>
+<pre class="c">
+#ifndef LIST_H
+#define LIST_H
+
+struct node{
+  struct node *next, *prev;
+  void* data;
+};
+
+struct list{
+  struct node *first, *last;
+};
+
+typedef struct node node;
+typedef struct list list;
+
+list* list_list();
+int list_empty(list*);
+int list_size(list*);
+void list_push(list*, void*);
+void list_pop(list*);
+void list_remove(list*, node*);
+void list_clear(list*);
+void list_dispose(list*);
+void list_insert(list*,node*,void*);
+void list_print(list*, void (*)(void*));
+void* list_get(list*,int);
+void list_reverse(list*);
+list* list_slice(node*,node*);
+#endif
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include "list.h"
+#define dispose free
+
+void error(const char* s){
+  puts(s);
+  exit(1);
+}
+
+void* malloc2(int n){
+  void* p;
+  p = malloc(n);
+  if(p==0){
+    error("memory error in module list");
+  }
+  return p;
+}
+
+list* list_list(){
+  list* p;
+  p = malloc2(sizeof(list));
+  p-&gt;first=0;
+  return p;
+}
+
+int list_empty(list* a){
+  return a-&gt;first==0;
+}
+
+int list_size(list* a){
+  node* p;
+  int size=0;
+  for(p=a-&gt;first; p!=0; p=p-&gt;next){
+    size++;
+  }
+  return size;
+}
+
+void list_push(list* a, void* data){
+  if(a-&gt;first==0){
+    a-&gt;first = malloc2(sizeof(node));
+    a-&gt;first-&gt;data = data;
+    a-&gt;first-&gt;next = 0;
+    a-&gt;first-&gt;prev = 0;
+    a-&gt;last = a-&gt;first;
+  }else{
+    a-&gt;last-&gt;next = malloc2(sizeof(node));
+    a-&gt;last-&gt;next-&gt;prev = a-&gt;last;
+    a-&gt;last = a-&gt;last-&gt;next;
+    a-&gt;last-&gt;data = data;
+    a-&gt;last-&gt;next = 0;
+  }
+}
+
+void list_pop(list* a){
+  node* p;
+  if(a-&gt;first==0){
+    error("error in list_pop");
+  }else if(a-&gt;first==a-&gt;last){
+    dispose(a-&gt;first);
+    a-&gt;first=0;
+  }else{
+    p = a-&gt;last-&gt;prev;
+    p-&gt;next=0;
+    dispose(a-&gt;last);
+    a-&gt;last=p;
+  }
+}
+
+void list_remove(list* a, node* p){
+  node *prev, *next;
+  if(a-&gt;first==0){
+    error("error in list_remove");
+  }else if(a-&gt;first==a-&gt;last){
+    list_pop(a);
+  }else if(p==a-&gt;first){
+    next = a-&gt;first-&gt;next;
+    next-&gt;prev=0;
+    dispose(a-&gt;first);
+    a-&gt;first = next;
+  }else if(p==a-&gt;last){
+    list_pop(a);
+  }else{
+    prev = p-&gt;prev;
+    next = p-&gt;next;
+    dispose(p);
+    prev-&gt;next = next;
+    next-&gt;prev = prev;
+  }
+}
+
+void list_clear(list* a){
+  while(!list_empty(a)){
+    list_pop(a);
+  }
+}
+
+void list_dispose(list* a){
+  list_clear(a);
+  dispose(a);
+}
+
+void list_print(list* a, void (*put)(void*)){
+  node *p, *last;
+  p = a-&gt;first;
+  if(p==0){
+    printf("[]");
+  }else if(p==a-&gt;last){
+     printf("["); put(p-&gt;data);
+     printf("]");
+  }else{
+    last = a-&gt;last;
+    printf("[");
+    while(p!=last){
+      put(p-&gt;data);
+      p=p-&gt;next;
+      printf(", ");
+    }
+    put(p-&gt;data);
+    printf("]");
+  }
+}
+
+void list_insert(list* a, node* p, void* data){
+  node* p2 = malloc2(sizeof(node));
+  p2-&gt;data = data;
+  if(p==0){
+    error("error in list_insert");
+  }else if(p-&gt;prev==0){
+    p2-&gt;prev=0;
+    p2-&gt;next=p;
+    p-&gt;prev=p2;
+    a-&gt;first=p2;
+  }else{
+    p2-&gt;prev = p-&gt;prev;
+    p2-&gt;next = p;
+    p-&gt;prev-&gt;next = p2;
+    p-&gt;prev = p2;
+  }
+}
+
+void* list_get(list* a, int n){
+  node* p;
+  int i;
+  if(a-&gt;first==0){
+    error("error in list_get: list is empty");
+  }
+  if(n&lt;0){
+    p=a-&gt;last;
+    n=-n-1;
+    for(i=0; i&lt;n; i++){
+      p=p-&gt;prev;
+      if(p==0){
+        error("error in list_get: out of bounds");
+      }
+    }
+  }else{
+    p=a-&gt;first;
+    for(i=0; i&lt;n; i++){
+      p=p-&gt;next;
+      if(p==0){
+        error("error in list_get: out of bounds");
+      }
+    }
+  }
+  return p-&gt;data;
+}
+
+void list_reverse(list* a){
+  node *p1, *p2;
+  void* h;
+  p1 = a-&gt;first;
+  p2 = a-&gt;last;
+  if(p1==0) return;
+  while(p1!=p2 &amp;&amp; p2-&gt;next!=p1){
+    h=p1-&gt;data;
+    p1-&gt;data=p2-&gt;data;
+    p2-&gt;data=h;
+    p1=p1-&gt;next;
+    p2=p2-&gt;prev;
+  }
+}
+
+list* list_slice(node* p, node* p2){
+  list* a2 = list_list();
+  if(p2==0){
+    error("error in list_slice");
+  }
+  while(1){
+    if(p==0){
+      error("error in list_slice");
+    }
+    list_push(a2,p-&gt;data);
+    if(p==p2) break;
+    p=p-&gt;next;
+  }
+  return a2;
+}
+</pre>
+
+<h3 id="Hashtabellen">Hashtabellen</h3>
+<pre class="c">
+#ifndef MAP_H
+#define MAP_H
+
+struct element{
+  char* id;
+  void* data;
+};
+
+struct map{
+  int size, capacity;
+  struct element* a;
+};
+
+typedef struct element element;
+typedef struct map map;
+
+map* map_map();
+int map_find(map*, char*);
+void* map_get(map*,char*);
+void map_insert(map*,char*,void*);
+void map_remove(map*,int);
+void map_dispose(map*);
+#endif
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include "map.h"
+#define u32 unsigned int
+
+void* malloc2(int n){
+  void* p;
+  p = malloc(n);
+  if(p==0){
+    puts("memory error in module map");
+    exit(1);
+  }
+  return p;
+}
+
+u32 hash(char* a){
+  u32 y=0;
+  while(*a!=0){
+    y = *a+(y&lt;&lt;6)+(y&lt;&lt;16)-y;
+    a++;
+  }
+  return y;
+}
+
+map* map_map(){
+  map* m;
+  m = malloc2(sizeof(map));
+  m-&gt;a = malloc2(4*sizeof(element));
+  m-&gt;a[0].id=0; m-&gt;a[1].id=0;
+  m-&gt;a[1].id=0; m-&gt;a[2].id=0;
+  m-&gt;size=0;
+  m-&gt;capacity=4;
+  return m;
+}
+
+int map_find(map* m, char* id){
+  int index;
+  char* p;
+  index = hash(id)%m-&gt;capacity;
+  while(1){
+    p = m-&gt;a[index].id;
+    if(p==0)return -1;
+    if(strcmp(p,id)==0){
+      return index;
+    }
+    index=(index+1)%m-&gt;capacity;
+  }
+}
+
+void* map_get(map* m, char* id){
+  int index;
+  index = map_find(m,id);
+  if(index&lt;0){
+    return 0;
+  }else{
+    return m-&gt;a[index].data;
+  }
+}
+
+void map_inserta(element* a, int n, char* id, void* data){
+  int index;
+  index = hash(id)%n;
+  while(a[index].id!=0){
+    index=(index+1)%n;
+  }
+  a[index].id=id;
+  a[index].data=data;
+}
+
+void map_insert(map* m, char* id, void* data){
+  int index;
+  element *a,*a1;
+  int i,n,n2;
+  if(map_find(m,id)&gt;=0){
+    puts("error in insert: expected unique key");
+    exit(1);
+  }
+  index = hash(id)%m-&gt;capacity;
+  while(m-&gt;a[index].id!=0){
+    index=(index+1)%m-&gt;capacity;
+  }
+  m-&gt;a[index].id=id;
+  m-&gt;a[index].data=data;
+  n=m-&gt;capacity;
+  m-&gt;size++;
+  if(m-&gt;size*2&gt;n){
+    n2 = n*2;
+    m-&gt;capacity=n2;
+    a = malloc2(sizeof(element)*n2);
+    for(i=0; i&lt;n2; i++){
+      a[i].id=0;
+    }
+    a1=m-&gt;a;
+    for(i=0; i&lt;n; i++){
+      if(a1[i].id!=0){
+        map_inserta(a,n2,a1[i].id,a1[i].data);
+      }
+    }
+    free(a1);
+    m-&gt;a=a;
+  }
+}
+
+void map_remove(map* m, int index){
+  element *a,*a1;
+  int i,n,h;
+  if(index&lt;0){
+    return;
+  }else{
+    m-&gt;a[index].id=0;
+    m-&gt;a[index].data=0;
+    m-&gt;size--;
+  }
+  if(m-&gt;size&lt;m-&gt;capacity*4){
+    n=m-&gt;capacity;
+    h=n/2;
+    m-&gt;capacity=h;
+    a = malloc2(sizeof(element)*h);
+    for(i=0; i&lt;h; i++){
+      a[i].id=0;
+    }
+    a1=m-&gt;a;
+    for(i=0; i&lt;n; i++){
+      if(a1[i].id!=0){
+        map_inserta(a,h,a1[i].id,a1[i].data);
+      }
+    }
+    free(a1);
+    m-&gt;a=a;
+  }
+}
+
+void map_dispose(map* m){
+  free(m-&gt;a);
+  free(m);
+}
+</pre>
+
 
 <br>
 <p><span class="modest"

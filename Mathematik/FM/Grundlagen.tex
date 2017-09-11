@@ -19,7 +19,7 @@ Natürliche Zahlen:
 \end{equation}
 Ganze Zahlen:
 \begin{equation}
-\Z := \{\ldots -3,-2,-1,0,1,2,3,\ldots\}.
+\Z := \{\ldots,-3,-2,-1,0,1,2,3,\ldots\}.
 \end{equation}
 Rationale Zahlen:
 \begin{equation}
@@ -98,12 +98,13 @@ Unbeschränkte Intervalle:
 \end{align}
 
 \subsection{Summen}
-\begin{Definition} Für eine Folge $(a_n)$:
+\begin{definition}[Summe]
+Für eine Folge $(a_n)$:
 \begin{align}
 \sum_{k=m}^{m-1} a_k &:= 0,\qquad(\text{leere Summe})\\
 \sum_{k=m}^n a_k &:= \sum_{k=m}^{n-1} a_k.\qquad(n\ge m)
 \end{align}
-\end{Definition}
+\end{definition}
 \noindent
 Für eine Konstante $c$ gilt:
 \begin{equation}
@@ -147,12 +148,12 @@ Die ersten Formeln sind:\index{binomische Formeln}
 (a-b)^4 = a^4-4a^3 b+6a^2 b^2-4ab^3+b^4.
 \end{gather}
 \subsection{Potenzgesetze}
-\begin{Definition}
+\begin{definition}[Potenz]
 Für $a\in\R, a>0$ und $x\in\C$:
 \begin{equation}
 a^x := \exp(\ln(a)\,x).
 \end{equation}
-\end{Definition}
+\end{definition}
 \noindent
 Für $a\in\R, a>0$ und $x,y\in\C$ gilt:
 \begin{gather}
@@ -161,10 +162,97 @@ a^{x+y} = a^x a^y,\quad a^{x-y} = \frac{a^x}{a^y},
 \end{gather}
 
 \section{Gleichungen}
+\begin{definition}[Bestimmungsgleichung]
+Sind $f,g$ auf der Grundmenge $G$ definierte Funktionen, so nennt
+man
+\begin{equation}
+f(x) = g(x)\\
+\end{equation}
+eine \emdef{Bestimmungsgleichung}\index{Bestimmungsgleichung},
+wenn die Lösungemenge
+\begin{equation}
+L = \{x\in G\mid f(x)=g(x)\}
+\end{equation}
+gesucht ist.
+\end{definition}
+Bei den $x\in G$ kann es sich auch um Tupel $x=(x_1,x_2)$ oder
+$x=(x_1,x_2,x_3)$ usw. handeln. Man spricht in diesem Fall
+von einer Gleichung in mehreren Variablen.
+
+Handelt es sich bei den Funktionswerten von $f,g$ um Tupel,
+dann spricht man von einem
+\emdef{Gleichungssystem}\index{Gleichungssystem}.
+
+\subsection{Äquivalenzumformungen}
+
+Äquivalenzumformungen lassen die Lösungsmenge einer Gleichung
+unverändert. Seien $A(x),B(x)$ zwei Aussageformen bzw. zwei
+Gleichungen. Aus
+\begin{equation}
+\forall x{\in}G\,[A(x)\Longleftrightarrow B(x)]
+\end{equation}
+folgt
+\begin{equation}
+\{x\in G\mid A(x)\} = \{x\in G\mid B(x)\}.
+\end{equation}
+Aus
+\begin{equation}
+\forall x{\in} G\,[A(x)\Longrightarrow B(x)]
+\end{equation}
+folgt jedoch nur noch
+\begin{equation}
+\{x\in G\mid A(x)\}\subseteq\{x\in G\mid B(x)\}.
+\end{equation}
+Seien $f,g,h$ Funktionen mit Definitionsmenge $G$ und
+Zielmenge $Z=\R$ oder $Z=\C$.
+
+Für alle $x$ gilt:
+\begin{align}
+f(x)=g(x) &\Longleftrightarrow f(x){+}h(x)=g(x){+}h(x),\\
+f(x)=g(x) &\Longleftrightarrow f(x){-}h(x)=g(x){-}h(x).
+\end{align}
+Besitzt $h(x)$ keine Nullstellen, dann gilt für alle $x$:
+\begin{align}
+f(x)=g(x) &\iff f(x)h(x)=g(x)h(x),\\
+f(x)=g(x) &\iff \frac{f(x)}{h(x)}=\frac{f(x)}{h(x)}.
+\end{align}
+Besitzt $h(x)$ aber Nullstellen, dann gilt immerhin noch für alle $x$:
+\begin{equation}
+f(x)=g(x) \implies f(x)h(x)=g(x)h(x).
+\end{equation}
+Sei $f,g\colon G\to Z$. Sei $\varphi_x\colon Z\to Z'$ eine Injektion
+für jedes $x\in G$. Es gilt
+\begin{equation}
+f(x)=g(x) \iff \varphi_x(f(x))=\varphi_x(g(x))
+\end{equation}
+für alle $x\in G$.
+
+Bei einer Kette von Äquivalenzumformungen wird links das
+Äquivalenzzeichen geschrieben, in der Mitte die Gleichung
+und rechts hinter einem senkrechten Strich die Operation
+$\varphi_x(w)$, welche als nächstes auf beide Seiten der Gleichung
+angwendet werden soll.
+
+Beispiel:
+\begin{equation*}\setlength{\arraycolsep}{2pt}
+\begin{array}{rrl@{\qquad}l}
+& 2x+4 &= 2x^2-8x+2 &\mid w/2\\[2pt]
+\Longleftrightarrow& x+2 &= x^2-4x+1 &\mid w-2\\[2pt]
+\Longleftrightarrow& x &= x^2-4x-1 &\mid w-x\\[2pt]
+\Longleftrightarrow& 0 &= x^2-7x-1.
+\end{array}
+\end{equation*}
+Am Anfang befinden sich eventuell Bedingungen für $x$.
+Bei Fallunterscheidungen wird eine Verschärfung der Bedingungen
+vorgenommen, so dass es zur Verkleinerung der Grundmenge kommt.
+Nach einer Fallunterscheidung ergeben sich unter Umständen neue
+Injektionen.
+
 \subsection{Quadratische Gleichungen}
-{\definition}
+\begin{definition}[Quadratische Gleichung]
 Eine Gleichung der Form $ax^2+bx+c=0$ mit $a\ne 0$ heißt
 \emdef{quadratische Gleichung}.
+\end{definition}
 
 Wegen $a\ne 0$ lässt sich die Gleichung durch $a$ dividieren
 und es ensteht die äquivalente Normalform $x^2+px+q=0$
@@ -461,6 +549,8 @@ Vollständige Fallunterscheidung, allgemein:
 \iff (\exists k[A_k]\Rightarrow C).
 \end{gather}
 
+\newpage
+\phantom{x}
 \newpage
 \subsection{Prädikatenlogik}
 \subsubsection{Rechenregeln}
@@ -773,7 +863,7 @@ Auswahlaxiom:
 
 \newpage
 \subsection{Kardinalität}
-\begin{Definition}
+\begin{definition}[Gleichmächtigkeit]
 Zwei Mengen $M,N$ heißen \emdef{gleichmächtig}, notiert als
 $|M|=|N|$, wenn es eine bijektive Abbildung $f\colon M\to N$ gibt.
 
@@ -784,15 +874,15 @@ surjektive Abbildung $g\colon N\to M$ gibt.
 
 Eine Menge heißt \emdef{abzählbar unendlich}, wenn sie gleichmächtig
 zu den natürlichen Zahlen ist.
-\end{Definition}
+\end{definition}
 Gleichmächtigkeit ist eine Äquivalenzrelation.
-\begin{Definition}
+\begin{definition}[Kardinalzahl]
 Die Äquivalenzklassen
 \begin{equation}
 |M| := \{N\mid\;{\scriptstyle |M|=|N|}\}
 \end{equation}
 heißen \emdef{Kardinalzahlen}.
-\end{Definition}
+\end{definition}
 
 \strong{Satz von Cantor-Bernstein.}
 
@@ -808,25 +898,25 @@ Ist $M$ endlich, dann gilt $|M|=2^{|M|}$.
 
 \section{Funktionen}
 \subsection{Surjektionen}\index{surjektiv}
-\begin{Definition}
+\begin{definition}[Surjektion]
 Eine Funktion $f\colon A\to B$ heißt \emdef{surjektiv},\\
 wenn $f(A)=B$ ist. Damit ist gemeint, dass jedes Element
 der Zielmenge wenigstens einmal der Funktionswert von einem
 Element der Definitionsmenge ist.
-\end{Definition}
+\end{definition}
 
 \subsection{Injektionen}\index{injektiv}
-\begin{Definition}
-Eine Funktion $f\colon A\to B$ heißt \emdef{injektiv},\\
+\begin{definition}[Injektion]
+Eine Funktion $f\colon A\to B$ heißt \emdef{injektiv},
 wenn
 \begin{equation}
 \forall x_1,x_2\in A\,[f(x_1)=f(x_2)\implies x_1=x_2]
 \end{equation}
 gilt.
-\end{Definition}
+\end{definition}
 
 \subsection{Bijektionen}\index{bijektiv}
-\begin{Definition}
+\begin{definition}[Bijektion]
 Eine Funktion $f\colon A\to B$ heißt \emdef{bijektiv},
 wenn sie injektiv und surjektiv ist.
 
@@ -839,10 +929,11 @@ gibt. Wenn $f$ bijektiv ist, so gibt es $g$ genau einmal und
 $g$ wird die \emph{Umkehrfunktion}\index{Umkehrfunktion}
 oder \emph{Inverse}
 von $f$ genannt und als $f^{-1}$ notiert.
-\end{Definition}
+\end{definition}
 
 \subsection{Komposition}\index{Komposition}
-\begin{Definition} Für zwei Funktionen $f\colon A\to B$
+\begin{definition}[Komposition]
+Für zwei Funktionen $f\colon A\to B$
 und $g\colon B\to C$ ist die \emdef{Komposition}
 ($g$ nach $f$)
 durch
@@ -850,7 +941,7 @@ durch
 g\circ f\colon A\to C,\quad (g\circ f)(x) := g(f(x))
 \end{equation}
 definiert.
-\end{Definition}
+\end{definition}
 Für die Komposition gilt das Assozativgesetz:
 \begin{equation}
 (f\circ g)\circ h = f\circ(g\circ h).
@@ -873,19 +964,20 @@ Ist $g\circ f$ surjektiv, so ist $g$ surjektiv.
 
 Ist $g\circ f$ bijektiv, so ist $f$ injektiv und $g$ surjektiv.
 
-\begin{Definition}
+\begin{definition}[Iteration]
 Für eine Funktion $\varphi\colon A\to A$ wird
 \begin{equation}
 \varphi^0:=\operatorname{id}_A,\quad \varphi^{n+1}:=\varphi^n\circ\varphi
 \end{equation}
 \emdef{Iteration}\index{Iteration} von $\varphi$ genannt.
-\end{Definition}
+\end{definition}
 
 \subsection{Einschränkung}\index{Einschränkung}
-\begin{Definition} Sei $f\colon A\to B$ und $M\subseteq A$.
+\begin{definition}[Einschränkung]
+Sei $f\colon A\to B$ und $M\subseteq A$.
 Die Funktion $g(x)=f(x)$ mit $g\colon M\to B$ wird \emdef{Einschränkung}
 von $f$ genannt und mit $f|_M$ notiert.
-\end{Definition}
+\end{definition}
 Sei $f\colon A\to B$ und $M\subseteq A$.
 Mit der Inklusionsabbildung $i(x):=x$ mit $i\colon M\to A$ gilt:
 \begin{equation}
@@ -897,12 +989,13 @@ g\circ (f|_M) = (g\circ f)|_M.
 \end{equation}
 \newpage
 \subsection{Bild}\index{Bild}
-\begin{Definition} Ist $f\colon A\to B$ und $M\subseteq A$, so wird
+\begin{definition}[Bild]
+Ist $f\colon A\to B$ und $M\subseteq A$, so wird
 \begin{equation}
 f(M) := \{f(x)\mid x\in M\}
 \end{equation}
 das \emdef{Bild} von $M$ unter $f$ genannt.
-\end{Definition}
+\end{definition}
 Es gilt
 \begin{align}
 &f(M\cup N) = f(M)\cup f(N),\\
@@ -915,13 +1008,13 @@ Es gilt
 \end{align}
 
 \subsection{Urbild}\index{Urbild}
-\begin{Definition}
+\begin{definition}[Urbild]
 Ist $f\colon A\to B$, so wird
 \begin{equation}
 f^{-1}(M) := \{x\in A\mid f(x)\in M\}.
 \end{equation}
 das \emdef{Urbild} von $M$ unter $f$ genannt.
-\end{Definition}
+\end{definition}
 Es gilt
 \begin{align}
 & f^{-1}(M\cup N) = f^{-1}(M)\cup f^{-1}(N),\\
@@ -936,6 +1029,122 @@ Es gilt
 & (g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M)),\\
 & (f|_M)^{-1}(N) = M\cap f^{-1}(N).
 \end{align}
+
+\newpage
+\section{Formale Systeme}
+\subsection{Formale Sprachen}
+\begin{definition}[Formale Sprache]
+Eine \emdef{formale Sprache} $L$ ist eine Teilmenge der kleenschen
+Hülle über einer Menge $\Sigma$, kurz $L\subseteq\Sigma^*$.
+Die Menge $\Sigma$ wird \emdef{Alphabet} genannt,
+ihre Elemente heißen \emdef{Symbole}.
+
+Die kleensche Hülle $\Sigma^*$ besteht aus allen möglichen
+Konkatenationen von Symbolen aus $\Sigma$. Die Konkatenationen
+von $\Sigma^*$ heißen \emdef{Wörter}. Die leere Konkatenation ist
+zulässig und wird mit $\varepsilon$ notiert. Die Elemente von $L$ heißen
+\emdef{wohlgeformte Wörter} oder \emdef{wohlgeformte Formeln},
+engl. \emdef{well formed formulas}, kurz \emdef{wff}.
+\end{definition}
+
+Ein Wort $a$ ist ein Tupel
+\begin{equation}
+a = (a_1,\ldots, a_m).\qquad (a_k\in\Sigma)
+\end{equation}
+Sind $a,b$ zwei Wörter, dann ist mit $ab$ deren Konkatenation
+gemeint:
+\begin{equation}
+ab := (a_1,\ldots,a_m,b_1,\ldots b_n).
+\end{equation}
+Es gilt $\varepsilon a=a$ und $a\varepsilon=a$.
+Bei $\varepsilon$ handelt es sich um das leere Tupel.
+
+\begin{definition}[Konkatenation von Sprachen]
+\emdef{Konkatenation} von $L_1$ und $L_2$:
+\begin{equation}
+L_1\circ L_2 := \{ab\mid a\in L_1, b\in L_2\}.
+\end{equation}
+\end{definition}
+
+\begin{definition}[Potenz einer Sprache]
+\emdef{Potenzen} von $L$:
+\begin{align}
+L^0 &:= \{\varepsilon\},\\
+L^n &:= L^{n-1}\circ L.
+\end{align}
+\end{definition}
+
+\begin{definition}[Kleensche Hülle einer Sprache]
+\emdef{Kleensche Hülle} von $L$:
+\begin{equation}
+L^* := \bigcup_{k\in\N_0} L^k.
+\end{equation}
+
+\emdef{Positive Hülle} von $L$:
+\begin{equation}
+L^+ := \bigcup_{k\in\N_1} L^k.
+\end{equation}
+\end{definition}
+
+\newpage
+\subsection{Formale Grammatiken}
+\begin{definition}[Formale Grammatik]
+Eine \emdef{formale Grammatik} ist ein Tupel $(N,\Sigma,P,S)$,
+wobei $N$ die \emdef{Nonterminalsymbolen}\index{Nonterminalsymbol},
+$\Sigma$ die \emdef{Terminalsymbolen}\index{Terminalsymbol},
+$P$ die \emdef{Produktionsregeln}\index{Produktionsregel} sind
+und $S$ ein \emdef{Startsymbol}\index{Startsymbol} ist.
+Die Mengen $N,\Sigma,P$ müssen endlich sein. Die Mengen $N$ und
+$\Sigma$ müssen disjunkt sein. Bei $\Sigma$ handelt es sich um
+ein Alphabet. Das Startsymbol ist ein Element $S\in N$.
+
+Bei $P$ handelt es sich um eine Relation
+\begin{equation}\label{eq:einfache-Produktionsregeln}
+P\subseteq N\times (N\cup\Sigma)^*
+\end{equation}
+oder allgemeiner
+\begin{equation}
+P\subseteq (N\cup\Sigma)^*\setminus\Sigma^*\times (N\cup\Sigma)^*.
+\end{equation}
+Produktionsregeln werden in der Form $n\to w$ notiert und drücken aus,
+dass in jedem Wort das Nonterminalsymbol $n$ durch das Wort $w$ ersetzt
+werden darf. Allgemeiner bedeutet $t\to w$, dass ein Teilwort $t$
+durch $w$ ersetzt werden darf.
+
+Die Produktionsregeln werden ausgehend vom Startsymbol immer weiter
+angewendet bis keine Nonterminalsymbole mehr vorhanden sind.
+Die Menge aller möglichen Produktionen bildet
+eine formale Sprache $L\subseteq\Sigma^*$.
+\end{definition}
+
+Für Produktionsregeln der Form \eqref{eq:einfache-Produktionsregeln}
+wurde eine Kurznotation geschaffen, die EBNF:
+
+\begin{tabular}{l|l}
+\verb|Symbol| & Nonterminalsymbol\\
+\verb|"Symbol"| & Terminalsymbol\\
+\verb|w1, w2| & $w_1w_2$ (Konkatenation)\\
+\verb/n = w1 | w2./ & $n\to w_1,\; n\to w_2$\\
+\verb|n = {w}.| & $n\to \varepsilon,\; n\to wn$\\
+\verb|n = [w].| & $n\to w,\; n\to wn$
+\end{tabular}
+
+\subsection{Formale Systeme}
+\begin{definition}[Formales System]
+Ein \emdef{formales System} ist ein Tupel $(\Sigma,L,A,R)$, wobei
+$\Sigma$ ein Alphabet, $L$ eine formale Sprache über
+dem Alphabet, $A$ eine Menge von Axiomen und $R$ eine Menge von
+Ableitungsrelationen ist. Die Menge der \emdef{Axiome} ist eine
+beliebige Teilmenge von $L$. 
+Eine \emdef{Ableitungsrelation} ist eine zwei oder mehrstellige
+Relation über $L$, die
+\begin{equation}
+a_1,\ldots,a_n\vdash b
+\end{equation}
+geschrieben wird. Eine wohlgeformte Formel wird $\emdef{Satz}$
+genannt, wenn sie ein Axiom ist oder über eine Kette von
+Ableitungen aus den Axiomen folgt.
+\end{definition}
 
 \newpage
 \section{Mathematische Strukturen}\label{sec:Strukturen}

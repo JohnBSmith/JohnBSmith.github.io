@@ -6,6 +6,7 @@
 \usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{textcomp}
 \usepackage{lipsum}
 \usepackage{microtype}
@@ -75,10 +76,19 @@
 \newcommand{\strong}[1]{{\sffamily\bfseries #1}}
 \newcommand{\bsf}[1]{{\sffamily\bfseries #1}}
 
-\newcommand{\definition}{\strong{Definition.}}
+% \newcommand{\definition}{\strong{Definition.}}
 \newcommand{\theorem}[1]{\strong{#1.}}
 \newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
 \newenvironment{Satz}{\par\noindent\strong{Satz.}}{\par}
+
+\newtheoremstyle{Definition}
+  {4pt}{0pt}
+  {}{}
+  {\sffamily\bfseries}{\newline\indent}
+% {.2em}{\thmname{#1}\thmnumber{~#2}.~\thmnote{#3.}}
+  {.2em}{\thmname{#1}.~\thmnote{#3.}}
+\theoremstyle{Definition}
+\newtheorem{definition}{Definition}[chapter]
 
 \newcommand{\ibox}[1]{\par\hbox{\hsize=22em\hglue 1em\vbox{{\noindent}#1}}}
 
@@ -87,6 +97,7 @@
 
 % emphasis, definierter Begriff
 \newcommand{\emdef}[1]{\textit{#1}}
+\newcommand{\bdef}[1]{\strong{#1}}
 
 % table header bold font
 \newcommand{\thbf}[1]{{\sffamily\bfseries #1}}
@@ -178,15 +189,19 @@ Creative Commons CC0 veröffentlicht.
 
 \newpage
 \noindent
-$\sin(-x) = -\sin x$\\
-$\cos(-x) = \cos x$
+$\!\begin{aligned}
+\sin(-x) &= -\sin x\\
+\cos(-x) &= \cos x
+\end{aligned}$
 \vspace{1em}
 
 \noindent
-$\sin(x+y) = \sin x\cos y + \cos x\sin y$\\
-$\sin(x-y) = \sin x\cos y - \cos x\sin y$\\
-$\cos(x+y) = \cos x\cos y - \sin x\sin y$\\
-$\cos(x-y) = \cos x\cos y + \sin x\sin y$
+$\!\begin{aligned}
+\sin(x+y) &= \sin x\cos y + \cos x\sin y\\
+\sin(x-y) &= \sin x\cos y - \cos x\sin y\\
+\cos(x+y) &= \cos x\cos y - \sin x\sin y\\
+\cos(x-y) &= \cos x\cos y + \sin x\sin y
+\end{aligned}$
 \vspace{1em}
 
 \noindent
