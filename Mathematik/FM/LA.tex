@@ -405,7 +405,7 @@ Laplacescher Entwicklungssatz:
 \det A = \sum_{j=1}^n (-1)^{i+j}a_{ij}\det([A]_{ij}).
 \end{align}
 
-\subsection{Determinanten}\index{Determinante}
+\subsubsection{Determinanten}\index{Determinante}
 Für Matrizen $A,B\in K^{n\times n}$ und $r\in K$ gilt:
 \begin{gather}
 \det(AB) = \det(A)\det(B),\\
@@ -427,7 +427,7 @@ Für eine linke oder rechte Dreiecksmatrix $A=(a_{ij})$ gilt:
 \det(A) = \prod_{k=1}^n a_{kk}.
 \end{gather}
 
-\subsection{Eigenwerte}
+\subsubsection{Eigenwerte}
 \strong{Eigenwertproblem:}\index{Eigenwert}
 Für eine gegebene quadratische Matrix $A$ bestimme
 \begin{equation}
@@ -439,7 +439,7 @@ Av=\lambda v \iff (A-\lambda E_n)v=0
 \end{equation}
 besitzt Lösungen $v\ne 0$ gdw.
 \begin{equation}
-p(\lambda)=\det(A-\lambda E_n)=0.
+p(\lambda):=\det(A-\lambda E_n)=0.
 \end{equation}
 Bei $p(\lambda)$ handelt es sich um ein normiertes Polynom
 vom Grad $n$, das \emdef{charakeristisches Polynom}
@@ -458,6 +458,30 @@ von $\lambda$ genannt.
 \begin{equation}
 \sigma(A) := \{\lambda\mid \exists v\ne 0\colon Av=\lambda v\}.
 \end{equation}
+
+\subsubsection{Nilpotente Matrizen}
+\begin{definition}[Nilpotente Matrix]
+Eine quadratische Matrix $A\in K^{n\times n}$ heißt \emdef{nilpotent},
+wenn es eine Zahl $k\in\N, k\ge 1$ gibt, so dass gilt:
+\begin{equation}
+A^k=0.
+\end{equation}
+Die erste solche Zahl heißt \emdef{Nilpotenzgrad} der Matrix $A$.
+
+Eine äquivalente Bedingung ist:
+\begin{equation}
+p_A(\lambda):=\det(\lambda E-A)=\lambda^n.
+\end{equation}
+\end{definition}
+
+\noindent
+\strong{Eigenschaften.}
+Sei $A$ eine nilpotente Matrix. Es gilt:
+\begin{itemize}[itemsep=0pt, leftmargin=3em]
+\bitem $A$ besitzt nur den Eigenwert $\lambda=0$.
+\bitem $\det(A)=\tr(A)=0$.
+\bitem $E-A$ ist invertierbar.
+\end{itemize}
 
 \section{Lineare Gleichungssysteme}
 \index{lineares Gleichungssytem}
@@ -519,7 +543,7 @@ Im Fall $m=n$ gilt:
 \end{split}
 \end{equation}
 
-\newpage
+% \newpage
 \section{Multilineare Algebra}
 \subsection{Äußeres Produkt}
 Sei $V$ ein Vektorraum und sei $v_k\in V$ für alle $k$.

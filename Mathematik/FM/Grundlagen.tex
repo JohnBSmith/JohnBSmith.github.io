@@ -102,7 +102,7 @@ Unbeschränkte Intervalle:
 Für eine Folge $(a_n)$:
 \begin{align}
 \sum_{k=m}^{m-1} a_k &:= 0,\qquad(\text{leere Summe})\\
-\sum_{k=m}^n a_k &:= \sum_{k=m}^{n-1} a_k.\qquad(n\ge m)
+\sum_{k=m}^n a_k &:= a_n+\sum_{k=m}^{n-1} a_k.\qquad(n\ge m)
 \end{align}
 \end{definition}
 \noindent
@@ -128,6 +128,47 @@ Vertauschung der Reihenfolge bei Doppelsummen:
 \sum_{i=p}^m \sum_{j=q}^n a_{ij} = \sum_{j=q}^n \sum_{i=p}^m a_{ij}.
 \end{equation}
 
+\subsection{Produkte}
+\begin{definition}[Produkt]
+Für eine Folge $(a_n)$:
+\begin{align}
+\prod_{k=m}^{m-1} a_k &:= 1,\qquad(\text{leeres Produkt})\\
+\prod_{k=m}^n a_k &:= a_n\prod_{k=m}^{n-1} a_k.\qquad(n\ge m)
+\end{align}
+\end{definition}
+
+\noindent
+Für eine Konstante $c$ gilt:
+\begin{equation}
+\prod_{k=m}^n c = c^{n-m+1}.
+\end{equation}
+Unter Voraussetzung des Kommutativgesetzes gilt
+\begin{align}
+\label{eq:product-product}
+\prod_{k=m}^n (a_k b_k) &= \bigg(\prod_{k=m}^n a_k\bigg)\bigg(\prod_{k=m}^n b_k\bigg),\\
+\label{eq:product-power}
+\prod_{k=m}^n a_k^c &= \bigg(\prod_{k=m}^n a_k\bigg)\Big.^c.\qquad (c\in\N_0)
+\end{align}
+
+Formel \eqref{eq:product-power} gilt auch für $a_k\in\R^+$ und $c\in\C$.
+
+Formel \eqref{eq:product-product} ist ein Spezialfall von
+\begin{equation}
+\prod_{i=p}^m \prod_{j=q}^n a_{ij} = \prod_{j=q}^n \prod_{i=p}^m a_{ij}.
+\end{equation}
+Indexverschiebung ist möglich:
+\begin{equation}
+\prod_{k=m}^n a_k = \prod_{k=m-j}^{n-j} a_{k+j} = \prod_{k=m+j}^{n+j} a_{k-j}.
+\end{equation}
+Aufspaltung ist möglich:
+\begin{equation}
+\prod_{k=m}^n a_k = \bigg(\prod_{k=m}^p a_k\bigg)\bigg(\prod_{k=p+1}^n a_k\bigg).
+\end{equation}
+Für $a_k\in\R^+$ gilt
+\begin{equation}
+\prod_{k=m}^n a_k = \exp\bigg(\sum_{k=m}^n \ln(a_k)\bigg).
+\end{equation}
+
 \subsection{Binomischer Lehrsatz}\index{binomischer Lehrsatz}
 Sei $R$ ein unitärer Ring. 
 Für $a,b\in R$ mit $ab=ba$ gilt:%
@@ -149,6 +190,12 @@ Die ersten Formeln sind:\index{binomische Formeln}
 \end{gather}
 \subsection{Potenzgesetze}
 \begin{definition}[Potenz]
+Für $a$ aus einem Monoid und $n\in\Z,n\ge 1$:
+\begin{align}
+a^0 &:= 1,\\
+a^n &:= a^{n-1}\cdot a.
+\end{align}
+
 Für $a\in\R, a>0$ und $x\in\C$:
 \begin{equation}
 a^x := \exp(\ln(a)\,x).
@@ -177,7 +224,7 @@ gesucht ist.
 \end{definition}
 Bei den $x\in G$ kann es sich auch um Tupel $x=(x_1,x_2)$ oder
 $x=(x_1,x_2,x_3)$ usw. handeln. Man spricht in diesem Fall
-von einer Gleichung in mehreren Variablen.
+von einer Gleichung \emdef{in mehreren Variablen}.
 
 Handelt es sich bei den Funktionswerten von $f,g$ um Tupel,
 dann spricht man von einem
@@ -550,8 +597,6 @@ Vollständige Fallunterscheidung, allgemein:
 \end{gather}
 
 \newpage
-\phantom{x}
-\newpage
 \subsection{Prädikatenlogik}
 \subsubsection{Rechenregeln}
 Verneinung (De Morgansche Regeln):
@@ -810,7 +855,7 @@ heißt \emph{Induktionsschritt}. Beim Induktionsschritt muss
 $A(n+1)$ gezeigt werden, wobei $A(n)$ als gültig vorausgesetzt werden
 darf.
 
-\newpage
+% \newpage
 \subsection{ZFC-Axiome}
 
 Axiom der Bestimmtheit:
@@ -1029,6 +1074,9 @@ Es gilt
 & (g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M)),\\
 & (f|_M)^{-1}(N) = M\cap f^{-1}(N).
 \end{align}
+
+\newpage
+\phantom{x}
 
 \newpage
 \section{Formale Systeme}
