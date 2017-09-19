@@ -416,6 +416,12 @@ evaluate: function(t){
       return cas.expand_sf(cas.evaluate(t[1][0]));
     }else if(t[0]==="sf"){
       return cas.standard_form(cas.evaluate(t[1][0]));
+    }else if(t[0]==="var"){
+      return cas.variables_as_list(t[1][0]);
+    }else if(t[0]==="taut"){
+      return cas.test_tautology(t[1][0]);
+    }else if(t[0]==="es"){
+      return cas.evaluate_strict(t[1][0],{a: 1, b: 1});
     }else{
       var a=[];
       for(var i=0; i<t[1].length; i++){
@@ -469,8 +475,84 @@ output_form: function(t){
     return [t[0],a];
   }
   return t;
-}
+},
+
+update: function(a,b){
+  for(var key in b){
+    a[key]=b[key];
+  }
+},
+
+variables: function(t){
+  if(cas.is_app(t)){
+    var d={};
+    for(var i=0; i<t[1].length; i++){
+      cas.update(d,cas.variables(t[1][i]));
+    }
+    return d;
+  }else if(typeof t==="string"){
+    var d={};
+    d[t]=1;
+    return d;
+  }
+},
+
+variables_as_list: function(t){
+  var d = cas.variables(t);
+  var a = [];
+  for(var key in d){
+    a.push(key);
+  }
+  return ["[]",a];
+},
+
+eval_dict: {
+  "and": function(a){return a[0]&&a[1];},
+  "or" : function(a){return a[0]||a[1];},
+  "not": function(a){return !a[0]? 1: 0;},
+  "=>" : function(a){return !a[0]||a[1]? 1: 0;},
+  "<=>": function(a){return a[0]==a[1]? 1: 0;},
+  "+"  : function(a){return a[0]+a[1];},
+},
+
+evaluate_strict: function(t,d){
+  if(cas.is_app(t)){
+    var a=[];
+    for(var i=0; i<t[1].length; i++){
+      a.push(cas.evaluate_strict(t[1][i],d));
+    }
+    return cas.eval_dict[t[0]](a);
+  }else if(typeof t==="string"){
+    return d[t];
+  }else{
+    return t;
+  }
+},
+
+test_all_valuations: function(a,i,t,d){
+  if(i==a.length){
+    var A = cas.evaluate_strict(t,d);
+    if(A==0) return 0;
+    return cas.evaluate_strict(t,d);
+  }else{
+    d[a[i]]=0;
+    var A = cas.test_all_valuations(a,i+1,t,d);
+    if(A==0) return 0;
+    d[a[i]]=1;
+    return cas.test_all_valuations(a,i+1,t,d);
+  }
+},
+
+test_tautology: function(t){
+  var d = cas.variables(t);
+  var a = [];
+  for(var key in d){
+    a.push(key);
+  }
+  return cas.test_all_valuations(a,0,t,d);
+},
 
 }; return cas;
 })();
+
 

@@ -15,11 +15,15 @@ var htm_print = {
     "..": 30,
     "=": 20, "in": 20,
     "<": 10, ">": 10, "<=": 10, ">=": 10,
+    "not": 9,
     "and": 8,
     "or": 6,
     "=>": 4,
     "<=>": 2,
     "": 0,
+  },
+  associative: {
+    "+": 1, "*": 1, "and": 1, "or": 1
   },
   alt_name: {
     "alpha": "&alpha;",
@@ -83,11 +87,14 @@ var htm_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],op));
     }
-    if(this.order[cop]>this.order[op]){
-      return ["(", a.join(p), ")"].join("");
-    }else{
-      return a.join(p);
+    if(this.order[cop]<=this.order[op]){
+      if(this.order[cop]!=this.order[op]){
+        return a.join(p);
+      }else if(htm_print.associative[op]){
+        return a.join(p);
+      }
     }
+    return ["(", a.join(p), ")"].join("");
   },
   unary: function(t,op,context,p){
     var s = p+this.ast(t[1][0],op);
@@ -181,6 +188,12 @@ var htm_print = {
           return this.operator(t,">=",op,"&ge;");
         }else if(s=="and"){
           return this.operator(t,"and",op,"&nbsp;&and;&nbsp;");
+        }else if(s=="or"){
+          return this.operator(t,"or",op,"&nbsp;&or;&nbsp;");
+        }else if(s=="=>"){
+          return this.operator(t,"=>",op,"&nbsp;&rArr;&nbsp;");
+        }else if(s=="<=>"){
+          return this.operator(t,"<=>",op,"&nbsp;&hArr;&nbsp;");
         }else if(s=="diff"){
           return this.diff(t,op);
         }else if(s=="lambda"){
@@ -217,7 +230,6 @@ var htm_print = {
 var mathml_print = {
   order: htm_print.order,
   alt_name: {
-    "e": "<mi mathvariant='normal'>e</mi>",
     "i": "<mi mathvariant='normal'>i</mi>",
     "lambda": "&lambda;",
     "sum": "&sum;",
@@ -265,11 +277,14 @@ var mathml_print = {
     for(var i=0; i<t[1].length; i++){
       a.push(this.ast(t[1][i],op));
     }
-    if(this.order[cop]>this.order[op]){
-      return ["<mo>(</mo>", a.join(p), "<mo>)</mo>"].join("");
-    }else{
-      return a.join(p);
+    if(this.order[cop]<=this.order[op]){
+      if(this.order[cop]!=this.order[op]){
+        return a.join(p);
+      }else if(htm_print.associative[op]){
+        return a.join(p);
+      }
     }
+    return ["<mo>(</mo>", a.join(p), "<mo>)</mo>"].join("");
   },
   unary: function(t,op,context,p){
     var s = p+this.ast(t[1][0],op);
@@ -387,7 +402,11 @@ var mathml_print = {
         }else if(s=="or"){
           return this.operator(t,"or",op,"<mo>&or;</mo>");
         }else if(s=="=>"){
-          return this.operator(t,"or",op,"<mo>&rArr;</mo>");
+          return this.operator(t,"=>",op,"<mo>&rArr;</mo>");
+        }else if(s=="<=>"){
+          return this.operator(t,"<=>",op,"<mo>&hArr;</mo>");   
+        }else if(s=="not"){
+          return this.unary(t,"not",op,"<mo>&not;</mo>");
         }else if(s=="range"){
           return this.operator(t,"..",op,"<mo>..</mo>");
         }else if(s=="sqrt"){

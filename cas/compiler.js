@@ -29,7 +29,7 @@ function vtoken_tos(a){
 }
 
 var keywords = {
-  "in": "op", "and": "op", "or": "op"
+  "in": "op", "and": "op", "or": "op", "not": "op"
 };
 
 function scan(s){
@@ -83,6 +83,9 @@ function scan(s){
     }else if(c=="." && i+1<n && s[i+1]=="."){
       a.push(token("op","..",line,col));
       i+=2; col+=2;
+    }else if(c=="<" && i+2<n && s[i+1]=="=" && s[i+2]==">"){
+      a.push(token("op","<=>",line,col));
+      i+=3; col+=3;
     }else{
       a.push(token("op",c,line,col));
       i++; col++;
@@ -320,12 +323,23 @@ function relation(i){
   } 
 }
 
+function negation(i){
+  var t = get_token(i);
+  if(t.type=="op" && t.value=="not"){
+    i.index++;
+    var x = negation(i);
+    return ["not",[x]];
+  }else{
+    return relation(i);
+  }
+}
+
 function and_expression(i){
-  var x = relation(i);
+  var x = negation(i);
   var t = get_token(i);
   while(t.type=="op" && (t.value=="and")){
     i.index++;
-    var y = relation(i);
+    var y = negation(i);
     x=[t.value,[x,y]];
     t = get_token(i);
   }
@@ -356,8 +370,20 @@ function implication(i){
   return x;
 }
 
+function equivalence(i){
+  var x = implication(i);
+  var t = get_token(i);
+  while(t.type=="op" && (t.value=="<=>")){
+    i.index++;
+    var y = implication(i);
+    x=[t.value,[x,y]];
+    t = get_token(i);
+  }
+  return x;
+}
+
 function expression(i){
-  return implication(i);
+  return equivalence(i);
 }
 
 function ast(a,s){

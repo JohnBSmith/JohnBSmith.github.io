@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>tautology</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="cas.js"></script>
+  <script src="print.js"></script>
+  <script src="compiler.js"></script>
+  <script>
+function main(){
+  var input = document.getElementById("input");
+  var output = document.getElementById("output");
+  try{
+    var a = compiler.scan(input.value);
+    if(a[0].type!="."){
+      var t = compiler.ast(a,input.value);
+      var ans;
+      if(cas.test_tautology(t)){
+        ans = "&nbsp;is a tautology.";
+      }else{
+        ans = "&nbsp;is not a tautology.";
+      }
+      output.innerHTML = compiler.htm_expression(t);
+      output.innerHTML+=ans;
+    }else{
+      output.innerHTML="";
+    }
+  }catch(e){
+    if(typeof e=="string"){
+      output.innerHTML=["<div class='mono'>",e,"</div>"].join("");
+    }
+    throw e;
+  }
+}
+  </script>
+</head>
+<body>
+
+<br><br>
+<pre>
+Operators: not, and, or, =&gt;, &lt;=&gt;.
+0: false, 1: true.
+</pre>
+<input type="button" onclick="main();" value="tautology test">
+<br><input type="text" id="input"
+  onkeyup="handle_keys(event);" style="width: 600px">
+<br><br>
+<div class="output" id="output">
+</div>
+
+</body>
+</html>
