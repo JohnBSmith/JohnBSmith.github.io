@@ -190,6 +190,8 @@ var htm_print = {
           return this.operator(t,"and",op,"&nbsp;&and;&nbsp;");
         }else if(s=="or"){
           return this.operator(t,"or",op,"&nbsp;&or;&nbsp;");
+        }else if(s=="not"){
+          return this.unary(t,"not",op,"&not;");
         }else if(s=="=>"){
           return this.operator(t,"=>",op,"&nbsp;&rArr;&nbsp;");
         }else if(s=="<=>"){
