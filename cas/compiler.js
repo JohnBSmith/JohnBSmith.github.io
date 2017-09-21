@@ -438,7 +438,8 @@ function main(){
     // alert(vtoken_tos(a));
     if(a[0].type!="."){
       var t = compiler.ast(a,input.value);
-      t = cas.evaluate(t);
+      t = cas.execute(t);
+      t = cas.simplify_sf(1,t);
       var out = cas.output_form(t);
       output.innerHTML = compiler.htm_expression(out);
       output.innerHTML += "<ul class='ast'><li>"+compiler.ast_tos(out)+"</ul>";

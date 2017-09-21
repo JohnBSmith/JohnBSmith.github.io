@@ -787,6 +787,33 @@ $a_{21}$ & $a_{22}$ & $\sum$ & $\sum$
 \end{tabular}\\
 \phantom{x}
 
+\noindent
+Auch die Multiplikation von mehr als zwei Matrizen kann nach diesem
+Schema notiert werden. Das Produkt $Z=ABCD$ wird in die
+Multiplikationen $X=AB$, $Y=XC$ und $Z=YD$ aufgetrennt, womit
+sich eine horizontales Schema ergibt. Alternativ setzt man $X=CD$,
+$Y=BX$ und $Z=AY$, womit sich eine vertikales Schema ergibt.
+
+Das sind:
+
+\begin{tabular}{@{\hspace{2em}}l@{\hspace{4em}}l}
+\begin{tabular}{l|l|l|l}
+  & $B$ & $C$ & $D$\\
+\hline
+$A$ & $X$ & $Y$ & $Z$
+\end{tabular}
+&
+\begin{tabular}{l|l}
+  & D\\
+\hline
+C & X\\
+\hline
+B & Y\\
+\hline
+A & Z
+\end{tabular}
+\end{tabular}
+
 \strong{Problem.} \emph{Zu einer gegebenen regulären
 Matrix $A$ soll die Matrix
 $B$ gefunden werden, sodass $AB=E_2$ gilt.}
@@ -933,6 +960,97 @@ Tatsächlich bilden die Symmetrien des Quadrates aber eine Gruppe,
 die aus diesem Grund als \emph{Symmetriegruppe} bezeichnet wird.
 Die Übereinstimmung der Symmetriegruppe des Dreiecks mit der
 symmetrischen Gruppe der Ecken stellt sich als Koinzidenz heraus.
+
+\subsubsection{Konjugation}
+Sei $G$ eine Gruppe und $g,h\in G$. Unter der \emdef{Konjugation}
+von $g$ mit $h$ wird die Operation $hgh^{-1}$ verstanden. Beim
+Verketten von Abbildungen ist die Reihenfolge umgekehrt, das ist
+$h^{-1}\circ g\circ h$. Konjugation ist bei nichtabelschen Gruppen
+von besonderer Bedeutung. Für abelsche Gruppen ist die Konjugation
+trivial, da sich $h$ und $h^{-1}$ kürzen lassen.
+
+Als Beispielaufgabe betrachten wird die Gruppe aller Drehmatrizen
+im Raum, die $\operatorname{SO}(3)$. Während die $\operatorname{SO}(2)$
+abelsch ist, ist das bei der $\operatorname{SO}(3)$ nicht mehr
+der Fall. Man betrachte nun den $\R^3$, wobei die $x$-Achse nach
+rechts zeigt, die $y$-Achse in den Raum hinein und die $y$-Achse
+nach oben. Die Drehmatrizen um die Koordinatenachsen sind klar:
+\begin{equation}
+R_{xy} = \begin{bmatrix}
+\cos\varphi & -\sin\varphi & 0\\
+\sin\varphi & \cos\varphi & 0\\
+0 & 0 & 1
+\end{bmatrix},
+R_{xz} = \begin{bmatrix}
+\cos\varphi & 0 & -\sin\varphi\\
+0 & 1 & 0\\
+\sin\varphi & 0 & \cos\varphi
+\end{bmatrix},
+R_{yz} = \begin{bmatrix}
+1 & 0 & 0\\
+0 & \cos\varphi & -\sin\varphi\\
+0 & \sin\varphi & \cos\varphi
+\end{bmatrix}.
+\end{equation}
+Hierbei ist $R_{xy}(\varphi)$ die Rotation um die $z$-Achse,
+$R_{xz}(\varphi)$ die Rotation um die $y$-Achse und
+$R_{yz}(\varphi)$ die Rotation um die $x$-Achse.
+
+Die Aufgabe besteht nun darin, um die Winkelhalbierende $x=y$ zu
+drehen. Man möchte also in der Ebene $\{(x,y,z)\mid x=-y\}$ drehen.
+Dazu wird der Punkt auf der Achse $x=-y$ zunächst zur $x$-Achse
+gedreht. Nun lässt sich die Matrix $R_{xz}(\theta)$ anwenden.
+Anschließend wird die Drehung um die $z$-Achse rückgängig gemacht.
+Es ergibt sich
+\begin{equation}
+R = R_{xy}(45^\circ)^{-1}\,R_{xz}(\theta)\,R_{xy}(45^\circ).
+\end{equation}
+Bei Rotationsmatrizen gilt immer $R^{-1}(\varphi)=R(-\varphi)$.
+
+Das falksche Schema zur Multiplikation
+$R_{xy}(-\varphi)\,R_{xz}(\theta)\,R_{xy}(\varphi)$ ist:
+
+\begin{tabular}{l|c}
+& $\begin{bmatrix}
+\cos\varphi\qquad & \qquad -\sin\varphi\qquad & \qquad 0\\
+\sin\varphi\qquad & \cos\varphi & \qquad 0\\
+0\qquad & 0 & \qquad 1
+\end{bmatrix}$\\
+\hline
+$\begin{bmatrix}
+\cos\theta & 0 & -\sin\theta\\
+0 & 1 & 0\\
+\sin\theta & 0 & \cos\theta
+\end{bmatrix}$ &
+$\begin{bmatrix}
+  \cos\theta\cos\varphi\quad
+& \quad -\cos\theta\sin\varphi\quad
+& \quad -\sin\theta\\
+  \sin\varphi\quad
+& \cos\varphi
+& \quad 0\\
+  \sin\theta\cos\varphi\quad
+& -\sin\theta\sin\varphi
+& \quad\cos\theta
+\end{bmatrix}$\\
+\hline
+$\begin{bmatrix}
+\cos\varphi & \sin\varphi & 0\\
+-\sin\varphi & \cos\varphi & 0\\
+0 & 0 & 1
+\end{bmatrix}$
+&$\begin{bmatrix}
+  \cos\theta\cos^2\varphi+\sin^2\varphi
+& (1-\cos\theta)\cos\varphi\sin\varphi
+& -\sin\theta\cos\varphi\\
+  (1-\cos\theta)\cos\varphi\sin\varphi
+& \cos\theta\sin^2\varphi+\cos^2\varphi
+& \sin\theta\sin\varphi\\
+  \sin\theta\cos\varphi
+& -\sin\theta\sin\varphi
+& \cos\theta
+\end{bmatrix}$
+\end{tabular}
 
 \subsection{Zyklische Gruppen}
 Die Gruppe \eqref{eq:Drehungen} ist von besonderer Gestalt.

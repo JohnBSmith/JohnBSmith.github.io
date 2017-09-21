@@ -389,6 +389,10 @@ diff: function(t,v){
       return ["*",[["cos",t[1]],cas.diff(t[1][0],v)]];
     }else if(t[0]==="cos"){
       return ["neg",[["*",[["sin",t[1]],cas.diff(t[1][0],v)]]]];
+    }else if(t[0]==="tan"){
+      return ["/",[cas.diff(t[1][0],v),["^",[["cos",t[1]],2]]]];
+    }else if(t[0]==="cot"){
+      return ["neg",[["/",[cas.diff(t[1][0],v),["^",[["sin",t[1]],2]]]]]];
     }else if(t[0]==="sqrt"){
       return ["*",[["/",[1,["*",[2,t]]]],cas.diff(t[1][0],v)]];
     }
@@ -403,13 +407,30 @@ diff: function(t,v){
   }
 },
 
+diffn: function(t,v,n){
+  for(var i=0; i<n; i++){
+    t = cas.simplify_sf(1,cas.diff(t,v));
+  }
+  return t;
+},
+
+variables_table: {
+},
+
 evaluate: function(t){
   if(cas.is_app(t)){
     if(t[0]==="diff" && typeof t[1][1]=="string"){
-      return cas.simplify(cas.diff(
-        cas.evaluate(t[1][0]),
-        cas.evaluate(t[1][1])
-      ));
+      if(t[1].length==3){
+        return cas.diffn(
+          cas.evaluate(t[1][0]),
+          cas.evaluate(t[1][1]), t[1][2]
+        );
+      }else{
+        return cas.simplify(cas.diff(
+          cas.evaluate(t[1][0]),
+          cas.evaluate(t[1][1])
+        ));
+      }
     }else if(t[0]==="simp"){
       return cas.simplify_sf(1,cas.evaluate(t[1][0]));
     }else if(t[0]==="expand"){
@@ -420,8 +441,10 @@ evaluate: function(t){
       return cas.variables_as_list(t[1][0]);
     }else if(t[0]==="taut"){
       return cas.test_tautology(t[1][0]);
-    }else if(t[0]==="es"){
-      return cas.evaluate_strict(t[1][0],{a: 1, b: 1});
+    }else if(t[0]==="subs"){
+      var t2 = t[1][1][1];
+      var vtab={}; vtab[t2[0]]=t2[1];
+      return cas.substitute(t[1][0],vtab);
     }else{
       var a=[];
       for(var i=0; i<t[1].length; i++){
@@ -432,6 +455,40 @@ evaluate: function(t){
   }else{
     return t;
   }
+},
+
+substitute: function(t,d){
+  if(cas.is_app(t)){
+    var a=[];
+    if(t[0]==="="){
+      a.push(t[1][0]);
+      a.push(cas.substitute(t[1][1],d));
+    }else{
+      for(var i=0; i<t[1].length; i++){
+        a.push(cas.substitute(t[1][i],d));
+      }
+    }
+    return [t[0],a];
+  }else if(typeof t==="string"){
+    if(d.hasOwnProperty(t)){
+      return d[t];
+    }else{
+      return t;
+    }
+  }else{
+    return t;
+  }
+},
+
+execute: function(t){
+  t = cas.substitute(t,cas.variables_table);
+  if(cas.is_app(t)){
+    if(t[0]==="="){
+      cas.variables_table[t[1][0]] = cas.evaluate(t[1][1]);
+      return t;
+    }
+  }
+  return cas.evaluate(t);
 },
 
 is_negative: function(t){
