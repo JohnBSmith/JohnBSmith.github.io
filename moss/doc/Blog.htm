@@ -165,8 +165,8 @@ comes into mind is: should they be equivalent? In order to achieve
 that, in a module a module object should be returned explicitely rather
 than implicitely. This would also solve another problem: How to
 state a module that consists only of a single class or a single
-function (to achieve advanced lazy loading and lazy evaluation)?
-The problem here is an oddly looking import statement:
+function (e.g. to achieve advanced lazy loading and lazy
+evaluation)? The problem here is an oddly looking import statement:
 <pre class="moss">
   use class_name: class_name
   # vs.
@@ -261,6 +261,76 @@ hand side is an expression. I think it was a worthwhile effort.
     # ...
   end
 </pre>
+
+<h3 data-date="20170525" id="private-variables"
+>Private variables</h3>
+
+<p>At first I recall that
+<pre>
+  begin ... end</pre>
+</pre>
+<p>is syntatic shugar for:
+<pre>
+  (sub|| ... end)()
+</pre>
+
+<p>Often we want to create a local variable, use it in one or
+more functions, and forget it afterwarts. Thus we want to have
+a <i>local scope</i>, so that the variable does not exist outside
+of this scope. In Moss I have used this ugly construction so far:
+<pre class="moss">
+f = begin
+  n = 42
+  return |x| n*x
+end
+</pre>
+<p>But if one wants to bind some value to more than one function,
+this construction becomes even more unpleasant:
+<pre class="moss">
+f,g = begin
+  n = 42
+  f = |x| n*x
+  g = |x| x+n
+  return f,g
+end
+</pre>
+
+<p>In Lua it is possible to restrict variables to a local scope:
+<pre>
+do
+  local n = 42
+  function f(x)
+    return n*x
+  end
+  function g(x)
+    return x+n
+  end
+end
+
+print(f(2))
+</pre>
+
+<p>I did not realize until now that this is perfectly possible in
+my own programming language too:
+<pre class="moss">
+begin
+  global f,g
+  n = 42
+  f = |x| n*x
+  g = |x| x+n
+end
+
+print(f(2))
+</pre>
+<p>Furthermore, this actually solves the problem of having variables
+that are restricted to a module. And fortunately these variables
+can be accessed faster, since local variables are stored in
+a stack frame rather than the dictionary of global variables.
+
+<p>A problem that remains is mutual recursion. In JavaScript this
+is solved by making it possible to use a local variable that
+is defined later on. For now, in Moss one would need to switch to
+global variables for this purpose.
 
 </body>
 </html>

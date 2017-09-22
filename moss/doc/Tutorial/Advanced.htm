@@ -17,6 +17,7 @@
 <li><a href="#Stringbuffer">Stringbuffers</a>
 <li><a href="#Memoisation">Memoisation</a>
 <li><a href="#uniq">Unique</a>
+<li><a href="#Multiple-dispatch">Multiple dispatch</a>
 </ol>
 </div>
 
@@ -119,13 +120,13 @@ fib = fix(|f,n| 1 if n==1 or n==2 else f(n-1)+f(n-2))
 
 <p>Uniq(ue) is an operation that removes duplicates from a list.
 Sets and dictionarys provide a simple way to state this operation.
-The first way is, to convert the list into a set and
+The first way to achieve unique is to convert the list into a set and
 then back into a list.
 </p>
 
 <pre class="moss">
-# (1)
-uniq = |a| list(set(a))
+  # (1)
+  uniq = |a| list(set(a))
 </pre>
 
 <p>If two non-equal elements have a different string representation
@@ -133,21 +134,76 @@ we can use a dictionary construction instead of a set construction.
 </p>
 
 <pre class="moss">
-# (2)
-uniq = |a| list(a.dict(|x| [str(x),x]).values())
+  # (2)
+  uniq = |a| list(a.dict(|x| [str(x),x]).values())
 </pre>
 
-<p>What should be equal and what not, is abstracted by
-a projection function&nbsp;<code>p</code>.
-</p>
+<p>What should be equal and what not, may be abstracted by
+a projection function&nbsp;<code>p</code>:
 
 <pre class="moss">
-uniq = |a,p| list(a.dict(|x| [p(x),x]).values())
+  uniq = |p,a| list(a.dict(|x| [p(x),x]).values())
 </pre>
 
-<p>The last one is very general, with <code>uniq(a,|x|x)</code>
-equivalent to (1) and <code>uniq(a,str)</code> equivalent to (2).
-</p>
+<p>The last one is very general, with <code>uniq(|x|x,a)</code>
+equivalent to (1) and <code>uniq(str,a)</code> equivalent to (2).
+
+<p>Floating point numbers need a version of unique that takes
+a desired precision:
+<pre class="moss">
+  uniq = |p,a| list(a.dict(|x| [int(x/p),x]).values())
+</pre>
+
+<h2 id="Multiple-dispatch">Multiple dispatch</h2>
+
+<p>Here is a basic implementation of multiple dispatch in Moss.
+At first, some auxiliary functionality is to be defined.
+<pre class="moss">
+dtab = {}
+
+sub define(m,d)
+  if m not in dtab
+    dtab[m] = d
+  else
+    dtab[m].update(d)
+  end
+end
+
+method = {
+  2: sub|m|
+    f = dtab[m]
+    return |x,y| f[[type(x),type(y)]](x,y)
+  end
+}
+</pre>
+<p>So far, <code>dtab</code> is thought to contain a dispatch table
+for each method name.
+
+<p>Now we can specify a multimethod:
+<pre class="moss">
+Int = int.type
+Str = str.type
+
+define("f",{
+  [Int,Int]: |x,y| "({},{}) [Int,Int]"%[x,y],
+  [Str,Str]: |x,y| "({},{}) [Str,Str]"%[x,y],
+  [Int,Str]: |x,y| "({},{}) [Int,Str]"%[x,y],
+  [Str,Int]: |x,y| "({},{}) [Str,Int]"%[x,y]
+})
+
+f = method[2]("f")
+
+print(f(1,2))
+print(f("x","y"))
+print(f(1,"y"))
+print(f("x",2))
+
+# Output:
+# (1,2) [Int,Int]
+# (x,y) [Str,Str]
+# (1,y) [Int,Str]
+# (x,2) [Str,Int]
+</pre>
 
 </body>
 </html>

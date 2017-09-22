@@ -14,6 +14,7 @@
 <h2>Table of contents</h2>
 <ol>
 <li><a href="#Main">Main program</a>
+<li><a href="#Private-variables">Private variables</a>
 <li><a href="#Dynamic-loading">Dynamic loading</a>
 </ol>
 </div>
@@ -51,6 +52,51 @@ $ moss m1 alpha beta gamma
 use m1
 
 m1.main(["m1", "alpha", "beta", "gamma"])
+</pre>
+
+<h2 id="Private-variables">Private variables</h2>
+
+<p>A complicated program may have some internal variables that
+should not be made public. Let us have a look on the following
+program.
+
+<pre class="moss">
+sub tabulate_row(t)
+  t.map(|x| str(x).rjust(4)).join("\s|")
+end
+
+sub tabulate(a)
+  a.map(tabulate_row).join("\n")
+end
+</pre>
+
+<p>Here, <code>tabulate_row</code> is just for internal use
+and not meant to be accessible outside of the module.
+It is possible to express internal variables in Moss.
+
+<pre class="moss">
+begin
+  global tabulate
+
+  sub tabulate_row(t)
+    t.map(|x| str(x).rjust(4)).join("\s|")
+  end
+
+  sub tabulate(a)
+    a.map(tabulate_row).join("\n")
+  end
+end
+</pre>
+
+<p>Every variable that is declared as <code>global</code> belongs to
+the module interface and is publicly available. All other
+variables are only visible inside of <code>begin ... end</code>.
+
+<pre class="moss">
+use my_module: tabulate
+
+a = list(1..20).map(|x| [x,x^2])
+print(tabulate(a))
 </pre>
 
 
