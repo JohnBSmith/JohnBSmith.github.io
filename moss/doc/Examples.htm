@@ -81,7 +81,7 @@ fac = fix(|f,n| 1 if n==0 else n*f(n-1))
 # Tail-recursive
 sub call(f,m,n)
   x=f(m,n)
-  while type(x) is function.type
+  while type(x) is Function
     x=x()
   end
   return x
@@ -202,7 +202,7 @@ compose = |f,g| |x| f(g(x))
 f = |x| 2*x
 print(compose(f,f)(10))
 
-function.type.MPY = |f;g| |x| f(g(x))
+Function.MPY = |f;g| |x| f(g(x))
 print((f*f*f)(10))
 </pre>
 

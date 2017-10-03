@@ -28,10 +28,10 @@ a string cannot be modified. Therefore one cannot append a
 string <code>s2</code> to a string <code>s1</code>. To bypass
 this problem one could write <code>s1=s1+s2</code>. But this
 sparks off another problem. To understand this we should have
-a look on the following statement.
+a look on the following statement:
 </p>
 
-<pre class="moss">
+<pre class="moss indent">
 s = s1+s2+s3+s4+s5+s6
 </pre>
 
@@ -43,43 +43,43 @@ The following program unveils the full painfullness of this
 approach.
 </p>
 
-<pre class="moss">
-n=1000
-s=""
+<pre class="moss indent">
+n = 1000
+s = ""
 for i in 1..n
-  s=s+"."
+  s = s+"."
 end
 </pre>
 
 <p>We may increase <code>n</code> to <code>10000</code>
 or <code>100000</code> and measure
 how long it takes. A better method is to use the
-method <code>join</code> that glues strings together.
+method <code>join</code> that glues strings together:
 </p>
 
-<pre class="moss">
+<pre class="moss indent">
 s = [s1,s2,s3,s4,s5,s6].join()
 </pre>
 
 <p>Now one can use a list as a buffer.
 </p>
 
-<pre class="moss">
-a=[]
+<pre class="moss indent">
+a = []
 for i in 1..n
   a.push(".")
 end
-s=a.join()
+s = a.join()
 </pre>
 
 <h2 id="Memoisation">
 Memoisation</h2>
 
 <p>We can directly obtain an implementation from the
-recursive definition of the Fibonacci-squence.
+recursive definition of the Fibonacci-squence:
 </p>
 
-<pre class="moss">
+<pre class="moss indent">
 fib = |n| 1 if n==1 or n==2 else fib(n-1)+fib(n-2)
 </pre>
 
@@ -87,8 +87,8 @@ fib = |n| 1 if n==1 or n==2 else fib(n-1)+fib(n-2)
 to <code>fib</code> is <em>multiplied</em> by a factor of two.
 Ok, let <code>N</code> be this number of needed calls. Then we have
 </p>
-<pre>
-  N(n+1) = 2N(n).
+<pre class="indent">
+N(n+1) = 2N(n).
 </pre>
 <p>Mathematics says, the solution of this equation is
 <code>N(n)=c+2^n</code>. That <code>c</code> is some uninteresting
@@ -124,25 +124,25 @@ The first way to achieve unique is to convert the list into a set and
 then back into a list.
 </p>
 
-<pre class="moss">
-  # (1)
-  uniq = |a| list(set(a))
+<pre class="moss indent">
+# (1)
+uniq = |a| list(set(a))
 </pre>
 
 <p>If two non-equal elements have a different string representation
 we can use a dictionary construction instead of a set construction.
 </p>
 
-<pre class="moss">
-  # (2)
-  uniq = |a| list(a.dict(|x| [str(x),x]).values())
+<pre class="moss indent">
+# (2)
+uniq = |a| list(a.dict(|x| [str(x),x]).values())
 </pre>
 
 <p>What should be equal and what not, may be abstracted by
 a projection function&nbsp;<code>p</code>:
 
-<pre class="moss">
-  uniq = |p,a| list(a.dict(|x| [p(x),x]).values())
+<pre class="moss indent">
+uniq = |p,a| list(a.dict(|x| [p(x),x]).values())
 </pre>
 
 <p>The last one is very general, with <code>uniq(|x|x,a)</code>
@@ -150,8 +150,8 @@ equivalent to (1) and <code>uniq(str,a)</code> equivalent to (2).
 
 <p>Floating point numbers need a version of unique that takes
 a desired precision:
-<pre class="moss">
-  uniq = |p,a| list(a.dict(|x| [int(x/p),x]).values())
+<pre class="moss indent">
+uniq = |p,a| list(a.dict(|x| [int(x/p),x]).values())
 </pre>
 
 <h2 id="Multiple-dispatch">Multiple dispatch</h2>
@@ -181,9 +181,6 @@ for each method name.
 
 <p>Now we can specify a multimethod:
 <pre class="moss">
-Int = int.type
-Str = str.type
-
 define("f",{
   [Int,Int]: |x,y| "({},{}) [Int,Int]"%[x,y],
   [Str,Str]: |x,y| "({},{}) [Str,Str]"%[x,y],
