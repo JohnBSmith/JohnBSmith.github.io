@@ -27,6 +27,8 @@
   <a href="#Midi">Probleme mit Midi auf Linux</a>
 <li><span class="date">[2017-05-09]</span>
   <a href="#Int">Ganzzahldatentypen</a>
+<li><span class="date">[2017-10-26]</span>
+  <a href="#Rust">Gedanken zu Rust</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -380,6 +382,170 @@ zu Gunsten von typsicheren Programmiersprachen möglichst vermieden
 werden. Als nächstes wird man sich also fragen, wie das Lesen von
 Daten in den effizienten Programmiersprachen Ada, D, Rust und OCaml
 ermöglicht wird.
+
+<h2 id="Rust">Gedanken zu Rust</h2>
+<div class="date">26. Oktober 2017</div>
+
+<p>Standard ML ist eine strenge, typsichere und mathematisch
+außerordentlich reine Programmiersprache.
+In Standard ML wurden Theorembeweiser geschrieben.
+An Robin Milner wurde 1991 für den Entwurf von Standard ML
+der Turing-Award verliehen. Nur eines ist Standard ML nicht:
+im Mainstream angekommen. Die Sprache konnte sich nicht
+gegen die Effizienz von&nbsp;C behaupten. Verkettete Listen
+erzeugen zu viele Speicherallokationen und rekursive Programmierung
+ist langsamer als iterative. Solche Probleme lassen sich mit
+Zusatzinformationen bis zu einem gewissen Grad wegoptimieren,
+aber das kann außerordentlich schwierig werden. Zwar hatte
+Standard ML auch Mittel zur iterativen Programmierung, aber diese
+stand im Abseits.
+
+<p>In Rust wurde nun das scharfe typtheoretische Modell von
+Standard ML mit dem iterativen Programmierstil kombiniert.
+So gibt es die algebraischen Typkonstruktionen Produkt
+(<code>struct</code> wie <code>struct</code> in&nbsp;C,
+<code>record</code> in Pascal) und Summe (<code>enum</code>
+wie tagged <code>union</code> in&nbsp;C und Pascal). Wenn
+die <code>union</code> entfällt, bleibt das Tag übrig, das ist
+dann eine einfache <code>enum</code> wie in&nbsp;C. Die Summe
+kann man sich als disjunkte Vereinigung von Typen vorstellen,
+wenn man sich die Typen als Mengen von zulässigen Werten vorstellt.
+Eigentlich sind bei Typen aber auch rekursive Typen möglich, was
+zu einem Paradoxen wie der russelschen Antimonie führt. Deshalb
+können Typen im Allgemeinen keine Mengen sein, sondern sind
+viel mehr Klassen. Das kartesische Produkt von Mengen wird
+zum kategorientheortischen Produkt verallgemeinert und
+die disjunkte Vereinigung zum Koprodukt.
+
+<p>Während das Produkt von Typen seinen Weg in die klassischen
+Programmiersprachen gefunden hat, sind typsichere
+Tagged Unions bei den meisten Sprachen leider nicht möglich.
+Zur Verwendung von Tagged Unions ist es notwendig, diese
+wieder typsicher in eine Fallunterscheidung aufzuspalten.
+Dafür wird eine extra Kontrollstruktur benötigt, die es
+nur in Algol 68, Rust und den funktionalen Sprachen gibt.
+In Java sind aus Gründen der Typsicherheit nun Tagged Unions
+nicht möglich &mdash; das Verhalten wird durch Laufzeitpolymorphie
+simuliert, was zu außerordentlich vielen Speicherallokationen,
+Cache-unfreundlichen Indirektionen und damit scheußlichem
+Laufzeitverhalten führt. Man versucht, das Problem durch
+Verwendung eines Garbage-Kollektors leicht zu mildern.
+
+<p>Auch das System zur Ausnahmebehandlung arbeitet in Rust
+mit Summentypen. Der Grundgedanke ist, dass im Falle eines
+Fehlers von einer Funktion ein Fehlerwert zurückgegeben
+wird, der außerhalb der Menge der normalen Werte liegt.
+Um ein solches Vorgehen zuverlässig zu machen, wird wieder eine
+disjunkte Vereinigung benutzt. Die dafür normalerweise
+vorgesehenen Summentypen sind <code>Option&lt;T&gt;</code>
+und <code>Result&lt;T,E&gt;</code>, man kann sich aber auch
+eigene Summentypen definieren. Bei C++ weiß man nie so genau
+was hinter <code>try-catch</code> stekt, welche Laufzeitkosten
+entstehen, wie komplex das intern arbeitet, und welche Programmaufrufe
+eine Ausnahme werfen könnten. Bei einer Systemprogrammiersprache mag
+man solches eigentlich nicht. Aus diesem Grund ist der Ansatz mit
+Summentypen sehr viel eleganter.
+
+<p>Das System <i>Scope, Ownership, Lifetime, Borrowing, Mutability</i>
+ist sehr ausgeklügelt, auch wenn die formalen Regeln des Borrow
+Checkers noch nicht zu 100% ausgearbeitet worden sind. In den meisten
+Fällen genügt das System tatsächlich. In einer speziellen Situation
+reichten mir Lebenszeitangaben nicht aus, so dass ich einen
+Arena-Allokator benötigt hätte. Die Referenzen auf dynamisch erzeugte
+Daten die ein Arena-Objekt zurückgibt, haben die selbe Lebenszeit
+wie das Arena-Objekt selbst. Leider ist es nicht möglich, den Datentyp
+Arena in typsicherem Rust zu programmieren und in der Standardbibliothek
+ist dieser Datentyp auch nicht vorhanden.
+
+<p>Man kann sich aber auch in solchen problematischen Fällen
+mit <code>Rc&lt;T&gt;</code>
+(ggf. als <code>Rc&lt;RefCell&lt;T&gt;&gt;</code>)
+behelfen. Das sind Referenz-zählende Smart-Pointer, die eine
+minimalistische Garbage-Collection darstellen.
+Das eleganteste bei der Speicherallokation in Rust ist
+die automatische Deallokation und der automatische Aufruf
+von Destruktoren am Ende der Lebenszeit von Objekten, ein System
+das schon erfolgreich in C++ eingebaut wurde.
+Die Lebenszeit von Objekten endet immer dann, wenn sie ihren Scope
+verlassen und keine Ownership-Übertrag an eine andere Variable
+stattgefunden hat. Das gilt auch für die Smart-Pointer: Die
+Lebenszeit des Objektes, auf das die Pointer zeigen, endet genau
+dann, wenn die Lebenszeit aller Pointer vorbei ist.
+
+<p>Man muss sich mal vor Augen führen dass solche Referenz-zählenden
+Zeiger eigentlich unheimlich performant sind. Zumal muss beim
+bloßen Borrowing nicht am Referenz-Zähler herumgespielt werden
+muss, es sei denn man benötigt verändliche Borrows, die durch
+<code>RefCell&lt;T&gt;</code> modeliert werden. Selbst wenn das
+Programm dann 1% langsamer wird oder 1% mehr
+Energie verbraucht, ist das eigentlich nicht weiter schlimm.
+Für große Objekte, aus denen eine Menge Inhalt ausgelsen werden
+soll, sind die Referenz-Zähler eigentlich
+zu vernachlässen. Performance-Einbußen treten erst bei Feldern von sehr
+feinen kleinen Datenobjekten auf. In einem solchen Fall sollte man
+sowieso möglichst mit Summentypen arbeiten um unnötige
+Speicherallokationen zu vermeiden.
+
+<p>Momentan gibt es in Rust ein kleineres Problem mit
+<i>Code Bloat</i>, der bei generischen Algorithmen auftritt.
+Zum Beispiel wird der Maschinencode beim Datentyp
+<code>Vec&lt;T&gt;</code> für jeden Typ <code>T</code> neu erzeugt,
+was als Monomorphisation oder automatische Spezialisierung
+bezeichnet wird.
+Tatsächlich ist es aber möglich, die internen Algorithmen polymorph
+zu schreiben, indem sie nur den Speicher per Shallow Copy kopieren.
+Nur das Interface wird generisch ausgelegt, was aber eine
+Zero-Cost Abstraktion und ggf. ein wenig Inline-Code darstellt.
+Für die Laufzeit ist es natürlich <i>etwas</i> günstiger, wenn
+die Algorithmen für jeden Typ <code>T</code> extra spezialisiert
+werden. Bei einem Optionstyp <code>Option&lt;T&gt;</code> mit
+großen Inhalt muss z.&nbsp;B. nur das Tag kopiert werden, falls die
+Option <code>None</code> ist.
+
+<p>Auch <code>Vec&lt;Box&lt;T&gt;&gt;</code> für unterschiedliche
+Typen <code>T</code> erzeugt momentan Code Bloat. Das ist natürlich
+unschön, da der Maschinencode in diesem Fall identisch sein sollte.
+Diese Idee lässt sich aber vernünftig und in mehr Ausdrucksstärke
+als allgemeines Prinzip in Rust umsetzen. Die Konstruktion
+dazu ist:
+<pre class="code indent">
+<b>trait</b> Item{}
+
+<b>struct</b> A; <b>impl</b> Item <b>for</b> A{}
+<b>struct</b> B; <b>impl</b> Item <b>for</b> B{}
+
+<b>fn</b> main(){
+  <b>let</b> vA: Vec&lt;Box&lt;Item&gt;&gt; = vec![Box::new(A), Box::new(A)];
+  <b>let</b> vB: Vec&lt;Box&lt;Item&gt;&gt; = vec![Box::new(B), Box::new(B)];
+}
+</pre>
+<p>Auf diese Art ist auch Laufzeit-Polymorphie möglich.
+Wenn <code>Item</code> nämlich Methoden-Signaturen enthält
+und die Strukturen diese implementieren, werden die
+Variablen vom Typ <code>Box&lt;Item&gt;</code> automatisch zu
+<i>Fat Pointern</i> die neben einem Zeiger auf die Daten noch
+einen Zeiger auf die jeweilige Tabelle virtueller Methoden
+enthalten. Für Variablen vom Typ <code>Item</code> entfallen alle
+Indirektionen und die Methoden können direkt aufgerufen werden.
+Die selben Methoden können somit nach belieben statisch an ein
+Objekt oder dynamisch an einen Objekt-Zeiger gebunden werden.
+Dieser Ansatz ist außerordentlich elegant und ausgeklügelt,
+und ich würde sagen dass das der kanonische Ansatz für eine
+performante Programmiersprache ist.
+
+<p>Was Rust m.&nbsp;E. noch fehlt ist ein System zum
+maschinengestützten Beweisen von sicher abstrahierten unsafe-Blöcken.
+Damit lässt sich die Korrektheit von Alogrithmen, welche
+unsafe-Blöcke enthalten, im Nachhinein sicherstellen. Mit
+Korrektheit ist hier gemeint, dass es in keinem Fall zu einer
+Speicherzugriffs-Verletzung und damit undefinierten Verhalten
+kommen kann. Jedes undefinierte Verhalten stelle nämlich eine
+potentielle Sicherheitslücke dar.
+
+<p>Zusammenfassend wurde ich überzeugt, dass Rust die Sprache
+ist, die das Erbe von C/C++ antreten könnte. Falls es nicht
+Rust selbst ist, ist es eine Sprache die Rust sehr ähnlich
+ist und fast die gleichen Mechanismen besitzt.
 </main>
 
 <aside id="right-aside">
