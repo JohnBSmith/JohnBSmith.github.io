@@ -1550,8 +1550,8 @@ y = \frac{q^{n+1}-q}{q-1}.
 \begin{equation}\label{eq:diff-Partialsumme-geometrische-Reihe}
 \sum_{k=m}^{n-1} k^p q^k = \bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^p\;\frac{q^n-q^m}{q-1}.
 \end{equation}
-Der Induktionsanfang $p=0$ ist  \eqref{eq:Partialsumme-geometrische-Reihe}. Beim Induktionsschritt
-gehen wir von der Gültigkeit von
+Der Induktionsanfang $p=0$ ist  \eqref{eq:Partialsumme-geometrische-Reihe}.
+Beim Induktionsschritt gehen wir von der Gültigkeit von
 \begin{equation}
 \sum_{k=m}^{n-1} k^{p-1} q^k = \bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^{p-1}\;\frac{q^n-q^m}{q-1}.
 \end{equation}
@@ -1562,7 +1562,8 @@ Bemerkung: Mit Ausnahme von Spezialfällen ist
 \begin{equation}
 \bigg(q\frac{\mathrm d}{\mathrm dq}\bigg)^p \ne q^p \frac{\mathrm d^p}{\mathrm dq^p},
 \end{equation}
-da das Produkt mit $q$ nach dem Differentialoperator vom nächsten Differentialoperator mit abgeleitet werden muss.
+da das Produkt mit $q$ nach dem Differentialoperator vom nächsten
+Differentialoperator mit abgeleitet werden muss.
 
 Aus \eqref{eq:diff-Partialsumme-geometrische-Reihe} wird mit $p=1$ nun
 z.\,B. die Formel
@@ -1570,6 +1571,42 @@ z.\,B. die Formel
 \sum_{k=m}^{n-1} kq^k = \frac{nq^n-mq^m}{q-1} - \frac{q^{n+1}-q^{m+1}}{(q-1)^2}
 \end{equation}
 gewonnen.
+
+\subsection{Differenzenrechnung und Teleskopsummen}
+Sei
+\begin{align}
+(\Delta f)(n) &:= f(n+1)-f(n), && \text{(\emph{Differenzenoperator})}\\
+(\Sigma f)(n) &:= \sum_{k=0}^{n-1} f(k). && \text{(\emph{Summenoperator})}
+\end{align}
+Wir wollen zeigen:
+\begin{align}
+(\Delta\circ\Sigma)(f)(n) = (\Delta(\Sigma f))(n) = \id(f)(n) = f(n).
+\end{align}
+Und rechnen nach:
+\begin{align}
+&(\Delta(\Sigma f))(n)
+= \Delta(n\mapsto\sum_{k=0}^{n-1} f(k))(n)
+= \sum_{k=0}^{n} f(k)-\sum_{k=0}^{n-1} f(k)\\
+&= f(n)+\underbrace{\sum_{k=0}^{n-1} f(k)-\sum_{k=0}^{n-1} f(k)}_{=0}
+= f(n).
+\end{align}
+Das bedeutet, dass $\Delta$ die Linksinverse zu $\Sigma$ ist.
+
+Somit muss $\Sigma\colon\R^\N\to\R^\N$ ein injektiver Operator
+sein.
+
+Jetzt kehren wir die Reihenfolge um und berechnen $\Sigma\circ\Delta$.
+Es ergibt sich:
+\begin{align}
+&(\Sigma(\Delta f))(n) = (\Sigma(n\to f(n+1)-f(n)))(n)
+= \sum_{k=0}^{n-1} [f(k+1)-f(k)]\\
+&= \underbrace{\sum_{k=0}^{n-1} f(k+1)}_{\sum_{k=1}^n f(k)}
+- \sum_{k=0}^{n-1} f(k)
+= f(n)-f(0) + \underbrace{\sum_{k=0}^{n-1} f(k)
+- \sum_{k=0}^{n-1} f(k)}_{=0}.
+\end{align}
+Bis auf die Konstante $f(0)$ ist also auch $\Sigma$ invers zu $\Delta$.
+Dieser Zusammenhang nennt sich \emph{Teleskopsumme}.
 
 \subsection{Formale Potenzreihen}
 Zwischen Potenzreihen und formalen Potenzreihen besteht
