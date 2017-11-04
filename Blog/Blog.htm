@@ -29,6 +29,8 @@
   <a href="#Int">Ganzzahldatentypen</a>
 <li><span class="date">[2017-10-26]</span>
   <a href="#Rust">Gedanken zu Rust</a>
+<li><span class="date">[2017-10-31]</span>
+  <a href="#Rechenaufwand">Rechenaufwand</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -401,7 +403,7 @@ Standard ML auch Mittel zur iterativen Programmierung, aber diese
 stand im Abseits.
 
 <p>In Rust wurde nun das scharfe typtheoretische Modell von
-Standard ML mit dem iterativen Programmierstil kombiniert.
+Standard ML und Haskell mit dem iterativen Programmierstil kombiniert.
 So gibt es die algebraischen Typkonstruktionen Produkt
 (<code>struct</code> wie <code>struct</code> in&nbsp;C,
 <code>record</code> in Pascal) und Summe (<code>enum</code>
@@ -410,12 +412,7 @@ die <code>union</code> entfällt, bleibt das Tag übrig, das ist
 dann eine einfache <code>enum</code> wie in&nbsp;C. Die Summe
 kann man sich als disjunkte Vereinigung von Typen vorstellen,
 wenn man sich die Typen als Mengen von zulässigen Werten vorstellt.
-Eigentlich sind bei Typen aber auch rekursive Typen möglich, was
-zu einem Paradoxen wie der russelschen Antimonie führt. Deshalb
-können Typen im Allgemeinen keine Mengen sein, sondern sind
-viel mehr Klassen. Das kartesische Produkt von Mengen wird
-zum kategorientheortischen Produkt verallgemeinert und
-die disjunkte Vereinigung zum Koprodukt.
+Das Produkt entspricht dem kartesischen Produkt.
 
 <p>Während das Produkt von Typen seinen Weg in die klassischen
 Programmiersprachen gefunden hat, sind typsichere
@@ -533,19 +530,112 @@ Dieser Ansatz ist außerordentlich elegant und ausgeklügelt,
 und ich würde sagen dass das der kanonische Ansatz für eine
 performante Programmiersprache ist.
 
+<p>Eine kleine Schwäche die mir noch aufgefallen ist, ist,
+dass bis jetzt eine Typumwandlung von <code>&amp;[T]</code>
+zu <code>&amp;[T;N]</code> nicht möglich ist. Die Idee ist,
+dass in
+<pre class="code indent">
+<b>fn</b> compose_u32(a: &amp;[u8;4]) &minus;&gt; u32 {
+  (a[3] <b>as</b> u32)&lt;&lt;24 | (a[2] <b>as</b> u32)&lt;&lt;16 |
+  (a[1] <b>as</b> u32)&lt;&lt; 8 | (a[0] <b>as</b> u32)
+}
+</pre>
+bei den Feld-Zugriffen keine Bereichsprüfung notwendig ist.
+Diese Bereichsprüfung würde schon bei
+<code>compose_u32(&amp;a[index..index+4])</code> ausgeführt
+werden. Aber <code>&amp;a[index..index+4] as &amp;[u8;4]</code> ist
+in Rust bis jetzt nicht möglich.
+
 <p>Was Rust m.&nbsp;E. noch fehlt ist ein System zum
 maschinengestützten Beweisen von sicher abstrahierten unsafe-Blöcken.
 Damit lässt sich die Korrektheit von Alogrithmen, welche
 unsafe-Blöcke enthalten, im Nachhinein sicherstellen. Mit
 Korrektheit ist hier gemeint, dass es in keinem Fall zu einer
 Speicherzugriffs-Verletzung und damit undefiniertem Verhalten
-kommen kann. Jedes undefinierte Verhalten stellt nämlich eine
-potentielle Sicherheitslücke dar.
+kommen kann, denn jedes undefinierte Verhalten stellt eine
+potentielle Sicherheitslücke dar. Es ist ja so, dass
+die meisten unsafe-Blöcke keine globalen Auswirkungen
+besitzen, sondern lokal in ihren Modulen abgekapselt sind.
+Es ist nun zu zeigen dass diese Kapselung in ihrer Gesamtheit
+wieder typsicher ist. Wir sprechen von einer typsicheren Abstraktion.
 
-<p>Zusammenfassend wurde ich überzeugt, dass Rust die Sprache
-ist, die das Erbe von C/C++ antreten könnte. Falls es nicht
-Rust selbst ist, ist es eine Sprache die Rust sehr ähnlich
-ist und fast die gleichen Mechanismen besitzt.
+<p>Zusammenfassend ergibt sich für mich, dass Rust das Potenzial
+besitzt, C/C++ abzulösen. Falls es nicht Rust selbst ist,
+ist es eine Sprache die Rust sehr ähnlich ist und fast die gleichen
+Mechanismen besitzt.
+
+<h2 id="Rechenaufwand">Rechenaufwand</h2>
+<div class="date">31. Oktober 2017</div>
+
+<p>Beim Nachdenken über Naturkonstanten und Einheitensysteme bin
+ich zu einer interssanten Überlegung gekommen. Es ist ja so,
+dass das internationale Einheitensytem bald auf Naturkonstanten
+umgestellt werden soll. Der physikalisch gebildete Laie könnte sich
+daraufhin die Frage stellen, wieso die Einheiten nicht gleich im Bezug
+zum plancksche Einheitsystem definiert werden, da dieses doch
+dem State of the Art in der Physik entspricht. Der Grund hierfür
+liegt natürlich in der großen Unsicherheit des Messungen für
+die Gravitationskonstante G. Diese Messunsicherheit überträgt sich
+dem Wesen des planckschen Einheitensystems nach auf die wichtigsten
+Basiseinheiten des internationalen Einheitensystems.
+Ein solcher Ansatz ist also praktisch nicht durchfürbar, solange
+nicht ein äußerst genauer Wert der Graviationskonstante bekannt ist.
+
+<p>Die klassische Bestimmung der Gravitationskonstante über
+eine Gravitationswaage ist zu ungenau. Einen genauen Wert der
+Gravitationskonstante über die Bahnparameter von astronomischen
+Objekten zu schlussfolgern, steht im Zusammenhang mit der genauen
+Kenntnis der Masse eine Planeten. Die Massen der Planeten sind
+offensichtlich auch nicht so genau bekannt.
+
+<p>Eigentlich ist die Gravitationskonstante aber doch eine
+inhärente Eigenschaft unserer Welt. Somit könnte es doch möglich
+sein, alles Wissen über unsere Welt zusammenzunehmen und dann die
+Information über die Gravitationskonstante aus diesem Wissen
+herauszuprojizieren. Praktisch könnte sich dieser Ansatz wie
+folgt gestalten: Man verändert die Gravitationskonstante um einen
+winzigen Bruchteil, belässt aber alle anderen Naturkonstanten bei
+ihrem bekannten Wert. Hierzu wird eine physikalische Simulation
+durchgeführt und mit unserem Universum verglichen. Stellt man dabei
+irgendwann eine Abweichung fest, müsste ein fehlerhafter Wert der
+Gravitationskonstante vorliegen.
+
+<p>Wir legen nun alle anderen aktuellen physikalischen Probleme
+beiseite und stellen uns die Frage, warum ein solcher Ansatz nicht
+durchführbar ist, auch wenn wir die Welt hypothetisch genau verstehen
+würden.
+
+<p>Der Kern des Problemes liegt in der Simulation eines <i>dynamischen
+Systems</i>, die zuviel Rechenaufwand benötigt. Es ist so,
+dass dynamische System exakt, einschließlich exaktem Anfangszustand,
+festgelegt werden können. Durch Simulation können nun die Strukturen,
+welche das System entwickelt (besitzt, schon immer bessen hat,
+siehe <i>laplacescher Dämon</i> etc.),
+beschaut werden. Tatsächlich ist die Physik von diesem Problem
+durchsiebt. Eine Simulation ist immer bei Unkenntnis
+der anlytischen Lösung der Differentialgleichung, durch
+welche das System beschrieben wird, notwendig. Aktuelle Beispiele
+sind Simulationen der theoretischen Chemie und Proteinfaltungen.
+
+<p>Da es mit der Gravitationskonstante viel zu kompliziert ist,
+beschäftiget man sich am besten zuerst mit etwas einfacherem.
+Z.&nbsp;B. sind die Eigenschaften des Wasserstoffatoms
+analytisch berechenbar. Wenn zusätzliche Elektronen ins Spiel kommen,
+kommt aber zunächst nur die numerische Lösung in Frage.
+
+<p>Auch wenn man nur eine bestimmte Frequenz des Spektrums wissen
+möchte, ist dafür die numerische Simulation des gesamten Systems
+notwendig. Muss das so sein? Gibt es nicht einen Trick, der eine
+Berechnung unnötig macht oder zumindest den Rechenaufwand drastisch
+veringert? Könnte man die Frequenz nicht mathematisch vorhersagen,
+ohne die vollständige analytische Lösung zu besitzen?
+
+<p>Das große Problem hierbei ist, dass alle Teilzustände des
+Systems gekoppelt sind und gegenseitigen Einfluss auf sich
+ausüben. Manchmal ist es möglich, bei schwachem Einfluss auf
+Berechnungen zu verzichten. Ein Beispiel wo dieser Ansatz zum
+Erfolg führt, ist der Barnes-Hut-Algorithmus.
+
 </main>
 
 <aside id="right-aside">
