@@ -465,7 +465,7 @@ print(pow(2,-2))
 <p>A failed assertion results in an ordinary exception
 that is shown together with a stack trace.
 
-<h3 data-date="20171024" id="Embedded-slicing-ability"
+<h3 data-date="20171024" id="embedded-slicing-ability"
 >Embedded slicing ability</h3>
 
 <p>If we have a string <code>s</code>, it is expensive to
@@ -539,6 +539,33 @@ y = m(key) else x
 </pre>
 
 <p>In both statements, <code>x</code> is lazily evaluated.
+
+
+<h3 data-date="20171120" id="reflection"
+>Better reflection support</h3>
+
+<p>In Moss, there is the member access operation "<code>a.x</code>".
+One can have reflection this way:
+
+<pre class="moss indent">
+y = record(a)["x"]
+</pre>
+
+<p>Here the problem emerges, that the ordinary index operation
+does not respect the prototype chain. Now we find, that an
+expression "<code>a.x</code>" is parsed into an AST
+<code>(dot a "x")</code>. But the compiler
+ever since the beginning was able to compile the more general
+AST <code>(dot a x)</code> where <code>a</code> and <code>x</code>
+are arbitray expressions. The recursive desecent may simply take an
+atom after the dot. Thus I will introduce the general syntax
+"<code>a.(x)</code>". So, adding very few lines to the compiler allows
+us nice reflection with respect to the prototype chain. For clarity,
+we have:
+
+<pre class="moss indent">
+a.x == a.("x")
+</pre>
 
 </body>
 </html>
