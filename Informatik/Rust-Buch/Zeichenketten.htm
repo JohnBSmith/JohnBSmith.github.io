@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust-Buch.htm">Programmieren in Rust</a>
+<h1>Zeichenketten</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Komplexität">Eine gewisse Komplexität</a>
+<li><a href="#Zeichen">Zeichen</a>
+</ol>
+
+<h2 id="Komplexität">Eine gewisse Komplexität</h3>
+
+<p>Zuerst muss mal gesagt werden, dass Rust eine Programmiersprache
+mit einer gewissen Komplexität ist. Der Zeitpunkt ist günstig, dies
+einfach mal an den Datentypen für Zeichenketten zu verdeutlichen.
+In einer einfachen Programmiersprache gibt es einen Datentyp für
+Zeichenketten, in Rust kann man sie streng genommen nicht mehr an
+der Hand abzählen. Das klingt jetzt zunächst abschreckend, wäre da
+nicht das Prinzip der Orthogonalität.
+
+<table class="bt">
+<tr>
+<th>Typ
+<th>Erklärung
+<tr>
+<td><code>&amp;'static str</code>
+<td>UTF-8-Kette fixer Länge, statisch in der Binärdatei
+<tr>
+<td><code>&amp;'a str</code>
+<td>UTF-8-Kette fixer Länge mit Lebenszeit a
+<tr>
+<td><code>&amp;str</code>
+<td>UTF-8-Kette fixer Länge
+<tr>
+<td><code>String</code>
+<td>Besitz einer dynamischen UTF-8-Kette
+<tr>
+<td><code>&amp;mut String</code>
+<td>Referenz auf eine veränderbare dynamischen UTF-8-Kette
+<tr>
+<td><code>Box&lt;str&gt;</code>
+<td>Besitz einer UTF-8-Kette fixer Länge
+<tr>
+<td><code>Rc&lt;str&gt;</code>
+<td>gemeinschaftlicher Besitz einer UTF-8-Kette fixer Länge
+<tr>
+<td><code>Rc&lt;RefCell&lt;String&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz einer dynamischen UTF-8-Kette
+<tr>
+<td><code>&amp;'static [char]</Code>
+<td>UTF-32-Kette fixer Länge, statisch in der Binärdatei
+<tr>
+<td><code>&amp;[char]</Code>
+<td>UTF-32-Kette fixer Länge
+<tr>
+<td><code>&amp;mut [char]</Code>
+<td>veränderbare UTF-32-Kette fixer Länge
+<tr>
+<td><code>Box&lt;[char]&gt;</Code>
+<td>Besitz einer UTF-32-Kette fixer Länge
+<tr>
+<td><code>Vec&lt;char&gt;</Code>
+<td>Besitz einer dynamischen UTF-32-Kette
+<tr>
+<td><code>Rc&lt;[char]&gt;</code>
+<td>gemeinschaftlicher Besitz einer UTF-32-Kette fixer Länge
+<tr>
+<td><code>Rc&lt;RefCell&lt;[char]&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz, veränderbar, fixe Länge
+<tr>
+<td><code>Rc&lt;RefCell&lt;Vec&lt;char&gt;&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz einer dynamischen UTF-32-Kette
+<tr>
+<td><code>&amp;[u8]</code>
+<td>Byte-Kette fixer Länge
+<tr>
+<td><code>&amp;mut [u8]</code>
+<td>veränderbare Byte-Kette fixer Länge
+<tr>
+<td><code>Vec&lt;u8&gt;</code>
+<td>Besitz einer dynamischen Byte-Kette
+<tr>
+<td><code>&amp;[u16]</code>
+<td>UTF-16-Kette fixer Länge
+<tr>
+<td><code>&amp;mut [u16]</code>
+<td>veränderbare UTF-16-Kette fixer Länge
+<tr>
+<td><code>Vec&lt;u16&gt;</code>
+<td>Besitz einer dynamischen UTF-16-Kette
+<tr>
+<td><code>&amp;CStr</Code>
+<td>nullterminierte Kette fixer Länge
+<tr>
+<td><code>CString</Code>
+<td>Besitz einer nullterminierten dynamischen Kette
+<tr>
+<td><code>&amp;OsStr</code>
+<td>Kette fixer Länge, von plattformabhängiger Gestalt
+<tr>
+<td><code>OsString</code>
+<td>Besitz einer Kette von plattformabhängiger Gestalt
+</table>
+
+<p>Die Typen <code>&amp;mut str</code> und
+<code>Rc&lt;RefCell&lt;str&gt;&gt;</code> darf es nicht geben,
+da UTF-8-Zeichenketten nicht allgemein manipuliert werden können,
+ohne deren Länge zu ändern. Für solche Aufgaben sollte der
+Typ <code>str</code> in den Typ <code>[u8]</code> transmutiert
+werden. Bei der Rückkehr von <code>[u8]</code> nach <code>str</code>
+muss man Vorsicht walten lassen, da das UTF-8 invalide sein könnte.
+
+<h2 id="Zeichen">Zeichen</h3>
+
+<p>In Rust gibt es folgende Typen für einzelne Zeichen:
+<table class="bt indent">
+<tr>
+<th>Typ
+<th>Erklärung
+<tr>
+<td><code>u8</code>
+<td>ein Byte
+<tr>
+<td><code>u16</code>
+<td>ein UTF-16-Zeichen
+<tr>
+<td><code>char</code>
+<td>ein UTF-32-Zeichen
+</table>
+
+<p>Ein UTF-32-Zeichen kann über einen expliziten Typcast in eine blanke
+32-Bit-Zahl umgewandelt werden und umgekehrt:
+<pre class="rust indent">
+let x = 'a' as u32;
+let c = 97 as char;
+</pre>
+
+<p>Warum es für ASCII und UTF-16 keine eigenen Datentypen gibt,
+ist auch für mich unklar. Man kann sich die abstrakten Datentypen
+aber grundsätzlich mit <code>struct</code> selbst definieren, wobei
+inline-Funktionen eine Zero-Cost-Abstraktion ermöglichen.
+
+</body>
+</html>
+

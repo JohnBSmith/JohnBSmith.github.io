@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust-Buch.htm">Programmieren in Rust</a>
+<h1>Typsicherheit</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Validierung">Validierung</a>
+</ol>
+
+<h2 id="Validierung">Validierung</h3>
+
+<p>Angenommen, wir erhalten über eine Schnittstelle eine
+Zeichenkette die aus genau vier dezimalen Ziffern bestehen soll.
+Diese Zeichenkette wird später in eine Zahl umgewandelt und für
+einen Datenbankindex verwendet. Nun ist es aber so, dass diese
+Zeichenkette von einem Client zu einem Server kommt. Das Client-Programm
+übergibt jedoch eine Zeichenkette die eine falsche Zahl von Ziffern
+besitzt oder Buchstaben enthält. Dies führt dazu dass das Datenbanksystem
+in einen invaliden Zustand gerät und ein über Monate lang umbemerktes
+Datenleck entsteht.
+
+<p>Das Problem hier ist, dass einer der Programmier
+vielleicht nicht gewusst hat, dass die Daten vor der Benutzung hätten
+validiert werden müssen.
+
+<p>In Rust kann eine solche Validierung vom Typsystem erzwungen
+werden, indem für die validierten Daten ein eigener Datentyp definiert
+wird, nennen wir ihn <code>Datenbankindex</code>. Die Idee dabei ist,
+dass erstens die betroffenen Unterprogramme nur Werte vom Typ
+<code>Datenbankindex</code> entgegennehmen und zweitens
+ein solcher Wert nur über eine Validierung erzeugt werden kann.
+
+<pre class="rust indent">
+mod db{
+    #[derive(Clone,Copy)]
+    pub struct Datenbankindex{
+        index: u16
+    }
+    fn is_digit(c: char) -&gt; bool {
+        48&lt;=(c as u32) &amp;&amp; (c as u32)&lt;=57
+    }
+    impl Datenbankindex{
+        pub fn new(s: &amp;str) -&gt; Option&lt;Self&gt; {
+            let a: Vec&lt;char&gt; = s.chars().collect();
+            if a.len()==4 &amp;&amp;
+                is_digit(a[0]) &amp;&amp; is_digit(a[1]) &amp;&amp;
+                is_digit(a[2]) &amp;&amp; is_digit(a[3])
+            {
+                return Some(Datenbankindex{
+                    index: s.parse::&lt;u16&gt;().unwrap()
+                });
+            }else{
+                return None;
+            }
+        }
+        pub fn get(&amp;self) -&gt; u16 {
+            self.index
+        }
+    }
+}
+
+use std::io;
+use std::io::Write;
+
+fn main(){
+    loop {
+        print!("Index: ");
+        if io::stdout().flush().is_err() {println!();}
+        let mut s = String::new();
+        io::stdin().read_line(&amp;mut s).unwrap();
+        s.pop();
+        match db::Datenbankindex::new(&amp;s) {
+            Some(index) =&gt; {
+                DatenbankZugriff(index)
+            },
+            None =&gt; {
+                println!("Fehler: ungültiger Datenbankindex.");
+                continue;
+            }
+        };
+    }
+}
+
+#[allow(non_snake_case)]
+fn DatenbankZugriff(index: db::Datenbankindex){
+    println!("Validierter Index: {}",index.get());
+}
+</pre>
+
+<p>Hierzu ist zu bemerken, dass das Feld <code>index</code>
+von <code>Datenbankindex</code> privat ist. Daher besteht der Zugang
+zu Werten vom Typ <code>Datenbankindex</code> nur über die öffentlichen
+Funktionen <code>new</code> und <code>get</code>.
+
+<p>Die Idee ist nun, die Steuerung der Datenbank von ihrem Kernel zu
+abstrahieren. Bei der Ansteuerung der Datenbank sollte es nie
+zu einem invaliden Zustand kommen. Lediglich im Kernel besteht Zugriff
+auf die private Funktionalität, bei der das System auch zerstört
+werden kann, wenn man nicht vorsichtig ist.
+
+<p>In Verbindung hiermit kann gesagt werden, dass die Maxime eine
+möglichst strenge Typisierung der gesamten Datenverarbeitung sein
+sollte.
+
+</body>
+</html>
+

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust-Buch.htm">Programmieren in Rust</a>
+<h1>Elementare Datentypen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Ganzzahlen">Ganzzahlen</a>
+</ol>
+
+<h2 id="Ganzzahlen">Ganzzahlen</h3>
+
+<p>Die vorzeichenlosen Ganzzahl-Datentypen in Rust sind
+<code>u8</code>, <code>u16</codE>, <code>u32</codE> und <code>u64</code>.
+Das <code>u</code> steht hierbei für <i>unsigned</i> (engl. vorzeichenlos)
+und die Zahl dahinter ist die Anzahl der Bits. Ein Bit ist eine
+binäre Ziffer. Eine Speicherzelle mit <var>n</var> Bits kann also die
+2<sup><var>n</var></sup> Zahlen von 0 bis 2<sup><var>n</var></sup>&minus;1
+speichern.
+
+<p>Neben den vorzeichenlosen gibt es auch noch die vorzeichenbehafteten
+Typen <code>i8</code>, <code>i16</code>, <code>i32</code> und <code>i64</code>.
+Das <code>i</code> steht dabei für <i>integer</i>.
+Das Vorzeichen wird hier nicht im ersten oder letzten Bit gespeichert.
+Stattdessen liegen die Zahlen in der Zweier-Komplement-Darstellung vor.
+Der Zahlenvorrat reicht hier von &minus;2<sup><var>n</var>&minus;1</sup>
+bis 2<sup><var>n</var>&minus;1</sup>&minus;1.
+
+<p>Außerdem gibt es noch die Typen <code>usize</code> und
+<code>isize</code>. Der Typ <code>usize</code> ist ein Aliasname
+für <code>u32</code> oder <code>u64</code>, je nachdem ob ein
+32-Bit-Programm oder ein 64-Bit-Programm vorliegt. Ein 64-Bit-Programm
+hat u.&nbsp;a. den Vorteil, dass es mehr als 4&nbsp;GB Arbeitsspeicher
+adressieren kann. Es gibt reine <var>n</var>-Bit-Architekturen auf
+denen nur <var>n</var>-Bit-Programme ausgeführt werden können.
+Auf eingeschränkten Microcontrollern kann auch <var>n</var>=16
+oder gar <var>n</var>=8 sein.
+
+<p>Wir wollen nun die Zahl 12 an den Bezeichner <code>x</code> binden.
+Das geschieht wie folgt:
+
+<pre class="rust indent">
+let x: i32 = 12 as i32;
+</pre>
+
+<p>Hier muss man zunächst bemerken, dass der Rust-Compiler in der
+Lage ist, den Typ von <code>x</code> aus dem Ausdruck auf der
+rechten Seite vom Zuweisungszeichen »=« zu erkennen. Dieser Vorgang
+nennt sich Typ-Inferenz. Man darf also kürzer schreiben:
+
+<pre class="rust indent">
+let x = 12 as i32;
+</pre>
+
+<p>Die Typ-Inferenz erfolgt nun auch rückwärts. Somit ist bekannt
+dass es sich beim Literal 12 um eine <code>i32</code>-Zahl handelt. Eine
+Kurzschreibweise hierfür ist <code>12i32</code>. Die folgenden
+Formen sind also äquivalent:
+
+<pre class="rust indent">
+let x = 12i32;     // Vorwärts-Typinferenz
+let x: i32 = 12;   // Rückwärts-Typinferenz
+let x = 12 as i32; // Vorwärts- und Rückwärts-Typinferenz
+</pre>
+
+<p>Da aber <code>i32</code> der Standard-Ganzzahl-Datentyp ist,
+wird dieser angenommen, falls kein Typ inferiert werden kann.
+Man kann hier also kurz schreiben:
+
+<pre class="rust indent">
+let x = 12;
+</pre>
+
+<p>Angenommen wir benötigen nun einen Ganzzahltyp, der auf einem
+Computer <code>u16</code> und auf dem anderen Computer <code>u32</code>
+ist. Rust bietet diese Möglichkeit der Abstraktion, indem es uns einen
+Typ-Alias wie <code>usize</code> definieren lässt:
+
+<pre class="rust indent">
+type uint = u32;
+let x = 12 as uint;
+</pre>
+
+<p>Hier ist <code>uint</code> ein Alias für <code>u32</code>.
+Durch Änderung ein einzigen Zeile kann ein komplexes Computerprogramm
+nun an eine andere Architektur angepasst werden. Auch die
+Automatisierung dieser Änderung ist möglich. Durch Änderung
+der Konfiguration in einer Datei ließe sich ein ganzes Softwaresystem
+anpassen. Ein solcher Extremfall ist z.&nbsp;B. <code>usize</code>.
+
+<p>Oft liegt die Situation vor, dass eine Typumwandlung zwischen
+Typen notwendig ist. In Rust gibt es hierfür das Schlüsselwort
+»<code>as</code>«. Implizite Typumwandlungen zwischen Zahlen
+gibt es in Rust nicht.
+
+<pre class="rust indent">
+let x: u8 = 12;
+let y = x as u32;
+</pre>
+
+<p>Bei einer Umwandlung von <code>u8</code> nach <code>u32</code>
+werden ganz einfach drei höherwertige Nullbytes hinzugefügt. 
+
+<pre class="indent">
+Vorher   u8: 00001100
+Nachher u32: 00000000 00000000 00000000 00001100
+</pre>
+
+<p>Bei einer Umwandlung von <code>u32</code> nach <code>u8</code>
+werden die drei höherwertigen Bytes abgeschnitten, was zu
+Informationsverlust führen kann.
+
+<p>Tatsächlich kann man in Rust die binäre, oktale und hexadezimale
+Darstellung einer Zahl einfach in den Quelltext schreiben:
+
+<pre class="rust indent">
+let x: u32 = 0b00000000_00000000_00000000_00001100;
+let x: u32 = 0b1100; // kurz
+let x: u32 = 0x00_00_00_0c; // hexadezimal
+let x: u32 = 0x0000000c; // hexadezimal ohne Trennzeichen
+let x: u32 = 0xc; // hexadezimal, kurz
+let x: u32 = 0o14; // oktal
+</pre>
+
+<p>Der Unterstrich darf an beliebigen Stellen eingefügt werden
+und dient ausschließlich als Mittel um bessere Lesbarkeit
+zu ermöglichen. Auch die Ausgabe in den unterschiedlichen
+Darstellungen ist möglich:
+
+<pre class="rust indent">
+let x: u32 = 12;
+println!("{}, 0b{:b}, 0x{:x}, 0o{:o}",x,x,x,x);
+
+// Ausgabe:
+// 12, 0b1100, 0xc, 0o14
+</pre>
+
+</body>
+</html>
+
