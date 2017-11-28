@@ -61,6 +61,7 @@ var eqepsilon=0.01;
 var precision=10;
 var shortmode=0;
 var gc=0.57721566490153286;
+
 var animation=false;
 var plot=fplot;
 
@@ -73,7 +74,9 @@ var vtab={
   "e": {value: Math.E},
   "gc": {value: gc},
   "deg": {value: Math.PI/180},
-  "grad": {value: Math.PI/180}
+  "grad": {value: Math.PI/180},
+  "gon": {value: Math.PI/200},
+  "gr": {value: 1.61803398874989484}
 };
 
 var ftab = {
@@ -94,7 +97,7 @@ var ftab = {
   "asech": asech, "acsch": acsch,
   "arsinh": asinh, "arcosh": acosh, "artanh": atanh, "arcoth": acoth,
   "arsech": asech, "arcsch": acsch,
-  "gamma": gamma, "fac": fac, "digamma": digamma,
+  "gamma": gamma, "fac": fac, "digamma": digamma, "psi": digamma,
   "erf": erf, "erfc": erfc, "norm": norm, "gd": gd,
   "K": eiK, "E": eiE,
   "H": step, "W": lambertw, "Wm1": lambertwm1,
@@ -128,7 +131,7 @@ var ftab2 = {
   "BY": BesselY, "By": Bessely,
   "BI": BesselI, "BK": BesselK,
   "bc": bc, "get": fget,
-  "table": table, "pgamma": pgamma, "gpgamma": gpgamma,
+  "table": table, "pgamma": pgamma, "gpgamma": gpgamma, "psi": pgamma,
   "zeta": hzeta, "Li": pLi, "B": Beta,
   "inv": inv, "En": En,
   "PT": ChebyshevT, "PU": ChebyshevU, "PH": Hermite,
@@ -2493,6 +2496,10 @@ function scan(s,d){
       i++; j=i;
       while(i<s.length && s[i]!='"') i++;
       push_token(a,Tstring,s.slice(j,i));
+      i++;
+    }else if(s[i]=='\u00b0'){
+      push_token(a,Top,"*");
+      push_token(a,Tid,"grad");
       i++;
     }else{
       error("Unexpected character: \""+s[i]+"\"");
