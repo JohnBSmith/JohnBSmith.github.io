@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust-Buch.htm">Programmieren in Rust</a>
+<h1>Trait-Objekte</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Laufzeit-Polymorphie">Laufzeit-Polymorphie</a>
+</ol>
+
+<h2 id="Laufzeit-Polymorphie">Laufzeit-Polymorphie</h2>
+
+<p>In Rust dient das Trait-System auch dem Zweck der Verwirklichung
+von Laufzeit-Polymorphie. Zum Beispiel ist es möglich ein Feld
+zu konstruieren, dessen Elemente jeweils einen unterschiedlichen
+Typ besitzen. Zunächst kommt man auf die Idee eine solche
+Konstruktion als Summentyp (<code>enum</code>)
+zu verwirklichen:
+
+<pre class="indent rust">
+enum Item{
+    Int(i32),
+    String(String)
+}
+
+impl Item{
+    pub fn items_to_string(a: &amp;[Item]) -&gt; String {
+        let mut s = "[".to_string();
+        let mut first = true;
+        for x in a {
+            if first {first=false;} else {s.push_str(", ");}
+            s.push_str(&amp;match *x {
+                Item::Int(i)=&gt;format!("{}",i),
+                Item::String(ref s)=&gt;format!("{}",s)
+            });
+        }
+        s.push_str("]");
+        return s;
+    }
+}
+
+fn main() {
+    let v = vec![
+        Item::String("Boot".to_string()),
+        Item::Int(12)
+    ];
+    println!("{}",Item::items_to_string(&amp;v));
+}
+</pre>
+
+<p>Ein solcher Ansatz ist für große Felder mit vielen kleinen
+Elementen effizienter als Konstruktionen mit Referenz-Strukturen.
+Referenz-Strukturen müssen auf der Halde (oder auf einer Arena)
+alloziert werden. Außerdem kann man die Überlegung aufstellen, ob die
+Referenz-Strukturen durch die Indirektion zu fragmentiertem Speicher
+zu schlechterer Cache-Lokalität führen können. Fragmentierung kann unter
+bestimmten Voraussetzungen natürlich durch einen vernünftigen
+Arena-Allokator vermieden werden.
+
+<p>Eine allgemeine Polymorphie ergibt sich bei einfachen Summentypen
+aber nicht, da die verfügbaren Varianten im Vornherein bekannt sein
+müssen. Zur Aufhebung dieser Beschränkung wird die Grundkonstruktion
+der objektorientierten Programmierung herangezogen: eine
+Dispatch-Tabelle, auch »Tabelle virtueller Methoden«
+genannt.
+
+<p>Jedes Objekt bekommt einen Zeiger auf eine Dispatch-Tabelle,
+die eine untrennbare Verbindung von Methoden zu ihrem Objekt
+ermöglicht. Jede Methode eines Objektes wird dann über diese
+Dispatch-Tabelle aufgerufen. Die Polymorphie ergibt sich nun dadurch,
+dass für jeden Datentyp eine separate Dispatch-Tabelle vorhanden ist.
+
+<p>In Rust ist es nun so, dass der Zeiger auf die Dispatch-Tabelle
+nicht in der Struktur des Objektes gespeichert ist, sondern dem
+Objekt-Zeiger hinterhergestellt wird. Man spricht von einem
+<i>Fat-Pointer</i>, das ist einfach ein Tupel aus den beiden Zeigern.
+
+<p>Ein Datentyp <code>T</code> soll nun den Trait <code>A</code>
+implementieren. Hierbei werden die (Methodenzeiger auf die)
+Implementationen der Methoden von <code>A</code> zur Dispatch-Tabelle
+von <code>T</code> hinzugefügt. Man kann auch von den »realen«
+Implementationen der »virtuellen« Methoden von <code>A</code> sprechen,
+womit ausgerückt wird dass der Trait <code>A</code> für sich allein
+nur ein Interface ist.
+
+<p>Bei einem Upcast von <code>T</code> zu <code>Box&lt;A&gt;</code>
+wird automatisch ein Fat-Pointer erstellt. Bei <code>Box&lt;T&gt;</code>
+ist das offensichtlich nicht notwendig, da die Methode hier bereits zur
+Kompilierzeit angegeben werden kann. Ein Objekt vom Typ
+<code>Box&lt;A&gt;</code> wird Trait-Objekt genannt. Andere
+Smart-Pointer wie <code>Rc&lt;A&gt;</code> sind ebenfalls möglich.
+
+<pre class="rust indent">
+trait Item {
+    fn to_string(&amp;self) -&gt; String;
+}
+
+impl Item for i32 {
+    fn to_string(&amp;self) -&gt; String {
+        format!("{}",self)
+    }
+}
+
+impl Item for String {
+    fn to_string(&amp;self) -&gt; String {
+        self.clone()
+    }
+}
+
+fn items_to_string(a: &amp;[Box&lt;Item&gt;]) -&gt; String {
+    let mut s = "[".to_string();
+    let mut first = true;
+    for x in a {
+        if first {first=false;} else {s.push_str(", ");}
+        s.push_str(&amp;x.to_string());
+    }
+    s.push_str("]");
+    return s;
+}
+
+fn main() {
+    let v: Vec&lt;Box&lt;Item&gt;&gt; = vec![
+        Box::new("Boot".to_string()),
+        Box::new(12)
+    ];
+    println!("{}",items_to_string(&amp;v));
+}
+</pre>
+
+<p>Zufälligerweise enthält der Trait <code>ToString</code>
+aus der Standardbibliothek bereits die Methode <code>to_string</code>,
+einschließlich der Implementationen für die grundlegenden Datentypen.
+Hätten wir <code>to_representation</code> genommen, die
+Anführungszeichen um Zeichenketten zeigen soll, wäre das nicht der Fall.
+
+<p>Rust besitzt <i>Trait-Vererbung</i>. Hierbei werden einfach die
+Methoden aus anderen Traits automatisch zum Trait hinzugefügt.
+Für jeden implementierten Typ wird dabei zur Kompilierzeit eine
+Dispatch-Tabelle erzeugt, bei der automatisch die Methodenzeiger der
+anderen Trait-Implementationen hinzugefügt werden. Die Angabe der Methode
+<code>to_string</code> wird überflüssig:
+
+<pre class="rust indent">
+use std::string::ToString;
+trait Item: ToString {}
+impl Item for i32 {}
+impl Item for String {}
+</pre>
+
+<p>Bei einem Upcast von einem speziellen Trait <code>S: A</code>
+zum allgemeineren Trait <code>A</code> muss der Zeiger auf
+die Dispatch-Tabelle <code>impl S for T</code> gegen einen Zeiger auf
+die Dispatch-Tabelle <code>impl A for T</code> ausgetauscht
+werden. Andernfalls müsste man mit fragmentierten Dispatch-Tabellen
+arbeiten, deren interne Implementation unelegant und ineffizient ist.
+
+</body>
+</html>
+
