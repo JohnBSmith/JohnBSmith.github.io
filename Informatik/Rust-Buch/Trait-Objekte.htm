@@ -14,14 +14,17 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Laufzeit-Polymorphie">Laufzeit-Polymorphie</a>
+<li><a href="#Downcasts">Downcasts</a>
 </ol>
 
 <h2 id="Laufzeit-Polymorphie">Laufzeit-Polymorphie</h2>
-
 <p>In Rust dient das Trait-System auch dem Zweck der Verwirklichung
 von Laufzeit-Polymorphie. Zum Beispiel ist es möglich ein Feld
 zu konstruieren, dessen Elemente jeweils einen unterschiedlichen
-Typ besitzen. Zunächst kommt man auf die Idee eine solche
+Typ besitzen.
+
+<h3>Summentypen</h3>
+<p>Zunächst kommt man auf die Idee eine solche
 Konstruktion als Summentyp (<code>enum</code>)
 zu verwirklichen:
 
@@ -65,6 +68,7 @@ zu schlechterer Cache-Lokalität führen können. Fragmentierung kann unter
 bestimmten Voraussetzungen natürlich durch einen vernünftigen
 Arena-Allokator vermieden werden.
 
+<h3>Dispatch-Tabellen</h3>
 <p>Eine allgemeine Polymorphie ergibt sich bei einfachen Summentypen
 aber nicht, da die verfügbaren Varianten im Vornherein bekannt sein
 müssen. Zur Aufhebung dieser Beschränkung wird die Grundkonstruktion
@@ -95,9 +99,11 @@ nur ein Interface ist.
 wird automatisch ein Fat-Pointer erstellt. Bei <code>Box&lt;T&gt;</code>
 ist das offensichtlich nicht notwendig, da die Methode hier bereits zur
 Kompilierzeit angegeben werden kann. Ein Objekt vom Typ
-<code>Box&lt;A&gt;</code> wird Trait-Objekt genannt. Andere
-Smart-Pointer wie <code>Rc&lt;A&gt;</code> sind ebenfalls möglich.
+<code>Box&lt;A&gt;</code> wird Trait-Objekt genannt. Auch die Borrows
+vom Typ <code>&amp;A</code> und <code>&amp;mut A</code>
+sind Fat-Pointer.
 
+<p>Der polymorphe Ansatz gestaltet sich wie folgt:
 <pre class="rust indent">
 trait Item {
     fn to_string(&amp;self) -&gt; String;
@@ -134,6 +140,13 @@ fn main() {
     println!("{}",items_to_string(&amp;v));
 }
 </pre>
+<p>Durch Hinzufügen von <code>impl Item for T</code> für eine
+unbeschränkte Anzahl von weiteren, erst in speziellen Situationen
+bekannten Typen <code>T</code> lässt die polymorphe Funktion
+<code>items_to_string</code> für alle diese Typen nutzen.
+Die Funktion <code>items_to_string</code> liegt dabei tatsächlich
+polymorph im Maschinencode vor.
+
 
 <p>Zufälligerweise enthält der Trait <code>ToString</code>
 aus der Standardbibliothek bereits die Methode <code>to_string</code>,
@@ -161,6 +174,167 @@ die Dispatch-Tabelle <code>impl S for T</code> gegen einen Zeiger auf
 die Dispatch-Tabelle <code>impl A for T</code> ausgetauscht
 werden. Andernfalls müsste man mit fragmentierten Dispatch-Tabellen
 arbeiten, deren interne Implementation unelegant und ineffizient ist.
+
+<h3>Dispatch-Tabellen bei Vererbung</h3>
+
+<p>Angenommen wir haben die folgende Situation:
+<pre class="rust indent">
+trait A {fn f(); fn g();}
+trait B {fn h();}
+trait S: A,B {fn s();}
+</pre>
+
+<p>Für jeden Typen <code>T</code> mit Trait-Implementationen zu
+<code>A,B,S</code> werden nun die folgenden
+Dispatch-Tabellen erzeugt:
+<pre class="rust indent">
+(S for T).vtable = (T::f, T::g, T::h, T::s);
+(A for T).vtable = (T::f, T::g);
+(B for T).vtable = (T::h);
+</pre>
+
+<p>Da hier eine Einbettung vorliegt, können die Bestandteile
+der größten Dispatch-Tabelle gemeinsam genutzt werden:
+<pre class="rust indent">
+(S for T).vtable = (T::f, T::g, T::h, T::s);
+(A for T).vtable = (S for T).vtable[0..2];
+(B for T).vtable = (S for T).vtable[2..3];
+</pre>
+
+<p>Der Methodenaufruf geschieht nun wie folgt:
+<pre class="rust indent">
+let x: Box&lt;S&gt; = Box::new(T);
+let (pdata,pvtable): (&amp;T,&amp;(S for T)) = x;
+
+x.f() == pvtable.0(),
+x.g() == pvtable.1(),
+x.h() == pvtable.2(),
+x.s() == pvtable.3()
+</pre>
+<p>Bzw. wenn ein self-Argument vorliegt:
+<pre class="rust indent">
+x.f() == pvtable.0(pdata)
+</pre>
+
+<h2 id="Downcasts">Downcasts</h2>
+<p>Manchmal möchte man ein Trait-Objekt vom Trait <code>A</code>
+zum Typ <code>T</code> wieder in das passende Objekt vom Typ
+<code>T</code> umwandeln. Um Typsicherheit zu gewährleisten muss
+zur Laufzeit eine Typ-Identifikation überprüft werden, die im
+Objekt gespeichert wird. Prinzipiell ließe sich die Speicheradresse
+der Dispatch-Tabelle als Typ-Identifikation nehmen. Da diese
+neben dem Objektzeiger liegt, wäre zum Laden nicht einmal eine
+Indirektion notwendig.
+
+<p>Der Funktionalität der Typ-Identifikation ist im Trait
+<code>Any</code> implementiert. Hier zunächst ein einfaches Beispiel
+mit einem Upcast und einem Downcast:
+<pre class="rust indent">
+use std::any::Any;
+
+fn main() {
+    let x: Box&lt;Any&gt; = Box::new(12);
+    let n: i32 = *match x.downcast_ref::&lt;i32&gt;() {
+        Some(n)=&gt;n,
+        None=>panic!()
+    };
+    println!("{}",n);
+}
+</pre>
+
+<p>Es lässt sich auch einfach ein Typtest vornehmen:
+<pre class="rust indent">
+use std::any::Any;
+
+fn main() {
+    let x: Box&lt;Any&gt; = Box::new(12);
+    assert_eq!(true,x.is::&lt;i32&gt;());
+}
+</pre>
+
+<p>Beim Methoden-Aufruf ist zunächst auch ein Downcast notwendig:
+<pre class="rust indent">
+use std::any::Any;
+
+trait Item{
+    fn to_string(&amp;self) -&gt; String;
+}
+
+impl Item for i32 {
+    fn to_string(&amp;self) -&gt; String {
+        format!("{}",self)
+    }
+}
+
+fn main() {
+    let x: Box&lt;Any&gt; = Box::new(12);
+    let item = x.downcast_ref::&lt;i32&gt;().unwrap() as &amp;Item;
+    println!("{}",item.to_string());
+}
+</pre>
+
+<p>Ein Downcast für ein allgemeines Objekt lässt sich durch
+eine Methode <code>as_any</code> ermöglichen, die einen
+Upcast nach <code>Any</code> durchführt:
+
+<pre class="rust indent">
+use std::any::Any;
+
+trait Item{
+    fn to_string(&amp;self) -&gt; String;
+    fn as_any(&amp;self) -&gt; &amp;Any;
+}
+impl Item for i32 {
+    fn to_string(&amp;self) -&gt; String {
+        format!("{}",self)
+    }
+    fn as_any(&amp;self) -&gt; &amp;Any {
+        self
+    }
+}
+
+fn main() {
+    let x: Box&lt;Item&gt; = Box::new(12);
+    println!("{}",x.to_string());
+    let n: i32 = *x.as_any().downcast_ref::&gt;i32&gt;().unwrap();
+    println!("{}",n);
+}
+</pre>
+
+<p>Hierbei lässt sich <code>Item</code> auch für eigene Datentypen
+implementieren:
+
+<pre class="rust indent">
+struct Point{
+  x: i32, y: i32
+}
+
+impl Item for Point {
+    fn to_string(&amp;self) -&gt; String {
+        format!("({}|{})",self.x,self.y)
+    }
+    fn as_any(&amp;self) -&gt; &amp;Any {
+        self
+    }
+}
+
+fn main() {
+    let x: Box&lt;Item&gt; = Box::new(Point{x: 1, y: 2});
+    println!("{}",x.to_string());
+    let p: &amp;Point = x.as_any().downcast_ref::&lt;Point&gt;().unwrap();
+    println!("({}|{})",p.x,p.y);
+}
+</pre>
+<p>Eine andere Überlegung geht davon aus dass <code>Item</code>
+von <code>Any</code> erben soll. Ein solcher Ansatz ist aber aus
+bestimmten Gründen nicht möglich.<sup><a href="#1">1</a></sup>
+
+<h2>Fußnoten</h2>
+<ol>
+<li id="1">Siehe hierzu
+  »<a href="https://stackoverflow.com/questions/33687447/how-to-get-a-struct-reference-from-a-boxed-trait"
+  >How to get a struct reference from a boxed trait?</a>«. In: StackOverflow (rust, traits) 2015.
+</ol>
 
 </body>
 </html>
