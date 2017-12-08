@@ -192,7 +192,7 @@ var ftabn = {
   "short": short, "save": save,
   "ani": animate, "hsl": colorHSL,
   "scatter": scatter, "box": box,
-  "font": setfont
+  "font": setfont, "pc": load_pc
 };
 
 function isalpha(s){
@@ -3926,6 +3926,31 @@ function calc_keys(event){
   if(event.keyCode==13){
     calc();
   }
+}
+
+function load_async(URL,callback){
+  var r = new XMLHttpRequest();
+  r.overrideMimeType("text/plain");
+  r.open("GET",URL,true);
+  r.onreadystatechange = function(){
+    if(r.readyState === XMLHttpRequest.DONE){
+      if(r.status === 200){
+        callback(r.responseText);
+      }else{
+        throw ["Error: could not load '", URL, "'."].join("");
+      }
+    }
+  };
+  r.send(null);
+}
+
+function load_pc(stack,argc){
+  load_async("pc.js",function(code){
+    var t = eval(code);
+    for(var x in t){
+      vtab[x] = {value: t[x]};
+    }
+  });
 }
 
 window.onload = initclick;

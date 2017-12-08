@@ -112,12 +112,15 @@ nicht das Prinzip der Orthogonalität.
 </table>
 
 <p>Die Typen <code>&amp;mut str</code> und
-<code>Rc&lt;RefCell&lt;str&gt;&gt;</code> darf es nicht geben,
-da UTF-8-Zeichenketten nicht allgemein manipuliert werden können,
-ohne deren Länge zu ändern. Für solche Aufgaben sollte der
-Typ <code>str</code> in den Typ <code>[u8]</code> transmutiert
-werden. Bei der Rückkehr von <code>[u8]</code> nach <code>str</code>
+<code>Rc&lt;RefCell&lt;str&gt;&gt;</code> dürfen nicht auf normale
+Art verwendet werden, da UTF-8-Zeichenketten nicht allgemein
+manipuliert werden können, ohne deren Länge zu ändern. Für solche
+Aufgaben sollte der Typ <code>&amp;mut str</code> in den Typ
+<code>&amp;mut [u8]</code> transmutiert werden. Bei der Transmutation
+von <code>&amp;[u8]</code> nach <code>&amp;str</code>
 muss man Vorsicht walten lassen, da das UTF-8 invalide sein könnte.
+Hierfür ist die Funktion <code>from_utf8</code> vorgesehen, die
+eine Überprüfung vornimmt.
 
 <h2 id="Zeichen">Zeichen</h3>
 
