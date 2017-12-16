@@ -13,8 +13,9 @@ var rust_keyword = {
   "else": 0, "enum": 0, "false": 0, "fn": 0, "for": 0,
   "if": 0, "impl": 0, "let": 0, "loop": 0,
   "match": 0, "mod": 0, "mut": 0, "pub": 0,
-  "return": 0, "struct": 0,
-  "trait": 0, "true": 0, "type": 0, "use": 0, "while": 0
+  "return": 0, "static": 0, "struct": 0,
+  "trait": 0, "true": 0, "type": 0, "use": 0,
+  "where": 0, "while": 0
 };
 
 function rust_syntax(s){
@@ -56,15 +57,20 @@ function rust_syntax(s){
       st+="\"</span>";
       s2+=st;
     }else if(c=="'"){
-      st="<span class='string'>'";
-      i++;
-      while(i<s.length && s[i]!="'"){
-        st+=s[i];
+      if(i+2<s.length && (s[i+2]=="'" || s[i+1]=='\\')){
+        st="<span class='string'>'";
+        i++;
+        while(i<s.length && s[i]!="'"){
+          st+=s[i];
+          i++;
+        }
+        i++;
+        st+="'</span>";
+        s2+=st;
+      }else{
+        s2 += "<span class='symbol'>'</span>";
         i++;
       }
-      i++;
-      st+="'</span>";
-      s2+=st;
     }else if(c=='#'){
       st="<span class='preprocessor'>";
       while(i<s.length && s[i]!='\n'){
