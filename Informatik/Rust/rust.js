@@ -14,7 +14,7 @@ var rust_keyword = {
   "if": 0, "impl": 0, "let": 0, "loop": 0,
   "match": 0, "mod": 0, "mut": 0, "pub": 0,
   "return": 0, "struct": 0,
-  "trait": 0, "true": 0, "type": 0, "use": 0
+  "trait": 0, "true": 0, "type": 0, "use": 0, "while": 0
 };
 
 function rust_syntax(s){

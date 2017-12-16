@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zahlentheorie</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Zahlentheorie</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#ggT">Größter gemeinsamer Teiler</a>
+<li><a href="#kgV">Kleinstes gemeinsames Vielfaches</a>
+<li><a href="#Primzahlen">Primzahlen</a>
+<li><a href="#Teiler">Teiler</a>
+</ol>
+
+<h2 id="ggT">Größter gemeinsamer Teiler</h2>
+<pre class="rust">
+// Klassischer euklidischer Algorithmus, rekursiv
+fn gcd(a: u32, b: u32) -&gt; u32 {
+    return if b==0 {a}
+      else if a==0 {b}
+      else if b&lt;a {gcd(a-b,b)}
+      else {gcd(a,b-a)};
+}
+
+// Klassischer euklidischer Algorithmus, iterativ
+fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
+    if a==0 {
+        return b;
+    }else{
+        while b != 0 {
+            if b&lt;a {a=a-b;} else {b=b-a;}
+        }
+        return a;
+    }
+}
+
+// Moderner euklidischer Algorithmus, rekursiv
+fn gcd(a: u32, b: u32) -&gt; u32 {
+    return if b==0 {a} else {gcd(b,a%b)};
+}
+
+// Moderner euklidischer Algorithmus, iterativ
+// ("Turbo-Euklid")
+fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
+    while b != 0 {
+        let h = a%b;
+        a=b; b=h;
+    }
+    return a;
+}
+</pre>
+
+<h2 id="kgV">Kleinstes gemeinsames Vielfaches</h2>
+<pre class="rust">
+fn lcm(a: u32, b: u32) -&gt; u32 {
+    return a*b/gcd(a,b);
+}
+
+fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
+    return a.iter().fold(1,|a,&amp;b| {a*b/gcd(a,b)});
+}
+</pre>
+
+<h2 id="Primzahlen">Primzahlen</h2>
+<pre class="rust">
+// Naiver Primzahltest
+fn isprime(n: u64) -&gt; bool {
+    return (1..n+1).filter(|i| n%i==0).count()==2;
+}
+
+fn isprime(n: u64) -&gt; bool {
+    for i in 2..n {
+        if n%i==0 {return false;}
+    }
+    return true;
+}
+
+// Verbesserter Primzahltest
+fn isprime(n: u64) -&gt; bool {
+    let mut i: u64 = 2;
+    while i*i&lt;=n {
+        if n%i==0 {return false;}
+        i+=1;
+    }
+    return true;
+}
+
+// Primfaktorzerlegung
+fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
+    let mut v: Vec&lt;(u64,u8)&gt; = Vec::new();
+    let mut i=2;
+    while i&lt;=n {
+        let mut p=0;
+        while n%i==0 {
+            n = n/i;
+            p+=1;
+        }
+        if p != 0 {
+            v.push((i,p));
+        }
+        i+=1;
+    }
+    return v;
+}
+</pre>
+
+<h2 id="Teiler">Teiler</h2>
+<pre class="rust">
+// Teilerliste
+fn divisors(n: u64) -> Vec&lt;u64&gt; {
+    return (1..n+1).filter(|i| n%i==0).collect();
+}
+
+// Teileranzahlfunktion
+fn sigma0(n: u64) -&gt; usize {
+    return (1..n+1).filter(|i| n%i==0).count();
+}
+
+// Teilerfunktion
+fn sigma(x: u32, n: u64) -&gt; u64 {
+    return (1..n+1).filter(|i| n%i==0).map(|i| i.pow(x)).sum();
+}
+</pre>
+
+</body>
+</html>
+
