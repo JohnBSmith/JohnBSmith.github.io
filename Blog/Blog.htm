@@ -31,6 +31,8 @@
   <a href="#Rust">Gedanken zu Rust</a>
 <li><span class="date">[2017-10-31]</span>
   <a href="#Rechenaufwand">Rechenaufwand</a>
+<li><span class="date">[2017-12-23]</span>
+  <a href="#SVG-und-Fonts">SVG und Fonts</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -635,6 +637,62 @@ Systems gekoppelt sind und gegenseitigen Einfluss auf sich
 ausüben. Manchmal ist es möglich, bei schwachem Einfluss auf
 Berechnungen zu verzichten. Ein Beispiel wo dieser Ansatz zum
 Erfolg führt, ist der Barnes-Hut-Algorithmus.
+
+
+<h2 id="SVG-und-Fonts">SVG und Fonts</h2>
+<div class="date">23. Dezember 2017</div>
+
+<p>Das SVG-Format ist ja bis jetzt überhaupt noch nicht
+benutzbar, finde ich. Etwa gefühlt jede zweite SVG-Datei enthält doch
+auch Text. Zum Rendern des Textes muss der gewählte Font verfügbar
+sein, was aber nicht gewährleistet werden kann.
+
+<p>Die erste Lösung die man gewählt hat, ist die Umwandlung der Glyphen
+in Pfade an Ort und Stelle. Das ist so ziemlich die kurzsichtigste
+Lösung auf die man kommen kann. Da die Glyphen immer wieder in Pfade
+umgewandelt werden, erzeugt man Bloat, total unelegant. Außerdem lassen
+sich die Texte danach nicht mehr bearbeiten, nicht mehr kopieren,
+und das Verzeichnis lässt sich nicht mehr nach Text durchsuchen.
+Man muss an der Stelle eigentlich mal ganz laut sagen, »so einen Mist
+will ich nicht«, aber alle akzeptieren es.
+
+<p>Besser wäre die Einbettung des Fonts in die SVG-Datei.
+Hat man auch vorgesehen, es heißt »SVG fonts«. Aus Chrome hat man
+es wieder ausgebaut, weil die da zu nichts fähig sind, und bei
+Firefox wurde es auf unbestimmte Zeit verschoben.
+
+<p>Jetzt will man dafür das neue Format WOFF benutzen, was im
+Wesentlichen einen komprimierenden Container für TTF-Dateien
+darstellt. Es mag ja sein, dass WOFF für sich sinnvoll ist und
+gewisse Probleme löst. Aber dann müsste man ja so WOFF-Blob in
+die SVG-Datei einbetten und hat wieder Bloat, oder aber man setzt
+einen Link auf die WOFF-Datei und hat Dependency-Hell. Jedenfalls
+kommt man irgendwie zum Schluss dass das hinten und forne nicht
+funktioniert.
+
+<p>Der vernünftige Ansatz schaut wie folgt aus. Wie bei SVG fonts
+gehört zu jedem Buchstaben des Textes ein Glyph für den ein
+Pfad vorliegt. So Dinge wie Kerning lassen wir jetzt einfach mal
+unberücksichtigt. Jeder Buchstabe ist wie ein Klon des Glyphen.
+Der Vorteil: Man kann nun einen Buchstaben unter der Lupe betrachten
+und dort den Pfad verändern. Damit verändern sich der selbe
+Buchstabe auch an allen anderen Stellen. Möchte man nur einen Text
+manipulieren, dann erzeugt man einfach eine Kopie der Glyphen.
+
+<p>Ich finde jetzt nicht, dass das besonders viel Speicher kostet,
+der Pfad für einen Glyphen ist nicht allzu groß. Wenn man jetzt
+schon einen SVG-Renderer geschrieben hat, warum geht da nicht
+auch SVG fonts? Da nimmt man den Pfad, führt eine Transformation
+aus und schiebt die Position um <code>horiz-adv-x</code> weiter,
+lassen wir Unicode features mal unberücksichtigt. 
+
+<p>Die müssen sich da alle mal am Kopf fassen. Die bekommen ja
+garnichts auf die Reihe. Das ist irgendwie so wie beim schmalen und
+schmalen geschützten Leerzeichen. Da gibt es heute noch keine
+Entität für. Einfach <code>&amp;tsp;</code> für <i>thin space</i>
+und <code>&amp;tnbsp;</code> für <i>thin non breaking space</i>
+und gut ist. Aber nein, da muss man ja ein halbes Jahrhundert drauf
+warten.
 
 </main>
 
