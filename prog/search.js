@@ -29,7 +29,12 @@ function get_ref(s){
 function file_list_to_html(a){
   var buffer=[];
   for(var i=0; i<a.length; i++){
-    buffer.push("<a href='"+get_ref(a[i])+"'>"+last_part(a[i])+"</a>");
+    var x = "<a href='"+get_ref(a[i])+"'>"+last_part(a[i])+"</a>"
+    if(a[i].substr(a[i].length-4)==".tex"){
+      var s = a[i].slice(0,a[i].length-4);
+      x+=" (<a href='"+get_ref(s+".pdf")+"'>pdf</a>)";
+    }
+    buffer.push(x);
   }
   return buffer.join(", ");
 }
