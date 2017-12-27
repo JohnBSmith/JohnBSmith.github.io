@@ -339,7 +339,7 @@ von $T_{F(p)}N$ sein.
 Wenn wir für eine differenzierbare Mannigfaligkeit $M$ eine Karte
 haben (so wie die Karten der Erdoberfläche), das ist eine diffeomorphe
 Abbildung
-\[\varphi\colon (U\subseteq \R^r)\to V\subseteq M,\]
+\[\varphi\colon (U\subseteq \R^n)\to V\subseteq M,\]
 dann lässt sich $\varphi$ als gekrümmtes Koordinatensystem auf $M$
 betrachten. Die partiellen Ableitungen $(D_k\varphi)(\mathbf x_0)$ sind
 Tangentialvektoren von $M$ am Punkt $p=\varphi(\mathbf x_0)$.
@@ -369,17 +369,44 @@ mit $w\in T_pM$ und $p=\varphi(\mathbf x_0)$ zuordnet.
 \end{frame}
 
 \begin{frame}
-Da $\varphi$ ein Diffeomorphismus ist, ist auch die lineare Abbildung
-bijektiv. Eine bijektive lineare Abbildung ordnet einer Basis
-wieder eine Basis zu!
+Eine Karte $\varphi$ induziert als Diffeomorphismus an der Stelle
+$\mathbf x\in\R^n$ eine injektive lineare
+Abbildung $(\mathrm d\varphi)(\mathbf x)$, deren Koordinatendarstellung die
+Jacobimatrix
+\[(D\varphi)(\mathbf x)\colon\R^n\to\R^m\]
+ist.
+Die Jacobimatrix muss nicht quadratisch sein, hat aber den Rang $n$,
+ordent also einer Basis des $\R^n$ eine Basis des $n$-dimensonalen
+Tangentialraums zu.
 \end{frame}
 
 \begin{frame}
-Ok, der $\R^r$ ist doch der Koordinatenraum. Dort liegt doch die
+Eigentlich sollte die lineare Abbildung bijektiv sein und eine quadratische
+Matrix besitzen, aber dann müsste
+man einen Rahmen für die Bildmenge von $\varphi$ wählen. Der Rahmen
+wird jedoch erst durch $\mathrm d\varphi$ erzeugt.
+\end{frame}
+
+\begin{frame}
+Ok, der $\R^n$ ist doch der Koordinatenraum. Dort liegt doch die
 Standardbasis $\mathrm E=(\mathbf e_k)_{k=1}^n$ vor. Bsp.
 $\mathbf e_1=(1,0)$ und $\mathbf e_2=(0,1)$. Dann ist
 \[\mathbf w_k = (\mathrm d\varphi)(\mathbf x_0)(\mathbf e_k)\]
 die induzierte Basis von $T_pM$ bei $p=\varphi(\mathbf x_0)$.
+\end{frame}
+
+\begin{frame}
+Warum induziert $\varphi$ eine injektive lineare Abbildung?
+\end{frame}
+
+\begin{frame}
+Wenn $\varphi$ diffeomorph ist, sind $\varphi$ und $\varphi^{-1}$
+differenzierbar. Dann gilt die Kettenregel:
+\[\mathrm{id} = \mathrm d(\varphi^{-1}\circ\varphi)(\mathbf x)
+= \mathrm d\varphi^{-1}(\varphi(\mathbf x))\circ\mathrm d\varphi(\mathbf x).\]
+In Worten: $\mathrm d\varphi^{-1}(\varphi(\mathbf x))$ ist die
+Linksinverse von $\mathrm d\varphi(\mathbf x)$. Somit muss
+$\mathrm d\varphi(\mathbf x)$ injektiv sein.
 \end{frame}
 
 \begin{frame}
