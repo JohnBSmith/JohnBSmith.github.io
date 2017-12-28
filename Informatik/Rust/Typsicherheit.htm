@@ -14,6 +14,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Validierung">Validierung</a>
+<li><a href="#ADT">Abstrakte Datentypen</a>
 </ol>
 
 <h2 id="Validierung">Validierung</h2>
@@ -110,6 +111,71 @@ werden kann, wenn man nicht vorsichtig ist.
 <p>In Verbindung hiermit kann gesagt werden, dass die Maxime eine
 möglichst strenge Typisierung der gesamten Datenverarbeitung sein
 sollte.
+
+<h2 id="ADT">Abstrakte Datentypen</h2>
+<p>Ein abstrakter Datentyp, kurz ADT, ist ein Datentyp mit Operationen,
+bei dem die interne Struktur und die interne Implementation der
+Operationen vor der Öffentlichkeit verschwiegen wird. Bei einem
+abstrakten Datentyp kann es sich um einen einfachen Datentyp oder
+auch um eine komplizierte Datenstruktur handeln. Wichtig ist nur,
+dass nur solche Operationen öffentlich sind, die eine Schnittstelle
+zur Außenwelt repräsentieren.
+
+<p>Es ist möglich dass ein abstrakter Datentyp eine vollkommen
+typsichere Schnittstelle besitzt, obwohl dem bei der internen
+Implementation nicht so ist. Man spricht von einer
+<i>sicheren Abstraktion</i>.
+
+<p>Rust bietet die Mittel zur Darstellung von abstrakten Datentypen,
+indem Variablen und Funktionen per Vorgabe zunächst privat sind.
+Möchte man etwas zur öffentlichen Schnittstelle hinzufügen, so muss es
+mit dem Schlüsselwort <code>pub</code> als <i>public</i> deklariert werden.
+
+<p>Rust bietet außerdem Zero-Cost-Abstractions, die eine
+Spezialisierung von allgemeinen abstrakten Datentypen zu spezielleren
+ermöglichen, ohne dass es dabei zu Laufzeiteinbußen kommt.
+Zur Umsetzung wird die Inline-Ersetzung von Funktionen genutzt.
+
+<p>Als einfachstes Beispiel soll ein Stapelspeicher formuliert
+werden, der nur die Operationen <code>push</code> und <code>pop</code>
+unterstützt.
+
+<pre class="rust indent">
+mod stack {
+    pub struct Stack&lt;T&gt; {
+        v: Vec&lt;T&gt;
+    }
+    impl&lt;T&gt; Stack&lt;T&gt; {
+        pub fn new() -&gt; Self {
+            return Stack{v: Vec::new()};
+        }
+        pub fn push(&amp;mut self, x: T) {
+            self.v.push(x);
+        }
+        pub fn pop(&amp;mut self) -&gt; T {
+            return match self.v.pop() {
+                Some(x)=&gt;x, None=&gt;panic!()
+            };
+        }
+    }
+}
+use stack::Stack;
+
+fn main() {
+    let mut a: Stack&lt;i32&gt; = Stack::new();
+    a.push(1);
+    a.push(2);
+    println!("{}",a.pop());
+    println!("{}",a.pop());
+}
+</pre>
+
+<p>Der Konstruktor <code>new</code> und die Methoden
+<code>push</code> und <code>pop</code> können mit
+<code>#[inline(always)]</code> annotiert werden, um Inline-Ersetzung
+zu erzwingen. Die Funktionen sind aber so kurz, dass der Compiler
+das in aller Wahrscheinlichkeit automatisch macht, wenn die
+Optimierungen eingeschaltet werden.
 
 </body>
 </html>
