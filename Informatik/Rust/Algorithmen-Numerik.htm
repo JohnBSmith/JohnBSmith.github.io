@@ -80,18 +80,14 @@ static GL32: [[f64;2];32] = [
 ];
 
 fn gauss(f: &amp;Fn(f64)-&gt;f64, a: f64, b: f64, n: u32) -&gt; f64 {
-    let m = GL32.len();
     let h = (b-a)/(n as f64);
+    let p = 0.5*h;
     let mut s = 0.0;
     for j in 0..n {
-        let jf = j as f64;
-        let aj = a+jf*h;
-        let bj = a+(jf+1.0)*h;
-        let p = 0.5*(bj-aj);
-        let q = 0.5*(aj+bj);
+        let q = p+a+(j as f64)*h;
         let mut sj = 0.0;
-        for i in 0..m {
-            sj += GL32[i][1]*f(p*GL32[i][0]+q);
+        for t in &amp;GL32 {
+            sj += t[1]*f(p*t[0]+q);
         }
         s += p*sj;
     }
