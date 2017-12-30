@@ -1,0 +1,227 @@
+\documentclass{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+
+\title{Lineare gewöhnliche Dgln.}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+Gegeben ist das Anfangswertproblem
+\[y'' = y'-y,\quad y(0)=0, y'(0)=1.\]
+\end{frame}
+
+\begin{frame}
+Wie löst man das?
+\end{frame}
+
+\begin{frame}
+In der Hochschule wird der Exponentialansatz $y=\ee^{\lambda x}$
+unterrichtet. Einsetzen in die Dgl. führt zu
+\[\lambda^2\ee^{\lambda x} = \lambda\ee^{\lambda x}-\ee^{\lambda x}.\]
+Da $\ee^{\lambda x}\ne 0$ ist, ist die Division durch diesen Faktor
+eine Äquivalenzumformung der Gleichung. Es ergibt sich
+\[\lambda^2 = \lambda-1.\]
+\end{frame}
+
+\begin{frame}
+Man bezeichnet
+\[P(\lambda) = \lambda^2-\lambda+1\]
+als \emph{charakteristisches Polynom}. Wir suchen demnach die
+Nullstellen von $P(\lambda)$.
+\end{frame}
+
+\begin{frame}
+Das sind
+\[\lambda_1 = \frac{1}{2}+\frac{\sqrt{3}}{2}\ui\]
+und
+\[\lambda_2 = \frac{1}{2}-\frac{\sqrt{3}}{2}\ui.\]
+\end{frame}
+
+\begin{frame}
+Die Lösung hat demnach die Gestalt
+\[y(x) = K_1\ee^{\lambda_1 x}+K_2\ee^{\lambda_2 x}.\]
+Einsetzen in das Anfangswertproblem bringt
+\[0=y(0)=K_1+K_2,\qquad 1=y'(0)=K_1\lambda_1+K_2\lambda_2.\]
+\end{frame}
+
+\begin{frame}
+Die Lösung lässt sich zu
+\[y(x) = K_1\ee^{x/2}(\ee^{\sqrt{3}x\ui/2}+\ee^{-\sqrt{3}x\ui/2})\]
+umformen. Unter Heranziehung der eulerschen Formel ergibt sich
+\[y(x) = 2\ui K_1\ee^{x/2}\sin(\tfrac{\sqrt{3}}{2} x).\]
+\end{frame}
+
+\begin{frame}
+Mit
+\[K_1=\frac{1}{\lambda_1-\lambda_2} = \frac{1}{\sqrt{3}\ui}\]
+ergibt sich schließlich
+\[y(x) = \tfrac{2}{\sqrt{3}}\ee^{x/2}\sin(\tfrac{\sqrt{3}}{2} x).\]
+Die Lösung lässt über eine Probe durch Einsetzen und numerisch
+durch das Euler-Verfahren verifizieren.
+\end{frame}
+
+\begin{frame}
+Das Ende unserer intellektuellen Betrachtungen? 
+\end{frame}
+
+\begin{frame}
+Wir definieren zunächst $v=y'$ und Formen die Dgl. zweiter Ordnung
+in ein System von zwei Dgln. erster Ordnung um:
+\begin{align*}
+v'&=v-y,\\
+y'&=v.
+\end{align*}
+Das System lässt sich zu einem Vergleich von Tupeln zusammenfassen:
+\[\begin{bmatrix}
+v'\\
+y'
+\end{bmatrix}
+= \begin{bmatrix}
+v-y\\
+v
+\end{bmatrix}.\]
+\end{frame}
+
+\begin{frame}
+Die rechte Seite lässt sich als Produkt aus einer Matrix und
+einem Vektor interpretieren:
+\[\begin{bmatrix}
+v'\\
+y'
+\end{bmatrix}
+= \begin{bmatrix}
+1 & -1\\
+1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+v\\
+y
+\end{bmatrix}.\]
+Kurz:
+\[\mathbf y' = A\mathbf y.\]
+\end{frame}
+
+\begin{frame}
+Die Gleichung $y'=ay$ besitzt doch die
+Lösung
+\[y=y_0\ee^{(x-x_0)a}.\]
+In Analogie wäre
+\[\mathbf y=\mathbf y_0\ee^{(x-x_0)A}.\]
+\end{frame}
+
+\begin{frame}
+Aber man kann doch nicht die Exponentialfunktion
+auf eine Matrix $X=(x-x_0)A$ anwenden?
+\end{frame}
+
+\begin{frame}
+Doch!
+\end{frame}
+
+\begin{frame}
+Angenommen, $X$ besitzt die Diagonalisierung $X=TST^{-1}$, wobei
+$S$ eine Diagonalmatrix mit den Eigenwerten von $X$ ist. Dann
+gilt
+\[X^2 = TS\underbrace{T^{-1}T}_{=E}ST^{-1} = TS^2T^{-1}.\]
+Allgemein:
+\[X^k = TS^k T^{-1}.\]
+\end{frame}
+
+\begin{frame}
+Jetzt ergibt sich
+\[\begin{split}\exp(X) &= \sum_{k=0}^\infty \frac{X^k}{k!}
+= \sum_{k=0}^\infty T\frac{S^k}{k!}T^{-1}
+= T\Bigg(\sum_{k=0}^\infty \frac{S^k}{k!}\Bigg)T^{-1}\\
+&= T\exp(S)T^{-1}.
+\end{split}\]
+\end{frame}
+
+\begin{frame}
+Das Exponential einer Diagonalmatrix ist ganz einfach:
+\[\exp(\begin{bmatrix}
+\lambda_1 & 0\\
+0 & \lambda_2
+\end{bmatrix})
+= \begin{bmatrix}
+\ee^{\lambda_1} & 0\\
+0 & \ee^{\lambda_2}
+\end{bmatrix}.\]
+\end{frame}
+
+\begin{frame}
+Wir müssen zunächst die Eigenwerte von $A$ bestimmen.
+Der Ansatz dafür ist $P(\lambda)=\det(A-\lambda E)=0$. In unserem
+Fall ist
+\[P(\lambda) = \det(
+\begin{bmatrix}
+1 & -1\\
+1 & 0
+\end{bmatrix}-\lambda\begin{bmatrix}
+1 & 0\\
+0 & 1
+\end{bmatrix})
+= \det\begin{bmatrix}
+1-\lambda & -1\\
+1 & -\lambda
+\end{bmatrix}.\]
+Es ergibt sich
+\[P(\lambda) = \lambda^2-\lambda+1.\]
+\end{frame}
+
+\begin{frame}
+Huch. Das kennen wir ja schon.
+\end{frame}
+
+\begin{frame}
+Warum?
+\end{frame}
+
+\begin{frame}
+Machen wir den Ansatz $\mathbf y = \ee^{\lambda x}\mathbf v$.
+Einsetzen in $\mathbf y'=A\mathbf y$ bringt
+\[\lambda\ee^{\lambda x}\mathbf v = A\ee^{\lambda x}\mathbf v.\]
+Nach Division durch $\ee^{\lambda x}$ ergibt sich
+\[\lambda\mathbf v = A\mathbf v,\]
+das ist das Eigenwertproblem.
+\end{frame}
+
+\end{document}
+
+

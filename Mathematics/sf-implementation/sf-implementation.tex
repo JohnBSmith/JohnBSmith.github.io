@@ -67,9 +67,6 @@ g_{n+1}
 \sqrt{a_n g_n}
 \end{bmatrix}.
 \end{align}
-This calculation is even valid for complex numbers, but one has to
-take care of the branch cut of the square root.
-
 The iteration can be stopped if $a_n$ and $g_n$ are sufficiently
 close to each other. If this condition fails for some reason,
 to have a more stable algorithm, a maximum number $n_{\mathrm{max}}$ of iterations
@@ -79,7 +76,7 @@ is enough for 64-bit floating point arithmetic with
 (x,y)\in [10^{-307},10^{308}]\times [10^{-307},10^{308}].
 \end{equation}
 The complete elliptic integral of the first kind is defined as
-\begin{equation}
+\begin{equation}\label{eq:definitionK}
 K(m) := \int_0^{\pi/2} \frac{\mathrm d\theta}{\sqrt{1-m\sin^2\theta}}.
 \end{equation}
 It is calculated by the arithmetic
@@ -87,6 +84,12 @@ geometric mean:
 \begin{equation}
 K(m) = \frac{\pi}{2\operatorname{agm}(1,\sqrt{1-m})}.
 \end{equation}
-
+The domain of $K(m)$ is $m<1$, but \eqref{eq:definitionK} allows more generally
+\begin{equation}
+m\in\C\setminus\{x\in\R\mid x\ge 1\}.
+\end{equation}
+The relation between the arithmetic geometric mean and $K(m)$ holds
+even for complex numbers, but one has to take care of the branch
+cut of the square root.
 
 \end{document}
