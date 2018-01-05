@@ -5,6 +5,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{lipsum}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
@@ -91,5 +93,63 @@ m\in\C\setminus\{x\in\R\mid x\ge 1\}.
 The relation between the arithmetic geometric mean and $K(m)$ holds
 even for complex numbers, but one has to take care of the branch
 cut of the square root.
+
+\newpage
+\section{Polynomials and related}
+\subsection{Associated Legendre functions}
+
+The associated Legendre functions $P_n^m(x)$ are solutions
+of the general Legendre equation%
+\begin{equation}
+(1-x^2) \frac{\mathrm d^2}{\mathrm dx^2} P_n^m(x)
+- 2x \frac{\mathrm d}{\mathrm dx} P_n^m(x)
++ \bigg[(n+1)n-\frac{m^2}{1-x^2}\bigg] P_n^m(x)=0.
+\end{equation}
+In case of $m=n$ one has the recurrence
+\begin{equation}
+P_0^0(x)=1, \quad P_n^n(x) = -(2n-1)\sqrt{1-x^2}P_{n-1}^{n-1}(x),
+\end{equation}
+which has the solution
+\begin{equation}
+P_n^n(x) = (-1)^n (2n-1)!! (1-x^2)^{n/2}.
+\end{equation}
+By
+\begin{equation}
+(2n-1)!! = (-2)^n \frac{\sqrt{\pi}}{\Gamma(\tfrac{1}{2}-n)}
+\end{equation}
+we obtain
+\begin{equation}
+P_n^n(x) = \frac{\sqrt{\pi}}{\Gamma(\tfrac{1}{2}-n)} (2\sqrt{1-x^2})^n.
+\end{equation}
+In case of $m=n-1$ one has
+\begin{equation}
+P_n^{n-1}(x) = (2n-1)xP_{n-1}^{n-1}(x).
+\end{equation}
+Now we use the recurrence
+\begin{equation}
+(n-m) P_n^m(x) = (2n-1)xP_{n-1}^m(x)-(n-1+m)P_{n-2}^m(x)
+\end{equation}
+to get $n\ge m$ down to $m$. The recurrence will be
+converted into a bottom up iteration like in the calculation of the Fibonacci
+sequence. We can remove quadratic complexity by this trick.
+
+This leads us to the following algorithm:
+\begin{lstlisting}[mathescape=true]
+function $P_n^m(x)$
+    if $n=m$
+        return $\frac{\sqrt{\pi}}{\Gamma(\tfrac{1}{2}-n)} (2\sqrt{1-x^2})^n$
+    else if $n-1=m$
+        return $(2n-1)x P_m^m(x)$
+    else
+        let mut $a := P_m^m(x)$
+        let mut $b := P_{m+1}^m(x)$
+        for $k$ in $[m+2..n]$
+            let $h := \frac{(2k-1)xb-(k-1+m)a}{k-m}$
+            $a:=b$; $b:=h$
+        end
+        return $b$
+    end
+end
+\end{lstlisting}
 
 \end{document}

@@ -119,6 +119,17 @@ function plot3d(){
     c: cp, s: sp, ct: ct, st: st
   };
 
+  vcr=0; vcg=0; vcb=0;
+  for(var x=0; x<10.0; x+=0.01){
+    point3d_theta(0.5,cp,sp,ct,st,x,0,0);
+  }
+  for(var y=0; y<10.0; y+=0.01){
+    point3d_theta(0.5,cp,sp,ct,st,0,y,0);
+  }
+  for(var z=0; z<10.0; z+=0.01){
+    point3d_theta(0.5,cp,sp,ct,st,0,0,z);
+  }
+
   s = gets("inputg");
   if(s.length>0 && s[0]!='#'){
     define2("g",s);
@@ -133,17 +144,6 @@ function plot3d(){
     a=gva;
     vcr=0x80; vcg=0x90; vcb=0xa0;
     plotfn3d(a,tab);
-  }
-  
-  vcr=0; vcg=0; vcb=0;
-  for(var x=0; x<10.0; x+=0.01){
-    point3d_theta(0.5,cp,sp,ct,st,x,0,0);
-  }
-  for(var y=0; y<10.0; y+=0.01){
-    point3d_theta(0.5,cp,sp,ct,st,0,y,0);
-  }
-  for(var z=0; z<10.0; z+=0.01){
-    point3d_theta(0.5,cp,sp,ct,st,0,0,z);
   }
 
   context.putImageData(img,0,0);

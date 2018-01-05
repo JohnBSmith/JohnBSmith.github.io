@@ -36,6 +36,71 @@
 
 
 \section{Analysis}
+\subsection{Gleichungen}
+\begin{Aufgabe}
+Man bestimme $L=\{x\in\R\mid x^3=2\}$.
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+Wir definieren zunächst die Funktion $f\colon\R\to\R, f(x):=x^3$.
+Gesucht ist das Urbild $f^{-1}(\{2\})$.
+Ein Plot des Graphen zeigt, dass $f$ offenbar streng monoton ist, was
+wir verifizieren wollen. Wenn $f$ streng monton ist, dann muss $f$
+auch injektiv sein. Das Kritierium für strenge Monotonie lautet:
+\begin{equation}
+\forall x,y\in\R\,(x<y\implies f(x)<f(y)).
+\end{equation}
+Wir setzen nun $y=x+h$ mit $h>0$, dann ist ja automatisch $x<y$.
+Es ergibt sich nun
+\begin{equation}
+f(y) = f(x+h) = (x+h)^3 = x^3+3x^2h+3xh^2+h^3
+\end{equation}
+und weiter
+\begin{equation}
+f(x)<f(y) \iff 0 < 3x^2 h+3xh^2+h^3.
+\end{equation}
+Division durch $h>0$ ergibt dann
+\begin{equation}
+0 < 3x^2+3xh+h^2.
+\end{equation}
+Wir haben $x^2>0$ und $h^2>0$. Ein Problem bereitet nur $xh$. Nimmt man
+aber $x>0$ an, dann ist auch $xh>0$. Der Fall $x<0$ ergibt sich
+über die Punktsymmetrie von $f$. Bei Punktsymmetrie bedeutet $f(-x)=-f(x)$.
+Wegen $(-x)^3=(-1)^3x^3=-x^3$ liegt Punktsymmetrie vor.
+
+Haben wir nun $x<y$ mit $x<0$ und $y<0$, so ist $-y<-x$. Aus
+$f(-y)<f(-x)$ erhalten wir über die Punktsymmetrie $-f(y)<-f(x)$
+und daher $f(x)<f(y)$.
+
+Damit ist gezeigt dass $f$ streng monoton steigend, und somit auch
+injektiv ist. Es muss daher eine Linksinverse $g$ mit $g(f(x))=x$
+geben. Wir schreiben einfach $g(y)=\sqrt[3]{y}$.
+Wird der Wert $y=2$ überhaupt von $f$ getroffen? Die Frage kann
+über den Zwischenwertsatz positiv beantwortet werden. Dazu muss
+zuächst gezeigt werden dass $f$ auch stetig ist. Es muss also
+$\lim_{x\to a}f(x)=f(a)$ für jede Stelle $a$ gelten. Über
+$\lim_{x\to a} x = a$ sind wir uns sicher. Über die Grenzwertsätze ergibt
+sich nun
+\begin{equation}
+\lim_{x\to a} f(x) = \lim_{x\to a} (x\cdot x\cdot x)
+= (\lim_{x\to a} x)(\lim_{x\to a} x)(\lim_{x\to a} x)
+= a\cdot a\cdot a = a^3 = f(a).
+\end{equation}
+Wir haben nun $f(1)=1$ und $f(2)=8$. Nach dem Zwischwertsatz
+muss es ein $x$ mit $f(x)=2$ geben. Für uns ergibt sich insgesamt, dass
+die Einschränkung
+\begin{equation}
+f\colon [a,b]\to\R, f(x):=x^3
+\end{equation}
+bijektiv ist, egal wie $a$ und $b$ gewählt werden.
+
+Die Lösung lautet demnach
+\begin{equation}
+L = \{\sqrt[3]{2}\}.
+\end{equation}
+Der numerische Wert kann über das Newton-Verfahren bestimmt werden.
+
+
 \subsection{Integralrechnung}
 \begin{Aufgabe}
 Berechne $\displaystyle\int x^2\sin x\,\mathrm dx$.
