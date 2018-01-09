@@ -1,11 +1,15 @@
-\documentclass[a4paper,11pt,fleqn,twoside]{scrartcl}
+\documentclass[a4paper,10pt,fleqn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
+
+% \usepackage{lmodern}
+\usepackage{arev}
+
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
@@ -27,7 +31,9 @@
 \newtheorem{Aufgabe}{\sffamily Aufgabe}[section]
 
 \begin{document}
+\setlength{\baselineskip}{14pt} 
 \thispagestyle{empty}
+
 
 \noindent
 {\huge\sf\bfseries Aufgaben}
@@ -45,8 +51,7 @@ Man bestimme $L=\{x\in\R\mid x^3=2\}$.
 Wir definieren zunächst die Funktion $f\colon\R\to\R, f(x):=x^3$.
 Gesucht ist das Urbild $f^{-1}(\{2\})$.
 Ein Plot des Graphen zeigt, dass $f$ offenbar streng monoton ist, was
-wir verifizieren wollen. Wenn $f$ streng monton ist, dann muss $f$
-auch injektiv sein. Das Kritierium für strenge Monotonie lautet:
+wir verifizieren wollen. Das Kritierium für strenge Monotonie lautet:
 \begin{equation}
 \forall x,y\in\R\,(x<y\implies f(x)<f(y)).
 \end{equation}
@@ -98,7 +103,11 @@ Die Lösung lautet demnach
 \begin{equation}
 L = \{\sqrt[3]{2}\}.
 \end{equation}
-Der numerische Wert kann über das Newton-Verfahren bestimmt werden.
+Der numerische Wert kann über das Newton-Verfahren bestimmt werden,
+oder über
+\begin{equation}
+\sqrt[3]{2} = 2^{1/3} = \exp(\tfrac{1}{3}\ln(2)).
+\end{equation}
 
 
 \subsection{Integralrechnung}
@@ -176,20 +185,20 @@ die Differenz im Integral umgedreht. Dann das Produkt mit dem
 Faktor $\ee^{\ui u}$ ausmultiplizieren. Es ergibt sich
 \begin{equation}
 \int \ee^x\sin x\,\mathrm dx
-= \frac{1}{2}\int (\ee^{\ui u}\ee^{-u}-\ee^{\ui u}\ee^u)\,\mathrm du
+= \frac{1}{2}\int (\ee^{\ui u}\ee^{-u}-\ee^{\ui u}\ee^u)\,\mathrm du.
 \end{equation}
 Nun ist aber $\ee^a e^b=\ee^{a+b}$. Somit ergibt sich
 für den Term im Integral
 \begin{equation}
 \ee^{\ui u-u}-\ee^{\ui u+u} = \ee^{(\ui-1)u}-\ee^{(\ui+1)u}.
 \end{equation}
-Jetzt können wir straight forward durchintegrieren, ohne
+Jetzt können wir straight forward integrieren, ohne uns um
 die partielle Integration bemühen zu müssen. Es ergibt sich
 \begin{equation}
 \int \ee^x\sin x
 = \frac{1}{2}\bigg[
 \frac{1}{\ui-1}\ee^{(\ui-1)u}-\frac{1}{\ui+1}\ee^{(\ui+1)u}
-\bigg]
+\bigg].
 \end{equation}
 Nun gilt $\frac{1}{\ui-1}=-\frac{1}{2}-\frac{1}{2}\ui$ und
 $\frac{1}{\ui+1} = \frac{1}{2}-\frac{1}{2}\ui$. Damit ergibt sich
@@ -217,7 +226,7 @@ Rechnung. Man braucht in diesem Fall aber keine Substitution.
 Der Kern dieser Rechnungen sind die
 \emph{eulersche Formel}\footnote{Bei der eulerschen Formel handelt
 es sich um eine Identität. Aus historischen Gründen wird nur der
-Spezialfall $x=\pi$ als \emph{eulersche Identät} bezeichnet.}
+Spezialfall $x=\pi$ als \emph{eulersche Identität} bezeichnet.}
 \begin{equation}
 \ee^{\ui x}=\cos x+\ui\sin x
 \end{equation}
@@ -251,12 +260,10 @@ Man rechnet nun
 \end{align}
 
 \strong{Dritte alternative Lösung.}
-\emph{Es war gestern aber schon sehr spät geworden, sodass ich es
-gestern nicht mehr aufschreiben wollte.}
 Mir war die Idee gekommen, dass $\ee^x$ bei der Laplace-Transformation
 vielleicht wegfällt. Das klappt auf eine gewisse Art tatsächlich.
 
-Also pass auf. Bei Integration im Originalbereich erhält man eine
+Also aufgepasst. Bei Integration im Originalbereich erhält man eine
 Division durch die abhängige Variable im Bildbereich. Du siehst also,
 Integrieren ist im Bildbereich ganz einfach. Bezeichnen wir mit
 $L(f)$ die Laplace-Trafo. Die macht aus einer Funktion eine neue
@@ -504,7 +511,10 @@ Somit ist
 \begin{Aufgabe}
 Vereinfache $\displaystyle\sum_{k=1}^n (2k+4)$.
 \end{Aufgabe}
-\strong{Lösung.}
+
+\noindent
+\strong{Lösung.} Man verwendet die Rechenregeln für endliche Summen.
+Es ergibt sich:
 \begin{equation}
 \sum_{k=1}^n (2k+4) = 2\sum_{k=1}^n k + \sum_{k=1}^n 4
 = 2\cdot\frac{n}{2}(n+1)+4n = n^2+n+4n = n^2+5n.
@@ -584,7 +594,7 @@ Es gibt weitere Rechenregeln. Man spricht von \emph{Differenzenrechnung}
 im Buch »Concrete Mathematics« beschrieben.
 
 \strong{Homogene Koordinaten.}
-Ein alternatives Verfahren zur Lösung der Aufgabe zeigen.
+Es gibt noch ein alternatives Verfahren zur Lösung der Aufgabe.
 Was im Gegensatz zu Aufgabe \ref{qPotenzen}
 jetzt stört, ist der Summand $r$. Es gibt nun ein Verfahren, um
 Additionen in Multiplikationen umzuwandeln, das allgemein für die

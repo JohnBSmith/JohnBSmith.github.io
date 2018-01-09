@@ -145,7 +145,7 @@ var ftab2 = {
   "pmfP": pmfP, "cdfP": cdfP,
   "pmfLog": pmfLog, "cdfLog": cdfLog,
   "pdfExp": pdfExp, "cdfExp": cdfExp,
-  "pdfchisq": pdfchisq, "cdfchisq": cdfchisq,
+  "pdfchisq": pdfchisq, "cdfchisq": cdfchisq, "qfchisq": qfchisq,
   "pdfst": pdfst, "cdfst": cdfst,
   "primes": primes, "cprod": cartesian_prod
 };
@@ -164,7 +164,7 @@ var ftab3 = {
   "E": MLE, "pmfB": pmfB, "cdfB": cdfB,
   "pdfN": pdfN, "cdfN": cdfN,
   "pdfLogN": pdfLogN, "cdfLogN": cdfLogN,
-  "pdfF": pdfF, "cdfF": cdfF,
+  "pdfF": pdfF, "cdfF": cdfF, "qfF": qfF,
   "pdfW": pdfW, "cdfW": cdfW,
   "pdfGamma": pdfGamma, "cdfGamma": cdfGamma,
   "pdfBeta": pdfBeta, "cdfBeta": cdfBeta,
@@ -1552,12 +1552,18 @@ function cdfExp(lambda,x){
 }
 
 function pdfchisq(n,x){
+  if(x<=0) return 0;
   return Math.pow(x,n/2-1)*Math.exp(-x/2)/(Math.pow(2,n/2)*gamma(n/2));
 }
 
 function cdfchisq(n,x){
   if(x<=0) return 0;
-  return 1-igamma(n/2,x/2)/gamma(n/2);
+  return igamma(n/2,x/2)/gamma(n/2);
+}
+
+function qfchisq(n,p){
+  var F = function(x){return cdfchisq(n,x);};
+  return inv(F,p);
 }
 
 function pdfst(n,x){
@@ -1579,6 +1585,11 @@ function pdfF(m,n,x){
 function cdfF(m,n,x){
   if(x<=0) return 0;
   return riBeta(m*x/(m*x+n),0.5*m,0.5*n);
+}
+
+function qfF(m,n,p){
+  var F = function(x){return cdfF(m,n,x);};
+  return inv(F,p);
 }
 
 function pdfW(a,b,x){
