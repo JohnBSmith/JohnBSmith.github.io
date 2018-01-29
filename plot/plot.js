@@ -98,6 +98,7 @@ var ftab = {
   "arsinh": asinh, "arcosh": acosh, "artanh": atanh, "arcoth": acoth,
   "arsech": asech, "arcsch": acsch,
   "gamma": gamma, "fac": fac, "digamma": digamma, "psi": digamma,
+  "lngamma": lngammapx,
   "erf": erf, "erfc": erfc, "norm": norm, "gd": gd,
   "K": eiK, "E": eiE,
   "H": step, "W": lambertw, "Wm1": lambertwm1,

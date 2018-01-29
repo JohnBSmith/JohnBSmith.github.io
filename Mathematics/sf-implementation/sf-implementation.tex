@@ -10,7 +10,7 @@
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
-\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage[colorlinks=true,linkcolor=c1,citecolor=c1]{hyperref}
 
 \usepackage{arev}
 
@@ -151,5 +151,55 @@ function $P_n^m(x)$
     end
 end
 \end{lstlisting}
+
+\section{Gamma function and related}
+\subsection{Gamma function}
+
+The easiest way to compute an approximate value of the gamma function
+is Stirling's approximation
+\begin{equation}\label{eq:Stirling}
+\Gamma(x+1) \approx \sqrt{2\pi x}\,\bigg(\frac{x}{e}\bigg)^x
+= \sqrt{2\pi}\,x^{x+1/2}\ee^{-x}.
+\end{equation}
+This approximation is also an asymptotic formula. That means, the
+relative error gets smaller as $x\to\infty$. We can profit from
+this property if me make $x$ larger by the functional equation
+\begin{equation}
+\Gamma(x+1) = x\,\Gamma(x).
+\end{equation}
+Performing the functional equation one time yields again an easy
+formula, because in this case a simplification is possible:
+\begin{equation}\label{eq:Stirling-a}
+\Gamma(x) \approx \sqrt{2\pi}\,x^{x-1/2}\ee^{-x}.
+\end{equation}
+Formula \eqref{eq:Stirling-a} is more
+precise than \eqref{eq:Stirling}. Iteration of this technique yields
+\begin{equation}
+\Gamma(x) \approx \sqrt{2\pi}\,\frac{(x+n)^{x+n-1/2}}{\ee^{x+n}}
+\prod_{k=0}^{n-1} \frac{1}{x+k}.
+\end{equation}
+We can obtain more and more precise values, but convergence
+as $n\to\infty$ is very slow.
+
+More precise than \eqref{eq:Stirling-a} is
+\begin{equation}\label{eq:Stirling-b}
+\Gamma(x) \approx \sqrt{2\pi}\,x^{x-1/2}\exp\bigg(-x+\frac{1}{12x}\bigg).
+\end{equation}
+More precise than \eqref{eq:Stirling-b} is
+\begin{equation}\label{eq:Nemes}
+\Gamma(x) \approx \sqrt{\frac{2\pi}{x} }
+\bigg(\frac{1}{e} \bigg(x + \frac{1}{12x - \frac{1}{10x}}\bigg)\bigg)^x,
+\end{equation}
+found by G. Nemes. More formulas are discussed in \cite{Luschny}.
+
+The standard algorithm for 64-bit floating point numbers is
+Lanczos approximation, see \cite{Pugh}.
+
+\begin{thebibliography}{x}
+\bibitem{Luschny}
+Peter Luschny: \emph{Approximation Formulas for the Factorial Function}.
+\bibitem{Pugh}
+Glendon Pugh (2004): \emph{An analysis of the Lanczos Gamma approximation}.
+\end{thebibliography}
 
 \end{document}
