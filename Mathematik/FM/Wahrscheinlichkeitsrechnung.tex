@@ -1,0 +1,216 @@
+
+\chapter{Wahrscheinlichkeitsrechnung}
+
+\section{Diskrete Verteilungen}
+
+\subsection{Diskreter Wahrscheinlichkeitsraum}
+
+\begin{definition}[Ergebnis, Ereignis, Ergebnismenge, Ereignisraum,
+unmögliches Ereignis, sicheres Ereignis]%
+\index{Ergebnismenge}\index{Ereignisraum}%
+\index{sicheres Ereignis}\index{unmögliches Ereignis}
+Eine abzählbare \emdef{Ergebnismenge} $\Omega$ ist eine endliche
+(oder abzählbar unendliche) Menge, die als Grundmenge verwendet wird.
+Ein Element von $\Omega$ heißt \emdef{Ergebnis} oder
+\emdef{Elementarereignis}.
+
+Die Potenzmenge $2^\Omega$ heißt \emdef{Ereignisraum}, die
+Elemente heißen \emdef{Ereignisse}.
+Man nennt die leere Menge $\emptyset$ das \emdef{unmögliche} und $\Omega$
+das \emdef{sichere} Ereignis.
+\end{definition}
+
+\begin{definition}[Diskreter Wahrscheinlichkeitsraum, Wahrscheinlichkeitsmaß]%
+\index{Wahrscheinlichkeitsraum!diskreter}\index{Wahrscheinlichkeitsmaß!diskretes}%
+\index{Verteilung!diskrete Wahrscheinlichkeitsverteilung}
+Ein Paar $(\Omega,P)$ heißt \emdef{diskreter Wahrscheinlichkeitsraum}, wenn
+$\Omega$ eine abzählbare Ergebnismenge ist und%
+\begin{equation}
+P(A):=\sum_{\omega\in A} P(\{\omega\}),\quad P\colon 2^\Omega\to [0,1]
+\end{equation}
+die Eigenschaft
+\begin{equation}
+\sum_{\omega\in\Omega} P(\{\omega\})=1
+\end{equation}
+besitzt. Die Abbildung $P$ heißt (das von den
+Einzelwahrscheinlichkeiten induzierte) \emdef{Wahrscheinlichkeitsmaß}.
+Man spricht auch von einer \emdef{Verteilung} auf $\Omega$.
+\end{definition}
+
+
+\subsection{Axiome von Kolmogorow}
+\begin{definition}[Wahrscheinlichkeitsmaß (Axiome von Kolmogorow)]%
+\index{Wahrscheinlichkeitsmaß!Axiome von Kolmogorow}%
+\index{Axiome von Kolmogorow}
+Gegeben ist ein Messraum $(\Omega,\Sigma)$. Man nennt $P$ ein
+\emdef{Wahrscheinlichkeitsmaß}, wenn gilt:
+
+1. $P$ ist eine Funktion $P\colon\Sigma\to [0,1]$.
+
+2. $P(\Omega)=1$.
+
+3. Ist $I$ eine abzählbare Indexmenge und sind die $A_i$
+für $i\in I$ paarweise disjunkte Ereignisse, so gilt
+\begin{equation}
+P\Big(\bigcup_{i\in I} A_i\Big) = \sum_{i\in I}P(A_i).
+\end{equation}
+\end{definition}
+
+\noindent
+Bei einem diskreten Wahrscheinlichkeitsraum $(\Omega,P)$ mit
+$\Sigma=2^\Omega$ sind die Axiome erfüllt.
+
+\subsection{Rechenregeln}
+Aus den Axiomen von Kolmogorow folgen folgende
+Rechenregeln für ein Wahrscheinlichkeitsmaß $P$:
+\begin{gather}
+P(\emptyset) = 0,\\
+P(\Omega) = 1,\\
+P(A\cup B) = P(A)+P(B)-P(A\cap B).
+\end{gather}
+Man nennt $A^\comp:=\Omega\setminus A$ das
+\emdef{komplementäre Ereignis}\index{komplementäres Ereignis}
+zu $A$. Es gilt:
+\begin{gather}
+A\cup A^\comp = \Omega,\\
+A\cap A^\comp = \emptyset,\\
+P(A\cup A^\comp) = P(A)+P(A^\comp) = 1.
+\end{gather}
+\strong{Mehrstufige Experimente.}
+Ein zweistufiges Zufallsexperiment mit einem ersten Ergebnis aus
+$\Omega_1$ und einem zweiten aus $\Omega_2$ lässt sich als
+Zufallsexperiment modellieren, bei dem die Ergebnismenge das
+kartesische Produkt $\Omega=\Omega_1\times\Omega_2$ ist. Bei einem
+$n$-stufigen Experiment gilt
+\begin{equation}
+\Omega = \Omega_1\times\ldots\times\Omega_n.
+\end{equation}
+Erste Pfadregel: Sei $a\in\Omega_1$, $b\in\Omega_2$, $A=\{a\}\times\Omega_2$
+und $B=\Omega_1\times\{b\}$. Es gilt
+\begin{equation}
+P(\{(a,b)\}) = P(A\cap B) = P(A)\,P(B|A).
+\end{equation}
+Das Ereignis $\{(a,b)\}$ tritt ein, wenn zuerst
+der Pfad $A$ eingetreten ist, und dann auch der Pfad $B$.
+Die Wahrscheinlichkeit ist das Produkt der Pfadwahrscheinlichkeiten
+$P(A)$ und $P(B|A)$.
+
+Zweite Pfadregel: Sind $a,b\in\Omega$ zwei unterschiedliche
+Ergebnisse, dann gilt
+\begin{equation}
+P(\{a\}\cup\{b\}) = P(\{a\})+P(\{b\}).
+\end{equation}
+Wenn die Teilexperimente eines mehrstufigen Experiments
+stochastisch unabhängig sind, dann gilt nach der ersten Pfadregel
+die Formel
+\begin{equation}
+P(\{(a_1,\ldots,a_n)\}) = \prod_{k=1}^n P(A_k),
+\end{equation}
+wobei $A_k$ der Pfad zu $a_k$ ist.
+Für den Fall, dass die einzelnen
+Experimente alle Laplace-Experimente sind, gilt speziell
+\begin{equation}
+P(\{(a_1,\ldots,a_n)\}) = \frac{1}{|\Omega|} = \prod_{k=1}^n \frac{1}{|\Omega_k|}
+\end{equation}
+mit $\Omega=\Omega_1\times\ldots\times\Omega_n$ und $(a_1,\ldots,a_n)\in\Omega$.
+
+Führt man immer wieder das selbe Laplace-Experiment aus, gilt
+mit $t\in\Omega$ und $\Omega=\Omega_1^n$ die Regel
+\begin{equation}
+P(t) = \frac{1}{|\Omega|} = \frac{1}{|\Omega_1|^n}.
+\end{equation}
+Würfelt man z.\,B. $n$-mal hintereinander, dann gibt es $6^n$ Pfade
+und für jeden Pfad ergibt sich eine Wahrscheinlichkeit von $(1/6)^n$.
+
+\subsection{Bedingte Wahrscheinlichkeit}
+\begin{definition}[Bedingte Wahrscheinlichkeit]%
+\index{bedingte Wahrscheinlichkeit}
+Für zwei Ereignisse $A,B$ mit $P(B)>0$ nennt man
+\begin{equation}
+P(A|B) := \frac{P(A\cap B)}{P(B)}
+\end{equation}
+die \emdef{bedingte Wahrscheinlichkeit} von $A$, vorausgesetzt $B$.
+\end{definition}
+Bei
+\begin{equation}
+P'(A) := P(A|B),\quad P'\colon 2^B\to [0,1]
+\end{equation}
+handelt es sich wieder um ein Wahrscheinlichkeitsmaß.
+
+\strong{Satz von Bayes.} Für $P(A)>0$ und $P(B)>0$ gilt
+\begin{equation}
+P(A|B) = \frac{P(B|A)\, P(A)}{P(B)}.
+\end{equation}
+
+\subsection{Unabhängige Ereignisse}
+\begin{definition}[Stochastische Unabhängigkeit]%
+\index{stochastisch unabhängig}
+Zwei Ereignisse $A,B$ heißen \emdef{stochastisch unabhängig}, wenn
+\begin{equation}
+P(A\cap B) = P(A)\, P(B)
+\end{equation}
+gilt.
+\end{definition}
+
+\subsection{Gleichverteilung}
+\begin{definition}[Gleichverteilung (Laplace-Verteilung)]%
+\index{Gleichverteilung}\index{Laplace-Verteilung}
+Sei $\Omega$ eine endliche Ergebnismenge. Mann nennt $P$ eine
+\emdef{Gleichverteilung} oder \emdef{Laplace-Verteilung}, wenn
+\begin{equation}
+P(\{\omega\}) = \frac{1}{|\Omega|}
+\end{equation}
+für alle Ergebnisse $\omega\in\Omega$ gilt.
+\end{definition}
+
+Für eine Gleichverteilung gilt
+\begin{equation}
+P(A) = \frac{|A|}{|\Omega|}.
+\end{equation}
+
+\subsection{Zufallsvariablen}
+\begin{definition}[Zufallsvariable]
+Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum. Jede Funktion
+\begin{equation}
+X\colon\Omega\to\R
+\end{equation}
+heißt \emdef{Zufallsvariable}. Die Funktionswerte $x=X(\omega)$ heißen
+\emdef{Realisationen} der Zufallsvariable.
+\end{definition}
+
+Eine Zufallsvariable $X$ ordent dem Raum $(\Omega,P)$
+einen neuen Wahrscheinlichkeitsraum $(\R,P_X)$ zu, wobei
+\begin{equation}
+P_X\colon 2^{X(\Omega)}\to [0,1],\; P_X(A):=P(X^{-1}(A))
+\end{equation}
+definiert wird. Mit
+\begin{equation}
+X^{-1}(A) := \{\omega\in\Omega\mid X(\omega)\in A\}
+\end{equation}
+ist das Urbild von $A$ gemeint.
+Die folgenden Kurzschreibweisen haben sich
+eingebürgert:
+\begin{align}
+P(X\in A) &:= P(\{\omega\mid X(\omega)\in A\}),\\
+P(X=x) &:= P(\{\omega\mid X(\omega)=x\}),\\
+P(X\le x) &:= P(\{\omega\mid (X\omega)\le x\}).
+\end{align}
+
+\begin{definition}[Verteilungsfunktion]
+Für eine Zufallsvariable $X$ wird
+\begin{equation}
+F(x):=P(X\le x),\quad F\colon\R\to [0,1]
+\end{equation}
+\emdef{Verteilungsfunktion} von $X$ genannt.
+\end{definition}
+
+\strong{Eigenschaften von Verteilungsfunktionen.}\\
+Für eine Verteilungsfunktion $F$ gilt:
+\begin{gather}
+\bulletbs F\text{ ist monoton wachsend},\\
+\bulletbs F\text{ ist rechtsseitig stetig},\\
+\bulletbs \lim\limits_{x\to -\infty} F(x) = 0,\\
+\bulletbs \lim\limits_{x\to\infty} F(x)=1,\\
+\bulletbs P(a<X\le b) = F(b)-F(a).
+\end{gather}
+
