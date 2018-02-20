@@ -71,13 +71,11 @@ function sketch_plot(){
   var a,n,s;
   x1=0; y1=0;
   x2=10;
-  pma = getnum("inputa");
-  pmb = getnum("inputb");
   x1 = getnum("inputx");
   y1 = getnum("inputy");
   wx = getnum("inputwx");
   wy = getnum("inputwy");
-  n = getnum("inputn");
+  n = 10000;
   getgridtype();
   getgridpos();
 
