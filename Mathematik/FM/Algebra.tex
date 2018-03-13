@@ -78,7 +78,6 @@ X/G := \{Gx\mid x\in X\}
 \end{equation}
 wird \emdef{Bahnenraum}\index{Bahnenraum} genannt.
 
-\noindent
 \strong{Bahnformel.}\index{Bahnformel}
 Ist $G$ eine endliche Gruppe, so gilt:
 \begin{equation}
@@ -111,82 +110,82 @@ für alle $a,b\in R$ gilt und $\varphi(1)=1$ ist.
 \subsection{Polynome}\index{Polynom}
 \begin{definition}[Polynom, Polynomring, Faltung]
 Sei $R$ ein kommutativer unitärer Ring.
-Ein \emdef{Polynom} ist eine Folge
+Mit $R[X]$ bezeichnen wir die Menge der unendlichen Folgen
 \begin{equation}
 (a_k) = (a_0,a_1,\ldots,a_n,0,0,0,\ldots)
 \end{equation}
-mit $a_k\in R$, die in der Form
-\begin{equation}
-\sum_{k=0}^n a_k X^k
-\end{equation}
-geschrieben wird. Die $a_k$ nennt man \emdef{Koeffizienten}
-des Polynoms.
+mit $a_k\in R$, bei denen ab einem Index alle Folgenglieder null sind.
 
-Die $X^k$ können als Vektorraumbasis betrachtet
-werden und dienen dabei lediglich dazu, die $a_k$ auseinanderzuhalten.
-Zwei Polynome $\sum_{k=0}^m a_k X^k$ und $\sum_{k=0}^n b_k X^k$
-sind genau dann gleich, wenn $a_k=b_k$ für alle $k\le\max(m,n)$ gilt.
-
-Für zwei Polynome wird nun eine Addition erklärt:
+Für zwei Folgen aus $R[X]$ wird nun die Addition
 \begin{equation}
 (a_k) + (b_k) := (a_k+b_k)
 \end{equation}
-bzw.
+und die Multiplikation
+\begin{equation}\label{eq:Faltung}
+(a_i)*(b_j) = \bigg(\sum_{i=0}^k a_i b_{k-i}\bigg)
+\end{equation}
+erklärt. In der Form \eqref{eq:Faltung} wird die Operation auch
+\emdef{Faltung}\index{Faltung!von zwei Folgen}
+der Folgen $(a_i)$ und $(b_j)$ genannt.
+
+Die Menge $R[X]$ bildet mit der Addition und Multiplikation
+einen kommutativen unitären Ring, den \emdef{Polynomring}
+mit Koeffizienten in $R$. Ein Element von $R[X]$ wird
+\emdef{Polynom} genannt.
+
+Man definiert nun
+\begin{equation}
+X:=(0,1,0,0,0,\ldots),
+\end{equation}
+womit sich jedes Polynom in der Form
+\begin{equation}\textstyle
+(a_k) = \sum_{k=0}^n a_k X^k
+\end{equation}
+schreiben lässt. Die $a_k$ nennt man \emdef{Koeffizienten}
+des Polynoms.
+
+Die Addition bekommt nun die Form
 \begin{equation}
 \sum_{k=0}^m a_k X^k + \sum_{k=0}^n b_k X^k
 := \sum_{k=0}^p (a_k+b_k)X^k.
 \end{equation}
-mit $p=\max(m,n)$.
-
-Außerdem wird eine Multiplikation erklärt:
-\begin{equation}\label{eq:Faltung}
-(a_i)*(b_j) = \bigg(\sum_{i=0}^k a_i b_{k-i}\bigg)
-\end{equation}
-bzw.
+mit $p=\max(m,n)$. Die Multiplikation lässt sich nun in der Form
 \begin{equation}
 \bigg(\sum_{i=0}^m a_i X^i\bigg)\bigg(\sum_{j=0}^n b_j X^j\bigg)
 := \sum_{k=0}^{m+n}\bigg(\sum_{i=0}^k a_i b_{k-i}\bigg) X^k.
 \end{equation}
-In der Form \eqref{eq:Faltung} wird die Operation auch
-\emdef{Faltung}\index{Faltung!von zwei Folgen}
-der Folgen $(a_i)$ und $(b_j)$ genannt. Die Multiplikation von
-Polynomen ist das gewöhnlichen Ausmultiplizieren der
-Polynome, wobei $X^i X^j=X^{i+j}$ gilt.
+schreiben. Die Multiplikation von Polynomen ist das gewöhnlichen
+Ausmultiplizieren der Polynome, wobei $X^i X^j=X^{i+j}$ gilt.
 
-Mit $R[X]$ wird die Menge aller Polynome mit Koeffizienten
-in $R$ bezeichnet:
-\begin{equation}
-R[X] := \{\sum_{k=0}^n a_k X^k\mid n\in\N_0\wedge a_k\in R\}.
-\end{equation}
-Die Menge $R[X]$ bildet mit der Addition und Multiplikation
-von Polynomen einen kommutativen unitären Ring, den \emdef{Polynomring}
-mit Koeffizienten in $R$.
+Die $X^k$ können als Vektorraumbasis betrachtet
+werden und dienen dabei dazu, die $a_k$ auseinanderzuhalten.
+Zwei Polynome $\sum_{k=0}^m a_k X^k$ und $\sum_{k=0}^n b_k X^k$
+sind genau dann gleich, wenn $a_k=b_k$ für alle $k\le\max(m,n)$ gilt.
 
-Analog ist für zwei formale Variablen $X$ und $Y$ die Menge
+Da $R[X]$ wieder ein kommutativer unitärer Ring ist,
+ist auch $R[X][Y]$ ein Polynomring. Man definiert
 \begin{equation}
-R[X,Y] := \{\sum_{i=0}^m\sum_{j=0}^n a_{ij} X^i Y^j\mid a_{ij}\in R\}
+R[X,Y] := R[X][Y].
 \end{equation}
-ein Polynomring. Dieser ist wieder kommutativ und unitär.
+Polynome aus $R[X,Y]$ lassen sich in der Form
+\begin{equation}
+\sum_{j=0}^n \bigg(\sum_{i=0}^m a_{ij}X^i\bigg)Y^j
+= \sum_{i=0}^m\sum_{j=0}^n a_{ij} X^i Y^j
+\end{equation}
+mit $a_{ij}\in R$ schreiben.
+
 Allgemein ist die Menge
 \begin{equation}
-R[X_1,\ldots,X_q] := \{\sum_{k\in\N_0^q} a_k X^k\mid a_k\in R\}
+R[X_1,\ldots,X_q] := X[X_1,\ldots,X_{q-1}][X_q]
+\end{equation}
+ein kommutativer unitärer Ring. Die Polynome lassen sich in der Form
+\begin{equation}
+\sum_{k\in\N_0^q} a_k X^k\quad (a_k\in R)
 \end{equation}
 mit
 \[k=(k_1,\ldots,k_q)\quad\text{und}\quad X^k:=\prod_{i=1}^q X_i^{k_i}\]
-ein Polynomring, kommutativ und unitär. 
+schreiben.
 \end{definition}
-
-Da $R[X]$ wieder ein kommutativer unitärer Ring ist,
-ist auch $R[X][Y]$ ein Polynomring, bei dem die Koeffizienten Polynome
-aus $R[X]$ sind. Die Polynomringe $R[X,Y]$ und $R[X][Y]$ sind kanonisch
-isomorph. Allgemein ist
-\begin{equation}
-R[X_1,\ldots,X_q]
-\end{equation}
-kanonisch isomorph zu
-\begin{equation}
-R[X_1,\ldots,X_{q-1}][X_q].
-\end{equation}
 
 \begin{definition}[Grad]
 Für ein Polynom $f=\sum_{k=0}^n a_k X^k$ mit $a_n\ne 0$ wird
@@ -221,9 +220,9 @@ Ein Polynomring ist genau dann ein Integritätsring, wenn die
 Koeffizienten aus einem Integritätsring entstammen.
 
 \begin{definition}[Einsetzungshomomorphismus]
-Seien $R,S$ kommutative unitäre Ringe, sei $R\subseteq S$
-und sei $r\in S$.
-Die Abbildung $\varphi_r\colon R[X]\to S$ mit
+Seien $R,R'$ kommutative unitäre Ringe. Sei $R'$ eine Ringerweiterung
+von $R$ und sei $r\in R'$. Die Abbildung $\varphi_r\colon R[X]\to R'$
+mit
 \begin{equation}\textstyle
 \varphi_r(p) = p(r) := \sum_{k=0}^n a_k r^k 
 \end{equation}
@@ -234,16 +233,22 @@ von $r$ in $p$ und $\varphi_r$ als
 \emdef{Einsetzungshomomorphismus}\index{Einsetzungshomomorphimus}.
 \end{definition}
 
+Man kann auch $R'=R$ und $r=X$ setzen, dann gilt $p=p(X)$.
+Ein Polynom stimmt also mit der Einsetzung seiner eigenen formalen
+Variablen überein.
+
 \begin{definition}[Polynomfunktion]
 Für ein festes $p\in R[X]$ wird die Funktion
 \begin{equation}
-f\colon S\to S,\quad f(r):=p(r)
+f\colon R'\to R',\quad f(x):=p(x)
 \end{equation}
 als \emdef{Polynomfunktion} bezeichnet.
 \end{definition}
 
-In einigen Ringen können
-unterschiedliche Polynome zur selben Polynomfunktion führen.
+In einigen Ringen können unterschiedliche Polynome zur selben
+Polynomfunktion führen. Handelt es sich bei $R$ jedoch um einen
+unendlichen Körper, z.\,B. $R=\R$ oder $R=\C$, dann gibt es zu jeder
+Polynomfunktion nur ein einziges Polynom.
 
 \section{Körper}
 \begin{definition}[Körperhomomorphismus]

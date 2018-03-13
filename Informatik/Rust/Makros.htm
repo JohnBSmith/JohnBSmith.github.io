@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Makros</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Makros</h1>
+<h2 id="Literale">Literale</h2>
+<p>Makros können genutzt werden, um Datentypen mit Literalen
+auszustatten, welche zur Initialisierung der Datenstrukturen
+genutzt werden.
+
+<p>Literal für ein dynamisches Feld von Zeichenketten:
+<pre class="rust">
+macro_rules! vec_string {
+    ( $( $x:expr ),* ) =&gt; {{
+        let mut temp_vec = Vec::new();
+        $(temp_vec.push($x.to_string());)*
+        temp_vec
+    }}
+}
+
+fn main() {
+    let v: Vec&lt;String&gt; = vec_string![
+        "Hamburg", "Kiel", "Lübeck"
+    ];
+    println!("{:?}",v);
+}
+</pre>
+
+<p>Literal für ein assoziatives Feld:
+<pre class="rust">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( [$key:expr]: $value:expr ),* ) =&gt; {{
+        let mut temp_map = HashMap::new();
+        $(temp_map.insert($key.to_string(),$value.to_string());)*
+        temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String,String&gt; = map!{
+        ["Hamburg"]: "Hamburg",
+        ["Kiel"]:    "Schleswig-Holstein",
+        ["Lübeck"]:  "Schleswig-Holstein"
+    };
+    println!("{:?}",m);
+}
+</pre>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Generische Programmierung</h1>
+<h2 id="Arithmetik">Arithmetik</h2>
+
+<p>Bei der Programmierung von generischen arithmetischen Funktionen
+ist zu beachten, dass jede Operation einen bestimmten Trait
+benötigt, welcher die Operation implementiert.
+
+<p>Als erstes Beispiel soll die Funktion <code>range(a,b)</code>
+dienen, die für einen beliebigen Ganzzahltyp das Feld
+[<var>a</var>,&nbsp;<var>a</var>+1,&nbsp;<var>a</var>+2,&nbsp;&hellip;,&nbsp;<var>b</var>]
+erzeugt.
+
+<pre class="rust">
+use std::ops::Add;
+
+trait Cast {fn cast(n: i32) -> Self;}
+impl Cast for  i8 {fn cast(n: i32) -> Self {n as  i8}}
+impl Cast for i16 {fn cast(n: i32) -> Self {n as i16}}
+impl Cast for i32 {fn cast(n: i32) -> Self {n as i32}}
+impl Cast for i64 {fn cast(n: i32) -> Self {n as i64}}
+impl Cast for  u8 {fn cast(n: i32) -> Self {n as  u8}}
+impl Cast for u16 {fn cast(n: i32) -> Self {n as u16}}
+impl Cast for u32 {fn cast(n: i32) -> Self {n as u32}}
+impl Cast for u64 {fn cast(n: i32) -> Self {n as u64}}
+
+fn range&lt;T&gt;(a: T, b: T) -> Vec&lt;T&gt;
+    where T: Add&lt;Output=T&gt; + PartialOrd + Copy + Cast
+{
+    let mut v: Vec&lt;T&gt; = Vec::new();
+    let mut k = a;
+    let one = T::cast(1);
+    while k&lt;=b {
+        v.push(k);
+        k = k+one;
+    }
+    return v;
+}
+
+fn main() {
+    let v = range::&lt;i32&gt;(1,10);
+    println!("{:?}",v);
+}
+</pre>
+
+<p>Das hätten wir natürlich auch einfacher haben können:
+<pre class="rust">
+fn main() {
+    let v: Vec&lt;i32&gt; = (1..11).collect();
+    println!("{:?}",v);
+}
+</pre>
+
+
+</body>
+</html>
+
