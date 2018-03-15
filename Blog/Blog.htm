@@ -35,6 +35,8 @@
   <a href="#SVG-und-Fonts">SVG und Fonts</a>
 <li><span class="date">[2018-01-21]</span>
   <a href="#Drachen-und-Zombies">Drachen und Zombies</a>
+<li><span class="date">[2018-03-13]</span>
+  <a href="#GCHQ-TLS">GCHQ murrt gegen TLS-1.3</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -348,7 +350,7 @@ wenn <code>unsigned char</code> einem Byte entspräche, wäre
 <pre>
   B B B B X X X X == *(unsigned long*)(p+POSITION)
 </pre>
-wo Datenmüll <code>XXXX</code> im Datum liegt. Das Problem ist hier,
+<p>wo Datenmüll <code>XXXX</code> im Datum liegt. Das Problem ist hier,
 dass das nicht portabel ist und Leute es eventuell erst bemerken,
 wenn das Programm nach dem Portieren von <code>ILP32</code> auf
 <code>LP64</code> an irgendeiner Stelle abstürzt oder sinnlose
@@ -544,7 +546,7 @@ dass in
   (a[1] <b>as</b> u32)&lt;&lt; 8 | (a[0] <b>as</b> u32)
 }
 </pre>
-bei den Feld-Zugriffen keine Bereichsprüfung notwendig ist.
+<p>bei den Feld-Zugriffen keine Bereichsprüfung notwendig ist.
 Diese Bereichsprüfung würde schon bei
 <code>compose_u32(&amp;a[index..index+4])</code> ausgeführt
 werden. Aber <code>&amp;a[index..index+4] as &amp;[u8;4]</code> ist
@@ -725,6 +727,88 @@ Das müsste man beim Zombie-Motiv recherchieren.
 Das wiederkehrende Zombie-Motiv besagt, dass Menschen nach einem
 Biss von einem Zombie selbst zu einem Zombie werden. Hierdurch
 wird aber die Tollwut genau charakterisiert.
+
+
+<h2 id="GCHQ-TLS">GCHQ murrt gegen TLS-1.3</h2>
+<div class="date">13. März 2018</div>
+
+<p>Wenn ihr bei TLS 1.3 von der Diskussion um die Middleboxen
+gehört habt, hier ist mal ein aktuelles Beispiel wo ich das erklären
+will. Das GCHQ vermeldet:<sup><a href="#GCHQ-Blog-post">[1]</a></sup>
+
+<blockquote>
+The challenge is that these protections will also make the enterprise
+security model much, much harder. There’s two specific things
+that I think will have a negative impact on enterprise security.
+<br><br>
+The first is that it’s impossible to whitelist sites anymore because
+server certificates (the things that authenticate a site) are encrypted.
+So, your appliance will be unable to work out (for example) whether
+you’re communicating with your bank, or if malware on your machine is
+talking to its criminal masters, without breaking the connection.
+That wouldn't be a problem if you could break the start of a connection
+and then drop out when you find out it’s a low risk (or sensitive site).
+But that brings us to the second problem; you can’t do this in
+TLS 1.3. Once you proxy a connection, you have to proxy it
+until it’s done.
+</blockquote>
+
+<p>Nun ist der rationale Gedankengang beim Entwurf eines Kryptosystems
+von folgender Gestalt. Ein System nach dem State of the Art sieht
+spontanen Verbindungsaufbau mit DH-Schlüsseltausch und Perfect Forward
+Secrecy vor. So Geschichten mit RSA könnt ihr in die Tonne werfen,
+das taugt nur noch für Zertifikate. Man verifiziert seine Identität
+dabei am besten nach dem DH-Schlüsseltausch und nicht davor.
+
+<p>Die Argumentation des GCHQ ist nun, dass alle Computer so dermaßen
+von Malware verseucht sind, dass jedes Socket vor der Benutzung
+erstmal vom lokalen Proxy verifiziert werden muss. Natürlich überlegt
+man sich jetzt, ob das nicht auch ohne Zertifikate vor dem
+Schlüsseltausch möglich ist, wenn man die feste IP überprüft.
+Das ist aber nicht sicher,
+weil ein Router dazwischen gehen kann und das Paket irgendwo anders
+hin leiten. Nach dem Schlüsseltausch verifizieren geht auch nicht,
+weil dabei schon eine Verbindung stehen muss und die Malware dann
+bereits alle möglichen Dinge sendet.
+
+<p>Den letzten Satz, »Once you proxy a connection, you have to proxy it
+until it’s done«, seh ich aber nicht ein. Warum kann der Proxy nicht
+die Verbindung aufbauen und den Client dann zu einem Web of Trust
+mit dem Server einladen? Vielleicht müsste da eine Protokollerweiterung
+vorgenommen werden. Aber ich kann keinen fundamentalen Grund finden,
+warum man so ein Modell nicht umsetzen kann.
+
+<p>Außerdem bin ich von der Sicherheit von Proxys nicht überzeugt.
+Es wäre doch möglich, dass Router die Daten, welche an einen
+Server gehen sollen, verzweigen. Um das Aussickern von ungewollten
+Daten in einer unsicheren Umgebung zu verhindern, müssten die Daten
+jedoch durch einen sicheren Flaschenhals geleitet werden (den
+lokalen Proxy), wo eine Überprüfung des kryptologischen Hashwerts
+der Daten vorgenommen wird. Vorausgesetzt das Tool auf dem Client,
+das den Hashwert erzeugt und an den Proxy sendet, ist nicht auch schon
+verseucht.
+
+<p>Und was sagt uns TLS 1.3 laut GCHQ da? Dass die Verbindung
+über den lokalen Proxy bis zum Ende laufen muss. Vielleicht ist
+das ein Indiz dafür, dass das der einzige Weg ist, das zugrundliegende
+mathematische Modell zu erfüllen.
+
+<p>Am besten man entpackt die Daten und schaut sich die auf dem
+lokalen Proxy manuell Byte für Byte an. Das ist natürlich unrealistisch.
+Was ich daraus auch schließen kann ist: Sicherheit nach
+Kompromittierung zu bieten ist für mich sehr schwierig bis unmöglich,
+auch wenn es Überprüfungen an sicheren Flaschenhälsen gibt.
+
+<ul>
+<li id="GCHQ-Blog-post">
+  [1] »<a href="https://www.ncsc.gov.uk/blog-post/tls-13-better-individuals-harder-enterprises"
+  >TLS 1.3: better for individuals &ndash; harder for enterprises</a>«.
+  In: GCHQ NCSC Blog post (9. März 2018).
+<li>[2] Jürgen Schmidt:
+  »<a href="https://www.heise.de/security/meldung/Verschluesselung-GCHQ-kritisiert-die-kommende-TLS-Version-3991653.html"
+  >Verschlüsselung: GCHQ kritisiert die kommende TLS-Version</a>«.
+  In: Heise online (13. März 2018).
+</ul>
 
 </main>
 

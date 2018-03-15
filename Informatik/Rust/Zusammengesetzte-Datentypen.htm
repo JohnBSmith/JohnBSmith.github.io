@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Zusammengesetzte Datentypen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Strukturen">Strukturen</a>
+<li><a href="#Enumerationen">Enumerationen</a>
+</ol>
+
+<h2 id="Strukturen">Strukturen</h2>
+<p>Wenn man sich einen Datentyp zunächst als Menge von zulässigen Werten
+vorstellt, dann ergibt auch das kartesische Produkt von zwei oder
+mehr Datentypen einen Sinn. Sind <code>A</code> und <code>B</code> zwei
+Datentypen, dann ist das kartesische Produkt die Menge
+
+<p class="math">A &times; B
+:= {(<var>a</var>,&nbsp;<var>b</var>) | <var>a</var>&in;A &and; <var>b</var>&in;B},
+
+<p>das ist die Menge aller geordneten Paare, bei denen die erste
+Komponente den Typ <code>A</code> und die zweite Komponente
+den Typ <code>B</code> besitzt. In Rust schreibt man diesen Typ
+als <code>(A,B)</code>. Zu beachten ist, dass die Indizierung
+nicht bei eins startet, sondern bei null. Ein Beispiel dazu:
+
+<pre class="rust indent">
+fn main(){
+    let t: (u32, u32) = (360, 240);
+    println!("({}|{})", t.0, t.1);
+}
+</pre>
+
+<p>Aus ergonomischen Gründen ist es nun wünschenswert,
+die Komponenten der Tupel nicht unter ihrem Index anzusprechen,
+sondern über Bezeichner. Man schreibt in Rust dann z.&nbsp;B.
+<code>struct Name{a: A, b: B}</code>, wobei die erste Komponente unter
+dem Bezeichner <code>a</code> und die zweite unter <code>b</code>
+angesprochen wird. Ein Beispiel dazu:
+
+<pre class="rust indent">
+struct Point{
+    a: u32, b: u32
+}
+
+fn main(){
+    let t: Point = Point{a: 360, b: 240};
+    println!("({}|{})", t.a, t.b);
+}
+</pre>
+
+<p>Ein als <code>struct</code> definierter zusammengesetzer Datentyp
+wird als <i>Struktur</i> bezeichnet. In der theoretischen Informatik
+spricht man vom <i>Produkt</i>. Bei Pascal und verwandten
+Sprachen kennt man die synonymen Begriffe <i>Record</i>
+und <i>Verbund</i>.
+
+
+<h2 id="Enumerationen">Enumerationen</h2>
+<p>Stellen wir uns einen Datentyp zunächst wieder als Menge von
+zulässigen Werten vor, dann ergibt auch die disjunkte Vereinigung
+von zwei oder mehr Datentypen einen Sinn. Sind <code>A</code>
+und <code>B</code> zwei Datentypen, dann ist disjunkte Vereinigung
+die Menge
+
+<p class="math">A+B
+:= {(0,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;A}
+&cup; {(1,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;B}.
+
+<p>Die disjunkte Vereinigung, auch <i>Summe</i> genannt,
+wird demnach als Zusammenfassung der Wertemengen betrachtet,
+wobei aber ein <i>Tag</i>, hier <code>0</code> oder <code>1</code>,
+eine strenge Unterscheidung der Wertemengen ermöglicht.
+
+<p>Aus ergonomischen Gründen ist es nun wieder wünschenswert,
+wenn Bezeichner anstelle von Indizes als Tags verwendet werden.
+Eine solche Konstruktion wird in Rust als <code>enum</code> bezeichnet.
+Ein Beispiel:
+
+<pre class="rust indent">
+enum E{
+    Int(i32), Char(char)
+}
+
+fn print(x: E) {
+    match x {
+        E::Int(i) =&gt; {println!("Zahl: {}.",i);},
+        E::Char(c) =&gt; {println!("Zeichen: {}.",c);}
+    }
+}
+
+fn main(){
+    let x: E = E::Int(12);
+    let y: E = E::Char('y');
+    print(x);
+    print(y);
+}
+</pre>
+
+<p>Hier ist <code>E</code> eine disjunkte Vereinigung mit den
+Tags <code>E::Int</code> und <code>E::Char</code>.
+
+</body>
+</html>
+
