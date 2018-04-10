@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Makros</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Unendliche Datenstrukturen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Lazy-Evaluation">Lazy Evaluation</a>
+</ol>
+
+<h2 id="Lazy-Evaluation">Lazy Evaluation</h2>
+
+<p>Bei <i>Lazy Evaluation</i>, auch <i>Bedarfsauswertung</i>
+genannt, wird ein Ausdruck nicht sofort ausgewertet, sondern
+erst dann, wenn der Wert auch benötigt wird.
+
+<p>Wir können Closures zur Implementation von Lazy Evaluation
+heranziehen.
+<pre class="rust indent">
+macro_rules! lazy {
+    ($x:expr) =&gt; {Box::new(move || $x)}
+}
+
+type Lazy&lt;T&gt; = Box&lt;Fn()-&gt;T&gt;;
+
+trait Force&lt;T&gt; {
+    fn force(&amp;self) -&gt; T;
+}
+
+impl&lt;T&gt; Force&lt;T&gt; for Lazy&lt;T&gt; {
+    fn force(&amp;self) -&gt; T {self()}
+}
+</pre>
+
+<p>Als konkretes Beispiel soll ein unendlicher Baum
+formuliert werden.
+<pre class="rust indent">
+struct Tree{
+    left: Lazy&lt;Tree&gt;,
+    right: Lazy&lt;Tree&gt;,
+    value: i32
+}
+
+fn tree(x: i32) -&gt; Tree {
+    return Tree{
+        value: x,
+        left: lazy!{tree(x)},
+        right: lazy!{tree(x+1)}
+    };
+}
+
+fn main() {
+    println!("{}",
+        tree(0).right.force().right.force().value
+    );
+}
+</pre>
+
+<p>Der Baum hat demnach die folgende Gestalt:
+<pre class="indent">
+                    0
+                   / \
+                  /   \
+                 /     \
+                /       \
+               /         \
+              /           \
+             /             \
+            /               \
+           /                 \
+          /                   \
+         0                     1
+        / \                   / \
+       /   \                 /   \
+      /     \               /     \
+     /       \             /       \
+    0         1           1         2
+   / \       / \         / \       / \
+  0   1     1   2       1   2     2   3
+ / \ / \   / \ / \     / \ / \   / \ / \
+.. ... .. .. ... ..   .. ... .. .. ... ..
+</pre>
+
+<br>
+<p>Wir ersetzen den Typalias jetzt noch gegen einen abstrakten
+Datentyp.
+
+<pre class="rust indent">
+macro_rules! lazy {
+    ($x:expr) => {Lazy{value: Box::new(move || $x)}}
+}
+
+struct Lazy&lt;T&gt; {
+    value: Box&lt;Fn()-&gt;T&gt;
+}
+
+trait Force&lt;T&gt; {
+    fn force(&amp;self) -> T;
+}
+
+impl&lt;T&gt; Force&lt;T&gt; for Lazy&lt;T&gt; {
+    fn force(&amp;self) -> T {(self.value)()}
+}
+</pre>
+
+</body>
+</html>
+

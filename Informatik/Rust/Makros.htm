@@ -10,13 +10,18 @@
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
 <h1>Makros</h1>
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Literale">Literale</a>
+</ol>
+
 <h2 id="Literale">Literale</h2>
 <p>Makros können genutzt werden, um Datentypen mit Literalen
 auszustatten, welche zur Initialisierung der Datenstrukturen
 genutzt werden.
 
 <p>Literal für ein dynamisches Feld von Zeichenketten:
-<pre class="rust">
+<pre class="rust indent">
 macro_rules! vec_string {
     ( $( $x:expr ),* ) =&gt; {{
         let mut temp_vec = Vec::new();
@@ -34,7 +39,7 @@ fn main() {
 </pre>
 
 <p>Literal für ein assoziatives Feld:
-<pre class="rust">
+<pre class="rust indent">
 use std::collections::HashMap;
 
 macro_rules! map {
@@ -55,7 +60,36 @@ fn main() {
 }
 </pre>
 
+<p>Die eckigen Klammern um die Schlüssel sind etwas umständlich.
+Sie sind vorhanden weil nach <code>$key:expr</code> kein Doppelpunkt
+folgen darf, die erlaubten Zeichen sind "<code>=&gt; , ;</code>"
+und schließende Klammern. Das <code>expr</code> zeigt uns
+hier, dass es sich um einen Ausdruck handelt. Tatsächlich können
+wir aber mit <code>tt</code> (single token tree) sagen, dass es
+sich um ein Atom handeln soll, wobei auch ein geklammerter Ausdruck
+als Atom zugelassen ist. Nach leichter Modifikation ergibt sich
+also:
 
+<pre class="rust indent">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( $key:tt: $value:expr ),* ) =&gt; {{
+        let mut temp_map = HashMap::new();
+        $(temp_map.insert($key.to_string(),$value.to_string());)*
+        temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String,String&gt; = map!{
+        "Hamburg": "Hamburg",
+        "Kiel":    "Schleswig-Holstein",
+        "Lübeck":  "Schleswig-Holstein"
+    };
+    println!("{:?}",m);
+}
+</pre>
 
 </body>
 </html>

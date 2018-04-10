@@ -13,114 +13,10 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Komplexität">Eine gewisse Komplexität</a>
 <li><a href="#Zeichen">Zeichen</a>
+<li><a href="#Puffer">Puffer</a>
+<li><a href="#Komplexität">Eine gewisse Komplexität</a>
 </ol>
-
-<h2 id="Komplexität">Eine gewisse Komplexität</h3>
-
-<p>Zuerst muss mal gesagt werden, dass Rust eine Programmiersprache
-mit einer gewissen Komplexität ist. Der Zeitpunkt ist günstig, dies
-einfach mal an den Datentypen für Zeichenketten zu verdeutlichen.
-In einer einfachen Programmiersprache gibt es einen Datentyp für
-Zeichenketten, in Rust kann man sie streng genommen nicht mehr an
-der Hand abzählen. Das klingt jetzt zunächst abschreckend, wäre da
-nicht das Prinzip der Orthogonalität.
-
-<table class="bt">
-<tr>
-<th>Typ
-<th>Erklärung
-<tr>
-<td><code>&amp;'static str</code>
-<td>UTF-8-Kette fixer Länge, statisch in der Binärdatei
-<tr>
-<td><code>&amp;'a str</code>
-<td>UTF-8-Kette fixer Länge mit Lebenszeit a
-<tr>
-<td><code>&amp;str</code>
-<td>UTF-8-Kette fixer Länge
-<tr>
-<td><code>String</code>
-<td>Besitz einer dynamischen UTF-8-Kette
-<tr>
-<td><code>&amp;mut String</code>
-<td>Referenz auf eine veränderbare dynamischen UTF-8-Kette
-<tr>
-<td><code>Box&lt;str&gt;</code>
-<td>Besitz einer UTF-8-Kette fixer Länge
-<tr>
-<td><code>Rc&lt;str&gt;</code>
-<td>gemeinschaftlicher Besitz einer UTF-8-Kette fixer Länge
-<tr>
-<td><code>Rc&lt;RefCell&lt;String&gt;&gt;</code>
-<td>gemeinschaftlicher Besitz einer dynamischen UTF-8-Kette
-<tr>
-<td><code>&amp;'static [char]</Code>
-<td>UTF-32-Kette fixer Länge, statisch in der Binärdatei
-<tr>
-<td><code>&amp;[char]</Code>
-<td>UTF-32-Kette fixer Länge
-<tr>
-<td><code>&amp;mut [char]</Code>
-<td>veränderbare UTF-32-Kette fixer Länge
-<tr>
-<td><code>Box&lt;[char]&gt;</Code>
-<td>Besitz einer UTF-32-Kette fixer Länge
-<tr>
-<td><code>Vec&lt;char&gt;</Code>
-<td>Besitz einer dynamischen UTF-32-Kette
-<tr>
-<td><code>Rc&lt;[char]&gt;</code>
-<td>gemeinschaftlicher Besitz einer UTF-32-Kette fixer Länge
-<tr>
-<td><code>Rc&lt;RefCell&lt;[char]&gt;&gt;</code>
-<td>gemeinschaftlicher Besitz, veränderbar, fixe Länge
-<tr>
-<td><code>Rc&lt;RefCell&lt;Vec&lt;char&gt;&gt;&gt;</code>
-<td>gemeinschaftlicher Besitz einer dynamischen UTF-32-Kette
-<tr>
-<td><code>&amp;[u8]</code>
-<td>Byte-Kette fixer Länge
-<tr>
-<td><code>&amp;mut [u8]</code>
-<td>veränderbare Byte-Kette fixer Länge
-<tr>
-<td><code>Vec&lt;u8&gt;</code>
-<td>Besitz einer dynamischen Byte-Kette
-<tr>
-<td><code>&amp;[u16]</code>
-<td>UTF-16-Kette fixer Länge
-<tr>
-<td><code>&amp;mut [u16]</code>
-<td>veränderbare UTF-16-Kette fixer Länge
-<tr>
-<td><code>Vec&lt;u16&gt;</code>
-<td>Besitz einer dynamischen UTF-16-Kette
-<tr>
-<td><code>&amp;CStr</Code>
-<td>nullterminierte Kette fixer Länge
-<tr>
-<td><code>CString</Code>
-<td>Besitz einer nullterminierten dynamischen Kette
-<tr>
-<td><code>&amp;OsStr</code>
-<td>Kette fixer Länge, von plattformabhängiger Gestalt
-<tr>
-<td><code>OsString</code>
-<td>Besitz einer Kette von plattformabhängiger Gestalt
-</table>
-
-<p>Die Typen <code>&amp;mut str</code> und
-<code>Rc&lt;RefCell&lt;str&gt;&gt;</code> dürfen nicht auf normale
-Art verwendet werden, da UTF-8-Zeichenketten nicht allgemein
-manipuliert werden können, ohne deren Länge zu ändern. Für solche
-Aufgaben sollte der Typ <code>&amp;mut str</code> in den Typ
-<code>&amp;mut [u8]</code> transmutiert werden. Bei der Transmutation
-von <code>&amp;[u8]</code> nach <code>&amp;str</code>
-muss man Vorsicht walten lassen, da das UTF-8 invalide sein könnte.
-Hierfür ist die Funktion <code>from_utf8</code> vorgesehen, die
-eine Überprüfung vornimmt.
 
 <h2 id="Zeichen">Zeichen</h3>
 
@@ -151,6 +47,167 @@ let c = 97 as char;
 ist auch für mich unklar. Man kann sich die abstrakten Datentypen
 aber grundsätzlich mit <code>struct</code> selbst definieren, wobei
 inline-Funktionen eine Zero-Cost-Abstraktion ermöglichen.
+
+<h2 id="Puffer">Puffer</h2>
+
+<p>Zeichenketten sind in Rust dynamisch und lassen sich als
+Puffer benutzen. Ein Puffer ist eine dynamische Zeichenkette,
+an die beliebig viele Zeichenketten angehängt werden können.
+<pre class="rust indent">
+fn main() {
+    let mut s = "".to_string();
+    s += "Hier";
+    s += " steht";
+    s += " ein";
+    s += " Text.";
+    println!("{}",s);
+}
+</pre>
+
+<p>Es folgt ein Beispiel wo ein Puffer mit zwei dynamischen Ketten
+gefüttert wird.
+<pre class="rust indent">
+fn main() {
+    let s1 = "Text1\n".to_string();
+    let s2 = "Text2\n".to_string();
+
+    let mut s = "".to_string();
+    s += &amp;s1;
+    s += &amp;s2;
+    println!("{}",s);
+}
+</pre>
+
+<p>Die Borrows sind notwendig, weil <code>s1</code> und <code>s2</code>
+bei diesen Operationen nicht ihren Besitz verlieren.
+
+<p>Die Ketten können auch von Unterprogrammen erzeugt worden sein.
+<pre class="rust indent">
+fn p1() -> String {
+    return "Text1\n".to_string();
+}
+
+fn p2() -> String {
+    return "Text2\n".to_string();
+}
+
+fn main() {
+    let mut s = "".to_string();
+    s += &amp;p1();
+    s += &amp;p2();
+    println!("{}",s);
+}
+</pre>
+
+
+<h2 id="Komplexität">Eine gewisse Komplexität</h3>
+
+<p>An dieser Stelle muss einmal gesagt werden, dass Rust eine Programmiersprache
+mit einer gewissen Komplexität ist. Der Zeitpunkt ist günstig, dies
+einfach mal an den Datentypen für Zeichenketten zu verdeutlichen.
+In einer einfachen Programmiersprache gibt es einen Datentyp für
+Zeichenketten, in Rust kann man sie streng genommen nicht mehr an
+der Hand abzählen. Das klingt jetzt zunächst abschreckend, wäre da
+nicht das Prinzip der Orthogonalität.
+
+<table class="bt">
+<tr>
+<th>Typ
+<th>Erklärung
+<tr>
+<td><code>&amp;'static str</code>
+<td>unveränderbare UTF-8-Kette, statisch in der Binärdatei
+<tr>
+<td><code>&amp;'a str</code>
+<td>unveränderbare UTF-8-Kette mit Lebenszeit a
+<tr>
+<td><code>&amp;str</code>
+<td>unveränderbare UTF-8-Kette
+<tr>
+<td><code>String</code>
+<td>Besitz einer dynamischen UTF-8-Kette
+<tr>
+<td><code>&amp;String</code>
+<td>Referenz auf eine unveränderbare dynamische UTF-8-Kette
+<tr>
+<td><code>&amp;mut String</code>
+<td>Referenz auf eine veränderbare dynamische UTF-8-Kette
+<tr>
+<td><code>Box&lt;str&gt;</code>
+<td>Besitz einer UTF-8-Kette fixer Länge
+<tr>
+<td><code>Rc&lt;str&gt;</code>
+<td>gemeinschaftlicher Besitz unveränderbaren UTF-8-Kette
+<tr>
+<td><code>Rc&lt;RefCell&lt;String&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz einer dynamischen UTF-8-Kette
+<tr>
+<td><code>&amp;'static [char]</Code>
+<td>unveränderbare UTF-32-Kette, statisch in der Binärdatei
+<tr>
+<td><code>&amp;[char]</Code>
+<td>unveränderbare UTF-32-Kette
+<tr>
+<td><code>&amp;mut [char]</Code>
+<td>veränderbare UTF-32-Kette fester Länge
+<tr>
+<td><code>Box&lt;[char]&gt;</Code>
+<td>Besitz einer UTF-32-Kette fester Länge
+<tr>
+<td><code>Vec&lt;char&gt;</Code>
+<td>Besitz einer dynamischen UTF-32-Kette
+<tr>
+<td><code>Rc&lt;[char]&gt;</code>
+<td>gemeinschaftlicher Besitz, unveränderbar
+<tr>
+<td><code>Rc&lt;RefCell&lt;[char]&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz, veränderbar, feste Länge
+<tr>
+<td><code>Rc&lt;RefCell&lt;Vec&lt;char&gt;&gt;&gt;</code>
+<td>gemeinschaftlicher Besitz einer dynamischen UTF-32-Kette
+<tr>
+<td><code>&amp;[u8]</code>
+<td>unveränderbare Byte-Kette
+<tr>
+<td><code>&amp;mut [u8]</code>
+<td>veränderbare Byte-Kette fester Länge
+<tr>
+<td><code>Vec&lt;u8&gt;</code>
+<td>Besitz einer dynamischen Byte-Kette
+<tr>
+<td><code>&amp;[u16]</code>
+<td>unveränderbare UTF-16-Kette
+<tr>
+<td><code>&amp;mut [u16]</code>
+<td>veränderbare UTF-16-Kette fester Länge
+<tr>
+<td><code>Vec&lt;u16&gt;</code>
+<td>Besitz einer dynamischen UTF-16-Kette
+<tr>
+<td><code>&amp;CStr</Code>
+<td>unveränderbare nullterminierte Kette
+<tr>
+<td><code>CString</Code>
+<td>Besitz einer nullterminierten dynamischen Kette
+<tr>
+<td><code>&amp;OsStr</code>
+<td>unveränderbare Kette, von plattformabhängiger Gestalt
+<tr>
+<td><code>OsString</code>
+<td>Besitz einer Kette von plattformabhängiger Gestalt
+</table>
+
+<p>Die Typen <code>&amp;mut str</code> und
+<code>Rc&lt;RefCell&lt;str&gt;&gt;</code> dürfen nicht auf normale
+Art verwendet werden, da UTF-8-Zeichenketten nicht allgemein
+manipuliert werden können, ohne deren Länge zu ändern. Für solche
+Aufgaben sollte der Typ <code>&amp;mut str</code> in den Typ
+<code>&amp;mut [u8]</code> transmutiert werden. Bei der Transmutation
+von <code>&amp;[u8]</code> nach <code>&amp;str</code>
+muss man Vorsicht walten lassen, da das UTF-8 invalide sein könnte.
+Hierfür ist die Funktion <code>from_utf8</code> vorgesehen, die
+eine Überprüfung vornimmt. Man sollte diese Funktion auch bitte
+benutzen, sofern man nicht Experte ist.
 
 </body>
 </html>

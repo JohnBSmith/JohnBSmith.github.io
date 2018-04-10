@@ -37,6 +37,8 @@
   <a href="#Drachen-und-Zombies">Drachen und Zombies</a>
 <li><span class="date">[2018-03-13]</span>
   <a href="#GCHQ-TLS">GCHQ murrt gegen TLS-1.3</a>
+<li><span class="date">[2018-03-23]</span>
+  <a href="#Strukturelle-Typisierung">Strukturelle Typisierung in Rust</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -808,6 +810,67 @@ auch wenn es Überprüfungen an sicheren Flaschenhälsen gibt.
   »<a href="https://www.heise.de/security/meldung/Verschluesselung-GCHQ-kritisiert-die-kommende-TLS-Version-3991653.html"
   >Verschlüsselung: GCHQ kritisiert die kommende TLS-Version</a>«.
   In: Heise online (13. März 2018).
+</ul>
+
+<h2 id="Strukturelle-Typisierung">Strukturelle Typisierung in Rust</h2>
+<div class="date">23. März 2018</div>
+
+<p>In Rust geht das folgende:
+<pre class="code indent">
+<b>struct</b> PN{x: i32, y: i32};
+<b>type</b> PS = (i32,i32);
+</pre>
+
+<p>Während der Typ <code>PN</code> nomial typisiert ist, ist
+<code>PS</code> als anonymer Produkttyp strukturell typisiert.
+Prinzipiell müsste dann auch folgendes möglich sein:
+<pre class="code indent">
+<b>enum</b> EN{x: i32, y: i32};
+<b>type</b> ES = <b>enum</b>{i32,i32};
+</pre>
+<p>Die letzte Zeile existiert in Rust aber bisweilen nicht.
+Richtige strukturelle Typisierung würde nun aber auch
+gerne Isomorphien wie z.&nbsp;B.
+<pre class="indent">
+(i32,(i32,i32)) == ((i32,i32),i32) == (i32,i32,i32)
+</pre>
+durchsetzen. Man fragt sich jetzt wie das durchgesetzt werden soll,
+wenn man es eigentlich verbieten will. Hier ergibt sich für mich
+die Notwendigkeit von Funktionen zwischen Typen:
+<pre class="indent">
+flatten&lt;(i32,(i32,i32))&gt; == (i32,i32,i32)
+</pre>
+<p>Hier ordnet <code>flatten</code> den Tupeln über die Isomorphie
+den Standard-Repräsentanten der Äquivalenzklasse zu, erzeugt
+also eine Normalform. Weiterhin ist eine Funktion denkbar,
+die einen nominalen Typen auf seinen strukturellen runterprojiziert.
+Das ist aber irgendwie auch problematisch, weil jetzt nicht
+klar ist, ob man auch die Indexmenge (die inneren Variablen)
+auf die natürlichen Zahlen runterprojiziert, z.&nbsp;B. per
+lexikographischer Anordnung. Das führt nicht zu ineffizientem
+Maschinencode, weil es mit der Erzeugung von Maschinencode ausdrücklich
+noch nichts zu tun hat. Eine Umordnung der Elemente und Padding
+kommt erst ganz zum Schluss. Allerdings ist das für die Praxis
+höchst unergnomisch. Konsequenterweise benötigt man auch noch
+unbenannte Strukturen, wobei man die Indexmenge aber zum
+Bestandteil des strukturellen Typen macht.
+
+<p>Eine Frage die sich mir auch stellt, ist, ob sich ein solches
+hypothetisches strukturelles Typsystem so ausdrucksstark formulieren
+lässt, dass damit das Template-System von C++ modelliert werden kann.
+
+<p>Die nächste Frage ist, ob das überhaupt für irgendwas von
+Vorteil ist. Man ist in der Anfangsphase von Rust auch
+von der strukturellen zur nominellen Typisierung gewechselt,
+weil so Probleme vermieden werden konnten<sup>[1]</sup>.
+Dass nominelle Typisierung für die typsichere Programmierung
+konstitutiv ist, ist natürlich klar.
+
+<ul>
+<li>[1] Diskussion
+  »<a href="https://internals.rust-lang.org/t/why-were-structural-records-removed/1553"
+  >Why were structural records removed?</a>«. In: »Rust Internals«
+  Forum (15. Feb. 2015).
 </ul>
 
 </main>

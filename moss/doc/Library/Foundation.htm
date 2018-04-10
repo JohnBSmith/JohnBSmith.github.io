@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Foundation</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script src="../js/moss-syntax.js"></script>
+</head>
+<body>
+
+<table class="navigation">
+<tr><td><b>&uarr;</b> <a href="toc.htm">Up</a>
+</table>
+<h1>Foundation</h1>
+
+<div class="toc">
+<h2 id="toc">Table of contents</h2>
+<ol>
+<li><a href="#global-objects">Global objects</a>
+<li><a href="#global-functions">Global functions</a>
+<li><a href="#list">List (data type)</a>
+<li><a href="#map">Map (data type)</a>
+<li><a href="#function">Function (data type)</a>
+<li><a href="#iterable">Iterable (data type)</a>
+</ol>
+</div>
+
+<h2 id="global-objects">Global objects</h2>
+<dl class="code">
+<dt>Bool, Int, Long, Float, Complex, List, Map, String, Range,
+Function, Iterable
+<dd>The basic data types.
+
+<dt>Type
+<dd>The type of data types.
+</dl>
+
+<h2 id="global-functions">Global functions</h2>
+
+<dl class="code">
+<dt>print(x1,...,xn)
+<dd>Print the arguments to the command-line interface.
+The output representations of
+the arguments are joined together without any separating character
+or spacing. Does print a line break thereafter. If the function is
+called with no argument, it only prints a line break.
+
+<dt>put(x1,...,xn)
+<dd>Does the same as print, but does not print a line break.
+
+<dt>input(), input(prompt), input(prompt,history)
+<dd>Read a line of input from the command-line interface and return
+the input as a string. The line break at the end of the input line is
+not contained in the string. If the POSIX terminal interface is
+accessible, use <code>history</code> (a list of strings) as a history
+to choose from.
+
+<dt>str(x)
+<dd>Convert <code>x</code> into a string.
+
+<dt>str(x,format,precision)
+<dd>Convert the floating point number <code>x</code> into
+a string.
+<pre class="moss">
+# format = "[+|-](f|e|E|g|G)"
+s = str(math.pi,"f",4)
+</pre>
+
+<dt>int(x)
+<dd>Convert <code>x</code> into an integer if possible.
+
+<dt>float(x)
+<dd>Convert <code>x</code> into a floating point number
+  if possible.
+
+<dt>ord(s)
+<dd>Take a string of length one and return the code point of the
+  Unicode character.
+
+<dt>chr(x)
+<dd>Take an integer value <code>x</code> and return the Unicode
+  character at code point&nbsp;<code>x</code>.
+
+<dt>list(x)
+<dd>Convert the iterable object <code>x</code> into a list.
+<pre class="moss">
+&gt; list(1..4)
+[1, 2, 3, 4]
+</pre>
+
+<dt>map(x)
+<dd>Convert the iterable object <code>x</code> of
+<code>[key,value]</code> pairs into a map.
+<pre class="moss">
+&gt; map([["a",1],["b",2]])
+{"a": 1, "b": 2}
+</pre>
+
+<dt>set(x)
+<dd>Turn an iterable object <code>x</code> into a set.
+<pre class="moss">
+&gt; set(1..4)
+{1, 2, 3, 4}
+</pre>
+
+<dt>iter(x)
+<dd>Take an iterable object and return an iterator.
+<pre class="moss">
+&gt; i = iter(1..)
+&gt; [i(),i(),i(),i()]
+[1, 2, 3, 4]
+</pre>
+
+<dt>cycle(x)
+<dd>Take an iterable object and return a cycling iterator.
+<pre class="moss">
+&gt; cycle(1..4).list(10)
+[1, 2, 3, 4, 1, 2, 3, 4, 1, 2]
+</pre>
+
+<dt>size(a)
+<dd>Number of elements of <code>a</code>. The object <code>a</code>
+should be a data structure that has this property.
+
+<dt>rand(a..b), rand(a..b,seed)
+<dd>Return a random number generator that returns random integers
+from <code>a</code> inclusive to <code>b</code> inclusive.
+<pre class="moss">
+&gt; r = rand(1..4)
+&gt; [r(),r(),r(),r()]
+[2, 1, 3, 3]
+
+&gt; r.list(10)
+[1, 1, 4, 2, 3, 4, 1, 2, 1, 1]
+</pre>
+
+<dt>rand(a), rand(a,seed)
+<dd>Return a random number generator that chooses an element of
+the list <code>a</code> randomly.
+
+<dt>rand(), rand(seed)
+<dd>Return a random number generator that returns floats
+between zero and one.
+
+<dt>read(id), read(id,mode)
+<dd>Read the text file with filename <code>id</code> and encoding
+<code>UTF-8</code>. Return the contents as an
+<code>UTF32</code>-string. If <code>mode=='b'</code>,
+the file is read as a binary file.
+
+<dt>load(id)
+<dd>Load the module with filename <code>id</code> and
+  return the module object. The function <code>load</code>
+  can be used in a more general way than import statements
+  (keyword <code>use</code>). One can achieve dynamic loading
+  this way.
+<pre class="moss">
+&gt; math = load("math")
+&gt; math.floor(2.4)
+2.0
+</pre>
+
+<dt>abs(x)
+<dd>Absolute value of <code>x</code>. Returns an integer if
+<code>x</code> is an integer. Takes also complex numbers.
+
+<dt>sgn(x)
+<dd>Sign of <code>x</code>. Returns an integer if
+<code>x</code> is an integer.</dd>
+
+<dt>max(a,b)
+<dd>Return the maximum of <code>a</code> and <code>b</code>.
+
+<dt>min(a,b)
+<dd>Return the minimum of <code>a</code> and <code>b</code>.
+
+<dt>pow(a,n,m)
+<dd>Modular exponentiation: calculate <code>(a^n)%m</code> fast.
+
+<dt>const(x), const(n,x)
+<dd>Shallow freeze a mutable object <code>x</code> and return it.
+If <code>n</code> is given, deep freeze <code>x</code> by
+depth <code>n</code>.
+If <code>n</code> is <code>null</code>, freeze the complete
+tree. Note that <code>const(x)</code> is equivalent to
+<code>const(1,x)</code>.
+
+<dt>copy(x), copy(n,x)
+<dd>Construct a shallow copy of the object <code>x</code>
+and return it. If <code>n</code> is given, return a deep copy
+by depth <code>n</code>. If <code>n</code> is <code>null</code>,
+return a complete deep copy. Note that <code>copy(x)</code>
+is equivalent to <code>copy(1,x)</code>.
+
+<dt>object(), object(p), object(p,m)
+<dd>Construct a new object with <code>p</code> as its
+prototype and map <code>m</code> as its slot table.
+
+<dt>type(x)
+<dd>Prototype of <code>x</code>.
+
+<dt>record(x)
+<dd>Slot table of <code>x</code>.
+
+<dt>extend(a,b)
+<dd>Insert all slots of <code>b</code> into the slot
+table of <code>a</code>. Already existent slots
+of <code>a</code> will not be overwritten.
+
+<dt>zip(a1,...,an)
+<dd>Take the iterables <code>a1,...,an</code> and return an iterator
+that produces lists <code>[y1,...,yn]</code> for <code>yk</code>
+in <code>ak</code> until one of the iterators
+is exhausted.
+<pre class="moss">
+&gt; zip("abcd",[1,2,3,4]).list()
+[["a", 1], ["b", 2], ["c", 3], ["d", 4]]
+
+&gt; zip("abcd",1..).list()
+[["a", 1], ["b", 2], ["c", 3], ["d", 4]]
+
+&gt; zip(1..,1..).map(|[x,y]| x*y).list(10)
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+&gt; (1..).map(|x| x*x).list(10)
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+</pre>
+
+Note that, for a list of lists, <code>zip</code> is an involution:
+<pre class="moss">
+a == zip(*zip(*a).list()).list()
+</pre>
+
+<dt>eval(s), eval(s,m)
+<dd>Execute a string as a program. Free variables are from
+the current environment (only global variables).
+If the map <code>m</code>
+is given, use it as an environment for free/global variables.
+<pre class="moss">
+&gt; x=12
+&gt; eval("2*x")
+24
+
+&gt; eval("a=[1,2]")
+&gt; a
+[1, 2]
+
+&gt; eval("x*y",{x=360,y=240})
+86400
+</pre>
+</dl>
+
+
+<h2 id="list">List (<a href="#iterable">Iterable</a>)</h2>
+
+<dl class="code">
+<dt>a.push(x)
+<dd>Append <code>x</code> to <code>a</code>.
+
+<dt>a.pop()
+<dd>Remove the last element of <code>a</code> and
+return it.
+
+<dt>a.pop(i)
+<dd>Remove the element at index <code>i</code> from <code>a</code>
+and return it. Thus, <code>a.pop(0)</code> removes the first element.
+
+<dt>a.insert(i,x)
+<dd>Insert the object <code>x</code> at index <code>i</code>.
+Beforehand, all elements from index <code>i</code> inclusive onwards
+are shiftet one position to the right.
+
+<dt>a.append(b), a.push(*b)
+<dd>Append all elements from <code>b</code> to <code>a</code>.
+
+<dt>a.clear(), a.clear(n)
+<dd>Remove all elements.
+Remove all elements, but keep the first <code>n</code>.
+
+<dt>a.map(f)
+<dd>Create a shallow copy of <code>a</code>, apply the
+function <code>f</code> to every element of this copy and return
+the result.
+<pre class="moss">
+&gt; [1,2,3,4].map(|x| 2*x)
+[2, 4, 6, 8]
+</pre>
+
+<dt>a.filter(p)
+<dd>Filter all elements from <code>a</code> for which the
+predicate <code>p</code> is true.
+<pre class="moss">
+&gt; [1,2,3,4].filter(|x| x%2==0)
+[2, 4]
+</pre>
+
+<dt>a.rev()
+<dd>Reverse <code>a</code> and return it.
+Does not construct a shallow copy, <code>a</code> itself will be
+modified.
+<pre class="moss">
+&gt; list(1..4).rev()
+[4, 3, 2, 1]
+</pre>
+
+<dt>a.shuffle()
+<dd>Shuffle <code>a</code> randomly and return it.
+Does not construct a shallow copy, <code>a</code> itself will be
+modified.
+<pre class="moss">
+&gt; list(1..10).shuffle()
+[10, 9, 5, 3, 1, 7, 6, 2, 8, 4]
+</pre>
+
+<dt>a.chain()
+<dd>Construct a new list with the same elements, but if elements
+of <code>a</code> are lists or ranges, these will be unpacked.
+<pre class="moss">
+&gt; [[1,2],[3,4]].chain()
+[1, 2, 3, 4]
+
+&gt; [[1,2],11..14,3,4].chain()
+[1, 2, 11, 12, 13, 14, 3, 4]
+</pre>
+
+<dt>a.sort(), a.sort(p), a.sort(p,cmp)
+<dd>Sort the list and return it. Does not construct a shallow
+copy, <code>a</code> itself will be modified. The function
+<code>p</code> is a projection on which the sorting is based.
+The function <code>cmp</code> is an alternative binary comparison
+function. The sorting algorithm is not required to be stable.
+<pre class="moss">
+&gt; a = ["oak", "Elm", "willow", "birch"]
+&gt; a.sort()
+["Elm", "birch", "oak", "willow"]
+
+&gt; a.sort(|x| x.lower())
+["birch", "Elm", "oak", "willow"]
+
+&gt; a.sort(size)
+["oak", "Elm", "birch", "willow"]
+
+&gt; a.sort(null,|x,y| x&gt;y)
+["willow", "oak", "birch", "Elm"]
+</pre>
+</dl>
+
+
+<h2 id="string">Type string (<a href="#iterable">Iterable</a>)</h2>
+
+<dl class="code">
+<dt>s.lower()
+<dd>Return the string <code>s</code> projected to lower case.
+<pre class="moss">
+&gt; "Bee".lower()
+"bee"
+</pre>
+
+<dt>s.upper()
+<dd>Return the string <code>s</code> projected to upper case.
+<pre class="moss">
+&gt; "Bee".upper()
+"BEE"
+</pre>
+
+<dt>s.islower()
+<dd>Return only true if the string <code>s</code> is empty or all
+letters are in lower case.</dd>
+
+<dt>s.isupper()
+<dd>Return only true if the string <code>s</code> is empty or all
+letters are in upper case.</dd>
+
+<dt>s.isalpha()
+<dd>Return only true if the string <code>s</code> is empty or consists only
+of letters.</dd>
+
+<dt>s.isdigit()
+<dd>Return only true if the string <code>s</code> is empty or consists only
+of digits.</dd>
+
+<dt>s.isalnum()
+<dd>Return only true if the string <code>s</code> is empty or each character
+is a letter or a digit.</dd>
+
+<dt>s.isrange(a,b)
+<dd>Return only true if the string <code>s</code> is empty or consists only
+of characters from Unicode code point <code>a</code> inclusive
+to <code>b</code> inclusive. You may also write
+<code>s.isrange(c,d)</code> instead of
+<code>s.isrange(ord(c),ord(d))</code>.
+
+<dt>s.ltrim(), s.ltrim(chars)
+<dd>Remove withespace from the left side. If a string
+<code>chars</code> is given, remove characters
+until a character is found, that is not contained in
+<code>chars</code>.
+
+<dt>s.rtrim(), s.rtrim(chars)
+<dd>Remove withespace from the right side.
+
+<dt>s.trim(), s.trim(chars)
+<dd>Remove withespace from the left and right side.
+</dl>
+
+
+<h2 id="map">Type map  (<a href="#iterable">Iterable</a>)</h2>
+
+<dl class="code">
+<dt>m.values()
+<dd>Return an iterator of the values.</dd>
+
+<dt>m.items()
+<dd>Return an iterator of the key-value pairs.</dd>
+
+<dt>m.update(m2)
+<dd>Insert all items of <code>m2</code> into
+<code>m</code>. Already in <code>m</code> contained items
+are overwritten.</dd>
+
+<dt>m.extend(m2)
+<dd>Insert all items of <code>m2</code> into
+<code>m</code>, but do not overwrite already in <code>m</code>
+contained items.</dd>
+
+<dt>m.add(key)
+<dd>Add a key to the map.</dd>
+
+<dt>m.remove(key)
+<dd>Remove an item from the map. Raise an exception
+if the key is not found.</dd>
+
+<dt>m.clear()
+<dd>Remove all items of <code>m</code>.
+</dl>
+
+
+<h2 id="function">Function (<a href="#iterable">Iterable</a>)</h2>
+
+<dl class="code">
+<dt>f.orbit(x)
+<dd>Return an iterator that produces
+<code>[x,f(x),f(f(x)),...]</code>.
+<pre class="moss">
+&gt; (|x| 2*x).orbit(2).list(10)
+[2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+</pre>
+
+<dt>f.apply(a), f.apply(self_argument,a)
+<dd>Take a list as the function's arguments:
+<pre class="moss">
+f(a[0], ..., a[n-1]),
+f(self_argument; a[0], ..., a[n-1])
+</pre>
+
+<dt>f.argc()
+<dd>Return the function's argument count. If the function is
+variadic, return <code>a..b</code> instead of a number.
+If the function is variadic without upper bound,
+return <code>(a..)</code>.
+</dl>
+
+
+<h2 id="iterable">Iterable</h2>
+<dl class="code">
+<dt>a.all(p), a.all()
+<dd>Universal quantifier: Return only true if the
+predicate <code>p</code> is true for all elements of <code>a</code>.
+<pre class="moss">
+&gt; [1,2,3,4].all(|x| x%2==0)
+false
+</pre>
+
+<dt>a.any(p), a.any()
+<dd>Existential quantifier: Return true if the
+predicate <code>p</code> is true for at least one element
+of <code>a</code>.
+<pre class="moss">
+&gt; [1,2,3,4].any(|x| x%2==0)
+true
+</pre>
+
+<dt>a.count(p), a.count()
+<dd>Apply predicate <code>p</code>
+to every element of <code>a</code> and
+count how often it is true. If no predicate is given, the
+total number of elements will be returned.
+<pre class="moss">
+&gt; [1,2,3,4].count(|x| x%2==0)
+2
+</pre>
+
+<dt>a.until(p)
+<dd>Return a new iterator that takes elements from <code>a</code>
+as long as the predicate&nbsp;<code>p</code> is false.
+<pre class="moss">
+isprime = |n| n&gt;1 and (2..).until(|i| i*i&gt;n).all(|i| n%i!=0)
+</pre>
+
+<dt>a.sum(f), a.sum()
+<dd>Calculate the sum of all <code>f(x)</code> for <code>x</code>
+in <code>a</code>.
+
+<dt>a.prod(f), a.prod()
+<dd>Calculate the product of all <code>f(x)</code> for <code>x</code>
+in <code>a</code>.
+
+<dt>a.reduce(f), a.reduce(e,f)
+<dd>Reduce the iterable <code>a</code> from left to right by the
+binary function <code>f</code>. That means, if <code>f</code> is
+regarded as a left associative binary operator, this operator is
+inserted between all elements of <code>a</code>.
+If <code>e</code> is given, it is used as initial element.
+<pre class="moss">
+# 1+2+3+...+99+100
+&gt; (1..100).reduce(|x,y| x+y)
+5050
+
+&gt; (1..4).reduce("#",|x,y| x+"/"+str(y))
+"#/1/2/3/4"
+
+&gt; fac = |n| (1..n).reduce(1,|x,y| x*y)
+&gt; fac(6)
+720
+</pre>
+
+<dt>a.map(f)
+<dd>Apply the function <code>f</code> to every element of
+<code>a</code> and return a new iterator.
+<pre class="moss">
+&gt; (1..).map(|x| x^2).list(10)
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+</pre>
+
+<dt>a.filter(p)
+<dd>Filter all elements from <code>a</code>
+for which the predicate&nbsp;<code>p</code> is true and
+return a new iterator.
+<pre class="moss">
+&gt; isprime = |n| (1..n).count(|k| n%k==0)==2
+&gt; (1..).filter(isprime).list(10)
+[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+</pre>
+
+<dt>a.max(), a.max(p)
+<dd>Return the maximum of a. Return the maximum based on a
+projection <code>p</code>.
+
+<dt>a.min(), a.min(p)
+<dd>Return the minimum of a. Return the minimum based on a
+projection <code>p</code>.
+<pre class="moss">
+&gt; a = [[1,"dca"],[2,"b"],[3,"ab"]]
+&gt; a.min(|t| t[0])
+[1, "dca"]
+
+&gt; a.min(|t| t[1])
+[3, "ab"]
+
+&gt; a.min(|t| size(t[1]))
+[2, "b"]
+</pre>
+
+<dt>a.join(sep="",left="",right="")
+<dd>Apply <code>str</code> to each element and join the strings
+together.
+<pre class="moss">
+&gt; (1..4).join()
+"1234"
+</pre>
+
+If <code>sep</code> is given, it will be inserted between.
+<pre class="moss">
+&gt; (1..4).join(", ")
+"1, 2, 3, 4"
+</pre>
+
+The result will be surrounded by <code>left</code>
+and <code>right</code>, if given.
+
+<pre class="moss">
+&gt; (1..4).join(", ","(",")")
+"(1, 2, 3, 4)"
+</pre>
+
+<dt>a.enum(), a.enum(start)
+<dd>Return an iterator that enumerates the elements of <code>a</code>.
+<pre class="moss">
+&gt; "abcd".enum().list()
+[[0, "a"], [1, "b"], [2, "c"], [3, "d"]]
+
+&gt; "abcd".enum(1).list()
+[[1, "a"], [2, "b"], [3, "c"], [4, "d"]]
+</pre>
+
+<dt>a.list(), a.list(n)
+<dd>Take the iterable <code>a</code> and return its elements
+as a list. If <code>n</code> is given, a maximum number of
+<code>n</code> elements will be taken. This is equivalent to
+<code>a.take(n).list()</code>.
+<pre class="moss">
+&gt; (1..).list(4)
+[1, 2, 3, 4]
+</pre>
+
+<dt>a.take(n)
+<dd>Return a new iterator that takes a maximum number of
+<code>n</code> elements from the iterable <code>a</code>.
+
+<dt>a.skip(n)
+<dd>Leave out the next <code>n</code> elements of the iterable
+<code>a</code>.
+
+<dt>a.chunks(n)
+<dd>Return a new iterator with the same elements, but the elements
+are grouped to chunks of size <code>n</code>.
+<pre class="moss">
+&gt; (1..6).chunks(2).list()
+[[1, 2], [3, 4], [5, 6]]
+</pre>
+
+<!--
+<dt>a.chunks(R)
+<dd>Return a new iterator with the same elements, but the elements
+are grouped by equivalence relation <code>R</code> to equivalence
+classes.
+<pre class="moss">
+&gt; [1,2,3,4,5,6].chunks(|x,y| x%3==y%3).list()
+[[1, 4], [2, 5], [3, 6]]
+</pre>
+-->
+
+</dl>
+
+
+</body>
+</html>
+

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mathematics</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script src="../js/moss-syntax.js"></script>
+</head>
+<body>
+
+<table class="navigation">
+<tr><td><b>&uarr;</b> <a href="toc.htm">Up</a>
+</table>
+<h1>Mathematics</h1>
+
+<div class="toc">
+<h2 id="toc">Table of contents</h2>
+<ol>
+<li><a href="#math">Module <code>math</code> &mdash; elementary functions</a>
+<li><a href="#cmath">Module <code>cmath</code> &mdash; complex numbers</a>
+<li><a href="#math-rational">Module <code>math.rational</code> &mdash; rational numbers</a>
+<li><a href="#math-nt">Module <code>math.nt</code> &mdash; number theory</a>
+<li><a href="#math-cf">Module <code>math.cf</code> &mdash; combinatorical functions</a>
+<li><a href="#math-la">Module <code>math.la</code> &mdash; linear algebra</a>
+</ol>
+</div>
+
+<h2 id="math">Module math</h2>
+<p>Elementary mathematical functions.
+
+<dl class="code">
+<dt>e
+<dd>Euler's number <code>2.71828...</code></dd>
+
+<dt>pi
+<dd><code>3.14159...</code></dd>
+
+<dt>nan
+<dd>Not a number.</dd>
+
+<dt>inf
+<dd>Infinity.</dd>
+
+<dt>floor(x)
+<dd>Round down. Returns floating point numbers.</dd>
+
+<dt>ceil(x)
+<dd>Round up. Returns floating point numbers.</dd>
+
+<dt>sqrt(x)
+<dd>Square root of <code>x</code>.</dd>
+
+<dt>exp(x)
+<dd>Exponential function.</dd>
+
+<dt>log2(x)
+<dd>Logarithm to base 2.</dd>
+
+<dt>ln(x)
+<dd>Logarithm to base e.</dd>
+
+<dt>lg(x)
+<dd>Logarithm to base 10.</dd>
+
+<dt>lg(x,b)
+<dd>Logarithm to base <code>b</code>.</dd>
+
+<dt>sin(x), cos(x), tan(x)
+<dd>Sine, cosine and tangent.</dd>
+
+<dt>asin(x), acos(x), atan(x)
+<dd>Arc sine, arc cosine and arc tangent.</dd>
+
+<dt>sinh(x), cosh(x), tanh(x)
+<dd>Hyperbolic sine, hyperbolic cosine and hyperbolic tangent.
+
+<dt>asinh(x), acosh(x), atanh(x)
+<dd>Inverse functions of the hyperbolic functions.
+
+<dt>fac(x)
+<dd>Factorial function. Returns floating point numbers.</dd>
+
+<dt>gamma(x)
+<dd>Gamma function.</dd>
+
+<dt>lgamma(x)
+<dd>Return <code>ln(abs(gamma(x)))</code>.
+
+<dt>sgngamma(x)
+<dd>Return <code>sgn(gamma(x))</code>.
+
+<dt>erf(x)
+<dd>Error function.
+
+<dt>hypot(x1,...,xn)
+<dd>Return <code>sqrt(x1^2+...+xn^2)</code>.</dd>
+
+<dt>atan2(y,x)
+<dd>Return the phase angle of the coordinate vector
+<code>[x,y]</code>.
+
+<dt>expm1(x)
+<dd>Return <code>exp(x)-1</code>.</dd>
+
+<dt>ln1p(x)
+<dd>Return <code>ln(1+x)</code>.</dd>
+
+<dt>isfinite(x)
+<dd>Return true if <code>x</code> is not infinite and not a NaN.
+
+<dt>isnan(x)
+<dd>Return true if <code>x</code> is a NaN.
+
+<dt>isinf(x)
+<dd>Return true if <code>x</code> is infinite.
+
+<dt>frexp(x)
+<dd>Take <code>x==m*2^n</code> and return <code>[m,n]</code>.
+The type of <code>m</code> is float, the type of <code>n</code> is int.
+
+<dt>ldexp(m,n)
+<dd>Return <code>m*2^n</code>.</dd>
+</dl>
+
+
+<h2 id="cmath">Module cmath</h2>
+<p>Elementary mathematical functions that can take or return complex
+numbers.
+
+<dl class="code">
+<dt>re(z)
+<dd>Real part of <code>z</code>.
+
+<dt>im(z)
+<dd>Imaginary part of <code>z</code>.
+
+<dt>conj(z)
+<dd>Complex conjugate.</dd>
+
+<dt>sqrt(z)
+<dd>Square root.</dd>
+
+<dt>exp(z)
+<dd>Exponential function.</dd>
+
+<dt>ln(z)
+<dd>Natural logarithm.</dd>
+
+<dt>sin(z), cos(z), tan(z)
+<dd>Sine, cosine and tangent.
+
+<dt>sinh(z), cosh(z), tanh(z)
+<dd>Hyperbolic sine, hyperbolic cosine and hyperbolic tangent.
+
+<dt>asinh(z), acosh(z), atanh(z)
+<dd>Inverse functions of the hyperbolic functions.
+
+<dt>gamma(z)
+<dd>Gamma function.</dd>
+</dl>
+
+
+<h2 id="math-rational">Module math.rational</h2>
+
+<dl class="code">
+<dt>Rat
+<dd>Rational numbers data type.
+
+<dt>rat(n,d)
+<dd>Rational number <code>n/d</code>.
+
+<dt>r.n
+<dd>Numerator.
+
+<dt>r.d
+<dd>Denominator.
+</dl>
+
+
+<h2 id="math-nt">Module math.nt</h2>
+
+<p>Number theory.
+
+<dl class="code">
+<dt>base(n,b)
+<dd>Transform the number <code>n</code> into positional notation
+by base <code>b</code>. The result is in little endian
+(least significant digit first).
+
+<dt>base(n,b).rev()
+<dd>Big endian (least significant digit last) of the
+positional notation above.
+
+<dt>isprime(n)
+<dd>Deterministic primality test.</dd>
+
+<dt>isprime(n,e)
+<dd>Probalistic primality test with false positive probability of less than
+<code>1/(4^e)</code>.
+
+<dt>gcd(a,b)
+<dd>Greatest common divisor of <code>a</code> and <code>b</code>.</dd>
+
+<dt>lcm(a,b)
+<dd>Least common multiple of <code>a</code> and <code>b</code>.
+
+<dt>lcm(a)
+<dd>Least common multiple of the numbers in the iterable <code>a</code>.
+
+<dt>factor(n)
+<dd>Prime factorization of <code>n</code>.
+
+<dt>divisors(n)
+<dd>The list of divisors of <code>n</code>.
+
+<dt>phi(n)
+<dd>Euler's totient function.
+
+<dt>lambda(n)
+<dd>Carmichael function.
+</dl>
+
+<h2 id="math-cf">Module math.cf</h2>
+<p>Combinatorical functions.
+
+<dl class="code">
+<dt>fac(n)
+<dd>Factorial function.
+
+<dt>rf(n,k)
+<dd>Raising factorial.
+
+<dt>ff(n,k)
+<dd>Falling factorial.
+
+<dt>bc(n,k)
+<dd>Binomial coefficient.
+
+<dt>mc([k1,...,kn])
+<dd>Multinomial coefficient.
+
+<dt>stirling1(n,k)
+<dd>Stirling number of the first kind.
+
+<dt>stirling2(n,k)
+<dd>Stirling number of the second kind.
+
+<dt>euler1(n,k)
+<dd>Eulerian number.
+
+<dt>euler2(n,k)
+<dd>Eulerien number of the second order.
+
+<dt>bell(n)
+<dd>Bell numbers.
+
+<dt>pf(n)
+<dd>Partition function.
+
+<dt>pf(n,k)
+<dd>Number of partitions of <code>n</code> into exactly <code>k</code>
+parts.
+
+<dt>permutations(a)
+<dd>Permutations of the list <code>a</code>.
+
+<dt>combinations(k,s)
+<dd>Combinations of set/list/string <code>s</code> into
+  sets of <code>k</code> elements.
+
+<dt>partitions(n,k)
+<dd>Partitions of <code>n</code> into <code>k</code> parts.
+</dl>
+
+<h2 id="math-la">Module math.la</h2>
+
+<dl class="code">
+<dt>vector(a1,...,an)
+<dd>Return a coordinate vector.
+
+<dt>matrix([a11,...,a1n],...,[am1,...,amn])
+<dd>Return a matrix.
+
+<dt>array(N,data)
+<dd>Return a coordinate tensor of order <code>N</code>.
+Note that:
+<pre class="code">
+array(1,a) = vector.apply(a),
+array(2,a) = matrix.apply(a).
+</pre>
+
+<dt>diag(a1,...,an)
+<dd>Return a diagonal matrix.
+
+<dt>scalar(a)
+<dd>Return a scalar matrix.
+
+<dt>a.T
+<dd>Transposed matrix.
+
+<dt>a.H
+<dd>Conjugate transpose.
+
+<dt>a.conj
+<dd>Conjugated complex matrix.
+
+<dt>a.tr
+<dd>Trace.
+
+<dt>a.diag
+<dd>Main diagonal as a coordinate vector.
+
+<dt>a.shape
+<dd>Shape of the array.
+
+<dt>a.copy
+<dd>Shallow copy of the array.
+
+<dt>a.list
+<dd>Convert the array into a list.
+
+<dt>a.map(f)
+<dd>Return <code>(f(a[i,j]))</code>.
+
+<dt>a[k]
+<dd>Component of a vector (<code>k=0</code> upto <code>n-1</code>).
+Row of a matrix.
+</dl>
+
+</body>
+</html>
+
