@@ -1,7 +1,11 @@
 \documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathptmx}
+
+\usepackage{libertine}
+\usepackage[libertine,cmintegrals]{newtxmath}
+\renewcommand\ttdefault{lmtt}
+
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -26,6 +30,68 @@ der Mathematik}
 \tableofcontents
 
 \section{Formale Sprachen}
+\subsection{Objektsprache, Metasprache}
+Hinfort ist es sinnvoll zwischen Objektsprache und Metasprache
+zu unterscheiden. Die Ausdrücke einer Objektsprache werden als
+Objekte behandelt über die man spricht. Die Metasprache ist die
+Sprache in der man über diese Objekte spricht. Zur Unterscheidung
+von werden Ausdrücke der Objektsprache zunächst in Anführungszeichen
+gesetzt. Demnach lässt z.\,B. der folgende metasprachliche
+Satz formulieren:
+
+Die Aussage »Heute hat es geregnet.« war gestern wahr gewesen.
+
+Natürlich kann es mehrere Ebenen von Metasprachen geben:
+
+Die Aussage »Die Aussage »Heute hat es geregnet.« war gestern wahr
+gewesen.« wahr gestern wahr gewesen.
+
+\subsection{Formale Sprachen}
+
+Wir können auf ein Blatt Papier oder in den Computer eine Zeichenkette
+aus Symbolen schreiben. Um genau zu sein, müssen wir uns zunächst
+überlegen welche Symbole erlaut sein sollen. Die erlaubten Symbole
+fassen wir zu einer Menge $\Sigma$ zusammen und bezeichnen diese
+als \emph{Alphabet}. Aus den Symbolen lassen sich nun Ketten
+von Symbolen bilden, die wir als \emph{Wörter} bezeichnen.
+Ein Wort ist demnach ein Tupel
+\begin{equation}
+a := (a_1,a_2,\ldots,a_n), \qquad (a_k\in\Sigma)
+\end{equation}
+das in vielen Fällen auch kurz als $a_1a_2\ldots a_n$ geschrieben wird.
+Z.\,B. schreiben wir »Boot« anstelle von
+$(\text{B},\text{o},\text{o},\text{t})$. Dazu passend wird die
+Konkatenation zweier Wörter $a$ und $b$ als $ab$ geschrieben.
+Also
+\begin{equation}
+ab := (a_1,\ldots,a_m,b_1,\ldots,b_n)
+\end{equation}
+für $a=(a_1,\ldots,a_m)$ und $b=(b_1,\ldots,b_n)$.
+
+Die Konkatenation von mehr als zwei Wörtern ist ganz klar und lässt
+sich präzise rekursiv definieren:
+\begin{equation}
+\operatorname{cat}_{k=1}^n [a^{(k)}]
+:= \operatorname{cat}_{k=1}^{n-1} [a^{(k)}]a^{(n)}.
+\end{equation}
+Man definiert auch noch das sogenannte leere Wort $\varepsilon$
+als leeres Tupel, kurz $\varepsilon:=()$. Das leere Wort ist zugleich
+der Wert der leeren Konkatenation:
+\begin{equation}
+\operatorname{cat}_{k=1}^0 [a^{(k)}] := \varepsilon.
+\end{equation}
+Verschiedene Wörter lassen sich nun zu einer Menge $L$
+zusammenfassen, die man als \emph{Sprache} bezeichnet.
+
+Die Menge aller möglichen Konkatenationen (einschließlich der leeren
+Konkatenation) von Symbolen aus $\Sigma$ bezeichnet man als
+\emph{kleensche Hülle} $\Sigma^*$. Schließt man man die leere
+Konkatenation aus, so spricht man von der \emph{positiven kleenschen
+Hülle} $\Sigma^+$.
+
+Jede Sprache $L$ über dem Alphabet $\Sigma$ ist demnach eine Teilmenge
+$L\subseteq\Sigma^*$.
+
 \subsection{Abstrakte Syntaxbäume}
 
 Wenn ein mathematischer Ausdruck syntaktisch analysiert
@@ -73,11 +139,11 @@ die Liste der Argumente.
 
 Bei der Verwendung von dynamischen Feldern anstelle von verketteten
 Listen sind die Operationen \texttt{first} und \texttt{rest} eventuell
-etwas ineffizienter. Hier ist die Darstellung
+etwas ineffizienter. Die Darstellung ist z.\,B.:
 \begin{verbatim}
-  ["f", ["x", "y"]]
+  ["f", "x", "y"]
 \end{verbatim}
-sinnvoller. In einer effizienten statisch typisierten
+In einer effizienten statisch typisierten
 Programmiersprache ließe sich natürlich ein Datentyp für AST-Knoten
 formulieren, der auf extra die Bedürfnisse, welche sich ergeben,
 zugeschnitten ist.
@@ -132,7 +198,7 @@ Dabei verlangt man nun, dass $|x|$ schwächer bindet als alle anderen
 Operationen und rechtsassoziativ ist. Rechtsassoziativ bedeutet, dass
 die Klammerung immer auf der rechten Seite gesetzt wird. Z.\,B. ist
 \begin{equation}
-|x|\;|y|\; x+y = |x|\;(|y|\;x+y).
+|x|\;|y|\; x+y = |x|\;(|y|\;(x+y)).
 \end{equation}
 Ein lambda-Ausdruck lässt sich nun auf einen AST \emph{applizieren}.
 Man definiert
@@ -200,8 +266,7 @@ Variablen von $t$ definieren:
 
 3. $\mathrm{AV}(|x|\; t) = \mathrm{AV}(t)\cup\{x\}$.
 
-\newpage
-
+% \newpage
 \noindent
 Außerdem definieren wir noch $\mathrm{PV}(t)$, die Menge der
 in Ausdrücken präsenten Variablen, wie folgt:
