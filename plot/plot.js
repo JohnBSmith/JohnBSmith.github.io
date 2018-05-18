@@ -16,6 +16,10 @@ var cr2=0, cg2=0x60, cb2=0;
 // line color 3
 var cr3=0x80, cg3=0, cb3=0x80;
 
+var scale_color="#909080";
+var scale_color2="#404020";
+
+
 // font of the scale
 var font = "12px \"FreeMono\", \"Courier New\", monospace";
 
@@ -3249,11 +3253,9 @@ function statements(s){
   }
 }
 
-var axiscolor="#909080";
-var axiscolor2="#404020";
 function axisx(context,x1,shiftx){
   if(gridtype<0) return;
-  context.fillStyle = axiscolor;
+  context.fillStyle = scale_color;
   var i;
   for(i=1; true; i+=1){
     xbar(i,x1+i*shiftx,context);
@@ -3261,7 +3263,7 @@ function axisx(context,x1,shiftx){
     if(getpx(i,0.1)>dw && getpx(-i,0.1)<0) break;
   }
   if(gridtype>0 && bcr>120){
-    context.fillStyle = axiscolor2;
+    context.fillStyle = scale_color2;
   }
   for(i=2; true; i+=2){
     xlabel(i,x1+i*shiftx,context);
@@ -3272,7 +3274,7 @@ function axisx(context,x1,shiftx){
 
 function axisy(context,y1,shifty){
   if(gridtype<0) return;
-  context.fillStyle = axiscolor;
+  context.fillStyle = scale_color;
   var i;
   for(i=1; true; i++){
     ybar(i,y1+i*shifty,context);
@@ -3280,7 +3282,7 @@ function axisy(context,y1,shifty){
     if(getpy(i,0.1)<0 && getpy(-i,0.1)>dh) break;
   }
   if(gridtype>0 && bcr>120){
-    context.fillStyle = axiscolor2;
+    context.fillStyle = scale_color2;
   }
   for(i=1; true; i++){
     ylabel(i,y1+i*shifty,context);
@@ -3389,10 +3391,10 @@ function system(){
   if(gridtype<0) return;
   var a=160;
   if(gridtype==1){
-    vcr=0xb0; vcg=0xb0; vcb=0x70;
+    vcr=0xb0; vcg=0xb0; vcb=0x8a;
     grid(60); a=220;
   }else if(gridtype==2){
-    vcr=0xa0; vcg=0xa0; vcb=0x8a;
+    vcr=0xa0; vcg=0xa0; vcb=0x9a;
     mgrid(); a=220;
   }
   vcr=0x90; vcg=0x90; vcb=0x8a;

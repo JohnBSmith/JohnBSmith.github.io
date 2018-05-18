@@ -256,7 +256,7 @@ function isoplot(){
   vlinea(data,psx,200);
   vlinea(data,psx-1,200);
   context.putImageData(img,0,0);
-  axiscolor = "#202020";
+  scale_color = "#202020";
   axisx(context,x1,0.1*wx);
   axisy(context,y1,0.1*wy);
 }
@@ -357,11 +357,11 @@ function vplot(){
       arrow(data,x,y,phi);
     }
   }
-  
+
   vcr=0; vcg=0; vcb=0;
   flush();
-  axiscolor="#000000";
-  axiscolor2="#000000";
+  scale_color="#000000";
+  scale_color2="#000000";
   context.putImageData(img,0,0);
   axisx(context,x1,0.1*wx);
   axisy(context,y1,0.1*wy);
