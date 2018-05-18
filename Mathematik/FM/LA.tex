@@ -145,8 +145,9 @@ w_2=v_2-P[w_1](v_2).
 \subsubsection{Musikalische Isomorphismen}
 \begin{definition}[Musikalische Isomorphismen]%
 \index{musikalische Isomorphismen}
-Sei $V$ ein eindlichdimensionaler Vektorraum und
-$V^*$ sein Dualraum. Die lineare Abbildung
+Sei $V$ ein eindlichdimensionaler Vektorraum
+mit Skalarprodukt und $V^*$ sein Dualraum.
+Die lineare Abbildung%
 \begin{equation}
 \Phi\colon V\to V^*,\quad \Phi(u)(v):=\langle u,v\rangle
 \end{equation}
@@ -370,7 +371,7 @@ E_3 = \begin{bmatrix}
 
 \subsubsection{Symmetrische Matrizen}
 Eine quadratiche Matrix $A=(a_{ij})$ heißt
-symmetrisch\index{symmetrische Matrix},
+symmetrisch\index{symmetrische Matrix}\index{Matrix!symmetrische},
 falls gilt $a_{ij}=a_{ji}$ bzw. $A^T=A$.
 
 Jede reelle symmetrische Matrix besitzt ausschließlich reelle
@@ -398,16 +399,31 @@ Ist $K=\R$ und $A$ positiv definit, so ist
 \eqref{eq:symmBf} ein Skalarprodukt auf $\R^n$.
 
 \subsubsection{Reguläre Matrizen}\index{inverse Matrix}
-Eine quadratische Matrix $A\in K^{n\times n}$ heißt \emdef{regulär}
+\begin{definition}[Reguläre Matrix, singuläre Matrix]
+Eine quadratische Matrix $A\in K^{n\times n}$ heißt
+\emdef{regulär}\index{reguläre Matrix}\index{Matrix!reguläre}
 oder \emdef{invertierbar}, wenn es eine inverse Matrix $A^{-1}$ gibt,
 so dass
 \begin{equation}
 A^{-1}A = E_n \quad (\iff AA^{-1} = E_n)
 \end{equation}
-gilt, wobei mit $E_n$ die Einheitsmatrix gemeint ist. Jede
-reguläre Matrix besitzt genau eine inverse Matrix. Eine Matrix $A$
-ist genau dann regulär, wenn $\det(A)\ne 0$ gilt. Die Menge
-der regulären Matrizen bildet bezüglich Matrizenmultiplikation
+gilt, wobei mit $E_n$ die Einheitsmatrix gemeint ist.
+Eine quadratische Matrix die nicht regulär ist, heißt
+\emdef{singulär}\index{singuläre Matrix}\index{Matrix!singuläre}.
+\end{definition}
+
+\strong{Kriterien.} Für eine Matrix $A\in K^{n\times n}$ gilt:
+\begin{gather}
+A\text{ ist regulär}\iff \exists B (BA=E_n)\\
+\iff \det(A)\ne 0 \iff \operatorname{rk}(A)=n\\
+\iff 0\text{ ist kein Eigenwert von }A\\
+\iff \ker(A)=\{0\}.
+\end{gather}
+
+\noindent
+\strong{Eigenschaften.}
+Jede reguläre Matrix besitzt genau eine inverse Matrix. 
+Die Menge der regulären Matrizen bildet bezüglich Matrizenmultiplikation
 eine Gruppe, die
 \emdef{allgemeine lineare Gruppe}\index{allgemeine lineare Gruppe}
 \begin{equation}
@@ -431,9 +447,8 @@ M_B^B\colon \operatorname{Aut}(V)\to\operatorname{GL}(\dim V,K)
 \end{equation}
 eine Gruppenisomorphismus.
 
-Eine quadratische Matrix, die nicht regulär ist, heißt
-\emdef{singulär}. Endomorphismen, die nicht bijektiv sind, lassen
-die Dimension ihrer Definitionsmenge schrumpfen:
+Endomorphismen die nicht bijektiv sind, bzw. singuläre Matrizen,
+lassen die Dimension ihrer Definitionsmenge schrumpfen:
 \begin{equation}
 f{\in}\operatorname{End}(V){\setminus}\operatorname{Aut}(V)
 \Longleftrightarrow \dim f(V)<\dim V.
@@ -443,23 +458,27 @@ den vollen Rang besitzen:
 \begin{equation}
 \det A=0\iff \operatorname{rk}(A) < n = \dim K^n.
 \end{equation}
-Inversionsformel:
+\strong{Bestimmung der inversen Matrix.}
+
+Für eine Matrix $A\in K^{2\times 2}$ gilt:
 \begin{equation}
-\begin{bmatrix}
+A^{-1} = \begin{bmatrix}
 a & b\\
 c & d
 \end{bmatrix}^{-1}
 = \frac{1}{ad-bc}\begin{bmatrix}
 d & -b\\
 -c & a
-\end{bmatrix}.
+\end{bmatrix},
 \end{equation}
-\begin{Definition}
+wenn $\det A\ne 0$ mit $\det A = ad-bc$.
+
+\begin{definition}[Streichungsmatrix]
 Wird in der Matrix $A$ die Zeile $i$ und die Spalte $j$ entfernt,
 so entsteht eine neue Matrix $[A]_{ij}$, die
 \emdef{Streichungsmatrix}\index{Streichungsmatrix}
 von $A$ genannt wird.
-\end{Definition}
+\end{definition}
 Laplacescher Entwicklungssatz:
 \begin{align}
 \det A = \sum_{i=1}^n (-1)^{i+j}a_{ij}\det([A]_{ij}),\\
