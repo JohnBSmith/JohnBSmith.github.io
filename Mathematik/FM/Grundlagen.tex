@@ -518,7 +518,7 @@ Funktionen.
 
 \subsubsection[Darstellung mit Negation, Konjunktion und Disjunktion]%
 {Darstellung mit Negation,\newline Konjunktion und Disjunktion}
-\begin{gather}
+\begin{gather}\label{eq:implication-definition}
 A\Rightarrow B \iff \overline A\lor B,\\
 (A\Leftrightarrow B) \iff
   (\overline A\land\overline B)\lor(A\land B),\\
@@ -527,7 +527,7 @@ A\oplus B \iff (\overline A\land B)\lor(A\land\overline B).
 
 \subsubsection{Tautologien}
 Modus ponens:
-\begin{equation}
+\begin{equation}\label{eq:modus-ponens}
 (A\Rightarrow B)\land A\implies B.
 \end{equation}
 Modus tollens:
@@ -596,7 +596,69 @@ Vollständige Fallunterscheidung, allgemein:
 \iff (\exists k[A_k]\Rightarrow C).
 \end{gather}
 
-\newpage
+\subsubsection{Schlussregeln}
+\strong{Ersetzungsregel.} Sei $p(\varphi)$ eine aussagenlogische
+Formel in expliziter Abhängigkeit von der Formelvariablen $\varphi$.
+Es gilt
+\begin{equation}
+\{p(\varphi),\varphi\leftrightarrow\psi\}\vdash p(\psi).
+\end{equation}
+\strong{Beispiel.} Betrachte $\varphi\land A\rightarrow B$ mit
+$\varphi:=(A\rightarrow B)$, was expandiert wird zu
+\[(A\rightarrow B)\land A\rightarrow B.\qquad\text{(s. \eqref{eq:modus-ponens})}\]
+Nun gilt nach \eqref{eq:implication-definition} aber
+\[A\rightarrow B\leftrightarrow \overline A\lor B.\]
+Daher lässt sich folgern:
+\[(\overline A\lor B)\land A\rightarrow B.\]
+
+\subsubsection{Metatheoreme}
+\strong{Korrektheit.}
+
+Für die Aussagenlogik gilt:
+\begin{equation}
+(\Gamma\vdash\psi)\implies (\Gamma\models\psi).
+\end{equation}
+
+\noindent
+\strong{Vollständigkeit.}
+
+Für die Aussagenlogik gilt:
+\begin{equation}
+(\Gamma\models\psi)\implies (\Gamma\vdash\psi).
+\end{equation}
+
+\noindent
+\strong{Deduktionstheorem (syntaktisch).}
+
+Für die Aussagenlogik gilt:
+\begin{equation}
+(\Gamma\cup\{\varphi\}\vdash\psi)\iff (\Gamma\vdash\varphi\rightarrow\psi).
+\end{equation}
+
+\noindent
+\strong{Deduktionstheorem (semantisch).}
+
+Für die Aussagenlogik gilt:
+\begin{equation}
+\begin{split}
+&(\{\varphi_1,\ldots,\varphi_n\}\models\psi)\\
+&\iff (\models \varphi_1\land\ldots\land\varphi_n\rightarrow\psi).
+\end{split}
+\end{equation}
+
+\noindent
+\strong{Einsetzungsregel.}
+
+Sei $v$ eine metasprachliche Variable, die für eine beliebige
+objektsprachliche Variable steht. Dann gilt:
+\begin{equation}
+(\models\varphi) \implies (\models\varphi[v:=\psi]).
+\end{equation}
+D.\,h. wenn in der tautologischen Formel $\varphi$ jedes auftreten
+der Variable $v$ gegen die Formel $\psi$ ersetzt wird, ergibt
+sich wieder eine tautologische Formel.
+
+%\newpage
 \subsection{Prädikatenlogik}
 \subsubsection{Rechenregeln}
 Verneinung (De Morgansche Regeln):
@@ -1073,7 +1135,8 @@ Es gilt
 &I\ne\emptyset\implies f\Big(\bigcap_{i\in I} M_i\Big) \subseteq \bigcap_{i\in I} f(M_i),\\
 &M\subseteq N\implies f(M)\subseteq f(N),\\
 &f(\emptyset) = \emptyset,\\
-&(g\circ f)(M) = g(f(M)).
+&(g\circ f)(M) = g(f(M)),\\
+&f(M) = \bigcup_{x\in M} f(\{x\}).
 \end{align}
 
 \subsection{Urbild}\index{Urbild}
@@ -1158,7 +1221,7 @@ L^+ := \bigcup_{k\in\N_1} L^k.
 \end{equation}
 \end{definition}
 
-\newpage
+% \newpage
 \subsection{Formale Grammatiken}
 \begin{definition}[Formale Grammatik]
 Eine \emdef{formale Grammatik} ist ein Tupel $(N,\Sigma,P,S)$,
@@ -1216,6 +1279,36 @@ a_1,\ldots,a_n\vdash b
 geschrieben wird. Eine wohlgeformte Formel wird $\emdef{Satz}$
 genannt, wenn sie ein Axiom ist oder über eine Kette von
 Ableitungen aus den Axiomen folgt.
+\end{definition}
+
+\subsection{Semantik}
+\begin{definition}[Interpretation (Aussagenlogik)]
+Eine \emph{Interpretation}\index{Interpretation}
+$I\colon V\to\{0,1\}$ ist eine Abbildung,
+welche jeder logischen Variablen einen Wahrheitswert zuordnet.
+
+Eine \emph{Interpretation} $I\colon F\to\{0,1\}$ erweitert den
+Definitionsbereich einer Interpretation wie folgt auf die
+Menge aller wohlgeformten Formeln:
+\begin{gather}
+I(\varphi\land\psi) = (I(\varphi)\land I(\psi)),\\
+I(\varphi\lor\psi) = (I(\varphi)\lor I(\psi)),\\
+I(\varphi\rightarrow\psi) = (I(\varphi)\rightarrow I(\psi)),\\
+I(\varphi\leftrightarrow\psi) = (I(\varphi)\leftrightarrow I(\psi)),\\
+I(\neg\varphi) = (\neg I(\varphi)).
+\end{gather}
+Die rechten Seiten werden hierbei entsprechend den Wertetabellen
+ausgewertet.
+\end{definition}
+
+\begin{definition}[Modellrelation]
+Sei $\Gamma=\{\varphi_1,\ldots,\varphi_n\}$ eine endliche Menge
+von Formeln und sei $\psi$ eine Formel. Die Formelmenge $\Gamma$
+\emph{modelliert} $\psi$, wenn jede Interpretation, die alle
+Formeln in $\Gamma$ erfüllt, auch $\psi$ erfüllt. Kurz:
+\begin{equation}
+(\Gamma\models\psi) \defiff \forall I[\forall\varphi{\in}\Gamma(I(\varphi))\Rightarrow I(\psi)].
+\end{equation}
 \end{definition}
 
 \newpage

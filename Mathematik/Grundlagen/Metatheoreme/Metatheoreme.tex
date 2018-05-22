@@ -1,0 +1,205 @@
+\documentclass{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{brown1}{rgb}{0.26,0.14,0}
+\definecolor{brown2}{rgb}{0.20,0.10,0}
+\setbeamercolor*{palette primary}{fg=white,bg=brown1}
+\setbeamercolor*{palette secondary}{fg=white,bg=brown2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=brown2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+
+\title{Metatheoreme über die Aussagenlogik}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\vfill\hfill
+\modest{Creative Commons CC0}
+\end{frame}
+
+\begin{frame}
+\strong{Definition. Interpretation.}
+Eine \emph{Interpretation} $I\colon V\to\{0,1\}$ ist eine Abbildung,
+die jeder logischen Variablen einen Wahrheitswert zuordnet.
+Anstelle von Interpretation spricht man auch von einer \emph{Belegung}.
+\end{frame}
+
+\begin{frame}
+Der Definitionsbereich einer Interpretation wird wie folgt
+auf die Menge aller wohlgeformten Formeln erweitert:
+\begin{align*}
+I(\varphi\land\psi) &= (I(\varphi)\land I(\psi)),\\
+I(\varphi\lor\psi) &= (I(\varphi)\lor I(\psi)),\\
+I(\varphi\rightarrow\psi) &= (I(\varphi)\rightarrow I(\psi)),\\
+I(\varphi\leftrightarrow\psi) &= (I(\varphi)\leftrightarrow I(\psi)),\\
+I(\neg\varphi) &= \neg I(\varphi).
+\end{align*}
+Die rechte Seite der jeweiligen Zeile wird hierbei mittels ihrer
+Wahrheitstabelle ausgewertet.
+\end{frame}
+
+\begin{frame}
+Für eine Formel $\varphi$ sind die Interpretationen
+nichts anderes als die Zeilen der Wahrheitstabelle zu $\varphi$.
+\end{frame}
+
+\begin{frame}
+\strong{Definition. Modell.} Eine Interpretation $I$
+heißt \emph{Modell} der Formel $\varphi$, wenn
+$I(\varphi)=1$ ist.
+\end{frame}
+
+\begin{frame}
+\strong{Definition. Modellrelation.}
+Ist jede Interpretation, die ein Modell jeder Formel der Formelmenge
+\[\Gamma=\{\varphi_1,\ldots,\varphi_n\}\]
+ist, auch ein Modell von $\psi$, dann sagt man,
+$\Gamma$ \emph{modelliert} $\psi$, und schreibt:
+\[\Gamma\models\psi.\]
+\end{frame}
+
+\begin{frame}
+\strong{Definition. Tautologische Formel.}
+Eine Formel, welche unter jeder beliebigen Interpretation
+gültig ist, heißt \emph{tautologisch}. Kurz:
+\[(\models\varphi) \iff \forall I(I(\varphi)=1).\]
+Das heißt:
+\[(\models\varphi) \iff (\{\}\models\varphi).\]
+\end{frame}
+
+\begin{frame}
+Anders ausgedrückt: Eine Formel ist genau dann tautologisch,
+wenn jede Zeile der Wahrheitstabelle am Ende erfüllt wird.
+Dieses einfache Verfahren ist Elektronikern bereits aus der
+Schaltalgebra bekannt.
+\end{frame}
+
+\begin{frame}
+\strong{Es gelten Metatheoreme.}
+\end{frame}
+
+\begin{frame}
+\strong{Korrektheit der Aussagenlogik.}
+Es gilt:
+\[(\Gamma\vdash\psi)\implies (\Gamma\models\psi).\]
+Das heißt, jede Formel die sich unter Verwendung von
+Schlussregeln und bereits gezeigten Sätzen syntaktisch aus $\Gamma$
+ableiten lässt, wird auch durch $\Gamma$ modelliert.
+\end{frame}
+
+\begin{frame}
+\strong{Vollständigkeit der Aussagenlogik.}
+Es gilt:
+\[(\Gamma\models\psi)\implies (\Gamma\vdash\psi).\]
+\end{frame}
+
+\begin{frame}
+\strong{Deduktionstheorem (syntaktisch).}
+Es gilt:
+\[(\Gamma\cup\{\varphi\}\vdash\psi)
+\iff(\Gamma\vdash\varphi\rightarrow\psi).\]
+\end{frame}
+
+\begin{frame}
+\strong{Deduktionstheorem (semantisch).}
+Es gilt:
+\[(\{\varphi_1,\ldots,\varphi_n\}\models\psi)
+\iff (\models\varphi_1\land\ldots\land\varphi_n\rightarrow\psi).\]
+\end{frame}
+
+\begin{frame}
+\strong{Einsetzungsregel.} Sei $v$ eine metasprachliche Variable,
+welche für eine objektsprachliche Variable steht. Ist $\varphi$
+eine tautologische Formel, dann ergibt sich auch eine tautologische
+Formel, wenn man jedes Auftreten von $v$ in $\varphi$ gegen die
+Formel $\psi$ ersetzt. Kurz:
+\[(\models\varphi)\implies (\models\varphi[v:=\psi]).\]
+\end{frame}
+
+\begin{frame}
+Diese Theoreme überschatten die Aussagenlogik. Sie sind auch etwas
+seltsam, da sie es gestatten, objektsprachliche Formeln in
+metasprachliche Schlussregeln umzuwandeln.
+\end{frame}
+
+\begin{frame}
+\strong{Beispiel.}
+Als Anwendungsbeispiel wollen wir den Modus ponens zeigen.
+Zunächst überzeugen wir uns mittels einer Wahrheitstabelle, dass
+\[\models A\land (A\rightarrow B)\rightarrow B\]
+gilt.
+\end{frame}
+
+\begin{frame}
+Mit der Einsetzungsregel ersetzen wir die Variablen gegen Formeln.
+Es ergibt sich
+\[\models\varphi\land (\varphi\rightarrow\psi)\rightarrow\psi.\]
+\end{frame}
+
+\begin{frame}
+Wir nutzen nun das semantische Deduktionstheorem und
+gewinnen:
+\[\{\varphi,\varphi\rightarrow\psi\}\models\psi.\]
+\end{frame}
+
+\begin{frame}
+Anwendung der Vollständigkeit bringt uns schließlich
+den Modus ponens:
+\[\{\varphi,\varphi\rightarrow\psi\}\vdash\psi.\]
+\end{frame}
+
+\begin{frame}
+Soeben wurde ein einfaches Verfahren skizziert, das es gestattet, neue
+Schlussregeln zu gewinnen.
+\end{frame}
+
+\begin{frame}
+Die Metatheoreme erlauben es uns, die Aussagenlogik zu beherrschen.
+\end{frame}
+
+\begin{frame}
+Ende.
+\end{frame}
+
+\end{document}
+
+
