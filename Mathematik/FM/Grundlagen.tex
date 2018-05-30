@@ -1406,31 +1406,56 @@ Ableitungen aus den Axiomen folgt.
 
 \subsection{Semantik}
 \begin{definition}[Interpretation (Aussagenlogik)]
-Eine \emph{Interpretation}\index{Interpretation}
+Eine \emdef{Interpretation}\index{Interpretation}
 $I\colon V\to\{0,1\}$ ist eine Abbildung,
 welche jeder logischen Variablen einen Wahrheitswert zuordnet.
 
-Eine \emph{Interpretation} $I\colon F\to\{0,1\}$ erweitert den
+Eine \emdef{Interpretation} $I\colon F\to\{0,1\}$ erweitert den
 Definitionsbereich einer Interpretation wie folgt auf die
 Menge aller wohlgeformten Formeln:
-\begin{gather}
-I(\varphi\land\psi) = (I(\varphi)\land I(\psi)),\\
-I(\varphi\lor\psi) = (I(\varphi)\lor I(\psi)),\\
-I(\varphi\rightarrow\psi) = (I(\varphi)\rightarrow I(\psi)),\\
-I(\varphi\leftrightarrow\psi) = (I(\varphi)\leftrightarrow I(\psi)),\\
-I(\neg\varphi) = (\neg I(\varphi)).
-\end{gather}
-Die rechten Seiten werden hierbei entsprechend den Wertetabellen
-ausgewertet.
+\begin{align}
+I(0) &= 0,\\
+I(1) &= 1,\\
+I(\neg\varphi) &= (\neg I(\varphi)),\\
+I(\varphi\land\psi) &= (I(\varphi)\land I(\psi)),\\
+I(\varphi\lor\psi) &= (I(\varphi)\lor I(\psi)),\\
+I(\varphi\rightarrow\psi) &= (I(\varphi)\rightarrow I(\psi)),\\
+I(\varphi\leftrightarrow\psi) &= (I(\varphi)\leftrightarrow I(\psi)).
+\end{align}
+Die rechten Seite der jeweiligen Zeile wird hierbei entsprechend
+ihrer Wahrheitstabelle ausgewertet.
+\end{definition}
+
+\begin{definition}[Modell]
+Eine Interpretation $I$ wird \emdef{Modell}\index{Modell}
+von $\varphi$ genannt, wenn $I(\varphi)=1$ ist. Man schreibt
+dafür auch $I\models\varphi$.
+
+Eine Interpretation $I$ wird \emdef{Modell} der Formelmenge
+$M=\{\varphi_1,\ldots,\varphi_n\}$ genannt, wenn sie für jede
+Formel der Menge ein Modell ist:
+\begin{equation}
+(I\models M) \defiff \forall\varphi{\in}M\;(I\models\varphi).
+\end{equation}
 \end{definition}
 
 \begin{definition}[Modellrelation]
-Sei $\Gamma=\{\varphi_1,\ldots,\varphi_n\}$ eine endliche Menge
-von Formeln und sei $\psi$ eine Formel. Die Formelmenge $\Gamma$
-\emph{modelliert} $\psi$, wenn jede Interpretation, die alle
-Formeln in $\Gamma$ erfüllt, auch $\psi$ erfüllt. Kurz:
+Sei $M=\{\varphi_1,\ldots,\varphi_n\}$ eine endliche Menge
+von Formeln und sei $\psi$ eine Formel. Die Formelmenge $M$
+\emph{modelliert}\index{Modellrelation} $\psi$, wenn jedes Modell
+von $M$ auch auch ein Modell von $\psi$ ist. Kurz:
 \begin{equation}
-(\Gamma\models\psi) \defiff \forall I[\forall\varphi{\in}\Gamma(I(\varphi))\Rightarrow I(\psi)].
+(M\models\psi) \defiff \forall I[(I\models M)\Rightarrow (I\models\psi)].
+\end{equation}
+Die Modellrelation wird auch als \emdef{metasprachliche
+semantische Implikation} bezeichnet.
+\end{definition}
+
+\begin{definition}[Tautologie]
+Eine Formel $\varphi$ heißt \emdef{tautologisch}\index{Tautologie},
+wenn jede Interpretation auch ein Modell von $\varphi$ ist:
+\begin{equation}
+(\models\varphi) \defiff \forall I(I(\varphi)=1).
 \end{equation}
 \end{definition}
 

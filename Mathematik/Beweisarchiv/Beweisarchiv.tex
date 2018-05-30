@@ -1,0 +1,220 @@
+\documentclass[a4paper,10pt,fleqn,twoside]{scrbook}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{arev}
+
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\usepackage[all]{xy}
+\usepackage{enumitem}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{0,40,80}
+\definecolor{gray1}{RGB}{80,80,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{geometry}
+\geometry{a4paper,left=38mm,right=22mm,top=24mm,bottom=40mm}
+\setlength{\columnsep}{4mm}
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{2}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\id}{\operatorname{id}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\sur}{\operatorname{sur}}
+\newcommand{\defiff}{\;:\Longleftrightarrow\;}
+\newcommand{\strong}[1]{{\sf\bfseries #1}}
+
+\newcommand{\emdef}[1]{\emph{#1}}
+\newcommand{\pstrut}[1]{\rule{0pt}{\dimexpr 8pt+#1}}
+\newcommand{\bitem}{\item[\scriptsize\color{gray1}$\blacksquare$]}
+\renewcommand{\qedsymbol}{\ensuremath{\square}}
+
+\declaretheoremstyle[%
+  within=chapter,%
+  spaceabove=\topsep,%
+  spacebelow=\topsep%,
+  headfont=\bfseries,%
+  headpunct={.},%
+  % postheadspace=,%
+  notefont=\bfseries,%
+  notebraces={(}{)},%
+]{baplain}
+
+\declaretheorem[style=baplain,name=Definition]{Definition}
+\declaretheorem[style=baplain,name=Satz]{Satz}
+\newenvironment{Beweis}{\par\noindent\strong{Beweis.}}{\par}
+
+\title{Beweisarchiv}
+\date{Mai 2018}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Grundlagen}
+\section{Mengenlehre}
+\subsection{Definitionen}
+
+\begin{Definition}[seteq: Gleichheit von Mengen]\label{def:seteq}
+\[A=B \defiff \forall x(x\in A\iff x\in B).\]
+\end{Definition}
+
+\begin{Definition}[subseteq: Teilmenge]\label{def:subseteq}
+\[A\subseteq B \defiff \forall x(x\in A\implies x\in B).\]
+\end{Definition}
+
+\begin{Definition}[filter: beschreibende Angabe]\label{def:filter}
+\[a\in\{x\mid P(x)\} \defiff P(a).\]
+\end{Definition}
+
+\begin{Definition}[cap: Schnitt]\label{def:cap}
+\[A\cap B = \{x\mid x\in A\land x\in B\}.\]
+\end{Definition}
+
+\begin{Definition}[cup: Vereinigung]\label{def:cup}
+\[A\cup B = \{x\mid x\in A\lor x\in B\}.\]
+\end{Definition}
+
+\begin{Definition}[intersection: Schnitt]\label{def:intersection}
+\[\bigcap_{i\in I} A_i \iff \{x\mid \forall i{\in}I\,(x\in A_i)\}.\]
+\end{Definition}
+
+\begin{Definition}[union: Vereinigung]\label{def:union}
+\[\bigcup_{i\in I} A_i \iff \{x\mid \exists i{\in}I\,(x\in A_i)\}.\]
+\end{Definition}
+
+
+\subsection{Rechenregeln}
+
+\begin{Satz}[Kommutativgesetze]
+Es gilt $A\cap B = B\cap A$ und $A\cup B = B\cup A$.
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x(x\in A\cap B \iff x\in B\cap A).\]
+Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
+\[x\in A\cap B \iff x\in A\land x\in B \iff x\in B\land x\in A
+\iff x\in B\cap A.\]
+Für die Vereinigung ist das analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Assoziativgesetze]
+Es gilt $A\cap (B\cap C) = (A\cap B)\cap C$
+und $A\cup (B\cup C) = (A\cup B)\cup C$.
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x[x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C].\]
+Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
+\begin{align*}
+&x\in A\cap (B\cap C) \iff x\in A\land x\in B\cap C
+\iff x\in A\land (x\in B\land x\in C)\\
+&\iff (x\in A\land x\in B)\land x\in C
+\iff x\in A\cap B\land x\in C
+\iff x\in (A\cap B)\cap C.
+\end{align*}
+Für die Vereinigung ist das analog.\,\qedsymbol
+\end{Beweis}
+
+
+
+\chapter{Analysis}
+\section{Folgen}
+\subsection{Konvergenz}
+
+\begin{Definition}[openepball: offene Epsilon-Umgebung]
+Sei $(M,d)$ ein metrischer Raum. Unter der offenen Epsilon-Umgebung
+von $a\in M$ versteht man:
+\[U_\varepsilon(a) := \{x\mid d(x,a)<\varepsilon\}\]
+Setze zunächst speziell $d(x,a):=|x-a|$ bzw. $d(x,a):=\|x-a\|$.
+\end{Definition}
+
+\begin{Definition}[lim: konvergente Folge, Grenzwert]\label{def:lim}
+\[\lim_{n\to\infty} a_n = a
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(a_n\in U_\varepsilon(a))\]
+bzw.
+\[\lim_{n\to\infty} a_n = a
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<\varepsilon).\]
+\end{Definition}
+
+\begin{Satz}
+Es gilt:
+\[\lim_{n\to\infty} a_n=a \iff
+\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<R\varepsilon),\]
+wobei $R>0$ ein fester aber beliebieger Skalierungsfaktor ist.
+\end{Satz}
+
+\begin{Beweis}
+Betrachte $\varepsilon>0$ und multipliziere auf beiden Seiten
+mit $R$. Dabei handelt es sich um eine Äquivalenzumformung.
+Setze $\varepsilon':=R\varepsilon$. Demnach gilt:
+\[\varepsilon>0 \iff \varepsilon'>0.\]
+Nach der Ersetzungsregel düfen wir die Teilformel $\varepsilon>0$
+nun ersetzen. Es ergibt sich die äquivalente Formel
+\[\lim_{n\to\infty} a_n=a \iff
+\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<\varepsilon').\]
+Das ist aber genau Def. \ref{def:lim} (lim).\,\qedsymbol
+\end{Beweis}
+
+\chapter{Topologie}
+\section{Grundbegriffe}
+\subsection{Definitionen}
+
+\begin{Definition}[nhfilter: Umgebungsfilter]\label{def:nhfilter}
+\[\underline U(x) := \{U{\subseteq}X\mid
+\exists O(O\in T\land x\in O\land O\subseteq U)\}.\]
+\end{Definition}
+
+\begin{Definition}[int: Offener Kern]\label{def:int}
+\[\operatorname{int}(M) := \{x\in M\mid M\in \underline U(x)\}\]
+\end{Definition}
+
+\begin{Satz}
+Der offene Kern von $M$ ist die Vereinigung der offenen Teilmengen
+von $M$. Kurz:%
+\[\operatorname{int}(M) = \bigcup_{O\in 2^M\cap T} O.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) und Def. \ref{def:int} (int)
+expandieren:
+\[\forall x[x\in M\land M\in\underline U(x)
+\iff x\in\bigcup_{O\in 2^M\cap T} O].\]
+Den äußeren Allquantor brauchen wir nicht weiter mitschreiben, da alle
+freien Variablen automatisch allquantifiziert werden.
+Nach Def. \ref{def:nhfilter} (nhfilter) weiter expandieren, wobei die
+Bedingung $U\subseteq X$ als tautologisch entfallen kann,
+weil $X$ die Grundmenge ist. Auf der rechten Seite wird nach Def.
+\ref{def:union} (union) expandiert. Es ergibt sich:
+\[x\in M\land \exists O(O\in T\land x\in O\land O\subseteq M)
+\iff \exists O(O\subseteq M\land O\in T\land x\in O).\]
+Wegen $A\land\exists x(P(x))\iff \exists x(A\land P(x))$ ergibt
+sich auf der linken Seite:
+\[\exists O(x\in M\land O\in T\land x\in O\land O\subseteq M).\]
+Wenn aber $O\subseteq M$ erfüllt sein muss, gilt
+$x\in O\implies x\in M$. Demnach kann $x\in M$ entfallen.
+Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
+\end{Beweis}
+
+
+
+\vfill
+\texttt{Dieses Heft steht unter der Creative"=Commons"=Lizenz CC0.}
+\end{document}
+
+
+
