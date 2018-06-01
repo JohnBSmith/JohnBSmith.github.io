@@ -80,11 +80,11 @@
 \end{Definition}
 
 \begin{Definition}[cap: Schnitt]\label{def:cap}
-\[A\cap B = \{x\mid x\in A\land x\in B\}.\]
+\[A\cap B := \{x\mid x\in A\land x\in B\}.\]
 \end{Definition}
 
 \begin{Definition}[cup: Vereinigung]\label{def:cup}
-\[A\cup B = \{x\mid x\in A\lor x\in B\}.\]
+\[A\cup B := \{x\mid x\in A\lor x\in B\}.\]
 \end{Definition}
 
 \begin{Definition}[intersection: Schnitt]\label{def:intersection}
@@ -221,13 +221,22 @@ Setze zunächst speziell $d(x,a):=|x-a|$ bzw. $d(x,a):=\|x-a\|$.
 \defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(a_n\in U_\varepsilon(a))\]
 bzw.
 \[\lim_{n\to\infty} a_n = a
-\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<\varepsilon).\]
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon).\]
 \end{Definition}
 
-\begin{Satz}
+\begin{Definition}[bseq: beschränkte Folge]\label{def:bseq}
+Eine Folge $(a_n)$ mit $a_n\in\R$ heißt genau dann beschränkt,
+wenn es eine reelle Zahl $S$ gibt mit $|a_n|<S$ für alle $n$.
+
+Eine Folge $(a_n)$ von Punkten eines normierten Raums heißt genau
+dann beschränkt, wenn es eine reelle Zahl $S$ gibt mit $\|a_n\|<S$
+für alle $n$.
+\end{Definition}
+
+\begin{Satz}\label{lim-scale}
 Es gilt:
 \[\lim_{n\to\infty} a_n=a \iff
-\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<R\varepsilon),\]
+\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<R\varepsilon),\]
 wobei $R>0$ ein fester aber beliebieger Skalierungsfaktor ist.
 \end{Satz}
 
@@ -239,8 +248,57 @@ Setze $\varepsilon':=R\varepsilon$. Demnach gilt:
 Nach der Ersetzungsregel düfen wir die Teilformel $\varepsilon>0$
 nun ersetzen. Es ergibt sich die äquivalente Formel
 \[\lim_{n\to\infty} a_n=a \iff
-\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;(|a_n-a|<\varepsilon').\]
+\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon').\]
 Das ist aber genau Def. \ref{def:lim} (lim).\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt:
+\[\lim_{n\to\infty} a_n = a\implies \lim_{n\to\infty} \|a_n\| = \|a\|.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Satz \ref{rev-tineq} (umgekehrte Dreiecksungleichung) gilt:
+\[|\|a_n\|-\|a\|| \le \|a_n-a\| < \varepsilon.\]
+Dann ist aber rest recht $|\|a_n\|-\|a\||<\varepsilon$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Ist $(a_n)$ eine Nullfolge und $(b_n)$ eine beschränkte Folge,
+dann ist auch $(a_n b_n)$ eine Nullfolge.
+\end{Satz}
+
+\begin{Beweis}
+Wenn $(b_n)$ beschränkt ist, dann existiert nach
+Def. \ref{def:bseq} (bseq) eine Schranke $S$ mit
+$|b_n|<S$ für alle $n$. Man multipliziert nun auf beiden Seiten
+mit $|a_n|$ und erhält
+\[|a_n b_n| = |a_n| |b_n| < |a_n| S.\]
+Wenn $a_n\to 0$, dann muss für jedes $\varepsilon$
+ein $n_0$ existieren mit $|a_n|<\varepsilon$ für $n>n_0$.
+Multipliziert man auf beiden Seiten mit $S$, und ergibt sich
+\[|a_n b_n-0| = |a_n b_n| < |a_n| S < S\varepsilon.\]
+Nach Satz \ref{lim-scale} gilt dann aber $a_n b_n\to 0$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Grenzwertsatz zur Addition]
+Seien $(a_n)$, $(b_n)$ Folgen von Punkten eines normierten Raumes.
+Es gilt:
+\[\lim_{n\to\infty} a_n = a\land \lim_{n\to\infty} b_n
+= b \implies \lim_{n\to\infty} a_n+b_n = a+b.\]
+\end{Satz}
+
+\begin{Beweis}
+Dann gibt es ein $n_0$, so dass für $n>n_0$ sowohl
+$\|a_n-a\|<\varepsilon$ als auch $\|b_n-b\|<\varepsilon$.
+Addition der beiden Ungleichungen ergibt
+\[\|a_n-a\| + \|b_n-b\| < 2\varepsilon.\]
+Nach der Dreiecksungleichung, das ist Axiom (N3) in Def.
+\ref{def:normed-space} (normed-space), gilt nun aber die Abschätzung
+\[\|(a_n+b_n)-(a+b)\| = \|(a_n-a)+(b_n-b)\| \le \|a_n-a\|+\|b_n-b\|.\]
+Somit gilt erst recht
+\[\|(a_n+b_n)-(a+b)\| < 2\varepsilon.\]
+Nach Satz \ref{lim-scale} folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
 \chapter{Topologie}
@@ -283,7 +341,48 @@ $x\in O\implies x\in M$. Demnach kann $x\in M$ entfallen.
 Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
 \end{Beweis}
 
+\section{Metrische Räume}
+\subsection{Metrischer Räume}
+\begin{Definition}[metric-space: metrischer Raum]
+Man bezeichet $(M,d)$ mit $d\colon M^2\to\R$ genau dann als
+metrischen Raum, wenn die folgenden Axiome erfüllt sind:
+\begin{gather*}
+\text{(M1)}\quad d(x,y)=0\iff x=y,\\
+\text{(M2)}\quad d(x,y)=d(y,x),\\
+\text{(M3)}\quad d(x,y)\le d(x,z)+d(z,y).
+\end{gather*}
+\end{Definition}
 
+\subsection{Normierte Räume}
+\begin{Definition}[normed-space: normierter Raum]\label{def:normed-space}
+Sei $V$ ein Vektorraum über dem Körper der rellen oder komplexen
+Zahlen. Sei $N(x)=\|x\|$ eine Abbildung, die jedem $x\in V$ eine
+reelle Zahl zuordnet. Man nennt $(V,N)$ genau dann einen
+normierten Raum, wenn die folgenden Axiome erfüllt sind:
+\begin{align*}
+\text{(N1)}\quad &\|x\|=0\iff x=0,&&\text{(Definitheit)}\\
+\text{(N2)}\quad &\|\lambda x\|=|\lambda|\|x\|,&&\text{(betragsmäßige Homogenität)}\\
+\text{(N3)}\quad &\|x+y\| \le \|x\|+\|y\|.&&\text{(Dreiecksungleichung)}
+\end{align*}
+\end{Definition}
+
+\begin{Satz}[umgekehrte Dreiecksungleichung]\label{rev-tineq}
+In jedem normierten Raum gilt
+\[|\|x\|-\|y\|| \le \|x-y\|.\]
+\end{Satz}
+\begin{Beweis}
+Auf beiden Seiten von Def. \ref{def:normed-space} (normed-space)
+Axiom (N3) wird $\|y\|$ subtrahiert.
+Es ergibt sich
+\[\|x+y\| - \|y\| \le \|x\|.\]
+Substitution $x:=x-y$ bringt nun
+\[\|x\| - \|y\| \le \|x-y\|.\]
+Vertauscht man nun $x$ und $y$, dann ergibt sich
+\[\|y\|-\|x\| \le \|y-x\| \iff -(\|x\|-\|y\|)\le \|x-y\|.\]
+Wir haben nun die Situation $a\le b$ und $-a\le b$. Multipliziert
+man die letzte Ungleichung mit $-1$, dann ergibt sich $a\ge -b$.
+Somit ist $-b\le a\le b$, kurz $|a|\le b$.\,\qedsymbol
+\end{Beweis}
 
 \vfill
 \texttt{Dieses Heft steht unter der Creative"=Commons"=Lizenz CC0.}

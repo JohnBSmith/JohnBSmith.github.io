@@ -588,15 +588,14 @@ evaluate_strict: function(t,d){
 
 test_all_valuations: function(a,i,t,d){
   if(i==a.length){
-    var A = cas.evaluate_strict(t,d);
-    if(A==0) return 0;
-    return cas.evaluate_strict(t,d);
+    var y = cas.evaluate_strict(t,d);
+    return [y,y];
   }else{
     d[a[i]]=0;
     var A = cas.test_all_valuations(a,i+1,t,d);
-    if(A==0) return 0;
     d[a[i]]=1;
-    return cas.test_all_valuations(a,i+1,t,d);
+    var B = cas.test_all_valuations(a,i+1,t,d);
+    return [A[0]&&B[0],A[1]+B[1]];
   }
 },
 

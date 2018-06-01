@@ -16,10 +16,14 @@ function main(){
     if(a[0].type!="."){
       var t = compiler.ast(a,input.value);
       var ans;
-      if(cas.test_tautology(t)){
+      var y = cas.test_tautology(t);
+      if(y[0]){
         ans = "&nbsp;<b style='color: #008000'>is a tautology</b>.";
+      }else if(y[1]) {
+        ans = "&nbsp;is <b style='color: #a00000'>not a tautology</b>, ";
+        ans+= "but <b style='color: #008000'>satisfiable</b>.";
       }else{
-        ans = "&nbsp;<b style='color: #a00000'>is not a tautology</b>.";
+        ans = "&nbsp;is <b style='color: #a00000'>not satisfiable</b>.";
       }
       output.innerHTML = compiler.htm_expression(t);
       output.innerHTML+=ans;
