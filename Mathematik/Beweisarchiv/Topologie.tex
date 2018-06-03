@@ -1,0 +1,85 @@
+
+\chapter{Topologie}
+\section{Grundbegriffe}
+\subsection{Definitionen}
+
+\begin{Definition}[nhfilter: Umgebungsfilter]\label{def:nhfilter}
+\[\underline U(x) := \{U{\subseteq}X\mid
+\exists O(O\in T\land x\in O\land O\subseteq U)\}.\]
+\end{Definition}
+
+\begin{Definition}[int: Offener Kern]\label{def:int}
+\[\operatorname{int}(M) := \{x\in M\mid M\in \underline U(x)\}\]
+\end{Definition}
+
+\begin{Satz}
+Der offene Kern von $M$ ist die Vereinigung der offenen Teilmengen
+von $M$. Kurz:%
+\[\operatorname{int}(M) = \bigcup_{O\in 2^M\cap T} O.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) und Def. \ref{def:int} (int)
+expandieren:
+\[\forall x[x\in M\land M\in\underline U(x)
+\iff x\in\bigcup_{O\in 2^M\cap T} O].\]
+Den äußeren Allquantor brauchen wir nicht weiter mitschreiben, da alle
+freien Variablen automatisch allquantifiziert werden.
+Nach Def. \ref{def:nhfilter} (nhfilter) weiter expandieren, wobei die
+Bedingung $U\subseteq X$ als tautologisch entfallen kann,
+weil $X$ die Grundmenge ist. Auf der rechten Seite wird nach Def.
+\ref{def:union} (union) expandiert. Es ergibt sich:
+\[x\in M\land \exists O(O\in T\land x\in O\land O\subseteq M)
+\iff \exists O(O\subseteq M\land O\in T\land x\in O).\]
+Wegen $A\land\exists x(P(x))\iff \exists x(A\land P(x))$ ergibt
+sich auf der linken Seite:
+\[\exists O(x\in M\land O\in T\land x\in O\land O\subseteq M).\]
+Wenn aber $O\subseteq M$ erfüllt sein muss, gilt
+$x\in O\implies x\in M$. Demnach kann $x\in M$ entfallen.
+Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
+\end{Beweis}
+
+\section{Metrische Räume}
+\subsection{Metrischer Räume}
+\begin{Definition}[metric-space: metrischer Raum]
+Man bezeichet $(M,d)$ mit $d\colon M^2\to\R$ genau dann als
+metrischen Raum, wenn die folgenden Axiome erfüllt sind:
+\begin{gather*}
+\text{(M1)}\quad d(x,y)=0\iff x=y,\\
+\text{(M2)}\quad d(x,y)=d(y,x),\\
+\text{(M3)}\quad d(x,y)\le d(x,z)+d(z,y).
+\end{gather*}
+\end{Definition}
+
+\subsection{Normierte Räume}
+\begin{Definition}[normed-space: normierter Raum]\label{def:normed-space}
+Sei $V$ ein Vektorraum über dem Körper der rellen oder komplexen
+Zahlen. Sei $N(x)=\|x\|$ eine Abbildung, die jedem $x\in V$ eine
+reelle Zahl zuordnet. Man nennt $(V,N)$ genau dann einen
+normierten Raum, wenn die folgenden Axiome erfüllt sind:
+\begin{align*}
+\text{(N1)}\quad &\|x\|=0\iff x=0,&&\text{(Definitheit)}\\
+\text{(N2)}\quad &\|\lambda x\|=|\lambda|\|x\|,&&\text{(betragsmäßige Homogenität)}\\
+\text{(N3)}\quad &\|x+y\| \le \|x\|+\|y\|.&&\text{(Dreiecksungleichung)}
+\end{align*}
+\end{Definition}
+
+\begin{Satz}[umgekehrte Dreiecksungleichung]\label{rev-tineq}
+In jedem normierten Raum gilt
+\[|\|x\|-\|y\|| \le \|x-y\|.\]
+\end{Satz}
+\begin{Beweis}
+Auf beiden Seiten von Def. \ref{def:normed-space} (normed-space)
+Axiom (N3) wird $\|y\|$ subtrahiert.
+Es ergibt sich
+\[\|x+y\| - \|y\| \le \|x\|.\]
+Substitution $x:=x-y$ bringt nun
+\[\|x\| - \|y\| \le \|x-y\|.\]
+Vertauscht man nun $x$ und $y$, dann ergibt sich
+\[\|y\|-\|x\| \le \|y-x\| \iff -(\|x\|-\|y\|)\le \|x-y\|.\]
+Wir haben nun die Situation $a\le b$ und $-a\le b$. Multipliziert
+man die letzte Ungleichung mit $-1$, dann ergibt sich $a\ge -b$.
+Somit ist $-b\le a\le b$, kurz $|a|\le b$.\,\qedsymbol
+\end{Beweis}
+
+

@@ -1,0 +1,143 @@
+
+\chapter{Grundlagen}
+\section{Mengenlehre}
+\subsection{Definitionen}
+
+\begin{Definition}[seteq: Gleichheit von Mengen]\label{def:seteq}
+\[A=B \defiff \forall x(x\in A\iff x\in B).\]
+\end{Definition}
+
+\begin{Definition}[subseteq: Teilmenge]\label{def:subseteq}
+\[A\subseteq B \defiff \forall x(x\in A\implies x\in B).\]
+\end{Definition}
+
+\begin{Definition}[filter: beschreibende Angabe]\label{def:filter}
+\[a\in\{x\mid P(x)\} \defiff P(a).\]
+\end{Definition}
+
+\begin{Definition}[cap: Schnitt]\label{def:cap}
+\[A\cap B := \{x\mid x\in A\land x\in B\}.\]
+\end{Definition}
+
+\begin{Definition}[cup: Vereinigung]\label{def:cup}
+\[A\cup B := \{x\mid x\in A\lor x\in B\}.\]
+\end{Definition}
+
+\begin{Definition}[intersection: Schnitt]\label{def:intersection}
+\[\bigcap_{i\in I} A_i \iff \{x\mid \forall i{\in}I\,(x\in A_i)\}.\]
+\end{Definition}
+
+\begin{Definition}[union: Vereinigung]\label{def:union}
+\[\bigcup_{i\in I} A_i \iff \{x\mid \exists i{\in}I\,(x\in A_i)\}.\]
+\end{Definition}
+
+
+\subsection{Rechenregeln}
+
+\begin{Satz}[Kommutativgesetze]
+Es gilt $A\cap B = B\cap A$ und $A\cup B = B\cup A$.
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x(x\in A\cap B \iff x\in B\cap A).\]
+Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
+\[x\in A\cap B \iff x\in A\land x\in B \iff x\in B\land x\in A
+\iff x\in B\cap A.\]
+Für die Vereinigung ist das analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Assoziativgesetze]
+Es gilt $A\cap (B\cap C) = (A\cap B)\cap C$
+und $A\cup (B\cup C) = (A\cup B)\cup C$.
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x[x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C].\]
+Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
+\begin{align*}
+&x\in A\cap (B\cap C) \iff x\in A\land x\in B\cap C
+\iff x\in A\land (x\in B\land x\in C)\\
+&\iff (x\in A\land x\in B)\land x\in C
+\iff x\in A\cap B\land x\in C
+\iff x\in (A\cap B)\cap C.
+\end{align*}
+Für die Vereinigung ist das analog.\,\qedsymbol
+\end{Beweis}
+
+\section{Abbildungen}
+\subsection{Definitionen}
+\begin{Definition}[img: Bildmenge]\label{def:img}
+Für eine Abbildung $f\colon A\to B$ und $M\subseteq A$
+wird die Menge
+\[f(M) := \{y\mid \exists x{\in}M\;(y=f(x))\}
+= \{y\mid \exists x(x\in M\land y=f(x))\}\]
+als Bildmenge von $M$ unter $f$ bezeichnet.
+\end{Definition}
+
+\begin{Definition}[inj: Injektion]\label{def:inj}
+Eine Abbildung $f\colon A\to B$ heißt genau dann injektiv, wenn gilt:
+\[\forall x_1\forall x_2(f(x_1)=f(x_2)\implies x_1=x_2)\]
+bzw. äquivalent
+\[\forall x_1\forall x_2(x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
+\end{Definition}
+
+\begin{Definition}[sur: Surjektion]\label{def:sur}
+Eine Abbildung $f\colon A\to B$ heißt genau dann surjektiv, wenn gilt:
+\[B\subseteq f(A).\]
+\end{Definition}
+
+\subsection{Grundlagen}
+\begin{Satz}[feq: Gleichheit von Abbildungen]\label{feq}
+Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
+dann gleich, kurz $f=g$, wenn $A=C$ und $B=D$ und
+\[\forall x(f(x)=g(x)).\]
+\end{Satz}
+Ohne Beweis.
+
+\subsection{Kardinalzahlen}
+\begin{Definition}[equipotent: Gleichmächtigkeit]\label{def:equipotent}
+Zwei Mengen $A$, $B$ heißen genau dann gleichmächtig, wenn
+eine Bijektion $f\colon A\to B$ existiert.
+\end{Definition}
+
+\begin{Satz}
+Sei $M$ eine beliebige Menge. Die Potenzmenge $2^M$ ist zur
+Menge $\{0,1\}^M$ gleichmächtig.
+\end{Satz}
+
+\begin{Beweis}
+Für eine Aussage $A$ sei
+\[[A] := \begin{cases}
+1&\text{wenn }$A$\text{ gilt},\\
+0&\text{sonst}.
+\end{cases}\]
+Für $A\subseteq M$ betrachte man nun die Indikatorfunktion
+\[\chi_A\colon M\to\{0,1\},\quad \chi_A(x):=[x\in A].\]
+Die Abbildung
+\[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=\chi_A\]
+ist eine kanonische Bijektion. \strong{Zur Injektivität.}
+Nach Def. \ref{def:inj} (inj) muss gelten:
+\[\varphi(A)=\varphi(B)\implies A=B,\quad\text{d.\,h.}\quad
+\chi_A=\chi_B \implies A=B.\]
+Nach Satz \ref{feq} (feq) und Def. \ref{def:seteq} (seteq)
+wird die Aussage expandiert zu:
+\[\forall x(\chi_A(x)=\chi_B(x))\implies \forall x(x\in A\iff x\in B).\]
+Es gilt aber nun:
+\[\chi_A(x)=\chi_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\iff x\in B).\]
+\end{Beweis}
+\strong{Zur Surjektivität.} Wir müssen nach Def. \ref{def:sur} (sur)
+prüfen, dass $\{0,1\}^M\subseteq \varphi(2^M)$ gilt.
+Expansion nach Def. \ref{def:subseteq} (subseteq) und
+Def. \ref{def:img} (img)
+ergibt:
+\[\forall f(f\in \{0,1\}^M\implies\exists A{\in}2^M[f=\varphi(A)]).\]
+Um dem Existenzquantor zu genügen, wähle
+\[A := f^{-1}(\{1\}) = \{x\in M\mid f(x)\in \{1\}\} = \{x\in M\mid f(x)=1\}.\]
+Es gilt $f=\chi_A$, denn
+\[\chi_A(x) = [x\in A] = [x\in\{x\mid f(x)=1\}] = [f(x)=1] = f(x).\]
+Da $\varphi$ eine Bijektion ist, müssen $2^M$ und $\{0,1\}^M$
+nach Def. \ref{def:equipotent} (equipotent) gleichmächtig
+sein.\,\qedsymbol
+

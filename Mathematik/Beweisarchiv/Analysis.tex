@@ -1,0 +1,159 @@
+
+\chapter{Analysis}
+\section{Folgen}
+\subsection{Konvergenz}
+
+\begin{Definition}[open-ep-ball: offene Epsilon-Umgebung]
+Sei $(M,d)$ ein metrischer Raum. Unter der offenen Epsilon-Umgebung
+von $a\in M$ versteht man:%
+\[U_\varepsilon(a) := \{x\mid d(x,a)<\varepsilon\}\]
+Setze zunächst speziell $d(x,a):=|x-a|$ bzw. $d(x,a):=\|x-a\|$.
+\end{Definition}
+
+\begin{Definition}[lim: konvergente Folge, Grenzwert]\label{def:lim}
+\[\lim_{n\to\infty} a_n = a
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(a_n\in U_\varepsilon(a))\]
+bzw.
+\[\lim_{n\to\infty} a_n = a
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon).\]
+\end{Definition}
+
+\begin{Definition}[bseq: beschränkte Folge]\label{def:bseq}
+Eine Folge $(a_n)$ mit $a_n\in\R$ heißt genau dann beschränkt,
+wenn es eine reelle Zahl $S$ gibt mit $|a_n|<S$ für alle $n$.
+
+Eine Folge $(a_n)$ von Punkten eines normierten Raums heißt genau
+dann beschränkt, wenn es eine reelle Zahl $S$ gibt mit $\|a_n\|<S$
+für alle $n$.
+\end{Definition}
+
+\begin{Satz}[lim-scaled-ep: skaliertes Epsilon]\label{lim-scaled-ep}
+Es gilt:
+\[\lim_{n\to\infty} a_n=a \iff
+\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<R\varepsilon),\]
+wobei $R>0$ ein fester aber beliebieger Skalierungsfaktor ist.
+\end{Satz}
+
+\begin{Beweis}
+Betrachte $\varepsilon>0$ und multipliziere auf beiden Seiten
+mit $R$. Dabei handelt es sich um eine Äquivalenzumformung.
+Setze $\varepsilon':=R\varepsilon$. Demnach gilt:
+\[\varepsilon>0 \iff \varepsilon'>0.\]
+Nach der Ersetzungsregel düfen wir die Teilformel $\varepsilon>0$
+nun ersetzen. Es ergibt sich die äquivalente Formel
+\[\lim_{n\to\infty} a_n=a \iff
+\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon').\]
+Das ist aber genau Def. \ref{def:lim} (lim).\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt:
+\[\lim_{n\to\infty} a_n = a\implies \lim_{n\to\infty} \|a_n\| = \|a\|.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Satz \ref{rev-tineq} (umgekehrte Dreiecksungleichung) gilt:
+\[|\|a_n\|-\|a\|| \le \|a_n-a\| < \varepsilon.\]
+Dann ist aber rest recht $|\|a_n\|-\|a\||<\varepsilon$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{zero-seq-bounded}
+Ist $(a_n)$ eine Nullfolge und $(b_n)$ eine beschränkte Folge,
+dann ist auch $(a_n b_n)$ eine Nullfolge.
+\end{Satz}
+
+\begin{Beweis}
+Wenn $(b_n)$ beschränkt ist, dann existiert nach
+Def. \ref{def:bseq} (bseq) eine Schranke $S$ mit
+$|b_n|<S$ für alle $n$. Man multipliziert nun auf beiden Seiten
+mit $|a_n|$ und erhält
+\[|a_n b_n| = |a_n| |b_n| < |a_n| S.\]
+Wenn $a_n\to 0$, dann muss für jedes $\varepsilon$
+ein $n_0$ existieren mit $|a_n|<\varepsilon$ für $n>n_0$.
+Multipliziert man auf beiden Seiten mit $S$, und ergibt sich
+\[|a_n b_n-0| = |a_n b_n| < |a_n| S < S\varepsilon.\]
+Nach Satz \ref{lim-scaled-ep} (lim-scaled-ep) gilt dann
+aber $a_n b_n\to 0$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sind $(a_n)$ und $(b_n)$ Nullfolgen,
+dann ist auch $(a_n b_n)$ eine Nullfolge.
+\end{Satz}
+
+\begin{Beweis}[Beweis 1]
+Wenn $(b_n)$ eine Nullfolge ist, dann ist $(b_n)$ auch beschränkt.
+Nach Satz \ref{zero-seq-bounded} gilt dann die Behauptung.
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2]
+Sei $\varepsilon>0$ beliebig.
+Es gibt ein $n_0$, so dass
+$|a_n|<\varepsilon$ und $|b_n|<\varepsilon$ für $n>n_0$.
+Demnach ist
+\[|a_n b_n| = |a_n| |b_n|< |a_n|\varepsilon <\varepsilon^2.\]
+Wegen $\varepsilon>0\iff\varepsilon'>0$ mit
+$\varepsilon'=\varepsilon^2$ gilt
+\[\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;
+(|a_n b_n|<\varepsilon').\]
+Nach Def. \ref{def:lim} (lim) gilt somit die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Grenzwertsatz zur Addition]\label{lim-add}
+Seien $(a_n)$, $(b_n)$ Folgen von Vektoren eines normierten Raumes.
+Es gilt:
+\[\lim_{n\to\infty} a_n = a\land \lim_{n\to\infty} b_n
+= b \implies \lim_{n\to\infty} a_n+b_n = a+b.\]
+\end{Satz}
+
+\begin{Beweis}
+Dann gibt es ein $n_0$, so dass für $n>n_0$ sowohl
+$\|a_n-a\|<\varepsilon$ als auch $\|b_n-b\|<\varepsilon$.
+Addition der beiden Ungleichungen ergibt
+\[\|a_n-a\| + \|b_n-b\| < 2\varepsilon.\]
+Nach der Dreiecksungleichung, das ist Axiom (N3) in Def.
+\ref{def:normed-space} (normed-space), gilt nun aber die Abschätzung
+\[\|(a_n+b_n)-(a+b)\| = \|(a_n-a)+(b_n-b)\| \le \|a_n-a\|+\|b_n-b\|.\]
+Somit gilt erst recht
+\[\|(a_n+b_n)-(a+b)\| < 2\varepsilon.\]
+Nach Satz \ref{lim-scaled-ep} (lim-scaled-ep)
+folgt die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Grenzwertsatz zur Skalarmultiplikation]\label{lim-smult}
+Sei $(a_n)$ eine Folge von Vektoren eines normierten Raumes
+und sei $r\in\R$ oder $r\in\C$. Es gilt:
+\[\lim_{n\to\infty} a_n = a\implies \lim_{n\to\infty} ra_n\to ra.\]
+\end{Satz}
+
+\begin{Beweis}
+Sei $\varepsilon>0$ fest aber beliebig. Es gibt nun ein $n_0$, so
+dass $\|a_n-a\|<\varepsilon$ für $n>n_0$. Multipliziert man auf beiden Seiten
+mit $|r|$ und zieht Def. \ref{def:normed-space} (normed-space)
+Axiom (N2) heran, dann ergibt sich
+\[\|ra_n-ra\| = |r|\,\|a_n-a\|<|r|\varepsilon.\]
+Nach Satz \ref{lim-scaled-ep} (lim-scaled-ep)
+folgt die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Grenzwertsatz zum Produkt]\mbox{}\\
+Seien $(a_n)$ und $(b_n)$ Folgen
+reeller Zahlen. Es gilt:
+\[\lim_{n\to\infty} a_n=a\land\lim_{n\to\infty} b_n=b\implies
+\lim_{n\to\infty} a_n b_n = ab.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Voraussetzung sind $a_n-a$ und $b_n-b$ Nullfolgen.
+Da das Produkt von Nullfolgen wieder eine Nullfolge ist, gilt
+\[(a_n-a)(b_n-b) = a_n b_n-a_n b-ab_n+ab\to 0.\]
+Da nach Satz \ref{lim-smult} aber $a_n b\to ab$ und $ab_n\to ab$,
+ergibt sich nach Satz \ref{lim-add} nun
+\[(a_n-a)(b_n-b)+a_n b+ab_n = a_n b_n+ab\to 2ab.\]
+Addiert man nun noch die konstante Folge $-2ab$
+und wendet nochmals Satz \ref{lim-add} an, dann ergibt sich
+die Behauptung
+\[a_n b_n\to ab.\,\qedsymbol\]
+\end{Beweis}
+
+
