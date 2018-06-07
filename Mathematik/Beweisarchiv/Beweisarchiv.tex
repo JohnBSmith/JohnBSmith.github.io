@@ -7,7 +7,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{thmtools}
+\usepackage{mdframed}
+% \usepackage{thmtools}
 
 \usepackage[all]{xy}
 \usepackage{enumitem}
@@ -40,25 +41,43 @@
 \newcommand{\bitem}{\item[\scriptsize\color{gray1}$\blacksquare$]}
 \renewcommand{\qedsymbol}{\ensuremath{\square}}
 
-\declaretheoremstyle[%
-  within=chapter,%
-  spaceabove=\topsep,%
-  spacebelow=\topsep%,
-  headfont=\bfseries,%
-  headpunct={.},%
-  % postheadspace=,%
-  notefont=\bfseries,%
-  notebraces={(}{)},%
-]{baplain}
+\newtheoremstyle{rmbox}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\bfseries}% head font
+  {\;}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmname{#1}\;\thmnumber{#2}.\thmnote{\;(#3).}}
 
-\declaretheorem[style=baplain,name=Definition]{Definition}
-\declaretheorem[style=baplain,name=Satz]{Satz}
+\theoremstyle{rmbox}
+\newtheorem{Definition}{Definition}[chapter]
+\newtheorem{Satz}{Satz}[chapter]
+\newtheorem{Lemma}[Satz]{Lemma}
+\newtheorem{Korollar}[Satz]{Korollar}
+
+\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
+\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=greenblue, linewidth=4pt, innerleftmargin=7pt,%
+  innertopmargin=2pt, innerbottommargin=4pt,%
+  innerrightmargin=0pt%
+]{Definition}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=grayblue, linewidth=4pt, innerleftmargin=7pt,%
+  innertopmargin=2pt, innerbottommargin=4pt,%
+  innerrightmargin=0pt%
+]{Satz}
+
 \newenvironment{Beweis}[1][Beweis]%
   {\par\noindent\strong{#1.}\;\ignorespaces}%
   {\par\addvspace{\topsep}}
 
 \title{Beweisarchiv}
-\date{Mai 2018}
+\date{Juni 2018}
 
 \begin{document}
 

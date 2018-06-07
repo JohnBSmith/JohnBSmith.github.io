@@ -1,5 +1,12 @@
 
 \chapter{Grundlagen}
+\section{Prädikatenlogik}
+
+\begin{Satz}\label{exists-implies-const}
+Es gilt:
+\[\forall x(P(x)\implies A) \iff \exists x(P(x))\implies A.\]
+\end{Satz}
+
 \section{Mengenlehre}
 \subsection{Definitionen}
 
@@ -31,6 +38,9 @@
 \[\bigcup_{i\in I} A_i \iff \{x\mid \exists i{\in}I\,(x\in A_i)\}.\]
 \end{Definition}
 
+\begin{Definition}[cart: kartesisches Produkt]\label{def:cart}
+\[A\times B := \{(a,b)\mid a\in A\land b\in B\} = \{t\mid\exists a\exists b(t=(a,b)\land a\in A\land b\in B)\}.\]
+\end{Definition}
 
 \subsection{Rechenregeln}
 
@@ -66,8 +76,69 @@ Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
 Für die Vereinigung ist das analog.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{eq-iff-all-iff}
+Es gilt $a=b\iff \forall x(x=a\iff x=b)$.
+\end{Satz}
+
+\begin{Beweis}
+Die Implikation $a=b\implies\forall x(x=a\iff x=b)$.
+Wenn wir $a=b$ voraussetzen, kann $b$ gegen $a$ ersetzt werden
+und es ergibt sich
+\[\forall x(x=a\iff x=a)\iff\forall x(1)\iff 1.\]
+Die andere Implikation bringen wir zunächst in ihre Kontraposition:
+\[a\ne b\implies \exists x((x=a)\oplus (x=b)).\]
+Auf einer leeren Grundmenge wird der Allquantifizierung
+über $a,b$ immer genügt. Besitzt die Grundmenge nur ein Element,
+dann muss $a=b$ sein, womit $a\ne b$ falsch ist und die Implikation
+somit erfüllt. Wir setzen nun $a\ne b$ voraus. Wählt man nun
+$x=a$, dann ist $x\ne b$, womit die Kontravalenz erfüllt wird.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $a=b\iff\{a\}=\{b\}$.
+\end{Satz}
+
+\begin{Beweis}
+Es gilt:
+\[\{a\}=\{b\}\iff \{x\mid x=a\}=\{x\mid x=b\}\iff \forall x(x=a\iff x=b).\]
+Nach Satz \ref{eq-iff-all-iff} ist das aber äquivalent zu $a=b$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{all-cart}
+Es gilt:
+\[\forall t{\in}A{\times}B\;(P(t)) \iff \forall a{\in}A\;\forall b{\in}B\;(P(a,b)).\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:cart} (cart) gilt:
+\begin{align*}
+&\forall t{\in}A{\times}B\;(P(t))\iff \forall t(t\in A\times B\implies P(t))\\
+&\iff \forall t(\exists a\exists b[t=(a,b)\land a\in A\land B\in B]\implies P(t))
+\end{align*}
+Unter doppelter Anwendung von Satz \ref{exists-implies-const} gilt weiter:
+\[\iff \forall t\forall a\forall b[t=(a,b)\land a\in A\land B\in B\implies P(t)]\]
+Substituiert man $t:=(a,b)$, dann ergibt sich:
+\[\implies \forall a\forall b[a\in A\land B\in B\implies P(a,b)]
+\iff \forall a{\in a}\forall b{\in}B (P(a,b)),\]
+wobei $P(a,b)$ eine Kurzschreibweise für $P((a,b))$ ist.
+Von der Gegenrichtung bilden wir die Kontraposition:
+\[\exists t\exists a\exists b[t=(a,b)\land a\in A\land b\in B\land \overline{P(t)}]
+\implies \exists a\exists b(a\in a\land b\in B\land \overline{P(a,b)}).\]
+Dem $\exists t$ wird aber immer durch $t:=(a,b)$ genügt, so dass sich die
+äquivalente Formel
+\[\exists a\exists b[a\in A\land b\in B\land \overline{P(a,b)}]
+\implies \exists a\exists b(a\in a\land b\in B\land \overline{P(a,b)}).\]
+ergibt.\;\qedsymbol
+\end{Beweis}
+
 \section{Abbildungen}
 \subsection{Definitionen}
+
+\begin{Definition}[app: Applikation]\label{def:app}
+Für eine Abbildung $f$ ist
+\[y=f(x)\defiff (x,y)\in G_f.\]
+\end{Definition}
+
 \begin{Definition}[img: Bildmenge]\label{def:img}
 Für eine Abbildung $f\colon A\to B$ und $M\subseteq A$
 wird die Menge
@@ -94,7 +165,22 @@ Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
 dann gleich, kurz $f=g$, wenn $A=C$ und $B=D$ und
 \[\forall x(f(x)=g(x)).\]
 \end{Satz}
-Ohne Beweis.
+
+\begin{Beweis}
+Nach Definition gilt $f=g$ genau dann, wenn $(G_f,A,B)=(G_g,C,D)$,
+was äquivalent zu $G_f=G_g\land A=C\land B=D$ ist. Nach Def.
+\ref{def:seteq} (seteq) gilt
+\[G_f=G_g\iff \forall t(t\in G_f\iff t\in G_g).\]
+Nach Satz \ref{eq-iff-all-iff} und Def. \ref{def:app} (app) gilt
+\begin{align*}
+&\forall x[f(x)=g(x)] \iff \forall x\forall y[y=f(x)\iff y=g(x)]\\
+&\iff \forall x\forall y[(x,y)\in G_f\iff (x,y)\in G_g]
+\iff \forall t(t\in G_f\iff t\in G_g).
+\end{align*}
+Da die Quantifizerung auf $x\in A$, $y\in B$ und $t\in A\times B$
+beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
+angewendet werden.\;\qedsymbol
+\end{Beweis}
 
 \subsection{Kardinalzahlen}
 \begin{Definition}[equipotent: Gleichmächtigkeit]\label{def:equipotent}

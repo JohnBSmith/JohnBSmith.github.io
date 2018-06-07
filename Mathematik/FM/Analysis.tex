@@ -59,10 +59,11 @@ d(p,q) &:=\|p-q\|.\quad (\text{normierte Räume})
 
 \subsection{Konvergente Folgen}\index{konvergente Folge}
 \begin{definition}[Konvergente Folge]
-Eine Folge $(a_n)\colon \N\to X$ heißt \emdef{konvergent} gegen $g$, wenn%
+Eine Folge $(a_n)\colon \N\to X$ heißt \emdef{konvergent} gegen $g$,
+wenn%
 \begin{equation}\label{eq:konvergent}
-\forall r{>}0\enspace\exists n_0\enspace\forall n{>}n_0\colon\;
-a_n\in U_r(g).
+\forall r{>}0\enspace\exists n_0\enspace\forall n{>}n_0\;
+(a_n\in U_r(g)).
 \end{equation}
 Man schreibt dann $\lim\limits_{n\to\infty} a_n=g$ und bezeichnet
 $g$ als \emdef{Grenzwert}\index{Grenzwert}.
@@ -79,11 +80,13 @@ $n$, so konvergiert $(c_n)$ auch gegen $g$.
 \begin{definition}[Häufungspunkt]
 Eine Punkt $h$ heißt \emdef{Häufungspunkt} einer Folge $(a_n$), wenn
 \begin{equation}
-\forall r{>}0\enspace\forall n_0\enspace\exists n{>}n_0\colon\;
-a_n\in U_r(h).
+\forall r{>}0\enspace\forall n_0\enspace\exists n{>}n_0\;
+(a_n\in U_r(h)).
 \end{equation}
+In Worten: Ein Punkt $h$ heißt Häufungspunkt, wenn in jeder Umgebung
+von $h$ unendlich viele Werte der Folge liegen.
 \end{definition}
-\noindent
+
 Besitzt eine Folge $(a_n)$ einen Grenzwert $g$, so ist $g$ auch ein
 Häufungspunkt von $(a_n)$.
 
@@ -92,8 +95,8 @@ Häufungspunkt von $(a_n)$.
 Sei $(X,d)$ ein metrischer Raum.
 Eine Folge $(a_n)$ heißt \emdef{Cauchy-Folge}, wenn
 \begin{equation}
-\forall r{>}0\enspace\exists N{\in}\N\enspace\forall m,n>N\colon\;
-d(a_m,a_n)<r.
+\forall r{>}0\;\exists N{\in}\N\;\forall m{>}N,n{>}N\;
+(d(a_m,a_n)<r).
 \end{equation}
 \noindent
 Ein metrischer Raum $(X,d)$ heißt \emdef{vollständig}\index{vollständig},
@@ -192,23 +195,26 @@ Eine konvergente Reihe, für die \eqref{eq:unconditional-convergence}
 gilt, heißt \emdef{unbedingt konvergent}\index{unbedingt konvergent}.
 
 \subsection{Konvergenzkriterien}\index{Konvergenzkriterium}
+\subsubsection{Nullfolgenkriterium}
+Wenn $\lim\limits_{n\to\infty}a_n\ne 0$, dann divergiert $s_n=\sum\limits_{k=0}^n a_k$.
+
 \subsubsection{Quotientenkriterium}\index{Quotientenkriterium}
 Gegeben ist eine unendliche Reihe $s_n=\sum_{k=0}^n a_k$, wobei
 die $a_k$ reelle oder komplexe Zahlen sind und $a_k\ne 0$ ab einem
 gewissen $k$ ist. Gilt
 \begin{equation}
-\exists q{<}1\;\exists k_0\;\forall k{>}k_0\colon \bigg|\frac{a_{k+1}}{a_k}\bigg|\le q,
+\exists q{<}1\;\exists k_0\;\forall k{>}k_0\;(\Big|\frac{a_{k+1}}{a_k}\Big|\le q),
 \end{equation}
 so ist $(s_n)$ absolut konvergent. S.\,\eqref{eq:absolut-convergence}.
 Gilt jedoch
 \begin{equation}
-\exists k_0\;\forall k{>}k_0\colon\bigg|\frac{a_{k+1}}{a_k}\bigg|\ge 1,
+\exists k_0\;\forall k{>}k_0\;(\Big|\frac{a_{k+1}}{a_k}\Big|\ge 1),
 \end{equation}
 so ist $(s_n)$ divergent.
 
 Existiert der Grenzwert
 \begin{equation}
-g = \lim_{k\to\infty}\bigg|\frac{a_{k+1}}{a_k}\bigg|,
+g = \lim_{k\to\infty}\Big|\frac{a_{k+1}}{a_k}\Big|,
 \end{equation}
 so gilt:
 \begin{gather}
@@ -278,11 +284,11 @@ Sind $f,g$ stetige Funktion, so ist auch $g\circ f$ stetig.
 Sei $f\colon [a,b]\to\R$ eine stetige Funktion und sei
 $a<b$. Bei $f(a)<f(b)$ gilt:
 \begin{equation}
-\forall y\in [f(a),f(b)]\enspace\exists x\in [a,b]\colon y=f(x).
+\forall y{\in}[f(a),f(b)]\;\exists x{\in}[a,b]\;(y=f(x)).
 \end{equation}
 Bei $f(a)>f(b)$ gilt:
 \begin{equation}
-\forall y\in [f(b),f(a)]\enspace\exists x\in [a,b]\colon y=f(x).
+\forall y{\in}[f(b),f(a)]\;\exists x{\in}[a,b]\;(y=f(x)).
 \end{equation}
 
 % \newpage
@@ -364,11 +370,11 @@ Für Polynomfunktionen und für $\exp$, $\sin$, $\cos$ gilt
 Sei $D$ eine offene Menge und $f\colon D\to\R$. Ein Wert $f(x_0)$
 heißt \emdef{lokales Maximum}, wenn
 \begin{equation}
-\exists r{>}0\;\forall x\in U_r(x_0)\colon f(x)\le f(x_0).
+\exists r{>}0\;\forall x(x\in U_r(x_0)\implies f(x)\le f(x_0)).
 \end{equation}
 Ein Wert $f(x_0)$ heißt \emdef{lokales Minimum}, wenn
 \begin{equation}
-\exists r{>}0\;\forall x\in U_r(x_0)\colon f(x)\ge f(x_0).
+\exists r{>}0\;\forall x(x\in U_r(x_0)\implies f(x)\ge f(x_0)).
 \end{equation}
 Ist $f(x)=f(x_0)$ nur bei $x=x_0$, dann spricht man von einem
 \emdef{strengen} lokalen Minimum bzw. Maximum.
