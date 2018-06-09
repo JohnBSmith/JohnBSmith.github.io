@@ -1,11 +1,83 @@
 
 \chapter{Grundlagen}
+\section{Aussagenlogik}
+
+\begin{Satz}[bool-dl: Distributivgesetze]\label{bool-dl}
+Es gilt:
+\begin{align}
+A\land (B\lor C) &\iff A\land B\lor A\land C,\\
+A\lor (B\land C) &\iff (A\lor B)\land (A\lor C).
+\end{align}
+\end{Satz}
+
 \section{Prädikatenlogik}
+
+\begin{Definition}[bounded: beschränkte Quantifizierung]%
+\label{def:bounded}
+\begin{align}
+\forall x{\in}M\;(P(x)) &\defiff \forall x(x\in M\implies P(x)),\\
+\exists x{\in}M\;(P(x)) &\defiff \exists x(x\in M\land P(x)).
+\end{align}
+\end{Definition}
+
+\begin{Satz}[general-dl: allgemeine Distributivgesetze]\label{general-dl}
+Es gilt:
+\begin{align}
+A\land \exists x(P(x)) &\iff \exists x(A\land P(x)),\\
+A\lor \forall x(P(x)) &\iff \forall x(A\lor P(x)).
+\end{align}
+\end{Satz}
+
+\begin{Satz}[exists-dl: Distributivgesetz]\label{exists-dl}
+Es gilt:
+\[\exists x(P(x)\lor Q(x)) \iff \exists x(P(x))\lor\exists x(Q(x)).\]
+\end{Satz}
+
+\begin{Satz}[exists-asym-dl: asymmetrisches Distributivgesetz]\label{exists-asym-dl}
+Es gilt:
+\[\exists x(P(x)\land Q(x)) \implies \exists x(P(x))\land\exists x(Q(x)).\]
+\end{Satz}
 
 \begin{Satz}\label{exists-implies-const}
 Es gilt:
 \[\forall x(P(x)\implies A) \iff \exists x(P(x))\implies A.\]
 \end{Satz}
+
+\begin{Satz}[exists-cl: Kommutativgesetz]\label{exists-cl}
+Es gilt:
+\[\exists x\exists y(P(x,y)) \iff \exists y\exists x(P(x,y)).\]
+\end{Satz}
+
+\begin{Satz}[bounded-general-dl: allgemeine Distributivgesetze]%
+\label{bounded-general-dl}
+Es gilt:
+\begin{align}
+A\land \exists x{\in}M\,(P(x)) &\iff \exists x{\in}M\,(A\land P(x)),\\
+A\lor \forall x{\in}M\,(P(x)) &\iff \forall x{\in}M\,(A\lor P(x)).
+\end{align}
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:bounded} (bounded)
+und Satz \ref{general-dl} (general-dl) gilt:
+\begin{align*}
+&A\land \exists x{\in}M\,(P(x))
+\iff A\land\exists x(x\in M\land P(x))
+\iff \exists x(A\land x\in M\land P(x))\\
+&\iff \exists x(x\in M\land A\land P(x))
+\iff \exists x{\in}M\,(A\land P(x)).
+\end{align*}
+Nach Def. \ref{def:bounded} (bounded)
+und Satz \ref{general-dl} (general-dl) gilt:
+\begin{align*}
+& A\lor\forall x{\in}M\,(P(x))
+\iff A\lor\forall x(x\in M\implies P(x))
+\iff A\lor\forall x(x\notin M\lor P(x))\\
+&\iff \forall x(A\lor x\notin M\lor P(x))
+\iff \forall x(x\in M\implies A\lor P(x))\\
+&\iff \forall x{\in}M\,(A\lor P(x)).\;\qedsymbol
+\end{align*}
+\end{Beweis}
 
 \section{Mengenlehre}
 \subsection{Definitionen}
@@ -168,7 +240,7 @@ Eine Abbildung $f\colon A\to B$ heißt genau dann surjektiv, wenn gilt:
 \[B\subseteq f(A).\]
 \end{Definition}
 
-\newpage
+
 \subsection{Grundlagen}
 \begin{Satz}[feq: Gleichheit von Abbildungen]\label{feq}
 Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
@@ -192,7 +264,7 @@ beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
 angewendet werden.\;\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[preimg-distribute: Distributivität der Urbildoperation]\mbox{}\\
+\begin{Satz}[preimg-dl: Distributivität der Urbildoperation]\mbox{}\\
 Für $f\colon A\to B$ und beliebige Mengen $M_i$ gilt:
 \begin{align}
 f^{-1}(M_1\cap M_2) &= f^{-1}(M_1)\cap f^{-1}(M_2),\\
@@ -228,6 +300,77 @@ Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:intersection}
 \iff x\in \bigcap_{i\in I} f^{-1}(M_i).
 \end{align*}
 Für die Vereinigung ist das analog.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[img-cup-dl: Distributivität der Bildoperation über die Vereinigung]
+Für $f\colon A\to B$ und Mengen $M_i\subseteq A$ gilt:
+\begin{align}
+f(M_1\cup M_2) &= f(M_1)\cup f(M_2),\\
+f(\bigcup_{i\in I} M_i) &= \bigcup_{i\in I} f(M_i).
+\end{align}
+\end{Satz}
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall y(y\in f(M_1\cup M_2)\iff y\in f(M_1)\cup f(M_2)).\]
+Nach Def. \ref{def:img} (img), Def. \ref{def:cup} (cup),
+Satz \ref{bool-dl} (bool-dl) und Satz \ref{exists-dl} (exists-dl) gilt:
+\begin{align*}
+&y\in f(M_1\cup M_2) \iff \exists x[x\in M_1\cup M_2\land y=f(x)]\\
+&\iff \exists x[(x\in M_1\lor x\in M_2)\land y=f(x)]\\
+&\iff \exists x[x\in M_1\land y=f(x)\lor x\in M_2\land y=f(x)]\\
+&\iff \exists x[x\in M_1\land y=f(x)]\lor\exists x[x\in M_2\land y=f(x)]\\
+&\iff y\in f(M_1)\lor y\in f(M_2) \iff y\in f(M_1)\cup f(M_2).
+\end{align*}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall y[y\in f(\bigcup_{i\in I} M_i)\iff y\in \bigcup_{i\in I} f(M_i)].\]
+Nach Def. \ref{def:img} (img), Def. \ref{def:union} (union),
+Satz \ref{general-dl} (general-dl)\\
+und Satz \ref{exists-cl} (exists-cl) gilt:
+\begin{align*}
+& y\in f(\bigcup_{i\in I} M_i)
+\iff \exists x(x\in\bigcup_{i\in I} M_i\land y=f(x))\\
+&\iff \exists x(\exists i(i\in I\land x\in M_i)\land y=f(x))
+\iff \exists x\exists i(i\in I\land x\in M_i\land y=f(x))\\
+&\iff \exists i\exists x(i\in I\land x\in M_i\land y=f(x))
+\iff \exists i(i\in I\land\exists x(x\in M_i\land y=f(x))\\
+&\iff \exists i(i\in I\land y\in f(M_i))
+\iff y\in\bigcup_{i\in I} f(M_i).\;\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}
+Es gilt:
+\begin{align}
+f(M_1\cap M_2) &\subseteq f(M_1)\cap f(M_2),\\
+f(\bigcap_{i\in I} M_i) &\subseteq \bigcap_{i\in I} f(M_i).
+\end{align}
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:subseteq} (subseteq) expandieren:
+\[\forall y(y\in f(M_1\cap M_2)\implies y\in f(M_1)\cap f(M_2)).\]
+Nach Def. \ref{def:img} (img), Def. \ref{def:cap} (cap)
+und Satz. \ref{exists-asym-dl} (exists-asym-dl) gilt:
+\begin{align*}
+& y\in f(M_1\cap M_2) \iff \exists x(x\in M_1\cap x\in M_2\land y=f(x))\\
+&\iff \exists x(x\in M_1\land x\in M_2\land y=f(x))\\
+&\iff \exists x(x\in M_1\land y=f(x)\land x\in M_2\land y=f(x))\\
+&\implies \exists x(x\in M_1\land y=f(x))\land\exists x(x\in M_2\land y=f(x))\\
+&\iff y\in f(M_1)\land y\in f(M_2)\iff y\in f(M_1)\cap f(M_2).
+\end{align*}
+Nach Def. \ref{def:subseteq} (subseteq) expandieren:
+\[\forall y(y\in f(\bigcap_{i\in I} M_i)\implies y\in \bigcap_{i\in I} f(M_i))\]
+Nach Def. \ref{def:img} (img) und Def. \ref{def:intersection} (intersection)
+gilt:
+\begin{align*}
+& y\in f(\bigcap_{i\in I} M_i)\iff \exists x[x\in\bigcap_{i\in I} M_i\land y=f(x)]\\
+& \iff \exists x[\forall i(i\in I\implies x\in M_i)\land y=f(x)]\\
+& \iff \exists x\forall i(i\in I\implies x\in M_i\land y=f(x))\\
+& \implies \forall i\exists x[i\in I\implies x\in M_i\land y=f(x)]\\
+& \iff \forall i(i\in I\implies \exists x[x\in M_i\land y=f(x)])\\
+& \iff \forall i(i\in I\implies y\in f(M_i))
+\iff y\in\bigcap_{i\in I} f(M_i).\;\qedsymbol
+\end{align*}
 \end{Beweis}
 
 \newpage
