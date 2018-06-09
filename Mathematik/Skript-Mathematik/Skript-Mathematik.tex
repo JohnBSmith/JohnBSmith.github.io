@@ -42,7 +42,7 @@
 
 \noindent
 {\huge\sf\bfseries
-Skript zum\hfill {\normalsize\rmfamily\mdseries 30. August 2017}
+Skript zum\hfill {\normalsize\rmfamily\mdseries Juni 2018}
 \par\noindent
 Mathematik-Studium
 \par}
@@ -198,11 +198,13 @@ Die Interpretation lässt sich zu $I\colon L\to\{0,1\}$
 erweitern, wobei mit $L$ die Menge der aussagenlogischen Formeln
 ist. Man definiert:
 \begin{align}
-I(\neg\varphi) &= \neg I(\varphi),\\
-I(\varphi\land\psi) &= I(\varphi)\land I(\psi),\\
-I(\varphi\lor\psi) &= I(\varphi)\lor I(\psi),\\
-I(\varphi\rightarrow\psi) &= I(\varphi)\rightarrow I(\psi),\\
-I(\varphi\leftrightarrow\psi) &= I(\varphi)\leftrightarrow I(\psi),
+I(0) &= 0,\\
+I(1) &= 1,\\
+I(\neg\varphi) &= (\neg I(\varphi)),\\
+I(\varphi\land\psi) &= (I(\varphi)\land I(\psi)),\\
+I(\varphi\lor\psi) &= (I(\varphi)\lor I(\psi)),\\
+I(\varphi\rightarrow\psi) &= (I(\varphi)\rightarrow I(\psi)),\\
+I(\varphi\leftrightarrow\psi) &= (I(\varphi)\leftrightarrow I(\psi)),
 \end{align}
 wobei die rechten Seiten gemäß der Wertetabelle zu berechnen sind.
 \end{Definition}
@@ -311,32 +313,41 @@ A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emdef{symmetrische
 \begin{Definition}\index{Bildmenge}
 \emph{Bildmenge} von $M\subseteq A$ unter $f\colon A\to B$:
 \begin{equation}
-f(M) := \{f(x)\mid x\in M\}.
+f(M) := \{f(x)\mid x\in M\} := \{y\mid \exists x(x\in M\land y=f(x))\}.
 \end{equation}
 Die maximale Bildmenge $f(A)$ wird einfach \emdef{Bildmenge} von $f$ genannt.
 \end{Definition}
 Die Regel $f(M\cup N)=f(M)\cup f(N)$ ist allgemeingültig, denn:
 \begin{align}
-&f(M\cup N) = \{f(x)\mid x\in M\lor x\in N\}
-= \{y\mid y=f(x)\land(x\in M\lor x\in N)\}\\
-&= \{y\mid y=f(x)\land x\in M\lor y=f(x)\land x\in N\}\\
-&= \{y\mid y\in\{f(x)\mid x\in M\}\lor y\in\{f(x)\mid x\in N\}\}\\
-&= \{y\mid y\in f(M)\lor y\in f(N)\}
-= \{y\mid y\in f(M)\}\cup \{y\mid y\in f(N)\}\\
-&= f(M)\cup f(N).
+&y\in f(M\cup N) \iff \exists x[x\in M\cup N\land y=f(x)]\\
+&\iff \exists x[(x\in M\lor x\in N)\land y=f(x)]\\
+&\iff \exists x[x\in M\land y=f(x)\lor x\in N\land y=f(x)]\\
+&\iff \exists x[x\in M\land y=f(x)]\lor\exists x[x\in N\land y=f(x)]\\
+&\iff y\in f(M) \lor y\in f(N)
+\iff y\in f(M)\cup f(N).
 \end{align}
-Auch $f(M\cap N)=f(M)\cap f(N)$ gilt:
+Ein wesentlicher Schritt ist dabei die Nutzung der tautologischen
+Formel:
+\begin{equation}
+\exists x(P(x)\lor Q(x)) \iff \exists x(P(x))\lor\exists x(Q(x)).
+\end{equation}
+Für die Schnittmenge gilt aber nur noch
+$f(M\cap N)\subseteq f(M)\cap f(N)$. Es gilt:
 \begin{align}
-&f(M\cap N) = \{f(x)\mid x\in M\land x\in N\}
-= \{y\mid y=f(x)\land x\in M\land x\in N\}\\
-&= \{y\mid y=f(x)\land y=f(x)\land x\in M\land x\in N\}\\
-&= \{y\mid y\in\{f(x)\mid x\in M\}\land y\in\{f(x)\mid x\in N\}\}\\
-&= \{y\mid y\in f(M)\land y\in f(N)\}
-= \{y\mid y\in f(M)\}\cap \{y\mid y\in f(N)\}\\
-&= f(M)\cap f(N).
+& y\in f(M\cap N) \iff \exists x[x\in M\cap N\land y=f(x)]\\
+& \iff \exists x[x\in M\land x\in N\land y=f(x)]\\
+& \iff \exists x[x\in M\land y=f(x)\land x\in N\land y=f(x)]\\
+& \implies \exists x[x\in M\land y=f(x)]\land\exists x[x\in N\land y=f(x)]\\
+& \iff y\in f(M)\land y\in f(N)
+\iff y\in f(M)\cap f(N).
 \end{align}
-Hierbei wurde $A=A\land A$ sowie das Kommutativ- und das
-Assoziativgesetz zunutze gemacht.
+Hierbei wurde $A\Leftrightarrow A\land A$ sowie das Kommutativ- und das
+Assoziativgesetz zunutze gemacht. Die Äquivalenzkette ist durch
+eine Implikation unterbrochen, weil nur gilt:
+\begin{equation}
+\exists x(P(x)\land Q(x)) \implies \exists x(P(x))\land\exists x(q(x)).
+\end{equation}
+Für die Umkehrung lassen sich leicht Gegenbeispiele finden.
 
 Es gilt sogar die allgemeine Regel
 \begin{equation}
@@ -344,12 +355,20 @@ f(\bigcup_{i\in I} M_i) = \bigcup_{i\in I} f(M_i).
 \end{equation}
 Man rechnet nach:
 \begin{align}
-&f(\bigcup_{i\in I} M_i)
-= \{y\mid y=f(x)\land x\in\bigcup_{i\in I} M_i\}
-= \{y\mid y=f(x)\land\exists i{\in}I\,[x\in M_i]\}\\
-&= \{y\mid\exists i{\in}I\,[\underbrace{y=f(x)\land x\in M_k}_{y\in f(M_k)}]\}
-= \bigcup_{i\in I} f(M_i).
+& y\in f(\bigcup_{i\in I} M_i)
+\iff \exists x[x\in\bigcup_{i\in I} M_i\land y=f(x)]\\
+& \iff \exists x[\exists i(i\in I\land x\in M_i)\land y=f(x)]\\
+& \iff \exists x\exists i(i\in I\land x\in M_i\land y=f(x))\\
+& \iff \exists i\exists x(i\in I\land x\in M_i\land y=f(x))\\
+& \iff \exists i[i\in I\land\exists x(x\in M_i\land y=f(x))]\\
+& \iff \exists i[i\in I\land y\in f(M_i)]
+\iff y\in \bigcup_{i\in I} f(M_i).
 \end{align}
+Analog zum Schnitt von zwei Mengen gilt nur:
+\begin{equation}
+f(\bigcap_{i\in I} M_i) \subseteq \bigcap_{i\in I} f(M_i).
+\end{equation}
+Für die Umkehrung lassen sich die selben Gegenbeispiele benutzen.
 
 \begin{Definition}\index{Injektion}
 Eine Funktion $f\colon A\to B$ heißt \emph{surjektiv}, wenn $f(A)=B$ ist.

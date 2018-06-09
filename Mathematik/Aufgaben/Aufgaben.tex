@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{mdframed}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -27,8 +28,26 @@
 \newcommand{\strong}[1]{{\sf\bfseries #1}}
 \newcommand{\entspricht}{\;\;\hat =\;}
 
-\theoremstyle{definition}
+\newtheoremstyle{Aufgabe}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\bfseries}% head font
+  {\;}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmname{#1}\;\thmnumber{#2}.\thmnote{\;(#3).}}
+
+\theoremstyle{Aufgabe}
 \newtheorem{Aufgabe}{\sffamily Aufgabe}[section]
+
+\definecolor{grayblue}{rgb}{0.3,0.3,0.5}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=grayblue, linewidth=4pt, innerleftmargin=7pt,%
+  innertopmargin=2pt, innerbottommargin=4pt,%
+  innerrightmargin=0pt%
+]{Aufgabe}
 
 \begin{document}
 \setlength{\baselineskip}{14pt} 
