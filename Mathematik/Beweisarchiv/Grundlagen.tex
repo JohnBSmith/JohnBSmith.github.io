@@ -31,15 +31,18 @@ Es gilt:
 \end{Definition}
 
 \begin{Definition}[intersection: Schnitt]\label{def:intersection}
-\[\bigcap_{i\in I} A_i \iff \{x\mid \forall i{\in}I\,(x\in A_i)\}.\]
+\[\bigcap_{i\in I} A_i := \{x\mid \forall i{\in}I\,(x\in A_i)\}
+= \{x\mid \forall i\,(i\in I\implies x\in A_i)\}.\]
 \end{Definition}
 
 \begin{Definition}[union: Vereinigung]\label{def:union}
-\[\bigcup_{i\in I} A_i \iff \{x\mid \exists i{\in}I\,(x\in A_i)\}.\]
+\[\bigcup_{i\in I} A_i := \{x\mid \exists i{\in}I\,(x\in A_i)\}
+= \{x\mid \exists i\,(i\in I\land x\in A_i)\}.\]
 \end{Definition}
 
 \begin{Definition}[cart: kartesisches Produkt]\label{def:cart}
-\[A\times B := \{(a,b)\mid a\in A\land b\in B\} = \{t\mid\exists a\exists b(t=(a,b)\land a\in A\land b\in B)\}.\]
+\[A\times B := \{(a,b)\mid a\in A\land b\in B\}
+= \{t\mid\exists a\exists b(t=(a,b)\land a\in A\land b\in B)\}.\]
 \end{Definition}
 
 \subsection{Rechenregeln}
@@ -147,6 +150,12 @@ wird die Menge
 als Bildmenge von $M$ unter $f$ bezeichnet.
 \end{Definition}
 
+\begin{Definition}[preimg: Urbildmenge]\label{def:preimg}
+Für eine Abbildung $f\colon A\to B$ wird
+\[f^{-1}(M) := \{x\mid f(x)\in M\}\]
+als Urbildmenge von $M$ unter $f$ bezeichnet.
+\end{Definition}
+
 \begin{Definition}[inj: Injektion]\label{def:inj}
 Eine Abbildung $f\colon A\to B$ heißt genau dann injektiv, wenn gilt:
 \[\forall x_1\forall x_2(f(x_1)=f(x_2)\implies x_1=x_2)\]
@@ -159,6 +168,7 @@ Eine Abbildung $f\colon A\to B$ heißt genau dann surjektiv, wenn gilt:
 \[B\subseteq f(A).\]
 \end{Definition}
 
+\newpage
 \subsection{Grundlagen}
 \begin{Satz}[feq: Gleichheit von Abbildungen]\label{feq}
 Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
@@ -182,6 +192,45 @@ beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
 angewendet werden.\;\qedsymbol
 \end{Beweis}
 
+\begin{Satz}[preimg-distribute: Distributivität der Urbildoperation]\mbox{}\\
+Für $f\colon A\to B$ und beliebige Mengen $M_i$ gilt:
+\begin{align}
+f^{-1}(M_1\cap M_2) &= f^{-1}(M_1)\cap f^{-1}(M_2),\\
+f^{-1}(M_1\cup M_2) &= f^{-1}(M_1)\cup f^{-1}(M_2),\\
+f^{-1}(\bigcap_{i\in I} M_i) &= \bigcap_{i\in I} f^{-1}(M_i),\\
+f^{-1}(\bigcup_{i\in I} M_i) &= \bigcup_{i\in I} f^{-1}(M_i).
+\end{align}
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x[x\in f^{-1}(M_1\cap M_2)\iff x\in f^{-1}(M_1)\cap f^{-1}(M_2)].\]
+Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:cap} (cap)
+zusammen mit Def. \ref{def:filter} (filter) gilt:
+\begin{align*}
+& x\in f^{-1}(M_1\cap M_2) \iff f(x)\in M_1\cap M_2
+\iff f(x)\in M_1\land f(x)\in M_2\\
+&\iff x\in f^{-1}(M_1)\land x\in f^{-1}(M_2)
+\iff x\in f^{-1}(M_1)\cap f^{-1}(M_2).
+\end{align*}
+Für die Vereinigung ist das analog.
+
+Schnitt von beliebig vielen Mengen.
+Nach Def. \ref{def:seteq} (seteq) expandieren:
+\[\forall x[x\in f^{-1}(\bigcap_{i\in I}M_i)
+\iff x\in \bigcap_{i\in I} f^{-1}(M_i)].\]
+Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:intersection}
+(intersection) zusammen mit Def. \ref{def:filter} (filter) gilt:
+\begin{align*}
+& x\in f^{-1}(\bigcap_{i\in I} M_i)\iff f(x)\in\bigcap_{i\in I} M_i
+\iff \forall i(i\in I\implies f(x)\in M_i)\\
+&\iff \forall i(i\in I\implies x\in f^{-1}(M_i))
+\iff x\in \bigcap_{i\in I} f^{-1}(M_i).
+\end{align*}
+Für die Vereinigung ist das analog.\;\qedsymbol
+\end{Beweis}
+
+\newpage
 \subsection{Kardinalzahlen}
 \begin{Definition}[equipotent: Gleichmächtigkeit]\label{def:equipotent}
 Zwei Mengen $A$, $B$ heißen genau dann gleichmächtig, wenn
