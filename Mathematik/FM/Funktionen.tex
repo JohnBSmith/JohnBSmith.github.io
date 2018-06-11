@@ -2,14 +2,18 @@
 \chapter{Funktionen}
 \section{Elementare Funktionen}
 \subsection{Exponentialfunktion}
-\strong{Definition.} \emdef{Exponentialfunktion}: $\C\to\C$,
+\begin{definition}[Exponentialfunktion]
+Für $x\in\C$ als $\C\to\C$:
 \begin{equation}
 \exp(x) := \sum_{k=0}^{\infty} \frac{x^k}{k!}
-= 1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\ldots
+= 1+x+\frac{x^2}{2}+\frac{x^3}{6}+\ldots
 \end{equation}
+\end{definition}
+
+\noindent
 \strong{Eigenschaften.}
 Die Einschränkung von $\exp$ auf $\R$ ist injektiv und
-hat die Bildmenge $\{x{\in}\R\mid x>0\}$.
+besitzt die Bildmenge $\R^+$.
 
 Die Exponentialfunktion ist holomorph auf ganz $\C$ und stimmt
 mit ihrer eigenen Ableitung überein:
@@ -22,25 +26,30 @@ Für $x,y\in\C$ gilt:
 \exp(x-y) = \frac{\exp(x)}{\exp(y)},\\
 \exp(-x) = \frac{1}{\exp(x)}.
 \end{gather}
-\strong{Eulersche Formel.} Für alle $x\in\C$ gilt:
+\strong{Eulersche Formel.} Für $x\in\C$ gilt:
 \begin{equation}
 \ee^{\ui x} = \cos x+\ui\sin x.
 \end{equation}
 
 \subsection{Logarithmusfunktion}
 \begin{definition}[Natürlicher Logarithmus]
-Für $x\in\R^+$:
+Für $x\in\R^+$ als $\R^+\to\R$:
 \begin{equation}
-\ln(x):=\int_1^x \frac{1}{t}\,\mathrm dt.
+\ln(x) := \exp^{-1}(x).
 \end{equation}
-
-Für $z\in\C\setminus\{0\}$, $z=r\ee^{\ui\varphi}$:
+Für $z\in\C\setminus\{0\}$, $z=r\ee^{\ui\varphi}$ als
+$\C\setminus\{0\}\to\C$:
 \begin{equation}
 \ln(z):=\ln(r)+\ui\varphi.
 \end{equation}
 \end{definition}
 \noindent
 \strong{Eigenschaften.}
+Für $x\in\R^+$ gilt:
+\begin{equation}
+\ln(x):=\int_1^x \frac{1}{t}\,\mathrm dt.
+\end{equation}
+
 Für $z\in\C\setminus\{0\}$ gilt:
 \begin{equation}
 \ln(z)=\lim_{h\to 0}\frac{z^h-1}{h}.
@@ -54,28 +63,23 @@ Die Logarithmusfunktion ist auf $\C{\setminus}\R_0^-$ holomorph.
 \sin(x) := \sum_{k=0}^\infty \frac{x^{2k+1}}{(2k+1)!}
 = x+\frac{x^3}{3!}+\frac{x^5}{5!}+\ldots
 \end{equation}
-\indent
 \emdef{Kosinus}\index{Kosinus}\index{Cosinus}: $\C\to\C$,
 \begin{equation}
 \cos(x) := \sum_{k=0}^\infty \frac{x^{2k}}{(2k)!}
 = 1+\frac{x^2}{2!}+\frac{x^4}{4!}+\ldots
 \end{equation}
-\indent
 \emdef{Tangens}\index{Tangens}: $\C\setminus\{k\pi+\pi/2\mid k\in\Z\}\to\C$,
 \begin{equation}
 \tan(x) := \frac{\sin(x)}{\cos(x)}.
 \end{equation}
-\indent
 \emdef{Kotangens}\index{Kotangens}: $\C\setminus\{k\pi\mid k\in\Z\}\to\C$,
 \begin{equation}
 \cot(x) := \frac{\cos(x)}{\sin(x)}.
 \end{equation}
-\indent
 \emdef{Sekans}\index{Sekans}: $\C\setminus\{k\pi+\pi/2\mid k\in\Z\}\to\C$,
 \begin{equation}
 \sec(x) := \frac{1}{\cos(x)}.
 \end{equation}
-\indent
 \emdef{Kosekans}\index{Kosekans}: $\C\setminus\{k\pi\mid k\in\Z\}\to\C$,
 \begin{equation}
 \csc(x) := \frac{1}{\sin(x)}.
@@ -179,12 +183,13 @@ Rekursionsformeln für $x,n\in\C$:
 \section{Zahlentheoretische Funktionen}
 \subsection{Eulersche Phi-Funktion}
 
-\begin{Definition}
-\emdef{Eulersche Phi-Funktion}:
+\begin{definition}[Eulersche Phi-Funktion]
+Für $n\in\N$:
 \begin{equation}
-\varphi(n) := |\{a\in N\mid 1\le a\le n\wedge\operatorname{ggT}(a,n)=1\}|.
+\varphi(n) := |\{a{\in}\N\mid 1{\le}a{\le}n\wedge\operatorname{ggT}(a,n){=}1\}|.
 \end{equation}
-\end{Definition}
+\end{definition}
+
 \noindent
 Für zwei teilerfremde Zahlen $m,n$ gilt:
 \begin{equation}
@@ -194,22 +199,23 @@ Für jede Primzahlpotenz $p^k$ mit $k\in\Z$ und $k\ge 1$ gilt:
 \begin{equation}
 \varphi(p^k) = p^k-p^{k-1}.
 \end{equation}
-Besitzt die Zahl $n$ die Primfaktorzerlegung
+Für eine Zahl $n$ mit der Primfaktorzerlegung
 \begin{equation}
-n=\prod_{p|n} p^{k_p},
+n=\prod_{p|n} p^{k_p}
 \end{equation}
-so gilt:
+gilt:
 \begin{equation}
 \varphi(n) = \prod_{p|n} (p^{k_p}-p^{k_p-1})
 = n\prod_{p|n} \Big(1-\frac{1}{p}\Big).
 \end{equation}
 
 \subsection{Carmichael-Funktion}
-\begin{Definition} \emdef{Carmichael-Funktion}:
+\begin{definition}[Carmichael-Funktion]
+Für $n\in\N$:
 \begin{equation}
 \begin{split}
-\lambda(n) &:= \min\{m\mid \forall a\,[\operatorname{ggT}(a,n)=1\\
-&\implies a^m\equiv 1\mod n]\}.
+\lambda(n) &:= \min\{m\mid \forall a(\operatorname{ggT}(a,n)=1\\
+&\implies a^m\equiv 1\mod n)\}.
 \end{split}
 \end{equation}
-\end{Definition}
+\end{definition}
