@@ -855,6 +855,60 @@ dass es bei der ersten Wahl 20 Gläser und bei der zweiten nur noch
 19 gibt?
 \end{Aufgabe}
 
+\noindent\strong{Lösung.}
+Es handelt sich zunächst um ein zweistufiges Zufallsexperiment
+mit Abbruchbedingung. Das Ergebnis Ingwer-Smoothie nennen wir $1$.
+Das Ausbleiben nennen wir $0$. Falls das Ergebnis $0$ eingetreten ist,
+muss noch ein Smoothie gewählt werden, und man erhält eines der
+Ergebnisse $(0,1)$ oder $(0,0)$. Die Ergebnismenge besteht daher
+aus drei Elementen:
+\[\Omega = \{1,(0,1),(0,0)\}.\]
+Um Wahrscheinlichkeiten für beliebige Ereignisse berechnen zu können,
+müssen wir die Wahrscheinlichkeiten für ein möglichst feines System
+von disjunkten Ereignissen bestimmen, am besten für alle elementaren
+Ereignisse. Das ist in diesem Fall auch möglich. Zunächst ist
+$P(\{1\})=\frac{1}{2}$ klar. Nach der ersten Pfadregel ist die
+Wahrscheinlichkeit eines Pfades das Produkt der
+Wahrscheinlichkeiten der Zweige die zu diesem Ergebnis führen:%
+\[P(\{(0,0)\}) = \frac{1}{2}\cdot\frac{1}{2} = \frac{1}{4},\qquad
+P(\{(0,1)\}) = \frac{1}{2}\cdot\frac{1}{2} = \frac{1}{4}.
+\]
+Gesucht ist nun die Wahrscheinlichkeit für das Ereignis
+$A=\{1,(0,1)\}$. Zerlegen wir $A$ nun in disjunkte Teilereignisse,
+dann dürfen wir die Wahrscheinlichkeiten dieser Summieren (zweite
+Pfadregel):
+\[P(A) = P(\{1\}\cup\{(0,1)\}) = P(\{1\})+P(\{(0,1)\})
+= \frac{1}{2}+\frac{1}{4} = \frac{3}{4} = 75\%.\]
+Gibt es nun noch einen dritten Versuch, dann ist
+\[\Omega = \{1,(0,1),(0,0,1),(0,0,0)\}\]
+und $A=\{0,(0,1),(0,0,1)\}$ (das sind die Tupel wo eine 1 vorkommt).
+Es ergibt sich
+\[P(A) = \frac{1}{2}+\frac{1}{4}+\frac{1}{8} = \frac{7}{8} = 87.5\%.\]
+Macht man immer so weiter, dann ergibt sich die Ergebnismenge
+\[\Omega = \{1,(0,1),(0,0,1),(0,0,0,1),(0,0,0,0,1),\ldots\}.\]
+Die Warscheinlichkeit spätestens beim $n$-ten Glas einen Ingwer-Smoothie
+zu erhalten ist dann offenbar
+\[P_n = \sum_{k=1}^n \frac{1}{2^k} = \frac{100\%}{2^n}\sum_{k=1}^n 2^{n-k}.\]
+Es ergibt sich
+\[(P_n) = (50\%,75\%,87.5\%,93.75\%,96.875\%,\ldots).\]
+Befinden sich nun 20 Gläser auf dem Tisch, dann haben im ersten
+Versuch beide Zweige eine Wahrscheinlichkeit von $10/20$. Im
+zweiten Versuch gilt jedoch $10/19$ für Ergebnis~$1$ und $9/19$ für
+Ergebnis~$0$. Somit ist
+\[P(A) = \frac{10}{20}+\frac{10}{20}\cdot\frac{10}{19}
+= \frac{29}{38} \approx 76.32\%.\]
+Wie erwartet, wird es wahrscheinlicher, spätestens beim zweiten
+Versuch einen Ingwer-Smoothie zu erhalten. Für spätestens beim $n$-ten
+Glas ergibt sich die relativ komplizierte Formel
+\[P_n = \sum_{k=0}^{n-1} \frac{10}{20-k}\prod_{i=0}^{k-1} \frac{10-i}{20-i}.\]
+Z.\,B. ist
+\[P_4 = \frac{10}{20}\enspace +\enspace\frac{10}{19}\cdot \frac{10}{20}
+\enspace +\enspace\frac{10}{18}\cdot\frac{10}{20}\cdot\frac{9}{19}
+\enspace +\enspace\frac{10}{17}\cdot\frac{10}{20}\cdot\frac{9}{19}\cdot\frac{8}{18}.\]
+Bei Verständnisschwierigkeiten sollte der Leser bitte den Pfadbaum
+zeichnen und die Terme $\frac{10}{20-k}$ sowie die dazugehörigen
+Zweige einfärben.
+
 \vfill\noindent
 \texttt{Dieses Heft steht unter der Creative-Commons-Lizenz CC0.}
 

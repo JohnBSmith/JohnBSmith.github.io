@@ -571,7 +571,7 @@ Kurzschreibweisen:
 \subsection{Gradient}\index{Gradient}
 Sei $(\ue_k)_{k=1}^n$ die kanonische Basis des $\R^n$.
 \begin{definition}[Gradient]
-\emdef{Gradient} an der Stelle $a$:
+An der Stelle $a$:
 \begin{equation}
 \begin{split}
 &(\nabla f)(a) := \textstyle\sum_{k=1}^n \ue_k (D_k f)(a)\\
@@ -598,8 +598,7 @@ beschrieben wird.
 
 \subsection{Richtungsableitung}
 \begin{definition}[Richtungsableitung]
-\emdef{Richtungsableitung} an der Stelle $a$
-in Richtung $v$:
+An der Stelle $a$ in Richtung $v$:
 \begin{equation}
 \begin{split}
 & (D_v f)(a) := \frac{\mathrm d}{\mathrm dt} f(a+tv)\Big|_{t=0}\\
@@ -628,9 +627,8 @@ D_{v+w} f &= D_v f+D_w f.
 
 \section{Vektorfelder}\index{Vektorfeld!auf dem Koordinatenraum}
 Sei $f\colon G\to\R^m$ wobei $G\subseteq\R^n$ eine offene Menge ist.
-\begin{definition}[Jacobi-Matrix]
-\emdef{Jacobi-Matrix}\index{Jacobi-Matrix}
-an der Stelle $a$:
+\begin{definition}[Jacobi-Matrix]\index{Jacobi-Matrix}
+An der Stelle $a$:
 \begin{equation}
 (J[f](a))_{ij} := (D_j f_i)(a).
 \end{equation}
@@ -656,8 +654,7 @@ beschrieben wird.
 \newpage
 \subsection{Richtungsableitung}
 \begin{definition}[Richtungsableitung]
-\emdef{Richtungsableitung} von $f$ an der
-Stelle $a$:
+An der Stelle $a$ in Richtung $v$:
 \begin{equation}
 (D_v f)(a) := \frac{\mathrm d}{\mathrm dt}f(a+tv)\Big|_{t=0}.
 \end{equation}
@@ -707,14 +704,39 @@ mit $y=f(x)$ und $y'=f'(x)$ ist eine notwendige Bedingung dafür.
 \newpage
 \section{Fourier-Analysis}
 \subsection{Fourierreihen}\index{Fourierreihe}
+\subsubsection{Fourier-Skalarprodukt}%
+\index{Fourier-Skalarprodukt}\index{Skalarprodukt!Fourier-Analysis}
+\begin{definition}[Fourier-Skalarprodukt]
+Für periodische Funktionen $f,g\colon\R\to\C$ mit\\
+Periodendauer $T$:
+\begin{equation}\label{eq:Fourier-Skalarprodukt}
+\langle f,g\rangle := \frac{1}{T}\int_{t_0}^{t_0+T} \overline{f(t)}g(t)\,\mathrm dt.
+\end{equation}
+Speziell für $T=2\pi$ und $t_0=-\pi$:
+\begin{equation}
+\langle f,g\rangle = \frac{1}{2\pi}\int_{-\pi}^{\pi} \overline{f(t)}g(t)\,\mathrm dt.
+\end{equation}
+Für rein reelle Funktionen ist die Konjugation wirkungslos
+und entfällt daher.
+\end{definition}
+Das Fourier-Skalarprodukt ist ein Skalarprodukt auf dem Hilbertraum
+$L^2([t_0,t_0+T])$. Wie jedes Skalarprodukt induziert es eine Norm:%
+\begin{equation}\label{eq:Fourier-Norm}
+\|f\|^2 = \langle f,f\rangle
+= \frac{1}{T}\int_{t_0}^{t_0+T} |f(t)|^2\,\mathrm dt.
+\end{equation}
+Man nennt $\|f\|$ auch das \emph{quadratische Mittel} von $f$.
+Die Definition des Skalarproduktes ist so gewählt, dass es sich
+bei $\|f\|$ um den Effektivwert des Signals $f$ handelt.
+
 \subsubsection{Fourier-Koeffizienten}\index{Fourier-Koeffizient}
 \strong{Komplexe Fourier-Koeffizienten:}
 \begin{equation}
-c_k[s] = \frac{1}{T}\int_{t_0}^{t_0+T} \ee^{-k\ui\omega t}s(t)\,\mathrm dt.
+c_k[f] := \frac{1}{T}\int_{t_0}^{t_0+T} \ee^{-k\ui\omega t}f(t)\,\mathrm dt.
 \end{equation}
-Nach Normierung $x:=\omega t$, $f(x):=s(x/\omega)$:
+Für $T=2\pi$ und $t_0=-\pi$ gilt speziell:
 \begin{equation}
-c_k[f] = \frac{1}{2\pi}\int_{-\pi}^{\pi} \ee^{-k\ui x}f(x)\,\mathrm dx.
+c_k[f] = \frac{1}{2\pi}\int_{-\pi}^{\pi} \ee^{-k\ui t}f(t)\,\mathrm dt.
 \end{equation}
 Es gilt ($\lambda$: eine Konstante):
 \begin{gather}
@@ -723,12 +745,88 @@ c_k[\lambda f] = \lambda c_k[f].
 \end{gather}
 \strong{Reelle Fourier-Koeffizienten:}
 \begin{align}
-a_k[s] &= \frac{2}{T}\int_{t_0}^{t_0+T} \cos(k\omega t)\,s(t)\,\mathrm dt,\\
-b_k[s] &= \frac{2}{T}\int_{t_0}^{t_0+T} \sin(k\omega t)\,s(t)\,\mathrm dt.
+a_k[f] &:= \frac{2}{T}\int_{t_0}^{t_0+T} \cos(k\omega t)\,f(t)\,\mathrm dt,\\
+b_k[f] &:= \frac{2}{T}\int_{t_0}^{t_0+T} \sin(k\omega t)\,f(t)\,\mathrm dt.
 \end{align}
-Nach Normierung $x:=\omega t$, $f(x):=s(x/\omega)$:
+Für $T=2\pi$ und $t_0=-\pi$ gilt speziell:
 \begin{align}
-a_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \cos(kx)\,f(x)\,\mathrm dx,\\
-b_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \sin(kx)\,f(x)\,\mathrm dx.
+a_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \cos(kt)\,f(t)\,\mathrm dt,\\
+b_k[f] &= \frac{1}{\pi}\int_{-\pi}^{\pi} \sin(kt)\,f(t)\,\mathrm dt.
+\end{align}
+Es gilt ($\lambda$: eine Konstante):
+\begin{gather}
+a_k[f+g] = a_k[f]+a_k[g],\\
+b_k[f+g] = b_k[f]+b_k[g],\\
+a_k[\lambda f] = \lambda a_k[f],\\
+b_k[\lambda f] = \lambda b_k[f].
+\end{gather}
+
+\newpage\noindent
+Umrechnung zwischen den reellen und den komplexen
+Koeffizienten für $k>0$:
+\begin{align}
+c_0 &= \frac{1}{2}a_0, & a_0&=2c_0,\\
+c_k &= \frac{1}{2}(a_k-b_k\ui), & a_k &= c_k+c_{-k},\\
+c_{-k} &= \frac{1}{2}(a_k+b_k\ui), & b_k &= (c_k-c_{-k})\ui.
 \end{align}
 
+\subsubsection{Fourierreihe}
+
+\strong{Reelles Fourier-Polynom:}
+\begin{equation}
+p_n(t) := \frac{a_0}{2}+\sum_{k=1}^n [a_k\cos(k\omega t)+b_k\sin(k\omega t)].
+\end{equation}
+\strong{Komplexes Fourier-Polynom:}
+\begin{equation}
+p_n(t) := \sum_{k=-n}^n c_k\ee^{\ui k\omega t}.
+\end{equation}
+\begin{definition}[Fourierreihe]
+Sind $c_k[f]$ die Fourierkoeffizienten zu $f$ und ist $p_n$
+das daraus gebildete Fourierpolynom, dann bezeichnet man die
+Folge $(p_n)$ als \emdef{Fourierreihe} von $f$.
+\end{definition}
+Ist $f$ stetig differenzierbar, dann gilt
+\begin{equation}
+f(t) = \lim_{n\to\infty} p_n(t)
+\end{equation}
+für alle $t$. Ist $f\in L^2([t_0,t_0+T])$, dann gilt
+\begin{equation}\label{eq:Konvergenz-RMS}
+f = \lim_{n\to\infty} p_n,
+\end{equation}
+bezüglich \eqref{eq:RMS-eq}. Das heißt, es liegt Konvergenz im
+quadratischen Mittel vor:%
+\begin{equation}
+\lim_{n\to\infty}\|f-p_n\| = 0.
+\end{equation}
+
+\subsubsection{Raum der quadratintegrablen\\
+Funktionen}
+Sei $I=[t_0,t_0+T]$. Man definiert zunächst
+\begin{equation}
+\mathcal L^2(I) := \{f\colon I\to\C\mid \|f\|<\infty\},
+\end{equation}
+wobei $\|f\|$ gemäß \eqref{eq:Fourier-Norm} definiert ist.
+Für zwei Funktionen $f,g\in \mathcal L^2(I)$ ist wie folgt
+eine Äquivalenzrelation gegeben:%
+\begin{equation}\label{eq:RMS-eq}
+f\sim g \defiff \|f-g\|=0.
+\end{equation}
+Man sagt, die Funktionen stimmen \emph{im quadratischen Mittel}
+überein. Der Quotientenraum
+\begin{equation}
+L^2(I) := \mathcal L^2(I)/{\sim}
+\end{equation}
+bildet bezüglich \eqref{eq:Fourier-Skalarprodukt} einen Hilbertraum,
+welcher als \emph{Raum der quadratintegrablen Funktionen} bezeichnet
+wird.
+
+Die Fourier-Basis
+\begin{equation}
+B := \{e_k\mid k\in\Z\},\quad e_k(t):=\ee^{\ui k\omega t}
+\end{equation}
+ist eine Orthonormalbasis von $L^2(I)$. Die gegen $f$ konvergente
+Fourier-Reihe \eqref{eq:Konvergenz-RMS} bekommt nun die Form
+\begin{equation}
+f = \sum_{k\in\Z} \langle e_k,f\rangle\, e_k. 
+\end{equation}
+Hierbei gilt $c_k[f]=\langle e_k,f\rangle$.

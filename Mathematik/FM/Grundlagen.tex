@@ -8,14 +8,7 @@ Natürliche Zahlen ab null:
 \end{equation}
 Natürliche Zahlen ab eins:
 \begin{equation}
-\N_1 := \{1,2,3,4,5,\ldots\}.
-\end{equation}
-Natürliche Zahlen:
-\begin{equation}
-\begin{split}
-&\text{$\N$, wenn es keine Rolle spielt,}\\
-&\text{ob $\N:=\N_0$ oder $\N:=\N_1$}.
-\end{split}
+\N := \{1,2,3,4,5,\ldots\}.
 \end{equation}
 Ganze Zahlen:
 \begin{equation}
@@ -23,11 +16,13 @@ Ganze Zahlen:
 \end{equation}
 Rationale Zahlen:
 \begin{equation}
-\Q := \{\tfrac{z}{n}\mid z\in\Z,n\in\N_0\}.
+\Q := \{\tfrac{z}{n}\mid z\in\Z,n\in\N\}.
 \end{equation}
 Reelle Zahlen:
 \begin{equation}
-\R := \overline{\Q}\enspace\text{bezüglich}\; d(x,y)=|x-y|.
+\begin{split}
+&\R := \text{Vervollständigung von }\Q.
+\end{split}
 \end{equation}
 Positive reelle Zahlen:
 \begin{equation}
@@ -190,13 +185,12 @@ Die ersten Formeln sind:\index{binomische Formeln}
 \end{gather}
 \subsection{Potenzgesetze}
 \begin{definition}[Potenz]
-Für $a$ aus einem Monoid und $n\in\Z,n\ge 1$:
+Für $a$ aus einem Monoid:
 \begin{align}
 a^0 &:= 1,\\
-a^n &:= a^{n-1}\cdot a.
+a^n &:= a^{n-1}\cdot a.\quad (n\in\N)
 \end{align}
-
-Für $a\in\R, a>0$ und $x\in\C$:
+Für $a\in\R$, $a>0$ und $x\in\C$:
 \begin{equation}
 a^x := \exp(\ln(a)\,x).
 \end{equation}
@@ -301,6 +295,7 @@ Eine Gleichung der Form $ax^2+bx+c=0$ mit $a\ne 0$ heißt
 \emdef{quadratische Gleichung}.
 \end{definition}
 
+\noindent
 Wegen $a\ne 0$ lässt sich die Gleichung durch $a$ dividieren
 und es ensteht die äquivalente Normalform $x^2+px+q=0$
 mit $p:=b/a$ und $q:=c/a$.
@@ -1532,6 +1527,7 @@ wenn jede Interpretation auch ein Modell von $\varphi$ ist:
 \end{definition}
 
 \section{Mathematische Strukturen}\label{sec:Strukturen}
+\subsection{Algebraische Strukturen}
 \subsubsection*{Axiome}
 
 \noindent\bsf{E:} Abgeschlossenheit.
@@ -1591,6 +1587,7 @@ Strukturen mit zwei inneren Verknüpfungen:\\
 \end{tabular}
 
 \newpage
+\subsection{Relationen, Ordnungsstrukturen}
 \subsubsection*{Axiome für Relationen}
 
 \noindent\bsf{R:} Reflexivität.
@@ -1626,3 +1623,41 @@ Strukturen mit zwei inneren Verknüpfungen:\\
 \bsf{RiATL}\dotfill & strenge Totalordnung\\
 \bsf{RiATLMin} & Wohlordnung
 \end{tabular}
+
+\section{Zahlenbereiche}
+
+\subsection{Reelle Zahlen}
+\begin{definition}[Reelle Zahlen]
+Unter den reellen Zahlen versteht man eine Menge $\R$, die folgende
+Axiome erfüllt:
+\begin{enumerate}[itemsep=0pt]
+\item $(\R,+,\cdot)$ ist ein Körper.
+\item $\R$ ist total geordnet, wobei die Ordnungsrelation mit
+Addition und Multiplikation verträglich ist.
+\item Jede nach oben beschränkte nichtleere Teilmenge von $\R$ hat
+  ein Supremum in $\R$.
+\end{enumerate}
+\end{definition}
+
+\noindent
+\strong{Konstruktion der reellen Zahlen.}
+Sei $C(\Q)$ die Menge der Cauchyfolgen mit Werten in $\Q$.
+Für $x_n,y_n\in C(\Q)$ ist
+\begin{equation}
+(x_n)\sim (y_n) \defiff x_n-y_n\to 0.
+\end{equation}
+eine Äquivalenzrelation. Man setzt nun
+\begin{equation}
+\R := C(\Q)/{\sim}.
+\end{equation}
+Wohldefiniert (unabhängig von den Repräsentanten) ist
+\begin{align}
+[(x_n)]+[(y_n)] &:= [(x_n+y_n)],\\
+[(x_n)]\cdot [(y_n)] &:= [(x_n y_n)]
+\end{align}
+und
+\begin{equation}
+[(x_n)]\le [(y_n)] \defiff
+(x_n){\sim}(y_n)\lor \exists n_0\;\forall n{>}n_0\;(x_n\le y_n).
+\end{equation}
+
