@@ -1624,7 +1624,92 @@ Strukturen mit zwei inneren Verknüpfungen:\\
 \bsf{RiATLMin} & Wohlordnung
 \end{tabular}
 
+\newpage
 \section{Zahlenbereiche}
+
+\subsection{Natürliche Zahlen}
+\begin{definition}[Natürliche Zahlen (Peano-Axiome)]
+Unter den natürlichen Zahlen versteht man eine Menge $N$, die
+als dynamisches System $(N,s)$ mit $s(n)=n'$ die folgenden Axiome erfüllt:
+\begin{align}
+& \text{(P1)}\quad 0\in N,\\
+& \text{(P2)}\quad \forall n{\in}N\;(n'\in N),\\
+& \text{(P3)}\quad \forall n{\in}N\;(n'\ne 0),\\
+& \text{(P4)}\quad \forall m,n{\in}N\;(n'=m'\implies m=n)
+\end{align}
+und
+\begin{equation}
+\begin{split}
+\text{(P5)}\quad \forall M(&0\in M\land\\
+& \forall n{\in}N\;(n\in M\implies n'\in M)\\
+& \implies N\subseteq M)
+\end{split}
+\end{equation}
+\end{definition}
+Axiom (P2) besagt, dass $s$ eine Selbstabbildung $s\colon N\to N$
+ist und Axiom (P4), dass $s$ injektiv ist. Die Axiome (P1) bis (P5)
+charakterisieren die Struktur der natürlichen Zahlen, so dass
+$N$ als $\N_0$ und $s$ als Nachfolgerfunktion $s(n)=n+1$ interpretiert
+werden kann.
+
+Die Addition wir rekursiv definiert:
+\begin{equation}
+a+0 := a,\qquad a+s(b) := s(a+b).
+\end{equation}
+
+Die Multiplikation wird ebenfalls rekursiv definiert:
+\begin{equation}
+a\cdot 0 := 0,\qquad a\cdot s(b):=a+a\cdot b.
+\end{equation}
+
+\noindent
+\strong{Von-Neumann-Modell der natürlichen Zahlen.}\\
+Eine Menge $M$ heißt \emph{induktiv}, wenn gilt:
+\begin{equation}
+0\in M\land \forall n(n\in M\implies s(n)\in M).
+\end{equation}
+Sei $0:=\{\}$ und $s(n):=n\cup\{n\}$. Sei
+\begin{equation}
+\N := \bigcap \{M\mid M\text{ ist induktiv}\}.
+\end{equation}
+Bei $(\N,s,0)$ handelt es sich um ein Modell
+natürlichen Zahlen, das die Peano-Axiome (P1) bis (P5) erfüllt.
+
+Es ergibt sich
+\begin{align*}
+0 &= \{\},\\
+1 &= \{0\} = \{\{\}\},\\
+2 &= \{0,1\} = \{\{\},\{\{\}\}\},\\
+3 &= \{0,1,2\},\\
+4 &= \{0,1,2,3\}
+\end{align*}
+usw.
+
+\newpage
+\subsection{Rationale Zahlen}
+\begin{definition}[Rationale Zahlen]
+Die rationalen Zahlen sind die Quotientenmenge
+\begin{equation}
+\Q := (\Z\times(\Z{\setminus}\{0\}))/{\sim}
+\end{equation}
+bezüglich der Äquivalenzrelation
+\begin{equation}
+(a,b)\sim (c,d) \defiff ad=bc.
+\end{equation}
+\end{definition}
+Wohldefiniert (unabhängig von den Repräsentanten) ist
+\begin{align}
+[(a,b)]+[(c,d)] &:= [(ad+bc, bd)],\\
+[(a,b)]\cdot [(c,d)] &:= [(ac,bd)].
+\end{align}
+Die Einbettung von $\Z$ in $\Q$ ist gegeben durch
+\begin{equation}
+\varphi\colon \Z\to\Q,\quad \varphi(z):=[(z,1)].
+\end{equation}
+Bei $\varphi$ handelt es sich um einen Monomorphismus
+bezüglich der grundlegenden Rechenoperationen, so
+dass $\Z$ und $\varphi(\Z)$ miteinander
+identifiziert werden können.
 
 \subsection{Reelle Zahlen}
 \begin{definition}[Reelle Zahlen]
