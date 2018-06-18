@@ -1,22 +1,28 @@
 \documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
+
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mdframed}
 \usepackage{microtype}
+
+\usepackage{libertine}
+\usepackage[cmintegrals]{newtxmath} 
+\usepackage[scaled=0.80]{DejaVuSans}
+\renewcommand\ttdefault{lmvtt}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=32mm}
+\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=26mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
 \setcounter{tocdepth}{2}
 
-\newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
@@ -24,11 +30,52 @@
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
 
+\DeclareMathOperator{\real}{Re}
+\DeclareMathOperator{\imag}{Im}
+\DeclareMathOperator{\sgn}{sgn}
+
+\newtheoremstyle{rmbox}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\sffamily\bfseries}% head font
+  {~}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmnote{#3.}}
+
+\theoremstyle{rmbox}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Satz}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Korollar}
+
+\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
+\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=greenblue, linewidth=3.5pt, innerleftmargin=6pt,%
+  innertopmargin=2pt, innerbottommargin=6pt,%
+  innerrightmargin=0pt%
+]{definition}
+
+\newcommand{\framedtheorem}[1]{%
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=grayblue, linewidth=3.5pt, innerleftmargin=6pt,%
+  innertopmargin=2pt, innerbottommargin=6pt,%
+  innerrightmargin=0pt%
+]{#1}}
+
+\framedtheorem{theorem}
+\framedtheorem{lemma}
+\framedtheorem{corollary}
+
 \begin{document}
+
 
 \noindent
 {\LARGE\sffamily\bfseries Aufzeichnungen
-{\mdseries\rmfamily\large\hfill Dezember 2016}\\
+{\mdseries\rmfamily\large\hfill Juni 2018}\\[-2pt]
 zur Mathematik\par}
 
 
@@ -319,7 +366,7 @@ dem leeren Tupel einen Wert zuordnet. Eine solche nullstellige
 Funktion entspricht einer Konstante. In der Informatik muss die
 »Funktion« natürlich zusätzlich referenziell transparent sein.
 
-\newpage
+%\newpage
 \section{Analysis}
 \subsection{Halley-Verfahren}
 Im Folgenden wird die Herleitung des Halley"=Verfahrens unter
@@ -333,21 +380,21 @@ Die Taylorreihe ist
 R[m,0] = \sum_{k=0}^m a_k(x-x_0)^k.
 \end{equation}
 Sei\\
-\(A=\begin{vmatrix}
+$\mbox{}\qquad A=\begin{vmatrix}
 a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
 \ldots & \ldots & \ldots & \ldots\\
 a_m & a_{m+1} & \ldots & a_{m+n}\\
 \sum\limits_{i=n}^m a_{i-n}x^i &
 \sum\limits_{i=n-1}^m a_{i-n+1}x^i
 &\ldots & \sum\limits_{i=0}^m a_i x^i
-\end{vmatrix}\)\\
+\end{vmatrix}$\\
 und\\
-\(B=\begin{vmatrix}
+$\mbox{}\qquad B=\begin{vmatrix}
 a_{m-n+1} & a_{m-n+2} & \ldots & a_{m+1}\\
 \ldots &\ldots &\ldots &\ldots\\
 a_m & a_{m+1} &\ldots & a_{m+n}\\
 x^n & x^{n-1} &\ldots & x^0
-\end{vmatrix}\).\\
+\end{vmatrix}$.\\
 Es ist $R[m,n]=A/B$.
 Ersetze dann $x$ gegen\\
 $x-x_0$. Es ist
@@ -377,7 +424,7 @@ $x_{n+1}=\varphi(x_n)$.
 Man sieht, dass das Halley"=Verfahren in das Newton"=Verfahren
 übergeht, wenn man $f(x)f''(x)$ verschwinden lässt.
 
-\newpage
+% \newpage
 \subsection{Integral der Potenzfunktion}
 Ich will eine ungewöhnliche Methode zur Berechnung des Integrals
 \begin{equation}
@@ -434,28 +481,239 @@ gewinnen, das ist eine bekannte Technik. Man beachte dabei
 Die Vorgehensweise wird nun umgedreht, so dass integriert wird,
 anstelle zu differenzieren:
 \begin{gather}
-\int_0^q \frac{1}{q}\sum_{k=m}^{n-1} q^k \mathrm dq = \int_0^q\bigg(\frac{1}{q}\bigg)\frac{q^n-q^m}{q-1}\,\mathrm dq.
+\int_0^q \frac{1}{q}\sum_{k=m}^{n-1} q^k \mathrm dq
+= \int_0^q\bigg(\frac{1}{q}\bigg)\frac{q^n-q^m}{q-1}\,\mathrm dq.
 \end{gather}
 Es ergibt sich
 \begin{equation}
-\sum_{k=m}^{n-1}\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{q^n-q^m}{q^2-q}\,\mathrm dq\,\mathrm dq.
+\sum_{k=m}^{n-1}\frac{q^k}{k^2}
+= \int_0^q\frac{1}{q}\int_0^q\frac{q^n-q^m}{q^2-q}\,\mathrm dq\,\mathrm dq.
 \end{equation}
 Man setzt nun $m=1$ und lässt $n\to\infty$ gehen.
 Das bringt%
 \begin{equation}
-\sum_{k=1}^\infty\frac{q^k}{k^2} = \int_0^q\frac{1}{q}\int_0^q\frac{1}{1-q}\,\mathrm dq\,\mathrm dq.
+\sum_{k=1}^\infty\frac{q^k}{k^2}
+= \int_0^q\frac{1}{q}\int_0^q\frac{1}{1-q}\,\mathrm dq\,\mathrm dq.
 \end{equation}
 Um die Polstelle lässt sich in der komplexen Ebene herumintegerieren.
 Dabei ergibt sich
 \begin{equation}
-\sum_{k=1}^\infty\frac{q^k}{k^2} = \int_q^0 \frac{\ln(1-q)}{q}\,\mathrm dq,
+\sum_{k=1}^\infty\frac{q^k}{k^2}
+= \int_q^0 \frac{\ln(1-q)}{q}\,\mathrm dq,
 \end{equation}
 und somit
 \begin{equation}
-\sum_{k=1}^\infty\frac{1}{k^2} = \lim_{q\to 1}\int_q^0 \frac{\ln(1-z)}{z}\,\mathrm dz.
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \lim_{q\to 1}\int_q^0 \frac{\ln(1-z)}{z}\,\mathrm dz.
 \end{equation}
 Die Definitionslücke bei $z=0$ lässt sich stetig beheben. Dann muss
-aber auch das Integral existieren.
+aber auch das Integral existieren. Mittels Substitution $1-z:=\ee^x$
+ergibt sich noch
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \lim_{q\to 1}\int_{\ln(1-q)}^0 \frac{x\ee^x}{\ee^x-1}\,\mathrm dx.
+\end{equation}
+Demnach gilt
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \int_{-\infty}^0 \frac{x\ee^x}{\ee^x-1}\,\mathrm dx.
+\end{equation}
+Substitution $x:=-x$ ergibt nun
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \int_0^\infty \frac{x\ee^{-x}}{1-\ee^{-x}}\,\mathrm dx.
+\end{equation}
+Erweitert man den Bruch nun mit $\ee^x$, was wegen $\ee^x\ne 0$
+gefahrlos getan werden kann, dann ergibt sich%
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \int_0^\infty \frac{x}{\ee^x-1}\,\mathrm dx.
+\end{equation}
+Schaut man sich den Graph des Integranden an, dann bemerkt man,
+dass sich dieses Integral besonders gut numerisch integrieren
+lässt.
+
+Die Bernoulli-Zahlen $\bar B_k$ mit $\bar B_1=-1/2$
+sind implizit definiert durch%
+\begin{equation}
+\frac{x}{\ee^x-1} = \sum_{k=0}^\infty \bar B_k\frac{x^k}{k!}.
+\end{equation}
+Demnach gilt:
+\begin{equation}
+\sum_{k=1}^\infty\frac{1}{k^2}
+= \lim_{x\to\infty}\sum_{k=0}^\infty \bar B_k\frac{x^{k+1}}{(k+1)!}.
+\end{equation}
+
+%\newpage
+\subsection{Integraldarstellung der Zeta-Funktion}
+
+\subsubsection{Vorbetrachtung}
+Wir wollen zunächst eine Formel für das wiederholte Integral
+\begin{gather}
+(I_a^n f)(x) := \left(\int_a^x\right)^n f(x)\,(\mathrm dx)^n\\
+= \int_a^x\int_a^x\ldots\int_a^x f(x)\,\mathrm dx\mathrm dx\ldots\mathrm dx
+\end{gather}
+herleiten.
+
+Aus der Formel für Parameterintegrale erhält man
+zunächst den Spezialfall%
+\begin{equation}
+\int_a^x \frac{\partial \varphi(x,t)}{\partial x}\,\mathrm dt+\varphi(x,x)
+= \frac{\mathrm d}{\mathrm dx}\int_a^x \varphi(x,t)\,\mathrm dt.
+\end{equation}
+Einsetzen von $\varphi(x,t):=(x-t)^n f(t)$ bringt für $n>0$ nun
+\begin{equation}
+n\int_a^x (x-t)^{n-1}f(t)\,\mathrm dt
+= \frac{\mathrm d}{\mathrm dx}\int_a^x (x-t)^n f(t)\,\mathrm dt.
+\end{equation}
+Wiederholt man das noch $n$ mal, dann findet man
+\begin{equation}
+n!\,f(x) =
+\left(\frac{\mathrm d}{\mathrm dx}\right)^{n+1} \int_a^x (x-t)^n f(t)\,\mathrm dt,
+\end{equation}
+wobei $n!=\Gamma(n+1)$ gilt. Man definiert nun noch
+\begin{equation}
+(I_a f)(x) := \int_a^x f(t)\,\mathrm dt.
+\end{equation}
+Da sich Integral und Ableitung gegenseitig aufheben, ergibt sich
+\begin{equation}
+\Gamma(n+1)\, (I_a^{n+1}f)(x) = \int_a^x (x-t)^n f(t)\,\mathrm dt.
+\end{equation}
+Umformen bringt die folgende Formel:
+
+\begin{theorem}[Riemann-Liouville-Integral]
+\begin{equation}\label{eq:Riemann-Liouville-Integral}
+(I_a^n f)(x) = \frac{1}{\Gamma(n)}\int_a^x (x-t)^{n-1}f(t)\,\mathrm dt.
+\end{equation}
+\end{theorem}
+Für $n$ kann nun sogar eine komplexe Zahl eingesetzt werden, wobei
+man hofft, dass das Integral konvergiert.
+
+\newpage
+\subsubsection{Integraldarstellung}
+\begin{definition}[Satz und Definition. Zeta-Funktion]\mbox{}\\
+Für $\real(s)>1$ konvergiert die Reihe:
+\begin{equation}
+\zeta(s) := \sum_{k=1}^\infty \frac{1}{k^s}.
+\end{equation}
+\end{definition}
+Ohne Beweis. Betrachte nun die Summenformel
+\begin{equation}
+\sum_{k=m}^{n-1} q^k = \frac{q^n-q^m}{q-1}.\qquad (q\ne 1)
+\end{equation}
+Mit Differentialrechnung lässt sich daraus die Formel
+\begin{equation}
+\sum_{k=m}^{n-1} k^p q^k 
+= \Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p\;\frac{q^n-q^m}{q-1}
+\end{equation}
+gewinnen, das ist eine bekannte Technik. Man beachte dabei
+\begin{equation}
+\Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p
+\ne q^p \Big(\frac{\mathrm d}{\mathrm dq}\Big)^p.\qquad (p\ge 2)
+\end{equation}
+Die Vorgehensweise wird nun umgedreht, so dass integriert wird,
+anstelle zu differenzieren. Es ergibt sich%
+\begin{equation}
+\sum_{k=m}^{n-1} \frac{q^k}{k^p}
+= \left(\int_0^q \frac{1}{q}\right)^p \frac{q^n-q^m}{q-1}\,(\mathrm dq)^p.
+\end{equation}
+Damit ist folgendes gemeint:
+\begin{equation}
+\sum_{k=m}^{n-1} \frac{q^k}{k^p}
+= \int_0^q \frac{1}{q}\int_0^q \frac{1}{q}\ldots\int_0^q \frac{1}{q}
+\left(\frac{q^n-q^m}{q-1}\right)\,\mathrm dq\mathrm dq\ldots\mathrm dq.
+\end{equation}
+Wir setzen nun $m=1$. Verlangen wir $q<1$, dann können wir $n\to\infty$
+auf beiden Seiten der Gleichung anwenden und erhalten:%
+\begin{equation}
+\sum_{k=1}^\infty \frac{q^k}{k^p}
+= \left(\int_0^q \frac{1}{q}\right)^p \frac{q}{1-q}\,(\mathrm dq)^p
+= \left(\int_0^q \mathrm dq \frac{1}{q}\right)^p \frac{q}{1-q}.
+\end{equation}
+Beachtet man nun $\frac{\mathrm d\ln q}{\mathrm dq}=\frac{1}{q}$
+und stellt dies zu $\mathrm d\ln q = \frac{\mathrm dq}{q}$ um,
+dann wird klar, dass wir hier mit der Substitution $x=\ln q$
+weiterarbeiten können. Es ergibt sich:%
+\begin{equation}
+\sum_{k=1}^\infty \frac{q^k}{k^p}
+= \left(\int_{\ee^x=0}^{\ee^x=q} \mathrm dx\right)^p \frac{\ee^x}{1-\ee^x}.
+\end{equation}
+Nun werden aber auch alle $q$ in den Grenzen bis auf das letzte
+von innen nach außen gegen $\ee^x$ ersetzt. Dann ergibt sich
+immer $\ee^x=\ee^x$, also $x=x$. Somit gilt:%
+\begin{equation}
+\sum_{k=1}^\infty \frac{q^k}{k^p}
+= [x:=\ln q]\left(\int_{-\infty}^{x} \mathrm dx\right)^p \frac{\ee^x}{1-\ee^x}.
+\end{equation}
+Wendet man nun Formel \eqref{eq:Riemann-Liouville-Integral}
+mit $n=p$ an, dann ergibt sich
+\begin{equation}
+\sum_{k=1}^\infty \frac{q^k}{k^p}
+= \frac{1}{\Gamma(p)}\int_{-\infty}^{\ln q} (\ln q-t)^{p-1}\frac{\ee^t}{1-\ee^t}\,\mathrm dt.
+\end{equation}
+Wir substituieren nun $x=-t$ und erhalten
+\begin{equation}
+\sum_{k=1}^\infty \frac{q^k}{k^p}
+= \frac{1}{\Gamma(p)}\int_{\infty}^{-\ln q} (\ln q+x)^{p-1}\frac{\ee^{-x}}{\ee^{-x}-1}\,\mathrm dx.
+\end{equation}
+Den Integrand können wir wegen $\ee^x\ne 0$ gefahrlos mit $\ee^x$
+erweitern und erhalten%
+\begin{equation}
+\frac{\ee^{-x}}{\ee^{-x}-1} = \frac{1}{1-\ee^x}.
+\end{equation}
+Wir können nun auf beiden Seiten $q\to 1$ anwenden, wobei das Integral
+dann natürlich für beide Grenzen als uneigentliches zu verstehen
+ist. Wegen $\ln q\to 0$ ergibt sich%
+\begin{equation}
+\sum_{k=1}^\infty \frac{1}{k^p}
+= \frac{1}{\Gamma(p)}\int_{\infty}^0 x^{p-1}\frac{1}{1-\ee^x}\,\mathrm dx
+= \frac{1}{\Gamma(p)}\int_0^\infty \frac{x^{p-1}}{\ee^x-1}\,\mathrm dx.
+\end{equation}
+Nimmt man jetzt an, dass Formel \eqref{eq:Riemann-Liouville-Integral}
+auch für gewisse komplexe Zahlen $n=s$ gültig ist, dann ergibt sich
+für die Zeta"=Funktion die Integraldarstellung:%
+\begin{theorem}[Integraldarstellung der Zeta-Funktion]
+\begin{equation}
+\zeta(s) = \frac{1}{\Gamma(s)}\int_0^\infty \frac{x^{s-1}}{\ee^x-1}\,\mathrm dx.
+\end{equation}
+\end{theorem}
+Tatsächlich gilt auch diese Formel für $\real(s)>1$, was an dieser
+Stelle nicht weiter gezeigt werden soll. Stattdessen erhalten wir
+daraus die Einsicht, dass das Riemann"=Liouville"=Integral offenbar
+konsistente Resultate liefern kann. Die genauen Voraussetzungen dafür
+stehen momentan im Dunklen und müssten herausgearbeitet werden.
+
+\subsection{Metamorphose}
+
+Seien $f(x)$ und $g(x)$ zwei reelle Funktionen und sei $r$ aus
+dem Intervall $[0,1]$. Eine Metamorphose von $f$ zu $g$
+lässt sich durch die Funktion
+\begin{equation}
+h(x) = (1-r)f(x)+rg(x)
+\end{equation}
+modellieren. Dabei handelt es sich um das punktweise gewichtete
+arithmetische Mittel der beiden Funktionen. Man bezeichnet dies
+auch als Konvexkombination.
+
+Allgemeiner muss es sich bei $f$ und $g$ natürlich nicht um relle
+Funktionen handeln. Für zwei Parameterkurven oder  zwei Vektorfelder
+lässt sich so auch eine Metamorphose bilden.
+
+Sind $F(x,y)=0$ und $G(x,y)=0$ zwei implizite Funktionen, so
+lässt sich die Metamorphose durch
+\begin{equation}
+H(x,y) = (1-r)F(x,y)+rG(x,y) = 0.
+\end{equation}
+modellieren. Setzt man $F(x,y)=y-f(x)$ und $G(x,y)=y-g(x)$,
+so erhält man das zuvor beschriebene Modell als Spezialfall.
+
+Sind allgemeiner $F$ und $G$ Funktionen mit mehreren
+Variablen, so kann die Metamorphose der impliziten Funktionen
+analog durch
+\begin{equation}
+(1-r)F(x_1,\ldots,x_n)+rG(x_1,\ldots,x_n)=0.
+\end{equation}
+beschrieben werden.
 
 \newpage
 \section{Lineare Algebra}
@@ -608,6 +866,12 @@ r &= \frac{\sqrt{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}}
 &=\frac{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}{\sqrt{\det g}}.
 \end{split}
 \end{equation}
+
+\begin{thebibliography}{x}
+\bibitem{} Joakim Munkhammar: »Riemann"=Liouville Fractional Derivatives
+and the Taylor"=Riemann Series«. U.U.D.M. Project Report 2004:7.
+Department of Mathematics, Uppsala University.
+\end{thebibliography}
 
 \vfill\noindent
 \texttt{Dieses Heft steht unter der\\
