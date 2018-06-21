@@ -54,14 +54,14 @@
 \definecolor{grayblue}{rgb}{0.2,0.2,0.4}
 
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=greenblue, linewidth=3.5pt, innerleftmargin=6pt,%
+  linecolor=greenblue, linewidth=3.5pt, innerleftmargin=4pt,%
   innertopmargin=2pt, innerbottommargin=6pt,%
   innerrightmargin=0pt%
 ]{definition}
 
 \newcommand{\framedtheorem}[1]{%
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=grayblue, linewidth=3.5pt, innerleftmargin=6pt,%
+  linecolor=grayblue, linewidth=3.5pt, innerleftmargin=4pt,%
   innertopmargin=2pt, innerbottommargin=6pt,%
   innerrightmargin=0pt%
 ]{#1}}
@@ -714,6 +714,67 @@ analog durch
 (1-r)F(x_1,\ldots,x_n)+rG(x_1,\ldots,x_n)=0.
 \end{equation}
 beschrieben werden.
+
+\newpage
+
+\subsection{Grünwald-Letnikow-Ableitung}
+
+Den Translationsoperator $T_h$ definiert man durch
+\begin{equation}
+(T_h f)(x) := f(x+h).
+\end{equation}
+Für den Differenzoperator gilt nun:
+\begin{equation}
+(\Delta_h f)(x) := f(x+h)-f(x) = (T_h-1) f(x).
+\end{equation}
+Setzt man nun die binomische Reihe ein, dann ergibt sich%
+\begin{equation}
+\Delta_h^n = (T_h-1)^n
+= (-1)^n \sum_{k=0}^\infty \binom{n}{k} (-1)^k T_h^k.
+\end{equation}
+Wegen $T_h^k = T_{hk}$ ergibt sich nun
+\begin{equation}
+(\Delta_h^n f)(x) = (-1)^n \sum_{k=0}^\infty \binom{n}{k} (-1)^k f(x+kh).
+\end{equation}
+Für eine natürliche Zahl $n$ geht die Reihe nur bis $n=k$. Wir wollen
+jetzt aber auch komplexe Zahlen für $n$ einsetzen.
+
+Nun ergibt sich heuristisch
+\begin{equation}
+(D^n f)(x) = \lim_{h\to 0} \bigg(\frac{\Delta_h}{h}\bigg)^n f(x)
+= \lim_{h\to 0}\frac{1}{h^n} (\Delta_h^n f)(x).
+\end{equation}
+Das führt uns zu folgender Definition:
+\begin{definition}[Umgekehrte Grünwald-Letnikow-Ableitung]
+\begin{equation}
+(D^n f)(x) := \lim_{h\to 0}
+\frac{(-1)^n}{h^n} \sum_{k=0}^\infty \binom{n}{k} (-1)^k f(x+kh).
+\end{equation}
+\end{definition}
+Substitutiert man nun $h:=-h$ dann ergibt sich:
+\begin{definition}[Direkte Grünwald-Letnikow-Ableitung]
+\begin{equation}
+(D^n f)(x) := \lim_{h\to 0}
+\frac{1}{h^n} \sum_{k=0}^\infty \binom{n}{k} (-1)^k f(x-kh).
+\end{equation}
+\end{definition}
+Man beachte nun aber auch
+\begin{gather}
+(a+b)^n = a^n \bigg(1+\frac{b}{a}\bigg)^n\\
+= a^n\sum_{k=0}^\infty \binom{n}{k}\bigg(\frac{b}{a}\bigg)^k
+= \sum_{k=0}^\infty \binom{n}{k} a^{n-k}b^k,
+\end{gather}
+falls die binomische Reihe konvergiert. Demnach ergibt sich%
+\begin{equation}
+\Delta_h^n = (T_h-1)^n = \sum_{k=0}^\infty \binom{n}{k}(-1)^k T_h^{n-k}.
+\end{equation}
+Das führt nun zu:
+\begin{definition}[Definition. Grünwald-Letnikow-Ableitung]
+\begin{equation}
+(D^n f)(x) := \lim_{h\to 0}
+\frac{1}{h^n} \sum_{k=0}^\infty \binom{n}{k} (-1)^k f(x+(n-k)h).
+\end{equation}
+\end{definition}
 
 \newpage
 \section{Lineare Algebra}
