@@ -3,7 +3,7 @@ import numpy as np
 from numpy import arange, array
 import matplotlib as mp
 import matplotlib.pyplot as pplot
-from math import pi, sin, cos, tan, tanh
+from math import exp, log, pi, sin, cos, tan, tanh
 
 black = [0,0,0]
 lw_line = 2.0
@@ -20,7 +20,10 @@ style = {
 }
 mp.rcParams.update(style)
 
-def plot(f,X,Y,title,discont=None):
+def ln(x):
+  return float("nan") if x<=0 else log(x)
+
+def plot(a,X,Y,title,discont=None):
   fig = pplot.figure()
   ax = fig.add_subplot(1,1,1)
   
@@ -42,13 +45,16 @@ def plot(f,X,Y,title,discont=None):
   ax.set_xticks(list(range(X[0],0,1))+list(range(1,X[1]+1,1)))
   ax.set_yticks(list(range(Y[0],0,1))+list(range(1,Y[1]+1,1)))
 
-  x = arange(X[0],X[1],0.01)
-  y = array(map(f,x))
-  if discont is not None:
-    y[:-1][np.diff(y) >= discont] = np.nan
-  ax.plot(x,y,color=black,linewidth=lw_line)
+  x = arange(X[0],X[1],0.001)
+  if not isinstance(a,list): a=[a]
+  for f in a:
+    y = array(map(f,x))
+    if discont is not None:
+      y[:-1][np.diff(y) >= discont] = np.nan
+    ax.plot(x,y,color=black,linewidth=lw_line)
   pplot.savefig(title,bbox_inches='tight')
 
+# plot([exp,ln],X=[-5,5],Y=[-5,5],title="exp.pdf")
 # plot(sin,X=[-1,9],Y=[-2,2],title="sin.pdf")
 # plot(cos,X=[-1,9],Y=[-2,2],title="cos.pdf")
 # plot(tan,X=[-1,9],Y=[-4,4],title="tan.pdf",discont=0.5)

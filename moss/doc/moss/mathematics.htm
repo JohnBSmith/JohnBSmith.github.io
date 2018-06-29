@@ -24,6 +24,7 @@ table.bt td {
 <h2 id="toc">Table of contents</h2>
 <ol>
 <li><a href="#notations">Notations</a>
+<li><a href="#integer-division">Integer division</a>
 <li><a href="#rational">Rational numbers</a>
 <li><a href="#la">Linear algebra</a>
 </ol>
@@ -260,6 +261,49 @@ integral(a,b,|x| f(x))
 <td>real part, imaginary part
 </table>
 
+
+<h2 id="integer-division">Integer division</h2>
+
+<p>There are different forms of integer division.
+<pre class="moss indent">
+# Floor division
+div_floor = |x,y| x//y
+mod_floor = |x,y| x%y
+
+
+# Euclidean division
+div_euc = |x,y| sgn(y)*(x//abs(y))
+mod_euc = |x,y| x%abs(y)
+
+
+# Truncating division
+div_trunc = |x,y| sgn(x)*sgn(y)*(abs(x)//abs(y))
+mod_trunc = |x,y| x%(sgn(x)*abs(y))
+</pre>
+
+<p>In case of <code>y&gt;0</code>, flooring division and Euclidean
+division coincide. In case of <code>x&gt;0</code> and
+<code>y&gt;0</code>, all of them coincide.
+
+<p>Furthermore, there are floating point counterparts:
+<pre class="moss indent">
+use math: floor, trunc
+
+# Floor division
+div_floor = |x,y| floor(x/y)
+mod_floor = |x,y| x-y*floor(x/y)
+
+
+# Euclidean division
+div_euc = |x,y| sgn(y)*floor(x/abs(y))
+mod_euc = |x,y| x-abs(y)*floor(x/abs(y))
+
+
+# Truncating division
+div_trunc = |x,y| trunc(x/y)
+mod_trunc = |x,y| x-y*trunc(x/y)
+</pre>
+
 <h2 id="rational">Rational numbers</h2>
 <p>Module <code>math.rational</code> provides rational numbers.
 A rational number <var>a</var>/<var>b</var> is denoted as
@@ -284,12 +328,12 @@ A rational number <var>a</var>/<var>b</var> is denoted as
 </pre>
 
 <h2 id="la">Linear algebra</h2>
+<p>Main chapter: <a href="linear-algebra.htm">Linear algebra</a>.
 
-<p>Module <code>la</code> provides an array data type which can be
-used to calculate with coordinate vectors and matrices.
+<p>Module <code>math.la</code> provides vector algebra.
 
 <pre class="moss indent">
-use la: vector, matrix
+use math.la: vector, matrix
 
 v = vector(1,2)
 
@@ -301,47 +345,7 @@ A = matrix(
 print(A*v)
 </pre>
 
-Module <code>math.la</code> provides the polymorphic version
-of this array data type.
 
-<pre class="moss indent">
-use math.la: matrix
-
-A = matrix(
-  [1,2],
-  [3,4]
-)
-
-print(A^40)
-
-# Output (long integers instead of floating point numbers):
-# matrix(
-#   [38418114959269691024862069751, 55991602170538933080248818850],
-#   [83987403255808399620373228275, 122405518215078090645235298026]
-# )
-</pre>
-
-<p>It is possible to combine this with rational numbers.
-A rational number <var>a</var>/<var>b</var> is denoted as
-<code>rat(a,b)</code>.
-
-<pre class="moss indent">
-use math.la: matrix
-use math.rational: rat
-
-A = matrix(
-  [rat(4,1),rat(2,3)],
-  [rat(9,5),rat(1,2)]
-)
-
-print(A^2)
-
-# Output:
-# matrix(
-#   [86/5, 3],
-#   [81/10, 29/20]
-# )
-</pre>
 
 </body>
 </html>

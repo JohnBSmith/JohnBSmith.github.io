@@ -2,12 +2,15 @@
 \chapter{Analysis}
 \section{Ungleichungen}
 \subsection{Dreiecksungleichung}
-In einem metrischen Raum $(X,d)$ gilt für $x,y,z\in X$
+In einem metrischen Raum $(X,d)$ gilt axiomatisch für $x,y,z\in X$
 die allgemeine Dreiecksungleichung:
-\begin{gather}
-d(x,z) \le d(x,y)+d(y,z),\\
+\begin{equation}
+d(x,z) \le d(x,y)+d(y,z).
+\end{equation}
+Infolge gilt auch die umgekehrte Dreiecksungleichung:
+\begin{equation}
 |d(x,y)-d(y,z)|\le d(x,z).
-\end{gather}
+\end{equation}
 Ist $X$ ein normierter Raum, so wird durch $d(x,y) := \|x-y\|$
 eine Metrik induziert. Somit gilt
 \begin{gather}
@@ -16,10 +19,13 @@ eine Metrik induziert. Somit gilt
 \end{gather}
 Wird nun $x:=x_1$, $z:=-x_2$ und $y:=0$ gesetzt, so ergibt sich
 die Dreiecksungleichung für normierte Räume:
-\begin{gather}
-\|x_1+x_2\| \le \|x_1\|+\|x_2\|,\\
+\begin{equation}
+\|x_1+x_2\| \le \|x_1\|+\|x_2\|,
+\end{equation}
+und die umgekehrte Dreiecksungleichung:
+\begin{equation}
 |\|x_1\|-\|x_2\||\le \|x_1-x_2\|.
-\end{gather}
+\end{equation}
 Normen sind z.\,B. $\|x\|=|x|$ für $x\in\R$ und $\|z\|=|z|$ für
 $z\in\C$. Allgemeiner
 \begin{equation}
@@ -65,16 +71,48 @@ wenn%
 \forall r{>}0\enspace\exists n_0\enspace\forall n{>}n_0\;
 (a_n\in U_r(g)).
 \end{equation}
-Man schreibt dann $\lim\limits_{n\to\infty} a_n=g$ und bezeichnet
-$g$ als \emdef{Grenzwert}\index{Grenzwert}.
+Man schreibt dann $\lim\limits_{n\to\infty} a_n=g$ bzw. $a_n\to g$
+und bezeichnet $g$ als den \emdef{Grenzwert}\index{Grenzwert}
+von $(a_n)$.
 Hierbei gilt
 \begin{equation}
 a_n\in U_r(g)\iff d(a_n,g)<r.
 \end{equation}
 \end{definition}
-\strong{Sandwichsatz.} Seien $(a_n)$ und $(b_n)$ reelle Folgen
+\strong{Einschnürungssatz.} Seien $(a_n)$ und $(b_n)$ reelle Folgen
 mit $a_n\to g$ und $b_n\to g$. Gilt $a_n\le c_n\le b_n$ für fast alle
 $n$, so konvergiert $(c_n)$ auch gegen $g$.
+
+\minisection\strong{Vergleichssatz.}
+Seien $(a_n)$ und $(b_n)$ konvergente Folgen mit $a_n\to a$ und
+$b_n\to b$. Ist $a_n\le b_n$ für alle $n\ge n_0$, dann gilt auch
+$a\le b$.
+
+Folgerung: Sei $(a_n)$ eine konvergente Folge mit $a_n\to a$ und
+seien $A,B$ reelle Zahlen mit $A\le B$. Ist $A\le a_n\le B$ für alle
+$n\ge n_0$, dann gilt auch $A\le a\le B$.
+
+\minisection
+\strong{Grenzwertsätze.} Sind $(a_n)$ und $(b_n)$ konvergente
+Folgen mit $a_n\to a$ und $b_n\to b$, dann gilt:
+\begin{align}
+\lim_{n\to\infty} (a_n+b_n) &= a+b,\\
+\lim_{n\to\infty} (a_n-b_n) &= a-b,\\
+\lim_{n\to\infty} (a_n b_n) &= ab.
+\end{align}
+Ist zusätzlich für $n\ge n_0$ immer $b_n\ne 0$, dann gilt auch
+\begin{equation}
+\lim_{n\to\infty} \frac{a_n}{b_n} = \frac{a}{b}.
+\end{equation}
+Bemerkung: Die Regeln gelten speziell, wenn $(a_n)$ oder $(b_n)$
+eine konstante Folge ist, denn eine konstante Folge ist auch
+konvergent.
+
+Ist $f\colon U\to\R$ eine stetige Funktion und $(a_n)$
+mit $a_n\in U$ eine konvergente Folge mit $a_n\to a\in U$, dann gilt
+\begin{equation}
+\lim_{n\to\infty} f(a_n) = f(\lim_{n\to\infty} a_n) = f(a).
+\end{equation}
 
 \subsection{Häufungspunkte}\index{Häufungspunkt}
 \begin{definition}[Häufungspunkt]
@@ -87,6 +125,7 @@ In Worten: Ein Punkt $h$ heißt Häufungspunkt, wenn in jeder Umgebung
 von $h$ unendlich viele Werte der Folge liegen.
 \end{definition}
 
+\noindent
 Besitzt eine Folge $(a_n)$ einen Grenzwert $g$, so ist $g$ auch ein
 Häufungspunkt von $(a_n)$.
 
