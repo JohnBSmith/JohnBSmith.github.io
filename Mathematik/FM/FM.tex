@@ -173,6 +173,15 @@
 
 \newcommand{\defiff}{\;:\Longleftrightarrow\;}
 
+\newcounter{bibcounter}
+\newenvironment{bibenumerate}[1]%
+  {\begingroup\renewcommand{\chapter}[2]{}%
+    \begin{thebibliography}{#1}%
+      \setcounter{enumiv}{\value{bibcounter}}}%
+  {\setcounter{bibcounter}{\value{enumiv}}%
+    \end{thebibliography}\endgroup}
+
+\newcommand{\bibtitle}[1]{»#1«}
 
 \usepackage{makeidx}
 \renewcommand\indexname{Stichwortverzeichnis}
@@ -297,6 +306,7 @@ $\sin\theta=\cos\beta$
 \input{Wahrscheinlichkeitsrechnung.tex}
 \input{Tabellen.tex}
 \input{Anhang.tex}
+\input{Literatur.tex}
 
 \printindex
 

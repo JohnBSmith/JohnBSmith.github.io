@@ -47,6 +47,50 @@ Für $x\in\R$, $x\ge -1$ und $n\in\Z$, $n\ge 1$ gilt
 Die Ungleichung wird nur für $n=1$ oder $x=0$ zu einer Gleichung.
 
 \section{Konvergenz}
+\subsection{Beschränkte Folgen}
+\begin{definition}[Beschränkte Folge]
+Eine Teilmenge $M\subseteq\R$ heißt \emdef{nach oben beschränkt},
+wenn
+\begin{equation}\label{eq:Schranke-oben}
+\exists S_o\,\forall x{\in}M\,(x\le S_o).
+\end{equation}
+und \emdef{nach unten beschränkt}, wenn
+\begin{equation}
+\exists S_u\forall x{\in M}\,(x\ge S_u).
+\end{equation}
+Die Zahl $S_o$ heißt \emdef{obere Schranke}
+und $S_u$ heißt \emdef{untere Schranke}. Eine Folge heißt
+\emdef{beschränkt}, wenn sowohl eine untere als auch
+eine obere Schranke existiert.
+\end{definition}
+
+\begin{definition}[Supremum, Infimum]
+\emdef{Supremum}:
+\begin{equation}
+\sup(M) := \min\{S_o\mid \forall x{\in}M\,(x\le S_o)\}.
+\end{equation}
+
+\emdef{Infimum}:
+\begin{equation}\label{eq:Infimum}
+\inf(M) := \max\{S_u\mid \forall x{\in}M\,(x\ge S_u)\}.
+\end{equation}
+\end{definition}
+
+\begin{definition}[Supremum, Infimum einer Folge]
+Bei einer Folge $(a_n)\colon\N\to\R$ sind die
+Begriffe \eqref{eq:Schranke-oben}
+bis \eqref{eq:Infimum} bezüglich der Bildmenge
+von $(a_n)$ definiert.
+\end{definition}
+
+\noindent
+Jede nach oben beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Supremum.
+Jede nach unten beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Infimum.
+Jede beschränkte nichtleere Teilmenge $M\subseteq\R$
+besitzt ein Infimum und ein Supremum.
+
 \subsection{Umgebungen}\index{Umgebung}
 
 Sei $(X,d)$ ein metrischer Raum und $p\in X$.
@@ -108,11 +152,39 @@ Bemerkung: Die Regeln gelten speziell, wenn $(a_n)$ oder $(b_n)$
 eine konstante Folge ist, denn eine konstante Folge ist auch
 konvergent.
 
-Ist $f\colon U\to\R$ eine stetige Funktion und $(a_n)$
-mit $a_n\in U$ eine konvergente Folge mit $a_n\to a\in U$, dann gilt
+\minisection\strong{Allgemeine Grenzwertsätze.}\\
+Sei $f\colon U\to\R$ mit $U\subseteq\R$ und $(a_n)$ eine konvergente
+Folge von Werten in $U$ mit $a_n\to a\in U$.
+Die Funktion $f$ ist genau dann stetig, wenn für jede solche
+Folge gilt:
 \begin{equation}
 \lim_{n\to\infty} f(a_n) = f(\lim_{n\to\infty} a_n) = f(a).
 \end{equation}
+
+\noindent
+Sei $f\colon U\to\R$ mit $U\subseteq\R^2$.
+Seien $(a_n),(b_n)$ konvergente Folgen von Werten in $U$ mit
+$a_n\to a\in U$ und $b_n\to b\in U$. Die Funktion $f$ ist genau dann
+stetig, wenn für alle solche Folgen gilt:
+\begin{equation}
+\lim_{n\to\infty} f(a_n,b_n)
+= f(\lim_{n\to\infty}a_n,\lim_{n\to\infty} b_n)
+= f(a,b).
+\end{equation}
+
+\noindent
+\strong{Beschränkte Folgen.}
+Ist $(a_n)$ konvergent und gilt für alle $n\ge n_0$ immer $a_n\le s$,
+dann ist auch $\lim\limits_{n\to\infty} a_n\le s$.
+
+\minisection\strong{Monotoniekriterium.}
+Jede streng monoton wachsende nach oben beschränkte Folge ist
+konvergent. Jede streng monoton fallende nach unten beschränkte
+Folge ist konvergent.
+
+\minisection\strong{Cauchy-Kriterium.}
+Jede reelle Cauchy-Folge ist konvergent.
+
 
 \subsection{Häufungspunkte}\index{Häufungspunkt}
 \begin{definition}[Häufungspunkt]
@@ -144,51 +216,7 @@ mit $g\in X$ besitzt. Ein vollständiger normierter Raum heißt
 \emdef{Banachraum}\index{Banachraum}.
 \end{definition}
 
-\subsection{Beschränkte Folgen}
-\begin{definition}[Beschränkte Folge]
-Eine Teilmenge $M\subseteq\R$ heißt \emdef{nach oben beschränkt},
-wenn
-\begin{equation}\label{eq:Schranke-oben}
-\exists S_o\,\forall x{\in}M\,(x\le S_o).
-\end{equation}
-und \emdef{nach unten beschränkt}, wenn
-\begin{equation}
-\exists S_u\forall x{\in M}\,(x\ge S_u).
-\end{equation}
-Die Zahl $S_o$ heißt \emdef{obere Schranke}
-und $S_u$ heißt \emdef{untere Schranke}. Eine Folge heißt
-\emdef{beschränkt}, wenn sowohl eine untere als auch
-eine obere Schranke existiert.
-\end{definition}
-
-\begin{definition}[Supremum, Infimum]
-\emdef{Supremum}:
-\begin{equation}
-\sup(M) := \min\{S_o\mid \forall x{\in}M\,(x\le S_o)\}.
-\end{equation}
-
-\emdef{Infimum}:
-\begin{equation}\label{eq:Infimum}
-\inf(M) := \max\{S_u\mid \forall x{\in}M\,(x\ge S_u)\}.
-\end{equation}
-\end{definition}
-
-\begin{definition}[Supremum, Infimum einer Folge]
-Bei einer Folge $(a_n)\colon\N\to\R$ sind die
-Begriffe \eqref{eq:Schranke-oben}
-bis \eqref{eq:Infimum} bezüglich der Bildmenge
-von $(a_n)$ definiert.
-\end{definition}
-
-\noindent
-Jede nach oben beschränkte nichtleere Teilmenge $M\subseteq\R$
-besitzt ein Supremum.
-Jede nach unten beschränkte nichtleere Teilmenge $M\subseteq\R$
-besitzt ein Infimum.
-Jede beschränkte nichtleere Teilmenge $M\subseteq\R$
-besitzt ein Infimum und ein Supremum.
-
-\newpage
+\clearpage
 \section{Reihen}\index{Reihe}
 \begin{definition}[Reihe]
 Sei $(a_n)$ eine Folge. Die Folge $(s_n)$ von
