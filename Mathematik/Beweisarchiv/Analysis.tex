@@ -14,10 +14,10 @@ Setze zunächst speziell $d(x,a):=|x-a|$ bzw. $d(x,a):=\|x-a\|$.
 \begin{Definition}[lim: konvergente Folge, Grenzwert]%
 \label{def:lim}\index{konvergente Folge}\index{Grenzwert}
 \[\lim_{n\to\infty} a_n = a
-\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(a_n\in U_\varepsilon(a))\]
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{\ge}n_0\;(a_n\in U_\varepsilon(a))\]
 bzw.
 \[\lim_{n\to\infty} a_n = a
-\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon).\]
+\defiff \forall\varepsilon{>}0\;\exists n_0\;\forall n{\ge}n_0\;(\|a_n-a\|<\varepsilon).\]
 \end{Definition}
 
 \begin{Definition}[bseq: beschränkte Folge]%
@@ -30,10 +30,35 @@ dann beschränkt, wenn es eine reelle Zahl $S$ gibt mit $\|a_n\|<S$
 für alle $n$.
 \end{Definition}
 
+\begin{Satz}[Grenzwert bei Konvergenz eindeutig bestimmt]\mbox{}\\
+Eine konvergente Folge von Elementen eines metrischen Raumes
+besitzt genau einen Grenzwert.
+\end{Satz}
+
+\begin{Beweis}
+Sei $(a_n)$ eine konvergente Folge mit $a_n\to g_1$. Sei weiterhin
+$g_1\ne g_2$. Es wird nun gezeigt, dass $g_2$ kein Grenzwert von $a_n$
+sein kann. Wir müssen also zeigen:
+\[\neg\lim_{n\to\infty} a_n=g_2 \iff
+\exists\varepsilon{>}0\;\forall n_0\;\exists n{\ge}n_0\;
+(a_n\notin U_\varepsilon(g_2))\]
+mit $a_n\notin U_\varepsilon(g_2)\iff d(a_n,g_2)\ge\varepsilon$.
+
+Um dem Existenzquantor zu genügen, wählt man nun
+$\varepsilon = \frac{1}{2}d(g_1,g_2)$.
+Nach Def. \ref{metric-space} (metric-space) gilt 
+$d(g_1,g_2)>0$, daher ist auch $\varepsilon>0$. Nach Satz
+\ref{construction-disjoint-ep-balls} sind die Umgebungen
+$U_\varepsilon(g_1)$ und $U_\varepsilon(g_2)$ disjunkt.
+Wegen $a_n\to g_1$ gibt es ein $n_0$ mit $a_n\in U_\varepsilon(g_1)$ für alle
+$n\ge n_0$. Dann gibt es für jedes beliebig große $n_0$ aber auch
+$n\ge n_0$ mit $a_n\notin U_\varepsilon(g_2)$.\,\qedsymbol
+\end{Beweis}
+
 \begin{Satz}[lim-scaled-ep: skaliertes Epsilon]\label{lim-scaled-ep}
 Es gilt:
 \[\lim_{n\to\infty} a_n=a \iff
-\forall\varepsilon{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<R\varepsilon),\]
+\forall\varepsilon{>}0\;\exists n_0\;\forall n{\ge}n_0\;(\|a_n-a\|<R\varepsilon),\]
 wobei $R>0$ ein fester aber beliebieger Skalierungsfaktor ist.
 \end{Satz}
 
@@ -45,7 +70,8 @@ Setze $\varepsilon':=R\varepsilon$. Demnach gilt:
 Nach der Ersetzungsregel düfen wir die Teilformel $\varepsilon>0$
 nun ersetzen. Es ergibt sich die äquivalente Formel
 \[\lim_{n\to\infty} a_n=a \iff
-\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;(\|a_n-a\|<\varepsilon').\]
+\forall\varepsilon'{>}0\;\exists n_0\;\forall n{\ge}n_0\;
+(\|a_n-a\|<\varepsilon').\]
 Das ist aber genau Def. \ref{def:lim} (lim).\,\qedsymbol
 \end{Beweis}
 
@@ -72,7 +98,7 @@ $|b_n|<S$ für alle $n$. Man multipliziert nun auf beiden Seiten
 mit $|a_n|$ und erhält
 \[|a_n b_n| = |a_n| |b_n| < |a_n| S.\]
 Wenn $a_n\to 0$, dann muss für jedes $\varepsilon$
-ein $n_0$ existieren mit $|a_n|<\varepsilon$ für $n>n_0$.
+ein $n_0$ existieren mit $|a_n|<\varepsilon$ für $n\ge n_0$.
 Multipliziert man auf beiden Seiten mit $S$, und ergibt sich
 \[|a_n b_n-0| = |a_n b_n| < |a_n| S < S\varepsilon.\]
 Nach Satz \ref{lim-scaled-ep} (lim-scaled-ep) gilt dann
@@ -92,12 +118,12 @@ Nach Satz \ref{zero-seq-bounded} gilt dann die Behauptung.
 \begin{Beweis}[Beweis 2]
 Sei $\varepsilon>0$ beliebig.
 Es gibt ein $n_0$, so dass
-$|a_n|<\varepsilon$ und $|b_n|<\varepsilon$ für $n>n_0$.
+$|a_n|<\varepsilon$ und $|b_n|<\varepsilon$ für $n\ge n_0$.
 Demnach ist
 \[|a_n b_n| = |a_n| |b_n|< |a_n|\varepsilon <\varepsilon^2.\]
 Wegen $\varepsilon>0\iff\varepsilon'>0$ mit
 $\varepsilon'=\varepsilon^2$ gilt
-\[\forall\varepsilon'{>}0\;\exists n_0\;\forall n{>}n_0\;
+\[\forall\varepsilon'{>}0\;\exists n_0\;\forall n{\ge}n_0\;
 (|a_n b_n|<\varepsilon').\]
 Nach Def. \ref{def:lim} (lim) gilt somit die Behauptung.\,\qedsymbol
 \end{Beweis}
@@ -111,7 +137,7 @@ Es gilt:
 \end{Satz}
 
 \begin{Beweis}
-Dann gibt es ein $n_0$, so dass für $n>n_0$ sowohl
+Dann gibt es ein $n_0$, so dass für $n\ge n_0$ sowohl
 $\|a_n-a\|<\varepsilon$ als auch $\|b_n-b\|<\varepsilon$.
 Addition der beiden Ungleichungen ergibt
 \[\|a_n-a\| + \|b_n-b\| < 2\varepsilon.\]
@@ -132,7 +158,8 @@ und sei $r\in\R$ oder $r\in\C$. Es gilt:
 
 \begin{Beweis}
 Sei $\varepsilon>0$ fest aber beliebig. Es gibt nun ein $n_0$, so
-dass $\|a_n-a\|<\varepsilon$ für $n>n_0$. Multipliziert man auf beiden Seiten
+dass $\|a_n-a\|<\varepsilon$ für $n\ge n_0$.
+Multipliziert man auf beiden Seiten
 mit $|r|$ und zieht Def. \ref{def:normed-space} (normed-space)
 Axiom (N2) heran, dann ergibt sich
 \[\|ra_n-ra\| = |r|\,\|a_n-a\|<|r|\varepsilon.\]

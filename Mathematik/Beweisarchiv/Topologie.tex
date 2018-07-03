@@ -44,15 +44,54 @@ Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
 \section{Metrische Räume}
 \subsection{Metrischer Räume}
 \begin{Definition}[metric-space: metrischer Raum]%
-\index{metrischer Raum}
+\index{metrischer Raum}\label{metric-space}
 Man bezeichet $(M,d)$ mit $d\colon M^2\to\R$ genau dann als
 metrischen Raum, wenn die folgenden Axiome erfüllt sind:
-\begin{gather*}
-\text{(M1)}\quad d(x,y)=0\iff x=y,\\
-\text{(M2)}\quad d(x,y)=d(y,x),\\
-\text{(M3)}\quad d(x,y)\le d(x,z)+d(z,y).
-\end{gather*}
+\begin{align*}
+\text{(M1)}\quad & d(x,y)=0\iff x=y, &&\text{(Gleichheit abstandsloser Punkte)}\\
+\text{(M2)}\quad & d(x,y)=d(y,x), &&\text{(Symmetrie)}\\
+\text{(M3)}\quad & d(x,y)\le d(x,z)+d(z,y). &&\text{(Dreiecksungleichung)}
+\end{align*}
 \end{Definition}
+
+\begin{Definition}[open-ep-ball: offene Epsilon-Umgebung]\mbox{}\\
+Für einen metrischen Raum $(M,d)$ und $p\in M$:
+\[U_\varepsilon(p) := \{x\mid d(p,x)<\varepsilon\}.\]
+\end{Definition}
+Bemerkung: Unter einer Epsilon-Umgebung ohne weitere Attribute
+versteht man immer eine offene Epsilon-Umgebung.
+
+\begin{Satz}[Konstruktion disjunkter Epsilon-Umgebungen]%
+\label{construction-disjoint-ep-balls}
+Sei $(M,d)$ ein metrischer Raum und $p,q\in M$ mit $p\ne q$.
+Betrachte die Streckenzerlegung $d(p,q)=A+B$. Für $a\le A$ und
+$b\le B$ sind die Epsilon-Umgebungen $U_a(p)$ und $U_b(q)$ disjunkt.
+\end{Satz}
+
+\begin{Beweis}
+Angenommen $U_a(p)$ und $U_b(q)$ wären nicht disjunkt, dann gäbe
+es mindestens ein $x$ mit $x\in U_a(p)$ und $x\in U_b(q)$, d.\,h.
+$d(p,x)<a$ und $d(q,x)<b$. Addition der beiden Ungleichungen
+bringt
+\[d(p,x)+d(q,x)<a+b\le d(p,q).\]
+Gemäß der Dreiecksungleichung Def. \ref{metric-space} Axiom (M3) gilt
+nun aber
+\[d(p,q)\le d(p,x)+d(q,x)\]
+für alle $x$. Sei $c:=d(p,x)+d(q,x)$. Wir erhalten damit nun
+$c<a+b\le c$ und somit den Widerspruch $c<c$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Unterschiedliche Punkte eines metrischen Raumes
+besitzen disjunkte Epsilon-Umgebungen]
+Sei $(M,d)$ ein metrischer Raum und $p,q\in M$.
+Wenn $p\ne q$ ist, dann gibt es disjunkte offene
+Epsilon-Umgebungen $U_a(p)$ und $U_b(q)$.
+\end{Korollar}
+
+\begin{Beweis}
+Folgt trivial aus Satz \ref{construction-disjoint-ep-balls}.
+Wähle speziell z.\,B. $a=b=d(p,q)/2$.\,\qedsymbol
+\end{Beweis}
 
 \subsection{Normierte Räume}
 \begin{Definition}[normed-space: normierter Raum]%
@@ -83,7 +122,8 @@ Substitution $x:=x-y$ bringt nun
 \[\|x\| - \|y\| \le \|x-y\|.\]
 Vertauscht man nun $x$ und $y$, dann ergibt sich
 \[\|y\|-\|x\| \le \|y-x\| \iff -(\|x\|-\|y\|)\le \|x-y\|.\]
-Wir haben nun die Situation $a\le b$ und $-a\le b$. Multipliziert
+Wir haben nun $a\le b$ und $-a\le b$,
+wobei $a:=\|x\|-\|y\|$ und $b:=\|x-y\|$ ist. Multipliziert
 man die letzte Ungleichung mit $-1$, dann ergibt sich $a\ge -b$.
 Somit ist $-b\le a\le b$, kurz $|a|\le b$.\,\qedsymbol
 \end{Beweis}
