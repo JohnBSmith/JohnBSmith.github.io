@@ -383,10 +383,17 @@ gilt:
 \end{align*}
 \end{Beweis}
 
+\begin{Satz}[acc: abzählbares Auswahlaxiom]\label{acc}%
+\index{abzählbares Auswahlaxiom}\index{Auswahlaxiom!abzählbares}
+Sei $(A_n)_{n\in\N}$ eine Folge nichtleerer Mengen.
+Dann existiert eine Funktion $f\colon\N\to\bigcup_{n\in\N} A_n$
+mit $f(n)\in A_n$.
+\end{Satz}
+
 \newpage
 \subsection{Kardinalzahlen}
 \begin{Definition}[equipotent: Gleichmächtigkeit]%
-\label{def:equipotent}\index{Gleichmaechtig@Gleichmächtig}
+\label{def:equipotent}\index{gleichmaechtig@gleichmächtig}
 Zwei Mengen $A$, $B$ heißen genau dann gleichmächtig, wenn
 eine Bijektion $f\colon A\to B$ existiert.
 \end{Definition}
@@ -402,7 +409,8 @@ Für eine Aussage $A$ sei
 1&\text{wenn }$A$\text{ gilt},\\
 0&\text{sonst}.
 \end{cases}\]
-Für $A\subseteq M$ betrachte man nun die Indikatorfunktion
+Für $A\subseteq M$ betrachte man nun die
+Indikatorfunktion\index{Indikatorfunktion}
 \[\chi_A\colon M\to\{0,1\},\quad \chi_A(x):=[x\in A].\]
 Die Abbildung
 \[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=\chi_A\]
@@ -430,3 +438,88 @@ Da $\varphi$ eine Bijektion ist, müssen $2^M$ und $\{0,1\}^M$
 nach Def. \ref{def:equipotent} (equipotent) gleichmächtig
 sein.\,\qedsymbol
 
+\newpage
+\begin{Satz}\label{countable-union-countable}
+Man setze Axiom \ref{acc} (acc) voraus.
+Die Vereinigung von abzählbar vielen abzählbar unendlichen Mengen
+ist abzählbar unendlich. Kurz $|\bigcup_{n\in\N} A_n| = |\N|$, wenn
+$|A_n|=|\N|$ für jedes $n$.
+\end{Satz}
+
+\begin{Beweis}
+Sei $B_n$ die Menge der Bijektionen aus $\Abb(\N,A_n)$. 
+Nach Axiom \ref{acc} (acc) kann aus jeder Menge $B_n$
+eine Bijektion $f_n\colon\N\to A_n$ ausgewählt werden.
+Man betrachte nun
+\[\varphi\colon\N\times\N\to\bigcup_{n\in\N} A_n,\quad
+\varphi(n,m):=f_n(m).\]
+Die Abbildung $\varphi$ ist surjektiv, denn es gilt
+\begin{gather*}
+\varphi(\N\times\N) = \bigcup_{(n,m)\in\N{\times}\N} \{f_n(m)\}
+= \bigcup_{n\in\N}\bigcup_{m\in\N} \{f_n(m)\}\\
+= \bigcup_{n\in\N} f_n(\bigcup_{m\in\N} \{m\})
+= \bigcup_{n\in\N} f_n(\N) = \bigcup_{n\in\N} A_n.
+\end{gather*}
+Daher gilt $|\bigcup_{n\in\N} A_n|\le |\N\times \N| = |\N|$.
+Für eine beliebige der Bijektionen $f_n\in B_n$ lässt sich die Zielmenge
+erweitern, so dass man eine Injektion $f\colon\N\to\bigcup_{n\in\N} A_n$
+erhält. Daher ist auch $|\N|\le |\bigcup_{n\in\N} A_n|$. Nach dem
+Satz von Cantor-Bernstein gilt also
+$|\bigcup_{n\in\N} A_n|=|\N|$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{countable-polynomial-ring}
+Wenn $R$ abzählbar ist, dann ist auch der Polynomring $R[X]$ abzählbar.
+\end{Satz}
+
+\begin{Beweis}
+Zu jedem Polynom vom Grad $n\ge 1$ gehört auf kanonische Weise
+genau ein Tupel aus $M_n:=R^{n-1}\times R\setminus\{0\}$. Da $R$
+abzählbar ist, sind auch $R^{n-1}$ und $R\setminus\{0\}$ abzählbar.
+Dann ist auch $M_n$ abzählbar. Nach Satz \ref{countable-union-countable}
+gilt
+\[|R[X]| = 1+|\bigcup_{n\in\N} M_n| = 1+|\N| = |\N|.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\index{algebraische Zahlen!Kardinalität}
+Es gibt nur abzählbar unendlich viele algebraische Zahlen.
+\end{Satz}
+
+\begin{Beweis}[Beweis 1]
+Zu zeigen ist $|\A|=|\N|$ mit
+\[\A := \{a\in\C\mid \exists p(p\in \Q[X]\setminus\{0\}\land p(a)=0)\}.\]
+Dass $\A$ unendlich ist, ist leicht ersichtlich, denn schon jede
+rationale Zahl $q$, von denen es unendlich viele gibt, ist Nullstelle
+von $p(X):=X-q$ und daher algebraisch.
+
+Ein Polynom vom Grad $n$ kann höchstens $n$ Nullstellen besitzen.
+Nach Satz \ref{countable-polynomial-ring} gilt $\Q[X]=|\N|$.
+Für $\Q[X]$ lässt sich also eine Abzählung angeben.
+Bei dieser Abzählung lässt sich für jedes Polynom $p$ die Liste der
+Nullstellen von $p$ einfügen. Streicht man alle Nullstellen, die schon
+einmal vorkamen, dann erhält man eine Abzählung der algebraischen
+Zahlen. Demnach gilt $|\A|=|\N|$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2]
+Jedem $p=\sum_{k=0}^n a_kX^k$ lässt sich eine Höhe
+$h:=n+\sum_{k=0}^n |a_k|$ zuordnen. Zu einer festen Höhe kann es nur
+endlich viele Polynome $p\in\Z[X]$ geben, wodurch man eine Abzählung der
+Polynome erhält, wenn für $h=1$, $h=2$, $h=3$ usw. jeweils die Liste
+der Polynome eingefügt wird. Für jedes Polynom $p$ lässt sich die
+Liste der Nullstellen von $p$ einfügen. Streicht man alle Nullstellen,
+die schon einmal vorkamen, dann erhält man eine Abzählung der
+algebraischen Zahlen.\,\qedsymbol
+\end{Beweis}
+
+\begin{Beweis}[Beweis 3]
+Für $n\in\N$ sei
+\[\begin{split}
+A_n := \{x\in\A\mid \;&\text{$x$ ist Nullstelle eines
+$p\in\Z[X]\setminus\{0\}$ mit $\deg(p)=n$,}\\
+& \text{dessen Koeffizienten $a_k$ alle $|a_k|\le n$
+erfüllen}\}.
+\end{split}\]
+Alle $A_n$ sind endlich und es gilt $\A=\bigcup_{n\in\N} A_n$.
+Daher muss $|\A|\le |\N|$ sein.\,\qedsymbol
+\end{Beweis}
