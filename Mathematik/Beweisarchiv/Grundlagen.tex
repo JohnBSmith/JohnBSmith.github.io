@@ -50,6 +50,11 @@ Es gilt:
 \[\exists x\exists y(P(x,y)) \iff \exists y\exists x(P(x,y)).\]
 \end{Satz}
 
+\begin{Satz}[all-cl: Kommutativgesetz]\label{all-cl}
+Es gilt:
+\[\forall x\forall y(P(x,y)) \iff \forall y\forall x(P(x,y)).\]
+\end{Satz}
+
 \begin{Satz}[bounded-general-dl: allgemeine Distributivgesetze]%
 \label{bounded-general-dl}
 Es gilt:
@@ -81,6 +86,76 @@ und Satz \ref{general-dl} (general-dl) gilt:
 \end{align*}
 \end{Beweis}
 
+\begin{Satz}\label{bounded-exists-cl}
+Es gilt:
+\[\exists x{\in}A\;\exists y{\in}B\;(P(x,y))
+\iff \exists y{\in}B\;\exists x{\in}A\;(P(x,y)).\]
+\end{Satz}
+
+\begin{Beweis} Nach Def. \ref{def:bounded} (bounded),
+Satz \ref{general-dl} (general-dl)
+und Satz \ref{exists-cl} (exists-cl) gilt:
+\begin{gather*}
+\exists x{\in}A\;\exists y{\in}B\;(P(x,y))
+\iff \exists x(x\in A\land\exists y[y\in B\land P(x,y)])\\
+\iff \exists x\exists y[x\in A\land y\in B\land P(x,y)]
+\iff \exists y\exists x[y\in B\land x\in A\land P(x,y)]\\
+\iff \exists y(y\in B\land \exists x[x\in A\land P(x,y)])
+\iff \exists y{\in}B\;\exists x{\in}A\; (P(x,y)).\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}\label{bounded-all-cl}
+Es gilt:
+\[\forall x{\in}A\;\forall y{\in}B\;(P(x,y))
+\iff \forall y{\in}B\;\forall x{\in}A\;(P(x,y)).\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:bounded} (bounded),
+Satz \ref{general-dl} (general-dl)
+und Satz \ref{all-cl} (all-cl) gilt:
+\begin{gather*}
+\forall x{\in}A\;\forall y{\in}B\;(P(x,y))
+\iff \forall x(x\in A\Rightarrow \forall y[y\in B\Rightarrow P(x,y)])\\
+\iff \forall x(x\notin A\lor \forall y[y\notin B\lor P(x,y)])
+\iff \forall x\forall y[x\notin A\lor y\notin B\lor P(x,y)]\\
+\iff \forall y\forall x[y\notin B\lor x\notin A\lor P(x,y)]
+\iff \forall y(y\notin B\lor \forall x[x\notin A\lor P(x,y)])\\
+\iff \forall y(y\in B\Rightarrow \forall x[x\in A\Rightarrow P(x,y)])
+\iff \forall y{\in}B\;\forall x{\in}A\;(P(x,y).\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}
+Für eine Aussage $P$, die nicht von $x$ abhängt, und ein nichtleeres
+Diskursuniversum gilt:
+\[\exists x(P) \iff P.\]
+\end{Satz}
+\begin{Beweis}[Beweis (informal)]
+Nach \ref{general-dl} (general-dl) gilt:
+\[\exists x(P) \iff \exists x(1\land P)
+\iff \exists x(1)\land P\iff 1\land P\iff P.\]
+Im vorletzten Schritt wurde dabei ausgenutzt, dass
+für ein nichtleeres Diskursuniversum immer $\exists x(1)\iff 1$
+gelten muss.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt
+\[\exists x{\in}M\;(P) \iff (M\ne\emptyset)\land P.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:bounded} (bounded) und Satz
+\ref{general-dl} (general-dl) gilt:
+\begin{gather*}
+\exists x{\in}M\;(P) \iff \exists x(x\in M\land P)
+\iff \exists x(x\in M)\land P\iff (M\ne\emptyset)\land P.\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\newpage
 \section{Mengenlehre}\index{Mengenlehre}
 \subsection{Definitionen}
 
@@ -187,6 +262,11 @@ Es gilt:
 Nach Satz \ref{eq-iff-all-iff} ist das aber äquivalent zu $a=b$.\;\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{eq-substitution}
+Es gilt:
+\[\forall x\forall y(x=y\land P(x)\iff P(y))\]
+\end{Satz}
+
 \begin{Satz}\label{all-cart}
 Es gilt:
 \[\forall t{\in}A{\times}B\;(P(t)) \iff \forall a{\in}A\;\forall b{\in}B\;(P(a,b)).\]
@@ -196,13 +276,13 @@ Es gilt:
 Nach Def. \ref{def:cart} (cart) gilt:
 \begin{align*}
 &\forall t{\in}A{\times}B\;(P(t))\iff \forall t(t\in A\times B\implies P(t))\\
-&\iff \forall t(\exists a\exists b[t=(a,b)\land a\in A\land B\in B]\implies P(t))
+&\iff \forall t(\exists a\exists b[t=(a,b)\land a\in A\land b\in B]\implies P(t))
 \end{align*}
 Unter doppelter Anwendung von Satz \ref{exists-implies-const} gilt weiter:
-\[\iff \forall t\forall a\forall b[t=(a,b)\land a\in A\land B\in B\implies P(t)]\]
+\[\iff \forall t\forall a\forall b[t=(a,b)\land a\in A\land b\in B\implies P(t)]\]
 Substituiert man $t:=(a,b)$, dann ergibt sich:
 \[\implies \forall a\forall b[a\in A\land B\in B\implies P(a,b)]
-\iff \forall a{\in a}\forall b{\in}B (P(a,b)),\]
+\iff \forall a{\in}a\;\forall b{\in}B\;(P(a,b)),\]
 wobei $P(a,b)$ eine Kurzschreibweise für $P((a,b))$ ist.
 Von der Gegenrichtung bilden wir die Kontraposition:
 \[\exists t\exists a\exists b[t=(a,b)\land a\in A\land b\in B\land \overline{P(t)}]
@@ -210,10 +290,73 @@ Von der Gegenrichtung bilden wir die Kontraposition:
 Dem $\exists t$ wird aber immer durch $t:=(a,b)$ genügt, so dass sich die
 äquivalente Formel
 \[\exists a\exists b[a\in A\land b\in B\land \overline{P(a,b)}]
-\implies \exists a\exists b(a\in a\land b\in B\land \overline{P(a,b)}).\]
+\implies \exists a\exists b(a\in A\land b\in B\land \overline{P(a,b)}).\]
 ergibt.\;\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{exists-cart}
+Es gilt:
+\[\exists t{\in}A{\times}B\;(P(t))
+\iff \exists a{\in}A\;\exists b{\in}B\;(P(a,b)).\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:cart} (cart) gilt:
+\begin{gather*}
+\exists t{\in}A{\times}B\;(P(t))
+\iff \exists t(t\in A\times B\land P(t))\\
+\iff \exists t(\exists a\exists b[t=(a,b)\land a\in A\land b\in B]\land P(t))\\
+\iff \exists t\exists a\exists b[a\in A\land b\in B\land t=(a,b)\land P(t)]\\
+\iff \exists a{\in}A\;\exists b{\in}B\;\exists t[t=(a,b)\land P(t)].
+\end{gather*}
+Nun gilt aber ganz offensichtlich
+\[\exists t[t=(a,b)\land P(t)]\iff P(a,b).\]
+Nimmt man $P(a,b)$ an, dann lässt sich $\exists t[t=(a,b)\land P(t)]$
+durch Wahl von $t:=(a,b)$ bestätigen. Nimmt man umgekehrt
+$\exists t[t=(a,b)\land P(t)]$ an, lässt sich $P(a,b)$ daraus
+unter Anwendung von Satz \ref{eq-substitution} ableiten.
+Da $\exists t[t=(a,b)\land P(t)]$ gegen $P(a,b)$ ersetzt werden
+darf, folgt die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt:
+\[\bigcup_{t\in I\times J} A_t
+= \bigcup_{i\in I}\bigcup_{j\in J} A_{ij}.\quad (t=(i,j))\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:union} (union) und Satz \ref{exists-cart} gilt:
+\begin{gather*}
+x\in \bigcup_{t\in I\times J} A_t
+\iff \exists t{\in}I{\times J}\;(x\in A_t)
+\iff \exists i{\in}I\;\exists j{\in}J\;(x\in A_{ij})\\
+\iff \exists i{\in}I\; (x\in \bigcup_{j\in J} A_{ij})
+\iff x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}.
+\end{gather*}
+Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt:
+\[\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
+= \bigcup_{j\in J}\bigcup_{i\in I} A_{ij}.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:union} (union) und Satz \ref{bounded-exists-cl} gilt:
+\begin{gather*}
+x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
+\iff \exists i{\in}I\;(x\in\bigcup_{j\in J} A_{ij})
+\iff \exists i{\in}I\;\exists j{\in}J\;(x\in A_{ij})\\
+\iff \exists j{\in}J\;\exists i{\in}I\;(x\in A_{ij})
+\iff \exists j{\in}J\;(x\in \bigcup_{i\in I}A_{ij})
+\iff x\in\bigcup_{j\in J}\bigcup_{i\in I} A_{ij}.
+\end{gather*}
+Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Abbildungen}\index{Abbildungen}
 \subsection{Definitionen}
 
@@ -414,7 +557,9 @@ Indikatorfunktion\index{Indikatorfunktion}
 \[\chi_A\colon M\to\{0,1\},\quad \chi_A(x):=[x\in A].\]
 Die Abbildung
 \[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=\chi_A\]
-ist eine kanonische Bijektion. \strong{Zur Injektivität.}
+ist eine kanonische Bijektion.
+
+\strong{Zur Injektivität.}
 Nach Def. \ref{def:inj} (inj) muss gelten:
 \[\varphi(A)=\varphi(B)\implies A=B,\quad\text{d.\,h.}\quad
 \chi_A=\chi_B \implies A=B.\]
