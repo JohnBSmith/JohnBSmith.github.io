@@ -20,6 +20,7 @@
 <li><a href="#gauss-jordan">Gauss-Jordan elimination</a>
 <li><a href="#det">Determinant of a matrix</a>
 <li><a href="#rat">Rational numbers</a>
+<li><a href="#complex-rat">Complex rational numbers</a>
 <li><a href="#rand">Random numbers</a>
 </ol>
 </div>
@@ -150,6 +151,38 @@ print(inv(A)*A)
 #   [1, 0, 0],
 #   [0, 1, 0],
 #   [0, 0, 1]
+# )
+</pre>
+
+<h2 id="complex-rat">Complex rational numbers</h2>
+<pre class="moss">
+use math.cmath: complex
+use math.rational: rat
+use math.la: matrix
+use math.la.inversion: det, inv
+
+i = complex(0,1)
+
+crat = |z| rat(z.re)+rat(z.im)*i
+
+A = matrix(
+  [1+2*i, 3+2*i],
+  [2+4*i, 4+3*i]
+).map(crat)
+
+print(det(A))
+# 0-5*i
+
+print(inv(A))
+# matrix(
+#   [-3/5+4/5*i, 2/5-3/5*i],
+#   [4/5-2/5*i, -2/5+1/5*i]
+# )
+
+print(inv(A)*A)
+# matrix(
+#   [1+0*i, 0+0*i],
+#   [0+0*i, 1+0*i]
 # )
 </pre>
 
