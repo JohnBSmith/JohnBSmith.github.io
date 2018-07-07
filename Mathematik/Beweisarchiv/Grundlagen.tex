@@ -319,7 +319,7 @@ Da $\exists t[t=(a,b)\land P(t)]$ gegen $P(a,b)$ ersetzt werden
 darf, folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}
+\begin{Satz}\label{cup-cart}
 Es gilt:
 \[\bigcup_{t\in I\times J} A_t
 = \bigcup_{i\in I}\bigcup_{j\in J} A_{ij}.\quad (t=(i,j))\]
@@ -526,6 +526,21 @@ gilt:
 \end{align*}
 \end{Beweis}
 
+\begin{Satz}\label{img-as-cup}
+Es gilt:
+\[f(M) = \bigcup_{x\in M} \{f(x)\}.\]
+\end{Satz}
+
+\begin{Beweis}
+Nach Def. \ref{def:img} (img) und Def. \ref{def:union} (union) gilt:
+\[y\in f(M) \iff \exists x{\in}M\;(y=f(x))
+\iff \exists x{\in}M\;(y\in \{f(x)\})
+\iff y\in\bigcup_{x\in M}\{f(x)\}.\]
+Nach Def. \ref{def:seteq} (seteq) folgt dann die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\subsection{Kardinalzahlen}
 \begin{Satz}[acc: abzählbares Auswahlaxiom]\label{acc}%
 \index{abzählbares Auswahlaxiom}\index{Auswahlaxiom!abzählbares}
 Sei $(A_n)_{n\in\N}$ eine Folge nichtleerer Mengen.
@@ -533,8 +548,6 @@ Dann existiert eine Funktion $f\colon\N\to\bigcup_{n\in\N} A_n$
 mit $f(n)\in A_n$.
 \end{Satz}
 
-\newpage
-\subsection{Kardinalzahlen}
 \begin{Definition}[equipotent: Gleichmächtigkeit]%
 \label{def:equipotent}\index{gleichmaechtig@gleichmächtig}
 Zwei Mengen $A$, $B$ heißen genau dann gleichmächtig, wenn
@@ -598,7 +611,8 @@ eine Bijektion $f_n\colon\N\to A_n$ ausgewählt werden.
 Man betrachte nun
 \[\varphi\colon\N\times\N\to\bigcup_{n\in\N} A_n,\quad
 \varphi(n,m):=f_n(m).\]
-Die Abbildung $\varphi$ ist surjektiv, denn es gilt
+Die Abbildung $\varphi$ ist surjektiv, denn nach
+Satz \ref{img-as-cup} und Satz \ref{cup-cart} gilt
 \begin{gather*}
 \varphi(\N\times\N) = \bigcup_{(n,m)\in\N{\times}\N} \{f_n(m)\}
 = \bigcup_{n\in\N}\bigcup_{m\in\N} \{f_n(m)\}\\
