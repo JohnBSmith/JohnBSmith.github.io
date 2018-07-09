@@ -171,6 +171,9 @@ impl Item for String {}
 
 <h3>Dispatch-Tabellen bei Vererbung</h3>
 
+<p>Wir wollen uns kurz anschauen, wie eine mögliche Implementation
+von Dispatch-Tabellen bei Vererbung aussehen kann.
+
 <p>Angenommen wir haben die folgende Situation:
 <pre class="rust indent">
 trait A {fn f(); fn g();}
@@ -178,7 +181,7 @@ trait B {fn h();}
 trait S: A,B {fn s();}
 </pre>
 
-<p>Für jeden Typen <code>T</code> mit Trait-Implementationen zu
+<p>Für jeden Typ <code>T</code> mit Trait-Implementationen zu
 <code>A,B,S</code> werden nun die folgenden
 Dispatch-Tabellen erzeugt:
 <pre class="rust indent">
@@ -319,7 +322,7 @@ fn main() {
     println!("({}|{})",p.x,p.y);
 }
 </pre>
-<p>Eine andere Überlegung geht davon aus dass <code>Item</code>
+<p>Eine andere Überlegung geht davon aus, dass <code>Item</code>
 von <code>Any</code> erben soll. Ein solcher Ansatz ist aber aus
 bestimmten Gründen nicht möglich.<sup><a href="#1">1</a></sup>
 
