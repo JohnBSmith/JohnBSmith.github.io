@@ -157,6 +157,10 @@ function arg(a){
   return {re: phi, im: 0};
 }
 
+function rarg(a){
+  return phase(a,cabs(a));
+}
+
 function ccabs(x){
   return {re: cabs(x), im: 0};
 }
@@ -1593,6 +1597,81 @@ function fractalplot(){
 function fractalplot_hd(){
   plot_hd=1;
   fractalplot();
+}
+
+function newtonplot(){
+  var s,z,c,a,az0,r,phi,color;
+  var x,y,n,dim;
+  var px,py;
+  c = {value: complex(0,0)};
+  cvtab.c=c;
+  pma = getnum("inputa");
+  x1 = getnum("inputx");
+  y1 = getnum("inputy");
+  wx = getnum("inputw");
+  wy = wx;
+  r = getnum("inputr");
+  n = getnum("inputn");
+  s = gets("inputf");
+  dim = getnum("inputdim");
+  a = compile(s);
+  afunf = a;
+  az0 = compile(gets("inputz0"));
+
+  bcr=0, bcg=0, bcb=0;
+  getgridtype();
+  getgridpos();
+  init();
+
+  var fpset,m,pw,ph;
+  var pwh,psxh,psyh;
+  if(plot_hd==1){
+    plot_hd=0;
+    fpset=pset;
+    m=1; pw=dw; ph=dh;
+    psxh=psx; psyh=psy;
+    pwh=360;
+  }else{
+    fpset=pset4;
+    m=2; pw=dwh; ph=dhh;
+    psxh=psx/2; psyh=psy/2;
+    pwh=180;
+  }
+
+  for(px=0; px<pw; px++){
+    for(py=0; py<ph; py++){
+      x = x1+(px-psxh)*wx/pwh;
+      y = y1-(py-psyh)*wy/pwh;
+      c.value = {re: x, im: y};
+      z = evalvc(az0);
+      vcr=0; vcg=0; vcb=0;
+      for(var i=0; i<n; i++){
+        gcv1=z;
+        p = z;
+        z = sub(z,div(funf(z),cdiff(funf,z)));
+
+        if(cabs(sub(z,p))<r){
+          phi = rarg(z);
+          if(phi<0) phi+=2*Math.PI;
+          color = get_rgb(phi,0.2,1-Math.pow(tanh(i/10*dim),2));
+          vcr = Math.floor(color.r*255);
+          vcg = Math.floor(color.g*255);
+          vcb = Math.floor(color.b*255);
+          break;
+        }
+      }
+      fpset(data,m*px,m*py,255);
+    }
+  }
+  system();
+  context.putImageData(img,0,0);
+  axisx(context,x1,0.1*wx);
+  axisy(context,y1,0.1*wy);
+}
+
+function newtonplot_hd(){
+  plot_hd=1;
+  newtonplot();
 }
 
 function clickc(event){
