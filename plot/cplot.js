@@ -1600,7 +1600,7 @@ function fractalplot_hd(){
 }
 
 function newtonplot(){
-  var s,z,c,a,az0,r,phi,color;
+  var s,z,p,c,a,az0,r,phi,color;
   var x,y,n,dim;
   var px,py;
   c = {value: complex(0,0)};
