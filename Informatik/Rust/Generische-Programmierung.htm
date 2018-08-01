@@ -14,6 +14,7 @@
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Arithmetik">Arithmetik</a>
+<li><a href="#Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</a>
 </ol>
 
 <h2 id="Arithmetik">Arithmetik</h2>
@@ -67,6 +68,109 @@ fn main() {
 }
 </pre>
 
+<h2 id="Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</h2>
+
+<p>Beim schreiben generischer Programme tut sich oft das Problem des
+<i>Code Bloats</i> auf. Das soll am Beispiel von <code>Vec</code>, dem
+Datentyp dynamischer Felder, verdeutlicht werden. Weil der Compiler
+bei der Monomorphisierung von <code>Vec</code>
+für unterschiedliche Typen <code>A,B,C</code>
+jeweils neuen optimierten Programmcode zu
+<code>Vec&lt;A&gt;,Vec&lt;B&gt;,Vec&lt;C&gt;</code>
+erzeugt, können generische Programme zu großen Binärdateien führen.
+
+<p>Zur Lösung dieses Problems bieten sich vier Ansätze an:
+<ol>
+<li>Die Monomorphisierung wird schlicht verhindert,
+  indem mit polymorphen Zeigern gearbeitet wird.
+<li>Die Implementation ist intern polymorph gestaltet mit
+  <code>str::ptr::copy</code>, eventuell mit
+  ein paar Spezialisierungen zur Optimierung.
+<li>Der Compiler erzeugt bei der Monomorphisierung eine
+Zwischenrepräsentation, die z.&nbsp;B. nur <code>str::ptr::copy</code>
+verwendet und erkennt dabei, dass Funktionen wiederverwendet werden
+können.
+<li>Die Monomorphisierung findet zur Laufzeit statt. Das bietet sich
+  bei Rust nicht an, weil dafür eine Laufzeitumgebung
+  benötigt wird, die unter Umständen groß und kompliziert ausfallen kann.
+</ol>
+<p>Davon wollen wir uns auf 1. beschränken.
+Zunächst ist denkbar, dass der Compiler schon bei
+<code>Vec&lt;Box&lt;T&gt;&gt;</code> für unterschiedliche Typen
+<code>T</code> bei der Monomorphisierung die gleichen Funktionen
+erzeugt und wiederverwendet. Ein guter Compiler sollte das auf jeden
+Fall bewerkstelligen. Um das zu erzwingen, können aber Trait-Pointer
+<code>Box&lt;dyn A&gt;</code> des selben Traits <code>A</code> benutzt
+werden. Oder aber man verwendet <code>Box&lt;Any&gt;</code>.
+
+<p>Wir wollen den allgemeinen Ansatz mit <code>Box&lt;Any&gt;</code>
+verfolgen. Rust bietet uns nun die Mittel, um den polymorphen Code
+in ein monomorphisiertes Interface einzuhüllen. Das gestaltet sich wie
+folgt:
+
+<pre class="rust">
+pub mod polyvec {
+    use std::any::Any;
+    use std::marker::PhantomData;
+    pub struct PolyVec&lt;T&gt; {
+        v: Vec&lt;Box&lt;Any&gt;&gt;,
+        _marker: PhantomData&lt;T&gt;
+    }
+    impl&lt;T: 'static&gt; PolyVec&lt;T&gt; {
+        pub fn new() -&gt; Self {
+            Self{v: Vec::new(), _marker: PhantomData}
+        }
+        pub fn push(&amp;mut self, x: T) {
+            self.v.push(Box::new(x));
+        }
+        pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+            match self.v.pop() {
+                None =&gt; None,
+                Some(x) =&gt; {
+                    if let Ok(x) = x.downcast::&lt;T&gt;() {
+                        Some(*x)
+                    }else{
+                        unreachable!()
+                    }
+                }
+            }
+        }
+    }
+}
+
+use polyvec::PolyVec;
+
+struct LargeChunk{}
+
+fn main() {
+    let mut v: PolyVec&lt;LargeChunk&gt; = PolyVec::new();
+    v.push(LargeChunk{});
+    v.push(LargeChunk{});
+}
+</pre>
+
+<p>Interessant ist, dass <code>PolyVec</code> eine Teilmenge
+der Operationen von <code>Vec</code> unterstützt und dabei nicht
+von <code>Vec</code> zu unterscheiden ist.
+Um diesen Umstand auszunutzen, können wir einen abstrakten Datentyp
+als Typalias formulieren:
+
+<pre class="rust indent">
+type VecADT = Vec;
+// type VecADT = PolyVec;
+</pre>
+
+<p>Aber Vorsicht: hierbei handelt es sich nicht um einen echten
+abstrakten Datentyp, sondern um eine Typvariable.
+
+<p>Man kann nun zu jeder Zeit zwischen <code>Vec</code>
+und <code>PolyVec</code> umschalten, um zu sehen wie sich
+die Speichergröße der erzeugten Binärdatei verändert.
+
+<p>Da <code>PolyVec</code> mit <code>Box</code> Indirektionen und
+zusätzliche Speicherallokationen erzeugt, ist dieser Container natürlich
+nicht für laufzeitkritische Unterprogramme geeignet. Wie immer gilt,
+dass zur Entscheidungsfindung konkrete Messungen hilfreich sein können.
 
 </body>
 </html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Numerik</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: Arrays</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Umdrehen">Array umdrehen</a>
+<li><a href="#gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</a>
+</ol>
+<br>
+
+<h2 id="Umdrehen">Array umdrehen</h2>
+<pre class="rust">
+fn reverse(a: &amp;mut [i32]){
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i,n-1-i);
+    }
+}
+
+// Typ-generisch:
+fn reverse&lt;T&gt;(a: &amp;mut [T]){
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i,n-1-i);
+    }
+}
+
+fn main(){
+    let mut a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    reverse(&amp;mut a);
+    println!("{:?}",a);
+}
+</pre>
+
+<h2 id="gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</h2>
+<pre class="rust">
+fn take_even(a: &amp;[i32]) -> Vec&lt;i32&gt; {
+    let mut v: Vec&lt;i32&gt; = Vec::new();
+    let n = a.len();
+    let m = if n%2==0 {n/2} else {n/2+1};
+    for i in 0..m {
+        v.push(a[2*i]);
+    }
+    return v;
+}
+
+fn take_odd(a: &amp;[i32]) -> Vec&lt;i32&gt; {
+    let mut v: Vec&lt;i32&gt; = Vec::new();
+    for i in 0..a.len()/2 {
+        v.push(a[2*i+1]);
+    }
+    return v;
+}
+
+fn main(){
+    let a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    let v = take_even(&amp;a);
+    let w = take_odd(&amp;a);
+    println!("{:?}, {:?}",v,w);
+}
+</pre>
+
+</body>
+</html>
+
