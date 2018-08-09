@@ -1734,6 +1734,25 @@ function define(id,s){
   return f;
 }
 
+function evalv2(a,x1,x2){
+  var y,tmp1,tmp2;
+  tmp1=gv1; tmp2=gv2;
+  gv1=x1; gv2=x2;
+  y=evalv(a);
+  gv1=tmp1; gv2=tmp2;
+  return y;
+}
+
+function define2(id,s){
+  var a = compile(s);
+  gva=a;
+  var f = function(x,y){
+    return evalv2(a,x,y);
+  };
+  ftab2[id]=f;
+  return f;
+}
+
 function setw(stack,argc){
   var w,h;
   if(argc==2){
@@ -3643,6 +3662,52 @@ function iplot_hq(h,n){
   }  
 }
 
+function zeroes_bisection(f,a,b,n){
+  var zeroes = [];
+  var h = (b-a)/n;
+  for(var k=0; k<n; k++){
+    var x0 = a+h*k;
+    var x1 = a+h*(k+1);
+    if(sgn(f(x0))!=sgn(f(x1))){
+      if(f(x0)==0){
+        zeroes.push(x0);
+      }else if(f(x1)==0){
+        zeroes.push(x1);
+      }else{
+        zeroes.push(invab(f,0,x0,x1))
+      }
+    }
+  }
+  return zeroes;
+}
+
+function eq_to_implicit(s){
+  var a = s.split("=");
+  return ["(",a[0],")-(",a[1],")"].join("");
+}
+
+function iplot_bisection(f,h){
+  var x,y,px,py,a,t;
+  var dwq,dhq;
+  var psxh=psx/2, psyh=psy/2;
+  dwq=dw/4; dhq=dh/4;
+  var N = Math.round(2/h);
+  for(px=0; px<dwh; px+=0.5){
+    x = x1+(px-psxh)*wx/dwq;
+    a = zeroes_bisection(function(y){return f(x,y);},y1-wy,y1+wy,N);
+    for(var k=0; k<a.length; k++){
+      spoint(x,a[k]);
+    }
+  }
+  for(py=0; py<dhh; py+=0.5){
+    y = y1-(py-psyh)*wy/dwq;
+    a = zeroes_bisection(function(x){return f(x,y);},x1-wx,x1+wx,N);
+    for(var k=0; k<a.length; k++){
+      spoint(a[k],y);
+    }
+  }
+}
+
 function iplot(){
   var ptype,h;
   x1=0; y1=0;
@@ -3659,7 +3724,8 @@ function iplot(){
   init();
   system();
 
-  define("f",gets("inputf"));
+  var sf = gets("inputf");
+  var f = define2("f",sf);
   vcr=cr1; vcg=cg1; vcb=cb1;
 
   if(ptype=="fast"){
@@ -3670,6 +3736,9 @@ function iplot(){
     iplot_hq(10*h,4);
   }else if(ptype=="best"){
     iplot_hq(20*h,6);
+  }else if(ptype=="bisection"){
+    f = define2("f",eq_to_implicit(sf));
+    iplot_bisection(f,h);
   }
 
   flush();

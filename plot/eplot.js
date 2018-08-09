@@ -4,25 +4,6 @@ var phi;
 var dgrid=false;
 click=clickidle;
 
-function evalv2(a,x1,x2){
-  var y,tmp1,tmp2;
-  tmp1=gv1; tmp2=gv2;
-  gv1=x1; gv2=x2;
-  y=evalv(a);
-  gv1=tmp1; gv2=tmp2;
-  return y;
-}
-
-function define2(id,s){
-  var a = compile(s);
-  gva=a;
-  var f = function(x,y){
-    return evalv2(a,x,y);
-  };
-  ftab2[id]=f;
-  return f;
-}
-
 function shiftphim(){
   phi = (getnum("inputphi")-10);
   if(phi<0) phi+=360;
