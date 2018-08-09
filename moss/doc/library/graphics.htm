@@ -18,6 +18,7 @@
 <ol>
 <li><a href="#gx">Module <code>gx</code> &mdash; computer graphics</a>
 <li><a href="#plotlib">Module <code>plotlib</code> &mdash; graphing data and functions</a>
+<li><a href="#plotlib-implicit">Module <code>plotlib.implicit</code> &mdash; graphing zero sets</a>
 </ol>
 </div>
 
@@ -85,10 +86,27 @@ coordinate system instead of pixel coordinates.
 
 <dt>c.origin(x,y)
 <dd>Set the origin of the device independent coordinate system.
+
+<dt>c.vflush()
+<dd>Flush the vector graphics buffer.
+
+<dt>c.vcflush()
+<dd>Flush and clear the vector graphics buffer.
 </dl>
 
 <h2 id="plotlib">Module plotlib</h2>
 <p>Graphing data and functions.
+
+<p>A basic example:
+
+<pre class="moss indent">
+use plotlib: system
+use math: pi, sin
+
+s = system()
+s.plot(|x| sin(pi*x))
+s.idle()
+</pre>
 
 <h3>plotlib.system</h3>
 <dl class="code">
@@ -96,7 +114,7 @@ coordinate system instead of pixel coordinates.
 wx=10/scale, wy=10/scale, dark=false, grid=true})
 <dd>Create a new coordinate system with center <code>(px,py)</code>
 where the visible range is <code>x&in;[px-wx,px+wx]</code>
-and <code>y&in;[py-wy,py+wy]</code>.
+and <code>y&in;[py-wy,py+wy]</code> by assuming <code>w==h</code>.
 The resolution will be <code>w*h</code> pixels.
 
 <dt>s.idle()
@@ -138,6 +156,14 @@ an animated gif instead. That is currently not supported, but planned for
 the future.
 <dd>
 
+<dt>s.lock_color(lock=true)
+<dd>After <code>s.plot(f)</code> and <code>s.vplot(f)</code>
+the color is changed automatically to the next one in the palette.
+This is turned off by <code>s.lock_color()</code> in order
+to achieve unimpaired manual control over the color state.
+Note that <code>s.animate(callback)</code>
+automatically applies <code>s.lock_color()</code>.
+
 <dt>s.color(n)
 <dd>Set the color state. Use color <code>n&ge;0</code> from
 the color palette. If <code>n</code> is out of bounds,
@@ -158,6 +184,27 @@ s.rgb(*rng())
 </pre>
 </dl>
 
+<h2 id="plotlib-implicit">Module plotlib.implicit</h2>
+<p>Patches plotlib with functionality to draw zero sets.
+
+<p>A basic example:
+<pre class="moss indent">
+use plotlib: system
+use plotlib.implicit
+
+s = system()
+
+s.plot_zero_set(|x,y| x^2-y^2-1)
+
+s.idle()
+</pre>
+
+<dl class="code">
+<dt>s.plot_zero_set(F,{n=1000,m=10,method="bisection"})
+<dd>Draw the solutions of <code>F(x,y)=0</code>.
+A large line density needs a large <code>m</code>.
+If there are gaps, try to increase <code>m</code> to 20 or 100.
+</dl>
 
 </body>
 </html>
