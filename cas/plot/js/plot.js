@@ -934,13 +934,24 @@ async function plot_zero_set_async(gx,f,color){
     plot_zero_set(gx,f,10,false,color);
     while(busy){await sleep(40);}
     await sleep(40);
-    plot_zero_set(gx,f,100,true,color);
+    plot_zero_set(gx,f,400,true,color);
+}
+
+function contains_variable(t,v){
+    if(Array.isArray(t)){
+        for(var i=0; i<t.length; i++){
+            if(contains_variable(t[i],v)) return true;
+        }
+        return false;
+    }else{
+        return t===v;
+    }
 }
 
 function plot_node(gx,t,color){
     var f;
-    if(Array.isArray(t) && t[0]=="="){
-        if(t[1]=="y"){
+    if(Array.isArray(t) && t[0]==="="){
+        if(t[1]==="y" && !contains_variable(t[2],"y")){
             f = compile(t[2],["x"]);
             plot_async(gx,f,color);
         }else{
@@ -968,7 +979,7 @@ function plot(gx){
     var input = get_value("inputf");
     if(input.length>0){
         var t = ast(input);
-        if(Array.isArray(t) && t[0]=="block"){
+        if(Array.isArray(t) && t[0]==="block"){
             for(var i=1; i<t.length; i++){
                plot_node(gx,t[i],color_table[color_index]);
                color_index = (color_index+1)%color_table.length;
