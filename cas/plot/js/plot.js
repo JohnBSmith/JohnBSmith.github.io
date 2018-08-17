@@ -766,7 +766,11 @@ function init(canvas,w,h){
     gx.color = [0,0,0,255];
     /* gx.mx = 36; */
     if(w<900){
-        gx.mx = w/1300*65;
+        if(w<400){
+            gx.mx = w/1300*110;
+        }else{
+            gx.mx = w/1300*65;
+        }
     }else{
         gx.mx = w/1300*50;
     }
@@ -973,6 +977,17 @@ var color_table = [
     [100,80,0,255]
 ];
 
+function global_definition(t){
+    if(Array.isArray(t[1])){
+        var app = t[1];
+        var value = compile(t[2],app.slice(1));
+        ftab[app[0]] = value;
+    }else{
+        var value = compile(t[2],[]);
+        ftab[t[1]] = value();
+    }
+}
+
 function plot(gx){
     cancel_stack = [];
     var color_index = 0;
@@ -981,8 +996,12 @@ function plot(gx){
         var t = ast(input);
         if(Array.isArray(t) && t[0]==="block"){
             for(var i=1; i<t.length; i++){
-               plot_node(gx,t[i],color_table[color_index]);
-               color_index = (color_index+1)%color_table.length;
+                if(Array.isArray(t[i]) && t[i][0]===":="){
+                    global_definition(t[i]);
+                }else{
+                    plot_node(gx,t[i],color_table[color_index]);
+                    color_index = (color_index+1)%color_table.length;
+                }
             }
         }else{
             plot_node(gx,t,color_table[0]);
@@ -1020,7 +1039,24 @@ function keys(event){
     if(event.keyCode==13) main();
 }
 
+function query(href){
+    var a = href.split("?");
+    if(a.length>1){
+        var s = a[1];
+        var n = s.length;
+        if(n>0 && s[0]=='{'){
+            var i=1;
+            while(i<n && s[i]!='}') i++;
+            s = s.slice(1,i);
+        }
+        var input = document.getElementById("inputf");
+        input.value = s;
+        main();
+    }
+}
+
 window.onload = function(){
     var gx = new_system();
     labels(gx);
+    query(window.location.href);
 };
