@@ -1,6 +1,8 @@
 
 "use strict";
 
+var diff = diffh(0.001);
+
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
@@ -20,7 +22,8 @@ var ftab = {
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, 
     gamma: gamma,
-    diff: diffh(0.001), int: integral
+    diff: diff, int: integral,
+    pow: pow, D: diff
 };
 
 function diffh(h){
@@ -122,6 +125,13 @@ function gauss(f,a,b,n){
 function integral(a,b,f,n){
     if(n==undefined) n=1;
     return gauss(f,a,b,n);
+}
+
+function pow(f,n,x){
+    for(var i=0; i<n; i++){
+        x = f(x);
+    }
+    return x;
 }
 
 // Lanczos approximation
