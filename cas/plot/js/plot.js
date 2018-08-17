@@ -1087,11 +1087,27 @@ function keys(event){
     if(event.keyCode==13) main();
 }
 
+function decode_percent(s){
+    var a = [];
+    var n = s.length;
+    var i = 0;
+    while(i<n){
+        if(i+2<n && s[i]=='%'){
+            a.push(decodeURIComponent(s.slice(i,i+3)));
+            i+=3;
+        }else{
+            a.push(s[i]);
+            i++;
+        }
+    }
+    return a.join("");
+}
+
 function query(href){
     var a = href.split("?");
     if(a.length>1){
         var input = document.getElementById("inputf");
-        input.value = a[1];
+        input.value = decode_percent(a[1]);
         main();
     }
 }
