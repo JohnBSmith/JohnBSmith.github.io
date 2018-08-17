@@ -20,12 +20,17 @@ var ftab = {
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, 
     gamma: gamma,
-    diff: diff, int: integral
+    diff: diffh(0.001), int: integral
 };
 
-function diff(f,x){
-    var h = 0.001;
-    return (f(x+h)-f(x-h))/(2*h);
+function diffh(h){
+    return function diff(f,x,n){
+        if(n==undefined || n==1){
+            return (f(x-2*h)-8*f(x-h)+8*f(x+h)-f(x+2*h))/(12*h);
+        }else{
+            return (diff(f,x+h,n-1)-diff(f,x-h,n-1))/(2*h);
+        }
+    };
 }
 
 var g64=[
@@ -223,13 +228,21 @@ function str(s){
     return JSON.stringify(s);
 }
 
-function ErrSyntax(i,text){
-    var t = i.a[i.index];
-    this.text = ["Syntax error (col ",t[3]+1,"): ",text].join("");
+function Err(text){
+    this.text = text;
+}
+
+function repeat(c,n){
+    return Array(n+1).join(c);
 }
 
 function syntax_error(i,text){
-    throw new ErrSyntax(i,text);
+    var t = i.a[i.index];
+    var s = ["&nbsp;&nbsp;",i.s,"<br>&nbsp;&nbsp;",
+        repeat("&nbsp;",t[3])+"<b>^</b>", "<br>",
+        "Syntax error: ",text
+    ].join("");
+    throw new Err(s);
 }
 
 var superscript = {
@@ -351,7 +364,7 @@ function atom(i){
     }else if(t[0] == Symbol && t[1]=='|'){
         return lambda_expression(i);
     }else{
-        syntax_error(i,"expected an idenitifer or a number.");
+        syntax_error(i,"expected an operand.");
     }
 }
 
@@ -382,6 +395,21 @@ function application(i){
         if(t[0]==Symbol && t[1]=='('){
             i.index++;
             x = application_list(i,[x],')');
+        }else if(t[0]==Symbol && t[1]=="'"){
+            var count = 0;
+            while(1){
+                t = i.a[i.index];
+                if(t[0]==Symbol && t[1]=="'"){
+                    count++;
+                    i.index++;
+                }else break;
+            }
+            var y = atom(i);
+            if(count==1){
+                x = ["diff",x,y];
+            }else{
+                x = ["diff",x,y,count];
+            }
         }else{
             break;
         }
@@ -494,8 +522,8 @@ function expression_list(i){
     }
 }
 
-function parse(a){
-    var i = {index: 0, a: a};
+function parse(a,s){
+    var i = {index: 0, a: a, s: s};
     var x = expression_list(i);
     var t = i.a[i.index];
     if(t[0] != SymbolTerminator){
@@ -506,7 +534,7 @@ function parse(a){
 
 function ast(s){
     var a = scan(s);
-    return parse(a);
+    return parse(a,s);
 }
 
 function compile_application(a,id,t,context){
@@ -571,7 +599,7 @@ function compile_expression(a,t,context){
             context.local[t] = true;
             a.push(t);
         }else{
-            a.push("gtab."+t);
+            throw new Err("Error: undefined variable: '"+t+"'.");
         }
     }else if(Array.isArray(t)){
         var op = t[0];
@@ -1030,9 +1058,19 @@ function calc(){
 }
 
 function main(){
+    var out = document.getElementById("out");
+    out.innerHTML = "";
     // calc();
-    var gx = new_system();
-    plot(gx);
+    try{
+        var gx = new_system();
+        plot(gx);
+    }catch(e){
+        if(e instanceof Err){
+            out.innerHTML = e.text;
+        }else{
+            throw e;
+        }
+    }
 }
 
 function keys(event){
@@ -1042,15 +1080,8 @@ function keys(event){
 function query(href){
     var a = href.split("?");
     if(a.length>1){
-        var s = a[1];
-        var n = s.length;
-        if(n>0 && s[0]=='{'){
-            var i=1;
-            while(i<n && s[i]!='}') i++;
-            s = s.slice(1,i);
-        }
         var input = document.getElementById("inputf");
-        input.value = s;
+        input.value = a[1];
         main();
     }
 }
