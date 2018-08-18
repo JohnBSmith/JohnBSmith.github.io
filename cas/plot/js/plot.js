@@ -5,7 +5,8 @@ var diff = diffh(0.001);
 var graphics;
 var ax=1;
 var ay=1;
-var scale_index=10000;
+var xscale = {index: 10000};
+var yscale = {index: 10000};
 var hud_display = false;
 
 var ftab = {
@@ -1165,33 +1166,69 @@ function set_pos(gx,t){
     gx.py0 = Math.round(0.5*gx.h+y*ay*gx.mx);
 }
 
-function scale_inc(){
+function scale_inc(scale){
     var m;
-    if(scale_index%3==2){
+    if(scale.index%3==2){
         m = 5/2;
     }else{
         m = 2;
     }
-    scale_index++;
+    scale.index++;
     var t = get_pos(graphics);
-    ax = Math.round(1E10*ax*m)/1E10;
-    ay = Math.round(1E10*ay*m)/1E10;
+    if(scale===xscale){
+        ax = Math.round(1E10*ax*m)/1E10;
+    }else{
+        ay = Math.round(1E10*ay*m)/1E10;
+    }
     set_pos(graphics,t);
+}
+
+function scale_dec(scale){
+    var m;
+    if(scale.index%3==0){
+        m = 5/2;
+    }else{
+        m = 2;
+    }
+    scale.index--;
+    var t = get_pos(graphics);
+    if(scale===xscale){
+        ax = Math.round(1E10*ax/m)/1E10;
+    }else{
+        ay = Math.round(1E10*ay/m)/1E10;
+    }
+    set_pos(graphics,t);
+}
+
+function xyscale_inc(){
+    scale_inc(xscale);
+    scale_inc(yscale);
     update(graphics);
 }
 
-function scale_dec(){
-    var m;
-    if(scale_index%3==0){
-        m = 5/2;
-    }else{
-        m = 2;
-    }
-    scale_index--;
-    var t = get_pos(graphics);
-    ax = Math.round(1E10*ax/m)/1E10;
-    ay = Math.round(1E10*ay/m)/1E10;
-    set_pos(graphics,t);
+function xyscale_dec(){
+    scale_dec(xscale);
+    scale_dec(yscale);
+    update(graphics);
+}
+
+function xscale_inc(){
+    scale_inc(xscale);
+    update(graphics);
+}
+
+function yscale_inc(){
+    scale_inc(yscale);
+    update(graphics);
+}
+
+function xscale_dec(){
+    scale_dec(xscale);
+    update(graphics);
+}
+
+function yscale_dec(){
+    scale_dec(yscale);
     update(graphics);
 }
 
