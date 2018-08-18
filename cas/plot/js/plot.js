@@ -2,6 +2,7 @@
 "use strict";
 
 var diff = diffh(0.001);
+var graphics;
 
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
@@ -742,8 +743,8 @@ function new_point(gx){
         }
     };
     var spoint = function(color,x,y){
-        var rx = gx.w2+mx*x;
-        var ry = gx.h2-my*y;
+        var rx = gx.px0+mx*x;
+        var ry = gx.py0-my*y;
         fpsets(color,rx,ry);
     };
     var point = function(color,x,y){
@@ -751,29 +752,29 @@ function new_point(gx){
         var py = floor(gx.h2-my*y);
         pset4(color,px,py);
     };
-    var hline = function(gx,y){
-        var py = Math.floor(h/2-my*y);
+    var hline = function(gx,py0,y){
+        var py = py0-Math.floor(my*y);
         var color = gx.color;
         for(var px=0; px<w; px++){
             pset4(color,px,py);
         }
     };
-    var vline = function(gx,x){
-        var px = Math.floor(w/2+mx*x);
+    var vline = function(gx,px0,x){
+        var px = px0+Math.floor(mx*x);
         var color = gx.color;
         for(var py=0; py<h; py++){
             pset4(color,px,py);
         }
     };
-    var vspine = function(gx,py0,x){
-        var px = Math.floor(w/2+mx*x);
+    var vspine = function(gx,px0,py0,x){
+        var px = px0+Math.floor(mx*x);
         var color = gx.color;
         for(var py=py0-4; py<py0+5; py++){
             pset4(color,px,py);
         }
     }
-    var hspine = function(gx,px0,y){
-        var py = Math.floor(h/2-my*y);
+    var hspine = function(gx,px0,py0,y){
+        var py = py0-Math.floor(my*y);
         var color = gx.color;
         for(var px=px0-4; px<px0+5; px++){
             pset4(color,px,py);
@@ -801,6 +802,8 @@ function init(canvas,w,h){
     gx.data = gx.img.data;
     gx.w=w; gx.h=h;
     gx.w2=w/2; gx.h2=h/2;
+    gx.px0 = Math.floor(0.5*gx.w);
+    gx.py0 = Math.floor(0.5*gx.h);
     gx.color = [0,0,0,255];
     /* gx.mx = 36; */
     if(w<900){
@@ -822,29 +825,32 @@ function get_value(id){
 }
 
 function system(gx){
+    var px0 = gx.px0;
+    var py0 = gx.py0;
+    var xcount = Math.ceil(0.5*gx.w/gx.mx)+1;
+    var ycount = Math.ceil(0.5*gx.h/gx.mx)+1;
+    var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
+    var yshift = -Math.round((0.5*gx.h-py0)/gx.mx);
+
     gx.color = [20,20,0,32];
-    var ycount = Math.ceil(0.5*gx.h/gx.mx);
-    var xcount = Math.ceil(0.5*gx.w/gx.mx);
-    for(var y=1; y<ycount; y++){
-        gx.hline(gx,y);
-        gx.hline(gx,-y);
+    for(var y=0; y<ycount; y++){
+        gx.hline(gx,py0,yshift+y);
+        gx.hline(gx,py0,yshift-y);
     }
-    for(var x=1; x<xcount; x++){
-        gx.vline(gx,x);
-        gx.vline(gx,-x);
+    for(var x=0; x<xcount; x++){
+        gx.vline(gx,px0,xshift+x);
+        gx.vline(gx,px0,xshift-x);
     }
     gx.color = [0,0,0,100];
-    gx.hline(gx,0);
-    gx.vline(gx,0);
-    var px0 = Math.floor(0.5*gx.w);
-    var py0 = Math.floor(0.5*gx.h);
-    for(var y=1; y<ycount; y++){
-        gx.hspine(gx,px0,y);
-        gx.hspine(gx,px0,-y);    
+    gx.hline(gx,py0,0);
+    gx.vline(gx,px0,0);
+    for(var y=yshift-ycount; y<=yshift+ycount; y++){
+        if(y!=0){
+            gx.hspine(gx,px0,py0,y);
+        }
     }
-    for(var x=1; x<xcount; x++){
-        gx.vspine(gx,py0,x);
-        gx.vspine(gx,py0,-x);    
+    for(var x=xshift-xcount; x<=xshift+xcount; x++){
+        gx.vspine(gx,px0,py0,x);
     }
 }
 
@@ -858,22 +864,24 @@ function float_str(x){
 
 function labels(gx){
     var context = gx.context;
-    var px0 = Math.floor(0.5*gx.w);
-    var py0 = Math.floor(0.5*gx.h);
+    var px0 = gx.px0;
+    var py0 = gx.py0;
     var ycount = Math.ceil(0.5*gx.h/gx.mx);
     var xcount = Math.ceil(0.5*gx.w/gx.mx);
+    var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
+    var yshift = Math.round((0.5*gx.h-py0)/gx.mx);
     var px,py;
-    for(var x=1; x<xcount; x++){
-        px = Math.floor(gx.w/2+gx.mx*x);
-        context.fillText(float_str(x),px-5,py0+22);
-        px = Math.floor(gx.w/2-gx.mx*x);
-        context.fillText(float_str(-x),px-5,py0+22);
+    for(var x=xshift-xcount; x<=xshift+xcount; x++){
+        if(x!=0){
+            px = px0+Math.floor(gx.mx*x);
+            context.fillText(float_str(x),px-5,py0+22);
+        }
     }
-    for(var y=1; y<ycount; y++){
-        py = Math.floor(gx.h/2-gx.mx*y);
-        context.fillText(float_str(y),px0+14,py+6);
-        py = Math.floor(gx.h/2+gx.mx*y);
-        context.fillText(float_str(-y),px0+14,py+6);
+    for(var y=yshift-ycount; y<=yshift+ycount; y++){
+        if(y!=0){
+            py = py0+Math.floor(gx.mx*y);
+            context.fillText(float_str(-y),px0+14,py+6);
+        }
     }
 }
 
@@ -883,7 +891,49 @@ function sleep(ms){
     });
 }
 
-function new_system(){
+function clear(gx){
+    var data = gx.data;
+    var w = gx.w;
+    var h = gx.h;
+    var n = 4*w*h;
+    for(var i=0; i<n; i++){
+        data[i] = 0;
+    }
+}
+
+var clientXp=0;
+var clientYp=0;
+var moved = false;
+
+function mouse_move_handler(e){
+    if(e.buttons==1){
+        moved = true;
+        var gx = graphics;
+        pid_stack = [];
+        var dx = e.clientX-clientXp;
+        var dy = e.clientY-clientYp;
+        gx.px0 = gx.px0+dx;
+        gx.py0 = gx.py0+dy;
+        clientXp = e.clientX;
+        clientYp = e.clientY;
+        clear(gx);
+        system(gx);
+        gx.context.putImageData(gx.img,0,0);
+        labels(gx);
+    }else{
+        clientXp = e.clientX;
+        clientYp = e.clientY;
+    }
+}
+
+function mouse_up_handler(e){
+    if(moved){
+        update(graphics);
+        moved = false;
+    }
+}
+
+function new_system(last_gx){
     var canvas = document.getElementById("canvas1");
     var w = window.innerWidth;
     var h = window.innerHeight;
@@ -891,37 +941,46 @@ function new_system(){
     canvas.height = h;
     var gx = init(canvas,w,h);
     new_point(gx);
+    if(last_gx!==undefined){
+        gx.px0 = last_gx.px0;
+        gx.py0 = last_gx.py0;
+    }else{
+        canvas.addEventListener("mousemove", mouse_move_handler, false);
+        canvas.addEventListener("mouseup", mouse_up_handler, false);
+    }
     system(gx);
     gx.context.putImageData(gx.img,0,0);
+
     return gx;
 }
 
 var busy;
-var cancel_stack;
+var pid_stack;
 
-function cancel(id,index,cancel_stack){
-    return (index>=cancel_stack.length ||
-      !Object.is(id,cancel_stack[index]));
+function cancel(pid,index,pid_stack){
+    return (index>=pid_stack.length ||
+      !Object.is(pid,pid_stack[index]));
 }
 
 async function fplot(gx,f,d,cond,color){
-    var id = {};
-    var index = cancel_stack.length;
-    cancel_stack.push(id);
+    var pid = {};
+    var index = pid_stack.length;
+    pid_stack.push(pid);
     busy = true;
     var spoint = gx.spoint;
     var wx = 0.5*gx.w/gx.mx;
+    var x0 = (0.5*gx.w-gx.px0)/gx.mx;
     var k=0;
-    for(var x=-wx; x<wx; x+=d){
+    for(var x=x0-wx; x<x0+wx; x+=d){
         var y = f(x);
         spoint(color,x,y);
-        if(cancel(id,index,cancel_stack)) return;
         if(cond && k==10000){
             k=0;
             await sleep(20);
         }else{
             k++;
         }
+        if(cancel(pid,index,pid_stack)) return;
     }
     gx.context.putImageData(gx.img,0,0);
     labels(gx);
@@ -929,34 +988,40 @@ async function fplot(gx,f,d,cond,color){
 }
 
 async function plot_zero_set(gx,f,n,cond,color){
-    var id = {};
-    var index = cancel_stack.length;
-    cancel_stack.push(id);
+    var pid = {};
+    var index = pid_stack.length;
+    pid_stack.push(pid);
     busy = true;
     var wx = 0.5*gx.w/gx.mx;
     var wy = 0.5*gx.h/gx.mx;
+    var x0 = (0.5*gx.w-gx.px0)/gx.mx;
+    var y0 = -(0.5*gx.h-gx.py0)/gx.mx;
+    var xa = x0-wx;
+    var xb = x0+wx;
+    var ya = y0-wy;
+    var yb = y0+wy;
     var d = 0.01;
     var k=0;
-    for(var x=-wx; x<wx; x+=d){
-        var a = zeroes_bisection(function(y){return f(x,y);},-wy,wy,n);
+    for(var x=xa; x<xb; x+=d){
+        var a = zeroes_bisection(function(y){return f(x,y);},ya,yb,n);
         for(var i=0; i<a.length; i++){
             gx.spoint(color,x,a[i]);
         }
-        if(cancel(id,index,cancel_stack)) return;
         if(cond && k%100==0){
             await sleep(20);
         }
+        if(cancel(pid,index,pid_stack)) return;
         k++;
     }
-    for(var y=-wy; y<wy; y+=d){
-        var a = zeroes_bisection(function(x){return f(x,y);},-wx,wx,n);
+    for(var y=ya; y<yb; y+=d){
+        var a = zeroes_bisection(function(x){return f(x,y);},xa,xb,n);
         for(var i=0; i<a.length; i++){
             gx.spoint(color,a[i],y);
         }
-        if(cancel(id,index,cancel_stack)) return;
         if(cond && k%100==0){
             await sleep(20);
         }
+        if(cancel(pid,index,pid_stack)) return;
         k++;
     }
     gx.context.putImageData(gx.img,0,0);
@@ -1027,9 +1092,14 @@ function global_definition(t){
 }
 
 function plot(gx){
-    cancel_stack = [];
+    pid_stack = [];
+    clear(gx);
+    system(gx);
+    gx.context.putImageData(gx.img,0,0);
+    labels(gx);
+
     var color_index = 0;
-    var input = get_value("inputf");
+    var input = get_value("inputf").trim();
     if(input.length>0){
         var t = ast(input);
         if(Array.isArray(t) && t[0]==="block"){
@@ -1042,7 +1112,11 @@ function plot(gx){
                 }
             }
         }else{
-            plot_node(gx,t,color_table[0]);
+            if(Array.isArray(t) && t[0]===":="){
+                global_definition(t);
+            }else{
+                plot_node(gx,t,color_table[0]);
+            }
         }
     }
 }
@@ -1067,20 +1141,25 @@ function calc(){
     }
 }
 
-function main(){
+function update(gx){
     var out = document.getElementById("out");
     out.innerHTML = "";
     // calc();
     try{
-        var gx = new_system();
         plot(gx);
     }catch(e){
         if(e instanceof Err){
-            out.innerHTML = e.text;
+            out.innerHTML = "<br>"+e.text;
         }else{
             throw e;
         }
     }
+}
+
+function main(){
+    var gx = new_system(graphics);
+    graphics = gx;
+    update(gx);
 }
 
 function keys(event){
@@ -1116,4 +1195,5 @@ window.onload = function(){
     var gx = new_system();
     labels(gx);
     query(window.location.href);
+    graphics = gx;
 };
