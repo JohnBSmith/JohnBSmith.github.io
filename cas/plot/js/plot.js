@@ -3,9 +3,14 @@
 
 var diff = diffh(0.001);
 var graphics;
+var ax=1;
+var ay=1;
+var scale_index=10000;
+var hud_display = false;
 
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
+    deg: Math.PI/180, grad: Math.PI/180, gon: Math.PI/200,
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
     max: Math.max, min: Math.min, hypot: Math.hypot,
     floor: Math.floor, ceil: Math.ceil,
@@ -324,6 +329,10 @@ function scan(s){
             }
             a.push([Symbol,"^",line,col]);
             a.push([SymbolNumber,number,line,col]);
+        }else if(s[i]=='\u00b0'){
+            a.push([Symbol,"*",line,col]);
+            a.push([SymbolIdentifier,"deg",line,col]);
+            i++; col++;
         }else{
             a.push([Symbol,s[i],line,col]);
             i++; col++;
@@ -874,13 +883,13 @@ function labels(gx){
     for(var x=xshift-xcount; x<=xshift+xcount; x++){
         if(x!=0){
             px = px0+Math.floor(gx.mx*x);
-            context.fillText(float_str(x),px-5,py0+22);
+            context.fillText(float_str(x/ax),px-5,py0+22);
         }
     }
     for(var y=yshift-ycount; y<=yshift+ycount; y++){
         if(y!=0){
             py = py0+Math.floor(gx.mx*y);
-            context.fillText(float_str(-y),px0+14,py+6);
+            context.fillText(float_str(-y/ay),px0+14,py+6);
         }
     }
 }
@@ -968,12 +977,13 @@ async function fplot(gx,f,d,cond,color){
     pid_stack.push(pid);
     busy = true;
     var spoint = gx.spoint;
-    var wx = 0.5*gx.w/gx.mx;
-    var x0 = (0.5*gx.w-gx.px0)/gx.mx;
+    var wx = 0.5*gx.w/gx.mx/ax;
+    var x0 = (0.5*gx.w-gx.px0)/gx.mx/ax;
     var k=0;
+    d = d/ax;
     for(var x=x0-wx; x<x0+wx; x+=d){
         var y = f(x);
-        spoint(color,x,y);
+        spoint(color,ax*x,ay*y);
         if(cond && k==10000){
             k=0;
             await sleep(20);
@@ -992,20 +1002,20 @@ async function plot_zero_set(gx,f,n,cond,color){
     var index = pid_stack.length;
     pid_stack.push(pid);
     busy = true;
-    var wx = 0.5*gx.w/gx.mx;
-    var wy = 0.5*gx.h/gx.mx;
-    var x0 = (0.5*gx.w-gx.px0)/gx.mx;
-    var y0 = -(0.5*gx.h-gx.py0)/gx.mx;
+    var wx = 0.5*gx.w/gx.mx/ax;
+    var wy = 0.5*gx.h/gx.mx/ay;
+    var x0 = (0.5*gx.w-gx.px0)/gx.mx/ax;
+    var y0 = -(0.5*gx.h-gx.py0)/gx.mx/ay;
     var xa = x0-wx;
     var xb = x0+wx;
     var ya = y0-wy;
     var yb = y0+wy;
-    var d = 0.01;
+    var d = 0.01/ax;
     var k=0;
     for(var x=xa; x<xb; x+=d){
         var a = zeroes_bisection(function(y){return f(x,y);},ya,yb,n);
         for(var i=0; i<a.length; i++){
-            gx.spoint(color,x,a[i]);
+            gx.spoint(color,ax*x,ay*a[i]);
         }
         if(cond && k%100==0){
             await sleep(20);
@@ -1016,7 +1026,7 @@ async function plot_zero_set(gx,f,n,cond,color){
     for(var y=ya; y<yb; y+=d){
         var a = zeroes_bisection(function(x){return f(x,y);},xa,xb,n);
         for(var i=0; i<a.length; i++){
-            gx.spoint(color,a[i],y);
+            gx.spoint(color,ax*a[i],ay*y);
         }
         if(cond && k%100==0){
             await sleep(20);
@@ -1122,22 +1132,77 @@ function plot(gx){
 }
 
 function calc(){
-    var input = get_value("inputf");
-    var out = document.getElementById("out");
+    var input = get_value("input-calc");
+    var out = document.getElementById("calc-out");
     try{
         var t = ast(input);
         var f = compile(t,["x"]);
-        out.innerHTML = "<p><code>"+JSON.stringify(t)+"</code>";
-        var t0 = performance.now();
-        out.innerHTML += "<p><code>"+f(0)+"</code>";
-        var t1 = performance.now();
-        out.innerHTML += "<p><code>time: "+(t1-t0)+"ms</code>";
+        // out.innerHTML = "<p><code>"+JSON.stringify(t)+"</code>";
+        // var t0 = performance.now();
+        out.innerHTML = "<p><code>= "+f(0)+"</code>";
+        // var t1 = performance.now();
+        // out.innerHTML += "<p><code>time: "+(t1-t0)+"ms</code>";
     }catch(e){
         if(e instanceof ErrSyntax){
             out.innerHTML = "<code>"+e.text+"</code>";
         }else{
             throw e;
         }
+    }
+}
+
+function get_pos(gx){
+    return [
+        (0.5*gx.w-gx.px0)/gx.mx/ax,
+        -(0.5*gx.h-gx.py0)/gx.mx/ay
+    ];
+}
+
+function set_pos(gx,t){
+    var x = t[0];
+    var y = t[1];
+    gx.px0 = Math.round(0.5*gx.w-x*ax*gx.mx);
+    gx.py0 = Math.round(0.5*gx.h+y*ay*gx.mx);
+}
+
+function scale_inc(){
+    var m;
+    if(scale_index%3==2){
+        m = 5/2;
+    }else{
+        m = 2;
+    }
+    scale_index++;
+    var t = get_pos(graphics);
+    ax = Math.round(1E10*ax*m)/1E10;
+    ay = Math.round(1E10*ay*m)/1E10;
+    set_pos(graphics,t);
+    update(graphics);
+}
+
+function scale_dec(){
+    var m;
+    if(scale_index%3==0){
+        m = 5/2;
+    }else{
+        m = 2;
+    }
+    scale_index--;
+    var t = get_pos(graphics);
+    ax = Math.round(1E10*ax/m)/1E10;
+    ay = Math.round(1E10*ay/m)/1E10;
+    set_pos(graphics,t);
+    update(graphics);
+}
+
+function switch_hud(){
+    var hud = document.getElementById("hud");
+    if(hud_display){
+        hud_display = false;
+        hud.style.display = "none";
+    }else{
+        hud_display = true;
+        hud.style.display = "block";
     }
 }
 
@@ -1164,6 +1229,10 @@ function main(){
 
 function keys(event){
     if(event.keyCode==13) main();
+}
+
+function keys_calc(event){
+    if(event.keyCode==13) calc();
 }
 
 function decode_percent(s){
