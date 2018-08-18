@@ -15,8 +15,10 @@ var ftab = {
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
     max: Math.max, min: Math.min, hypot: Math.hypot,
     floor: Math.floor, ceil: Math.ceil,
-    rd: Math.round, trunc: Math.trunc,
-    sqrt: Math.sqrt, expm1: Math.expm1, rng: Math.random,
+    div: div, mod: mod, diveuc: diveuc, modeuc: modeuc,
+    divtrunc: divtrunc, modtrunc: modtrunc,
+    rd: Math.round, trunc: Math.trunc, frac: frac,
+    sqrt: Math.sqrt, cbrt: cbrt, root: root, expm1: Math.expm1,
     exp: Math.exp, log: log, ln: Math.log, lg: lg, ld: ld, lb: ld,
     sin: Math.sin, cos: Math.cos, tan: Math.tan,
     cot: cot, sec: sec, csc: csc,
@@ -28,10 +30,27 @@ var ftab = {
     arsinh: asinh, arcosh: acosh, artanh: atanh,
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, 
-    gamma: gamma,
+    gamma: gamma, fac: fac,
     diff: diff, int: integral,
-    pow: pow, D: diff
+    pow: pow, D: diff, sum: sum, prod: prod,
+    rng: Math.random, inv: invab
 };
+
+function sum(a,b,f){
+    var y = 0;
+    for(var i=a; i<=b; i++){
+        y += f(i);
+    }
+    return y;
+}
+
+function prod(a,b,f){
+    var y = 1;
+    for(var i=a; i<=b; i++){
+        y *= f(i);
+    }
+    return y;
+}
 
 function diffh(h){
     return function diff(f,x,n){
@@ -161,6 +180,46 @@ function gamma(x){
     }else{
         return gammapx(x);
     }
+}
+
+function fac(x){
+    return gamma(x+1);
+}
+
+function cbrt(x){
+    return Math.pow(x,1/3);
+}
+
+function root(n,x){
+    return Math.pow(x,1/n);
+}
+
+function frac(x){
+    return x-Math.floor(x);
+}
+
+function div(x,m){
+    return Math.floor(x/m);
+}
+
+function mod(x,m){
+    return x-m*Math.floor(x/m);
+}
+
+function diveuc(x,m){
+    return Math.sign(m)*Math.floor(x/Math.abs(m));
+}
+
+function modeuc(x,m){
+    return mod(x,Math.abs(m));
+}
+
+function divtrunc(x,m){
+    return Math.trunc(x/m);
+}
+
+function modtrunc(x,m){
+    return x-m*Math.trunc(x/m);
 }
 
 function tanh(x){
