@@ -36,12 +36,13 @@ var ftab = {
     Gamma: Gamma, erf: erf,
     diff: diff, int: integral,
     pow: pow, D: diff, sum: sum, prod: prod,
-    rng: rng, rand: rng, inv: invab, agm: agm,
+    rand: rand, rng: rand, tg: tg,
+    inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD
 };
 
-function rng(a,b){
+function rand(a,b){
     if(a==undefined){
         return Math.random();
     }else if(b==undefined){
@@ -50,6 +51,10 @@ function rng(a,b){
     }else{
         return a+Math.random()*(b-a);
     }
+}
+
+function tg(f,a,x){
+    return f(a)+diff(f,a)*(x-a);
 }
 
 function sum(a,b,f){
