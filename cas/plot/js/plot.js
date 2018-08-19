@@ -1252,9 +1252,9 @@ async function fplot(gx,f,d,cond,color){
     for(var x=x0-wx; x<x0+wx; x+=d){
         var y = f(x);
         spoint(color,ax*x,ay*y);
-        if(cond && k==10000){
+        if(cond && k==4000){
             k=0;
-            await sleep(20);
+            await sleep(10);
         }else{
             k++;
         }
