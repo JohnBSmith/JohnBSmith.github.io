@@ -40,33 +40,76 @@ table.bt td, table.bt th{
   vertical-align: top;
 }
 table.bt td{
-  background-color: #fafaf0;
+  background-color: #f0f0ff;
 }
 table.bt th{
-  background-color: #eaeada;
+  background-color: #dae0f0;
 }
 .indent {
   margin-left: 1.6em;
+}
+dl.input dt{
+  font-weight: bold;
+  font-family: "FreeMono", "Courier New", monospace;
+}
+dl.input dd{
+  margin-bottom: 1em;
 }
   </style>
 </head>
 <body>
 
+<br>
 <h2>Function grapher manual</h2>
+<h3>Table of contents</h3>
+<ol>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#higher-order">Higher order operations</a>
+<li><a href="#elementary-special">Elementary special functions</a>
+<li><a href="#exp">Exponentiation and logarithms</a>
+<li><a href="#trigonometric">Trigonometric functions</a>
+<li><a href="#gamma">Gamma function and related</a>
+<li><a href="#input-examples">Input examples</a>
+</ol>
 
+<h3 id="syntax">Syntax</h3>
 <table class="bt">
 <tr>
 <th>Syntax
 <th>Math
 <th>Explanation
 <tr>
+<td><code>a+b,&nbsp;a-b</code>
+<td>a+b, a&minus;b
+<td>Addition, subtraction.
+<tr>
+<td><code>a*b, a/b</code>
+<td>a&sdot;b, a/b
+<td>Multiplication, division.
+<tr>
+<td><code>a^n</code>
+<td>a<sup>n</sup>
+<td>Exponentiation.
+<tr>
+<td><code>a:=b</code>
+<td>a:=b
+<td>Assignment.
+<tr>
 <td><code>f(x):=2x</code>
 <td>f(x):=2x
 <td>Function definition.
 <tr>
 <td><code>f(x,y):=x*y</code>
-<td>f(x,y):=xy
+<td>f(x,y):=x&sdot;y
 <td>Function definition.
+<tr>
+<td><code>|x| 2x</code>
+<td>x&nbsp;&#8614;&nbsp;2x
+<td>Lambda expression.
+<tr>
+<td><code>|x,y| x*y</code>
+<td>(x,y)&nbsp;&#8614;&nbsp;x&sdot;y
+<td>Lambda expression.
 <tr>
 <td><code>f'(a)</code>
 <td>f'(a)
@@ -75,6 +118,15 @@ table.bt th{
 <td><code>f''(a)</code>
 <td>f''(a)
 <td>Second derivative of f at a.
+</table>
+
+<br>
+<h3 id="higher-order">Higher order operations</h3>
+<table class="bt">
+<tr>
+<th>Function
+<th>Math
+<th>Explanation
 <tr>
 <td><code>diff(|x|f(x),a)</code>
 <td>df(x)/dx|<sub>x=a</sub>
@@ -102,10 +154,29 @@ table.bt th{
 </table>
 
 <br>
+<h3 id="elementary-special">Elementary special functions</h3>
 <table class="bt">
 <tr>
 <th>Function
 <th>Explanation
+<tr>
+<td><code>abs(x)</code>
+<td>Absolute value.
+<tr>
+<td><code>sgn(x)</code>
+<td>Signum.
+<tr>
+<td><code>floor(x)</code>
+<td>Rounded towards minus infinity.
+<tr>
+<td><code>ceil(x)</code>
+<td>Rounded towards plus infinity.
+<tr>
+<td><code>rd(x)</code>
+<td>Rounded towards zero.
+<tr>
+<td><code>frac(x)</code>
+<td>Fractional part.
 <tr>
 <td><code>div(x,y)</code>
 <td>Floor division.
@@ -124,21 +195,14 @@ table.bt th{
 <tr>
 <td><code>modtrunc(x,y)</code>
 <td>Truncating division remainder.
+</table>
+
+<br>
+<h3 id="exp">Exponentiation and logarithms</h3>
+<table class="bt">
 <tr>
-<td><code>floor(x)</code>
-<td>Rounds towards minus infinity.
-<tr>
-<td><code>ceil(x)</code>
-<td>Rounds towards plus infinity.
-<tr>
-<td><code>rd(x)</code>
-<td>Rounds towards zero.
-<tr>
-<td><code>frac(x)</code>
-<td>Fractional part.
-<tr>
-<td><code>sqrt(x)</code>
-<td>Square root.
+<th>Function
+<th>Explanation
 <tr>
 <td><code>exp(x)</code>
 <td>Natural exponential function.
@@ -146,9 +210,82 @@ table.bt th{
 <td><code>ln(x)</code>
 <td>Natural logarithm.
 <tr>
+<td><code>lg(x)</code>
+<td>Common logarithm.
+<tr>
+<td><code>ld(x)</code>
+<td>Binary logarithm.
+<tr>
+<td><code>lb(x)</code>
+<td>Binary logarithm.
+<tr>
+<td><code>log(x,b)
+<td>Logarithm to base b.
+<tr>
+<td><code>sqrt(x)</code>
+<td>Square root.
+<tr>
+<td><code>root(n,x)</code>
+<td>n-th root.
+</table>
+
+<br>
+<h3 id="trigonometric">Trigonometric functions and related</h3>
+<table class="bt">
+<tr>
+<th>Function
+<th>Explanation
+<tr>
 <td><code>sin(x),cos(x),
   <br>tan(x),cot(x)</code>
 <td>Trigonometric functions.
+</table>
+
+<br>
+<h3 id="gamma">Gamma function and related</h3>
+<table class="bt">
+<tr>
+<th>Function
+<th>Explanation
+<tr>
+<td><code>gamma(x)</code>
+<td>Gamma function.
+<tr>
+<td><code>fac(x)</code>
+<td>Factorial function, i.e. <code>gamma(x+1)</code>.
+</table>
+
+<br>
+<h3 id="input-examples">Input examples</h3>
+<dl class="input">
+<dt><a href="plot.htm?sin(x)">sin(x)</a>
+<dd>An explicit function.
+
+<dt><a href="plot.htm?sin(x),cos(x),tan(x)">sin(x),cos(x),tan(x)</a>
+<dd>Many functions.
+
+<dt><a href="plot.htm?x^2-y^2=1">x^2-x^2=1</a>
+<dd>An implicit function.
+
+<dt><a href="plot.htm?x^2-y^2=1,x,-x">x^2-x^2=1,x,-x</a>
+<dd>An implicit function and asymptotes.
+
+<dt><a href="plot.htm?f(x):=ln(x),f(x),f%27(x)"
+>f(x):=ln(x),f(x),f'(x)</a>
+<dd>A function and its derivative.
+
+<dt><a href="plot.htm?f(x):=sin(x),a:=2,f(x),f(a)+f%27(a)*(x-a)"
+>f(x):=sin(x),a:=2,f(x),f(a)+f'(a)*(x-a)</a>
+<dd>Tangential line to a function.
+
+<dt><a href="plot.htm?exp(x),sum(0,4,|k|x^k/fac(k))"
+>exp(x),sum(0,4,|k|x^k/fac(k))</a>
+<dd>Partial sum of the exponential series.
+
+<dt><a href="plot.htm?int(0,10,|t|t^(x-1)*exp(-t))"
+>int(0,10,|t|t^(x-1)*exp(-t))</a>
+<dd>Gamma function via parameter integral.
+<dl>
 </table>
 
 </body>
