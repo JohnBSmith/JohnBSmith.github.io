@@ -8,10 +8,12 @@ var ay=1;
 var xscale = {index: 10000};
 var yscale = {index: 10000};
 var hud_display = false;
+var GAMMA = 0.57721566490153286;
 
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
     deg: Math.PI/180, grad: Math.PI/180, gon: Math.PI/200,
+    gc: GAMMA, angle: angle,
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
     max: Math.max, min: Math.min, hypot: Math.hypot,
     floor: Math.floor, ceil: Math.ceil,
@@ -30,10 +32,13 @@ var ftab = {
     arsinh: asinh, arcosh: acosh, artanh: atanh,
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, 
-    gamma: gamma, fac: fac,
+    gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
+    Gamma: Gamma, erf: erf,
     diff: diff, int: integral,
     pow: pow, D: diff, sum: sum, prod: prod,
-    rng: Math.random, inv: invab
+    rng: Math.random, inv: invab, agm: agm,
+    E: eiE, K: eiK, F: eiF, Pi: eiPi,
+    RF: RF, RC: RC, RJ: RJ, RD: RD
 };
 
 function sum(a,b,f){
@@ -186,6 +191,14 @@ function fac(x){
     return gamma(x+1);
 }
 
+function ffac(n,k){
+    return gamma(n+1)/gamma(n-k+1)
+}
+
+function rfac(n,k){
+    return gamma(n+k)/gamma(n);
+}
+
 function cbrt(x){
     return Math.pow(x,1/3);
 }
@@ -220,6 +233,10 @@ function divtrunc(x,m){
 
 function modtrunc(x,m){
     return x-m*Math.trunc(x/m);
+}
+
+function angle(x,y){
+    return Math.atan2(y,x);
 }
 
 function tanh(x){
@@ -286,6 +303,197 @@ function zeroes_bisection(f,a,b,n){
         }
     }
     return zeroes;
+}
+
+// Arithmetic-geometric mean
+function agm(a,b){
+    var ah,bh;
+    for(var i=0; i<20; i++){
+        ah = (a+b)/2;
+        bh = Math.sqrt(a*b);
+        a=ah; b=bh;
+        if(Math.abs(a-b)<1E-15) break;
+    }
+    return a;
+}
+
+// Modified arithmetic-geometric mean, see
+// Semjon Adlaj: "An eloquent formula for the perimeter
+// of an ellipse", Notices of the AMS 59(8) (2012), p. 1094-1099
+function magm(x,y){
+    var z=0;
+    var xh,yh,zh,r;
+    for(var i=0; i<20; i++){
+        xh=0.5*(x+y);
+        r=Math.sqrt((x-z)*(y-z));
+        yh=z+r; zh=z-r;
+        x=xh; y=yh; z=zh;
+        if(Math.abs(x-y)<2E-15) break;
+    }
+    return x;
+}
+
+function eiK(m){
+    return 0.5*Math.PI/agm(1,Math.sqrt(1-m));
+}
+
+function eiE1(m){
+    var M = agm(1,Math.sqrt(1-m));
+    var N = magm(1,1-m);
+    return 0.5*Math.PI*N/M;
+}
+
+function RF(x,y,z){
+    var xk=x, yk=y, zk=z;
+    var a;
+    for(var k=0; k<26; k++){
+        a = Math.sqrt(xk*yk)+Math.sqrt(xk*zk)+Math.sqrt(yk*zk);
+        xk=(xk+a)/4; yk=(yk+a)/4; zk=(zk+a)/4;
+    }
+    return 1/Math.sqrt(xk);
+}
+
+function RC(x,y){
+    return RF(x,y,y);
+}
+
+function RJ(x,y,z,p){
+    var xk=x, yk=y, zk=z, pk=p;
+    var n,s,a,d,e,sx,sy,sz,sp,delta;
+    delta=(p-x)*(p-y)*(p-z);
+    s=0; n=12;
+    for(var k=0; k<n; k++){
+        sx=Math.sqrt(xk); sy=Math.sqrt(yk);
+        sz=Math.sqrt(zk); sp=Math.sqrt(pk);
+        a = sx*sy+sx*sz+sy*sz;
+        d=(sp+sx)*(sp+sy)*(sp+sz);
+        e=Math.pow(4,-3*k)/(d*d)*delta;
+        xk=(xk+a)/4; yk=(yk+a)/4; zk=(zk+a)/4; pk=(pk+a)/4;
+        s+=Math.pow(4,-k)/d*RC(1,1+e);
+    }
+    return Math.pow(xk,-3/2)*Math.pow(4,-n)+6*s;
+}
+
+function RD(x,y,z){
+    return RJ(x,y,z,z);
+}
+
+function eiF(phi,m){
+    var s = Math.sin(phi);
+    var c = Math.cos(phi);
+    return s*RF(c*c,1-m*s*s,1);
+}
+
+function eiE2(phi,m){
+    var s = Math.sin(phi);
+    var c = Math.cos(phi);
+    return s*RF(c*c,1-m*s*s,1)-1/3*m*s*s*s*RJ(c*c,1-m*s*s,1,1);
+}
+
+function eiPi(phi,n,m){
+    var s = Math.sin(phi);
+    var c = Math.cos(phi);
+    return s*RF(c*c,1-m*s*s,1)+1/3*n*s*s*s*RJ(c*c,1-m*s*s,1,1-n*s*s);
+}
+
+function eiE(x,y){
+    if(y===undefined){
+        return eiE1(x);
+    }else{
+        return eiE2(x,y);
+    }
+}
+
+function cfGamma(a,x,n){
+    var y=0;
+    for(var k=n; k>=1; k--){
+        y = k*(k-a)/(x-y-a+2*k+1);
+    }
+    return Math.exp(-x)*Math.pow(x,a)/(x-y-a+1);
+}
+
+function psgamma(a,x,n){
+    var y=0;
+    var p=1/a;
+    for(var k=1; k<n; k++){
+        y += p;
+        p = p*x/(a+k);
+    }
+    return y*Math.exp(-x)*Math.pow(x,a);
+}
+
+function igamma(a,x){
+    if(x>a+1){
+        return gamma(a)-cfGamma(a,x,20);
+    }else{
+        return psgamma(a,x,20);
+    }
+}
+
+function iGamma(a,x){
+    if(x>a+1){
+        return cfGamma(a,x,20);
+    }else{
+        if(a==0) a=1E-6;
+        return gamma(a)-psgamma(a,x,20);
+    }
+}
+
+function gamma2(x,y){
+    if(y==undefined){
+        return gamma(x);
+    }else{
+        return igamma(x,y);
+    }
+}
+
+function Gamma(x,y){
+    if(y===undefined){
+        return gamma(x);
+    }else{
+        return iGamma(x,y);
+    }
+}
+
+function erf(x){
+    if(Math.abs(x)>8) return Math.sign(x);
+    var y;
+    if(Math.abs(x)>1.7){
+        y = Math.sqrt(Math.PI)-cfGamma(0.5,x*x,26);
+    }else{
+        y = psgamma(0.5,x*x,26);
+    }
+    return Math.sign(x)*y/Math.sqrt(Math.PI);
+}
+
+function erfc(x){
+    return 1-erf(x);
+}
+
+function norm(x){
+    return 0.5+0.5*erf(x/Math.SQRT2);
+}
+
+function En(n,x){
+    return Math.pow(x,n-1)*iGamma(1-n,x);
+}
+
+function Ei(x){
+    var s=0;
+    var p=1;
+    for(var k=1; k<80; k++){
+        p = p*x/k;
+        s += p/k;
+    }
+    return GAMMA+Math.log(Math.abs(x))+s;
+}
+
+function li(x){
+    return Ei(Math.log(x));
+}
+
+function Li(x){
+    return li(x)-li(2);
 }
 
 function isalpha(s){
