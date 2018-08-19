@@ -36,10 +36,21 @@ var ftab = {
     Gamma: Gamma, erf: erf,
     diff: diff, int: integral,
     pow: pow, D: diff, sum: sum, prod: prod,
-    rng: Math.random, inv: invab, agm: agm,
+    rng: rng, rand: rng, inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD
 };
+
+function rng(a,b){
+    if(a==undefined){
+        return Math.random();
+    }else if(b==undefined){
+        var index = Math.floor(Math.random()*a.length);
+        return a[index];
+    }else{
+        return a+Math.random()*(b-a);
+    }
+}
 
 function sum(a,b,f){
     var y = 0;
