@@ -33,7 +33,7 @@ var ftab = {
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, 
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
-    Gamma: Gamma, erf: erf,
+    Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
     diff: diff, int: integral,
     pow: pow, D: diff, sum: sum, prod: prod,
     rand: rand, rng: rand, tg: tg,
@@ -1529,8 +1529,8 @@ function calc(){
         // var t1 = performance.now();
         // out.innerHTML += "<p><code>time: "+(t1-t0)+"ms</code>";
     }catch(e){
-        if(e instanceof ErrSyntax){
-            out.innerHTML = "<code>"+e.text+"</code>";
+        if(e instanceof Err){
+            out.innerHTML = "<p><code>"+e.text+"</code>";
         }else{
             throw e;
         }
