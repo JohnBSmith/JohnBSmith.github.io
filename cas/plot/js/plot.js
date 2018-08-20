@@ -39,7 +39,8 @@ var ftab = {
     rand: rand, rng: rand, tg: tg,
     inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
-    RF: RF, RC: RC, RJ: RJ, RD: RD
+    RF: RF, RC: RC, RJ: RJ, RD: RD,
+    P: set_position, scale: set_scale
 };
 
 function rand(a,b){
@@ -1174,8 +1175,14 @@ function float_str(x){
     }
 }
 
+function clamp(x,a,b){
+    return Math.min(Math.max(x,a),b);
+}
+
 function labels(gx){
     var context = gx.context;
+    var w = gx.w;
+    var h = gx.h;
     var px0 = gx.px0;
     var py0 = gx.py0;
     var ycount = Math.ceil(0.5*gx.h/gx.mx);
@@ -1190,15 +1197,15 @@ function labels(gx){
             s = float_str(x/ax);
             if(s.length>3 && x%2==0){py_adjust=40;} else{py_adjust=22;}
             if(x/ax<0){px_adjust=4;} else{px_adjust=-1;}
-            context.fillText(s,px-px_adjust,py0+py_adjust);
+            context.fillText(s,px-px_adjust,clamp(py0,10,h-44)+py_adjust);
         }
     }
-    context.textAlign = "left";
+    context.textAlign = "right";
     for(var y=yshift-ycount; y<=yshift+ycount; y++){
         if(y!=0){
             py = py0+Math.floor(gx.mx*y);
             s = float_str(-y/ay);
-            context.fillText(s,px0+14,py+6);
+            context.fillText(s,clamp(px0-14,28+10*(s.length-2),w-16),py+6);
         }
     }
 }
@@ -1445,17 +1452,35 @@ function global_definition(t){
     }
 }
 
+function eval_statements(s){
+    var t = ast(s);
+    var value;
+    if(Array.isArray(t) && t[0]==="block"){
+        for(var i=1; i<t.length; i++){
+            value = compile(t[i],[]);
+            value();
+        }
+    }else{
+        value = compile(t,[]);
+        value();
+    }
+}
+
 function plot(gx){
+    var color_index = 0;
+    var input = get_value("inputf").trim();
+    var a = input.split(";");
+    if(a.length>1){
+        eval_statements(a[1]);
+    }
     pid_stack = [];
     clear(gx);
     system(gx);
     gx.context.putImageData(gx.img,0,0);
     labels(gx);
 
-    var color_index = 0;
-    var input = get_value("inputf").trim();
     if(input.length>0){
-        var t = ast(input);
+        var t = ast(a[0]);
         if(Array.isArray(t) && t[0]==="block"){
             for(var i=1; i<t.length; i++){
                 if(Array.isArray(t[i]) && t[i][0]===":="){
@@ -1507,6 +1532,20 @@ function set_pos(gx,t){
     var y = t[1];
     gx.px0 = Math.round(0.5*gx.w-x*ax*gx.mx);
     gx.py0 = Math.round(0.5*gx.h+y*ay*gx.mx);
+}
+
+function set_position(x,y){
+    set_pos(graphics,[x,y]);
+    return [x,y];
+}
+
+function set_scale(dx,dy){
+    if(dy==undefined) dy=dx;
+    var t = get_pos(graphics);
+    ax = 1/dx;
+    ay = 1/dy;
+    set_pos(graphics,t);
+    return [dx,dy];
 }
 
 function scale_inc(scale){
