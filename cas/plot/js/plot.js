@@ -13,7 +13,7 @@ var GAMMA = 0.57721566490153286;
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
     deg: Math.PI/180, grad: Math.PI/180, gon: Math.PI/200,
-    gc: GAMMA, angle: angle,
+    gc: GAMMA, angle: angle, t0: 0, t1: 2*Math.PI,
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
     max: Math.max, min: Math.min, hypot: Math.hypot,
     floor: Math.floor, ceil: Math.ceil,
@@ -692,6 +692,17 @@ function application_list(i,a,bracket){
     }
 }
 
+function index_operation(i,x){
+    var y = expression(i);
+    var t = i.a[i.index];
+    if(t[0]==Symbol && t[1]==']'){
+        i.index++;
+        return ["index",x,y];
+    }else{
+        syntax_error(i,"expected ']'.");
+    }
+}
+
 function application(i){
     var x = atom(i);
     while(1){
@@ -699,6 +710,9 @@ function application(i){
         if(t[0]==Symbol && t[1]=='('){
             i.index++;
             x = application_list(i,[x],')');
+        }else if(t[0]==Symbol && t[1]=='['){
+            i.index++;
+            x = index_operation(i,x);
         }else if(t[0]==Symbol && t[1]=="'"){
             var count = 0;
             while(1){
@@ -936,6 +950,11 @@ function compile_expression(a,t,context){
             compile_assignment(a,t,context);
         }else if(op=="block"){
             compile_block(a,t,context);
+        }else if(op=="index"){
+            compile_expression(a,t[1],context);
+            a.push("[");
+            compile_expression(a,t[2],context);
+            a.push("]");
         }else if(op=="if"){
             a.push("(");
             compile_expression(a,t[1],context);
@@ -1099,12 +1118,12 @@ function init(canvas,w,h){
     gx.py0 = Math.floor(0.5*gx.h);
     gx.color = [0,0,0,255];
     /* gx.mx = 36; */
-    if(w<900){
-        if(w<400){
-            gx.mx = w/1300*110;
-        }else{
-            gx.mx = w/1300*65;
-        }
+    if(w<600){
+        gx.mx = w/1300*110;
+    }else if(w<800){
+        gx.mx = w/1300*72.5;
+    }else if(w<1000){
+        gx.mx = w/1300*65;
     }else{
         gx.mx = w/1300*50;
     }
@@ -1163,17 +1182,23 @@ function labels(gx){
     var xcount = Math.ceil(0.5*gx.w/gx.mx);
     var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
     var yshift = Math.round((0.5*gx.h-py0)/gx.mx);
-    var px,py;
+    var px,py,s,px_adjust,py_adjust;
+    context.textAlign = "center";
     for(var x=xshift-xcount; x<=xshift+xcount; x++){
         if(x!=0){
             px = px0+Math.floor(gx.mx*x);
-            context.fillText(float_str(x/ax),px-5,py0+22);
+            s = float_str(x/ax);
+            if(s.length>3 && x%2==0){py_adjust=40;} else{py_adjust=22;}
+            if(x/ax<0){px_adjust=4;} else{px_adjust=-1;}
+            context.fillText(s,px-px_adjust,py0+py_adjust);
         }
     }
+    context.textAlign = "left";
     for(var y=yshift-ycount; y<=yshift+ycount; y++){
         if(y!=0){
             py = py0+Math.floor(gx.mx*y);
-            context.fillText(float_str(-y/ay),px0+14,py+6);
+            s = float_str(-y/ay);
+            context.fillText(s,px0+14,py+6);
         }
     }
 }
@@ -1323,6 +1348,31 @@ async function plot_zero_set(gx,f,n,cond,color){
     busy = false;
 }
 
+async function vplot(gx,f,d,cond,color){
+    var pid = {};
+    var index = pid_stack.length;
+    pid_stack.push(pid);
+    busy = true;
+    var spoint = gx.spoint;
+    var k=0;
+    var t0 = ftab.t0;
+    var t1 = ftab.t1;
+    for(var t=t0; t<t1; t+=d){
+        var v = f(t);
+        spoint(color,ax*v[0],ay*v[1]);
+        if(cond && k==4000){
+            k=0;
+            await sleep(10);
+        }else{
+            k++;
+        }
+        if(cancel(pid,index,pid_stack)) return;
+    }
+    gx.context.putImageData(gx.img,0,0);
+    labels(gx);
+    busy = false;
+}
+
 async function plot_async(gx,f,color){
     fplot(gx,f,0.01,false,color);
     while(busy){await sleep(40);}
@@ -1336,6 +1386,13 @@ async function plot_zero_set_async(gx,f,color){
     while(busy){await sleep(40);}
     await sleep(40);
     plot_zero_set(gx,f,400,true,color);
+}
+
+async function vplot_async(gx,f,color){
+    vplot(gx,f,0.01,false,color);
+    while(busy){await sleep(40);}
+    await sleep(40);
+    vplot(gx,f,0.001,true,color);
 }
 
 function contains_variable(t,v){
@@ -1360,6 +1417,9 @@ function plot_node(gx,t,color){
             f = compile(t,["x","y"]);
             plot_zero_set_async(gx,f,color);
         }
+    }else if(Array.isArray(t) && t[0]==="[]"){
+        f = compile(t,["t"]);
+        vplot_async(gx,f,color);
     }else{
         f = compile(t,["x"]);
         plot_async(gx,f,color);
@@ -1420,10 +1480,10 @@ function calc(){
     var out = document.getElementById("calc-out");
     try{
         var t = ast(input);
-        var f = compile(t,["x"]);
-        // out.innerHTML = "<p><code>"+JSON.stringify(t)+"</code>";
+        var value = compile(t,[]);
+        // out.innerHTML = "<p><code>"+str(t)+"</code>";
         // var t0 = performance.now();
-        out.innerHTML = "<p><code>= "+f(0)+"</code>";
+        out.innerHTML = "<p><code>= "+str(value())+"</code>";
         // var t1 = performance.now();
         // out.innerHTML += "<p><code>time: "+(t1-t0)+"ms</code>";
     }catch(e){
