@@ -1210,7 +1210,7 @@ function labels(gx){
         if(y!=0){
             py = py0+Math.floor(gx.mx*y);
             s = float_str(-y/ay);
-            context.fillText(s,clamp(px0-14,28+10*(s.length-2),w-16),py+6);
+            context.fillText(s,clamp(px0-10,28+10*(s.length-2),w-16),py+6);
         }
     }
 }
