@@ -15,8 +15,8 @@ var ftab = {
     deg: Math.PI/180, grad: Math.PI/180, gon: Math.PI/200,
     gc: GAMMA, angle: angle, t0: 0, t1: 2*Math.PI,
     abs: Math.abs, sgn: Math.sign, sign: Math.sign,
-    max: Math.max, min: Math.min, hypot: Math.hypot,
-    floor: Math.floor, ceil: Math.ceil,
+    max: Math.max, min: Math.min, clamp: clamp,
+    hypot: Math.hypot, floor: Math.floor, ceil: Math.ceil,
     div: div, mod: mod, diveuc: diveuc, modeuc: modeuc,
     divtrunc: divtrunc, modtrunc: modtrunc,
     rd: Math.round, trunc: Math.trunc, frac: frac,
@@ -36,7 +36,7 @@ var ftab = {
     Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
     diff: diff, int: integral,
     pow: pow, D: diff, sum: sum, prod: prod,
-    rand: rand, rng: rand, tg: tg,
+    rand: rand, rng: rand, tg: tg, range: range,
     inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD,
@@ -51,6 +51,22 @@ function rand(a,b){
         return a[index];
     }else{
         return a+Math.random()*(b-a);
+    }
+}
+
+function range(a,b,step){
+    if(step==undefined){
+        var y = [];
+        for(var i=a; i<=b; i++){
+            y.push(i);
+        }
+        return y;
+    }else{
+        var y = [];
+        for(var i=a; i<=b; i+=step){
+            y.push(i);
+        }
+        return y;
     }
 }
 
@@ -797,23 +813,66 @@ function addition(i){
     return x;
 }
 
-function comparison(i){
+function range_expression(i){
     var x = addition(i);
+    var t = i.a[i.index];
+    if(t[0]==Symbol && t[1]==':'){
+        i.index++;
+        var y = addition(i);
+        t = i.a[i.index];
+        if(t[0]==Symbol && t[1]==':'){
+            i.index++;
+            var z = addition(i);
+            return ["range",x,y,z];
+        }else{
+            return ["range",x,y];
+        }
+    }else{
+        return x;
+    }
+}
+
+function comparison(i){
+    var x = range_expression(i);
     var t = i.a[i.index];
     if(t[0]==Symbol && (
        t[1]=="<"  || t[1]==">" || t[1]=="<=" ||
        t[1]==">=" || t[1]=="=" || t[1]=="!="
     )){
         i.index++;
-        var y = addition(i);
+        var y = range_expression(i);
         return [t[1],x,y];
     }else{
         return x;
     }
 }
 
+function conjunction(i){
+    var x = comparison(i);
+    var t = i.a[i.index];
+    if(t[0]==Symbol && t[1]=='&'){
+        i.index++;
+        var y = comparison(i);
+        return ["&",x,y];
+    }else{
+        return x;
+    }
+}
+
+function disjunction(i){
+    var x = conjunction(i);
+    var t = i.a[i.index];
+    if(t[0]==Symbol && t[1]=='|'){
+        i.index++;
+        var y = conjunction(i);
+        return ["|",x,y];
+    }else{
+        return x;
+    }
+}
+
 function expression(i){
-    return comparison(i);
+    return disjunction(i);
 }
 
 function assignment(i){
@@ -936,6 +995,12 @@ function compile_expression(a,t,context){
             a.push("(");
             compile_expression(a,t[1],context);
             a.push(op);
+            compile_expression(a,t[2],context);
+            a.push(")");
+        }else if(op=="&" || op=="|"){
+            a.push("(");
+            compile_expression(a,t[1],context);
+            a.push(op+op);
             compile_expression(a,t[2],context);
             a.push(")");
         }else if(op=="^"){
