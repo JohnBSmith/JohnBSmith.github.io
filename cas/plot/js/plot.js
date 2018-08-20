@@ -529,6 +529,11 @@ function str(s){
     return JSON.stringify(s);
 }
 
+function log(s){
+    var out = document.getElementById("out");
+    out.innerHTML = "<p><code>"+str(s)+"</code>";
+}
+
 function Err(text){
     this.text = text;
 }
@@ -1466,13 +1471,25 @@ function eval_statements(s){
     }
 }
 
+function process_statements(a){
+    if(a.length>1){
+        if(a.length>2){
+            eval_statements(a[2]);
+            var inputf = document.getElementById("inputf");
+            inputf.value = a[0];
+            if(a[1].length>0) inputf.value += ";"+a[1];
+        }
+        if(a[1].length>0){
+            eval_statements(a[1]);
+        }
+    }
+}
+
 function plot(gx){
     var color_index = 0;
     var input = get_value("inputf").trim();
     var a = input.split(";");
-    if(a.length>1){
-        eval_statements(a[1]);
-    }
+    process_statements(a);
     pid_stack = [];
     clear(gx);
     system(gx);
@@ -1681,7 +1698,8 @@ function query(href){
 
 window.onload = function(){
     var gx = new_system();
+    graphics = gx;
     labels(gx);
     query(window.location.href);
-    graphics = gx;
 };
+
