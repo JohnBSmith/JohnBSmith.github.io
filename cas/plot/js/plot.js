@@ -10,6 +10,23 @@ var xscale = {index: 10000};
 var yscale = {index: 10000};
 var hud_display = false;
 var GAMMA = 0.57721566490153286;
+var dark = false;
+
+var color_table = [
+    [0,0,140,255],
+    [0,100,0,255],
+    [140,0,140,255],
+    [0,140,140,255],
+    [100,80,0,255]
+];
+
+var color_table_dark = [
+    [220,180,20],
+    [140,0,100],
+    [0,120,120],
+    [60,140,0],
+    [140,40,40]
+];
 
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
@@ -1125,7 +1142,6 @@ function new_point(gx){
             data[i+0] = color[0];
             data[i+1] = color[1];
             data[i+2] = color[2];
-            data[i+3] = color[3];
         }
     };
     var pset4 = function(color,x,y){
@@ -1134,16 +1150,24 @@ function new_point(gx){
         pset(color,x,y+1);
         pset(color,x+1,y+1);
     };
-    
     var pseta = function(color,x,y,a){
         if(x>=0 && x<w && y>=0 && y<h){
             var i = (x+y*w)*4;
-            data[i+0] = data[i+0]+Math.floor((color[0]-data[i+0])*a/255);
-            data[i+1] = data[i+1]+Math.floor((color[1]-data[i+1])*a/255);
-            data[i+2] = data[i+2]+Math.floor((color[2]-data[i+2])*a/255);
-            data[i+3] = Math.max(data[i+3],Math.round(color[3]*a/255));
+            data[i+0] = Math.min(data[i+0],255-floor(a*(1-color[0]/255)));
+            data[i+1] = Math.min(data[i+1],255-floor(a*(1-color[1]/255)));
+            data[i+2] = Math.min(data[i+2],255-floor(a*(1-color[2]/255)));
         }
-    }
+    };
+    var pseta_max = function(color,x,y,a){
+        if(x>=0 && x<w && y>=0 && y<h){
+            var i = (x+y*w)*4;
+            data[i+0] = Math.max(data[i+0],floor(a*color[0]/255));
+            data[i+1] = Math.max(data[i+1],floor(a*color[1]/255));
+            data[i+2] = Math.max(data[i+2],floor(a*color[2]/255));
+
+        }
+    };
+    if(dark) pseta = pseta_max;
     var fade = function(x){
         return Math.exp(-0.4*x*x*x);
     };
@@ -1224,7 +1248,21 @@ function init(canvas,w,h){
     gx.w2=w/2; gx.h2=h/2;
     gx.px0 = Math.floor(0.5*gx.w);
     gx.py0 = Math.floor(0.5*gx.h);
+    
+    if(dark){
+        gx.color_bg = [0,0,0,255];
+        gx.color_axes = [40,40,40];
+        gx.color_grid = [10,10,10];
+        color_table = color_table_dark;
+        gx.context.fillStyle = "#5a5a5a";
+    }else{
+        gx.color_bg = [255,255,255,255];
+        gx.color_axes = [160,160,160];
+        gx.color_grid = [228,228,228];
+    }
+
     gx.color = [0,0,0,255];
+
     /* gx.mx = 36; */
     if(w<600){
         gx.mx = w/1300*110;
@@ -1245,6 +1283,8 @@ function get_value(id){
 }
 
 function system(gx){
+    clear(gx,gx.color_bg);
+
     var px0 = gx.px0;
     var py0 = gx.py0;
     var xcount = Math.ceil(0.5*gx.w/gx.mx)+1;
@@ -1252,7 +1292,8 @@ function system(gx){
     var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
     var yshift = -Math.round((0.5*gx.h-py0)/gx.mx);
 
-    gx.color = [0,0,0,28];
+
+    gx.color = gx.color_grid;
     for(var y=0; y<ycount; y++){
         gx.hline(gx,py0,yshift+y);
         gx.hline(gx,py0,yshift-y);
@@ -1261,7 +1302,8 @@ function system(gx){
         gx.vline(gx,px0,xshift+x);
         gx.vline(gx,px0,xshift-x);
     }
-    gx.color = [0,0,0,100];
+
+    gx.color = gx.color_axes;
     gx.hline(gx,py0,0);
     gx.vline(gx,px0,0);
     for(var y=yshift-ycount; y<=yshift+ycount; y++){
@@ -1323,16 +1365,20 @@ function sleep(ms){
     });
 }
 
-function clear(gx){
+function clear(gx,color){
     var data = gx.data;
     var w = gx.w;
     var h = gx.h;
     var n = 4*w*h;
+    var r = color[0];
+    var g = color[1];
+    var b = color[2];
+    var a = color[3];
     for(var i=0; i<n; i+=4){
-        data[i] = 0;
-        data[i+1] = 0;
-        data[i+2] = 0;
-        data[i+3] = 0;
+        data[i] = r;
+        data[i+1] = g;
+        data[i+2] = b;
+        data[i+3] = a;
     }
 }
 
@@ -1355,7 +1401,6 @@ function mouse_move_handler(e){
         gx.py0 = gx.py0+dy;
         clientXp = e.clientX;
         clientYp = e.clientY;
-        clear(gx);
         system(gx);
         flush(gx);
         labels(gx);
@@ -1547,14 +1592,6 @@ function plot_node(gx,t,color){
     }
 }
 
-var color_table = [
-    [0,0,140,255],
-    [0,100,0,255],
-    [140,0,140,255],
-    [0,140,140,255],
-    [100,80,0,255]
-];
-
 function global_definition(t){
     if(Array.isArray(t[1])){
         var app = t[1];
@@ -1601,7 +1638,6 @@ function plot(gx){
     process_statements(a);
     pid_stack = [];
 
-    clear(gx);
     system(gx);
     flush(gx);
     labels(gx);
