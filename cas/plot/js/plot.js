@@ -11,6 +11,8 @@ var yscale = {index: 10000};
 var hud_display = false;
 var GAMMA = 0.57721566490153286;
 var dark = false;
+var ftab_extension_loaded = false;
+var async_continuation = undefined;
 
 var color_table = [
     [0,0,140,255],
@@ -49,7 +51,7 @@ var ftab = {
     acoth: acoth, asech: asech, acsch: acsch,
     arsinh: asinh, arcosh: acosh, artanh: atanh,
     arcoth: acoth, arsech: asech, arcsch: acsch,
-    sinc: sinc, gd: gd, 
+    sinc: sinc, gd: gd, W: lambertw, Wm1: lambertwm1,
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
     Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
     diff: diff, int: integral, D: diff, Dop: diff_operator,
@@ -61,6 +63,49 @@ var ftab = {
     P: set_position, scale: set_scale,
     zeroes: zeroes
 };
+
+function load(URL,callback){
+    var r = new XMLHttpRequest();
+    r.overrideMimeType("text/plain");
+    r.open("GET",URL,false);
+    r.send(null);
+    if(r.status === 200){
+        return r.responseText;
+    }else{
+        throw new Err(["Error: could not load '", URL, "'."].join(""));
+    }
+}
+
+function load_async(URL,callback){
+    var r = new XMLHttpRequest();
+    r.overrideMimeType("text/plain");
+    r.open("GET",URL,true);
+    r.onreadystatechange = function(){
+        if(r.readyState === XMLHttpRequest.DONE){
+            if(r.status === 200){
+                callback(r.responseText);
+            }else{
+                throw Err(["Error: could not load '", URL, "'."].join(""));
+            }
+        }
+    };
+    r.send(null);
+}
+
+function load_ftab_extension(){
+    load_async("js/ftab-extension.js",async function(code){
+        var t = eval(code);
+        var a = Object.keys(t);
+        for(var i=0; i<a.length; i++){
+            ftab[a[i]] = t[a[i]];
+        }
+        ftab_extension_loaded = true;
+        while(async_continuation == "await"){
+            await sleep(100);
+        }
+        async_continuation();
+    });
+}
 
 function rand(a,b){
     if(a==undefined){
@@ -572,6 +617,44 @@ function Li(x){
     return li(x)-li(2);
 }
 
+function lambertw(x){
+    var y;
+    if(x>=74){
+        y = Math.log(x/Math.log(x/Math.log(x/Math.log(x/Math.log(x)))));
+    }else if(x>=1.14){
+        y = x/Math.pow(x+1,0.73);
+    }else if(x>=-0.3455){
+        y = x/Math.exp(x/Math.exp(x/Math.exp(x/Math.exp(x/Math.exp(x)))));
+    }else if(x>=-1/Math.E){
+        y = Math.sqrt(2*(Math.E*x+1))-1;
+    }else{
+      return NaN;
+    }
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    return y;
+}
+
+function lambertwm1(x){
+    var y;
+    if(x<-1/Math.E){
+        return NaN;
+    }else if(x<-0.33469524){
+        y = -Math.sqrt(Math.E*x+1)-1;
+    }else if(x<0){
+        y = Math.log(x/Math.log(x/Math.log(x/Math.log(x/Math.log(-x)))));
+    }else{
+        return NaN;
+    }
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    y = y-(y-x*Math.exp(-y))/(y+1);
+    return y;
+}
+
 function isalpha(s){
     return /^[a-z]+$/i.test(s);
 }
@@ -602,6 +685,8 @@ function log(s){
 function Err(text){
     this.text = text;
 }
+
+function Repeat(){}
 
 function repeat(c,n){
     return Array(n+1).join(c);
@@ -1035,6 +1120,10 @@ function compile_expression(a,t,context){
             context.pre.push("var "+t+"=ftab[\""+t+"\"];");
             context.local[t] = true;
             a.push(t);
+        }else if(!ftab_extension_loaded){
+            async_continuation = "await";
+            load_ftab_extension();
+            throw new Repeat();
         }else{
             throw new Err("Error: undefined variable: '"+t+"'.");
         }
@@ -1677,6 +1766,8 @@ function calc(){
     }catch(e){
         if(e instanceof Err){
             out.innerHTML = "<p><code>"+e.text+"</code>";
+        }else if(e instanceof Repeat){
+            async_continuation = calc;
         }else{
             throw e;
         }
@@ -1797,6 +1888,8 @@ function update(gx){
     }catch(e){
         if(e instanceof Err){
             out.innerHTML = "<br>"+e.text;
+        }else if(e instanceof Repeat){
+            async_continuation = main;
         }else{
             throw e;
         }
