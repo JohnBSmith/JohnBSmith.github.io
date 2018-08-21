@@ -2,6 +2,7 @@
 "use strict";
 
 var diff = diffh(0.001);
+var diff_operator = diffh_curry(0.001);
 var graphics;
 var ax=1;
 var ay=1;
@@ -34,13 +35,14 @@ var ftab = {
     sinc: sinc, gd: gd, 
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
     Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
-    diff: diff, int: integral,
-    pow: pow, D: diff, sum: sum, prod: prod,
+    diff: diff, int: integral, D: diff, Dop: diff_operator,
+    pow: pow, sum: sum, prod: prod,
     rand: rand, rng: rand, tg: tg, range: range,
     inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD,
-    P: set_position, scale: set_scale
+    P: set_position, scale: set_scale,
+    zeroes: zeroes
 };
 
 function rand(a,b){
@@ -97,6 +99,13 @@ function diffh(h){
         }else{
             return (diff(f,x+h,n-1)-diff(f,x-h,n-1))/(2*h);
         }
+    };
+}
+
+function diffh_curry(h){
+    var diff = diffh(h);
+    return function(f,n){
+        return function(x){return diff(f,x,n);};
     };
 }
 
@@ -314,28 +323,45 @@ function invab(f,x,a,b){
         if(s*(f(m)-x)<0) a=m;
         else b=m;
     }
-    if(Math.abs(m-a1)<1E-8) return NaN;
-    if(Math.abs(m-b1)<1E-8) return NaN;
+    if(Math.abs(f(m)-x)>1E-6) return NaN;
     return m;
+}
+
+function zeroes_push(a,x){
+    var n = a.length;
+    if(n==0 || Math.abs(a[n-1]-x)>1E-10){
+        a.push(x);
+    }
 }
 
 function zeroes_bisection(f,a,b,n){
     var zeroes = [];
     var h = (b-a)/n;
+    var x0,x1,y0,y1,z;
     for(var k=0; k<n; k++){
-        var x0 = a+h*k;
-        var x1 = a+h*(k+1);
-        if(Math.sign(f(x0))!=Math.sign(f(x1))){
-            if(f(x0)==0){
-                zeroes.push(x0);
-            }else if(f(x1)==0){
-                zeroes.push(x1);
+        x0 = a+h*k;
+        x1 = a+h*(k+1);
+        y0 = f(x0);
+        y1 = f(x1);
+        if(Number.isNaN(y1-y0)) continue;
+        if(Math.sign(y0)!=Math.sign(y1)){
+            if(y0==0){
+                zeroes_push(zeroes,x0);
             }else{
-                zeroes.push(invab(f,0,x0,x1))
+                z = invab(f,0,x0,x1);
+                if(Number.isFinite(z)){
+                    zeroes_push(zeroes,z);
+                }
             }
         }
     }
     return zeroes;
+}
+
+function zeroes(f,a,b){
+    if(a==undefined) a=-100;
+    if(b==undefined) b=100;
+    return zeroes_bisection(f,a,b,10000);
 }
 
 // Arithmetic-geometric mean
@@ -541,8 +567,14 @@ function isspace(s){
     return s==' ' || s=='\t' || s=='\n';
 }
 
-function str(s){
-    return JSON.stringify(s);
+function str(x){
+    if(Array.isArray(x)){
+        return "["+x.map(str).join(", ")+"]";
+    }else if(x instanceof Function){
+        return "a function";
+    }else{
+        return JSON.stringify(x);
+    }
 }
 
 function log(s){
@@ -744,11 +776,16 @@ function application(i){
                     i.index++;
                 }else break;
             }
-            var y = atom(i);
-            if(count==1){
-                x = ["diff",x,y];
+            var t = i.a[i.index];
+            if(t[0]==Symbol && t[1]=='('){
+                var y = atom(i);
+                if(count==1){
+                    x = ["diff",x,y];
+                }else{
+                    x = ["diff",x,y,count];
+                }
             }else{
-                x = ["diff",x,y,count];
+                x = ["Dop",x,count];
             }
         }else{
             break;
@@ -1215,7 +1252,7 @@ function system(gx){
     var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
     var yshift = -Math.round((0.5*gx.h-py0)/gx.mx);
 
-    gx.color = [20,20,0,32];
+    gx.color = [0,0,0,28];
     for(var y=0; y<ycount; y++){
         gx.hline(gx,py0,yshift+y);
         gx.hline(gx,py0,yshift-y);
@@ -1291,9 +1328,16 @@ function clear(gx){
     var w = gx.w;
     var h = gx.h;
     var n = 4*w*h;
-    for(var i=0; i<n; i++){
+    for(var i=0; i<n; i+=4){
         data[i] = 0;
+        data[i+1] = 0;
+        data[i+2] = 0;
+        data[i+3] = 0;
     }
+}
+
+function flush(gx){
+    gx.context.putImageData(gx.img,0,0);
 }
 
 var clientXp=0;
@@ -1313,7 +1357,7 @@ function mouse_move_handler(e){
         clientYp = e.clientY;
         clear(gx);
         system(gx);
-        gx.context.putImageData(gx.img,0,0);
+        flush(gx);
         labels(gx);
     }else{
         clientXp = e.clientX;
@@ -1344,7 +1388,7 @@ function new_system(last_gx){
         canvas.addEventListener("mouseup", mouse_up_handler, false);
     }
     system(gx);
-    gx.context.putImageData(gx.img,0,0);
+    flush(gx);
 
     return gx;
 }
@@ -1378,7 +1422,7 @@ async function fplot(gx,f,d,cond,color){
         }
         if(cancel(pid,index,pid_stack)) return;
     }
-    gx.context.putImageData(gx.img,0,0);
+    flush(gx);
     labels(gx);
     busy = false;
 }
@@ -1420,7 +1464,7 @@ async function plot_zero_set(gx,f,n,cond,color){
         if(cancel(pid,index,pid_stack)) return;
         k++;
     }
-    gx.context.putImageData(gx.img,0,0);
+    flush(gx);
     labels(gx);
     busy = false;
 }
@@ -1445,7 +1489,7 @@ async function vplot(gx,f,d,cond,color){
         }
         if(cancel(pid,index,pid_stack)) return;
     }
-    gx.context.putImageData(gx.img,0,0);
+    flush(gx);
     labels(gx);
     busy = false;
 }
@@ -1556,9 +1600,10 @@ function plot(gx){
     var a = input.split(";");
     process_statements(a);
     pid_stack = [];
+
     clear(gx);
     system(gx);
-    gx.context.putImageData(gx.img,0,0);
+    flush(gx);
     labels(gx);
 
     if(input.length>0){
