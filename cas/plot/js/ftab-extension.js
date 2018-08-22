@@ -90,7 +90,9 @@ function Legendre(n,m,x){
     }
 }
 
+var ftab_extension = {
+  PT: ChebyshevT, PU: ChebyshevU, PH: Hermite, 
+  PP: Legendre, PL: Laguerre
+};
 
 
-({PT: ChebyshevT, PU: ChebyshevU, PH: Hermite, 
-  PP: Legendre, PL: Laguerre})

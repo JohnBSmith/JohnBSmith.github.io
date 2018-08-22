@@ -65,26 +65,17 @@ var ftab = {
 };
 
 function load_async(URL,callback){
-    var r = new XMLHttpRequest();
-    r.overrideMimeType("text/plain");
-    r.open("GET",URL,true);
-    r.onreadystatechange = function(){
-        if(r.readyState === XMLHttpRequest.DONE){
-            if(r.status === 200){
-                callback(r.responseText);
-            }else{
-                var text = ["Error: could not load file '", URL, "'."].join("");
-                print(text);
-                throw new Err(text);
-            }
-        }
-    };
-    r.send(null);
+   var head = document.getElementsByTagName("head")[0];
+   var s = document.createElement("script");
+   s.type = "text/javascript";
+   s.onload = callback;
+   s.src = URL;
+   head.appendChild(s);
 }
 
 function load_ftab_extension(){
-    load_async("js/ftab-extension.js",async function(code){
-        var t = eval(code);
+    load_async("js/ftab-extension.js",async function(){
+        var t = ftab_extension;
         var a = Object.keys(t);
         for(var i=0; i<a.length; i++){
             ftab[a[i]] = t[a[i]];
