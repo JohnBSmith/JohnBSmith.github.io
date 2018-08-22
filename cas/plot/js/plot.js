@@ -64,18 +64,6 @@ var ftab = {
     zeroes: zeroes
 };
 
-function load(URL,callback){
-    var r = new XMLHttpRequest();
-    r.overrideMimeType("text/plain");
-    r.open("GET",URL,false);
-    r.send(null);
-    if(r.status === 200){
-        return r.responseText;
-    }else{
-        throw new Err(["Error: could not load '", URL, "'."].join(""));
-    }
-}
-
 function load_async(URL,callback){
     var r = new XMLHttpRequest();
     r.overrideMimeType("text/plain");
@@ -85,7 +73,9 @@ function load_async(URL,callback){
             if(r.status === 200){
                 callback(r.responseText);
             }else{
-                throw Err(["Error: could not load '", URL, "'."].join(""));
+                var text = ["Error: could not load file '", URL, "'."].join("");
+                print(text);
+                throw new Err(text);
             }
         }
     };
@@ -677,9 +667,9 @@ function str(x){
     }
 }
 
-function log(s){
+function print(s){
     var out = document.getElementById("out");
-    out.innerHTML = "<p><code>"+str(s)+"</code>";
+    out.innerHTML = "<p><code>"+s+"</code>";
 }
 
 function Err(text){
@@ -1882,7 +1872,6 @@ function switch_hud(){
 function update(gx){
     var out = document.getElementById("out");
     out.innerHTML = "";
-    // calc();
     try{
         plot(gx);
     }catch(e){
