@@ -1,8 +1,6 @@
 
 "use strict";
 
-var diff = diffh(0.001);
-var diff_operator = diffh_curry(0.001);
 var graphics;
 var ax=1;
 var ay=1;
@@ -29,6 +27,9 @@ var color_table_dark = [
     [60,140,0],
     [140,40,40]
 ];
+
+var diff = diffh(0.001);
+var diff_operator = diffh_curry(0.001);
 
 var ftab = {
     pi: Math.PI, tau: 2*Math.PI, e: Math.E, nan: NaN,
@@ -61,7 +62,7 @@ var ftab = {
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD,
     P: set_position, scale: set_scale,
-    zeroes: zeroes
+    zeroes: zeroes, map: map, filter: filter
 };
 
 function load_async(URL,callback){
@@ -117,6 +118,14 @@ function range(a,b,step){
 
 function tg(f,a,x){
     return f(a)+diff(f,a)*(x-a);
+}
+
+function map(f,a){
+    return a.map(f);
+}
+
+function filter(f,a){
+    return a.filter(f);
 }
 
 function sum(a,b,f){
@@ -357,14 +366,15 @@ function sinc(x){
 }
 
 function invab(f,x,a,b){
-    var m,s,a1,b1;
+    var m,s,a1,b1,d;
     a1=a; b1=b;
     s = Math.sign(f(b)-f(a));
     if(s==0 || isNaN(s)) s=1;
     for(var k=0; k<60; k++){
         m = 0.5*(a+b);
-        if(s*(f(m)-x)<0) a=m;
-        else b=m;
+        d = f(m)-x;
+        if(s*d<0) a=m; else b=m;
+        if(Math.abs(d)>1E4 && Math.abs(b-a)<1E-4) break;
     }
     if(Math.abs(f(m)-x)>1E-6) return NaN;
     return m;
@@ -1091,6 +1101,12 @@ function compile_assignment(a,t,context){
     context.local[t[1]] = true;
 }
 
+var operator_table = {
+    "+": "+", "-": "-", "*": "*", "/": "/",
+    "<": "<", ">": ">", "<=": "<=", ">=": ">=",
+    "&": "&&", "|": "||", "=": "=="
+};
+
 function compile_expression(a,t,context){
     if(typeof t == "number"){
         a.push(t);
@@ -1113,18 +1129,10 @@ function compile_expression(a,t,context){
         if(Array.isArray(op)){
             compile_expression(a,op,context);
             compile_application(a,"",t,context);
-        }else if(op=="+" || op=="-" || op=="*" || op=="/" ||
-            op=="<" || op==">" || op=="<=" || op==">="
-        ){
+        }else if(operator_table.hasOwnProperty(op)){
             a.push("(");
             compile_expression(a,t[1],context);
-            a.push(op);
-            compile_expression(a,t[2],context);
-            a.push(")");
-        }else if(op=="&" || op=="|"){
-            a.push("(");
-            compile_expression(a,t[1],context);
-            a.push(op+op);
+            a.push(operator_table[op]);
             compile_expression(a,t[2],context);
             a.push(")");
         }else if(op=="^"){
