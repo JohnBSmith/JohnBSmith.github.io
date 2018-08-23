@@ -56,9 +56,9 @@ var ftab = {
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
     Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
     diff: diff, int: integral, D: diff, Dop: diff_operator,
-    pow: pow, sum: sum, prod: prod,
-    rand: rand, rng: rand, tg: tg, range: range,
-    inv: invab, agm: agm,
+    pow: pow, sum: sum, prod: prod, af: af,
+    rand: rand, rng: rand, tg: tg, sc: sc, res: res,
+    range: range, inv: invab, agm: agm,
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD,
     P: set_position, scale: set_scale,
@@ -116,17 +116,17 @@ function range(a,b,step){
     }
 }
 
-function tg(f,a,x){
-    return f(a)+diff(f,a)*(x-a);
+function af(x0,y0,x1,y1){
+    var a = (y1-y0)/(x1-x0);
+    var b = y0-a*x0;
+    return function(x){return a*x+b;}
 }
 
-function map(f,a){
-    return a.map(f);
-}
-
-function filter(f,a){
-    return a.filter(f);
-}
+function sc(f,a,b,x){return f(a)+(f(b)-f(a))/(b-a)*(x-a);}
+function tg(f,a,x){return f(a)+diff(f,a)*(x-a);}
+function res(f,x,a,b){return a<=x && x<=b? f(x): NaN;}
+function map(f,a){return a.map(f);}
+function filter(f,a){return a.filter(f);}
 
 function sum(a,b,f){
     var y = 0;
@@ -144,14 +144,44 @@ function prod(a,b,f){
     return y;
 }
 
+var diff_tab = [
+[0],
+[1/12,-2/3,0,2/3,-1/12],
+[1/90,-3/20,3/2,-49/18,3/2,-3/20,1/90],
+[-7/240,3/10,-169/120,61/30,0,-61/30,169/120,-3/10,7/240],
+[7/240,-2/5,169/60,-122/15,91/8,-122/15,169/60,-2/5,7/240],
+[139/12096,-121/756,3125/3024,-3011/756,33853/4032,-1039/126,0,
+ 1039/126,-33853/4032,3011/756,-3125/3024,121/756,-139/12096],
+[-139/12096,121/630,-3125/2016,3011/378,-33853/1344,1039/21,-44473/720,
+ 1039/21,-33853/1344,3011/378,-3125/2016,121/630,-139/12096],
+[311/17280,-101/360,6995/3456,-2363/270,135073/5760,-40987/1080,184297/5760,0,
+ -184297/5760,40987/1080,-135073/5760,2363/270,-6995/3456,101/360,-311/17280]
+];
+
+function diff_rec(f,x,n,h){
+    if(n<8){
+        var a = diff_tab[n];
+        var m = Math.floor(a.length/2);
+        var y = 0;
+        for(var k=-m; k<=m; k++){
+            y += a[m+k]*f(x+k*h);
+        }
+        return y/Math.pow(h,n);
+    }else{
+        return diff_rec(function(x){return diff_rec(f,x,6,h);},x,n-6,h);
+    }
+}
+
 function diffh(h){
-    return function diff(f,x,n){
+    return function(f,x,n){
         if(n==undefined || n==1){
             return (f(x-2*h)-8*f(x-h)+8*f(x+h)-f(x+2*h))/(12*h);
+        }else if(n==0){
+            return f(x);
         }else{
-            return (diff(f,x+h,n-1)-diff(f,x-h,n-1))/(2*h);
+            return diff_rec(f,x,n,Math.pow(h,1/n));
         }
-    };
+    }
 }
 
 function diffh_curry(h){
@@ -225,7 +255,7 @@ var g64=[
 [0.0041470332605625, -0.9963401167719553],
 [0.0041470332605625, 0.9963401167719553],
 [0.0017832807216964, -0.9993050417357722],
-[0.0017832807216964, 0.9993050417357722]]
+[0.0017832807216964, 0.9993050417357722]];
 
 function gauss(f,a,b,n){
     var s,sj,h,i,j,aj,bj,p,q;
