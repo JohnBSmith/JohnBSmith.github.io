@@ -1818,6 +1818,8 @@ function set_scale(dx,dy){
     ax = 1/dx;
     ay = 1/dy;
     set_pos(graphics,t);
+    xscale.index = 10000+Math.round(3*lg(ax));
+    yscale.index = 10000+Math.round(3*lg(ay));
     return [dx,dy];
 }
 
