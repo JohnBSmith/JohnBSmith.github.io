@@ -62,7 +62,8 @@ var ftab = {
     E: eiE, K: eiK, F: eiF, Pi: eiPi,
     RF: RF, RC: RC, RJ: RJ, RD: RD,
     P: set_position, scale: set_scale,
-    zeroes: zeroes, map: map, filter: filter
+    zeroes: zeroes, roots: zeroes,
+    map: map, filter: filter
 };
 
 function load_async(URL,callback){
@@ -994,16 +995,24 @@ function range_expression(i){
 
 function comparison(i){
     var x = range_expression(i);
-    var t = i.a[i.index];
-    if(t[0]==Symbol && (
-       t[1]=="<"  || t[1]==">" || t[1]=="<=" ||
-       t[1]==">=" || t[1]=="=" || t[1]=="!="
-    )){
-        i.index++;
-        var y = range_expression(i);
-        return [t[1],x,y];
-    }else{
-        return x;
+    var h = undefined;
+    while(1){
+        var t = i.a[i.index];
+        if(t[0]==Symbol && (
+           t[1]=="<"  || t[1]==">" || t[1]=="<=" ||
+           t[1]==">=" || t[1]=="=" || t[1]=="!="
+        )){
+            i.index++;
+            var y = range_expression(i);
+            if(h==undefined){
+                x = [t[1],x,y];
+            }else{
+                x = ["&",x,[t[1],h,y]];
+            }
+            h = y;
+        }else{
+            return x;
+        }
     }
 }
 
@@ -1194,7 +1203,11 @@ function compile_expression(a,t,context){
             a.push("?");
             compile_expression(a,t[2],context);
             a.push(":");
-            compile_expression(a,t[3],context);
+            if(t.length<4){
+                a.push("NaN");
+            }else{
+                compile_expression(a,t[3],context);
+            }
             a.push(")");
         }else{
             compile_expression(a,op,context);
