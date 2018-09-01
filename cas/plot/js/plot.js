@@ -12,6 +12,14 @@ var dark = false;
 var ftab_extension_loaded = false;
 var async_continuation = undefined;
 
+var color_bg = [255,255,255,255];
+var color_axes = [160,160,160];
+var color_grid = [228,228,228];
+
+var color_dark_bg = [0,0,0,255];
+var color_dark_axes = [40,40,40];
+var color_dark_grid = [10,10,10];
+
 var color_table = [
     [0,0,140,255],
     [0,100,0,255],
@@ -1265,12 +1273,6 @@ function new_point(gx){
             data[i+2] = color[2];
         }
     };
-    var pset4 = function(color,x,y){
-        pset(color,x,y);
-        pset(color,x+1,y);
-        pset(color,x,y+1);
-        pset(color,x+1,y+1);
-    };
     var pseta = function(color,x,y,a){
         if(x>=0 && x<w && y>=0 && y<h){
             var i = (x+y*w)*4;
@@ -1285,10 +1287,29 @@ function new_point(gx){
             data[i+0] = Math.max(data[i+0],floor(a*color[0]/255));
             data[i+1] = Math.max(data[i+1],floor(a*color[1]/255));
             data[i+2] = Math.max(data[i+2],floor(a*color[2]/255));
-
+        }
+    };
+    var pseta_median = function(color,x,y,a){
+        if(x>=0 && x<w && y>=0 && y<h){
+            var i = (x+y*w)*4;
+            data[i+0] = floor((1-a)*data[i+0]+a*color[0]);
+            data[i+1] = floor((1-a)*data[i+1]+a*color[1]);
+            data[i+2] = floor((1-a)*data[i+2]+a*color[2]);
         }
     };
     if(dark) pseta = pseta_max;
+    var pset4 = function(color,x,y){
+        pset(color,x,y);
+        pset(color,x+1,y);
+        pset(color,x,y+1);
+        pset(color,x+1,y+1);
+    };
+    var pset4a = function(color,x,y,a){
+        pseta_median(color,x,y,a);
+        pseta_median(color,x+1,y,a);
+        pseta_median(color,x,y+1,a);
+        pseta_median(color,x+1,y+1,a);
+    }
     var fade = function(x){
         return Math.exp(-0.4*x*x*x);
     };
@@ -1317,32 +1338,46 @@ function new_point(gx){
         var py = floor(gx.h2-my*y);
         pset4(color,px,py);
     };
-    var hline = function(gx,py0,y){
+    var hline = function(gx,py0,y,a){
         var py = py0-Math.floor(my*y);
         var color = gx.color;
-        for(var px=0; px<w; px++){
-            pset4(color,px,py);
+        if(a==undefined){
+            for(var px=0; px<w; px++){
+                pset4(color,px,py);
+            }
+        }else{
+            for(var px=0; px<w; px++){
+                pset4a(color,px,py,a);
+            }
         }
     };
-    var vline = function(gx,px0,x){
+    var vline = function(gx,px0,x,a){
         var px = px0+Math.floor(mx*x);
         var color = gx.color;
-        for(var py=0; py<h; py++){
-            pset4(color,px,py);
+        if(a==undefined){
+            for(var py=0; py<h; py++){
+                pset4(color,px,py);
+            }
+        }else{
+            for(var py=0; py<h; py++){
+                pset4a(color,px,py,a);
+            }
         }
     };
-    var vspine = function(gx,px0,py0,x){
+    var vspine = function(gx,px0,py0,x,a){
+        if(a==undefined) a=1;
         var px = px0+Math.floor(mx*x);
         var color = gx.color;
         for(var py=py0-4; py<py0+5; py++){
-            pset4(color,px,py);
+            pset4a(color,px,py,a);
         }
     }
-    var hspine = function(gx,px0,py0,y){
+    var hspine = function(gx,px0,py0,y,a){
+        if(a==undefined) a=1;
         var py = py0-Math.floor(my*y);
         var color = gx.color;
         for(var px=px0-4; px<px0+5; px++){
-            pset4(color,px,py);
+            pset4a(color,px,py,a);
         }
     };
 
@@ -1369,17 +1404,18 @@ function init(canvas,w,h){
     gx.w2=w/2; gx.h2=h/2;
     gx.px0 = Math.floor(0.5*gx.w);
     gx.py0 = Math.floor(0.5*gx.h);
-    
+    gx.pos = [0,0];
+
     if(dark){
-        gx.color_bg = [0,0,0,255];
-        gx.color_axes = [40,40,40];
-        gx.color_grid = [10,10,10];
+        gx.color_bg = color_dark_bg;
+        gx.color_axes = color_dark_axes;
+        gx.color_grid = color_dark_grid;
         color_table = color_table_dark;
         gx.context.fillStyle = "#5a5a5a";
     }else{
-        gx.color_bg = [255,255,255,255];
-        gx.color_axes = [160,160,160];
-        gx.color_grid = [228,228,228];
+        gx.color_bg = color_bg;
+        gx.color_axes = color_axes;
+        gx.color_grid = color_grid;
     }
 
     gx.color = [0,0,0,255];
@@ -1403,9 +1439,7 @@ function get_value(id){
     return document.getElementById(id).value;
 }
 
-function system(gx){
-    clear(gx,gx.color_bg);
-
+function system(gx,grid,alpha,alpha_axes){
     var px0 = gx.px0;
     var py0 = gx.py0;
     var xcount = Math.ceil(0.5*gx.w/gx.mx)+1;
@@ -1413,35 +1447,49 @@ function system(gx){
     var xshift = Math.round((0.5*gx.w-px0)/gx.mx);
     var yshift = -Math.round((0.5*gx.h-py0)/gx.mx);
 
-
-    gx.color = gx.color_grid;
-    for(var y=0; y<ycount; y++){
-        gx.hline(gx,py0,yshift+y);
-        gx.hline(gx,py0,yshift-y);
-    }
-    for(var x=0; x<xcount; x++){
-        gx.vline(gx,px0,xshift+x);
-        gx.vline(gx,px0,xshift-x);
+    if(grid){
+        gx.color = gx.color_grid;
+        for(var y=yshift-ycount; y<=yshift+ycount; y++){
+            if(y!=0) gx.hline(gx,py0,y,alpha);
+        }
+        for(var x=xshift-xcount; x<=xshift+xcount; x++){
+            if(x!=0) gx.vline(gx,px0,x,alpha);
+        }
     }
 
     gx.color = gx.color_axes;
-    gx.hline(gx,py0,0);
-    gx.vline(gx,px0,0);
+    gx.hline(gx,py0,0,alpha_axes);
+    gx.vline(gx,px0,0,alpha_axes);
     for(var y=yshift-ycount; y<=yshift+ycount; y++){
         if(y!=0){
-            gx.hspine(gx,px0,py0,y);
+            gx.hspine(gx,px0,py0,y,alpha_axes);
         }
     }
     for(var x=xshift-xcount; x<=xshift+xcount; x++){
-        gx.vspine(gx,px0,py0,x);
+        gx.vspine(gx,px0,py0,x,alpha_axes);
+    }
+}
+
+function clear_system(gx){
+    clear(gx,gx.color_bg);
+    system(gx,true);
+}
+
+function round_pretty(x){
+    var r = Math.abs(x);
+    if(r<1 && r!=0){
+        var m = Math.pow(10,4+Math.round(-lg(r)));
+        return Math.round(m*x)/m;
+    }else{
+        return Math.round(100000*x)/100000;
     }
 }
 
 function float_str(x){
     if(x<0){
-        return "\u2212"+Math.abs(x).toString();
+        return "\u2212"+round_pretty(Math.abs(x)).toString();
     }else{
-        return x.toString();
+        return round_pretty(x).toString();
     }
 }
 
@@ -1511,6 +1559,12 @@ var clientXp=0;
 var clientYp=0;
 var moved = false;
 
+function refresh(gx){
+    clear_system(gx);
+    flush(gx);
+    labels(gx);
+}
+
 function mouse_move_handler(e){
     if(e.buttons==1){
         moved = true;
@@ -1520,11 +1574,10 @@ function mouse_move_handler(e){
         var dy = e.clientY-clientYp;
         gx.px0 = gx.px0+dx;
         gx.py0 = gx.py0+dy;
+        gx.pos = get_pos(gx);
         clientXp = e.clientX;
         clientYp = e.clientY;
-        system(gx);
-        flush(gx);
-        labels(gx);
+        refresh(gx);
     }else{
         clientXp = e.clientX;
         clientYp = e.clientY;
@@ -1549,11 +1602,12 @@ function new_system(last_gx){
     if(last_gx!==undefined){
         gx.px0 = last_gx.px0;
         gx.py0 = last_gx.py0;
+        gx.pos = last_gx.pos;
     }else{
         canvas.addEventListener("mousemove", mouse_move_handler, false);
         canvas.addEventListener("mouseup", mouse_up_handler, false);
     }
-    system(gx);
+    clear_system(gx);
     flush(gx);
 
     return gx;
@@ -1734,7 +1788,7 @@ function eval_statements(s){
         }
     }else{
         value = compile(t,[]);
-        value();
+        var y = value();
     }
 }
 
@@ -1759,7 +1813,7 @@ function plot(gx){
     process_statements(a);
     pid_stack = [];
 
-    system(gx);
+    clear_system(gx);
     flush(gx);
     labels(gx);
 
@@ -1818,6 +1872,7 @@ function set_pos(gx,t){
     var y = t[1];
     gx.px0 = Math.round(0.5*gx.w-x*ax*gx.mx);
     gx.py0 = Math.round(0.5*gx.h+y*ay*gx.mx);
+    gx.pos = t;
 }
 
 function set_position(x,y){
@@ -1827,7 +1882,7 @@ function set_position(x,y){
 
 function set_scale(dx,dy){
     if(dy==undefined) dy=dx;
-    var t = get_pos(graphics);
+    var t = graphics.pos;
     ax = 1/dx;
     ay = 1/dy;
     set_pos(graphics,t);
@@ -1844,7 +1899,7 @@ function scale_inc(scale){
         m = 2;
     }
     scale.index++;
-    var t = get_pos(graphics);
+    var t = graphics.pos;
     if(scale===xscale){
         ax = Math.round(1E10*ax*m)/1E10;
     }else{
@@ -1861,7 +1916,7 @@ function scale_dec(scale){
         m = 2;
     }
     scale.index--;
-    var t = get_pos(graphics);
+    var t = graphics.pos;
     if(scale===xscale){
         ax = Math.round(1E10*ax/m)/1E10;
     }else{
@@ -1964,7 +2019,6 @@ function query(href){
     if(a.length>1){
         var input = document.getElementById("inputf");
         input.value = decode_percent(a[1]);
-        main();
     }
 }
 
@@ -1973,5 +2027,6 @@ window.onload = function(){
     graphics = gx;
     labels(gx);
     query(window.location.href);
+    main();
 };
 
