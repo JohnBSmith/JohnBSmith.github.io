@@ -702,6 +702,9 @@ function str(x){
         return "["+x.map(str).join(", ")+"]";
     }else if(x instanceof Function){
         return "a function";
+    }else if(x.hasOwnProperty("re")){
+        var sep = x.im<0? "": "+";
+        return [str(x.re),sep,str(x.im),"i"].join("");
     }else{
         return JSON.stringify(x);
     }
@@ -1509,13 +1512,19 @@ function labels(gx){
     var yshift = Math.round((0.5*gx.h-py0)/gx.mx);
     var px,py,s,px_adjust,py_adjust;
     context.textAlign = "center";
+    var bulky_pred = false;
     for(var x=xshift-xcount; x<=xshift+xcount; x++){
         if(x!=0){
             px = px0+Math.floor(gx.mx*x);
             s = float_str(x/ax);
-            if(s.length>3 && x%2==0){py_adjust=40;} else{py_adjust=22;}
+            if(x%2==0 && (s.length>3 || s.length>1 && bulky_pred)){
+                py_adjust=40;
+            }else{
+                py_adjust=22;
+            }
             if(x/ax<0){px_adjust=4;} else{px_adjust=-1;}
             context.fillText(s,px-px_adjust,clamp(py0,10,h-44)+py_adjust);
+            bulky_pred = s.length>3;
         }
     }
     context.textAlign = "right";
@@ -1838,7 +1847,7 @@ function plot(gx){
     }
 }
 
-function calc(){
+function calculate(compile){
     var input = get_value("input-calc");
     var out = document.getElementById("calc-out");
     try{
@@ -1858,6 +1867,10 @@ function calc(){
             throw e;
         }
     }
+}
+
+function calc(){
+    calculate(compile);
 }
 
 function get_pos(gx){

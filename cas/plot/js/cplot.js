@@ -1,84 +1,90 @@
 
+var cdiff = cdiffh(0.001);
+
 var cglobal_ftab = {
     "+": "cadd", "-": "csub", "*": "cmul", "/": "cdiv",
     "^": "cpow", "~": "cneg", "=": "ceq",
-    abs: "ccabs", arg: "ccarg",
+    abs: "ccabs", arg: "ccarg", sgn: "csgn",
     re: "cre", im: "cim", Re: "cre", Im: "cim",
     exp: "cexp", ln: "cln", sqrt: "csqrt",
     sin: "csin", cos: "ccos", tan: "ctan", cot: "ccot",
-    gamma: "cgamma"
+    gamma: "cgamma", diff: "cdiff", int: "cint"
 };
 
 var cftab = {
-    pi: [Math.PI,0], tau: [2*Math.PI,0],
-    e: [Math.E,0], i: [0,1], nan: [NaN,NaN],
-    deg: [Math.PI/180,0], grad: [Math.PI/180,0], gon: [Math.PI/200,0],
-    gc: [GAMMA,0]
+    pi: complex(Math.PI,0), tau: complex(2*Math.PI,0),
+    e: complex(Math.E,0), i: complex(0,1), nan: complex(NaN,NaN),
+    deg: complex(Math.PI/180,0), grad: complex(Math.PI/180,0),
+    gon: complex(Math.PI/200,0), gc: complex(GAMMA,0)
 };
 
-function cabs(z){
-    return Math.hypot(z[0],z[1]);
+function complex(x,y){
+    return {re: x, im: y};
 }
 
-function sgn(x){
-    return x<0? -1: (x>0? 1: 0);
+function cabs(z){
+    return Math.hypot(z.re,z.im);
+}
+
+function csgn(z){
+    return cmulr(z,1/cabs(z));
 }
 
 function carg(z){
-    return Math.atan2(z[1],z[0]);
+    return Math.atan2(z.im,z.re);
 }
 
 function carg_positive(z){
     var r = cabs(z);
-    var phi = Math.atan2(z[1],z[0]);
+    var phi = Math.atan2(z.im,z.re);
     return phi<0? phi+2*Math.PI: phi;
 }
 
 function ccabs(z){
-    return [Math.hypot(z[0],z[1]),0];
+    return {re: Math.hypot(z.re,z.im), im: 0};
 }
 
 function ccarg(z){
-    return [Math.atan2(z[1],z[0]),0];
+    return {re: Math.atan2(z.im,z.re), im: 0};
 }
 
 function cadd(a,b){
-    return [a[0]+b[0],a[1]+b[1]];
+    return {re: a.re+b.re, im: a.im+b.im};
 }
 
 function csub(a,b){
-    return [a[0]-b[0],a[1]-b[1]];
+    return {re: a.re-b.re, im: a.im-b.im};
 }
 
 function cmul(a,b){
-    return [a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+    return {re: a.re*b.re-a.im*b.im, im: a.re*b.im+a.im*b.re};
 }
 
 function cdiv(a,b){
-    var r = 1/(b[0]*b[0]+b[1]*b[1]);
-    return [r*(a[0]*b[0]+a[1]*b[1]),r*(a[1]*b[0]-a[0]*b[1])];
+    var r = 1/(b.re*b.re+b.im*b.im);
+    return {re: r*(a.re*b.re+a.im*b.im), im: r*(a.im*b.re-a.re*b.im)};
 }
 
 function crdiv(a,b){
-    var r = a/(b[0]*b[0]+b[1]*b[1]);
-    return [r*b[0],-r*b[1]];
+    var r = a/(b.re*b.re+b.im*b.im);
+    return {re: r*b.re, im: -r*b.im};
 }
 
-function cneg(a){return [-a[0],-a[1]];}
-function caddr(a,b){return [a[0]+b,a[1]];}
-function csubr(a,b){return [a[0]-b,a[1]];}
-function crsub(a,b){return [a-b[0],-b[1]];}
-function cmulr(a,b){return [a[0]*b,a[1]*b];}
-function cre(z){return [z[0],0];}
-function cim(z){return [z[1],0];}
+function cneg(a){return {re: -a.re, im: -a.im};}
+function caddr(a,b){return {re: a.re+b, im: a.im};}
+function csubr(a,b){return {re: a.re-b, im: a.im};}
+function crsub(a,b){return {re: a-b.re, im: -b.im};}
+function cmulr(a,b){return {re: a.re*b, im: a.im*b};}
+function cre(z){return {re: z.re, im: 0};}
+function cim(z){return {re: z.im, im: 0};}
 
 function cexp(z){
-    var r = Math.exp(z[0]);
-    return [r*Math.cos(z[1]),r*Math.sin(z[1])];
+    var r = Math.exp(z.re);
+    return {re: r*Math.cos(z.im), im: r*Math.sin(z.im)};
 }
 
 function cln(z){
-    return [Math.log(cabs(z)),carg(z)];
+    return {re: Math.log(cabs(z)), im: carg(z)};
 }
 
 function cpow(a,b){
@@ -90,19 +96,19 @@ function csqrt(z){
 }
 
 function csin(z){
-    var c = Math.cos(z[0]);
-    var s = Math.sin(z[0]);
-    var p = 0.5*Math.exp(z[1]);
-    var q = 0.5*Math.exp(-z[1]);
-    return [(p+q)*s,(p-q)*c];
+    var c = Math.cos(z.re);
+    var s = Math.sin(z.re);
+    var p = 0.5*Math.exp(z.im);
+    var q = 0.5*Math.exp(-z.im);
+    return {re: (p+q)*s, im: (p-q)*c};
 }
 
 function ccos(z){
-    var c = Math.cos(z[0]);
-    var s = Math.sin(z[0]);
-    var p = 0.5*Math.exp(-z[1]);
-    var q = 0.5*Math.exp(z[1]);
-    return [(p+q)*c,(p-q)*s];
+    var c = Math.cos(z.re);
+    var s = Math.sin(z.re);
+    var p = 0.5*Math.exp(-z.im);
+    var q = 0.5*Math.exp(z.im);
+    return {re: (p+q)*c, im: (p-q)*s};
 }
 
 function ctan(z){
@@ -118,7 +124,7 @@ function gamma_lancos(z){
     771.32342877765313, -176.61502916214059, 12.507343278686905,
     -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
     z = csubr(z,1);
-    var y = [p[0],0];
+    var y = {re: p[0], im: 0};
     for(var i=1; i<9; i++){
         y = cadd(y,crdiv(p[i],caddr(z,i)));
     }
@@ -130,13 +136,88 @@ function gamma_lancos(z){
 }
 
 function cgamma(z){
-    if(z[0]<0.5){
+    if(z.re<0.5){
         var d = cmul(csin(cmulr(z,Math.PI)),gamma_lancos(crsub(1,z)));
         return crdiv(Math.PI,d);
     }else{
         return gamma_lancos(z);
     }
 }
+
+function cdiffh(h){
+    return function(f,z){
+        return cmulr(csub(f(caddr(z,h)),f(csubr(z,h))),0.5/h);
+    };
+}
+
+var g32 = [
+[-0.9972638618494816, 0.007018610009470141],
+[-0.9856115115452684, 0.01627439473090563],
+[-0.9647622555875064, 0.02539206530926208],
+[-0.9349060759377397, 0.03427386291302148],
+[-0.8963211557660522, 0.04283589802222668],
+[-0.8493676137325699, 0.05099805926237622],
+[-0.7944837959679425, 0.05868409347853551],
+[-0.7321821187402897, 0.06582222277636184],
+[-0.6630442669302152, 0.07234579410884850],
+[-0.5877157572407623, 0.07819389578707028],
+[-0.5068999089322295, 0.08331192422694673],
+[-0.4213512761306354, 0.08765209300440380],
+[-0.3318686022821277, 0.09117387869576390],
+[-0.2392873622521371, 0.09384439908080457],
+[-0.1444719615827965, 0.09563872007927489],
+[-0.04830766568773831,0.09654008851472778],
+[ 0.04830766568773831,0.09654008851472778],
+[ 0.1444719615827965, 0.09563872007927489],
+[ 0.2392873622521371, 0.09384439908080457],
+[ 0.3318686022821277, 0.09117387869576390],
+[ 0.4213512761306354, 0.08765209300440380],
+[ 0.5068999089322295, 0.08331192422694673],
+[ 0.5877157572407623, 0.07819389578707028],
+[ 0.6630442669302152, 0.07234579410884850],
+[ 0.7321821187402897, 0.06582222277636184],
+[ 0.7944837959679425, 0.05868409347853551],
+[ 0.8493676137325699, 0.05099805926237622],
+[ 0.8963211557660522, 0.04283589802222668],
+[ 0.9349060759377397, 0.03427386291302148],
+[ 0.9647622555875064, 0.02539206530926208],
+[ 0.9856115115452684, 0.01627439473090563],
+[ 0.9972638618494816, 0.007018610009470141]
+];
+
+function cgauss(f,a,b,n){
+    var h = (b-a)/n;
+    var p = 0.5*h;
+    var s = {re: 0, im: 0};
+    var N = g32.length;
+    var i,j,sj,q;
+    for(j=0; j<n; j++){
+        q = p+a+j*h;
+        sj = {re: 0, im: 0};
+        for(i=0; i<N; i++){
+            sj = cadd(sj,cmulr(f(p*g32[i][0]+q),g32[i][1]));
+        }
+        s = cadd(s,cmulr(sj,p));
+    }
+    return s;
+}
+
+function cint(p,f,n){
+    if(n==undefined) {n=1} else {n=Math.round(n.re)};
+    var s = {re: 0, im: 0};
+    var N = p.length-1;
+    for(var i=0; i<N; i++){
+        var a = p[i];
+        var b = p[i+1];
+        var m = csub(b,a);
+        var g = function(t){
+            return f({re: a.re+m.re*t, im: a.im+m.im*t});
+        };
+        s = cadd(s,cmul(m,cgauss(g,0,1,n)));
+    }
+    return s;
+}
+
 
 function hsl_to_rgb(H,S,L){
     var C = (1-Math.abs(2*L-1))*S;
@@ -225,9 +306,9 @@ var coperator_table = {
 
 function ccompile_expression(a,t,context){
     if(typeof t == "number"){
-        a.push("[");
+        a.push("{re:");
         a.push(t);
-        a.push(",0]");
+        a.push(",im:0}");
     }else if(typeof t == "string"){
         if(t in context.local){
             a.push(t);
@@ -235,6 +316,8 @@ function ccompile_expression(a,t,context){
             context.pre.push("var "+t+"=cftab[\""+t+"\"];");
             context.local[t] = true;
             a.push(t);
+        }else if(cglobal_ftab.hasOwnProperty(t)){
+            a.push(cglobal_ftab[t]);
         }else if(!ftab_extension_loaded){
             async_continuation = "await";
             load_ftab_extension();
@@ -348,11 +431,11 @@ async function cplot(gx,f,n,cond){
         for(px=0; px<W; px+=n){
             x = (px-px0)/gx.mx/ax;
             y = -(py-py0)/gx.mx/ay;
-            z = [x,y];
+            z = {re: x, im: y};
             w = f(z);
             r = cabs(w);
             phi = carg_positive(w);
-            color = hsl_to_rgb_u8(phi,0.5,Math.tanh(r/10));
+            color = hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10));
             rect(pset,color,px,py,n,n);
         }
         if(cond && k==10){
@@ -382,16 +465,35 @@ async function cplot_async(gx,f){
     }
 }
 
-function plot_node(gx,t,color){
-    var f = ccompile(t,["z"]);
-    cplot_async(gx,f);
-}
-
 var plot_refresh = false;
 
 function refresh(gx){
     plot_refresh = true;
     update(gx);
+}
+
+function plot_node(gx,t,color){
+    var f = ccompile(t,["z"]);
+    cplot_async(gx,f);
+}
+
+function global_definition(t){
+    if(Array.isArray(t[1])){
+        var app = t[1];
+        var value = ccompile(t[2],app.slice(1));
+        cftab[app[0]] = value;
+    }else{
+        var value = ccompile(t[2],[]);
+        cftab[t[1]] = value();
+    }
+}
+
+function ccalc(){
+    calculate(ccompile);
+}
+
+function keys_ccalc(event){
+    if(event.keyCode==13) ccalc();
 }
 
 color_dark_axes = [80,80,80];
