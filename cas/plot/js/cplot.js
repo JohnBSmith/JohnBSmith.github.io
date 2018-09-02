@@ -1,4 +1,6 @@
 
+"use strict";
+
 var cdiff = cdiffh(0.001);
 
 var cglobal_ftab = {

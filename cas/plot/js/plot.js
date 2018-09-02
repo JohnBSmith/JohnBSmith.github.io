@@ -1398,8 +1398,6 @@ function init(canvas,w,h){
     var gx = {};
     gx.canvas = canvas;
     gx.context = canvas.getContext("2d");
-    gx.context.font = "16px \"DejaVu Sans\", \"Verdana\", \"sans-serif\"";
-    gx.context.fillStyle = "#404040";
     gx.context.clearRect(0,0,w,h);
     gx.img = gx.context.createImageData(w,h);
     gx.data = gx.img.data;
@@ -1419,6 +1417,7 @@ function init(canvas,w,h){
         gx.color_bg = color_bg;
         gx.color_axes = color_axes;
         gx.color_grid = color_grid;
+        gx.context.fillStyle = "#404040";
     }
 
     gx.color = [0,0,0,255];
@@ -1434,6 +1433,10 @@ function init(canvas,w,h){
         gx.mx = w/1300*50;
     }
     gx.my = gx.mx;
+    gx.char_max = gx.mx<38?2:3;
+    var font_size = gx.mx<32?14:16;
+    var font = "\"DejaVu Sans\", \"Verdana\", \"sans-serif\"";
+    gx.context.font = font_size+"px "+font;
     return gx;
 }
 
@@ -1513,18 +1516,19 @@ function labels(gx){
     var px,py,s,px_adjust,py_adjust;
     context.textAlign = "center";
     var bulky_pred = false;
+    var char_max = gx.char_max;
     for(var x=xshift-xcount; x<=xshift+xcount; x++){
         if(x!=0){
             px = px0+Math.floor(gx.mx*x);
             s = float_str(x/ax);
-            if(x%2==0 && (s.length>3 || s.length>1 && bulky_pred)){
+            if(x%2==0 && (s.length>char_max || s.length>1 && bulky_pred)){
                 py_adjust=40;
             }else{
                 py_adjust=22;
             }
             if(x/ax<0){px_adjust=4;} else{px_adjust=-1;}
             context.fillText(s,px-px_adjust,clamp(py0,10,h-44)+py_adjust);
-            bulky_pred = s.length>3;
+            bulky_pred = s.length>char_max;
         }
     }
     context.textAlign = "right";
