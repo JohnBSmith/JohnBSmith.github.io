@@ -8,7 +8,8 @@ var cglobal_ftab = {
     re: "cre", im: "cim", Re: "cre", Im: "cim",
     exp: "cexp", ln: "cln", sqrt: "csqrt",
     sin: "csin", cos: "ccos", tan: "ctan", cot: "ccot",
-    gamma: "cgamma", diff: "cdiff", int: "cint"
+    gamma: "cgamma", fac: "cfac",
+    diff: "cdiff", int: "cint", pow: "citerate"
 };
 
 var cftab = {
@@ -88,7 +89,19 @@ function cln(z){
 }
 
 function cpow(a,b){
-    return cexp(cmul(cln(a),b));
+    if(a.re==0 && a.im==0){
+        if(b.re==0 && b.im==0){
+            return {re: 1, im: 0};
+        }else{
+            return {re: 0, im: 0};
+        }
+    }else{
+        var lnr = 0.5*Math.log(a.re*a.re+a.im*a.im);
+        var phi = Math.atan2(a.im,a.re);
+        var r1 = Math.exp(lnr*b.re-phi*b.im);
+        var phi1 = lnr*b.im+phi*b.re;
+        return {re: r1*Math.cos(phi1), im: r1*Math.sin(phi1)};
+    }
 }
 
 function csqrt(z){
@@ -119,7 +132,7 @@ function ccot(z){
     return cdiv(ccos(z),csin(z));
 }
 
-function gamma_lancos(z){
+function gamma_lanczos(z){
     var p=[0.99999999999980993, 676.5203681218851, -1259.1392167224028,
     771.32342877765313, -176.61502916214059, 12.507343278686905,
     -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
@@ -137,11 +150,15 @@ function gamma_lancos(z){
 
 function cgamma(z){
     if(z.re<0.5){
-        var d = cmul(csin(cmulr(z,Math.PI)),gamma_lancos(crsub(1,z)));
+        var d = cmul(csin(cmulr(z,Math.PI)),gamma_lanczos(crsub(1,z)));
         return crdiv(Math.PI,d);
     }else{
-        return gamma_lancos(z);
+        return gamma_lanczos(z);
     }
+}
+
+function cfac(z){
+    return cgamma(caddr(z,1));
 }
 
 function cdiffh(h){
@@ -218,6 +235,13 @@ function cint(p,f,n){
     return s;
 }
 
+function citerate(f,n,z){
+    n = Math.round(n.re);
+    for(var i=0; i<n; i++){
+        z = f(z);
+    }
+    return z;
+}
 
 function hsl_to_rgb(H,S,L){
     var C = (1-Math.abs(2*L-1))*S;
@@ -237,7 +261,7 @@ function hsl_to_rgb(H,S,L){
     }else if(5<=Hp && Hp<6.01){
         R1=C; G1=0; B1=X;
     }else{
-        R1=0; G1=0; B1=0;
+        return [1,1,1,];
     }
     m = L-C/2;
     return [R1+m,G1+m,B1+m];
