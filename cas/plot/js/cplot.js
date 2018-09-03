@@ -298,6 +298,7 @@ function ccompile_list(a,t,context){
 }
 
 function ccompile_lambda_expression(a,argv,body,context){
+    if(!Array.isArray(argv)) argv = [argv];
     var local = Object.create(context.local);
     for(var i=0; i<argv.length; i++){
         local[argv[i]] = true;
@@ -362,7 +363,7 @@ function ccompile_expression(a,t,context){
             a.push(coperator_table[op]);
             ccompile_expression(a,t[2],context);
             a.push(")");
-        }else if(op=="||"){
+        }else if(op=="fn"){
             ccompile_lambda_expression(a,t[1],t[2],context);
         }else if(op=="[]"){
             ccompile_list(a,t,context);

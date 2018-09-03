@@ -49,8 +49,9 @@ var ftab = {
     div: div, mod: mod, diveuc: diveuc, modeuc: modeuc,
     divtrunc: divtrunc, modtrunc: modtrunc,
     rd: Math.round, trunc: Math.trunc, frac: frac,
-    sqrt: Math.sqrt, cbrt: cbrt, root: root, expm1: Math.expm1,
-    exp: Math.exp, log: log, ln: Math.log, lg: lg, ld: ld, lb: ld,
+    sqrt: Math.sqrt, cbrt: cbrt, rt: root, root: root,
+    exp: Math.exp, expm1: Math.expm1,
+    log: log, ln: Math.log, lg: lg, ld: ld, lb: ld,
     sin: Math.sin, cos: Math.cos, tan: Math.tan,
     cot: cot, sec: sec, csc: csc,
     asin: Math.asin, acos: Math.acos, atan: Math.atan,
@@ -62,7 +63,8 @@ var ftab = {
     arcoth: acoth, arsech: asech, arcsch: acsch,
     sinc: sinc, gd: gd, W: lambertw, Wm1: lambertwm1,
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
-    Gamma: Gamma, erf: erf, En: En, Ei: Ei, li: li, Li: Li,
+    Gamma: Gamma, erf: erf, erfc: erfc,
+    En: En, Ei: Ei, li: li, Li: Li,
     diff: diff, int: integral, D: diff, Dop: diff_operator,
     pow: pow, sum: sum, prod: prod, af: af,
     rand: rand, rng: rand, tg: tg, sc: sc, res: res,
@@ -828,7 +830,7 @@ function lambda_expression(i){
         }
     }
     var x = expression(i);
-    return ["||",argv,x];
+    return ["fn",argv,x];
 }
 
 function atom(i){
@@ -1123,6 +1125,7 @@ function compile_list(a,t,context){
 }
 
 function compile_lambda_expression(a,argv,body,context){
+    if(!Array.isArray(argv)) argv = [argv];
     var local = Object.create(context.local);
     for(var i=0; i<argv.length; i++){
         local[argv[i]] = true;
@@ -1194,7 +1197,7 @@ function compile_expression(a,t,context){
             a.push("(-");
             compile_expression(a,t[1],context);
             a.push(")");
-        }else if(op=="||"){
+        }else if(op=="fn"){
             compile_lambda_expression(a,t[1],t[2],context);
         }else if(op=="[]"){
             compile_list(a,t,context);
