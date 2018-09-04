@@ -15,7 +15,7 @@ asin: "casin", acos: "cacos", atan: "catan", acot: "cacot",
 arcsin: "casin", arccos: "cacos", arctan: "catan", arccot: "cacot",
 asinh: "casinh", acosh: "cacosh", atanh: "catanh", acoth: "cacoth",
 arsinh: "casinh", arcosh: "cacosh", artanh: "catanh", arcoth: "cacoth",
-gamma: "cgamma", fac: "cfac",
+gamma: "cgamma", fac: "cfac", sum: "csum", prod: "cprod",
 diff: "cdiff", int: "cint", pow: "citerate"
 };
 
@@ -233,9 +233,77 @@ function cfac(z){
     return cgamma(caddr(z,1));
 }
 
+function csum(a,b,f){
+    a = Math.round(a.re);
+    b = Math.round(b.re);
+    var y = {re: 0, im: 0};
+    for(var k=a; k<=b; k++){
+        y = cadd(y,f({re: k, im: 0}));
+    }
+    return y;
+}
+
+function cprod(a,b,f){
+    a = Math.round(a.re);
+    b = Math.round(b.re);
+    var y = {re: 1, im: 0};
+    for(var k=a; k<=b; k++){
+        y = cmul(y,f({re: k, im: 0}));
+    }
+    return y;
+}
+
+var cdiff_tab = [
+[1],
+[-1/60,3/20,-3/4,0,3/4,-3/20,1/60],
+[1/90,-3/20,3/2,-49/18,3/2,-3/20,1/90],
+[-7/240,3/10,-169/120,61/30,0,-61/30,169/120,-3/10,7/240],
+[7/240,-2/5,169/60,-122/15,91/8,-122/15,169/60,-2/5,7/240],
+
+[139/12096,-121/756,3125/3024,-3011/756,33853/4032,-1039/126,0,
+1039/126,-33853/4032,3011/756,-3125/3024,121/756,-139/12096],
+[-139/12096,121/630,-3125/2016,3011/378,-33853/1344,1039/21,
+-44473/720,1039/21,-33853/1344,3011/378,-3125/2016,121/630,
+-139/12096],
+[-2473/518400, 2747/32400, -1363/1920, 4787/1296, -678739/51840,
+37517/1200, -12312353/259200, 251539/6480, 0, -251539/6480,
+12312353/259200, -37517/1200, 678739/51840, -4787/1296, 1363/1920,
+-2747/32400, 2473/518400],
+[2473/518400, -2747/28350, 1363/1440, -4787/810, 678739/25920,
+-37517/450, 12312353/64800, -251539/810, 4913051/13440, -251539/810,
+12312353/64800, -37517/450, 678739/25920, -4787/810, 1363/1440,
+-2747/28350, 2473/518400],
+[-2021/268800, 7403/50400, -156031/115200, 65377/8400, -248167/8064,
+309691/3600, -1618681/9600, 5586823/25200, -66976673/403200, 0,
+66976673/403200, -5586823/25200, 1618681/9600, -309691/3600,
+248167/8064, -65377/8400, 156031/115200, -7403/50400, 2021/268800],
+];
+
+function ctab_diff(h){
+    return function(f,z,n){
+        if(n==0){
+            return f(z);
+        }else{
+            var a = cdiff_tab[n];
+            var m = Math.floor(a.length/2);
+            var d = Math.pow(h,1/n);
+            var y = {re: 0, im: 0};
+            for(var k=-m; k<=m; k++){
+                y = cadd(y,cmulr(f(caddr(z,k*d)),a[m+k]));
+            }
+            return cmulr(y,1/h);
+        }
+    }
+}
+
 function cdiffh(h){
-    return function(f,z){
-        return cmulr(csub(f(caddr(z,h)),f(csubr(z,h))),0.5/h);
+    var tab_diff = ctab_diff(0.001);
+    return function(f,z,n){
+        if(n==undefined){
+            return cmulr(csub(f(caddr(z,h)),f(csubr(z,h))),0.5/h);
+        }else{
+            return tab_diff(f,z,Math.round(n.re));
+        }
     };
 }
 

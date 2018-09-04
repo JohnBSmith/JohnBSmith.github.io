@@ -140,6 +140,8 @@ function map(f,a){return a.map(f);}
 function filter(f,a){return a.filter(f);}
 
 function sum(a,b,f){
+    a = Math.round(a);
+    b = Math.round(b);
     var y = 0;
     for(var i=a; i<=b; i++){
         y += f(i);
@@ -148,6 +150,8 @@ function sum(a,b,f){
 }
 
 function prod(a,b,f){
+    a = Math.round(a);
+    b = Math.round(b);
     var y = 1;
     for(var i=a; i<=b; i++){
         y *= f(i);
