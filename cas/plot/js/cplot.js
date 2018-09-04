@@ -578,6 +578,38 @@ function rect(pset,color,px0,py0,w,h){
     }
 }
 
+function pulse(x){
+    return Math.pow(Math.cos(Math.PI*x),100);
+}
+
+function color_hsl(w){
+    var r = cabs(w);
+    var phi = carg_positive(w);
+    return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10));
+}
+
+function color_hsl_and_rect(w){
+    var r = cabs(w);
+    var phi = carg_positive(w);
+    return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*(1+pulse(w.re))*(1+pulse(w.im))));
+}
+
+function color_hsl_and_polar(w){
+    var r = cabs(w);
+    var phi = carg_positive(w);
+    var iso_r = 1+pulse(r);
+    var iso_phi = 1-1/Math.sqrt(r)*pulse(8*phi/Math.PI);
+    return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*iso_r*iso_phi));
+}
+
+var color_method_tab = {
+    "0": color_hsl,
+    "1": color_hsl_and_rect,
+    "2": color_hsl_and_polar
+};
+
+var img_color = color_hsl;
+
 async function cplot(gx,f,n,cond){
     var pid = {};
     var index = pid_stack.length;
@@ -586,7 +618,7 @@ async function cplot(gx,f,n,cond){
 
     var W = gx.w;
     var H = gx.h;
-    var px,py,x,y,z,w,r,phi,color;
+    var px,py,x,y,z;
     var pset = gx.pset;
     var px0 = gx.px0;
     var py0 = gx.py0;
@@ -597,11 +629,7 @@ async function cplot(gx,f,n,cond){
             x = (px-px0)/gx.mx/ax;
             y = -(py-py0)/gx.mx/ay;
             z = {re: x, im: y};
-            w = f(z);
-            r = cabs(w);
-            phi = carg_positive(w);
-            color = hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10));
-            rect(pset,color,px,py,n,n);
+            rect(pset,img_color(f(z)),px,py,n,n);
         }
         if(cond && k==10){
             k=0;
@@ -638,6 +666,8 @@ function refresh(gx){
 }
 
 function plot_node(gx,t,color){
+    var index = document.getElementById("method").value;
+    img_color = color_method_tab[index];  
     var f = ccompile(t,["z"]);
     cplot_async(gx,f);
 }
