@@ -4,14 +4,19 @@
 var cdiff = cdiffh(0.001);
 
 var cglobal_ftab = {
-    "+": "cadd", "-": "csub", "*": "cmul", "/": "cdiv",
-    "^": "cpow", "~": "cneg", "=": "ceq",
-    abs: "ccabs", arg: "ccarg", sgn: "csgn",
-    re: "cre", im: "cim", Re: "cre", Im: "cim",
-    exp: "cexp", ln: "cln", sqrt: "csqrt",
-    sin: "csin", cos: "ccos", tan: "ctan", cot: "ccot",
-    gamma: "cgamma", fac: "cfac",
-    diff: "cdiff", int: "cint", pow: "citerate"
+"+": "cadd", "-": "csub", "*": "cmul", "/": "cdiv",
+"^": "cpow", "~": "cneg", "=": "ceq",
+abs: "ccabs", arg: "ccarg", sgn: "csgn", conj: "conj",
+re: "cre", im: "cim", Re: "cre", Im: "cim",
+exp: "cexp", ln: "cln", sqrt: "csqrt",
+sin: "csin", cos: "ccos", tan: "ctan", cot: "ccot",
+sinh: "csinh", cosh: "ccosh", tanh: "ctanh", coth: "ccoth",
+asin: "casin", acos: "cacos", atan: "catan", acot: "cacot",
+arcsin: "casin", arccos: "cacos", arctan: "catan", arccot: "cacot",
+asinh: "casinh", acosh: "cacosh", atanh: "catanh", acoth: "cacoth",
+arsinh: "casinh", arcosh: "cacosh", artanh: "catanh", arcoth: "cacoth",
+gamma: "cgamma", fac: "cfac",
+diff: "cdiff", int: "cint", pow: "citerate"
 };
 
 var cftab = {
@@ -23,6 +28,10 @@ var cftab = {
 
 function complex(x,y){
     return {re: x, im: y};
+}
+
+function conj(z){
+    return {re: z.re, im: -z.im};
 }
 
 function cabs(z){
@@ -132,6 +141,67 @@ function ctan(z){
 
 function ccot(z){
     return cdiv(ccos(z),csin(z));
+}
+
+function csinh(z){
+    return cmulr(csub(cexp(z),cexp(cneg(z))),0.5);
+}
+
+function ccosh(z){
+    return cmulr(cadd(cexp(z),cexp(cneg(z))),0.5);
+}
+
+function ctanh(z){
+    return cdiv(csinh(z),ccosh(z));
+}
+
+function ccoth(z){
+    return cdiv(ccosh(z),csinh(z));
+}
+
+function casin(z){
+    var a = csqrt(crsub(1,cmul(z,z)));
+    var b = cadd(cmul({re:0,im:1},z),a);
+    return cmul({re:0,im:-1},cln(b));
+}
+
+function cacos(z){
+    var a = csqrt(crsub(1,cmul(z,z)));
+    var b = cadd(z,cmul({re:0,im:1},a));
+    return cmul({re:0,im:-1},cln(b));
+}
+
+function catan(z){
+    var a = cmul({re:0,im:1},z);
+    var b = csub(cln(crsub(1,a)),cln(caddr(a,1)));
+    return cmul({re:0,im:0.5},b);
+}
+
+function cacot(z){
+    var a = cdiv({re:0,im:1},z);
+    var b = csub(cln(crsub(1,a)),cln(caddr(a,1)));
+    return cmul({re:0,im:0.5},b);
+}
+
+function casinh(z){
+    var a = csqrt(caddr(cmul(z,z),1));
+    return cln(cadd(z,a));
+}
+
+function cacosh(z){
+    var a = csqrt(caddr(z,1));
+    var b = csqrt(csubr(z,1));
+    return cln(cadd(z,cmul(a,b)));
+}
+
+function catanh(z){
+    var a = cdiv(caddr(z,1),crsub(1,z));
+    return cmulr(cln(a),0.5);
+}
+
+function cacoth(z){
+    var a = cdiv(caddr(z,1),csubr(z,1));
+    return cmulr(cln(a),0.5);
 }
 
 function gamma_lanczos(z){
