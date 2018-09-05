@@ -607,7 +607,7 @@ function color_hsl_and_polar(w){
     var r = cabs(w);
     var phi = carg_positive(w);
     var iso_r = 1+pulse(r,100);
-    var iso_phi = 1-1/Math.sqrt(r)*pulse(8*phi/Math.PI,100);
+    var iso_phi = 1-1/Math.sqrt(r)*pulse(6*phi/Math.PI,100);
     return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*iso_r*iso_phi));
 }
 
