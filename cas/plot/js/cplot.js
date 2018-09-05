@@ -578,8 +578,8 @@ function rect(pset,color,px0,py0,w,h){
     }
 }
 
-function pulse(x){
-    return Math.pow(Math.cos(Math.PI*x),100);
+function pulse(x,a){
+    return Math.pow(Math.cos(Math.PI*x),a);
 }
 
 function color_hsl(w){
@@ -591,21 +591,38 @@ function color_hsl(w){
 function color_hsl_and_rect(w){
     var r = cabs(w);
     var phi = carg_positive(w);
-    return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*(1+pulse(w.re))*(1+pulse(w.im))));
+    return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*(1+pulse(w.re,100))*(1+pulse(w.im,100))));
 }
 
 function color_hsl_and_polar(w){
     var r = cabs(w);
     var phi = carg_positive(w);
-    var iso_r = 1+pulse(r);
-    var iso_phi = 1-1/Math.sqrt(r)*pulse(8*phi/Math.PI);
+    var iso_r = 1+pulse(r,100);
+    var iso_phi = 1-1/Math.sqrt(r)*pulse(8*phi/Math.PI,100);
     return hsl_to_rgb_u8(phi,0.8,Math.tanh(r/10*iso_r*iso_phi));
+}
+
+function smooth_mod(a){
+    var x0 = a/(a+1);
+    return function(x,m){
+        x = mod(x,m);
+        return x<x0?x:a*(1-x);
+    };
+}
+var smod = smooth_mod(20);
+
+function color_lb_repeat(w){
+    var r = cabs(w);
+    var phi = carg_positive(w);
+    var iso_phi = 0.5*pulse(6*phi/Math.PI,100);
+    return hsl_to_rgb_u8(phi,0.9,Math.tanh(0.25+0.5*smod(ld(r),1)+iso_phi));
 }
 
 var color_method_tab = {
     "0": color_hsl,
     "1": color_hsl_and_rect,
-    "2": color_hsl_and_polar
+    "2": color_hsl_and_polar,
+    "3": color_lb_repeat
 };
 
 var img_color = color_hsl;
