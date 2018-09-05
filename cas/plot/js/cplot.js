@@ -26,6 +26,8 @@ var cftab = {
     gon: complex(Math.PI/200,0), gc: complex(GAMMA,0)
 };
 
+ftab["colorfn"] = colorfn;
+
 function complex(x,y){
     return {re: x, im: y};
 }
@@ -575,6 +577,13 @@ function rect(pset,color,px0,py0,w,h){
         for(var px=px0; px<px1; px++){
             pset(color,px,py);
         }
+    }
+}
+
+function colorfn(n){
+    var a = document.getElementById("method").options;
+    for(var i=0; i<a.length; i++){
+        a[i].selected = i==n;
     }
 }
 
