@@ -812,6 +812,12 @@ function scan(s){
             a.push([SymbolIdentifier,"deg",line,col]);
             i++; col++;
         }else{
+            if(s[i]=='(' && a.length>0){
+                var last = a[a.length-1];
+                if(last[0]==SymbolNumber){
+                    a.push([Symbol,"*",line,col]);
+                }
+            }
             a.push([Symbol,s[i],line,col]);
             i++; col++;
         }
@@ -902,6 +908,9 @@ function application(i){
     while(1){
         var t = i.a[i.index];
         if(t[0]==Symbol && t[1]=='('){
+            if(Array.isArray(x) && (x[0]==="+" || x[0]==="-")){
+                break;
+            }
             i.index++;
             x = application_list(i,[x],')');
         }else if(t[0]==Symbol && t[1]=='['){
@@ -968,6 +977,9 @@ function multiplication(i){
             i.index++;
             var y = negation(i);
             x = [t[1],x,y];
+        }else if(t[0] == Symbol && t[1]=='('){
+            var y = negation(i);
+            x = ["*",x,y];
         }else{
             break;
         }
