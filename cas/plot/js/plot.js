@@ -908,7 +908,9 @@ function application(i){
     while(1){
         var t = i.a[i.index];
         if(t[0]==Symbol && t[1]=='('){
-            if(Array.isArray(x) && (x[0]==="+" || x[0]==="-")){
+            if(Array.isArray(x) && (x[0]==="+" || x[0]==="-" ||
+              x[0]==="*" || x[0]==="/" || x[0]==="^"
+            )){
                 break;
             }
             i.index++;
@@ -1175,13 +1177,32 @@ var operator_table = {
     "&": "&&", "|": "||", "=": "=="
 };
 
-function compile_expression(a,t,context){
+var number_op_table = {
+    "+":0, "-":0, "*":0, "/":0, "^":0,
+    "<":0, ">":0, "<=":0, ">=":0
+}
+
+function type_test(t,type){
+    if(type!=undefined && number_op_table.hasOwnProperty(type)){
+        if(typeof ftab[t]=="function"){
+            throw new Err(["Error: operator '",type,
+                "' takes numbers, but&nbsp;'",t,
+                "' is&nbsp;a function.<br><br>",
+                "Did you mean '",t,"(x)' instead of just '",t,
+                "'?"].join("")
+            );
+        }
+    }
+}
+
+function compile_expression(a,t,context,type){
     if(typeof t == "number"){
         a.push(t);
     }else if(typeof t == "string"){
         if(t in context.local){
             a.push(t);
         }else if(ftab.hasOwnProperty(t)){
+            type_test(t,type);
             context.pre.push("var "+t+"=ftab[\""+t+"\"];");
             context.local[t] = true;
             a.push(t);
@@ -1199,19 +1220,19 @@ function compile_expression(a,t,context){
             compile_application(a,"",t,context);
         }else if(operator_table.hasOwnProperty(op)){
             a.push("(");
-            compile_expression(a,t[1],context);
+            compile_expression(a,t[1],context,op);
             a.push(operator_table[op]);
-            compile_expression(a,t[2],context);
+            compile_expression(a,t[2],context,op);
             a.push(")");
         }else if(op=="^"){
             a.push("power(");
-            compile_expression(a,t[1],context);
+            compile_expression(a,t[1],context,op);
             a.push(",");
-            compile_expression(a,t[2],context);
+            compile_expression(a,t[2],context,op);
             a.push(")");
         }else if(op=="~"){
             a.push("(-");
-            compile_expression(a,t[1],context);
+            compile_expression(a,t[1],context,op);
             a.push(")");
         }else if(op=="fn"){
             compile_lambda_expression(a,t[1],t[2],context);
@@ -1224,7 +1245,7 @@ function compile_expression(a,t,context){
         }else if(op=="index"){
             compile_expression(a,t[1],context);
             a.push("[");
-            compile_expression(a,t[2],context);
+            compile_expression(a,t[2],context,op);
             a.push("]");
         }else if(op=="if"){
             a.push("(");
