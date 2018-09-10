@@ -11,6 +11,7 @@ var GAMMA = 0.57721566490153286;
 var dark = false;
 var ftab_extension_loaded = false;
 var async_continuation = undefined;
+var freq = 1;
 
 var color_bg = [255,255,255,255];
 var color_axes = [160,160,160];
@@ -73,7 +74,7 @@ var ftab = {
     RF: RF, RC: RC, RJ: RJ, RD: RD,
     P: set_position, scale: set_scale,
     zeroes: zeroes, roots: zeroes,
-    map: map, filter: filter
+    map: map, filter: filter, freq: set_freq
 };
 
 function load_async(URL,callback){
@@ -1832,7 +1833,7 @@ function rect(pset,color,px0,py0,w,h){
 }
 
 function level_color(x){
-    return hsl_to_rgb_u8(mod(4/3*Math.PI-2/10*Math.PI*x,2*Math.PI),1,0.6);
+    return hsl_to_rgb_u8(mod(Math.PI*(4/3-2/10*freq*x),2*Math.PI),1,0.6);
 }
 
 async function plot_level(gx,f,n,cond){
@@ -1868,9 +1869,14 @@ async function plot_level(gx,f,n,cond){
     busy = false;
 }
 
+function set_freq(x){
+    freq = x;
+    return x;
+}
+
 function plot_level_async(gx,f,color){
     var g = function(x,y){
-        var r=f(x,y);
+        var r = freq*f(x,y);
         return r-1-Math.floor(r-0.5);
     };
     plot_level(gx,f,1,false);
