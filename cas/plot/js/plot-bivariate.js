@@ -1,4 +1,6 @@
 
+"use strict";
+
 var plot_refresh = false;
 
 function refresh(gx){
@@ -71,30 +73,6 @@ function interpolate_color(c1,c2){
         var B = clamp(Math.round(255*((1-t)*c1[2]+t*c2[2])),0,255);
         return rgba_to_hex(R,G,B,a);
     };
-}
-
-function hsl_to_rgb(H,S,L){
-    var C = (1-Math.abs(2*L-1))*S;
-    var R1,G1,B1,Hp,X,m;
-    Hp = 3*H/Math.PI;
-    X = C*(1-Math.abs(Hp%2-1));
-    if(0<=Hp && Hp<1){
-        R1=C; G1=X; B1=0;
-    }else if(1<=Hp && Hp<2){
-        R1=X; G1=C; B1=0;
-    }else if(2<=Hp && Hp<3){
-        R1=0; G1=C; B1=X;
-    }else if(3<=Hp && Hp<4){
-        R1=0; G1=X; B1=C;
-    }else if(4<=Hp && Hp<5){
-        R1=X; G1=0; B1=C;
-    }else if(5<=Hp && Hp<6.01){
-        R1=C; G1=0; B1=X;
-    }else{
-        return [1,1,1];
-    }
-    m = L-C/2;
-    return [R1+m,G1+m,B1+m];
 }
 
 var colorfn1 = interpolate_color([0.6,0.6,1],[1,0.6,0.6]);

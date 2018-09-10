@@ -385,35 +385,6 @@ function citerate(f,n,z){
     return z;
 }
 
-function hsl_to_rgb(H,S,L){
-    var C = (1-Math.abs(2*L-1))*S;
-    var R1,G1,B1,Hp,X,m;
-    Hp = 3*H/Math.PI;
-    X = C*(1-Math.abs(Hp%2-1));
-    if(0<=Hp && Hp<1){
-        R1=C; G1=X; B1=0;
-    }else if(1<=Hp && Hp<2){
-        R1=X; G1=C; B1=0;
-    }else if(2<=Hp && Hp<3){
-        R1=0; G1=C; B1=X;
-    }else if(3<=Hp && Hp<4){
-        R1=0; G1=X; B1=C;
-    }else if(4<=Hp && Hp<5){
-        R1=X; G1=0; B1=C;
-    }else if(5<=Hp && Hp<6.01){
-        R1=C; G1=0; B1=X;
-    }else{
-        return [1,1,1,];
-    }
-    m = L-C/2;
-    return [R1+m,G1+m,B1+m];
-}
-
-function hsl_to_rgb_u8(H,S,L){
-    var t = hsl_to_rgb(H,S,L);
-    return [255*t[0],255*t[1],255*t[2]];
-}
-
 function ccompile_application(a,id,t,context){
     if(id.length>0) a.push(id);
     a.push("(");
@@ -568,16 +539,6 @@ function ccompile(t,argv){
 function ccompile_string(s,argv){
     var t = ast(s);
     return ccompile(t,argv);
-}
-
-function rect(pset,color,px0,py0,w,h){
-    var px1 = px0+w;
-    var py1 = py0+h;
-    for(var py=py0; py<py1; py++){
-        for(var px=px0; px<px1; px++){
-            pset(color,px,py);
-        }
-    }
 }
 
 function colorfn(n){

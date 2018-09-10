@@ -1434,6 +1434,7 @@ function new_point(gx){
     gx.vline = vline;
     gx.hspine = hspine;
     gx.vspine = vspine;
+    gx.pseta_median = pseta_median;
 }
 
 function init(canvas,w,h){
@@ -1791,6 +1792,151 @@ async function vplot_async(gx,f,color){
     vplot(gx,f,0.001,true,color);
 }
 
+function hsl_to_rgb(H,S,L){
+    var C = (1-Math.abs(2*L-1))*S;
+    var R1,G1,B1,Hp,X,m;
+    Hp = 3*H/Math.PI;
+    X = C*(1-Math.abs(Hp%2-1));
+    if(0<=Hp && Hp<1){
+        R1=C; G1=X; B1=0;
+    }else if(1<=Hp && Hp<2){
+        R1=X; G1=C; B1=0;
+    }else if(2<=Hp && Hp<3){
+        R1=0; G1=C; B1=X;
+    }else if(3<=Hp && Hp<4){
+        R1=0; G1=X; B1=C;
+    }else if(4<=Hp && Hp<5){
+        R1=X; G1=0; B1=C;
+    }else if(5<=Hp && Hp<6.01){
+        R1=C; G1=0; B1=X;
+    }else{
+        return [1,1,1,];
+    }
+    m = L-C/2;
+    return [R1+m,G1+m,B1+m];
+}
+
+function hsl_to_rgb_u8(H,S,L){
+    var t = hsl_to_rgb(H,S,L);
+    return [255*t[0],255*t[1],255*t[2]];
+}
+
+function rect(pset,color,px0,py0,w,h){
+    var px1 = px0+w;
+    var py1 = py0+h;
+    for(var py=py0; py<py1; py++){
+        for(var px=px0; px<px1; px++){
+            pset(color,px,py);
+        }
+    }
+}
+
+function level_color(x){
+    return hsl_to_rgb_u8(mod(4/3*Math.PI-2/10*Math.PI*x,2*Math.PI),1,0.6);
+}
+
+async function plot_level(gx,f,n,cond){
+    var pid = {};
+    var index = pid_stack.length;
+    pid_stack.push(pid);
+    busy = true;
+
+    var W = gx.w;
+    var H = gx.h;
+    var px,py,x,y,z;
+    var pseta = gx.pseta_median;
+    var pset = function(color,x,y){pseta(color,x,y,0.4);}
+    var px0 = gx.px0;
+    var py0 = gx.py0;
+    var k = 0;
+    
+    for(py=0; py<H; py+=n){
+        for(px=0; px<W; px+=n){
+            x = (px-px0)/gx.mx/ax;
+            y = -(py-py0)/gx.mx/ay;
+            rect(pset,level_color(f(x,y)),px,py,n,n);
+        }
+        if(cond && k==10){
+            k=0;
+            await sleep(20);
+        }else{
+            k++;
+        }
+        if(cancel(pid,index,pid_stack)) return;
+    }
+    flush(gx);
+    busy = false;
+}
+
+function plot_level_async(gx,f,color){
+    var g = function(x,y){
+        var r=f(x,y);
+        return r-1-Math.floor(r-0.5);
+    };
+    plot_level(gx,f,1,false);
+    plot_zero_set_async(gx,g,color);
+}
+
+function bisection_bool(state,f,a,b){
+    var m;
+    for(var k=0; k<6; k++){
+        m = 0.5*(a+b);
+        if(f(m)==state) a=m; else b=m;
+    }
+    return m;
+}
+
+function plot_bool(gx,f,color,n){
+    var W = gx.w;
+    var H = gx.h;
+    var px,py,x,y,z;
+    var pseta = gx.pseta_median;
+    var alpha = dark?0.3:0.4;
+    var pset = function(color,x,y){pseta(color,x,y,alpha);}
+    var px0 = gx.px0;
+    var py0 = gx.py0;
+
+    var state;
+    var d = n/gx.mx/ax;
+    for(py=0; py<H; py+=n){
+        state = undefined;
+        for(px=0; px<W; px+=n){
+            x = (px-px0)/gx.mx/ax;
+            y = -(py-py0)/gx.mx/ay;
+            z = f(x,y);
+            if(z){
+                rect(pset,color,px,py,n,n);
+            }
+            if(z!=state){
+                if(state!=undefined){
+                    var g = function(x){return f(x,y);};
+                    var x0 = bisection_bool(state,g,x-d,x+d);
+                    gx.spoint(color,ax*x0,ay*y);
+                }
+                state = z;
+            }
+        }
+    }
+    for(px=0; px<W; px+=n){
+        state = undefined;
+        for(py=0; py<H; py+=n){
+            x = (px-px0)/gx.mx/ax;
+            y = -(py-py0)/gx.mx/ay;
+            z = f(x,y);
+            if(z!=state){
+                if(state!=undefined){
+                    var g = function(y){return f(x,y);};
+                    var y0 = bisection_bool(!state,g,y-d,y+d);
+                    gx.spoint(color,ax*x,ay*y0);
+                }
+                state = z;
+            }
+        }
+    }
+    flush(gx);
+    labels(gx);
+}
+
 function contains_variable(t,v){
     if(Array.isArray(t)){
         for(var i=0; i<t.length; i++){
@@ -1801,6 +1947,10 @@ function contains_variable(t,v){
         return t===v;
     }
 }
+
+var bool_result_ops = {
+    "<":0, ">":0, "<=":0, ">=":0, "&":0, "|":0
+};
 
 function plot_node(gx,t,color){
     var f;
@@ -1816,6 +1966,12 @@ function plot_node(gx,t,color){
     }else if(Array.isArray(t) && t[0]==="[]"){
         f = compile(t,["t"]);
         vplot_async(gx,f,color);
+    }else if(Array.isArray(t) && bool_result_ops.hasOwnProperty(t[0])){
+        f = compile(t,["x","y"]);
+        plot_bool(gx,f,color,1);
+    }else if(contains_variable(t,"y")){
+        f = compile(t,["x","y"]);
+        plot_level_async(gx,f,color);
     }else{
         f = compile(t,["x"]);
         plot_async(gx,f,color);
