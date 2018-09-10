@@ -853,7 +853,7 @@ function atom(i){
         return t[1];
     }else if(t[0] == Symbol && t[1]=='('){
         i.index++;
-        var x = expression(i);
+        var x = expression_list(i,"let");
         t = i.a[i.index];
         if(t[0] == Symbol && t[1]==')'){
             i.index++;
@@ -938,6 +938,9 @@ function application(i){
             }else{
                 x = ["Dop",x,count];
             }
+        }else if(t[0]==Symbol && t[1]=="!"){
+            i.index++;
+            x = ["fac",x];
         }else{
             break;
         }
@@ -1086,8 +1089,8 @@ function assignment(i){
     }
 }
 
-function expression_list(i){
-    var a = ["block"];
+function expression_list(i,type){
+    var a = [type];
     while(1){
         a.push(assignment(i));
         var t = i.a[i.index];
@@ -1106,7 +1109,7 @@ function expression_list(i){
 
 function parse(a,s){
     var i = {index: 0, a: a, s: s};
-    var x = expression_list(i);
+    var x = expression_list(i,"block");
     var t = i.a[i.index];
     if(t[0] != SymbolTerminator){
         syntax_error(i,"unexpected symbol: '"+t[1]+"'.");
@@ -1240,7 +1243,7 @@ function compile_expression(a,t,context,type){
             compile_list(a,t,context);
         }else if(op==":="){
             compile_assignment(a,t,context);
-        }else if(op=="block"){
+        }else if(op=="block" || op=="let"){
             compile_block(a,t,context);
         }else if(op=="index"){
             compile_expression(a,t[1],context);
@@ -1835,12 +1838,20 @@ function eval_statements(s){
     var value;
     if(Array.isArray(t) && t[0]==="block"){
         for(var i=1; i<t.length; i++){
-            value = compile(t[i],[]);
-            value();
+            if(Array.isArray(t[i]) && t[i][0]===":="){
+                global_definition(t[i]);
+            }else{
+                value = compile(t[i],[]);
+                value();
+            }
         }
     }else{
-        value = compile(t,[]);
-        var y = value();
+        if(Array.isArray(t) && t[0]===":="){
+            global_definition(t);
+        }else{
+            value = compile(t,[]);
+            var y = value();
+        }
     }
 }
 
@@ -1893,6 +1904,10 @@ function plot(gx){
 function calculate(compile){
     var input = get_value("input-calc");
     var out = document.getElementById("calc-out");
+    if(input.length==0){
+        out.innerHTML = "";
+        return;
+    }
     try{
         var t = ast(input);
         var value = compile(t,[]);
@@ -2078,11 +2093,19 @@ function query(href){
     }
 }
 
+async function update_on_resize(){
+    await sleep(2000);
+    if(graphics.w!=window.innerWidth || graphics.h!=window.innerHeight){
+        main();
+    }
+}
+
 window.onload = function(){
     var gx = new_system();
     graphics = gx;
     labels(gx);
     query(window.location.href);
     main();
+    update_on_resize();
 };
 
