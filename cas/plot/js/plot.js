@@ -942,6 +942,11 @@ function application(i){
         }else if(t[0]==Symbol && t[1]=="!"){
             i.index++;
             x = ["fac",x];
+        }else if(t[0]==Symbol && t[1]=="."){
+            i.index++;
+            var y = expression(i);
+            if(Array.isArray(x)) x = x.slice(1);
+            x = ["fn",x,y];
         }else{
             break;
         }

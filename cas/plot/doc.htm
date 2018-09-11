@@ -100,6 +100,10 @@ dl.input dd{
 <td>n!
 <td>Factorial.
 <tr>
+<td><code>abs(x)</code>
+<td>|x|
+<td>Absolute value.
+<tr>
 <td><code>a:=b</code>
 <td>a:=b
 <td>Assignment.
@@ -112,11 +116,11 @@ dl.input dd{
 <td>f(x,y):=x&sdot;y
 <td>Function definition.
 <tr>
-<td><code>|x| 2x</code>
+<td><code>x.2x</code>
 <td>x&nbsp;&#8614;&nbsp;2x
 <td>Lambda expression.
 <tr>
-<td><code>|x,y| x*y</code>
+<td><code>(x,y).x*y</code>
 <td>(x,y)&nbsp;&#8614;&nbsp;x&sdot;y
 <td>Lambda expression.
 <tr>
@@ -157,23 +161,23 @@ dl.input dd{
 <th>Math
 <th>Explanation
 <tr>
-<td><code>diff(|x|f(x),a)</code>
+<td><code>diff(x.f(x),a)</code>
 <td>df(x)/dx|<sub>x=a</sub>
 <td>Derivative of f at a.
 <tr>
-<td><code>diff(|x|f(x),a,n)</code>
+<td><code>diff(x.f(x),a,n)</code>
 <td>(d/dx)<sup>n</sup>&nbsp;f(x)|<sub>x=a</sub>
 <td>The n-th derivative of f at a.
 <tr>
-<td><code>sum(a,b,|k|f(k))</code>
+<td><code>sum(a,b,k.f(k))</code>
 <td>&sum;<sub>k&in;[a,b]</sub>&nbsp;f(k)
 <td>Sum.
 <tr>
-<td><code>prod(a,b,|k|f(k))</code>
+<td><code>prod(a,b,k.f(k))</code>
 <td>&prod;<sub>k&in;[a,b]</sub>&nbsp;f(k)
 <td>Product.
 <tr>
-<td><code>int(a,b,|x|f(x))</code>
+<td><code>int(a,b,x.f(x))</code>
 <td>&int;<sub>[a,b]</sub>&nbsp;f(x)&nbsp;dx
 <td>Definite integral.
 <tr>
@@ -344,7 +348,7 @@ dl.input dd{
 <th>Explanation
 <tr>
 <td><code>gamma(x)</code>
-<td>Gamma function.
+<td>Gamma function &Gamma;(x).
 <tr>
 <td><code>fac(x)</code>
 <td>Factorial function, i.e. <code>gamma(x+1)</code>.
@@ -499,11 +503,11 @@ dl.input dd{
 <tr>
 <td><code>map(f,a)</code>
 <td>Apply f to every element of list a.
-<br>Example: <code>map(|x|2x,1:10)</code>.
+<br>Example: <code>map(x.2x,1:10)</code>.
 <tr>
 <td><code>filter(p,a)</code>
 <td>The elements x in a that fulfill the predicate p.
-<br>Example: <code>filter(|k|mod(k,2)=1,1:10)<code>.
+<br>Example: <code>filter(k.mod(k,2)=1,1:10)<code>.
 </table>
 
 <br>
@@ -539,12 +543,12 @@ and then removed.
 >f(x):=sin(x),a:=2,f(x),f(a)+f'(a)*(x-a)</a>
 <dd>Tangent line to a function.
 
-<dt><a href="plot.htm?exp(x),sum(0,4,|k|x^k/fac(k))"
->exp(x),sum(0,4,|k|x^k/fac(k))</a>
+<dt><a href="plot.htm?exp(x),sum(0,4,k.x^k/fac(k))"
+>exp(x),sum(0,4,k.x^k/fac(k))</a>
 <dd>Partial sum of the exponential series.
 
-<dt><a href="plot.htm?int(0,10,|t|t^(x-1)*exp(-t))"
->int(0,10,|t|t^(x-1)*exp(-t))</a>
+<dt><a href="plot.htm?int(0,10,t.t^(x-1)*exp(-t))"
+>int(0,10,t.t^(x-1)*exp(-t))</a>
 <dd>Gamma function via parameter integral.
 
 <dt><a href="plot.htm?%5bcos(t),sin(2t)/2%5d"
@@ -558,8 +562,7 @@ and then removed.
 <dt><a href="plot.htm?r(t):=sin(5t)+4,%5br(t)*cos(t),r(t)*sin(t)%5d"
 >r(t):=sin(5t)+4,[r(t)*cos(t),r(t)*sin(t)]</a>
 <dd>A star.
-<dl>
-</table>
+</dl>
 
 </body>
 </html>

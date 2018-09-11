@@ -8,7 +8,9 @@ var cglobal_ftab = {
 "^": "cpow", "~": "cneg", "=": "ceq",
 abs: "ccabs", arg: "ccarg", sgn: "csgn", conj: "conj",
 re: "cre", im: "cim", Re: "cre", Im: "cim",
-exp: "cexp", ln: "cln", sqrt: "csqrt",
+floor: "cfloor", ceil: "cceil", rd: "crd", frac: "cfrac",
+exp: "cexp", sqrt: "csqrt", root: "croot", rt: "croot",
+ln: "cln", lg: "clg", ld: "cld", lb: "cld", log: "clog",
 sin: "csin", cos: "ccos", tan: "ctan", cot: "ccot",
 sinh: "csinh", cosh: "ccosh", tanh: "ctanh", coth: "ccoth",
 asin: "casin", acos: "cacos", atan: "catan", acot: "cacot",
@@ -91,6 +93,10 @@ function crsub(a,b){return {re: a-b.re, im: -b.im};}
 function cmulr(a,b){return {re: a.re*b, im: a.im*b};}
 function cre(z){return {re: z.re, im: 0};}
 function cim(z){return {re: z.im, im: 0};}
+function cfloor(z){return {re:Math.floor(z.re),im:Math.floor(z.im)};}
+function cceil(z){return {re:Math.ceil(z.re),im:Math.ceil(z.im)};}
+function crd(z){return {re:Math.round(z.re),im:Math.round(z.im)};}
+function cfrac(z){return {re:frac(z.re),im:frac(z.im)};}
 
 function cexp(z){
     var r = Math.exp(z.re);
@@ -99,6 +105,18 @@ function cexp(z){
 
 function cln(z){
     return {re: Math.log(cabs(z)), im: carg(z)};
+}
+
+function clg(z){
+    return cmulr(cln(z),0.43429448190325176);
+}
+
+function cld(z){
+    return cmulr(cln(z),1.4426950408889634);
+}
+
+function clog(z,b){
+    return cdiv(cln(z),cln(b));
 }
 
 function cpow(a,b){
@@ -119,6 +137,10 @@ function cpow(a,b){
 
 function csqrt(z){
     return cexp(cmulr(cln(z),0.5));
+}
+
+function croot(n,z){
+    return cexp(cmul(cln(z),crdiv(1,n)));
 }
 
 function csin(z){
