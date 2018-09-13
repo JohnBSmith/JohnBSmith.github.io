@@ -66,7 +66,7 @@ var ftab = {
     gamma: gamma2, fac: fac, rf: rfac, ff: ffac,
     Gamma: Gamma, erf: erf, erfc: erfc,
     En: En, Ei: Ei, li: li, Li: Li,
-    diff: diff, int: integral, D: diff, Dop: diff_operator,
+    diff: diff, int: integral, D: diff_operator,
     pow: pow, sum: sum, prod: prod, af: af,
     rand: rand, rng: rand, tg: tg, sc: sc, res: res,
     range: range, inv: invab, agm: agm,
@@ -937,7 +937,7 @@ function application(i){
                     x = ["diff",x,y,count];
                 }
             }else{
-                x = ["Dop",x,count];
+                x = ["D",x,count];
             }
         }else if(t[0]==Symbol && t[1]=="!"){
             i.index++;
@@ -1948,6 +1948,107 @@ function plot_bool(gx,f,color,n){
     labels(gx);
 }
 
+function pli(x0,d,y){
+    var n = y.length;
+    return function(x){
+        var k = Math.floor((x-x0)/d);
+        if(k<0 || k+1>=n){
+            return NaN;
+        }else{
+            return y[k]+(y[k+1]-y[k])/d*(x-x0-k*d);
+        }
+    };
+}
+
+function add_scaled(n,v,x,a,y){
+    for(var i=0; i<n; i++){
+        v[i] = x[i]+a*y[i];
+    }
+    return v;
+}
+
+function runge_kutta_unilateral(f,h,N,x0,y0){
+    var n = y0.length;
+    var m = n-1;
+    var F = function(v,x,y){
+        for(var i=0; i<m; i++) v[i] = y[i+1];
+        v[m] = f(x,y);
+    };
+    var x = x0;
+    var y = y0.slice();
+    var yt = y.slice();
+    var k1 = y.slice();
+    var k2 = y.slice();
+    var k3 = y.slice();
+    var k4 = y.slice();
+    var a = [y[0]];
+    for(var k=1; k<=N; k++){
+        F(k1,x,y);
+        F(k2,x+0.5*h,add_scaled(n,yt,y,0.5*h,k1));
+        F(k3,x+0.5*h,add_scaled(n,yt,y,0.5*h,k2));
+        F(k4,x+h,add_scaled(n,yt,y,h,k3));
+        for(var i=0; i<n; i++){
+            y[i] = y[i]+h/6*(k1[i]+2*(k2[i]+k3[i])+k4[i]);
+        }
+        x = x0+k*h;
+        a.push(y[0]);
+    }
+    return pli(x0,h,a);
+}
+
+function runge_kutta(f,h,wm,wp,x0,y0){
+    var gm = runge_kutta_unilateral(f,-h,wm/h,x0,y0);
+    var gp = runge_kutta_unilateral(f,h,wp/h,x0,y0);
+    return function(x){return x<x0?gm(x):gp(x);};
+}
+
+function ode_as_fn_rec(v,t){
+    if(Array.isArray(t)){
+        if(t[0]==="D" && t[1]===v){
+            return ["index","y",t[2]];
+        }else{
+            var a = [];
+            for(var i=0; i<t.length; i++){
+                a.push(ode_as_fn_rec(v,t[i]));
+            }
+            return a;        
+        }
+    }else if(t===v){
+        return ["index","y",0];
+    }else{
+        return t;
+    }
+}
+
+function ode_as_fn(t,v,order){
+    var u = ode_as_fn_rec(v,t[2]);
+    return compile(u,["x","y"]);
+}
+
+function from_ode(gx,t){
+    var v = t[1][1];
+    var order = t[1][2];
+    var f = ode_as_fn(t,v,order);
+    var p = ftab["p"];
+    if(!ftab.hasOwnProperty("p") || !Array.isArray(p)){
+        throw new Err(
+            "Please append initial values as follows:<br><br>"+
+            "p:=[x0,y(x0),y'(x0),y''(x0),...]<br><br>"+
+            "for example:<br><br>"+
+            "y''=-y; p:=[0,0,1]")
+    }
+    if(p.length<order+1){
+        throw new Err("Error: p is too short.");
+    }else{
+        p = p.slice(0,order+1);
+    }
+    var wm = Math.abs(p[0]+gx.px0/gx.mx/ax);
+    var wp = Math.abs(p[0]-(gx.w-gx.px0)/gx.mx/ax);
+    var fv = runge_kutta(f,0.001,wm,wp,p[0],p.slice(1));
+    if(v!=="y") ftab[v]=fv;
+    return fv;
+}
+
 function contains_variable(t,v){
     if(Array.isArray(t)){
         for(var i=0; i<t.length; i++){
@@ -1966,7 +2067,10 @@ var bool_result_ops = {
 function plot_node(gx,t,color){
     var f;
     if(Array.isArray(t) && t[0]==="="){
-        if(t[1]==="y" && !contains_variable(t[2],"y")){
+        if(Array.isArray(t[1]) && t[1][0]==="D"){
+            f = from_ode(gx,t);
+            plot_async(gx,f,color);
+        }else if(t[1]==="y" && !contains_variable(t[2],"y")){
             f = compile(t[2],["x"]);
             plot_async(gx,f,color);
         }else{
