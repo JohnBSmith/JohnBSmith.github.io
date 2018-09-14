@@ -1191,15 +1191,29 @@ var number_op_table = {
     "<":0, ">":0, "<=":0, ">=":0
 }
 
+function number_application_error(t){
+    return new Err([
+        "Error: tried to apply number '",t,
+        "' as a function.<br><br>",
+        "Did you mean '",t,"*(...)' instead of '",t,
+        "(...)'?"
+    ].join(""));
+}
+
 function type_test(t,type){
-    if(type!=undefined && number_op_table.hasOwnProperty(type)){
-        if(typeof ftab[t]=="function"){
-            throw new Err(["Error: operator '",type,
-                "' takes numbers, but&nbsp;'",t,
-                "' is&nbsp;a function.<br><br>",
-                "Did you mean '",t,"(x)' instead of just '",t,
-                "'?"].join("")
-            );
+    if(type!=undefined){
+        if(type=="app"){
+            if(typeof ftab[t]=="number"){
+                throw number_application_error(t);
+            }
+        }else if(number_op_table.hasOwnProperty(type)){
+            if(typeof ftab[t]=="function"){
+                throw new Err(["Error: operator '",type,
+                    "' takes numbers, but&nbsp;'",t,
+                    "' is&nbsp;a function.<br><br>",
+                    "Did you mean '",t,"(x)' instead of just '",t,"'?"
+                ].join(""));
+            }
         }
     }
 }
@@ -1209,7 +1223,11 @@ function compile_expression(a,t,context,type){
         a.push(t);
     }else if(typeof t == "string"){
         if(t in context.local){
-            a.push(t);
+            if(type=="app" && context.local[t]=="number"){
+                throw number_application_error(t);
+            }else{
+                a.push(t);
+            }
         }else if(ftab.hasOwnProperty(t)){
             type_test(t,type);
             context.pre.push("var "+t+"=ftab[\""+t+"\"];");
@@ -1269,7 +1287,7 @@ function compile_expression(a,t,context,type){
             }
             a.push(")");
         }else{
-            compile_expression(a,op,context);
+            compile_expression(a,op,context,"app");
             compile_application(a,"",t,context);
         }
     }else{
@@ -1277,11 +1295,12 @@ function compile_expression(a,t,context,type){
     }
 }
 
-function compile(t,argv){
+function compile(t,argv,type){
+    if(type==undefined) type="number";
     var a = [];
     var local = Object.create(null);
     for(var i=0; i<argv.length; i++){
-        local[argv[i]] = true;
+        local[argv[i]] = type;
     }
     var context = {
         pre: ["var power=Math.pow;"],
@@ -2096,7 +2115,7 @@ function plot_node(gx,t,color){
 function global_definition(t){
     if(Array.isArray(t[1])){
         var app = t[1];
-        var value = compile(t[2],app.slice(1));
+        var value = compile(t[2],app.slice(1),"");
         ftab[app[0]] = value;
     }else{
         var value = compile(t[2],[]);
