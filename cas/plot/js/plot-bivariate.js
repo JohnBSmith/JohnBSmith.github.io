@@ -7,6 +7,7 @@ ftab["u1"] = 2*Math.PI;
 ftab["v0"] = 0;
 ftab["v1"] = Math.PI;
 ftab["d"] = set_distance;
+ftab["alpha"] = 0.94;
 
 var new_proj = new_proj_parallel;
 var proj_distance = 100;
@@ -168,20 +169,26 @@ function new_proj_perspective(phi,theta,px0,py0,mx){
     var Rz = matrix_Rz(phi+pi/4);
     var Rx = matrix_Rx(theta+pi/6);
     var A = matrix_mul(Rx,Rz);
-    var r = proj_distance;
+    var r = proj_distance/ax;
     return function(x,y,z){
         var xt = A[0][0]*x+A[0][1]*y+A[0][2]*z;
         var yt = A[1][0]*x+A[1][1]*y+A[1][2]*z;
         var zt = A[2][0]*x+A[2][1]*y+A[2][2]*z;
         gxt=yt; gyt=0;
-        return [px0+mx*(-xt*r/(r-yt)),py0-mx*(zt*r/(r-yt))];
+        var a = yt<r?r/(r-yt):NaN;
+        return [px0+mx*(-xt*a),py0-mx*(zt*a)];
     };
 }
 
 function set_distance(x){
-    new_proj = new_proj_perspective;
-    proj_distance = x;
-    theta_max = Math.PI/2-Math.PI/6;
+    if(x==0){
+        new_proj = new_proj_parallel;
+        theta_max = Math.atan(Math.sqrt(2));
+    }else{
+        new_proj = new_proj_perspective;
+        proj_distance = x;
+        theta_max = Math.PI/2-Math.PI/6;
+    }
     theta_min = theta_max-Math.PI;
     return x;
 }
@@ -473,7 +480,8 @@ function plot(gx){
         }
     }
 
-    flush_tile_buffer(gx,240);
+    var alpha = Math.round(ftab["alpha"]*255);
+    flush_tile_buffer(gx,alpha);
     system_xyz(gx,10/ax);
 }
 
