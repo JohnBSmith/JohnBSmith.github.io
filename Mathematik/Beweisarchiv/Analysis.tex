@@ -212,3 +212,36 @@ konvergente Folge $(a_n)$. Somit gilt:
 = f(\lim_{n\to\infty} x_n) = f(x).\;\qedsymbol\]
 \end{Beweis}
 
+\section{Differentialrechnung}
+\begin{Satz}
+Sei $f\colon\R\to\R$ eine Funktion mit der Eigenschaft
+$f(x)=0$ für $x\le 0$ und $f(x)>0$ für $x>0$. Es gibt glatte Funktionen
+mit dieser Eigenschaft, jedoch keine analytische.
+\end{Satz}
+
+\begin{Beweis}
+Wegen $f(x)=0$ für $x\le 0$ muss die linksseitige $n$-te Ableitung
+an der Stelle $x=0$ immer verschwinden. Wenn die $n$-te Ableitung
+stetig sein soll, muss auch die rechtsseitige Ableitung bei $x=0$
+verschwinden. Da die Funktion glatt sein soll, muss das für jede
+Ableitung gelten. Daher verschwindet die Taylorreihe an der Stelle
+$x=0$. Da aber $f(x)>0$ für $x>0$, gibt es keine noch so kleine
+Umgebung mit Übereinstimmung von $f$ und ihrer Taylorreihe.
+Daher kann $f$ an der Stelle $x=0$ nicht analytisch sein.
+
+Eine glatte Funktion lässt sich jedoch konstruieren:
+\[f(x):=\begin{cases}
+\ee^{-1/x}&\text{wenn}\;x>0,\\
+0&\text{wenn}\;x\le 0.
+\end{cases}\]
+Ist nämlich $g(x)$ an einer Stelle glatt, dann ist
+es nach Kettenregel, Produktregel und Summenregel auch $\ee^{g(x)}$.
+Die $n$-te Ableitung lässt sich immer in der Form
+\[\sum\nolimits_k e^{g(x)}{r_k(x)}
+= e^{g(x)}\sum\nolimits_k r_k(x) = e^{g(x)}r(x)\]
+darstellen, wobei die $r_k(x)$ bzw. $r(x)$ in diesem Fall rationale
+Funktionen mit Polstelle bei $x=0$ sind. Da aber $e^{-1/x}$ für
+$x\to 0$ schneller fällt als jede rationale Funktion steigen kann,
+muss die rechtsseitige Ableitung an der Stelle $x=0$ immer
+verschwinden.\;\qedsymbol
+\end{Beweis}

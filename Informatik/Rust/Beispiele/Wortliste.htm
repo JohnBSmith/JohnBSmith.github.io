@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Wortliste</title>
+  <link href="../main.css" rel="stylesheet">
+  <script src="../rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: Wortliste</h1>
+
+<p>Vorgelegt werden soll ein Programm das folgendes tut:
+<ul>
+<li>Eine Text-Datei einlesen und als Zeichenkette weitergeben.
+<li>Wörter bestehend aus Buchstaben aus dieser Zeichenkette extrahieren.
+<li>Doppeltes Vorkommen eines Wortes aus der Liste entfernen.
+<li>Die Liste sortieren.
+</ul>
+
+
+<h2>Musterlösung</h2>
+
+<pre class="rust">
+use std::fs::File;
+use std::io::Read;
+use std::collections::HashMap;
+
+fn read_file(path: &amp;str) -&gt; Result&lt;String,std::io::Error&gt; {
+    let mut f = File::open(path)?;
+    let mut s = String::new();
+    f.read_to_string(&amp;mut s)?;
+    return Ok(s);
+}
+
+fn string_to_words(s: &amp;str) -&gt; Vec&lt;String&gt; {
+    let mut v: Vec&lt;String&gt; = Vec::new();
+    let mut buffer = String::new();
+    for c in s.chars() {
+        if c.is_alphabetic() {
+            buffer.push(c);
+        }else{
+            if buffer.len()&gt;0 {
+                v.push(buffer);
+                buffer = String::new();
+            }
+        }
+    }
+    return v;
+}
+
+fn unique(v: &amp;[String]) -&gt; Vec&lt;String&gt; {
+    let mut m: HashMap&lt;String,()&gt; = HashMap::new();
+    for s in v {
+        m.insert(s.clone(),());
+    }
+    let mut a: Vec&lt;String&gt; = Vec::new();
+    for (key, _) in m {
+        a.push(key);
+    }
+    return a;
+}
+
+fn main() {
+    let file_id = "Datei.txt";
+    let s = match read_file(file_id) {
+        Ok(s) =&gt; s,
+        Err(_) =&gt; {
+            println!("Could not read file {}.",file_id);
+            return;
+        }
+    };
+    let mut v = string_to_words(&amp;s);
+    v = unique(&amp;v);
+    v.sort();
+    println!("{:?}",v);
+}
+</pre>
+
+
+</body>
+</html>
+

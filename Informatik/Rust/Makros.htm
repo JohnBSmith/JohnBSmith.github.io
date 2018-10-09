@@ -32,7 +32,7 @@ macro_rules! vec_string {
 
 fn main() {
     let v: Vec&lt;String&gt; = vec_string![
-        "Hamburg", "Kiel", "Lübeck"
+        "Ahorn", "Eiche", "Erle", "Esche"
     ];
     println!("{:?}",v);
 }
@@ -52,9 +52,10 @@ macro_rules! map {
 
 fn main() {
     let m: HashMap&lt;String,String&gt; = map!{
-        ["Hamburg"]: "Hamburg",
-        ["Kiel"]:    "Schleswig-Holstein",
-        ["Lübeck"]:  "Schleswig-Holstein"
+        ["Ahorn"]: "Acer",
+        ["Eiche"]: "Quercus",
+        ["Erle" ]: "Alnus",
+        ["Esche"]: "Fraxinus excelsior"
     };
     println!("{:?}",m);
 }
@@ -83,9 +84,62 @@ macro_rules! map {
 
 fn main() {
     let m: HashMap&lt;String,String&gt; = map!{
-        "Hamburg": "Hamburg",
-        "Kiel":    "Schleswig-Holstein",
-        "Lübeck":  "Schleswig-Holstein"
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
+    };
+    println!("{:?}",m);
+}
+</pre>
+
+<p>Das Makro ist bis jetzt auf den Typ
+<code>HashMap&lt;String,String&gt;</code> begrenzt.
+Mit der Trait-Methode <code>into</code> lässt es sich
+aber auf andere Typen verallgemeinern:
+
+<pre class="rust indent">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( $key:tt: $value:expr ),* ) =&gt; {{
+        let mut temp_map = HashMap::new();
+        $(temp_map.insert($key.into(),$value.into());)*
+        temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String,String&gt; = map!{
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
+    };
+    println!("{:?}",m);
+}
+</pre>
+
+<p>Etwas allgemeiner lassen sich beliebige Transformationen
+<code>tk</code> und <code>tv</code> anwenden:
+
+<pre class="rust indent">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $tk:expr, $tv:expr; $( $key:tt: $value:expr ),*) =&gt; {{
+        let mut temp_map = HashMap::new();
+        $(temp_map.insert($tk($key),$tv($value));)*
+        temp_map
+    }}
+}
+
+fn main() {
+    let m = map!{String::from,String::from;
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
     };
     println!("{:?}",m);
 }
