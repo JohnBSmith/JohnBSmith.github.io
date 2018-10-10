@@ -20,7 +20,7 @@
 </ul>
 
 
-<h2>Musterlösung</h2>
+<h2>Musterlösung 1</h2>
 
 <pre class="rust">
 use std::fs::File;
@@ -73,6 +73,46 @@ fn main() {
     };
     let mut v = string_to_words(&amp;s);
     v = unique(&amp;v);
+    v.sort();
+    println!("{:?}",v);
+}
+</pre>
+
+<h2>Musterlösung 2 (fortgeschritten)</h2>
+<pre class="rust">
+use std::fs::File;
+use std::io::Read;
+use std::collections::HashSet;
+use std::iter::FromIterator;
+use std::hash::Hash;
+
+fn read_file(path: &amp;str, buffer: &amp;mut String)
+-&gt; Result&lt;(),std::io::Error&gt;
+{
+    let mut f = File::open(path)?;
+    f.read_to_string(buffer)?;
+    return Ok(());
+}
+
+fn string_to_words(s: &amp;str) -&gt; Vec&lt;String&gt; {
+    s.split(|x: char| !x.is_alphabetic())
+        .filter(|&amp;x| x != "")
+        .map(|x| String::from(x))
+        .collect()
+}
+
+fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+    HashSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
+}
+
+fn main() {
+    let file_id = "Datei.txt";
+    let mut s = String::new();
+    if let Err(_) = read_file(file_id,&amp;mut s) {
+        println!("Could not read file {}.",file_id);
+        return;
+    }
+    let mut v = unique(string_to_words(&amp;s));
     v.sort();
     println!("{:?}",v);
 }

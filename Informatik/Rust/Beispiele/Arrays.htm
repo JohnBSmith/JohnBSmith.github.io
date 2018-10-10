@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Numerik</title>
+  <title>Beispiele: Arrays</title>
   <link href="../main.css" rel="stylesheet">
   <script src="../rust.js"></script>
 </head>
@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Umdrehen">Array umdrehen</a>
 <li><a href="#gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</a>
+<li><a href="#Unique">Duplikate entfernen</a>
 </ol>
 <br>
 
@@ -69,6 +70,24 @@ fn main(){
     println!("{:?}, {:?}",v,w);
 }
 </pre>
+
+<h2 id="Unique">Duplikate entfernen</h2>
+
+<pre class="rust">
+use std::collections::HashSet;
+use std::iter::FromIterator;
+use std::hash::Hash;
+
+fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+    HashSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
+}
+
+fn main() {
+    let v: Vec&lt;i32&gt; = vec![1,2,3,1,4];
+    println!("{:?}",unique(v));
+}
+</pre>
+
 
 </body>
 </html>
