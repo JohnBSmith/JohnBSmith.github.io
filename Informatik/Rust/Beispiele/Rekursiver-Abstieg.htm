@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rekursiver Abstieg</title>
+  <link href="../main.css" rel="stylesheet">
+  <script src="../rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: rekursiver Abstieg</h1>
+
+<p>Vorzulegen ist eine Funktion <code>ast</code> (abstract syntax tree),
+die einen arithmetischen Ausdruck als Zeichenkette entgegennimmt
+und einen abstrakten Syntaxbaum aus Lisp-Ausdrücken
+zurückgibt.  Der Syntaxbaum wird anschließend von der Funktion
+<code>eval</code> ausgewertet.
+
+<p>Die Aufgabe kann auf unterschiedlichste Art bewerkstelligt werden.
+Als Musterlösung ist ein rekursiver Abstieg angegeben.
+
+<pre>
+<b>Formale Grammatik</b>
+Produktionsregeln in EBNF
+
+atom = number | identifier | "(" expression ")";
+power = atom ["^" negation];
+negation = ["-"] power;
+multiplication = negation {("*" | "/") negation};
+addition = multiplication {("+" | "-") multiplication};
+expression = addition;
+
+Beispiel-Eingabe:
+"2*(x+y)^2+4*x".
+</pre>
+
+<h2>Musterlösung</h2>
+
+<pre class="rust">
+use std::io;
+use std::io::Write;
+
+#[derive(Debug)]
+enum Symbol {
+    Identifier(String),
+    Number(f64),
+    Symbol(char),
+    None
+}
+
+#[derive(Debug)]
+struct Token {
+    symbol: Symbol,
+    col: usize
+}
+
+#[derive(Debug)]
+enum AST {
+    Identifier(String),
+    Number(f64),
+    Symbol(char),
+    List(Box&lt;[AST]&gt;)
+}
+
+struct SyntaxError {
+    text: String,
+    col: usize
+}
+
+fn syntax_error(col: usize, s: &amp;str) -&gt; SyntaxError {
+    SyntaxError{col, text: format!("Syntax-Fehler: {}.",s)}
+}
+
+fn print_syntax_error(e: SyntaxError, s: &amp;str){
+    println!("\n{}",s);
+    for _ in 0..e.col {
+        print!(" ");
+    }
+    println!("^");
+    println!("{}",e.text);
+}
+
+fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;,SyntaxError&gt; {
+    let s: Vec&lt;char&gt; = s.chars().collect();
+    let n = s.len();
+    let mut a: Vec&lt;Token&gt; = Vec::new();
+    let mut i = 0;
+    let mut col = 0;
+    while i&lt;n {
+        let c = s[i];
+        if c=='+' || c=='-' || c=='*' || c=='/' || c=='^' ||
+           c=='(' || c==')' || c=='[' || c==']' ||
+           c==';' || c==','
+        {
+            a.push(Token{col,symbol: Symbol::Symbol(c)});
+            i+=1; col+=1;
+        }else if c.is_alphabetic() {
+            let j = i;
+            while i&lt;n &amp;&amp; s[i].is_alphanumeric() {
+                i+=1; col+=1;
+            }
+            let id: String = s[j..i].iter().collect();
+            a.push(Token{col,symbol: Symbol::Identifier(id)});
+        }else if c.is_digit(10) {
+            let j = i;
+            while i&lt;n &amp;&amp; (s[i]=='.' || s[i].is_digit(10)) {
+                i+=1; col+=1;
+            }
+            let t: String = s[j..i].iter().collect();
+            let x = match t.parse::&lt;f64&gt;() {
+                Ok(x) =&gt; x,
+                Err(_) =&gt; {
+                    return Err(syntax_error(col,"invalide Zahl"));
+                }
+            };
+            a.push(Token{col,symbol: Symbol::Number(x)});
+        }else if c==' ' || c=='\t' || c=='\n' {
+            i+=1;
+            if c=='\n' {col=0} else {col+=1;}
+        }else{
+            return Err(syntax_error(col,
+                &amp;format!("unerwartetes Zeichen: '{}'",c)));
+        }
+    }
+    a.push(Token{col,symbol: Symbol::None});
+    return Ok(a);
+}
+
+fn atom(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    return match a[i].symbol {
+        Symbol::Number(x) =&gt; Ok((AST::Number(x),i+1)),
+        Symbol::Identifier(ref x) =&gt; Ok((AST::Identifier(x.clone()),i+1)),
+        Symbol::Symbol(c) =&gt; {
+            if c=='(' {
+                let (x,i) = expression(a,i+1)?;
+                if let Symbol::Symbol(')') = a[i].symbol {
+                    Ok((x,i+1))
+                }else{
+                    Err(syntax_error(a[i].col,
+                        "schließende Klammer wurde erwartet"))
+                }
+            }else{
+                Err(syntax_error(a[i].col,
+                    &amp;format!("das Symbol '{}' wurde nicht erwartet",c)))
+            }
+        },
+        Symbol::None =&gt; {
+            Err(syntax_error(a[i].col,"unerwartetes Ende der Eingabe"))
+        }
+    };
+}
+
+fn power(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    let (x,i) = atom(a,i)?;
+    if let Symbol::Symbol('^') = a[i].symbol {
+        let (y,i) = negation(a,i+1)?;
+        return Ok((AST::List(Box::new([AST::Symbol('^'),x,y])),i));
+    }else{
+        return Ok((x,i));
+    }
+}
+
+fn negation(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    if let Symbol::Symbol('-') = a[i].symbol {
+        let (x,i) = power(a,i+1)?;
+        return Ok((AST::List(Box::new([AST::Symbol('~'),x])),i));
+    }else{
+        return power(a,i);
+    }
+}
+
+fn multiplication(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    let (mut x, mut i) = negation(a,i)?;
+    loop{
+        let op = match a[i].symbol {
+            Symbol::Symbol(c) =&gt; c,
+            _ =&gt; break
+        };
+        if op=='*' || op=='/' {
+            let (y,j) = negation(a,i+1)?;
+            x = AST::List(Box::new([AST::Symbol(op),x,y]));
+            i = j;
+        }else{
+            break;
+        }
+    }
+    return Ok((x,i));
+}
+
+fn addition(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    let (mut x, mut i) = multiplication(a,i)?;
+    loop{
+        let op = match a[i].symbol {
+            Symbol::Symbol(c) =&gt; c,
+            _ =&gt; break
+        };
+        if op=='+' || op=='-' {
+            let (y,j) = multiplication(a,i+1)?;
+            x = AST::List(Box::new([AST::Symbol(op),x,y]));
+            i = j;
+        }else{
+            break;
+        }
+    }
+    return Ok((x,i));
+}
+
+fn expression(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+    return addition(a,i);
+}
+
+fn full_expression(a: &amp;[Token]) -&gt; Result&lt;AST,SyntaxError&gt; {
+    let (x,i) = expression(a,0)?;
+    if let Symbol::None = a[i].symbol {
+        return Ok(x);
+    }else{
+        return Err(syntax_error(a[i].col,"Ende der Eingabe wurde erwartet"));
+    }
+}
+
+fn eval(t: &amp;AST) -&gt; Result&lt;f64,String&gt; {
+    match *t {
+        AST::List(ref a) =&gt; {
+            let op = match a[0] {
+                AST::Symbol(c)=&gt;c,
+                _ =&gt; return Err(String::from("Unbekanntes Symbol"))
+            };
+            let y = match op {
+                '+' =&gt; eval(&amp;a[1])?+eval(&amp;a[2])?,
+                '-' =&gt; eval(&amp;a[1])?-eval(&amp;a[2])?,
+                '*' =&gt; eval(&amp;a[1])?*eval(&amp;a[2])?,
+                '/' =&gt; eval(&amp;a[1])?/eval(&amp;a[2])?,
+                '^' =&gt; eval(&amp;a[1])?.powf(eval(&amp;a[2])?),
+                '~' =&gt; -eval(&amp;a[1])?,
+                _ =&gt; return Err(format!("Unbekannter Operator: '{}'",op))
+            };
+            return Ok(y);
+        },
+        AST::Number(x) =&gt; {
+            return Ok(x);
+        },
+        AST::Identifier(_) =&gt; {
+            return Err(String::from("Kann Buchstabe nicht auswerten"))
+        },
+        AST::Symbol(_) =&gt; {
+            return Err(String::from("Operator nicht erwartet"))
+        }
+    }
+}
+
+fn ast(s: &amp;str) -&gt; Result&lt;AST,SyntaxError&gt; {
+    let a = scan(s)?;
+    return full_expression(&amp;a);
+}
+
+fn main() {
+    let mut input: String;
+    loop{
+        input = String::new();
+        print!("&gt; ");
+        io::stdout().flush().ok();
+        match io::stdin().read_line(&amp;mut input) {
+            Ok(_) =&gt; {},
+            Err(e) =&gt; {
+                println!("Konnte die Eingabe nicht lesen: {}.",e);
+                continue;
+            }
+        }
+        input.pop();
+        if input=="" {continue;}
+        let t = match ast(&amp;input) {
+            Ok(a) =&gt; a,
+            Err(e) =&gt; {
+                print_syntax_error(e,&amp;input);
+                continue;
+            }
+        };
+        println!("{:?}\n",t);
+        match eval(&amp;t) {
+            Ok(y) =&gt; println!("Ergebnis: {}\n",y),
+            Err(e) =&gt; println!("Auswertungsfehler: {}.\n",e)
+        }
+    }
+}
+</pre>
+
+
+</body>
+</html>
+
