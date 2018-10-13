@@ -9,12 +9,13 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Generische Programmierung</h1>
+<h1>Traits und generische Programmierung</h1>
 
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Arithmetik">Arithmetik</a>
 <li><a href="#Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</a>
+<li><a href="#Monkey-patching">Monkey patching</a>
 </ol>
 
 <h2 id="Arithmetik">Arithmetik</h2>
@@ -171,6 +172,64 @@ die Speichergröße der erzeugten Binärdatei verändert.
 zusätzliche Speicherallokationen erzeugt, ist dieser Container natürlich
 nicht für laufzeitkritische Unterprogramme geeignet. Wie immer gilt,
 dass zur Entscheidungsfindung konkrete Messungen hilfreich sein können.
+
+
+<h2 id="Monkey-patching">Monkey patching</h2>
+<p>In manchen Programmiersprachen besteht die Möglichkeit,
+nachträglich weitere Methoden zu einem Datentyp hinzuzufügen.
+Man spricht hier von <i>Monkey patching</i> oder
+<i>Extension methods</i>. Diese Technik ist eigentlich verpönt,
+da sie zu Bezeichnerkonflikten führen kann. Implementieren zwei
+Module nämlich den selben Bezeichner, liegt Zweideutigkeit vor.
+
+<p>Aus didaktischen soll trotzdem gezeigt werden, wie sich das
+Trait-System dafür »misbrauchen« lässt. Als Beispiel soll zum
+Typ <code>Vec</code> eine Methode <code>sq</code> hinzugefügt
+werden, die alle Elemente quadriert und das Ergebnis als neues
+Array zurückgibt.
+
+<pre class="rust indent">
+use std::ops::Mul;
+use std::iter::FromIterator;
+
+trait Sq&lt;T&gt; {
+    fn sq(&amp;self) -&gt; Vec&lt;T&gt;;
+}
+
+impl&lt;T: Copy+Mul&gt; Sq&lt;T&gt; for Vec&lt;T&gt;
+    where Vec&lt;T&gt;: FromIterator&lt;&lt;T as Mul&gt;::Output&gt;
+{
+    fn sq(&amp;self) -&gt; Vec&lt;T&gt; {
+        self.iter().map(|&amp;x| x*x).collect()
+    }
+}
+
+fn main() {
+    println!("{:?}",vec![1,2,3,4].sq());
+}
+</pre>
+
+<p>Die Trait-Bounds <code>T: Copy+Mul</code> und in der
+<code>where</code>-Klausel können erst einmal ausgeblendet werden.
+Diese sind dafür da, dass sich ein Wert <code>x</code> vom Typ
+<code>T</code> auch multiplizieren und ein Iterator über die
+Ergebnisse auch zu einem neuen Array sammeln lässt.
+
+<p>Glücklicherweise meckert der Compiler bei Bezeichnerkonflikten
+sofort. Außerdem lassen sie sich auf zwei Arten verhindern:
+<ul>
+<li>Bevor man die Methode benutzen kann, muss der Trait auch explizit
+  mit <code>use</code> eingebunden werden.
+<li>Anstelle von <code>v.sq()</code> darf man
+  auch <code>Sq::sq(&amp;v)</code> schreiben, wobei der verwendete
+  Trait hier explizit angegeben wird.
+</ul>
+
+<p>Es kann später aber trotzdem zu ein paar Konflikten kommen,
+wenn zum Typ oder zum Trait neue Methoden hinzugefügt werden.
+Aus diesem Grund würde ich eher dazu neigen, solche
+Erweiterungsmethoden zu vermeiden.
+
 
 </body>
 </html>
