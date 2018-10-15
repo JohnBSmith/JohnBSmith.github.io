@@ -43,6 +43,8 @@
   <a href="#Wikipedia">Wikipedia ist überholt</a>
 <li><span class="date">[2018-08-06]</span>
   <a href="#Backpulver">Backpulver</a>
+<li><span class="date">[2018-10-15]</span>
+  <a href="#Spulenfiepen">Spulenfiepen</a>
 </ul>
 
 <h2 id="Passwoerter">Kryptische Passwörter</h2>
@@ -449,7 +451,7 @@ disjunkte Vereinigung benutzt. Die dafür normalerweise
 vorgesehenen Summentypen sind <code>Option&lt;T&gt;</code>
 und <code>Result&lt;T,E&gt;</code>, man kann sich aber auch
 eigene Summentypen definieren. Bei C++ weiß man nie so genau
-was hinter <code>try-catch</code> stekt, welche Laufzeitkosten
+was hinter <code>try-catch</code> steckt, welche Laufzeitkosten
 entstehen, wie komplex das intern arbeitet, und welche Programmaufrufe
 eine Ausnahme werfen könnten. Bei einer Systemprogrammiersprache mag
 man solches eigentlich nicht. Aus diesem Grund ist der Ansatz mit
@@ -940,6 +942,50 @@ Diphosphate als Säuerungsmittel und Maisstärke als Trennmittel.
 
 <p>Kann ja sein dass ich etwas falsch gemacht habe und ihr damit
 super klarkommt. Ich mag aber erst einmal lieber ohne Backpulver backen.
+
+<h2 id="Spulenfiepen">Spulenfiepen</h2>
+<div class="date">15. Oktober 2018</div>
+
+<p>Vor einiger Zeit habe ich einen Laptop von Asus, auf dem ich auch
+gerade diesen Text schreibe, mehr oder weniger Geschenk bekommen.
+Das Gerät ist eigentlich für meine Zwecke eigentlich ganz in Ordnung,
+abgesehen davon dass das DVD-Laufwerk keinen Brenner enthält.
+Es ist nun so, dass es beim Bewegen der Maus oder beim gedrückthalten
+einer Taste zu Spulenfiepen kommt, was mich aber nie gestört hat.
+Das Geräusch ist relativ leise und klingt auch eher wie ein Rattern.
+
+<p>Nach einem Betriebsystemupgrade von Ubuntu 16 auf 18 hat sich
+aber nun ein surrender Ton im Leerlauf eingestellt, der klingt wie
+eine leise schnarrende Violine auf H6 (1975 Hz). Das ist nicht so
+häßlich wie hochfrequenter Tinnitus, aber dennoch ausgesprochen nervig
+wenn man gerade etwas liest oder schreibt.
+
+<p>Als erstes hab ich gedacht, das neue System würde krampfhaft
+versuchen Energie zu sparen und daher die Prozessorleistung nach
+unten zu drücken. Ein Blick in die Systemüberwachung hat aber gezeigt
+dass das Gegenteil der Fall ist. Die beiden Kerne waren ständig
+ausgelastet, also 40% und 100% im Tauschwechsel. Ich dachte nun,
+es müsse am hungrigen GNOME3 liegen und hab das dann wieder
+gegen Unity ausgetauscht. Das GNOME3 ist schon ein bisschen gefräßig,
+beim bewegen eines Fenster bricht mir die Framerate ein, fühlt sich
+alles nicht richtig flüssig an. Nun war das Fiepen auf einem Benutzerkonto
+fort, auf dem anderem aber noch vorhanden. Ein Blick in
+<code>top</code> zeigte mir nun, dass <code>baloo_file</code>
+mit 15% und <code>baloo_file+</code> mit 90% im Hintergrund laufen.
+Das ist so ein schrottes Suchprogramm für Dateisuche. Die
+Hintergrundprozesse sollen wohl nebenbei einen größeren Index
+aufbauen. Normalerweise sollen die nach wenigen Minuten fertig
+sein, bei mir lief das aber schon Stunden.
+
+<p>Bevor ich die ausgeschaltet habe, lief Unity auch nicht stabil.
+Nach dem öffnen eines Texteditors hat der das Fenster angefangen
+zu flackern, wenn man den Mauszeiger ganz nach unten bewegt hat.
+Total seltsam. Könnte auch eine Koinzidenz sein. Mich interessiert
+aber trotzdem wo das herkommt. Vermutlich hat irgendjemand
+Multithreading verkackt und dann ist da so eine Race condition
+die irgendwo Müll reinschreibt oder zu einem Puffüberlauf führt.
+Nur Spekulation.
+
 </main>
 
 <aside id="right-aside">
