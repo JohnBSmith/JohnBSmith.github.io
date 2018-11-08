@@ -29,7 +29,7 @@ dienen, die für einen beliebigen Ganzzahltyp das Feld
 [<var>a</var>,&nbsp;<var>a</var>+1,&nbsp;<var>a</var>+2,&nbsp;&hellip;,&nbsp;<var>b</var>]
 erzeugt.
 
-<pre class="rust">
+<pre class="rust indent">
 use std::ops::Add;
 
 trait Cast {fn cast(n: i32) -> Self;}
@@ -43,7 +43,7 @@ impl Cast for u32 {fn cast(n: i32) -> Self {n as u32}}
 impl Cast for u64 {fn cast(n: i32) -> Self {n as u64}}
 
 fn range&lt;T&gt;(a: T, b: T) -> Vec&lt;T&gt;
-    where T: Add&lt;Output=T&gt; + PartialOrd + Copy + Cast
+    where T: Copy + Cast + Add&lt;Output=T&gt; + PartialOrd
 {
     let mut v: Vec&lt;T&gt; = Vec::new();
     let mut k = a;
@@ -62,12 +62,71 @@ fn main() {
 </pre>
 
 <p>Das hätten wir natürlich auch einfacher haben können:
-<pre class="rust">
+<pre class="rust indent">
 fn main() {
     let v: Vec&lt;i32&gt; = (1..11).collect();
     println!("{:?}",v);
 }
 </pre>
+
+<p>Bei der Formulierung von <code>Cast</code> wurde das selbe
+Muster immer wiederholt. Oft lassen sich solche Wiederholungen
+durch <code>where</code>-Klauseln faktorisieren. Fast das selbe
+Verhalten bekommen wir, wenn <code>as</code> durch <code>from</code>
+ersetzt wird. Nur die potentiell verlustbehaftete Typumwandlung
+von <code>u8</code> nach <code>i8</code> ist nicht erlaubt.
+
+<pre class="rust indent">
+trait Cast {fn cast(n: u8) -&gt; Self;}
+impl&lt;T&gt; Cast for T where T: From&lt;u8&gt; {
+    fn cast(n: u8) -&gt; T {T::from(n)}
+}
+</pre>
+
+<p>Man kann auch einfach <code>Cast</code> gegen
+<code>From&lt;u8&gt;</code> austauschen und <code>T::cast(1)</code>
+gegen <code>T::from(1)</code>.
+
+<p>Nun schaut es etwas ungeschickt aus wenn jede Funktion lange
+<code>where</code>-Klauseln bekommt. Um dies zu vermeiden, lässt
+sich ein Trait als Zusammenfassung der verwendeten Traits formulieren.
+Man spricht auch von einem Alias-Trait. Hierzu wird ein Trait mit
+Trait-Bounds beschränkt, wobei die Liste der Methoden aber leer bleiben
+kann. Wir führen nun den neuen Trait <code>Int</code> ein, der mehr oder
+weniger die ganzen Zahlen repräsentieren soll.
+
+<pre class="rust indent">
+trait Int: Copy + From&lt;u8&gt; + Add&lt;Output=Self&gt; + PartialOrd {}
+
+impl&lt;T&gt; Int for T
+where T: Copy + From&lt;u8&gt; + Add&lt;Output=T&gt; + PartialOrd {}
+
+fn range&lt;T: Int&gt;(a: T, b: T) -&gt; Vec&lt;T&gt; {
+    let mut v: Vec&lt;T&gt; = Vec::new();
+    let mut k = a;
+    let one = T::from(1);
+    while k&lt;=b {
+        v.push(k);
+        k = k+one;
+    }
+    return v;
+}
+</pre>
+
+<p>Wie man sieht lassen sich auf diese Weise recht hübsch
+generische numerische Algorithmen schreiben. Für vordefinierte
+Traits und Datentypen für numerische Zwecke steht auch das Crate
+num<sup><a href="#ref-num">[1]</a></sup>
+zur Verfügung. Da Algorithmen aber durch unnötige Trait-Bounds
+eventuell zu stark beschränkt werden, ist es in manchen Fällen
+eleganter, zusätzliche Zwischen-Traits einzuführen, die nur einige
+der Trait-Bounds enthalten.
+
+<p>Verzichtet man auf den Trait-Bound <code>Copy</code> und führt ggf.
+die Trait-Bounds <code>Sized</code> und <code>'static</code> ein,
+lassen sich auch Algorithmen schreiben, die mit größeren
+Datenstrukturen umgehen können.
+
 
 <h2 id="Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</h2>
 
@@ -183,7 +242,7 @@ da sie zu Bezeichnerkonflikten führen kann. Implementieren zwei
 Module nämlich den selben Bezeichner, liegt Zweideutigkeit vor.
 
 <p>Aus didaktischen soll trotzdem gezeigt werden, wie sich das
-Trait-System dafür »misbrauchen« lässt. Als Beispiel soll zum
+Trait-System dafür »missbrauchen« lässt. Als Beispiel soll zum
 Typ <code>Vec</code> eine Methode <code>sq</code> hinzugefügt
 werden, die alle Elemente quadriert und das Ergebnis als neues
 Array zurückgibt.
@@ -230,6 +289,11 @@ wenn zum Typ oder zum Trait neue Methoden hinzugefügt werden.
 Aus diesem Grund würde ich eher dazu neigen, solche
 Erweiterungsmethoden zu vermeiden.
 
+<h2>Links</h2>
+
+<ul>
+<li id="ref-num">[1] <a href="https://crates.io/crates/num">num</a> <code>(https://crates.io/crates/num)</code>.
+</ul>
 
 </body>
 </html>

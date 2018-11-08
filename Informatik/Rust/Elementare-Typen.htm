@@ -35,14 +35,17 @@ Der Zahlenvorrat reicht hier von &minus;2<sup><var>n</var>&minus;1</sup>
 bis 2<sup><var>n</var>&minus;1</sup>&minus;1.
 
 <p>Außerdem gibt es noch die Typen <code>usize</code> und
-<code>isize</code>. Der Typ <code>usize</code> ist ein Aliasname
-für <code>u32</code> oder <code>u64</code>, je nachdem ob ein
-32-Bit-Programm oder ein 64-Bit-Programm vorliegt. Ein 64-Bit-Programm
-hat u.&nbsp;a. den Vorteil, dass es mehr als 4&nbsp;GB Arbeitsspeicher
-adressieren kann. Es gibt reine <var>n</var>-Bit-Architekturen auf
-denen nur <var>n</var>-Bit-Programme ausgeführt werden können.
-Auf eingeschränkten Microcontrollern kann auch <var>n</var>=16
-oder gar <var>n</var>=8 sein.
+<code>isize</code>. Der Typ <code>usize</code> ist ein Typ der intern
+die Gestalt von <code>u32</code> oder <code>u64</code> besitzt, je
+nachdem ob ein 32-Bit-Programm oder ein 64-Bit-Programm vorliegt.
+Ein 64-Bit-Programm hat u.&nbsp;a. den Vorteil, dass es mehr als
+4&nbsp;GB Arbeitsspeicher adressieren kann. Es gibt reine
+<var>n</var>-Bit-Architekturen auf denen nur <var>n</var>-Bit-Programme
+ausgeführt werden können. Auf eingeschränkten Microcontrollern
+kann auch <var>n</var>=16 oder gar <var>n</var>=8 sein.
+Die Typen <code>usize</code> und <code>isize</code> sind dafür da,
+um mit Speicheradressen rechnen zu können, unabhängig davon ob eine
+32-Bit oder 64-Bit-Architektur vorliegt.
 
 <p>Wir wollen nun die Zahl 12 an den Bezeichner <code>x</code> binden.
 Das geschieht wie folgt:
@@ -82,7 +85,8 @@ let x = 12;
 <p>Angenommen wir benötigen nun einen Ganzzahltyp, der auf einem
 Computer <code>u16</code> und auf dem anderen Computer <code>u32</code>
 ist. Rust bietet diese Möglichkeit der Abstraktion, indem es uns einen
-Typ-Alias wie <code>usize</code> definieren lässt:
+Typ-Alias definieren lässt, welcher ähnlich wie <code>usize</code>
+verwendet wird:
 
 <pre class="rust indent">
 type uint = u32;
@@ -96,6 +100,10 @@ Automatisierung dieser Änderung ist möglich. Durch Änderung
 der Konfiguration in einer Datei ließe sich ein ganzes Softwaresystem
 anpassen. Ein solcher Extremfall wäre z.&nbsp;B. <code>usize</code>,
 wobei <code>usize</code> aber ein eigener abstrakter Datentyp ist.
+Noch strenger lässt sich die Abstraktion formulieren, wenn man
+wie bei <code>usize</code> einen dafür vorgesehen abstrakten
+Datentyp formuliert. Eine genaue Erläuterung dazu folgt in einem
+späteren Kapitel.
 
 <p>Oft liegt die Situation vor, dass eine Typumwandlung zwischen
 Typen notwendig ist. In Rust gibt es hierfür das Schlüsselwort
