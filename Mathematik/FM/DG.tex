@@ -42,7 +42,7 @@ Bsp. für einen geschlossenen Weg mit Doppelpunkt:
 2\cos t\\
 \sin(2t)
 \end{bmatrix},\quad
-f\colon [0,2\pi]\to \R^2.
+\gamma\colon [0,2\pi]\to \R^2.
 \end{equation}
 Die Kurve ist eine Achterschleife.
 
@@ -61,7 +61,7 @@ Parameterkurve heißt \emdef{glatt}.
 
 Eine Parameterkurve heißt \emdef{regulär}, wenn:
 \begin{equation}
-\forall t\colon f'(t)\ne 0.
+\forall t\colon \gamma'(t)\ne 0.
 \end{equation}
 \end{definition}
 
@@ -158,7 +158,7 @@ Sei $m,n\in\N, n<m$. Eine Menge $M\subseteq\R^m$ heißt
 \emdef{$n$-dimensionale Untermannigfaltigkeit} des $\R^m$, wenn
 es zu jedem Punkt $p\in M$ eine lokale Karte
 \begin{equation}
-\varphi\colon (U'\subseteq R^n)\to (U\subseteq M\subseteq\R^m)
+\varphi\colon (U'\subseteq\R^n)\to (U\subseteq M\subseteq\R^m)
 \end{equation}
 gibt.
 \end{definition}
@@ -187,27 +187,76 @@ Es genügt bereits der Nachweis für alle Karten aus jeweils einem
 Atlas für $M$ und $N$.
 \end{definition}
 
+\subsection{Skalarfelder}
+\subsubsection{Totales Differential}
+\begin{definition}[Totales Differential]
+Sei $f\colon M\to\R$ ein glattes Skalarfeld, sei $p\in M$ ein Punkt
+und $v\in T_p M$ ein Vektor. Sei $\gamma(t)$ eine Parameterkurve in $M$
+mit $p=\gamma(0)$ und $v=\gamma'(0)$. Die Linearform%
+\begin{gather}
+\mathrm d_p f\colon T_p M\to\R,\\
+(\mathrm d_p f)(v) := (f\circ\gamma)'(0)
+= \frac{\mathrm d}{\mathrm dt}(f(\gamma(t))\Big|_{t=0}
+\end{gather}
+heißt \emdef{totales Differential} von $f$ am Punkt $p$.
+\end{definition}
+\begin{definition}[Richtungsableitung]
+Für einen festen Vektor $v$ wird $(\mathrm d_p f)(v)$ auch als
+\emdef{Richtungsableitung} bezeichnet.
+\end{definition}
+Sei $(g_k)$ ein Rahmen und $(\mathrm dx^k)$ der dazu gehörige
+Korahmen. Unter den partiellen Ableitungen versteht man die
+Richtungsableitungen in Richtung der Basisvektoren:%
+\begin{equation}
+\frac{\partial f}{\partial x^k}(p)\coloneq (\mathrm d_p f)(g_k).
+\end{equation}
+Sei $\varphi\colon U\to V\subseteq M$ eine lokale Karte und
+$(g_k)$ der gemäß%
+\begin{equation}
+g_k(u) = \frac{\partial\varphi}{\partial u_k}
+\end{equation}
+induzierte lokale Rahmen. Es gilt
+\begin{equation}
+\frac{\partial f}{\partial x^k} = \frac{\partial\tilde f}{\partial u_k},
+\end{equation}
+wobei $\tilde f\coloneq f\circ\varphi$ die
+lokale Darstellung von $f$ ist. Für die lokale Darstellung gilt daher
+die Formel
+\begin{equation}
+(\mathrm d_p f)(X) = \sum_{k=1}^n X^k\frac{\partial f}{\partial x^k}(p)
+= \sum_{k=1}^n X^k\frac{\partial\tilde f}{\partial u_k}(u),
+\end{equation}
+wobei $p=\varphi(u)$ und $X^k=X^k(p)=X^k(\varphi(u))$.
+
+Dem Prinzip der dualen Paarung nach schreibt man auch%
+\begin{equation}
+\mathrm d_p f = \sum_{k=1}^n \frac{\partial f}{\partial x^k} \mathrm dx^k,\quad
+X = \sum_{k=1}^n X^k g_k.
+\end{equation}
+Oder kurz $\mathrm df = \partial_k f\mathrm dx^k$ und $X=X^k g_k$.
+
 \subsection{Vektorfelder}
 \subsubsection{Tangentialräume}
 
 \emdef{Tangentialbündel}\index{Tangentialbündel}:
 \begin{equation}
-TM := \bigsqcup_{p\in M} T_p M = \bigcup_{p\in M} \{p\}\times T_p M.
+TM\coloneq \bigsqcup_{p\in M} T_p M = \bigcup_{p\in M} \{p\}\times T_p M.
 \end{equation}
 \emdef{Kotangentialbündel}\index{Kotangentialbündel}:
 \begin{equation}
-T^*M := \bigsqcup_{p\in M} T_p^* M,
+T^*M \coloneq \bigsqcup_{p\in M} T_p^* M,
 \end{equation}
 wobei $T_p^* M$ eine andere Schreibweise für
 $(T_p M)^*$ ist.
 
 \emdef{Natürliche Projektion}\index{natürliche Projektion}:
 \begin{equation}
-\pi(p,v):=p,\quad\pi\colon TM\to M.
+\pi(p,v)\coloneq p,\quad\pi\colon TM\to M.
 \end{equation}
 Das Tangentialbündel einer glatten Mannigfaltigkeit ist eine
 glatte Mannigfaltigkeit.
 
+\section{Riemannsche Geometrie}
 \subsubsection{Christoffel-Symbole}\index{Christoffel-Symbole}
 Sei $(M,g)$ eine pseudo-riemannsche Mannigfaltigkeit.
 

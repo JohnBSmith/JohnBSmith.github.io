@@ -8,7 +8,7 @@ body{
   margin-top: 2em;
   margin-left: 10%;
   margin-bottom: 10em;
-  max-width: 40em;
+  max-width: 46em;
   font-family: "DejaVu Sans", "Verdana", sans-serif;
   color: #404030;
 }
@@ -35,6 +35,9 @@ table.bt td, table.bt th{
 }
 table.bt th{
   background-color: #e0e0c0;
+}
+.indent {
+  margin-left: 2em;
 }
 
 .keyword{color: #204080; font-weight: bold;}
@@ -193,6 +196,8 @@ window.onload = main;
 <li><a href="#this">Das this-Argument</a>
 <li><a href="#Woerterbuch">Wörterbuch-Syntax</a>
 <li><a href="#Module">Module</a>
+<li><a href="#map">Die Methode map</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <p><b>Zusammenfassung:</b> Dieser Text handelt von Problemen der
@@ -205,19 +210,23 @@ oder hätte ausschauen können.
 <p>Normalerweise sollte die Umwandlung eines Arrays in eine
 Zeichenkette auch genau so ausschauen wie das Literal.
 Aber in JavaScript fehlen die eckigen Klammern:
-<pre class="js">
+
+<pre class="js indent">
 &gt; String([1,2])
 "1,2"
 </pre>
+
 <p>Man kann sich denken: »Gut, die kann ich ja noch hinzufügen«.
 Aber bei verschachtelten Arrays wird es schlimmer:
-<pre class="js">
+
+<pre class="js" indent>
 &gt; String([[1,2],[3,4]])
 &gt; "1,2,3,4"
 </pre>
 
 <h2 id="Typisierung">Schwache Typisierung</h2>
-<pre class="js">
+
+<pre class="js indent">
 &gt; [1,2]+3
 "1,23"
 </pre>
@@ -233,23 +242,27 @@ Nur weil JavaScript typsicher ist, heißt das aber nicht, dass es
 auch streng typisiert ist.
 
 <h2 id="Variablen">Globale Variablen</h2>
+
 <p>In JavaScript ist es vorgesehen, dass eine undeklarierte Variable
 auf der linken Seite einer Zuweisenung automatisch global ist.
 In der Funktion
-<pre class="js">
+
+<pre class="js indent">
 function f(x){
-  y=2*x;
-  return y;
+    y=2*x;
+    return y;
 }
 </pre>
+
 <p>wird z.&nbsp;B. unintuitiverweise die globale Variable
 <code>y</code> geändert, was man höchstwahrscheinlich nicht wollte.
 Ein solches Verhalten führt in einer Vielzahl von Fällen zu seltsamen
 Bugs. Ein explizite deklaration von globalen Variablen wäre sinnvoll:
-<pre class="js">
+
+<pre class="js indent">
 function f(x){
-  <span class='keyword'>global</span> y=2*x;
-  return y;
+    <span class='keyword'>global</span> y=2*x;
+    return y;
 }
 </pre>
 
@@ -257,93 +270,114 @@ function f(x){
 <p>In JavaScript ist Operatorüberladung leider nicht möglich, obwohl
 es trivial zu implementieren wäre. Es kommt stattdessen folgends
 Verhalten zustande:
-<pre class="js">
+
+<pre class="js indent">
 &gt; x = {}; y = {}
 &gt; x+y
 "[object Object][object Object]"
 </pre>
+
 <p>Der Interpreter überprüft ja schon zur Laufzeit, welchen Datentyp
 die Variablen <code>x,y</code> besitzen. Falls der Datentyp kein
 einfacher ist, werden die Objekte in diesem Residualfall einfach
 implizit in Zeichenketten umgewandelt. Genau in diesem Residualfall
 wäre es aber möglich gewesen, eine zugehörige Methode <code>add</code>
 im Objekt <code>x</code> oder in dessen Prototypenkette aufzurufen:
-<pre class="js">
-  x+y == x.add(y)
+
+<pre class="js indent">
+x+y == x.add(y)
 </pre>
 
 <h2 id="this">Das this-Argument</h2>
+
 <p>In JavaScript lässt sich unter Zuhilfenahme von Closures der
 Kompositionsoperator formulieren:
-<pre class="js">
+<pre class="js indent">
 function compose(g,f){
-  return function(x){return g(f(x));};
+    return function(x){return g(f(x));};
 }
 </pre>
+
 <p>Diesen Operator möchten wir nun als Methode einer Funktion
 haben. Man macht folgenden Ansatz:
-<pre class="js">
+
+<pre class="js indent">
 Function.prototype.o = function(f){
-  return function(x){return this(f(x));};
+    return function(x){return this(f(x));};
 }
 </pre>
+
 <p>Hier ergibt sich das Problem, dass das <code>this</code>-Argument
 zur inneren Funktion gehört, und nicht zur äußeren.
 Stattdessen ist man gezwungen zu:
-<pre class="js">
+
+<pre class="js indent">
 Function.prototype.o = function(f){
-  var g = this;
-  return function(x){return g(f(x));};
+    var g = this;
+    return function(x){return g(f(x));};
 }
 </pre>
+
 <p>Es wäre sinnvoll, wenn es in JavaScript eine Möglichkeit geben
 würde, den Namen des <code>this</code>-Arguments individuell
 festzulegen, wie bei jeder anderen gewöhnlichen Variable auch. Z.B. so:
-<pre class="js">
+
+<pre class="js indent">
 Function.prototype.o = function(g;f){
-  return function(x){return g(f(x));};
+    return function(x){return g(f(x));};
 }
 </pre>
 
 
 <h2 id="Woerterbuch">Wörterbuch-Syntax</h2>
+
 <p>In JavaScript koinzidieren Wörterbücher mit strukturierten
 Objekten. Die Syntax von Wörterbuch- bzw. Objekt-Literalen besitzt
 das Manko, dass zunächst keine Ausdrücke als Schlüssel möglich sind.
 Weil nämlich die Schreibweisen
-<pre class="js">
-  t = {"a": 1, "b": 2};
-  t = {a: 1, b: 2};
+
+<pre class="js indent">
+t = {"a": 1, "b": 2};
+t = {a: 1, b: 2};
 </pre>
+
 <p>äquivalent sind, wäre die letztere Schreibweise zweideutig, wenn
 Ausdrücke als Schlüssel auf der linken Seite zugelassen wären.
 Man hat diesen Umstand in ES6 durch die Notation
-<pre class="js">
-  t = {["a"]: 1, ["b"]: 2};
+
+<pre class="js indent">
+t = {["a"]: 1, ["b"]: 2};
 </pre>
+
 <p>umgangen. Diese Notation ist umständlich lang und schaut
 dahingehend seltsam aus, dass die Schlüssel doch eigentlich auch
 Arrays sein könnten:
-<pre class="js">
-  t = {[[1,2]]: 1, [[3,4]]: 2};
+
+<pre class="js indent">
+t = {[[1,2]]: 1, [[3,4]]: 2};
 </pre>
+
 <p>Hier ergibt sich ein weiteres Problem: alle Schlüssel werden
 implizit in Zeichenketten umgewandelt. Zumindest bei Ganzzahlen
 ergibt das keinen Sinn, da das direkte hashen von Ganzzahlen
 wesentlich effizienter ist, als Zeichenketten neu zu erzeugen.
 Problematisch ist weiterhin, dass die eckigen Klammern bei der
 Umwandlung verloren gehen, die Schlüssel
-<pre class="js">
-  [1,[2,3]] und [1,2,3]
+
+<pre class="js indent">
+[1,[2,3]] und [1,2,3]
 </pre>
+
 <p>somit gleich sind.
 
 <p>Meines erachtens wäre folgende Syntax sinnvoller gewesen:
-<pre class="js">
-  t = {"x": 1, "y": 2};
-  t = {x=1, y=2};
+
+<pre class="js indent">
+t = {"x": 1, "y": 2};
+t = {x=1, y=2};
 </pre>
-<p>Hiermit lassen sich auch recht angenehm Schlüsselwort-Argumente
+
+<p>Hiermit lassen sich auch recht angenehm benannte Argumente
 (wie sie in Python und&nbsp;R zu finden sind) simulieren.
 
 <h2 id="Module">Module</h2>
@@ -351,7 +385,8 @@ Umwandlung verloren gehen, die Schlüssel
 so sollten dessen Funktionen in einem eigenen Namensraum stehen.
 Betrachten wir folgende Funtkionen die zunächst flach im
 Hauptnamesraum stehen:
-<pre class="js">
+
+<pre class="js indent">
 function f(x){return 2*x;}
 function g(x){return 3*x;}
 </pre>
@@ -359,37 +394,41 @@ function g(x){return 3*x;}
 <p>Das Modul möchten wir nun als <code>M</code> bezeichnen. Die
 erste Idee ist, die Funktionen einfach als Slots eines Objektes
 <code>M</code> aufzufassen.
-<pre class="js">
+
+<pre class="js indent">
 var M = {
-  f: function(x){return 2*x;},
-  g: function(x){return 3*x;}
+    f: function(x){return 2*x;},
+    g: function(x){return 3*x;}
 };
 </pre>
 <p>Falls das Modul nun statische Variablen besitzt, kann auf diese
 über das this-Argument zugegriffen werden:
-<pre class="js">
+<pre class="js indent">
 var M = {
-  name: "M",
-  f: function(){return this.name;}
+    name: "M",
+    f: function(){return this.name;}
 };
 </pre>
 <p>Hiermit ist es auch möglich, Funktionen aus dem Modul innerhalb
 des Moduls aufzurufen. Hier ein Beispiel mit Rekursion:
-<pre class="js">
+<pre class="js indent">
 var M = {
-  f: function(x){return x==0? 1: 2*this.g(x-1);},
-  g: function(x){return x==0? 1: 3*this.f(x-1);}
+    f: function(x){return x==0? 1: 2*this.g(x-1);},
+    g: function(x){return x==0? 1: 3*this.f(x-1);}
 }
 </pre>
+
 <p>Leider kommen wir nun in einen Konflikt, wenn wir eine Funktion
 aus dem Modul als Argument an eine andere Funktion übergeben wollen.
-<pre class="js">
+
+<pre class="js indent">
 var M = {
-  beta: 2,
-  f: function(x){return this.beta*x;},
-  g: function(a){return a.map(this.f);}
+    beta: 2,
+    f: function(x){return this.beta*x;},
+    g: function(a){return a.map(this.f);}
 };
 </pre>
+
 <p>Dieses Beispiel wird nicht wie erwartet funktionieren.
 Bei der Übergabe von <code>f</code> an <code>map</code> geht
 nämlich das this-Argument von <code>f</code> verloren. Somit
@@ -398,64 +437,76 @@ kann nicht mehr auf <code>beta</code> zugegriffen werden.
 <p>Die Direkte Lösung dieses Problems ist die feste Bindung des
 this-Argumentes an <code>f</code>. Dies geschieht durch Hinzufügen
 von:
-<pre class="js">
+
+<pre class="js indent">
 M.f = M.f.bind(M);
 </pre>
+
 <p>Man könnte anstelle des this-Argumentes auch direkt auf die
 Modulvariable zugreifen:
-<pre class="js">
+
+<pre class="js indent">
 var M = {
-  beta: 2,
-  f: function(x){return M.beta*x;},
-  g: function(a){return a.map(M.f);}
-};
-</pre>
-<p>Hier muss aber beachtet werden, dass der Inhalt der Variable
-<code>M</code> nicht mehr verändert werden darf. Folgendes
-ist also nicht möglich:
-<pre class="js">
-var M2 = M;
-M = undefined;
-</pre>
-<p>Die Lösung besteht darin, eine lokale Variable für
-das Modul einzuführen.
-<pre class="js">
-var M = (function(){
-  var M = {
     beta: 2,
     f: function(x){return M.beta*x;},
     g: function(a){return a.map(M.f);}
-  };
-  return M;
+};
+</pre>
+
+<p>Hier muss aber beachtet werden, dass der Inhalt der Variable
+<code>M</code> nicht mehr verändert werden darf. Folgendes
+ist also nicht möglich:
+
+<pre class="js indent">
+var M2 = M;
+M = undefined;
+</pre>
+
+<p>Die Lösung besteht darin, eine lokale Variable für
+das Modul einzuführen.
+
+<pre class="js indent">
+var M = (function(){
+    var M = {
+        beta: 2,
+        f: function(x){return M.beta*x;},
+        g: function(a){return a.map(M.f);}
+    };
+    return M;
 })();
 </pre>
+
 <p>Man hätte auch alle Funktionen und Variablen direkt als lokale
 Variablen schreiben können.
-<pre class="js">
+
+<pre class="js indent">
 var M = (function(){
-  var beta = 2;
-  var f = function(x){return beta*x;};
-  var g = function(a){return a.map(f);};
-  var Interface = {g: g};
-  return Interface;
+    var beta = 2;
+    var f = function(x){return beta*x;};
+    var g = function(a){return a.map(f);};
+    var Interface = {g: g};
+    return Interface;
 })();
 </pre>
+
 <p>Hier ist alles privat, was sich nicht im Interface befindet.
 Leider ist jetzt eine nachträgliche Manipulation des Moduls nicht mehr
 möglich, z.&nbsp;B. wenn man das Modul mit <code>M.beta=4</code>
 konfigurieren möchte. Es ist aber möglich, konfigurierbare Eigenschaften
 des Moduls explizit zum Interface mit aufzunehmen.
-<pre class="js">
+
+<pre class="js indent">
 var M = (function(){
-  var config = {beta: 2};
-  var f = function(x){return config.beta*x;};
-  var g = function(a){return a.map(f);};
-  var Interface = {g: g, config: config};
-  return Interface;
+    var config = {beta: 2};
+    var f = function(x){return config.beta*x;};
+    var g = function(a){return a.map(f);};
+    var Interface = {g: g, config: config};
+    return Interface;
 })();
 
-M.config.beta=4;
+M.config.beta = 4;
 </pre>
+
 <p>Bisher haben wir nicht beachtet, dass es auch mehrere Instanzen
 eines Moduls geben könnte. Z.&nbsp;B. würde man von einem Modul
 gerne eine shallow copy machen und diese Kopie modifizieren.
@@ -464,13 +515,14 @@ Alternativ kann das Prototypensystem hierfür verwendet werden.
 <p>Möchte man eine nachträgliche Manipulation verbieten, so kann
 das Modul als Factory formuliert werden. Eine solche nimmt eine
 Konfiguration und erzeugt aus dieser ein konfiguriertes Modul:
-<pre class="js">
+
+<pre class="js indent">
 var M = (function(config){
-  var beta = config.beta;
-  var f = function(x){return beta*x;};
-  var g = function(a){return a.map(f);};
-  var Interface = {g: g};
-  return Interface;
+    var beta = config.beta;
+    var f = function(x){return beta*x;};
+    var g = function(a){return a.map(f);};
+    var Interface = {g: g};
+    return Interface;
 });
 
 var M1 = M({beta: 4});
@@ -487,6 +539,25 @@ waren es Referenzvariablen auf die tatsächlichen Variablen. In der
 Programmiersprache Lua ist diese Problematik unter dem Stichwort
 »upvalues« bekannt.
 
+<h2 id="map">Die Methode map</h2>
+
+<p>Der Methodenaufruf <code>a.map(f)</code> kann eine Funktion
+<code>f</code> mit mehr als einem Argument annehmen. Zusätzlich
+lässt sich hierdurch der Index des Array-Elements mit übergeben.
+
+<p>Wer auch immer das so entworfen hat, hat sich zu diesem Zeitpunkt
+nicht die Gedanken über die Konsequenzen gemacht, die daraus
+resultieren. Eine Funktion mit einem optionalen Argument bekommt
+dann nämlich den Index anstelle von <code>undefined</code>, was niemals
+beabsichtigt war.
+
+<p>Eine klare Lösung geben strenge funktionale Programmiersprachen
+vor. Dort gibt es eine Funktion <code>enumerate</code>, welche
+<code>a[i]</code> auf <code>[i,a[i]]</code> abbildet. Wenn das
+nicht effizient genug ist, kann man immer noch eine for-Schleife
+benutzen bzw. eine Funktion <code>map_with_index</code> schreiben.
+
+
 <h2 id="Literatur">Literatur</h2>
 <ol>
 <li>Henning Thielemann: »<a href="http://www.parallelnetz.de/ScriptingHater.html"
@@ -494,6 +565,8 @@ Programmiersprache Lua ist diese Problematik unter dem Stichwort
 <li>Henning Thielemann: »<a href="http://www.parallelnetz.de/CHater.html"
   >C-Hasser in 10 Tagen</a>«. (2002).
 </ol>
+
+
 
 </body>
 </html>

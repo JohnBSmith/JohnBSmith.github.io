@@ -25,7 +25,9 @@
 \newcommand{\C}{\mathbb C}
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
-\newcommand{\strong}[1]{{\sf\bfseries #1}}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\strong}[1]{{\normalfont\sffamily\bfseries #1}}
 \newcommand{\entspricht}{\;\;\hat =\;}
 
 \newtheoremstyle{Aufgabe}%
@@ -55,7 +57,7 @@
 
 
 \noindent
-{\huge\sf\bfseries Aufgaben}
+{\huge\normalfont\sffamily\bfseries Aufgaben}
 
 \tableofcontents
 
@@ -525,6 +527,77 @@ Somit ist
 \[g = \exp(\lim_{x\downarrow -\infty} x)
 = \lim_{x\downarrow -\infty} \exp(x) = 0.\;\Box\]
 
+\begin{Aufgabe}
+Sei $(s_n)$ mit $s_n=\sum_{k=0}^n a_k$ eine konvergente Reihe von
+komplexen Zahlen. Man zeige:
+\[\sum_{k=0}^\infty a_k
+= \sum_{k=0}^\infty \real(a_k)+\ui\sum_{k=0}^\infty \imag(a_k).\]
+\end{Aufgabe}
+\strong{Lösung.} Wir versuchen gleich, den Kern des Problemes
+herauszuschälen. Für die linke Seite der Gleichung gilt
+\begin{equation}
+\sum_{k=0}^\infty a_k
+= \real(\sum_{k=0}^\infty a_k)+\ui\imag(\sum_{k=0}^\infty a_k).
+\end{equation}
+Die komplexen Zahlen bilden einen Vektorraum und wir haben hier
+Linearkombinationen der bezüglich der Basis $(1,i)$. Demnach erhalten
+wir beim komponentenweisen Vergleich der Vektoren eine äquivalente
+Bedingung. Man spricht auch von einem Koeffizientenvergleich.
+Der Realteil und der Imaginärteil lassen sich also separat betrachten:
+\begin{equation}
+\real(\sum_{k=0}^\infty a_k) = \sum_{k=0}^\infty \real(a_k),
+\qquad \imag(\sum_{k=0}^\infty a_k) = \sum_{k=0}^\infty \imag(a_k).
+\end{equation}
+Hier liegen die Spezialfälle der Projektionsabbildungen
+\begin{equation}
+p_i\colon\R^N\to\R^N,\quad p_i(\sum_{k=1}^N v_k\mathbf e_k) := v_i\mathbf e_i.
+\end{equation}
+vor. Wir müssen für eine Folge $(a_n)$ von Koordinatenvektoren
+demnach
+\begin{equation}
+p_i(\sum_{k=0}^\infty a_k) = \sum_{k=0}^\infty p_i(a_k)
+\end{equation}
+zeigen. Nun gilt aber
+$\sum_{k=0}^\infty a_k = \lim\limits_{n\to\infty}\sum_{k=0}^n a_k$.
+Wir können $p_i(\sum_{k=0}^n a_k) = \sum_{k=0}^n p_i(a_k)$ als
+ersichtlich voraussetzen. Man prüfe die Gleichung ggf. induktiv mit
+der rekursiven Definition der Summierung.
+
+Es wäre also schön, d.\,h. wir hätten die Aufgabe gelöst, wenn
+sogar
+\begin{equation}\label{eq:proj-stetig}
+p_i(\lim_{n\to\infty} a_n) = \lim_{n\to\infty} p_i(a_n)
+\end{equation}
+für jede beliebige Folge gelten würde, weil wir $p_i$ dann
+»durch $\lim$ und $\sum$ hindurchschieben« könnten. Bei der Bedingung
+\eqref{eq:proj-stetig} handelt es sich nun aber genau um die
+Definition der Folgenstetigkeit. Zu Bemerken ist, dass für metrische
+Räume, also auch für den Koordinatenraum mit der Standardmetrik,
+die Begriffe Stetigkeit und Folgenstetigkeit äquivalent sind.
+
+Es genügt also, wenn wir die Stetigkeit von $p_i$ nachweisen.
+Der Anschauung nach darf das auch sein. Stetigkeit bedeutet, dass
+kleine Änderungen im Argument nicht zu sprunghaften Änderungen im
+Bild führen. Man stelle sich dazu den $\R\times\R$ als
+Koordinatensystem vor und lege einen Punkt $a=(a_x,a_y)$ darin.
+Man variiere den Punkt nun leicht und betrachte dabei die Projektion
+auf eine der Koordinatenachsen. Auch die Projektion wird sich dabei
+nur sanft verändern.
+
+Da die Projektion schon so schön ausschaut, versuchen wir am besten
+gleich, die partiellen Ableitungen zu bilden. Das sind
+\begin{equation}
+\frac{\partial p_i(x)}{\partial x_j}
+= \frac{\partial}{\partial x_j}(x_i\mathbf e_i) =
+\begin{cases}
+\mathbf e_i &\text{wenn}\;\; i=j,\\
+0 &\text{wenn}\;\; i\ne j.
+\end{cases}
+\end{equation}
+Weil alle partiellen Ableitungen konstant und daher auch stetig
+sind, ist $p_i$ total differenzierbar. Somit muss $p_i$ erst
+recht stetig sein.\;$\Box$
+
 \section{Kombinatorik}
 \subsection{Endliche Summen}
 \begin{Aufgabe}
@@ -539,6 +612,7 @@ Es ergibt sich:
 = 2\cdot\frac{n}{2}(n+1)+4n = n^2+n+4n = n^2+5n.
 \end{equation}
 
+\newpage
 \subsection{Rekursionsgleichungen}
 
 \begin{Aufgabe}\label{qPotenzen}

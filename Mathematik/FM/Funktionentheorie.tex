@@ -5,9 +5,9 @@
 \begin{definition}[Holomorphe Funktion]
 Sei $U\subseteq\C$ eine offene Menge und $f\colon U\to\C$.
 Die Funktion $f$ wird \emdef{holomorph}\index{holomorph} an der
-Stelle $z_0\in U$ genannt, wenn der Grenzwert
+Stelle $z_0\in U$ genannt, wenn der Grenzwert%
 \begin{equation}
-f'(z_0) := \lim_{z\to z_0} \frac{f(z)-f(z_0)}{z-z_0}
+f'(z_0)\coloneq \lim_{z\to z_0} \frac{f(z)-f(z_0)}{z-z_0}
 \end{equation}
 existiert.
 \end{definition}
@@ -17,15 +17,37 @@ Das Argument und Bild von $f$ werden nun in Real- und Imaginärteil
 zerlegt. Das sind die Zerlegungen $z=x+y\ui$ und $f(z)=u(x,y)+v(x,y)\ui$.
 Die Funktion $f(z)$ ist genau dann holomorph an der Stelle
 $z_0=x_0+y_0\ui$, wenn bei $(x_0,y_0)$ die partiellen Ableitungen
-stetig sind und die \emdef{Cauchy-Riemann-Gleichungen}
+stetig sind und die \emdef{Cauchy-Riemann-Gleichungen}%
 \begin{equation}\label{eq:Cauchy-Riemann-Gleichungen}
 \frac{\partial u}{\partial x}=\frac{\partial v}{\partial y},
 \quad \frac{\partial u}{\partial y}=-\frac{\partial v}{\partial x}
 \qquad\text{bei}\;(x_0,y_0)
 \end{equation}
-gelten. Bei
+gelten. Sind die beiden partiellen Dgln. erfüllt, dann lässt die
+Ableitung auch über die Formel%
 \begin{equation}
-\uv v := (u,-v) = (v_x,v_y) = v_x\uv e{}_x+v_y\uv e{}_y
+f'(z) = \frac{\partial u}{\partial x}+\ui\frac{\partial v}{\partial x}
+= \frac{\partial v}{\partial y}-\ui\frac{\partial u}{\partial y},
+\end{equation}
+bzw.
+\begin{equation}
+f'(z) = \frac{\partial u}{\partial x}-\ui\frac{\partial u}{\partial y}
+= \frac{\partial v}{\partial y}+\ui\frac{\partial v}{\partial x}
+\end{equation}
+bestimmen. Für die Polarform $r^{i\varphi}$ mit den Polarkoordinaten
+$(r,\varphi)$ gemäß%
+\begin{align}
+x &= r\cos\varphi,\\
+y &= r\sin\varphi
+\end{align}
+bekommen die Gleichungen \eqref{eq:Cauchy-Riemann-Gleichungen} die Form
+\begin{equation}
+\frac{\partial u}{\partial r} = \frac{1}{r}\frac{\partial v}{\partial\varphi}, \quad
+\frac{\partial v}{\partial r} = -\frac{1}{r}\frac{\partial u}{\partial\varphi}.
+\end{equation}
+Bei
+\begin{equation}
+\uv v\coloneq (u,-v) = (v_x,v_y) = v_x\uv e{}_x+v_y\uv e{}_y
 \end{equation}
 handelt es sich um ein Vektorfeld
 auf dem Koordinatenraum. Die Gleichungen
@@ -54,9 +76,9 @@ Hierbei ist $\mathrm dz=\mathrm dx+\ui\,\mathrm dy$ und $\mathrm d\overline{z}=\
 Die Ableitungsoperatoren
 \begin{align}
 \frac{\partial f}{\partial z}
-&:= \frac{1}{2}\bigg(\frac{\partial f}{\partial x}-\ui\frac{\partial f}{\partial y}\bigg),\\
+&\coloneq\frac{1}{2}\bigg(\frac{\partial f}{\partial x}-\ui\frac{\partial f}{\partial y}\bigg),\\
 \frac{\partial f}{\partial\overline z}
-&:= \frac{1}{2}\bigg(\frac{\partial f}{\partial x}+\ui\frac{\partial f}{\partial y}\bigg)
+&\coloneq\frac{1}{2}\bigg(\frac{\partial f}{\partial x}+\ui\frac{\partial f}{\partial y}\bigg)
 \end{align}
 mit $\partial f=\partial u+\ui\,\partial v$ heißen \emdef{Wirtinger-Operatoren}.
 
@@ -72,7 +94,7 @@ Differential \eqref{eq:Differential-Wirtinger-Operatoren} wegen
 \mathrm df = \frac{\partial f}{\partial z}\mathrm dz.
 \end{equation}
 
-\newpage
+% \newpage
 \section{Harmonische Funktionen}
 \begin{definition}[Harmonische Funktion]
 Sei $U\subseteq\R^2$ eine offene Menge.
@@ -80,7 +102,9 @@ Eine Funktion $\Phi\colon U\to\R$ heißt \emdef{harmonisch}
 an der Stelle $(x_0,y_0)$, wenn die \emdef{Laplace-Gleichung}
 $(\Delta\Phi)(x_0,y_0)=0$ mit dem \emdef{Laplace-Operator}%
 \begin{equation}
-\Delta\Phi := \frac{\partial^2\Phi}{\partial x\partial x}+\frac{\partial^2\Phi}{\partial y\partial y}
+\Delta\Phi\coloneq
+\frac{\partial^2\Phi}{\partial x\partial x}+
+\frac{\partial^2\Phi}{\partial y\partial y}
 \end{equation}
 erfüllt ist.
 \end{definition}
@@ -107,6 +131,24 @@ zu $u$ genannt. An jeder Stelle $(x_0,y_0)$ treffen die Linien%
 \end{align}
 senkrecht aufeinander.
 
+Ist eine harmonische Funktion $u(x,y)$ gegeben, lässt sich $v(x,y)$
+durch Integration von \eqref{eq:Cauchy-Riemann-Gleichungen}
+bestimmen:%
+\begin{align}
+v &= \int\frac{\partial u}{\partial x}\mathrm dy = F(x,y)+\Phi(x),\\
+v &= -\int \frac{\partial u}{\partial y}\mathrm dx = -G(x,y)-\Psi(y).
+\end{align}
+Die Funktionen $\Phi(x)$ und $\Psi(y)$ sind zunächst unbekannt.
+Der Vergleich bringt nun aber
+\begin{equation}
+\Phi(x) = -F(x,y)-G(x,y)-\Psi(y).
+\end{equation}
+Da $\Phi(x)$ nicht von $y$ abhängig sein darf, kann man sich ein
+beliebiges festes $y_0$ aussuchen. Demnach ergibt sich eine Konstante
+$C=\Psi(y_0)$, wobei man auch $C=0$ setzen darf, da $v(x,y)$ nur bis
+auf eine additive Konstante bestimmt ist.
+
+\newpage
 \section{Wegintegrale}
 \strong{Integral einer komplexwertigen Funktion.}\\
 Für $f\colon [a,b]\to\C$ mit $f=u+\ui v$ ist
@@ -119,7 +161,8 @@ wenn $u$ und $v$ integrierbar sind.
 \begin{definition}[Kurvenintegral]
 Für $f\colon U\to\C$ mit $U\subseteq\C$:%
 \begin{equation}
-\int_\gamma f(z)\,\mathrm dz := \int_a^b f(\gamma(t))\,\gamma'(t)\,\mathrm dt,
+\int_\gamma f(z)\,\mathrm dz
+\coloneq\int_a^b f(\gamma(t))\,\gamma'(t)\,\mathrm dt,
 \end{equation}
 wobei $\gamma\colon [a,b]\to U$ ein (zumindest stückweise)
 differenzierbarer Weg \eqref{eq:Parameterkurve} ist.
