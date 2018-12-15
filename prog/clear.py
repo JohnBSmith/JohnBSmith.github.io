@@ -4,7 +4,7 @@
 # PDF files from LaTeX source code automatically.
 
 # Dieses Skript entfernt alle Dateien die aus Quelltext
-# erzeugt wurden. Bitte führe build.py aus um automatisch
+# erzeugt wurden. Bitte führe build.py aus, um automatisch
 # PDF-Dateien aus LaTeX-Quelltext zu erzeugen.
 
 files = [
