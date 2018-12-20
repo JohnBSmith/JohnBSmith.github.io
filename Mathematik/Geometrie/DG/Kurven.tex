@@ -1,0 +1,545 @@
+
+
+\chapter{Kurven im Koordinatenraum}
+
+\section{Vorbereitungen}
+
+\subsection{Koordinatensysteme}\label{section:Koordinatensysteme}
+
+Zur Darstellung von Punkten im euklidischen Raum $E_n$ wird ein
+Koordinatensystem benötigt, das ist eine Abbildung
+$\varphi\colon\R^n\to E_n$. Da der $E_n$ ein abstraktes mathematisches
+Objekt ist, kann auch $\varphi$ nicht rechnerisch erfasst werden.
+Wir bräuchten eine Darstellung von $E_n$, was aber $\varphi$ selbst
+sein soll.
+
+Was wir aber erfassen können, ist die Koordinatenwechselabbildung%
+\begin{equation}
+\psi\colon\R^n\to\R^n,\quad \psi := \varphi_2\circ\varphi_1^{-1},
+\end{equation}
+wobei $\varphi_1\colon\R^n\to E_n$ und $\varphi_2\colon\R^n\to E_n$
+zwei unterschiedliche Koordinatensysteme sind.
+
+Man beschränkt sich bei $\varphi$ zunächst
+auf eine bijektive affine Abbildung. Eine affine Abbildung ist
+zusammengesetzt aus einer bijektiven linearen Abbildung und einer
+Verschiebung. Demnach gilt $p=\varphi(x) = p_0+L(x)$ wobei
+$L\colon\R^n\to V$ eine lineare Abbildung und $V$ der
+Verschiebungsvektorraum von $E_n$ ist. Umstellen nach $x$ ergibt
+$x=L^{-1}(p-p_0)$. Auch bei $\psi$ muss es sich um eine affine
+Abbildung handeln:%
+\begin{align}
+\psi(x) &= (\varphi_2^{-1}\circ\varphi_1)(x)= L_2^{-1}((p_1+L_1(x))-p_2)\\
+&= L_2^{-1}(p_1-p_2)+(L_2^{-1}\circ L_1)(x) = v_0+Ax.
+\end{align}
+Da $A\colon\R^n\to\R^n$ mit $A:=L_2^{-1}\circ L_1$ ein Automorphismus
+zwischen Koordinatenräumen ist, darf $A$ bei Wahl der kanonischen Basis
+wie üblich mit seiner kanonischen Darstellungsmatrix identifiziert
+werden. Bei $A$ muss es sich demnach um eine reguläre Matrix handeln.
+Bei $v_0\in\R^n$ mit
+$v_0:=L_2^{-1}(p_1-p_2)$ handelt es sich um einen Vektor, welcher den
+Verschiebungsvektor repräsentiert, der von $p_1$ nach $p_2$ verschiebt.
+
+Da man anstelle von $E_n$ irgendeinen affinen Raum einsetzen kann,
+zeigt die Rechnung auch, dass die Verkettung $\psi_2^{-1}\circ\psi$
+auch wieder ein affiner Koordinatenwechsel ist, wenn es denn $\psi_1$
+und $\psi_2$ sind. Für $\psi_1(x)=v_1+A_1 x$ und
+$\psi_2(x) = v_2+A_2 x$
+ergibt sich:%
+\begin{equation}
+\psi(x) = (\psi_2^{-1}\circ\psi_1)(x)
+= A_2^{-1}((v_1+A_1x)-v_2)
+= A_2^{-1}(v_1-v_2) + A_2^{-1} A_1 x.
+\end{equation}
+
+\begin{definition}[Affine Koordinatentransformation]
+Unter einer \emdef{affinen Koordinatentransformation} versteht man
+die affine Abbildung
+\begin{equation}
+\psi\colon\R^n\to\R^n,\quad \psi(x):=v_0+Ax,
+\end{equation}
+wobei $v_0\in\R^n$ und $A\in\operatorname{GL}(n,\R)$ ist.
+\end{definition}
+Für $v_0=0$ spricht man von einer \emph{linearen
+Koordinatentransformation}, wobei $A$ die \emph{Transformationsmatrix}
+ist.
+
+\subsection{Vektorwertige Funktionen}
+\begin{theorem}\label{lim-vektorwertige-Folge}
+Eine vektorwertige Folge $v_i = \sum_{k=1}^n v_{ki}\mathbf e_k$
+ist genau dann konvergent, wenn sie komponentenweise konvergiert.
+Es gilt
+\begin{equation}
+\lim_{i\to\infty} v_i
+= \sum_{k=1}^n (\lim_{i\to\infty} v_{ki})\mathbf e_k.
+\end{equation}
+\end{theorem}
+\strong{Beweis.} Angenommen, alle $(v_{ki})$ sind konvergent, dann gilt
+nach den Grenzwertsätzen für Folgen in normierten Räumen die folgende
+Rechnung:
+\begin{equation}
+\sum_{k=1}^n (\lim_{i\to\infty} v_{ki})\mathbf e_k
+= \sum_{k=1}^n \lim_{i\to\infty} (v_{ki}\mathbf e_k)
+= \lim_{i\to\infty}\sum_{k=1}^n v_{ki}\mathbf e_k = \lim_{i\to\infty} v_i.
+\end{equation}
+Sei nun umgekehrt $(v_i)$ konvergent mit $v = \lim\limits_{i\to\infty} v_i$.
+Man betrachte nun die Projektion $p_k\colon\R^n\to\R$ mit
+\begin{equation}
+p_k(v) = p_k(\sum_{k=1}^n v_k\mathbf e_k) := v_k.
+\end{equation}
+Wenn man $v$ leicht variiert und dabei $p_k(v)$ betrachtet, ist
+ersichtlich, dass es sich bei $p_k$ um eine stetige Abbildung handeln
+muss. Da $p_k$ total differenzierbar ist, sollte diese Eigenschaft
+evident sein. Daher gilt:
+\begin{equation}
+p_k(v) = p_k(\lim_{i\to\infty} v_i) = \lim_{i\to\infty}(p_k(v_i))
+= \lim_{i\to\infty} v_{ik}.
+\end{equation}
+Somit hat jede Komponente den erwarteten Grenzwert.\;\qedsymbol
+
+\begin{theorem}\label{lim-vektorwertige-Funktion}
+Eine vektorwertige Funktion $f\colon I\to\R^n$ mit $I\subseteq\R$ und
+$f(t)=(f_1(t),\ldots,f_n(t))$ ist genau dann an der Stelle $t_0$
+konvergent, wenn alle Komponenten $f_k\colon I\to\R$
+konvergent sind. Es gilt%
+\begin{equation}
+\lim_{t\to t_0} f(t) = \sum_{k=1}^n (\lim_{t\to t_0}f(t))\mathbf e_k.
+\end{equation}
+\end{theorem}
+\begin{corollary}
+Eine vektorwertige Funktion ist genau dann stetig, wenn sie in
+jeder Komponente stetig ist.
+\end{corollary}
+\strong{Beweis.} Ist völlig analog zum vorangegangenen Beweis.
+Alternativ sei $v=(v_1,\ldots,v_n)$ und $(t_i)$ eine beliebige Folge
+mit $t_i\to t$. Satz \ref{lim-vektorwertige-Folge} zufolge gilt dann
+\begin{gather}
+v = \lim_{t\to t_0} f(t) \iff \forall (t_i)(v=\lim_{i\to\infty} f(t_i))
+\iff \forall k\forall(t_i)(v_k = \lim_{i\to\infty} f_k(t_i))\\
+\iff \forall k(v_k = \lim_{t\to t_0} f_k(t)).\;\qedsymbol
+\end{gather}
+
+
+\section{Allgemeine Begriffe}
+\subsection{Parameterkurven}
+
+Was wollen wir genau unter einer Kurve verstehen? Zunächst wollen
+wir nur solche Kurven betrachten, die in den euklidische Raum $E_n$
+eingebettet sind. Es ist nicht abträglich, sich dabei zunächst immer
+die euklidische Ebene $E_2$ vorzustellen.
+
+Wir haben also ein unendlich weit ausgedehntes leeres Blatt Papier
+vor uns. Auf dieses Blatt wird nun mit einem Stift eine Linie gezogen.
+Jedem Zeitpunkt $t$ wird dabei ein Punkt $p=\gamma(t)$ zugeordnet.
+Man bezeichnet $\gamma$ als \emph{Parameterkurve} mit Parameter $t$.
+Es ist nun so, dass beim Ziehen der Linie keine instantanen Sprünge
+gemacht werden. Daher kann gefordert werden, dass $\gamma$ eine
+stetige Abbildung sein soll.
+
+\begin{definition}[Parameterkurve, Kurve]
+Sei $I$ ein reelles Intervall und $X$ ein topologischer Raum.
+Eine stetige Abbbildung%
+\begin{equation}
+\gamma\colon I\to X
+\end{equation}
+wird als \emdef{Parameterkurve} bezeichnet. Die Bildmenge
+$\gamma(I)\subseteq X$ wird \emdef{Kurve} genannt.
+\end{definition}
+
+\noindent
+Zunächst betrachten wir nur $X=E_n$, speziell $X=E_2$. Als Intervall
+sind z.\,B.%
+\[I=\R,\quad I=(a,b),\quad I=[a,b],\quad
+I=[a,b),\quad I=[a,\infty)\]
+erlaubt.
+
+Zur Angabe einer Parameterkurve im euklidischen Punktraum $E_n$ kann
+aufgrund der in Abschnitt \ref{section:Koordinatensysteme} erläuterten
+Zusammenhänge einfach äquivalent eine Kurve $\gamma\colon I \to\R^n$
+betrachtet werden. Dann ergibt sich die Parameterkurve
+$(\varphi\circ\gamma)\colon I\to E_n$,
+wobei $\varphi\colon \R^n\to E_n$ eine bijektive affine Abbildung ist.
+
+Beim Ziehen der Linie kann es doch sein, dass wir diese mit sich selbst
+überschneiden. Bei einer injektiven Parameterkurve wird das niemals
+der Fall sein. Trotzdem soll es aber erlaubt sein, wenn Anfangspunkt
+und Endpunkt der Kurve übereinstimmen. Eine solche Kurve nennt man
+\emph{einfach}.
+
+\begin{definition}[Einfache Parameterkurve]
+Eine Parameterkurve $\gamma\colon I\to X$ heißt \emdef{einfach} oder
+\emdef{doppelpunktfrei}, wenn $\gamma$ injektiv ist. Für ein kompaktes
+Intervall $I=[a,b]$ ist auch $\gamma(a)=\gamma(b)$ erlaubt.
+\end{definition}
+
+\noindent
+Das ziehen der Linie mit einem Stift geschieht normalerweise in einer
+endlichen Zeit. Eine Kurve, auf der man nach einer endlichen Zeit
+von einem Anfangspunkt zu einem Zielpunkt kommt, wird auch als
+Weg oder Pfad bezeichnet. Aus diesem Gedanken heraus
+ergibt sich die folgende Definition.
+
+\begin{definition}[Weg, Anfangspunkt, Endpunkt]
+Eine Parameterkurve $\gamma\colon I\to\R$ wird für ein kompaktes
+Intervall $I=[a,b]$ als \emdef{Weg} bezeichnet. Man nennt dann
+$\gamma(a)$ den \emdef{Anfangspunkt} und $\gamma(b)$ den
+\emdef{Endpunkt} des Weges.
+\end{definition}
+
+\noindent
+Eine Kurve kann natürlich geschlossen sein, in dem Sinn, dass man
+wieder dort ankommt, woher man kommt.
+
+\begin{definition}[Geschlossener Weg]
+Ein Weg $\gamma\colon [a,b]\to X$ heißt \emdef{geschlossen},
+wenn $\gamma(a)=\gamma(b)$ ist, wenn also Anfangspunkt und
+Endpunkt übereinstimmen.
+\end{definition}
+
+\subsection{Differenzierbarkeit}
+Die Ableitung einer Kurve können wir uns als Information über die
+Tangente der Kurve an einem Punkt auf dieser Kurve vorstellen. Dieses
+Konzept lässt sich leicht von reellen Funktionen auf Parameterkurven
+übertragen.
+
+Sei $I$ ein offnes Intervall, welches $t_0$ enthält. Wenn die einseitige
+Ableitung betrachtet wird, darf $t_0$ natürlich auch Randpunkt von $I$
+sein. Sei $\gamma\colon I\to E_n$ eine Parameterkurve im euklidischen
+Raum. Ist nun $t$ eine weitere Stelle, dann ist die Strecke von
+$\gamma(t_0)$ nach $\gamma(t)$ eine Sekante der Kurve. Für $t\to t_0$
+müsste sich dann die Richtung der Tangente ergeben.
+
+Ist $p_0\in E_n$ ein Punkt im euklidischen Raum und $v\in V$ ein Vektor
+aus dem dazugehörigen Verschiebungsvektorraum, dann ergibt sich
+gemäß $p=p_0+v$ ein neuer Punkt, die Verschiebung von $p_0$ um $v$.
+Um präzise zu sein, die Addition eines Punktes und eines Vektors ist
+eine Gruppenaktion der Gruppe $(V,+)$ auf $E_n$. 
+
+Umgekehrt kann die »Differenz der Punkte« als dieser Vektor $v$
+verstanden werden:%
+\begin{equation}
+v = p-p_0 \iff p = p_0+v.
+\end{equation}
+Der Sekantenvektor der Kurve lautet demnach
+\begin{equation}
+\Delta\gamma = \gamma(t)-\gamma(t_0).
+\end{equation}
+Jetzt ergibt sich aber das Problem, dass dieser Vektor für $t\to t_0$
+immer kleiner wird und schließlich verschwindet. Dies wird analog
+zur Ableitung einer reellen Funktion verhindert, indem durch $h=t-t_0$
+dividiert wird.
+\begin{definition}[Differenzierbare Parameterkurve]%
+\label{diff-Parameterkurve}
+Sei $\gamma\colon I\to E_n$ eine Parameterkurve. Wenn der Grenzwert
+\begin{equation}
+\gamma'(t_0) := \lim_{h\to 0} \frac{\gamma(t_0+h)-\gamma(t_0)}{h}
+= \lim_{t\to t_0} \frac{\gamma(t)-\gamma(t_0)}{t-t_0}
+\end{equation}
+existiert, dann heißt $\gamma$ an der Stelle $t_0$
+\emdef{differenzierbar} und $\gamma'(t_0)$ wird \emdef{Ableitung}
+oder \emdef{Tangentialvektor} genannt. Eine Parameterkurve heißt
+\emdef{differenzierbar}, wenn sie an jeder Stelle differenzierbar ist.
+\end{definition}
+Betrachtet man $t$ als die Zeit, dann handelt es sich beim
+Tangentialvektor um die Momentangeschwindigkeit, mit der sich ein
+Punkt auf der Kurve bewegt. Es kann nun sein, dass die Bewegung für
+einen Zeitpunkt oder eine Weile lang zum stehen kommt, dass der
+Tangentialvektor also verschwindet, d.\,h. zum Nullvektor wird.
+Für wichtige Anwendungen der Differentialgeometrie muss dieser
+Fall aber ausgeschlossen werden.
+\begin{definition}[Reguläre Parameterkurve]
+Eine Parameterkurve $\gamma$ heißt \emdef{regulär} an der Stelle $t_0$,
+wenn $\gamma'(t_0)\ne 0$ ist. Eine Parameterkurve heißt \emdef{regulär},
+wenn sie an jeder Stelle regulär ist.
+\end{definition}
+
+\noindent
+Die Analogie zwischen reellen Funktionen und Parameterkurven
+verschärft sich unter dem folgenden Satz.
+
+\begin{theorem}
+Eine Parameterkurve $\gamma\colon I\to\R^n$ ist genau dann
+differenzierbar, wenn sie komponentenweise differenzierbar
+ist. Es gilt
+\begin{equation}
+\gamma'(t) = \sum_{k=1}^n x_k'(t)\,\mathbf e_k,
+\end{equation}
+wobei $\gamma(t)=(x_1,\ldots,x_n)=\sum_{k=1}^n x_k(t)\,\mathbf e_k$.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Für den Differenzenquotient gilt:
+\begin{gather}
+\frac{\gamma(t+h)-\gamma(t)}{h}
+= \frac{1}{h}\bigg(\sum_{k=1}^n x_k(t+h)\mathbf e_k-\sum_{k=1}^n x_k(t)\mathbf e_k\bigg)\\
+= \frac{1}{h}\sum_{k=1}^n (x_k(t+h)-x_k(t))\mathbf e_k
+= \sum_{k=1}^n \frac{x_k(t+h)-x_k(t)}{h}\mathbf e_k.
+\end{gather}
+Laut Definition \ref{diff-Parameterkurve} und
+Satz \ref{lim-vektorwertige-Funktion} gilt dann
+\begin{equation}
+\gamma'(t) = \lim_{h\to 0}\frac{\gamma(t+h)-\gamma(t)}{h}
+= \sum_{k=1}^n \lim_{h\to 0}\frac{x_k(t+h)-x_k(t)}{h}\mathbf e_k
+= \sum_{k=1}^n x_k'(t)\mathbf e_k.\;\qedsymbol
+\end{equation}
+
+\begin{theorem}
+Eine Paramterkurve $(\varphi\circ\gamma)\colon I\to E_n$ ist genau dann
+differenzierbar, wenn die Darstellung $\gamma\colon I\to\R^n$
+komponentenweise differenzierbar ist. Es gilt
+\begin{equation}
+(\varphi\circ\gamma)'(t_0) = L(\gamma'(t_0))
+= \sum_{k=1}^n x_k'(t) L(\mathbf e_k),
+\end{equation}
+wobei $\gamma(t) = (x_1,\ldots,x_n) = \sum_{k=1}^n x_k(t)\,\mathbf e_k$.
+Dabei ist $\varphi(x) = p_0+L(x)$, wobei $L$ eine bijektive lineare
+Abbildung ist.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Da jede affine Abbildung $\varphi$ total differenzierbar ist, gilt gemäß
+der Kettenregel die Rechnung%
+\begin{equation}
+(\varphi\circ\gamma)'(t) = (\mathrm d_{\gamma(t)}\varphi)(\gamma'(t))
+= L(\gamma'(t)) = L(\sum_{k=1}^n x_k'(t)\mathbf e_k)
+= \sum_{k=1}^n x_k'(t)L(\mathbf e_k).
+\end{equation}
+Dabei gilt $\mathrm d_x \varphi = \mathrm d_x L = L$, weil die lineare
+Approximation einer linearen Abbildung einfach diese lineare Abbildung
+ist.\;\qedsymbol
+
+
+\subsection{Parametertransformationen}
+
+\begin{definition}[Umparametrisierung, Parametertransformation]
+Sei $\gamma\colon I\to X$ eine Parameterkurve und $\varphi\colon J\to I$
+eine stetige und streng monotone Funktion. Man nennt
+$\tilde\gamma\colon J\to X$ mit $\tilde\gamma:=\gamma\circ\varphi$ dann
+\emdef{Umparametrisierung} von $\gamma$, wobei $\varphi$ die
+\emdef{Parametertransformation} dazu ist. Ein streng monoton steigendes
+$\varphi$ wird als \emdef{orientierungserhaltend} bezeichnet,
+ein strong monoton fallendes als \emdef{orientierungsumkehrend}.
+
+Man spricht von einer $C^k$"=Parametertransformation, wenn sowohl
+$\varphi$ also auch $\varphi^{-1}$ aus $C^k$ sind. Man betrachtet
+auch $C^\infty$, die glatten Parametertransformationen und
+$C^\omega$, die reell-analytischen.
+\end{definition}
+
+\noindent
+Wenn $\tilde\gamma$ eine Umparametrisierung ist, gilt natürlich
+$\Bild\tilde\gamma=\Bild\gamma$, denn
+\begin{equation}
+\Bild\tilde\gamma = \tilde\gamma(J)
+= (\gamma\circ\varphi)(J) = (\gamma)(\varphi(J))
+= \gamma(I) = \Bild\gamma.
+\end{equation}
+Die Regel $(g\circ f)(A)=g(f(A))$ gilt für beliebige Abbildungen,
+wie aus den Grundlagen der Mathematik bekannt sein sollte.
+
+Die Umkehrung ist nicht allgemeingültig: Aus
+$\Bild\gamma=\Bild\tilde\gamma$ folgt nicht zwingend, dass
+$\tilde\gamma$ eine Umparametrisierung von $\gamma$ ist. Sei
+$\gamma(t)=(t,0)$ und $t\in[0,1]$. Als Gegenbeispiel wählt man
+$\tilde\gamma$ nun so, dass sich auch diese Strecke ergibt, die
+Bewegung aber auch rückwärts verläuft, z.\,B. $\tilde\gamma(t)=(\sin(t),0)$
+mit $t\in[0,\pi]$. Die erste Komponente von $\gamma(t)$ ist streng
+monoton steigend. Da die Verkettung von streng monotonen Funktionen
+auch wieder streng monoton ist, kann $\sin(t)$ niemals das Ergebnis
+einer Parametertransformation sein.
+
+\begin{corollary}
+Jede Parametertransformation ist auch ein
+Homöomorphismus. Die Umkehrfunktion ist auch eine
+Parametertransformation. Jede $C^k$"=Parametertransformation
+ist auch ein $C^k$"=Diffeomorphismus.
+\end{corollary}
+
+\noindent\strong{Beweis.}
+Folgt trivial aus dem Umkehrsatz für streng monotone
+Funktionen.\;\qedsymbol
+
+\begin{corollary}
+Ein $C^k$"=Diffeomorphismus $\varphi$ ist auch eine
+$C^k$"=Parametertransformation.
+\end{corollary}
+
+\noindent\strong{Beweis.}
+Eine bijektive stetige reelle Funktion muss streng monoton sein.
+Daher ist $\varphi$ streng monoton.\;\qedsymbol
+
+Man beachte, dass auch der Fall $C^0$ mit eingeschlossen ist.
+Insgesamt bekommen wir das folgende übersichtliche Resultat.
+
+\begin{corollary}[Charakterisierung von Parametertransformationen]
+Die $C^k$"=Diffeomorphismen zwischen reellen Intervallen sind
+genau die $C^k$"=Parametertransformationen.
+\end{corollary}
+
+\begin{corollary}
+Sei $\varphi\colon J\to I$ eine stetig differenzierbare
+Funktion zwischen Intervallen. Ist $\varphi'(x)\ne 0$ für alle $x$,
+dann ist $\varphi$ bereits eine Parametertransformation.
+\end{corollary}
+
+\noindent\strong{Beweis.}
+Da $\varphi'$ stetig ist, muss es nach dem Zwischwertsatz beim
+Vorzeichenwechsel eine Stelle $x$ mit $\varphi'(x)=0$ geben. Da
+dies ausgeschlossen ist, gilt entweder $\varphi'(x)>0$ für alle $x$
+oder $\varphi'(x)<0$ für alle $x$. Somit ist $\varphi$ streng monoton.
+Da $\varphi$ stetig differenzierbar ist, ist es erst recht
+stetig.\;\qedsymbol
+
+Umparametrisierungen ändern die Bildmenge nicht und lassen wohl auch
+andere geometrische Eigenschaften unverändert. Zwar wird sich
+beim schnelleren durchlaufen der Kurve ein größerer Tangentialvektor
+ergeben, die Tangente bleibt aber gleich. Auch der normierte
+Tangentialvektor bleibt gleich, wenn die Parametertransformation
+orientierungserhaltend ist. Diese Überlegungen motivieren das folgende
+Konzept.
+
+\begin{definition}[Geometrische Kurve]
+Zwei Parameterkurven seien in Relation, wenn die eine eine
+Umparametrisierung der anderen ist, wobei die Parametertransformation
+glatt sein soll. Hierdurch ist eine 
+Äquivalenzrelation gegeben. Die Äquivalenzklasse nennt man
+\emdef{geometrische Kurve}.
+\end{definition}
+
+\begin{definition}[Orientierte Kurve]
+Eine \emdef{orientierte Kurve} ist das Analogon zu einer
+geometrischen Kurve, wobei man sich auf orientierungserhaltende
+Parametertransformationen beschränkt.
+\end{definition}
+
+\noindent
+Wie üblich schreiben wir $[\gamma]$ für die Äquivalenzklasse zum
+Repräsentanten $\gamma$. Wir wollen eine Eigenschaft als
+\emph{geometrisch} bezeichnen, wenn sie für eine geometrische Kurve
+wohldefiniert ist, d.\,h. unabhängig von der Wahl des Repräsentanten.
+
+Es folgt ein einfaches Beispiel.
+
+\begin{corollary}
+Sei $\gamma$ doppelpunktfrei. Der Tangentialraum
+\begin{equation}
+T_p[\gamma] := \{r\gamma'(t_0)\mid r\in\R\}
+\quad\text{für ein $t_0$ mit $p=\gamma(t_0)$}
+\end{equation}
+ist ein geometrisches Konzept. Regularität ist eine geometrische
+Eigenschaft, d.\,h. für eine reguläre Parameterkurve gilt
+$\dim T_p[\gamma]=1$.
+\end{corollary}
+
+\noindent\strong{Beweis.}
+Wir zeigen einfach, dass der Tangentialvektor nach Umparametrisierung
+kollinear zum ursprünglichen Tangentialvektor ist. Gemäß der
+Kettenregel ergibt sich:%
+\begin{equation}
+w = (\gamma\circ\varphi)'(t_0) = (\gamma'\circ\varphi)(t_0)\cdot \varphi'(t_0).
+\end{equation}
+Sei $v=(\gamma'\circ\varphi)(t_0)$. Gemäß der Definition der
+Parametertransformation ist $r=\varphi'(t_0)\ne 0$. Demnach
+gilt $w=rv$, was wegen $r\ne 0$ eine kollineare Beziehung zwischen
+$w$ und $v$ ist. Wenn $\gamma$ regulär ist, muss $v\ne 0$ sein.
+Wegen $r\ne 0$ ist dann aber auch $w\ne 0$.\;\qedsymbol
+
+
+\subsection{Rektifizierbare Wege}
+
+Wir wollen nun versuchen, die Länge eines Weges zu ermitteln.
+Der Gedankengang ist, dass sich ein Weg durch einen Polygonzug
+approximieren lassen müsste. Sei also $\gamma\colon [a,b]\to X$
+ein Weg und $(X,d)$ ein metrischer Raum. Sei durch%
+\begin{equation}
+P:=(t_0,\ldots,t_m),\quad a=t_0<t_1<\ldots <t_m=b
+\end{equation}
+eine Partition (Zerlegung) von $[a,b]$ gegeben. Dann ergibt sich
+über die Knoten $\gamma(t_k)$ ein Polygonzug. Dessen Länge ergibt
+sich gemäß%
+\begin{equation}
+L(\gamma,P) := \sum_{k=0}^{m-1} d(\gamma(t_{k+1}),\gamma(t_k)).
+\end{equation}
+Wenn man nun die Partition immer weiter verfeinert, dann sollte
+sich die Länge der Nähe des Weges nähern, sofern dieser Weg überhaupt
+eine Länge besitzt.
+\begin{definition}[Länge, rektifizierbarer Weg]
+Die \emdef{Länge} eines Weges $\gamma$ ist definiert als%
+\begin{equation}
+L_a^b(\gamma) := \sup\nolimits_P L(\gamma,P), \quad P=(a,\ldots,b).
+\end{equation}
+Ein Weg mit endlich Länge wird \emdef{rektifizierbar} genannt.
+\end{definition}
+Das ist eine typische dieser unzugänglich erscheinenden Definitionen.
+Ein Satz mit einer praktischen Formel zur Berechnung gelangt uns
+aber sogleich in die Hände.
+\begin{theorem}
+Ein stetig differenzierbarer Weg $\gamma\colon [a,b]\to\R^n$ ist
+rektifizierbar und es gilt%
+\begin{equation}
+L_a^b(\gamma) = \int_a^b |\gamma'(t)|\,\mathrm dt.
+\end{equation}
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Nach dem Hauptsatz der Analysis und der Dreiecksungleichung gilt:
+\begin{gather}
+L(\gamma,P) = \sum_{k=0}^{m-1} |\gamma(t_{k+1})-\gamma(t_k)|
+= \sum_{k=0}^{m-1} \Big|\int_{t_k}^{t_{k+1}}\gamma'(t)\,\mathrm dt\Big|\\
+\le \sum_{k=0}^{m-1} \int_{t_k}^{t_{k+1}} |\gamma'(t)|\,\mathrm dt
+= \int_a^b |\gamma'(t)|\,\mathrm dt.
+\end{gather}
+Da $\gamma'(t)$ nach Voraussetzung stetig ist, ist auch $|\gamma'(t)|$
+stetig. Demnach nimmt das Integral einen endlichen Wert an. Also ergibt
+sich
+\begin{gather}
+L_a^b(\gamma) \le \int_a^b |\gamma'(t)|\,\mathrm dt < \infty.
+\end{gather}
+Die Länge der geraden Strecke kann gemäß Dreiecksungleichung niemals
+länger sein, als die eines Polygonzuges. Das heißt, es muss
+$|\gamma(t+h)-\gamma(t)|\le L_t^{t+h}(\gamma)$ sein. Demnach
+gilt die Abschätzung
+\begin{equation}
+\frac{|\gamma(t+h)-\gamma(t)|}{h}\le L_t^{t+h}(\gamma)
+\le\frac{1}{h}\int_t^{t+h} |\gamma'(t)|\,\mathrm dt.
+\end{equation}
+Beide Seiten konvergieren gegen $|\gamma'(t)|$ für $h\to 0$.
+Gemäß dem Einschnürungssatz muss auch der mittlere Term gegen diesen
+Wert konvergieren. Demnach gilt
+\begin{equation}
+|\gamma'(t)| = \lim_{h\to 0}\frac{L_t^{t+h}(\gamma)}{h}
+= \lim_{h\to 0}\frac{L_a^{t+h}(\gamma)-L_a^t(\gamma)}{h}
+= \frac{\mathrm d}{\mathrm dt} L_a^t(\gamma).
+\end{equation}
+Ziehen wir nochmals den Hauptsatz der Analysis heran, dann ergibt
+sich das gewünschte Resultat:
+\begin{equation}
+L_a^b(\gamma) = \int_a^b \frac{\mathrm d}{\mathrm dt} L_a^t(\gamma)\,\mathrm dt
+= \int_a^b |\gamma'(t)|\,\mathrm dt.\;\qedsymbol
+\end{equation}
+
+\begin{theorem}
+Die Länge eines stetig differenzierbaren Weges ist ein geometrisches
+Konzept.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Sei $\gamma\colon [a,b]\to\R^n$ ein stetig differenzierbarer Weg und
+und $\tilde\gamma\colon [\alpha,\beta]\to\R^n$ eine Umparametrisierung
+gemäß $\tilde\gamma = \gamma\circ\varphi$, wobei $\varphi$ eine
+orientierungserhaltende glatte Parametertransformation ist. Nach
+der Kettenregel und wegen $\varphi'(t)>0$ ist zunächst
+\begin{gather}
+|\tilde\gamma'(t)| = |(\gamma'\circ\varphi)(t)\cdot\varphi'(t)|
+= |(\gamma'\circ\varphi)(t)|\cdot\varphi'(t).
+\end{gather}
+Unter Bemühung der Substitutionsregel ergibt sich
+\begin{gather}
+L(\tilde\gamma) = \int_\alpha^\beta |\tilde\gamma'(t)|\,\mathrm dt
+= \int_\alpha^\beta |(\gamma'\circ\varphi)(t)|\,\varphi'(t)\,\mathrm dt
+= \int_a^b |\gamma'(\varphi)|\,\mathrm d\varphi = L(\gamma).
+\end{gather}
+Die Länge ist also nicht vom gewählten Repräsentanten
+abhängig.\;\qedsymbol
+
+

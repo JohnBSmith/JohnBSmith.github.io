@@ -1,4 +1,4 @@
-\documentclass[a4paper,fleqn,11pt]{scrartcl}
+\documentclass[a4paper,fleqn,11pt]{scrbook}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
@@ -11,7 +11,7 @@
 
 \usepackage{libertine}
 \usepackage[scaled=0.80]{DejaVuSans}
-\usepackage[libertine,cmintegrals]{newtxmath}
+\usepackage[cmintegrals]{newtxmath}
 \renewcommand\ttdefault{lmvtt}
 
 \usepackage{geometry}
@@ -41,6 +41,9 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Korollar}
 
+\numberwithin{definition}{chapter}
+\numberwithin{theorem}{chapter}
+
 \definecolor{greenblue}{rgb}{0.0,0.32,0.4}
 \definecolor{grayblue}{rgb}{0.2,0.2,0.4}
 
@@ -68,59 +71,28 @@
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\defiff}{\;:\Longleftrightarrow\;}
+\newcommand{\emdef}[1]{\emph{#1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
 
 \DeclareMathOperator{\id}{id}
 \DeclareMathOperator{\sur}{sur}
 \DeclareMathOperator{\real}{Re}
 \DeclareMathOperator{\imag}{Im}
+\DeclareMathOperator{\Bild}{Bild}
+
+\title{Differentialgeometrie}
+\date{Dezember 2018}
 
 \begin{document}
 \thispagestyle{empty}
 
-\noindent
-{\huge\strong{Grundlagen}}
+\maketitle
+
+Dieses Heft steht unter der Lizenz Creative Commons CC0.
 
 \tableofcontents
 
-\section{Mengen und Abbildungen}
-
-\subsection{Mengenoperationen}
-
-\begin{definition}[Vereinigung]
-Als \emph{Vereinigung} von zwei Mengen $A$ und $B$ wird die Menge
-\begin{equation}\label{eq:cup}
-A\cup B := \{x\mid x\in A\lor x\in b\}
-\end{equation}
-bezeichnet.
-\end{definition}
-
-
-\subsection{Urbild}
-
-\begin{definition}[Urbild]
-Unter dem \emph{Urbild} einer Menge $M$ bezüglich einer
-Abbildung $f\colon A\to B$ versteht
-man die Menge
-\begin{equation}\label{eq:Urbild}
-f^{-1}(M) := \{x\mid f(x)\in M\}.
-\end{equation}
-\end{definition}
-
-\begin{theorem}
-Für eine Abbildung $f\colon A\to B$ gilt
-\begin{equation}
-f^{-1}(A\cup B) = f^{-1}(A)\cup f^{-1}(B).
-\end{equation}
-\end{theorem}
-
-\noindent
-\strong{Beweis.} Nach \eqref{eq:Urbild} und \eqref{eq:cup} gilt:
-\begin{align}
-&x\in f^{-1}(A\cup B)\iff f(x)\in A\cup B
-\iff f(x)\in A\lor f(x)\in B\\
-&\iff x\in f^{-1}(A)\lor x\in f^{-1}(B)
-\iff x\in f^{-1}(A)\cup f^{-1}(B).\;\Box
-\end{align}
+\input{Kurven.tex}
 
 
 \end{document}
