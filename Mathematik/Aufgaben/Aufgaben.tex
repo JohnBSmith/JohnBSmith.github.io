@@ -598,21 +598,138 @@ Weil alle partiellen Ableitungen konstant und daher auch stetig
 sind, ist $p_i$ total differenzierbar. Somit muss $p_i$ erst
 recht stetig sein.\;$\Box$
 
+\subsection{Vektoranalysis}
+\begin{Aufgabe}
+Man berechne den Fluss des Vektorfeldes $F(x,y,z)=(x,y,xyz)$ durch
+die Oberfläche des Würfels $[0,1]^3$.
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+Das Integral wird in sechs Summanden zerlegt, jeweils einen für jede
+Seite. Die Definition des Oberflächenintegrals lautet
+\begin{equation}
+I = \iint_A \langle F,\hat N\rangle \mathrm d\sigma
+:= \iint_B \langle F(\varphi(u,v)),N\rangle\,\mathrm du\,\mathrm dv,
+\end{equation}
+wobei $\varphi(u,v)$ eine Parametrisierung der Oberfläche ist und
+\[N = \varphi_u\times\varphi_v = \frac{\partial\varphi}{\partial u}\times\frac{\partial\varphi}{\partial v}.
+\qquad (\hat N = N/|N|,\;\mathrm d\sigma = |N|\mathrm du\,\mathrm dv)\]
+Für die Parametrisierungen wird immer $B=[0,1]^2$ gewählt, dergestalt
+dass der Normalenvektor nach außen zeigt.
+
+\newpage
+\noindent
+Die Berechnung:
+\[
+\varphi = \begin{bmatrix}v\\ u\\ 0\end{bmatrix},
+F = \begin{bmatrix}v\\ u\\ 0\end{bmatrix},
+N = \begin{bmatrix}0\\ 0\\ -1 \end{bmatrix},
+\quad\langle F,N\rangle = 0,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = 0
+\]
+
+\[
+\varphi = \begin{bmatrix}u\\ v\\ 1\end{bmatrix},
+F = \begin{bmatrix}u\\ v\\ uv\end{bmatrix},
+N = \begin{bmatrix}0\\ 0\\ 1\end{bmatrix},
+\quad\langle F,N\rangle = uv,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = \frac{1}{4}
+\]
+
+\[
+\varphi = \begin{bmatrix}u\\ 0\\ v\end{bmatrix},
+F = \begin{bmatrix}u\\ 0\\ 0\end{bmatrix},
+N = \begin{bmatrix}0\\ -1\\ 0\end{bmatrix},
+\quad\langle F,N\rangle = 0,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = 0
+\]
+
+\[
+\varphi = \begin{bmatrix}v\\ 1\\ u\end{bmatrix},
+F = \begin{bmatrix}v\\ 1\\ vu\end{bmatrix},
+N = \begin{bmatrix}0\\ 1\\ 0\end{bmatrix},
+\quad\langle F,N\rangle = 1,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = 1
+\]
+
+\[
+\varphi = \begin{bmatrix}0\\ u\\ v\end{bmatrix},
+F = \begin{bmatrix}0\\ u\\ 0\end{bmatrix},
+N = \begin{bmatrix}-1\\ 0\\ 0\end{bmatrix},
+\quad\langle F,N\rangle = 0,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = 0
+\]
+
+\[
+\varphi = \begin{bmatrix}1\\ v\\ u\end{bmatrix},
+F = \begin{bmatrix}1\\ v\\ vu\end{bmatrix},
+N = \begin{bmatrix}1\\ 0\\ 0\end{bmatrix},
+\quad\langle F,N\rangle = 1,
+\quad\int_0^1 \int_0^1 \langle F,N\rangle\,\mathrm du\,\mathrm dv = 1
+\]
+Es ergibt sich
+\[I = I_1+I_2+I_3+I_4+I_5+I_6 = 0+\frac{1}{4}+0+1+0+1 = \frac{9}{4}.\;\Box\]
+
+\newpage
+\section{Lineare Algebra}
+\subsection{Matrizenrechnung}
+\begin{Aufgabe}
+Seien $A,B\in K^{n\times n}$ zwei quadratische Matrizen mit $A\ne 0$
+und $B\ne 0$. Unter welchen Umständen ergibt sich $AB=0$?
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+Die invertierbaren Matrizen bilden eine Gruppe, die allgemeine
+lineare Gruppe $\mathrm{GL}(n,K)$. Für jede invertierbare Matrix $A$
+gilt $\det(A)\ne 0$. Da das Produkt von invertierbaren Matrizen
+wieder in dieser Gruppe liegen muss, kann sich niemals die Nullmatrix
+ergeben, weil diese nicht invertierbar ist.
+
+Angenommen, nur eine der beiden Matrizen ist invertierbar. Wenn es
+$B$ ist, dann kann man transponieren:%
+\begin{equation}
+AB=0 \iff (AB)^T = 0^T \iff B^T A^T = 0.
+\end{equation}
+Die Transponierte einer invertierbaren Matrix ist auch invertierbar.
+Daher genügt es, die Situtation $\det(A)\ne 0$ zu betrachten
+und an $B$ keine weiteren Forderungen zu stellen.
+
+Eine invertierbare Matrix repräsentiert einen
+Vektorraum"=Automorphismus. Da dieser bijektiv und somit auch injektiv
+ist, besitzt er einen trivialen Kern. Wegen $Av\ne 0$ für $v\ne 0$
+kann kein Spaltenvektor von $B$ zum Nullvektor werden. Daher ist $AB=0$
+erst recht ausgeschlossen.
+
+Die allgemeine lineare Gruppe ist die Einheitengruppe des Matrizenrings
+$K^{n\times n}$. Sei $R$ ein Ring und $G=R^*$ die Einheitengruppe
+dieses Rings. Sei $g\in G$ und $x\in R$. Angenommen es ist $gx=0$,
+dann gilt%
+\begin{equation}
+0 = g^{-1}\cdot 0 = g^{-1}\cdot (gx) = (g^{-1}g)x = x.
+\end{equation}
+Die Forderung $gx=0$ zieht immer $x=0$ nach sich. Dann kann $g$ aber
+niemals ein Linksnullteiler sein, weil sich kein $x\ne 0$ mit $gx=0$
+finden lässt. Für $xg=0$ ergibt sich analog%
+\begin{equation}
+0 = 0\cdot g^{-1} = (xg)g^{-1} = x(gg^{-1}) = x.
+\end{equation}
+Bei $g$ kann es sich also niemals um einen Nullteiler handeln.
+
+\newpage
 \section{Kombinatorik}
 \subsection{Endliche Summen}
 \begin{Aufgabe}
 Vereinfache $\displaystyle\sum_{k=1}^n (2k+4)$.
 \end{Aufgabe}
 
-\noindent
-\strong{Lösung.} Man verwendet die Rechenregeln für endliche Summen.
+\noindent\strong{Lösung.}
+Man verwendet die Rechenregeln für endliche Summen.
 Es ergibt sich:
 \begin{equation}
 \sum_{k=1}^n (2k+4) = 2\sum_{k=1}^n k + \sum_{k=1}^n 4
 = 2\cdot\frac{n}{2}(n+1)+4n = n^2+n+4n = n^2+5n.
 \end{equation}
 
-\newpage
 \subsection{Rekursionsgleichungen}
 
 \begin{Aufgabe}\label{qPotenzen}
@@ -681,7 +798,7 @@ Nun gilt:
 \[\sum_{k=a}^{b-1} (\Delta f)_k = f_b-f_a.\]
 In dieser Form ist die Teleskopsummen-Regel völlig analog zu
 \[\int_a^b \frac{\mathrm df(x)}{\mathrm dx}\,\mathrm dx
-= \int_a^b \mathrm df(x) = f(b)-f(a).\]
+= \int_{x=a}^{x=b} \mathrm df(x) = f(b)-f(a).\]
 Es gibt weitere Rechenregeln. Man spricht von \emph{Differenzenrechnung}
 (engl. \emph{finite calculus}). Dieser Kalkül ist unter anderem
 im Buch »Concrete Mathematics« beschrieben.
@@ -917,6 +1034,7 @@ kürzesten Weg. Wie viele kürzeste Wege von Knoten $(0,0)$ zu Knoten
 $(m,n)$ gibt es auf einem diskreten Gitter mit Manhatten-Metrik?
 \end{Aufgabe}
 
+\newpage
 \section{Wahrscheinlichkeitsrechnung}
 \subsection{Diskrete Verteilungen}
 \begin{Aufgabe}
