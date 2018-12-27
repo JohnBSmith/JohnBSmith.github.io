@@ -1,25 +1,104 @@
 
 \chapter{Untermannigfaltigkeiten des euklidischen Raums}
 
+\section{Grundlagen}
+
+\subsection{Lokale Karten}
+
+Sei $\varphi\colon U\to\R^m$ mit $U\subseteq\R^n$ eine lokale Karte.
+Man definiert die Richtungsableitung von $\varphi$ als
+\begin{equation}
+\mathrm d\varphi_u(v) = (\mathrm d\varphi)(u)(v)
+:= \lim_{h\to 0}\frac{\varphi(u+hv)-\varphi(u)}{h}.
+\end{equation}
+Im Folgenden wird der Begriff der totalen Differenzierbarkeit
+aus der mehrdimensionalen Analysis als bekannt vorausgesetzt.
+Ist $\varphi$ total differenzierbar, dann lässt sich
+$\mathrm d\varphi_u$ als lineare Abbildung aus $\hom(\R^n,\R^m)$
+darstellen. Aufgrund der kanonischen Isomorphie zwischen
+$\hom(\R^n,\R^m)$ und dem Matrizenraum $\R^{m\times n}$ gibt
+es für jede lineare Abbildung genau eine Darstellungsmatrix,
+wobei für $\R^n$ und $\R^m$ die kanonische Basis zu wählen ist.
+Dieser Zusammenhang ist so eindrücklich, dass wir die lineare
+Abbildung zwischen Koordinatenräumen mit ihrer Darstellungsmatrix
+identifizieren könnten.
+
+Die kanonische Darstellungsmatrix von $\mathrm d\varphi_u$ ist die
+Jacobi"=Matrix $J=D\varphi_u$. Für einen Vektor $v\in\R^n$ mit
+$v=\sum_{j=1}^n v_j \mathbf e_j$ gilt dann
+\begin{equation}
+\mathrm d\varphi_u(v) = Jv
+= \sum_{j=1}^n \frac{\partial\varphi}{\partial u^j}(u) v^j
+= \sum_{i=1}^m\sum_{j=1}^n \frac{\partial\varphi^i}{\partial u^j}(u) v^j\mathbf e_i
+= \sum_{i=1}^m\sum_{j=1}^n J_{ij} v^j\mathbf e_i.
+\end{equation}
+
+\subsection{Tangentialräume}
+
+Sei $M$ eine Untermannigfaltigkeit, $p\in M$ ein Punkt und
+$c\colon (-\varepsilon,\varepsilon)\to M$ eine differenzierbare Kurve
+mit $p=c(0)$. Da $c'(0)$ der Tangentialvektor der Kurve am Punkt $p$
+ist und die Kurve in $M$ liegt, muss $c'(0)$ auch ein Tangentialvektor
+von $M$ sein. Die Menge aller Tangentialvektoren, die sich auf
+diese Art am Punkt $p$ bilden lassen, nennt man Tangentialraum $T_p M$.
+
+\begin{theorem}
+Sei $M$ eine $n$"=dimensionale Untermannigfaltigkeit des $\R^m$.
+Der Tangentialraum $T_p M$ ist ein $n$"=dimensionaler Untervektorraum
+des $\R^m$. Sei $\varphi\colon U\to V$ mit $U\subseteq\R^n$ und
+$V\subseteq M$ eine lokale Karte von $M$.  Es gilt
+$T_p M = \Bild(\mathrm d\varphi_u)$, wobei $p=\varphi(u)$. 
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Zur Kurve $c$ in $M$ gehört genau die Kurve $\tilde c$ im $\R^n$, so
+dass $c=\varphi\circ\tilde c$. Sei $u=\tilde c(0)$. Nach der
+Kettenregel gilt%
+\begin{equation}
+c'(0) = (\varphi\circ\tilde c)'(0) = \mathrm d\varphi_u\tilde c'(0),
+\end{equation}
+Zu jedem Vektor $v\in\R^n$ lässt sich eine Kurve $\tilde c$
+mit $u=\tilde c(0)$ und $v=\tilde c'(0)$ finden. Demnach gilt
+\begin{equation}
+T_p M = \mathrm d\varphi_u(\R^n) = \Bild(\mathrm d\varphi_u).
+\end{equation}
+Weil $\mathrm d\varphi_u$ eine injektive lineare Abbildung ist,
+gilt nach dem Dimensionssatz%
+\begin{equation}
+\dim\Bild(d\varphi_u) = \dim(\R^n) = n.\;\qedsymbol
+\end{equation}
+Da $\mathrm d\varphi_u$ injektiv ist, wird einer Basis wieder eine
+Basis zugeordnet. Nimmt man die Standardbasis
+$(\mathbf e_k)=(\mathbf e_1,\ldots,\mathbf e_n)$, dann ergibt
+sich für $T_p M$ die Basis $(g_k)$ mit
+\begin{equation}
+g_k(u) = \mathrm d\varphi_u(\mathbf e_k)
+= \frac{\partial\varphi}{\partial u^k}(u),\quad\text{wobei}\; p=\varphi(u).
+\end{equation}
+
+
 \section{Skalarfelder}
 
 \subsection{Die Richtungsableitung}
 
 Sei $U\subseteq\R^n$ eine offene Menge. Sei außerdem $p\in U$ 
-eine Stelle und $v\in\R^n$ ein Vektor. Man betrachte nun die Gerade
+eine Stelle und $v\in\R^n$ ein Vektor. Man betrachte die Gerade
 \begin{equation}\label{eq:Gerade-zum-Vektor}
 G := \{p+tv\mid t\in\R\}.
 \end{equation}
-Die Einschränkung von $f$ auf $U\cap G$ ist
+Das Skalarfeld $f$ wollen wir nun auf den Streifen $U\cap G$
+einschränken. Parametrisiert man diesen Streifen um $p$ herum durch
+$t$, dann ergibt sich die Funktion%
 \begin{equation}
-g\colon U\cap G\to\R,\quad g(t):=f(p+tv).
+g\colon (-\varepsilon,\varepsilon)\to\R,\quad g(t):=f(p+tv).
 \end{equation}
-Für $g$ ist die gewöhnliche Ableitung definiert, da $g$ eine reelle
-Funktion in einer Variablen ist. Wir nennen $g'(0)$ die
+Für $g$ ist die gewöhnliche Ableitung definiert, da $g$
+eine reelle Funktion in einer Variablen ist. Wir nennen $g'(0)$ die
 \emph{Richtungsableitung} von $f$ an der Stelle $p$ in Richtung $v$.
 Es ergibt sich%
 \begin{equation}\label{eq:Richtungsableitung-flach}
-(\mathrm d_p f)(v) := g'(0) = \lim_{h\to 0}\frac{g(h)-g(0)}{h}
+\mathrm df_p(v) = (\mathrm df)(p)(v) := g'(0)
+= \lim_{h\to 0}\frac{g(h)-g(0)}{h}
 = \lim_{h\to 0}\frac{f(p+hv)-f(p)}{h}.
 \end{equation}
 Wir betrachten nun ein Skalarfeld $f\colon M\to\R$, welches
@@ -31,46 +110,110 @@ Außerhalb von $M$ ist das Skalarfeld nicht definiert, der Ausdruck
 \eqref{eq:Richtungsableitung-flach} setzt dies aber voraus.
 
 Dieses Problem lässt sich wie folgt lösen. Sei $p\in M$ ein Punkt
-auf $M$. Sei $c\colon I\to M$ eine Kurve in $M$ mit
-$p=c(0)$ und $v=c'(0)$. Damit das überhaupt möglich ist, muss
+auf $M$. Sei $c\colon (-\varepsilon,\varepsilon)\to M$ eine Kurve
+in $M$ mit $p=c(0)$ und $v=c'(0)$. Damit das überhaupt möglich ist, muss
 der Vektor $v\in T_p M$, d.\,h. im Punkt $p$ tangential an $M$ sein.
-Nun wird ähnlich wie zuvor die Einschränkung des
-Skalarfeldes $f$ auf den kleineren Definitionsbereich $c(I)$
-betrachtet. Diese Einschränkung lässt sich als
-$g\colon I\to\R$ mit $g:=f\circ c$ angeben. Für $g$ ist die
-gewöhnliche Ableitung definiert. Die Richtungsableitung lässt sich
-also gemäß $g'(0)=(f\circ c)'(0)$ bestimmen.
+Nun wird ähnlich wie zuvor die Funktion
+$g\colon (-\varepsilon,\varepsilon)\to\R$ mit $g:=f\circ c$ betrachtet.
+Für $g$ ist die gewöhnliche Ableitung definiert. Die Richtungsableitung
+lässt sich also gemäß $g'(0)=(f\circ c)'(0)$ bestimmen.
 
 \begin{definition}[Richtungsableitung]
 Sei $M$ eine Untermannigfaltigkeit und $f\colon M\to\R$ ein Skalarfeld.
 Sei $p\in M$ ein Punkt und $v$ ein Vektor, welcher am Punkt $p$
-tangential an $M$ ist. Sei $c\colon I\to M$ eine glatte Kurve mit
-$p=c(0)$ und $v=c'(0)$. Unter der \emdef{Richtungsableitung} von $f$ am
-Punkt $p$ in Richtung $v$ versteht man die reelle Zahl
+tangential an $M$ ist. Sei $c\colon (-\varepsilon,\varepsilon)\to M$
+eine glatte Kurve mit $p=c(0)$ und $v=c'(0)$. Unter der
+\emdef{Richtungsableitung} von $f$ am Punkt $p$ in Richtung $v$
+versteht man die reelle Zahl
 \begin{equation}
-(\mathrm d_p f)(v) := (f\circ c)'(0) = \lim_{h\to 0}\frac{f(c(h))-f(p)}{h}.
+\mathrm df_p(v) = (\mathrm df)(p)(v) := (f\circ c)'(0)
+= \lim_{h\to 0}\frac{f(c(h))-f(p)}{h}.
 \end{equation}
 \end{definition}
+Sei $\varphi\colon U\to V$ mit $U\subseteq\R^m$ und $V\subseteq M$
+eine lokale Karte. Sei $(g_k)$ der durch
+$g_k=\frac{\partial\varphi}{\partial u^k}$ induzierte lokale
+Rahmen. Demnach ist $(g_k)$ am Punkt $p$ eine
+Basis von $T_p M$. Sei $(\mathrm dx^k)$ die zu $(g_k)$ eindeutig
+bestimmte duale Basis. Diese spannt den Kotangentialraum $T_p^* M$ auf.
 
+Die partiellen Ableitungen von $f$ lassen sich wie bei Skalarfeldern
+auf dem $\R^n$ als die Richtungsableitungen in Richtung der
+Basisvektoren sehen. Beim $\R^n$ war es die Standarbasis, hier ist
+es $(g_k)$.
+\begin{definition}[Partielle Ableitungen]
+Die \emdef{partielle Ableitung} von $f$ nach der $k$-ten Koordinate
+ist definiert als
+\begin{equation}
+(\partial_k f)(p) = \frac{\partial f}{\partial x^k}(p)
+= \frac{\partial f(x)}{\partial x^k}\Big|_{x=p} :=
+\mathrm df_p(g_k).
+\end{equation}
+\end{definition}
+Wenn $f$ als total differenzierbar vorausgesetzt wird, dann ist
+$\mathrm df_p$ eine Linearform, also ein Element des
+Kotangentialraums. Es ergibt sich
+\begin{equation}
+\mathrm df_p = \sum_{k=1}^n \frac{\partial f}{\partial x^k}(p)\mathrm dx^k.
+\end{equation}
+Für einen Vektor $v=\sum_{k=1}^n v^k g_k$ ergibt
+sich dann die duale Paarung
+\begin{equation}
+\mathrm df_p(v) = \sum_{k=1}^n \frac{\partial f}{\partial x^k}(p)v^k.
+\end{equation}
+Mit der lokalen Karte $\varphi$ ist eigentlich die lokale
+Darstellung $\tilde f=f\circ\varphi$ gegeben. Zwischen
+$f$ und $\tilde f$ gibt es aber einen besonders einfachen Zusammenhang.
+\begin{corollary}
+Sei $f$ ein Skalarfeld, $\varphi$ eine lokale Karte und
+$\tilde f=f\circ\varphi$. Es gilt%
+\begin{equation}
+\frac{\partial f}{\partial x^k}(p) = \frac{\partial\tilde f}{\partial u^k}(u),
+\end{equation}
+wobei $p=\varphi(u)$.
+\end{corollary}
+\strong{Beweis.} Sei dazu $c(t)$ eine Kurve mit $p=c(0)$ und
+$g_k(u)=c'(0)$. Sei außerdem $\tilde c$ eine Kurve im $\R^m$, so dass
+$c=\varphi\circ \tilde c$. Nach der Kettenregel gilt
+\begin{equation}
+g_k(u) = c'(0) = (\varphi\circ\tilde c)'(0) = \mathrm d\varphi_u(\tilde c'(0)).
+\end{equation}
+Es gilt aber auch $g_k(u) = (\partial_k\varphi)(u) =
+\mathrm d\varphi_u(\mathbf e_k)$. Daraus folgt
+$\mathrm d\varphi_u(\tilde c'(0)) = \mathrm d\varphi_u(\mathbf e_k)$.
+Da $\mathrm d\varphi_u$ eine injektive Abbildung ist, ergibt sich
+$\tilde c'(0) = \mathbf e_k$.\;\qedsymbol
+
+Für die Richtungsableitung ergibt sich
+\begin{equation}
+\mathrm df_p(v) = \mathrm d\tilde f_u((v^k)) =
+\langle(\nabla \tilde f)(u),(v^k)\rangle.
+\end{equation}
+Auf der rechten Seite steht das Standardskalarprodukt, weil die
+duale Paarung mit dem totalen Differential im Koordinatenraum einfach
+das Standardskalarprodukt mit dem Gradient ist. Das ist ein rein
+technischer Formalismus, diese Formel setzt keinenfalls eine
+Metrik oder ähnlich voraus.
 
 
 \section{Vektorfelder}
 
 \subsection{Die kovariante Ableitung}
 
-Sei $M$ eine Untermannigfaltigkeit des $\R^n$ und $X\colon M\to TM$
+Sei $M$ eine Untermannigfaltigkeit des $\R^m$ und $X\colon M\to TM$
 ein Vektorfeld. Nun kann doch wie bei einem Skalarfeld die
 Richtungsableitung von $X$ in Richtung
-eines Vektors $v\in T_p M$ definiert werden. Sei dazu $c\colon I\to M$
-eine Kurve mit $p=c(0)$ und $v=c'(0)$. Dann definiert man%
+eines Vektors $v\in T_p M$ definiert werden. Sei dazu
+$c\colon (-\varepsilon,\varepsilon)\to M$ eine Kurve
+mit $p=c(0)$ und $v=c'(0)$. Dann definiert man%
 \begin{equation}
-(\mathrm d_p X)(v) := (X\circ c)'(0).
+\mathrm dX_p(v) := (X\circ c)'(0).
 \end{equation}
 Nun taucht das Problem auf, dass die Ableitung an der Stelle $p$
 ein Vektor ist, welcher nicht unbedingt tangential an $M$ sein muss.
 Ein Ziel der Differentialgeometrie ist es aber, eine Theorie aufzubauen,
 welche nur auf Tangentialräumen beruht. Aus diesem Grund projizieren
-wir den Vektor $w=(\mathrm d_p X)(v)$ orthogonal auf den Tangentialraum
+wir den Vektor $w=\mathrm dX_p(v)$ orthogonal auf den Tangentialraum
 $T_p M$. Der zum Tangentialraum orthogonale Anteil entfällt dabei.
 
 Die orthogonale Projektion auf $T_p M$ nennen wir $\Pi_p$. Es handelt
@@ -82,7 +225,8 @@ an der Stelle $p\in M$ in Richtung $v\in T_p M$ ist definiert als
 \begin{equation}
 (\nabla_v X)(p) := \Pi_p((X\circ c)'(0)),
 \end{equation}
-wobei $c\colon I\to M$ eine glatte Kurve mit $p=c(0)$ und $v=c'(0)$ ist.
+wobei $c\colon (-\varepsilon,\varepsilon)\to M$ eine glatte Kurve
+mit $p=c(0)$ und $v=c'(0)$ ist.
 \end{definition}
 
 \noindent
@@ -101,13 +245,13 @@ $g_k = \frac{\partial\varphi}{\partial u_k}$. Die lokale
 Darstellung $\tilde X$ des Vektorfeldes $X$ sei gemäß den
 Funktionen $a^k(u)$ gegeben, so dass%
 \begin{equation}
-\tilde X(u) = (X\circ\varphi)(u) = \sum_{k=1}^m a^k(u)g_k(u).
+\tilde X(u) = (X\circ\varphi)(u) = \sum_{k=1}^n a^k(u)g_k(u).
 \end{equation}
 An jedem Punkt $p=\varphi(u)$ ist das Vektorfeld also als
 Linearkombination aus der Tangentialbasis an diesem Punkt dargestellt.
 Der Vektor $v$ sei am Punkt $p=\varphi(u_0)$ ebenfalls als
 Linearkombination aus der Tangentialbasis dargestellt:
-$v = \sum_{k=1}^m v^k g_k(u_0)$.
+$v = \sum_{k=1}^n v^k g_k(u_0)$.
 
 Nun sei $\tilde c$ die lokale Darstellung der Kurve, gemäß
 $c=\varphi\circ\tilde c$. Es ergibt sich
@@ -119,25 +263,25 @@ $c=\varphi\circ\tilde c$. Es ergibt sich
 Nach der Produktregel ergibt sich
 \begin{gather}
 (\tilde X\circ\tilde c)'(t)
-= \frac{\mathrm d}{\mathrm dt} \sum_{i=1}^m a^i g_i
-= \sum_{i=1}^m \frac{\mathrm da^i}{\mathrm dt}g_i
-+ \sum_{i=1}^m a^i\frac{\mathrm dg_i}{\mathrm dt}.
+= \frac{\mathrm d}{\mathrm dt} \sum_{i=1}^n a^i g_i
+= \sum_{i=1}^n \frac{\mathrm da^i}{\mathrm dt}g_i
++ \sum_{i=1}^n a^i\frac{\mathrm dg_i}{\mathrm dt}.
 \end{gather}
 Anwendung der Kettenregel bringt nun
 \begin{equation}
 \frac{\mathrm da^i}{\mathrm dt}
-= \sum_{j=1}^m \frac{\partial a^i}{\partial u_j}
+= \sum_{j=1}^n \frac{\partial a^i}{\partial u_j}
 \frac{\mathrm d\tilde c_j}{\mathrm dt},\qquad
 \frac{\mathrm dg^i}{\mathrm dt}
-= \sum_{j=1}^m \frac{\partial g_i}{\partial u_j}
+= \sum_{j=1}^n \frac{\partial g_i}{\partial u_j}
 \frac{\mathrm d\tilde c_j}{\mathrm dt}.
 \end{equation}
 Nach der Kettenregel und $c(0)=\varphi(u_0)$ ergibt sich aber auch
 \begin{equation}
 c'(0) = (\tilde c\circ\varphi)'(0)
-= \sum_{j=1}^m \tilde c_j'(0)(\partial_j\varphi)(u_0)
-= \sum_{j=1}^m \tilde c_j'(0)g_j(u_0)
-= \sum_{j=1}^m v^j g_j(u_0).
+= \sum_{j=1}^n \tilde c_j'(0)(\partial_j\varphi)(u_0)
+= \sum_{j=1}^n \tilde c_j'(0)g_j(u_0)
+= \sum_{j=1}^n v^j g_j(u_0).
 \end{equation}
 Der Koeffizientenvergleich ergibt $\tilde c_j'(0)=v^j$. Demnach ergibt sich
 \begin{equation}
@@ -159,19 +303,19 @@ sind an der Stelle $u_0$ also durch%
 \begin{equation}
 \Pi_p((\partial_j g_i)(u_0))
 = \Pi_p((\partial_i\partial_j\varphi)(u_0))
-= \sum_{k=1}^m \Gamma_{ij}^k g_k(u_0)
+= \sum_{k=1}^n \Gamma_{ij}^k g_k(u_0)
 \end{equation}
 gegeben. Die $\Gamma_{ij}^k(u_0)$ nennt man \emph{Christoffel-Symbole}.
 Auf der linken Seite von \eqref{eq:kov-Ableitung1} machen wir eine
 Indexumbenennung $i:=k$. Es ergibt sich schließlich
 \begin{equation}
 (\nabla_v X)(p)
-= \sum_{k=1}^m \bigg(\sum_{j=1}^m(\partial_j a^k)(u_0)v^j
-+\sum_{i=1}^m\sum_{j=1}^m \Gamma_{ij}^k(u_0) v^j a^i(u_0)\bigg)g_k(u_0).
+= \sum_{k=1}^n \bigg(\sum_{j=1}^n (\partial_j a^k)(u_0)v^j
++\sum_{i=1}^n\sum_{j=1}^n \Gamma_{ij}^k(u_0) v^j a^i(u_0)\bigg)g_k(u_0).
 \end{equation}
 Kurz
 \begin{equation}
 \nabla_v X = \sum_k \bigg(\sum_j v^j\partial_j a^k
 +\sum_{i,j} \Gamma_{ij}^k v^j a^i\bigg)g_k.
 \end{equation}
-Oder kürzer $(\nabla_v X)_k = v^j \partial_j a^k + \Gamma_{ij}^k v^j a^i$.
+Oder kürzer $(\nabla_v X)^k = v^j \partial_j a^k + \Gamma_{ij}^k v^j a^i$.

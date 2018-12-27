@@ -122,11 +122,9 @@ Darstellung des metrischen Tensors in Polarkoordinaten:%
 \subsection{Grundbegriffe}
 
 \begin{definition}[Reguläre Abbildung]
-Seien $U,V$ offene Mengen. Eine Abbildung
-\begin{equation}
-\varphi\colon (U\subseteq\R^n)\to (V\subseteq\R^m)
-\end{equation}
-heißt \emdef{regulär}, wenn
+Seien $U\subseteq\R^n$ und $V\subseteq\R^m$ offene Mengen.
+Eine Abbildung $\varphi\colon U\to V$
+heißt \emdef{regulär}, wenn%
 \begin{equation}
 \forall u\in U\colon \operatorname{rg}((D\varphi)(u))=\min(m,n)
 \end{equation}
@@ -154,11 +152,11 @@ $p\in M$, so heißt $\varphi$ \emdef{lokale Karte} bezüglich $p$.
 \pagebreak[1]
 
 \begin{definition}[Untermannigfaltigkeit des $\R^m$]
-Sei $m,n\in\N, n<m$. Eine Menge $M\subseteq\R^m$ heißt
+Sei $m,n\in\N$ mit $n<m$. Eine Menge $M\subseteq\R^m$ heißt
 \emdef{$n$-dimensionale Untermannigfaltigkeit} des $\R^m$, wenn
 es zu jedem Punkt $p\in M$ eine lokale Karte
 \begin{equation}
-\varphi\colon (U'\subseteq\R^n)\to (U\subseteq M\subseteq\R^m)
+\varphi\colon U'\to U,\quad U'\subseteq\R^n,\quad U\subseteq M
 \end{equation}
 gibt.
 \end{definition}
@@ -172,7 +170,7 @@ ist eine Menge von Karten, deren Bildmengen $M$ überdecken.
 Sei $M$ eine glatte Mannigfaltigkeit.
 Eine Abbildung $f\colon M\to\R$ ist ($k$ mal) (stetig)
 \emdef{differenzierbar}
-gdw. für jede Karte $\varphi\colon U'\to (U\subseteq M)$ das
+gdw. für jede Karte $\varphi\colon U'\to U\subseteq M$ das
 Kompositum $f\circ\varphi$ ($k$ mal) (stetig) differenzierbar ist.
 Es genügt der Nachweis für alle Karten aus einem Atlas.
 \end{definition}
@@ -180,8 +178,8 @@ Es genügt der Nachweis für alle Karten aus einem Atlas.
 \begin{definition}[Glatte Abbildung]
 Seien $M,N$ zwei glatte Mannigfaltigkeiten.
 Eine Abbildung $f\colon M\to N$ heißt \emdef{glatt}
-gdw. für alle Karten $\varphi\colon U'\to (U\subseteq M)$ und
-$\psi\colon V'\to (V\subseteq N)$ das Kompositum
+gdw. für alle Karten $\varphi\colon U'\to U\subseteq M$ und
+$\psi\colon V'\to V\subseteq N$ das Kompositum
 $\psi^{-1}\circ f\circ\varphi$ eine glatte Abbildung ist.
 Es genügt bereits der Nachweis für alle Karten aus jeweils einem
 Atlas für $M$ und $N$.
@@ -189,26 +187,28 @@ Atlas für $M$ und $N$.
 
 \subsection{Skalarfelder}
 \subsubsection{Totales Differential}
-\begin{definition}[Totales Differential]
-Sei $f\colon M\to\R$ ein glattes Skalarfeld, sei $p\in M$ ein Punkt
-und $v\in T_p M$ ein Vektor. Sei $\gamma(t)$ eine Parameterkurve in $M$
-mit $p=\gamma(0)$ und $v=\gamma'(0)$. Die Linearform%
-\begin{gather}
-\mathrm d_p f\colon T_p M\to\R,\\
-(\mathrm d_p f)(v) := (f\circ\gamma)'(0)
-= \frac{\mathrm d}{\mathrm dt}(f(\gamma(t))\Big|_{t=0}
-\end{gather}
-heißt \emdef{totales Differential} von $f$ am Punkt $p$.
-\end{definition}
 \begin{definition}[Richtungsableitung]
-Für einen festen Vektor $v$ wird $(\mathrm d_p f)(v)$ auch als
-\emdef{Richtungsableitung} bezeichnet.
+Sei $f\colon M\to\R$ ein Skalarfeld, sei $p\in M$ ein Punkt
+und $v\in T_p M$ ein Vektor. Sei $\gamma(t)$ eine Parameterkurve in $M$
+mit $p=\gamma(0)$ und $v=\gamma'(0)$. Die Abbildung%
+\begin{gather}
+\mathrm df_p\colon T_p M\to\R,\\
+\mathrm df_p(v) := (f\circ\gamma)'(0)
+\end{gather}
+heißt \emdef{Richtungsableitung} von $f$ am Punkt $p$.
+\end{definition}
+\begin{definition}[Totales Differential]
+Man nennt $f$ am Punkt $p$ total differezierbar, wenn für eine lokale
+Karte $\varphi$ die Darstellung $f\circ\varphi$ total differenzierbar
+ist. Die Richtungsableitung $\mathrm df_p$ ist dann eine
+Linearform, welche \emdef{totales Differential}
+genannt wird.
 \end{definition}
 Sei $(g_k)$ ein Rahmen und $(\mathrm dx^k)$ der dazu gehörige
 Korahmen. Unter den partiellen Ableitungen versteht man die
 Richtungsableitungen in Richtung der Basisvektoren:%
 \begin{equation}
-\frac{\partial f}{\partial x^k}(p)\coloneq (\mathrm d_p f)(g_k).
+\frac{\partial f}{\partial x^k}(p)\coloneq \mathrm df_p(g_k).
 \end{equation}
 Sei $\varphi\colon U\to V\subseteq M$ eine lokale Karte und
 $(g_k)$ der gemäß%
@@ -217,23 +217,23 @@ g_k(u) = \frac{\partial\varphi}{\partial u_k}
 \end{equation}
 induzierte lokale Rahmen. Es gilt
 \begin{equation}
-\frac{\partial f}{\partial x^k} = \frac{\partial\tilde f}{\partial u_k},
+\frac{\partial f}{\partial x^k}(p) = \frac{\partial\tilde f}{\partial u_k}(u),
 \end{equation}
 wobei $\tilde f\coloneq f\circ\varphi$ die
-lokale Darstellung von $f$ ist. Für die lokale Darstellung gilt daher
-die Formel
+lokale Darstellung von $f$ ist. Für ein total differenzierbares $f$
+gilt daher die Formel%
 \begin{equation}
-(\mathrm d_p f)(X) = \sum_{k=1}^n X^k\frac{\partial f}{\partial x^k}(p)
-= \sum_{k=1}^n X^k\frac{\partial\tilde f}{\partial u_k}(u),
+\mathrm df_p(v) = \sum_{k=1}^n \frac{\partial f}{\partial x^k}(p)\,v^k
+= \sum_{k=1}^n \frac{\partial\tilde f}{\partial u_k}(u)\,v^k,
 \end{equation}
-wobei $p=\varphi(u)$ und $X^k=X^k(p)=X^k(\varphi(u))$.
+wobei $p=\varphi(u)$ und $v=\sum_{k=1}^n v^k g_k(u)$.
 
 Dem Prinzip der dualen Paarung nach schreibt man auch%
 \begin{equation}
-\mathrm d_p f = \sum_{k=1}^n \frac{\partial f}{\partial x^k} \mathrm dx^k,\quad
-X = \sum_{k=1}^n X^k g_k.
+\mathrm df_p = \sum_{k=1}^n \frac{\partial f}{\partial x^k}(p)\,\mathrm dx^k,\quad
+\mathrm dx^i(g_j) = \delta_{ij}.
 \end{equation}
-Oder kurz $\mathrm df = \partial_k f\mathrm dx^k$ und $X=X^k g_k$.
+Oder kurz $\mathrm df = \partial_k f\mathrm dx^k$ und $v=v^k g_k$.
 
 \subsection{Vektorfelder}
 \subsubsection{Tangentialräume}
@@ -256,11 +256,41 @@ $(T_p M)^*$ ist.
 Das Tangentialbündel einer glatten Mannigfaltigkeit ist eine
 glatte Mannigfaltigkeit.
 
+\subsection{Kovariante Ableitung}
+\begin{definition}[Kovariante Ableitung]
+Sei $X\colon M\to TM$ ein Vektorfeld und $\gamma$ eine Kurve
+in $M$ mit $p=\gamma(t)$ und $v=\gamma'(t)$. Für eine eingebettete
+Mannigfaltigkeit $M$ sei $\Pi_p$ die orthogonale Projektion eines Vektors
+auf den Tangentialraum $T_p M$. Man nennt%
+\begin{equation}
+(\nabla_v X)(p) = \Pi_p((X\circ\gamma)'(0))
+\end{equation}
+die kovariante Ableitung von $X$ am Punkt $p$ bezüglich $v$.
+\end{definition}
+Sei $\varphi$ eine lokale Karte und $X=\tilde X\circ\varphi$ wobei
+$a^k(u)$ die Komponentenfunktionen sind, so dass
+$\tilde X(u) = \sum_k a^k(u) g_k(u)$. Sei $v=\sum_k v^k g_k(u)$.
+Die lokale Darstellung der kovarianten Ableitung ist
+\begin{equation}
+(\nabla_v X)(p) = \sum_{k=1}^n w^k(u) g_k(u),
+\end{equation}
+mit
+\begin{equation}
+w^k = \sum_{j=1}^n \frac{\partial a^k}{\partial u^j}v^j
++ \sum_{i=1}^n\sum_{j=1}^n \Gamma_{ij}^k a^i v^j,
+\end{equation}
+kurz $w^k = v^j\partial_j a^k + \Gamma_{ij}^k a^i v^j$. Die
+Funktionen $\Gamma_{ij}^k(u)$ mit%
+\begin{equation}
+\Pi_p\Big(\frac{\partial^2\varphi}{\partial u^i\partial u^j}(u)\Big)
+= \sum_{k=1}^n\Gamma_{ij}^k(u) g_k(u).
+\end{equation}
+heißen \emdef{Christoffel"=Symbole}.
+
 \section{Riemannsche Geometrie}
 \subsubsection{Christoffel-Symbole}\index{Christoffel-Symbole}
-Sei $(M,g)$ eine pseudo-riemannsche Mannigfaltigkeit.
-
-Es gilt:
+Sei $(M,g)$ eine pseudo-riemannsche Mannigfaltigkeit. Die
+Christoffel"=Symbole sind durch die Metrik induziert. Es gilt%
 \begin{align}
 \Gamma_{ab}^k &= \frac{1}{2} g^{kc}
 (\partial_a g_{bc}+\partial_b g_{ac}-\partial_c g_{ab}),\\
