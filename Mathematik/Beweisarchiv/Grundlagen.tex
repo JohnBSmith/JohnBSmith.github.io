@@ -365,7 +365,8 @@ Für eine Abbildung $f$ ist
 \[y=f(x)\defiff (x,y)\in G_f.\]
 \end{Definition}
 
-\begin{Definition}[img: Bildmenge]\label{def:img}\index{Bildmenge}
+\begin{Definition}[img: Bildmenge]%
+\label{def:img}\index{Bildmenge}\mbox{}\\
 Für eine Abbildung $f\colon A\to B$ und $M\subseteq A$
 wird die Menge
 \[f(M) := \{y\mid \exists x{\in}M\;(y=f(x))\}
@@ -379,18 +380,26 @@ Für eine Abbildung $f\colon A\to B$ wird
 als Urbildmenge von $M$ unter $f$ bezeichnet.
 \end{Definition}
 
-\begin{Definition}[inj: Injektion]\label{def:inj}\index{Injektion}
+\begin{Definition}[inj: Injektion]%
+\label{def:inj}\index{Injektion}\mbox{}\\
 Eine Abbildung $f\colon A\to B$ heißt genau dann injektiv, wenn gilt:
 \[\forall x_1\forall x_2(f(x_1)=f(x_2)\implies x_1=x_2)\]
 bzw. äquivalent
 \[\forall x_1\forall x_2(x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
 \end{Definition}
 
-\begin{Definition}[sur: Surjektion]\label{def:sur}\index{Surjektion}
+\begin{Definition}[sur: Surjektion]%
+\label{def:sur}\index{Surjektion}\mbox{}\\
 Eine Abbildung $f\colon A\to B$ heißt genau dann surjektiv, wenn gilt:
 \[B\subseteq f(A).\]
 \end{Definition}
 
+\begin{Definition}[composition: Verkettung]\label{def:composition}%
+\index{Komposition}\index{Verkettung}\mbox{}\\
+Für Abbildungen $f\colon A\to B$ und $g\colon B\to C$ heißt
+\[(g\circ f)\colon A\to C,\quad (g\circ f)(x):=g(f(x))\]
+Verkettung von $f$ und $g$.
+\end{Definition}
 
 \subsection{Grundlagen}
 \begin{Satz}[feq: Gleichheit von Abbildungen]%
@@ -537,6 +546,66 @@ Nach Def. \ref{def:img} (img) und Def. \ref{def:union} (union) gilt:
 \iff \exists x{\in}M\;(y\in \{f(x)\})
 \iff y\in\bigcup_{x\in M}\{f(x)\}.\]
 Nach Def. \ref{def:seteq} (seteq) folgt dann die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $(g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M))$.
+\end{Satz}
+\begin{Beweis}
+Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:seteq} (seteq)
+expandieren und Def. \ref{def:filter} (filter) anwenden:
+\[(g\circ f)(x)\in M \iff f(x)\in\{y\mid g(y)\in M\}.\]
+Links Def. \ref{def:composition} (composition) anwenden und rechts
+nochmals Def. \ref{def:filter} (filter):
+\[g(f(x))\in M \iff g(f(x))\in M.\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $(g\circ f)(M) = g(f(M))$.
+\end{Satz}
+\begin{Beweis}
+Nach Def. \ref{def:img} (img) und Def. \ref{def:seteq} expandieren,
+dann \ref{def:filter} (filter) anwenden:%
+\[\exists x(x\in M\land z=(g\circ f)(x))
+\iff \exists y(y\in f(M)\land z=g(y)).\]
+Die rechte Seite mit Def. \ref{def:img} (img) expandieren und
+Def. \ref{def:filter} (filter) anwenden. Unter Anwendung von
+Satz \ref{general-dl} (general-dl) und Satz \ref{exists-cl} (exists-cl)
+ergibt sich
+\begin{gather*}
+\exists y(\exists x(x\in M\land y=f(x))\land z=g(y))\\
+\iff \exists y\exists x(x\in M\land y=f(x)\land z=g(y))\\
+\iff \exists x(x\in M\land\exists y(y=f(x)\land z=g(y)))\\
+\iff \exists x(x\in M\land z=g(f(x)))\\
+\iff \exists x(x\in M\land z=(g\circ f)(x)).\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}
+$f\colon A\to B$ eine Abbildung und $A\ne\emptyset$. Man nennt
+eine Funktion $g\colon B\to A$ mit $g\circ f=\id_A$ Linksinverse
+zu $f$. Die Abbildung $f$ ist genau dann injektiv, wenn eine
+Linksinverse zu $f$ existiert.
+\end{Satz}
+\begin{Beweis}
+Sei $f$ injektiv. Man wähle ein $a\in A$, das wegen $A\ne\emptyset$
+existieren muss. Man definiert nun $g\colon B\to A$ mit
+\[g(y):=\begin{cases}
+x\;\text{wobei}\;y=f(x),\;\text{wenn}\;y\in f(A),\\
+a\;\text{wenn}\;y\notin f(A).
+\end{cases}\]
+Diese Funktion ist eindeutig definiert, weil $f$ injektiv ist.
+Gemäß ihrer Definition gilt $g(f(x))=x$, bzw. $g\circ f = \id$.
+
+Sei nun eine Linksinverse $g$ mit $g\circ f=\id$ gegeben. Dann gilt
+\[f(a)=f(b) \implies g(f(a))=g(f(b))\]
+und
+\[g(f(a))=g(f(b))
+\iff (g\circ f)(a)=(g\circ f)(a)
+\iff \id(a)=\id(b)
+\iff a=b.\]
+Es ergibt sich
+\[f(a)=f(b)\implies a=b.\;\qedsymbol\]
 \end{Beweis}
 
 \newpage

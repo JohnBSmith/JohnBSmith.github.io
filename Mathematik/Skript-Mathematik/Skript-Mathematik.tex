@@ -1,13 +1,17 @@
 \documentclass[a4paper,11pt,fleqn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+
 \usepackage{lmodern}
+\usepackage[scaled=0.82]{DejaVuSans}
 
 \usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage[all]{xy}
 \usepackage{enumitem}
+\usepackage{mdframed}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{0,40,80}
@@ -32,17 +36,41 @@
 \newcommand{\defiff}{\;:\Longleftrightarrow\;}
 \newcommand{\strong}[1]{{\normalfont\sffamily\bfseries #1}}
 
-\newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
+\newtheoremstyle{rmbox}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\normalfont\sffamily\bfseries}% head font
+  {\\[2pt]}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmname{#1}\;\thmnumber{#2}.\;\thmnote{#3.}}
+
+\theoremstyle{rmbox}
+\newtheorem{Definition}{Definition}
+
+
+\definecolor{leftborder}{rgb}{0.4,0.4,0.4}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=leftborder, linewidth=3pt, innerleftmargin=6pt,%
+  innertopmargin=2pt, innerbottommargin=4pt,%
+  innerrightmargin=0pt%
+]{Definition}
+
 \newcommand{\emdef}[1]{\emph{#1}}
 \newcommand{\pstrut}[1]{\rule{0pt}{\dimexpr 8pt+#1}}
 \newcommand{\bitem}{\item[\scriptsize\color{gray1}$\blacksquare$]}
+
+\usepackage{makeidx}
+\makeindex
 
 \begin{document}
 \thispagestyle{empty}
 
 \noindent
 {\huge\sffamily\bfseries
-Skript zum\hfill {\normalsize\rmfamily\mdseries Juni 2018}
+Zur Vorbereitung auf das\hfill {\normalsize\rmfamily\mdseries Juni 2018}
 \par\noindent
 Mathematik-Studium
 \par}
@@ -75,11 +103,15 @@ d & -b\\
 \end{bmatrix}
 \]
 
+\vfill
+\texttt{Dieses Heft steht unter der Creative"=Commons"=Lizenz CC0.}
+
 \newpage
 
 \section{Grundlagen}
 \subsection{Formale Systeme}
 \subsubsection{Formale Sprachen}
+
 Zum Ausdrücken von mathematischen Sachverhalten wird eine Sprache
 benötigt. Die Sprache soll jeder Repräsentation einen bestimmten
 Sachverhalt zuordnen. Hierbei ist ein schrittweises Vorgehen
@@ -183,7 +215,7 @@ An den Produktionsregeln werden folgende Modifikationen vorgenommen:
 \end{itemize}
 
 \subsubsection{Interpretation der Aussagenlogik}
-\begin{Definition}
+\begin{Definition}[Interpretation]
 Sei $\varphi$ eine aussagenlogische Formel. Mit $V$ ist die
 Menge aller Variablen gemeint, mit $\operatorname{V}(\varphi)$ die
 Menge der Variablen, die in der Formel $\varphi$ vorkommen.
@@ -223,7 +255,7 @@ $A$ & $B$ & $A\land B$ & $A\lor B$
 \end{tabular}
 
 \vspace{10pt}
-\begin{Definition}
+\begin{Definition}[Modellrelation]
 \emdef{Modellrelation}:
 \begin{equation}
 (I\models\varphi) \defiff (I(\varphi)=1).
@@ -267,8 +299,8 @@ Der Induktionsschritt ist
 \end{align}
 \subsection{Mengenlehre}
 
-\begin{Definition}
-\emdef{Aufzählende Schreibweise}\index{aufzählende Schreibweise}:
+\begin{Definition}[Aufzählende Angabe]
+\emdef{Aufzählende Angabe}:
 \begin{equation}
 a\in\{x_1\,\ldots,x_n\} \quad:\Longleftrightarrow\quad
 a=x_1\lor\ldots\lor a=x_n.
@@ -280,15 +312,15 @@ Ein Prädikat $P(x)$ ist das selbe wie eine Aussageform, das ist eine
 Funktion, die jedem $x$ aus einer beliebigen Definitionsmenge
 einen Wert aus der Zielmenge $\{0,1\}$ zuordnet.
 
-\begin{Definition}
-\emph{Mengenbau-Schreibweise}\index{Mengenbau-Schreibweise}:
+\begin{Definition}[Beschreibende Angabe]
+\emph{Beschreibende Angabe}:
 \begin{align}
 & a\in\{x\mid P(x)\} :\Longleftrightarrow P(a)\qquad(\text{unbeschränkter Mengenbau}),\\
 & \{x\in M\mid P(x)\} := \{x\mid x\in M\land P(x)\}\qquad(\text{beschränkter Mengenbau}),\\
 & \{f(x)\mid P(x)\} := \{y\mid y=f(x)\land P(x)\}.
 \end{align}
 \end{Definition}
-\begin{Definition}
+\begin{Definition}[Gleichheit, Teilmengenrelation]
 \emph{Gleichheit} und \emdef{Teilmengenrelation}\index{Teilmenge}
 von Mengen:
 \begin{align}
@@ -297,7 +329,7 @@ A\subseteq B &\;:\Longleftrightarrow\;\forall x\,[x\in A\implies x\in B].
 \end{align}
 \end{Definition}
 \noindent
-\begin{Definition}
+\begin{Definition}[Vereinigung, Schnitt, Differenz, symmetrische Differenz]
 Grundlegende Operationen:
 \index{Vereinigung}\index{Schnittmenge}
 \index{Differenzmenge}\index{symmetrische Differenz}
@@ -310,7 +342,7 @@ A\triangle B &:= \{x\mid x\in A\oplus x\in B\}.\qquad (\text{\emdef{symmetrische
 \end{Definition}
 
 \subsection{Funktionen}
-\begin{Definition}\index{Bildmenge}
+\begin{Definition}[Bildmenge]\index{Bildmenge}
 \emph{Bildmenge} von $M\subseteq A$ unter $f\colon A\to B$:
 \begin{equation}
 f(M) := \{f(x)\mid x\in M\} := \{y\mid \exists x(x\in M\land y=f(x))\}.
@@ -370,11 +402,11 @@ f(\bigcap_{i\in I} M_i) \subseteq \bigcap_{i\in I} f(M_i).
 \end{equation}
 Für die Umkehrung lassen sich die selben Gegenbeispiele benutzen.
 
-\begin{Definition}\index{Injektion}
+\begin{Definition}[Surjektion]\index{Surjektion}
 Eine Funktion $f\colon A\to B$ heißt \emph{surjektiv}, wenn $f(A)=B$ ist.
 \end{Definition}
 
-\begin{Definition}\index{Surjektion}
+\begin{Definition}[Injektion]\index{Injektion}
 Eine Funktion $f\colon A\to B$ heißt \emph{injektiv}, wenn
 \begin{equation}
 \forall x_1,x_2\in A\,[f(x_1)=f(x_2)\implies x_1=x_2]
@@ -382,7 +414,7 @@ Eine Funktion $f\colon A\to B$ heißt \emph{injektiv}, wenn
 gilt.
 \end{Definition}
 
-\begin{Definition}\index{Verkettung}\index{Komposition}
+\begin{Definition}[Verkettung]\index{Verkettung}\index{Komposition}
 Für zwei Funktionen $f\colon A\to B$ und $g\colon B\to C$ wird
 die Funktion
 \begin{equation}
@@ -456,14 +488,15 @@ Nun würde $K^M$ keinen einzigen Vektor enthalten, was nicht sein darf,
 weil jeder Vektorraum mindestens den Nullvektor enthalten muss.
 
 \subsection{Lineare Abhängigkeit}
-\begin{Definition}\index{linear unabhängig}
+\begin{Definition}[Lineare Abhängigkeit]\index{linear unabhängig}
 Eine Menge $\{v_k\}_{k=1}^n$ von Vektoren $v_k\in V$ heißt
 \emph{linear unabhängig}, wenn $\sum_{k=1}^n \lambda_k v_k=0$ nur
 gilt, falls alle $\lambda_k=0$ sind. Andernfalls heißen die Vektoren
 \emph{linear abhängig}.
 \end{Definition}
 
-Das Definition ist äquivalent dazu, dass sich keiner der Vektoren
+\noindent
+Die Definition ist äquivalent dazu, dass sich keiner der Vektoren
 als Linearkombination der anderen darstellen lässt.
 
 Sei nun zunächst $n=2$. Sind $v_1,v_2$ linear abhängig, so gilt
@@ -502,7 +535,7 @@ Die Umkehrung zu zeigen, ist etwas schwieriger.
 
 \subsection{Lineare Abbildungen}
 
-\begin{Definition}\index{lineare Abbildung}
+\begin{Definition}[Lineare Abbildung]\index{lineare Abbildung}
 Sind $V$ und $W$ Vektorräume über dem selben Körper $K$, so heißt
 eine Abbildung $f\colon V\to W$ \emph{linear}, wenn sie additiv
 und homogen ist. \emph{Additiv} bedeutet, dass für alle $v,w\in V$
@@ -922,7 +955,7 @@ H := \{\id,d_1,d_2\}
 \end{equation}
 um eine Untergruppe von $S(X)$.
 
-\begin{Definition}
+\begin{Definition}[Untergruppe]
 Ist $(G,*)$ eine Gruppe und $H\subseteq G$, so heißt $H$
 \emph{Untergruppe} von $G$, wenn $(H,*)$ auch wieder eine Gruppe
 bildet. Man schreibt dann $H\le G$.
@@ -1076,12 +1109,13 @@ $\begin{bmatrix}
 \end{bmatrix}$
 \end{tabular}
 
-\pagebreak[4]
+% \pagebreak[4]
+\newpage
 \subsection{Zyklische Gruppen}
 Die Gruppe \eqref{eq:Drehungen} ist von besonderer Gestalt.
 Sie lässt sich von nur einem einzigen Element erzeugen.
 
-\begin{Definition}\index{zyklische Gruppe}
+\begin{Definition}[Zyklische Gruppe]\index{zyklische Gruppe}
 Eine Gruppe heißt \emph{zyklisch}, wenn sie die Form
 \begin{equation}
 \langle g\rangle := \{g^n\mid n\in\Z\}
@@ -1153,7 +1187,7 @@ Beweis.
 \stackrel{\eqref{eq:minus-minus-plus}}= -(-(a*b)) = a*b.
 \end{equation}
 \subsubsection{Ringhomomorphismen}
-\begin{Definition}
+\begin{Definition}[Ringhomomorphismus]
 Seien $(R,+,*)$ und $(R',+',*')$ zwei Ringe. Eine Abbildung
 $\varphi\colon R\to R'$ heißt \emdef{Ringhomomorphismus},
 wenn gilt:
@@ -1189,9 +1223,10 @@ und
 = (x_{ij})(a_{ij}){+}(y_{ij})(a_{ij}).
 \end{gather}
 
+\newpage
 \section{Analysis}
 \subsection{Grenzwert einer Funktion}\index{Grenzwert!einer Funktion}
-\begin{Definition}
+\begin{Definition}[Grenzwert einer Funktion]
 Sei $D\subseteq\R$ und $a$ ein Berührpunkt von $D$.
 Sei $f\colon D\to\R$. Es sei $\lim_{x\to a} f(x)=L$ genau dann,
 wenn für jede Folge $(x_n)$, $x_n\in D$ mit $x_n\to a$ die
@@ -1249,7 +1284,7 @@ Diese Zusammenhänge ermöglichen es, Grenzwerte für eine große
 Klasse von Funktionen sofort in die Hand geschenkt zu bekommen.
 
 \subsection{Stetige Funktionen}
-\begin{Definition}
+\begin{Definition}[Stetige Funktion]
 Eine Funktion $f\colon D\to\R$ heißt \emph{stetig} an der Stelle
 $a\in D$, wenn $\lim_{x\to a} f(x)=f(a)$ gilt. Man nennt $f$ stetig
 in $D$, wenn $f$ an jeder Stelle von $D$ stetig ist.
@@ -1355,7 +1390,7 @@ Raum wird auch als \emph{Lineal} bezeichnet.
 
 Nun gibt es eine Darstellung $s=f\circ\varphi$.
 
-\begin{Definition}
+\begin{Definition}[Richtungsableitung]
 \emph{Richtungsableitung} von $f$ in Richtung $v$
 an der Stelle $p$:
 \begin{equation}
@@ -1374,7 +1409,7 @@ Die Basisvektoren lassen sich natürlich als Richtungsvektoren
 verwenden, und diesen Richtungsableitungen kommt eine besondere
 Bedeutung zu.
 
-\begin{Definition}
+\begin{Definition}[Partielle Ableitungen]
 Die Richtungsableitungen bezüglich
 der kanonischen Basis werden als \emph{partielle Ableitungen}
 bezeichnet:
@@ -1407,7 +1442,7 @@ sein. Schärfer soll sogar
 \end{equation}
 gelten.
 
-\begin{Definition}
+\begin{Definition}[Totale Differenzierbarkeit]
 Eine Funktion $f\colon\R^n\to\R$ heißt
 \emph{total differenzierbar} an der Stelle $p$, wenn
 \begin{equation}
@@ -1443,6 +1478,7 @@ Sonst würde man einen Ableitungsbegriff benötigen, der bestimmte
 Richtungen ausschließt, was unnötigen
 technischen Balast darstellt.
 
+\newpage
 \section{Kombinatorik}
 \subsection{Funktionen Zählen}
 Man definiert
@@ -1457,7 +1493,7 @@ Anzahl der Funktionen bestimmt werden. Hierfür ergibt sich
 \end{equation}
 
 \subsubsection{Permutationen Zählen}
-\begin{Definition}
+\begin{Definition}[Permutation, symmetrische Gruppe]
 Eine bijektive Selbstabbildung $\sigma\colon X\to X$ heißt
 \emdef{Permutation}. Die Menge aller Permutationen auf $X$ wird mit
 $S(X)$ bezeichnet und \emdef{symmetrische Gruppe} genannt.
@@ -1474,7 +1510,7 @@ dieser Möglichkeiten bleiben $n-1$ Plätze übrig, für die es jeweils
 $(n-1)!$ Möglichkeiten gibt. Das sind insgesamt $n\cdot (n-1)!$
 Möglichkeiten.
 
-\begin{Definition}
+\begin{Definition}[Fakultät]
 \emdef{Fakultät}:
 \begin{equation}
 1!:=1,\qquad n! := n\cdot (n-1)!.
@@ -1494,7 +1530,7 @@ n! = n\cdot (n-1)! = n\prod_{k=1}^{n-1} k = \prod_{k=1}^n k.
 \end{equation}
 
 \subsection{Endliche Summen}
-\begin{Definition}
+\begin{Definition}[Summierungsoperator]
 Das \emdef{Summenzeichen} (der \emdef{Summierungsoperator}) wird rekursiv
 definiert:
 \begin{equation}
@@ -1683,7 +1719,7 @@ die Formel
 Die inneren Summen sind auch bei unendlichen Reihen endlich, was
 die folgende Definition motiviert.
 
-\begin{Definition}
+\begin{Definition}[Produkt von formalen Potenzreihen]
 \emdef{Produkt} von zwei formalen Potenzreihen:
 \begin{equation}\label{eq:Produkt-formale-Potenzreihen}
 \bigg(\sum_{i=0}^\infty a_i X^i\bigg)\bigg(\sum_{j=0}^\infty b_j X^j\bigg)
@@ -1712,6 +1748,7 @@ Die Menge $R[[X]]$ bildet bezüglich der Addition
 \eqref{eq:Produkt-formale-Potenzreihen}
 einen Ring.
 
+\newpage
 \section{Dynamische Systeme}
 \subsection{Fixpunkt-Methode}
 Betrachte eine Iteration
@@ -1841,7 +1878,7 @@ so handelt es sich nicht um eine Gruppe, sondern um ein Monoid,
 dessen Elemente eine Monoidaktion anstelle einer Gruppenaktion
 erwirken.
 
-\begin{Definition}
+\begin{Definition}[Dynamisches System, Ruhelage, periodischer Orbit]
 Die Struktur $(T,X,\Phi)$ mit
 \begin{equation}
 \Phi\colon T\times X\to X,\quad\Phi(t,x)
@@ -1888,7 +1925,7 @@ die Gültigkeit der Körperaxiome nachgewiesen wird. Hierbei ergibt
 sich, dass $M\setminus\{0\}$ eine abelsche Gruppe ist. Es gilt
 insbesondere $M\setminus\{0\}\le\operatorname{GL}(2,\R)$.
 
-\begin{Definition}
+\begin{Definition}[Körperhomomorphismus]
 Sind $(K,+,\bullet)$ und $(K',+',\bullet')$ zwei Körper, so wird
 $\varphi\colon K\to K'$ als \emph{Körperhomomorphismus} bezeichnet,
 wenn
@@ -1945,8 +1982,8 @@ Die nächste Frage besteht nun darin, ob sich Operationen
 wie $f(x)=\ee^x$ auch auf Matrizen übertragen lassen,
 die nicht in der Form \eqref{eq:Drehstreckung} vorliegen.
 
-\vfill
-\texttt{Dieses Heft steht unter der Creative"=Commons"=Lizenz CC0.}
+\printindex
+
 \end{document}
 
 

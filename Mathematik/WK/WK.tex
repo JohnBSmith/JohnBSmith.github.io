@@ -2737,44 +2737,31 @@ Produktregel ergibt sich
 D_i v = D_i\sum_{j}v^j b_j
 = \sum_{j}(b_jD_i v^j+v^jD_i b_j).
 \end{equation}
-Man kommt jetzt auf die Idee, die Ableitungen $D_ib_j$ als
-Linearkombination der Basisvektoren $b_k$ darzustellen. Das sollte
-möglich sein, weil die partielle Ableitung eins Vektors wieder ein
-Vektor sein wird. Die Mannigfaltigkeit (z.\,B. eine gekrümmte Fläche)
-wird durch die Karte $\varphi(u)$ dargestellt. Das ist für jedes
-$u$ ein Ortsvektor $x=\varphi(u)\in\R^m$. Dieser Ortsvektor lässt
-sich als Linearkombination bezüglich der konstanten
-Orthonormalbasis $(e_k)$ bilden. Man rechnet
-\begin{gather}
-D_i b_j = D_i D_j x = D_i D_j\sum_{l} e_l x_l\\
-= \sum_{l}e_l D_i D_j x_l
-= \sum_{l}\frac{\partial x}{\partial x_l}D_i D_j x_l.
-\end{gather}
-Mit der Kettenregel erhält man
+Sei $\Pi_p$ die orthogonale Projektion auf den Tangentialraum
+$T_p M$. Man nennt $\nabla_i v = \Pi(D_i v)$ kovariante Ableitung.
+Da $\Pi$ eine lineare Abbildung ist, ergibt sich%
 \begin{equation}
-D_ib_j = \sum_{k,l}\frac{\partial x}{\partial u^k}
-\frac{\partial u^k}{\partial x_l}D_iD_j x_l
-= \sum_{k,l}b_k\frac{\partial u^k}{\partial x_l}D_iD_j x_l.
+\nabla_i v = \sum_{j} (b_j D_i v^j+v^j \Pi(D_i b_j)).
 \end{equation}
-Man definiert nun die Abkürzung
+Dabei wurde ausgenutzt, dass $\Pi(b_j)=b_j$, weil $b_j$ schon im
+Tangentialraum liegt. Man kommt jetzt auf die Idee, die Ausdrücke
+$\Pi(D_i b_j)$ als Linearkombination der Basisvektoren $b_k$
+darzustellen. Die Koeffizienten dieser Linearkombination sollen
+$\Gamma_{ij}^k$ heißen.
+Demnach ergibt sich
 \begin{equation}
-\Gamma_{ij}^k := \sum_{l}\frac{\partial u^k}
-{\partial x_l}D_iD_j x_l.
+\Pi(D_i b_j) = \Pi(D_i D_j\varphi) = \sum_k \Gamma_{ij}^k b_k.
 \end{equation}
 Die $\Gamma_{ij}^k$ werden als Christoffelsymbole bezeichnet.
-Mit dieser Abkürzung bekommt die Linearkombination die Form
-\begin{equation}
-D_ib_j = \sum_{k} \Gamma_{ij}^k b_k.
-\end{equation}
-Die Ableitung des Vektorfeldes ist hiermit
+Die kovariante Ableitung des Vektorfeldes ist hiermit
 \begin{gather}
-D_i v  = \sum_{j}(b_jD_i v^j+v^j\sum_{k} \Gamma_{ij}^k b_k)\\
+\nabla_i v  = \sum_{j}(b_jD_i v^j+v^j\sum_{k} \Gamma_{ij}^k b_k)\\
 = \sum_{j}b_jD_i v^j+\sum_{k,j}v^j \Gamma_{ij}^k b_k.
 \end{gather}
 Da der Index $j$ in der ersten Summe durch die Summe gebunden ist,
 kann man ihn durch $k$ austauschen. Man erhält
 \begin{gather}
-D_i v = \sum_{k}b_kD_i v^k+\sum_{k,j}v^j \Gamma_{ij}^k b_k\\
+\nabla_i v = \sum_{k}b_kD_i v^k+\sum_{k,j}v^j \Gamma_{ij}^k b_k\\
 = \sum_{k}b_k(D_i v^k+\sum_{j}v^j\Gamma_{ij}^k).
 \end{gather}
 Man definiert nun die kovariante Ableitung
@@ -2783,7 +2770,7 @@ Man definiert nun die kovariante Ableitung
 \end{equation}
 Damit ist
 \begin{equation}
-D_i v = \sum_{k}b_k\nabla_i v^k.
+\nabla_i v = \sum_{k}b_k\nabla_i v^k.
 \end{equation}
 Die Schreibweise $\nabla_i v^k$ ist etwas unglücklich, da die
 Information des gesamten Vektorfeldes notwendig ist, um die Ableitung
@@ -2803,20 +2790,29 @@ Obwohl der Gradient die $b^k\equiv\mathrm dx^k$ enthält, ist es bei
 der Richtungsableitung wieder unerheblich, ob man kartesische
 Koordinaten hat oder nicht.
 
-Die Richtungsableitung von einem Vektorfeld in kartesischen
-Koordinaten kann man bilden, indem man die Richtungsableitung
-komponentenweise bildet. D.\,h. man kann die Komponenten eines
-Vektorfeldes als Skalarfelder betrachten. Bei gekrümmten Koordinaten
-macht meine eine Rechnung, die zur Rechnung oben analog ist.
-Man erhält zunächst
+Für die Richtungsableitung eines Vektorfeldes macht man einen
+analogen Ansatz:
 \begin{equation}
-D_a b_j = \sum_{k,i}a^i \Gamma_{ij}^k b_k.
+D_a v = \sum_i a^i D_i v.
 \end{equation}
-Man definiert
+Daraus ergibt sich
 \begin{equation}
-\nabla_a v^k := D_a(v^k) + \sum_{i,j}a^i v^j \Gamma_{ij}^k.
+\nabla_a v := \Pi(D_a v) = \sum_i a^i \Pi(D_i v),
 \end{equation}
-Damit hat man
+und somit
+\begin{equation}
+\nabla_a v = \sum_i a^i \nabla_i v.
+\end{equation}
+Demnach ergibt sich
+\begin{equation}
+\nabla_a v = \sum_k \Big(\sum_i a^i D_i v^k
++\sum_{i,j}\Gamma_{ij}^k a^i v^j\Big) b_k.
+\end{equation}
+Mit den Komponenten
+\begin{equation}
+\nabla_a v^k = (\nabla_a v)^k := D_a(v^k) + \sum_{i,j}\Gamma_{ij}^k a^i v^j.
+\end{equation}
+erhält man
 \begin{equation}
 D_a v = \sum_k b_k \nabla_a v^k.
 \end{equation}
@@ -2831,17 +2827,17 @@ sind und somit $(b_i)^l=\delta_{il}$ gilt. Damit ist
 + \sum_{l,j}(b_i)^l v^j \Gamma_{il}^k
 = D_i v^k + \sum_{j} v^j\Gamma_{ij}^k.\]
 Wir wollen nun herausfinden, wie man Kovektoren ableitet.
-Mit der Formel $D_ib_j=\sum_k\Gamma_{ij}^k b_k$ lassen sich
-umgekehrt die Christoffelsymbole als Projektion darstellen. Es ist
-$\Gamma_{ij}^k = \langle b^k,D_ib_j\rangle.$
+Mit der Formel $\nabla_i b_j = \Pi(D_ib_j)=\sum_k\Gamma_{ij}^k b_k$
+lassen sich umgekehrt die Christoffelsymbole als Projektion darstellen.
+Es ist $\Gamma_{ij}^k = \langle b^k,\nabla_i b_j\rangle.$
 Mit der Produktregel ist weiterhin
 \begin{equation}
-0=D_i\langle b^k,b_j\rangle
-= \langle D_ib^k,b_j\rangle + \langle b^k,D_ib_j\rangle.
+0=\nabla_i\langle b^k,b_j\rangle
+= \langle \nabla_i b^k,b_j\rangle + \langle b^k,\nabla_i b_j\rangle.
 \end{equation}
 Damit erhält man
 \begin{equation}
-D_ib^k = -\sum_{j}\Gamma_{ij}^kb^j
+\nabla_i b^k = -\sum_{j}\Gamma_{ij}^kb^j
 \end{equation}
 Mit dieser Formel findet man
 \begin{equation}
