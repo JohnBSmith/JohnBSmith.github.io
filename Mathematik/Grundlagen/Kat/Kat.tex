@@ -1,0 +1,309 @@
+\documentclass{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{brown1}{rgb}{0.26,0.14,0}
+\definecolor{brown2}{rgb}{0.20,0.10,0}
+\setbeamercolor*{palette primary}{fg=white,bg=brown1}
+\setbeamercolor*{palette secondary}{fg=white,bg=brown2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=brown2}
+\setbeamercolor{itemize item}{fg=black,bg=white}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\renewcommand{\qedsymbol}{\ensuremath{\square}}
+
+\title{Kategorientheorie}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\vfill\hfill
+\modest{Creative Commons CC0}
+\end{frame}
+
+\begin{frame}
+Was ist eine Kategorie?
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item Ein ganz normales Axiomensystem das auf der Prädikatenlogik aufbaut.
+\item Man verkettet Morphismen, ganz analog wie Abbildungen
+  verkettet werden.
+\item Die Verkettung von Morphismen hat Axiome analog zu denen
+  eines Monoids.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Also nichts neues. Alles schon gewohnt.
+\end{frame}
+
+\begin{frame}
+Ist das nicht zu einfach? Ein Monoid $(M,\circ)$ hat nur die Axiome
+\begin{itemize}
+\item Assoziativität: $\forall_{a,b,c{\in}M}((a\circ b)\circ c = a\circ (b\circ c))$,
+\item neutrales Element existiert: $\exists_{e\in M}\forall_{a\in M}(a\circ e = e\circ a = a)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Eine Kategorie ist ein Tripel $C=(\operatorname{ob},\hom,\circ)$.
+Die Teilstruktur $(\hom,\circ)$ hat die »Monoid"=Axiome«.
+Man bezeichnet $g\circ f$ für $f,g\in\hom$ als Verkettung.
+
+\vspace{1em}
+Die Elemente der Klasse $\ob$ nennt man Objekte.
+Wenn die Klasse bezüglich der Morphismen und Verkettung dieser
+eine Kategorie bildet, spricht man von der Kategorie dieser Objekte.
+\end{frame}
+
+\begin{frame}
+Die Klasse $\hom$ besteht aus allen Morphismen zwischen Objekten.
+Speziell für zwei Objekte $A,B\in\ob$ ist $\hom(A,B)$ die Klasse
+aller Morphismen $f\colon A\to B$.
+\end{frame}
+
+\begin{frame}
+Wie gesagt gilt für $f\colon A\to B$, $g\colon B\to C$ und
+$h\colon C\to D$ das Assoziativgesetz:
+\[h\circ (g\circ f) = (h\circ g)\circ f.\]
+Für jedes Objekt $X$ existiert die Identität $\id_X\colon X\to X$, so
+dass
+\[f\circ\id_A = \id_B\circ f = f.\]
+\end{frame}
+
+\begin{frame}
+Man kann zeigen dass die Identität für jedes Objekt eindeutig
+bestimmt ist. Wir wollen uns damit jetzt nicht aufhalten.
+\end{frame}
+
+\begin{frame}
+Das einfachste Beispiel für eine Kategorie ist die Kategorie der
+Mengen mit den Abbildungen als Morphismen und der gewöhnlichen
+Verkettung von Abbildungen.
+Sei $\ob=\Omega$ die Klasse aller Mengen, sei $\hom=\Abb$ die Klasse
+aller Abbildungen und $\hom(A,B)=\Abb(A,B)$. Dann ist
+\[\mathbf{Set} = (\Omega,\Abb,\circ)\]
+eine Kategorie.
+\end{frame}
+
+\begin{frame}
+Sei $\Omega$ die Klasse aller Gruppen. Für $G,H\in\Omega$ sei $\hom(G,H)$
+die Klasse der Gruppenhomomorphismen. Die Verkettung sei die
+gewöhnliche Verkettung. Dann ist
+\[\mathbf{Group} = (\Omega,\hom,\circ)\]
+eine Kategorie.
+\end{frame}
+
+\begin{frame}
+Sei $K$ ein Körper und $\Omega_K$ die Klasse aller Vektorräume
+über dem Körper. Für $V,W\in\Omega_K$ sei $\hom(V,W)$ die Klasse
+der linearen Abbildungen von $V$ nach $W$, d.\,h. der
+Vektorraum"=Homomorphismen. Sei die Verkettung die gewöhnliche
+Verkettung. Dann ist
+\[\mathbf{Vect}_K = (\Omega_K,\hom,\circ)\]
+eine Kategorie.
+\end{frame}
+
+\begin{frame}
+Es ist so, dass in den Vektorräumen die Struktur von Gruppen
+enthalten ist und in den Gruppen die Struktur von Mengen. Um das
+zu präzisieren muss der Begriff \emph{Funktor} eingeführt werden. Wir
+brauchen einen sogenannten Vergissfunktor, um Struktur zu vergessen
+bzw. zu entfernen.
+\end{frame}
+
+\begin{frame}
+Sind $C,D$ Kategorien, dann nennt man $F\colon C\to D$ kovarianten
+Funktor, wenn
+\begin{itemize}
+\item jedem Objekt $X\in\ob(C)$ ein Objekt $F(X)\in\ob(D)$ zugeordent wird,
+\item jedem Morphismus $f\in\hom_C(X,Y)$ ein Morphismus $F(f)\in\hom_D(F(X),F(Y))$
+  zugeordnet wird,
+\end{itemize}
+so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:
+\begin{itemize}
+\item $F(g\circ f) = F(g)\circ F(f),$
+\item $F(\id_X) = \id_{F(X)}.$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Bemerkung: Die Notation ist überladen. Die Zuordnung
+\[F\colon\ob(C)\to\ob(D)\]
+ist eigentlich zu unterscheiden von
+\[\tilde F\colon\hom_C(X,Y)\to\hom_D(F(X),F(Y)).\]
+Das Paar $(F,\tilde F)$ kodiert dann eigentlich den Funktor $C\to D$.
+
+\vspace{1em}
+Ab nun schreiben wir aber $F=\tilde F=(F,\tilde F)$, da der Leser
+weiß was gemeint ist, wenn er das Wort Funktor ließt.
+\end{frame}
+
+\begin{frame}
+Noch eine Bemerkung: Die Verträglichkeitsaxiome lassen $F$ ausschauen wie einen
+Homomorphismus zwischen Monoiden. Es kann gut möglich
+sein, dass die Klasse der Morphismen mit den Funktoren als
+Morphismen selbst wieder eine Kategorie bildet.
+\end{frame}
+
+
+\begin{frame}
+Der Vergissfunktor von der Gruppenkategorie zur Mengenkategorie wird
+wie folgt definiert:
+\[F\colon\mathbf{Group}\to\mathbf{Set},\quad F((G,*,e)):=G,\]
+und jedem Gruppenhomomorphismus
+\[\varphi\colon (G,*,e)\to (G',*',e')\]
+wird die Abbildung
+\[F(\varphi)\colon G\to G',\quad F(\varphi)(x):=\varphi(x)\]
+zugeordnet.
+\end{frame}
+
+\begin{frame}
+Der Vergissfunktor ist tatsächlich ein kovarianter Funktor.
+
+\vspace{1em}
+\strong{Beweis.}
+Es gilt $F(\id)(x)=\id(x)$, und daher $F(\id)=\id$. Außerdem gilt
+\begin{align*}
+F(\varphi_2\circ\varphi_1)(x) &= (\varphi_2\circ\varphi_1)(x)
+= \varphi_2(\varphi_1(x))\\
+&= F(\varphi_2)(F(\varphi_1)(x))\\
+&= (F(\varphi_2)\circ F(\varphi_1))(x),
+\end{align*}
+und daher
+\[F(\varphi_2\circ\varphi_1) = F(\varphi_2)\circ F(\varphi_1).\;\qedsymbol\]
+\end{frame}
+
+\begin{frame}
+Es ergibt sich das folgende Diagramm:
+\[\xymatrix{(G,*,e) \ar[r]^\varphi \ar@{|->}[d]^F & \ar@{|->}[d]^F (G',*',e')\\
+G \ar[r]^{F(\varphi)} & G'}
+\]
+Das ist aber nur eine Übersicht und kein kommutatives Diagramm, da
+die Pfeile von unterschiedlichem Typ sind.
+\end{frame}
+
+\begin{frame}
+Ein Funktor ordnet einem kommutierenden Diagramm ein
+kommutierendes Diagramm zu. Hier ergibt sich:
+\[
+\begin{matrix}\xymatrix{(G,*,e)\ar[d]_{\varphi_1} \ar[dr]^{\varphi_2\circ\varphi_1}\\
+  (G',*',e')\ar[r]_{\varphi_2} & (G'',*'',e'')}\end{matrix}
+\quad\mapsto\quad\begin{matrix}
+\xymatrix{G\ar[d]_{F(\varphi_1)}\ar[dr]^{F(\varphi_2\circ\varphi_1)}\\
+  G'\ar[r]_{F(\varphi_2)} & G''}\end{matrix}
+\]
+\end{frame}
+
+\begin{frame}
+Ein zweites Beispiel. Sei $P(X)=2^X$ die Potenzmenge von $X$.
+Dann ist wie folgt ein kovarianter Funktor gegeben:
+\[P\colon\mathbf{Set}\to\mathbf{Set},\quad P(X):=2^X,\]
+mit
+\[P(f)(M) := f(M).\]
+Dabei ist $f$ eine Abbildung und $f(M)$ die Bildmenge von $M$
+unter $f$.
+\end{frame}
+
+\begin{frame}
+Wir setzen $(g\circ f)(M)=g(f(M))$ als bekannt voraus und rechnen
+damit wieder nach:
+\begin{align*}
+P(g\circ f)(M) &= (g\circ f)(M) = g(f(M))\\
+&= P(g)(P(f)(M)) = (P(g)\circ P(f))(M),
+\end{align*}
+also gilt
+\[P(g\circ f) = P(g)\circ P(f).\]
+\end{frame}
+
+\begin{frame}
+Die Abbildung
+\[P\colon \Abb(X,Y)\to\Abb(2^X,2^Y)\]
+scheint dabei ein Einbettungsmonomorphismus zu sein.
+\end{frame}
+
+\begin{frame}
+Außerdem gilt $f(\{x\})=\{f(x)\}$ für alle Abbildungen. Daher definiert
+man $\eta(X)\colon X\to 2^X$ mit $\eta(X)(x):=\{x\}$. Dann
+kommutiert das folgende Diagramm:
+\[\xymatrix{
+X \ar[r]^f \ar[d]_{\eta(X)} & Y \ar[d]^{\eta(Y)} \\
+2^X \ar[r]_{P(f)} & 2^Y }\]
+\end{frame}
+
+\begin{frame}
+Hier ordnet $\eta$ jedem Objekt $X\in\ob(\mathbf{Set})$ einen Morphismus
+\[\eta(X)\colon \id(X)\to P(X)\]
+zu, wobei $\id(X)=X$ und $P(X)=2^X$ gilt. Man schreibt dann auch
+$\eta\colon \id\to P$ und bezeichnet $\eta$ als natürliche
+Transformation.
+\end{frame}
+
+\begin{frame}
+Seien $C,D$ Kategorien und $F,G\colon C\to D$ Funktoren. Dann schreibt
+man $\eta\colon F\to G$ und nennt $\eta$ natürliche Transformation,
+wenn die folgenden beiden Bedingungen erfüllt sind:
+\begin{itemize}
+\item jedes Objekt $X\in\ob(C)$ bekommt einen Morphismus\\
+  $\eta(X)\colon F(X)\to G(X)$,
+\item für jeden Morphismus $f\colon X\to Y$ gilt\\
+  $\eta(Y)\circ F(f) = G(f)\circ\eta(X)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Die zweite Bedingung lässt sich übersichtlich als kommutierendes
+Diagramm darstellen:
+\[\xymatrix{
+F(X) \ar[r]^{F(f)} \ar[d]_{\eta(X)} & F(Y) \ar[d]^{\eta(Y)} \\
+G(X) \ar[r]_{G(f)} & G(Y)}\]
+\end{frame}
+
+\begin{frame}
+Im Beispiel war $F=\id$ und $G=P$.
+\end{frame}
+
+\end{document}
+
+
