@@ -212,7 +212,172 @@ konvergente Folge $(a_n)$. Somit gilt:
 = f(\lim_{n\to\infty} x_n) = f(x).\;\qedsymbol\]
 \end{Beweis}
 
+\section{Stetige Funktionen}
+
+\begin{Definition}[Grenzwert einer Funktion]\label{fn-lim}
+Sei $f\colon D\to\R$ mit $D\subseteq\R$ und sei $p$ ein
+Häufungspunkt von $D$. Die Funktion $f$ heißt konvergent
+gegen $L$ für $x\to p$, wenn%
+\[\forall(\varepsilon>0)\exists(\delta>0)\forall(x\in D)(
+  0<|x-x_0|<\delta\implies |f(x)-L|<\varepsilon).\]
+Bei Konvergenz schreibt man $L=\lim\limits_{x\to p} f(x)$ und nennt $L$ den Grenzwert.
+\end{Definition}
+
+\begin{Definition}[cont: stetig]\label{cont}
+Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt stetig an der
+Stelle $x_0\in D$, wenn
+\[\forall(\varepsilon>0)\exists(\delta>0)\forall(x\in D)(
+  |x-x_0|<\delta\implies |f(x)-f(x_0)|<\varepsilon).\]
+\end{Definition}
+
+\begin{Definition}[Lipschitz-stetig]\mbox{}\\
+Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt
+Lipschitz"=stetig, wenn eine Konstante $L$ existiert, so dass
+\[|f(b)-f(a)|\le L|b-a|\]
+für alle $a,b\in D$.
+\end{Definition}
+
+\begin{Definition}[Lipschitz-stetig an einer Stelle]%
+\label{Lipschitz-cont-at}\mbox{}\\
+Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt
+Lipschitz"=stetig an der Stelle $x_0\in D$, wenn eine Konstante $L$
+existiert, so dass
+\[|f(x_0)-(a)|\le L|x_0-a|\]
+für alle $a\in D$.
+\end{Definition}
+
+\begin{Korollar}
+Eine Funktion ist genau dann Lipschitz"=stetig, wenn sie an jeder
+Stelle Lipschitz"=stetig ist und die Menge der optimalen
+Lipschitz"=Konstanten dabei beschränkt.
+\end{Korollar}
+\begin{Beweis}
+Eine Lipschitz"=stetige Funktion ist trivialerweise an jeder Stelle
+Lipschitz"=stetig. Ist $f\colon D\to\R$ an der Stelle $b$ Lipschitz"=stetig,
+dann existiert eine Lipschitz"=Konstante $L_b$ mit%
+\[\forall(a\in D)(|f(b)-f(a)|\le L_b |b-a|).\]
+Nach Voraussetzung ist $L=\sup_{b\in D} L_b$ endlich. Alle $L_b$ können
+nun zu $L$ abgeschwächt werden und es ergibt sich%
+\[\forall(b\in D)\forall(a\in D)(|f(b)-f(a)|\le L|b-a|).\;\qedsymbol\]
+\end{Beweis}
+
+
+\begin{Definition}[lokal Lipschitz-stetig]\mbox{}\\
+Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt lokal
+Lipschitz"=stetig in der Nähe einer Stelle $x_0\in D$, wenn es eine
+Epsilon"=Umgebung $U_\varepsilon(x_0)$ gibt, so dass die Einschränkung
+von $f$ auf diese Umgebung Lipschitz"=stetig ist. Die Funktion heißt
+lokal Lipschitz"=stetig, wenn sie in der Nähe jeder Stelle
+Lipschitz"=stetig ist.
+\end{Definition}
+
+\begin{Satz}\label{diff-nh-Lipschitz-cont-at}
+Ist die Funktion $f\colon D\to\R$ an der Stelle $x_0$ differenzierbar,
+dann gibt es ein $\delta>0$, so dass die Einschränkung von $f$
+auf $U_\delta(x_0)$ an der Stelle $x_0$ Lipschitz"=stetig ist.
+\end{Satz}
+
+\begin{Beweis}
+Def. \ref{fn-lim} wird in Def. \ref{diff} (diff) eingesetzt.
+Es ergibt sich:
+\[0<|x-x_0|<\delta\implies
+\left|\frac{f(x)-f(x_0)}{x-x_0}-f'(x_0)\right|<\varepsilon.\]
+Nach der umgekehrten Dreiecksungleichung \ref{rev-tineq} gilt
+\[\left|\frac{f(x)-f(x_0)}{x-x_0}\right|-|f'(x_0)| \le
+\left|\frac{f(x)-f(x_0)}{x-x_0}-f'(x_0)\right|
+< \varepsilon.\]
+Daraus ergibt sich
+\[|f(x)-f(x_0)| < (|f'(x_0)|+\varepsilon)\cdot |x-x_0|\]
+und somit erst recht
+\[|f(x)-f(x_0)| \le (|f'(x_0)|+\varepsilon)\cdot |x-x_0|,\]
+wobei jetzt auch $x=x_0$ erlaubt ist. Demnach wird Def.
+\ref{Lipschitz-cont-at} erfüllt:
+\[\exists(\delta>0)\forall(x\in U_\delta(x_0))(
+|f(x)-f(x_0)| \le (|f'(x_0)|+\varepsilon)\cdot |x-x_0|).\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{diff-bounded-Lipschitz-cont}
+Eine differenzierbare Funktion ist genau dann Lipschitz"=stetig,
+wenn ihre Ableitung beschränkt ist.
+\end{Satz}
+Wenn $f\colon I\to\R$ Lipschitz"=stetig ist, dann gibt es $L$ mit
+\[\left|\frac{f(b)-f(a)}{b-a}\right|\le L\]
+für alle $a,b\in D$ mit $a\ne b$. Daraus folgt
+\[|f'(a)| = \left|\lim_{b\to a} \frac{f(b)-f(a)}{b-a}\right|
+= \lim_{b\to a} \left|\frac{f(b)-f(a)}{b-a}\right|
+\le L.\]
+Demnach ist die Ableitung beschränkt.
+
+Sei nun umgekehrt die Ableitung beschränkt. Für $a,b\in I$ mit $a\ne b$
+gibt es nach dem Mittelwertsatz ein $x_0\in(a,b)$, so dass
+\[|f'(x_0)| = \left|\frac{f(b)-f(a)}{b-a}\right|.\]
+Da die Ableitung beschränkt ist gibt es ein Supremum
+$L = \sup_{x\in I} |f'(x)|$. Demnach ist $|f'(x)|\le L$ für alle $x$.
+Es ergibt sich
+\[\left|\frac{f(b)-f(a)}{b-a}\right|\le L|b-a| \implies |f(b)-f(a)|\le L|b-a|.\]
+Nun darf auch $a=b$ gewählt werden.\;\qedsymbol
+
+\begin{Satz}\label{diff-compact-Lipschitz-cont}
+Eine auf einem kompakten Intervall $[a,b]$ definierte stetig
+differenzierbare Funktion ist Lipschitz"=stetig.
+\end{Satz}
+\begin{Beweis}
+Sei $f\colon [a,b]\to\R$ stetig differenzierbar. Dann ist $f'(x)$ stetig.
+Nach dem Satz vom Minimum und Maximum ist $|f'(x)|$ beschränkt. Nach
+Satz \ref{diff-bounded-Lipschitz-cont} muss $f$ Lipschitz"=stetig
+sein.\;\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Eine stetig differenzierbare Funktion ist lokal Lipschitz"=stetig.
+\end{Korollar}
+\begin{Beweis}
+Sei $f\colon D\to\R$ stetig differenzierbar. Sei $[a,b]\in D$. Sei
+$x_0\in [a,b]$. Die Einschränkung von $f$ auf $[a,b]$ ist
+Lipschitz"=stetig nach Satz \ref{diff-compact-Lipschitz-cont}.
+Dann ist auch die Einschränkung von $f$ auf
+$U_\varepsilon(x_0)\subseteq [a,b]$ Lipschitz"=stetig.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gibt differenzierbare Funktionen, die nicht überall lokal
+Lipschitz"=stetig sind.
+\end{Satz}
+\begin{Beweis}
+Aus Satz \ref{diff-bounded-Lipschitz-cont} ergibt sich also
+Kontraposition, dass eine Funktion mit unbeschränkter Ableitung
+nicht Lipschitz"=stetig sein kann.
+
+Ist $f\colon D\to\R$ an jeder Stelle differenzierbar und ist $f'$
+in jeder noch so kleinen Umgebung der Stelle $x_0$ unbeschränkt, dann
+kann $f$ also in der Nähe dieser Stelle auch nicht lokal
+Lipschitz"=stetig sein.
+
+Ein Beispiel für eine solche Funktion ist $f\colon{}[0,\infty)\to\R$
+mit
+\[f(0):=0\quad \text{und}\quad f(x):=x^{3/2}\cos\Big(\tfrac{1}{x}\Big).\]
+Einerseits gilt
+\[f'(0) = \lim_{h\to 0}\frac{f(0+h)-f(0)}{h} = \lim_{h\to 0}\frac{f(h)}{h}
+= \lim_{h\to 0} (h^{1/2}\cos\Big(\tfrac{1}{h}\Big)) = 0.\]
+Die Funktion ist also an der Stelle $x=0$ differenzierbar.
+Andererseits gilt nach den Ableitungsregeln
+\[f'(x) = \frac{3}{2}\sqrt{x}\cos\Big(\tfrac{1}{x}\Big)+\frac{1}{\sqrt{x}}\sin\Big(\tfrac{1}{x}\Big).\]
+für $x>0$. Der Term $\tfrac{1}{\sqrt{x}}$ erwirkt für $x\to 0$ immer
+größere Maxima von $|f'(x)|$. Daher kann $f$ in der Nähe von $x=0$ nicht
+lokal Lipschitz"=stetig sein.\;\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Differentialrechnung}
+\begin{Definition}[diff: differenzierbar, Ableitung]\label{diff}
+Eine Funktion $f\colon D\to\R$ heißt differenzieraber an der Stelle
+$x_0\in D$, wenn der Grenzwert
+\[f'(x_0) = \lim_{x\to x_0}\frac{f(x)-f(x_0)}{x-x_0}
+= \lim_{h\to 0}\frac{f(x_0+h)-f(x_0)}{h}\]
+existiert. Man nennt $f'(x_0)$ die Ableitung von $f$ an der Stelle
+$x_0$.
+\end{Definition}
+
 \begin{Satz}
 Sei $f\colon\R\to\R$ eine Funktion mit der Eigenschaft
 $f(x)=0$ für $x\le 0$ und $f(x)>0$ für $x>0$. Es gibt glatte Funktionen
@@ -245,3 +410,4 @@ $x\to 0$ schneller fällt als jede rationale Funktion steigen kann,
 muss die rechtsseitige Ableitung an der Stelle $x=0$ immer
 verschwinden.\;\qedsymbol
 \end{Beweis}
+
