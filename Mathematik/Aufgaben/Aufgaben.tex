@@ -29,6 +29,7 @@
 \newcommand{\imag}{\operatorname{Im}}
 \newcommand{\strong}[1]{{\normalfont\sffamily\bfseries #1}}
 \newcommand{\entspricht}{\;\;\hat =\;}
+\renewcommand{\qedsymbol}{\ensuremath{\square}}
 
 \newtheoremstyle{Aufgabe}%
   {0pt}% space above
@@ -597,6 +598,57 @@ gleich, die partiellen Ableitungen zu bilden. Das sind
 Weil alle partiellen Ableitungen konstant und daher auch stetig
 sind, ist $p_i$ total differenzierbar. Somit muss $p_i$ erst
 recht stetig sein.\;$\Box$
+
+\begin{Aufgabe}
+Man prüfe, für welche $s\in\R\setminus\{0\}$ der Grenzwert
+\[L = \lim_{z\to 0} \frac{\real(z)}{|z|^s},\quad z\in\C\setminus\{0\}\]
+existiert und bestimme ggf. diesen Grenzwert.
+\end{Aufgabe}
+\noindent\strong{Lösung.} Das Problem wird gemäß $z=x+\ui y$ in das reelle
+Problem
+\begin{equation}
+L = \lim_{(x,y)\to (0,0)} \frac{x}{(\sqrt{x^2+y^2})^s}
+\end{equation}
+überführt. Der Grenzwert $f(x,y)\to L$ für $(x,y)\to (0,0)$ existiert
+genau dann, wenn für alle gegen $(0,0)$ konvergenten Folgen $c_n$, die
+Verkettung $f(c_n)$ gegen $L$ konvergiert. Bzw. wenn für alle
+Parameterkurven $c(t)=(x(t),y(t))$ mit $c(0)=(0,0)$ die Verkettung
+$f(c(t))$ für $t\to 0$ zum Grenzwert $L$ konvergiert. Speziell lässt
+sich die Parameterkurve entlang einer der Koordinatenachsen legen,
+d.\,h. für $x=0$ und $y=0$ muss sich notwendig der selbe Grenzwert
+ergeben. Für $x=0$ ergibt
+sich $L=0$. Demnach muss notwendig die Gleichung%
+\begin{equation}
+0 = \lim_{x\to 0} \frac{x}{|x|^s}
+\end{equation}
+erfüllt sein. Dies ist jedoch nur für $s<1$ der Fall. Verlangt man
+speziell $x>0$, dann ergibt sich nämlich%
+\begin{equation}
+\frac{x}{|x|^s} = \frac{x}{x^s} = \frac{1}{x^{s-1}}
+= x^a\quad\text{mit}\quad a=1-s.
+\end{equation}
+Die Gleichung $0=\lim\limits_{x\searrow 0} x^a$ gilt bekanntlich nur für
+$a>0$. Demnach muss zwingend $s<1$ sein. Für $s\ge 1$ existiert der
+Grenzwert nicht.
+
+Für $a>0$ ist die Funktion $x\mapsto |x|^a$ stetig. Da außerdem
+$(x,y)\mapsto\sqrt{x^2+y^2}$ stetig ist, muss auch die Komposition
+$(x,y)\mapsto (\sqrt{x^2+y^2})^a$ stetig sein und daher auch das
+Produkt $(x,y)\mapsto x(\sqrt{x^2+y^2})^a$. Mit $a=-s$ ergibt sich
+daher, dass%
+\begin{equation}
+\lim_{(x,y)\to (0,0)} \frac{x}{(\sqrt{x^2+y^2})^s} = 0
+\end{equation}
+für $s<0$. Leider ist $0\le s<1$ damit noch nicht abgedeckt.
+
+Man betrachte dazu die Abschätzung $x\le\sqrt{x^2+y^2}$. Daraus
+ergibt sich
+\begin{equation}
+\frac{x}{(\sqrt{x^2+y^2})^s} \le \frac{\sqrt{x^2+y^2}}{(\sqrt{x^2+y^2})^s}
+= (\sqrt{x^2+y^2})^{1-s}
+\end{equation}
+Bei $(x,y)\to (0,0)$ geht für $s<1$ die rechte Seite gegen null,
+folglich nach dem Einschnürungssatz auch die linke Seite.\;\qedsymbol
 
 \subsection{Vektoranalysis}
 \begin{Aufgabe}
