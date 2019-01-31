@@ -722,6 +722,79 @@ N = \begin{bmatrix}1\\ 0\\ 0\end{bmatrix},
 Es ergibt sich
 \[I = I_1+I_2+I_3+I_4+I_5+I_6 = 0+\frac{1}{4}+0+1+0+1 = \frac{9}{4}.\;\Box\]
 
+\subsection{Differentialgleichungen}
+
+\begin{Aufgabe}
+Zu lösen ist das Anfangswertproblem
+\[y' = \frac{1}{y}+\frac{a}{1+ay},\quad y(x_0)=y_0.\]
+Anschauliche Beispiele sollen zum Fall $a:=1$ und $x_0:=0$ betrachtet
+werden, speziell $y_0:=1$ und $y_0:=-1/4$.
+\end{Aufgabe}
+\strong{Lösung.} Umformung der Gleichung führt zu
+\begin{equation}
+\frac{y+ay^2}{2ay+1}y' = 1.
+\end{equation}
+Gemäß dem Satz über die Separation der Variablen muss die gesuchte
+Funktion eine Lösung der Gleichung
+\begin{equation}
+\int_{y_0}^y \frac{ay^2+y}{2ay+1}\,\mathrm dy
+= \int_{x_0}^x 1\,\mathrm dx = x-x_0
+\end{equation}
+sein. Zur Bestimmung der Stammfunktion wählt man die Substitution
+$u=2ay+1$, dann ergibt sich
+\begin{equation}
+ay^2+y = a\bigg(\frac{u-1}{2a}\bigg)^2+\frac{u-1}{2a} =
+\frac{(u-1)^2}{4a}+\frac{2u-2}{4a} = \frac{u^2-1}{4a}.
+\end{equation}
+Mit $\mathrm du = 2a\mathrm dy$ erhält man
+\begin{gather}
+\int\frac{ay^2+y}{2ay+1}\,\mathrm dy
+= \frac{1}{2a}\int \frac{u^2-1}{4au}\,\mathrm du
+= \frac{1}{16a^2}(\int 2u\,\mathrm du-2\int\frac{1}{u}\,\mathrm du)\\
+= \frac{1}{16a^2}(u^2-2\ln|u|) = \frac{1}{16a^2}((2ay+1)^2-2\ln|2ay+1|)\\
+= \frac{ay^2+y}{4a}+\frac{1}{16a^2}+\frac{\ln|2ay+1|}{8a^2}.
+\end{gather}
+Es ergibt sich
+\begin{equation}
+2ay(ay+1)-\ln|2ay+1| = 8a^2x+K
+\end{equation}
+mit
+\begin{equation}
+K = -8a^2x_0+2ay_0(ay_0+1)-\ln|2ay_0+1|.
+\end{equation}
+Betrachten wir nochmals die Substitution $u=2ay+1$, hier ergibt sich
+\begin{gather}
+2ay(ay+1) = 2a\frac{u-1}{2a}\bigg(a\frac{u-1}{2a}+1\bigg)
+= (u-1)\bigg(\frac{u-1}{2}+1\bigg)\\
+= \tfrac{1}{2}(u-1)(u-1+2) = \tfrac{1}{2}(u-1)(u+1) = \tfrac{1}{2}(u^2-1),
+\end{gather}
+was den linearen Term eliminiert. Die Gleichung
+\begin{equation}
+\tfrac{1}{2}(u^2-1)-\ln|u| = 8a^2x+K
+\end{equation}
+lässt sich nun umformen zu
+\begin{equation}
+|u|\ee^{(1-u^2)/2} = \ee^{-8a^2x-K}.
+\end{equation}
+Quadrieren dieser Gleichung liefert
+\begin{equation}
+u^2\ee^{(1-u^2)} = \ee^{-16a^2x-2K},
+\end{equation}
+und damit
+\begin{equation}
+-u^2\ee^{-u^2} = -\ee^{-16a^2x-2K-1}.
+\end{equation}
+Mittels Lambert"=W"=Funktion ergibt sich
+\begin{equation}
+-u^2 = -(2ay+1)^2 = W(-\ee^{-16a^2x-2K-1})
+\end{equation}
+und daher
+\begin{equation}
+y = -\frac{1}{2a}\pm\frac{1}{2a}\sqrt{-W(-\ee^{-16a^2x-2K-1})}.
+\end{equation}
+Welcher Ast der Lambert"=W"=Funktion und welches Vorzeichen
+zu wählen ist, ergibt sich aus dem Anfangswert.
+
 \newpage
 \section{Lineare Algebra}
 \subsection{Matrizenrechnung}
