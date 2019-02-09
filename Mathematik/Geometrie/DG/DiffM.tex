@@ -1,0 +1,131 @@
+
+\chapter{Differenzierbare Mannigfaltigkeiten}
+
+\section{Differentialgleichungen}
+
+Sei $M$ eine differenzierbare Mannigfaltigkeit und sei $c\colon\R\to M$
+eine differenzierbare Parameterkurve in $M$. Daher gibt es auch
+$c'\colon\R\to TM$. Das bringt uns auf die folgende Idee. Hat man
+ein durch $t$ parametrisiertes Vektorfeld
+\begin{equation}
+f\colon\R\times M\to TM,\quad f(t,p)\in T_p M,
+\end{equation}
+gegeben, dann lässt sich das Anfangswertproblem
+\begin{equation}
+c'(t) = f(t,c(t)),\quad c_0=c(t_0),\quad 
+\end{equation}
+formulieren. Für eine abstrakte Mannigfaltigkeit muss das
+Anfangswertproblem aber nun in lokale Koordinaten übersetzt
+werden. Sei dazu $\varphi$ eine lokale Karte und $c=\varphi\circ x$.
+Anwendung der Kettenregel ergibt
+\begin{equation}
+c'(t) = (\varphi\circ x)'(t) = \mathrm d\varphi_{x(t)}(x'(t)).
+\end{equation}
+Aus $\mathrm d\varphi_{x(t)}(x'(t))=f(t,\varphi(x(t)))$ erhält man
+\begin{equation}
+x'(t) = f_\varphi(t,x(t)),\quad
+f_\varphi(t,x):=\mathrm d\varphi_{x}^{-1}(f(t,\varphi(x)).
+\end{equation}
+In lokalen Koordinaten lässt sich das Anfangswertproblem also als
+ein gewöhnliches Anfangswertproblem im Koordinatenraum darstellen.
+Für eine abstrakte Mannigfaltigkeit ist auch nur $f_\varphi$ bekannt.
+Wir wollen nun aber in Erfahrung bringen, welche Gestalt das
+Anfangswertproblem nach einem Kartenwechsel bekommt. Sei $\psi$
+dazu eine zweite Karte. Daraus ergibt sich der Vergleich
+\begin{equation}
+f(t,p)
+= \mathrm d\varphi_x(f_\varphi(t,x))
+= \mathrm d\psi_{\tilde x}(f_\psi(t,\tilde x)),\quad
+p = \varphi(x) = \psi(\tilde x).
+\end{equation}
+Umformen bringt $x = (\varphi^{-1}\circ\psi)(\tilde x)$ und
+\begin{equation}
+f_\varphi(t,x) = (\mathrm d\varphi_x^{-1}\circ \mathrm d\psi_{\tilde x})(f_\psi(t,\tilde x))
+= \mathrm d(\varphi^{-1}\circ \psi)_{\tilde x}(f_\psi(t,\tilde x)).
+\end{equation}
+Es gilt aber auch
+\begin{equation}
+x'(t) = (\varphi^{-1}\circ\psi\circ\tilde x)'(t)
+= \mathrm d(\varphi^{-1}\circ\psi)_{\tilde x(t)}(\tilde x'(t)).
+\end{equation}
+Das Differential des Kartenwechsels hebt sich weg und man
+erhält%
+\begin{equation}
+\tilde x'(t) = f_\psi(t,\tilde x(t))
+= \mathrm d(\psi^{-1}\circ\varphi)_{x(t)}(f_\varphi(t,x(t))).
+\end{equation}
+Bei der Transformation des Anfangswertproblems werden die Werte des
+parametrisierten Vektorfelds also mit dem Differential der
+Kartenwechselabbildung transformiert.
+
+\newpage
+\section{Dynamische Systeme}
+
+\begin{definition}[Dynamisches System]
+Ein \emdef{dynamisches System} ist eine Abbildung
+$\Phi\colon T\times M\to M$, welche
+die beiden Eigenschaften
+\begin{gather}
+\label{eq:dyn-Sys-1}
+\Phi(0,x) = x,\\
+\label{eq:dyn-Sys-2}
+\Phi(t_1+t_2,x) = \Phi(t_2,\Phi(t_1,x))
+\end{gather}
+erfüllt. Man bezeichnet $M$ als \emdef{Zustandsraum} des Systems und
+$T$ als \emdef{Menge der Zeitpunkte}.
+Für $T=\R$ oder $T=\R^+$ spricht man von einem
+\emdef{Zeit-kontinuierlichen} System, für $T=\Z$ oder $T=\N$ von einem
+\emdef{Zeit-diskreten}.
+\end{definition}
+
+\noindent
+Wir wollen uns nun auf Zeit-kontinuierliche Systeme beschränken,
+bei denen der Zustandsraum $M$ eine differenzierbare Mannigfaltigkeit
+ist. Man betrachte das autonome Anfangswertproblem
+\begin{equation}\label{eq:AWP-M}
+c'(t) = f(c(t)),\quad c(0)=c_0,
+\end{equation}
+wobei das Vektorfeld $f\colon M\to TM$ hinreichend gutartig sein soll,
+so dass zu jedem $c_0$ eine eindeutige Lösung $c\colon\R\to M$
+existiert. 
+
+\begin{theorem}\label{autonom-fasert}
+Besitzt das Anfangswertproblem \eqref{eq:AWP-M} zu jedem $c_0$ eine
+eindeutige Lösung, dann verläuft durch jeden Punkt von $M$ genau
+eine Lösung, d.\,h. keine zwei Lösungen können sich schneiden
+oder berühren.
+\end{theorem}
+\noindent\strong{Beweis.}
+Seien $c_1(t)$ und $c_2(t)$ zwei Lösungen der Dgl. und sei
+$c_1(t_1)=c_2(t_2)$. Setze $a=t_1-t_2$, dann gilt $c_2(t_2)=c_1(t_2+a)$.
+Es muss gezeigt werden, dass $c_2$ nur Parameter"=verschoben
+zu $c_1$ um $a$ ist, d.\,h. $c_2(t)=c_1(t+a)$ für alle $t$. Dazu
+defineren wir $c(t):=c_1(t+a)$. Für $c$ ergibt sich das
+Anfangswertproblem
+\begin{equation}
+c'(t) = c_1'(t+a) = f(c_1(t+a)) = f(c(t)),\quad c(t_2)=c_1(t_2+a).
+\end{equation}
+Außerdem gilt
+\begin{equation}
+c_2'(t) = f(c_2(t)), \quad c_2(t_2)=c_1(t_2+a).
+\end{equation}
+Das ist beides das selbe Anfangswertproblem. Da die Lösung nach
+Voraussetzung eindeutig ist, muss $c(t)=c_2(t)$
+für alle $t$ sein.\;\qedsymbol
+
+\begin{theorem}
+Unter der Voraussetzung, dass es zu jedem $c_0$ eine eindeutige
+Lösung des Anfangswertproblems \eqref{eq:AWP-M} gibt, ist durch
+$\Phi(t,c_0)=c(t)$ ein dynamisches System gegeben.
+\end{theorem}
+\noindent\strong{Beweis.}
+Die Eigenschaft \eqref{eq:dyn-Sys-1} ist gemäß $\Phi(0,c_0)=c_0$
+trivial erfüllt. Die Eigenschaft \eqref{eq:dyn-Sys-2} bekommt
+die Form $c(t_1+t_2)=\Phi(t_2,c(t_1))$. Nach Satz
+\ref{autonom-fasert} verläuft durch den Zustand $c(t_1)$ genau
+eine Bahn $p(t)=\Phi(t,c(t_1))$ und nach \eqref{eq:dyn-Sys-1} gilt
+$p(0)=\Phi(0,c(t_1))=c(t_1)$. Dann muss $p$ zu $c$ Parameter"=verschoben
+sein und es gilt $p(t)=c(t+t_1)$. Setze speziell $t=t_2$.\;\qedsymbol
+
+
+
