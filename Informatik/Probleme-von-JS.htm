@@ -191,6 +191,7 @@ window.onload = main;
 <ol class="toc">
 <li><a href="#Umwandlung">Umwandlung von Arrays in Zeichenketten</a>
 <li><a href="#Typisierung">Schwache Typisierung</a>
+<li><a href="#Unsinnige-Regeln">Unsinnige Regeln</a>
 <li><a href="#Variablen">Globale Variablen</a>
 <li><a href="#Operatoren">Operatorüberladung</a>
 <li><a href="#this">Das this-Argument</a>
@@ -241,6 +242,37 @@ JavaScript-Programm die Speichersicherheit gefärden.
 Nur weil JavaScript typsicher ist, heißt das aber nicht, dass es
 auch streng typisiert ist.
 
+<h2 id="Unsinnige-Regeln">Unsinnige Regeln</h2>
+<p>Einige Operationen sind in JavaScript nach Regeln definiert,
+welche keinen praktischen Sinn ergeben.
+
+<pre class="js indent">
+&gt; []==[]
+false
+
+&gt; [1,2]==[1,2]
+false
+
+&gt; [1]==[1]
+false
+</pre>
+<p>Was soll das?
+
+<pre class="js indent">
+&gt; [1]==1
+true
+</pre>
+<p>Ja. Logisch, oder?
+
+<pre class="js indent">
+&gt; []==0
+true
+
+&gt; []==1
+false
+</pre>
+<p>Ja.
+
 <h2 id="Variablen">Globale Variablen</h2>
 
 <p>In JavaScript ist es vorgesehen, dass eine undeklarierte Variable
@@ -249,7 +281,7 @@ In der Funktion
 
 <pre class="js indent">
 function f(x){
-    y=2*x;
+    y = 2*x;
     return y;
 }
 </pre>
@@ -261,7 +293,7 @@ Bugs. Ein explizite deklaration von globalen Variablen wäre sinnvoll:
 
 <pre class="js indent">
 function f(x){
-    <span class='keyword'>global</span> y=2*x;
+    <span class='keyword'>global</span> y = 2*x;
     return y;
 }
 </pre>
@@ -285,7 +317,7 @@ wäre es aber möglich gewesen, eine zugehörige Methode <code>add</code>
 im Objekt <code>x</code> oder in dessen Prototypenkette aufzurufen:
 
 <pre class="js indent">
-x+y == x.add(y)
+x+y &equiv;&equiv; x.add(y)
 </pre>
 
 <h2 id="this">Das this-Argument</h2>
@@ -384,7 +416,7 @@ t = {x=1, y=2};
 <p>Möchte man in JavaScript ein wiederverwendbares Modul schreiben,
 so sollten dessen Funktionen in einem eigenen Namensraum stehen.
 Betrachten wir folgende Funtkionen die zunächst flach im
-Hauptnamesraum stehen:
+Hauptnamensraum stehen:
 
 <pre class="js indent">
 function f(x){return 2*x;}
