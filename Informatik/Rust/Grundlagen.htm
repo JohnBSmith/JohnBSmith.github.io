@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Grundlagen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#erstes-Programm">Das erste Programm</a>
+<li><a href="#Ausdrucke-Variablen-Typen">Ausdrücke, Variablen, Typen</a>
+<li><a href="#Schleifen">Schleifen</a>
+<li><a href="#Felder">Felder</a>
+</ol>
+
+<h2 id="erstes-Programm">Das erste Programm</h2>
+
+<p>Es folgt das obligatorische Hallo-Welt-Programm:
+<pre class="rust indent">
+fn main() {
+    println!("Hallo Welt!");
+}
+</pre>
+
+
+<h2 id="Ausdruecke-Variablen-Typen"
+>Ausdrücke, Variablen, Typen</h2>
+
+<h3>Ausdrücke</h3>
+<p>Das Wesen von Computern liegt in gewisser Hinsicht in ihrer Fähigkeit,
+Berechnungen schnell ausführen zu können. Aus diesem Grund erscheint
+es nur sinnvoll, wenn die Programmiersprache die einfache Angabe
+einer Berechnung ermöglicht. Und ja, arithmetische Ausdrücke schreibt
+man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
+<code>1+2</code> aus« lautet kurz:
+<pre class="rust indent">
+fn main() {
+    println!("{}",1+2);
+}
+</pre>
+<p>Der Befehl <code>println</code> (print line) nimmt die Zeichenkette
+<code>"{}"</code> als Schablone und ersetzt das geschweifte Klammerpaar
+gegen den Wert des Ausdrucks. Die resultierende Zeichenkette wird dann
+ausgegeben, woraufhin ein Zeilenumbruch folgt.
+
+<h3>Variablen</h3>
+<p>Der Wert eines Ausdrucks lässt sich mittels <code>let</code> auch
+in einer Variablen speichern. Ein einfaches Beispiel hierzu:
+<pre class="rust indent">
+fn main() {
+    let x = 1;
+    let y = 2;
+    println!("{} plus {} ist {}",x,y,x+y);
+}
+</pre>
+<p>Das ist wie in der Mathematik. Sei <var>x</var>=1 und
+sei <var>y</var>=2. Tue damit dies und das.
+
+<h3>Typen</h3>
+<p>In der Sprache Rust besitzt jeder Wert und jede Variable einen
+<i>Datentyp</i>, kurz <i>Typ</i>. Um auszudrücken, dass die Variable
+<code>v</code> vom Typ <code>T</code> ist, schreibt man
+<code>v:&nbsp;T</code>. Beispielsweise sagt <code>x:&nbsp;i32</code> aus, dass
+<code>x</code> eine Ganzzahl sein soll,
+welche binär in einer 32&nbsp;bit langen Speicherzelle gespeichert
+werden kann. Alle Berechnungen müssen den Regeln des
+<i>Typsystems</i> genügen. Z.&nbsp;B. ist es nicht erlaubt, Zahlen
+mit Farben zu verrechnen. Dies ergibt keinen Sinn, und der Compiler
+verweigert sich auch, ein solches Programm zu übersetzen.
+
+<p>Der Typ einer Variablen muss nicht unbedingt angegeben sein, sofern
+der Compiler in der Lage ist, diesen Typ abzuleiten. Der Vorgang
+des Ableitens eines Typs wird als <i>Typinferenz</i> bezeichnet,
+und davon wurde auch bereits gebrauch gemacht. Vollständig typisiert
+schaut das Programm so aus:
+<pre class="rust indent">
+fn main() {
+    let x: i32 = 1;
+    let y: i32 = 2;
+    println!("{} plus {} ist {}",x,y,x+y);
+}
+</pre>
+<p>Typen werden in Rust eigentlich mit einem großen Anfangsbuchstaben
+geschrieben, bei den <i>primitiven Datentypen</i> wurde da
+jedoch eine Ausnahme gemacht. Von diesen primitiven Datentypen
+gibt es aber nur eine Hand voll. Das sind:
+
+<table class="bt">
+<tr>
+<th>Typ
+<th>Englisch
+<th>Deutsch
+<tr>
+<td><code>u8, u16, u32, u64, u128</code>
+<td>unsigned integer of size 8, 16, 32, 64, 128 bit
+<td>vorzeichenlose Ganzzahl der Größe 8, 16, 64, 128 Bit
+<tr>
+<td><code>i8, i16, i32, i64, i128</code>
+<td>integer of size 8, 16, 32, 64, 128 bit
+<td>Ganzzahl der Größe 8, 16, 32, 64, 128 Bit
+<tr>
+<td><code>usize</code>
+<td>unsigned integer of address size (32&nbsp;bit oder 64&nbsp;bit)
+<td>vorzeichenlose Ganzzahl der Adressgröße (32&nbsp;Bit oder 64&nbsp;Bit)
+<tr>
+<td><code>isize</code>
+<td>integer of address size (32&nbsp;bit oder 64&nbsp;bit)
+<td>Ganzzahl der Adressgröße (32&nbsp;Bit oder 64&nbsp;Bit)
+<tr>
+<td><code>f32, f64</code>
+<td>floating point number of size 32&nbsp;bit, 64&nbsp;bit
+<td>Fließkommazahl der Größe 32&nbsp;bit, 64&nbsp;bit
+<tr>
+<td><code>bool</code>
+<td>boolean, i.e. logical values
+<td>boolesch, d.h. logische Werte
+<tr>
+<td><code>str</code>
+<td>string
+<td>Zeichenkette
+</table>
+
+<h2 id="Schleifen">Schleifen</h2>
+
+<h3>For-Schleifen</h3>
+<p>Es wird nun gezeigt, wie sich Quadratwurzeln mit dem Computer
+berechnen lassen. Die Wurzel <var>x</var>&nbsp;=&nbsp;&radic;<var>a</var> lässt
+sich als positive Lösung der quadratischen Gleichung
+<var>x</var><sup>2</sup>&nbsp;=&nbsp;<var>a</var> betrachten. Umstellen
+bringt nun <var>x</var><sup>2</sup>&minus;<var>a</var>&nbsp;=&nbsp;0. Demnach ist
+die positive Nullstelle der Funktion
+<var>f</var>(<var>x</var>)&nbsp;:=&nbsp;<var>x</var><sup>2</sup>&minus;<var>a</var>
+gesucht. Man betrachte nun die rekursiv
+gegebene Folge
+<var>x</var><sub><var>n</var>+1</sub>&nbsp;=&nbsp;&phi;(<var>x</var><sub><var>n</var></sub>)
+mit
+&phi;(<var>x</var>)&nbsp;:= <var>x</var>&minus;<var>f</var>(<var>x</var>)/<var>f</var>'(<var>x</var>).
+Das ist das Newton-Verfahren, und die Theorie zu diesem Verfahren sagt
+uns, dass diese Folge unter gewissen Bedingungen schnell zur gesuchten
+Nullstelle konvergiert. In diesem Fall gilt
+<var>f</var>'(<var>x</var>)&nbsp;=&nbsp;2<var>x</var> und daher 
+
+<p class="indent">&phi;(<var>x</var>)
+= <var>x</var>&minus;(<var>x</var><sup>2</sup>&minus;<var>a</var>)/(2<var>x</var>)
+= (<var>x</var><sup>2</sup>+a)(2<var>x</var>)
+= (<var>x</var>+<var>a</var>/<var>x</var>)/2.
+
+<p>Hierbei handelt es sich natürlich um das Heron-Verfahren, das sich
+wie gezeigt als Spezialfall aus dem Newton-Verfahren ergibt.
+Als Anfangswert kann <var>x</var><sub>0</sub>=<var>a</var>/2 benutzt werden. 
+
+<p>Eine einfache Implementation des Verfahrens lässt sich mit
+einer for-Schleife wie folgt angeben:
+<pre class="rust indent">
+fn sqrt(a: f64) -&gt; f64 {
+    let mut x = 0.5*a;
+    for _ in 0..20 {
+        x = 0.5*(x+a/x);
+    }
+    return x;
+}
+
+fn main() {
+    println!("{}",sqrt(2.0))
+}
+</pre>
+
+<p>Das Programm sollte <code>1.414213562373095</code> ausgeben.
+Wie viele Iterationen benötigt man? Für Zahlen die nicht gigantisch
+groß oder winzig klein sind, reichen 20 Iterationen mit Sicherheit aus.
+Man kann durch Experimente oder mathematische Analyse sicherlich herausfinden,
+wie viele Iterationen für eine bestimmte Zahl <var>a</var> notwendig
+sind. Eine elegantere Formulierung verzichtet aber auf dieses Wissen
+und benutzt stattdessen eine Abbruchbedingung. Der Abbruch der
+Schleife wird durch den Befehl <code>break</code> ausgelöst:
+<pre class="rust indent">
+fn sqrt(a: f64) -&gt; f64 {
+    let mut x = 0.5*a;
+    for _ in 0..1000 {
+        if (x*x-a).abs() &lt; 1E-14 {break;}
+        x = 0.5*(x+a/x);
+    }
+    return x;
+}
+</pre>
+
+<p>Die folgende Modifikation des Programms gibt auch die Anzahl der
+benötigten Iterationen an. Dazu gibt die Funktion ein aus Wert
+und Anzahl bestehendes Paar zurück:
+<pre class="rust indent">
+fn sqrt_count(a: f64) -&gt; (f64,u32) {
+    let mut x = 0.5*a;
+    for k in 0..1000 {
+        if (x*x-a).abs() &lt; 1E-14 {return (x,k);}
+        x = 0.5*(x+a/x);
+    }
+    return (x,1000);
+}
+
+fn main() {
+    let (x,n) = sqrt_count(2.0);
+    println!("Wert: {};",x);
+    println!("Iterationen: {}",n); 
+}
+</pre>
+
+<h2 id="Felder">Felder</h2>
+
+<h3>Felder fester Länge</h3>
+<p>Ein <i>Feld</i>, auch <i>Array</i> genannt, ist eine zusammenhängende
+Folge von Elementen des selben Datentyps. Die Elemente werden dabei
+in Speicherzellen gespeichert, welche auch zusammenhängend im Speicher
+liegen. Jedes Feld hat eine Länge, das ist die Anzahl der Elemente.
+Betrachten wir ein einfaches Programm, welches ein Feld mit
+vier Ganzzahlen ausgibt:
+
+<pre class="rust indent">
+fn main() {
+    let a: [i32;4] = [1,2,3,4];
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Hier liegt ein Feld <code>a</code> vom Typ <code>[i32;4]</code> vor,
+also vier Speicherzellen mit jeweils einer Zahl vom Typ <code>i32</code>.
+Jedes Element lässt sich über eine Indizierung <code>a[i]</code> ansprechen.
+Der Index <code>i</code> startet immer ab null. Im genannten Beispiel
+gilt daher
+<pre class="rust indent">
+a[0]==1, a[1]==2, a[2]==3, a[3]==4.
+</pre>
+
+<p>Nun soll eine Funktion angegeben werden, welche ein Feld nimmt
+und die Summe der Elemente zurückgibt. Das lässt z.&nbsp;B. wie folgt
+bewerkstelligen:
+<pre class="rust indent">
+fn sum(a: &amp;[i32;4]) -&gt; i32 {
+    let mut s = 0;
+    for x in a {s += x;}
+    return s;
+}
+
+fn main() {
+    let a: [i32;4] = [1,2,3,4];
+    println!("{}",sum(&amp;a));
+}
+</pre>
+
+<p>Das Feld braucht für diese Aufgabe lediglich ausgeborgt werden,
+es genügt hier daher eine Referenz auf das Feld, deshalb die Signatur
+<code>a:&nbsp;&amp;[i32;4]</code>.
+
+<h3>Ausschnitte von Feldern</h3>
+<p>Dem Leser mag nun aber sofort auffallen, dass diese Funktion lediglich
+Felder der Länge vier verarbeiten kann. Um dieses Problem zu lösen,
+existiert ein eigener Datentyp, der <i>Slice</i> eines Feldes, geschrieben
+<code>&amp;[i32]</code>. Die Signatur der Funktion <code>sum</code>
+braucht lediglich auf <code>a:&nbsp;&amp;[i32]</code> abgeändert zu
+werden und schon lassen sich Summen von Feldern beliebiger Länge bilden.
+
+<p>Ein Slice besteht intern aus zwei Bestandteilen, einem Zeiger auf den
+Anfang des Feldes und der Länge des Feldes. Slices können auch
+zusammenhängende Teilbereiche eines Feldes beschreiben. Wenn
+nur die ersten drei Zahlen des Feldes aufsummiert werden sollen,
+sieht das Programm wie folgt aus:
+<pre class="rust indent">
+fn main() {
+    let a: [i32;4] = [1,2,3,4];
+    println!("{}",sum(&amp;a[0..2]));
+}
+</pre>
+
+<p>Der Bereich <code>0..3</code> enthält die Indizes <code>0,1,2</code>.
+Daher beschreibt der Slice <code>&amp;a[0..2]</code> eine Referenz auf
+<code>[a[0],a[1],a[2]]</code>.
+
+<h3>Dynamische Felder</h3>
+<p>Felder vom Typ <code>[T;N]</code> haben immer eine feste, schon zur
+Kompilierzeit bekannte Länge <code>N</code>. Da diese Einschränkung für
+viele Problemstellungen zu hinderlich ist, gibt es für Felder
+noch den Datentyp <code>Vec&lt;T&gt;</code>, der dynamische Felder ermöglicht.
+Dynamische Felder werden ganz analog zu den Feldern fester Länge
+gehandhabt:
+<pre class="rust indent">
+fn main() {
+    let a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    println!("{}",sum(&amp;a));
+}
+</pre>
+
+<p>Man stellt hier fest, dass sich offenbar
+auch von einem dynamischen Feld ein Slice bilden lassen muss.
+Ein Wert von Typ <code>Vec&lt;T&gt;</code> besteht intern aus drei
+Informationen: einem Zeiger auf den aktuellen Puffer, der aktuellen
+Länge und der aktuellen Kapazität. Man kann sich das so vorstellen:
+<pre class="rust indent">
+struct Vec&lt;T&gt; {ptr: *mut T, len: usize, cap: usize}
+</pre>
+
+<p>Die tatsächliche Formulierung ist noch etwas ausgeklügelter,
+besitzt aber die selbe Struktur. Der Zeiger auf den Puffer 
+verhält sich zusammen mit der Länge wie ein Slice eines Feldes fester
+Länge. Jedoch können sich durch Manipulation des
+Feldes alle drei genannten Informationen verändern. Die aktuelle Länge
+des Feldes lässt sich via <code>a.len()</code> auslesen, die aktuelle
+Kapazität mit <code>a.capacity()</code>.
+
+<p>Die Kapazität eines Feldes macht eine Aussage darüber, wie viele
+Elemente zu dem leeren Feld hinzugefügt werden können, ohne dass der
+Puffer zur Erhöhung der Kapazität realloziert werden muss.
+Da dies alles automatisch geschieht, muss man sich darüber 
+keine Gedanken machen. Es folgt eine Funktion
+<code>reverse</code>, die ein Feld <code>a</code> umdreht, indem sie
+rückwärts durch das Feld iteriert und dabei die Elemente zu einem
+neuen Feld <code>b</code> hinzufügt.
+
+<pre class="rust indent">
+fn reverse(a: &amp;[i32]) -> Vec&lt;i32&gt; {
+    let mut b: Vec&lt;i32&gt; = vec![];
+    for x in a.iter().rev() {
+        b.push(*x);
+    }
+    return b;
+}
+
+fn main() {
+    let a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    println!("{:?}",reverse(&amp;a));
+}
+</pre>
+
+<p>Wie man sieht, ist nirgendwo eine manuelle Handhabung des Puffers
+notwendig. Die Reallokation des Puffers wird von der Methode
+<code>push</code> automatisch aufgerufen, wenn die Länge gleich der
+Kapazität ist. Die Kapazität ändert sich normalerweise in
+Zweierpotenzen, über den
+genauen Algorithmus werden jedoch keine Garantien gemacht, um sich
+Potential für Optimierungen zu behalten. Jedoch darf die anfängliche
+Kapazität zur Verhinderung der Reallokation auch manuell angegeben
+werden:
+<pre class="rust indent">
+let mut b: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
+</pre>
+
+<h3>Alleinige Referenzen auf ein Feld</h3>
+<p>Zum Umdrehen eines Feldes muss man eigentlich kein neues erzeugen.
+Das Feld lässt sich auch selbst umdrehen, man nennt diese Vorgehensweise
+<i>in place</i>. Der folgende Algorithmus vertauscht das erste
+Element mit dem letzten, das zweite mit dem vorletzten usw. bis
+das Verfahren in der Mitte des Feldes angekommen ist.
+<pre class="rust indent">
+fn reverse(a: &amp;mut [i32]) {
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i,n-1-i);
+    }
+}
+
+fn main() {
+    let mut a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    reverse(&amp;mut a);
+    println!("{:?}",a);
+}
+</pre>
+<p>Da dem Feld selbst Veränderung widerfährt, ist hier eine alleinige
+Referenz auf den Slice des Feldes notwendig.
+
+<p>Dieser Algorithmus kann ohne die geringste Schwierigkeit generisch für
+einen beliebigen<sup>1</sup>
+Typ <code>T</code> angegeben werden. Dazu ist die
+Signatur lediglich in die folgende zu ändern:
+<pre class="rust indent">
+fn reverse&lt;T&gt;(a: &amp;mut [T])
+</pre>
+
+<p><sup>1</sup>Fast beliebig. Werte eines Typs mit
+Trait <code>Pin</code> lassen sich nicht im Speicher bewegen, Werte eines Typs
+mit Trait <code>?Sized</code> haben nicht unbedingt eine feste Größe. Allerdings
+spricht man solche Werte normalerweise indirekt über Zeiger an,
+welche diesen Unzulässigkeiten selbst nicht unterliegen.
+
+<h3>Nochmals Auschnitte von Feldern</h3>
+
+<p>Slices bestehen nur aus Zeiger und Länge. Intuitiv lässt sich aus
+einem Slice ein Teilslice bilden und aus diesem wieder ein Teilslice
+usw. Solange bis man den leeren Slice erhält. Ein Beispiel dazu ist
+diese Implementation der Summierung: 
+<pre class="rust indent">
+fn sum(a: &amp;[i32]) -&gt; i32 {
+    if a.len()==0 {0} else {a[0]+sum(&amp;a[1..])}
+}
+</pre>
+
+<p>Eine solche rekursive Formulierung ist zwar mathematisch elegant,
+in der Praxis jedoch leider ineffizient.
+
+<p>Der Slice <code>&amp;a[i..]</code> ist eine Abkürzung für
+<code>&amp;a[i..a.len()]</code>. Außerdem gibt es noch
+<code>&amp;a[..j]</code>, das ist <code>&amp;a[0..j]</code>. Demnach
+hat <code>&amp;a[..]</code> die Bedeutung <code>&amp;a[0..a.len()]</code>.
+
+<p>Slices sind recht praktisch, daher sind für diese eine ganze Reihe
+von Methoden definiert. Beispielsweise ist eine Methode zur
+Sortierung eines veränderlichen Slices vorhanden:
+<pre class="rust indent">
+fn main() {
+    let mut a: Vec&lt;i32&gt; = vec![4,2,1,3];
+    a[..].sort();
+    println!("{:?}",a);
+}
+</pre>
+
+
+</body>
+</html>
+
