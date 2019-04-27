@@ -455,6 +455,47 @@ Einsetzen bringt
 \int \ee^x\sin x\;\mathrm dx = \frac{\ee^x}{2}(\sin x-\cos x).\;\Box
 \end{equation}
 
+\begin{Aufgabe}
+Berechne
+\[\int_0^\infty \frac{\mathrm dx}{(x+\sqrt{x^2+1})^n}.\]
+\end{Aufgabe}
+\strong{Lösung.} Einer Betrachtung des Graphen des Integranden
+entnimmt man, dass dieser $\ee^{-n\cdot x}$ sehr ähnelt.
+Eventuell ist der restliche Zusammenhang einfacher Gestalt.
+Aus dem Ansatz
+\begin{equation}
+f(x) = \ee^{-n\cdot u(x)} = \frac{1}{(x+\sqrt{x^2+1})^n}
+\end{equation}
+ergibt sich, dass $u(x) = -\tfrac{1}{n}\ln f(x)$ an $\arctan(x)$
+oder $\operatorname{arsinh}(x)$ erinnert. Die zweite Vermutung
+wird numerisch bekräftigt und durch die Gleichung
+\begin{equation}
+\operatorname{arsinh}(x) = \ln(x+\sqrt{x^2+1})
+\end{equation}
+bestätigt. Die Substitution $x=\sinh(t)$ drängt sich nun als Ansatz auf.
+Die Vereinfachungen können hier nochmals nachgerechnet werden,
+um Rechenregeln für Hyperbelfunktionen einzuüben:
+\begin{align}
+&\sinh(t)^2-\cosh(t)^2 = 1 \implies x^2+1 = \sinh(t)^2+1 = \cosh(t)^2\\
+&\implies \sqrt{x^2+1} = \cosh(t),\\
+& \cosh(t)+\sinh(t) = e^t \implies x+\sqrt{x^2+1} = e^t.
+\end{align}
+Gemäß Substitutionsregel (die Grenzen bleiben hier zufällig erhalten)
+und der Identität $\cosh(t) = \tfrac{1}{2}(\ee^t+\ee^{-t})$ ergibt sich
+\begin{align}
+&\int_0^\infty \frac{\mathrm dx}{(x+\sqrt{x^2+1})^n}
+= \int_0^\infty e^{-nt} \cosh(t) \,\mathrm dt
+= \frac{1}{2}\int_0^\infty e^{-nt}(e^t+e^{-t})\,\mathrm dt\\
+&= \frac{1}{2}\bigg(\int_0^\infty e^{(-n+1)t}\,\mathrm dt
++\int_0^\infty e^{(-n-1)t}\,\mathrm dt\bigg)\\
+&= \frac{1}{2}\bigg(\frac{1}{-n+1}[e^{(-n+1)t}]_0^\infty
++ \frac{1}{-n-1}[e^{(-n-1)t}]_0^\infty\bigg)\\
+&= \frac{1}{2}\bigg(\frac{(-1)}{-n+1}
++ \frac{(-1)}{-n-1}\bigg)
+= \frac{1}{2}\bigg(\frac{1}{n-1}
++ \frac{1}{n+1}\bigg)
+= \frac{n}{n^2-1}.\;\Box
+\end{align}
 
 \subsection{Konvergenz}
 \begin{Aufgabe}

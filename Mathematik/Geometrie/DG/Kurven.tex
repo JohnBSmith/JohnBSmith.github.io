@@ -476,7 +476,7 @@ aber sogleich in die Hände.
 \begin{theorem}
 Ein stetig differenzierbarer Weg $c\colon [a,b]\to\R^n$ ist
 rektifizierbar und es gilt%
-\begin{equation}
+\begin{equation}\label{eq:Laenge}
 L_a^b(c) = \int_a^b |c'(t)|\,\mathrm dt.
 \end{equation}
 \end{theorem}
@@ -542,4 +542,199 @@ L(\tilde c) = \int_\alpha^\beta |\tilde c'(t)|\,\mathrm dt
 Die Länge ist also nicht vom gewählten Repräsentanten
 abhängig.\;\qedsymbol
 
+\subsection{Parametrisierung nach Bogenlänge}
 
+Sei $c\colon\R\to\R^n$ eine reguläre und stetig differenzierbare
+Parameterkurve. Die Bogenlängenfunktion $L(t):=L_a^t(c)$ nach
+\eqref{eq:Laenge} ist als Integralfunktion erst recht stetig.
+Mit $c'(t)\ne 0$ gilt auch $|c'(t)|>0$. Daher ist $L(t)$ streng monoton
+steigend. Nach dem Umkehrsatz für streng monotone Funktionen gibt es
+die Umkehrfunktion $\varphi(s):=L^{-1}(s)$. Diese lässt sich als
+Parametertransformation verwenden, und $(c\circ\varphi)(s)$ wird
+\emph{Parametrisierung nach der Bogenlänge} genannt.
+
+\begin{corollary}
+Sei $(c\circ\varphi)(s)$ nach Bogenlänge parametrisiert
+und $t=\varphi(s)$. Es gilt
+\begin{equation}
+\frac{\mathrm dc}{\mathrm ds} =
+(c\circ\varphi)'(s) = \frac{c'(t)}{|c'(t)|}.
+\end{equation}
+\end{corollary}
+\noindent\strong{Beweis.}
+Aus $t=(\varphi\circ L)(t)$ folgt
+\begin{equation}
+1 = (\varphi\circ L)'(t) = (\varphi'\circ L)(t)\,L'(t) = \varphi'(s)L'(t).
+\end{equation}
+Nach dem Hauptsitz ist $L'(t)=|c'(t)|$. Es folgt
+\begin{equation}
+(c\circ\varphi)'(s) = (c'\circ\varphi)(s)\,\varphi'(s) = c'(t)\varphi'(s)
+= \frac{c'(t)}{|c'(t)|}.\;\qedsymbol
+\end{equation}
+Wir sehen hier also, dass die Tangentialvektoren von
+Bogenlänge"=parametrisierten Kurven automatisch normiert sind.
+
+\section{Krümmung}
+\subsection{Krümmung ebener Kurven}
+
+Die Krümmung einer Kurve lässt sich definieren als das Maß für
+Richtungsänderung einer Kurve. Desto höher die Krümmung an einem
+bestimmten Punkt ist, desto schneller ändert sich dort die
+Richtung beim Durchlaufen der Kurve. Da die Richtung an einem
+Punkt durch den Tangentialvektor gegeben ist und Änderung
+durch die Ableitung quantifiziert wird, müsste die Krümmung
+als Betrag der Ableitung des Tangentialvektorfeldes nach der Zeit
+gegeben sein. Da die Durchlaufgeschwindigkeit dabei keine Rolle spielen
+soll, muss die Kurve vorher nach Bogenlänge parametrisiert werden.
+
+Alternativ lässt sich zunächst die Krümmung eines Kreises definieren.
+Ein Kreis ist umso stärker gekrümmt, je kleiner er ist. Demnach lässt
+sich die Krümmung einfach als Kehrwert des Radius definieren. Die
+Krümmung einer Kurve an einem Punkt ist dann die Krümmung des Kreises
+der sich der Kurve an dem Punkt am besten anschmiegt.
+
+Wie im Folgenden gefunden wird, sind diese beiden Ansätze äquivalent.
+
+Sei $\gamma\colon\R\to\R^2$ eine reguläre und zweimal stetig
+differenzierbare Parameterkurve. Sei
+\begin{equation}
+c\colon\R\to\R^2,\quad c(t)=\begin{bmatrix}
+x_0+R\cos(\omega t+\varphi_0)\\
+y_0+R\sin(\omega t+\varphi_0)
+\end{bmatrix}.
+\end{equation}
+Die Kreiskurve $c(t)$ soll nun an der Stelle $t=a$ an $\gamma(t)$
+geschmiegt sein. Dazu muss notwendigerweise $c(a)=\gamma(a)$ sein.
+Außerdem müssen die Tangentialvektoren dort gleich sein, also
+$\gamma'(a) = c'(a)$. Das allein genügt jedoch noch nicht. Der
+Kreis sollte sich zweiter Ordnung dort anschmiegen. Wenn die
+Taylorpolynome zweiten Grades übereinstimmen, muss auch
+$\gamma''(a) = c'(a)$ sein. Nun ist es aber so, dass die $\gamma$
+und $c$ eine unterschiedliche Durchlaufgeschwindigkeit haben können.
+Man könnte verlangen, dass beide Kurven nach Bogenlänge parametrisiert
+sind. Für den Kreis ergibt sich dabei
+\begin{equation}
+s = \int_0^t |c'(t)|\,\mathrm dt = \int_0^t R\omega\,\mathrm dt
+= R\omega t \implies \omega t = \frac{s}{R}.
+\end{equation}
+Es ergibt sich nun
+\begin{align}
+x'(s) &= -\sin(\tfrac{s}{R}+\varphi_0),
+& x''(s) &= -\tfrac{1}{R}\cos(\tfrac{s}{R}+\varphi_0),\\
+y'(s) &= \cos(\tfrac{s}{R}+\varphi_0),
+& y''(s) &= -\tfrac{1}{R}\sin(\tfrac{s}{R}+\varphi_0).
+\end{align}
+Um an das $R$ zu gelangen, findet man $x''(s)=-\tfrac{1}{R}y'(s)$
+und $y''(s)=\tfrac{1}{R}x'(s)$. Nun kann es aber sein, dass
+$x'(s)=0$ oder $y'(s)=0$ ist. Dann müsste man zur Berechnung der
+Krümmung $K = 1/R$ die jeweils andere Formel benutzen, um
+nicht durch null zu dividieren. Eine allgemeingültige Formel
+ergibt sich, wenn jeweils ein Faktor $x'(s)$ und $y'(s)$ in
+die Beziehung $x'(s)^2+y'(s)^2=1$ substituiert wird. Es ergibt
+sich dann $Rx'(s)y''(s)-Rx''(s)y'(s)=1$ und daher
+\begin{equation}\label{eq:Kruemmung-mit-Vorzeichen}
+K = \frac{1}{R} =
+\begin{vmatrix}
+x'(s) & x''(s)\\
+y'(s) & y''(s)
+\end{vmatrix}
+= x'(s)y''(s)-x''(s)y'(s).
+\end{equation}
+Substituiert man beide Faktoren, ergibt sich stattdessen
+\begin{equation}
+(Ry''(s))^2+(Rx''(s))^2 = 1
+\implies K = \frac{1}{R} = \sqrt{x''(s)^2+y''(s)^2}.
+\end{equation}
+Demnach ist die Krümmung tatsächlich die Änderung des
+Tangentialvektors:
+\begin{equation}\label{eq:Kruemmung-ohne-Vorzeichen}
+K = |\gamma''(s)| = |T'(s)|.
+\end{equation}
+Genauer genommen ist die Krümmung \eqref{eq:Kruemmung-mit-Vorzeichen}
+vorzeichenbehaftet, wodurch Information darüber enthalten ist, ob
+die Kurve nach links oder rechts gekrümmt ist. Die Formel
+\eqref{eq:Kruemmung-ohne-Vorzeichen} ergibt jedoch nur den Betrag
+der Krümmung.
+
+Die Krümmung lässt sich auch von solchen Parameterkurven angeben,
+die nicht nach der Bogenlänge parametrisiert sind. Dazu substituiert
+man $s=L(t)$, womit sich $\gamma'(s) = (\gamma'\circ L)(t)$ und
+$\gamma''(s)=(\gamma''\circ L)(t)$ ergibt. Die Aufgabe ist es nun, diese
+Ableitungen bezüglich $t$ darzustellen. Sei $\tilde\gamma = \gamma\circ L$.
+Nach der Kettenregel gilt%
+\begin{equation}
+\tilde\gamma'(t) = (\gamma'\circ L)\,L'(t) = \gamma'(s)\,|\tilde\gamma'(t)|
+\implies \gamma'(s) = \frac{\tilde\gamma'(t)}{|\tilde\gamma'(t)|}.
+\end{equation}
+Bei $\gamma''(s)$ ist es etwas komplizierter:
+\begin{align}
+\tilde\gamma''(t)
+&= (\gamma''{\circ}L)(t)\,L'(t)^2+(\gamma'{\circ}L)(t)\,L''(t)\\
+&= \gamma''(s)\,L'(t)^2+\gamma'(s)\,L''(t).
+\end{align}
+Mit $L''(t)=\langle\tilde\gamma',\tilde\gamma''\rangle/|\tilde\gamma'|$
+ergibt sich
+\begin{equation}
+\gamma''(s) = \frac{\tilde\gamma''(t)-\gamma'(s)L''(t)}{L'(t)^2}
+= \frac{\tilde\gamma''(t)-\gamma'(s)L''(t)}{|\gamma'(t)|^2}
+= \frac{
+|\tilde\gamma'|^2\tilde\gamma''
+-\tilde\gamma'\langle\tilde\gamma',\tilde\gamma''\rangle
+}{|\tilde\gamma'|^4}.
+\end{equation}
+Daraus erhält man via $|v-w|^2 = |v|^2-2\langle v,w\rangle+|w|^2$ nach
+dem Kürzen
+\begin{equation}
+|\gamma''(s)|^2 = \frac{
+|\tilde\gamma'|^2|\tilde\gamma''|^2
+-\langle\tilde\gamma',\tilde\gamma''\rangle^2
+}{|\tilde\gamma'|^6}.
+\end{equation}
+Es ergibt sich schließlich
+\begin{equation}\label{eq:Kruemmung-t}
+K = |\gamma''(s)| = \frac{|\tilde\gamma'(t)\wedge\tilde\gamma''(t)|}{|\tilde\gamma'(t)|^3}
+= \frac{\sqrt{\det(A^T A)}}{|\tilde\gamma'(t)|^3},
+\end{equation}
+wobei $A=(\gamma'(t),\gamma''(t))$ ist.
+
+Speziell in der Ebene ist die
+Matrix $A$ quadratisch, womit sich $\sqrt{\det(A^T A)}$
+zu $|\det(A)|$ vereinfacht. Die Betragsstriche können fallengelassen
+werden um auch zu kodieren, ob die Kurve nach links oder rechts
+gekrümmt ist. Für $\tilde\gamma(t)=(x(t),y(t))$ ergibt
+sich die Formel%
+\begin{equation}
+K = \frac{\det(A)}{|\tilde\gamma'(t)|^3}
+= \frac{|x'(t)y''(t)-y'(t)x''(t)|}{(x'(t)^2+y'(t)^2)^{3/2}}.
+\end{equation}
+Der Graph einer differenzierbare Funktion $f\colon I\to \R$ lässt sich
+als Parameterkurve $(x(t),y(t))=(t,f(t))$ darstellen. Für die
+Krümmung ergibt sich entsprechend
+\begin{equation}
+K = \frac{f''(x)}{(1+f'(x)^2)^{3/2}}.
+\end{equation}
+
+\subsection{Krümmung beliebiger Kurven}
+
+\begin{definition}[Krümmung einer Parameterkurve]
+Sei $\gamma\colon I\to \R^n$ eine reguläre zweimal stetig
+differenzierbare Parameterkurve, welche nach der Bogenlänge
+parametrisiert ist. Die \emdef{Krümmung} von $\gamma$ an der Stelle
+$s$ ist definiert durch%
+\begin{equation}
+K = |\gamma'(s)|.
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Berechnungsformel für die Krümmung]
+Sei $\gamma\colon I\to\R^n$ eine reguläre zweimal stetig
+differenzierbare Parameterkurve. Die Krümmung von $\gamma$ an der
+Stelle $t$ ist%
+\begin{equation}
+K = \frac{|\gamma'(t)\wedge\gamma''(t)|}{|\gamma'(t)|^3}
+= \frac{\sqrt{\det(A^T A)}}{|\gamma'(t)|^3},
+\end{equation}
+wobei $A=(\gamma'(t),\gamma''(t))$.
+\end{theorem}
+\strong{Beweis.} Die Rechnung zum Resultat \eqref{eq:Kruemmung-t}
+lässt sich unverändert übernehmen.\;\qedsymbol
