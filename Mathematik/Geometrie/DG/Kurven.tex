@@ -690,7 +690,8 @@ dem Kürzen
 -\langle\tilde\gamma',\tilde\gamma''\rangle^2
 }{|\tilde\gamma'|^6}.
 \end{equation}
-Es ergibt sich schließlich
+Entsprechend dem Formalismus in \eqref{eq:vol} und \eqref{eq:vol-gram}
+ergibt sich schließlich
 \begin{equation}\label{eq:Kruemmung-t}
 K = |\gamma''(s)| = \frac{|\tilde\gamma'(t)\wedge\tilde\gamma''(t)|}{|\tilde\gamma'(t)|^3}
 = \frac{\sqrt{\det(A^T A)}}{|\tilde\gamma'(t)|^3},
@@ -722,7 +723,7 @@ differenzierbare Parameterkurve, welche nach der Bogenlänge
 parametrisiert ist. Die \emdef{Krümmung} von $\gamma$ an der Stelle
 $s$ ist definiert durch%
 \begin{equation}
-K = |\gamma'(s)|.
+K = |\gamma''(s)|.
 \end{equation}
 \end{definition}
 
@@ -738,3 +739,118 @@ wobei $A=(\gamma'(t),\gamma''(t))$.
 \end{theorem}
 \strong{Beweis.} Die Rechnung zum Resultat \eqref{eq:Kruemmung-t}
 lässt sich unverändert übernehmen.\;\qedsymbol
+
+Im $\R^3$ gilt speziell $|v\wedge w| = |v\times w|$,
+weshalb in der älteren Literatur oft die Formel%
+\begin{equation}
+K = \frac{|\gamma'(t)\times\gamma''(t)|}{|\gamma'(t)|^3}
+\end{equation}
+zu finden ist.
+
+\begin{theorem}[Lagrange-Identität]
+Für zwei Vektoren $a,b\in\R^n$ gilt
+\begin{equation}
+|a\wedge b|^2 = |a|^2 |b|^2 - \langle a,b\rangle^2
+= \sum_{i<j} (a_i b_j - a_j b_i)^2.
+\end{equation}
+\end{theorem}
+\strong{Beweis.}
+Es gilt
+\begin{align}
+&\sum_{i<j} (a_i b_j - a_j b_i)^2
+= \frac{1}{2}\sum_{i,j} (a_i b_j - a_j b_i)^2\\
+&= \frac{1}{2}\sum_{i,j} (a_i^2 b_j^2 - 2a_i b_i a_j b_j + a_j^2 b_i^2)
+= \frac{1}{2}\bigg(2\sum_{i,j} a_i^2 b_j^2 - 2\sum_{i,j}a_i b_i a_j b_j\bigg)\\
+&= \bigg(\sum_{i=1}^n a_i^2\bigg)\bigg(\sum_{j=1}^n b_j^2\bigg)
+- \bigg(\sum_{i=1}^n a_i b_i\bigg)\bigg(\sum_{j=1}^n a_j b_j\bigg)\\
+&= |a|^2 |b|^2 - \langle a,b\rangle^2.\;\qedsymbol
+\end{align}
+
+\section{Die frenetschen Formeln}
+
+Sei $\gamma\colon\R\to\R^n$ eine nach Bogenlänge parametrisierte
+zweimal stetig differenzierbare Kurve. Aus $|\gamma'(s)|=1$ folgt
+$|\gamma'(s)|^2=1$ und somit%
+\begin{equation}\label{eq:orthogonale-Ableitungen}
+0 = \frac{\mathrm d}{\mathrm ds} |\gamma'(s)|^2
+= \langle \gamma'(s),\gamma''(s)\rangle + \langle\gamma''(s),\gamma'(s)\rangle
+= 2\langle\gamma'(s),\gamma''(s)\rangle.
+\end{equation}
+Es ist also $\langle\gamma'(s),\gamma''(s)\rangle=0$
+bzw. $\gamma'(s)\perp\gamma''(s)$. Diese Beziehung ist aber nur dann
+allgemeingültig, wenn eine nach Bogenlänge parametrisierte Kurve
+vorliegt. Dieser Zusammenhang lässt sich auch noch physikalisch
+interpretieren. Die Bewegung $\gamma(t)$ eines Teilchens besitzt den
+Geschwindigkeitsvektor $v=\gamma'(t)$. Außerdem erfährt das Teilchen
+der Masse $m$ die Beschleunigung $a=\gamma''(t)$ durch den
+Kraftvektor $F=ma$. Aus rein mathematischen Gründen gilt%
+\begin{equation}
+\frac{\mathrm d}{\mathrm dt}(\tfrac{1}{2}m |v|^2)
+= \langle m\gamma''(t),\gamma'(t)\rangle = \langle ma,v\rangle
+= \langle F,v\rangle.
+\end{equation}
+Der Kraftvektor $F$ lässt sich nun zerlegen in eine Komponente in
+Richtung von $v$ und eine orthogonal dazu. Bei Parametrisierung
+nach der Bogenlänge durchläuft das Teilchen seine Bahn mit konstanter
+Geschwindigkeit $|v|$. Demnach bleibt die kinetische Energie
+$\tfrac{1}{2}m|v|^2$ erhalten,
+was zur Folge hat, dass $F$ orthogonal auf $v$ steht. Die physikalische
+Deutung ist also, dass das Teilchen keine Beschleunigung in
+tangentialer Richtung erfährt.
+
+\begin{definition}[Begleitendes Zweibein]
+Sei $\gamma\colon I\to\R^2$ eine zweiter Ordnung reguläre
+nach Bogenlänge parametrisierte Kurve. Dann ist das
+\emdef{begleitende Zweibein} gegeben gemäß
+\begin{align}
+T(s) &:= \gamma'(s), && \text{(\emph{Tangenteneinheitsvektor})}\\
+N(s) &:= \frac{T'(s)}{|T'(s)|}. && \text{(\emph{Normaleneinheitsvektor})}
+\end{align}
+\end{definition}
+
+\begin{theorem}[Frenetsche Formeln für ebene Kurven]
+Sei $\gamma\colon I\to\R^2$ eine zweiter Ordnung reguläre nach
+Bogenlänge parametrisierte Kurve. Sei $K$ die betragsmäßige
+Krümmung und $T,N$ das begleitende Zweibein. Dann gilt%
+\begin{equation}
+\begin{bmatrix}
+T'(s)\\ N'(s)
+\end{bmatrix}
+= \begin{bmatrix}
+K(s)  & 0\\
+0 & -K(s)
+\end{bmatrix}\begin{bmatrix}
+N(s)\\ T(s)
+\end{bmatrix}.
+\end{equation}
+\end{theorem}
+\strong{Beweis.}
+Die Formel $T'(s) = K(s)N(s)$ bekommt man wegen $K(s)=|T'(s)|$
+geschenkt. Gemäß \eqref{eq:orthogonale-Ableitungen} gilt
+$\langle T(s),N(s)\rangle=0$. Demnach muss
+\begin{equation}
+N(s) = (\pm 1)\begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}T(s)
+\end{equation}
+sein. Daraus ergibt sich
+\begin{align}
+N'(s) &= (\pm 1)\begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}T'(s)
+= (\pm 1)\begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}K(s)N(s)\\
+&= K(s)(\pm 1)(\pm 1)\begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}
+  \begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}T(s)
+= K(s)\begin{bmatrix}-1 & 0\\ 0 & -1\end{bmatrix}T(s)\\
+&= -K(s)T(s).\;\qedsymbol
+\end{align}
+
+\begin{definition}[Begleitendes Dreibein]
+Sei $\gamma\colon I\to\R^3$ eine zweiter Ordnung reguläre
+nach Bogenlänge parametrisierte Kurve. Dann ist das \emdef{begleitende
+Dreibein} gegeben gemäß
+\begin{align}
+T(s) &:= \gamma'(s), && \text{(\emph{Tangenteneinheitsvektor})}\\
+N(s) &:= \frac{\gamma''(s)}{|\gamma''(s)|}, && \text{(\emph{Hauptnormaleneinheitsvektor})}\\
+B(s) &:= T(s)\times N(s). && \text{(\emph{Binormaleneinheitsvektor})}
+\end{align}
+\end{definition}
+
+
+
