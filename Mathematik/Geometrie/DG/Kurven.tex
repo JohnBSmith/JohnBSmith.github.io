@@ -824,7 +824,8 @@ N(s)\\ T(s)
 \end{bmatrix}.
 \end{equation}
 \end{theorem}
-\strong{Beweis.}
+
+\noindent\strong{Beweis.}
 Die Formel $T'(s) = K(s)N(s)$ bekommt man wegen $K(s)=|T'(s)|$
 geschenkt. Gemäß \eqref{eq:orthogonale-Ableitungen} gilt
 $\langle T(s),N(s)\rangle=0$. Demnach muss
@@ -847,10 +848,95 @@ nach Bogenlänge parametrisierte Kurve. Dann ist das \emdef{begleitende
 Dreibein} gegeben gemäß
 \begin{align}
 T(s) &:= \gamma'(s), && \text{(\emph{Tangenteneinheitsvektor})}\\
-N(s) &:= \frac{\gamma''(s)}{|\gamma''(s)|}, && \text{(\emph{Hauptnormaleneinheitsvektor})}\\
+N(s) &:= \frac{T'(s)}{|T'(s)|}, && \text{(\emph{Hauptnormaleneinheitsvektor})}\\
 B(s) &:= T(s)\times N(s). && \text{(\emph{Binormaleneinheitsvektor})}
 \end{align}
 \end{definition}
 
+\begin{theorem}\label{Bstrich-kollinear-zu-N}
+Die Vektoren $B'(s)$ und $N(s)$ sind kollinear.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Gezeigt wird $B'\times N=0$. Mittels Produktregel und $N\times N=0$
+erhält man zunächst%
+\begin{equation}
+B' = (T\times N)' = T'\times N+T\times N'
+= K_1 N\times N + T\times N' = T\times N'.
+\end{equation}
+Unter Heranziehung der allgemeingültigen Beziehung
+\begin{equation}\label{eq:Grassmann-Identitaet}
+(a\times b)\times c = \langle a,c\rangle b - \langle b,c\rangle a
+\end{equation}
+ergibt sich nun
+\begin{equation}
+B'\times N = (T\times N')\times N
+= \langle T,N\rangle N' - \langle N',N\rangle T.
+\end{equation}
+Der Vektor $N$ steht senkrecht auf $T$, d.h.
+$\langle T,N\rangle=0$. Außerdem ist $T(s)\ne 0$ für alle $s$,
+da die Kurve als regulär vorausgesetzt ist. Demnach bleibt lediglich
+$\langle N',N\rangle=0$ zu zeigen. Nach $|N|=1$ und der Produktregel
+gilt aber%
+\begin{equation}
+0 = \frac{\mathrm d}{\mathrm ds} 1 = \frac{\mathrm d}{\mathrm ds} |N|^2
+= \frac{\mathrm d}{\mathrm ds} \langle N,N\rangle
+= \langle N',N\rangle + \langle N,N'\rangle
+= 2\langle N',N\rangle.\;\qedsymbol
+\end{equation}
 
 
+\begin{definition}[Torsion]\label{Torsion}
+Sei $\gamma\colon I\to\R^3$ eine dreimal differenzierbare und
+zweiter Ordnung reguläre nach Bogenlänge parametrisierte Kurve.
+Die \emdef{Torsion} ist definiert als der Faktor $K_2$ in der Gleichung%
+\begin{equation}
+B'(s) = -K_2(s)N(s).
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Frenetsche Formeln für räumliche Kurven]
+Sei $\gamma\colon I\to\R^3$ eine dreimal differenzierbare und zweiter
+Ordnung reguläre nach Bogenlänge parametrisierte Kurve.
+Sei $K_1$ die Krümmung, $K_2$ die Torsion und $T,N,B$ das begleitende
+Dreibein. Dann gilt%
+\begin{equation}
+\begin{bmatrix}
+T'(s)\\ N'(s)\\ B'(s)
+\end{bmatrix}
+= \begin{bmatrix}
+0 & K_1(s) & 0\\
+-K_1(s) & 0 & K_2(s)\\
+0 & -K_2(s) & 0
+\end{bmatrix}
+\begin{bmatrix}
+T(s)\\ N(s)\\ B(s)
+\end{bmatrix}.
+\end{equation}
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Die Formel $T'(s)=K_1(s)N(s)$ bekommt man wegen $K_1(s)=|T'(s)|$
+wieder geschenkt. Die Formel $B'(s)=-K_2(s)N(s)$ gilt gemäß
+Definition \ref{Torsion}, die auf Satz \ref{Bstrich-kollinear-zu-N}
+beruht. Die Gleichung $B=T\times N$ lässt sich nach $N$ umstellen,
+da das System orthonormal ist. Aus \eqref{eq:Grassmann-Identitaet}
+und $\langle N,T\rangle=0$ ergibt sich
+\begin{equation}
+B\times T = (T\times N)\times T
+= \langle T,T\rangle N - \langle N,T\rangle T
+= |T|^2 N = N.
+\end{equation}
+Analog ergibt sich
+\begin{equation}
+B\times N = (T\times N)\times N
+= \langle T,N\rangle N - \langle N,N\rangle T
+= -|N|^2 T = -T
+\end{equation}
+Man erhält nun
+\begin{align}
+N' &= (B\times T)' = B'\times T+B\times T'
+= -K_2 N\times T+K_1 B\times N\\
+&= K_1 B\times N+K_2 T\times N
+= -K_1 T + K_2 B.\;\qedsymbol
+\end{align}
