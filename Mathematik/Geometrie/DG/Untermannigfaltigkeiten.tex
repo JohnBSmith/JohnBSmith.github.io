@@ -2,6 +2,130 @@
 \chapter{Untermannigfaltigkeiten des Koordinatenraums}
 
 \section{Grundlagen}
+\subsection{Definition}
+
+\begin{definition}[Topologische Untermannigfaltigkeit]
+Eine Menge $M\subseteq\R^m$ heißt
+Untermannigfaltigkeit des $\R^m$, wenn es zu jedem Punkt $p\in M$ einen
+Homöomorphismus $\varphi\colon U\to V$ mit%
+\begin{equation}
+M\cap V = \varphi(U\cap(\R^n\times\{0\})),\quad 0\in\R^{m-n}
+\end{equation}
+gibt, wobei $U,V\subseteq\R^m$ offen in $\R^m$ sind und $p\in V$ ist.
+\end{definition}
+Wenn nämlich $U$ offen in $\R^m$ ist, muss der Schnitt von $U$
+mit einem Untervektorraum auch offen in diesem Untervektorraum
+sein. Demnach ist $\tilde U:=U\cap(\R^n\times\{0\})$ offen in
+$\R^n\times\{0\}$. Der Homöomorphismus $\varphi$ kann nun zur
+Übertragung der Topologie genutzt werden. 
+
+\begin{theorem}[Lokale Topologie einer Untermannigfaltigkeit]
+Eine Menge $B\subseteq\varphi(\tilde U)$
+sei offen in $\varphi(\tilde U)$, wenn eine Menge $A$ mit
+$B=\varphi(A)$ existiert, wobei
+$A\subseteq\tilde U$ offen ist.
+Hierdurch wird $\varphi(\tilde U)$
+zu einem topologischen Raum.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Die Menge $B=\emptyset$ ist trivialerweise das Bild von
+$A=\emptyset$. Die Menge $B=\varphi(\tilde U)$ ist
+trivialerweise das Bild der offenen Menge $\tilde U$.
+
+Nun muss gezeigt werden, dass $B_1\cap B_2$ offen ist,
+wenn $B_1,B_2$ offen sind. Es gibt also $A_1,A_2$ mit $B_1=\varphi(A_1)$
+und $B_2=\varphi(A_2)$. Gesucht ist also eine offene Menge $X$,
+welche die Gleichung
+\begin{equation}
+\varphi(X) = B_1\cap B_2 = \varphi(A_1)\cap\varphi(A_2)
+\end{equation}
+erfüllt. Für eine beliebige Abbildung $f$ gilt
+$f(B_1\cap B_2) \subseteq f(B_1)\cap f(B_2)$ und falls $f$
+bijektiv ist, auch $f(B_1\cap B_2)=f(B_1)\cap f(B_2)$. Demnach
+ergibt sich
+\begin{equation}
+X = \varphi^{-1}(B_1\cap B_2) = \varphi^{-1}(B_1)\cap\varphi^{-1}(B_2)
+= A_1\cap A_2.
+\end{equation}
+Die Vereinigung von beliebig vielen offenen Mengen $B_k=\varphi(A_k)$
+soll wieder offen sein. Das ist die Gleichung
+\begin{equation}
+\varphi(X) = \bigcup_{k\in K} B_k = \bigcup_{k\in K} \varphi(A_k)
+= \varphi(\bigcup_{k\in K} A_k)
+\implies X=\bigcup_{k\in K} A_k.
+\end{equation}
+Dabei wurde beachtet, dass $f(\bigcup_k B_k) = \bigcup_k f(B_k)$
+für eine beliebige Abbildung $f$ gilt.\;\qedsymbol
+
+\begin{theorem}[Topologie einer Untermannigfaltigkeit]
+Eine Menge $B\subseteq M$ sei offen, wenn Paare $(\varphi_k,A_k)$
+mit $B=\bigcup_k\varphi_k(A_k)$ existieren, wobei die
+$A_k\subseteq\tilde U_k$ offen sind.
+Hierdurch wird $M$ zu einem topologischen Raum.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Die Offenheit der leeren Menge ist wieder geschenkt.
+Beliebige Vereinigungen sind offen, da die Vereinigung von
+Vereinigungen wieder eine Vereinigung ist. Dann muss auch
+$M$ offen sein.
+
+Seien nun $B_1,B_2$ offen. Demnach ist $B_1=\bigcup_i B_i$
+und $B_2=\bigcup_j B_j$, wobei $B_k=\varphi_k(A_k)$.
+Daraus ergibt sich nun
+\begin{equation}
+B_1\cap B_2 = \Big(\bigcup\nolimits_i B_i\Big)
+\cap\Big(\bigcup\nolimits_j B_j\Big)
+= \bigcup\nolimits_i \bigcup\nolimits_j (B_i\cap B_j).
+\end{equation}
+Es bleibt lediglich zu zeigen, dass $B_i\cap B_j$ offen ist.
+Wegen $B_i\cap B_j\subseteq B_i$ muss es ganz sicher eine Menge
+$X\subseteq\tilde U_i$ geben, so dass
+\begin{equation}
+\varphi_i(X) = B_i\cap B_j = \varphi_i(A_i)\cap\varphi_j(A_j).
+\end{equation}
+Es ergibt sich nun
+\begin{equation}
+X = \varphi_i^{-1}(B_i\cap B_j)
+= \varphi_i^{-1}(B_i)\cap\varphi_i^{-1}(B_j)
+= A_i\cap (\varphi_i^{-1}{\circ}\varphi_j)(A_j).
+\end{equation}
+Folglich muss $X$ offen sein, da es die Schnittmenge von offenen
+Mengen im flachen Raum ist. Demnach besitzt auch $B_1\cap B_2$
+eine Darstellung als Vereinigung von offenen Mengen.\;\qedsymbol
+
+Es gibt aufgrund der unterschiedlichen topologischen Strukturen
+viele Mannigfaltigkeiten, die nicht über eine einzige Karte
+angegeben werden können. Die Angabe geschieht somit im
+Allgemeinen über einen Atlas von Karten.
+
+\begin{definition}[Atlas]
+Eine Menge von Karten $\varphi_k\colon U_k\to V_k$ für eine
+Mannigfaltigkeit $M$ wird \emph{Atlas} genannt, wenn die
+$V_k$ die Mannigaltigkeit überdecken, d.\,h. $M=\bigcup_k V_k$.
+\end{definition}
+
+\noindent
+Angenommen, auf einer Mannigfaltigkeit $M$ ist nun ein Skalarfeld
+$f\colon V\to\R$ mit offenem $V\subseteq M$ definiert. Dieses
+Skalarfeld sei gegeben durch eine lokale Darstellung
+$\tilde f\colon U\to\R$ mit $U\subseteq\R^n$, wobei
+$f=\tilde f\circ\psi$ und $\psi\colon V\to U$.
+Die Berechnung der Ableitung muss nun über die Kettenregel
+geschehen:
+\begin{equation}
+\mathrm df_p = \mathrm d(\tilde f\circ\psi)_p
+= \mathrm d\tilde f_u\circ\mathrm d\psi_p,
+\quad u = \psi(p).
+\end{equation}
+Dann muss die Karte $\psi$ differenzierbar sein.
+
+Wenn auf einer Mannigfaltigkeit Differentialrechnung benutzt
+werden soll usw. usf., dann müssen also auch die Karten hinreichend oft
+differenzierbar sein. Wir fordern demnach dass die Karten
+$C^k$-Diffeomorphismen sein sollen.
+
 
 \subsection{Lokale Karten}
 
