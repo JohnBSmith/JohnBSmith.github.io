@@ -1,0 +1,77 @@
+
+\chapter{Lineare Algebra}
+\section{Matrizen}
+\subsection{Definitionen}
+\begin{Definition}[Transponierte Matrix]%
+\index{transponierte Matrix}
+Sei $R$ ein Ring und $A\in R^{m\times n}$ eine Matrix.
+Die Matrix $A^T\in R^{n\times m}$ mit $(A^T)_{ij} := A_{ji}$
+heißt Transponierte von $A$.
+\end{Definition}
+
+\begin{Definition}[Inverse Matrix]%
+\label{matrix-inv}\index{inverse Matrix}
+Sei $K$ ein Körper und $A\in K^{n\times n}$ eine quadratische
+Matrix. Man nennt $A$ invertierbar, wenn es eine Matrix $B$ gibt,
+mit $AB=BA=E_n$, wobei $E_n$ die Einheitsmatrix ist. Die Matrix
+$A^{-1}:=B$ heißt dann inverse Matrix zu $A$.
+\end{Definition}
+
+\subsection{Rechenregeln}
+
+\begin{Korollar}\label{transpose-product}
+Sei $R$ ein kommutativer Ring. Für Matrizen $A\in R^{m\times n}$ und
+$B\in R^{n\times p}$ gilt
+\[(AB)^T = B^T A^T.\]
+\end{Korollar}
+\begin{Beweis} Es gilt:
+\begin{align}
+(AB)^T &= \bigg(\sum_{k=1}^n A_{ik}B_{kj}\bigg)^T
+= \bigg(\sum_{k=1}^n A_{jk}B_{ki}\bigg)
+= \bigg(\sum_{k=1}^n B_{ki} A_{jk}\bigg)\\
+&= \bigg(\sum_{k=1}^n (B^T)_{ik} (A^T)_{kj}\bigg)
+= B^T A^T.\;\qedsymbol
+\end{align}
+\end{Beweis}
+
+\begin{Korollar}
+Sei $A\in K^{n\times n}$ eine invertierbare Matrix. Dann ist auch
+$A^T$ invertierbar und es gilt $(A^{-1})^T = (A^T)^{-1}$.
+\end{Korollar}
+\begin{Beweis}
+Aus $E=A^{-1}A=AA^{-1}$ und Korollar \ref{transpose-product} folgt
+\begin{equation}
+E = E^T = (A^{-1}A)^T = A^T (A^{-1})^T = (AA^{-1})^T = (A^{-1})^T A^T.
+\end{equation}
+Dann muss $A^T$ nach Def. \ref{matrix-inv} die inverse Matrix
+zu $(A^{-1})^T$ sein.\;\qedsymbol
+\end{Beweis}
+
+\section{Eigenwerte}
+
+\begin{Satz}
+Gegeben sei eine quadratische Matrix $A\in\R^{n\times n}$.
+Dann ist die Matrix $M=A^T A$ symmetrisch und besitzt nur
+nichtnegative Eigenwerte, speziell bei $\det(A)\ne 0$ nur positive.
+\end{Satz}
+
+\begin{Beweis}
+Gemäß Satz \ref{transpose-product} gilt
+\begin{equation}
+M^T = (A^T A) = A^T (A^T)^T = A^T A = M.
+\end{equation}
+Ist nun $\lambda$ ein Eigenwert von $M$ und $v$ ein Eigenvektor dazu,
+dann gilt $Mv=\lambda v$. Daraus folgt
+\begin{equation}
+\lambda |v|^2 = \langle\lambda v,v\rangle
+= \langle Mv,v\rangle = \langle A^T Av,v\rangle
+= \langle Av,Av\rangle = |Av|^2\ge 0.
+\end{equation}
+Ergo ist $\lambda|v|^2\ge 0$. Unter der Voraussetzung $v\ne 0$ ist
+$|v|>0$. Dann muss auch $\lambda\ge 0$ sein. Wenn nun $\det(A)\ne 0$
+ist, also $A$ eine reguläre Matrix, dann hat $A$ trivialen Kern,
+also $Av=0$ nur im Fall $v=0$. Da $v\ne 0$ vorausgesetzt wurde,
+muss auch $Av\ne 0$, und damit $|Av|>0$ sein. Dann ist auch
+$\lambda>0$. Alternativ folgt $\lambda>0$ daraus, dass $\det(A)$
+das Produkt der Eigenwerte ist.\;\qedsymbol
+\end{Beweis}

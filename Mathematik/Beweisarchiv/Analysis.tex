@@ -212,6 +212,32 @@ konvergente Folge $(a_n)$. Somit gilt:
 = f(\lim_{n\to\infty} x_n) = f(x).\;\qedsymbol\]
 \end{Beweis}
 
+\subsection{Wachstum und Landau-Symbole}
+\begin{Definition}\label{Landau-O}
+Seien $f,g\colon D\to\R$ mit $D=\N$ oder $D=\R$. Man sagt, die
+Funktion $f$ wächst nicht wesentlich schneller als $g$, kurz
+$f\in\mathcal O(g)$, genau dann, wenn
+\[\exists(c>0)\exists(x_0>0)\forall(x>x_0)(|f(x)|\le c|g(x)|).\]
+\end{Definition}
+
+\begin{Korollar}
+Ist $r\in\R$ mit $r\ne 0$ eine Konstante, dann gilt
+$\mathcal O(rg)=\mathcal O(g)$.
+\end{Korollar}
+\begin{Beweis}
+Nach Def. \ref{Landau-O} ist
+\[f\in\mathcal O(rg) \iff 
+\exists(c>0)\exists(x_0>0)\forall(x>x_0)(|f(x)|\le c|rg(x)|).\]
+Man hat nun
+\[|f(x)|\le c|rg(x)| = c\cdot |r|\cdot |g(x)|.\]
+\end{Beweis}
+Wegen $r\ne 0$ ist $|r|>0$ und daher auch $c>0\iff c|r|>0$. Sei
+$c':=r|c|$. Also gilt $c>0\iff c'>0$. Nach der Ersetzungsregel
+darf $c>0$ gegen $c'>0$ ersetzt werden und man erhält die
+äquivalente Bedingung
+\[\exists(c'>0)\exists(x_0>0)\forall(x>x_0)(|f(x)|\le c'|g(x)|).\]
+Nach Def. \ref{Landau-O} ist das gerade $f\in\mathcal O(g)$.\;\qedsymbol
+
 \section{Stetige Funktionen}
 
 \begin{Definition}[Grenzwert einer Funktion]\label{fn-lim}
@@ -300,6 +326,7 @@ wobei jetzt auch $x=x_0$ erlaubt ist. Demnach wird Def.
 Eine differenzierbare Funktion ist genau dann Lipschitz"=stetig,
 wenn ihre Ableitung beschränkt ist.
 \end{Satz}
+\begin{Beweis}
 Wenn $f\colon I\to\R$ Lipschitz"=stetig ist, dann gibt es $L$ mit
 \[\left|\frac{f(b)-f(a)}{b-a}\right|\le L\]
 für alle $a,b\in D$ mit $a\ne b$. Daraus folgt
@@ -316,6 +343,7 @@ $L = \sup_{x\in I} |f'(x)|$. Demnach ist $|f'(x)|\le L$ für alle $x$.
 Es ergibt sich
 \[\left|\frac{f(b)-f(a)}{b-a}\right|\le L|b-a| \implies |f(b)-f(a)|\le L|b-a|.\]
 Nun darf auch $a=b$ gewählt werden.\;\qedsymbol
+\end{Beweis}
 
 \begin{Satz}\label{diff-compact-Lipschitz-cont}
 Eine auf einem kompakten Intervall $[a,b]$ definierte stetig
@@ -367,7 +395,6 @@ größere Maxima von $|f'(x)|$. Daher kann $f$ in der Nähe von $x=0$ nicht
 lokal Lipschitz"=stetig sein.\;\qedsymbol
 \end{Beweis}
 
-\newpage
 \section{Differentialrechnung}
 \begin{Definition}[diff: differenzierbar, Ableitung]\label{diff}
 Eine Funktion $f\colon D\to\R$ heißt differenzieraber an der Stelle
