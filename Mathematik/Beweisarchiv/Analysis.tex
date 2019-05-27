@@ -388,7 +388,7 @@ Einerseits gilt
 \[f'(0) = \lim_{h\to 0}\frac{f(0+h)-f(0)}{h} = \lim_{h\to 0}\frac{f(h)}{h}
 = \lim_{h\to 0} (h^{1/2}\cos\Big(\tfrac{1}{h}\Big)) = 0.\]
 Die Funktion ist also an der Stelle $x=0$ differenzierbar.
-Andererseits gilt nach den Ableitungsregeln
+Andererseits gilt nach den Ableitungsregeln%
 \[f'(x) = \frac{3}{2}\sqrt{x}\cos\Big(\tfrac{1}{x}\Big)+\frac{1}{\sqrt{x}}\sin\Big(\tfrac{1}{x}\Big).\]
 für $x>0$. Der Term $\tfrac{1}{\sqrt{x}}$ erwirkt für $x\to 0$ immer
 größere Maxima von $|f'(x)|$. Daher kann $f$ in der Nähe von $x=0$ nicht
@@ -398,7 +398,7 @@ lokal Lipschitz"=stetig sein.\;\qedsymbol
 \section{Differentialrechnung}
 \begin{Definition}[diff: differenzierbar, Ableitung]\label{diff}
 Eine Funktion $f\colon D\to\R$ heißt differenzieraber an der Stelle
-$x_0\in D$, wenn der Grenzwert
+$x_0\in D$, wenn der Grenzwert%
 \[f'(x_0) = \lim_{x\to x_0}\frac{f(x)-f(x_0)}{x-x_0}
 = \lim_{h\to 0}\frac{f(x_0+h)-f(x_0)}{h}\]
 existiert. Man nennt $f'(x_0)$ die Ableitung von $f$ an der Stelle
@@ -406,9 +406,51 @@ $x_0$.
 \end{Definition}
 
 \begin{Satz}
+Sei $I$ ein Intervall und $f,g\colon I\to\R$. Sind $f,g$
+differenzierbar an der Stelle $x\in I$, dann ist auch%
+\begin{align*}
+f+g&\;\text{dort differenzierbar mit}\;(f+g)'(x)=f'(x)+g'(x),\\
+f-g&\;\text{dort differenzierbar mit}\;(f-g)'(x)=f'(x)-g'(x),\\
+fg&\;\text{dort differenzierbar mit}\;(fg)'(x)=f'(x)g(x)+f(x)g'(x).
+\end{align*}
+\end{Satz}
+
+\begin{Beweis} Es gilt
+\begin{gather}
+(f+g)'(x)
+= \lim_{h\to 0}\frac{(f+g)(x+h)-(f+g)(x)}{h}\\
+= \lim_{h\to 0}\frac{(f(x+h)+g(x+h))-(f(x)+g(x))}{h}\\
+= \lim_{h\to 0}\bigg(\frac{f(x+h)-f(x)}{h}+\frac{g(x+h)-g(x)}{h}\bigg)\\
+= \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}+\lim_{h\to 0}\frac{g(x+h)-g(x)}{h}
+= f'(x)+g'(x).
+\end{gather}
+Da die Grenzwerte auf der rechten Seite nach Voraussetzung existieren,
+muss auch der Grenzwert der Summe existieren.
+Die Rechnung für die Subtraktion ist analog.
+
+Bei der Multiplikation wird ein Nullsummentrick angewendet:
+\begin{gather}
+g(x)f'(x)+f(x)g'(x)
+= g(x)\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}
++ f(x)\lim_{h\to 0}\frac{g(x+h)-g(x)}{h}\\
+= \lim_{h\to 0}\bigg[g(x+h)\frac{f(x+h)-f(x)}{h}\bigg]
++ \lim_{h\to 0}\bigg[f(x)\frac{g(x+h)-g(x)}{h}\bigg]\\
+= \lim_{h\to 0}\frac{f(x+h)g(x+h)-f(x)g(x+h)}{h}
++ \lim_{h\to 0}\frac{f(x)g(x+h)-f(x)g(x)}{h}\\
+= \lim_{h\to 0}\frac{f(x+h)g(x+h)-f(x)g(x+h)+f(x)g(x+h)-f(x)g(x)}{h}\\
+= \lim_{h\to 0}\frac{f(x+h)g(x+h)-f(x)g(x)}{h}
+= \lim_{h\to 0}\frac{(fg)(x+h)-(fg)(x)}{h}
+= (fg)'(x).
+\end{gather}
+Hierbei wurde $\lim_{h\to 0}g(x+h)=g(x)$ benutzt, was richtig ist,
+weil $g$ an der Stelle $x$ differenzierbar ist und dort somit ganz
+sicher stetig.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
 Sei $f\colon\R\to\R$ eine Funktion mit der Eigenschaft
 $f(x)=0$ für $x\le 0$ und $f(x)>0$ für $x>0$. Es gibt glatte Funktionen
-mit dieser Eigenschaft, jedoch keine analytische.
+mit dieser Eigenschaft, jedoch keine analytischen.
 \end{Satz}
 
 \begin{Beweis}
@@ -428,7 +470,7 @@ Eine glatte Funktion lässt sich jedoch konstruieren:
 \end{cases}\]
 Ist nämlich $g(x)$ an einer Stelle glatt, dann ist
 es nach Kettenregel, Produktregel und Summenregel auch $\ee^{g(x)}$.
-Die $n$-te Ableitung lässt sich immer in der Form
+Die $n$-te Ableitung lässt sich immer in der Form%
 \[\sum\nolimits_k e^{g(x)}{r_k(x)}
 = e^{g(x)}\sum\nolimits_k r_k(x) = e^{g(x)}r(x)\]
 darstellen, wobei die $r_k(x)$ bzw. $r(x)$ in diesem Fall rationale
