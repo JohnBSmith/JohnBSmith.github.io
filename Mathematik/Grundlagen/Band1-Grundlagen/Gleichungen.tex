@@ -238,23 +238,51 @@ Schon ein wenig schwieriger ist z.\,B.
 
 \subsection{Monotone Funktionen}
 
-\begin{Definition}[Streng monotone Funktionen]
-Eine Funktion $f\colon G\to\R$ heißt streng monoton, wenn die Äquivalenz
-\[a<b\iff f(a)<f(b)\]
+\begin{Definition}[Streng monoton steigende Funktion]
+Eine Funktion $f\colon G\to\R$ heißt streng monoton steigend, wenn
+\[a<b\implies f(a)<f(b)\]
 für beliebige Zahlen $a,b\in G$ erfüllt ist.
 \end{Definition}
-Streng monotone Abbildung sind von besonderer Bedeutung, weil
-sie gemäß ihrer Definition auch Äquivalenzumformungen sind.
+Streng monotone Abbildungen sind von besonderer Bedeutung, weil
+sie gemäß ihrer Definition auch Äquivalenzumformungen sind:
 
-Tatsächlich haben wir schon monotone Abbildungen kennengelernt.
+\begin{Satz}
+Streng monoton steigende Funktionen sind umkehrbar eindeutig.
+Die Umkehrfunktion ist auch streng monoton steigend. D.\,h.
+\[a<b\iff f(a)<f(b).\]
+Demnach ist die Anwendung einer streng monoton steigenden
+Funktion eine Äquivalenzumformung.
+\end{Satz}
+\noindent\strong{Beweis.}
+Zu zeigen ist $a\ne b\implies f(a)\ne f(b)$. Wenn aber $a\ne b$
+ist, dann ist entweder $a<b$ und daher nach Voraussetzung
+$f(a)<f(b)$ oder $b<a$ und daher nach Voraussetzung $f(b)<f(a)$.
+In beiden Fällen ist $f(a)\ne f(b)$.
+
+\begin{Definition}[Streng monoton fallende Funktion]
+Eine Funktion $f\colon G\to\R$ heißt streng monoton fallend, wenn
+\[a<b\implies f(a)>f(b)\]
+für beliebige Zahlen $a,b\in G$ erfüllt ist.
+\end{Definition}
+
+Seien nun $y_1,y_2$ zwei Bilder der streng monotonen Funktion $f$.
+Zu zeigen ist $y_1<y_2\implies f^{-1}(y_1)<f^{-1}(y_2)$.
+Stattdessen kann auch die Kontraposition
+$f^{-1}(y_2)\le f^{-1}(y_1)\implies y_2\le y_1$ gezeigt werden.
+Das lässt sich nun aus der strengen Monotonie von $f$ schließen:
+\begin{equation}
+f^{-1}(y_2)\le f^{-1}(y_1)\implies
+\underbrace{f(f^{-1}(y_2))}_{=y_2}\le \underbrace{f(f^{-1}(y_1))}_{=y_1}.\;\qedsymbol
+\end{equation}
+Tatsächlich haben wir schon monotone Funktionen kennengelernt.
 Z.\,B. ist \eqref{lt-add} nichts anderes als die strenge Monotonie
 für $f(x):=x+c$. Und \eqref{lt-mul-nat} ist die strenge Monotonie
 für $f(x):=nx$.
 
-Die Funktion $f\colon\R\to\R$ mit $f(x):=x^2$ ist nicht streng Monoton.
+Die Funktion $f\colon\R\to\R$ mit $f(x):=x^2$ ist nicht streng monoton.
 Zum Beispiel ist $-4<-2$, aber $16=f(-4)>f(-2)=4$. Schränkt man $f$
 auf den Definitionsbereich $\R_{>0}$ ein, so ergibt sich jedoch eine
-streng Monotone Funktion. Das lässt sich wie folgt zeigen.
+streng monotone Funktion. Das lässt sich wie folgt zeigen.
 
 Nach Voraussetzung sind $a,b\in\R_{>0}$, d.\,h. $a,b>0$.
 Also kann gemäß \eqref{lt-mul-real} einerseits mit $a$
