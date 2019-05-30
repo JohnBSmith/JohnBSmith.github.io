@@ -395,8 +395,13 @@ größere Maxima von $|f'(x)|$. Daher kann $f$ in der Nähe von $x=0$ nicht
 lokal Lipschitz"=stetig sein.\;\qedsymbol
 \end{Beweis}
 
+
 \section{Differentialrechnung}
-\begin{Definition}[diff: differenzierbar, Ableitung]\label{diff}
+
+\subsection{Ableitungsregeln}
+
+\begin{Definition}[diff: differenzierbar, Ableitung]%
+\label{diff}\index{differenzierbar}\index{Ableitung}
 Eine Funktion $f\colon D\to\R$ heißt differenzieraber an der Stelle
 $x_0\in D$, wenn der Grenzwert%
 \[f'(x_0) = \lim_{x\to x_0}\frac{f(x)-f(x_0)}{x-x_0}
@@ -405,14 +410,15 @@ existiert. Man nennt $f'(x_0)$ die Ableitung von $f$ an der Stelle
 $x_0$.
 \end{Definition}
 
-\begin{Satz}
+\begin{Satz}\index{Produktregel}
 Sei $I$ ein Intervall und $f,g\colon I\to\R$. Sind $f,g$
 differenzierbar an der Stelle $x\in I$, dann ist auch%
-\begin{align*}
+\begin{align}
 f+g&\;\text{dort differenzierbar mit}\;(f+g)'(x)=f'(x)+g'(x),\\
 f-g&\;\text{dort differenzierbar mit}\;(f-g)'(x)=f'(x)-g'(x),\\
+\label{eq:diff-mul}
 fg&\;\text{dort differenzierbar mit}\;(fg)'(x)=f'(x)g(x)+f(x)g'(x).
-\end{align*}
+\end{align}
 \end{Satz}
 
 \begin{Beweis} Es gilt
@@ -446,6 +452,69 @@ Hierbei wurde $\lim_{h\to 0}g(x+h)=g(x)$ benutzt, was richtig ist,
 weil $g$ an der Stelle $x$ differenzierbar ist und dort somit ganz
 sicher stetig.\;\qedsymbol
 \end{Beweis}
+
+\begin{Satz}
+Sei $I$ ein Intervall. Sind $f,g\colon I\to\R$ an der Stelle
+$x$ differenzierbar und ist $g(x)\ne 0$, dann
+ist auch $f/g$ differenzierbar und es gilt
+\begin{equation}
+\bigg(\frac{f}{g}\bigg)'(x) = \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}.
+\end{equation}
+\end{Satz}
+\begin{Beweis}
+Nach der Produktregel \eqref{eq:diff-mul} gilt
+\begin{equation}
+0 = 1' = \bigg(g\cdot\frac{1}{g}\bigg)'
+= g'\cdot\frac{1}{g}+g\cdot \bigg(\frac{1}{g}\bigg)'.
+\end{equation}
+Umstellen bringt $(1/g)'(x)=-g'(x)/g(x)^2$. Nochmalige Anwendung der
+Produktregel \eqref{eq:diff-mul} bringt
+\begin{align}
+\bigg(\frac{f}{g}\bigg)'(x)
+&= \bigg(f\cdot\frac{1}{g}\bigg)'(x)
+= f'(x)\cdot\frac{1}{g(x)}+f(x)\bigg(\frac{1}{g}\bigg)'(x)\\
+&= \frac{f'(x)}{g(x)}-\frac{f(x)g'(x)}{g(x)^2}
+= \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}.\;\qedsymbol
+\end{align}
+\end{Beweis}
+
+\begin{Satz}\label{diff-power}
+Für $f\colon\R\to\R$, $f(x):=x^n$ mit $n\in\N$ gilt
+$f'(x)=nx^{n-1}$.
+\end{Satz}
+\begin{Beweis}
+Heranziehung des binomischen Lehrsatzes bringt
+\begin{align}
+f'(x) &= \lim_{h\to 0}\frac{(x+h)^n-x^n}{h}
+= \lim_{h\to 0}\frac{\sum_{k=0}^n\binom{n}{k}x^{n-k} h^k-x^n}{h}\\
+&= \lim_{h\to 0}\bigg(nx^{n-1}+\sum_{k=2}^n\binom{n}{k}x^{n-k}h^{k-1}\bigg)
+= nx^{n-1}.\;\qedsymbol
+\end{align}
+\end{Beweis}
+
+\begin{Satz}
+Für $f\colon\R{\setminus}\{0\}\to\R$, $f(x):=x^n$ mit $n\in\Z$
+gilt $f'(x)=nx^{n-1}$.
+\end{Satz}
+\begin{Beweis}
+Der Fall $n=0$ ist trivial und $n\ge 1$ wurde schon in Satz
+\ref{diff-power} gezeigt. Sei nun $a\in\N$ und $n=-a$. Nach der
+Produktregel \eqref{eq:diff-mul} und Satz \ref{diff-power} gilt
+\begin{equation}
+0 = \frac{\mathrm d}{\mathrm dx} 1
+= \frac{\mathrm d}{\mathrm dx} (x^a x^{-a})
+= x^{-a}\frac{\mathrm d}{\mathrm dx} x^a+x^a\frac{\mathrm d}{\mathrm dx} x^{-a}
+= x^{-a}ax^{a-1}+x^a\frac{\mathrm d}{\mathrm dx} x^{-a}.
+\end{equation}
+Dividiert man nun durch $x^a$ und formt um, dann ergibt sich
+\begin{equation}
+\frac{\mathrm d}{\mathrm dx} x^{-a} = -ax^{-a-1}
+\implies \frac{\mathrm d}{\mathrm dx} x^n = nx^{n-1}.\;\qedsymbol
+\end{equation}
+\end{Beweis}
+
+\newpage
+\subsection{Glatte Funktionen}
 
 \begin{Satz}
 Sei $f\colon\R\to\R$ eine Funktion mit der Eigenschaft

@@ -47,6 +47,22 @@ Dann muss $A^T$ nach Def. \ref{matrix-inv} die inverse Matrix
 zu $(A^{-1})^T$ sein.\;\qedsymbol
 \end{Beweis}
 
+\begin{Korollar}\label{Verschiebungseigenschaft}
+Sei $v\in\R^n$ und $w\in\R^m$. Sei $A\in\R^{m\times n}$. Es gilt
+$\langle Av,w\rangle = \langle v,A^Tw\rangle$,
+wobei links das Standardskalarprodukt auf dem $\R^m$ und
+rechts das auf dem $\R^n$ ausgewertet wird.
+\end{Korollar}
+\begin{Beweis}
+Identifiziert man die Vektoren $x,y\in\R^k$ mit den
+Matrizen $x,y\in\R^{k\times 1}$, dann
+ist $\langle x,y\rangle = x^T y$. Gemäß Korollar
+\ref{transpose-product} darf man rechnen:
+\[\langle Av,w\rangle
+= (Av)^T w = v^T A^T w = \langle v,A^Tw\rangle.\;\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \section{Eigenwerte}
 
 \begin{Satz}
@@ -61,7 +77,8 @@ Gemäß Satz \ref{transpose-product} gilt
 M^T = (A^T A) = A^T (A^T)^T = A^T A = M.
 \end{equation}
 Ist nun $\lambda$ ein Eigenwert von $M$ und $v$ ein Eigenvektor dazu,
-dann gilt $Mv=\lambda v$. Daraus folgt
+dann gilt $Mv=\lambda v$. Unter Anwendung von Korollar
+\ref{Verschiebungseigenschaft} folgt daraus
 \begin{equation}
 \lambda |v|^2 = \langle\lambda v,v\rangle
 = \langle Mv,v\rangle = \langle A^T Av,v\rangle
