@@ -9,6 +9,21 @@ Die Matrix $A^T\in R^{n\times m}$ mit $(A^T)_{ij} := A_{ji}$
 heißt Transponierte von $A$.
 \end{Definition}
 
+\begin{Definition}[Konjugierte Matrix]%
+\index{konjugierte Matrix}
+Sei $A\in\C^{m\times n}$. Die Matrix $\overline A$ mit
+$(\overline A)_{ij} := \overline{A_{ij}}$
+heißt konjugierte Matrix zu $A$. Mit $\overline{A_{ij}}$ ist
+die Konjugation der komplexen Zahl $A_{ij}$ gemeint.
+\end{Definition}
+
+\begin{Definition}[Adjungierte Matrix]%
+\index{adjungierte Matrix}
+Sei $A\in\C^{m\times n}$. Die Adjungierte zu $A$ ist
+definiert als $A^H:=(\overline A)^T$, d.\,h.
+die Transponierte der konjugierten Matrix zu $A$.
+\end{Definition}
+
 \begin{Definition}[Inverse Matrix]%
 \label{matrix-inv}\index{inverse Matrix}
 Sei $K$ ein Körper und $A\in K^{n\times n}$ eine quadratische
@@ -19,7 +34,7 @@ $A^{-1}:=B$ heißt dann inverse Matrix zu $A$.
 
 \subsection{Rechenregeln}
 
-\begin{Korollar}\label{transpose-product}
+\begin{Korollar}\label{matrix-mul-tp}
 Sei $R$ ein kommutativer Ring. Für Matrizen $A\in R^{m\times n}$ und
 $B\in R^{n\times p}$ gilt
 \[(AB)^T = B^T A^T.\]
@@ -39,7 +54,7 @@ Sei $A\in K^{n\times n}$ eine invertierbare Matrix. Dann ist auch
 $A^T$ invertierbar und es gilt $(A^{-1})^T = (A^T)^{-1}$.
 \end{Korollar}
 \begin{Beweis}
-Aus $E=A^{-1}A=AA^{-1}$ und Korollar \ref{transpose-product} folgt
+Aus $E=A^{-1}A=AA^{-1}$ und Korollar \ref{matrix-mul-tp} folgt
 \begin{equation}
 E = E^T = (A^{-1}A)^T = A^T (A^{-1})^T = (AA^{-1})^T = (A^{-1})^T A^T.
 \end{equation}
@@ -47,6 +62,7 @@ Dann muss $A^T$ nach Def. \ref{matrix-inv} die inverse Matrix
 zu $(A^{-1})^T$ sein.\;\qedsymbol
 \end{Beweis}
 
+\newpage
 \begin{Korollar}\label{Verschiebungseigenschaft}
 Sei $v\in\R^n$ und $w\in\R^m$. Sei $A\in\R^{m\times n}$. Es gilt
 $\langle Av,w\rangle = \langle v,A^Tw\rangle$,
@@ -57,12 +73,53 @@ rechts das auf dem $\R^n$ ausgewertet wird.
 Identifiziert man die Vektoren $x,y\in\R^k$ mit den
 Matrizen $x,y\in\R^{k\times 1}$, dann
 ist $\langle x,y\rangle = x^T y$. Gemäß Korollar
-\ref{transpose-product} darf man rechnen:
+\ref{matrix-mul-tp} darf man rechnen:
 \[\langle Av,w\rangle
 = (Av)^T w = v^T A^T w = \langle v,A^Tw\rangle.\;\qedsymbol\]
 \end{Beweis}
 
-\newpage
+\subsection{Rechenregeln für komplexe Matrizen}
+\begin{Korollar}\label{matrix-mul-conj}
+Für Matrizen $A\in\C^{m\times n}$ und $B\in\C^{n\times p}$ gilt
+\[\overline{AB} = \overline A\cdot\overline B\]
+\end{Korollar}
+\begin{Beweis}
+Es gilt
+\begin{align*}
+\overline{AB}
+&= \overline{\bigg(\sum_{k=1}^n A_{ik}B_{kj}\bigg)}
+= \bigg(\sum_{k=1}^n \overline{A_{ik}B_{kj}}\bigg)
+= \bigg(\sum_{k=1}^n \overline{A_{ik}}\cdot\overline{B_{kj}}\bigg)
+= \bigg(\sum_{k=1}^n (\overline A)_{ik}(\overline B)_{kj}\bigg)
+= \overline A\cdot\overline B.\;\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar}\label{matrix-mul-tp-conj}
+Für Matrizen $A\in\C^{m\times n}$ und $B\in\C^{n\times p}$ gilt
+\[(AB)^H = B^H A^H.\]
+\end{Korollar}
+\begin{Beweis}
+Gemäß Korollar \ref{matrix-mul-conj} und \ref{matrix-mul-tp} gilt
+\[(AB)^H = (\overline{AB})^T = (\overline A\cdot\overline B)^T
+= (\overline B)^T(\overline A)^T = B^H A^H.\]
+\end{Beweis}
+
+\begin{Korollar}
+Sei $v\in\C^n$ und $w\in\C^m$. Sei $A\in\C^{m\times n}$.
+Es gilt $\langle Av,w\rangle = \langle v,A^H w\rangle$,
+wobei links das Standardskalarprodukt auf dem $\C^m$ ausgewertet
+wird und rechts das auf dem $\C^n$.
+\end{Korollar}
+\begin{Beweis}
+Identifiziert man die Vektoren $x,y\in\C^k$ mit den Matrizen
+$x,y\in\C^{k\times 1}$, dann gilt $\langle x,y\rangle = x^H y$.
+Gemäß Korollar \ref{matrix-mul-tp-conj} darf man rechnen
+\[\langle Av,w\rangle = (Av)^H w = v^H A^H w
+= \langle v,A^Hw\rangle.\;\qedsymbol\]
+\end{Beweis}
+
+%\newpage
 \section{Eigenwerte}
 
 \begin{Satz}
@@ -72,7 +129,7 @@ nichtnegative Eigenwerte, speziell bei $\det(A)\ne 0$ nur positive.
 \end{Satz}
 
 \begin{Beweis}
-Gemäß Satz \ref{transpose-product} gilt
+Gemäß Satz \ref{matrix-mul-tp} gilt
 \begin{equation}
 M^T = (A^T A) = A^T (A^T)^T = A^T A = M.
 \end{equation}

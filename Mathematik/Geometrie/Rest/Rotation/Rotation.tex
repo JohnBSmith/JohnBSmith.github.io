@@ -1,0 +1,219 @@
+\documentclass[a4paper,fleqn,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage{mdframed}
+\usepackage{lipsum}
+%\usepackage{microtype}
+
+\usepackage{lmodern}
+%\usepackage{arev}
+%\usepackage{libertine}
+%\usepackage[libertine,cmintegrals]{newtxmath}
+%\renewcommand\ttdefault{lmvtt}
+
+\usepackage{geometry}
+\geometry{a4paper,left=34mm,right=34mm,top=38mm,bottom=48mm}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{0,40,80}
+\definecolor{gray1}{RGB}{80,80,80}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+
+\newtheoremstyle{rmbox}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\bfseries}% head font
+  {\\[2pt]}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmname{#1}\;\thmnumber{#2}.\;\thmnote{#3.}}
+
+\theoremstyle{rmbox}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Satz}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Korollar}
+\newtheorem{Aufgabe}{Aufgabe}
+
+\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
+\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=greenblue, linewidth=4pt, innerleftmargin=7pt,%
+  innertopmargin=2pt, innerbottommargin=4pt,%
+  innerrightmargin=0pt%
+]{definition}
+
+\newcommand{\framedtheorem}[1]{%
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=grayblue, linewidth=3.5pt, innerleftmargin=6pt,%
+  innertopmargin=2pt, innerbottommargin=6pt,%
+  innerrightmargin=0pt%
+]{#1}}
+
+\framedtheorem{theorem}
+\framedtheorem{lemma}
+\framedtheorem{corollary}
+\framedtheorem{Aufgabe}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\defiff}{\;:\Longleftrightarrow\;}
+
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\sur}{sur}
+\DeclareMathOperator{\real}{Re}
+\DeclareMathOperator{\imag}{Im}
+
+\begin{document}
+\pagestyle{empty}
+
+\section*{Die Rotation im Raum mittels Clifford-Algebra}
+
+Im Folgenden wird die folgende Notation benutzt:
+\begin{align*}
+\langle v,w\rangle &\qquad \text{Standardskalarprodukt},\\
+v\wedge w &\qquad \text{äußeres Produkt},\\
+vw &\qquad \text{Produkt der Clifford-Algebra}.
+\end{align*}
+Der Vektor $\vec r_0$ soll um die durch den normierten Vektor $\vec n$
+gegebene Achse rotiert werden. Die Rotation um den Winkel $\varphi$
+lässt sich berechnen gemäß
+\begin{equation}\label{eq:Rotation}
+\vec r(\varphi) = R\vec r_0\tilde R,\quad R=\ee^{-\hat B\varphi/2},\quad\tilde R=\ee^{\hat B\varphi/2}.
+\end{equation}
+Hierbei ist $\hat B$ der Einheitsbivektor der Ebene orthogonal zu
+$\vec n$. Mittels Hodge"=Stern"=Operator gilt dann $\hat B=*\vec n$.
+Die Clifford"=Algebra"=Elemente $R$ und $\tilde R$
+werden \emph{Rotoren} genannt, und $\tilde R$ ist die \emph{Reversion}
+von $R$.
+
+Allgemein für den $\R^n$ gilt
+\begin{equation}\label{eq:Pseudoskalar-Vektor}
+*\vec v = \vec vI_n = (-1)^{n-1}I_n\vec v,
+\end{equation}
+wobei $I_n = e_1e_2\ldots e_n$ der Pseudoskalar ist.
+
+Im $\R^3$ gilt also $\vec vI_3=I_3\vec v$. Wir schreiben
+ab jetzt kurz $I:=I_3$.
+
+Somit ist $\hat B = \vec nI = I\vec n$.
+
+Es gilt die Verallgemeinerung der eulerschen Formel:
+\begin{equation}
+\ee^{\hat B x} = \cos x +\hat B\sin x.
+\end{equation}
+Es ergibt sich
+\begin{gather}
+R\vec r_0\tilde R = (\cos\tfrac{\varphi}{2}-\hat B\sin\tfrac{\varphi}{2})
+\vec r_0(\cos\tfrac{\varphi}{2}+\hat B\sin\tfrac{\varphi}{2})\\
+= (\cos\tfrac{\varphi}{2}-\hat B\sin\tfrac{\varphi}{2})
+(\vec r_0\cos\tfrac{\varphi}{2}+\vec r_0\hat B\sin\tfrac{\varphi}{2})\\
+= \vec r_0\cos^2\tfrac{\varphi}{2}-\hat B\vec r_0\hat B\sin^2\tfrac{\varphi}{2}
++ (\vec r_0\hat B-\hat B\vec r_0)\cos\tfrac{\varphi}{2}\sin\tfrac{\varphi}{2}\\
+= \vec r_0\cos^2\tfrac{\varphi}{2}-\vec n I\vec r_0\vec n I\sin^2\tfrac{\varphi}{2}
++(\vec r_0\vec n I -\vec n \vec r_0 I)\cos\tfrac{\varphi}{2}\sin\tfrac{\varphi}{2}\\
+= \vec r_0\cos^2\tfrac{\varphi}{2}-\vec n \vec r_0\vec n I^2\sin^2\tfrac{\varphi}{2}
++(\vec r_0\vec n-\vec n \vec r_0)I\cos\tfrac{\varphi}{2}\sin\tfrac{\varphi}{2}.
+\end{gather}
+Aus $ab = \langle a,b\rangle+a\wedge b$ folgt nun aber
+\begin{equation}
+ab-ba = 2a\wedge b,\qquad ab+ba = 2\langle a,b\rangle.
+\end{equation}
+Daher gilt
+\begin{equation}
+(\vec r_0\vec n-\vec n\vec r_0)I = 2(\vec r_0\wedge\vec n)I
+= -2\vec r_0\times\vec n = 2\vec n\times\vec r_0
+\end{equation}
+und
+\begin{equation}
+\vec n \vec r_0\vec n = \vec n(2\langle\vec r_0,\vec n\rangle-\vec n\vec r_0)
+= 2\langle\vec r_0,\vec n\rangle\vec n - \vec n\vec n\vec r_0
+= 2\langle\vec r_0,\vec n\rangle\vec n - \langle\vec n,\vec n\rangle\vec r_0,
+\end{equation}
+wobei $\langle\vec n,\vec n\rangle=1$.
+
+Man beachtet nun $I^2=-1$. Außerdem gilt
+\begin{align}
+\cos^2(\varphi/2)&=\tfrac{1}{2}(1+\cos\varphi),\\
+\sin^2(\varphi/2)&=\tfrac{1}{2}(1-\cos\varphi),\\
+\cos(\varphi/2)\sin(\varphi/2)&=\tfrac{1}{2}\sin\varphi.
+\end{align}
+Schließlich ergibt sich
+\begin{align}
+R\vec r_0\tilde R
+&= \vec r_0\cos^2\tfrac{\varphi}{2}+(2\langle\vec r_0,\vec n\rangle\vec n - \vec r_0)\sin^2\tfrac{\varphi}{2}
++\vec n\times\vec r_0\sin\varphi\\
+&= \tfrac{\vec r_0}{2}(1+\cos\varphi)-\tfrac{\vec r_0}{2}(1-\cos\varphi)
++(1-\cos\varphi)\langle\vec r_0,\vec n\rangle\vec n
++\vec n\times\vec r_0\sin\varphi\\
+&= \vec r_0\cos\varphi
++(1-\cos\varphi)\langle\vec r_0,\vec n\rangle\vec n
++\vec n\times\vec r_0\sin\varphi.
+\end{align}
+
+%\newpage
+
+\noindent
+Der Vorteil von Formel \eqref{eq:Rotation} ist, dass hiermit
+Rotationen im $\R^n$ auch für $n\ne 3$ beschrieben werden können.
+Im $\R^2$ kann man den Pseudoskalar $I_2=e_1e_2$ mit der
+imaginären Einheit identifizieren. Gemäß \eqref{eq:Pseudoskalar-Vektor}
+gilt $I_2\vec v=-\vec vI_2$ und daher
+\begin{equation}\label{eq:komplexe-Zahl-Vektor}
+z\vec v = (a+bI_2)\vec v = a\vec v+bI_2\vec v
+= \vec v a -\vec v\,bI_2 = \vec v(a-bI_2) = \vec v\,\overline z.
+\end{equation}
+In der Ebene ist $\hat B=I_2=\ui$. Mit \eqref{eq:komplexe-Zahl-Vektor}
+erhält man
+\begin{equation}
+R\vec v\tilde R = \ee^{-\ui\varphi/2}\vec v\,\ee^{\ui\varphi/2}
+= \ee^{-\ui\varphi/2}\ee^{-\ui/\varphi/2}\vec v
+= \ee^{-\ui\varphi}\vec v.
+\end{equation}
+Die Anwendung einer komplexen Zahl auf einen Vektor ergibt
+\begin{align}
+(a+b\ui)\vec v &= (a+be_1e_2)\vec v = (a+be_1e_2)(v_1e_1+v_2e_2)\\
+&= av_1 e_1 + av_2 e_2 - bv_1 e_2 + bv_2 e_1\\
+&= (av_1+bv_2)e_1+(-bv_1+av_2)e_2\\
+&= \begin{bmatrix}
+av_1+bv_2\\
+-bv_1+av_2
+\end{bmatrix}
+= \begin{bmatrix}
+a & b\\
+-b & a
+\end{bmatrix}\begin{bmatrix}
+v_1\\ v_2
+\end{bmatrix}.
+\end{align}
+Somit ist
+\begin{equation}
+\ee^{-\varphi\ui}\vec v = \begin{bmatrix}
+\cos\varphi & -\sin\varphi\\
+\sin\varphi & \cos\varphi
+\end{bmatrix}\vec v.
+\end{equation}
+Speziell gilt
+\begin{equation}
+(-\ui)\vec v = \begin{bmatrix}
+0 & -1\\
+1 & 0
+\end{bmatrix}\vec v.
+\end{equation}
+
+\end{document}
+
+
