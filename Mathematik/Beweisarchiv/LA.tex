@@ -105,7 +105,7 @@ Gemäß Korollar \ref{matrix-mul-conj} und \ref{matrix-mul-tp} gilt
 = (\overline B)^T(\overline A)^T = B^H A^H.\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Korollar}\label{Verschiebungseigenschaft-komplex}
 Sei $v\in\C^n$ und $w\in\C^m$. Sei $A\in\C^{m\times n}$.
 Es gilt $\langle Av,w\rangle = \langle v,A^H w\rangle$,
 wobei links das Standardskalarprodukt auf dem $\C^m$ ausgewertet
@@ -131,7 +131,7 @@ nichtnegative Eigenwerte, speziell bei $\det(A)\ne 0$ nur positive.
 \begin{Beweis}
 Gemäß Satz \ref{matrix-mul-tp} gilt
 \begin{equation}
-M^T = (A^T A) = A^T (A^T)^T = A^T A = M.
+M^T = (A^T A)^T = A^T (A^T)^T = A^T A = M.
 \end{equation}
 Ist nun $\lambda$ ein Eigenwert von $M$ und $v$ ein Eigenvektor dazu,
 dann gilt $Mv=\lambda v$. Unter Anwendung von Korollar
@@ -148,4 +148,26 @@ also $Av=0$ nur im Fall $v=0$. Da $v\ne 0$ vorausgesetzt wurde,
 muss auch $Av\ne 0$, und damit $|Av|>0$ sein. Dann ist auch
 $\lambda>0$. Alternativ folgt $\lambda>0$ daraus, dass $\det(A)$
 das Produkt der Eigenwerte ist.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Gegeben sei eine Matrix $A\in\C^{m\times n}$.
+Dann ist die Matrix $M=A^H A$ hermitisch und besitzt nur
+nichtnegative reelle Eigenwerte.
+\end{Satz}
+\begin{Beweis}
+Gemäß Satz \ref{matrix-mul-tp-conj} gilt
+\begin{equation}
+M^H = (A^H A)^H = A^H (A^H)^H = A^H A = M.
+\end{equation}
+Ist nun $\lambda$ ein Eigenwert von $M$ und $v$ ein Eigenvektor dazu,
+dann gilt $Mv=\lambda v$. Unter Anwendung von Korollar
+\ref{Verschiebungseigenschaft-komplex} folgt daraus
+\begin{equation}
+\lambda |v|^2 = \langle\lambda v,v\rangle
+= \langle Mv,v\rangle = \langle A^H Av,v\rangle
+= \langle Av,Av\rangle = |Av|^2\ge 0.
+\end{equation}
+Ergo ist $\lambda|v|^2\ge 0$. Unter der Voraussetzung $v\ne 0$
+ist $|v|>0$. Dann muss auch $\lambda\ge 0$ sein.\;\qedsymbol
 \end{Beweis}
