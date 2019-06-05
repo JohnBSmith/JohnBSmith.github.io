@@ -171,3 +171,69 @@ dann gilt $Mv=\lambda v$. Unter Anwendung von Korollar
 Ergo ist $\lambda|v|^2\ge 0$. Unter der Voraussetzung $v\ne 0$
 ist $|v|>0$. Dann muss auch $\lambda\ge 0$ sein.\;\qedsymbol
 \end{Beweis}
+
+\subsection{Quadratische Matrizen}
+\begin{Satz}
+Sei
+\[I:=\begin{bmatrix}
+0 & -1\\
+1 & 0
+\end{bmatrix},\quad
+aE+bI = a\begin{bmatrix}1 & 0\\ 0 & 1\end{bmatrix}
++b\begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}
+=
+\begin{bmatrix}
+a & -b\\
+b & a
+\end{bmatrix}.\]
+Die Menge $M := \{aE+bI\mid a,b\in\R\}$ bildet bezüglich
+Matrizenaddition und Matrizenmultiplikation einen
+Körper $(M,+,\cdot)$. Die Abbildung
+\[\Phi\colon\C\to M,\quad \Phi(a+b\ui):= aE+bI\]
+ist ein Isomorphismus zwischen Körpern.
+\end{Satz}
+\begin{Beweis}
+Bei $(M,+)$ handelt es sich um eine Untergruppe der
+kommutativen Gruppe $(\R^{2\times 2},+)$, denn gemäß
+\begin{equation}\label{eq:matrix-repr-complex-add}
+(aE+bI)+(cE+dI) = (a+b)E+(b+d)I \in M
+\end{equation}
+und
+\begin{equation}
+-(aE+bI) = (-a)E+(-b)I\in M
+\end{equation}
+ist das Untergruppenkriterium erfüllt. Die Abgeschlossenheit
+bezüglich Multiplikation:
+\begin{equation}\label{eq:matrix-repr-complex-mul}
+\begin{split}
+&(aE+bI)(cE+dI) = aEcE+aEdI+bIcE+bIdI\\
+&= acE+adI+bcI+bdI^2
+= (ac-bd)E+(ad+bc)I \in M.
+\end{split}
+\end{equation}
+Das Kommutativgesetz:
+\begin{equation}
+\begin{split}
+&(aE+bI)(cE+dI) = (ac-bd)E+(ad+bc)I\\
+&= (ca-db)E+(cb+da)I = (cE+dI)(aE+bI).
+\end{split}
+\end{equation}
+Das Assoziativgesetz ist für Matrizen allgemeingültig. Das multiplikativ
+neutrale Element ist die Einheitsmatrix $E$. Wird nun $aE+bI\ne 0$
+vorausgesetzt, dann ist $a\ne 0\lor b\ne 0$. Daher ist
+$\det(aE+bI)=a^2+b^2\ne 0$. Demnach besitzt $aE+bI$ eine Inverse.
+Somit muss $(M,+,\cdot)$ ein Körper sein.
+
+Die Abbildung $\Phi$ ist invertierbar, denn jedes Bild $A$ kann
+auf eindeutige Art in $A=aE+bI$ zerlegt werden, wodurch $a,b$
+eindeutig bestimmt sind. Die Eigenschaften
+\begin{equation}
+\Phi((a+b\ui)+(c+d\ui)) = \Phi(a+b\ui)+\Phi(c+d\ui)
+\end{equation}
+und
+\begin{equation}
+\Phi((a+b\ui)(c+d\ui)) = \Phi(a+b\ui)\Phi(c+d\ui)
+\end{equation}
+ergeben sich aus den Rechnungen \eqref{eq:matrix-repr-complex-add}
+und \eqref{eq:matrix-repr-complex-mul}.\;\qedsymbol
+\end{Beweis}
