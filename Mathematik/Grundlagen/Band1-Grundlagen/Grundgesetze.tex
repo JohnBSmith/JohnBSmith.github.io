@@ -123,10 +123,11 @@ Mit dieser Notation kann man nun z.\,B. schreiben:
 Mit der folgenden formalen Defintion wird die beschreibende Angabe
 auf ein festes Fundament gebracht.
 
-\begin{Definition}[Beschreibende Angabe einer Menge]
-Die Menge der $x\in M$, welche die Aussage $P(x)$ erfüllen
+\begin{Definition}[Beschränkte Beschreibung einer Menge]%
+\label{def:set-builder-bounded}
+Die Menge der $x\in M$, welche die Aussage $P(x)$ erfüllen,
 ist definiert durch die folgende logische Äquivalenz:
-\[a\in\{x{\in}M\mid P(x)\} \defiff a\in M\land P(a).\]
+\[a\in\{x\in M\mid P(x)\} \defiff a\in M\land P(a).\]
 \end{Definition}
 Das schaut ein wenig kompliziert aus, ist aber ganz einfach zu
 benutzen. Sei z.\,B. $A:=\{n\in\Z\mid n<4\}$. Zu beantworten ist
@@ -155,13 +156,107 @@ Man zeige:
 & (2.)\;\;a\in 4\Z\implies a\in 2\Z,   && (4.)\;\;4\Z\subseteq 2\Z.
 \end{align*}
 
-%\subsection{Mengenoperationen}
 
-%Mengen sind mathematische Objekte, mit denen sich rechnen lässt.
-%So wie es für Zahlen Rechenoperationen gibt, gibt es auch für
-%Mengen Rechenoperationen.
+\begin{Definition}[Beschreibende Angabe einer Menge]%
+\label{def:set-builder}
+Stellt man sich unter $G$ die Grundmenge vor, welche
+alle Elemente enthält, die überhaupt in Betracht kommen können,
+dann schreibt man kurz
+\[\{x\mid P(x)\} := \{x\in G\mid P(x)\}\]
+und nennt dies die Beschreibung einer Menge.
+\end{Definition}
+\begin{Satz}
+Es gilt
+\begin{gather}
+\label{eq:set-builder} a\in\{x\mid P(x)\}\iff P(a),\\
+\{x\in A\mid P(x)\} = \{x\mid x\in A\land P(x)\}.
+\end{gather}
+\end{Satz}
+\strong{Beweis.} Gemäß Definition \ref{def:set-builder}
+und \ref{def:set-builder-bounded} gilt
+\[a\in\{x\mid P(x)\} \iff a\in\{x\in G\mid P(x)\}
+\iff a\in G\land P(a)\iff P(a),\]
+denn $a\in G$ ist immer erfüllt, wenn $G$ die Grundmenge ist.
+Die Aussage $a\in G$ kann daher in der Konjunktion gemäß dem
+Neutralitätsgesetz der booleschen Algebra entfallen.
+
+Zu zeigen ist nun
+\[a\in\{x\in A\mid P(x)\}\iff a\in\{x\mid x\in A\land P(x)\},\]
+was gemäß Definition \ref{def:set-builder-bounded} und der schon
+bewiesenen Aussage \eqref{eq:set-builder} aber vereinfacht
+werden kann zu
+\[a\in A\land P(a)\iff a\in A\land P(a).\;\qedsymbol\]
 
 
+\subsection{Bildmengen}
+
+Oft kommt auch die Angabe einer Menge als Bildmenge vor, dabei
+handelt es sich um eine spezielle Beschreibung der Menge. Ist
+$T(x)$ ein Term und $A:=\{a_1,a_2,\ldots,a_n\}$ eine endliche
+Menge, dann wird das Bild von $A$ unter $T(x)$ so beschrieben:
+\[\{T(x)\mid x\in A\} := \{T(a_1),T(a_2),\ldots, T(a_n)\}.\]
+Lies: Die Menge der $T(x)$, für die $x\in A$ gilt.
+Für $T(x):=x^2$ und $A:=\{1,2,3,4\}$ ist z.\,B.
+\[\{T(x)\mid x\in A\} = \{T(1), T(2), T(3), T(4)\}
+= \{1^2,2^2,3^2,4^2\} = \{1,4,9,16\}.\]
+Nun kann es aber sein, dass die Menge $A$ unendlich viele Elemente
+enthält, eine Auflistung dieser somit unmöglich ist. Eine Auflistung
+lässt umgehen, indem man nur logisch die Existenz eines Bildes
+zu jedem $x\in A$ verlagt, dieses aber nicht mehr explizit angibt.
+Man definiert also allgemein
+\[\{T(x)\mid x\in A\} := \{y\mid\text{es gibt ein $x\in A$, für das gilt: $y=T(x)$}\}.\]
+Das hatten wir bei den geraden Zahlen
+\[2\Z := \{2k\mid k\in\Z\} = \{n\mid\text{es gibt ein $k\in\Z$, für das gilt: $n=2k$}\}\]
+schon kennengelernt. Hierbei ist es unwesentlich, ob man $n\in\Z$ verlangt
+oder nicht, denn dies wird bereits durch $k\in\Z$ erzwungen.
+
+\newpage
+\subsection{Mengenoperationen}
+
+Mengen sind mathematische Objekte, mit denen sich rechnen lässt.
+So wie es für Zahlen Rechenoperationen gibt, gibt es auch für
+Mengen Rechenoperationen.
+\begin{Definition}[Vereinigungsmenge]
+Die Vereinigungsmenge von zwei Mengen $A,B$ ist die Menge aller Elemente,
+welche in $A$ oder in $B$ vorkommen:
+\[A\cup B := \{x\mid x\in A\lor x\in B\}.\]
+\end{Definition}
+Man nimmt also einen neuen Beutel und schüttet den Inhalt von $A$
+und $B$ in diesen Beutel.
+
+Beispiele:
+\begin{gather*}
+\{1,2\}\cup\{5,7,9\} = \{1,2,5,7,9\},\\
+\{1,2\}\cup\{1,3,5\} = \{1,2,3,5\}.
+\end{gather*}
+
+\begin{Definition}[Schnittmenge]
+Die Schnittmenge von zwei Mengen $A,B$ ist die Menge aller Elemente,
+welche sowohl in $A$ also auch in $B$ vorkommen:
+\[A\cap B := \{x\mid x\in A\land x\in B\}.\]
+\end{Definition}
+\begin{Satz}
+Bei der Beschreibung der Schnittmenge $A\cap B$ genügt es, $A\cup B$ als Grundmenge
+zu verwenden, denn es gilt
+\[A\cap B = \{x\in A\cup B\mid x\in A\land x\in B\}\]
+\end{Satz}
+\strong{Beweis.}
+Zu zeigen ist
+\[a\in A\cap B\iff a\in \{x\in A\cup B\mid x\in A\land x\in B\}.\]
+Das ist nach Definition gleichbedeutend mit
+\begin{align*}
+a\in A\land a\in B&\iff a\in A\cup B\land a\in A\land a\in B\\
+&\iff (a\in A\lor a\in B)\land a\in A\land a\in B.
+\end{align*}
+Nun gilt für beliebige Aussagen $\varphi,\psi$ gemäß boolescher Algebra aber
+\begin{align*}
+(\varphi\lor\psi)\land\varphi\land\psi
+&\iff (\varphi\land\varphi\land\psi)\lor(\psi\land\varphi\land\psi)\\
+&\iff (\varphi\land\psi)\lor(\varphi\land\psi)\\
+&\iff \varphi\land\psi.
+\end{align*}
+Es ergibt sich
+\[a\in A\land a\in B\iff a\in A\land a\in B.\;\qedsymbol\]
 
 \newpage
 \section{Ungleichungen}
