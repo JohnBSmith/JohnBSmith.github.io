@@ -100,7 +100,54 @@ Zahlen haben Lücken in dieser Zahlengerade, z.\,B. ist die Zahl
 $\sqrt{2}$ nicht rational, wie sich zeigen lässt. Die reellen
 Zahlen schließen diese Lücken.
 
+\subsection{Vergleich von Mengen}
 
+Wie können wir denn wissen, wann zwei Mengen $A,B$, gleich sind?
+Zwei Mengen sind ja gleich, wenn sie beide die gleichen Elemente
+enthalten. Aber wie lässt sich das als mathematische Aussage
+formulieren?
+
+Jedes Element von $A$ muss doch auch ein Element von $B$ sein,
+sonst gäbe es Elemente in $A$, die nicht in $B$ enthalten wären.
+Umgekehrt muss auch jedes Element von $B$ ein Element von $A$ sein.
+Also ist $A\subseteq B$ und $B\subseteq A$ eine notwendige Bedingung.
+Diese Bedingung ist sogar hinreichend.
+
+Gehen wir mal von der Kontraposition aus -- sind die beiden Mengen
+$A,B$ verschieden, dann muss es ein Element in $A$ geben, welches nicht
+in $B$ enthalten ist, oder eines in $B$, welches nicht $A$ enthalten
+ist. Als Formel:%
+\[A\ne B \implies \exists(x\in A)(x\notin B)\lor\exists(x\in B)(x\notin A).\]
+Hiervon bildet man wieder die Kontraposition. Gemäß den
+De Morganschen Gesetzen und den verallgemeinerten
+De Morganschen Gesetzen ergibt sich%
+\[\forall(x\in A)(x\in B)\land\forall(x\in B)(x\in A)\implies A=B.\]
+Auf der linken Seite stehen aber nach Definition
+Teilmengenbeziehungen, es ergibt sich%
+\[A\subseteq B\land B\subseteq A\implies A=B.\]
+\begin{Definition}[Gleichheit von Mengen]
+Zwei Mengen $A,B$ sind genau dann gleich, wenn jedes Element von
+$A$ auch in $B$ enthalten ist, und jedes von $B$ auch in $A$ enthalten:%
+\[A=B\defiff A\subseteq B\land B\subseteq A.\]
+\end{Definition}
+\begin{Satz}\label{set-eq}
+Es gilt
+\[A=B\iff \forall x(x\in A\iff x\in B).\]
+\end{Satz}
+\strong{Beweis.} Wir müssen ein wenig Prädikatenlogik bemühen:%
+\begin{align*}
+A\subseteq B\land B\subseteq A
+&\iff \forall(x\in A)(x\in B)\land\forall(x\in B)(x\in A)\\
+&\iff \forall x(x\in A\implies x\in B)\land\forall x(x\in B\implies x\in A)\\
+&\iff \forall x((x\in A\implies x\in B)\land (x\in B\implies x\in A))\\
+&\iff \forall x(x\in A\iff x\in B).
+\end{align*}
+Im letzten Schritt wurde ausgenutzt, dass
+$\varphi\Leftrightarrow\psi$ definitionsgemäß gleichbedeutend
+mit $(\varphi\Rightarrow\psi)\land(\psi\Rightarrow\varphi)$
+ist.\;\qedsymbol
+
+\newpage
 \subsection{Beschreibende Angabe von Mengen}
 
 Umso mehr Elemente eine Menge enthält, umso umständlicher wird
@@ -111,11 +158,11 @@ demnach unmöglich.
 
 Wir entgehen der Auflistung aller Elemente durch eine Beschreibung
 der Menge. Die Menge der ganzen Zahlen, welche kleiner als vier sind,
-wird so beschrieben:
+wird so beschrieben:%
 \[\{n\in\Z\mid n<4\}.\]
 In Worten: Die Menge der $n\in\Z$, für die gilt: $n<4$.
 
-Mit dieser Notation kann man nun z.\,B. schreiben:
+Mit dieser Notation kann man nun z.\,B. schreiben:%
 \begin{align*}
 \N_0 &= \{n\in\Z\mid n\ge 0\},\\
 \N &= \{n\in\Z\mid n>0\}.
@@ -126,18 +173,18 @@ auf ein festes Fundament gebracht.
 \begin{Definition}[Beschränkte Beschreibung einer Menge]%
 \label{def:set-builder-bounded}
 Die Menge der $x\in M$, welche die Aussage $P(x)$ erfüllen,
-ist definiert durch die folgende logische Äquivalenz:
+ist definiert durch die folgende logische Äquivalenz:%
 \[a\in\{x\in M\mid P(x)\} \defiff a\in M\land P(a).\]
 \end{Definition}
 Das schaut ein wenig kompliziert aus, ist aber ganz einfach zu
 benutzen. Sei z.\,B. $A:=\{n\in\Z\mid n<4\}$. Zu beantworten ist
 die Frage, ob $2\in A$ gilt. Eingesetzt in die Definition
-ergibt sich
+ergibt sich%
 \[2\in\{n\in\Z\mid n<4\}\iff 2\in\Z\land 2<4.\]
 Da $2\in\Z$ und $2<4$ wahre Aussagen sind, ist die rechte Seite
 erfüllt, und damit auch die linke Seite der Äquivalenz.
 
-Die geraden Zahlen lassen sich so definieren:
+Die geraden Zahlen lassen sich so definieren:%
 \[2\Z:=\{n\in\Z\mid\text{es gibt ein $k\in\Z$ mit $n=2k$}\}.\]
 Es lässt sich zeigen:
 \[a\in 2\Z\implies a^2\in 2\Z.\]
@@ -148,7 +195,7 @@ mit $a^2=2k'$, und daher ist $a^2\in 2\Z$.
 
 Die graden Zahlen sind ganze Zahlen, welche ohne Rest durch zwei teilbar
 sind. Die ganzen Zahlen, welche ohne Rest durch $m$ teilbar sind,
-lassen sich formal so definieren:
+lassen sich formal so definieren:%
 \[m\Z:=\{n\in\Z\mid\text{es gibt ein $k\in\Z$ mit $n=mk$}\}.\]
 Man zeige:
 \begin{align*}
@@ -161,26 +208,29 @@ Man zeige:
 \label{def:set-builder}
 Stellt man sich unter $G$ die Grundmenge vor, welche
 alle Elemente enthält, die überhaupt in Betracht kommen können,
-dann schreibt man kurz
+dann schreibt man kurz%
 \[\{x\mid P(x)\} := \{x\in G\mid P(x)\}\]
 und nennt dies die Beschreibung einer Menge.
 \end{Definition}
 \begin{Satz}
 Es gilt
 \begin{gather}
-\label{eq:set-builder} a\in\{x\mid P(x)\}\iff P(a),\\
+\label{eq:set-builder}
+a\in\{x\mid P(x)\}\iff P(a),\\
+\label{eq:bound-conversion}
 \{x\in A\mid P(x)\} = \{x\mid x\in A\land P(x)\}.
 \end{gather}
 \end{Satz}
 \strong{Beweis.} Gemäß Definition \ref{def:set-builder}
-und \ref{def:set-builder-bounded} gilt
+und \ref{def:set-builder-bounded} gilt%
 \[a\in\{x\mid P(x)\} \iff a\in\{x\in G\mid P(x)\}
 \iff a\in G\land P(a)\iff P(a),\]
 denn $a\in G$ ist immer erfüllt, wenn $G$ die Grundmenge ist.
 Die Aussage $a\in G$ kann daher in der Konjunktion gemäß dem
 Neutralitätsgesetz der booleschen Algebra entfallen.
 
-Zu zeigen ist nun
+Aussage \eqref{eq:bound-conversion} wird mit Satz \ref{set-eq}
+expandiert. Zu zeigen ist nun
 \[a\in\{x\in A\mid P(x)\}\iff a\in\{x\mid x\in A\land P(x)\},\]
 was gemäß Definition \ref{def:set-builder-bounded} und der schon
 bewiesenen Aussage \eqref{eq:set-builder} aber vereinfacht
@@ -241,9 +291,10 @@ zu verwenden, denn es gilt
 \[A\cap B = \{x\in A\cup B\mid x\in A\land x\in B\}\]
 \end{Satz}
 \strong{Beweis.}
-Zu zeigen ist
+Die Formel wird mit Satz \ref{set-eq} expandiert. Zu zeigen ist demnach
 \[a\in A\cap B\iff a\in \{x\in A\cup B\mid x\in A\land x\in B\}.\]
-Das ist nach Definition gleichbedeutend mit
+Das ist nach \eqref{eq:set-builder} und Definition
+\ref{def:set-builder-bounded} gleichbedeutend mit
 \begin{align*}
 a\in A\land a\in B&\iff a\in A\cup B\land a\in A\land a\in B\\
 &\iff (a\in A\lor a\in B)\land a\in A\land a\in B.
@@ -255,8 +306,13 @@ Nun gilt für beliebige Aussagen $\varphi,\psi$ gemäß boolescher Algebra aber
 &\iff (\varphi\land\psi)\lor(\varphi\land\psi)\\
 &\iff \varphi\land\psi.
 \end{align*}
-Es ergibt sich
+Auf beiden Seiten der Äquivalenz steht jetzt die gleiche Aussage:%
 \[a\in A\land a\in B\iff a\in A\land a\in B.\;\qedsymbol\]
+
+% \newpage
+% \section{Gleichungen}
+% \subsection{Begriff der Gleichung}
+
 
 \newpage
 \section{Ungleichungen}
