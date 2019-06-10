@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Effiziente Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Verkettung">Verkettung von Operatoren</a>
+</ol>
+
+<h2 id="Verkettung">Verkettung von Operatoren</h2>
+
+<p>Rust erlaubt die abstrakte Verkettung von Operatoren, womit
+allokationsfreie Operationen ermöglicht werden. Man definiert dazu
+einen Trait <code>Flush</code>, dessen Methode das Endergebnis
+der Berechnung in einen zur Verfügung stehenden Puffer schreibt.
+
+<p>Im Wesentlichen erhält man so etwas hübschere Schreibweisen
+für Routinen als wie die in BLAS. Man muss das nicht sinnvoll finden,
+ich will es nur einmal gezeigt haben.
+
+<p>Es folgt eine Demonstration Anhand von Linearkombinationen.
+
+<pre class="rust">
+use std::ops::{Add,Mul};
+
+struct Vector {
+    data: Vec&lt;f64&gt;
+}
+
+impl Vector {
+    pub fn new(v: Vec&lt;f64&gt;) -&gt; Self {Vector{data: v}}
+}
+
+impl std::fmt::Display for Vector {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        write!(f,"{:?}",self.data)
+    }
+}
+
+trait Flush {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector;
+}
+
+struct Multiplication&lt;'a&gt; {
+    r: f64,
+    v: &amp;'a Vector
+}
+
+struct Addition&lt;'a&gt; {
+    v: &amp;'a Vector,
+    w: &amp;'a Vector
+}
+
+struct AddMul&lt;'a&gt; {
+    m: Multiplication&lt;'a&gt;,
+    v: &amp;'a Vector
+}
+
+struct AddMulMul&lt;'a&gt; {
+    ma: Multiplication&lt;'a&gt;,
+    mb: Multiplication&lt;'a&gt;
+}
+
+impl Mul&lt;f64&gt; for Vector {
+    type Output = Vector;
+    fn mul(mut self, r: f64) -&gt; Vector {
+        for x in &amp;mut self.data {*x *= r;}
+        return self;
+    }
+}
+
+impl Mul&lt;Vector&gt; for f64 {
+    type Output = Vector;
+    fn mul(self, mut b: Vector) -&gt; Vector {
+        for x in &amp;mut b.data {*x *= self;}
+        return b;
+    }
+}
+
+impl&lt;'a&gt; Mul&lt;&amp;'a Vector&gt; for f64 {
+    type Output = Multiplication&lt;'a&gt;;
+    fn mul(self, b: &amp;'a Vector) -&gt; Multiplication&lt;'a&gt; {
+        Multiplication{r: self, v: b}
+    }
+}
+
+impl&lt;'a&gt; Mul&lt;&amp;'a mut Vector&gt; for f64 {
+    type Output = Multiplication&lt;'a&gt;;
+    fn mul(self, b: &amp;'a mut Vector) -&gt; Multiplication&lt;'a&gt; {
+        Multiplication{r: self, v: b}
+    }
+}
+
+impl Add&lt;&amp;Vector&gt; for Vector {
+    type Output = Vector;
+    fn add(mut self, b: &amp;Vector) -&gt; Vector {
+        for (i,x) in self.data.iter_mut().enumerate() {
+            *x += b.data[i];
+        }
+        return self;
+    }
+}
+
+impl Add&lt;Vector&gt; for Vector {
+    type Output = Vector;
+    fn add(self, b: Vector) -&gt; Vector {self+&amp;b}
+}
+
+impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for &amp;'a Vector {
+    type Output = Addition&lt;'a&gt;;
+    fn add(self, b: &amp;'a Vector) -&gt; Addition&lt;'a&gt; {
+        Addition{v: self, w: b}
+    }
+}
+
+impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for Multiplication&lt;'a&gt; {
+    type Output = AddMul&lt;'a&gt;;
+    fn add(self, b: &amp;'a Vector) -&gt; AddMul&lt;'a&gt; {
+        AddMul{m: self, v: b}
+    }
+}
+
+impl&lt;'a&gt; Add&lt;Multiplication&lt;'a&gt;&gt; for Multiplication&lt;'a&gt; {
+    type Output = AddMulMul&lt;'a&gt;;
+    fn add(self, b: Multiplication&lt;'a&gt;) -&gt; AddMulMul&lt;'a&gt; {
+        AddMulMul{ma: self, mb: b}
+    }
+}
+
+impl&lt;'a&gt; Flush for Multiplication&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        for (i,x) in data.iter_mut().enumerate() {
+            *x = self.r*self.v.data[i];
+        }
+        return buffer;
+    }
+}
+
+impl&lt;'a&gt; Flush for Addition&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        for (i,x) in data.iter_mut().enumerate() {
+            *x = self.v.data[i]+self.w.data[i];
+        }
+        return buffer;
+    }
+}
+
+impl&lt;'a&gt; Flush for AddMul&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        let m = &amp;self.m;
+        let v = &amp;self.v;
+        for (i,x) in data.iter_mut().enumerate() {
+            *x = m.r*m.v.data[i]+v.data[i];
+        }
+        return buffer;
+    }
+}
+
+impl&lt;'a&gt; Flush for AddMulMul&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        let ma = &amp;self.ma;
+        let mb = &amp;self.mb;
+        for (i,x) in data.iter_mut().enumerate() {
+            *x = ma.r*ma.v.data[i]+mb.r*mb.v.data[i];
+        }
+        return buffer;
+    }
+}
+
+#[allow(unused_macros)]
+macro_rules! calc {
+    ( $x:tt = $value:expr ) =&gt; {
+        let $x = $value.flush($x);
+    }
+}
+
+fn main() {
+    let e1 = &amp;Vector::new(vec![1.0, 0.0]);
+    let e2 = &amp;Vector::new(vec![0.0, 1.0]);
+    let a = &amp;mut Vector::new(vec![0.0, 0.0]);
+    let b = &amp;mut Vector::new(vec![0.0, 0.0]);
+
+    calc!{a = 2.0*e1+4.0*e2};
+    calc!{b = 2.0*(a as &amp;Vector)+2.0*e2};
+    println!("{}",a);
+    println!("{}",b);
+}
+</pre>
+
+</body>
+</html>
+
