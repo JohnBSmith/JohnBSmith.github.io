@@ -14,8 +14,48 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Box">Verzicht auf Box</a>
 <li><a href="#Verkettung">Verkettung von Operatoren</a>
 </ol>
+
+<h2 id="Box">Verzicht auf Box</h2>
+
+<p>Man könnte denken, bei der Rückgabe einer großen <code>struct</code>
+müsse diese zwischen den Stack Frames kopiert werden. Tatsächlich
+erzeugt der Compiler eine große <code>struct</code> im Stack Frame
+des Aufrufers und einen Zeiger auf die <code>struct</code> als
+Referenzparameter. Das gleiche gilt für eine große <code>enum</code>.
+
+<p>Würde man die <code>struct</code> mit <code>Box</code> einhüllen,
+würde das Programm sogar weniger effizient sein, weil ständig
+Heap-Allokationen und -Freigaben vorgenommen würden.
+
+<p>Beispiel:
+<pre class="rust indent">
+struct Chunck {
+    data: [u64; 10]
+}
+
+impl Chunck {
+    fn new() -&gt; Box&lt;Chunck&gt; {
+        Box::new(Chunck{data: [0;10]})
+    }
+}
+
+fn main() {
+    let a = Chunck::new();
+    println!("{:?}",a.data);
+}
+</pre>
+
+<p>Es sollte besser auf <code>Box</code> verzichtet werden:
+<pre class="rust indent">
+impl Chunck {
+    fn new() -&gt; Chunck {
+        Chunck{data: [0;10]}
+    }
+}
+</pre>
 
 <h2 id="Verkettung">Verkettung von Operatoren</h2>
 
@@ -25,10 +65,11 @@ einen Trait <code>Flush</code>, dessen Methode das Endergebnis
 der Berechnung in einen zur Verfügung stehenden Puffer schreibt.
 
 <p>Im Wesentlichen erhält man so etwas hübschere Schreibweisen
-für Routinen als wie die in BLAS. Man muss das nicht sinnvoll finden,
-ich will es nur einmal gezeigt haben.
+für Routinen als wie die in BLAS (Basic Linear Algebra Subprograms).
+Man muss das nicht sinnvoll finden, ich will es nur einmal gezeigt
+haben.
 
-<p>Es folgt eine Demonstration Anhand von Linearkombinationen.
+<p>Es folgt eine Demonstration anhand von Linearkombinationen.
 
 <pre class="rust">
 use std::ops::{Add,Mul};
