@@ -147,18 +147,17 @@ mod stack {
     }
     impl&lt;T&gt; Stack&lt;T&gt; {
         pub fn new() -&gt; Self {
-            return Stack{v: Vec::new()};
+            Stack{v: Vec::new()}
         }
         pub fn push(&amp;mut self, x: T) {
             self.v.push(x);
         }
         pub fn pop(&amp;mut self) -&gt; T {
-            return match self.v.pop() {
-                Some(x)=&gt;x, None=&gt;panic!()
-            };
+            match self.v.pop() {Some(x)=&gt;x, None=&gt;panic!()}
         }
     }
 }
+
 use stack::Stack;
 
 fn main() {
@@ -176,6 +175,51 @@ fn main() {
 zu erzwingen. Die Funktionen sind aber so kurz, dass der Compiler
 das in aller Wahrscheinlichkeit automatisch macht, wenn die
 Optimierungen eingeschaltet werden.
+
+<p>Das Konzept der Schnittstelle lässt sich aber auch noch
+schärfer umsetzen. Spezifiziert man die Schnittstelle durch einen
+<code>Trait</code>, dann lassen sich abstrakte Programme schreiben,
+welche nur noch auf die Schnittstelle zugreifen, aber nicht
+mehr auf konkrete Datentypen.
+
+<pre class="rust indent">
+mod stack {
+    pub trait Stack&lt;T&gt; {
+        fn new() -&gt; Self;
+        fn push(&amp;mut self, x: T);
+        fn pop(&amp;mut self) -&gt; T;
+    }
+
+    pub struct VecStack&lt;T&gt; {
+        v: Vec&lt;T&gt;
+    }
+    impl&lt;T&gt; Stack&lt;T&gt; for VecStack&lt;T&gt; {
+        fn new() -&gt; Self {
+            VecStack{v: Vec::new()}
+        }
+        fn push(&amp;mut self, x: T) {
+            self.v.push(x);
+        }
+        fn pop(&amp;mut self) -&gt; T {
+            match self.v.pop() {Some(x)=&gt;x, None=&gt;panic!()}
+        }
+    }
+}
+
+use stack::{Stack,VecStack};
+
+fn routine&lt;S: Stack&lt;i32&gt;&gt;() {
+    let mut a: S = S::new();
+    a.push(1);
+    a.push(2);
+    println!("{}",a.pop());
+    println!("{}",a.pop());
+}
+
+fn main() {
+    routine::&lt;VecStack&lt;i32&gt;&gt;();
+}
+</pre>
 
 </body>
 </html>
