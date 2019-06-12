@@ -497,6 +497,66 @@ und der Identität $\cosh(t) = \tfrac{1}{2}(\ee^t+\ee^{-t})$ ergibt sich
 = \frac{n}{n^2-1}.\;\Box
 \end{align}
 
+\begin{Aufgabe}
+Sei $r\colon [a,b]\to\R$ mit $r(z)\ge 0$ eine stetige Funktion.
+Man bestimme die Formel für das Volumen des durch $x^2+y^2\le r(z)^2$
+begrenzten Rotationskörpers.
+\end{Aufgabe}
+\strong{Lösung 1.} Der Flächeninhalt der Kreisscheibe an der Stelle
+$z$ ist $\pi\cdot r(z)^2$. Das Volumen des Scheibchens
+zum Bereich $[z,z+\mathrm dz]$ ist demnach%
+\begin{equation}
+\mathrm dV = \pi\cdot r(z)^2\,\mathrm dz.
+\end{equation}
+Es ergibt sich
+\begin{equation}
+V = \int_a^b \pi\cdot r(z)^2\,\mathrm dz = \pi\int_a^b r(z)^2\,\mathrm z.\;\Box
+\end{equation}
+\strong{Lösung 2.} Gesucht ist das Volumen
+\begin{equation}
+\int_\Omega \chi(x,y,z)\,\mathrm dx\mathrm dy\mathrm dz,
+\end{equation}
+wobei $\Omega=\R^3$ und $\chi\colon\R^3\to\{0,1\}$ mit
+\begin{equation}
+\chi(x,y,z) = [a\le z\le b]\cdot [x^2+y^2\le r(z)^2].
+\end{equation}
+Umformung der Ungleichung ergibt $|y|\le\sqrt{r(z)^2-x^2}$.
+Daraus erhält man%
+\begin{equation}
+\chi(x,y,z) = [a\le z\le b]\cdot [|x|\le r(z)]\cdot [|y|\le\sqrt{r(z)-x^2}].
+\end{equation}
+Der erste Faktor ist nicht von $x,y$ abhängig, der zweite nicht
+von $y$. Daher ergibt sich%
+\begin{align}
+V &= \int_{-\infty}^\infty [a\le z\le b]
+  \int_{-\infty}^\infty [|x|\le r(z)]
+  \int_{-\infty}^\infty [|y|\le\sqrt{r(z)^2-x^2}]\,\mathrm dy\mathrm dx\mathrm dz\\
+&= \int_a^b \int_{-r(z)}^{r(z)}
+  \int_{-\sqrt{r(z)^2-x^2}}^{\sqrt{r(z)^2-x^2}}
+  1\,\mathrm dy\mathrm dx\mathrm dz
+= \int_a^b \int_{-r(z)}^{r(z)} 2\sqrt{r(z)^2-x^2}\,\mathrm dx\mathrm dz.
+\end{align}
+Das unbestimmte Integral der Kreisfunktion ist
+\begin{equation}
+\int \sqrt{r^2-x^2}\,\mathrm dx
+= \tfrac{x}{2}\sqrt{r^2-x^2}+\tfrac{r^2}{2}\cdot\arcsin\tfrac{x}{r}+C.
+\end{equation}
+Da die Integralgrenzen $x=-r$ und $x=r$ sind, ist $\sqrt{r^2-x^2}=0$.
+Man erhält%
+\begin{align}
+\int_{-r}^r 2\sqrt{r^2-x^2}\,\mathrm dx
+&= r^2[\arcsin\tfrac{x}{r}]_{-r}^r
+= r^2(\arcsin(1)-\arcsin(-1))\\
+&= r^2(\tfrac{\pi}{2}-(-\tfrac{\pi}{2}))
+= \pi r^2.
+\end{align}
+Schließlich ergibt sich
+\begin{equation}
+V = \int_a^b \pi\cdot r(z)^2\,\mathrm dz
+= \pi\int_a^b r(z)^2\,\mathrm dz.\;\Box
+\end{equation}
+
+\newpage
 \subsection{Konvergenz}
 \begin{Aufgabe}
 Berechne
@@ -506,8 +566,9 @@ Berechne
 \noindent
 \strong{Lösung.}
 Wegen $x\ne 0$ kann der Bruch mit $\frac{bx}{bx}$ erweitert
-werden. Damit ergibt sich
-\[\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}
+werden. Damit ergibt sich%
+\[
+\frac{\sum_{k=1}^n a_k x^k}{\sin(bx)}
 = \underbrace{\bigg(\frac{bx}{\sin(bx)}\bigg)}_{\to 1}
 \underbrace{\bigg(\frac{a_1}{b}+\sum_{k=2}^n\frac{a_k}{b}x^{k-1}\bigg)}_{\to a_1/b}.
 \]
@@ -525,11 +586,11 @@ Berechne
 \noindent
 \strong{Lösung.}
 Verwende die Substitution $x=\frac{\pi}{2a}-\frac{u}{a}$.
-Nun ist
+Nun ist%
 \[
 \frac{1-\sin(ax)}{(\pi-2ax)^2}
 = \frac{1-\sin(\frac{\pi}{2}-u)}{4u^2}
-= \frac{1-\cos u}{4u^2}\\
+= \frac{1-\cos u}{4u^2}
 = \frac{\frac{u^2}{2!}+\frac{u^4}{4!}+\ldots}{4u^2}
 = \frac{1}{4} \Big(\frac{1}{2!}+\frac{u^2}{4!}+\ldots\Big).
 \]
@@ -544,15 +605,19 @@ Bestimme
 \[g=\lim_{x\downarrow 0} x^x.\]
 \end{Aufgabe}
 \noindent
-\strong{Lösung.} Es ist $x^x=\exp(x\ln x)$. Wegen der Stetigkeit von $\exp$
-gilt nun
-\[\lim_{x\to 0}\exp(f(x)) = \exp(\lim_{x\to 0} f(x)).\]
+\strong{Lösung.} Es ist $x^x=\exp(x\ln x)$.
+Wegen der Stetigkeit von $\exp$ gilt nun
+\begin{equation}
+\lim_{x\to 0}\exp(f(x)) = \exp(\lim_{x\to 0} f(x)).
+\end{equation}
 Nun ist $x\ln x = (\ln x)/(1/x).$
 Mit der Regel von L'Hôpital ergibt sich
-\[\lim_{x\downarrow 0} \frac{\ln x}{\frac{1}{x}}
+\begin{equation}
+\lim_{x\downarrow 0} \frac{\ln x}{\frac{1}{x}}
 = \lim_{x\downarrow 0} \frac{\frac{1}{x}}{-\frac{1}{x^2}}
 = \lim_{x\downarrow 0}\frac{x^2}{x}
-= \lim_{x\downarrow 0} x = 0.\]
+= \lim_{x\downarrow 0} x = 0.
+\end{equation}
 Somit ist $g=1$. $\Box$
 
 \begin{Aufgabe}
@@ -562,12 +627,16 @@ Bestimme
 \noindent
 \strong{Lösung.} Es ist $x^{1/x}=\exp(\frac{\ln x}{x})$.
 Nun gilt
-\[\lim_{x\downarrow 0}\frac{\ln x}{x}
+\begin{equation}
+\lim_{x\downarrow 0}\frac{\ln x}{x}
 \stackrel{\text{L'H}}= \lim_{x\downarrow 0}\frac{1}{x}
-= -\infty = \lim_{x\downarrow -\infty} x.\]
+= -\infty = \lim_{x\downarrow -\infty} x.
+\end{equation}
 Somit ist
-\[g = \exp(\lim_{x\downarrow -\infty} x)
-= \lim_{x\downarrow -\infty} \exp(x) = 0.\;\Box\]
+\begin{equation}
+g = \exp(\lim_{x\downarrow -\infty} x)
+= \lim_{x\downarrow -\infty} \exp(x) = 0.\;\Box
+\end{equation}
 
 \begin{Aufgabe}
 Sei $(s_n)$ mit $s_n=\sum_{k=0}^n a_k$ eine konvergente Reihe von
