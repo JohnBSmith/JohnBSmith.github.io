@@ -25,7 +25,7 @@ Die Berechnung gemäß der Definition:
 \end{align*}
 
 \subsection{Rechenregeln}
-\begin{Satz}[Homogenität der Summenoperation]%
+\begin{Satz}[Homogenität der Summenoperation]\label{Summe-Hom}%
 \index{Homogenität}
 Ist $c$ eine Konstante, dann gilt
 \[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
@@ -37,7 +37,7 @@ Der Induktionsschritt »$A(n-1)\Rightarrow A(n)$« ist erfüllt, denn es gilt
 \[\sum_{k=m}^n ca_k = ca_n+\sum_{k=m}^{n-1} ca_k = ca_n+c\sum_{k=m}^{n-1} a_k
 = c\bigg(a_n+\sum_{k=m}^{n-1} a_k\bigg) = c\sum_{k=m}^n a_k.\;\qedsymbol\]
 
-\begin{Satz}[Additivität der Summenoperation]%
+\begin{Satz}[Additivität der Summenoperation]\label{Summe-Add}%
 \index{Additivität}
 Es gilt
 \[\sum_{k=m}^n (a_k+b_k) = \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\]
@@ -51,7 +51,7 @@ Der Induktionsanfang ist trivial. Induktionsschritt:
 = \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\;\qedsymbol
 \end{align*}
 
-\begin{Satz}[Aufteilung von Summen]
+\begin{Satz}[Aufteilung von Summen]\label{Summe-Aufteilung}
 Für $m\le p\le n$ gilt
 \[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k+\sum_{k=p}^n a_k.\]
 \end{Satz}
@@ -67,7 +67,7 @@ Der Induktionsschritt:
 \end{align*}
 
 \newpage
-\begin{Satz}[Indexshift]
+\begin{Satz}[Indexshift]\label{Summe-Indexshift}
 Für eine beliebige Indexverschiebung der Distanz $d\in\Z$,
 kurz Indexshift, gilt
 \[\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
@@ -88,7 +88,24 @@ Induktionsschritt:
 = \sum_{m+d\le k'\le n+d} a_{k'-d}
 = \sum_{k'=m+d}^{n+d} a_{k'-d}.\;\qedsymbol
 \end{align*}
-\begin{Satz}[Summe der konstanten Folge]
+
+\begin{Satz}[Umkehrung der Reihenfolge]\label{Summe-Umkehrung}
+Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
+\end{Satz}
+\strong{Beweis.}
+Der Induktionsanfang bei $n=0$ ist trivial. Beim Induktionsschritt
+macht man sich Satz \ref{Summe-Indexshift} (Indexshift) und
+Satz \ref{Summe-Aufteilung} (Aufteilung) zunutze:
+\begin{gather*}
+\sum_{k=0}^n a_{n-k} = a_{n-n}+\sum_{k=0}^{n-1} a_{n-k}
+= a_0+\sum_{k=0}^{n-1} a_{n-(n-1-k)}
+= a_0+\sum_{k=0}^{n-1} a_{k+1}\\
+\stackrel{[k:=k-1]}= a_0+\sum_{k=1}^n a_k
+= \sum_{k=0}^0 a_k + \sum_{k=1}^n a_k
+= \sum_{k=0}^n a_k.\;\qedsymbol
+\end{gather*}
+
+\begin{Satz}[Summe der konstanten Folge]\label{Summe-der-Eins}
 Es gilt
 $\sum_{k=m}^n 1 = n-m+1$.
 \end{Satz}
@@ -98,7 +115,46 @@ Induktionsschritt:
 \[\sum_{k=m}^n 1 = 1+\sum_{k=m}^{n-1} 1 = 1+(n-1)-m+1 = n-m+1.\;\qedsymbol\]
 
 \newpage
-\section{Produkte}
+\begin{Satz}[Summe der arithmetischen Folge]
+Es gilt $\sum_{k=0}^n k = \frac{n}{2}(n+1)$.
+\end{Satz}
+\strong{Beweis.} Der Induktionsanfang $n=0$ ist trivial.
+Induktionsschritt:
+\begin{align*}
+\sum_{k=0}^n k &= n+\sum_{k=0}^{n-1} k = n+\frac{(n-1)}{2}(n-1+1)
+= \frac{2n}{2}+\frac{(n-1)\,n}{2}\\
+&= \frac{2n+n^2-n}{2} = \frac{n^2+n}{2}
+= \frac{n}{2}(n+1).\;\qedsymbol
+\end{align*}
+\strong{Herleitung und alternativer Beweis.} Man addiert die Summe
+zu sich selbst, da muss das Doppelte der Summe bei herauskommen.
+Die Reihenfolge der einen Summe wird mittels Satz \ref{Summe-Umkehrung}
+umgekehrt. Danach wendet man Satz \ref{Summe-Add} (Additivität),
+Satz \ref{Summe-Hom} (Homogenität) und Satz \ref{Summe-der-Eins} an:
+\begin{align*}
+2\sum_{k=0}^n k &= \sum_{k=0}^n k+\sum_{k=0}^n k
+= \sum_{k=0}^n k + \sum_{k=0}^n (n-k)\\
+&= \sum_{k=0}^n (k+n-k) = \sum_{k=0}^n n
+= n\sum_{k=0}^n 1 = n(n+1).\;\qedsymbol
+\end{align*}
+
+\subsection{Anwendungen}
+
+Die gezeigten Rechenregeln ermöglichen die Vereinfachung
+einiger Summen, die in der Kombinatorik und Analysis ab
+und zu vorkommen. Die allgemeine arithmetischen Folge ist z.\,B.
+gegeben gemäß $a_k=Ak+B$, wobei $A,B$ zwei Konstanten sind.
+Für die Summe findet man
+\[\sum_{k=0}^n (Ak+B)
+= A\sum_{k=0}^n k+B\sum_{k=0}^n 1 = A\,\frac{n}{2}(n+1)+B(n+1)
+= \Big(\frac{An}{2}+B\Big)(n+1),\]
+bzw.
+\[\sum_{k=1}^n (Ak+B)
+= A\sum_{k=1}^n k + B\sum_{k=1}^n 1
+= A\,\frac{n}{2}(n+1)+Bn = \Big(\frac{A}{2}(n+1)+B\Big)n.\]
+
+\newpage
+\section{Endliche Produkte}
 
 \subsection{Definition}
 \begin{Definition}[Produkt]
