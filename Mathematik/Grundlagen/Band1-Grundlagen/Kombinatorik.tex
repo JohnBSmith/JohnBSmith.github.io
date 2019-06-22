@@ -78,7 +78,7 @@ Das macht insgesamt
 \[n! = n\cdot (n-1)\cdot (n-2)\cdot\ldots\cdot 3\cdot 2\cdot 1\]
 Möglichkeiten. Außerdem ergibt sich die folgende Rekursionsformel:
 \[n! = n\cdot (n-1)!.\]
-\begin{Definition}[Fakultät]\index{Fakultät}
+\begin{Definition}[Fakultät]\index{Fakultaet@Fakultät}
 Für eine Zahl $n\in\N_0$ ist die Fakultät von $n$ rekursiv
 definiert gemäß
 \[0! := 1,\qquad n! := n\cdot (n-1)!.\]
@@ -90,3 +90,99 @@ fünf Buchstaben $A,B,C,D,E$. Die Anzahl der Permutationen wächst
 rasant. Es gibt z.\,B. unzählige Möglichkeiten, Bücher in ein
 längeres Buchregel zu stellen.
 
+
+\subsection{Anzahl der Variationen ohne Wiederholung}%
+\index{Variationen!ohne Wiederholung}
+
+Angenommen man hat wieder $n$ unterschiedliche Buchstaben
+zur Verfügung, aber nur noch $k$ freie Plätze, wobei $k\le n$.
+Wie bei den Permutationen ergeben sich für den ersten Platz
+$n$ Möglichkeiten, für den zweiten jeweils noch $n-1$,
+für den dritten jeweils noch $n-2$ usw. Im Gegensatz zum
+Baum der Permutationen bricht der Baum nun vorläufig
+nach dem $k$-ten Platz ab. Die Anzahl der Möglichkeiten schreiben
+wir $n^{\underline k}$ und sprechen von der absteigenden Faktoriellen
+von $n$ mit $k$ Faktoren. Man erhält
+\[n^{\underline k} = \prod_{i=0}^{k-1} (n-i) = n\cdot (n-1)\cdot (n-2)\cdot\ldots\cdot (n-k+1).\]
+Offenbar gilt $n^{\underline n} = n!$, das ist der Spezialfall $k=n$.
+
+Das Produkt haben wir ja rekursiv definiert. Durch Einsetzen dieser
+Definition lässt sich daraus die rekursive Definition der absteigenden
+Faktoriellen extrahieren:
+
+\begin{Definition}[Absteigende Faktorielle]\index{Faktorielle}%
+\index{absteigende Faktorielle}\index{fallende Faktorielle}
+
+Die absteigende Faktorielle von $n$ mit $k$ Faktoren ist rekursiv
+definiert gemäß
+\[n^{\underline 0} := 1,\qquad
+n^{\underline k} := (n-k+1)\,n^{\underline{k-1}}.\]
+\end{Definition}
+
+\begin{Satz}
+Für $n,k\in\N_0$ und $k\le n$ gilt
+\[n^{\underline k} = \frac{n!}{(n-k)!}.\]
+\end{Satz}
+\strong{Beweis.} Kann man ohne langes Überlegen induktiv
+machen.
+
+Induktionsanfang:
+\[n^{\underline 0} = 1,\qquad \frac{n!}{(n-0)!}=\frac{n!}{n!}=1.\]
+
+Induktionsschritt »$A(k-1)\Rightarrow A(k)$«:
+\begin{align*}
+n^{\underline k} &= (n-k+1)\,n^{\underline{k-1}}
+= (n-k+1)\frac{n!}{(n-(k-1))!}
+= (n-k+1)\frac{n!}{(n-k+1)!}\\
+&= (n-k+1)\frac{n!}{(n-k+1)(n-k)!}
+= \frac{n!}{(n-k)!}.\;\qedsymbol
+\end{align*}
+
+\noindent
+Hierbei wurde $(n-k+1)!=(n-k+1)(n-k)!$ benutzt, was gemäß
+der rekursiven Definition der Fakultät gilt.
+
+\strong{Alternativer Beweis.} Mittels Produktaufteilung und Indexshift:
+\begin{align*}
+n! &= \prod_{i=0}^{n-1}(n-i)
+= \prod_{i=0}^{k-1} (n-i) \prod_{i=k}^{n-1} (n-i)
+= n^{\underline k} \prod_{i=k}^{n-1} (n-i)\\
+&\stackrel{[i:=i+k]}= n^{\underline k}\prod_{i=0}^{n-k-1} (n-k-i)
+= n^{\underline k}\,(n-k)!.\;\qedsymbol
+\end{align*}
+
+%\newpage
+\subsection{Anzahl der Variationen mit Wiederholung}%
+\index{Variationen!mit Wiederholung}
+
+Lässt man die Möglichkeit zu, einen schon gelegten Buchstaben
+nochmals zu legen, dann ergeben sich offenbar mehr Möglichkeiten.
+Wie viele Möglichkeiten gibt es, die zwei Buchstaben $A,B$
+auf drei freie Plätze zu legen? Dazu ergibt sich der folgende
+Baum:
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.38\textwidth]{img/VariW-XXX-AB.pdf}
+\end{center}
+\end{figure}
+
+\noindent
+Offenbar darf jeder Platz unabhängig von den anderen mit $A$ oder
+$B$ belegt werden. Das macht zwei Möglichkeiten für den ersten
+Platz, dann jeweils zwei Möglichkeiten für den zweiten Platz,
+und dann jeweils zwei Möglichkeiten für den dritten Platz.
+Ingesamt sind es
+\[8 = 2^3 = 2\cdot 2\cdot 2\]
+Möglichkeiten.
+
+Allgemein hat man nun $n$ unterschiedliche Buchstaben und $k$
+freie Plätze. Nach der gleichen Argumentation wie zuvor muss die
+Anzahl der Möglichkeiten
+\[n^k = \underbrace{n\cdot n\cdot n\cdot\ldots\cdot n}_\text{$k$ Faktoren}\]
+sein.
+
+Z.\,B. kann man sich die Frage stellen, wie viele unterschiedliche
+Werte ein Byte annehmen kann. Ein Byte besitzt acht Bits, also $k=8$,
+und jedes dieser Bits kann unabhängig von den anderen entweder 0 oder 1
+sein, d.\,h. $n=2$. Das macht $2^8=256$ Werte.
