@@ -5,7 +5,7 @@
 \subsection{Definition}
 
 \begin{Definition}[Summe]\index{Summe}
-Für eine Folge $a\colon\N\to\R$ ist die Summe über die $a_k$
+Für eine Folge $a\colon\Z\to\R$ ist die Summe über die $a_k$
 von $k=m$ bis $n$ rekursiv definiert gemäß%
 \[
 \sum_{k=m}^{m-1} a_k := 0,\qquad
@@ -36,6 +36,98 @@ Der Induktionsanfang ist trivial:
 Der Induktionsschritt »$A(n-1)\Rightarrow A(n)$« ist erfüllt, denn es gilt
 \[\sum_{k=m}^n ca_k = ca_n+\sum_{k=m}^{n-1} ca_k = ca_n+c\sum_{k=m}^{n-1} a_k
 = c\bigg(a_n+\sum_{k=m}^{n-1} a_k\bigg) = c\sum_{k=m}^n a_k.\;\qedsymbol\]
+
+\begin{Satz}[Additivität der Summenoperation]%
+\index{Additivität}
+Es gilt
+\[\sum_{k=m}^n (a_k+b_k) = \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\]
+\end{Satz}
+\strong{Beweis.}
+Der Induktionsanfang ist trivial. Induktionsschritt:
+\begin{align*}
+\sum_{k=m}^n (a_k+b_k) &= (a_n+b_n)+\sum_{k=m}^{n-1} (a_k+b_k)
+= (a_n+b_n)+\sum_{k=m}^{n-1} a_k+\sum_{k=m}^{n-1} b_k\\
+&= \bigg(a_n+\sum_{k=m}^{n-1}a_k\bigg)+\bigg(b_n+\sum_{k=m}^{n-1}b_k\bigg)
+= \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\;\qedsymbol
+\end{align*}
+
+\begin{Satz}[Aufteilung von Summen]
+Für $m\le p\le n$ gilt
+\[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k+\sum_{k=p}^n a_k.\]
+\end{Satz}
+\strong{Beweis.} Für den Induktionsanfang setzt man $n=p$. Die Gleichung
+ist dann erfüllt, weil definitionsgemäß $\sum_{k=p}^p a_k=a_p$
+gilt.
+
+Der Induktionsschritt:
+\begin{align*}
+\sum_{k=m}^n a_k &= a_n+\sum_{k=m}^{n-1} a_k
+= a_n + \sum_{k=m}^{p-1} a_k + \sum_{k=p}^{n-1} a_k
+= \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\;\qedsymbol
+\end{align*}
+
+\newpage
+\begin{Satz}[Indexshift]
+Für eine beliebige Indexverschiebung der Distanz $d\in\Z$,
+kurz Indexshift, gilt
+\[\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
+\end{Satz}
+\strong{Beweis.}
+Für den Induktionsanfang $n=m-1$ erhält man definitionsgemäß sofort
+\[\sum_{k=m}^{m-1} a_k = 0 = \sum_{k=m+d}^{m+d-1} a_{k-d}.\]
+Induktionsschritt:
+\begin{align*}
+\sum_{k=m}^n a_k = a_n+\sum_{k=m}^{n-1} a_k
+= a_{(n+d)-d}+\sum_{k=m+d}^{n+d-1} a_{k-d}
+= \sum_{k=m+d}^{n+d} a_{k-d}.\;\qedsymbol
+\end{align*}
+\strong{Herleitung.} Substituiere $k:=k'-d$. Man formt damit um:
+\begin{align*}
+\sum_{k=m}^n a_k = \sum_{m\le k\le n} a_k
+= \sum_{m\le k'-d\le n} a_{k'-d}
+= \sum_{m+d\le k'\le n+d} a_{k'-d}
+= \sum_{k'=m+d}^{n+d} a_{k'-d}.\;\qedsymbol
+\end{align*}
+\begin{Satz}[Summe der konstanten Folge]
+Es gilt
+$\sum_{k=m}^n 1 = n-m+1$.
+\end{Satz}
+\strong{Beweis.} Induktionsanfang bei $n=m-1$:
+\[\sum_{k=m}^{m-1} 1=0,\qquad (m-1)-m+1 = m-1-m+1 = 0.\]
+Induktionsschritt:
+\[\sum_{k=m}^n 1 = 1+\sum_{k=m}^{n-1} 1 = 1+(n-1)-m+1 = n-m+1.\;\qedsymbol\]
+
+\newpage
+\section{Produkte}
+
+\subsection{Definition}
+\begin{Definition}[Produkt]
+Für eine Folge $a\colon\Z\to\R$ ist das Produkt der $a_k$ für
+$k$ von $k=m$ bis $k=n$ rekursiv definiert gemäß
+\[\prod_{k=m}^{m-1} a_k := 1,\qquad
+\prod_{k=m}^n a_k := a_n\cdot\prod_{k=m}^{n-1} a_k.\]
+\end{Definition}
+
+\subsection{Rechenregeln}
+Für Produkte gelten analoge Rechenregeln wie für Summen. Auch
+die Beweise sind analog, weshalb sie für den Leser als Übung
+dienen sollen.
+\begin{Satz}
+Ist $c\in\R$ eine Konstante, dann gilt
+\[\prod_{k=m}^n ca_k = c^n\prod_{k=m}^n a_k.\]
+\end{Satz}
+\begin{Satz}
+Es gilt
+\[\prod_{k=m}^n a_k b_k = \prod_{k=m}^n a_k \prod_{k=m}^n b_k.\]
+\end{Satz}
+\begin{Satz}[Aufteilung von Produkten]\label{Prod-Aufteilung}
+Für $m\le p\le n$ gilt:
+\[\prod_{k=m}^n a_k = \prod_{k=m}^{p-1} a_k\prod_{k=p}^n a_k.\]
+\end{Satz}
+\begin{Satz}[Indexshift]\label{Prod-Indexshift}
+Für die Indexverschiebung zu einer beliebigen Distanz $d\in\Z$ gilt
+\[\prod_{k=m}^n a_k = \prod_{k=m+d}^{n+d} a_{k-d}.\]
+\end{Satz}
 
 \section{Permutationen}%
 \index{Permutation}
@@ -142,7 +234,8 @@ n^{\underline k} &= (n-k+1)\,n^{\underline{k-1}}
 Hierbei wurde $(n-k+1)!=(n-k+1)(n-k)!$ benutzt, was gemäß
 der rekursiven Definition der Fakultät gilt.
 
-\strong{Alternativer Beweis.} Mittels Produktaufteilung und Indexshift:
+\strong{Alternativer Beweis.} Mittels Satz \ref{Prod-Aufteilung}
+(Produktaufteilung) und  Satz \ref{Prod-Indexshift} (Indexshift):
 \begin{align*}
 n! &= \prod_{i=0}^{n-1}(n-i)
 = \prod_{i=0}^{k-1} (n-i) \prod_{i=k}^{n-1} (n-i)
