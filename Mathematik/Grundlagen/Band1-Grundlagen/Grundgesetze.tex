@@ -1,6 +1,185 @@
 
 \chapter{Grundgesetze der Mathematik}
 
+\section{Aussagenlogik}
+
+\subsection{Aussagenlogische Formeln}
+
+Aussagen in der Aussagenlogik sind entweder wahr oder falsch,
+etwas dazwischen gibt es nicht, das nennt man auch das \emph{Prinzip
+der Zweiwertigkeit}\index{Prinzip der Zweiwertigkeit}.
+Wir schreiben $0=\text{falsch}$ und $1=\text{wahr}$, das ist schön
+kurz und knapp.
+
+Für die Aussage »$n$ ist ohne Rest durch $m$ teilbar« bzw.
+»$m$ teilt $n$«, schreibt man kurz $m|n$. Aus Aussagen lassen sich
+in der Aussagenlogik zusammengesetzte Aussagen bilden, z.\,B.
+\[\text{Aus $2|n$ und $3|n$ folgt, dass $6|n$},\]
+als Formel:
+\[2|n\land 3|n \implies 6|n.\]
+Streng genommen handelt es sich hierbei um eine Aussageform, da die
+Aussage von einer Variable abhängig ist. Nachdem für $n$ eine Zahl
+eingesetzt wurde, ergibt sich daraus eine Aussage, in diesem Fall
+immer eine wahre Aussage.
+
+Eine zusammengesetzte Aussage wird auch \emph{aussagenlogische Formel}
+genannt. Aussagenlogische Formeln haben eine innere Struktur. Um diese
+untersuchen zu können, werden logische Variablen betrachtet,
+das sind solche Variablen, die für eine Aussage stehen. Eine
+logische Variable wird durch einen lateinischen Großbuchstaben
+am Anfang des Alphabetes beschrieben und kann nur mit den
+Wahrheitswerten falsch oder wahr belegt werden. Die genannte Formel
+besitzt die Struktur
+\[A\land B \implies C.\]
+In der Formel treten Verknüfungen von Aussagen auf, das sind
+$\land$ und $\Rightarrow$. Es gibt die grundlegenden Verknüpfungen
+$\neg,\land,\lor,\Rightarrow,\Leftrightarrow$. Die Bindungsstärke
+der gelisteten Verknüfpungen ist absteigend, so wie Punktrechnung
+vor Strichrechnung gilt. Das $\neg$ bindet stärker als $\land$,
+bindet stärker als $\lor$, bindet stärker als $\Rightarrow$,
+bindet stärker als $\Leftrightarrow$. Die Verknüpfungen sind
+in Tabelle \ref{tab:logische-Verknuepfungen} definiert.
+Anstelle von $\neg A$ schreibt man auch $\overline A$.
+
+\begin{table}
+\centering
+\begin{tabular}{cc}
+\begin{tabular}{c|c}
+$A$ & $\neg A$\\
+\hline
+$0$ & $1$\\
+$1$ & $0$
+\end{tabular}
+&\qquad \begin{tabular}{c|c|c|c|c|c}
+$A$ & $B$ & $A\land B$ & $A\lor B$ & $A\Rightarrow B$ & $A\Leftrightarrow B$\\
+\hline
+$0$ & $0$ & $0$ & $0$ & $1$ & $1$\\
+$1$ & $0$ & $0$ & $1$ & $0$ & $0$\\
+$0$ & $1$ & $0$ & $1$ & $1$ & $0$\\
+$1$ & $1$ & $1$ & $1$ & $1$ & $1$
+\end{tabular}
+\end{tabular}
+\caption{Definition der grundlegenden logischen Verknüpfungen.}
+\label{tab:logische-Verknuepfungen}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c|c|c|c|c}
+$A$ & $B$ & $A\land B$ & $B\land A$ & $A{\land}B\Rightarrow B{\land}A$\\
+\hline
+$0$ & $0$ & $0$ & $0$ & $1$\\
+$1$ & $0$ & $0$ & $0$ & $1$\\
+$0$ & $1$ & $0$ & $0$ & $1$\\
+$1$ & $1$ & $1$ & $1$ & $1$
+\end{tabular}
+\caption{Wahrheitstafel zu $A\land B\Rightarrow B\land A$.}
+\label{tab:Wahrheitstafel1}
+\end{table}
+
+Es gibt Formeln, die immer wahr sind, unabhängig davon, mit
+welchen Wahrheitswerten die Variablen belegt werden.
+\begin{Definition}[Tautologie]\index{Tautologie}
+Ist $\varphi$ eine Formel, die bezüglich jeder möglichen
+Variablenbelegung erfüllt ist, dann nennt man $\varphi$ eine Tautologie
+und schreibt dafür kurz $\models\varphi$.
+\end{Definition}
+Z.\,B. gilt
+\[\models A\land B\implies B\land A.\]
+Es lässt sich leicht überprüfen, ob eine Formel tautologisch ist.
+Dazu wird einfach die Wahrheitstafel zu dieser Formel aufgestellt,
+hier Tabelle $\ref{tab:Wahrheitstafel1}$.
+Die Wahrheitstafel\index{Wahrheitstafel} ist eine Wertetabelle,
+die zu jeder Variablenbelegung den Wahrheitswert der Formel angibt.
+Bei einer tautologischen Formel enthält die Ergebnisspalte in jeder
+Zeile den Wert $1$.
+
+Zwei wichtige Metaregeln, die Einsetzungsregel und die
+Ersetzungsregel, ermöglichen das Rechnen mit aussagenlogischen
+Formeln. Die Einsetzungsregel ermöglicht es, aus schon bekannten
+Tautologien neue bilden zu können, ohne jedes mal eine Wahrheitstafel
+aufstellen zu müssen. Die Ersetzungsregel ermöglicht die Umformung
+von Formeln.
+
+\begin{Satz}[Einsetzungsregel]\index{Einsetzungsregel}
+Sei $v$ eine logische Variable. Ist $\varphi$ eine tautologische
+Formel, dann ergibt sich wieder eine tautologische Formel, wenn man
+jedes Vorkommen von $v$ in $\varphi$ durch eine Formel $\psi$ ersetzt.
+Kurz:
+\[(\models \varphi )\implies (\models \varphi [v:=\psi]).\]
+Das gilt auch für die simultane Substitution:
+\[(\models \varphi )\implies
+(\models \varphi [v_1:=\psi_1,\ldots ,v_n:=\psi_n]).\]
+\end{Satz}
+\strong{Begründung.} Die Variable $v$ kann in $\varphi$
+frei mit einem Wahrheitswert belegt werden, nach Voraussetzung
+ist $\varphi$ dabei immer erfüllt. Somit ist $\varphi$ auch
+erfüllt, wenn $v$ mit dem Wahrheitswert von $\psi$ belegt wird.
+Dann muss aber auch $\varphi[v:=\psi]$ unter einer beliebigen Belegung
+wahr sein.\;\qedsymbol
+
+\newpage
+\begin{Satz}[Ersetzungsregel]\index{Ersetzungsregel}
+Sei $F(\varphi)$ eine Formel, welche von der Teilformel $\varphi$
+abhängig ist. Sei außerdem $\varphi$ äquivalent zu $\psi$.
+Dann sind auch $F(\varphi)$ und $F(\psi)$ äquivalent. Kurz:
+\[(\models\varphi\Leftrightarrow\psi)
+\implies (\models F(\varphi)\Leftrightarrow F(\psi)).\]
+\end{Satz}
+\strong{Begründung.}
+Die Äquivalenz von $\varphi$ und $\psi$ erzwingt, dass $\psi$
+unter einer beliebigen Belegung den gleichen Wahrheitswert besitzt
+wie $\varphi$. Da $F(0)\Leftrightarrow F(0)$ und
+$F(1)\Leftrightarrow F(1)$ gilt, muss also
+$F(\varphi)\Leftrightarrow F(\psi)$ gelten.\;\qedsymbol
+
+\begin{Satz}[Kleine Metaregel]
+Es gilt $\models\varphi$ und $\models\psi$
+genau dann, wenn $\models\varphi\land\psi$.
+\end{Satz}
+\strong{Beweis.}
+Sind $\varphi,\psi$ tautologisch, dann dürfen sie durch
+den Wahrheitswert wahr ersetzt werden. Unter dieser Voraussetzung
+ist $\varphi\land\psi$ gleichbedeutend mit $1\land 1$, demnach
+auch tautologisch.
+
+Sei nun umgekehrt $\varphi\land\psi$ tautologisch. Es müssen
+zwingend auch $\varphi$ und $\psi$ wahr sein, denn sonst wäre
+$\varphi\land\psi$ falsch.\;\qedsymbol
+
+\begin{Satz}[Kleine Abtrennungsregel]
+Aus $\models\varphi$ und $\models\varphi\Rightarrow\psi$
+folgt $\models\psi$.\\
+Aus $\models\varphi$ und $\models\varphi\Leftrightarrow\psi$
+folgt $\models\psi$.
+\end{Satz}
+\strong{Beweis.}
+Ist $\varphi$ tautologisch, dann darf es durch den Wahrheitswert
+wahr ersetzt werden. Unter dieser Voraussetzung ist
+$\varphi\Rightarrow\psi$ gleichbedeutend mit $1\Rightarrow\psi$.
+Diese Formel kann nur erfüllt sein, wenn auch $\psi$ wahr ist.
+Da aber $\varphi\Rightarrow\psi$ tautologisch sein soll,
+muss damit zwingend auch $\psi$ tautologisch sein.
+Für $\varphi\Leftrightarrow\psi$ ist die Argumentation
+analog.\;\qedsymbol
+
+\begin{Satz}[Abtrennung von Implikationen]
+Aus $\models\varphi\Leftrightarrow\psi$
+folgt $\models\varphi\Rightarrow\psi$.
+\end{Satz}
+\strong{Beweis.}
+Man zeigt
+\[\models (A\Leftrightarrow B)
+\Leftrightarrow (A\Rightarrow B)\land (B\Rightarrow A)\]
+mittels Wahrheitstafel. Gemäß der Einsetzungsregel gilt dann auch
+\[\models (\varphi\Leftrightarrow\psi)
+\Leftrightarrow (\varphi\Rightarrow\psi)\land (\psi\Rightarrow\varphi).\]
+Mit der kleinen Abtrennungsregel und der Voraussetzung erhält man
+\[\models (\varphi\Rightarrow\psi)\land (\psi\Rightarrow\varphi).\]
+Gemäß der kleinen Metaregel ergibt sich schließlich
+$\models \varphi\Rightarrow\psi$.\;\qedsymbol
+
+\newpage
 \section{Mengenlehre}
 
 \subsection{Der Mengenbegriff}\index{Menge}
