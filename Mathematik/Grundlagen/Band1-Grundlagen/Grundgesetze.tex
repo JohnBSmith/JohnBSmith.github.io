@@ -119,7 +119,8 @@ Dann muss aber auch $\varphi[v:=\psi]$ unter einer beliebigen Belegung
 wahr sein.\;\qedsymbol
 
 \newpage
-\begin{Satz}[Ersetzungsregel]\index{Ersetzungsregel}
+\begin{Satz}[Ersetzungsregel]\index{Ersetzungsregel}%
+\label{Ersetzungsregel}
 Sei $F(\varphi)$ eine Formel, welche von der Teilformel $\varphi$
 abhängig ist. Sei außerdem $\varphi$ äquivalent zu $\psi$.
 Dann sind auch $F(\varphi)$ und $F(\psi)$ äquivalent. Kurz:
@@ -196,7 +197,8 @@ es gilt
 \end{align}
 \end{Satz}
 
-\subsection{Boolesche Algebra}
+\subsection{Boolesche Algebra}%
+\index{boolesche Algebra}
 
 \begin{table}
 \begin{center}
@@ -243,7 +245,7 @@ Absorptionsgesetze
 \end{center}
 \end{table}
 
-Die Regeln in Tablelle \ref{tab:boolesche-Algebra} gewinnt man
+Die Regeln in Tabelle \ref{tab:boolesche-Algebra} gewinnt man
 alle mittels Warheitstafel. Gemäß der Einsetzungsregel dürfen für
 die Variablen auch Formeln eingesetzt werden, die griechischen
 Formelvariablen benötigt man somit nicht mehr.
@@ -263,6 +265,168 @@ zurückführen:%
 A\Rightarrow B &\equiv \overline A\lor B,\\
 A\Leftrightarrow B &\equiv (A\Rightarrow B)\land (B\Rightarrow A).
 \end{align}
+Mit den bisher genannten Regeln lassen sich aussagenlogische Formeln
+auf einfache Art umformen. Z.\,B. ist die Formel $1\Rightarrow A$
+äquivalent zu $A$. Man findet
+\[1\Rightarrow A\enspace\equiv\enspace\overline 1\lor A\enspace\equiv\enspace 0\lor A\enspace\equiv\enspace A.\]
+Natürlich kann man alternativ mittels Warheitstafel auch
+\[\models(1\Rightarrow A)\Leftrightarrow A\]
+überprüfen.
+
+\begin{Satz}[Formel zum Modus ponens]\label{Formel-Modus-ponens}
+Es gilt $\models A\land (A\Rightarrow B)\Rightarrow B$
+\end{Satz}
+\strong{Beweis.} Gemäß den Regeln der booleschen Algebra ergibt sich
+\begin{align}
+& A\land (A\Rightarrow B)\Rightarrow B\\
+& \equiv A\land (\overline A\lor B)\Rightarrow B && \text{(Zerlegung von »$\Rightarrow$«)}\\
+& \equiv \overline{A\land (\overline A\lor B)}\lor B && \text{(Zerlegung von »$\Rightarrow$«)}\\
+& \equiv \overline A\lor\overline{\overline A\lor B}\lor B && \text{(De Morgan)}\\
+& \equiv \overline A\lor (\overline{\overline A}\land\overline B)\lor B && \text{(De Morgan)}\\
+& \equiv \overline A\lor (A\land\overline B)\lor B && \text{(Involutionsgesetz)}\\
+& \equiv ((\overline A\lor A)\land(\overline A\lor\overline B))\lor B && \text{(Distributivgesetz)}\\
+& \equiv (1\land(\overline A\lor\overline B))\lor B && \text{(Komplementärgesetz)}\\
+& \equiv (\overline A\lor\overline B)\lor B && \text{(Absorptionsgesetz)}\\
+& \equiv \overline A\lor(\overline B\lor B) && \text{(Assoziativgesetz)}\\
+& \equiv \overline A\lor 1 && \text{(Komplementärgesetz)}\\
+& \equiv 1.\;\qedsymbol && \text{(Absorptionsgesetz)}
+\end{align}
+Von der Ersetzungsregel (Satz \ref{Ersetzungsregel}), also
+\[\varphi\equiv\psi\enspace
+\text{impliziert}\enspace F(\varphi)\equiv F(\psi),\]
+wurde ständig stillschweigend Gebrauch gemacht, nämlich bei jeder
+Umformung einer Teilformel.
+
+\begin{Satz}[Regel zur Kontraposition]\index{Kontraposition}
+Es gilt $A\Rightarrow B\equiv \overline B\Rightarrow\overline A$.
+\end{Satz}
+\strong{Beweis.} Man findet
+\begin{align}
+&A\Rightarrow B\\
+&\equiv \overline A\lor B && (\text{Zerlegung von »$\Rightarrow$«})\\
+&\equiv B\lor\overline A && (\text{Kommutativgesetz})\\
+&\equiv \overline{\overline B}\lor\overline A && (\text{Involutionsgesetz})\\
+&\equiv \overline B\Rightarrow\overline A.\;\qedsymbol
+  && (\text{Zerlegung von »$\Rightarrow$«)}
+\end{align}
+
+\subsection{Formale Beweise}
+\begin{Definition}[Modellrelation]\index{Modell}
+Sei $M=\{\varphi_1,\varphi_2,\ldots,\varphi_n\}$ eine Menge von
+Formeln und sei $\psi$ eine weitere Formel. Man sagt dann, $M$
+modelliert $\psi$, kurz $M\models\psi$, wenn jede Belegung von
+logischen Variablen, die alle Formeln in $M$ erfüllt, auch $\psi$
+erüllt.
+\end{Definition}
+Das klingt etwas kompliziert, ist es aber eigentlich nicht. Man schaut
+sich die große Wahrheitstafel an, in der alle Formeln vorkommen.
+Ergibt sich in einer Zeile bei allen Formeln in $M$ eine 1, dann muss
+auch $\psi$ in dieser Zeile den Warheitswert 1 besitzen.
+
+Die Aussage $\models\varphi$ ist mit $\{\}\models\varphi$
+gleichbedeutend, denn bei einer leeren Formelmenge werden keine
+Belegungen ausgeschlossen, $\varphi$ muss also jede Belegung
+erfüllen. Der Definition nach ist $\varphi$ dann eine Tautologie.
+
+Man beobachtet außerdem, dass $\{\varphi\}\models\psi$ mit
+$\models\varphi\Rightarrow\psi$ übereinstimmt. Hat nämlich
+$\varphi$ den Warheitswert 0, dann ist $\varphi\Rightarrow\psi$
+immer erfüllt, ohne dass der Warheitswert von $\psi$ dabei eine
+Rolle spielt. Solche Belegungen entfallen auch bei
+$\{\varphi\}\models\psi$. Nun darf $\varphi$ als wahr vorausgesetzt
+werden. Wäre $\psi$ nun falsch, dann ist $\varphi\Rightarrow\psi$
+nicht mehr erfüllt, also auch $\models\varphi\Rightarrow\psi$ falsch.
+In diesem Fall ist aber auch $\{\varphi\}\models\psi$ falsch.
+Es verbleibt nun die Situation, dass sowohl $\varphi$ also auch
+$\psi$ wahr sind. Mit diesen Belegungen bleibt dann auch
+$\{\varphi\}\models\psi$ unverletzt.
+
+\begin{Satz}[Deduktionstheorem]\index{Deduktionstheorem}
+Es gilt $M\cup\varphi\models\psi$ genau dann, wenn
+$M\models\varphi\Rightarrow\psi$.
+\end{Satz}
+\strong{Beweis.} Man hat
+\begin{equation}
+M\cup\varphi = \{\varphi_1,\ldots,\varphi_n,\varphi\}.
+\end{equation}
+Dass alle diese Formeln unter einer Belegung erfüllt sein sollen,
+ist aber gleichbedeutend damit, dass die Aussage%
+\begin{equation}
+\varphi_1\land\ldots\land\varphi_n\land\varphi
+\end{equation}
+unter dieser Belegung erfüllt ist. Wie bereits erläutert, gilt%
+\begin{equation}
+(\{\varphi_1\land\ldots\land\varphi_n\land\varphi\}\models\psi)
+\iff (\models \varphi_1\land\ldots\land\varphi_n\land\varphi\Rightarrow\psi).
+\end{equation}
+Mittels boolescher Algebra findet man nun
+\begin{align}
+& \varphi_1\land\ldots\land\varphi_n\land\varphi\Rightarrow\psi\\
+& \equiv \overline{\varphi_1\land\ldots\land\varphi_n\land\varphi}\lor\psi\\
+& \equiv \overline{\varphi_1\land\ldots\land\varphi_n}\lor\overline\varphi\lor\psi\\
+& \equiv \overline{\varphi_1\land\ldots\land\varphi_n}\lor(\varphi\Rightarrow\psi)\\
+& \equiv \varphi_1\land\ldots\land\varphi_n\Rightarrow (\varphi\Rightarrow\psi)
+\end{align}
+Schließlich gilt aber auch wieder
+\begin{equation}
+(\models \varphi_1\land\ldots\land\varphi_n\Rightarrow(\varphi\Rightarrow\psi))
+\iff (\{\varphi_1\land\ldots\land\varphi_n\}\models\varphi\Rightarrow\psi).\;\qedsymbol
+\end{equation}
+
+\newpage
+\begin{Definition}[Schlussregel]\index{Schlussregel}
+Sei $M$ eine Menge von Formelvariablen und $\psi$ eine Formelvariable.
+Ist die Aussage $M\models\psi$ wahr, unabhängig davon, welche
+Formeln für die Formelvariablen eingesetzt werden, dann spricht man
+von einer Schlussregel.
+\end{Definition}
+
+\begin{Satz}[Modus ponens]\index{Modus ponens}
+Es gilt die Schlussregel $\{\varphi,\varphi\Rightarrow\psi\}\models\psi$.
+\end{Satz}
+\strong{Beweis.} Gemäß Deduktionstheorem gilt
+\[(\{\varphi,\varphi\Rightarrow\psi\}\models\psi)
+\iff (\models \varphi\land(\varphi\Rightarrow\psi)\Rightarrow\psi).\]
+Gemäß Satz \ref{Formel-Modus-ponens} ist die rechte
+Seite wahr.\;\qedsymbol
+
+Schlussregeln ermöglichen es uns, aus wahren Aussagen weitere
+wahre Aussagen zu gewinnen. Die Belegung mit logischen Variablen
+tritt nun in den Hintergrund, besonders dann wenn die Formeln keine
+logischen Variablen mehr enthalten. Sind $A$ und $A\Rightarrow B$
+wahre Aussagen, dann muss gemäß Modus ponens auch $B$ eine wahre
+Aussage sein.
+
+Ein Beispiel dazu. Sei $A(n):=(2|n)$ die Aussage »$2$ teilt $n$«
+und $B(n):=(4|n^2)$ die Aussage »$4$ teilt $n^2$«.
+Nun gilt $A(n)\Rightarrow B(n)$ für jede beliebige ganze
+Zahl, welche für $n$ eingesetzt wird. Gemäß Modus ponens ist der Schluss%
+\[\{A(n), A(n)\Rightarrow B(n)\}\models B(n)\]
+richtig. Ausgehend von »$2$ teilt $10$« können wir
+damit »$4$ teilt $100$« schlussfolgern.
+
+\begin{Definition}[Beweis]\index{Beweis}
+Eine Aussage ist sicher dann wahr, wenn sie mittels Schlussregeln
+aus schon bekannten wahren Aussagen gefolgert werden kann. Die Kette
+von Schlüssen heißt Beweis dieser Aussage.
+\end{Definition}
+Ein Beispiel dazu. Angenommen wir wissen, dass die Aussage $A$ wahr
+ist. Außerdem ist bekannt, dass $A\Rightarrow B$ und $B\Rightarrow C$
+wahr sind. Gemäß Modus ponens ist dann auch $B$ wahr. Nochmalige
+Anwendung des Modus ponens liefert die Wahrheit von $C$.
+
+Der formale Beweis von $C$ schaut so aus:
+\[
+\begin{tabular}{ll}
+1.\;$A$, & (Prämisse)\\
+2.\;$A\Rightarrow B$, & (Prämisse)\\
+3.\;$B\Rightarrow C$, & (Prämisse)\\
+4.\;$B$, & (MP, 1, 2)\\
+5.\;$C$ & (MP, 4, 3)
+\end{tabular}
+\]
+In Klammern steht immer die Begründung für die jeweilige Aussage.
+Der Modus ponens wurde mit MP abgekürzt.
 
 \newpage
 \section{Mengenlehre}
