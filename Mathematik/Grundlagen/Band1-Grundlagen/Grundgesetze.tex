@@ -429,6 +429,84 @@ In Klammern steht immer die Begründung für die jeweilige Aussage.
 Der Modus ponens wurde mit MP abgekürzt.
 
 \newpage
+\section{Prädikatenlogik}\index{Prädikatenlogik}
+\subsection{Endliche Bereiche}
+In diesem Abschnitt wird der Übergang von der Aussagenlogik in
+die Prädikatenlogik beschrieben. Eine Prädikat $P$ ist eine Aussageform,
+die einem Objekt $x$ einen Wahrheitswert $P(x)$ zuordnet. Z.\,B.
+ist $P(x)\equiv (x<4)$ ein Prädikat. Je nachdem was für eine Zahl
+für $x$ eingesetzt wird, ergibt sich entweder wahr oder falsch.
+
+\begin{Definition}[Allquantor]\index{Allquantor}
+Der Allquantor für endliche Objektbereiche
+ist rekursiv definiert gemäß%
+\[\bigwedge_{k=1}^0 P(x_k) :\equiv 1,\qquad
+\bigwedge_{k=1}^n P(x_k) :\equiv P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k).\]
+\end{Definition}
+
+\begin{Definition}[Existenzquantor]\index{Existenzquantor}
+Der Existenzquantor für endliche Objektbereiche
+ist rekursiv definiert gemäß%
+\[\bigvee_{k=1}^0 P(x_k) :\equiv 0,\qquad
+\bigvee_{k=1}^n P(x_k) :\equiv P(x_n)\lor\bigvee_{k=1}^{n-1} P(x_k).\]
+\end{Definition}
+
+\noindent
+Das allquantifizierte Prädikat ist nur dann wahr, wenn $P(x_k)$ für
+jedes $x_k$ erfüllt ist. Man bekommt die aussagenlogische Formel%
+\[\bigwedge_{k=1}^n P(x_k)
+\enspace\equiv\enspace P(x_1)\land P(x_2)\land\ldots\land P(x_n).\]
+Meistenstens benutzen wir die Schreibweisen
+\[\forall(x\in M)(P(x)) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
+\exists(x\in M)(P(x)) \equiv \bigvee_{k=1}^n P(x_k),\]
+wobei $M=\{x_1,x_2,\ldots,x_n\}$ die Zusammenfassung
+der Objekte ist.
+
+\begin{Satz}[Distributivgesetze]
+Ist $M$ endlich, $A$ eine Aussage und $P(x)$ ein Prädikat auf $M$,
+dann gilt
+\begin{align*}
+A\lor\forall(x\in M)(P(x)) &\equiv \forall(x\in M)(A\lor P(x)),\\
+A\land\exists(x\in M)(P(x)) &\equiv \exists(x\in M) (A\land P(x)).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Induktiv mittels boolescher Algebra. Induktionsanfang:
+\begin{gather*}
+A\lor\bigwedge_{k=1}^0 P(x_k) \equiv A\lor 1 \equiv 1 \equiv \bigwedge_{k=1}^0 (A\lor P(x_k)).
+\end{gather*}
+Induktionsschritt:
+\begin{gather*}
+A\lor\bigwedge_{k=1}^n P(x_k) \equiv
+A\lor (P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k))
+\equiv (A\lor P(x_n))\land (A\lor\bigwedge_{k=1}^{n-1} P(x_k))\\
+\equiv (A\lor P(x_n))\land \bigwedge_{k=1}^{n-1} (A\lor P(x_k))
+\equiv \bigwedge_{k=1}^n (A\lor P(x_k)).
+\end{gather*}
+Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
+
+\begin{Satz}[De Morgansche Gesetze]
+Ist $M$ endlich und $P(x)$ ein Prädikat auf $M$, dann gilt
+\begin{align*}
+\neg\forall(x\in M)(P(x)) &\equiv \exists(x\in M)(\neg P(x)),\\
+\neg\exists(x\in M)(P(x)) &\equiv \forall(x\in M)(\neg P(x)).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Induktionsanfang:
+\begin{gather*}
+\neg\bigwedge_{k=1}^0 P(x_k) \equiv \neg 1 \equiv 0 \equiv\bigvee_{k=1}^0 \neg P(x_k).
+\end{gather*}
+Induktionsschritt:
+\begin{gather*}
+\neg\bigwedge_{k=1}^n P(x_k)
+\equiv \neg(P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k))
+\equiv \neg P(x_n)\lor\neg\bigwedge_{k=1}^{n-1} P(x_k)\\
+\equiv \neg P(x_n)\lor\bigvee_{k=1}^{n-1} \neg P(x_k)
+\equiv \bigvee_{k=1}^n \neg P(x_k).
+\end{gather*}
+Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
+
+
+\newpage
 \section{Mengenlehre}
 
 \subsection{Der Mengenbegriff}\index{Menge}

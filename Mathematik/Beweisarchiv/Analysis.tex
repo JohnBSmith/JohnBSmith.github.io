@@ -549,3 +549,66 @@ muss die rechtsseitige Ableitung an der Stelle $x=0$ immer
 verschwinden.\;\qedsymbol
 \end{Beweis}
 
+\section{Fixpunkt-Iterationen}%
+\index{Fixpunkt-Iteration}
+
+\begin{Definition}[Kontraktion]\index{Kontraktion}
+Sei $(M,d)$ ein vollständiger metrischer Raum. Eine Abbildung
+$\varphi\colon M\to M$ heißt Kontraktion, wenn sie
+Lipschitz"=stetig mit Lipschitz"=Konstante $L<1$ ist, d.\,h.
+\[d(\varphi(x),\varphi(y))<L\,d(x,y)\]
+für alle $x,y\in M$.
+\end{Definition}
+
+\begin{Satz}[Fixpunktsatz von Banach]\label{Banach-fixed-point-theorem}%
+\index{Fixpunktsatz von Banach}\index{Banach!Fixpunktsatz von}
+Sei $(M,d)$ ein nichtleerer vollständiger metrischer Raum
+und sei $\varphi\colon M\to M$ eine Kontraktion. Es gibt genau
+einen Fixpunkt $x\in M$ mit $x=\varphi(x)$ und die Folge
+$(x_n)\colon\N\to M$ mit $x_{n+1}=\varphi(x_n)$ konvergiert
+gegen den Fixpunkt, unabhängig vom Startwert $x_0$.
+\end{Satz}
+
+\begin{Satz}[Hinreichendes Konvergenzkriterium]\label{diff-fixed-point-iter}
+Sei $M=[a,b]$. Ist $\varphi\colon M\to M$ differenzierbar und gibt es
+eine Zahl $r$ mit $|\varphi'(x)|<r<1$ für alle $x\in M$, dann
+hat $\varphi$ genau einen Fixpunkt und die Folge $(x_n)$ mit $x_{n+1}=\varphi(x_n)$
+konvergiert für jeden Startwert $x_0\in M$ gegen diesen Fixpunkt.
+\end{Satz}
+\begin{Beweis}
+Nach Satz \ref{diff-bounded-Lipschitz-cont} ist eine differenzierbare
+Funktion $\varphi$ mit beschränkter Ableitung auch Lipschitz"=stetig,
+und $L=\sup_{x\in M}|\varphi'(x)|$ eine Lipschitz"=Konstante.
+Wegen $|\varphi'(x)|<r$ muss $L\le r$ sein, und somit $L<1$.
+D.\,h. $\varphi$ ist eine Kontraktion. Die Konvergenz der Folge
+$(x_n)$ ist gemäß Satz \ref{Banach-fixed-point-theorem}
+gewährleistet.\;\qedsymbol
+\end{Beweis}
+\newpage
+
+\begin{Satz}[Hinreichendes Konvergenzkriterium zum Newton-Verfahren]%
+\index{Newton-Verfahren}\mbox{}\\
+Sei $f\colon [a,b]\to\R$ zweimal stetig differenzierbar und
+$f'(x)\ne 0$ für alle $x$. Sei%
+\[\varphi\colon [a,b]\to [a,b],\quad \varphi(x):=x-\frac{f(x)}{f'(x)}.\]
+Man beachte $\varphi([a,b])\subseteq [a,b]$. Gilt für alle $x$ die Ungleichung%
+\[|\varphi'(x)| = \bigg|\frac{f(x)f''(x)}{f'(x)^2}\bigg| < 1,\]
+dann besitzt $f$ genau eine Nullstelle und die Folge $(x_n)$ mit
+$x_{n+1}=\varphi(x_n)$ konvergiert gegen diese Nullstelle.
+\end{Satz}
+
+\begin{Beweis}
+Gemäß den Ableitungsregeln ist $\varphi$ stetig differenzierbar
+und es gilt%
+\[\varphi'(x) = 1-\frac{f'(x)f'(x)-f(x)f''(x)}{f'(x)^2}
+= \frac{f(x)f''(x)}{f'(x)^2}.\]
+Da $|\varphi'(x)|$ stetig ist, gibt es nach dem Satz vom Minimum
+und Maximum ein Maximum $M$ und nach Voraussetzung ist $M<1$.
+Man setze nun $r:=(M+1)/2$. Dann ist $|\varphi'(x)|<r<1$.
+Gemäß Satz \ref{diff-fixed-point-iter} konvergiert die Iteration
+$(x_n)$ gegen den einzigen Fixpunkt von $\varphi$. Wegen $f'(x)\ne 0$
+gilt dabei%
+\[x = \varphi(x) = x-\frac{f(x)}{f'(x)} \iff \frac{f(x)}{f'(x)}=0\iff f(x)=0.\]
+Der Fixpunkt von $\varphi$ ist also die einzige Nullstelle von $f$.\;\qedsymbol
+\end{Beweis}
+
