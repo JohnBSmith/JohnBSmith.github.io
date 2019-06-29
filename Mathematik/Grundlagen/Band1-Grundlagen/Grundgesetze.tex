@@ -457,17 +457,25 @@ jedes $x_k$ erfüllt ist. Man bekommt die aussagenlogische Formel%
 \[\bigwedge_{k=1}^n P(x_k)
 \enspace\equiv\enspace P(x_1)\land P(x_2)\land\ldots\land P(x_n).\]
 Meistenstens benutzen wir die Schreibweisen
-\[\forall(x\in M)(P(x)) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
-\exists(x\in M)(P(x)) \equiv \bigvee_{k=1}^n P(x_k),\]
+\[(\forall x\in M)P(x) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
+(\exists x\in M)P(x) \equiv \bigvee_{k=1}^n P(x_k),\]
 wobei $M=\{x_1,x_2,\ldots,x_n\}$ die Zusammenfassung
-der Objekte ist.
+der Objekte ist. In allen diesen Schreibweisen haben die
+Quantoren die gleiche Bindungsstärke wie die Negation. Z.\,B. wird
+die Formel
+\[(\forall x\in M)P(x)\land A\]
+gelesen als
+\[((\forall x\in M)P(x))\land A,\]
+Davon zu unterscheiden ist die Formel
+\[(\forall x\in M)(P(x)\land A).\]
+
 
 \begin{Satz}[Distributivgesetze]
 Ist $M$ endlich, $A$ eine Aussage und $P(x)$ ein Prädikat auf $M$,
 dann gilt
 \begin{align*}
-A\lor\forall(x\in M)(P(x)) &\equiv \forall(x\in M)(A\lor P(x)),\\
-A\land\exists(x\in M)(P(x)) &\equiv \exists(x\in M) (A\land P(x)).
+A\lor(\forall x\in M)P(x) &\equiv (\forall x\in M)(A\lor P(x)),\\
+A\land(\exists x\in M)P(x) &\equiv (\exists x\in M)(A\land P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Induktiv mittels boolescher Algebra. Induktionsanfang:
@@ -487,8 +495,8 @@ Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 \begin{Satz}[De Morgansche Gesetze]
 Ist $M$ endlich und $P(x)$ ein Prädikat auf $M$, dann gilt
 \begin{align*}
-\neg\forall(x\in M)(P(x)) &\equiv \exists(x\in M)(\neg P(x)),\\
-\neg\exists(x\in M)(P(x)) &\equiv \forall(x\in M)(\neg P(x)).
+\neg(\forall x\in M)P(x) &\equiv (\exists x\in M)\;\neg P(x),\\
+\neg(\exists x\in M)P(x) &\equiv (\forall x\in M)\;\neg P(x).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Induktionsanfang:
@@ -505,6 +513,53 @@ Induktionsschritt:
 \end{gather*}
 Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
+\newpage
+\begin{Satz}\label{finite-quantifier-compatibility}
+Ist $M$ endlich und sind $P(x),Q(x)$ Prädikate auf $M$, dann gilt
+\begin{align*}
+(\forall x\in M)(P(x)\land Q(x)) \equiv (\forall x\in M)P(x)\land(\forall x\in M)Q(x),\\
+(\exists x\in M)(P(x)\lor Q(x)) \equiv (\exists x\in M)P(x)\lor(\exists x\in M)Q(x).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Induktionsanfang:
+\begin{gather*}
+\bigwedge_{k=1}^0 (P(x_k)\land Q(x_k)) \equiv 1 \equiv 1\land 1
+\equiv \bigwedge_{k=1}^0 P(x_k)\land\bigwedge_{k=1}^0 Q(x_k).
+\end{gather*}
+Induktionsschritt:
+\begin{gather*}
+\bigwedge_{k=1}^n (P(x_k)\land Q(x_k))
+\equiv (P(x_n)\land Q(x_n))\land\bigwedge_{k=1}^{n-1} (P(x_k)\land Q(x_k))\\
+\equiv P(x_n)\land Q(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k)\land\bigwedge_{k=1}^{n-1} Q(x_k)\\
+\equiv P(x_n)\land\bigwedge_{k=1}^{n-1} P(x_k)\land Q(x_n)\land\bigwedge_{k=1}^{n-1} Q(x_k)
+\equiv \bigwedge_{k=1}^n P(x_k)\land\bigwedge_{k=1}^n Q(x_k).
+\end{gather*}
+Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
+
+% \newpage
+\begin{Satz}[Vertauschbarkeit gleichartiger Quantoren]
+Sind $M,N$ endlich, dann gilt
+\begin{align*}
+(\forall x\in M)(\forall x\in N)P(x,y)&\equiv (\forall x\in N)(\forall x\in M)P(x,y),\\
+(\exists x\in M)(\exists x\in N)P(x,y)&\equiv (\exists x\in N)(\exists x\in M)P(x,y).
+\end{align*}
+\end{Satz}
+\strong{Beweis.}
+Indunktionsanfang:
+\[\bigwedge_{i=1}^0\bigwedge_{j=1}^n P(x_i,y_j)
+\equiv 1 \equiv \bigwedge_{j=1}^n 1 \equiv
+\bigwedge_{j=1}^n\bigwedge_{i=1}^0 P(x_i,y_j).\]
+Induktionsschritt:
+\begin{gather*}
+\bigwedge_{i=1}^m\bigwedge_{j=1}^n P(x_i,y_j)
+\equiv \bigwedge_{j=1}^n P(x_m,y_j)\land\bigwedge_{i=1}^{m-1}\bigwedge_{j=1}^n P(x_i,y_j)\\
+\equiv \bigwedge_{j=1}^n P(x_m,y_j)\land\bigwedge_{j=1}^n \bigwedge_{i=1}^{m-1} P(x_i,y_j)\\
+\stackrel{(*)}\equiv \bigwedge_{j=1}^n \bigg(P(x_m,y_j)\land\bigwedge_{i=1}^{m-1} P(x_i,y_j)\bigg)
+\equiv \bigwedge_{j=1}^n \bigwedge_{i=1}^m P(x_i,y_j).
+\end{gather*}
+Die Äquivalenz $(*)$ gilt gemäß Satz \ref{finite-quantifier-compatibility}.
+
+Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
 \newpage
 \section{Mengenlehre}
@@ -625,11 +680,11 @@ Gehen wir mal von der Kontraposition aus -- sind die beiden Mengen
 $A,B$ verschieden, dann muss es ein Element in $A$ geben, welches nicht
 in $B$ enthalten ist, oder eines in $B$, welches nicht $A$ enthalten
 ist. Als Formel:%
-\[A\ne B \implies \exists(x\in A)(x\notin B)\lor\exists(x\in B)(x\notin A).\]
+\[A\ne B \implies (\exists x\in A)(x\notin B)\lor(\exists x\in B)(x\notin A).\]
 Hiervon bildet man wieder die Kontraposition. Gemäß den
 De Morganschen Gesetzen und den verallgemeinerten
 De Morganschen Gesetzen ergibt sich%
-\[\forall(x\in A)(x\in B)\land\forall(x\in B)(x\in A)\implies A=B.\]
+\[(\forall x\in A)(x\in B)\land(\forall x\in B)(x\in A)\implies A=B.\]
 Auf der linken Seite stehen aber nach Definition
 Teilmengenbeziehungen, es ergibt sich%
 \[A\subseteq B\land B\subseteq A\implies A=B.\]
@@ -640,19 +695,19 @@ $A$ auch in $B$ enthalten ist, und jedes von $B$ auch in $A$ enthalten:%
 \end{Definition}
 \begin{Satz}\label{set-eq}
 Es gilt
-\[A=B\iff \forall x(x\in A\iff x\in B).\]
+\[A=B\iff (\forall x)(x\in A\iff x\in B).\]
 \end{Satz}
 \strong{Beweis.} Wir müssen ein wenig Prädikatenlogik bemühen:%
 \begin{align*}
 A\subseteq B\land B\subseteq A
-&\iff \forall(x\in A)(x\in B)\land\forall(x\in B)(x\in A)\\
-&\iff \forall x(x\in A\implies x\in B)\land\forall x(x\in B\implies x\in A)\\
-&\iff \forall x((x\in A\implies x\in B)\land (x\in B\implies x\in A))\\
-&\iff \forall x(x\in A\iff x\in B).
+&\iff (\forall x\in A)(x\in B)\land(\forall x\in B)(x\in A)\\
+&\iff (\forall x)(x\in A\implies x\in B)\land(\forall x)(x\in B\implies x\in A)\\
+&\iff (\forall x)((x\in A\implies x\in B)\land (x\in B\implies x\in A))\\
+&\iff (\forall x)(x\in A\iff x\in B).
 \end{align*}
-Im letzten Schritt wurde ausgenutzt, dass
-$\varphi\Leftrightarrow\psi$ definitionsgemäß gleichbedeutend
-mit $(\varphi\Rightarrow\psi)\land(\psi\Rightarrow\varphi)$
+Im letzten Schritt wurde ausgenutzt, dass die Äquivalenz
+$\varphi\Leftrightarrow\psi$ gleichbedeutend
+mit der Formel $(\varphi\Rightarrow\psi)\land(\psi\Rightarrow\varphi)$
 ist.\;\qedsymbol
 
 %\newpage
