@@ -311,10 +311,10 @@ Es gilt $A\Rightarrow B\equiv \overline B\Rightarrow\overline A$.
 \end{align}
 
 \subsection{Formale Beweise}
-\begin{Definition}[Modellrelation]\index{Modell}
+\begin{Definition}[Semantische Implikation]
 Sei $M=\{\varphi_1,\varphi_2,\ldots,\varphi_n\}$ eine Menge von
 Formeln und sei $\psi$ eine weitere Formel. Man sagt dann, $M$
-modelliert $\psi$, kurz $M\models\psi$, wenn jede Belegung von
+impliziert $\psi$, kurz $M\models\psi$, wenn jede Belegung von
 logischen Variablen, die alle Formeln in $M$ erfüllt, auch $\psi$
 erüllt.
 \end{Definition}
@@ -514,7 +514,8 @@ Induktionsschritt:
 Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
 \newpage
-\begin{Satz}\label{finite-quantifier-compatibility}
+\begin{Satz}[Verträglichkeitsgesetze]%
+\label{finite-quantifier-compatibility}
 Ist $M$ endlich und sind $P(x),Q(x)$ Prädikate auf $M$, dann gilt
 \begin{align*}
 (\forall x\in M)(P(x)\land Q(x)) \equiv (\forall x\in M)P(x)\land(\forall x\in M)Q(x),\\
@@ -560,6 +561,180 @@ Induktionsschritt:
 Die Äquivalenz $(*)$ gilt gemäß Satz \ref{finite-quantifier-compatibility}.
 
 Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
+
+\subsection{Allgemeine Regeln}
+
+Man denkt sich nun ein Universum $U$, das alle denkbaren Objekte
+enthält. Das Prädikat $P(x)$ sei für jedes $x\in U$ definiert.
+Anstelle von $(\forall x\in U)P(x)$ schreibt man kürzer
+$(\forall x)P(x)$. Anstelle von $(\exists x\in U)P(x)$ schreibt
+man kürzer $(\exists x)P(x)$. Das Universum darf unendlich sein,
+aber nicht leer, es muss immer mindestens ein Element enthalten.
+\begin{Definition}[Allquantor]
+Es gilt $(\forall x)P(x)$ genau dann, wenn $P(x)$ für jedes
+beliebige $x$ wahr ist.
+\end{Definition}
+\begin{Definition}[Existenzquantor]
+Es gilt $(\exists x)P(x)$ genau dann, wenn ein $x$ gefunden
+werden kann, das $P(x)$ erfüllt.
+\end{Definition}
+Das Problem das sich jetzt stellt, ist, dass zur Überprüfung
+von prädikatenlogischen Formeln unendlich viele Warheitstafeln
+aufgestellt werden müssten, nämlich für jedes der unendlich vielen
+Objekte, welche für eine Objektvariable eingesetzt werden können, und das
+auch noch für jedes Prädikat, welches in eine Prädikatvariable
+eingesetzt werden kann. Wir müssen also anders vorgehen.
+
+Zunächst überzeugt man sich davon, dass die Einsetzungsregel und die
+Ersetzungsregel gültig bleiben. Außerdem definiert man für zwei
+prädikatenlogische Formeln $\varphi,\psi$ die Äquivalenz als
+\[(\varphi\equiv\psi)\defiff (\{\varphi\}\models\psi)\land (\{\psi\}\models\varphi).\]
+Bei der semantischen Implikation werden nun nicht nur Aussagenvariablen mit
+Wahrheitswerten belegt. Auch Prädikatvariablen werden mit Prädikaten
+belegt. Da es unendlich viele Prädikate gibt, lässt sich das natürlich
+praktisch nicht mehr durchführen.
+\begin{Satz}
+Es gilt $A\equiv (\forall x)A$ und $A\equiv(\exists x)A$.
+\end{Satz}
+\strong{Beweis.} Im Fall $A\equiv 0$ ist auch
+$(\forall x)0$ falsch, da $0$ für kein $x$ erfüllt ist.
+Im Fall $A\equiv 1$ ist auch $(\forall x)1$ wahr, da $1$ für jedes
+beliebige $x$ erfüllt ist. Für den Existenzquantor ist die
+Argumentation analog.\;\qedsymbol
+
+Vorsicht, das Universum darf nicht leer sein,
+denn $(\forall x{\in}\{\})\,0\equiv 1$.
+
+\begin{Satz}[Verallgemeinerte Distributivgesetze]
+Es gilt
+\begin{align*}
+A\lor (\forall x)P(x) &\equiv (\forall x)(A\lor P(x)),\\
+A\land(\exists x)P(x) &\equiv (\exists x)(A\land P(x)).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Im Fall $A\equiv 0$ ergibt sich
+\[A\lor(\forall x)P(x) \equiv 0\lor(\forall x)P(x)
+\equiv (\forall x)P(x)\equiv (\forall x)(0\lor P(x))\equiv (\forall x)(A\lor P(x)).\]
+Im Fall $A\equiv 1$ ergibt sich
+\[A\lor(\forall x)P(x)\equiv 1\lor(\forall x)P(x) \equiv 1 \equiv (\forall x)1
+\equiv (\forall x)(1\lor P(x))\equiv (\forall x)(A\lor P(x).\]
+Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
+
+\begin{Satz}[Verallgemeinerte De Morgansche Gesetze]
+Es gilt
+\begin{align*}
+\neg (\forall x)P(x) &\equiv (\exists x)\;\neg P(x),\\
+\neg (\exists x)P(x) &\equiv (\forall x)\;\neg P(x).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Gilt $(\forall x)P(x)$, dann ist $P(x)\equiv 1$.
+Es ergibt sich
+\begin{equation}
+\neg(\forall x)P(x) \equiv \neg 1 \equiv 0 \equiv (\exists x)0
+\equiv (\exists x)\;\neg 1\equiv (\exists x)\;\neg P(x).
+\end{equation}
+Gilt $(\forall x)P(x)$ nicht, dann muss es ein $x$ mit
+$\neg P(x)\equiv 1$ geben und es gilt
+\begin{equation}
+\neg(\forall x)P(x) \equiv \neg 0\equiv 1\equiv (\exists x)1
+\equiv (\exists x)\;\neg P(x).
+\end{equation}
+Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
+
+\begin{Satz}[Verträglichkeitsgesetze]
+Es gilt
+\begin{align*}
+(\forall x)(P(x)\land Q(x)) &\equiv (\forall x)P(x)\land (\forall x)Q(x),\\
+(\exists x)(P(x)\lor Q(x)) &\equiv (\exists x)P(x)\lor (\exists x)Q(x).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Angenommen, die linke Seite ist wahr. Dann muss
+$P(x)\land Q(x)\equiv 1$ sein, und daher auch $P(x)\equiv 1$ und
+$Q(x)\equiv 1$. Dann ist aber auch
+$(\forall x)P(x)\equiv 1$ und $(\forall x)Q(x)\equiv 1$. Somit gilt
+\begin{equation}
+(\forall x)(P(x)\land Q(x)) \equiv 1 \equiv
+1\land 1 \equiv (\forall x)P(x)\land (\forall x)Q(x).
+\end{equation}
+Angenommen, die linke Seite ist falsch. Dann gibt es
+ein $x$, für welches $P(x)\land Q(x)\equiv 0$ ist. Für dieses $x$
+muss also $P(x)\equiv 0$ oder $Q(x)\equiv 0$ sein, oder beides.
+Dann ist auch $(\forall x)P(x)\equiv 0$ oder $(\forall x)Q(x)\equiv 0$.
+Somit ist
+\begin{equation}
+(\forall x)P(x)\land(\forall x)Q(x)\equiv 0.
+\end{equation}
+Für den Existenzquantor ist die Argumentation analog. Alternativ
+ergibt sich nach den De Morgenschen und verallgemeinerten De Morganschen
+Gesetzen
+\begin{gather}
+(\exists x)(P(x)\lor Q(x))
+\equiv \neg(\forall x)\;\neg (P(x)\lor Q(x))\\
+\equiv \neg(\forall x)(\neg P(x)\land \neg Q(x))
+\equiv \neg((\forall x)\;\neg P(x)\land (\forall x)\;\neg Q(x))\\
+\equiv \neg(\forall x)\;\neg P(x)\lor\neg(\forall x)\;\neg Q(x)
+\equiv (\exists x) P(x)\lor(\exists x) Q(x).\;\qedsymbol
+\end{gather}
+
+
+\newpage
+\subsection{Beschränkte Quantifizierung}
+\begin{Definition}[Beschränkte Quantifizierung]
+Ist $P$ ein Prädikat auf $U$ und $M\subseteq U$ eine Teilmenge von
+$U$, dann definiert man
+\begin{align*}
+(\forall x\in M)P(x) &:\equiv (\forall x)(x\in M\Rightarrow P(x)),\\
+(\exists x\in M)P(x) &:\equiv (\exists x)(x\in M\land P(x)).
+\end{align*}
+\end{Definition}
+Zuweilen schreibt man sogar
+\begin{align}
+(\forall R(x))P(x) &:\equiv (\forall x)(R(x)\Rightarrow P(x)),\\
+(\exists R(x))P(x) &:\equiv (\exists x)(R(x)\land P(x)),
+\end{align}
+solange klar bleibt, dass $x$ die gebundene Variable ist.
+
+
+\begin{Satz}[Verallgemeinerte Distributivgesetze]
+Es gilt
+\begin{align*}
+A\lor (\forall x\in M)P(x) &\equiv (\forall x\in M)(A\lor P(x)),\\
+A\land(\exists x\in M)P(x) &\equiv (\exists x\in M)(A\land P(x)).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Für den Allquantor gilt
+\begin{gather}
+A\lor (\forall x\in M)P(x)
+\equiv A\lor(\forall x)(x\in M\Rightarrow P(x))\\
+\equiv A\lor(\forall x)(\neg x\in M\lor P(x))
+\equiv (\forall x)(A\lor\neg x\in M\lor P(x))\\
+\equiv (\forall x)(x\in M\Rightarrow A\lor P(x))
+\equiv (\forall x\in M)(A\lor P(x)).
+\end{gather}
+Für den Existenzquantor gilt
+\begin{gather}
+A\land (\exists x\in M)P(x)
+\equiv A\land(\exists x)(x\in M\land P(x))\\
+\equiv (\exists x)(A\land x\in M\land P(x))
+\equiv (\exists x)(x\in M\land A\land P(x))\\
+\equiv (\exists x\in M)(A\land P(x)).\;\qedsymbol
+\end{gather}
+
+\begin{Satz}[Verallgemeinerte De Morgansche Gesetze]
+Es gilt
+\begin{align*}
+\neg (\forall x\in M)P(x) &\equiv (\exists x\in M)\;\neg P(x),\\
+\neg (\exists x\in M)P(x) &\equiv (\forall x\in M)\;\neg P(x).
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Es gilt
+\begin{gather}
+\neg(\forall x\in M)P(x) \equiv \neg(\forall x)(x\in M\Rightarrow P(x))
+\equiv \neg(\forall x)(\neg x\in M\lor P(x))\\
+\equiv (\exists x)(x\in M\land \neg P(x))
+\equiv (\exists x\in M)\;\neg P(x).
+\end{gather}
+Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
 
 \newpage
 \section{Mengenlehre}
