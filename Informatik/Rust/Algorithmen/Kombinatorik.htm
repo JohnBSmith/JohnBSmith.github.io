@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kombinatorik</title>
+  <link href="../main.css" rel="stylesheet">
+  <script src="../rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Kombinatorik</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Potenzmenge">Potenzmenge</a>
+</ol>
+
+<h2 id="Potenzmenge">Potenzmenge</h2>
+
+<h3>Iterativ</h3>
+<pre class="rust">
+fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    let mut ps = vec![vec![]];
+    for x in a {
+        for mut s in ps.clone() {
+            s.push(x.clone());
+            ps.push(s);
+        }
+    }
+    return ps;
+}
+</pre>
+
+<h3>Funktional</h3>
+<pre class="rust">
+fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    a.into_iter().fold(vec![vec![]],
+        |mut ps, x| {ps.extend(ps.clone().into_iter()
+            .map(|mut s| {s.push(x.clone()); s})); ps})
+}
+</pre>
+
+</body>
+</html>
+
