@@ -1,0 +1,98 @@
+
+\chapter{Zahlentheorie}
+
+\section{Kongruenzen}
+
+\begin{Definition}[Kongruenz]\index{Kongruenz}
+Zwei ganze Zahlen $a,b$ heißen kongruent modulo $m$, wenn ihre Differenz
+$(b-a)$ durch $m$ teilbar ist:%
+\[a\equiv b\pmod{m}\iff (\exists k\in\Z)(b-a=km).\]
+\end{Definition}
+Anstelle von »$(\mathrm{mod}\;m)$« schreibt man beim Rechnen meist
+kürzer »$(m)$«.
+
+\begin{Satz}
+Die Kongruenz ist eine Äquivalenzrelation, d.\,h. es gilt
+\begin{align*}
+&a\equiv a\pmod{m},&&\text{(Reflexivität)}\\
+&a\equiv b\implies b\equiv a\pmod{m},&&\text{(Symmetrie)}\\
+&a\equiv b\land b\equiv c\implies a\equiv c\pmod{m}.&&\text{(Transitivität)}
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Für die Reflexivität ist ein $k$ mit $0=a-a=km$
+zu finden. Setze $k=0$.
+
+Bei der Symmetrie gibt es nach Voraussetzung
+ein $k$ mit $b-a=km$. Dann ist $a-b=-km$. Setze $k'=-k$.
+Es gibt also $k'$ mit $a-b=k'm$, somit gilt $b\equiv a$.
+
+Bei der Transitivität gibt es nach Voraussetzung $k$ mit
+$b-a=km$ und $l$ mit $b-c=lm$. D.\,h. es gilt
+\[b = a+km = c+lm\implies c-a = km-lm = (k-l)m.\]
+Setze $k'=k-l$. Es gibt also $k'$ mit $c-a=k'm$. Somit gilt $a\equiv c$.\;\qedsymbol
+
+\begin{Satz}
+Sind $a,b,c$ ganze Zahlen, dann gilt
+\begin{align*}
+a\equiv b\pmod{m}&\iff a+c\equiv b+c\pmod{m},\\
+a\equiv b\pmod{m}&\iff a-c\equiv b-c\pmod{m}.
+\end{align*}
+\end{Satz}
+\strong{Beweis.}
+Unter Beachtung von $(b+c)-(a+c)=b-a$ findet man
+\begin{gather*}
+a\equiv b\pmod{m}
+\iff (\exists k\in\Z)(b-a=km)\\
+\iff (\exists k\in\Z)((b+c)-(a+c)=km)\\
+\iff a+c\equiv b+c\pmod{m}.
+\end{gather*}
+Für die Subtraktion von $c$ ist die Überlegung analog.\;\qedsymbol
+
+\begin{Satz}
+Sind $a,b,c$ ganze Zahlen, dann gilt
+\[a\equiv b\pmod{m} \implies ac\equiv bc\pmod{m}.\]
+\end{Satz}
+\strong{Beweis.}
+Unter der Voraussetzung $a\equiv b\pmod{m}$ gibt es ein
+$k$ mit $b-a=km$. Es gilt
+\[b-a=km\iff (b-a)c=kcm \iff bc-ac=k'm\]
+mit $k':=kc$. Man hat also
+\[(\exists k'\in\Z)(bc-ac=k'm)\iff ac\equiv bc\pmod{m}.\;\qedsymbol\]
+
+\begin{Satz}
+Gilt $a\equiv a'\pmod{m}$ und
+$b\equiv b'\pmod{m}$, dann gilt auch
+\begin{align*}
+a+b&\equiv a'+b'\pmod{m},\\
+a-b&\equiv a'-b'\pmod{m},\\
+ab&\equiv a'b'\pmod{m}.
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Man findet
+\begin{equation}
+\left.\begin{aligned}
+a\equiv a'&\implies a+b\equiv a'+b\\
+b\equiv b'&\implies a'+b\equiv a'+b'
+\end{aligned}\right\}
+\implies a+b\equiv a'+b\equiv a'+b'\pmod{m}.
+\end{equation}
+Für die Subtraktion ist die Überlegung analog. Für die Multiplikation
+ebenfalls:%
+\begin{equation}
+\left.\begin{aligned}
+a\equiv a'&\implies ab\equiv a'b\\
+b\equiv b'&\implies a'b\equiv a'b'
+\end{aligned}\right\}
+\implies ab\equiv a'b\equiv a'b'\pmod{m}.\;\qedsymbol
+\end{equation}
+
+\begin{Satz}
+Addition des Moduls führt auf eine kongruente Zahl:%
+\[a\equiv a+m\equiv a-m\pmod{m}.\]
+\end{Satz}
+\strong{Beweis.}
+Es gilt
+\[a\equiv a+m\pmod{m}\iff (\exists k\in\Z)(km=(a+m)-a=m).\]
+Setze $k=1$. Bei
+\[a\equiv a-m\pmod{m}\iff (\exists k\in\Z)(km=(a-m)-a=-m)\]
+setze $k=-1$.\;\qedsymbol
