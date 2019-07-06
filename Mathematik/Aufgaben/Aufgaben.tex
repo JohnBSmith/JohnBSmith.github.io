@@ -10,6 +10,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{mdframed}
+\usepackage{graphicx}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -1357,6 +1358,47 @@ Z.\,B. ist
 Bei Verständnisschwierigkeiten sollte der Leser bitte den Pfadbaum
 zeichnen und die Terme $\frac{10}{20-k}$ sowie die dazugehörigen
 Zweige einfärben.
+
+\begin{Aufgabe}
+Wie oft muss man durchschnittlich würfeln, bis eine 6 geworfen wurde?
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+Das Ereignis »6« hat die Wahrscheinlichkeit $p=1/6$. Das
+Gegenereignis entsprechend $q=1-p=5/6$. Zu berechnen ist der
+Erwartungswert der Anzahl der Würfe, das ist
+\[E(X) = \sum_{k=1}^\infty kP(X=k).\]
+Hierbei ist $P(X=k)$ die Wahrscheinlichkeit, dass $k$ Würfe
+benötigt wurden. Dem Pfadbaum in Abb. \ref{fig:Pfadbaum-zur-Anzahl} entnimmt
+man gemäß den Pfadregeln $P(X=1)=p$, $P(X=2)=(1-p)p$,
+$P(X=3)=(1-p)(1-p)p$ usw. Allgemein gilt somit $P(X=k)=(1-p)^{k-1}p$.
+
+Es ergibt sich
+\[E(X) = \sum_{k=1}^\infty k(1-p)^{k-1}p
+= \frac{p}{1-p}\sum_{k=1}^\infty k(1-p)^k
+= \frac{p}{q}\sum_{k=1}^\infty kq^k.\]
+Hierbei gilt
+\[\sum_{k=1}^\infty kq^k = q\frac{\mathrm d}{\mathrm dq}
+\sum_{k=1}^\infty q^k = q\frac{\mathrm d}{\mathrm dq}\frac{q}{(1-q)}
+= \frac{q}{(1-q)^2}.\]
+Dabei wurde beachtet:
+\[\sum_{k=a}^{b-1}q^k = \frac{q^b-q^a}{q-1}
+= \frac{q^a-q^b}{1-q},\]
+und $q^b\to 0$ für $b\to\infty$, sofern $|q|<1$.
+
+Man erhält also
+\[E(X) = \frac{p}{q}\cdot \frac{q}{(1-q)^2} = \frac{p}{(1-q)^2}
+= \frac{p}{(1-(1-p))^2} = \frac{p}{p^2} = \frac{1}{p}.\]
+Es sind demnach durchschnittlich $E(X)=1/p=1/(1/6)=6$ Würfe
+benötigt, bis eine »6« gewürfelt wurde.\;\qedsymbol
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.4\textwidth]{img/Pfadbaum-zur-Anzahl.pdf}
+\end{center}
+\caption{Pfadbaum zur Anzahl}
+\label{fig:Pfadbaum-zur-Anzahl}
+\end{figure}
 
 \vfill\noindent
 \texttt{Dieses Heft steht unter der Creative-Commons-Lizenz CC0.}
