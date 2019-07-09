@@ -1,5 +1,5 @@
 
-\chapter{Grundgesetze der Mathematik}
+\chapter{Grundbegriffe der Mathematik}
 
 \section{Aussagenlogik}
 
@@ -1050,7 +1050,7 @@ Auf beiden Seiten der Äquivalenz steht jetzt die gleiche Aussage:%
 \[a\in A\land a\in B\iff a\in A\land a\in B.\;\qedsymbol\]
 
 \newpage
-\section{Produktmengen}
+\subsection{Produktmengen}
 Zwei Objekte $a,b$ kann man zu einem geordneten Paar $(a,b)$
 zusammenfassen. Zwei Paare sind genau gleich, wenn sie
 elementweise gleich sind:
@@ -1097,6 +1097,55 @@ $A\subseteq X$ ist aber auch $a\in X$ und wegen $B\subseteq Y$
 ist auch $b\in Y$. Daher gibt es $a\in X$ und $b\in Y$, so dass
 $t=(a,b)$. Gemäß Definition heißt das $t\in X\times Y$. Gemäß
 Definition ist $A\times B$ daher eine Teilmenge von $X\times Y$.\;\qedsymbol
+
+\newpage
+\section{Abbildungen}
+\subsection{Grundbegriffe}
+Seien zwei beliebige Mengen $A,B$ gegeben. Eine Abbildung
+$f\colon A\to B$ ist eine Zuordnug, die jedem Element $x\in A$
+genau ein Element $y\in B$ zuordnet. Man schreibt $y=f(x)$
+oder $x\mapsto y$, um auszudrücken, dass dem Element $x$
+das Element $y$ zugeordnet wird.
+
+Ausgesprochen wird $f(x)$ als »$f$ von $x$«, oder auch
+»das Bild von $x$ unter $f$«. Die Schreibweise $x\mapsto y$
+wird ausgesprochen als »$x$ zu $y$«, oder auch
+»$x$ wird abgebildet auf $y$«. Die Schreibweise
+$f\colon A\to B$ wird ausgesprochen als »$f$ ist eine
+Abbildung von $A$ nach $B$«.
+
+Man nennt $A$ die Definitionsmenge oder den Definitionsbereich
+der Abbildung und $B$ die Zielmenge der Abbildung. Gibt es zu
+einem $y\in B$ ein $x\in A$, so dass $y=f(x)$, dann nennt man
+$x$ ein Urbildelement zu $y$.
+
+Abbildungen sind für die Mathematik fundamental. Eine
+Formalisierung dieses Begriffs mittels Prädikatenlogik
+und Mengenlehre erscheint deshalb erstrebenswert.
+
+\begin{Definition}[Abbildung]
+Sei $G\subseteq A\times B$. Man nennt ein Tripel $f=(G,A,B)$ eine
+Abbildung, wenn die folgenden zwei Bedingungen erfüllt sind.
+1. Zu jedem $x\in A$ gibt es mindestens ein Bild:
+\[(\forall x\in A)(\exists y\in B)((x,y)\in G).\]
+2. Zu jedem $x\in A$ gibt es höchstens ein Bild:
+\[(\forall (x_1,y_1),(x_2,y_2)\in G)(x_1=x_2\implies y_1=y_2).\]
+Man definiert außerdem
+\[y=f(x)\defiff (x,y)\in G.\]
+\end{Definition}
+
+\begin{Definition}[Bildmenge]
+Sei $f\colon A\to B$ eine Abbildung.
+Für eine Menge $M\subseteq A$ nennt man die Menge
+\[f(M) := \{y\mid(\exists x\in M)(y=f(x))\}\]
+das Bild von $M$ unter $f$.
+\end{Definition}
+
+\begin{Definition}[Urbildmenge]
+Sei $f\colon A\to B$ eine Abbildung. Für eine Menge $N$ nennt man
+\[f^{-1}(N) := \{x\in A\mid f(x)\in N\}\]
+das Urbild von $N$ bezüglich $f$.
+\end{Definition}
 
 \newpage
 \section{Gleichungen}
