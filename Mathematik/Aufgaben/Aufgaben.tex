@@ -11,6 +11,7 @@
 \usepackage{amsthm}
 \usepackage{mdframed}
 \usepackage{graphicx}
+\usepackage{listings}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -63,7 +64,7 @@
 
 \tableofcontents
 
-
+\newpage
 \section{Analysis}
 \subsection{Gleichungen}
 \begin{Aufgabe}
@@ -1400,8 +1401,75 @@ benötigt, bis eine »6« gewürfelt wurde.\;\qedsymbol
 \label{fig:Pfadbaum-zur-Anzahl}
 \end{figure}
 
+\begin{Aufgabe}
+Es werden vier Würfel geworfen. Der Würfel mit dem niedrigsten
+Ergebnis wird ignoriert. Wie groß ist der Erwartungswert für die
+Summe der restlichen drei Ergebnisse?
+\end{Aufgabe}
+\strong{Lösung.} Zum Wurf der vier Würfel gehört die Ergebnismenge%
+\[\Omega^4 = \{(W_1,W_2,W_3,W_4)\mid W_1,W_2,W_3,W_4\in\Omega\}.\]
+Mit $|\Omega|=6$ ergeben sich $|\Omega^4|=|\Omega|^4 = 1296$
+unterschiedliche Ergebnisse. Jedes dieser Ergebnisse hat die
+Wahrscheinlichkeit $p=\frac{1}{|\Omega^4|}$. Nach dem Entfernen
+des Minimus der Ergebnisse wird von den restlichen die Summe $s$
+gebildet. Die Ergebnismenge wird bezüglich diesen Summen
+partitioniert. Kommt die Summe $s$ genau $n$ mal vor, dann
+ist $P(X=s)=np$. Der Erwartungswert ist%
+\[E(X) = \sum_s s\cdot P(X=s).\]
+Zur Bewältigung dieser langwierigen Berechnung lässt sich ein
+Computer benutzen, der Algorithmus ist in Abb.
+\ref{fig:Algorithmus-Erwartungswert} dargestellt.
+
+Man betrachtet die Ergebnisse nun als Zufallsgrößen. Sei
+$M:=\min\{W_1,W_2,W_3,W_4\}$. Dann gilt $X=\sum_{i=1}^4 W_i-M$.
+Man erhält
+\[E(X) = E(\sum_{i=1}^4 W_i)-E(M) = \sum_{i=1}^4 E(W_i)-E(M)
+= \sum_{i=1}^4 E(W_1)-E(M) = 4E(W_1)-E(M).\]
+Mit $E(W_1)=7/2$ erhält man $4E(W_1)=14$. Beim Ereignis
+$\{M\ge k\}$ dürfen die Elemente in
+$[k..6]^4$ variieren, man bekommt%
+\[P(M\ge k) = \frac{|[k..6]^4|}{|\Omega^4|}
+= \frac{|[k..6]|^4}{|\Omega|^4} = \frac{(7-k)^4}{6^4}.\]
+Da die Zufallsgröße nichtnegativ und ganzzahlig ist, kann die Formel%
+\[E(X) = \sum_{k=1}^\infty P(X\ge k)\]
+benutzt werden. Man erhält
+\[E(M) = \sum_{k=1}^6 P(M\ge k) = \sum_{k=1}^6 \frac{(7-k)^4}{6^4}
+= \frac{1}{6^4}\sum_{k=1}^6 (7-k)^4 = \frac{1}{6^4}\sum_{k=1}^6 k^4
+= \frac{2275}{1296}.\]
+Schließlich ergibt sich
+\[E(X) = 14-\frac{2275}{1296} \approx 12.2446.\;\qedsymbol\]
+
+\begin{figure}[t]
+\begin{lstlisting}[language=Python]
+def quotient_set(M,proj):
+    d = {}
+    for t in M:
+        y = proj(t)
+        if y in d:
+            d[y].append(t)
+        else:
+            d[y] = [t]
+    return d
+
+def expected_value(Omega,proj):
+    p = 1.0/len(Omega)
+    Q = quotient_set(Omega,proj)
+    return p*sum(s*len(a) for s,a in Q.items())
+
+Omega4 = [[W1,W2,W3,W4]
+    for W1 in range(1,7)
+    for W2 in range(1,7)
+    for W3 in range(1,7)
+    for W4 in range(1,7)]
+    
+print(expected_value(Omega4, lambda t: sum(t)-min(t)))
+\end{lstlisting}
+\caption{Algorithmus zur Berechnung des Erwartungswertes}
+\label{fig:Algorithmus-Erwartungswert}
+\end{figure}
+
 \vfill\noindent
-\texttt{Dieses Heft steht unter der Creative-Commons-Lizenz CC0.}
+\texttt{Dieses Heft steht unter der Lizenz Creative Commons CC0.}
 
 \end{document}
 
