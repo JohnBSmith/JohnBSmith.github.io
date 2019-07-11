@@ -456,12 +456,12 @@ Das allquantifizierte Prädikat ist nur dann wahr, wenn $P(x_k)$ für
 jedes $x_k$ erfüllt ist. Man bekommt die aussagenlogische Formel%
 \[\bigwedge_{k=1}^n P(x_k)
 \enspace\equiv\enspace P(x_1)\land P(x_2)\land\ldots\land P(x_n).\]
-Meistenstens benutzen wir die Schreibweisen
+Meistens benutzen wir die Schreibweisen
 \[(\forall x\in M)P(x) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
 (\exists x\in M)P(x) \equiv \bigvee_{k=1}^n P(x_k),\]
 wobei $M=\{x_1,x_2,\ldots,x_n\}$ die Zusammenfassung
 der Objekte ist. In allen diesen Schreibweisen haben die
-Quantoren die gleiche Bindungsstärke wie die Negation. Z.\,B. wird
+Quantoren die gleiche Operatorrangfolge wie die Negation. Z.\,B. wird
 die Formel
 \[(\forall x\in M)P(x)\land A\]
 gelesen als
@@ -617,7 +617,7 @@ A\land(\exists x)P(x) &\equiv (\exists x)(A\land P(x)).
 \equiv (\forall x)P(x)\equiv (\forall x)(0\lor P(x))\equiv (\forall x)(A\lor P(x)).\]
 Im Fall $A\equiv 1$ ergibt sich
 \[A\lor(\forall x)P(x)\equiv 1\lor(\forall x)P(x) \equiv 1 \equiv (\forall x)1
-\equiv (\forall x)(1\lor P(x))\equiv (\forall x)(A\lor P(x).\]
+\equiv (\forall x)(1\lor P(x))\equiv (\forall x)(A\lor P(x)).\]
 Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
 \begin{Satz}[Verallgemeinerte De Morgansche Gesetze]
@@ -1178,6 +1178,150 @@ gilt wiederum
 \[f(x)\in B'\iff x\in f^{-1}(B').\]
 Man kann nun die Verkettung definieren gemäß
 \[h\colon f^{-1}(B')\to C,\quad h(x):=g(f(x)).\]
+
+\newpage
+\section{Relationen}
+\subsection{Grundbegriffe}
+
+\begin{Definition}[Relation]
+Seien $A,B$ zwei Mengen und sei $G\subseteq A\times B$.
+Das Tripel $R=(G,A,B)$ heißt Relation zwischen $A$ und $B$.
+Man schreibt
+\[R(x,y) \defiff (x,y)\in G.\]
+\end{Definition}
+Eine Relation lässt sich natürlich als wahrheitswertige Funktion
+interpretieren:
+\[R\colon A\times B\to\{0,1\},\quad R(x,y):=((x,y)\in G).\]
+Eine Relation ist somit auch ein Prädikat auf $A\times B$.
+
+\subsection{Äquivalenzrelationen}
+\begin{Definition}[Äquivalenzrelation]
+Seien $A$ eine Menge und seien $x,y,z\in A$. Sei $R(x,y):=(x\sim y)$ eine
+Relation. Man nennt $R$ Äquivalenzrelation, wenn gilt:
+\[\begin{array}{ll}
+x\sim x, &\text{(Reflexivität)}\\
+x\sim y \implies y\sim x, & \text{(Symmetrie)}\\
+x\sim y\land y\sim z\implies x\sim z.\quad & \text{(Transitivität)}
+\end{array}\]
+\end{Definition}
+
+\begin{Definition}[Äquivalenzklasse]
+Sei $M$ eine Menge und $x\sim y$ eine Äquivalenzrelation für $x,y\in M$.
+Die Menge%
+\[[a] := \{x\in M\mid x\sim a\}\]
+nennt man die Äquivalenzklasse zum Repräsentanten $a\in M$.
+\end{Definition}
+
+\begin{Satz}[Äquivalenzrelation induziert Zerlegung]
+Eine Menge wird durch eine Äquivalenzrelation in disjunkte
+Äquivalenzklassen zerlegt, lat. partitioniert.
+\end{Satz}
+\strong{Beweis.} Sei $M$ die Menge und $x\sim y$ die Äquivalenzrelation.
+Zu zeigen ist, dass kein Element von $M$ in mehr als einer
+Äquivalenzklasse vorkommt. Seien $a,b,c\in M$, sei $c\in [a]$
+und $c\in [b]$. Aufgrund von $c\sim a$ sowie $c\sim b$ und der
+Transitivität gilt%
+\[x\in [a]\iff x\sim a\iff x\sim c\iff x\sim b\iff x\in [b].\]
+Man hat also
+\[(\forall x\in M)(x\in [a]\Leftrightarrow x\in [b])\iff [a]=[b].\]
+Wenn also $[a]\ne [b]$ ist, kann nicht gleichzeitig $c\in [a]$ und $c\in [b]$
+sein.\;\qedsymbol
+
+\begin{Satz}[Zerlegung induziert Äquivalenzrelation]
+Sei $M$ eine Menge. Die Familie $(A_k)$ von Mengen $A_k\subseteq M$
+bilde eine Zerlegung von $M$, d.\,h. dass die Vereinigung aller
+$A_k$ die Menge $M$ überdeckt und dass paarweise $A_i\cap A_j=\{\}$
+für $i\ne j$ ist. Dann ist%
+\[x\sim y\defiff (\exists k)(x\in A_k\land y\in A_k)\]
+eine Äquivalenzrelation auf $M$.
+\end{Satz}
+\strong{Beweis.} Da die $A_k$ die Menge $M$ überdecken,
+muss es für ein beliebiges $x\in M$ mindestens eine Menge $A_k$
+geben, so dass $x\in A_k$. Daher gilt $x\sim x$.
+
+Die Symmetrie ergibt sich trivial.
+
+Zur Transitivität. Voraussetzung ist $x\sim y$ und $y\sim z$.
+Es gibt also ein $i$ mit $x\in A_i$ und $y\in A_i$. Außerdem gibt
+es ein $j$ mit $y\in A_j$ und $z\in A_j$. Somit gilt%
+\[(\exists i)(\exists j)(x\in A_i\land y\in A_i\land y\in A_j\land z\in A_j).\]
+Wegen
+\[A_i\cap A_j = \{\} \iff (\forall y)(y\in A_i\land y\in A_j\iff 0)\]
+für $i\ne j$ kann $y\in A_i\land y\in A_j$ aber nur erfüllt sein,
+wenn $i=j$ ist. Daher ergibt sich%
+\[(\exists i)(x\in A_i\land z\in A_i),\]
+d.\,h. $x\sim z$.\;\qedsymbol
+
+\begin{Definition}[Quotientenmenge]
+Für eine gegebene Äquivalenzrelation wird die aus allen
+Äquivalenzklassen bestehende Menge
+\[M/{\sim} := \{[x]\mid x\in M\}\]
+als Quotientenmenge oder Faktormenge bezeichnet.
+\end{Definition}
+
+\begin{Definition}[Quotientenabbildung]
+Für eine gegebene Äquivalenzrelation ist die Projektion
+\[\pi\colon M\to M/{\sim},\quad \pi(x):=[x]\]
+surjektiv und wird Quotientenabbildung genannt.
+\end{Definition}
+
+\newpage
+\begin{Definition}[Repräsentantensystem]
+Für eine gegebene Äquivalenzrelation auf $M$ nennt man eine
+Teilemenge $A\subseteq M$ ein vollständiges Repräsentantensystem,
+wenn die Einschränkung $\pi|_A$ bijektiv ist, wobei mit $\pi$
+die Quotientenabbildung gemeint ist.
+\end{Definition}
+Repräsentantensysteme ermöglichen die einfache Handhabung von
+Äquivalenzklassen. Möchte man wissen, ob ein Element $x$ in der
+Äquivalenklasse $[a]$ enthalten ist, dann braucht man bloß
+zu überprüfen, ob $x\sim a$ ist.
+
+Eine große Fülle von Äquivalenzrelationen lässt auf die folgende
+einfache Art konstruieren. Hat man eine beliebige Abbildung
+$f\colon A\to B$, dann sind die Urbilder $f^{-1}(\{y_1\})$ und
+$f^{-1}(\{y_2\})$ disjunkt, sofern $y_1\ne y_2$:%
+\begin{align*}
+f^{-1}(\{y_1\})\cap f^{-1}(\{y_2\})
+&= \{x\mid f(x)=y_1\}\cap\{x\mid f(x)=y_2\}\\
+&= \{x\mid f(x)=y_1\land f(x)=y_2\} = \{\}.
+\end{align*}
+Im letzten Schritt wurde beachtet, dass eine Abbildung für
+das selbe Argument definitionsgemäß keine zwei unterschiedlichen
+Werte annehmen kann.
+
+Demnach ist gemäß
+\[Z = A/{\sim} = \{f^{-1}(\{y\})\mid y\in f(A)\}\]
+eine Zerlegung des Definitionsbereichs $A$ gegeben und somit auch eine
+Äquivalenzrelation. Für $x_1,x_2\in A$ gilt%
+\[x_1\sim x_2 \iff f(x_1) = f(x_2).\]
+
+\begin{Satz}[Charakterisierung von Äquivalenzklassen]
+Sei auf der Menge $M$ eine Äquivalenzrelation gegeben. Eine
+Teilmenge $A\subseteq M$ ist genau dann eine Äquivalenzklasse,
+wenn%
+\begin{align*}
+1.\;& A\ne\{\},\\
+2.\;& x,y\in A\implies x\sim y,\\
+3.\;& x\in A\land y\in M\land x\sim y\implies y\in A.
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Angenommen, $A$ ist eine Äquivalenzklasse.
+Dann gibt es definitionsgemäß ein $a$ mit $A=[a]$. Daher ist
+mindestens $a\in A$ und somit $A\ne\{\}$. Mit $x,y\in A$ ergibt
+sich $A=[x]=[y]$. Aufgrund von%
+\[x\sim y \iff [a]=[b]\]
+muss somit $x\sim y$ sein. Sei nun $x\in A$ und $y\in M$ mit
+$x\sim y$. Es folgt $A=[x]=[y]$. Daher muss $y\in A$ sein.
+
+Umgekehrt angenommen, die drei Eigenschaften sind erfüllt.
+Zu zeigen ist, dass es ein $a$ gibt mit $A=[a]$. Da $A$ gemäß 1.
+nichtleer ist, enthält es mindestens ein Element, dieses nennen wir
+$a$. Für jedes weitere Element $x\in A$ ergibt sich
+$x\sim a$, da sonst 2. verletzt sein würde. Schließlich muss man
+noch wissen, ob $x\in A$, wenn $x\sim a$ und $x\in M$ ist.
+Dies ist aber mit 3. gesichert. Es gibt also
+tatsächlich ein $a$ mit $A=\{x\in M\mid x\sim a\}$.\;\qedsymbol
 
 \newpage
 \section{Gleichungen}
