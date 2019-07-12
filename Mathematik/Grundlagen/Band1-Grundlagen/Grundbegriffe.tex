@@ -1179,6 +1179,65 @@ gilt wiederum
 Man kann nun die Verkettung definieren gemäß
 \[h\colon f^{-1}(B')\to C,\quad h(x):=g(f(x)).\]
 
+\begin{Satz}[Bildmenge unter Verkettungen]\label{img-comp}
+Seien $f\colon A\to B$ und $g\colon B\to C$, dann gilt
+$(g\circ f)(M) = g(f(M))$.
+\end{Satz}
+\strong{Beweis.} Die Gleichung gemäß Definition expandieren:
+\[(\exists x)(x\in M\land z
+= (g\circ f)(x))\iff (\exists y)(y\in f(M)\land z=g(y)).\]
+Auf der rechten Seite ergibt sich nun
+\begin{gather*}
+(\exists y)(y\in f(M)\land z=g(y))
+\equiv (\exists y)((\exists x)(x\in M\land y=f(x))\land z=g(y))\\
+\equiv (\exists y)(\exists x)(x\in M\land y=f(x)\land z=g(y)))\\
+\equiv (\exists x)(x\in M\land\exists y(y=f(x)\land z=g(y)))\\
+\equiv (\exists x)(x\in M\land z=g(f(x)).\;\qedsymbol
+\end{gather*}
+
+
+\newpage
+\subsection{Injektionen, Surjektionen, Bijektionen}
+
+\begin{Definition}[Injektive Abbidlung]
+Eine Abbildung $f\colon A\to B$ heißt injektiv, wenn
+\[(\forall x_1,x_2\in A)(f(x_1)=f(x_2)\implies x_1=x_2)\]
+bzw.
+\[(\forall x_1,x_2\in A)(x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
+\end{Definition}
+
+\begin{Definition}[Surjektive Abbildung]
+Eine Abbildung $f\colon A\to B$ heißt surjektiv,
+wenn $f(A)=B$ ist.
+\end{Definition}
+Bemerkung: Da immer $f(A)\subseteq B$ ist, braucht man bloß $B\subseteq f(A)$
+zu zeigen.
+
+\begin{Definition}[Bijektive Abbildung]
+Eine Abbildung heißt bijektiv, wenn sie sowohl injektiv als
+auch surjektiv ist.
+\end{Definition}
+
+\begin{Satz}
+Sei $f\colon A\to B$ und $g\colon B\to C$. Es gilt:
+\begin{align*}
+1.\; & \text{Sind $f$ und $g$ injektiv, dann auch $g\circ f$}.\\
+2.\; & \text{Sind $f$ und $g$ surjektiv, dann auch $g\circ f$}.\\
+3.\; & \text{Sind $f$ und $g$ bijektiv, dann auch $g\circ f$}.
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Mühelos. Seien $f,g$ injektiv, dann gilt
+\begin{gather*}
+g(f(x_1)) = (g\circ f)(x_1) = (g\circ f)(x_2) = g(f(x_2))\\
+\implies f(x_1) = f(x_2)\\
+\implies x_1 = x_2.
+\end{gather*}
+Somit ist auch $g\circ f$ injektiv. Seien $f,g$ nun surjektiv,
+dann ergibt sich
+\[(g\circ f)(A) = g(f(A)) = g(B) = C\]
+gemäß Satz \ref{img-comp}.
+Somit ist auch $g\circ f$ surjektiv.\;\qedsymbol
+
 \newpage
 \section{Relationen}
 \subsection{Grundbegriffe}
