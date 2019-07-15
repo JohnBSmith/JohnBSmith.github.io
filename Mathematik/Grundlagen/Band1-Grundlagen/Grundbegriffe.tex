@@ -342,7 +342,7 @@ $\psi$ wahr sind. Mit diesen Belegungen bleibt dann auch
 $\{\varphi\}\models\psi$ unverletzt.
 
 \begin{Satz}[Deduktionstheorem]\index{Deduktionstheorem}
-Es gilt $M\cup\varphi\models\psi$ genau dann, wenn
+Es gilt $M\cup\{\varphi\}\models\psi$ genau dann, wenn
 $M\models\varphi\Rightarrow\psi$.
 \end{Satz}
 \strong{Beweis.} Man hat
@@ -427,6 +427,114 @@ Der formale Beweis von $C$ schaut so aus:
 \]
 In Klammern steht immer die Begründung für die jeweilige Aussage.
 Der Modus ponens wurde mit MP abgekürzt.
+
+\newpage
+\subsection{Notwendige und hinreichende Bedingungen}
+
+Manchmal sagt man, eine Bedingung ist für eine bestimmte Aussage
+notwendig. Das ist ein schon bekannter logischer Zusammenhang.
+Sei $B$ die Bedingung und $A$ die Aussage. Ist $B$ falsch, dann
+kann $A$ niemals wahr sein. Ist $B$ wahr, dann ist $A$ beliebig,
+denn nur weil die notwendige Bedingung $B$ zutrifft, heißt das nicht,
+dass die Aussage $A$ zwingend wahr sein muss. Dieser Zusammenhang
+wird nun gerade genau durch die Wahrheitstafel von $A\Rightarrow B$
+wiedergegeben. Man erhält%
+\[(\text{$B$ ist notwendig für $A$})\;\equiv\; (A\Rightarrow B).\]
+Die Sprechweise »$B$ ist hinreichend für $A$« drückt dagegen aus,
+dass die Wahrheit von $A$ mit der Wahrheit von $B$ sichergestellt
+ist. Falls $B$ jedoch falsch ist, ist der Wahrheitsgehalt von $A$
+beliebig. Dieser Zusammenhang wird gerade durch die Wahrheitstafel
+von $B\Rightarrow A$ wiedergegeben. Man erhält%
+\[(\text{$B$ ist hinreichend für $A$})\;\equiv\; (B\Rightarrow A).\]
+Um sich pedantischer ausdrücken, sprechen manche von notwendigen,
+aber nicht hinreichenden Bedingungen, bzw. von hinreichenden,
+aber nicht notwendigen Bedingungen. 
+
+Gemäß
+$(A\Leftrightarrow B)\equiv (A\Rightarrow B)\land (B\Rightarrow A)$
+ergibt sich
+\[(\text{$B$ ist notwendig und hinreichend für $A$})\;\equiv\;(B\Leftrightarrow A).\]
+
+\noindent
+Weitere Sprechweisen für $A\Rightarrow B$ sind »$A$ impliziert $B$«
+und »$A$ zieht $B$ nach sich« sowie »aus $A$ folgt $B$«.
+
+Ist $B$ hinreichend für $A$, dann kann man sich bei $A$ sicher sein,
+sofern die Bedingung $B$ überprüft wurde.
+
+Ist $B$ nur notwendig für $A$, dann ist durch eine Überprüfung von $B$
+nicht viel Wissen über $A$ gewonnen, man darf sich nicht sicher sein,
+dass $A$ wahr ist. Lediglich falls $B$ falsch
+ist, lässt sich mittels Kontraposition%
+\[A\Rightarrow B\;\equiv\;\overline B\Rightarrow\overline A\]
+ableiten, dass dann auch $A$ falsch sein muss.
+
+Man gewinnt den folgenden Zusammenhang:
+\[(\text{$B$ ist notwendig für $A$})\;\equiv\;
+(\text{$\overline A$ ist hinreichend für $\overline B$}).\]
+Sind für eine Aussage $A$ mehrere Bedingungen $B_k$ notwendig,
+dann heißt das, $A$ ist schon falsch, wenn nur eine der $B_k$
+falsch ist. Die Formel dazu ist
+\[A\Rightarrow B_1\land B_2\land\ldots\land B_n.\]
+Sind für eine Aussage $A$ mehrere Bedingungen $B_k$ hinreichend,
+dann heißt das, $A$ ist schon dann richtig, wenn nur eine der $B_k$
+richtig ist. Die Formel dazu ist
+\[B_1\lor B_2\lor\ldots\lor B_n\Rightarrow A.\]
+
+\newpage
+\subsection{Widerspruchsbeweise}
+Mittels boolescher Algebra oder einer Wahrheitstafel überzeugt man
+sich leicht von
+\[\models (A\Rightarrow B)\land (A\Rightarrow\overline B)\Rightarrow\overline A.\]
+Unter Heranziehung des Deduktionstheorems ist das äquivalent zu
+\[\{A\Rightarrow B,\;A\Rightarrow\overline B\}\models\overline A.\]
+Angenommen, man konnte die Aussagen $B$ und $\overline B$
+unter Annahme von $A$ beweisen, dann gilt $\{A\}\models B$
+und $\{A\}\models\overline B$. Gemäß Deduktionstheorem
+bedeutet das jedoch $\models A\Rightarrow B$ und
+$\models A\models\overline B$. Da diese Bedingungen tautologisch
+sind, können sie entfallen, übrigt bleibt $\models\overline A$.
+
+Wir gelangen zur folgenden Schlussregel.
+
+\begin{Satz}[Reductio ad absurdum]
+Kann man unter Annahme einer Prämisse $\varphi$ sowohl
+$\psi$ als auch $\overline\psi$ beweisen, dann muss
+die Negation von $\varphi$ tautologisch sein:
+\[\text{$\{\varphi\}\models\psi$
+und $\{\varphi\}\models\overline\psi$
+impliziert $\models\overline\varphi$}.\]
+\end{Satz}
+
+\noindent
+Diese Schlussregel lässt sich noch ein wenig verallgemeinern.
+Man überzeugt sich mittels boolescher Algebra oder Wahrheitstafel von
+\[\models (K\land A\Rightarrow B)\land (K\land A\Rightarrow\overline B)
+\Rightarrow (K\Rightarrow\overline A).\]
+Wiedermalig wird das Deduktionstheorem angewendet:
+\[\{K\land A\Rightarrow B,\;K\land A\Rightarrow\overline B\}
+\models K\Rightarrow\overline A.\]
+Für $K$ lässt sich eine konjunktive Aussage
+$\varphi_1\land\ldots\land\varphi_n$ einsetzen.
+Definiert man $M:=\{\varphi_1,\ldots,\varphi_n\}$, dann gilt
+\[(M\cup\{A\}\models\psi)\iff (\models K\land A\Rightarrow\psi)\]
+gemäß Deduktionstheorem. Die restliche Überlegung gestaltet
+sich wie zuvor. Insgesamt erhält man das folgende Ergebnis.
+\begin{Satz}[Reductio ad absurdum]
+Sei $M$ eine endliche Formelmenge. Es gilt:
+\[\text{$M\cup\{\varphi\}\models\psi$
+und $M\cup\{\varphi\}\models\overline\psi$
+impliziert $M\models\overline\varphi$}.\]
+\end{Satz}
+
+\noindent
+Aus der Reductio ad absurdum lässt sich nun ein
+Beweisverfahren erstellen. Man setzt $\varphi\equiv\overline A$ ein
+und beachtet $A\equiv\neg\neg A$. Aus $\overline A\models\psi$
+und $\overline A\models\overline\psi$ lässt sich wie gezeigt
+$\models A$ schlussfolgern. Nimmt man also $\overline A$ an,
+und zeigt damit den Widerspruch, dass sowohl $\psi$ als auch
+$\overline\psi$, dann hat man einen Beweis für $A$.
 
 \newpage
 \section{Prädikatenlogik}\index{Prädikatenlogik}
