@@ -1,0 +1,141 @@
+
+\chapter{Zahlenbereiche}
+
+\section{Rationale Zahlen}
+
+\subsection{Definition}
+
+\begin{Definition}[Rationale Zahlen]
+Auf $\Z\times\N$ wird die folgende Äquivalenzrelation definiert:
+\[(x_1,y_1)\sim (x_2,y_2) \defiff x_1y_2 = x_2y_1.\]
+Die Quotientenmenge $\Q := (\Z\times\N)/{\sim}$ nennt man
+die rationalen Zahlen.
+\end{Definition}
+Für die Äquivalenzklasse $[(x,y)]$ schreibt man $\frac{x}{y}$.
+
+\begin{Satz}[Körper der rationalen Zahlen]
+Die Operationen
+\[\frac{x_1}{y_1}+\frac{x_2}{y_2} := \frac{x_1y_2+x_2y_1}{y_1y_2},
+\qquad\frac{x_1}{y_1}\cdot \frac{x_2}{y_2} := \frac{x_1x_2}{y_1y_2}\]
+sind auf $\Q$ wohldefiniert und $(\Q,+,\cdot)$ bildet einen Körper.
+\end{Satz}
+\strong{Beweis.} Wohldefiniert bedeutet, dass das Ergebnis der
+Operationen nicht von den gewählten Repräsentanten der Argumente
+abhängig ist. Sei dazu $(a_1,b_1)\sim (x_1,y_1)$ und
+$(a_2,b_2)\sim (x_2,y_2)$. Zu zeigen ist nun
+\begin{align*}
+&(a_1b_2+a_2b_1,b_1b_2)\sim (x_1y_2+x_2y_1,y_1y_2)\\
+&\iff (a_1b_2+a_2b_1)(y_1y_2) = (x_1y_2+x_2y_1)(b_1b_2)\\
+&\iff a_1b_2 y_1y_2 + a_2b_1y_1y_2 = x_1y_2b_1b_2+x_2y_1b_1b_2.
+\end{align*}
+Substituiert man $a_1y_1=x_1b_1$ und $a_2y_2=x_2b_2$ auf
+der linken Seite der Gleichung, ergibt sich die rechte Seite.
+Zu zeigen ist weiterhin
+\begin{align*}
+(a_1a_2,b_1b_2)\sim (x_1x_2,y_1y_2)
+\iff a_1a_2y_1y_2 = x_1x_2b_1b_2.
+\end{align*}
+Wieder wird linke Seite der Gleichung über $a_1y_1=x_1b_1$
+und $a_2y_2=x_2b_2$ in die rechte Seite überführt.
+Die Wohldefiniertheit der Operationen ist damit bestätigt.
+
+Es bleibt zu prüfen, dass $(\Q,+,\cdot)$ allen Körperaxiomen genügt.
+Das neutrale Element der Addition ist $0/1$, denn es gilt
+\[\frac{x}{y}+\frac{0}{1} = \frac{x\cdot 1+0\cdot y}{y\cdot 1} = \frac{x}{y}.\]
+Das neutrale Element der Multiplikation ist $1/1$, denn es gilt
+\[\frac{x}{y}\cdot\frac{1}{1} = \frac{x\cdot 1}{y\cdot 1} = \frac{x}{y}.\]
+Die Assoziativität der Addition ergibt sich ohne größere Umstände:
+\begin{align*}
+\bigg(\frac{x_1}{y_1}+\frac{x_2}{y_2}\bigg)+\frac{x_3}{y_3}
+&= \frac{x_1y_2+x_2y_1}{y_1y_2} + \frac{x_3}{y_3}
+= \frac{x_1y_2y_3+x_2y_1y_3+x_3y_1y_2}{y_1y_2y_3},\\
+\frac{x_1}{y_1}+\bigg(\frac{x_2}{y_2}+\frac{x_3}{y_3}\bigg)
+&= \frac{x_1}{y_1}+\frac{x_2y_3+x_3y_2}{y_2y_3}
+= \frac{x_1y_2y_3+x_2y_1y_3+x_3y_1y_2}{y_1y_2y_3}.
+\end{align*}
+Die Assozativität der Multiplikation ist etwas einfacher:
+\[\bigg(\frac{x_1}{y_1}\cdot\frac{x_2}{y_2}\bigg)\cdot\frac{x_3}{y_3}
+= \frac{x_1x_2}{y_1y_2}\cdot\frac{x_3}{y_3} = \frac{x_1x_2x_3}{y_1y_2y_3}
+= \frac{x_1}{y_1}\cdot\frac{x_2x_3}{y_2y_3}
+= \frac{x_1}{y_1}\cdot\bigg(\frac{x_2}{y_2}\cdot\frac{x_3}{y_3}\bigg).\]
+Das Kommutativgesetz der Addition:
+\[\frac{x_1}{y_1}+\frac{x_2}{y_2} = \frac{x_1y_2+x_2y_1}{y_1y_2}
+= \frac{x_2y_1+x_1y_2}{y_2y_1}
+= \frac{x_2}{y_2}+\frac{x_1}{y_1}.\]
+Das Kommutativgesetz der Multiplikation:
+\[\frac{x_1}{y_2}\cdot\frac{x_2}{y_2}
+= \frac{x_1x_2}{y_1y_2} = \frac{x_2x_1}{y_2y_1}
+= \frac{x_2}{y_2}\cdot\frac{x_1}{y_1}.\]
+Das additiv inverse Element zu $x/y$ ist $(-x)/y$, denn es gilt
+\[\frac{x}{y}+\frac{-x}{y} = \frac{xy+(-x)y}{y^2}
+= \frac{0}{y^2} = \frac{0}{1}.\]
+Das multiplikativ inverse Element zu $x/y$ mit $x\ne 0$
+ist $y/x$, denn es gilt
+\[\frac{x}{y}\cdot\frac{y}{x} = \frac{xy}{xy} = \frac{1}{1}.\]
+Schließlich findet bestätigt man noch das Distributivgesetz:
+\begin{align*}
+&\frac{a}{b}\cdot\bigg(\frac{x_1}{y_1}+\frac{x_2}{y_2}\bigg)
+= \frac{a}{b}\cdot\frac{x_1y_2+x_2y_1}{y_1y_2}
+= \frac{ax_1y_2+ax_2y_1}{by_1y_2},\\
+&\frac{ax_1}{by_1}+\frac{ax_2}{by_2}
+= \frac{ax_1by_2+ax_2by_1}{by_1by_2}
+= \frac{b}{b}\cdot\frac{ax_1y_2+ax_2y_1}{by_1y_2}.
+\end{align*}
+Hierbei beachtet man, dass $b/b=1/1$ das multiplikativ
+neutrale Element ist.\;\qedsymbol
+
+\newpage
+\begin{Definition}[Ringhomomorphismus]
+Seien $(R,+,*)$ und $(R',+',*')$ zwei Ringe. Die Abbildung
+$\varphi\colon R\to R'$ heißt Ringhomomorphismus, wenn für alle
+$a,b\in R$ gilt:
+\begin{align*}
+\varphi(a+b) = \varphi(a)+'\varphi(b),\qquad
+\varphi(a*b) = \varphi(a)*'\varphi(b).
+\end{align*}
+Besitzt $R$ ein Einselement $1$ und $R'$ ein Einselement $1'$,
+dann nennt man $\varphi$ Eins"=erhaltend, wenn $\varphi(1)=1'$ ist.
+\end{Definition}
+Einen injektiver Homomorphimus wird Monomorphismus genannt. Ein
+Monomorphimus charakterisiert eine Einbettung einer Unterstruktur
+in eine andere Struktur.
+\begin{Satz}[Einbettung der ganzen Zahlen in die rationalen]
+Sei $\varphi\colon\Z\to\Q$ mit $\varphi(z):=z/1$. Die
+Abbildung $\varphi$ ist Eins"=erhaltender Ringmonomorphismus.
+\end{Satz}
+\strong{Beweis.} Die Erhaltung des Einselements ergibt sich
+trivial. Ferner findet man
+\[\varphi(a+b) = \frac{a+b}{1} = \frac{a\cdot 1+b\cdot 1}{1\cdot 1}
+= \frac{a}{1}+\frac{b}{1} = \varphi(a)+\varphi(b)\]
+und
+\[\varphi(ab) = \frac{ab}{1} = \frac{ab}{1\cdot 1} = \frac{a}{1}\cdot\frac{b}{1}
+= \varphi(a)\cdot\varphi(b).\;\qedsymbol\]
+Gemäß der Einbettung können wir die ganze Zahl $z$ ab jetzt
+mit der rationalen Zahl $z/1$ identifizieren. D.\,h. man schreibt
+einfach $z=z/1$ anstelle von $\varphi(z)=z/1$.
+
+\begin{Definition}[Division rationaler Zahlen]
+Wie in jedem Körper ist die Division für $a,b\in\Q$
+definiert als $a/b := ab^{-1}$.
+\end{Definition}
+Die Division ist also gerade die Multiplikation des Kehrwertes
+des Nenners:
+\[\frac{x_1}{y_1}/\frac{x_2}{y_2} = \frac{x_1}{y_1}\cdot\frac{y_2}{x_2}.\]
+Die Division muss natürlich mit der Notation für rationale Zahlen
+kompatibel sein, sonst dürfte man nicht die gleiche Schreibweise
+verwenden. Zur Unterscheidung schreiben wir Division für einen
+Augenblick mit Doppelstrich als $a\doubleslash b$. Man findet
+\[\frac{x}{y} = \frac{x}{1}\cdot\frac{1}{y}
+= \frac{x}{1}\doubleslash\frac{y}{1} = x\doubleslash y.\]
+Tatsächlich führt beides zum gleichen Ergebnis.
+
+Da die rationalen Zahlen einen Körper bilden, gilt $a/a=aa^{-1}=1$
+für jede ratonale Zahl $a$.
+
+\begin{Satz}[Addition, Subtraktion, Multiplikation von Brüchen]
+Seien $a,b,c,d$ rationale Zahlen mit $b\ne 0$ und $d\ne 0$. Es gilt
+\[\frac{a}{b}+\frac{c}{d} = \frac{ad+bc}{bd},
+\qquad \frac{a}{b}-\frac{c}{d} = \frac{ad-bc}{bd},
+\qquad \frac{a}{b}\cdot\frac{c}{d} = \frac{ac}{bd}.\]
+\end{Satz}
+Der Beweis wird dem Leser überlassen.
