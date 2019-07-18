@@ -1,8 +1,26 @@
-\documentclass[a4paper,11pt,fleqn]{article}
+\documentclass[a4paper,11pt,fleqn,twoside,BCOR=16mm]{scrartcl}
 \usepackage[utf8]{inputenc}
-\usepackage{ngerman}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+\usepackage[automark]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
+
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[scaled=0.88]{DejaVuSans}
+\usepackage[scaled=0.80]{DejaVuSansMono}
+
+
 \usepackage{amsmath}
 \usepackage{amssymb}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
@@ -13,14 +31,15 @@
 \newcommand{\C}{\mathbb C}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
-\renewcommand*\ttdefault{pcr}
+% \renewcommand*\ttdefault{pcr}
 
 \begin{document}
 \thispagestyle{empty}
 
 \begin{huge}
 \noindent
-\textbf{Empfehlungen zum mathematischen Sprachgebrauch}
+\textsf{\textbf{Empfehlungen zum mathematischen\newline
+Sprachgebrauch}}
 \par
 \end{huge}
 
@@ -33,6 +52,7 @@ auch inhaltliche Definitionen. Die Empfehlungen stehen niemals
 in der Luft, sondern werden immer vollständig begründet.
 Das Dokument ist nicht dogmatisch zu verstehen.
 
+\newpage
 \section{Geometrie und lineare Algebra}
 \subsection{Notation für Quadranten}
 Im ebenen kartesischen Koordinatensystem werden Quadranten für
@@ -60,10 +80,10 @@ Wünschenswert wären nun Möglichkeiten zur genaueren und allgemeineren
 Formulierung. Die Sprache der Mengenlehre bietet dafür aber genau
 die notwendigen Operationen an. Zunächst definiert man
 \begin{align}
-\R^+ &= \{x\in\R\mid x>0\}\qquad(\text{positive reelle Zahlen}),\\
-\R^- &= \{x\in\R\mid x<0\}\qquad(\text{negative reelle Zahlen}),\\
-\R_0^+ &= \{x\in\R\mid x\ge 0\}\qquad(\text{nichtnegative reelle Zahlen}),\\
-\R_0^- &= \{x\in\R\mid x\le 0\}\qquad(\text{nichtpositive reelle Zahlen}).
+\R^+ &= \R_{>0} = \{x\in\R\mid x>0\},\qquad(\text{positive reelle Zahlen})\\
+\R^- &= \R_{<0} = \{x\in\R\mid x<0\},\qquad(\text{negative reelle Zahlen})\\
+\R_0^+ &= \R_{\ge 0} = \{x\in\R\mid x\ge 0\},\qquad(\text{nichtnegative reelle Zahlen})\\
+\R_0^- &= \R_{\le 0} = \{x\in\R\mid x\le 0\}.\qquad(\text{nichtpositive reelle Zahlen})
 \end{align}
 Nun ist
 \begin{equation}
@@ -74,10 +94,10 @@ Nun ist
 \end{equation}
 Die waagerechten Achsen lassen sich durch $\R\times\{b\}$
 und die senkrechten durch $\{a\}\times\R$ angeben.
-Der die komplexen Zahlen ohne Standardbranchcut sind
-$\C\setminus\R_0^+$. Mit $p,q:=p+\R(q-p)$ wird lässt sich die Gerade durch
-zwei unterschiedliche Punkte bzw. komplexe Zahlen $p,q$ modellieren.
-Mit $p+\R v$ eine Gerade die in $p$ eingehängt ist, und in
+Die komplexen Zahlen ohne Standardbranchcut sind
+$\C\setminus\R_0^+$. Mit $p,q:=p+\R(q-p)$ lässt sich die Gerade durch
+zwei unterschiedliche Punkte bzw. komplexe Zahlen $p,q$ modellieren,
+mit $p+\R v$ eine Gerade die in $p$ eingehängt ist, und in
 Richtung $v$ zeigt. Mit $p+\R_0^+v$ ein Strahl.
 Mit $\R_0^+\ee^{\ui\varphi}$ Strahlen vom
 Ursprung aus in Richtung $\varphi$. Eine Kreislinie mit Mittelpunkt
@@ -464,45 +484,72 @@ notieren. Für eine Formel $\varphi$
 führt man also die Syntax $(\forall x)\varphi$ bzw. $\forall_x$ und
 $(\forall x{\in}M)\varphi$ ein und verlangt dabei, dass $(\forall x)$
 bzw. $\forall_x$ so stark bindet wie $\neg$. Dann kann geschrieben werden
-\[(\forall x)P(x)\land (\forall x)Q(x) \iff (\forall x)(P(x)\land Q(x)),\]
+\begin{equation}
+(\forall x)P(x)\land (\forall x)Q(x) \iff (\forall x)(P(x)\land Q(x)),
+\end{equation}
 oder
-\[(\forall\varepsilon{>}0)(\exists n_0)(\forall n{\ge}n_0)(a_n\in U_\varepsilon(a)),\]
+\begin{equation}
+(\forall\varepsilon{>}0)(\exists n_0)(\forall n{\ge}n_0)(a_n\in U_\varepsilon(a)),
+\end{equation}
 ohne zusätzliche syntaktische Regeln einführen zu müssen.
 Zur Praxis sagt man noch, dass $\forall x\varphi$ das selbe bedeuten
 soll wie $(\forall x)\varphi$, wenn sich dadurch keine Zweideutigkeit
 ergibt.
 
-\subsection{Natürliche Zahlen}
-Längere Zeit der Frustation bewog mich ich, einen Schlussstrich
-zu ziehen und
-\begin{equation}
-\N_a := \{n\in\Z\mid a\le n\}
-\end{equation}
-zu definieren. Man konnte sich nie einigen, ob denn
-$\N:=\N_0$ oder $\N:=\N_1$ sein soll. Im Fall $\N:=\N_1$
-gibt es dann
-\begin{equation}
-\N^\ast = \N_1^\ast := \N_1\setminus\{0\} = \N_0.
-\end{equation}
-Das Zeichen $\N$ wird nun mit einer neuen Bedeutung versehen.
-Es sagt aus, dass es nicht von Bedeutung ist, ob $\N_0$ oder $\N_1$
-verwendet wird.
+\subsection{Ganzzahlintervalle}
 
-Alternative Notation:
+Für Ganzzahlintervalle bieten sich die folgenden Schreibweisen an:
+\begin{align}
+[a..b] &:= \{z\in\Z\mid a\le z\le b\},\\
+[a..b) &:= \{z\in\Z\mid a\le z<b\}.
+\end{align}
+Die Punkte drücken suggestiv aus, dass es von $a$ aus springend
+bis $b$ weitergeht. Die Klammern entsprechen der Schreibweise
+für die kontinuierlichen Intervalle.
+
+\subsection{Natürliche Zahlen}
+Zunächst wird die folgende unmissverständliche Schreibweise definiert:%
+\begin{equation}
+\N_a := \N_{\ge a} = \{n\in\Z\mid n\ge a\}.
+\end{equation}
+Man streitet sich nun zwischen den Schreibweisen
+\begin{equation}
+\N := \N_{\ge 1},\quad \N_0 := \N_{\ge 0}
+\end{equation}
+und
+\begin{equation}
+\N := \N_{\ge 0},\quad \N^* := \N_{\ge 1}.
+\end{equation}
+Die Schreibweise $\N:=\N_{\ge 1}$ scheint davon die bessere zu sein.
+Das hat den einfachen Grund, dass $\N_0$ leichter von der Hand
+geht als $\N^*$. Außerdem schaut $\N_0^2$ besser aus
+als $(\N^*)^2$. Weiterhin würde man den Folgenraum reeller Folgen
+ab Index null lieber mit $\R^{\N_0}$ notieren als den ab Index eins
+mit $\R^{\N^*}$, wo die doppelte
+Hochstellung sehr unästhetisch wirkt und die Zacken des Asterisks
+wie in $\sum_{k\in\N^*} a_k$ kaum mehr zu erkennen sind.
+
+Zudem ist $\N_0$ eine auf Peano
+zurückgehende Notation, die somit als hinreichend konservativ
+betrachtet werden darf.
+
+Man kann $\N$ auch undefiniert lassen, was besonders da sinnvoll
+erscheint, wo es keine Rolle spielt, ob $\N=\N_0$ oder $\N=\N_1$
+ist. Das ist z.\,B. bei Betrachtungen zur Kardinalität der Fall,
+denn es gilt ja $|\N_0|=|\N_1|$.
+
+Als alternative Notation bietet sich noch an:
 \begin{align}
 [a..b] &:= \{n\in\Z\mid a\le n\wedge n\le b\},\\
 [a..]  &:= \{n\in\Z\mid a\le n\},\\
 [..b]  &:= \{n\in\Z\mid n\le b\}.
 \end{align}
-Somit ist $\N_0=[0..]$ und $\N_1=[1..]$.
+Somit ist $\N_0=[0..]$ und $\N=[1..]$.
 Ich würde außerdem $\omega=\N_0$ setzen, weil das am ehesten
 dem Von-Neumann-Modell entspricht. Ohne $2=\{0,1\}$ lässt
 sich $2^A$ nicht als Abbildung in die Wahrheitswerte
 interpretieren.
 
-Hübsch aussehen tut das nicht unbedingt. Aber zumindest gibt
-es nun kein Herumgezetere mehr, welche Definition denn die bessere
-sei.
 \end{document}
 
 
