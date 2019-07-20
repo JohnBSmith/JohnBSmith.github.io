@@ -3,12 +3,12 @@
 
 \section{Ganze Zahlen}
 
-\subsection{Definition}
+\subsection{Konstruktion}
 
 \begin{Definition}[Ganze Zahlen]
-Auf $\N\times\N$ wird die folgende Äquivalenrelation definiert:
+Auf $\N_0\times\N_0$ wird die folgende Äquivalenrelation definiert:
 \[(x_1,y_1)\sim (x_2,y_2) \defiff x_1+y_2 = x_2+y_1.\]
-Die Quotientenmenge $\Q := (\N\times\N)/{\sim}$ nennt man
+Die Quotientenmenge $\Q := (\N_0\times\N_0)/{\sim}$ nennt man
 die ganzen Zahlen.
 \end{Definition}
 
@@ -16,10 +16,10 @@ die ganzen Zahlen.
 Die Operationen
 \begin{align*}
 [(x_1,y_1)]+[(x_2,y_2)] &:= [(x_1+x_2,y_1+y_2)],\\
-[(x_1,y_1)]\cdot [(x_2,y_2)] &:= [(x_1x_2+y_1y_2,x_1y_2+y_1x_2)]
+[(x_1,y_1)]\cdot [(x_2,y_2)] &:= [(x_1x_2+y_1y_2,x_1y_2+x_2y_1)]
 \end{align*}
 sind auf $\Q$ wohldefiniert und $(\Q,+,\cdot)$ bildet einen
-unitären Ring.
+kommutativen unitären Ring.
 \end{Satz}
 \strong{Beweis.} Wohldefiniert heißt, dass das Ergebnis der Operationen
 nicht von den gewählten Repräsentanten der Argumente abhängig ist.
@@ -34,10 +34,122 @@ Man bekommt damit auf der linken Seite
 \[x_1+x_2+b_1+b_2 = a_1+y_1+a_2+y_2,\]
 was wiederum mit der rechten Seite übereinstimmt.
 
+Mit der Multiplikation verhält es sich etwas komplizierter.
+Zu Vereinfachung wird zunächst gezeigt:
+\begin{gather*}
+[(x_1,y_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(x_2,y_2)]\\
+\iff (x_1x_2+y_1y_2,x_1y_2+y_1x_2)\sim (a_1x_2+b_1y_2,a_1y_2+b_1x_2)\\
+\iff x_1x_2+y_1y_2 + a_1y_2+b_1x_2 = a_1x_2+b_1y_2 + x_1y_2+y_1x_2\\
+\iff (x_1+b_1)x_2 + (a_1+y_1)y_2 = (a_1+y_1)x_2 + (x_1+b_1)y_2.
+\end{gather*}
+Diese Gleichung ist gemäß Voraussetzung $(x_1,y_1)\sim (a_1,b_1)$
+bzw. $x_1+b_1=a_1+y_1$ erfüllt.
+
+Analog bestätigt man
+\[[(a_1,b_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(a_2,b_2)].\]
+Gemäß Transitivität ergibt sich somit
+\[[(x_1,y_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(a_2,b_2)].\]
+Es ist nun zu bestätigen, dass $(\Q,+)$ eine kommutative Gruppe ist.
+Das Assozativgesetz:
+\begin{gather*}
+([(x_1,y_1)]+[(x_2,y_2)])+[(x_3,y_3)]
+= [(x_1+x_2,y_1+y_2)] + [(x_3,y_3)]\\
+= [(x_1+x_2+x_3,y_1+y_2+y_3)]
+= [(x_1,y_1)]+[(x_2+x_3,y_2+y_3)]\\
+= [(x_1,y_1)]+([(x_2,y_2)]+[(x_3,y_3)]).
+\end{gather*}
+Das neutrale Element ist $[(0,0)]$:
+\[[(x,y)]+[(0,0)] = [(x+0,y+0)] = [(x,y)].\]
+Das inverse Element zu $[(x,y)]$ ist $[(y,x)]$, denn es gilt
+\begin{gather*}
+[(x,y)]+[(y,x)] = [(x+y,y+x)] = [(0,0)]\\
+\iff (x+y,y+x)\sim (0,0)\iff x+y+0 = y+x+0.
+\end{gather*}
+Das Kommutativgesetz:
+\begin{gather*}
+[(x_1,y_1)]+[(x_2,y_2)] = [(x_1+x_2,y_1+y_2)]
+= [(x_2+x_1,y_2+y_1)]\\
+= [(x_2,y_2)]+[(x_1,y_1)].
+\end{gather*}
+Es ist nun zu bestätigen, dass $(\Q,\cdot)$ ein kommutatives
+Monoid bildet. Das Assoziativgesetz:
+\begin{gather*}
+([(x_1,y_1)]\cdot [(x_2,y_2)])\cdot [(x_3,y_3)]
+= [(x_1x_2+y_1y_2,x_1y_2+x_2y_1)]\cdot [(x_3,y_3)]\\
+= [(x_1x_2x_3+x_3y_1y_2+x_1y_2y_3+x_2y_1y_3,\;
+x_1x_2y_3+y_1y_2y_3+x_1x_3y_2+x_2x_3y_1)]\\
+= [(x_1,y_1)]\cdot [(x_2x_3+y_2y_3,x_2y_3+x_3y_2)]
+= [(x_1,y_1)]\cdot ([(x_2,y_2)]\cdot [(x_3,y_3)]).
+\end{gather*}
+Das Kommutativgesetz:
+\begin{gather*}
+[(x_1,y_1)]\cdot [(x_2,y_2)] = [(x_1x_2+y_1y_2,\;x_1y_2+y_1x_2)]\\
+= [(x_2x_1+y_2y_1,\;x_2y_1+x_1y_2)] = [(x_2,y_2)]\cdot [(x_1,y_1)].
+\end{gather*}
+Das neutrale Element ist $[(1,0)]$, denn es gilt
+\[[(x,y)]\cdot [(1,0)] = [(x\cdot 1+y\cdot 0,\;1\cdot y+x\cdot 0)]
+= [(x,y)].\]
+Schließlich ist noch das Distributivgesetz zu bestätigen.
+Man findet
+\begin{gather*}
+[(a,b)]\cdot ([(x_1,y_1)]+[(x_2,y_2)])
+= [(a,b)]\cdot [(x_1+x_2,y_1+y_2)]\\
+= [(ax_1+ax_2+by_1+by_2,\;ay_1+ay_2+bx_1+bx_2)]\\
+= [(ax_1+by_1,ay_1+bx_1)]+[(ax_2+by_2,ay_2+bx_2)]\\
+= [(a,b)]\cdot [(x_1,y_1)] + [(a,b)]\cdot [(x_2,y_2)].
+\end{gather*}
+Somit sind alle Axiome bestätigt.\;\qedsymbol
+
+\begin{Definition}[Monoidhomomorphismus]
+Seien $(M,+)$ und $(M',+')$ zwei Monoide. Eine Abbildung
+$\varphi\colon M\to M'$ heißt Monoidhomomorphismus, wenn
+für alle $a,b\in M$ gilt
+\[\varphi(a+b) = \varphi(a)+\varphi(b)\]
+und $\varphi(0)=0'$ ist.
+\end{Definition}
+Einen injektiven Homomorphismus nennt man Monomorphismus. Ein
+Monomorphismus charakterisiert eine Einbettung einer Struktur als
+Unterstruktur einer anderen.
+
+\begin{Satz}[Einbettung der natürlichen Zahlen in die ganzen]%
+\label{embedding-nat-int}
+Die Abbildung $\varphi\colon\N_0\to\Z$ mit $\varphi(n)=[(n,0)]$
+ist ein Monoidmonomorphismus.
+\end{Satz}
+\strong{Beweis.} Es ergibt sich
+\[\varphi(a+b) = [(a+b,0)] = [(a,0)]+[(b,0)] = \varphi(a)+\varphi(b).\]
+Außerdem ist $\varphi(0)=[(0,0)]$, und $[(0,0)]$
+ist das neutrale Element von $(\Z,+)$.
+
+Schließlich ist noch die Injektivität zu prüfen:
+\begin{gather*}
+[(a,0)] = \varphi(a) = \varphi(b)  = [(b,0)]\iff (a,0)\sim (b,0)\\
+\iff a+0 = b+0 \iff a=b.\;\qedsymbol
+\end{gather*}
+Anstelle von $\varphi(n)=[(n,0)]$ darf man daher einfach schreiben
+$n=[(n,0)]$. Außerdem definiert man $a-b:=a+(-b)$. Daraus
+ergibt sich nun
+\[[(x,y)] = [(x,0)]+[(0,y)] = [(x,0)] - [(y,0)] = x-y.\]
+Die umständliche Schreibweise $[(x,y)]$ wird ab jetzt nicht
+mehr benötigt.
+
+\begin{Definition}[Totalordnung der ganzen Zahlen]
+Auf $\Z$ wird die folgende strenge Totalordnung definiert:
+\[[(x_1,y_1)] < [(x_2,y_2)] \defiff x_1+y_2<x_2+y_1.\]
+\end{Definition}
+\begin{Satz}[Einbettung der Totalordnung]
+Die Abbildung $\varphi$ aus Satz \ref{embedding-nat-int}
+genügt der Forderung
+\[a<b \implies \varphi(a)<\varphi(b).\]
+\end{Satz}
+\strong{Beweis.} Nach den Definitionen ist
+\[\varphi(a)<\varphi(b)\iff [(a,0)]<[(b,0)]\iff a+0<0+b\iff a<b.\;\qedsymbol\]
+
+
 \newpage
 \section{Rationale Zahlen}
 
-\subsection{Definition}
+\subsection{Konstruktion}
 
 \begin{Definition}[Rationale Zahlen]
 Auf $\Z\times\N$ wird die folgende Äquivalenzrelation definiert:
