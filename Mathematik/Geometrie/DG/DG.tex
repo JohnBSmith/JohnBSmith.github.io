@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
+\usepackage{microtype}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -31,9 +32,9 @@
   {}% bodyfont
   {}% indent
   {\normalfont\sffamily\bfseries}% head font
-  {\\[2pt]}% punctuation between head and body
+  {~}% punctuation between head and body
   {0pt}% space after theorem head
-  {\thmname{#1}\;\thmnumber{#2}.\;\thmnote{#3.}}
+  {\thmname{#1}\;\thmnumber{#2}.\thmnote{\;#3.}}
 
 \theoremstyle{rmbox}
 \newtheorem{definition}{Definition}
@@ -44,19 +45,19 @@
 \numberwithin{definition}{chapter}
 \numberwithin{theorem}{chapter}
 
-\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
-\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
+\definecolor{greenblue}{rgb}{0.1,0.42,0.5}
+\definecolor{grayblue}{rgb}{0.2,0.2,0.6}
 
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
   linecolor=greenblue, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=2pt, innerbottommargin=4pt,%
+  innertopmargin=1pt, innerbottommargin=4pt,%
   innerrightmargin=0pt%
 ]{definition}
 
 \newcommand{\framedtheorem}[1]{%
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
   linecolor=grayblue, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=2pt, innerbottommargin=4pt,%
+  innertopmargin=1pt, innerbottommargin=4pt,%
   innerrightmargin=0pt%
 ]{#1}}
 

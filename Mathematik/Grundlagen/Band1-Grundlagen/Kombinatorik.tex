@@ -4,7 +4,7 @@
 \section{Endliche Summen}
 \subsection{Definition}
 
-\begin{Definition}[Summe]\index{Summe}
+\begin{Definition}[Summe]\index{Summe}\mbox{}\\*
 Für eine Folge $a\colon\Z\to\R$ ist die Summe über die $a_k$
 von $k=m$ bis $n$ rekursiv definiert gemäß%
 \[
@@ -25,8 +25,8 @@ Die Berechnung gemäß der Definition:
 \end{align*}
 
 \subsection{Rechenregeln}
-\begin{Satz}[Homogenität der Summenoperation]\label{Summe-Hom}%
-\index{Homogenität}
+\begin{Satz}[Homogenität der Summenoperation]%
+\label{Summe-Hom}\index{Homogenität}\mbox{}\\*
 Ist $c$ eine Konstante, dann gilt
 \[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
 \end{Satz}
@@ -37,8 +37,8 @@ Der Induktionsschritt »$A(n-1)\Rightarrow A(n)$« ist erfüllt, denn es gilt
 \[\sum_{k=m}^n ca_k = ca_n+\sum_{k=m}^{n-1} ca_k = ca_n+c\sum_{k=m}^{n-1} a_k
 = c\bigg(a_n+\sum_{k=m}^{n-1} a_k\bigg) = c\sum_{k=m}^n a_k.\;\qedsymbol\]
 
-\begin{Satz}[Additivität der Summenoperation]\label{Summe-Add}%
-\index{Additivität}
+\begin{Satz}[Additivität der Summenoperation]%
+\label{Summe-Add}\index{Additivität}\mbox{}\\*
 Es gilt
 \[\sum_{k=m}^n (a_k+b_k) = \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\]
 \end{Satz}
@@ -51,7 +51,8 @@ Der Induktionsanfang ist trivial. Induktionsschritt:
 = \sum_{k=m}^n a_k+\sum_{k=m}^n b_k.\;\qedsymbol
 \end{align*}
 
-\begin{Satz}[Aufteilung von Summen]\label{Summe-Aufteilung}
+\begin{Satz}[Aufteilung von Summen]%
+\label{Summe-Aufteilung}\mbox{}\\*
 Für $m\le p\le n$ gilt
 \[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k+\sum_{k=p}^n a_k.\]
 \end{Satz}
@@ -67,7 +68,8 @@ Der Induktionsschritt:
 \end{align*}
 
 \newpage
-\begin{Satz}[Indexshift]\label{Summe-Indexshift}
+\begin{Satz}[Indexshift]%
+\label{Summe-Indexshift}\mbox{}\\*
 Für die Indexverschiebung der Distanz $d\in\Z$,
 kurz Indexshift, gilt%
 \[\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
@@ -89,7 +91,8 @@ Induktionsschritt:
 = \sum_{k'=m+d}^{n+d} a_{k'-d}.\;\qedsymbol
 \end{align*}
 
-\begin{Satz}[Umkehrung der Reihenfolge]\label{Summe-Umkehrung}
+\begin{Satz}[Umkehrung der Reihenfolge]%
+\label{Summe-Umkehrung}\mbox{}\\*
 Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
 \end{Satz}
 \strong{Beweis.}
@@ -105,7 +108,8 @@ Satz \ref{Summe-Aufteilung} (Aufteilung) zunutze:%
 = \sum_{k=0}^n a_k.\;\qedsymbol
 \end{gather*}
 
-\begin{Satz}[Summe der konstanten Folge]\label{Summe-der-Eins}
+\begin{Satz}[Partialsumme der konstanten Folge]%
+\label{Summe-der-Eins}\mbox{}\\*
 Es gilt
 $\sum_{k=m}^n 1 = n-m+1$.
 \end{Satz}
@@ -115,7 +119,8 @@ Induktionsschritt:
 \[\sum_{k=m}^n 1 = 1+\sum_{k=m}^{n-1} 1 = 1+(n-1)-m+1 = n-m+1.\;\qedsymbol\]
 
 \newpage
-\begin{Satz}[Summe der arithmetischen Folge]
+\begin{Satz}[Partialsumme der arithmetischen Folge]%
+\label{Partialsumme-arith}\mbox{}\\*
 Es gilt $\sum_{k=0}^n k = \frac{n}{2}(n+1)$.
 \end{Satz}
 \strong{Beweis.} Der Induktionsanfang $n=0$ ist trivial.
@@ -138,6 +143,19 @@ Satz \ref{Summe-Hom} (Homogenität) und Satz \ref{Summe-der-Eins} an:%
 = n\sum_{k=0}^n 1 = n(n+1).\;\qedsymbol
 \end{align*}
 
+\begin{Satz}[Partialsumme der geometrischen Folge]\mbox{}\\*
+Für $q\ne 1$ gilt $\sum_{k=a}^{b-1} q^k = \frac{q^b-q^a}{q-1}$
+\end{Satz}
+\strong{Herleitung und Beweis.}
+Sei $s:=\sum_{k=a}^{b-1} q^k$ die gesuchte Summe.
+Mittels Homogenität und Indexshift findet man
+\begin{align*}
+qs = q\sum_{k=a}^{b-1} q^k &= \sum_{k=a}^{b-1} q^{k+1} = \sum_{k=a+1}^b q^k = q^b-q^a+\sum_{k=a}^{b-1} q^k
+= q^b-q^a+s.
+\end{align*}
+Das ist nun aber lediglich eine lineare Gleichung in $s$. Die Lösung ist
+\[s = \frac{q^b-q^a}{q-1}.\;\qedsymbol\]
+
 \subsection{Anwendungen}
 
 Die gezeigten Rechenregeln ermöglichen die Vereinfachung
@@ -154,10 +172,118 @@ bzw.
 = A\,\frac{n}{2}(n+1)+Bn = \Big(\frac{A}{2}(n+1)+B\Big)n.\]
 
 \newpage
+\subsection{Teleskopsummen}
+
+\begin{Satz}[Teleskopsumme]\mbox{}\\*
+Es gilt $\sum_{k=m}^{n-1} (a_{k+1}-a_k) = a_n-a_m$.
+\end{Satz}
+\strong{Beweis.}
+Mittels Indexshift stellt man die folgende Überlegung an:
+\begin{gather*}
+\sum_{k=m}^{n-1} a_{k+1}
+= \sum_{k=m+1}^n a_k = a_n-a_m+\sum_{k=m}^{n-1} a_k.
+\end{gather*}
+Benutzung dieser Überlegung führt zu:
+\begin{gather*}
+\sum_{k=m}^{n-1} (a_{k+1}-a_k)
+= \sum_{k=m}^{n-1} a_{k+1}-\sum_{k=m}^{n-1} a_k
+= a_n-a_m+\sum_{k=m}^{n-1} a_k-\sum_{k=m}^{n-1} a_k
+= a_n-a_m.\;\qedsymbol
+\end{gather*}
+
+\begin{Definition}[Differenzenoperator]\mbox{}\\*
+Für eine Folge $(a_n)$ definiert man
+$(\Delta a)_n := a_{n+1}-a_n.$
+\end{Definition}
+Die Teleskopsumme lässt sich damit in der Form
+$\sum_{k=m}^{n-1}(\Delta a)_k = a_n-a_m$
+schreiben. Das Leser wird jetzt vielleicht fragen, warum für diesen
+einfachen Zusammenhang explizit ein Operator definiert wurde.
+Nun ja, dieser Operator kann iteriert werden. Die Formeln die
+dabei herauskommen, sind nicht mehr ganz so einfach. Z.\,B. ist
+\begin{align*}
+(\Delta^2 a)_n &= (\Delta \Delta a)_n
+= (\Delta a)_{n+1}-(\Delta a)_n
+= (a_{n+2}-a_{n+1}) - (a_{n+1}-a_n)\\
+&= a_{n+2}-2a_{n+1}+a_n.
+\end{align*}
+Außerdem genügt der Differenzenoperator selbst bestimmten Rechenregeln.
+\begin{Satz}
+Der Operator $\Delta$ ist linear, d.\,h. für
+Folgen $(a_n)$, $(b_n)$ und eine Konstante $c$ gilt%
+\[\Delta(c\cdot a) = c\cdot\Delta a,\qquad
+\Delta(a+b) = (\Delta a)+(\Delta b).\]
+\end{Satz}
+\strong{Beweis.} Man findent
+\begin{gather*}
+\Delta (ca)_n = ca_{n+1}-ca_n
+= c(a_{n+1}-a_n) = c\Delta a_n
+\end{gather*}
+und
+\begin{align*}
+\Delta (a+b)_n &= (a_{n+1}+b_{n+1})-(a_n+b_n)
+= a_{n+1}-a_n + b_{n+1}-b_n\\
+&= (\Delta a)_n + (\Delta b)_n.\;\qedsymbol
+\end{align*}
+Der Differenzenoperator erlaubt es, nach vielen neuen Summenformeln
+zu fischen, nämlich indem man einen beliebigen Ausdruck nimmt und
+diesen als Teleskopsumme darstellt. Für $a_n=n^2$ ist z.\,B.
+\[(\Delta a)_n = (n+1)^2-n^2 = n^2+2n+1-n^2 = 2n+1.\]
+Damit bekommt man
+\begin{gather*}
+2\sum_{k=0}^{n-1} k + n = \sum_{k=0}^{n-1} (2k+1) = 
+\sum_{k=0}^{n-1} (\Delta a)_k
+= n^2-0^2 = n^2.
+\end{gather*}
+Umformung bringt
+\[\sum_{k=0}^{n-1} k = \frac{1}{2}(n^2-n) = \frac{n}{2}(n-1).\]
+Setzt man für $n$ nun $n+1$ ein, dann ergibt sich die schon
+bekannte Formel von Satz \ref{Partialsumme-arith}.
+
+Eine wichtige Formel für Teleskopsummen gilt
+bezüglich Def. \ref{def:ffac}.
+
+\begin{Satz} Sei $k\ge 0$. Für $a_n:=n^{\underline k}$ gilt
+$(\Delta a)_n = kn^{\underline{k-1}}$.
+\end{Satz}
+\strong{Beweis.} Der Fall $k=0$ ist trivial. Für $k\ge 1$
+wendet man Satz \ref{ffac-n-rec} an:
+\begin{gather*}
+(\Delta a)_n = (n+1)^{\underline k}-n^{\underline k}
+= (n-(k-1)+1)(n+1)^{\underline {k-1}}-(n+1-k)n^{\underline{k-1}}\\
+= (n+1)n^{\underline{k-1}}-(n+1-k)n^{\underline{k-1}}
+= (n+1-n-1+k)n^{\underline{k-1}} = kn^{\underline{k-1}}.\;\qedsymbol
+\end{gather*}
+Für $a_n:=\tfrac{k^{\underline {p+1}}}{p+1}$ ergibt sich
+demnach $(\Delta a_n) = k^{\underline p}$. Das führt zur
+Teleskopsumme
+\[\sum_{k=m}^{n-1} k^{\underline p}
+= \frac{n^{\underline{p+1}}-m^{\underline{p+1}}}{p+1}.\]
+Nun treten zumeist Summen über $k^p$ auf und nicht
+über $k^{\underline p}$. Zwischen diesen gibt es aber einen
+einfachen Zusammenhang. Nämlich lässt sich $x^n$ als
+Linearkombination
+\[x^n = \sum_{k=0}^n S_k x^{\underline k}\]
+darstellen. Die Linearfaktoren $S_k$ sind von besonderer
+Bedeutung, es sind die Stirling"=Zahlen zweiter Art.
+\begin{Definition}[Stirling-Zahlen zweiter Art]\mbox{}\\*
+Man definiert rekursiv
+\[n>0\implies\begin{Bmatrix}n\\ k\end{Bmatrix} :=
+k\begin{Bmatrix}n-1\\ k\end{Bmatrix}
++\begin{Bmatrix}n-1\\ k-1\end{Bmatrix},\]
+mit den Anfangsbedingungen
+\[\begin{Bmatrix}n\\ n\end{Bmatrix} := 1,\qquad
+k=0<n\lor n<k\implies\begin{Bmatrix}n\\ k\end{Bmatrix} := 0.\]
+\end{Definition}
+\begin{Satz} Für $n\in\N_0$ gilt
+\[x^n = \sum_{k=0}^n \begin{Bmatrix}n\\ k\end{Bmatrix} x^{\underline k}.\]
+\end{Satz}
+
+\newpage
 \section{Endliche Produkte}
 
 \subsection{Definition}
-\begin{Definition}[Produkt]
+\begin{Definition}[Produkt]\mbox{}\\*
 Für eine Folge $a\colon\Z\to\R$ ist das Produkt der $a_k$ für
 $k$ von $k=m$ bis $k=n$ rekursiv definiert gemäß%
 \[\prod_{k=m}^{m-1} a_k := 1,\qquad
@@ -185,6 +311,7 @@ Für die Indexverschiebung der Distanz $d\in\Z$ gilt%
 \[\prod_{k=m}^n a_k = \prod_{k=m+d}^{n+d} a_{k-d}.\]
 \end{Satz}
 
+\newpage
 \section{Permutationen und Variationen}%
 \index{Permutation}
 
@@ -226,7 +353,8 @@ Das macht insgesamt%
 \[n! = n\cdot (n-1)\cdot (n-2)\cdot\ldots\cdot 3\cdot 2\cdot 1\]
 Möglichkeiten. Außerdem ergibt sich die folgende Rekursionsformel:%
 \[n! = n\cdot (n-1)!.\]
-\begin{Definition}[Fakultät]\index{Fakultaet@Fakultät}
+\begin{Definition}[Fakultät]%
+\index{Fakultaet@Fakultät}\label{def:fac}\mbox{}\\*
 Für eine Zahl $n\in\N_0$ ist die Fakultät von $n$ rekursiv
 definiert gemäß%
 \[0! := 1,\qquad n! := n\cdot (n-1)!.\]
@@ -260,15 +388,15 @@ Definition lässt sich daraus die rekursive Definition der absteigenden
 Faktoriellen extrahieren:
 
 \begin{Definition}[Absteigende Faktorielle]\index{Faktorielle}%
-\index{absteigende Faktorielle}\index{fallende Faktorielle}
-
+\index{absteigende Faktorielle}\index{fallende Faktorielle}%
+\label{def:ffac}\mbox{}\\*
 Die absteigende Faktorielle von $n$ mit $k$ Faktoren ist rekursiv
 definiert gemäß%
 \[n^{\underline 0} := 1,\qquad
 n^{\underline k} := (n-k+1)\,n^{\underline{k-1}}.\]
 \end{Definition}
 
-\begin{Satz}
+\begin{Satz}\label{ffac-fac}
 Für $n,k\in\N_0$ und $k\le n$ gilt
 \[n^{\underline k} = \frac{n!}{(n-k)!}.\]
 \end{Satz}
@@ -301,7 +429,26 @@ n! &= \prod_{i=0}^{n-1}(n-i)
 = n^{\underline k}\,(n-k)!.\;\qedsymbol
 \end{align*}
 
-%\newpage
+\begin{Satz}\label{ffac-n-rec}
+Für $n,k\in\Z$ und $k\ge 0$ gilt
+\[(n-k+1)(n+1)^{\underline k} = (n+1)n^{\underline k}.\]
+\end{Satz}
+\strong{Beweis.} Für $k\ge 1$ gilt
+\[(n-k+1)\prod_{i=0}^{k-2}(n-1)
+= (n-(k-1))\prod_{i=0}^{k-2} (n-i) = \prod_{i=0}^{k-1}(n-i).\]
+Damit ergibt sich
+\begin{gather*}
+(n-k+1)(n+1)^{\underline k} = (n-k+1)\prod_{i=0}^{k-1} (n+1-i)
+= (n-k+1)(n+1)\prod_{i=1}^{k-1}(n+1-i)\\
+= (n+1)(n-k+1)\prod_{i=0}^{k-2}(n-i)
+= (n+1)\prod_{i=0}^{k-1}(n-i)
+= (n+1)n^{\underline k}.
+\end{gather*}
+Den Fall $k=0$ verifiziert man separat:
+\[(n-0+1)(n+1)^{\underline 0}
+= (n-0+1)\cdot 1 = (n+1)\cdot 1 = (n+1)n^{\underline 0}.\;\qedsymbol\]
+
+% \newpage
 \subsection{Anzahl der Variationen mit Wiederholung}%
 \index{Variationen!mit Wiederholung}
 
