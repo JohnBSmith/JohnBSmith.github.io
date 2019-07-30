@@ -1,0 +1,105 @@
+
+\chapter{Kategorientheorie}
+
+\section{Grundbegriffe}
+
+\begin{Definition}[Kategorie]
+Eine Kategorie ist ein Tripel $C=(\mathrm{Ob},\mathrm{Hom},{\circ})$,
+sofern die folgenden beiden Axiome erfüllt sind:
+\begin{enumerate}
+\item Für $f\colon A\to B$, $g\colon B\to C$, $h\colon C\to D$ gilt
+das Assoziativgesetz $h\circ (g\circ f) = (h\circ g)\circ f$.
+\item Für jedes Objekt $X$ existiert die Identität $\id_X\colon X\to X$,
+so dass $f\circ\id_A = \id_B\circ f=f$ für alle Objekte $A,B$
+und $f\colon A\to B$.
+\end{enumerate}
+\end{Definition}
+Die Elemente der Klasse $\mathrm{Ob}$ nennt man Objekte. Die
+Elemente der Klasse $\mathrm{Hom}$ nennt man Morphismen. Die
+Verknüpfung $g\circ f$, sprich $g$ nach $f$, nennt man Verkettung
+von $g$ und $f$.
+
+Die Schreibweise ist $f\colon X\to Y$ gleichbedeutend mit
+$f\in\operatorname{Hom}(X,Y)$, wobei $X,Y\in\mathrm{Ob}$.
+Mit $\operatorname{Hom}(X,Y)$ ist die Teilklasse von
+$\mathrm{Hom}$ gemeint, die alle Morphismen von $X$ nach $Y$
+enthält. Man schreibt $\dom(f) = X$ und $\cod(f) = Y$.
+
+Nun gut, man macht hier zunächst zwei Beobachtungen. Erstens
+erinnern die Axiome an die Monoid"=Axiome, haben aber den Unterschied,
+dass die Morphismen kompatibel sein müssen. D.\,h. um $g\circ f$
+bilden zu können, muss $\cod(f)=\dom(g)$ sein.
+
+Zweitens erinnern die Axiome an die Regeln für die Verkettung
+von Abbildungen. Tatsächlich bilden die Abbildungen eine Kategorie.
+
+\begin{Satz}[Kategorie der Mengen]\mbox{}\\*
+Sei $\Omega$ das Mengenuniversum und für $A,B\in\Omega$ sei
+$\mathrm{Hom}(A,B):=\mathrm{Abb}(A,B)$. Sei $g\circ f$ die Verkettung
+von Abbildungen. Dann bildet $\strong{Set}:=(\Omega,\mathrm{Hom},\circ)$
+eine Kategorie.
+\end{Satz}
+\strong{Beweis.} Trivial.\;\qedsymbol
+
+\begin{Satz}[Kategorie der Gruppen]\mbox{}\\*
+Sei $\Omega$ die Klasse aller Gruppen und für $G,H\in\Omega$ sei
+$\mathrm{Hom}(G,H)$ die Klasse der Homomorphismen von $G$ nach $H$.
+Sei $g\circ f$ die Verkettung von Homomorphismuen.
+Dann bildet $\strong{Group}:=(\Omega,\mathrm{Hom},\circ)$
+eine Kategorie.
+\end{Satz}
+\strong{Beweis.} Homomorphismen sind Abbildungen, die Axiome
+daher wie bei der Kategorie der Mengen erfüllt. Die Verkettung
+zweier Homomorphismen ist ja auch ein Homomorphismus.\;\qedsymbol
+
+Entsprechend bilden Ringe mit Ringhomomorphismen, Körper mit
+Körperhomomorphismen, Vektorräume mit Vektorraumhomomorphismen
+usw. Kategorien.
+
+Nun ist es so, dass Gruppen auch Mengen und Homomorphismen
+auch Abbildungen sind. Die Kategorie der Gruppen ist gewissermaßen
+in der Kategorie der Mengen enthalten. Um das zu präzisieren,
+benötigen wir den Begriff des Vergissfunktors.
+
+\begin{Definition}[Kovarianter Funktor]\mbox{}\\*
+Sind $C,D$ Kategorien, dann nennt man $F\colon C\to D$ einen
+kovarianten Funktor, wenn jedem Objekt $X\in\mathrm{Ob}(C)$ ein Objekt
+$F(X)\in\mathrm{Ob}(D)$ zugeordnet wird und jedem Morphismus
+$f\in\mathrm{Hom}_C(X,Y)$ ein ein Morphismus
+$F(f)\in\mathrm{Hom}_D(F(X),F(Y))$ zugeordnet wird,
+so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:
+\begin{gather*}
+F(g\circ f) = F(g)\circ F(f),\\
+F(\id_X) = \id_{F(X)}.
+\end{gather*}
+\end{Definition}
+\begin{Definition}[Kontravarianter Funktor]\mbox{}\\*
+Wie beim kovarianten Funktor, mit dem Unterschied
+$F(g\circ f) = F(f)\circ F(g)$.
+\end{Definition}
+Bemerkung: Die Notation ist überladen. Nämlich ist die Zuordnung
+$F\colon\mathrm{Ob}(C)\to\mathrm{Ob}(D)$ zu unterscheiden
+von
+\[\tilde F\colon\mathrm{Hom}_C(X,Y)\to\mathrm{Hom}_D(F(X),F(Y)).\]
+Das Paar $(F,\tilde F)$ kodiert dann eigentlich den Funktor
+$C\to D$.
+
+\begin{Satz}[Vergissfunktor]\mbox{}\\*
+Sei $F\colon\strong{Group}\to\strong{Set}$ mit $F((G,*,e)):=G$,
+und jedem Gruppenhomomorphismus
+\[\varphi\colon (G,*,e)\to (G',*',e')\]
+sei die Abbildunge $F(\varphi)\colon G\to G'$ mit
+$F(\varphi)(x):=\varphi(x)$ zugeordnet. Bei $F$ handelt
+es sich um einen kovarianten Funktor.
+\end{Satz}
+\strong{Beweis.}
+Es gilt $F(\id)(x) = \id(x)$, und daher $F(\id)=\id$.
+Außerdem gilt
+\begin{gather*}
+F(\varphi_2\circ\varphi_1)(x) = (\varphi_2\circ\varphi_1)(x)
+= \varphi_2(\varphi_1(x))
+= F(\varphi_2)(F(\varphi_1)(x))
+= (F(\varphi_2)\circ F(\varphi_1))(x),
+\end{gather*}
+und daher $F(\varphi_2\circ\varphi_1)
+= F(\varphi_2)\circ F(\varphi_1)$.\;\qedsymbol
