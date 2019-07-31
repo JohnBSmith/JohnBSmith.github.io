@@ -805,7 +805,8 @@ Zuweilen schreibt man sogar
 solange klar bleibt, dass $x$ die gebundene Variable ist.
 
 
-\begin{Satz}[Verallgemeinerte Distributivgesetze]\mbox{}\\*
+\begin{Satz}[Verallgemeinerte Distributivgesetze]%
+\label{logical-dist-general}\mbox{}\\*
 Es gilt
 \begin{align*}
 A\lor (\forall x\in M)P(x) &\equiv (\forall x\in M)(A\lor P(x)),\\
@@ -1159,6 +1160,40 @@ Nun gilt für beliebige Aussagen $\varphi,\psi$ gemäß boolescher Algebra aber
 \end{align*}
 Auf beiden Seiten der Äquivalenz steht jetzt die gleiche Aussage:%
 \[a\in A\land a\in B\iff a\in A\land a\in B.\;\qedsymbol\]
+
+\begin{Definition}[Vereinigung beliebig vieler Mengen]\mbox{}\\*
+Sei $M$ eine Menge von Mengen. Die Vereinigung der $A\in M$ ist definiert gemäß
+\[\bigcup_{A\in M} A := \{x\mid (\exists A)(A\in M\land x\in A)\}.\]
+\end{Definition}
+Für $M=\{\}$ ist $\bigcup_{A\in M} A = \{\}$.
+
+Das logische ODER findet seine Entsprechung genau in der Vereinigung
+von zwei Mengen. Dazu passend findet der Existenzquantor seine
+Entsprechung genau in der Vereinigung beliebig vieler Mengen.
+Aus diesem Grund lassen sich Regeln der booleschen Algebra direkt
+auf die Mengenoperationen übertragen. Z.\,B. lautet das
+Distributivgesetz für Mengen
+\[B\cap\bigcup_{A\in M} A = \bigcup_{A\in M}(B\cap A).\]
+Diese Gleichung lässt sich nämlich expandieren in die logische Formel
+\[x\in B\land(\exists A\in M)(x\in A) \iff (\exists A\in M)(x\in B\land x\in A).\]
+Die Äquivalenz ist wie gesagt gültig gemäß Satz
+\ref{logical-dist-general}.
+
+\begin{Definition}[Schnitt beliebig vieler Mengen]\mbox{}\\*
+Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$
+ist definiert gemäß
+\[\bigcap_{A\in M} A := \{x\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
+\end{Definition}
+Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap_{A\in M} A$ 
+für $M=\{\}$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
+Zum einen könnte man die Bedingung $M\ne\{\}$ einfach fallen
+lassen, dann ergibt sich beim leeren Schnitt immer die Grundmenge
+$G=\{x\mid 1\}$. Im Allgemeinen Mengenuniversum ist $G$ die
+Allklasse. Diese ist nach den ZFC"=Axiomen jedoch keine Menge mehr.
+
+Aus diesen Grund gibt es noch die alternative Definition
+\[\bigcap_{A\in M} A :=
+\{x\in\bigcup_{A\in M} A\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
 
 \newpage
 \subsection{Produktmengen}
