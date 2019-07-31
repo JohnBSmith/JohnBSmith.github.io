@@ -67,7 +67,7 @@ kovarianten Funktor, wenn jedem Objekt $X\in\mathrm{Ob}(C)$ ein Objekt
 $F(X)\in\mathrm{Ob}(D)$ zugeordnet wird und jedem Morphismus
 $f\in\mathrm{Hom}_C(X,Y)$ ein ein Morphismus
 $F(f)\in\mathrm{Hom}_D(F(X),F(Y))$ zugeordnet wird,
-so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:
+so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:%
 \begin{gather*}
 F(g\circ f) = F(g)\circ F(f),\\
 F(\id_X) = \id_{F(X)}.
@@ -86,7 +86,7 @@ $C\to D$.
 
 \begin{Satz}[Vergissfunktor]\mbox{}\\*
 Sei $F\colon\strong{Group}\to\strong{Set}$ mit $F((G,*,e)):=G$,
-und jedem Gruppenhomomorphismus
+und jedem Gruppenhomomorphismus%
 \[\varphi\colon (G,*,e)\to (G',*',e')\]
 sei die Abbildunge $F(\varphi)\colon G\to G'$ mit
 $F(\varphi)(x):=\varphi(x)$ zugeordnet. Bei $F$ handelt
@@ -94,7 +94,7 @@ es sich um einen kovarianten Funktor.
 \end{Satz}
 \strong{Beweis.}
 Es gilt $F(\id)(x) = \id(x)$, und daher $F(\id)=\id$.
-Außerdem gilt
+Außerdem gilt%
 \begin{gather*}
 F(\varphi_2\circ\varphi_1)(x) = (\varphi_2\circ\varphi_1)(x)
 = \varphi_2(\varphi_1(x))
@@ -103,3 +103,53 @@ F(\varphi_2\circ\varphi_1)(x) = (\varphi_2\circ\varphi_1)(x)
 \end{gather*}
 und daher $F(\varphi_2\circ\varphi_1)
 = F(\varphi_2)\circ F(\varphi_1)$.\;\qedsymbol
+
+\begin{Satz} Sei $P(X)=2^X$ die Potenzmenge von $X$. Dann ist
+wie folgt ein kovarianter Funktor gegeben:
+\[P\colon\strong{Set}\to\strong{Set},\quad
+P(X):=2^X,\quad P(f)(M):=f(M),\]
+wobei $f$ eine beliebige Abbildung
+und $f(M)$ die Bildmenge von $M$ unter $f$ ist.
+\end{Satz}
+\strong{Beweis.} Nach Satz \ref{img-comp} gilt
+\begin{gather*}
+P(g\circ f)(M) = (g\circ f)(M) = g(f(M))
+= P(g)(P(f)(M)) = (P(g)\circ P(f))(M).
+\end{gather*}
+Daher ist $P(g\circ f)=P(g)\circ P(f)$. Außerdem ist
+\[P(\id_X)(M) = \id_X(M) = M = \id_{P(X)}(M)\]
+und daher $P(\id_X)=\id_{P(X)}$.\;\qedsymbol
+
+Zum Funktor $P$ kommt noch ein weiterer Aspekt hinzu.
+Für eine Abbildung $f$ kann man ganz pedantisch das
+Bild $f(x)$ von der Bildmenge $f(\{x\})$ unterscheiden.
+Aufgrund der Gleichung $f(\{x\})=\{f(x)\}$ verschwimmt diese
+Unterscheidung aber gewissermaßen.
+Die Abbildungen $f$ und $P(f)$ verhalten sich also
+gewissermaßen gleich. Man kann sagen, dass $f$
+auf ganz natürliche Art und Weise die Abbildung $P(f)$
+zugeorndet ist. Definiert man
+\[\eta(X)\colon X\to 2^X,\quad \eta(X)(x):=\{x\},\]
+dann kommutiert das folgende Diagramm:
+\[\xymatrix{
+X \ar[r]^f \ar[d]_{\eta(X)} & Y \ar[d]^{\eta(Y)} \\
+2^X \ar[r]_{P(f)} & 2^Y }\]
+D.\,h. es gilt $\eta(Y)\circ f = P(f)\circ\eta(X)$.
+Die Zuordnung $\eta$ ist eine sogenannte natürliche Transformation.
+
+\begin{Definition}[Natürliche Transformation]
+Seien $C,D$ Kategorien und $F,G\colon C\to D$ Funktoren.
+Dann schreibt man $\eta\colon F\to G$ und nennt $\eta$ natürliche
+Transformation, wenn die folgenden beiden Axiome erfüllt sind:
+\begin{enumerate}
+\item Jedes Objekt $X\in\mathrm{Ob}(C)$ bekommt einen Morphismus
+$\eta(X)\colon F(X)\to G(X)$.
+\item Für jeden Morphismus $f\colon X\to Y$ gilt
+$\eta(Y)\circ F(f)=G(f)\circ\eta(X)$.
+\end{enumerate}
+\end{Definition}
+Die zweite Bedingung lässt sich übersichtlich als kommutierendes Diagramm
+darstellen:
+\[\xymatrix{
+F(X) \ar[r]^{F(f)} \ar[d]_{\eta(X)} & F(Y) \ar[d]^{\eta(Y)} \\
+G(X) \ar[r]_{G(f)} & G(Y)}\]
