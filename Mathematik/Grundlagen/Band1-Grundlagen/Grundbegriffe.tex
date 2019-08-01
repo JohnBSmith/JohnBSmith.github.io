@@ -1163,7 +1163,7 @@ Auf beiden Seiten der Äquivalenz steht jetzt die gleiche Aussage:%
 
 \begin{Definition}[Vereinigung beliebig vieler Mengen]\mbox{}\\*
 Sei $M$ eine Menge von Mengen. Die Vereinigung der $A\in M$ ist definiert gemäß
-\[\bigcup_{A\in M} A := \{x\mid (\exists A)(A\in M\land x\in A)\}.\]
+\[\bigcup M = \bigcup_{A\in M} A := \{x\mid (\exists A)(A\in M\land x\in A)\}.\]
 \end{Definition}
 Für $M=\{\}$ ist $\bigcup_{A\in M} A = \{\}$.
 
@@ -1182,18 +1182,106 @@ Die Äquivalenz ist wie gesagt gültig gemäß Satz
 \begin{Definition}[Schnitt beliebig vieler Mengen]\mbox{}\\*
 Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$
 ist definiert gemäß
-\[\bigcap_{A\in M} A := \{x\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
+\[\bigcap M = \bigcap_{A\in M} A := \{x\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
 \end{Definition}
 Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap_{A\in M} A$ 
 für $M=\{\}$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
 Zum einen könnte man die Bedingung $M\ne\{\}$ einfach fallen
 lassen, dann ergibt sich beim leeren Schnitt immer die Grundmenge
-$G=\{x\mid 1\}$. Im Allgemeinen Mengenuniversum ist $G$ die
+$G=\{x\mid 1\}$. Im allgemeinen Mengenuniversum ist $G$ die
 Allklasse. Diese ist nach den ZFC"=Axiomen jedoch keine Menge mehr.
 
 Aus diesen Grund gibt es noch die alternative Definition
 \[\bigcap_{A\in M} A :=
 \{x\in\bigcup_{A\in M} A\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
+Eine Famile $(A_i)$ von Mengen $A_i$ mit $i\in I$ ist eine Abbildung
+$A\colon I\to Z$, wobei $Z$ eine Zielmenge ist, welche die
+$A_i$ als Elemente enthält. Die Menge $I$ wird in diesem Zusammenhang
+auch Indexmenge genannt. Man definiert dafür
+\[\bigcup_{i\in I} A_i := \bigcup A(I)
+= \bigcup\{X\mid(\exists i\in I)(X=A_i)\} = \{x\mid (\exists i\in I)(x\in A_i)\},\]
+wobei mit $A(I)$ das Bild von $I$ unter $A$ gemeint ist. Gemäß Def. \ref{def:img} bekommt man
+\begin{align*}
+\bigcup_{i\in I} A_i
+&= \{x\mid (\exists X)(X\in \{X\mid(\exists i\in I)(X=A_i)\}\land x\in X)\}\\
+&= \{x\mid (\exists X)((\exists i\in I)(X=A_i)\land x\in X)\}
+= \{x\mid (\exists X)(\exists i\in I)(X=A_i\land x\in X)\}\\
+&= \{x\mid (\exists X)(\exists i\in I)(x\in A_i)\}
+= \{x\mid (\exists i\in I)(x\in A_i)\}.
+\end{align*}
+Für $I\ne\{\}$ definiert man entsprechend
+\[\bigcap_{i\in I} A_i := \bigcap A(I) = \{x\mid (\exists i\in I)(x\in A_i)\}.\]
+
+\newpage
+\begin{Definition}[Differenzmenge]\mbox{}\\*
+Für zwei Mengen $A,B$ ist
+$A\setminus B := \{x\mid x\in A\land x\notin B\}$.
+\end{Definition}
+\begin{Definition}[Komplementärmenge]\mbox{}\\*
+Ist $G$ eine festgelegte Grundmenge und $A\subseteq G$, dann ist
+$A^\compc := G\setminus A$.
+\end{Definition}
+Die Komplementärmenge entspricht der logischen Negation, denn
+\[A^\compc = \{x\mid x\in G\land x\notin A\}
+= \{x\in G\mid x\notin A\}.\]
+Hat man eine Grundmenge festgelegt, so dass alle betrachteten
+Mengen Teilmengen dieser Grundmenge sind, dann genügen die
+Operationen $A^{\mathrm c}$, $A\cap B$, $A\cup B$
+den gleichen Regeln wie ihre logischen Entsprechungen $\neg A$,
+$A\land B$, $A\lor B$. Nämlich bilden diese eine boolesche Algebra.
+Definiert man axiomatisch, was unter einer booleschen Algebra
+zu verstehen ist, dann lassen sich damit Regeln herleiten, die
+sowohl für die Aussagenlogik als auch für die Mengenlehre
+gültig sein müssen.
+
+Um eine axiomatische Präzisierung kümmern wir uns später.
+Zunächst übertragen wir weitere wichtige Rechenregeln ausgehend
+von der Aussagenlogik.
+
+Aus $\neg\neg A\equiv A$ für eine Aussage $A$ folgt
+$(A^\compc)^\compc = A$ für eine Menge $A$, denn
+\begin{gather*}
+x\in (A^\compc)^\compc \iff x\in G\land \neg x\in\{x\mid x\in G\land \neg x\in A\}\\
+\iff x\in G\land \neg (x\in G\land \neg x\in A)
+\iff x\in G\land (\neg x\in G\lor \neg\neg x\in A)\\
+\iff 0\lor x\in G\land x\in A
+\iff x\in G\land x\in A
+\iff x\in A.
+\end{gather*}
+Die letzte Äquivalenz gilt wegen $A\subseteq G$. Käme die Grundmenge
+dabei nicht in den Weg, würde sich die Rechnung zu
+\begin{gather*}
+x\in (A^\compc)^\compc \iff \neg x\in\{x\mid \neg x\in A\}
+\iff \neg\neg x\in A\iff x\in A
+\end{gather*}
+vereinfachen. Zum einen müsste man dann aber
+die Allklasse als »Grundmenge« benutzen, zum anderen ist die Regel
+so nicht für jede beliebige Grundmenge $G$ mit $A\subseteq G$
+gezeigt.
+
+Die trivialen Regeln $\{\}^\compc = G$ und $G^\compc=\{\}$
+entsprechen $\neg 0\equiv 1$ und $\neg 1\equiv 0$.
+Dem logischen Wert wahr entspricht demnach die Grundmenge
+und dem logischen Wert falsch die leere Menge.
+
+Der Leser zeige zur Übung auch die Übertragung der De Morganschen
+Gesetze
+\begin{gather*}
+(A\cup B)^\compc = A^\compc\cap B^\compc,\qquad
+(A\cap B)^\compc = A^\compc\cap B^\compc.
+\end{gather*}
+Die Komplementärgesetze:
+\begin{gather*}
+A\cup A^\compc = G,\qquad A\cap A^\compc = \{\}.
+\end{gather*}
+Der Kontraposition entspricht die Formel
+$A^\compc\lor B=(B^\compc)^\compc\lor A^\compc$. Im Zusammenhang
+mit der Teilmengenrelation hat die Kontraposition aber auch noch
+ein anderes Analogon, das ist%
+\begin{gather*}
+A\subseteq B \iff B^\compc\subseteq A^\compc.
+\end{gather*}
+
 
 \newpage
 \subsection{Produktmengen}
@@ -1280,7 +1368,7 @@ Man definiert außerdem
 \[y=f(x)\defiff (x,y)\in G.\]
 \end{Definition}
 
-\begin{Definition}[Bildmenge]\mbox{}\\*
+\begin{Definition}[Bildmenge]\label{def:img}\mbox{}\\*
 Sei $f\colon A\to B$ eine Abbildung.
 Für eine Menge $M\subseteq A$ nennt man die Menge
 \[f(M) := \{y\mid(\exists x\in M)(y=f(x))\}\]
