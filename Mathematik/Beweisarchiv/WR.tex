@@ -1,0 +1,115 @@
+
+\chapter{Wahrscheinlichkeitsrechnung}
+
+\section{Diskrete Wahrscheinlichkeitsräume}
+
+\begin{Definition}[Diskreter Wahrscheinlichkeitsraum]\mbox{}\\*
+Sei $\Omega$ eine höchstens abzählbare Menge. Das
+Paar $(\Omega,P)$ nennt man diskreten Wahrscheinlichkeitsraum,
+wenn
+\[P\colon 2^\Omega\to [0,1],\quad P(A):=\sum_{\omega\in A} P(\{\omega\})\]
+die Eigenschaft $\sum_{\omega\in\Omega} P(\{\omega\}) = 1$ besitzt.
+\end{Definition}
+Bemerkung: Man schreibt auch $P(\omega):=P(\{\omega\})$.
+
+\begin{Definition}[Reelle Zufallsgröße]\mbox{}\\*
+Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum.
+Eine Funktion $X\colon\Omega\to\R$ nennt man Zufallsgröße.
+Die Verteilung von $X$ ist definiert gemäß $P_X(A):=P(X^{-1}(A))$.
+\end{Definition}
+
+\begin{Definition}[Erwartungswert]%
+\label{def:expected-value}\mbox{}\\*
+Sei $(\omega_k)$ eine beliebige Abzählung von $\Omega$.
+Ist die Reihe $\sum_{k=0}^{|\Omega|} X(\omega_k)P(\{\omega_k\})$
+absolut konvergent, dann nennt man
+\[E(X) := \sum_{\omega\in\Omega} X(\omega)P(\{\omega\})\]
+den Erwartungswert von $X$.
+\end{Definition}
+
+\begin{Satz} Es gilt
+\[E(X) = \sum_{x\in X(\Omega)} xP(X^{-1}(x))
+= \sum_{x\in X(\Omega)} xP(X=x).\]
+\end{Satz}
+\strong{Beweis.} Zunächst gilt
+\begin{gather*}
+\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}}P(\omega)
+= P(\bigcup_{\substack{\omega\in\Omega\\ X(\omega)=x}} \{\omega\})
+= P(\{\omega\in\Omega\mid X(\omega)=x\})
+= P(X^{-1}(x)).
+\end{gather*}
+Da die Reihe zu $E(X)$ nach Def. \ref{def:expected-value}
+absolut konvergent ist, darf sie beliebig umgeordnet werden und
+man bekommt
+\begin{gather*}
+E(X) = \sum_{\omega\in\Omega}X(\omega)P(\omega)
+= \sum_{x\in X(\Omega)}\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}} xP(\omega)
+= \sum_{x\in X(\Omega)} x\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}}P(\omega)\\
+= \sum_{x\in X(\Omega)} xP(X^{-1}(x)).\;\qedsymbol
+\end{gather*}
+
+\newpage
+\begin{Korollar} Der Erwartungswertoperator ist ein lineares Funktional,
+d.\,h. es gilt $E(aX)=aE(X)$ und $E(X+Y)=E(X)+E(Y)$. 
+\end{Korollar}
+\strong{Beweis.} Aufgrund der Konvergenz der Reihen gilt
+\[E(aX) = \sum_{\omega\in\Omega}aX(\omega)P(\omega)
+= a\sum_{\omega\in\Omega}X(\omega)P(\omega) = aE(X)\]
+und
+\begin{align*}
+E(X+Y) &= \sum_{\omega\in\Omega} (X(\omega)+Y(\omega))P(\omega)
+= \sum_{\omega\in\Omega} (X(\omega)P(\omega)+Y(\omega)P(\omega))\\
+&= \sum_{\omega\in\Omega} X(\omega)P(\omega)
++ \sum_{\omega\in\Omega} Y(\omega)P(\omega) = E(X)+E(Y).\;\qedsymbol
+\end{align*}
+
+\begin{Korollar} Ist $X\le Y$, dann ist auch $E(X)\le E(Y)$.
+\end{Korollar}
+\strong{Beweis.} Gemäß $P(\omega)\ge 0$ ist
+\begin{gather*}
+X\le Y\iff X(\omega)\le Y(\omega)\iff 0\le Y(\omega)-X(\omega)
+\iff 0\le (Y(\omega)-X(\omega))P(\omega).
+\end{gather*}
+Somit hat man
+\begin{gather*}
+X\le Y\implies 0\le E(Y-X) = \sum_{\omega\in\Omega} (Y(\omega)-X(\omega))P(\omega),
+\end{gather*}
+und gemäß Linearität daher
+\begin{gather*}
+X\le Y\implies 0\le E(Y-X) = E(Y)-E(X) \iff E(X)\le E(Y).\;\qedsymbol
+\end{gather*}
+
+\begin{Definition}[Unabhängige Ereignisse]\mbox{}\\*
+Zwei Ereignisse $A,B$ heißen unabhängig, falls $P(A\cap B)=P(A)P(B)$.
+\end{Definition}
+
+\begin{Definition}[Unabhängige Zufallsgrößen]\mbox{}\\*
+Zwei Zufallsgrößen $X,Y\colon\Omega\to\R$ heißen unabhängig, wenn
+die Ereignisse $\{X\in A\}$ und $\{X\in B\}$
+für alle Mengen $A,B\subseteq\R$ unabhängig sind.
+\end{Definition}
+
+\begin{Satz}
+Zwei Zufallsgrößen $X,Y\colon\Omega\to\R$ sind genau dann unabhängig,
+wenn für alle $x\in X(\Omega)$ und $y\in Y(\Omega)$ gilt:
+\[P(X=x,Y=y)= P(X=x)P(Y=y).\]
+\end{Satz}
+\strong{Beweis.} Sind $X,Y$ unabhängig, dann ist
+\begin{align*}
+P(X=x,Y=y) &= P(\{X\in\{x\}\}\cap\{Y\in\{y\}\})
+= P(\{X\in\{x\}\})P(\{Y\in\{y\}\})\\
+&= P(X=x)P(Y=y).
+\end{align*}
+Umgekehrt gelte nun $P(X=x,Y=y)=P(X=x)P(Y=y)$, dann ist
+\begin{gather*}
+P(\{X\in A\}\cap\{Y\in B\})
+= P(\bigcup_{x\in A}\{X=x\}\cap\bigcup_{y\in B}\{Y=y\})\\
+= P(\bigcup_{x\in A}\bigcup_{y\in B}(\{X=x\}\cap\{Y=y\}))
+= \sum_{x\in A}\sum_{y\in B}P(\{X=x\}\cap\{Y=y\})\\
+= \sum_{x\in A}\sum_{y\in B}P(X=x)P(Y=y)
+= \sum_{x\in A}P(X=x)\sum_{y\in B}P(Y=y)\\
+= P(\bigcup_{x\in A}\{X=x\})P(\bigcup_{y\in B}\{Y=y\})
+= P(X\in A)P(Y\in B).\;\qedsymbol
+\end{gather*}
+
+

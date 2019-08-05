@@ -18,12 +18,15 @@ Es gibt ein neutrales Element $e$, so dass $g*e=e*g=g$ für jedes
 $g\in G$ gilt.
 \item[\strong{(I)}]
 Zu jedem $g\in G$ gibt es ein Element $h\in G$ mit $g*h=h*g=e$,
-wobei $e$ ein neutrales Element ist.
+wobei $e$ ein neutrales Element ist. Dieses $h$ wird
+inverses Element zu $g$ genannt.
 \end{itemize}
 \end{Definition}
-Anstelle von $g*h$ schreibt man auch kurz $gh$. Es gibt auch Gruppen,
+Anstelle von $g*h$ schreibt man auch kurz $gh$. Für das inverse Element
+zu $g$ schreibt man $g^{-1}$. Es gibt auch Gruppen,
 die additiv geschrieben werden, da schreibt man $g+h$ anstelle von
-$gh$ und $ng$ anstelle von $g^n$ für $n\in\Z$.
+$gh$ und $ng$ anstelle von $g^n$ für $n\in\Z$. Für das inverse Element
+$-g$ anstelle von $g^{-1}$.
 
 \begin{Satz} Das neutrale Element einer Gruppe ist eindeutig bestimmt,
 d.\,h. es kann keine zwei unterschiedlichen neutralen Elemente geben.
@@ -41,6 +44,19 @@ und die Rechtskürzbarkeit $ag=bg\implies a=b$.
 Seiten mit $g^{-1}$, dann gilt
 \[ga=gb \implies g^{-1}ga=g^{-1}gb \iff ea=eb \iff a=b.\]
 Für die Gleichung $ag=bg$ geht das analog.\;\qedsymbol
+
+Kürzbarkeit bedeutet, eine Multiplikation auf beiden Seiten
+rückgängig machen zu können. Das Rückgänig"=machen"=können
+ist wiederum die charakteristische Eigenschaft einer injektiven
+Abbildung. Unter diesem Aspekt gesehen bedeutet die Kürzbarkeit,
+dass die Links- und Rechts"=Translation
+\begin{gather}
+\label{eq:ltrans} l_g\colon G\to G,\quad l_g(x):=gx,\\
+\label{eq:rtrans} r_g\colon G\to G,\quad r_g(x):=xg
+\end{gather}
+injektiv sind. Wie man leicht nachrechnet, sind sie sogar bijektiv.
+Für die Umkehrabbildungen gilt $(l_g)^{-1}=l_{g^{-1}}$ und
+$(r_g)^{-1}=r_{g^{-1}}$.
 
 \begin{Satz} Zu jedem Element ist das inverse Element eindeutig
 bestimmt, d.\,h. es kann keine zwei unterschiedlichen inversen
@@ -112,7 +128,6 @@ man die beiden Gruppen isomorph zueinander, man schreibt dafür
 $G\simeq G'$. Zwei Gruppen die isomorph zueinander sind, sind
 im Wesentlichen gleich. Isomorphis ist eine Äquivalenzrelation.
 
-
 Monomorphismen charakterisieren die Einbettung einer Gruppe
 in eine andere Gruppe. Man kann Einbettungen als Verallgemeinerung
 der Untergruppenbeziehung sehen. Hat man nämlich einen Monomorphismus
@@ -122,5 +137,29 @@ $H\simeq\varphi(H)$. Die Gruppen $H$ und $\varphi(H)$ sind also im
 Wesentlichen gleich. Andererseits ist $\varphi(H)\le G$ gemäß Satz
 \ref{hom-img-subgroup}.
 
+\subsection{Gruppenaktionen}
 
+\begin{Definition}[Linksaktion]\mbox{}\\*
+Eine Abbildung $f\colon G\times X\to X$ heißt Gruppenlinksaktion,
+kurz Linksaktion, wenn für das neutrale Element $e\in G$ und alle
+$g,h\in G$ gilt
+\begin{gather*}
+f(e,x) = x,\qquad f(gh,x) = f(g,f(h,x)).
+\end{gather*}
+\end{Definition}
+Anstelle von $f(g,x)$ schreibt man für gewöhnlich einfach $gx$,
+bzw. $g+x$ bei einer additiv geschriebenen Verknüpfung.
 
+\begin{Definition}[Rechtsaktion]\mbox{}\\*
+Eine Abbildung $f\colon X\times G\to X$ heißt Gruppenrechtssaktion,
+kurz Rechtsaktion, wenn für das neutrale Element $e\in G$ und
+alle $g,h\in G$ gilt
+\begin{gather*}
+f(x,e) = x,\qquad f(x,gh) = f(f(x,g),h).
+\end{gather*}
+\end{Definition}
+Bei diesen Axiomen ist für $X$ eine beliebige Menge zugelassen.
+Es kann auch $X=G$ sein. Beispiele dafür haben wir bereits
+kennengelernt, nämlich ist die Linkstranslation \eqref{eq:ltrans} eine
+Linksaktion und die Rechtstranslation \eqref{eq:rtrans} eine
+Rechtsaktion.
