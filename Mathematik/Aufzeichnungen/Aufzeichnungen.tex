@@ -34,6 +34,7 @@
 \DeclareMathOperator{\real}{Re}
 \DeclareMathOperator{\imag}{Im}
 \DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Cov}{Cov}
 
 \newtheoremstyle{rmbox}%
   {0pt}% space above
@@ -76,7 +77,7 @@
 
 \noindent
 {\LARGE\sffamily\bfseries Aufzeichnungen
-{\mdseries\rmfamily\large\hfill Juni 2018}\\[-2pt]
+{\mdseries\rmfamily\large\hfill August 2019}\\[-2pt]
 zur Mathematik\par}
 
 
@@ -590,7 +591,7 @@ Umformen bringt die folgende Formel:
 Für $n$ kann nun sogar eine komplexe Zahl eingesetzt werden, wobei
 man hofft, dass das Integral konvergiert.
 
-\newpage
+% \newpage
 \subsubsection{Integraldarstellung}
 \begin{definition}[Satz und Definition. Zeta-Funktion]\mbox{}\\
 Für $\real(s)>1$ konvergiert die Reihe:
@@ -716,8 +717,7 @@ analog durch
 \end{equation}
 beschrieben werden.
 
-\newpage
-
+% \newpage
 \subsection{Grünwald-Letnikow-Ableitung}
 
 Den Translationsoperator $T_h$ definiert man durch
@@ -777,7 +777,7 @@ Das führt nun zu:
 \end{equation}
 \end{definition}
 
-\newpage
+% \newpage
 \section{Lineare Algebra}
 \subsection{Lineare Abbildungen}
 Seien $V,W$ zwei Vektorräume über dem Körper $K$. Eine Abbildung
@@ -929,6 +929,113 @@ r &= \frac{\sqrt{g_{\sigma(1)\sigma(1)}\ldots g_{\sigma(k)\sigma(k)}}}
 \end{split}
 \end{equation}
 
+\section{Wahrscheinlichkeitsrechnung}
+\subsection{Bivariate Verteilungen}
+
+Gegeben ist eine bivariate Verteilung $\mathbf X=(X_1,X_2)$ mit Dichte
+$f(x_1,x_2)$. Zu berechnen ist die Kovarianzmatrix zu dieser
+Verteilung. Die Matrix ist definiert gemäß%
+\begin{equation}
+\Cov(\mathbf X) = E((\mathbf X-\mu)(\mathbf X-\mu)^T)
+\end{equation}
+mit
+\begin{equation}
+\mu = E(\mathbf X) = E\begin{pmatrix}X_1\\ X_2\end{pmatrix}
+= \begin{pmatrix}
+E(X_1)\\ E(X_2)
+\end{pmatrix}
+= \begin{pmatrix}\mu_1\\ \mu_2\end{pmatrix}.
+\end{equation}
+Aufgrund der Linearität von $E$ gilt
+\begin{gather*}
+\Cov(\mathbf X)_{ij} = E((X_i-\mu_i)(X_j-\mu_j))\\
+= E(X_i X_j-\mu_j X_i-\mu_i X_j+\mu_i\mu_j)\\
+= E(X_i X_j)-\mu_j E(X_i)-\mu_i E(X_j)+\mu_i\mu_j\\
+= E(X_i X_j)-\mu_i \mu_j-\mu_i \mu_j+\mu_i\mu_j\\
+= E(X_i X_j)-\mu_i\mu_j
+= E(X_i X_j)-E(X_i)E(X_j).
+\end{gather*}
+Die Berechnung von $E(X_i X_j),E(X_i),E(X_j)$ gestaltet
+sich etwas komplizierter als bei univariaten Verteilungen.
+Der Erwartungswert einer Abbildung $g(X,Y)$ wird berechnet
+gemäß%
+\begin{equation}\label{eq:E-of-bivariate-map}
+E(g(X,Y)) = \int_{-\infty}^\infty\int_{-\infty}^\infty
+g(x,y)f(x,y)\,\mathrm dx\mathrm dy,
+\end{equation}
+wobei $f(x,y)$ die Dichte von $(X,Y)$ ist.
+
+Man definiert die Randdichten:
+\begin{align}
+f_1(x) &:= \int_{-\infty}^\infty f(x,y)\,\mathrm dy,\\
+f_2(y) &:= \int_{-\infty}^\infty f(x,y)\,\mathrm dx.
+\end{align}
+Anwendung von \eqref{eq:E-of-bivariate-map} ergibt nun
+\begin{gather}
+E(X) = \int_{-\infty}^\infty\int_{-\infty}^\infty xf(x,y)\,\mathrm dx\mathrm dy\\
+= \int_{-\infty}^\infty x\bigg(\int_{-\infty}^\infty f(x,y)\,\mathrm dy\bigg)\mathrm dx
+= \int_{-\infty}^\infty x f_1(x)\mathrm dx.
+\end{gather}
+und
+\begin{gather}
+E(Y) = \int_{-\infty}^\infty\int_{-\infty}^\infty yf(x,y)\,\mathrm dx\mathrm dy\\
+= \int_{-\infty}^\infty y\bigg(\int_{-\infty}^\infty f(x,y)\,\mathrm dx\bigg)\mathrm dy
+= \int_{-\infty}^\infty x f_2(y)\mathrm dy.
+\end{gather}
+Für das Produkt wird auch \eqref{eq:E-of-bivariate-map} angewendet:
+\begin{equation}
+E(XY) = \int_{-\infty}^\infty\int_{-\infty}^\infty
+xyf(x,y)\,\mathrm dx\mathrm dy.
+\end{equation}
+
+\subsection{Zufallszahlengeneratoren}
+Eine RNG (random number generator) lässt sich modellieren
+als eine Folge $(X_k)$, wobei die Zufallsgrößen $X_k$
+identisch verteilt und paarweise unabhängig sind. Ein RNG entsteht
+auch, wenn das selbe Zufallsexperiment mit Verteilung $X$ immer
+wiederholt wird, die Verteilung der $X_k$ ist dann die Verteilung
+von $X$.
+
+Für eine Folge von Ergebnissen $(\omega_k)$ mit
+$\omega_k\in\Omega$ haben die $X_k\colon\Omega\to\R$ dann die Werte
+$x_k=X(\omega_k)$. Die Folge $(\omega_k)$ ist aber allgemein
+unbekannt, nur die Folge $(x_k)$ der Realisierungen ist gegeben,
+bzw. diese wird durch den RNG oder das wiederholte Experiment
+erzeugt.
+
+Die uniforme Verteilung hat die Verteilungsfunktion%
+\begin{equation}
+U\colon\R\to [0,1],\quad U(x):=\begin{cases}
+0\;\text{wenn}\; x<0,\\
+x\;\text{wenn}\; x\in[0,1],\\
+1\;\text{wenn}\; x>1.
+\end{cases}
+\end{equation}
+Möchte man eine Verteilung mit streng monoton steigender
+Verteilungsfunktion $F\colon\R\to[0,1]$ simulieren, hat aber zunächst
+nur einen RNG mit uniformer Verteilung zur Verfügung, dann kann man
+wie folgt vorgehen.
+
+Sei $X$ die zu simulierende Zufallsgröße mit Verteilung $F$
+und $X_u$ die Zufallsgröße mit uniformer Verteilung $U$. Der RNG
+nimmt den Wert $u=X_u(\omega)$ an. Den Wert $x=X(\omega)$ berechnet
+man gemäß $x=F^{-1}(u)$. Dieses Verfahren nennt man
+\emph{Inversionsmethode}.
+
+Demnach gilt $X=F^{-1}\circ X_u$. Zu zeigen ist, dass $X$ auch
+die gewünschte Verteilung $F$ besitzt. Man erhält
+\begin{align}
+X(\omega)\le x&\iff F^{-1}(X_u(\omega))\le x\\
+&\iff X_u(\omega)\le F(x).
+\end{align}
+Damit ergibt sich
+\begin{gather}
+P(X\le x) = P(X_u\le F(x)) = U(F(x)) = F(x).
+\end{gather}
+Somit hat $X$ tatsächlich die gewünschte Verteilung.
+
+
+\newpage
 \begin{thebibliography}{x}
 \bibitem{} Joakim Munkhammar: »Riemann"=Liouville Fractional Derivatives
 and the Taylor"=Riemann Series«. U.U.D.M. Project Report 2004:7.

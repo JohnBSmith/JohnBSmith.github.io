@@ -23,7 +23,8 @@
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
-\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage[colorlinks=true,linkcolor=c1,citecolor=black,%
+urlcolor=magenta]{hyperref}
 
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
@@ -31,6 +32,7 @@
 \newcommand{\C}{\mathbb C}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
+\newcommand{\citename}[1]{\textsc{#1}}
 % \renewcommand*\ttdefault{pcr}
 
 \begin{document}
@@ -352,11 +354,38 @@ $x$ im Ausdruck eine gebundene Variable ist und schreibt besser
 $[F(x)]_{x=a}^{x=b}$.
 
 Die Notation $F(x)|_a^b$ finde ich ambivalent. Man muss z.\,B.
-\[[2+F(x)]_a^b = (2+F(b))-(2+F(a)) = F(b)-F(a)\]
+\begin{equation}
+[2+F(x)]_a^b = (2+F(b))-(2+F(a)) = F(b)-F(a)
+\end{equation}
 von
-\[2+[F(x)]_a^b = 2+F(b)-F(a)\]
+\begin{equation}
+2+[F(x)]_a^b = 2+F(b)-F(a)
+\end{equation}
 unterscheiden können. Bei der Notation $F(x)|_a^b$ müsste
 man dafür extra ein Paar Klammern setzen.
+
+\subsection{Symmetrische Intervallnotation}
+Manchmal, z.\,B. beim Zwischenwertsatz, wird eine
+Intervallnotation benötigt, die symmetrisch bezüglich der Grenzen
+ist. Für $a,b\in\R$ mit $a\ne b$ empfiehlt sich folgende Notation:
+\begin{equation}
+[a,b]_s := [\min\{a,b\},\max\{a,b\}].
+\end{equation}
+Das »$s$« steht dabei für symmetrisch (engl. symmetric,
+franz. symétrique). In \citename{Heuser}~\cite{Heuser} findet
+man die Notation $\langle a,b\rangle$ anstelle von $[a,b]_s$,
+das kommt mir aber weniger unmissverständlich vor, manche benutzen die
+Notation für Tupel. Die Subscript"=Notation ist auch mit
+anderen Notationen kombinierbar. Meint man mit $[a..b]$
+z.\,B. das Ganzzahlintervall, dann kann man analog
+\begin{equation}
+[a..b]_s := [\min\{a,b\}..\max\{a,b\}]
+\end{equation}
+setzen. Eigentlich ist dieses Subscript auch bei Konvexkombinationen
+\begin{equation}
+[v,w]_s := \{(1-t)v+t w\mid t\in [0,1]\}
+\end{equation}
+erforderlich, denn $[w,v]_s=[v,w]_s$.
 
 \subsection{Notation für Kettenbrüche}
 Man schreibt für gewöhnlich
@@ -455,7 +484,7 @@ gewissen Pointe behaftet ist, da sich die eine endliche Gruppe
 als Quotient zweier unendlicher Gruppen ergibt.
 
 \section{Notation}
-\subsection{Bindungsstärke von Operatoren}
+\subsection{Operatorrangfolge von Quantoren}
 Die Schreibweisen $\forall x\colon P(x)$ und $\exists x\colon P(x)$
 für die Quantoren binden ihr Prädikat schwächer als alle anderen
 Operatoren, so dass alles nach dem Doppelpunkt zum Prädikat gehört?
@@ -549,6 +578,17 @@ Ich würde außerdem $\omega=\N_0$ setzen, weil das am ehesten
 dem Von-Neumann-Modell entspricht. Ohne $2=\{0,1\}$ lässt
 sich $2^A$ nicht als Abbildung in die Wahrheitswerte
 interpretieren.
+
+\begin{thebibliography}{xx}
+\bibitem{Heuser} Harro Heuser: »Lehrbuch der Analysis, Teil 1«.
+  17. Auflage, S. 353, Nr. 61: »Der Taylorsche Satz und die Taylorsche
+  Entwicklung«.
+\bibitem{Suggestions}
+»\href{https://mathoverflow.net/questions/42929/suggestions-for-good-notation}%
+{Suggestions for good notation}«.
+  In: MathOverflow. Tags: notation, biglist.
+\end{thebibliography}
+
 
 \end{document}
 
