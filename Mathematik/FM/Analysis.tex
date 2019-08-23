@@ -216,7 +216,7 @@ mit $g\in X$ besitzt. Ein vollständiger normierter Raum heißt
 \emdef{Banachraum}\index{Banachraum}.
 \end{definition}
 
-\clearpage
+% \clearpage
 \section{Reihen}\index{Reihe}
 \begin{definition}[Reihe]\mbox{}\newline
 Sei $(a_n)$ eine Folge. Die Folge $(s_n)$ von
@@ -315,10 +315,12 @@ absolut konvergenten Reihen ist absolut konvergent und es gilt%
 \begin{equation}\label{eq:cauchy-product-limits}
 C = AB.
 \end{equation}
-\strong{Satz von Mertens.}
+
+\begin{Satz}[Satz von Mertens]
 Das Cauchy-Produkt von reellen oder komplexen konvergenten Reihen,
 eine davon absolut konvergent, ist konvergent und es gilt
 \eqref{eq:cauchy-product-limits}.
+\end{Satz}
 
 \section{Reelle Funktionen}
 \begin{definition}[Reelle Funktion]\index{reelle Funktion}%
@@ -349,8 +351,7 @@ Intervall. Die Funktion $f$ ist stetig bei $x_0\in I$ gdw.
 \end{equation}
 Sind $f,g$ stetige Funktion, so ist auch $g\circ f$ stetig.
 
-\noindent
-\strong{Zwischenwertsatz.}\index{Zwischenwertsatz}
+\begin{Satz}[Zwischenwertsatz]\index{Zwischenwertsatz}
 Sei $f\colon [a,b]\to\R$ eine stetige Funktion und sei
 $a<b$. Bei $f(a)<f(b)$ gilt:
 \begin{equation}
@@ -360,8 +361,19 @@ Bei $f(a)>f(b)$ gilt:
 \begin{equation}
 \forall y{\in}[f(b),f(a)]\;\exists x{\in}[a,b]\;(y=f(x)).
 \end{equation}
+\end{Satz}
 
-\newpage
+\noindent
+Mit $[a,b]_s := [\min(a,b),\max(a,b)]$ lässt sich der Satz
+kompakter formuliern.
+\begin{Satz}[Zwischenwertsatz]
+Sei $f\colon [a,b]\to\R$ eine stetige Funktion, dann gilt
+\begin{equation}
+[a,b]_s \subseteq f([a,b]).
+\end{equation}
+\end{Satz}
+
+%\newpage
 \section{Differentialrechnung}\index{Differentialrechnung}
 \subsection{Differentialquotient}\index{Differentialquotient}\index{Ableitung}
 \begin{definition}[Differentialquotient]\mbox{}\newline
@@ -400,40 +412,50 @@ differenzierbar an der Stelle $x_0$ und es gilt
 \begin{equation}
 (f\circ g)'(x_0) = (f'\circ g)(x_0)\cdot g'(x_0).
 \end{equation}
+Für die Ableitung elementarer Funktionen, siehe
+Tabelle \ref{tab:Ableitungen}.
 
-\subsection{Ableitung elementarer Funktionen}
+\begin{table}
+\caption{Ableitungen elementarer Funktionen}
+\label{tab:Ableitungen}
 \begin{tabular}{l|l|l|l}
+\toprule
 $f(x)$ & $f'(x)$ & $D(f)$ & $D(f')$\\
-\hline\pstrut{2pt}%
+\midrule[\heavyrulewidth]
 $x^n, n{\in}\N$ & $nx^{n-1}$ & $\R$ & $D(f)$\\
 $x^r, r{\in}\R$ & $rx^{r-1}$ & $(0,\infty)$ & $D(f)$\\
 $\frac{1}{x}$ & $-\frac{1}{x^2}$ & $\R{\setminus}\{0\}$ & $D(f)$\\
 \pstrut{2pt}%
 $\sqrt{x}$ & $\frac{1}{2\sqrt{x}}$ & $[0,\infty)$ & $(0,\infty)$\\
 $\sqrt[n]{x}$ & $\frac{1}{n\sqrt[n]{x^{n-1}}}$ & $[0,\infty)$ & $(0,\infty)$\\
-\pstrut{2pt}%
+\midrule
 $\ee^x$ & $\ee^x$ & $\R$ & $D(f)$\\
 $a^x, a{>}0$ & $a^x\ln a$ & $\R$ & $D(f)$\\
 $\ln x$ & $\frac{1}{x}$ & $(0,\infty)$ & $D(f)$\\
 $\log_a x$ & $\frac{1}{x\ln a}$ & $(0,\infty)$ & $D(f)$\\
+\midrule
 $\sin x$ & $\cos x$ & $\R$ & $D(f)$\\
 $\cos x$ & $\sin x$ & $\R$ & $D(f)$\\
 $\tan x$ & $1+\tan^2 x$ & $\{x\mid x{\ne}k\pi{+}\frac{\pi}{2}\}$ & $D(f)$\\
 $\cot x$ & $-1-\cot^2 x$ & $\{x\mid x{\ne}k\pi\}$ & $D(f)$\\
+\midrule
 $\arcsin x$ & $\frac{1}{\sqrt{1-x^2}}$ & $[-1,1]$ & $(-1,1)$\\
 $\arccos x$ & $-\frac{1}{\sqrt{1-x^2}}$ & $[-1,1]$ & $(-1,1)$\\
 $\arctan x$ & $\frac{1}{1+x^2}$ & $\R$ & $D(f)$\\
 $\arccot x$ & $-\frac{1}{1+x^2}$ & $\R$ & $D(f)$\\
+\midrule
 $\sinh x$ & $\cosh x$ & $\R$ & $D(f)$\\
 $\cosh x$ & $\sinh x$ & $\R$ & $D(f)$\\
 $\tanh x$ & $1-\tanh^2 x$ & $\R$ & $D(f)$\\
 $\coth x$ & $1-\coth^2 x$ & $\R{\setminus}\{0\}$ & $D(f)$\\
+\midrule
 $\arsinh x$ & $\frac{1}{\sqrt{1+x^2}}$ & $\R$ & $D(f)$\\
 $\arcosh x$ & $\frac{1}{\sqrt{x^2-1}}$ & $[1,\infty)$ & $(1,\infty)$\\
 $\artanh x$ & $\frac{1}{1-x^2}$ & $(-1,1)$ & $D(f)$\\
-$\arcoth x$ & $\frac{1}{1-x^2}$ & $(-\infty,-1){\cup}(1,\infty)$ & $D(f)$
+$\arcoth x$ & $\frac{1}{1-x^2}$ & $(-\infty,-1){\cup}(1,\infty)$ & $D(f)$\\
+\bottomrule
 \end{tabular}
-
+\end{table}
 
 \subsection{Tangente und Normale}
 Funktionsgleichung der Tangente an den Graphen von
@@ -451,6 +473,7 @@ N(x) = f(x_0)+\frac{1}{f'(x_0)}(x-x_0).
 Sei $f$ eine an der Stelle $a$ unendlich oft differenzierbare
 reelle Funktion.
 
+\newpage
 \begin{definition}[Taylorreihe]\mbox{}\newline
 \emdef{Taylorreihe} von $f$ an der Stelle $a$:
 \begin{equation}
@@ -490,7 +513,7 @@ Ist $f(x)=f(x_0)$ nur bei $x=x_0$, dann spricht man von einem
 \subsection{Regelfunktionen}
 Ist $T$ eine Treppenfunktion\index{Treppenfunktion}
 mit $T(x):=t_k$ für $x\in(x_k,x_{k+1})$,
-so gilt:
+dann gilt:
 \begin{equation}
 \int_a^b T(x)\,\mathrm dx = \sum_{k=0}^{n-1} (x_{k+1}-x_k)\,t_k.
 \end{equation}
@@ -501,8 +524,9 @@ Folge von Treppenfunktionen gibt, die gleichmäßig gegen $f$
 konvergiert.
 \end{definition}
 
+\noindent
 Ist $(T_n)$ eine gleichmäßig gegen die Regelfunktion $f$ konvergente
-Folge von Treppenfunktionen, so gilt:
+Folge von Treppenfunktionen, dann gilt:
 \begin{equation}
 \int_a^b f(x)\,\mathrm dx = \lim_{n\to\infty} \int_a^b T_n(x)\,\mathrm dx.
 \end{equation}
@@ -514,13 +538,13 @@ Funktion mit $f(x)\ge 0$ auf dem gesamten Definitionsbereich.
 
 Untersumme:
 \begin{equation}
-\underline{A}_n = \sum_{k=0}^{n-1}
+\underline{A}_n := \sum_{k=0}^{n-1}
 f\Big(a+k\,\frac{b-a}{n}\Big)\,\frac{b-a}{n}.
 \end{equation}
 
 Obersumme:
 \begin{equation}
-\overline{A}_n = \sum_{k=1}^{n}
+\overline{A}_n := \sum_{k=1}^{n}
 f\Big(a+k\,\frac{b-a}{n}\Big)\,\frac{b-a}{n}.
 \end{equation}
 Es gilt:
@@ -534,7 +558,7 @@ Es gilt:
 Sei $I$ ein Intervall, offen, halboffen, geschlossen oder unendlich.
 Sei $f\colon I\to\R$ stetig.
 
-\begin{definition}[Integralfunktion]\mbox{}\newline
+\begin{definition}[Integralfunktion]\mbox{}\\*
 \emdef{Integralfunktion}:
 \begin{equation}
 F(x):=\int_a^x f(x)\,\mathrm dx,\quad F\colon I\to\R.
@@ -545,14 +569,15 @@ F(x):=\int_a^x f(x)\,\mathrm dx,\quad F\colon I\to\R.
 Gilt $F'=f$, so wird $F$ \emdef{Stammfunktion} von $f$ genannt.
 \end{definition}
 
-\theorem{Hauptsatz}
+\begin{Satz}[Hauptsatz]
 Die Integralfunktion ist differenzierbar und es gilt $F'=f$.
 Ist $f\colon I\to\R$ stetig und $F$ eine Stammfunktion von $f$,
-so gilt
+dann gilt
 \begin{equation}\label{eq:Hauptsatz}
 \int_a^b f(x)\,\mathrm dx = [F(x)]_{a}^{b} = F(b)-F(a)
 \end{equation}
 für $a,b\in I$.
+\end{Satz}
 
 \subsection{Integrationsregeln}
 \subsubsection{Linearität}
@@ -804,7 +829,7 @@ Die Euler-Lagrange-Gleichung\index{Euler-Lagrange-Gleichung}
 \end{equation}
 mit $y=f(x)$ und $y'=f'(x)$ ist eine notwendige Bedingung dafür.
 
-\newpage
+%\newpage
 \section{Fourier-Analysis}
 \subsection{Fourierreihen}\index{Fourierreihe}
 \subsubsection{Fourier-Skalarprodukt}%
@@ -864,7 +889,8 @@ a_k[\lambda f] = \lambda a_k[f],\\
 b_k[\lambda f] = \lambda b_k[f].
 \end{gather}
 
-\newpage\noindent
+% \newpage
+\noindent
 Umrechnung zwischen den reellen und den komplexen
 Koeffizienten für $k>0$:
 \begin{align}

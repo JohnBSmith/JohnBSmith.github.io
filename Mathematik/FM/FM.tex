@@ -14,10 +14,11 @@
 \usepackage{microtype}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{booktabs}
 % \usepackage{multicol}
 
 \usepackage{libertine}
-\usepackage[cmintegrals]{newtxmath}
+\usepackage{newtxmath}
 \usepackage[scaled=0.80]{DejaVuSans}
 \renewcommand{\ttdefault}{lmtt}
 % \renewcommand\sfdefault{lmss}
@@ -32,6 +33,13 @@
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{4mm}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
 
 \usepackage[toc]{multitoc}
 \setcounter{secnumdepth}{4}
@@ -91,7 +99,7 @@
 % \newcommand{\definition}{\strong{Definition.}}
 \newcommand{\theorem}[1]{\strong{#1.}}
 \newenvironment{Definition}{\par\noindent\strong{Definition.}}{\par}
-\newenvironment{Satz}{\par\noindent\strong{Satz.}}{\par}
+% \newenvironment{Satz}{\par\noindent\strong{Satz.}}{\par}
 \newcommand{\minisection}{\vspace{4pt plus 2pt minus 1pt}\par\noindent}
 
 \newtheoremstyle{Definition}
@@ -100,15 +108,26 @@
   {\sffamily\bfseries}{}
 % {.2em}{\thmname{#1}\thmnumber{~#2}.~\thmnote{#3.}}
   {.2em}{\thmname{#1}.~\thmnote{#3.}}
+
 \theoremstyle{Definition}
 \newtheorem{definition}{Definition}[chapter]
+
+\newtheoremstyle{SatzBox}
+  {0pt}{0pt}
+  {}{}
+  {\sffamily\bfseries}{}
+  {.2em}{\thmnote{#3.}}
+
+\theoremstyle{SatzBox}
+\newtheorem{Satz}{Satz}[chapter]
+\newtheorem{Korollar}[Satz]{Korollar}
 
 %\newenvironment{definition}[1][]%
 %  {\par\addvspace{4pt plus 0pt minus 4pt}\noindent\strong{Definition.~#1.}\newline\indent}%
 %  {\par\addvspace{4pt plus 0pt minus 4pt}}
 
-\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
-\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
+\definecolor{greenblue}{rgb}{0.05,0.32,0.4}
+\definecolor{grayblue}{rgb}{0.2,0.25,0.4}
 \definecolor{lightgray}{rgb}{0.4,0.4,0.4}
 \definecolor{b1}{rgb}{0.6,0.6,0.54}
 
@@ -117,6 +136,16 @@
   innertopmargin=1pt, innerbottommargin=1pt,%
   innerrightmargin=0pt%
 ]{definition}
+
+\newcommand{\framedtheorem}[1]{%
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=grayblue, linewidth=3.0pt, innerleftmargin=4pt,%
+  innertopmargin=1pt, innerbottommargin=1pt,%
+  innerrightmargin=0pt%
+]{#1}}
+
+\framedtheorem{Satz}
+\framedtheorem{Korollar}
 
 \newcommand{\ibox}[1]{\par\hbox{\hsize=22em\hglue 1em\vbox{{\noindent}#1}}}
 
