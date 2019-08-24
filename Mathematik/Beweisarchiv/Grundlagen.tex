@@ -560,7 +560,7 @@ nochmals Def. \ref{def:filter} (filter):
 \[g(f(x))\in M \iff g(f(x))\in M.\;\qedsymbol\]
 \end{Beweis}
 
-\begin{Satz}
+\begin{Satz}\label{img-chain}
 Es gilt $(g\circ f)(M) = g(f(M))$.
 \end{Satz}
 \begin{Beweis}
@@ -581,7 +581,7 @@ ergibt sich
 \end{gather*}
 \end{Beweis}
 
-\begin{Satz}
+\begin{Satz}\label{left-inverse}
 Sei $f\colon A\to B$ eine Abbildung und $A\ne\emptyset$. Man nennt
 eine Funktion $g\colon B\to A$ mit $g\circ f=\id_A$ Linksinverse
 zu $f$. Die Abbildung $f$ ist genau dann injektiv, wenn eine
@@ -607,6 +607,53 @@ und
 Es ergibt sich
 \[f(a)=f(b)\implies a=b.\;\qedsymbol\]
 \end{Beweis}
+
+\begin{Satz}\label{preimg-setminus}
+Für jede Abbildung $f$ gilt
+$f^{-1}(A\setminus B) = f^{-1}(A)\setminus f^{-1}(B)$.
+\end{Satz}
+\begin{Beweis} Ergibt sich sofort gemäß Definition:
+\begin{gather*}
+f^{-1}(A)\setminus f^{-1}(B) = \{x\mid x\in f^{-1}(A)\land \neg x\in f^{-1}(B)\}\\
+= \{x\mid f(x)\in A\land f(x)\notin B\}
+= \{x\mid f(x)\in A\setminus B\}
+= f^{-1}(A\setminus B).
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}\label{img-preimg}
+Für jede Abbildung $f\colon A\to B$ gilt $f(f^{-1}(N))=N$.
+\end{Satz}
+\begin{Beweis}
+Gemäß Definition bekommt man
+\begin{gather*}
+f(f^{-1}(N))
+= \{y\mid \exists x(x\in f^{-1}(N)\land y=f(x))\}
+= \{y\mid \exists x(f(x)\in N\land y=f(x))\}\\
+= \{y\mid \exists x(y\in N)\} = \{y\mid y\in N\} = N.\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}\label{inj-img-setminus}
+Ist $f$ injektiv, dann gilt $f(A\setminus B)=f(A)\setminus f(B)$.
+\end{Satz}
+\begin{Beweis}
+Da $f$ injektiv ist, gibt es nach Satz \ref{left-inverse} eine
+Linksinverse $f^{-1}$. Nach Satz \ref{img-chain} ist für eine
+beliebige Menge $M$ die Gleichung
+\[f^{-1}(f(M)) = (f^{-1}\circ f)(M) = \id(M) = M\]
+erfüllt. Auf beiden Seiten der zu zeigenden Gleichung
+wendet man $f^{-1}$ an. Unter Heranziehung von Satz \ref{preimg-setminus}
+bekommt man
+\begin{gather*}
+f^{-1}(f(A)\setminus f(B)) = f^{-1}(f(A))\setminus f^{-1}(f(B))
+= \id(A)\setminus\id(B) = A\setminus B.
+\end{gather*}
+Wendet man nun auf beide Seiten der Gleichung $f$ an, dann ergibt
+sich nach Satz \ref{img-preimg} das Resultat
+$f(A)\setminus f(B) = f(A\setminus B).\;\qedsymbol$
+\end{Beweis}
+
 
 \newpage
 \subsection{Kardinalzahlen}

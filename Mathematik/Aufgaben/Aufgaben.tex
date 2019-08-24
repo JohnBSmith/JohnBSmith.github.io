@@ -560,7 +560,7 @@ V = \int_a^b \pi\cdot r(z)^2\,\mathrm dz
 
 \subsection{Konvergenz}
 \begin{Aufgabe}
-Bestimme $g=\lim_{x\to\infty}(\sqrt{x^2+1}-x)$.
+Bestimme $L=\lim_{x\to\infty}(\sqrt{x^2+1}-x)$.
 \end{Aufgabe}
 \strong{Lösung.} Es gilt $(a-b)(a+b)=a^2-b^2$ und daher
 \begin{gather*}
@@ -568,8 +568,52 @@ Bestimme $g=\lim_{x\to\infty}(\sqrt{x^2+1}-x)$.
 = \frac{x^2+1-x^2}{\sqrt{x^2+1}+x} = \frac{1}{\sqrt{x^2+1}+x}.
 \end{gather*}
 Man bekommt
-\[g = \lim_{x\to\infty} \frac{1}{\sqrt{x^2+1}+x}
+\[L = \lim_{x\to\infty} \frac{1}{\sqrt{x^2+1}+x}
 = \frac{1}{\infty+\infty} = \frac{1}{\infty} = 0.\;\qedsymbol\]
+
+\begin{Aufgabe}
+Für welche Zahlen $r>0$ existiert der Grenzwert\\
+$L=\lim_{x\to\infty}((x^{1/r}+1)^r-x)$?
+\end{Aufgabe}
+\strong{Lösung 1.} Substituiere $x:=(1/u)^r$, das ergibt
+\begin{gather*}
+L = \lim_{u\to 0} \bigg(\bigg(\frac{1}{u}+1\bigg)^r-\bigg(\frac{1}{u}\bigg)^r\bigg)
+= \lim_{u\to 0} \frac{(1+u)^r-1}{u^r}
+\stackrel{\text{L'H}}= \lim_{u\to 0} \frac{r(1+u)^{r-1}}{ru^{r-1}}
+= \lim_{u\to 0} \bigg(\frac{1}{u}+1\bigg)^{r-1}\\
+= \lim_{x\to\infty}\frac{1}{(x+1)^{1-r}}.
+\end{gather*}
+Im trivialen Fall $r=1$ ergibt sich $L=1$. Im Fall $r<1$ ist
+$1-r>0$, es ergibt sich $L=0$. Im Fall $r>1$ ist $1-r<0$,
+es ergibt sich $L=\infty$.\;\qedsymbol
+
+\strong{Lösung 2.} Substituiere $x:=a^r$. Sei $F(a):=a^r$.
+Das bringt
+\[L = \lim_{a\to\infty} ((a+1)^r-a^r)
+= \lim_{a\to\infty} \int_a^{a+1} F'(t)\,\mathrm dt.\]
+Angenommen $\lim\limits_{t\to\infty}F'(t)=0$, dann taucht $|F'(t)|$
+irgendwann in jede Epsilon"=Umgebung von null ein und verlässt
+diese nicht mehr. Demnach konvergiert auch
+$\sup\limits_{t\in [a,a+1]}|F'(t)|$ gegen null für $a\to\infty$.
+Der Flächeninhalt unter dem Graphen kann durch das Rechteck mit
+Höhe Supremum abgeschätzt werden, das ist die Einschnürung%
+\begin{gather*}
+\bigg|\int_a^{a+1} F'(t)\,\mathrm dt\bigg| \le \sup_{t\in [a,a+d]} |F'(t)|.
+\end{gather*}
+Daher muss auch das Integral gegen null konvergieren.
+Im Fall $r<1$ ist $\lim\limits_{t\to\infty}F'(t)=0$ ist gemäß $F'(a)=ra^{r-1}$.
+
+Für den Fall $r>1$ kann keine Aussage getroffen werden. Für diesen
+Fall betrachte einen ähnlichen Ansatz. Gibt es eine Konstante $K>0$
+mit $F'(t)>K$ für alle $t>t_0$, dann wächst%
+\[\inf_{t\in[a,a+1]}F'(t) \le \int_a^{a+1} F'(t)\,\mathrm dt.\]
+über alle Grenzen, folglich auch das Integral.
+
+Die Bedingung $K<F'(t)=ra^{r-1}$ ist gesichert, da $a^{r-1}$
+für $r>1$ über alle Grenzen wächst.
+
+Zusammenfassung: Für $r<1$ ist $L=$ und
+für $r>1$ ist $L=\infty$.\;\qedsymbol
 
 \begin{Aufgabe}
 Berechne
@@ -722,7 +766,7 @@ Weil alle partiellen Ableitungen konstant und daher auch stetig
 sind, ist $p_i$ total differenzierbar. Somit muss $p_i$ erst
 recht stetig sein.\;$\Box$
 
-\newpage
+%\newpage
 \begin{Aufgabe}
 Man prüfe, für welche $s\in\R\setminus\{0\}$ der Grenzwert
 \[L = \lim_{z\to 0} \frac{\real(z)}{|z|^s},\quad z\in\C\setminus\{0\}\]
@@ -774,7 +818,6 @@ ergibt sich
 Bei $(x,y)\to (0,0)$ geht für $s<1$ die rechte Seite gegen null,
 folglich nach dem Einschnürungssatz auch die linke Seite.\;\qedsymbol
 
-\newpage
 \subsection{Potenzreihen}
 \begin{Aufgabe}
 Man bestimme die geschlossene Form der Potenzreihe
@@ -797,6 +840,7 @@ f(x) = f(x)-f(0) = \int_0^x f'(t)\,\mathrm dt
 = -\ln|1-x|.\;\qedsymbol
 \end{equation}
 
+\newpage
 \subsection{Vektoranalysis}
 \begin{Aufgabe}
 Man berechne den Fluss des Vektorfeldes $F(x,y,z)=(x,y,xyz)$ durch
@@ -816,7 +860,7 @@ wobei $\varphi(u,v)$ eine Parametrisierung der Oberfläche ist und
 Für die Parametrisierungen wird immer $B=[0,1]^2$ gewählt, dergestalt
 dass der Normalenvektor nach außen zeigt.
 
-\newpage
+%\newpage
 \noindent
 Die Berechnung:
 \[
@@ -869,6 +913,7 @@ N = \begin{bmatrix}1\\ 0\\ 0\end{bmatrix},
 Es ergibt sich
 \[I = I_1+I_2+I_3+I_4+I_5+I_6 = 0+\frac{1}{4}+0+1+0+1 = \frac{9}{4}.\;\Box\]
 
+\newpage
 \subsection{Differentialgleichungen}
 
 \begin{Aufgabe}
