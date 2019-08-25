@@ -634,6 +634,17 @@ f(f^{-1}(N))
 \end{gather*}
 \end{Beweis}
 
+\begin{Satz}
+Für jede Abbildung $f\colon A\to B$ gilt
+$\exists M(f(M)=N)\iff N\subseteq f(A)$.
+\end{Satz}
+\begin{Beweis}
+Hat man ein $M$ mit $f(M)=N$, dann ist trivialerweise
+$f(M)\subseteq f(A)$, also $N\subseteq f(A)$. Liegt umgekehrt
+eine Menge $N\subseteq f(A)$ vor, dann kann man $M:=f^{-1}(N)$
+setzen, nach Satz \ref{img-preimg} gilt dann $f(M)=N$.\;\qedsymbol
+\end{Beweis}
+
 \begin{Satz}\label{inj-img-setminus}
 Ist $f$ injektiv, dann gilt $f(A\setminus B)=f(A)\setminus f(B)$.
 \end{Satz}
@@ -642,8 +653,7 @@ Da $f$ injektiv ist, gibt es nach Satz \ref{left-inverse} eine
 Linksinverse $f^{-1}$. Nach Satz \ref{img-chain} ist für eine
 beliebige Menge $M$ die Gleichung
 \[f^{-1}(f(M)) = (f^{-1}\circ f)(M) = \id(M) = M\]
-erfüllt. Auf beiden Seiten der zu zeigenden Gleichung
-wendet man $f^{-1}$ an. Unter Heranziehung von Satz \ref{preimg-setminus}
+erfüllt. Unter Heranziehung von Satz \ref{preimg-setminus}
 bekommt man
 \begin{gather*}
 f^{-1}(f(A)\setminus f(B)) = f^{-1}(f(A))\setminus f^{-1}(f(B))
@@ -654,6 +664,24 @@ sich nach Satz \ref{img-preimg} das Resultat
 $f(A)\setminus f(B) = f(A\setminus B).\;\qedsymbol$
 \end{Beweis}
 
+\begin{Satz}
+Ist $f$ eine bijektive Abbildung und $f^{-1}$ die Umkehrabbildung
+von $f$, dann stimmt das Urbild $f^{-1}(N)$ mit der Bildmenge
+von $N$ unter der Umkehrabbildung -- zur Unterscheidung $(f^{-1})(N)$
+geschrieben -- überein.
+\end{Satz}
+\begin{Beweis}
+Expansion der Gleichung $f^{-1}(N)=(f^{-1})(N)$ führt zur Bedingung
+\[f(x)\in N\iff \exists y(y\in N\land x=f^{-1}(y)).\]
+Da $f$ bijektiv ist, gilt $x=f^{-1}(y)\iff f(x)=f(f^{-1}(y))=y$.
+Demnach ist
+\[\exists y(y\in N\land x=f^{-1}(y))\iff \exists y(f(x)\in N)\iff f(x)\in N.\]
+Die Bedingung ist daher immer erfüllt.\;\qedsymbol
+\end{Beweis}
+Es genügt nicht, wenn $f$ injektiv ist. Als Gegenbeispiel setze
+\[f\colon\{0\}\to\{0,1\},\quad f(x):=x.\]
+Hier ist $f^{-1}(\{1\})=\emptyset$. Jedoch ist
+$(f^{-1})(\{1\})=\{0\}$.
 
 \newpage
 \subsection{Kardinalzahlen}
