@@ -622,16 +622,39 @@ f^{-1}(A)\setminus f^{-1}(B) = \{x\mid x\in f^{-1}(A)\land \neg x\in f^{-1}(B)\}
 \end{Beweis}
 
 \begin{Satz}\label{img-preimg}
-Für jede Abbildung $f\colon A\to B$ gilt $f(f^{-1}(N))=N$.
+Für jede Abbildung $f$ gilt $f(f^{-1}(N)\subseteq N$.
 \end{Satz}
 \begin{Beweis}
 Gemäß Definition bekommt man
 \begin{gather*}
-f(f^{-1}(N))
-= \{y\mid \exists x(x\in f^{-1}(N)\land y=f(x))\}
-= \{y\mid \exists x(f(x)\in N\land y=f(x))\}\\
-= \{y\mid \exists x(y\in N)\} = \{y\mid y\in N\} = N.\;\qedsymbol
+y\in f(f^{-1}(N))
+\iff \exists x(x\in f^{-1}(N)\land y=f(x))
+\iff\exists x(f(x)\in N\land y=f(x)).
 \end{gather*}
+Leicht ersichtlich ist nun, dass
+\begin{gather*}
+\exists x(f(x)\in N\land y=f(x)) \implies y\in N.\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Satz}\label{img-preimg-imgset}
+Für jede Abbildung $f\colon A\to B$ gilt $f(f^{-1}(N))=N$,
+sofern $N\subseteq f(A)$ ist.
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{img-preimg} bleibt zu zeigen
+\begin{gather*}
+y\in N\implies\exists_{x\in A}(f(x)\in N\land y=f(x)).
+\end{gather*}
+Setzt man nun $N\subseteq f(A)$ voraus, dann ist $f(x)\in N$
+allgemeingültig. Man bekommt
+\begin{gather*}
+\exists_{x\in A}(f(x)\in N\land y=f(x))
+\iff \exists_{x\in A}(y=f(x))\iff y\in f(A).
+\end{gather*}
+Die Implikation $y\in N\implies y\in f(A)$ ist nun
+wiederum definitionsgemäß äquivalent zu $N\subseteq f(A)$,
+was Voraussetzung war.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
@@ -642,7 +665,7 @@ $\exists M(f(M)=N)\iff N\subseteq f(A)$.
 Hat man ein $M$ mit $f(M)=N$, dann ist trivialerweise
 $f(M)\subseteq f(A)$, also $N\subseteq f(A)$. Liegt umgekehrt
 eine Menge $N\subseteq f(A)$ vor, dann kann man $M:=f^{-1}(N)$
-setzen, nach Satz \ref{img-preimg} gilt dann $f(M)=N$.\;\qedsymbol
+setzen, nach Satz \ref{img-preimg-imgset} gilt dann $f(M)=N$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{inj-img-setminus}
@@ -660,7 +683,7 @@ f^{-1}(f(A)\setminus f(B)) = f^{-1}(f(A))\setminus f^{-1}(f(B))
 = \id(A)\setminus\id(B) = A\setminus B.
 \end{gather*}
 Wendet man nun auf beide Seiten der Gleichung $f$ an, dann ergibt
-sich nach Satz \ref{img-preimg} das Resultat
+sich nach Satz \ref{img-preimg-imgset} das gesuchte Resultat
 $f(A)\setminus f(B) = f(A\setminus B).\;\qedsymbol$
 \end{Beweis}
 
