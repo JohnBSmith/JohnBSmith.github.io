@@ -222,3 +222,39 @@ Für eine Verteilungsfunktion $F$ gilt:
 \bulletbs P(a<X\le b) = F(b)-F(a).
 \end{gather}
 
+\begin{definition}[Zufallszahlengenerator]\mbox{}\\*
+Sei $(X_k)$ eine Folge von unabhängigen und
+identisch verteilten Zufallsgrößen. Eine Folge
+$(x_k)$ von Realisierungen $x_k=X_k(\omega_k)$ wird
+Zufallszahlengenerator (kurz RNG, engl. random number generator)
+genannt.
+\end{definition}
+
+\noindent
+Bemerkung: Die $x_k$ werden durch Auswürfeln oder algorithmisch
+ermittelt, wobei die $\omega_k$ unbekannt bleiben und auch
+mathematisch keine Rolle spielen.
+
+\strong{Inversionsmethode.}
+Die uniforme Verteilung ist definiert durch die Verteilungsfunktion
+\begin{equation}
+U\colon\R\to [0,1],\quad U(x):=\begin{cases}
+0\;\text{wenn}\;x<0,\\
+x\;\text{wenn}\;x\in [0,1],\\
+1\;\text{wenn}\;x>1.
+\end{cases}
+\end{equation}
+Hat man nur einen Generator $(u_k)$ zur Verfügung, der uniform
+verteilte Zufallszahlen erzeugt, möchte aber Zufallszahlen $x_k$
+mit Verteilungsfunktion $F$ erzeugen, dann lassen sich diese
+gemäß
+\begin{equation}
+x_k = F^{-1}(u_k)
+\end{equation}
+ermitteln. Ist $F$ stetig und streng monoton steigend, dann
+ist $F^{-1}$ die Umkehrfunktion von $F$, andernfalls setzt man
+\begin{equation}
+F^{-1}(u) := \inf\{x\in\R\mid F(x)\ge u\}.
+\end{equation}
+
+

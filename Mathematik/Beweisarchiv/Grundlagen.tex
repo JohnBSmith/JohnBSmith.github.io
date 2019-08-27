@@ -234,6 +234,35 @@ Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
 Für die Vereinigung ist das analog.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{cap-subseteq}
+Es gilt $A\cap B\subseteq A$.
+\end{Satz}
+\begin{Beweis}
+Expansion liefert die Formel $x\in A\land x\in B\implies x\in A$.
+Gemäß boolescher Algebra gilt allgemein
+\[\varphi\land\psi\Rightarrow\varphi
+\equiv \neg(\varphi\land\psi)\lor\varphi
+\equiv \neg\varphi\lor\neg\psi\lor\varphi
+\equiv 1\lor\neg\psi\equiv 1.\]
+Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{subseteq-char}
+Es gilt $A\subseteq B\iff A\cap B=A$.
+\end{Satz}
+\begin{Beweis}
+Aufgrund von Satz \ref{cap-subseteq} muss lediglich
+$A\subseteq B\iff A\subseteq A\cap B$ gezeigt werden.
+Expansion führt zur Formel
+\[x\in A\Rightarrow x\in B\iff x\in A\Rightarrow x\in A\land x\in B.\]
+Die Formel $\varphi\Rightarrow\psi\iff\varphi\Rightarrow\varphi\land\psi$
+ist aber tautologisch, denn
+\[\varphi\Rightarrow\varphi\land\psi\equiv\neg\varphi\lor(\varphi\land\psi)
+\equiv (\neg\varphi\lor\varphi)\land(\neg\varphi\land\psi)
+\equiv 1\land(\varphi\Rightarrow\psi)\equiv \varphi\Rightarrow\psi.\]
+Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
+\end{Beweis}
+
 \begin{Satz}\label{eq-iff-all-iff}
 Es gilt $a=b\iff \forall x(x=a\iff x=b)$.
 \end{Satz}
@@ -319,6 +348,7 @@ Da $\exists t[t=(a,b)\land P(t)]$ gegen $P(a,b)$ ersetzt werden
 darf, folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
+\newpage
 \begin{Satz}\label{cup-cart}
 Es gilt:
 \[\bigcup_{t\in I\times J} A_t
@@ -426,7 +456,7 @@ angewendet werden.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[preimg-dl: Distributivität der Urbildoperation]%
-\index{Distributivgesetz!Urbildoperation}\mbox{}\\
+\label{preimg-dl}\index{Distributivgesetz!Urbildoperation}\mbox{}\\
 Für $f\colon A\to B$ und beliebige Mengen $M_i$ gilt:
 \begin{align}
 f^{-1}(M_1\cap M_2) &= f^{-1}(M_1)\cap f^{-1}(M_2),\\
@@ -500,7 +530,7 @@ und Satz \ref{exists-cl} (exists-cl) gilt:
 \end{align*}
 \end{Beweis}
 
-\begin{Satz}
+\begin{Satz}\label{img-cap-semi-dl}
 Es gilt:
 \begin{align}
 f(M_1\cap M_2) &\subseteq f(M_1)\cap f(M_2),\\
@@ -535,6 +565,41 @@ gilt:
 \end{align*}
 \end{Beweis}
 
+\begin{Satz}
+Es gilt $M\subseteq N\implies f^{-1}(M)\subseteq f^{-1}(N)$.
+\end{Satz}
+\begin{Beweis}[Beweis\;1]
+Gemäß Satz \ref{subseteq-char} ist $M\subseteq N$ äquivalent zu
+$M\cap N=M$. Man wendet die Urbildoperation $f^{-1}$ nun auf beide
+Seiten der Gleichung an und erhält mittles Satz \ref{preimg-dl}
+(preimg-dl) dann%
+\[f^{-1}(M\cap N) = f^{-1}(M)\cap f^{-1}(N) = f^{-1}(M).\]
+Nochmalige Anwendung von Satz \ref{subseteq-char} liefert
+das gewünschte Resultat
+\[f^{-1}(M)\subseteq f^{-1}(N).\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Beweis}[Beweis\;2]
+Die Expansion der Aussage bringt
+\[(y\in M\Rightarrow y\in N)\implies (f(x)\in M\Rightarrow f(x)\in N).\]
+Trivialerweise kann die Prämisse mit $y:=f(x)$ spezialisiert
+werden werden.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $M\subseteq N\implies f(M)\subseteq f(N)$.
+\end{Satz}
+\begin{Beweis}
+Gemäß Satz \ref{subseteq-char} ist $M\subseteq N$ äquivalent zu
+$M\cap N=M$. Man wendet die Bildoperation nun auf beide Seiten
+der Gleichung an und erhält mittels Satz \ref{img-cap-semi-dl}
+dann%
+\[f(M) = f(M\cap N)\subseteq f(M)\cap f(N).\]
+Laut Satz \ref{cap-subseteq} ist folglich $f(M)=f(M)\cap f(N)$.
+Nochmalige Anwendung von Satz \ref{subseteq-char} bringt das
+gewünschte Resultat $f(M)\subseteq f(N)$.\;\qedsymbol
+\end{Beweis}
+
 \begin{Satz}\label{img-as-cup}
 Es gilt:
 \[f(M) = \bigcup_{x\in M} \{f(x)\}.\]
@@ -553,10 +618,10 @@ Es gilt $(g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M))$.
 \end{Satz}
 \begin{Beweis}
 Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:seteq} (seteq)
-expandieren und Def. \ref{def:filter} (filter) anwenden:
+expandieren und Def. \ref{def:filter} (filter) anwenden:%
 \[(g\circ f)(x)\in M \iff f(x)\in\{y\mid g(y)\in M\}.\]
 Links Def. \ref{def:composition} (composition) anwenden und rechts
-nochmals Def. \ref{def:filter} (filter):
+nochmals Def. \ref{def:filter} (filter):%
 \[g(f(x))\in M \iff g(f(x))\in M.\;\qedsymbol\]
 \end{Beweis}
 
@@ -571,7 +636,7 @@ dann \ref{def:filter} (filter) anwenden:%
 Die rechte Seite mit Def. \ref{def:img} (img) expandieren und
 Def. \ref{def:filter} (filter) anwenden. Unter Anwendung von
 Satz \ref{general-dl} (general-dl) und Satz \ref{exists-cl} (exists-cl)
-ergibt sich
+ergibt sich%
 \begin{gather*}
 \exists y(\exists x(x\in M\land y=f(x))\land z=g(y))\\
 \iff \exists y\exists x(x\in M\land y=f(x)\land z=g(y))\\
@@ -589,7 +654,7 @@ Linksinverse zu $f$ existiert.
 \end{Satz}
 \begin{Beweis}
 Sei $f$ injektiv. Man wähle ein $a\in A$, das wegen $A\ne\emptyset$
-existieren muss. Man definiert nun $g\colon B\to A$ mit
+existieren muss. Man definiert nun $g\colon B\to A$ mit%
 \[g(y):=\begin{cases}
 x\;\text{wobei}\;y=f(x),\;\text{wenn}\;y\in f(A),\\
 a\;\text{wenn}\;y\notin f(A).
