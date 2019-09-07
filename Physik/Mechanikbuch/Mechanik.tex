@@ -1,15 +1,20 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
 \usepackage{lmodern}
-\usepackage{ngerman}
+% \usepackage[scaled=0.8]{DejaVu Sans}
+\setkomafont{sectioning}{\normalfont\normalcolor\bfseries}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=15mm,right=25mm,top=20mm,bottom=28mm}
+\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
 \begin{document}
 
@@ -23,10 +28,6 @@ zur Mechanik}
 \end{huge}
 \vspace{1em}
 
-\noindent
-Dieser Text steht unter der\\
-Creative-Commons-Lizenz CC0.
-
 \tableofcontents
 
 \section{Bewegungen}
@@ -35,25 +36,25 @@ Creative-Commons-Lizenz CC0.
 
 Wie kann man eine Bewegung in der Ebene oder im Raum beschreiben?
 Ein Punkt lässt sich ja durch einen Ortsvektor beschreiben. In der
-Ebene wird ein Punkt beschrieben durch
+Ebene wird ein Punkt beschrieben durch%
 \[\underline x
 = \begin{bmatrix}x_1\\ x_2\end{bmatrix}
 = x_1e_1+x_2e_2.\]
 Man wählt also ein Koordinatensystem mit zwei Achsen, in dem der
-Punkt die Koordinaten $(x_1,x_2)$ hat. Im Raum ist dementsprechend
+Punkt die Koordinaten $(x_1,x_2)$ hat. Im Raum ist dementsprechend%
 \[\underline x = x_1e_1+x_2e_2+x_3e_3.\]
 Wenn sich der Punkt nun bewegen soll, so muss jedem Zeitpunkt $t$
 ein Ortsvektor zugeordnet werden. Um das zu erreichen, kann man die
 Komponenten $x_1,x_2$ von der Zeit abhängig machen. Jede Komponente
 kann dann als eine Funktion betrachtet werden, welche die Zeit als
-Argument hat. Es ist also
+Argument hat. Es ist also%
 \[\underline x = f_1(t)e_1+f_2(t)e_2.\]
 In der Mathematik bezeichnet man einen solchen, durch $t$
 parametrisierten Vektor als Parameterkurve.
 
 Eine solche Funktion kann man auch ableiten. Man wendet einfach die
 Summenregel der Differenzialrechnung an. Da $e_1,e_2$ konstant sind,
-kann man sie aus der Ableitung herausziehen. Es ist
+kann man sie aus der Ableitung herausziehen. Es ist%
 \begin{gather*}
 \underline x' = (f_1(t)e_1+f_2(t)e_2)'\\
 = (f_1(t)e_1)'+(f_2(t)e_2)'\\
@@ -61,7 +62,7 @@ kann man sie aus der Ableitung herausziehen. Es ist
 \end{gather*}
 In der eulerschen Schreibweise ist das noch arithmetischer.
 Man multipliziert einfach mit dem Differntialoperator aus.
-Man rechnet dann
+Man rechnet dann%
 \begin{gather*}
 D\underline x = D(f_1(t)e_1+f_2(t)e_2)\\
 = Df_1(t)e_1+Df_2(t)e_2.
@@ -71,11 +72,11 @@ anschauliche Bedeutung. Es ist der Tangentialvektor an die Kurve
 am Punkt $\underline x(t_0)$. Der Betrag dieses Tangentialvektors
 ist die Geschwindigkeit, mit der sich der Massepunkt zur Zeit $t_0$
 auf der Kurve bewegt. Deshalb führt man die Bezeichnung
-$\underline v:=\underline x'$ ein. Der Betrag ist
+$\underline v:=\underline x'$ ein. Der Betrag ist%
 \[|\underline v| = \sqrt{f_1'(t)^2+f_2'(t)^2}.\]
 
 \subsection[Umlenkung der Erdbeschleunigung]
-{Umlenkung der\\ Erdbeschleunigung}
+{Umlenkung der\newline Erdbeschleunigung}
 
 Die Folgenden Vorgänge sind nicht auf die Erde beschränkt. Sollen
 sie zum Beispiel auf dem Mond stattfinden, so muss man nur die
@@ -96,12 +97,12 @@ entschieden werden.
 Die Kraft ${m_1}g$ die durch das Gewicht und die Erdbeschleunigung
 erzeugt wird, bewegt nach dem Loslassen beide Massen, den Wagen und das
 Gewicht. Das heißt, diese Kraft kann durch zwei Gleichungen ausgedrückt
-werden. Es ist
+werden. Es ist%
 \begin{gather*}
 F = {m_1}g,\\
 F = (m_1+m_2)a.
 \end{gather*}
-Nach dem Gleichsetzen und Umformen nach $a$ erhält man die Formel
+Nach dem Gleichsetzen und Umformen nach $a$ erhält man die Formel%
 \[a = \frac{m_1}{m_1+m_2} g.\]
 Da die Massen konstant sind und als Faktor mal Erdbeschleunigung
 wirken, ist auch die Beschleunigung des Wagens konstant. Mit Hilfe
@@ -127,23 +128,23 @@ Dabei ist die zweite Kraft die kleinere. Das heißt die zweite
 Masse ist kleiner als die erste.
 
 Die resultierende Kraft zieht beide Massen $F=(m_1+m_2)a$.
-Gleichsetzen des Gleichungssystems liefert
+Gleichsetzen des Gleichungssystems liefert%
 \[a = \frac{m_1-m_2}{m_1+m_2}g.\]
 Man will nun erst für beide Enden die Gleiche Masse $M$ verwenden,
 und dann an einem Ende eine kleine Masse $m$ hinzufügen. Einsetzen
-von $m_1=M+m$ und $m_2=M$ liefert
+von $m_1=M+m$ und $m_2=M$ liefert%
 \[a = \frac{m}{2M+m} g.\]
 
 \subsection{Kreisbewegungen}
 
-Eine Kreisbewegung in der Ebene kann parameterisiert werden durch
+Eine Kreisbewegung in der Ebene kann parameterisiert werden durch%
 \[\underline x = r \begin{bmatrix}
 \cos\omega t\\
 \sin\omega t
 \end{bmatrix}.\]
 Dabei ist $r$ der Radius, $\omega$ die Kreisfrequenz und $t$
 die Zeit. Um die Geschwindigkeit zu erhalten wird der Weg abgeleitet.
-Man erhält
+Man erhält%
 \[\underline v = \underline s'
 = \omega r \begin{bmatrix}
 -\sin\omega t\\
@@ -152,20 +153,20 @@ Man erhält
 Der Betrag der des Geschwindigkeitsvektors müsste unseren bisherigen
 Überlegungen nach konstant sein. Wir bilden ihn und überprüfen das.
 Dabei macht man sich die Identität $\sin^2 x+\cos^2 x=1$ zum Nutzen.
-Das Minuszeichen verschwindet beim Quadrieren. Man erhält
+Das Minuszeichen verschwindet beim Quadrieren. Man erhält%
 \[v = \omega r.\]
 Die Geschwindigkeit hängt also tatsächlich nicht von der Zeit ab.
 Dadurch ist auch die kinetische Energie konstant. Um eine Gleichung
-für die Beschleunigung zu bekommen, leiten wir wieder ab und erhalten
+für die Beschleunigung zu bekommen, leiten wir wieder ab und erhalten%
 \[\underline a = \underline v' = - {\omega^2}r
 \begin{bmatrix}
 \cos\omega t\\
 \sin\omega t\end{bmatrix}.
 \]
-Der Betrag des Beschleunigungsvektors ist
+Der Betrag des Beschleunigungsvektors ist%
 \[a = {\omega^2}r.\]
 Formt man die Gleichung für $v$ nach $\omega$ um, und setzt dann
-in die Gleichung für $a$ ein, so ist
+in die Gleichung für $a$ ein, so ist%
 \[a = \frac{v^2}{r}.\]
 Die Kraft $\vec F=m\underline a$, die durch Trägheit entsteht,
 wird \textit{Zentrifugalkraft} genannt und zieht den Massepunkt
@@ -179,9 +180,9 @@ für die Beschleunigung. An den Beträgen ändert die Richtung nichts.
 
 Die Gleichung für die Kräfte lautet $ma=-mg$. Nach dem Teilen durch
 die Masse und Integrieren erhält man eine Gleichung für die
-Geschwindigkeit:
+Geschwindigkeit:%
 \[v = -gt + v_0.\]
-Nochmaliges Integrieren bringt die Gleichung für den Weg:
+Nochmaliges Integrieren bringt die Gleichung für den Weg:%
 \[s = -\frac{1}{2}gt^2 + {v_0}t + s_0.\]
 Befindet sich der Massepunkt in Ruhe, so entfällt die
 Anfangsgeschwindigkeit. Wird der Massepunkt in die Höhe geworfen,
@@ -201,50 +202,50 @@ aufgeteilt werden. Horizontal bewegt sich die Kugel ja gleichförmig
 (das heißt unbeschleunigt) als wie, wenn sie auf dem Tisch weiter
 rollen würde. Vertikal wird sie Beschleunigt, als wie, wenn man eine
 Kugel aus der Hand fallen lässt. Damit ergeben sich zwei Gleichungen
-zu einem System
+zu einem System%
 \begin{gather*}
 x = {v_0}t,\\
 y = -\frac{1}{2}gt^2.
 \end{gather*}
 Das Minuszeichen ist nicht zwingend. Es verdeutlicht nur eine
 Bewegung nach unten. Stellt man die Gleichung für $x$ nach $t$
-um und setzt in die Gleichung für $y$ ein, so erhält man
+um und setzt in die Gleichung für $y$ ein, so erhält man%
 \[y = -\frac{g}{2v_0^2} x^2.\]
 Man kann das Gleichungssystem als Parameter{}gleichung für den Ort
 in Abhängigkeit der Zeit ansehen. Dann lässt sich durch Ableiten
-die Parameter{}gleichung für die Geschwindigkeit ausrechnen.
+die Parameter{}gleichung für die Geschwindigkeit ausrechnen.%
 \[\underline v = \underline s'
 = \begin{bmatrix}v_0\\ -gt
 \end{bmatrix}\]
-Der Betrag des Geschwindigkeitsvektors ist
+Der Betrag des Geschwindigkeitsvektors ist%
 \[v = \sqrt{v_0^2 + g^2t^2}.\]
 
 \subsection{Schräger Wurf}
 
 Die Gleichungen für die Teilbewegungen sind aus den vorherigen
-Rechnungen bekannt:
+Rechnungen bekannt:%
 \begin{gather*}
 x = v_1t\\
 y = v_2t - \frac{g}{2}t^2.
 \end{gather*}
-Setzt man nun für die Zeit ein, so ist
+Setzt man nun für die Zeit ein, so ist%
 \[y = \frac{v_2}{v_1}x - \frac{g}{2v_1^2} x^2.\]
 Gegeben sei eine Anfangsgeschwindigkeit $v_0$ und ein
 Winkel $\alpha$. Klar ist, dass $v_0^2=v_1^2+v_2^2$ ist,
 was man auch durch Ableiten zum Tangentialvektor bei $t=0$
-erkennen kann. Dadurch ist
+erkennen kann. Dadurch ist%
 \begin{gather*}
 v_1 = v_0\cos\alpha,\\
 v_2 = v_0\sin\alpha.
 \end{gather*}
 Setzt man für die Teilgeschwindigkeiten ein, so wird die Gleichung
-für den Weg zu
+für den Weg zu%
 \[y = x\tan\alpha - \frac{gx^2}{2v_0^2\cos^2\alpha}.\]
 Ableiten der Gleichung, bevor man die trigonometrischen Funktionen
 einsetzt, und null setzen bringt $gx = v_1v_2$.
-Setzt man $x=v_1t$, so ist
+Setzt man $x=v_1t$, so ist%
 \[t = \frac{v_0\sin\alpha}{g}.\]
-Einsetzen in die Parametergleichung $y(t)$ bringt die Wurfhöhe
+Einsetzen in die Parametergleichung $y(t)$ bringt die Wurfhöhe%
 \[h = \frac{v_0^2\sin^2\alpha}{2g}.\]
 
 \subsection{Echter senkrechter Wurf}
@@ -257,20 +258,20 @@ der die Wurfbahn verändert und berücksichtigt werden muss.
 Die Kraft vom Luftwiderstand wird von der Kraft durch die
 Erdbeschleunigung abgezogen. Die Kraftgleichung ist $ma = -mg + F_w$.
 Man teile durch die Masse. Um die Gleichungen kurz zu halten habe
-ich eine neue Konstante definiert:
+ich eine neue Konstante definiert:%
 \[F_w = \frac{1}{2}c_w\varrho Av^2,\quad B = \frac{c_w\varrho A}{2m}.\]
 Die Beschleunigung ist die Ableitung der Geschwindigkeit.
-Dadurch ergibt sich eine Differentialgleichung
+Dadurch ergibt sich eine Differentialgleichung%
 \[v' = -g + Bv^2.\]
 
 \subsection{Impuls}
 
-\textbf{Definition}: Der Impuls ist durch die Gleichung $p=mv$
+\textbf{Definition.} Der Impuls ist durch die Gleichung $p=mv$
 definiert. Die Einheit ist dem entsprechend Ns.
 
 Die Herleitung für einen wichtigen Erhaltungssatz: Beim Stoß gibt es
 Kraft und Gegenkraft. Auch, wenn sie sehr schlecht zu
-veranschaulichen sind, es ist
+veranschaulichen sind, es ist%
 \begin{align*}
 F_1 &= -F_2\\
 m_1(u_1-v_1) &= m_2(v_2-u_2)\\
@@ -309,7 +310,7 @@ man die Geschwindigkeit des Geschosses?
 Es erfolgt ein unelastischer Stoß, da das Projektil im Pendel stecken
 bleibt. Sei das Projektil Körper~1 und das Pendel der zweite.
 Mit gegebenen $m_1, m_2$ und $v_2=0$ ist, weil der
-Impulserhaltungssatz gilt:
+Impulserhaltungssatz gilt:%
 \begin{gather*}
 u = \frac{m_1 v_1 + m_2 v_2}{m_1 + m_2} = \frac{m_1 v_1}{m_1 + m_2},\\
 v_1 = \frac{m_1 + m_2}{m_1} u.
@@ -320,7 +321,7 @@ dem Stoß. Diese Geschwindigkeit nimmt langsam ab, die kinetische
 Energie wandelt sich in potenzielle um und das Pendel gewinnt an
 Höhe. Nachdem es durch den unelastischen Stoß $u$ erhielt -- wobei
 es keine Energieerhaltung gab -- gibt es nun sie wieder.
-Es ist $E_\text{kin} = E_\text{pot}$.
+Es ist $E_\text{kin} = E_\text{pot}$.%
 \begin{align*}
 \frac{1}{2}(m_1+m_2) u^2 &= (m_1+m_2)gh\\
 u^2 &= 2gh\\
@@ -329,7 +330,7 @@ u &= \sqrt{2gh}
 Da es sich bei Geschwindigkeiten um Beträge handelt, gibt es keine
 negativen, so dass Quadrieren und Radizieren Äquivalenzumformungen
 sind, wie bei Addition und Subtraktion. Also entfällt die negative
-Wurzel. Somit ist
+Wurzel. Somit ist%
 \[v_1 = \frac{m_1+m_2}{m_1} \sqrt{2gh}\]
 
 \subsection{Kreisbewegungen}
@@ -361,7 +362,7 @@ sind, bleiben die Verhältnisse der Strecken erhalten.
 Das bedeutet $s$ ist proportional zu $\sigma$ also $s=c\sigma$.
 Fehlt also noch der Streckungsfaktor. Diesen gewinnt man am besten
 aus der Erkenntnis, dass im Vollkreis $s=u=2\pi r$ und
-$\sigma = 2\pi$ ist. Man rechnet
+$\sigma = 2\pi$ ist. Man rechnet%
 \[\frac{s}{\sigma} = \frac{2\pi r}{2\pi} = r.\]
 %
 Damit erhält man $s=r\sigma$. Diese Formel kann auch direkt
@@ -391,7 +392,7 @@ ersetzt werden. Das dritte Gesetz besagt, dass für eine
 Planetenbahn $T^2/a^3=C$ konstant ist. Die Große Halbachse
 $a$ der Ellipse ist gleich dem Radius, weil wir es mit einer
 Kreisbewegung zu tun haben und der Kreis ein Spezialfall der
-Ellipse ist. Dadurch ist $T^2=Cr^3$ und damit
+Ellipse ist. Dadurch ist $T^2=Cr^3$ und damit%
 \[F = \frac{4\pi^2 m}{Cr^2}.\]
 Diese Kraft wirkt auch auf die Erde, aber die Masse ist $M$
 und die Konstante ist anders. Gleichsetzen der Kräfte
@@ -419,7 +420,7 @@ Es ist vorteilhaft, das Gravitationsgesetz in Vektorform zu
 formulieren. Wir haben zwei Massen $m_1, m_2$.
 Mit $\underline x_1, \underline x_2$ wollen wir die Positionen
 der Massen bezeichnen. Auf $m_1$ wirkt ein Kraftvektor, der in
-Richtung $m_2$ zeigt. Der Einheitsvektor in diese Richtung ist
+Richtung $m_2$ zeigt. Der Einheitsvektor in diese Richtung ist%
 \[\frac{\underline r_1}{r_1} = \frac{\underline x_2-\underline x_1}
 {|\underline x_2-\underline x_1|}.\]
 Der Kraftvektor ist dann
@@ -430,15 +431,15 @@ Damit erhält man
 {|\underline x_2-\underline x_1|^3}.\]
 Wenn auf eine Masse mehrere Kräfte wirken, so addiert man die
 Kraftvektoren. Befinden sich im Weltraum mehrere Massen,
-so erhält man
+so erhält man%
 \[\vec F_k = Gm_k\sum_{i\ne k}m_i\frac{\underline x_i-\underline x_k}
 {|\underline x_i-\underline x_k|^3}.\]
 Die Gravitation $\underline g(\underline x)$ bei einem
-Punkt $\underline x$ im Weltraum ist
+Punkt $\underline x$ im Weltraum ist%
 \[\underline g(\underline x)
 = G\sum_{i=1}^n m_i\frac{\underline x_i-\underline x}
 {|\underline x_i-\underline x|^3}.\]
-Auf eine kleine Probemasse, etwa ein Raumschiff, wirkt die Kraft
+Auf eine kleine Probemasse, etwa ein Raumschiff, wirkt die Kraft%
 \[\vec F = m\underline g(\underline x).\]
 
 \subsection{Die Energie im Gravitationsfeld}
@@ -448,7 +449,7 @@ Aufgebracht werden muss, um der Gravitationskraft entgegen zu wirken
 sind gleich. Dadurch kann eine einfachere Definition der Arbeit
 verwendet werden (die allgemeine geht über ein Kurvenintegral). Da
 sie nicht konstant ist, sondern vom Weg abhängig, ist die Arbeit der
-Flächeninhalt
+Flächeninhalt%
 \begin{gather*}
 W = \int_{r_1}^{r_2} F\,\mathrm dr
 = GMm\int_{r_1}^{r_2} r^{-2}\,\mathrm dr\\
@@ -457,12 +458,12 @@ W = \int_{r_1}^{r_2} F\,\mathrm dr
 Diese Arbeit müsste irgendwie wieder in die Hubarbeit übergehen.
 Dazu sei $r_1$ der Abstand vom Erdmittelpunkt zur Erdoberfläche.
 Mit der Höhe über der Erdoberfläche $h=r_2-r_1$
-und dem Hauptnenner ist
+und dem Hauptnenner ist%
 \[\frac{1}{r_1}-\frac{1}{r_2} = \frac{h}{r_1r_2}\]
-und weiterhin gilt ja auch $GM=gr_1^2$ und damit
+und weiterhin gilt ja auch $GM=gr_1^2$ und damit%
 \[W = g{r_1^2}m \frac{h}{r_1r_2} = mgh\frac{r_1}{r_2}.\]
 Da sich $r_1$ und $r_2$ nur sehr geringfügig unterscheiden,
-ist in guter Näherung $r_1/r_2\approx 1$. Man erhält also
+ist in guter Näherung $r_1/r_2\approx 1$. Man erhält also%
 \[W \approx mgh.\]
 
 \subsection{Geostationäre Satelliten}
@@ -478,16 +479,16 @@ Erde hat eine Periodendauer von 24~h.
 \subsection{Gravitation und Potential}
 
 Das Gravitationsfeld ist der negative Gradient des Potentialfeldes.
-Es ist
+Es ist%
 \[\underline g(\underline r) = -\nabla u(\underline r).\]
 Das folgende Potentialfeld kann die Gravitation im Weltraum
-beschreiben:
+beschreiben:%
 \[u(\underline r) = \frac{Gm}{r}.\]
 Man bilde davon also den negativen Gradient. Die Gravitationskonstante
 und die Masse sind konstante Faktoren, die vor den Vektor der
 partiellen Ableitungen geschrieben werden können. Man wende die
 Kettenregel an. Das Minus entfernt sich durch eines aus der
-Ableitung der Wurzel im Nenner. Man rechnet
+Ableitung der Wurzel im Nenner. Man rechnet%
 \begin{gather*}
 \underline g(\underline r)
 = -Gm\nabla\frac{1}{r}
@@ -497,9 +498,13 @@ e_i \frac{1}{\sqrt{\underline r^2}}\\
 \sum_{i=1}^3 \frac{\partial}{\partial r_i} e_i (r_1^2+r_2^2+r_3^2)\\
 = \frac{Gm}{2r^3}(2r_1e_1 + 2r_2e_2 + 2r_3e_3).
 \end{gather*}
-Damit ist die Gleichung für die Gravitation
+Damit ist die Gleichung für die Gravitation%
 \[\underline g(\underline r) = \frac{Gm}{r^3} \underline r.\]
 
+
+\vfill\noindent
+Dieser Text steht unter der Lizenz\\
+Creative Commons CC0.
 
 \end{document}
 

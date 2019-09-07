@@ -15,6 +15,7 @@ die drei Axiome%
 erfüllt sind.
 \end{definition}
 
+\noindent
 Eigenschaften:
 \begin{gather}
 \|v\|=0\iff v=0,\\
@@ -506,6 +507,7 @@ Für eine linke oder rechte Dreiecksmatrix $A=(a_{ij})$ gilt:
 \det(A) = \prod_{k=1}^n a_{kk}.
 \end{gather}
 
+\newpage
 \subsubsection{Eigenwerte}
 \strong{Eigenwertproblem:}\index{Eigenwert}
 Für eine gegebene quadratische Matrix $A$ bestimme
@@ -562,6 +564,99 @@ Sei $A$ eine nilpotente Matrix. Es gilt:
 \bitem $E-A$ ist invertierbar.
 \end{itemize}
 
+\subsection{Matrixfunktionen}
+\subsubsection{Matrixexponential}
+\begin{definition}[Matrixexponential]\mbox{}\\*
+Für eine beliebige Matrix  $X\in \C^{n\times n}$ konvergiert%
+\begin{equation}
+\exp(X) := \sum_{k=0}^\infty \frac{X^k}{k!}.
+\end{equation}
+\end{definition}
+Für jede Matrix $X$ und $a,b\in\C$ gilt
+\begin{gather}
+\exp(-X) = \exp(X)^{-1},\\
+\exp(X^H) = \exp(X)^H,\\
+\exp((a+b)X) = \exp(aX)\exp(bX),\\
+\exp(\diag(d_1,\ldots,d_n)) = \diag(\ee^{d_1},\ldots,\ee^{d_n}),\\
+\det(\exp(X)) = \ee^{\tr(X)}.
+\end{gather}
+Für $XY=XY$ gilt
+\begin{equation}
+\exp(X+Y)=\exp(X)\exp(Y).
+\end{equation}
+Das Exponential einer Matrix ist immer invertierbar und
+jede Matrix aus $\operatorname{GL}(n,\C)$ kann als Matrixexponential
+dargestellt werden. D.\,h.
+$\exp\colon \C^{n\times n}\to\operatorname{GL}(n,\C)$
+ist surjektiv.
+
+\newpage
+\subsubsection{Allgemein}
+
+Matrizen bilden bezüglich Matrizenmultiplikation zusammen
+mit der Frobeniusnorm oder einer Operatornorm eine assoziative
+Banachalgebra mit Einselement.
+Man betrachte nun die formale Potenzreihe%
+\begin{equation}
+f(X) := \sum_{k=0}^\infty a_k X^k,\quad a_k\in \C.
+\end{equation}
+Besitzt die Einsetzung $f(z)$ für $z\in\C$ den Konvergenzradius
+$r>0$ und ist $A$ ein Element einer Banachalgebra
+mit Einselement mit $\|A\|<r$,
+dann ist $f(A)$ absolut konvergent. Gemäß%
+\begin{equation}
+f\colon \{\|A\|<r\mid A\in\C^{n\times n}\}\to\C^{n\times n}
+\end{equation}
+ist daher eine Matrixfunktion definiert.
+
+Ist $A$ diagonalisierbar mit $A=TDT^{-1}$, dann gilt
+\begin{equation}
+f(A) = Tf(D)T^{-1},
+\end{equation}
+wobei $f(D)$ gemäß
+\begin{equation}
+f(\diag(d_1,\ldots,d_n)) = \diag(f(d_1),\ldots,f(d_n))
+\end{equation}
+berechnet wird.
+
+\strong{Sylvesters Formel.} Allgemein gilt%
+\begin{equation}\label{eq:Sylvesters-Formel}
+f(A) = \sum_{i=1}^s A_i \sum_{k=0}^{m_i-1} \frac{f^{(k)}(\lambda_i)}{k!}(A-\lambda_i E)^k
+\end{equation}
+mit
+\begin{equation}
+A_i := \prod_{j=1,\,j\ne i}^s \frac{1}{\lambda_i-\lambda_j}(A-\lambda_j E).
+\end{equation}
+Hierbei ist $s$ die Anzahl der unterschiedlichen Eigenwerte und $m_i$
+die algebraische Vielfachheit von $\lambda_i$.
+
+Bei einer diagonalisierbaren Matrix vereinfacht sich die Formel zu
+\begin{equation}
+f(A) = \sum_{i=1}^n A_i f(\lambda_i).
+\end{equation}
+Speziell für $2\times 2$-Matrizen gilt
+\begin{equation}
+f(A) = pA+qE
+\end{equation}
+mit
+\begin{align}
+p &= \frac{f(\lambda_2)-f(\lambda_1)}{\lambda_2-\lambda_1},\\
+q &= f(\lambda_1)-p\lambda_1 = f(\lambda_2)-p\lambda_2.
+\end{align}
+Im Fall $\lambda_1=\lambda_2$ ist $p=f'(\lambda_1)$.
+
+\strong{Als Cauchy-Integral.} Sei $f\colon U\to\C$ holomorph
+und $G\subseteq U$ abgeschlossen und einfach zusammenhängend.
+Liegen alle Eigenwerte von $A$ im Inneren von $G$, dann gilt%
+\begin{equation}\label{eq:Matrixfunktion-Cauchy}
+f(A) = \frac{1}{2\pi\ui}\int_{\partial G} f(z)(zE-A)^{-1}\,\mathrm dz.
+\end{equation}
+Die Formeln \eqref{eq:Sylvesters-Formel} und
+\eqref{eq:Matrixfunktion-Cauchy} liefern außerdem
+zwei miteinander verträgliche Verallgemeinerungen der Definition
+der Matrixfunktion.
+
+\newpage
 \section{Lineare Gleichungssysteme}
 \index{lineares Gleichungssytem}
 Ein lineares Gleichungssystem mit $m$ Gleichungen und $n$ Unbekannten

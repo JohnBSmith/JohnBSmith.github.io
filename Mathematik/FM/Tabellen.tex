@@ -1,6 +1,122 @@
 
 \onecolumn
 \chapter{Tabellen}
+
+\section{Lineare Algebra}
+\subsection{Lineare Abbildungen}
+\begin{tabular}{lcccc}
+\toprule
+\strong{Endomorphismus}
+& \strong{Matrix}
+& \strong{Inverse}
+& \strong{Eigenwerte}\\
+\midrule
+Identität
+& $E=\begin{bmatrix}1 & 0\\ 0 & 1\end{bmatrix}$
+& $E^{-1}=E$
+& $+1,+1$\\
+\midrule
+Skalierung
+& $rE=\begin{bmatrix}r & 0\\ 0 & r\end{bmatrix}$
+& $(rE)^{-1} = \tfrac{1}{r}E = \begin{bmatrix}1/r & 0\\ 0 & 1/r\end{bmatrix}$
+& $r,r$\\
+\midrule
+Skalierung der $x$"=Achse
+& $V_x = \begin{bmatrix}r & 0\\ 0 & 1\end{bmatrix}$
+& $V_x^{-1} = \begin{bmatrix}1/r & 0\\ 0 & 1\end{bmatrix}$
+& $r,1$\\
+\midrule
+Skalierung der $y$"=Achse
+& $V_y = \begin{bmatrix}1 & 0\\ 0 & r\end{bmatrix}$
+& $V_y^{-1} = \begin{bmatrix}1 & 0\\ 0 & 1/r\end{bmatrix}$
+& $r,1$\\
+\midrule
+Spiegelung an der $x$"=Achse
+& $S_x = \begin{bmatrix}1 & 0\\ 0 & -1\end{bmatrix}$
+& $S_x^{-1} = S_x$
+& $\pm 1$\\
+\midrule
+Spiegelung an der $y$"=Achse
+& $S_y = \begin{bmatrix}-1 & 0\\ 0 & 1\end{bmatrix}$
+& $S_y^{-1} = S_y$
+& $\pm 1$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Spiegelung an der Achse\\
+des Vektors $v=(a,b)$\end{tabular}
+& $S_v = \frac{1}{a^2{+}b^2}\begin{bmatrix}a^2{-}b^2 & 2ab\\ 2ab & b^2{-}a^2\end{bmatrix}$
+& $S_v^{-1} = S_v$
+& $\pm 1$\\
+\midrule
+Spiegelung am Ursprung
+& $S_0 = \begin{bmatrix}-1 & 0\\ 0 & -1\end{bmatrix}$
+& $S_0^{-1} = S_0$
+& $-1,-1$\\
+\midrule
+Projektion auf die $x$"=Achse
+& $P_x = \begin{bmatrix}1 & 0\\ 0 & 0\end{bmatrix}$
+& nicht vorhanden
+& $0,+1$\\
+\midrule
+Projektion auf die $y$"=Achse
+& $P_y = \begin{bmatrix}0 & 0\\ 0 & 1\end{bmatrix}$
+& nicht vorhanden
+& $0,+1$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Projektion auf die Achse\\
+des Vektors $v=(a,b)$\end{tabular}
+& $P_v = \tfrac{1}{a^2+b^2}\begin{bmatrix}a^2 & ab\\ ab & b^2\end{bmatrix}$
+& nicht vorhanden
+& $0,+1$\\
+\midrule
+Scherung an der $x$"=Achse
+& $M_x = \begin{bmatrix}1 & m\\ 0 & 1\end{bmatrix}$
+& $M_x^{-1} = \begin{bmatrix}1 & -m\\ 0 & 1\end{bmatrix}$
+& $+1,+1$\\
+\midrule
+Scherung an der $y$"=Achse
+& $M_y = \begin{bmatrix}1 & 0\\ m & 1\end{bmatrix}$
+& $M_y^{-1} = \begin{bmatrix}1 & 0\\ -m & 1\end{bmatrix}$
+& $+1,+1$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Rotation um den Winkel $\varphi$\\
+gegen den Uhrzeigersinn\end{tabular}
+& $R(\varphi) = \begin{bmatrix}\cos\varphi & -\sin\varphi\\ \cos\varphi & \sin\varphi\end{bmatrix}$
+& $R(\varphi)^{-1} = R(\varphi)^T = R(-\varphi)$
+& $\cos\varphi\pm\ui\sin\varphi$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Rotation um $90^\circ$ gegen\\
+den Uhrzeigersinn\end{tabular}
+& $R(\tfrac{\pi}{4}) = \begin{bmatrix}0 & -1\\ 1 & 0\end{bmatrix}$
+& $R(\tfrac{\pi}{4})^{-1} = R(-\tfrac{\pi}{4})$
+& $\pm\ui$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Rotation um $90^\circ$ im\\
+Uhrzeigersinn\end{tabular}
+& $R(-\tfrac{\pi}{4}) = \begin{bmatrix}0 & 1\\ -1 & 0\end{bmatrix}$
+& $R(-\tfrac{\pi}{4})^{-1} = R(\tfrac{\pi}{4})$
+& $\pm\ui$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Drehskalierung, entspricht\\
+der komplexen Zahl $a+b\ui$\end{tabular}
+& $Z = \begin{bmatrix}a & -b\\ b & a\end{bmatrix}$
+& $Z^{-1} = \tfrac{1}{a^2+b^2}\begin{bmatrix}a & b\\ -b & a\end{bmatrix}$
+& $a\pm b\ui$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Drehskalierung, entspricht\\
+der komplexen Zahl $r\ee^{\ui\varphi}$\end{tabular}
+& $Z = rR(\varphi)$
+& $Z^{-1} = \tfrac{1}{r}R(-\varphi)$
+& $r\cos\varphi\pm\ui r\sin\varphi$\\
+\midrule
+\begin{tabular}[c]{@{}l@{}}Allgemeiner\\
+Endomorphismus\end{tabular}
+& $A = \begin{bmatrix}a & b\\ c & d\end{bmatrix}$
+& $A^{-1} = \tfrac{1}{ad-bc}\begin{bmatrix}d & -b\\ -c & a\end{bmatrix}$
+& $\tfrac{a{+}d{\pm}\sqrt{(a{-}d)^2{+}4bc}}{2}$\\
+\bottomrule
+\end{tabular}
+
+\newpage
 \section{Kombinatorik}
 \subsection{Binomialkoeffizienten}\index{Binomialkoeffizient!Tabelle}
 
