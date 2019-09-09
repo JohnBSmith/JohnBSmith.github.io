@@ -359,7 +359,7 @@ p = -(x_1+x_2),\qquad q = x_1 x_2.
 & \thbf{Operation}
 & \thbf{Polarform}
 & \thbf{kartesische Form}\\
-\midrule[\heavyrulewidth]
+\midrule
   Identität
 & $z$ & $=r\ee^{\ui\varphi}$
 & $= a+b\ui$\\
@@ -487,7 +487,7 @@ Es gilt
 \end{align}
 
 \section{Logik}
-\subsection{Aussagenlogik}\index{Aussagenlogik}
+\subsection{Aussagenlogik}\index{Aussagenlogik}\label{subsec:Aussagenlogik}
 \subsubsection{Boolesche Algebra}\index{boolesche Algebra}
 
 \begin{table*}[t]
@@ -495,7 +495,7 @@ Es gilt
 \begin{tabular}{l|l|l}
 \toprule
 \thbf{Disjunktion} & \thbf{Konjunktion} & \thbf{Bezeichnung}\\
-\midrule[\heavyrulewidth]
+\midrule
   $A\lor A \Leftrightarrow A$
 & $A\land A \Leftrightarrow A$
 & Idempotenzgesetze\\
@@ -533,36 +533,56 @@ A\land (B\lor C) \iff (A\land B)\lor (A\land C).
 \end{gather}
 
 \subsubsection{Zweistellige Funktionen}
-Es gibt 16 zweistellige boolesche\\
-Funktionen.
 
-\begin{tabular}{r|l}
-\textbf{\texttt{AB}} & \thbf{Wert}\\
-\texttt{00} & \texttt{a}\\
-\texttt{01} & \texttt{b}\\
-\texttt{10} & \texttt{c}\\
-\texttt{11} & \texttt{d}
+Es gibt 16 zweistellige boolesche
+Funktionen. Die wichtigsten sind in Tabelle \ref{tab:Wahrheitstafel}
+definiert. Tabelle \ref{tab:Wahrheitstafel-16} gibt eine
+Übersicht über alle 16.
+
+\begin{table}
+\caption{Wahrheitstafel}\label{tab:Wahrheitstafel}
+\begin{tabular}{ccccccc}
+\toprule
+$A$ & $B$ & Wert & $A\land B$ & $A\lor B$
+& $A\Rightarrow B$ & $A\Leftrightarrow B$\\
+\midrule
+0 & 0 & \texttt{a} & 0 & 0 & 1 & 1\\
+0 & 1 & \texttt{b} & 0 & 1 & 1 & 0\\
+1 & 0 & \texttt{c} & 0 & 1 & 0 & 0\\
+1 & 1 & \texttt{d} & 1 & 1 & 1 & 1\\
+\bottomrule
 \end{tabular}
+\end{table}
 
-\begin{tabular}{r|l|l|l}
-\thbf{Nr.}& \textbf{\texttt{dcba}} & \thbf{Fkt.} & \thbf{Name}\\
+\begin{table}
+\caption{Große Wahrheitstafel}
+\label{tab:Wahrheitstafel-16}
+\begin{tabular}{rlcl}
+\toprule
+\thbf{Nr.}& \textbf{\texttt{dcba}} & \thbf{Funktion} & \thbf{Name}\\
+\midrule
  0 & \texttt{0000} & 0 & Kontradiktion\\
- 1 & \texttt{0001} & $\overline{A\lor B}$ & NOR\\
- 2 & \texttt{0010} & $\overline{B\Rightarrow A}$\\
- 3 & \texttt{0011} & $\overline A$\\
- 4 & \texttt{0100} & $\overline{A\Rightarrow B}$\\
- 5 & \texttt{0101} & $\overline{B}$\\
+ 1 & \texttt{0001} & $\neg(A\lor B)$ & NOR\\
+ 2 & \texttt{0010} & $\neg(B\Rightarrow A)$\\
+ 3 & \texttt{0011} & $\neg A$\\
+\midrule
+ 4 & \texttt{0100} & $\neg(A\Rightarrow B)$\\
+ 5 & \texttt{0101} & $\neg B$\\
  6 & \texttt{0110} & $A\oplus B$ & Kontravalenz\index{Kontravalenz}\\
- 7 & \texttt{0111} & $\overline{A\land B}$ & NAND\\
+ 7 & \texttt{0111} & $\neg(A\land B)$ & NAND\\
+\midrule
  8 & \texttt{1000} & $A\land B$ & Konjunktion\index{Konjunktion}\\
  9 & \texttt{1001} & $A\Leftrightarrow B$ & Äquivalenz\\
 10 & \texttt{1010} & $B$ & Projektion\\
 11 & \texttt{1011} & $A\Rightarrow B$ & Implikation\\
+\midrule
 12 & \texttt{1100} & $A$ & Projektion\\
 13 & \texttt{1101} & $B\Rightarrow A$ & Implikation\\
 14 & \texttt{1110} & $A\lor B$ & Disjunktion\index{Disjunktion}\\
-15 & \texttt{1111} & $1$ & Tautologie
+15 & \texttt{1111} & $1$ & Tautologie\\
+\bottomrule
 \end{tabular}
+\end{table}
 
 \subsubsection[Darstellung mit Negation, Konjunktion und Disjunktion]%
 {Darstellung mit Negation,\newline Konjunktion und Disjunktion}
@@ -573,6 +593,7 @@ A\Rightarrow B \iff \overline A\lor B,\\
 A\oplus B \iff (\overline A\land B)\lor(A\land\overline B).
 \end{gather}
 
+\newpage
 \subsubsection{Tautologien}
 Modus ponens:
 \begin{equation}\label{eq:modus-ponens}
@@ -652,6 +673,8 @@ ersetzt werden:
 \{F(\varphi),\varphi\leftrightarrow\psi\}\vdash F(\psi).
 \end{equation}
 \end{Satz}
+
+\newpage\noindent
 \strong{Beispiel.} Betrachte $\varphi\land A\rightarrow B$ mit
 $\varphi:=(A\rightarrow B)$, was expandiert wird zu
 \[(A\rightarrow B)\land A\rightarrow B.\qquad\text{(s. \eqref{eq:modus-ponens})}\]
@@ -676,7 +699,6 @@ Für die Aussagenlogik gilt:
 \end{equation}
 \end{Satz}
 
-\newpage
 \begin{Satz}[Deduktionstheorem (syntaktisch)]\mbox{}\\*
 Für die Aussagenlogik gilt:
 \begin{equation}
@@ -716,7 +738,6 @@ der Variable $v$ gegen die Formel $\psi$ ersetzt wird, ergibt
 sich wieder eine tautologische Formel.
 \end{Satz}
 
-\newpage
 \subsubsection{Regeln zum Tableaukalkül}
 
 \begin{tabular}{llll}
@@ -782,9 +803,10 @@ $\neg\psi$    & $\neg\varphi$
 \end{tabular}
 \end{tabular}
 
-\vspace{1em}
+% \vspace{1em}
 
-\subsection{Prädikatenlogik}
+\newpage
+\subsection{Prädikatenlogik}\label{subsec:Praedikatenlogik}
 \subsubsection{Rechenregeln}
 Verneinung (De Morgansche Regeln):
 \begin{gather}
@@ -1590,7 +1612,7 @@ Ableitungsrelationen ist. Die Menge der \emdef{Axiome} ist eine
 beliebige Teilmenge von $L$. 
 Eine \emdef{Ableitungsrelation} ist eine zwei oder mehrstellige
 Relation über $L$, die
-\begin{equation}
+\begin{equation}\label{eq:Ableitungsrelation}
 a_1,\ldots,a_n\vdash b
 \end{equation}
 geschrieben wird. Eine wohlgeformte Formel wird $\emdef{Satz}$
@@ -1599,7 +1621,8 @@ Ableitungen aus den Axiomen folgt.
 \end{definition}
 
 \subsection{Semantik}
-\begin{definition}[Interpretation (Aussagenlogik)]\mbox{}\newline
+\begin{definition}[Interpretation (Aussagenlogik)]%
+\label{def:Interpretation}\mbox{}\newline
 Eine \emdef{Interpretation}\index{Interpretation}
 $I\colon V\to\{0,1\}$ ist eine Abbildung,
 welche jeder logischen Variablen einen Wahrheitswert zuordnet.
@@ -1638,7 +1661,7 @@ Sei $M=\{\varphi_1,\ldots,\varphi_n\}$ eine endliche Menge
 von Formeln und sei $\psi$ eine Formel. Die Formelmenge $M$
 \emph{modelliert}\index{Modellrelation} $\psi$, wenn jedes Modell
 von $M$ auch auch ein Modell von $\psi$ ist. Kurz:
-\begin{equation}
+\begin{equation}\label{eq:semantische-Implikation}
 (M\models\psi) \defiff \forall I[(I\models M)\Rightarrow (I\models\psi)].
 \end{equation}
 Die Modellrelation wird auch als \emdef{metasprachliche
@@ -1649,7 +1672,7 @@ semantische Implikation} bezeichnet.
 \begin{definition}[Tautologie]\mbox{}\newline
 Eine Formel $\varphi$ heißt \emdef{tautologisch}\index{Tautologie},
 wenn jede Interpretation auch ein Modell von $\varphi$ ist:
-\begin{equation}
+\begin{equation}\label{eq:tautologisch}
 (\models\varphi) \defiff \forall I(I(\varphi)=1).
 \end{equation}
 \end{definition}
@@ -1657,7 +1680,7 @@ wenn jede Interpretation auch ein Modell von $\varphi$ ist:
 \begin{definition}[Äquivalente Formeln]\mbox{}\\*
 Zwei Formeln $\varphi,\psi$ heißen äquivalent, wenn
 $\varphi\Leftrightarrow\psi$ tautologisch ist, kurz
-\begin{equation}
+\begin{equation}\label{eq:aequivalente-Formeln}
 \varphi\equiv\psi\quad\text{gdw.}\quad \models\varphi\Leftrightarrow\psi.
 \end{equation}
 \end{definition}
