@@ -914,3 +914,88 @@ erfüllen}\}.
 Alle $A_n$ sind endlich und es gilt $\A=\bigcup_{n\in\N} A_n$.
 Daher muss $|\A|\le |\N|$ sein.\,\qedsymbol
 \end{Beweis}
+
+\begin{Definition}[Satz und Def. Multiplikation von Kardinalzahlen]\mbox{}\\*
+Die Operation $|X|\cdot |Y|:=|X\times Y|$ ist wohldefiniert.
+\end{Definition}
+\begin{Beweis}
+Zu zeigen ist, dass $|X\times Y|=|X'\times Y'|$
+aus $|X|=|X'|$ und $|Y|=|Y'|$ folgt. Nach Voraussetzung gibt
+es Bijektionen $f_1\colon X\to X'$ und $f_2\colon Y\to Y'$. Gesucht
+ist mindestens eine Bijektion $f\colon X\times Y\to X'\times Y'$.
+Diese erhält man gemäß folgender Konstruktion:
+\[f(x,y) := (f_1(x),f_2(y)).\]
+Die Abbildung $f$ ist injektiv, denn
+\begin{gather*}
+f(x_1,y_1)=f(x_2,y_2) \iff (f_1(x_1),f_2(y_1))=(f_1(x_2),f_2(y_2))\\
+\iff f_1(x_1)=f_1(x_2)\land f_2(y_1)=f_2(y_2)\iff x_1=x_2\land y_1=y_2\\
+\iff (x_1,y_1)=(x_2,y_2).
+\end{gather*}
+Für die Surjektivität muss es für jedes $(x',y')$ mindestens
+ein $(x,y)$ mit $(x',y')=f(x,y)$ geben. Die Konstruktion ergibt
+\[(x',y')=(f_1(x),f_2(y))\iff x'=f_1(x)\land y'=f_2(y).\]
+Man findet $x=f_1^{-1}(x')$ und $y=f_2^{-1}(y')$.
+
+Die Umkehrabbildung ist gegeben gemäß
+\begin{gather*}
+f^{-1}(x',y')=f^{-1}((x',y')):=((f_1^{-1}\circ\pi_1)(x',y'),(f_2^{-1}\circ\pi_2)(x',y'))\\
+= (f_1^{-1}(x'),f_2^{-1}(y')).
+\end{gather*}
+Mit $\pi_k$ ist die Projektion auf die $k$-te Komponente gemeint.\;\qedsymbol
+\end{Beweis}
+
+\begin{Definition}[Satz und Def. Addition von Kardinalzahlen]\mbox{}\\*
+Für $X\cap Y=\emptyset$ ist $|X|+|Y|:=|X\cup Y|$ wohldefiniert.
+Das schließt den Spezialfall $|X|+|Y|:=|X\sqcup Y|$ mit
+$X\sqcup Y:=(\{0\}\times X)\cup(\{1\}\times Y)$ ein.
+\end{Definition}
+\begin{Beweis}
+Zu zeigen ist, dass $|X\cup Y|=|X'\cup Y'|$
+aus $|X|=|X'|$ und $|Y|=|Y'|$ folgt. Nach Voraussetzung gibt
+es Bijektionen $f_1\colon X\to X'$ und $f_2\colon Y\to Y'$, wobei
+$X\cap Y=\emptyset$ und $X'\cap Y'=\emptyset$ gilt. Gesucht
+ist mindestens eine Bijektion $f\colon X\cup Y\to X'\cup Y'$.
+Diese erhält man gemäß folgender Konstruktion:
+\[f(x):=\begin{cases}
+f_1(x)&\text{für}\;x\in X,\\
+f_2(x)&\text{für}\;x\in Y.
+\end{cases}\]
+Die Abbildung $f$ ist injektiv, denn entweder ist $x'\in X'$
+und somit
+\[x'=f(a)=f(b)\iff x'=f_1(a)=f_1(b)\iff a=b\]
+oder $x'\in Y'$ und somit
+\[x'=f(a)=f(b)\iff x'=f_2(a)=f_2(b)\iff a=b.\]
+Zusammengefasst folgt $f(a)=f(b)\iff a=b$ für alle $a,b\in X\cup Y$.
+
+Für die Surjektivität muss es für jedes $x'$ mindestens ein $x$ mit
+$x'=f(x)$ geben. Entweder ist $x'\in X'$, dann ist $x'=f_1(x)$
+und daher $x=f_1^{-1}(x')$. Oder es ist $x'\in Y'$, dann ist
+$x'=f_2(x)$ und daher $x=f_2^{-1}(x')$.\;\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Definition}[Satz und Def. Potenz von Kardinalzahlen]\mbox{}\\*
+Die Operation $|Y|^{|X|}:=|Y^X|$ ist wohldefiniert.
+\end{Definition}
+\begin{Beweis}
+Zu zeigen ist, dass $|\Abb(X,Y)|=|\Abb(X',Y')|$
+aus $|X|=|X'|$ und $|Y|=|Y'|$ folgt. Nach Voraussetzung gibt
+es Bijektionen $f_1\colon X\to X'$ und $f_2\colon Y\to Y'$.
+Gesucht ist eine Bijektion $F\colon\Abb(X,Y)\to\Abb(X',Y')$.
+Diese erhält man gemäß folgender Konstruktion:
+\[F(f) := f_2\circ f\circ f_1^{-1}.\]
+Die Abbildung $F$ ist injektiv, da
+\begin{gather*}
+F(f)=F(g) \iff f_2\circ f\circ f_1^{-1} = f_2\circ f\circ f_1^{-1}
+\iff f_2\circ f = f_2\circ g\iff f=g,
+\end{gather*}
+denn Bijektionen sind kürzbar. Für die Surjektivität muss
+es für jedes $f'$ mindestens ein $f$ mit $f'=F(f)$ geben.
+Das führt auf die Gleichung $f'=f_2\circ f\circ f_1^{-1}$.
+Diese lässt sich Umformen zu $f_2^{-1}\circ f'=f\circ f_1^{-1}$.
+Wendet man beide Seiten auf $f_1$ an, ergibt sich
+$f=f_2^{-1}\circ f'\circ f_1$.\;\qedsymbol
+\end{Beweis}
+
+
+
