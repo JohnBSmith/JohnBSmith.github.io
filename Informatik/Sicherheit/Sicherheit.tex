@@ -1,0 +1,226 @@
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{lipsum}
+
+\usepackage{libertine}
+% \usepackage[scaled=0.80]{DejaVuSans}
+\usepackage[scaled=0.76]{DejaVuSansMono}
+% \renewcommand\ttdefault{lmvtt}
+\usepackage[libertine]{newtxmath}
+
+% Links ein großer Rand wegen Bindekorrektur für Schnellhefter.
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=30mm}
+\setlength{\columnsep}{5mm}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\smallstrong}[1]{{\footnotesize\strong{#1}}}
+
+\usepackage{caption}
+\captionsetup{justification=raggedright,singlelinecheck=false}
+
+\begin{document}
+\thispagestyle{empty}
+
+\noindent
+{\LARGE\sffamily\bfseries
+Grundwissen zur\\
+Informationssicherheit\par}
+
+\vspace{1em}\noindent
+September 2019
+
+\tableofcontents
+
+\section{Einführung}
+\subsection{Wichtige Prinzipien}
+
+Bei der gewährleistung der Informationssicherheit spielen
+vier grundlegende Prinzipien eine maßgebliche Rolle.
+Das sind die \emph{Redundanz},
+die \emph{Integrität}, die \emph{Privatheit} und die
+\emph{Authentizität}.
+
+\strong{Redundanz.}
+Datenträger haben eine begrenzte Haltbarkeit, können beschädigt werden
+oder verloren gehen. Aus diesem Grund möchte von wichtigen Daten
+mehrere Kopien lagern, möglichst an unterschiedlichen Orten.
+Dies nennt man Redundanz der Daten.
+
+\strong{Integrität.}
+Es kann vorkommen, dass gespeicherte Daten auf einem Datenträger
+beschädigt werden. Oder dass jemand oder ein Schadprogramm
+unbemerkte Veränderungen an den Daten vornimmt. Den Schutz davor
+bezeichnet man als Bewahrung der Integrität.
+
+\strong{Privatheit.}
+Daten können von jemanden oder einem Schadprogramm unerlaubt
+gelesen werden. Den Schutz davor bezeichnet man als
+Bewahrung der Privatheit.
+
+\strong{Authentizität.}
+Jemand kann behaupten, Author von bestimmten Daten zu sein
+oder nicht zu sein, oder bezichtigt jemanden, Author zu sein
+oder nicht zu sein. Den Schutz vor absichtlichen Fehlinformationen
+bezeichnet man als Bewahrung der Authentizität.
+
+\section{Datensicherung}
+\subsection{Verzeichnisstruktur}
+
+Daten sollten ihrer Speichergröße nach in unterschiedliche Ordner
+eingeteilt werden. Z.\,B. sind Ordner wie \emph{Texte}, \emph{Bilder},
+\emph{Videos} sinnvoll. Dies bietet mehrere Vorteile. Erstens brauchen
+Texte\footnote{Quelltexte, LaTeX, HTML anstelle von Exporten wie PDF}
+vergleichsweise verschwindend gering Speicherplatz und lassen
+sich sogar noch gut komprimieren. Aus diesem Grund können sehr oft
+Sicherheitskopien von Texten gemacht werden, ohne jemals
+überfüllten Speicher befürchten zu müssen. Zweitens lässt sich mit
+Programmen wie \texttt{grep} bzw. \texttt{findstr} eine Volltextsuche
+auf das Verzeichnis anwenden, wobei große Binärdateien aber stören
+würden.
+
+\subsection{Versionsgeschichte}
+
+Bei Texten in Bearbeitung sollte man nicht nur eine Kopie
+des aktuellen Textes zu speichern, sondern auch dessen frühere
+Bearbeitungszustände, dies nennt man
+\emph{Versionsgeschichte}. Warum ist das so wichtig?
+Nun, es können immmer mal Fehler auftauchen, die zu einem
+unbemerkten Verlust von Textpassagen führen. Oder aber, jemand
+greift unerlaubt auf den Text zu und nimmmt subtile Veränderungen
+vor. Hat man die Versionsgeschichte zu einem Text, lassen sich
+die Versionen des Textes im Nachhinein zur Sicherheit vergleichen.
+
+\subsection{Deduplikation}
+
+Mit solchen Versionsgeschichten ergibt sich aber noch ein technisches
+Problem. Große Dateien wie Bilder oder Videos würde man immer
+wieder speichern, auch wenn sich diese nicht mehr verändern.
+Dies bezeichnet man als ungewollte Duplikation von Daten.
+Zwar wird die Redundanz der Daten damit beträchtlich erhöht,
+eigentlich etwas gutes, aber dies findet in einem unkontrollierten
+Ausmaß statt und sorgt schnell für über jedes Maß
+steigenden Datenverbrauch.
+
+Zur Lösung dieses Problem bieten sich zwei Ansätze an.
+Zum einen unterlässt man es, diese Daten thematisch zu ordnen.
+Stattdessen bietet sich eine Ordnung nach dem Datum an, z.\,B.
+nach dem Jahr oder dem Monat des Jahres. Hat man diese Daten
+einmal archiviert, braucht man sie nicht ständig erneut speichern.
+Zur thematischen Sortierung schreibt man stattdessen ein Verzeichnis,
+das nur auf die Dateien verweist, sie aber nicht selbst speichert.
+
+Zum zweiten gibt es auch extra Backup"=Software, die in der Lage ist,
+Daten bei der Sicherung zu deduplizieren. Z.\,B. besitzt jede
+Datei einen Hashwert. Hat sich dieser nicht verändert, braucht die
+Software nur auf den Inhalt der Datei zu verweisen. Ob die Software
+das kann, lässt sich auch leicht experimentell überprüfen.
+
+\subsection{Speichermedien}
+
+\begin{table}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\smallstrong{Datenträger} & \smallstrong{Einzelpreis}
+& \smallstrong{Speicherplatz} & \smallstrong{Kosten je GB}\\
+\midrule
+Cloud    &  0,00\,€ &  1\,GB & 0,00\,€\\ 
+BD       &  0,75\,€ & 25\,GB & 0,03\,€\\
+HDD      & 53,00\,€ &  1\,TB & 0,05\,€\\
+\midrule
+DVD-R    &  0,32\,€ &4,7\,GB & 0,07\,€\\
+DVD-RW   &  1,27\,€ &4,7\,GB & 0,27\,€\\
+CD-R     &  0,28\,€ &700\,MB & 0,40\,€\\
+\midrule
+USB-Stick&  7,00\,€ & 16\,GB & 0,44\,€\\
+SD-Karte &  8,99\,€ & 16\,GB & 0,56\,€\\
+CD-RW    &  0,70\,€ &700\,MB & 0,99\,€\\
+\bottomrule
+\end{tabular}
+\caption{Preise für Datenspeicher}\label{Datenspeicher}
+Quelle: Kizoa, 2017.
+\end{table}
+
+Tabelle~\ref{Datenspeicher} zeigt die Kosten für unterschiedliche
+Datenspeicher. Hierbei ist zunächst zu beachten, dass Datenträger
+durch Beschädigung ab und zu unbrauchbar werden. Solches kommt auch
+bei allergrößter Sorgfalt vor. Aus diesem Grund möchte man von
+wichtigen Daten immer mehrere Replikate haben, es wäre also gefährlich,
+alle Daten auf eine einzelne HDD zu speichern. Ich würde empfehlen,
+wichtige Daten redundant auf drei USB-Sticks und drei DVD-R zu
+speichern. Zwei bis drei Replikate sollte man an einen anderen
+Ort bringen, damit diese im Falle eines Brands erhalten bleiben.
+
+Bei hohen Speichergrößen wird man entsprechend mehrere
+redundante Replikate von BD bis HDD wählen.
+
+\section{Kryptografische Methoden}
+
+\subsection{Hashfunktionen}
+
+Zur Gewährleistung der Integrität bedient man sich kryptografischen
+Hashfunktionen. Jede Datei besitzt einen eindeutigen Fingerabdruck,
+den man Hashwert nennt. Zu einer Datei lässt sich dieser Hashwert
+sehr schnell berechnen. Allerdings ist es aufgrund astronomisch großen
+Rechenaufwands faktisch unmöglich, zwei Dateien mit dem selben Hashwert
+zu finden (ein sogenannter \emph{Kollisionsangriff}), geschweige denn
+zu einem gegebenen Hashwert eine Datei zu finden (ein sogenannter
+\emph{Urbildangriff}).
+
+Das empfohlene moderne Verfahren zur Erzeugung eines solchen
+Hashwerts ist SHA-3-256. Auch SHA-2-256 kann man noch
+benutzen. Das ältere Verfahren MD5 konnte man als unsicher
+nachweisen, da Kollisionsangriffe gefunden wurden. Allerdings
+ist das für uns nicht besonders problematisch, da es auch für MD5
+noch keinen praktischen Urbildangriff gibt.
+
+\subsection{Verschlüsselung}
+
+Die Privatheit von Daten lässt sich mit Verschlüsselung
+gewährleisten. Mittels eines Schlüssels (eine Zeichenkette)
+wandelt man hierbei Klardaten in ein Chiffrat um. Die Klardaten lassen
+sich aus dem Chiffrat nur wieder zurückgewinnen, wenn der Schlüssel
+bekannt ist.
+
+Das empfohlene moderne Verfahren zur Verschlüsselung
+heißt AES-128. Allerdings muss zur Sicherung der Integrität noch
+ein Hashverfahren oder eine Datenkompression vorgeschaltet werden,
+denn AES allein schützt nicht die Integrität. Man darf aber davon
+ausgehen, dass die Software den Integritätsschutz beim Verschlüsseln
+automatisch bewerkstelligt. Dies lässt sich experimentell überprüfen,
+indem man mit einem Hexeditor Bytes einer verschlüsselten Datei
+manipuliert.
+
+Verschlüsselung ist kein Kinderspielzeug. Kommt der Schlüssel
+abhanden, ist die Entschlüsselung der Chiffrats unmöglich.
+Es gibt keinen Schlüsseldienst. Man kann auch nicht irgendwo
+seinen Personalausweis vorlegen und bekommt dann einen neuen
+Schlüssel zugeschickt. Mit dem Schlüssel gehen auch die Klardaten
+für immer verloren. Aus diesem Grund sollte man von den Klardaten
+besser irgendwo unverschlüsselte Kopien aufbewahren.
+
+\end{document}
