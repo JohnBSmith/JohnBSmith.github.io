@@ -32,10 +32,17 @@
 \newcommand{\id}{\operatorname{id}}
 \newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\erf}{\operatorname{erf}}
 \newcommand{\unit}[1]{\mathrm{#1}}
 \newcommand{\chem}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\ds}{\displaystyle}
+
+\newcommand{\arccot}{\operatorname{arccot}}
+\newcommand{\arsinh}{\operatorname{arsinh}}
+\newcommand{\arcosh}{\operatorname{arcosh}}
+\newcommand{\artanh}{\operatorname{artanh}}
+\newcommand{\arcoth}{\operatorname{arcoth}}
 
 \begin{document}
 \pagestyle{empty}
@@ -97,6 +104,28 @@ $\ds f[a](z) := \ee^{(z-a)D}f(a) = {\textstyle\sum\limits_{k=0}^\infty} \frac{f^
 \begin{tabular}{@{}ll}
 $f(x)=f(2a-x)$ & (Achsensymmetrie)\\
 $f(x)=2b-f(2a-x)$ & (Punktsymmetrie)
+\end{tabular}\\
+\begin{tabular}{@{}l|l}
+$(\ee^x)' = \ee^x$ & $(fg)'=f'g+g'f$\\
+$\ln' x = 1/x$ & $(f/g)'=(f'g-g'f)/g^2$\\
+$(a^x) = a^x\ln a$ & $(g\circ f)' = (g'\circ f)f'$\\
+$(x^n)' = nx^{n-1}$ & $(f^{-1})' = 1/(f'\circ f^{-1})$
+\end{tabular}\\
+\begin{tabular}{@{}l|l}
+$\sin'x = \cos x$ & $\tan'x = 1+\tan^2 x = 1/\cos^2 x$\\
+$\cos'x = -\sin x$ & $\cot'x = -1-\cot^2 x = -1/\sin^2 x$\\
+$\sinh'x = \cosh x$ & $\tanh'x = 1-\tanh^2 x = 1/\cosh^2 x$\\
+$\cosh'x = \sinh x$ & $\coth'x = 1-\coth^2 x = -1/\sinh^2 x$
+\end{tabular}\\
+\begin{tabular}{@{}l|l}
+$\arcsin'x = 1/\sqrt{1-x^2}$ & $\arctan'x = 1/(1+x^2)$\\
+$\arccos'x = -1/\sqrt{1-x^2}$ & $\arccot'x = -1/(1+x^2)$\\ 
+$\arsinh'x = 1/\sqrt{x^2+1}$ & $\artanh'x = 1/(1-x^2)$\\
+$\arcosh'x = 1/\sqrt{x^2-1}$ & $\arcoth'x = 1/(1-x^2)$
+\end{tabular}\\
+\begin{tabular}{@{}l|l}
+$\nabla(|\mathbf x|^2) = 2\mathbf x$ & $\nabla (fg) = g\nabla f+f\nabla g$\\
+$\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^T g+(Dg)^T f$
 \end{tabular}
 
 \newpage
@@ -224,9 +253,13 @@ $(I\models M) :\Leftrightarrow \forall\varphi{\in}M\colon I(\varphi)$\\
 \begin{tabular}{@{}l|l}
 $(\models\varphi) :\Leftrightarrow \forall I\colon I(\varphi)$
 & $(M\models\varphi) :\Leftrightarrow \forall I\colon ((I\models M)\Rightarrow I(\varphi))$\\
-$\operatorname{erf}(\varphi) :\Leftrightarrow \exists I\colon I(\varphi)$
-& $\operatorname{erf}(M) :\Leftrightarrow \exists I\colon (I\models M)$
+$\erf(\varphi) :\Leftrightarrow \exists I\colon I(\varphi)$
+& $\erf(M) :\Leftrightarrow \exists I\colon (I\models M)$
 \end{tabular}\\
+$\erf(\{\varphi_1,\ldots,\varphi_n\}) \Leftrightarrow
+\erf(\varphi_1\land\ldots\land\varphi_n)$\\
+$\erf(\varphi_1\lor\ldots\lor\varphi_n) \Leftrightarrow
+\erf(\varphi_1)\lor\ldots\lor\erf(\varphi_n)$\\
 \begin{tabular}{@{}ll}
 $(M\vdash\varphi)\Rightarrow (M\models\varphi)$ & (Korrektheit)\\
 $(M\models\varphi)\Rightarrow (M\vdash\varphi)$ & (Vollständigkeit)
