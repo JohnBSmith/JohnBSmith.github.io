@@ -108,7 +108,7 @@ $f(x)=2b-f(2a-x)$ & (Punktsymmetrie)
 \begin{tabular}{@{}l|l}
 $(\ee^x)' = \ee^x$ & $(fg)'=f'g+g'f$\\
 $\ln' x = 1/x$ & $(f/g)'=(f'g-g'f)/g^2$\\
-$(a^x) = a^x\ln a$ & $(g\circ f)' = (g'\circ f)f'$\\
+$(a^x)' = a^x\ln a$ & $(g\circ f)' = (g'\circ f)f'$\\
 $(x^n)' = nx^{n-1}$ & $(f^{-1})' = 1/(f'\circ f^{-1})$
 \end{tabular}\\
 \begin{tabular}{@{}l|l}
@@ -125,15 +125,18 @@ $\arcosh'x = 1/\sqrt{x^2-1}$ & $\arcoth'x = 1/(1-x^2)$
 \end{tabular}\\
 \begin{tabular}{@{}l|l}
 $\nabla(|\mathbf x|^2) = 2\mathbf x$ & $\nabla (fg) = g\nabla f+f\nabla g$\\
-$\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^T g+(Dg)^T f$
+$\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^T g+(Dg)^T f$\\
+$\nabla (\tfrac{1}{g}) = -\frac{\nabla g}{g^2}$
+& $\nabla(f/g) = (g\nabla f-f\nabla g)/g^2$
 \end{tabular}\\
 \begin{tabular}{@{}l}
 $t=\tan(\frac{x}{2})$,\; $\sin x = \frac{2t}{1+t^2}$,\;
 $\cos x = \frac{1-t^2}{1+t^2}$,\; $\mathrm dx = \frac{2\mathrm dt}{1+t^2}$
 \end{tabular}\\
-$L\{f(t)\} = \int_0^{\infty}\! f(t)\ee^{-pt}\mathrm dt$,\;
-$F\{f(t)\} = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}
-f(t)\ee^{-\ui\omega t}\mathrm dt$
+$L\{f(t)\} := \int_0^{\infty}\! f(t)\ee^{-pt}\mathrm dt$,\;
+$F\{f(t)\} := \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}
+f(t)\ee^{-\ui\omega t}\mathrm dt$\\
+$\int_\gamma f\mathrm ds := \int_a^b\! f(t)\,|\gamma'(t)|\,\mathrm dt$
 
 \newpage
 \noindent
@@ -157,7 +160,8 @@ $\ds\frac{z_1}{z_2}
 =\frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
 + \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui$\\
 $\ds\frac{1}{z} =\frac{1}{r}\ee^{-\ui\varphi}
-=\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\[4pt]
+=\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\[2pt]
+$x^2+px+q=0\colon\; x = -\frac{p}{2}\pm\frac{1}{2}\sqrt{p^2-4q}$\\[2pt]
 $\ds\begin{bmatrix}a & b\\ c & d\end{bmatrix}^{-1}
 = \frac{1}{ad-bc}\begin{bmatrix}d & -b\\ -c & a\end{bmatrix}$,\;\;
 $R(\varphi) = \begin{bmatrix}
@@ -196,9 +200,12 @@ $\langle v,w\rangle = |v||w|\cos\varphi$
 & $(AB)^{-1} = B^{-1} A^{-1}$
 \end{tabular}\\
 $\operatorname{proj}[w](v) = \frac{\langle v,w\rangle}{\langle w,w\rangle} w$,\quad
-$w_k := v_k - \sum_{i=1}^{k-1}\operatorname{proj}[w_i](v_k)$
+$w_k := v_k - \sum_{i=1}^{k-1}\operatorname{proj}[w_i](v_k)$\\
+$\ds y = \overline y + \frac{s_{xy}}{s_x}(x{-}\overline x)$,\;
+$s_x = \sum\limits_{k=1}^n (x_k{-}\overline x)^2$,\;
+$s_{xy} = \sum\limits_{k=1}^n (x_k{-}\overline x)(y_k{-}\overline y)$
 
-% \clearpage
+\clearpage
 
 \noindent
 \begin{tabular}{@{}cccccccc@{}}
@@ -297,12 +304,18 @@ $\bigcup_{i\in I} A_i := \{x\mid \exists i{\in}I\colon x{\in}A_i\}$
 $A\subseteq B :\Leftrightarrow \forall_{\!x}(x\in A\Rightarrow x\in B)$\\
 $A=B :\Leftrightarrow \forall_{\!x}(x\in A\Leftrightarrow x\in B)$\\
 $A=B :\Leftrightarrow A\subseteq B\land B\subseteq A$\\
-$f[M] := \{y\mid\exists x{\in}M\colon y{=}f(x)\}$\\
-$f^{-1}[N] := \{x\mid f(x)\in N\}$
+$f(M) := \{y\mid\exists x{\in}M\colon y{=}f(x)\}$\\
+$f^{-1}(N) := \{x\mid f(x)\in N\}$
 }
 \end{tabular}\\
 $A\times B := \{t\mid \exists x{\in}A\colon \exists y{\in}B\colon t=(x,y)\}$\\
-$A\subseteq B\Leftrightarrow A\cup B=B\Leftrightarrow A\cap B=A$
+$A\subseteq B\Leftrightarrow A\cup B=B\Leftrightarrow A\cap B=A$\\[2pt]
+\begin{tabular}{@{}l@{\;\,}|@{\;\,}l}
+$f(M\cup N) = f(M)\cup f(N)$ & $f^{-1}(M\cup N) = f^{-1}(M)\cup f^{-1}(N)$\\
+$f(M\cap N) \subseteq f(M)\cap f(N)$ & $f^{-1}(M\cap N) = f^{-1}(M)\cap f^{-1}(N)$\\
+$M\subseteq N\Rightarrow f(M)\subseteq f(N)$ & $M\subseteq N\Rightarrow f^{-1}(M)\subseteq f^{-1}(N)$\\
+$(g\circ f)(M) = g(f(M))$ & $(g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M))$
+\end{tabular}
 
 % \lipsum[1-20]
 
