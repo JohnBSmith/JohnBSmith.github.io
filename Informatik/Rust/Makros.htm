@@ -13,6 +13,8 @@
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Literale">Literale</a>
+<li><a href="#Komprehensionen">Komprehensionen</a>
+<li><a href="#TT-muncher">TT muncher</a>
 </ol>
 
 <h2 id="Literale">Literale</h2>
@@ -142,6 +144,145 @@ fn main() {
         "Esche": "Fraxinus excelsior"
     };
     println!("{:?}",m);
+}
+</pre>
+
+<h2 id="Komprehensionen">Komprehensionen</h2>
+
+<p>For-Audrücke, auch Listen-Komprehension oder Iterator-Komprehension
+genannt, gibt es Rust nicht. Da Rust aber Ausdruck-orientiert ist,
+lassen sich diese mithilfe von Makros selbst programmieren.
+
+<pre class="rust indent">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let mut _a = Vec::new();
+        for $x in $range {_a.push($expr);}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![2*x; for x in 0..10];
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Die Anzahl der notwendigen Reallokationen lässt sich durch
+Ausnutzen von <code>size_hint</code> erheblich reduzieren:
+
+<pre class="rust indent">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let _r = $range;
+        let mut _a = Vec::with_capacity(_r.size_hint().0);
+        for $x in _r {_a.push($expr);}
+        _a
+    }};
+}
+</pre>
+
+<p>Mit mehrstufigen for-Ausdrücken bekommt man kartesische
+Produkte als Definitionsbereich. Diese for-Ausdrücke kann man jeweils
+separat bis zu einer maximalen Anzahl implementieren:
+
+<pre class="rust indent">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let mut _a = Vec::new();
+        for $x in $range {_a.push($expr);}
+        _a
+    }};
+    ($expr:expr; for $x:tt in $xrange:expr;
+        for $y:tt in $yrange:expr
+    ) => {{
+        let mut _ = Vec::new();
+        for $x in $xrange {
+            for $y in $yrange {_a.push($expr)};
+        }
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![x*y; for x in 0..2; for y in 0..2];
+    println!("{:?}",a);
+}
+</pre>
+
+
+<h2 id="TT-muncher">TT muncher</h2>
+
+<p>Das Makro für die for-Ausdrücke lässt sich aber auch variadisch
+programmieren. Zur Umsetzung ist ein Verfahren gewinnbringend,
+das sich »TT muncher« nennt. Hierbei wird das zu parsende Muster
+in einen Anfang und einen Rest <code>$tail</code> zerlegt.
+Mit einem weiteren Makro-Aufruf geschieht dann das Parsen von
+<code>$tail</code>, was sich auch rekursiv formulieren lässt.
+
+<pre class="rust indent">
+macro_rules! expand_tail {
+    ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
+        for $x in $range {$v.push($expr);}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; $($tail:tt)*) =&gt; {
+        for $x in $range {expand_tail!($expr; $v; $($tail)*)}
+    };
+}
+
+macro_rules! list {
+    ($expr:expr; $($tail:tt)*) =&gt; {{
+        let mut _a = Vec::new();
+        expand_tail!{$expr; _a; $($tail)*}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![[x,y,z];
+        for x in 0..2; for y in 0..2; for z in 0..2];
+    println!("{:?}",arr);
+}
+</pre>
+
+<p>Bei for-Ausdrücken sind auch Bedingungen erlaubt, mit denen
+sich Elemente ausfiltern lassen. Diese können wir nun auch
+noch einbauen. Als einfaches Beispiel ist die Auflistung
+von pythagoräischen Tripeln angegeben.
+
+<pre class="rust indent">
+macro_rules! expand_tail {
+    ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
+        for $x in $range {$v.push($expr);}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; if $cond:expr) =&gt; {
+        for $x in $range {if $cond {$v.push($expr);}}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr;
+        if $cond:expr; $($tail:tt)*
+    ) =&gt; {
+        for $x in $range {
+            if $cond {expand_tail!($expr; $v; $($tail)*)}
+        }
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; $($tail:tt)*) =&gt; {
+        for $x in $range {expand_tail!($expr; $v; $($tail)*)}
+    };
+}
+
+macro_rules! list {
+    ($expr:expr; $($tail:tt)*) =&gt; {{
+        let mut _a = Vec::new();
+        expand_tail!{$expr; _a; $($tail)*}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![[x,y,z];
+        for x in 1..100; for y in 1..100; for z in 1..100;
+        if x&lt;y &amp;&amp; x*x+y*y == z*z];
+    println!("{:?}",a);
 }
 </pre>
 

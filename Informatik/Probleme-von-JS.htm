@@ -192,6 +192,7 @@ window.onload = main;
 <li><a href="#Umwandlung">Umwandlung von Arrays in Zeichenketten</a>
 <li><a href="#Typisierung">Schwache Typisierung</a>
 <li><a href="#Unsinnige-Regeln">Unsinnige Regeln</a>
+<li><a href="#Inkonsistente-Definitionen">Inkonsistente Definitionen</a>
 <li><a href="#Variablen">Globale Variablen</a>
 <li><a href="#Operatoren">Operatorüberladung</a>
 <li><a href="#this">Das this-Argument</a>
@@ -272,6 +273,26 @@ true
 false
 </pre>
 <p>Ja.
+
+<h2 id="Inkonsistente-Definitionen">Inkonsistente Definitionen</h2>
+
+<p>Die Funktion <code>Array(n)</code> ist nicht zu gebrauchen.
+Felder haben offenbar eine tieferliegende Komplexität, gegen
+die der Programmierer ankämpfen muss.
+
+<pre class="js indent">
+&gt; [undefined, undefined, undefined, undefined].map(x=&gt;1)
+[1, 1, 1, 1]
+
+&gt; Array(4).map(x=&gt;1)
+Array(4) [undefined, undefined, undefined, undefined]
+
+&gt; a = Array(4);
+&gt; a[0] = undefined;
+&gt; a.map(x=&gt;1)
+Array(4) [1, undefined, undefined, undefined]
+</pre>
+
 
 <h2 id="Variablen">Globale Variablen</h2>
 
