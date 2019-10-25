@@ -17,7 +17,6 @@
 <li><a href="#gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</a>
 <li><a href="#Unique">Duplikate entfernen</a>
 </ol>
-<br>
 
 <h2 id="Umdrehen">Array umdrehen</h2>
 <pre class="rust">
@@ -73,9 +72,10 @@ fn main(){
 
 <h2 id="Unique">Duplikate entfernen</h2>
 
+<h3>Reihenfolge beliebig</h3>
 <pre class="rust">
-use std::collections::HashSet;
 use std::iter::FromIterator;
+use std::collections::HashSet;
 use std::hash::Hash;
 
 fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
@@ -83,11 +83,25 @@ fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
 }
 
 fn main() {
-    let v: Vec&lt;i32&gt; = vec![1,2,3,1,4];
+    let v: Vec&lt;i32&gt; = vec![1,2,3,4,5,1,4];
     println!("{:?}",unique(v));
 }
 </pre>
 
+<h3>Reihenfolge bleibt erhalten</h3>
+<pre class="rust">
+use std::iter::FromIterator;
+use std::collections::BTreeSet;
+
+fn unique&lt;T: Eq+Ord&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+    BTreeSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
+}
+
+fn main() {
+    let v: Vec&lt;i32&gt; = vec![1,2,3,4,5,1,4];
+    println!("{:?}",unique(v));
+}
+</pre>
 
 </body>
 </html>
