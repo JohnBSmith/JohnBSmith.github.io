@@ -12,8 +12,34 @@
 <h1>Algorithmen: Kombinatorik</h1>
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Produkt">Kartesisches Produkt</a>
 <li><a href="#Potenzmenge">Potenzmenge</a>
 </ol>
+
+<h2 id="Produkt">Kartesisches Produkt</h2>
+
+<h3>Variadisch für Faktoren gleichen Datentyps</h3>
+<pre class="rust">
+fn cartesian_product&lt;T: Clone&gt;(a: &amp;[Vec&lt;T&gt;]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    if a.len()==0 {
+        return vec![Vec::new()];
+    } else {
+        let mut v: Vec&lt;Vec&lt;T&gt;&gt; = Vec::new();
+        for x in &amp;a[0] {
+            for t in cartesian_product(&amp;a[1..]) {
+                v.push([x.clone()].iter().cloned().chain(t).collect());
+            }
+        }
+        return v;
+    }
+}
+
+fn main() {
+    let p = cartesian_product(&amp;[vec![0,1],vec![0,1]]);
+    println!("{:?}",p);
+}
+</pre>
+
 
 <h2 id="Potenzmenge">Potenzmenge</h2>
 
