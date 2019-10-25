@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sortierung</title>
+  <link href="../main.css" rel="stylesheet">
+  <script src="../rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Sortierung</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Bubblesort">Bubblesort</a>
+</ol>
+
+<h2 id="Bubblesort">Bubblesort</h2>
+<pre class="rust">
+fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
+    let n = a.len();
+    for _ in 0..n {
+        for i in 0..n-1 {
+            if a[i+1]&lt;a[i] {a.swap(i,i+1);}
+        }
+    }
+}
+
+fn main() {
+    let mut a = [3,1,4,2];
+    bubble_sort(&amp;mut a);
+    println!("{:?}",a);
+}
+</pre>
+
+</body>
+</html>
+
