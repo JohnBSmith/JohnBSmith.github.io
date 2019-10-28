@@ -76,7 +76,6 @@ is found.
 Note: the list itself must be changed. Replacing <code>sys.path</code>
 with another list will not work.
 
-
 <dt>call(n,main,*argv)
 <dd>Call <code>main</code> with a new call stack of
 size <code>n</code>. This is used to obtain unlimited recursion
@@ -103,6 +102,25 @@ an integer.
 &gt; cmd("sh",["-c","GET en.wikipedia.org > /tmp/0"])
 &gt; s = read("/tmp/0")
 </pre>
+
+<dt>eprint(*a), eput(*a)
+<dd>Like <code>print(*a)</code> and <code>put(*a)</code>, but
+print to stderr instead of stdout.
+
+<dt>istable(x)
+<dd>True if <code>x</code> is a table object, else false.
+
+<dt>isclass(x)
+<dd>True if <code>x</code> is a class object, else false.
+
+<dt>id(x)
+<dd>Memory address of a pointer object. Value <code>null</code> for
+a non-pointer object. The only non-pointer objects are
+<code>null</code>, <code>empty</code> and
+objects of type <code>Bool</code>, <code>Int</code>, <code>Float</code>,
+<code>Complex</code>. Note that they are considered non-pointer, even
+if internally stored behind a pointer. Note that the address is not
+stored as an integer, because an integer cannot hold an u64 value.
 </dl>
 
 <h2 id="stackless">Module sys.stackless</h2>
