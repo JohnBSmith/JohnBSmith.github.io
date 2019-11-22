@@ -16,6 +16,7 @@
 <li><a href="#Validierung">Validierung</a>
 <li><a href="#ADT">Abstrakte Datentypen</a>
 <li><a href="#Read-only">Schreibgeschützte Komponenten</a>
+<li><a href="#Contracts">Vertragsbasierte Programmierung</a>
 </ol>
 
 <h2 id="Validierung">Validierung</h2>
@@ -416,6 +417,54 @@ macro_rules! define_read_only {
     }
 }
 </pre>
+
+<h2 id="Contracts">Vertragsbasierte Programmierung</h2>
+
+<p>Bei der vertragsbasierten Programmierung, engl. contract programming,
+sichern Laufzeitprüfungen das korrekte Arbeiten von Algorithmen ab.
+Die Prüfungen haben eine strukturierte Form, sie kommen als Prüfung von
+<i>Vorbedingungen</i>, <i>Nachbedingungen</i> und <i>Invarianten</i>
+vor.
+
+<p>Nehmen wir als Beispiel eine Funktion <code>zip</code>, welche
+zwei Arrays <code>a,b</code> entgegennimmt und ein Array
+von Paaren <code>(a<sub>k</sub>,b<sub>k</sub>)</code> zurückgibt.
+Die Vorbedingung ist, dass beide Arrays die gleiche Länge haben
+müssen, die Nachbedingung dass das Ergebnis auch diese Länge besitzt.
+
+<p>Die Vor- und Nachbedingung kann man mittels assert-Anweisungen
+formulieren.
+
+<pre class="rust indent">
+fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt; {
+    let n = a.len();
+    
+    // Precondition
+    assert!(n == b.len());
+
+    let mut v = Vec::with_capacity(n);
+    for k in 0..n {
+        v.push((a[k].clone(),b[k].clone()));
+    }
+
+    // Postcondition
+    assert!(n == v.len());
+
+    return v;
+}
+
+fn main() {
+    let a = vec![1,2,3,4];
+    let b = vec!["a","b","c","d"];
+    let c = zip(&amp;a,&amp;b);
+    println!("{:?}",c);
+}
+</pre>
+
+<p>Ein Nachteil bei dieser Formulierung von Nachbedingungen ist,
+dass return-Anweisungen in einer solchen Funktion nicht erlaubt sind.
+Um dies zu erzwingen bräuchte man ein zusätzliches Werkzeug, welches
+sich als prozedurales Makro formulieren ließe.
 
 </body>
 </html>
