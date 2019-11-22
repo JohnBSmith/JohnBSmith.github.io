@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Validierung">Validierung</a>
 <li><a href="#ADT">Abstrakte Datentypen</a>
+<li><a href="#Read-only">Schreibgeschützte Komponenten</a>
 </ol>
 
 <h2 id="Validierung">Validierung</h2>
@@ -218,6 +219,201 @@ fn routine&lt;S: Stack&lt;i32&gt;&gt;() {
 
 fn main() {
     routine::&lt;VecStack&lt;i32&gt;&gt;();
+}
+</pre>
+
+<h2 id="Read-only">Schreibgeschützte Komponenten</h2>
+
+<p>Oft möchte man bei Datenstrukturen von außen nur Lesezugriff
+auf Komponenten zulassen. Ein solcher Schreibschutz gehört neben
+Privatheit zum Konzept der Kapselung. Würde man eine Schnittstelle
+zulassen, die Manipulation interner Variablen erlaubt, ließe sich damit
+die Integrität der Datenstruktur zerstören. Mit dem Schreibschutz
+können wir eine konforme Benutzung der Datenstruktur erzwingen.
+
+<p>Als Beispiel wählen wir eine Datenstruktur, welche eine Liste von
+Obst in verschiedenen Sorten und ihr Gesamtgewicht speichert. Sowohl
+die Liste als auch das Gesamtgewicht müssen von außen schreibgeschützt
+sein.
+
+<p>Der Grundaufbau der Obstkiste sieht so aus:
+
+<pre class="rust indent">
+struct Fruit {kind: String, weight: u32}
+struct FruitCrate {list: Vec&lt;Fruit&gt;, total_weight: u32}
+</pre>
+
+<p>Die Zahlen speichern sinnvollerweise die Masse in Gramm.
+Die Datenstruktur wird nun eingekapselt. Die problematischen
+Komponenten &ndash; das sind hier sämtliche &ndash; lassen wir
+privat. Ausgelesen werden die Komponenten stattdessen mit Methoden,
+wobei man der Methode auch den gleichen Bezeichner wie der
+Komponente geben kann.
+
+<pre class="rust indent">
+pub mod fruit_crate {
+    pub struct Fruit {
+        pub kind: String,
+        pub mass: u32
+    }    
+    pub struct FruitCrate {
+        list: Vec&lt;Fruit&gt;,
+        total_mass: u32
+    }
+    impl FruitCrate {
+        pub fn new() -&gt; Self {
+            Self{list: Vec::new(), total_mass: 0}
+        }
+        pub fn push(&amp;mut self, kind: &amp;str, mass: u32) {
+            self.list.push(Fruit{kind: kind.to_string(), mass});
+            self.total_mass += mass;
+        }
+        pub fn total_mass(&amp;self) -&gt; u32 {self.total_mass}
+        pub fn list(&amp;self) -> &amp;Vec&lt;Fruit&gt; {&amp;self.list}
+    }
+}
+
+use fruit_crate::FruitCrate;
+
+fn main() {
+    let mut fc = FruitCrate::new();
+    fc.push("Äpfel",1000);
+    fc.push("Birnen",1000);
+    println!("Die Obstkiste wiegt {}g.",fc.total_mass());
+}
+</pre>
+
+<p>In Rust gestaltet sich dazu nun noch eine kleine technische
+Schwierigkeit. Nämlich wird mit dem Methodenaufruf <code>list</code>
+die gesamte Datenstruktur ausgeborgt. Gäbe es noch eine frei
+beschreibbare Komponente, könnte man auf diese während des ausborgens
+nicht mehr zugreifen. Als Beispiel sei der Obstkiste eine boolesche
+Variable hinzugefügt, die angibt ob die Kiste geöffnet ist.
+
+<pre class="rust indent">
+pub mod fruit_crate {
+    #[derive(Debug)]
+    pub struct Fruit {
+        pub kind: String,
+        pub mass: u32
+    }    
+    pub struct FruitCrate {
+        list: Vec&lt;Fruit&gt;,
+        total_mass: u32,
+        pub open: bool
+    }
+    impl FruitCrate {
+        pub fn new() -&gt; Self {
+            Self{list: Vec::new(), total_mass: 0, open: true}
+        }
+        /* Der Rest wie zuvor */
+    }
+}
+
+use fruit_crate::FruitCrate;
+
+fn main() {
+    let mut fc = FruitCrate::new();
+    fc.push("Äpfel",1000);
+    fc.push("Birnen",1000);
+    let a = fc.list();
+    fc.open = false;
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Der Kompiler würgt das ab, da <code>open</code> nicht überschrieben
+werden kann während <code>fc</code> ausgeborgt ist. Es gibt nun
+zwei Ansätze, wie sich dieses Problem lösen ließe.
+
+<p>Natürlich ließe sich hier auch <code>Cell&lt;bool&gt;</code> benutzen.
+Für allgemeineres müsste man dann aber <code>RefCell</code> heranziehen,
+was weniger effizient ist.
+
+<p>Der erste Ansatz besteht darin, das Ausborgen mit einer Methode
+aufzuteilen. Hierbei werden Teil-borrows als Tupel oder Struktur
+zurückgeben. Zu <code>FruitCrate</code> müssen wir lediglich die
+folgende Methode hinzufügen:
+
+<pre class="rust indent">
+pub fn borrow_parts(&amp;mut self) -&gt; (&amp;mut bool, &amp;Vec&lt;Fruit&gt;) {
+    (&amp;mut self.open, &amp;self.list)
+}
+</pre>
+
+<p>So wird es vom Compiler akzeptiert:
+<pre class="rust indent">
+fn main() {
+    let mut fc = FruitCrate::new();
+    fc.push("Äpfel",1000);
+    fc.push("Birnen",1000);
+    let (open,list) = fc.borrow_parts();
+    *open = false;
+    println!("{:?}",list);
+}
+</pre>
+
+<p>Beim zweiten Ansatz hüllt man die schreibgeschützten
+Komponenten in eine Struktur <code>ReadOnly</code> ein.
+
+<pre class="rust indent">
+pub mod fruit_crate {
+    pub struct ReadOnly&lt;T&gt;(T);
+
+    impl&lt;T&gt; std::ops::Deref for ReadOnly&lt;T&gt; {
+        type Target = T;
+        fn deref(&amp;self) -&gt; &amp;T {&amp;self.0}
+    }
+
+    #[derive(Debug)]
+    pub struct Fruit {
+        pub kind: String,
+        pub mass: u32
+    }    
+    pub struct FruitCrate {
+        pub list: ReadOnly&lt;Vec&lt;Fruit&gt;&gt;,
+        pub total_mass: ReadOnly&lt;u32&gt;,
+        pub open: bool
+    }
+    impl FruitCrate {
+        pub fn new() -&gt; Self {
+            Self{
+                list: ReadOnly(Vec::new()),
+                total_mass: ReadOnly(0),
+                open: true
+            }
+        }
+        pub fn push(&amp;mut self, kind: &amp;str, mass: u32) {
+            self.list.0.push(Fruit{kind: kind.to_string(), mass});
+            self.total_mass.0 += mass;
+        }
+    }
+}
+
+use fruit_crate::FruitCrate;
+
+fn main() {
+    let mut fc = FruitCrate::new();
+    fc.push("Äpfel",1000);
+    fc.push("Birnen",1000);
+    let list = &amp;*fc.list;
+    fc.open = false;
+    println!("{:?}",list);
+}
+</pre>
+
+<p>Da <code>ReadOnly</code> nicht aus dem Modul heraus genommen
+werden kann, definiert man dafür am besten ein Makro:
+<pre class="rust indent">
+macro_rules! define_read_only {
+    () =&gt; {
+        pub struct ReadOnly&lt;T&gt;(T);
+        
+        impl&lt;T&gt; std::ops::Deref for ReadOnly&lt;T&gt; {
+            type Target = T;
+            fn deref(&amp;self) -&gt; &amp;T {&amp;self.0}
+        }
+    }
 }
 </pre>
 

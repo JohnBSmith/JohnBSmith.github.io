@@ -237,8 +237,8 @@ a[0]==1, a[1]==2, a[2]==3, a[3]==4.
 </pre>
 
 <p>Nun soll eine Funktion angegeben werden, welche ein Feld nimmt
-und die Summe der Elemente zurückgibt. Das lässt z.&nbsp;B. wie folgt
-bewerkstelligen:
+und die Summe der Elemente zurückgibt. Das lässt sich z.&nbsp;B.
+wie folgt bewerkstelligen:
 <pre class="rust indent">
 fn sum(a: &amp;[i32;4]) -&gt; i32 {
     let mut s = 0;
@@ -254,11 +254,12 @@ fn main() {
 
 <p>Das Feld braucht für diese Aufgabe lediglich ausgeborgt werden,
 es genügt hier daher eine Referenz auf das Feld, deshalb die Signatur
-<code>a:&nbsp;&amp;[i32;4]</code>.
+<code>a:&nbsp;&amp;[i32;4]</code>. Die Anweisung <code>s += x;</code>
+ist eine Kurzschreibweise für <code>s = s+x;</code>.
 
 <h3>Ausschnitte von Feldern</h3>
 <p>Dem Leser mag nun aber sofort auffallen, dass diese Funktion lediglich
-Felder der Länge vier verarbeiten kann. Um dieses Problem zu lösen,
+Felder der Länge vier verarbeiten kann. Zur Lösung dieses Problems
 existiert ein eigener Datentyp, der <i>Slice</i> eines Feldes, geschrieben
 <code>&amp;[i32]</code>. Die Signatur der Funktion <code>sum</code>
 braucht lediglich auf <code>a:&nbsp;&amp;[i32]</code> abgeändert zu
@@ -348,7 +349,7 @@ werden:
 let mut b: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
 </pre>
 
-<h3>Alleinige Referenzen auf ein Feld</h3>
+<h3>Ungemeinschaftliche Referenzen auf ein Feld</h3>
 <p>Zum Umdrehen eines Feldes muss man eigentlich kein neues erzeugen.
 Das Feld lässt sich auch selbst umdrehen, man nennt diese Vorgehensweise
 <i>in place</i>. Der folgende Algorithmus vertauscht das erste
@@ -368,8 +369,13 @@ fn main() {
     println!("{:?}",a);
 }
 </pre>
-<p>Da dem Feld selbst Veränderung widerfährt, ist hier eine alleinige
-Referenz auf den Slice des Feldes notwendig.
+<p>Da dem Feld selbst Veränderung widerfährt, ist hier eine
+ungemeinschaftliche Referenz auf den Slice des Feldes notwendig.
+Eine ausführliche Erläuterung warum das so ist folgt später.
+Zunächst muss man nur wissen dass diese Art von Referenz die Signatur
+<code>&amp;mut</code> anstelle von <code>&amp;</code> besitzt.
+Das <code>mut</code> (mutable) weist daraufhin, dass die Daten,
+auf die die Referenz zeigt, verändert werden dürfen.
 
 <p>Dieser Algorithmus kann ohne die geringste Schwierigkeit generisch für
 einen beliebigen<sup>1</sup>
