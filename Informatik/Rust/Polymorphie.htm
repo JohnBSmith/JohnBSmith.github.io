@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Polymorphie</h1>
+
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Konzept">Das Konzept der Polymorphie</a>
+<li><a href="#Monomorphisierung">Monomorphisierung</a>
+</ol>
+
+<h2 id="Konzept">Das Konzept der Polymorphie</h2>
+
+<p>Eine Funktion zur elementweisen Addition zweier Arrays lässt sich
+ohne Schwierigkeiten umsetzen:
+<pre class="rust indent">
+fn add(a: &amp;[i32], b: &amp;[i32]) -&gt; Vec&lt;i32&gt; {
+    let mut c: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
+    for i in 0..a.len() {
+        c.push(a[i]+b[i]);
+    }
+    return c;
+}
+
+fn main() {
+    let a = vec![1,2,3,4];
+    println!("{:?}",add(&amp;a,&amp;a));
+}
+</pre>
+
+<p>Die Elemente haben hier nun allerdings 32&nbsp;Bit große Ganzzahlen
+als festen Datentyp. Man spricht von einer <i>monomorphen</i>
+Typisierung. Die Funktion würde aber auch für andere Datentypen
+wie <code>f64</code> einen Sinn ergeben. Man könnte nun auf die Idee
+kommen, die Funktion für die gewünschten Datentypen nochmals zu
+implementieren. Es kann doch aber sein, dass die Anzahl der Datentypen
+sehr groß oder nicht von vornherein bekannt ist.
+
+<p>Die Lösung dieses Problems besteht in der <i>polymorphen</i>
+Umsetzung der Funktion. Hierbei abstrahiert man das wiederkehrende
+Muster von den konkreten Datentypen. Nun stellt sich dabei aber die
+Frage, wie sich dies am besten bewerkstelligen lässt. Der Compiler
+weiß ja bisher nur wie er monomorphe Funktionen kompilieren muss.
+
+<p>Zunächst müssen wir Klarheit darüber bekommen was die Polymorphie
+für die Funktion bedeutet. Was ändert sich an der Funktion für
+unterschiedliche Datentypen und was bleibt gleich? Ändern muss man
+die Addition, und dann auch noch die Operationen zum verschieben
+der Zahlen im Speicher, denn diese sind ja von der Speichergröße des
+Datentyps abhängig. Nimmt man etwas Abstand, dann sieht man ein,
+dass Veränderungen nur überall dort zwangsweise vorkommen müssen,
+wo Operationen von den unterschiedlichen Eigenschaften der Datentypen
+abhängig sind.
+
+<p>Die Funktion sollte aber auch möglichst wenig über die Datentypen
+wissen. Eigentlich muss die Funktion nur darüber Bescheid wissen,
+dass für den gewünschten Datentyp die Addition definiert ist.
+Datentypen mit dieser Eigenschaft fassen wir zu einer
+<i>Typklasse</i> <code>Add</code> zusammen.
+
+<p>Die Funktion kann man nun polymorph mit einer gebundenen
+Typvariable schreiben, die man nennen kann wie man möchte.
+Nennen wir sie <code>T</code>. Die Funktion ließe sich dann
+so formulieren:
+
+<pre class="rust indent">
+fn add&lt;T: Add&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    // ...
+}
+</pre>
+
+<p>Die vollständige Angabe ist in Rust die folgende:
+<pre class="rust indent">
+use std::ops::Add;
+
+fn add&lt;T: Copy + Add&lt;Output=T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    let mut c: Vec&lt;T&gt; = Vec::with_capacity(a.len());
+    for i in 0..a.len() {
+        c.push(a[i]+b[i]);
+    }
+    return c;
+}
+</pre>
+
+<p>In Rust wird eine Typklasse als <i>Trait</i> bezeichnet. Jeder
+Trait macht bestimmte Aussagen über die Eigenschaften eines Datentyps.
+Daher entstammt auch die Bezeichnung Trait.
+
+<h2 id="Monomorphisierung">Monomorphisierung</h2>
+
+<p>Was fängt der Compiler nun damit an? Nun ja, das ist nicht schwer
+zu verstehen. Der Compiler prüft bei der Anwendung der Funktion einfach
+ob der dortige Datentyp in den Typklassen <code>Add</code> und
+<code>Copy</code> liegt, entnimmt dann die somit bekannten
+Eigenschaften des Datentyps und ist damit befähigt, die unbekannten
+Operationen gegen ihre konkreten zu ersetzen. Dieser Prozess wird als
+<i>Monomorphisierung</i> bezeichnet.
+
+<p>Man kann sich die polymorphe Funktion auch als Schablone vorstellen,
+in der für die Typvariable <code>T</code> der gewünschte Datentyp
+eingesetzt wird. Danach liegt die Funktion ja in monomorpher Form vor,
+so dass sie auf ganz gewöhnliche Art vom Compiler kompiliert werden
+kann.
+
+</body>
+</html>
+
