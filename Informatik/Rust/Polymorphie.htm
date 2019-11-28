@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Konzept">Das Konzept der Polymorphie</a>
 <li><a href="#Monomorphisierung">Monomorphisierung</a>
+<li><a href="#Laufzeit">Laufzeit-Polymorphie</a>
 </ol>
 
 <h2 id="Konzept">Das Konzept der Polymorphie</h2>
@@ -109,6 +110,147 @@ in der für die Typvariable <code>T</code> der gewünschte Datentyp
 eingesetzt wird. Danach liegt die Funktion ja in monomorpher Form vor,
 so dass sie auf ganz gewöhnliche Art vom Compiler kompiliert werden
 kann.
+
+<h2 id="Laufzeit">Laufzeit-Polymorphie</h2>
+
+<p>Die bisherige Umsetzung von Polymorphie enthält noch einen kleinen
+Schönheitsfehler. Angenommen, die Datentypen sind zahlreich und die
+Implementation ist relativ groß, dann ist das Programm im Quelltext
+zwar polymorph, bei der Monomorphisierung bläht es sich jedoch in
+ein großes Maschinenprogramm auf. Außerdem kann ja auch die Situation
+bestehen dass Datentypen nicht im Vorhinein bekannt sind. Dies führt
+dazu dass die Funktionen über die Programm-Bibliothek hinaus
+polymorph vorliegen müssen und bei der Anwendung jeweils
+monomorphisiert werden. Zwar erlaubt die Monomorphisierung viele
+Optimierungen, jedoch führt dies auch zu langen Kompilierzeiten,
+da separate Kompilation höchstens teilweise möglich ist.
+
+<p>Die alternative Umsetzung ist eine ganz einfache Überlegung:
+Wir halten die Funktion einfach polymorph. Was muss man dafür
+genau tun? Nun, es gibt diese Operationen die von den Eigenschaften
+des Argument-Datentyps abhängig sind. <i>Wenn die Funktion denn zur
+Laufzeit polymorph vorliegen soll, dann muss auf diese Operationen
+über Funktionenzeiger zugegriffen werden</i>. Der Funktionenzeiger
+muss zur Laufzeit irgendwie an die Funktion übergeben werden. Dies
+lässt sich günstig bewerkstelligen, indem die Funktionenzeiger
+in einer Tabelle gespeichert werden, welche mit an die Funktion
+übergeben wird. Solche Tabellen werden als <i>dispatch tables</i>
+oder <i>virtual method tables</i> bezeichnet.
+
+<p>Beim Dispatch gibt es nun zwei Ansätze. Der erste Ansatz ist der
+homogene Dispatch. Hierbei werden zusätzlich Informationen über die
+Speichergröße gespeichert um einfache Kopien und Verschiebungen
+zu gestatten. Der zweite Ansatz ist der heterogene Dispatch. Hierbei
+findet eine Indirektion der Daten über einen Zeiger statt. Heterogener
+Dispatch hat den den Vorteil dass er flexibler ist, indem er Daten
+von wechselndem Datentyp ermöglicht. Z.&nbsp;B. lässt sich damit ein
+Array formulieren, in welchem jedes Element von einem anderen
+Datentyp ist.
+
+<p>Die Umsetzung von automatischem homogenen Dispatch gilt im
+Zusammenspiel mit dem Monomorphisierungs-System als schwierig.
+Um sich hier aus der Affäre zu ziehen, entschied man sich
+für kontrollierten heterogenen Dispatch. Hierzu wird in Rust ein Wert
+als Zeigerpaar gespeichert, wobei der erste Zeiger auf die Daten
+zeigt, und der zweite Zeiger auf die Dispatch-Tabelle. Für solche
+Zeigerpaare ist auch die Sprechweise <i>fat pointer</i>
+(engl. dicker Zeiger) geläufig.
+
+<p>Der kontrollierte Dispatch manifestiert sich nun aber auch im
+Typsystem. Die polymorphe Funktion soll ja eine feste Schnittstelle
+besitzen, auf die man zur Laufzeit zugreifen kann. Da diese
+Schnittstelle nicht automatisiert erzeugt wird, muss man sich darum
+kümmern wie diese aussehen soll. Dafür braucht man zwar nicht bis auf
+die Binärschnittstelle runtergehen, das sollte der Compiler schon
+erledigen, allerdings müssen wir in der Schnittstelle eine monomorphe
+Typisierung vorgaukeln.
+
+<p>Gegeben ist also zunächst die polymorphe Typisierung, wobei
+die Typvariable in einer angegebenen Typklasse liegt. Gebraucht wird
+aber ein monomorpher Typ, der diese Typklasse zur Laufzeit umsetzt.
+Diese Abbildung erlaubt der Operator <code>dyn</code>, welcher
+nur in Verbindung mit einem Zeigertyp vorkommt, also als
+<code>Pointer&lt;dyn Trait&gt;</code> angeben wird. Werte dieses
+Typs werden in Rust zuweilen auch als Trait-Objekte bezeichnet.
+Speziell sind das z.&nbsp;B. <code>Box&lt;dyn Trait&gt;</code>
+und <code>Rc&lt;dyn Trait&gt;</code>, außerdem auch
+<code>&amp;dyn Trait</code> und <code>&amp;mut dyn Trait</code>.
+
+
+<p>Betrachten wir z.&nbsp;B. eine polymorphe Funktion zur Umkehrung
+der Reihenfolge eines Arrays:
+
+<pre class="rust indent">
+fn reverse&lt;T&gt;(a: &amp;mut [T]){
+    let n = a.len();
+    for i in 0..n/2 {a.swap(i,n-1-i);}
+}
+
+fn main(){
+    let mut a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    reverse(&amp;mut a);
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Die Typvariable der Funktion <code>reverse</code> ist nicht
+durch Traits eingeschränkt. Der Trait <code>Any</code> ermöglicht
+eine Laufzeitdarstellung dieses Umstandes. Es folgt die
+Laufzeit-polymorphe Implementation:
+
+<pre class="rust indent">
+use std::any::Any;
+
+fn reverse(a: &amp;mut [&amp;dyn Any]) {
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i,n-1-i);
+    }
+}
+
+fn downcast(a: &amp;[&amp;dyn Any]) -&gt; Vec&lt;i32&gt; {
+    a.iter().map(|x| *(*x).downcast_ref::&lt;i32&gt;().unwrap()).collect()
+}
+
+fn main() {
+    let mut a: Vec&lt;&amp;dyn Any&gt; = vec![&amp;1,&amp;2,&amp;3,&amp;4];
+    reverse(&amp;mut a);
+    println!("{:?}",downcast(&amp;a));
+}
+</pre>
+
+<p>Der hierbei vorkommende Downcast ist allerdings kein gutes Zeichen.
+Downcasts entstehen dadurch, dass der durch <code>dyn</code>
+erzeugte Type erasure rückgängig gemacht werden muss. Hierbei kann
+man aber Fehler machen, da Type erasure maßgeblich einen Teil der
+Typisierung entfernt. Und bei <code>Any</code> ist das nicht nur
+ein Teil, sondern die gesamte Typisierung. Downcasts laufen also
+der Sicherheit zuwider, die uns das Typsystem eigentlich bieten soll.
+
+<p>Zur Umgehung dieses Problems kann man sämtliche von dem polymorphen
+Code abhängige Programmteile selbst polymorph gestalten:
+
+<pre class="rust indent">
+use std::fmt::{Display,Debug};
+
+trait Object: Display+Debug {}
+impl&lt;T: Display+Debug&gt; Object for T {}
+
+fn reverse(a: &amp;mut [&amp;dyn Object]) {
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i,n-1-i);
+    }
+}
+
+fn main() {
+    let mut a: Vec&lt;&amp;dyn Object&gt; = vec![&amp;1,&amp;2,&amp;3,&amp;4];
+    reverse(&amp;mut a);
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Der missliebige Downcast ist nun verschwunden.
 
 </body>
 </html>
