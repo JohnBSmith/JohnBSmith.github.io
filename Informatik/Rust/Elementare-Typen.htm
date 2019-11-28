@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Ganzzahlen">Ganzzahlen</a>
 <li><a href="#Fliesskommazahlen">Fließkommazahlen</a>
+<li><a href="#Typumwandlungen">Typumwandlungen</a>
 </ol>
 
 <h2 id="Ganzzahlen">Ganzzahlen</h2>
@@ -42,7 +43,7 @@ nachdem ob ein 32-Bit-Programm oder ein 64-Bit-Programm vorliegt.
 Ein 64-Bit-Programm hat u.&nbsp;a. den Vorteil, dass es mehr als
 4&nbsp;GB Arbeitsspeicher adressieren kann. Es gibt reine
 <var>n</var>-Bit-Architekturen auf denen nur <var>n</var>-Bit-Programme
-ausgeführt werden können. Auf eingeschränkten Microcontrollern
+ausgeführt werden können. Auf eingeschränkten Mikrocontrollern
 kann auch <var>n</var>=16 oder gar <var>n</var>=8 sein.
 Die Typen <code>usize</code> und <code>isize</code> sind dafür da,
 um mit Speicheradressen rechnen zu können, unabhängig davon ob eine
@@ -52,7 +53,7 @@ um mit Speicheradressen rechnen zu können, unabhängig davon ob eine
 Das geschieht wie folgt:
 
 <pre class="rust indent">
-let x: i32 = 12 as i32;
+let x: i32 = 12i32;
 </pre>
 
 <p>Hier muss man zunächst bemerken, dass der Rust-Compiler in der
@@ -61,22 +62,11 @@ rechten Seite vom Zuweisungszeichen »=« zu erkennen. Dieser Vorgang
 nennt sich <i>Typ-Inferenz</i>. Man darf also kürzer schreiben:
 
 <pre class="rust indent">
-let x = 12 as i32;
-</pre>
-
-<p>Die Typ-Inferenz erfolgt nun auch rückwärts. Somit ist bekannt
-dass es sich beim Literal 12 um eine <code>i32</code>-Zahl handelt. Eine
-Kurzschreibweise hierfür ist <code>12i32</code>. Die folgenden
-Formen sind also äquivalent:
-
-<pre class="rust indent">
-let x = 12i32;     // Vorwärts-Typinferenz
-let x: i32 = 12;   // Rückwärts-Typinferenz
-let x = 12 as i32; // Vorwärts- und Rückwärts-Typinferenz
+let x = 12i32;
 </pre>
 
 <p>Da aber <code>i32</code> der Standard-Ganzzahl-Datentyp ist,
-wird dieser angenommen, falls kein Typ inferiert werden kann.
+wird dieser angenommen, falls kein Typ abgeleitet werden kann.
 Man kann hier also kurz schreiben:
 
 <pre class="rust indent">
@@ -91,7 +81,7 @@ verwendet wird:
 
 <pre class="rust indent">
 type uint = u32;
-let x = 12 as uint;
+let x: uint = 12;
 </pre>
 
 <p>Hier ist <code>uint</code> ein Alias für <code>u32</code>.
@@ -106,34 +96,12 @@ wie bei <code>usize</code> einen dafür vorgesehen abstrakten
 Datentyp formuliert. Eine genaue Erläuterung dazu folgt in einem
 späteren Kapitel.
 
-<p>Oft liegt die Situation vor, dass eine Typumwandlung zwischen
-Typen notwendig ist. In Rust gibt es hierfür das Schlüsselwort
-»<code>as</code>«. Implizite Typumwandlungen zwischen Zahlen
-gibt es in Rust nicht.
+<p>Rust erlaubt die binäre, oktale und hexadezimale
+Darstellung einer Zahl im Quelltext:
 
 <pre class="rust indent">
-let x: u8 = 12;
-let y = x as u32;
-</pre>
-
-<p>Bei einer Umwandlung von <code>u8</code> nach <code>u32</code>
-werden ganz einfach drei höherwertige Nullbytes hinzugefügt. 
-
-<pre class="indent">
-Vorher   u8: 00001100
-Nachher u32: 00000000 00000000 00000000 00001100
-</pre>
-
-<p>Bei einer Umwandlung von <code>u32</code> nach <code>u8</code>
-werden die drei höherwertigen Bytes abgeschnitten, was zu
-Informationsverlust führen kann.
-
-<p>Tatsächlich kann man in Rust die binäre, oktale und hexadezimale
-Darstellung einer Zahl einfach in den Quelltext schreiben:
-
-<pre class="rust indent">
-let x: u32 = 0b00000000_00000000_00000000_00001100;
-let x: u32 = 0b1100; // kurz
+let x: u32 = 0b00000000_00000000_00000000_00001100; // binär
+let x: u32 = 0b1100; // binär, kurz
 let x: u32 = 0x00_00_00_0c; // hexadezimal
 let x: u32 = 0x0000000c; // hexadezimal ohne Trennzeichen
 let x: u32 = 0xc; // hexadezimal, kurz
@@ -153,30 +121,13 @@ println!("{}, 0b{:b}, 0x{:x}, 0o{:o}",x,x,x,x);
 // 12, 0b1100, 0xc, 0o14
 </pre>
 
-<p>Zuletzt ist noch zu bemerken, dass der bisher sorgenlos
-verwendete Operator »<code>as</code>« auch verlustbehaftete
-und transmutierende Typumwandlungen erlaubt:
-
-<pre class="rust indent">
- 256u32 as u8  // verlustbehaftet
-(-1i32) as u32 // transmutierend
-</pre>
-
-<p>Zum Erzwingen von sicheren Typumwandlungen kann man stattdessen
-<code>from</code> verwenden:
-
-<pre class="rust indent">
-let x: u8 = 0;
-let y: i32 = i32::from(x);
-</pre>
-
-<h2 id="Flieskommazahlen">Fließkommazahlen</h2>
+<h2 id="Fliesskommazahlen">Fließkommazahlen</h2>
 
 <p>Die Datentypen <code>f32</code> und <code>f64</code> repräsentieren
 Fließkommazahlen, wobei 32 bzw. 64 wieder für die Zahl der Bits
 steht. Der Typ <code>f64</code> ist der Standarddatentyp für
 Fließkommazahlen. Der Typ <code>f32</code> sollte nur in extrem
-Laufzeitkritischen Routinen verwendet werden, etwa in den
+Laufzeit-kritischen Routinen verwendet werden, etwa in den
 Grafik-Kernen von Computerspielen, da dort jede Verzögerung
 schmerzlich ist.
 
@@ -210,7 +161,126 @@ fn main(){
 }
 </pre>
 
+<h2 id="Typumwandlungen">Typumwandlungen</h2>
+
+<h3>Sichere Typumwandlungen</h3>
+
+<p>Für sichere Typumwandlungen steht die Funktion <code>from</code>
+zur Verfügung:
+
+<pre class="rust indent">
+let x: u8 = 0;
+let y: i32 = i32::from(x);
+</pre>
+
+<p>Normalerweise ist eine solche Umwandlung eine
+umkehrbare Einbettung. Z.&nbsp;B. ist die Umwandlung von <code>u8</code>
+nach <code>i32</code> eine Einbettung, da <code>u8</code> als Teilmenge
+von <code>i32</code> betrachtet werden kann, und umkehrbar, da niemals
+zwei <code>u8</code>-Zahlen zur selben <code>i32</code>-Zahl werden.
+
+<p>In der Übersicht ergeben sich die folgenden Umwandlungen:
+<pre class="indent">
+u16::from(x: u8),
+u32::from(x: u8), u32::from(x: u16),
+u64::from(x: u8), u64::from(x: u16), u64::from(x: u32)
+
+i16::from(x: u8),
+i32::from(x: u8), i32::from(x: u16),
+i64::from(x: u8), i64::from(x: u16), i64::from(x: u32)
+
+i16::from(x: i8),
+i32::from(x: i8), i32::from(x: i16),
+i64::from(x: i8), i64::from(x: i16), i64::from(x: i32)
+</pre>
+
+<p>Nun stellt sich noch die Frage, wie Umwandlungen mit möglichem
+Verlust gehandhabt werden sollen. Falls ein Verlust auftritt, würde
+man das Verhalten dann gerne selbst festlegen. Dies erlaubt die Funktion
+<code>try_from</code>. Wenn man bei Verlust auf den selben Wert
+abbilden möchte, dann lässt sich dies wie folgt bewerkstelligen:
+
+<pre class="rust indent">
+use std::convert::TryFrom;
+
+const VERLUST: u8 = 0;
+
+fn main() {
+    let x: u32 = 12;
+    let y: u8 = match u8::try_from(x) {
+        Ok(value) =&gt; value,
+        Err(_) =&gt; VERLUST
+    };
+    println!("{}",y);
+}
+</pre>
+<p>Wenn man aber von vornherein weiß, dass das Argument im Wertebereich
+von <code>u8</code> liegt, sollte man stattdessen dies schreiben:
+
+<pre class="rust indent">
+let y: u8 = match u8::try_from(x) {
+    Ok(value) =&gt; value,
+    Err(_) =&gt; unreachable!()
+};
+</pre>
+
+<h3>Verlustbehaftete Typumwandlungen</h3>
+
+<p>Neben den sicheren Typumwandlungen gibt es in Rust noch die
+nackten Typumwandlungen mit dem Schlüsselwort »<code>as</code>«.
+Zwar stellen diese Umwandlungen keinen unsicheren Code dar, jedoch
+erlauben sie stillschweigend Verlust und Transmutation, sind
+daher also mit Vorsicht zu genießen.
+
+<p>Man sollte solche nackten Typumwandlungen nur dann verwenden,
+wenn sie mit nicht <code>from</code> möglich sind, beispielsweise
+bei einer potentiell verlustbehafteten Umwandlung:
+
+<pre class="rust indent">
+let x: u32 = 12;
+let y: u8 = x as u8;
+</pre>
+
+<p>Was passiert hierbei? Bei einer Umwandlung von <code>u32</code>
+nach <code>u8</code> werden ganz einfach die drei höherwertigen
+Nullbytes abgeschnitten:
+
+<pre class="indent">
+Vorher:  u32: 00000000 00000000 00000000 00001100
+Nachher:  u8: 00001100
+</pre>
+
+<p>Die Operation »<code>x as u8</code>« ist demnach äquivalent zu:
+
+<pre class="rust indent">
+match u8::try_from(x &amp; 0xff) {
+    Ok(value) =&gt; value,
+    Err(_) =&gt; unreachable!()
+}
+</pre>
+
+<h3>Transmutierende Typumwandlungen</h3>
+<p>Bei transmutierenden Umwandlungen werden Daten einfach als
+von anderem Typ interpretiert, ohne eine semantische Umwandlung
+vorzunehmen. Aus einer puristischen Sichtweise heraus ist das
+grundsätzlich problematisch, da durch die Offenlegung der internen
+Repräsentation der Daten jegliche Abstraktion zerstört wird. Aus
+diesem Grund sind Transmutationen charakteristisch für sehr
+maschinennahe Programmierung.
+
+<p>Betrachten wir z.&nbsp;B. die Umwandlung von <code>i32</code>
+in <code>u32</code>:
+<pre class="rust indent">
+fn main() {
+    let x: i32 = -1;
+    println!("{}", x as u32);
+}
+</pre>
+
+<p>Hierbei wird Zweierkomplement-Darstellung offengelegt, was
+dazu führt, dass <code>-1</code> als <code>std::u32::MAX</code>
+interpretiert wird. Wer noch nie von der Zweierkomplement-Darstellung
+gehört hat, wird über das riesig große Ergebnis verblüfft sein.
 
 </body>
 </html>
-
