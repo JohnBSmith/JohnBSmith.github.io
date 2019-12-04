@@ -16,6 +16,7 @@
 <li><a href="#Validierung">Validierung</a>
 <li><a href="#ADT">Abstrakte Datentypen</a>
 <li><a href="#Read-only">Schreibgeschützte Komponenten</a>
+<li><a href="#Typzustaende">Typzustände</a>
 <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
 </ol>
 
@@ -417,6 +418,110 @@ macro_rules! define_read_only {
     }
 }
 </pre>
+
+<h2 id="Typzustaende">Typzustände</h2>
+
+<p>Manchmal müssen Methoden in einer bestimmten Reihenfolge aufgerufen
+werden. Dass die Reihenfolge schon zur Kompilierzeit bekannt ist,
+weist darauf hin, dass sich ein entsprechender Formalismus mittels
+des Typsystems formulieren lassen müsste. Man spricht von
+<i>Typzuständen</i>, engl. <i>typestates</i>. Rust bietet mit seinem
+affinen Typsystem (Move-Semantik) die Möglichkeit, Typzustände bis
+zu einem gewissen Ausmaß zu modellieren.
+
+<p>Ohne affines Typsystem sind Typzustände nicht möglich, da die
+fehlende Move-Semantik dazu führt, dass sich Variablen noch nach dem
+Methodenaufruf benutzen lassen bis sie out of scope sind. Der
+springende Punkt ist aber, dass die Methode die Variable »aufessen«
+soll.
+
+<p>Ein einfaches Beispiel. Angenommen, es gibt einen Typ <code>A</code>
+mit den Methoden <code>f1</code>, <code>f2a</code>, <code>f2b</code>
+und <code>f3</code>. Wir würden nun gern haben, dass <code>f2x</code>
+nur nach <code>f1</code> aufgerufen werden kann und <code>f3</code>
+nur nach <code>f2x</code>.
+
+<p>Zur Umsetzung werden drei Typzustände <code>A</code>, <code>A2</code>
+und <code>A3</code> definiert. Die Daten der Typzustände bleiben
+privat, damit sich die Objekte ausschließlich über Methoden konstruieren
+lassen. Jeder Typzustand bekommt jeweils seine erlaubten Methoden.
+
+<pre class="rust indent">
+pub mod a_state {
+    pub struct A{data: ()}
+    impl A {
+        pub fn new() -&gt; A {A{data: ()}}
+        pub fn f1(self) -&gt; A2 {A2{data: self.data}}
+    }
+    
+    pub struct A2{data: ()}
+    impl A2 {
+        pub fn f2a(self) -&gt; A3 {A3{data: self.data}}
+        pub fn f2b(self) -&gt; A3 {A3{data: self.data}}
+    }
+    
+    pub struct A3{data: ()}
+    impl A3 {
+        pub fn f3(self) {let _ = self.data;}
+    }
+}
+
+use crate::a_state::A;
+
+fn main() {
+    let a = A::new();
+    let a = a.f1();
+    let a = a.f2a();
+    a.f3();
+}
+</pre>
+
+<p>Als Nebeneffekt sind hier syntaktisch angenehme Methodenketten
+erlaubt:
+
+<pre class="rust indent">
+A::new().f1().f2a().f3();
+</pre>
+
+<p>Dass jeder Typzustand ein eigenständiger Datentyp ist, kann
+unpraktisch sein, etwa wenn Methoden für einige oder alle Typzustände
+gültig sein sollen. Tatsächlich können wir die Typzustände
+zusammenfassen, indem der Zustand als Typparameter kodiert wird.
+Die Zustände sollen hierbei keinerlei Daten tragen, weswegen wir
+<code>PhantomData</code> heranziehen.
+
+<pre class="rust indent">
+pub mod a_state {
+    use std::marker::PhantomData as Ph;
+
+    pub trait State {}
+    pub struct A1; impl State for A1 {}
+    pub struct A2; impl State for A2 {}
+    pub struct A3; impl State for A3 {}
+
+    pub struct A&lt;S: State&gt; {
+        data: (), marker: Ph&lt;S&gt;
+    }
+    pub fn new_a() -&gt; A&lt;A1&gt; {A{data: (), marker: Ph}}
+    impl A&lt;A1&gt; {
+        pub fn f1(self) -&gt; A&lt;A2&gt; {A{data: self.data, marker: Ph}}
+    }
+    impl A&lt;A2&gt; {
+        pub fn f2a(self) -&gt; A&lt;A3&gt; {A{data: self.data, marker: Ph}}
+        pub fn f2b(self) -&gt; A&lt;A3&gt; {A{data: self.data, marker: Ph}}
+    }
+    impl A&lt;A3&gt; {
+        pub fn f3(self) {}
+    }
+}
+
+use a_state::new_a;
+
+fn main() {
+    new_a().f1().f2a().f3();
+}
+</pre>
+
 
 <h2 id="Contracts">Vertragsbasierte Programmierung</h2>
 
