@@ -17,6 +17,7 @@
 <li><a href="#ADT">Abstrakte Datentypen</a>
 <li><a href="#Read-only">Schreibgeschützte Komponenten</a>
 <li><a href="#Typzustaende">Typzustände</a>
+<li><a href="#Einheiten">Einheiten</a>
 <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
 </ol>
 
@@ -29,10 +30,10 @@ einen Datenbankindex verwendet. Nun ist es aber so, dass diese
 Zeichenkette von einem Client zu einem Server kommt. Das Client-Programm
 übergibt jedoch eine Zeichenkette die eine falsche Zahl von Ziffern
 besitzt oder Buchstaben enthält. Dies führt dazu dass das Datenbanksystem
-in einen invaliden Zustand gerät und ein über Monate lang umbemerktes
+in einen invaliden Zustand gerät und ein über Monate lang unbemerktes
 Datenleck entsteht.
 
-<p>Das Problem hier ist, dass einer der Programmier
+<p>Das Problem hier ist, dass einer der Programmierer
 vielleicht nicht gewusst hat, dass die Daten vor der Benutzung hätten
 validiert werden müssen.
 
@@ -288,7 +289,7 @@ fn main() {
 <p>In Rust gestaltet sich dazu nun noch eine kleine technische
 Schwierigkeit. Nämlich wird mit dem Methodenaufruf <code>list</code>
 die gesamte Datenstruktur ausgeborgt. Gäbe es noch eine frei
-beschreibbare Komponente, könnte man auf diese während des ausborgens
+beschreibbare Komponente, könnte man auf diese während des Ausborgens
 nicht mehr zugreifen. Als Beispiel sei der Obstkiste eine boolesche
 Variable hinzugefügt, die angibt ob die Kiste geöffnet ist.
 
@@ -324,7 +325,7 @@ fn main() {
 }
 </pre>
 
-<p>Der Kompiler würgt das ab, da <code>open</code> nicht überschrieben
+<p>Der Compiler würgt das ab, da <code>open</code> nicht überschrieben
 werden kann während <code>fc</code> ausgeborgt ist. Es gibt nun
 zwei Ansätze, wie sich dieses Problem lösen ließe.
 
@@ -519,6 +520,123 @@ use a_state::new_a;
 
 fn main() {
     new_a().f1().f2a().f3();
+}
+</pre>
+
+<h2 id="Einheiten">Einheiten</h2>
+
+<p>Einheiten beugen bei technischen oder physikalischen Rechnungen
+gegen Missverständnisse vor. Zur Schaffung einer erhöhten Sicherheit
+würden wir dieses Konzept nun auch gerne in die Programmierung
+einbringen.
+
+<p>Zunächst ließe sich mehr Klarheit schaffen durch Definition der
+Einheiten als Konstanten:
+
+<pre class="rust indent">
+pub mod unit {
+    #![allow(non_upper_case_globals)]
+    pub const km: f64 = 1000.0;
+    pub const  m: f64 = 1.0;
+    pub const cm: f64 = 0.01;
+    pub const mm: f64 = 0.001;
+}
+
+use unit::{cm,mm};
+use std::f64::consts::PI;
+
+fn circumference(radius: f64) -&gt; f64 {
+    2.0*PI*radius
+}
+
+fn main() {
+    let r = 4.0*cm + 2.0*mm;
+    println!("{} m",circumference(r));
+}
+</pre>
+
+<p>Hierbei verbleibt aber das Problem, dass sich Größen
+verschiedener Einheit beliebig addieren und multiplizieren lassen.
+Das würde man jedoch gerne auf erlaubte Operationen beschränken.
+Hierzu muss für Größen offenbar ein Datentyp definiert werden.
+
+<p>Man könnte nun für alle möglichen Einheiten einen separaten
+Datentyp definieren. Wesentlich günstiger ist aber die Definition
+der Dimension als Datentyp. Die Einheiten normalisieren den Zahlenwert
+dann bloß, dergestalt dass dieser nur in kohärenter Einheit
+gespeichert wird.
+
+<p>Weiterhin könnte man nun für alle möglichen Größenarten einen
+separaten Datentyp definieren bzw. diese mit ihrer Dimension
+zusammenfallen lassen. Jedoch ließen sich die Implementationen
+wiederkehrender Operationen dann nicht faktorisieren. Daher macht
+man die Dimension am besten zu einem Typargument der Größe. Da die
+Dimension lediglich zur Kompilierzeit existieren soll, nutzt man
+<code>PhantomData</code>. Eine Größe besteht nun aus einem Zahlenwert
+<code>value</code> (in kohärenter Einheit) und einer dazugehörigen
+Dimension <code>dim</code>.
+
+<p>Wir gehen wie erläutert vor und definieren regelkonform die
+Multiplikation einer Zahl mit einer Größe und die Addition von zwei
+Größen gleicher Dimension. Die Einheiten modellieren wir einfach
+als konstante Größen:
+
+<pre class="rust indent">
+pub mod quantities {
+    use std::marker::PhantomData as Ph;
+    use std::ops::{Mul,Add};
+    use std::fmt;
+
+    pub trait Dimension {}
+
+    #[derive(Clone,Copy)]
+    pub struct Quantity&lt;D: Dimension&gt; {
+        value: f64, dim: Ph&lt;D&gt;
+    }
+    impl&lt;D: Dimension&gt; Mul&lt;Quantity&lt;D&gt;&gt; for f64 {
+        type Output = Quantity&lt;D&gt;;
+        fn mul(self, y: Quantity&lt;D&gt;) -&gt; Quantity&lt;D&gt; {
+            Quantity{value: self*y.value, dim: Ph}
+        }
+    }
+    impl&lt;D: Dimension&gt; Add&lt;Quantity&lt;D&gt;&gt; for Quantity&lt;D&gt; {
+        type Output = Quantity&lt;D&gt;;
+        fn add(self, y: Quantity&lt;D&gt;) -&gt; Quantity&lt;D&gt; {
+            Quantity{value: self.value+y.value, dim: Ph}
+        }
+    }
+    
+    pub struct Length;
+    impl Dimension for Length {}
+
+    impl fmt::Display for Quantity&lt;Length&gt; {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+            write!(f, "{} m", self.value)
+        }
+    }
+
+    pub mod unit {
+        #![allow(non_upper_case_globals)]
+        use crate::quantities::{Quantity,Length};
+        use std::marker::PhantomData as Ph;
+        pub const km: Quantity&lt;Length&gt; = Quantity{value: 1.000, dim: Ph};
+        pub const  m: Quantity&lt;Length&gt; = Quantity{value: 1.0, dim: Ph};
+        pub const cm: Quantity&lt;Length&gt; = Quantity{value: 0.01, dim: Ph};
+        pub const mm: Quantity&lt;Length&gt; = Quantity{value: 0.001, dim: Ph};
+    }
+}
+
+use quantities::{Quantity,Length};
+use quantities::unit::{cm,mm};
+use std::f64::consts::PI;
+
+fn circumference(radius: Quantity&lt;Length&gt;) -&gt; Quantity&lt;Length&gt; {
+    2.0*PI*radius
+}
+
+fn main() {
+    let r = 4.0*cm+2.0*mm;
+    println!("{}",circumference(r));
 }
 </pre>
 
