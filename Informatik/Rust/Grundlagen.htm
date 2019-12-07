@@ -22,6 +22,7 @@
   <li><a href="#Schleifen">Schleifen</a>
   </ol>
 <li><a href="#Felder">Felder</a>
+<li><a href="#Eingaben">Eingaben</a>
 </ol>
 
 <h2 id="erstes-Programm">Das erste Programm</h2>
@@ -596,6 +597,80 @@ fn main() {
 }
 </pre>
 
+<h2 id="Eingaben">Eingaben</h2>
+<h3>Eingaben von der Konsole</h3>
+
+<p>In Rust gibt es Funktionen für die Eingaben/Ausgaben im Modul
+<code>io</code>. Diese erlauben sehr kontrolliertes Ansprechen
+der Unix-Schnittstelle, die sowohl Ein- und Ausgaben über die
+Konsole als auch über Dateien ermöglicht. Aus diesem Grund sind
+die Funktionen etwas unergonomisch. Zur Vereinfachung der Eingabe
+gebe ich hier eine Funktion <code>input</code> vor und packe die
+technischen Details darein.
+
+<p>Als Beispiel erweitern wir das Programm für die gefühlte
+Temperatur um Nutzereingaben.
+
+<pre class="rust indent">
+fn input(prompt: &amp;str) -&gt; String {
+    use std::{io,io::Write};
+    let mut buffer = String::new();
+    print!("{}",prompt);
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&amp;mut buffer).unwrap();
+    buffer.pop();
+    return buffer;
+}
+
+fn message(theta: f64) -&gt; String {
+    let text = if theta &lt;  0.0 {"eisig"}
+          else if theta &lt; 10.0 {"kalt"}
+          else if theta &lt; 16.0 {"mild"}
+          else {"warm"};
+    return format!("Draußen ist es {}.",text);
+}
+
+fn main() {
+    loop{
+        let s = input("Gib eine Temperatur ein: ");
+        match s.trim().parse::&lt;f64&gt;() {
+            Ok(theta) =&gt; {
+                println!("{}",message(theta));
+            },
+            _ =&gt; {
+                println!("Eine Zahl bitte.");
+            }
+        };
+    }
+}
+</pre>
+
+<h3>Eingaben aus Dateien</h3>
+
+<p>Eingaben aus Dateien ermöglicht die Funktion
+<code>read_to_string</code>. Die Funktion gibt ein Resultat zurück,
+bei welchem zwischen Erfolg (<code>Ok</code>) und Fehler
+(<code>Err</code>) unterschieden wird.
+
+<pre class="rust indent">
+fn main() {
+    let path = "Datei.txt";
+    let s = match std::fs::read_to_string(path) {
+        Ok(value) =&gt; value,
+        _ =&gt; panic!("Fehler: Konnte Datei '{}' nicht finden/lesen.",path)
+    };
+    println!("Inhalt von Datei '{}':\n{}",path,s);
+}
+</pre>
+
+<p>Die Datei muss in dem Verzeichnis liegen in welchem das Programm
+geöffnet wird. Der Dateipfad kann auch als Kommandozeilenargument
+gelesen werden:
+
+<pre class="rust indent">
+let argv: Vec&lt;String&gt; = std::env::args().collect();
+let path = &amp;argv[1];
+</pre>
 
 </body>
 </html>
