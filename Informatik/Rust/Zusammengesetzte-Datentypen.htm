@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Strukturen">Strukturen</a>
 <li><a href="#Enumerationen">Enumerationen</a>
+<li><a href="#Nominal">Nominale Typisierung</a>
 </ol>
 
 <h2 id="Strukturen">Strukturen</h2>
@@ -112,6 +113,51 @@ Tags <code>E::Int</code> und <code>E::Char</code>.
 auch von einer <i>disjunkten Vereinigung</i>
 (engl. <i>disjoint union</i>), <i>diskriminierten Vereinigung</i>
 (engl. <i>tagged union</i>), oder einem <i>Koprodukt</i>.
+
+<h2 id="Nominal">Nominale Typisierung</h2>
+
+<p>Zu unterscheiden ist zwischen <i>struktureller</i> und
+<i>nominaler</i> Typisierung. Bei der strukturellen Typisierung &ndash;
+man spricht auch von anonymen Typen &ndash; stimmen zwei Typen genau
+dann überein, wenn sie von gleicher Gestalt sind. Bei der nominalen
+Typisierung stimmen zwei Typen genau dann überein, wenn sie den selben
+Namen haben, dessen Definition aber einmalig ist. Die nominale
+Typisierung behaftet so gesagt einen strukturellen Typ mit einem
+im gesamten Programm und der gesamten Welt einzigartigen Namen, welcher
+den resultierenden Typ unterschiedlich von allen anderen Typen macht.
+
+<p>Die folgende Tabelle gibt Aufschluss, wie nominale und
+struktruelle Typen in Rust erstellt werden:
+<table class="bt indent">
+<tr>
+<th>
+<th>Nominal
+<th>Strukturell
+<tr>
+<th>Struktur
+<td><code>struct Name{x:X,y:Y}</code>
+<td>nicht vorhanden
+<tr>
+<th>Tupel
+<td><code>struct Name(X,Y);</code>
+<td><code>(X,Y)</code>
+<tr>
+<th>Enumeration
+<td><code>enum Name{A(X),B(Y)}</code>
+<td>nicht vorhanden
+<tr>
+<th>Feld
+<td><code>struct Name([X;2]);</code>
+<td><code>[X;2]</code>
+</table>
+
+<p>Die strukturelle Typisierung erlaubt vor allem Ergonomie und
+Komfort. Die nominale Typisierung ist dagegen grundlegend für die
+Typsicherheit.
+
+<p>Man kann zu jedem beliebigen strukturellen Typen <code>T</code>
+einen nominalen erzeugen, indem man ihn als <code>struct Name(T)</code>
+einhüllt.
 
 </body>
 </html>

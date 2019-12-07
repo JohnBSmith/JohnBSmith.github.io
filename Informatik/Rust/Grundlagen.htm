@@ -15,7 +15,12 @@
 <ol>
 <li><a href="#erstes-Programm">Das erste Programm</a>
 <li><a href="#Ausdrucke-Variablen-Typen">Ausdrücke, Variablen, Typen</a>
-<li><a href="#Schleifen">Schleifen</a>
+<li><a href="Kontrollfluss">Kontrollfluss</a>
+  <ol>
+  <li><a href="#Funktionen">Funktionen</a>
+  <li><a href="#Verzweigungen">Verzweigungen</a>
+  <li><a href="#Schleifen">Schleifen</a>
+  </ol>
 <li><a href="#Felder">Felder</a>
 </ol>
 
@@ -59,8 +64,9 @@ fn main() {
     println!("{} plus {} ist {}",x,y,x+y);
 }
 </pre>
-<p>Das ist wie in der Mathematik. Sei <var>x</var>=1 und
-sei <var>y</var>=2. Tue damit dies und das.
+<p>Das ist wie in der Mathematik: »Sei <var>x</var>&nbsp;=&nbsp;1 und
+sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
+<var>y</var> abhängiger Ausdruck.
 
 <h3>Typen</h3>
 <p>In der Sprache Rust besitzt jeder Wert und jede Variable einen
@@ -106,16 +112,16 @@ gibt es aber nur eine Hand voll. Das sind:
 <td>Ganzzahl der Größe 8, 16, 32, 64, 128 Bit
 <tr>
 <td><code>usize</code>
-<td>unsigned integer of address size (32&nbsp;bit oder 64&nbsp;bit)
+<td>unsigned integer of address size (32&nbsp;bit or 64&nbsp;bit)
 <td>vorzeichenlose Ganzzahl der Adressgröße (32&nbsp;Bit oder 64&nbsp;Bit)
 <tr>
 <td><code>isize</code>
-<td>integer of address size (32&nbsp;bit oder 64&nbsp;bit)
+<td>integer of address size (32&nbsp;bit or 64&nbsp;bit)
 <td>Ganzzahl der Adressgröße (32&nbsp;Bit oder 64&nbsp;Bit)
 <tr>
 <td><code>f32, f64</code>
 <td>floating point number of size 32&nbsp;bit, 64&nbsp;bit
-<td>Fließkommazahl der Größe 32&nbsp;bit, 64&nbsp;bit
+<td>Fließkommazahl der Größe 32&nbsp;Bit, 64&nbsp;Bit
 <tr>
 <td><code>bool</code>
 <td>boolean, i.e. logical values
@@ -126,9 +132,175 @@ gibt es aber nur eine Hand voll. Das sind:
 <td>Zeichenkette
 </table>
 
-<h2 id="Schleifen">Schleifen</h2>
+<h2 id="Kontrollfluss">Kontrollfluss</h2>
+<h3 id="Funktionen">Funktionen</h3>
 
-<h3>For-Schleifen</h3>
+<p>Jede Art von Unterprogramm wird in Rust als Funktion
+bezeichnet. Das betrifft auch solche Unterprogramme, die keine
+Funktionen im mathematischen Sinn sind.
+
+<p>Trifft der Kontrollfluss auf den Aufruf eines Unterprogramms,
+dann kommt es zu einem Sprung in das Unterprogramm, woraufhin
+der darin vorhandene Code ausgeführt wird. Mit
+einer Rücksprunganweisung <code>return</code> kehrt der Kontrollfluss
+später wieder an die Stelle des Aufrufs zurück. Wie bei einer
+mathematischen Funktion kann das Unterprogramm Argumente und einen
+Wert haben.
+
+<p>Das folgende Beispiel zeigt die Berechnung des Umfangs zu einem
+gegebenen Radius mittels der Funktion <code>circumference</code>.
+
+<pre class="rust indent">
+use std::f64::consts::PI;
+
+fn circumference(radius: f64) -&gt; f64 {
+    return 2.0*PI*radius;
+}
+
+fn main() {
+    print!("{}",circumference(1.0));
+}
+</pre>
+
+<p>Steht die Rücksprunganweisung ganz am Ende der Funktion,
+darf diese auch entfallen:
+
+<pre class="rust indent">
+fn circumference(radius: f64) -> f64 {
+    2.0*PI*radius
+}
+</pre>
+
+
+<h3 id="Verzweigungen">Verzweigungen</h3>
+
+<p>Bei vielen Programmen kommen im Kontrollfluss Verzweigungen vor.
+Das Programm ändert dabei sein Verhalten aufgrund des Wertes von
+Variablen. Das folgende Programm macht z.&nbsp;B. unterschiedliche
+Ausgaben, je nachdem welcher Wert für die Temperatur <code>theta</code>
+angegeben wird.
+
+<pre class="rust indent">
+fn main() {
+    let theta = 4.0;
+    print!("Draußen ist es ");
+    if theta &lt; 0.0 {
+        println!("eisig.");
+    } else if theta &lt; 10.0 {
+        println!("kalt.");
+    } else if theta &lt; 16.0 {
+        println!("mild.");
+    } else {
+        println!("warm.");
+    }
+}
+</pre>
+
+<p>Bei der if-Anweisung handelt es sich in Rust eigentlich um einen
+Ausdruck. Demnach lässt sich ein if-Ausdruck auch dort angeben,
+wo ein Ausdruck bzw. Term erwartet wird. Dies erlaubt eine etwas
+elegantere Formulierung des letzten Programms:
+
+<pre class="rust indent">
+fn main() {
+    let theta = 4.0;
+    let text = if theta &lt;  0.0 {"eisig"}
+          else if theta &lt; 10.0 {"kalt"}
+          else if theta &lt; 16.0 {"mild"}
+          else {"warm"};
+    print!("Draußen ist es {}.",text);
+}
+</pre>
+
+<p>In der Mathematik kommen im Zusammenhang mit ganzen Zahlen oft
+rekursive Definitionen vor. Die rekursive Definition der
+Potenzierung&nbsp;ist:
+<p class="indent"><var>x</var><sup><var>n</var></sup> :=
+<var>x</var><sup><var>n</var>&minus;1</sup>&nbsp;&sdot;&nbsp;<var>x</var>,
+<br>x<sup>0</sup> := 1.
+
+<p>Diese Definition lässt sich in Rust direkt als rekursive Funktion
+angeben:
+
+<pre class="rust indent">
+fn pow(x: f64, n: u32) -&gt; f64 {
+    if n==0 {1.0} else {pow(x,n-1)*x}
+}
+
+fn main() {
+    print!("{}",pow(2.0,10));
+}
+</pre>
+
+<p>Für Fallunterscheidungen gibt es auch den match-Ausdruck.
+Dieser Ausdruck vergleicht einen Wert mit einer Liste von Mustern
+und wählt den Ausdruck zum ersten passenden Muster. Für die
+Potenzierung ergibt sich damit eine äquivalente Formulierung:
+
+<pre class="rust indent">
+fn pow(x: f64, n: u32) -> f64 {
+    match n {
+        0 => 1.0,
+        n => pow(x,n-1)*x
+    }
+}
+</pre>
+
+
+<h3 id="Schleifen">Schleifen</h3>
+<h4>While-Schleifen</h4>
+<p>Anstelle von rekursiver Programmierung ist in Rust eher die
+iterative Programmierung üblich, was unterschiedliche Gründe hat.
+Zum einen lassen sich iterative Programme leichter vom Compiler
+optimieren. Zum anderen ist aus Gründen der Effizienz die Größe des
+Aufrufstapels und damit die maximale Rekursionstiefe beschränkt.
+Man bräuchte Tail-call-Optimierungen, die aber wieder zu Einschränkungen
+beim Programmierstil führen. Das heißt nicht, dass rekursive
+Programmierung nicht in Rust vorkommt, jedoch ist sie auf baumartige
+Strukturen in gerichtete Graphen beschränkt, die nicht besonders
+tief sind und demnach nur geringe Rekursionstiefe benötigen.
+
+<p>Aus der rekursiven Definition der Potenzierung lässt sich leicht
+ein iterativer Algorithmus zur Berechnung gewinnen. Unter Benutzung
+einer while-Schleife ist der Algorithmus von folgender Gestalt:
+
+<pre class="rust indent">
+fn pow(x: f64, n: u32) -&gt; f64 {
+    let mut p = 1.0;
+    let mut i = 0;
+    while i&lt;n {
+        p = p*x;
+        i = i+1;
+    }
+    return p;
+}
+</pre>
+
+<p>Die Variable <code>i</code> ist eine sogenannte Laufvariable.
+Die Laufvariablen speichert hier lediglich die Anzahl der
+Iterationen. Die Anweisung <code>i = i+1</code> bedeutet
+»berechne den Wert des Ausdrucks <code>i+1</code> und überschreibe
+die Variable <code>i</code> mit diesem Wert«. Entsprechend ist
+die Anweisung <code>p = p*x</code> zu lesen. Für beide Anweisungen
+gibt es auch eine Kurzschreibweise:
+<pre class="rust indent">
+p *= x; i += 1;
+</pre>
+
+
+<h4>For-Schleifen</h4>
+
+<p>Oft günstiger ist die Benutzung von for-Schleifen anstelle von
+while-Schleifen. Zur Verdeutlichung hier nochmals die Berechnung
+der Potenzierung:
+<pre class="rust indent">
+fn pow(x: f64, n: u32) -&gt; f64 {
+    let mut p = 1.0;
+    for _ in 0..n {p *= x;}
+    return p;
+}
+</pre>
+
 <p>Es wird nun gezeigt, wie sich Quadratwurzeln mit dem Computer
 berechnen lassen. Die Wurzel <var>x</var>&nbsp;=&nbsp;&radic;<var>a</var> lässt
 sich als positive Lösung der quadratischen Gleichung
@@ -255,7 +427,9 @@ fn main() {
 <p>Das Feld braucht für diese Aufgabe lediglich ausgeborgt werden,
 es genügt hier daher eine Referenz auf das Feld, deshalb die Signatur
 <code>a:&nbsp;&amp;[i32;4]</code>. Die Anweisung <code>s += x;</code>
-ist eine Kurzschreibweise für <code>s = s+x;</code>.
+ist eine Kurzschreibweise für <code>s = s+x;</code>. Das steht für
+»berechne den Wert von <code>s+x</code> und überschreibe die
+Variable <code>s</code> mit diesem Wert«.
 
 <h3>Ausschnitte von Feldern</h3>
 <p>Dem Leser mag nun aber sofort auffallen, dass diese Funktion lediglich
@@ -273,12 +447,12 @@ sieht das Programm wie folgt aus:
 <pre class="rust indent">
 fn main() {
     let a: [i32;4] = [1,2,3,4];
-    println!("{}",sum(&amp;a[0..2]));
+    println!("{}",sum(&amp;a[0..3]));
 }
 </pre>
 
 <p>Der Bereich <code>0..3</code> enthält die Indizes <code>0,1,2</code>.
-Daher beschreibt der Slice <code>&amp;a[0..2]</code> eine Referenz auf
+Daher beschreibt der Slice <code>&amp;a[0..3]</code> eine Referenz auf
 <code>[a[0],a[1],a[2]]</code>.
 
 <h3>Dynamische Felder</h3>
@@ -391,7 +565,7 @@ mit Trait <code>?Sized</code> haben nicht unbedingt eine feste Größe. Allerdin
 spricht man solche Werte normalerweise indirekt über Zeiger an,
 welche diesen Unzulässigkeiten selbst nicht unterliegen.
 
-<h3>Nochmals Auschnitte von Feldern</h3>
+<h3>Nochmals Ausschnitte von Feldern</h3>
 
 <p>Slices bestehen nur aus Zeiger und Länge. Intuitiv lässt sich aus
 einem Slice ein Teilslice bilden und aus diesem wieder ein Teilslice
