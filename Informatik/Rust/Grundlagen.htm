@@ -75,7 +75,7 @@ sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
 <code>v</code> vom Typ <code>T</code> ist, schreibt man
 <code>v:&nbsp;T</code>. Beispielsweise sagt <code>x:&nbsp;i32</code> aus, dass
 <code>x</code> eine Ganzzahl sein soll,
-welche binär in einer 32&nbsp;bit langen Speicherzelle gespeichert
+welche binär in einer 32&nbsp;Bit langen Speicherzelle gespeichert
 werden kann. Alle Berechnungen müssen den Regeln des
 <i>Typsystems</i> genügen. Z.&nbsp;B. ist es nicht erlaubt, Zahlen
 mit Farben zu verrechnen. Dies ergibt keinen Sinn, und der Compiler
@@ -257,9 +257,9 @@ optimieren. Zum anderen ist aus Gründen der Effizienz die Größe des
 Aufrufstapels und damit die maximale Rekursionstiefe beschränkt.
 Man bräuchte Tail-call-Optimierungen, die aber wieder zu Einschränkungen
 beim Programmierstil führen. Das heißt nicht, dass rekursive
-Programmierung nicht in Rust vorkommt, jedoch ist sie auf baumartige
-Strukturen in gerichtete Graphen beschränkt, die nicht besonders
-tief sind und demnach nur geringe Rekursionstiefe benötigen.
+Programmierung nicht in Rust vorkommt, jedoch ist sie auf meistens auf
+baumartige Strukturen und gerichtete Graphen beschränkt, die nicht
+besonders tief sind und demnach nur geringe Rekursionstiefe benötigen.
 
 <p>Aus der rekursiven Definition der Potenzierung lässt sich leicht
 ein iterativer Algorithmus zur Berechnung gewinnen. Unter Benutzung
@@ -278,11 +278,11 @@ fn pow(x: f64, n: u32) -&gt; f64 {
 </pre>
 
 <p>Die Variable <code>i</code> ist eine sogenannte Laufvariable.
-Die Laufvariablen speichert hier lediglich die Anzahl der
+Die Laufvariable speichert hier lediglich die Anzahl der
 Iterationen. Die Anweisung <code>i = i+1</code> bedeutet
 »berechne den Wert des Ausdrucks <code>i+1</code> und überschreibe
 die Variable <code>i</code> mit diesem Wert«. Entsprechend ist
-die Anweisung <code>p = p*x</code> zu lesen. Für beide Anweisungen
+die Anweisung <code>p = p*x</code> zu verstehen. Für beide Anweisungen
 gibt es auch eine Kurzschreibweise:
 <pre class="rust indent">
 p *= x; i += 1;
@@ -480,7 +480,7 @@ struct Vec&lt;T&gt; {ptr: *mut T, len: usize, cap: usize}
 </pre>
 
 <p>Die tatsächliche Formulierung ist noch etwas ausgeklügelter,
-besitzt aber die selbe Struktur. Der Zeiger auf den Puffer 
+besitzt aber die gleiche Struktur. Der Zeiger auf den Puffer 
 verhält sich zusammen mit der Länge wie ein Slice eines Feldes fester
 Länge. Jedoch können sich durch Manipulation des
 Feldes alle drei genannten Informationen verändern. Die aktuelle Länge
@@ -488,9 +488,9 @@ des Feldes lässt sich via <code>a.len()</code> auslesen, die aktuelle
 Kapazität mit <code>a.capacity()</code>.
 
 <p>Die Kapazität eines Feldes macht eine Aussage darüber, wie viele
-Elemente zu dem leeren Feld hinzugefügt werden können, ohne dass der
+Elemente zum leeren Feld hinzugefügt werden können, ohne dass der
 Puffer zur Erhöhung der Kapazität realloziert werden muss.
-Da dies alles automatisch geschieht, muss man sich darüber 
+Da dies alles automatisch geschieht, muss man sich darüber aber
 keine Gedanken machen. Es folgt eine Funktion
 <code>reverse</code>, die ein Feld <code>a</code> umdreht, indem sie
 rückwärts durch das Feld iteriert und dabei die Elemente zu einem
@@ -517,9 +517,9 @@ notwendig. Die Reallokation des Puffers wird von der Methode
 Kapazität ist. Die Kapazität ändert sich normalerweise in
 Zweierpotenzen, über den
 genauen Algorithmus werden jedoch keine Garantien gemacht, um sich
-Potential für Optimierungen zu behalten. Jedoch darf die anfängliche
-Kapazität zur Verhinderung der Reallokation auch manuell angegeben
-werden:
+Potential für Optimierungen zu behalten. Die anfängliche
+Kapazität darf aber zur Verhinderung der Reallokation auch manuell
+festgelegt werden:
 <pre class="rust indent">
 let mut b: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
 </pre>
@@ -553,18 +553,15 @@ Das <code>mut</code> (mutable) weist daraufhin, dass die Daten,
 auf die die Referenz zeigt, verändert werden dürfen.
 
 <p>Dieser Algorithmus kann ohne die geringste Schwierigkeit generisch für
-einen beliebigen<sup>1</sup>
-Typ <code>T</code> angegeben werden. Dazu ist die
-Signatur lediglich in die folgende zu ändern:
+einen beliebigen<sup>1</sup> Typ <code>T</code> angegeben werden.
+Dazu ist die Signatur lediglich in die folgende zu ändern:
 <pre class="rust indent">
 fn reverse&lt;T&gt;(a: &amp;mut [T])
 </pre>
 
-<p><sup>1</sup>Fast beliebig. Werte eines Typs mit
-Trait <code>Pin</code> lassen sich nicht im Speicher bewegen, Werte eines Typs
-mit Trait <code>?Sized</code> haben nicht unbedingt eine feste Größe. Allerdings
-spricht man solche Werte normalerweise indirekt über Zeiger an,
-welche diesen Unzulässigkeiten selbst nicht unterliegen.
+<p class="footer"><sup>1</sup>Fast beliebig. Es gibt exotische Typen die nicht
+erlaubt sind. Solche benötigt man aber erst in der fortgeschrittenen
+Programmierung.
 
 <h3>Nochmals Ausschnitte von Feldern</h3>
 

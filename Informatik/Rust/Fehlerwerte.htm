@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Fehlerwerte</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Optional">Optionale Werte</a>
+<li><a href="#Result">Resultate</a>
+</ol>
+
+<h2 id="Optional">Optionale Werte</h2>
+
+<p>Wir wollen eine Funktion programmieren die ein Array nach einem
+Wert durchsucht und den ersten Index zurückgibt wo dieser Wert gefunden
+wurde. Es kann natürlich aber auch sein dass dieser Wert nicht im Array
+vorkommt. Man könnte in diesem Fall z.&nbsp;B. den negativen
+Index <code>-1</code> zurückgeben. Jedoch geben Enumerationen unsere
+Absicht besser wieder.
+
+<p>Für solche optionalen Werte gibt es schon einen vordefinierten
+Datentyp:
+
+<pre class="rust indent">
+enum Option&lt;T&gt; {
+    None,
+    Some(T)
+}
+</pre>
+
+<p>Hierbei ist <code>T</code> eine Typvariable für die ein
+beliebiger aber fester Datentyp eingesetzt wird. In der Variante
+<code>None</code> trägt der Wert keine Daten. In der Variante
+<code>Some(T)</code> trägt der Wert genau einen Wert vom Typ
+<code>T</code>. Das Suchprogramm lässt sich damit so formulieren:
+
+<pre class="rust indent">
+fn find(a: &amp;[&amp;str], s: &amp;str) -&gt; Option&lt;usize&gt; {
+    for index in 0..a.len() {
+        if a[index] == s {return Some(index);}
+    }
+    return None;
+}
+
+fn print_index(a: &amp;[&amp;str], s: &amp;str) {
+    match find(a,s) {
+        Some(index) =&gt; println!("Der Index zu '{}' ist {}.",s,index),
+        None =&gt; println!("Konnte '{}' nicht finden.",s)
+    }
+}
+
+fn main() {
+    let a = vec!["Kaffee", "Tee", "Mate"];
+    print_index(&amp;a,"Tee");
+    print_index(&amp;a,"Smoothie");
+}
+</pre>
+
+<h2 id="Resultate">Resultate</h2>
+
+<p>Für Resultate gibt es auch einen vordefinierten Datentyp:
+<pre class="rust indent">
+enum Result&lt;T,E&gt; {
+    Ok(T),
+    Err(E)
+}
+</pre>
+
+
+</body>
+</html>
