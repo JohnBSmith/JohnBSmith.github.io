@@ -60,11 +60,20 @@ fn print_index(a: &amp;[&amp;str], s: &amp;str) {
 fn main() {
     let a = vec!["Kaffee", "Tee", "Mate"];
     print_index(&amp;a,"Tee");
-    print_index(&amp;a,"Smoothie");
+    print_index(&amp;a,"Pfefferminztee");
 }
 </pre>
 
 <h2 id="Resultate">Resultate</h2>
+
+<p>Blieb der Erfolg bei der Ausführung einer Funktion aus, würde man
+gerne mehr darüber erfahren wie es dazu kam. Die Funktion muss dafür
+Information über den Fehler zurückgeben. Man könnte diese Information
+in einer zusätzlichen Variablen speichern, was jedoch mit dem
+Schönheitsfehler behaftet ist, dass diese Variable dann auch
+vernachlässigt werden könnte. Wir würden lieber korrektes Benutzen
+des Rückgabewertes erzwingen, was sich mittels Enumerationen
+bewerkstelligen lässt.
 
 <p>Für Resultate gibt es auch einen vordefinierten Datentyp:
 <pre class="rust indent">
@@ -74,6 +83,62 @@ enum Result&lt;T,E&gt; {
 }
 </pre>
 
+<p>In der Variante <code>Ok(T)</code> trägt der Wert einen normalen
+Wert vom Typ <code>T</code>, in der Variante <code>Err(E)</code>
+einen Fehlerwert vom Typ <code>E</code>.
+
+<p>Als Beispiel wollen wir ein Programm zur Umwandlung von
+Zeichenketten in Zahlen schreiben. Kommen in der Zeichenkette aber
+Zeichen vor die keine Ziffern sind, wird ein darüber Aufschluss
+gebender Fehlerwert zurückgegeben. Einen entsprechenden Fehlerwert
+soll es geben falls die Zahl größer ausfällt als <code>u32</code>
+halten kann.
+
+<p>Zunächst die Funktion ohne Fehlerbehandlung:
+<pre class="rust indent">
+fn int(s: &amp;str) -&gt; u32 {
+    let mut value: u32 = 0;
+    for c in s.chars() {
+        let digit = u32::from(c)-u32::from('0');
+        value = 10*value+digit;
+    }
+    return value;
+}
+</pre>
+
+<p>Und nun mit Fehlerbehandlung:
+<pre class="rust indent">
+enum ParseError {InvalidDigit, Overflow}
+
+fn int(s: &amp;str) -&gt; Result&lt;u32,ParseError&gt; {
+    let mut value: u64 = 0;
+    for c in s.chars() {
+        if !c.is_ascii_digit() {
+            return Err(ParseError::InvalidDigit);
+        }
+        let digit = u32::from(c)-u32::from('0');
+        value = 10*value+u64::from(digit);
+        if value&gt;u64::from(std::u32::MAX) {
+            return Err(ParseError::Overflow);
+        }
+    }
+    return Ok(value as u32);
+}
+
+fn print_number(s: &amp;str) {
+    match int(s) {
+        Ok(value) =&gt; println!("Zahl: {}",value),
+        Err(ParseError::InvalidDigit) =&gt; println!("Keine Zahl."),
+        Err(ParseError::Overflow) =&gt; println!("Zahl zu groß.")
+    }
+}
+
+fn main() {
+    print_number("12");
+    print_number("Firlefanz");
+    print_number("10000000000")
+}
+</pre>
 
 </body>
 </html>
