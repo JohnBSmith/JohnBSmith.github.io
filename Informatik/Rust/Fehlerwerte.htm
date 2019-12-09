@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Optional">Optionale Werte</a>
 <li><a href="#Result">Resultate</a>
+<li><a href="#Fragezeichen">Fehler weiterreichen</a>
 </ol>
 
 <h2 id="Optional">Optionale Werte</h2>
@@ -137,6 +138,58 @@ fn main() {
     print_number("12");
     print_number("Firlefanz");
     print_number("10000000000")
+}
+</pre>
+
+<h2 id="Fragezeichen">Fehler weiterreichen</h2>
+<p>Bei Verzicht auf detailierte Fehlerinformation erlaubt sich
+auch diese Ausgestaltung:
+
+<pre class="rust indent">
+fn int(s: &amp;str) -&gt; Option&lt;u32&gt; {
+    let mut value: u32 = 0;
+    for c in s.chars() {
+        if !c.is_ascii_digit() {return None;}
+        let digit = u32::from(c)-u32::from('0');
+        value = value.checked_mul(10)?.checked_add(digit)?;
+    }
+    return Some(value);
+}
+</pre>
+
+<p>Die Operationen <code>checked_mul</code> und <code>checked_add</code>
+überprüfen ob es bei Multiplikation zu einem Überlauf kommt, der
+Rückgabewert hat den Typ <code>Option&lt;u32&gt;</code>. Die
+Operation <code>x?</code> ist eine Kurzschreibweise für:
+
+<pre class="rust indent">
+match x {
+    Some(value) =&gt; value,
+    None =&gt; return None
+}
+</pre>
+
+<p>Das ist ein sogenannter Wächter-Ausdruck. Falls <code>x</code>
+den Wert <code>None</code> haben sollte, wird die Ausführung
+der Funktion abgebrochen und <code>None</code> zurückgeben. Da
+im weiteren Verlauf also <code>None</code> ausgeschlossen ist,
+kann <code>value</code> einfach aus <code>Some(value)</code>
+herausgeholt werden.
+
+<p>Den Fragezeichen-Operator gibt es auch für Resultate:
+<pre class="rust indent">
+match x {
+    Ok(value) => value,
+    error => return error
+}
+</pre>
+
+<p>Die vollständige Definition des Operators kann auch noch
+eine Konvertierung zwischen Fehlerarten vornehmen:
+<pre class="rust indent">
+match x {
+    Ok(value) => value,
+    Err(error) => return Err(From::from(error))
 }
 </pre>
 
