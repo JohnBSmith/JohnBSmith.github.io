@@ -16,6 +16,7 @@
 <li><a href="#Ganzzahlen">Ganzzahlen</a>
 <li><a href="#Fliesskommazahlen">Fließkommazahlen</a>
 <li><a href="#Typumwandlungen">Typumwandlungen</a>
+<li><a href="#Bitweise">Bitweise Operationen</a>
 </ol>
 
 <h2 id="Ganzzahlen">Ganzzahlen</h2>
@@ -281,6 +282,113 @@ fn main() {
 dazu führt, dass <code>-1</code> als <code>std::u32::MAX</code>
 interpretiert wird. Wer noch nie von der Zweierkomplement-Darstellung
 gehört hat, wird über das riesig große Ergebnis verblüfft sein.
+
+<h2 id="Bitweise">Bitweise Operationen</h2>
+<p>Zahlen sind abstrakte Objekte die physisch auf irgendeine Art
+dargestellt werden müssen. Eine praktische Methode dafür sind
+Stellenwertsysteme und im Computer sind Zahlen bekanntlich im
+Binärsystem dargestellt. Zugriff auf die einzelnen Bits einer
+Speicherzelle ist auch möglich &ndash; mittels Bitmasken und
+Verschiebungen.
+
+<p>Bitweise Operationen lassen sich in zwei Gruppen unterscheiden.
+Das sind zum einen bitweise Operationen der booleschen Algebra, das
+sind NOT, AND, OR, XOR. Zum anderen gibt es Verschiebe-Operationen
+einschließlich zyklischen Verschiebungen, auch Rotation genannt.
+In Rust haben diese Operationen folgende Syntax:
+
+<table class="bt indent">
+<tr>
+<th>Operation
+<th>Op.
+<th>Rust
+<tr><td>Negation<td>NOT<td><code>!a</code>
+<tr><td>Konjunktion<td>AND<td><code>a&amp;b</code>
+<tr><td>Disjunktion<td>OR<td><code>a|b</code>
+<tr><td>Kontravalenz<td>XOR<td><code>a^b</code>
+<tr><td>Linksshift<td>SHL<td><code>a&lt;&lt;n</code>
+<tr><td>Rechtsshift<td>SHR<td><code>a&gt;&gt;n</code>
+</table>
+
+<p>Man kann auch ein ganzes Byte aus Bits zusammensetzen.
+Man geht von der Darstellung im Binärsystem aus:
+<pre class="indent">
+a[7]*2<sup>7</sup> + a[6]*2<sup>6</sup> + a[5]*2<sup>5</sup> +<!--
+-->a[4]*2<sup>4</sup> + a[3]*2<sup>3</sup> + a[2]*2<sup>2</sup> +<!--
+-->a[1]*2<sup>1</sup> + a[0]*2<sup>0</sup>
+</pre>
+
+<p>Wir wollen die Ziffern zum Komfort auch in Big-Endian schreiben
+und drehen die Reihenfolge deshalb um:
+<pre class="indent">
+a[7]*2<sup>0</sup> + a[6]*2<sup>1</sup> + a[5]*2<sup>2</sup> +<!--
+-->a[4]*2<sup>3</sup> + a[3]*2<sup>4</sup> + a[2]*2<sup>5</sup> +<!--
+-->a[1]*2<sup>6</sup> + a[0]*2<sup>7</sup>
+</pre>
+
+<p>Die Zweierpotenzen kodiert man als Bitmasken, anstelle von 
+Addition benutzt man bitweises Oder:
+<pre class="rust indent">
+fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
+    u8::from(a[7])*0b00000001 | u8::from(a[6])*0b00000010 |
+    u8::from(a[5])*0b00000100 | u8::from(a[4])*0b00001000 |
+    u8::from(a[3])*0b00010000 | u8::from(a[2])*0b00100000 |
+    u8::from(a[1])*0b01000000 | u8::from(a[0])*0b10000000
+}
+
+fn main() {
+    let bits = &amp;[false,false,false,false,true,false,true,false];
+    println!("0b{:08b}",u8_from_bits(bits));
+}
+</pre>
+
+<p>Man könnte das auch wie gewohnt schreiben:
+<pre class="rust indent">
+fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
+    let mut y = 0;
+    for k in 0..7 {
+        y += u8::from(a[k as usize])*(2u8).pow(7-k);
+    }
+    return y;
+}
+</pre>
+
+<p>Eigentlich nimmt man dafür aber Linksshift und bitweises Oder:
+<pre class="rust indent">
+fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
+    let mut y = 0;
+    for k in 0..7 {
+        y |= u8::from(a[k])*(2&lt;&lt;(6-k));
+    }
+    return y;
+}
+</pre>
+
+<p>Schließlich lässt sich die Multiplikation noch beseitigen:
+<pre class="rust indent">
+fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
+    let mut y = 0;
+    for k in 0..7 {
+        y |= u8::from(a[k])&lt;&lt;(7-k);
+    }
+    return y;
+}
+</pre>
+
+<p>Entsprechend gestaltet sich die Formulierung der umgekehrten Funktion:
+<pre class="rust indent">
+fn bits_from_u8(x: u8) -&gt; [bool;8] {
+    let mut a: [bool;8] = [false;8];
+    for k in 0..7 {
+        if (x&gt;&gt;(7-k)) &amp; 0b00000001 == 1 {a[k] = true;}
+    }
+    return a;
+}
+</pre>
+
+<p>Effizienter ist es jedoch, den Zugriff auf sämtliche Bits einer
+Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits
+welche für den jeweiligen Zweck von Interesse sind.
 
 </body>
 </html>
