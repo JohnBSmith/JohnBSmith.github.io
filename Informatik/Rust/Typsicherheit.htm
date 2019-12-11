@@ -18,6 +18,7 @@
 <li><a href="#Read-only">Schreibgeschützte Komponenten</a>
 <li><a href="#Typzustaende">Typzustände</a>
 <li><a href="#Einheiten">Einheiten</a>
+<li><a href="#Terminierung">Terminierung erzwingen</a>
 <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
 </ol>
 
@@ -640,6 +641,115 @@ fn main() {
 }
 </pre>
 
+<h2 id="Terminierung">Terminierung erzwingen</h2>
+
+<p>Programme können die Ausdrücke <code>panic!()</code> und
+<code>unreachable!()</code> enthalten. Diese sind überall erlaubt,
+da sie den leeren Typ haben und somit als divergent betrachtet
+werden können. Enthält eine Funktion einen solchen Ausdruck direkt
+oder indirekt über ihre transitiven Abhängigkeiten, ist die
+normale Terminierung der Funktion nicht mehr gesichert, sie muss
+vom Programmierer verifiziert werden. Es gibt zwar auch noch andere
+Möglichkeiten der Divergenz &ndash; etwa wenn der Kontrollfluss
+semantisch in eine unendliche Schleife gerät &ndash; das lassen
+wir aber zunächst außen vor.
+
+<p>Betrachten wir das folgende Programm das einen divergenten
+Ausdruck <code>unreachable!()</code> enthält.
+<pre class="rust indent">
+enum Symbol {Identifier, Number, Add}
+struct Token {symbol: Symbol, data: Option&lt;String&gt;}
+
+fn tokens_to_string(a: &amp;[Token]) -&gt; String {
+    let mut buffer = String::new();
+    for t in a {
+        match t.symbol {
+            Symbol::Identifier | Symbol::Number =&gt; {
+                if let Some(data) = &amp;t.data {
+                    buffer.push_str(data);
+                } else {
+                    unreachable!();
+                }
+            },
+            Symbol::Add =&gt; {
+                buffer.push('+');
+            }
+        }
+        buffer.push(' ');
+    }
+    return buffer;
+}
+
+fn main() {
+    let a = vec![
+        Token{symbol: Symbol::Identifier, data: Some("x".to_string())},
+        Token{symbol: Symbol::Add, data: None},
+        Token{symbol: Symbol::Number, data: Some("1".to_string())}
+    ];
+    println!("{}",tokens_to_string(&amp;a))
+}
+</pre>
+
+<p>Man verifiziert leicht, dass das Programm terminiert, falls
+die Token-Liste denn korrekt erzeugt wurde. Umstrukturierung
+der Datenstruktur gestattet aber eine Entfernung des missliebigen
+divergenten Ausdrucks, die Terminierung des Programms ist dann
+sicher.
+
+<pre class="rust indent">
+enum Symbol {
+    Identifier(String),
+    Number(u32),
+    Add
+}
+
+fn tokens_to_string(a: &amp;[Symbol]) -&gt; String {
+    let mut buffer = String::new();
+    for t in a {
+        match t {
+            Symbol::Identifier(id) =&gt; {
+                buffer.push_str(id);
+            },
+            Symbol::Number(x) =&gt; {
+                buffer.push_str(&amp;format!("{}",x))
+            },
+            Symbol::Add =&gt; {
+                buffer.push('+');
+            }
+        }
+        buffer.push(' ');
+    }
+    return buffer;
+}
+
+fn main() {
+    let a = vec![
+        Symbol::Identifier("x".to_string()),
+        Symbol::Add,
+        Symbol::Number(1)
+    ];
+    println!("{}",tokens_to_string(&amp;a))
+}
+</pre>
+
+<p>Terminierung von Programmen unter allen Umständen ist unter gewissen
+Anforderungen wichtig. Zwar ist Divergenz keine Sicherheitslücke
+&ndash; explizite Divergenz wird vielmehr eingesetzt um logische
+Fehler und Sicherheitslücken zu verhindern &ndash;
+jedoch bleibt dabei die Möglichkeit bestehen,
+dass das Programm irgendwann mit einer Fehlermeldung abstürzt.
+Das ist meist ein eher gutes Verhalten &ndash; je früher die
+Fehlermeldung kommt, desto besser &ndash; aber kein optimales.
+Für ausfallsichere Systeme ist so eine Divergenz jedoch verboten,
+etwa will man nicht dass einfach die Avionik eines Flugzeuges abstürzt.
+
+<p>Freiheit von Divergenz kann in Rust leider nicht vollständig kodiert
+werden, das Typsystem ist dafür nicht reichhaltig genug und die
+standardmäßig verwendeten Datenstrukturen geben das aufgrund
+der Speicherallokation zudem auch nicht her. Die normale implizite
+Speicherallokation in Rust kann zu <code>panic!()</code> führen. Man
+müsste stattdessen sogenannte <i>fehlbare</i> Speicherallokation
+benutzen oder aber den Speicher ganz am Anfang des Programms allozieren.
 
 <h2 id="Contracts">Vertragsbasierte Programmierung</h2>
 
