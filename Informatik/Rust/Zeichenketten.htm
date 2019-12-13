@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Zeichen">Zeichen</a>
 <li><a href="#Puffer">Puffer</a>
+<li><a href="#Formatierung">Formatierung mit Schablonen</a>
 <li><a href="#Komplexität">Eine gewisse Komplexität</a>
 </ol>
 
@@ -99,6 +100,93 @@ fn main() {
 }
 </pre>
 
+<h2 id="Formatierung">Formatierung mit Schablonen</h2>
+
+<h3>Mit Schablonen geht es am kürzesten</h3>
+<p>Ein Paar von Zahlen in eine Zeichenkette umwandeln ließe
+sich so bewerkstelligen:
+<pre class="rust indent">
+fn pair_to_string(x: i32, y: i32) -&gt; String {
+    let mut buffer = String::new();
+    buffer.push_str("(");
+    buffer.push_str(&amp;x.to_string());
+    buffer.push_str(", ");
+    buffer.push_str(&amp;y.to_string());
+    buffer.push_str(")");
+    return buffer;
+}
+
+fn main() {
+    println!("{}",pair_to_string(1,2));
+}
+</pre>
+
+<p>Etwas weniger umständlich geht es auch so:
+<pre class="rust indent">
+fn pair_to_string(x: i32, y: i32) -&gt; String {
+    ["(", &amp;x.to_string(), ", ", &amp;y.to_string(), ")"].join("")
+}
+</pre>
+
+<p>Formatierung mit Schablonen bietet aber eine kurze und prägnante
+Formulierung dieser Funktion:
+<pre class="rust indent">
+fn pair_to_string(x: i32, y: i32) -&gt; String {
+    format!("({}, {})",x,y)
+}
+</pre>
+
+<p>Man kann die Funktion auch gleich polymorph schreiben:
+<pre class="rust indent">
+fn pair_to_string&lt;X,Y&gt;(x: X, y: Y) -&gt; String
+where X: std::fmt::Display, Y: std::fmt::Display
+{
+    format!("({}, {})",x,y)
+}
+</pre>
+
+<p>Das Makro <code>format!</code> setzt Argumente in eine Schablone
+ein. Die Paare von geschweiften Klammern werden durch die Argumente
+ersetzt und die dadurch entstandene Zeichenkette zurückgegeben.
+Das kennen wir schon vom Makro <code>println!</code>, mit dem einzigen
+Unterschied, dass die Zeichenkette dort in der Konsole ausgegeben
+wird.
+
+<h3>Formatierung von Ganzzahlen</h3>
+<p>Die Schablonen für die Darstellung von Zahlen in Binärsystem,
+Dezimalsystem und Hexadezimalsystem sind
+<code>{:b}</code>, <code>{:o}</code>, <code>{:x}</code>:
+<pre class="rust indent">
+fn bin(n: u32) -&gt; String {format!("0b{:b}",n)}
+fn oct(n: u32) -&gt; String {format!("0o{:o}",n)}
+fn hex(n: u32) -&gt; String {format!("0x{:x}",n)}
+</pre>
+
+<h3>Ausrichtung</h3>
+<p>Man kann Text in Freiraum ausrichten. Beispiele für 10 Zeichen
+Freiraum:
+<pre class="rust indent">
+println!("|{:10}|","Text");  // Text linksbündig ausrichten
+println!("|{:&lt;10}|","Text"); // Text linksbündig ausrichten
+println!("|{:&gt;10}|","Text"); // Text rechtsbündig ausrichten
+println!("|{:^10}|","Text"); // Text zentriert ausrichten
+
+println!("|{:.&lt;10}|","Text"); // Punkte anstelle von Leerzeichen
+println!("|{:.&gt;10}|","Text"); // Punkte anstelle von Leerzeichen
+println!("|{:.^10}|","Text"); // Punkte anstelle von Leerzeichen
+
+println!("|{:10}|",360);  // Zahl rechtsbündig ausrichten
+println!("|{:&lt;10}|",360); // Zahl linksbündig ausrichten
+println!("|{:&gt;10}|",360); // Zahl rechtsbündig ausrichten
+
+println!("|{:010}|",360); // Zahl mit führenden Nullen
+println!("|{:010}|",-360); // Klappt auch für negative Zahlen
+</pre>
+
+<p>Man beachte: Die Standard-Ausrichtung von Text ist linksbündig,
+die von Zahlen jedoch rechtsbündig. Das ist natürlich dem Umstand
+geschuldet, dass wir Zahlen im Dezimalsystem in »Big-Endian«
+aufschreiben.
 
 <h2 id="Komplexität">Eine gewisse Komplexität</h3>
 
