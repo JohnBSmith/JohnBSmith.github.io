@@ -27,17 +27,19 @@ erst dann, wenn der Wert auch benötigt wird.
 heranziehen.
 <pre class="rust indent">
 macro_rules! lazy {
-    ($x:expr) =&gt; {Box::new(move || $x)}
+    ($x:expr) =&gt; {Lazy{value: Box::new(move || $x)}}
 }
 
-type Lazy&lt;T&gt; = Box&lt;Fn()-&gt;T&gt;;
+struct Lazy&lt;T&gt; {
+    value: Box&lt;dyn Fn()-&gt;T&gt;
+}
 
 trait Force&lt;T&gt; {
     fn force(&amp;self) -&gt; T;
 }
 
 impl&lt;T&gt; Force&lt;T&gt; for Lazy&lt;T&gt; {
-    fn force(&amp;self) -&gt; T {self()}
+    fn force(&amp;self) -&gt; T {(self.value)()}
 }
 </pre>
 
@@ -60,7 +62,7 @@ fn tree(x: i32) -&gt; Tree {
 
 fn main() {
     println!("{}",
-        tree(0).right.force().right.force().value
+        tree(0).right.force().left.force().value
     );
 }
 </pre>
@@ -90,27 +92,6 @@ fn main() {
 .. ... .. .. ... ..   .. ... .. .. ... ..
 </pre>
 
-<br>
-<p>Wir ersetzen den Typalias jetzt noch gegen einen abstrakten
-Datentyp.
-
-<pre class="rust indent">
-macro_rules! lazy {
-    ($x:expr) => {Lazy{value: Box::new(move || $x)}}
-}
-
-struct Lazy&lt;T&gt; {
-    value: Box&lt;Fn()-&gt;T&gt;
-}
-
-trait Force&lt;T&gt; {
-    fn force(&amp;self) -> T;
-}
-
-impl&lt;T&gt; Force&lt;T&gt; for Lazy&lt;T&gt; {
-    fn force(&amp;self) -> T {(self.value)()}
-}
-</pre>
 
 </body>
 </html>
