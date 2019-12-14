@@ -9,16 +9,50 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Präemptives Multitasking</h1>
+<h1>Präemptive Nebenläufigkeit</h1>
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Nebenlaeufigkeit">Nebenläufigkeit</a>
 <li><a href="#Threads-starten">Threads starten</a>
 <li><a href="#Kanaele">Kanäle</a>
 <li><span class="modest">Atomare Operationen</span>
-<li><span class="modest">Thread-lokale Variablen</span>
 <li><span class="modest">Wechselseitiger Ausschluss</span>
+<li><span class="modest">Thread-lokale Variablen</span>
 </ol>
+
+<h2 id="Nebenlaeufigkeit">Nebenläufigkeit</h2>
+
+<p>Bei einem nebenläufigen System sind Programmabläufe in
+Ausführungsstränge unterteilt, die gleichzeitig ausgeführt
+werden können.
+
+<p>Nebenläufigkeit lässt sich unterscheiden nach der Art der
+Unterbrechung. Es gibt präemptive und kooperative Unterbrechung.
+
+<p>Bei der <b>präemptiven Unterbrechung</b> werden nebenläufige
+Ausführungsstränge in einem bestimmten Zeitintervall von Außen durch
+einen Hypervisor unterbrochen, man spricht von einem sogenannten
+Interrupt. Daraufhin wird die Kontrolle an den Scheduler übergeben,
+der den nächsten abzuarbeitenden Ausführungsstrang auswählt.
+Die Ausführungsstränge werden hier als <i>Threads</i> bezeichnet.
+
+<p>Bei der <b>kooperativen Unterbrechung</b> sind die nebenläufigen
+Ausführungsstränge selbst für die Unterbrechung zuständig. Die
+Ausführungsstränge werden hier als <i>Koroutinen</i> oder
+<i>asynchrone Funktionen</i> bezeichnet. Auch hier
+lässt sich die Kontrolle an einen Scheduler übergeben, oder aber
+die aktuelle Koroutine wählt selbst aus, in welcher Koroutine es
+weitergeht.
+
+<p>Präemptive Unterbrechung hat den Vorteil, Ausführung auf mehreren
+Prozessorkernen bzw. Prozessoren (Multiprocessing) zu erlauben. Das ist
+ein Schlüsselkonzept zur Erhöhung der Rechenleistung, da sich
+Prozessoren nicht mit beliebig hoher Frequenz takten lassen.
+
+<p>Kooperative Unterbrechung hat den Vorteil, dass Race Conditions
+nicht implizit auftreten können, man daher keine erweiterten
+technischen Mittel zur Verhinderung dieser benötigt.
 
 <h2 id="Threads-starten">Threads starten</h2>
 
