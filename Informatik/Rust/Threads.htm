@@ -14,6 +14,10 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Threads-starten">Threads starten</a>
+<li><a href="#Kanaele">Kanäle</a>
+<li><span class="modest">Atomare Operationen</span>
+<li><span class="modest">Thread-lokale Variablen</span>
+<li><span class="modest">Wechselseitiger Ausschluss</span>
 </ol>
 
 <h2 id="Threads-starten">Threads starten</h2>
@@ -29,7 +33,7 @@ laufen. Dazu startet man zwei Threads und ruft in beiden jeweils
 <code>metronome</code> auf.
 
 <pre class="rust indent">
-use std::{thread, thread::sleep, time::Duration};
+use std::{thread,thread::sleep,time::Duration};
 
 fn metronome(msg: &amp;str, time: u64) {
     loop{
@@ -49,6 +53,62 @@ fn main() {
     t2.join().unwrap();
 }
 </pre>
+
+<h2 id="Kanaele">Kanäle</h2>
+
+<p>Bisher sind alle Threads parallel gelaufen ohne sich zu
+beeinflussen. In komplizierteren nebenläufigen Programmen kann
+so ein Einfluss aber vorkommen. Das typische
+einführende Beispiel besteht aus einem Produzenten und einem
+Konsumenten. Der Produzent sendet regelmäßig Daten, welche
+der Konsument empfängt und verarbeitet.
+
+<p>Zur Umsetzung bedient man sich eines sogenannten Kanals.
+Ein Kanal ist eine gerichtete Verbindung zur Übertragung von Daten
+zwischen zwei Threads.
+
+<pre class="rust indent">
+use std::{thread,thread::sleep,time::Duration};
+use std::sync::mpsc::{channel,Sender,Receiver};
+
+fn produce(transmitter: Sender&lt;String&gt;) {
+    for count in 0.. {
+        sleep(Duration::from_millis(500));
+        let value = format!("Daten Nr. {}",count);
+        transmitter.send(value).unwrap();
+    }
+}
+
+fn consume(receiver: Receiver&lt;String&gt;) {
+    loop{
+        sleep(Duration::from_millis(100));
+        let value = receiver.recv().unwrap();
+        println!("Erhalte: {}",value);
+    }
+}
+
+fn main() {
+    let (transmitter,receiver) = channel();
+    let t1 = thread::spawn(|| {
+        produce(transmitter);
+    });
+    let t2 = thread::spawn(|| {
+        consume(receiver);
+    });
+    t1.join().unwrap();
+    t2.join().unwrap();
+}
+</pre>
+
+<p>Die Schleife des Empfängers arbeitet hier in viel kürzeren
+Zeitintervallen. Der aufmerksame Leser stellt sich nun natürlich
+die Frage, was dann beim Aufruf von <code>recv</code> geschieht.
+Mit dem Wissen dass das Programm korrekt arbeitet, ist die einzig
+mögliche Antwort darauf ist, dass <code>recv</code>
+solange den Thread <code>t2</code> blockiert bis neue Daten
+von <code>t1</code> gekommen sind. Den Aufruf von <code>sleep</code>
+im Empfänger könnte man sich her also auch sparen, da der Thread durch
+<code>recv</code> hinreichend blockiert würde.
 
 </body>
 </html>
