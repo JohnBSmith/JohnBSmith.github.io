@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Präemptives Multitasking</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Threads-starten">Threads starten</a>
+</ol>
+
+<h2 id="Threads-starten">Threads starten</h2>
+
+<p>Ein Metronom gestattet eine recht gute Verdeutlichung von Threads
+und wie sie gestartet werden. Zunächst gibt es zur Veranschaulichung
+eine Funktion <code>metronome</code>, in welcher in einer endlosen
+Schleife in einem bestimmten Zeitintervall ein Klang bzw. eine
+Nachricht ausgegeben wird.
+
+<p>Wir wollen nun, dass zwei dieser Schleifen nebeneinanderher
+laufen. Dazu startet man zwei Threads und ruft in beiden jeweils
+<code>metronome</code> auf.
+
+<pre class="rust indent">
+use std::{thread, thread::sleep, time::Duration};
+
+fn metronome(msg: &amp;str, time: u64) {
+    loop{
+        println!("{}",msg);
+        sleep(Duration::from_millis(time));
+    }
+}
+
+fn main() {
+    let t1 = thread::spawn(|| {
+        metronome("tick",500);
+    });
+    let t2 = thread::spawn(|| {
+        metronome("*ping*",2000);
+    });
+    t1.join().unwrap();
+    t2.join().unwrap();
+}
+</pre>
+
+</body>
+</html>
