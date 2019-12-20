@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Lazy-Evaluation">Lazy Evaluation</a>
+<li><a href="#Sharing">Sharing</a>
 </ol>
 
 <h2 id="Lazy-Evaluation">Lazy Evaluation</h2>
@@ -34,11 +35,7 @@ struct Lazy&lt;T&gt; {
     value: Box&lt;dyn Fn()-&gt;T&gt;
 }
 
-trait Force&lt;T&gt; {
-    fn force(&amp;self) -&gt; T;
-}
-
-impl&lt;T&gt; Force&lt;T&gt; for Lazy&lt;T&gt; {
+impl&lt;T&gt; Lazy&lt;T&gt; {
     fn force(&amp;self) -&gt; T {(self.value)()}
 }
 </pre>
@@ -92,6 +89,78 @@ fn main() {
 .. ... .. .. ... ..   .. ... .. .. ... ..
 </pre>
 
+<p>Auch if-Ausdrücke lassen sich mit Lazy Evaluation darstellen:
+<pre class="rust indent">
+fn if_cond&lt;T&gt;(cond: bool, a: Lazy&lt;T&gt;, b: Lazy&lt;T&gt;) -&gt; T {
+    (if cond {a} else {b}).force()
+}
+
+fn fac(n: u32) -&gt; u32 {
+    if_cond(n==0, lazy!{1}, lazy!{n*fac(n-1)})
+}
+</pre>
+
+<h2 id="Sharing">Sharing</h2>
+
+<p>Betrachten wir das folgende Programm:
+<pre class="rust indent">
+fn log(x: i32) -&gt; i32 {
+    println!("Auswertung");
+    return x;
+}
+
+fn main() {
+    let x = lazy!{log(0)};
+    println!("{}",x.force());
+    println!("{}",x.force());
+}
+</pre>
+
+<p>Hier findet die Berechnung des Wertes <code>x</code> zweimal
+statt. Bei referentiell transparenten Funktionen ist die Wiederholung
+von Berechnungen eigentlich nicht notwendig. Diesem Umstand könnte man
+so Rechnung tragen:
+
+<pre class="rust indent">
+use std::cell::RefCell;
+
+macro_rules! lazy {
+    ($x:expr) =&gt; {Lazy{cell: RefCell::new(
+        Thunk::Calc(Box::new(move || $x))
+    )}}
+}
+
+enum Thunk&lt;T&gt; {
+    Calc(Box&lt;dyn Fn()-&gt;T&gt;),
+    Value(T)
+}
+
+struct Lazy&lt;T&gt; {
+    cell: RefCell&lt;Thunk&lt;T&gt;&gt;
+}
+
+impl&lt;T: Clone&gt; Lazy&lt;T&gt; {
+    fn force(&amp;self) -&gt; T {
+        let mut cell = self.cell.borrow_mut();
+        match &amp;*cell {
+            Thunk::Calc(calc) =&gt; {
+                let value = calc();
+                *cell = Thunk::Value(value.clone());
+                value
+            },
+            Thunk::Value(value) =&gt; {
+                value.clone()
+            }
+        }
+        
+    }
+}
+</pre>
+
+<p>Es verbleiben noch zwei Probleme. Zum einen würde man <code>Fn</code>
+gerne durch <code>FnOnce</code> ersetzen. Zum anderen muss man
+<code>T: Clone</code> entferenen und stattdessen <code>x.force()</code>
+vom Typ <code>&amp;T</code> bzw. <code>&amp;mut T</code> haben.
 
 </body>
 </html>
