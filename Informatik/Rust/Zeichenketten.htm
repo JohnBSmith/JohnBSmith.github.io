@@ -16,6 +16,7 @@
 <li><a href="#Zeichen">Zeichen</a>
 <li><a href="#Puffer">Puffer</a>
 <li><a href="#Formatierung">Formatierung mit Schablonen</a>
+<li><a href="#Unicode">Unicode und UTF-8</a>
 <li><a href="#Komplexität">Eine gewisse Komplexität</a>
 </ol>
 
@@ -187,6 +188,81 @@ println!("|{:010}|",-360); // Klappt auch für negative Zahlen
 die von Zahlen jedoch rechtsbündig. Das ist natürlich dem Umstand
 geschuldet, dass wir Zahlen im Dezimalsystem in »Big-Endian«
 aufschreiben.
+
+<h2 id="Unicode">Unicode und UTF-8</h2>
+
+<p>Die Standardbibliothek besitzt Funktionen zum Kodieren und
+Dekodieren von UTF-8.
+
+<p>Aus didaktischen Gründen wollen wir zunächst einmal selbst einen
+Dekodierer für UTF-8 schreiben. Im UTF-8 sind Bytes kleiner als 128
+einfache ASCII-Zeichen. Trifft man auf ein Byte &ge;128, gibt es
+folgende drei Möglichkeiten:
+<pre class="indent">
+0b110xxxxx 0b10xxxxxx
+0b1110xxxx 0b10xxxxxx 0b10xxxxxx
+0b11110xxx 0b10xxxxxx 0b10xxxxxx 0b10xxxxxx
+</pre>
+<p>Die Anzahl der 1-Bits vor dem 0-Bit im Startbyte ist die Anzahl
+<var>n</var> der Bytes. Die Bytesequenz besteht aus einem
+Startbyte und <var>n</var>&minus;1 Folgebytes.
+
+<p>Das folgende Programm kann korrektes UTF-8 in ein Array
+von Unicode-Zeichen dekodieren. Es wird auch niemals fehlschlagen,
+da <code>&amp;str</code> nur korrektes UTF-8 enthalten darf.
+<pre class="rust indent">
+use std::convert::TryFrom;
+
+fn multibyte_count(byte: u8) -&gt; u32 {
+    let mut count = 0;
+    for k in (0..7).rev() {
+        if (1&lt;&lt;k)&amp;byte !=0 {count+=1;}
+        else {break;}
+    }
+    return count;
+}
+
+fn chars_from_utf8(s: &amp;str) -&gt; Vec&lt;char&gt; {
+    let mut buffer: Vec&lt;char&gt; = Vec::new();
+    let mut count = 0;
+    let mut c: u32 = 0;
+    for byte in s.bytes() {
+        if byte&lt;128 {
+            buffer.push(char::from(byte));
+        }else{
+            if count==0 {
+                count = multibyte_count(byte);
+                c = u32::from(byte &amp; match count {
+                    1 =&gt; 0b00011111,
+                    2 =&gt; 0b00001111,
+                    3 =&gt; 0b00000111,
+                    _ =&gt; unreachable!()
+                });
+            }else{
+                c = (c&lt;&lt;6) | u32::from(byte&amp;0b00111111);
+                count -=1;
+                if count==0 {
+                    buffer.push(char::try_from(c).unwrap());
+                }
+            }
+        }
+    }
+    return buffer;
+}
+
+fn main() {
+    println!("{:?}",chars_from_utf8("Café äöü ∀∃"));
+}
+</pre>
+
+<p>Die Standardbibliothek enthält diese Funktionalität
+natürlich bereits:
+<pre class="rust indent">
+fn main() {
+    let a: Vec&lt;char&gt; = "Café äöü ∀∃".chars().collect();
+    println!("{:?}",a);
+}
+</pre>
 
 <h2 id="Komplexität">Eine gewisse Komplexität</h3>
 
