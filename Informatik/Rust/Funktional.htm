@@ -79,8 +79,78 @@ nur, wenn das Verfahren nicht an eine feste Funktion gekoppelt ist.
 
 <h2 id="Closures">Closures</h2>
 
-<p>
+<h3>Aufhebung einer Beschränkung</h3>
 
+<p>Funktionenzeiger sind einer Beschränkung unterworfen, die ihre
+Brauchbarkeit stark reduzieren. Zentral für die funktionale
+Programmierung ist, dass sich Funktionen aus Daten erzeugen lassen.
+Dies wird erreicht durch Bindung von Variablen aus der Umgebung
+der Funktion, man spricht von einem <i>Closure</i>. Die Umgebung wird
+auch <i>Erstellungskontext</i> genannt.
+
+<p>Angenommen wir wollten mit dem Newton-Verfahren nun die
+Quadratwurzel-Funktion <code>sqrt</code> implementieren. Die
+Funktion ergäbe sich offenbar so:
+<pre class="rust indent">
+fn sqrt(a: f64) -&gt; f64 {
+    fn f(x: f64) -&gt; f64 {x*x-a}
+    return newton(f,1.0);
+}
+</pre>
+
+<p>Diese Funktion würgt der Compiler jedoch ab, denn die innere
+Funktion <code>f</code> vermag es nicht, den Wert der Variablen
+<code>a</code> zu speichern. Diese Variable entstammt ja aus der
+Umgebung der Funktion.
+
+<p>Allerdings gestattet leichte Modifikation des Programms die
+explizite Benutzung von Closures und Closurezeigern. In abstrakteren
+Programmiersprachen sind Funktionen und Closures vereinheitlicht.
+In Rust ist das etwas komplizierter, weil Closures zur effizienten
+Programmierung mit den Eigenschaften des Typsystems verwoben sind.
+
+<p>Die verallgemeinerten Schnittstellen bezüglich Closurezeigern
+gestatten sowohl Funktionen als auch Closures als Argumente. Zwischen
+Funktionen und Closures  besteht einen kleiner Unterschied in der
+Syntax. Anstelle von
+<pre class="rust indent">
+fn f(x: f64) -&gt; f64 {x*x-2.0}
+</pre>
+
+<p>schreibt man:
+<pre class="rust indent">
+let f = |x: f64| -&gt; f64 {x*x-2.0};
+</pre>
+
+<p>oder mittels Typinferenz kurz:
+<pre class="rust indent">
+let f = |x| x*x-2.0;
+</pre>
+
+<p>Das gewünschte Programm:
+<pre class="rust indent">
+fn diff(f: &amp;dyn Fn(f64)-&gt;f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    return (f(x+h)-f(x-h))/(2.0*h);
+}
+
+fn newton(f: &amp;dyn Fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x-f(x)/diff(f,x);
+    }
+    return x;
+}
+
+fn sqrt(a: f64) -&gt; f64 {
+    let f = |x| x*x-a;
+    return newton(&amp;f,1.0);
+}
+
+fn main() {
+    println!("{}",sqrt(2.0));
+}
+</pre>
 
 <h2 id="Higher-order">Funktionen höherer Ordnung</h2>
 
