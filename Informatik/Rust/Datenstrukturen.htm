@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Stapel">Dynamische Stapel</a>
 <li><a href="#Listen">Einfach verkettete Listen</a>
+<li><a href="#Baeume">Bäume</a>
 </ol>
 
 <h2 id="Stapel">Dynamische Stapel</h2>
@@ -202,6 +203,48 @@ macro_rules! list {
 fn main() {
     let a: List&lt;i32&gt; = list![1,2,3,4];
     println!("{}",a);
+}
+</pre>
+
+
+<h2 id="Baeume">Bäume</h2>
+
+<p>Baumstrukturen lassen sich wie einfach verkettete Listen als
+Enumeration formulieren. Algorithmen für Bäume können hochkompliziert
+ausfallen, besonders wenn diese einer Balancierung unterworfen
+werden müssen um die Rekursionstiefe möglichst niedrig zu halten.
+
+<p>Formulieren wir dann doch zunächst eine Funktion <code>depth</code>
+zur Ermittlung der Tiefe eines Binärbaums. In puristischer Form
+fällt der Algorithmus selbst rekursiv aus, das ist typisch bei
+Algorithmen für Baumstrukturen.
+
+<pre class="rust indent">
+enum Tree&lt;T&gt; {
+    Empty,
+    Leaf(T),
+    Node(Box&lt;Tree&lt;T&gt;&gt;,Box&lt;Tree&lt;T&gt;&gt;)
+}
+impl&lt;T&gt; Tree&lt;T&gt; {
+    fn node(x: Tree&lt;T&gt;, y: Tree&lt;T&gt;) -&gt; Self {
+        Tree::Node(Box::new(x),Box::new(y))
+    }
+}
+
+fn depth&lt;T&gt;(t: &amp;Tree&lt;T&gt;) -&gt; u32 {
+    match t {
+        Tree::Empty =&gt; 0,
+        Tree::Leaf(_) =&gt; 1,
+        Tree::Node(x,y) =&gt; 1+depth(x).max(depth(y))
+    }
+}
+
+fn main() {
+    let t: Tree&lt;char&gt; = Tree::node(
+        Tree::node(Tree::Leaf('A'),Tree::Empty),
+        Tree::Leaf('B')
+    );
+    println!("{}",depth(&amp;t));
 }
 </pre>
 

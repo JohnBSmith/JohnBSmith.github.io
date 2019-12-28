@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Funktionale Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Funktionenzeiger">Funktionenzeiger</a>
+<li><a href="#Closures">Closures</a>
+<li><a href="#Higher-order">Funktionen höherer Ordnung</a>
+</ol>
+
+<h2 id="Funktionenzeiger">Funktionenzeiger</h2>
+
+<p>Der klassische Kontrollfluss in der prozeduralen Programmierung
+verläuft so: Ein Unterprogramm ruft ggf. ein weiteres Unterprogramm
+auf, und dieses dann ggf. noch ein weiteres Unterprogramm
+usw. Der Kontrollfluss besteht aus Verzweigungen, Schleifen und
+Unterprogrammen.
+
+<p>Den Unterprogrammen kommt hierbei eine besondere Bedeutung zu.
+Diese modularisieren das Programm, indem sie wiederkehrende
+Funktionalität zusammenfassen, die internen Details verbergen und über
+ihre Signatur eine Schnittstelle zum Rest des Programms herstellen.
+
+<p>Nun kann man sich eine Situation überlegen, in der es eine
+Fallunterscheidung zwischen sehr vielen Unterprogrammen gibt.
+Da dies noch handhabbar erscheint, will ich diese Überlegung
+sogleich verschärfen. Was tut man denn, wenn das gewählte
+Unterprogramm nicht im Vorhinein bekannt ist?
+
+<p>Da ich mathematisch-technisch belastet bin, fallen mir dazu keine
+besseren Beispiele als numerische Verfahren ein. Betrachten wir
+das Newton-Verfahren zur Ermittlung von Nullstellen einer Funktion.
+Man kann dieses Verfahren nun für eine bestimmte reelle Funktion
+programmieren. Der Algorithmus setzt aber eigentlich keine spezielle
+Funktion voraus. Für eine allgemeine Formulierung muss die Funktion
+ein Argument des Verfahrens sein. Ermöglicht wird dies durch das
+Speichern einer Referenz auf die Funktion in einer Variable, man
+spricht auch von einem Funktionenzeiger.
+
+<p>Das Newton-Verfahren benötigt die erste Ableitung der Funktion.
+Diese lässt sich ebenfalls mit einem numerischen Verfahren
+approximieren. Als Beispiel sei die Funktion <var>f</var>(<var>x</var>)
+= <var>x</var><sup>2</sup>&nbsp;&minus;&nbsp;2 gewählt.
+Die positive Nullstelle ist die Wurzel von zwei.
+
+<pre class="rust indent">
+fn diff(f: fn(f64)-&gt;f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    return (f(x+h)-f(x-h))/(2.0*h);
+}
+
+fn newton(f: fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x-f(x)/diff(f,x);
+    }
+    return x;
+}
+
+fn main() {
+    fn f(x: f64) -&gt; f64 {x*x-2.0}
+    println!("{}",newton(f,1.0));
+}
+</pre>
+
+<p>Der wesentliche Vorteil herbei ist, dass wir numerische Verfahren
+nun in allgemeiner Form in Bibliotheken aufbewahren können. Das geht
+nur, wenn das Verfahren nicht an eine feste Funktion gekoppelt ist.
+
+<h2 id="Closures">Closures</h2>
+
+<p>
+
+
+<h2 id="Higher-order">Funktionen höherer Ordnung</h2>
+
+<h3>Map</h3>
+
+<p>Die Funktion <code>map</code> wendet eine Funktion auf jedes
+Element eines Arrays an.
+
+<pre class="rust indent">
+fn map&lt;X,Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X)-&gt;Y) -&gt; Vec&lt;Y&gt; {
+    let mut b = Vec::with_capacity(a.len());
+    for x in a {
+        b.push(f(x));
+    }
+    return b;
+}
+
+fn main() {
+    let a = vec![1,2,3,4];
+    let b = map(&amp;a,&amp;|x| x.to_string());
+    println!("{:?}",b);
+}
+</pre>
+
+<p>Alternativ ist hier auch die Signatur
+<pre class="rust indent">
+f: impl Fn(&amp;X)->Y
+</pre>
+<p>erlaubt, bzw. äquivalent:
+<pre class="rust indent">
+fn map&lt;X,Y,F&gt;(a: &amp;[X], f: F) -&gt; Vec&lt;Y&gt;
+where F: Fn(&amp;X)-&gt;Y
+</pre>
+<p>Dies kann zu besser optimiertem Code führen, da die
+Monomorphisierung mehr Inlining ermöglicht.
+
+<p>Weitere Abstraktion erlaubt die Anwendung der Funktion auf
+beliebige iterierbare Objekte:
+<pre class="rust indent">
+fn map&lt;X,Y,A,F&gt;(a: A, f: F) -&gt; Vec&lt;Y&gt;
+where A: IntoIterator&lt;Item=X&gt;, F: Fn(&amp;X)-&gt;Y
+{
+    let it = a.into_iter();
+    let mut b = Vec::with_capacity(it.size_hint().0);
+    for x in it {
+        b.push(f(&amp;x));
+    }
+    return b;
+}
+
+fn main() {
+    let b = map(1..=4,|x| x.to_string());
+    println!("{:?}",b);
+}
+</pre>
+
+</body>
+</html>
+

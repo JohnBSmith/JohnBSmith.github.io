@@ -587,10 +587,10 @@ $A$ & $B$ & Wert & $A\land B$ & $A\lor B$
 \subsubsection[Darstellung mit Negation, Konjunktion und Disjunktion]%
 {Darstellung mit Negation,\newline Konjunktion und Disjunktion}
 \begin{gather}\label{eq:implication-definition}
-A\Rightarrow B \iff \overline A\lor B,\\
-(A\Leftrightarrow B) \iff
+(A\Rightarrow B) \equiv \overline A\lor B,\\
+(A\Leftrightarrow B) \equiv
   (\overline A\land\overline B)\lor(A\land B),\\
-A\oplus B \iff (\overline A\land B)\lor(A\land\overline B).
+A\oplus B \equiv (\overline A\land B)\lor(A\land\overline B).
 \end{gather}
 
 \newpage
@@ -810,85 +810,86 @@ $\neg\psi$    & $\neg\varphi$
 \subsubsection{Rechenregeln}
 Verneinung (De Morgansche Regeln):
 \begin{gather}
-\overline{\forall x[P(x)]}\iff \exists x[\overline{P(x)}],\\
-\overline{\exists x[P(x)]}\iff \forall x[\overline{P(x)}].
+\overline{\forall x[P(x)]}\equiv \exists x[\overline{P(x)}],\\
+\overline{\exists x[P(x)]}\equiv \forall x[\overline{P(x)}].
 \end{gather}
 Verallgemeinerte Distributivgesetze:
 \begin{gather}
-P\lor\forall x[Q(x)] \iff \forall x[P\lor Q(x)],\\
-P\land\exists x[Q(x)] \iff \exists x[P\land Q(x)].
+P\lor\forall x[Q(x)] \equiv \forall x[P\lor Q(x)],\\
+P\land\exists x[Q(x)] \equiv \exists x[P\land Q(x)],\\
+P\land\forall x[Q(x)] \equiv \forall x[P\land Q(x)],\quad (U\ne\emptyset)\\
+P\lor\exists x[Q(x)] \equiv \exists x[P\lor Q(x)].\quad (U\ne\emptyset)
 \end{gather}
 Verallgemeinerte Idempotenzgesetze:
 \begin{gather}
 \begin{split}
-\exists x{\in}M\,[P] & \iff
+\exists x{\in}M\,[P] & \equiv
 (M\ne\{\})\land P\\
-& \iff\begin{cases}
-P & \text{wenn}\; M\ne\{\},\\
-0 & \text{wenn}\; M=\{\}.
+& \equiv\begin{cases}
+P & \text{wenn}\; M\ne\emptyset,\\
+0 & \text{wenn}\; M=\emptyset.
 \end{cases}
 \end{split}\\
 \begin{split}
-\forall x{\in}M\,[P]& \iff
+\forall x{\in}M\,[P]& \equiv
 (M=\{\})\lor P\\
-&\iff\begin{cases}
-P & \text{wenn}\; M\ne\{\},\\
-1 & \text{wenn}\; M=\{\}.
+&\equiv\begin{cases}
+P & \text{wenn}\; M\ne\emptyset,\\
+1 & \text{wenn}\; M=\emptyset.
 \end{cases}
 \end{split}
 \end{gather}
 %\newpage\noindent
 Äquivalenzen:
 \begin{gather}
-\hspace{-2em}\forall x\forall y[P(x,y)] \iff \forall y\forall x[P(x,y)],\\
-\hspace{-2em}\exists x\exists y[P(x,y)] \iff \exists y\exists x[P(x,y)],\\
-\hspace{-2em}\forall x[P(x)\land Q(x)] \iff \forall x[P(x)]\land\forall x[Q(x)],\\
-\hspace{-2em}\exists x[P(x)\lor Q(x)] \iff \exists x[P(x)]\lor\exists x[Q(x)],\\
-\hspace{-2em}\forall x[P(x)\Rightarrow Q] \iff \exists x[P(x)]\Rightarrow Q,\\
-\hspace{-2em}\forall x[P\Rightarrow Q(x)] \iff P\Rightarrow\forall x[Q(x)],\\
-\hspace{-2em}\exists x[P(x)\Rightarrow Q(x)]
-  \iff\forall x[P(x)]\Rightarrow\exists x[Q(x)].
+\forall x\forall y[P(x,y)] \equiv \forall y\forall x[P(x,y)],\\
+\exists x\exists y[P(x,y)] \equiv \exists y\exists x[P(x,y)],\\
+\forall x[P(x)\land Q(x)] \equiv \forall x[P(x)]\land\forall x[Q(x)],\\
+\exists x[P(x)\lor Q(x)] \equiv \exists x[P(x)]\lor\exists x[Q(x)],\\
+\forall x[P(x)\Rightarrow Q] \equiv \exists x[P(x)]\Rightarrow Q,\\
+\forall x[P\Rightarrow Q(x)] \equiv P\Rightarrow\forall x[Q(x)],\\
+\exists x[P(x)\Rightarrow Q(x)]
+  \equiv\forall x[P(x)]\Rightarrow\exists x[Q(x)].
 \end{gather}
 % \newpage\noindent
 Implikationen:
 \begin{gather}
-\hspace{-2em}\exists x\forall y[P(x,y)]\implies \forall y\exists x[P(x,y)],\\
-\hspace{-2em}\forall x[P(x)]\lor\forall x[Q(x)]\implies\forall x[P(x)\lor Q(x)],\\
-\hspace{-2em}\exists x[P(x)\land Q(x)]\implies
+\hspace{-1em}\exists x\forall y[P(x,y)]\Rightarrow \forall y\exists x[P(x,y)],\\
+\hspace{-1em}\forall x[P(x)]\lor\forall x[Q(x)]\Rightarrow\forall x[P(x)\lor Q(x)],\\
+\hspace{-1em}\exists x[P(x)\land Q(x)]\Rightarrow
   \exists x[P(x)]\land \exists x[Q(x)],\\
-\hspace{-2em}\forall x[P(x)\Rightarrow Q(x)]\implies
+\hspace{-1em}\forall x[P(x)\Rightarrow Q(x)]\Rightarrow
   (\forall x[P(x)]\Rightarrow\forall x[Q(x)]),\\
-\hspace{-2em}\forall x[P(x)\Leftrightarrow Q(x)]\implies
+\hspace{-1em}\forall x[P(x)\Leftrightarrow Q(x)]\Rightarrow
   (\forall x[P(x)]\Leftrightarrow\forall x[Q(x)]).
 \end{gather}
 
 \subsubsection{Endliche Mengen}
 Sei $M=\{x_1,\ldots,x_n\}$. Es gilt:
 \begin{gather}
-\forall x{\in}M\,[P(x)]\iff P(x_1)\land\ldots\land P(x_n),\\
-\exists x{\in}M\,[P(x)]\iff P(x_1)\lor\ldots\lor P(x_n).
+\forall x{\in}M\,[P(x)]\equiv P(x_1)\land\ldots\land P(x_n),\\
+\exists x{\in}M\,[P(x)]\equiv P(x_1)\lor\ldots\lor P(x_n).
 \end{gather}
 
 \subsubsection{Beschränkte Quantifizierung}
 \begin{gather}
 \begin{split}
-& \forall x{\in}M\,[P(x)]\defiff\forall x[x\notin M\lor P(x)]\\
-& \quad\iff\forall x[x\in M\Rightarrow P(x)],
+& \forall x{\in}M\,[P(x)]:\equiv\forall x[x\notin M\lor P(x)]\\
+& \quad\equiv\forall x[x\in M\Rightarrow P(x)],
 \end{split}\\
-\exists x{\in}M\,[P(x)]\defiff\exists x[x\in M\land P(x)],\\
-\forall x{\in}M{\setminus}N\,[P(x)]\iff \forall x[x\notin N\Rightarrow P(x)].
+\exists x{\in}M\,[P(x)]:\equiv\exists x[x\in M\land P(x)].
 \end{gather}
 
 \subsubsection[Quantifizierung über Produktmengen]%
 {Quantifizierung über\newline Produktmengen}
 \begin{gather}
-\forall(x,y)\,[P(x,y)]\iff \forall x\forall y[P(x,y)],\\
-\exists(x,y)\,[P(x,y)]\iff \exists x\exists y[P(x,y)].
+\forall(x,y)\,[P(x,y)]\equiv \forall x\forall y[P(x,y)],\\
+\exists(x,y)\,[P(x,y)]\equiv \exists x\exists y[P(x,y)].
 \end{gather}
 Analog gilt
 \begin{gather}
-\forall(x,y,z)\,\iff \forall x\forall y\forall z,\\
-\exists(x,y,z)\,\iff \exists x\exists y\exists z
+\forall(x,y,z)\,\equiv \forall x\forall y\forall z,\\
+\exists(x,y,z)\,\equiv \exists x\exists y\exists z
 \end{gather}
 usw.
 
@@ -906,7 +907,7 @@ und
 \begin{equation}
 \begin{split}
 & \exists x{\in}M\,[P(x)] \iff \{1\}\subseteq P(M)\\
-& \iff M\cap\{x{\in}G\mid P(x)\}\ne\{\}.
+& \iff M\cap\{x{\in}G\mid P(x)\}\ne\emptyset.
 \end{split}
 \end{equation}
 
@@ -986,14 +987,14 @@ Schnitt über indizierte Mengen:
   $A\cup A = A$
 & $A\cap A = A$
 & Idempotenzgesetze\\
-  $A\cup \{\} = A$
+  $A\cup \emptyset = A$
 & $A\cap G = A$
 & Neutralitätsgesetze\\
   $A\cup G = G$
-& $A\cap \{\} = \{\}$
+& $A\cap \emptyset = \emptyset$
 & Extremalgesetze\\
   $A\cup A^\comp = G$
-& $A\cap A^\comp = \{\}$
+& $A\cap A^\comp = \emptyset$
 & Komplementärgesetze\\
 \midrule
   $A\cup B = B\cup A$
@@ -1044,7 +1045,7 @@ A\subseteq B \iff B^\comp\subseteq A^\comp.
 Mengentheoretisches Modell der natürlichen Zahlen:
 \begin{equation}
 \begin{split}
-& 0:=\{\},\quad 1:=\{0\},\quad 2:=\{0,1\},\\
+& 0:=\emptyset,\quad 1:=\{0\},\quad 2:=\{0,1\},\\
 & 3:=\{0,1,2\},\quad \text{usw.}
 \end{split}
 \end{equation}
@@ -1096,7 +1097,7 @@ Axiom der Aussonderung:
 \end{equation}
 Axiom des Unendlichen:
 \begin{equation}
-\exists M\,[\{\}\in M\land\forall x{\in}M\,[x\cup\{x\}\in M]].
+\exists M\,[\emptyset\in M\land\forall x{\in}M\,[x\cup\{x\}\in M]].
 \end{equation}
 Axiom der Potenzmenge:
 \begin{equation}
@@ -1111,13 +1112,13 @@ Axiom der Ersetzung:
 \end{equation}
 Axiom der Fundierung:
 \begin{equation}
-\forall A\,[A\ne\{\}\implies\exists x{\in}A\,[x\cap A=\{\}]].
+\forall A\,[A\ne\emptyset\implies\exists x{\in}A\,[x\cap A=\emptyset]].
 \end{equation}
 Auswahlaxiom:
 \begin{equation}
 \begin{split}
-&\forall x,y{\in}A\,[x\ne y\implies x\cap y=\{\}]\\
-&\quad\land\forall x{\in}A\,[x\ne\{\}]\\
+&\forall x,y{\in}A\,[x\ne y\implies x\cap y=\emptyset]\\
+&\quad\land\forall x{\in}A\,[x\ne\emptyset]\\
 &\implies\exists M\;\forall x{\in}A\;\exists^{=1}u{\in}x\,[u\in M].
 \end{split}
 \end{equation}
@@ -1681,7 +1682,7 @@ wenn jede Interpretation auch ein Modell von $\varphi$ ist:
 Zwei Formeln $\varphi,\psi$ heißen äquivalent, wenn
 $\varphi\Leftrightarrow\psi$ tautologisch ist, kurz
 \begin{equation}\label{eq:aequivalente-Formeln}
-\varphi\equiv\psi\quad\text{gdw.}\quad \models\varphi\Leftrightarrow\psi.
+(\varphi\equiv\psi)\defiff (\models\varphi\Leftrightarrow\psi).
 \end{equation}
 \end{definition}
 
@@ -1830,7 +1831,7 @@ Eine Menge $M$ heißt \emph{induktiv}, wenn gilt:
 \begin{equation}
 0\in M\land \forall n(n\in M\implies s(n)\in M).
 \end{equation}
-Sei $0:=\{\}$ und $s(n):=n\cup\{n\}$. Sei
+Sei $0:=\emptyset$ und $s(n):=n\cup\{n\}$. Sei
 \begin{equation}
 \N := \bigcap \{M\mid M\text{ ist induktiv}\}.
 \end{equation}
@@ -1839,9 +1840,9 @@ natürlichen Zahlen, das die Peano-Axiome (P1) bis (P5) erfüllt.
 
 Es ergibt sich
 \begin{align*}
-0 &= \{\},\\
-1 &= \{0\} = \{\{\}\},\\
-2 &= \{0,1\} = \{\{\},\{\{\}\}\},\\
+0 &= \emptyset,\\
+1 &= \{0\} = \{\emptyset\},\\
+2 &= \{0,1\} = \{\emptyset,\{\emptyset\}\},\\
 3 &= \{0,1,2\},\\
 4 &= \{0,1,2,3\}
 \end{align*}
