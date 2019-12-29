@@ -1,0 +1,167 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{lipsum}
+
+\usepackage[libertine,cmintegrals]{newtxmath}
+\usepackage{libertine}
+
+\usepackage{geometry}
+\geometry{a4paper,left=28mm,right=10mm,top=30mm,bottom=30mm}
+\setlength{\columnsep}{4mm}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+
+\begin{document}
+\thispagestyle{empty}
+
+\noindent
+{\LARGE\textbf{Überblick über die\\
+Mathematik}\par}
+
+\tableofcontents
+
+\section{Analysis}
+\subsection{Warum Analysis?}
+Was bringt uns die Analysis? Was erlaubt Analysis, was zuvor nicht
+möglich war? Zur Beantwortung dieser Frage werfen wir einen Blick
+auf wichtige Sätze, die zwar allgemeine Aussagen außerhalb
+der Analysis machen, jedoch nur mittels Konzepten der Analysis
+verstanden und bewiesen werden können.
+
+Ein wichtiges Problem in der Mathematik ist das Lösen von Gleichungen.
+Gleichungen sind aber eng mit Nullstellen verbunden. Eine
+Gleichung in einer Variable, $T_1(x)=T_2(x)$ mit $T_1,T_2\colon G\to\R$
+und $G\subseteq\R$ lässt sich über $f(x):=T_1(x)-T_2(x)$ als
+$f(x)=0$ schreiben. Das Lösen der Gleichung entspricht dem Finden der
+Nullstellen von $f$ bzw. dem Bestimmen des Urbilds $f^{-1}(0)$.
+Hierbei stellen sich drei Probleme. Erstens, woher weiß man, ob
+es überhaupt eine Nullstelle gibt? Zweitens, wie findet man eine
+Nullstelle von $f$? Drittens, wie kann man sich sicher sein, alle
+Nullstellen von $f$ gefunden zu haben?
+
+Zum ersten Problem, Existenz von Nullstellen. Der Zwischenwertsatz
+macht hierüber eine Aussage. Dieser setzt aber eine stetige Funktion
+voraus.
+
+Zum zweiten Problem, finden von Nullstellen. Dies lässt sich z.\,B.
+Approximativ mittels Näherungsverfahren wie Bisektionsverfahren
+oder Newtonverfahren bewerkstelligen. Das Newtonverfahren benötigt
+aber Differentialrechnung.
+
+Zum dritten Problem, ausschließen weiterer Nullstellen. Wenn die
+Funktion auf einem Intervall injektiv ist, kann sie dort höchstens
+eine Nullstelle besitzen. Jede streng monotone Funktion ist injektiv.
+Eine differenzierbare Funktion ist sicher dann streng monoton, wenn
+$f'(x)>0$ für alle $x$ aus dem betrachteten Intervall. Zur Bestimmung
+der Ableitung $f'$ ist wieder Differentialrechnung notwendig.
+
+Wie man sieht, erlaubt Analysis die Lösung eines praktischen Problems
+außerhalb der Analysis. Hierzu muss man jedoch Funktionen auf
+Eigenschaften aus der Analysis untersuchen, das sind hier
+Stetigkeit und Differenzierbarkeit. Diese Begriffe sind aufs
+engste mit Konvergenz verbunden, dem zentralen Konzept der Analysis.
+
+\subsection{Was ist Analysis?}
+
+Die zentralen Konzepte Konvergenz, Stetigkeit und Differenzierbarkeit
+sind sogenannte lokale Eigenschaften. Hierbei untersucht man ein
+Objekt an einer Stelle hinsichtlich beliebig klein werdender Umgebungen
+dieser Stelle. Man kann sich das so vorstellen, als wenn man das
+Objekt an der Stelle durch ein immer stärkeres Mikroskop betrachtet.
+Damit das Objekt an der Stelle eine lokale Eigenschaft besitzt,
+muss es ein bestimmtes reguläres Verhalten aufzeigen, egal wie klein
+die Umgebungen werden.
+
+Diese lokalen Eigenschaften ermöglichen eine tiefergehende,
+reichhaltigere Untersuchung von Objekten wie Funktionen oder Folgen.
+Mit der Zeit gelang es, diese Begriffe immer genauer zu
+charakterisieren. Dabei hat sich herausgestellt, dass lokale
+Eigenschaften mit einer bestimmten Art von Struktur verbunden sind,
+der \emph{topologischen} Struktur. Umgebungen, Stetigkeit und
+Konvergenz stellten sich als topologische Grundbegriffe heraus.
+
+Man kann daher sagen, dass diese Analysis auf den Grundlagen der
+Topologie aufbaut.
+
+Neben lokalen Eigenschaften gibt es auch noch globale. Zum einen
+ergibt sich bei manchen lokalen Eigenschaften eine entsprechende
+globale Eigenschaft, wenn die lokale Eigenschaft an jeder Stelle
+erfüllt wird. Das ist z.\,B. bei der Stetigkeit und der
+Differenzierbarkeit der Fall. Bei der Lipschitz"=Stetigkeit
+ist der Zusammenhang zwischen lokaler und globaler Version aber
+ein wenig komplizierter.
+
+Zum anderen gibt Eigenschaften, die nur global definiert sind.
+Hierunter Fällt der Begriff der Integrierbarkeit und des bestimmten
+Integrals. Integrierbarkeit baut wie Differenzierbarkeit auch
+auf dem Konzept der Konvergenz auf. Das Integral ist ein sogenanntes
+Funktional, das ist eine Abbildung die einer Funktion eine reelle
+Zahl zuordnet.
+
+Zwischen den unterschiedlichen globalen Eigenschaften gibt es auch
+Beziehungen. Z.\,B. ist jede differenzierbare reelle Funktion auch
+stetig und jede stetige reelle Funktion auch integrierbar.
+
+Charakteristisch für die Analysis ist aber nicht nur die die
+topologische Struktur. Die Analysis resultiert vielmehr aus einer
+Synthese der topologischen Konzepte mit arithmetischen Konzepten.
+Hier lässt sich interessanterweise eine genauere Unterscheidung
+vornehmen. So sind Konvergenz und Stetigkeit ganz allgemeine Begriffe.
+Die Begriffe Differentialquotient und bestimmtes Integral setzen
+jedoch arithmetische Struktur bzw. Operationen voraus. Man könnte
+nun einwenden, dass Untersuchungen zu Konvergenz und Stetigkeit eher
+zur Topologie gehörten. Jedoch werden in der Analysis gerade solche
+Folgen und Funktionen untersucht, die arithmetisch aufgebaut sind.
+
+Außerdem spielt die Ordnungsstruktur der reellen Zahlen in der
+Analysis eine wesentliche Rolle. Ungleichungen sind grundlegend
+für die Untersuchung von Folgen und Funktionen hinsichtlich
+Konvergenz, Stetigkeit, Differenzierbarkeit und Integrierbarkeit.
+
+\subsection{Werkzeuge der Analysis}
+
+Was sind die wesentlichen Werkzeuge der Analysis? Nun, die Werkzeuge
+manifestieren sich wie immer in Begriffen und Sätzen. Die Sätze
+motivieren hierbei die Begriffe. Werkzeuge dienen meist der Lösung
+von bestimmten Problemen. Diese sollten wir daher auch in das Zentrum
+stellen.
+
+\strong{1. Optimierungsprobleme}. Die Bestimmung von Optimumsstellen
+-- das sind Stellen an welchen eine Funktion einen größten oder
+kleinsten Wert annimmt -- lässt sich darauf zurückführen, eine
+waagerechte Tangente bzw. allgemeiner bei $f\colon\R^n\to\R$ eine
+Nullstelle der totalen Ableitung $\mathrm df$ zu finden. Das
+Verschwinden der totalen Ableitung ist nur eine notwendige Bedingung,
+da es sich auch um einen Sattelpunkt handeln könnte. Aufbauend
+gibt es aber auch Sätze über hinreichende Bedingungen, dann kann man
+sich sicher sein, ein Optimum gefunden zu haben. Dieses Verfahren
+lässt sich auch ohne Weiteres auf Mannigfaltigkeiten übertragen.
+Ist $M$ eine Mannigfaltigkeit und $f\colon M\to\R$ ein Skalarfeld,
+dann ist $\mathrm df(p)=0$ eine notwendige Bedingung, dass bei $p$
+ein lokales Optimum vorliegt.
+
+
+
+\end{document}
