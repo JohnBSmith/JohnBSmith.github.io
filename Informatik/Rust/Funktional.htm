@@ -82,11 +82,11 @@ nur, wenn das Verfahren nicht an eine feste Funktion gekoppelt ist.
 <h3>Aufhebung einer Beschränkung</h3>
 
 <p>Funktionenzeiger sind einer Beschränkung unterworfen, die ihre
-Brauchbarkeit stark reduzieren. Zentral für die funktionale
+Brauchbarkeit stark reduziert. Zentral für die funktionale
 Programmierung ist, dass sich Funktionen aus Daten erzeugen lassen.
-Dies wird erreicht durch Bindung von Variablen aus der Umgebung
-der Funktion, man spricht von einem <i>Closure</i>. Die Umgebung wird
-auch <i>Erstellungskontext</i> genannt.
+Dies wird erreicht durch Bindung der Werte von Variablen aus der
+Umgebung der Funktion, man spricht von einem <i>Closure</i>. Die
+Umgebung wird auch <i>Erstellungskontext</i> genannt.
 
 <p>Angenommen wir wollten mit dem Newton-Verfahren nun die
 Quadratwurzel-Funktion <code>sqrt</code> implementieren. Die
@@ -101,7 +101,7 @@ fn sqrt(a: f64) -&gt; f64 {
 <p>Diese Funktion würgt der Compiler jedoch ab, denn die innere
 Funktion <code>f</code> vermag es nicht, den Wert der Variablen
 <code>a</code> zu speichern. Diese Variable entstammt ja aus der
-Umgebung der Funktion.
+Umgebung der inneren Funktion.
 
 <p>Allerdings gestattet leichte Modifikation des Programms die
 explizite Benutzung von Closures und Closurezeigern. In abstrakteren
@@ -151,6 +151,72 @@ fn main() {
     println!("{}",sqrt(2.0));
 }
 </pre>
+
+
+<h3>Closures als Objekte</h3>
+
+<p>Nun stellen sich Fragen. Was hat es mit der Typsignatur
+<code>&amp;dyn Fn(X)-&gt;Y</code> auf sich? Das ist doch eine
+Referenz auf ein Trait-Objekt, oder nicht? Muss man sich ohne
+Closures geschlagen geben?
+
+<p>Man muss sich nicht geschlagen geben, ein Verzicht auf Closures
+ist möglich, denn diese lassen sich als Objekte mit einer einzigen
+Methode modellieren. Auf diese Art sind Closures hinter den
+Kulissen auch in Rust umgesetzt.
+
+<p>Nämlich kann man den Funktionenzeiger und die Variable
+<code>a</code> zu einem Objekt zusammenfassen. Dem
+Funktionenzeiger gibt man nun zusätzlich ein Argument zum Zugriff
+auf das eigene Objekt und damit <code>a</code>. Das ist nichts
+anderes als das self-Argument, die Funktion wird damit zu einer
+Methode. Schließlich ist der letzte wesentliche Schritt noch die
+Abstraktion des Aufrufs &ndash; dieser sei <code>call</code> genannt
+&ndash; über einen Trait <code>Fun&lt;X,Y&gt;</code>,
+die Funktionalität ist damit generisch. Ein expliziter
+Funktionenzeiger wird dabei nicht mehr benötigt, da dieser in Form
+des Aufrufs <code>call</code> schon über die Dispatch-Tabelle des
+Trait-Objekts erzeugt wird.
+
+<p>Die Formulierung ist nun lediglich ein klein wenig umständlicher:
+<pre class="rust indent">
+trait Fun&lt;X,Y&gt; {
+    fn call(&amp;self, x: X) -&gt; Y;
+}
+
+fn diff(f: &amp;dyn Fun&lt;f64,f64&gt;, x: f64) -&gt; f64 {
+    let h = 0.001;
+    return (f.call(x+h)-f.call(x-h))/(2.0*h);
+}
+
+fn newton(f: &amp;dyn Fun&lt;f64,f64&gt;, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x-f.call(x)/diff(f,x);
+    }
+    return x;
+}
+
+fn sqrt(a: f64) -&gt; f64 {
+    struct F {a: f64}
+    impl Fun&lt;f64,f64&gt; for F {
+        fn call(&amp;self, x: f64) -&gt; f64 {x*x-self.a}
+    }
+    return newton(&amp;F{a},1.0);
+}
+
+fn main() {
+    println!("{}",sqrt(2.0));
+}
+</pre>
+
+<p>Warum es ein Trait-Objekt sein muss, wird nun klar: Jedes Closure
+ergibt ein Objekt von einem jeweils neuen Datentyp, da nicht im
+Vorhinein bekannt ist, welche und wie viele Werte der Umgebung
+gebunden werden. Daher muss man von allen diesen Datentypen über eine
+gemeinsame Schnittstelle abstrahieren. Die Schnittstelle ist hierbei
+der Funktionsaufruf.
+
 
 <h2 id="Higher-order">Funktionen höherer Ordnung</h2>
 
