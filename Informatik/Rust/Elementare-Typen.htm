@@ -17,6 +17,7 @@
 <li><a href="#Fliesskommazahlen">Fließkommazahlen</a>
 <li><a href="#Typumwandlungen">Typumwandlungen</a>
 <li><a href="#Bitweise">Bitweise Operationen</a>
+<li><a href="#Ueberlauf">Umgang mit Überlauf</a>
 </ol>
 
 <h2 id="Ganzzahlen">Ganzzahlen</h2>
@@ -389,6 +390,83 @@ fn bits_from_u8(x: u8) -&gt; [bool;8] {
 <p>Effizienter ist es jedoch, den Zugriff auf sämtliche Bits einer
 Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits
 welche für den jeweiligen Zweck von Interesse sind.
+
+<h2 id="Ueberlauf">Umgang mit Überlauf</h2>
+
+<p>Der Wertebereich der elementaren Typen ist ja beschränkt, was
+die Frage aufwirft, wie mit arithmetischem Überlauf umzugehen ist.
+Überlauf bedeutet, dass das Ergebnis einer Operation den erlaubten
+Wertebereich verlässt. Wie ein überlaufendes Becken darf man
+arithmetischen Überlauf nicht einfach ignorieren, denn die
+Programmlogik kann in empfindlicher Weise davon abhängig sein,
+was im schlimmsten Fall zu einer Sicherheitslücke führen kann.
+
+<p>Problematisch sind allgemein solche Fehler, die längere Zeit
+unentdeckt bleiben, oder deren Ursache verschleiert bleibt. Diesen
+widerspenstigen Fehlern wirkt man zunächst am besten mit einer
+Fail-Fast-Strategie entgegen. Manifestieren tut sich dies meistens
+in Form von zusätzlichen Laufzeit-Prüfungen. Als Kompromisslösung
+lässt man diese zusätzlichen Prüfungen nur im Debug-Modus und
+während automatisierten Tests vorkommen, während sie im Release-Modus
+entfernt werden. Man kann solche Prüfungen auf Wunsch auch manuell mit
+den Makros <code>assert</code> und <code>debug_assert</code>
+einfügen.
+
+<p>Entsprechend ist dies bei den arithmetischen Operationen gehandhabt.
+Diese führen bei Überlauf im Debug-Modus zum Programmabbruch via
+<code>panic</code>. Im Release-Modus liegt stattdessen
+Wrapping-Verhalten vor, das direkt effizientem Maschinencode
+entspricht. Man kann die Prüfungen natürlich auch im Release-Modus
+durchführen lassen, es gibt ein Compiler-Flag dafür.
+
+<p>Das Wrapping-Verhalten entspricht bei vorzeichenlosen Ganzzahlen
+der modularen Arithmetik. Die folgenden drei Beispiele sind im
+Release-Modus äquivalent: 
+<pre class="rust indent">
+fn main() {
+    let x: u8 = 100;
+    let y: u8 = 200;
+    println!("{}",x+y);
+}
+
+fn main() {
+    let x: u8 = 200;
+    let y: u8 = 100;
+    println!("{}",x.wrapping_add(y));
+}
+
+fn main() {
+    let x: u32 = 200;
+    let y: u32 = 100;
+    println!("{}",(x+y)%256);
+}
+</pre>
+
+<p>Es gibt zusätzlich spezielle Operationen zur genauen Kontrolle des
+Verhaltens beim Überlauf:
+
+<table class="bt">
+<tr>
+<th>Operation
+<th>Verhalten
+<tr>
+<td><code>x.checked_add(y)</code>
+<td><code>None</code> bei Überlauf, sonst <code>Some(x+y)</code>
+<tr>
+<td><code>x.overflowing_add(y)</code>
+<td><code>(x.wrapping_add(y),true)</code> bei Überlauf, sonst <code>(x+y,false)</code>
+<tr>
+<td><code>x.saturating_add(y)</code>
+<td>Maximum des Zahlenraums bei Überlauf, sonst <code>x+y</code>
+<tr>
+<td><code>x.wrapping_add(y)</code>
+<td><code>x+y</code> modulo Zahlenraumgröße bei Überlauf,
+sonst <code>x+y</code>
+</table>
+
+<p>Entsprechende Varianten gibt es für die anderen arithmetischen
+Operationen.
+
 
 </body>
 </html>
