@@ -39,7 +39,7 @@ der Stapel auch leer sein darf, muss der Zeiger eine Option sein.
 Methode <code>pop</code> nimmt ein Element vom Stapel herunter und
 gibt es als Wert zurück.
 
-<pre class="rust">
+<pre class="rust indent">
 struct Node&lt;T&gt; {
     data: T,
     next: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
@@ -65,6 +65,51 @@ impl&lt;T&gt; Stack&lt;T&gt; {
         }else{
             return None;
         }
+    }
+}
+
+fn main() {
+    let mut a: Stack&lt;i32&gt; = Stack::new();
+    a.push(1);
+    a.push(2);
+    println!("{:?}",a.pop());
+    println!("{:?}",a.pop());
+    println!("{:?}",a.pop());
+}
+</pre>
+
+<p>Für einfach verkettete Listen gibt es auch eine alternative
+Darstellung:
+<pre class="rust indent">
+enum List&lt;T&gt; {
+    Nil, Node{data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+
+<p>Das führt zu einer leicht modifzierten, aber semantisch äquivalenten
+Implementation:
+
+<pre class="rust indent">
+pub enum Stack&lt;T&gt; {
+    Nil, Node{data: T, next: Box&lt;Stack&lt;T&gt;&gt;}
+}
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    pub fn new() -&gt; Self {
+        Stack::Nil
+    }
+    pub fn push(&amp;mut self, x: T) {
+        let node = std::mem::replace(self,Stack::Nil);
+        *self = Stack::Node{data: x, next: Box::new(node)};
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        return match std::mem::replace(self,Stack::Nil) {
+            Stack::Node{data,next} =&gt; {
+                *self = *next;
+                Some(data)
+            },
+            Stack::Nil =&gt; None
+        };
     }
 }
 
@@ -123,7 +168,7 @@ Der Einfachheit halber führen wir den Iterator klonend aus.
 Die folgende Implementation enthält gleich alles
 in einem Rutsch.
 
-<pre class="rust">
+<pre class="rust indent">
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fmt;
