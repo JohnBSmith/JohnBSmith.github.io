@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Benutzung von Behältern</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Arten">Arten von Behältern</a>
+<li><a href="#Hashtabellen">Hashtabellen</a>
+</ol>
+
+<h2>Arten von Behältern</h2>
+
+<p>Behälter (engl. container, collections) sind spezielle generische
+Datenstrukturen, die man als Hilfsmittel zur Konstruktion von
+Algorithmen und neuen Datenstrukturen benutzen kann. Die
+Standardbibliothek von Rust enthält eine Reihe solcher Behälter,
+diese sind im Modul <code>std::collections</code> zu finden.
+
+<p>Die wichtigsten Behälter lassen sich wie folgt in Arten einteilen:
+<dl class="indent">
+<dt><b>Sequenzen</b>
+<dd>Es gibt hier <code>Vec</code> für dynamische Felder,
+<code>VecDeque</code> für Warteschlangen und
+<code>LinkedList</code> für doppelt verkettete Listen.
+
+<dt><b>Abbildungen von Schlüsseln auf Werte</b>
+<dd>Diese werden auch assoziative Felder oder Wörterbücher genannt.
+Es gibt hier <code>HashMap</code> für assoziativen Felder und
+<code>BTreeMap</code> für Reihenfolge-erhaltende assoziative Felder.
+
+<dt><b>Mengen</b>
+<dd>Mengen lassen sich als assoziative Felder betrachten, bei denen
+die Werte fehlen. Es gibt hier <code>HashSet</code> für Mengen
+und <code>BTreeSet</code> für Reihenfolge-erhaltende Mengen.
+</dl>
+
+<h2 id="Hashtabellen">Hashtabellen</h2>
+
+<h3>Äquivalenz per Zeigervergleich</h3>
+
+<p>Manchmal soll die Äquivalenzrelation zwischen Objekten nicht
+über ihren Inhalt definiert sein, sondern über ihre Identifizierung.
+Ein erster Ansatz wäre die Speicherung der Identifizierung als
+zusätzlicher Eintrag <code>id</code>. Das kann z.&nbsp;B. eine
+Zahl vom Typ <code>u32</code> sein.
+
+<p>Der Typ zur Identifizierung sei hier <code>Id</code> genannt.
+Man kann einen solchen Typ auch nachträglich als Wrapper-Typ über jeden
+beliebigen Objekt-Typ bilden.
+
+<p>Entsprechend ergibt sich nun:
+
+<pre class="rust indent">
+use std::collections::HashMap;
+use std::hash::{Hash,Hasher};
+use std::rc::Rc;
+
+#[derive(Debug)]
+struct Id {
+    id: u32, name: Rc&lt;str&gt;
+}
+impl Id {
+    fn new(id: u32, name: &amp;str) -&gt; Self {
+        Self{id, name: Rc::from(name)}
+    }
+}
+impl Hash for Id {
+    fn hash&lt;H: Hasher&gt;(&amp;self, state: &amp;mut H) {
+        self.id.hash(state);
+    }
+}
+impl PartialEq for Id {
+    fn eq(&amp;self, y: &amp;Self) -&gt; bool {
+        self.id == y.id
+    }
+}
+impl Eq for Id {}
+
+fn main() {
+    let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
+    m.insert(Id::new(0,"A"),());
+    m.insert(Id::new(1,"A"),());
+    println!("{:?}",m);
+}
+</pre>
+
+<p>Ein wenig problematisch hierbei ist allerdings, dass die
+Identifizierung manuell festgelegt werden muss. Man bräuchte zusätzlich
+einen Zähler zur Gewährleistung, dass für jedes Objekt eine einmalige
+Identifikation erzeugt wird.
+
+<p>Wenn das Objekt aber ohnehin alloziert wird, kann man auch gleich
+die Speicheradresse des Zeigers zur Identifizierung heranziehen.
+Dafür sind lediglich ein paar kleine Modifikationen vorzunehmen:
+
+<pre class="rust indent">
+use std::collections::HashMap;
+use std::hash::{Hash,Hasher};
+use std::rc::Rc;
+
+#[derive(Debug)]
+struct Id {
+    id: Rc&lt;str&gt;
+}
+impl Id {
+    fn new(text: &amp;str) -&gt; Self {
+        Self{id: Rc::from(text)}
+    }
+}
+impl Hash for Id {
+    fn hash&lt;H: Hasher&gt;(&amp;self, state: &amp;mut H) {
+        (&amp;self.id as *const _ as usize).hash(state);
+    }
+}
+impl PartialEq for Id {
+    fn eq(&amp;self, y: &amp;Self) -&gt; bool {
+        Rc::ptr_eq(&amp;self.id,&amp;y.id)
+    }
+}
+impl Eq for Id {}
+
+fn main() {
+    let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
+    m.insert(Id::new("A"),());
+    m.insert(Id::new("A"),());
+    println!("{:?}",m);
+}
+</pre>
+
+</body>
+</html>
+

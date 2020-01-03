@@ -49,7 +49,7 @@
 \noindent
 {\LARGE\sffamily\bfseries
 Grundwissen zur\\
-Informationssicherheit\par}
+Datensicherheit\par}
 
 \vspace{1em}\noindent
 September 2019
@@ -59,7 +59,7 @@ September 2019
 \section{Einführung}
 \subsection{Wichtige Prinzipien}
 
-Bei der gewährleistung der Informationssicherheit spielen
+Bei der gewährleistung der Datensicherheit spielen
 vier grundlegende Prinzipien eine maßgebliche Rolle.
 Das sind die \emph{Redundanz},
 die \emph{Integrität}, die \emph{Privatheit} und die
@@ -67,7 +67,7 @@ die \emph{Integrität}, die \emph{Privatheit} und die
 
 \strong{Redundanz.}
 Datenträger haben eine begrenzte Haltbarkeit, können beschädigt werden
-oder verloren gehen. Aus diesem Grund möchte von wichtigen Daten
+oder verloren gehen. Aus diesem Grund möchte man von wichtigen Daten
 mehrere Kopien lagern, möglichst an unterschiedlichen Orten.
 Dies nennt man Redundanz der Daten.
 
@@ -109,11 +109,12 @@ Bei Texten in Bearbeitung sollte man nicht nur eine Kopie
 des aktuellen Textes zu speichern, sondern auch dessen frühere
 Bearbeitungszustände, dies nennt man
 \emph{Versionsgeschichte}. Warum ist das so wichtig?
-Nun, es können immmer mal Fehler auftauchen, die zu einem
+Nun, es können immer mal Fehler auftauchen, die zu einem
 unbemerkten Verlust von Textpassagen führen. Oder aber, jemand
-greift unerlaubt auf den Text zu und nimmmt subtile Veränderungen
-vor. Hat man die Versionsgeschichte zu einem Text, lassen sich
-die Versionen des Textes im Nachhinein zur Sicherheit vergleichen.
+oder ein Schadprogramm greift unerlaubt auf den Text zu und nimmmt
+subtile Veränderungen vor. Hat man die Versionsgeschichte zu einem
+Text, lassen sich die Versionen des Textes im Nachhinein zur Sicherheit
+vergleichen.
 
 \subsection{Deduplikation}
 
@@ -206,14 +207,20 @@ wandelt man hierbei Klardaten in ein Chiffrat um. Die Klardaten lassen
 sich aus dem Chiffrat nur wieder zurückgewinnen, wenn der Schlüssel
 bekannt ist.
 
+Moderne Verschlüsselung gibt es in zwei Konzepten, der
+\emph{symmetrischen} und der \emph{asymmetrischen} Verschlüsselung.
+An dieser Stelle ist zunächst nur die symmetrische Verschlüsselung
+von Bedeutung.
+
 Das empfohlene moderne Verfahren zur Verschlüsselung
-heißt AES-128. Allerdings muss zur Sicherung der Integrität noch
-ein Hashverfahren oder eine Datenkompression vorgeschaltet werden,
-denn AES allein schützt nicht die Integrität. Man darf aber davon
-ausgehen, dass die Software den Integritätsschutz beim Verschlüsseln
-automatisch bewerkstelligt. Dies lässt sich experimentell überprüfen,
-indem man mit einem Hexeditor Bytes einer verschlüsselten Datei
-manipuliert.
+ist die Blockverschlüsselung AES-128. Eine Blockverschlüsselung
+lässt sich in verschiedenen Betriesmodi benutzen. Einige
+Betriebsmodi gewährleisten leider nicht die Integrität. Dies lässt
+sich experimentell überprüfen, indem man mit einem Hexeditor Bytes
+einer verschlüsselten Datei manipuliert. Man könnte Integrität
+erzwingen, indem man ein Hashverfahren oder eine Datenkompression
+vorschaltet. Eine bessere Möglichkeit ist allerdings der Betriebsmodus
+EAX, der extra dafür geschaffen worden ist.
 
 Verschlüsselung ist kein Kinderspielzeug. Kommt der Schlüssel
 abhanden, ist die Entschlüsselung der Chiffrats unmöglich.
@@ -221,6 +228,8 @@ Es gibt keinen Schlüsseldienst. Man kann auch nicht irgendwo
 seinen Personalausweis vorlegen und bekommt dann einen neuen
 Schlüssel zugeschickt. Mit dem Schlüssel gehen auch die Klardaten
 für immer verloren. Aus diesem Grund sollte man von den Klardaten
-besser irgendwo unverschlüsselte Kopien aufbewahren.
+besser irgendwo unverschlüsselte Kopien aufbewahren. Auch sollte
+man die Kopien der Klardaten nicht wegwerfen, bevor man sich sicher
+ist, den Schlüssel korrekt eingegeben zu haben.
 
 \end{document}
