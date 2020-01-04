@@ -72,7 +72,7 @@ fn main(){
 
 <h2 id="Unique">Duplikate entfernen</h2>
 
-<h3>Reihenfolge beliebig</h3>
+<h3>Ergebnis hat beliebige Reihenfolge</h3>
 <pre class="rust">
 use std::iter::FromIterator;
 use std::collections::HashSet;
@@ -83,12 +83,12 @@ fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
 }
 
 fn main() {
-    let v: Vec&lt;i32&gt; = vec![1,2,3,4,5,1,4];
+    let v: Vec&lt;i32&gt; = vec![1,4,5,2,3,1,4];
     println!("{:?}",unique(v));
 }
 </pre>
 
-<h3>Reihenfolge bleibt erhalten</h3>
+<h3>Sortiert der Ordnung nach</h3>
 <pre class="rust">
 use std::iter::FromIterator;
 use std::collections::BTreeSet;
@@ -98,7 +98,7 @@ fn unique&lt;T: Eq+Ord&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
 }
 
 fn main() {
-    let v: Vec&lt;i32&gt; = vec![1,2,3,4,5,1,4];
+    let v: Vec&lt;i32&gt; = vec![1,4,5,2,3,1,4];
     println!("{:?}",unique(v));
 }
 </pre>

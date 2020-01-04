@@ -36,15 +36,42 @@ diese sind im Modul <code>std::collections</code> zu finden.
 <dt><b>Abbildungen von Schlüsseln auf Werte</b>
 <dd>Diese werden auch assoziative Felder oder Wörterbücher genannt.
 Es gibt hier <code>HashMap</code> für assoziativen Felder und
-<code>BTreeMap</code> für Reihenfolge-erhaltende assoziative Felder.
+<code>BTreeMap</code> für geordnete assoziative Felder.
 
 <dt><b>Mengen</b>
-<dd>Mengen lassen sich als assoziative Felder betrachten, bei denen
-die Werte fehlen. Es gibt hier <code>HashSet</code> für Mengen
-und <code>BTreeSet</code> für Reihenfolge-erhaltende Mengen.
+<dd>Diese Behälter entsprechen den endlichen Mengen in
+der Mathematik. Sie lassen sich als assoziative Felder mit fehlenden
+Werten betrachten. Es gibt hier <code>HashSet</code> für Mengen
+und <code>BTreeSet</code> für geordnete Mengen.
 </dl>
 
 <h2 id="Hashtabellen">Hashtabellen</h2>
+
+<h3>Von Feldern zu assoziativen Feldern</h3>
+
+<p>Ein Feld <code>a: [T;n]</code> lässt sich interpretieren als
+eine Abbildung der Indexmenge auf die Wertemenge:
+
+<p class="indent"><var>a</var>: {0, &hellip;, <var>n</var>&minus;1}
+&rarr; <var>T</var>.
+
+<p>Ein assoziatives Feld kann man als eine Verallgemeinerung eines
+Feldes betrachten, die beliebige Indexmengen erlaubt. Die Indizes
+werden hierbei als Schlüssel bezeichnet und können zunächst einen
+beliebigen Datentyp haben, solange sie nur unterscheidbar sind.
+
+<p>Für die Unterscheidbarkeit benötigen die Schlüssel eine
+Äquivalenzrelation, welche über den Trait <code>Eq</code> zugänglich
+gemacht wird. Für effiziente Umsetzungen sollten die Schlüssel
+zudem entweder hashbar sein via Trait <code>Hash</code>, oder
+eine Totalordnung haben via Trait <code>Ord</code>.
+
+<p>Die Begriffe Äquivalenzrelation (equivalence relation),
+Halbordnung (partial order) und Totalordnung (total order)
+sind mathematisch streng definiert. Die Definition der jeweiligen
+Relation enthält Axiome, die von einer Implementation für
+einen Datentyp erfüllt werden müssen.
+
 
 <h3>Äquivalenz per Zeigervergleich</h3>
 
@@ -55,8 +82,8 @@ zusätzlicher Eintrag <code>id</code>. Das kann z.&nbsp;B. eine
 Zahl vom Typ <code>u32</code> sein.
 
 <p>Der Typ zur Identifizierung sei hier <code>Id</code> genannt.
-Man kann einen solchen Typ auch nachträglich als Wrapper-Typ über jeden
-beliebigen Objekt-Typ bilden.
+Man kann einen solchen Typ auch nachträglich als Wrapper-Typ über
+jeden beliebigen Objekt-Typ bilden.
 
 <p>Entsprechend ergibt sich nun:
 
