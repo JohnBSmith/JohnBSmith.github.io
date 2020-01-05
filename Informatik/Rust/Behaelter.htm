@@ -72,6 +72,52 @@ sind mathematisch streng definiert. Die Definition der jeweiligen
 Relation enthält Axiome, die von einer Implementation für
 einen Datentyp erfüllt werden müssen.
 
+<h3>Hashtabellen definieren und anwenden</h3>
+
+<p>Variadische Funktionen werden in Rust bisweilen nicht unterstützt.
+Da das Literal für Hashtabellen variadisch ist und die Tupel-Syntax
+für Schlüsselwert-Paare etwas umständlich ist, behilft man sich am
+besten mit einem Makro:
+
+<pre class="rust indent">
+macro_rules! hashmap {
+    ($( $key:tt: $value:expr ),*) =&gt; {{
+        let mut map = HashMap::new();
+        $(map.insert($key.into(),$value.into());)*
+        map
+    }}
+}
+</pre>
+
+<p>Definition und Anwendung von Hashtabellen gestaltet sich nun
+wie bei Feldern:
+<pre class="rust indent">
+use std::collections::HashMap;
+
+fn main() {
+    let m: HashMap&lt;String,i32&gt; = hashmap!{
+        "x": 1, "y": 2
+    };
+    println!("{:?}",m);
+    println!("{}",m["x"]);
+}
+</pre>
+<p>So wie <code>a[k]</code> zum Programmabbruch via <code>panic</code>
+führt, falls <code>k</code> außerhalb von <code>0..a.len()</code>
+liegt, tut es auch <code>m[key]</code>, falls <code>key</code> nicht
+in <code>m</code> enthalten ist.
+
+<p>Zusätzlich gibt es auch die Methode <code>m.get(key)</code>, die
+<code>Some(value)</code> bei Vorhandensein von <code>key</code> in
+<code>m</code> zurückgibt, sonst <code>None</code>. Somit ist auch
+gestattet:
+<pre class="rust indent">
+println!("{:?}",m.get("x"));
+</pre>
+
+<p>Man kann <code>m.get(key)</code> als Verallgemeinerung von
+<code>m[key]</code> betrachten, da <code>m[key]</code> im
+Wesentlichen das gleiche bedeutet wie <code>m.get(key).unwrap()</code>.
 
 <h3>Äquivalenz per Zeigervergleich</h3>
 
@@ -189,7 +235,7 @@ fn main() {
     println!("0x{:x}",&amp;a.id as *const _ as usize);
     println!("0x{:x}",&amp;b.id as *const _ as usize);
     println!();
-    println!("Diese Adressen stimmmen überein:");
+    println!("Diese Adressen stimmen überein:");
     println!("0x{:x}",&amp;*a.id as *const str as *const () as usize);
     println!("0x{:x}",&amp;*b.id as *const str as *const () as usize);
 }
