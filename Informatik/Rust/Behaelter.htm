@@ -127,8 +127,9 @@ einen Zähler zur Gewährleistung, dass für jedes Objekt eine einmalige
 Identifikation erzeugt wird.
 
 <p>Wenn das Objekt aber ohnehin alloziert wird, kann man auch gleich
-die Speicheradresse des Zeigers zur Identifizierung heranziehen.
-Dafür sind lediglich ein paar kleine Modifikationen vorzunehmen:
+den Zeiger als Speicheradresse betrachten und diese zur Identifizierung
+heranziehen. Dafür sind lediglich ein paar kleine Modifikationen
+vorzunehmen:
 
 <pre class="rust indent">
 use std::collections::HashMap;
@@ -146,7 +147,7 @@ impl Id {
 }
 impl Hash for Id {
     fn hash&lt;H: Hasher&gt;(&amp;self, state: &amp;mut H) {
-        (&amp;self.id as *const _ as usize).hash(state);
+        (&amp;*self.id as *const str as *const () as usize).hash(state);
     }
 }
 impl PartialEq for Id {
@@ -163,6 +164,42 @@ fn main() {
     println!("{:?}",m);
 }
 </pre>
+<p>Bei der Berechnung des Hashwertes muss man hier aufpassen,
+dass man
+<pre class="rust indent">
+(&amp;*self.id as *const str as *const () as usize).hash(state);
+</pre>
+anstelle von
+<pre class="rust indent">
+(&amp;self.id as *const _ as usize).hash(state);
+</pre>
+schreibt. Es soll ja nicht die Speicheradresse der Referenz des Zeigers
+gehasht werden, sondern die Speicheradresse, welche der Zeiger enthält.
+Dies wird durch das folgende Programm verdeutlicht:
+<pre class="rust indent">
+use std::rc::Rc;
+
+#[derive(Clone)]
+struct Id {id: Rc&lt;str&gt;}
+
+fn main() {
+    let a = Id{id: Rc::from("A")};
+    let b = a.clone();
+    println!("Diese Adressen stimmen nicht überein:");
+    println!("0x{:x}",&amp;a.id as *const _ as usize);
+    println!("0x{:x}",&amp;b.id as *const _ as usize);
+    println!();
+    println!("Diese Adressen stimmmen überein:");
+    println!("0x{:x}",&amp;*a.id as *const str as *const () as usize);
+    println!("0x{:x}",&amp;*b.id as *const str as *const () as usize);
+}
+</pre>
+
+<p>Der Typcast <code>as *const ()</code> ist übrigens vonnöten, weil
+<code>&amp;str</code> bzw. <code>*const str</code> ein dicker Zeiger
+bestehend aus Datenzeiger und Länge ist. Durch den Typcast wird
+die Länge entfernt, es verbleibt ein einfacher Zeiger der sich
+in eine Speicheradresse vom Typ <code>usize</code> umwandeln lässt.
 
 </body>
 </html>
