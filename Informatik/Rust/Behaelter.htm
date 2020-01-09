@@ -182,7 +182,7 @@ use std::collections::HashMap;
 use std::hash::{Hash,Hasher};
 use std::rc::Rc;
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 struct Id {
     id: Rc&lt;str&gt;
 }
@@ -246,6 +246,60 @@ fn main() {
 bestehend aus Datenzeiger und Länge ist. Durch den Typcast wird
 die Länge entfernt, es verbleibt ein einfacher Zeiger der sich
 in eine Speicheradresse vom Typ <code>usize</code> umwandeln lässt.
+
+<p>Nun sind Leute beim Programmieren auch noch mit anderen Dingen
+beschäftigt und würden es dabei gerne vermeiden, ihren mentalen Fokus
+auf diese Feinheiten zu lenken. Glücklicherweise ist eine Abstraktion
+dieser Konvertierung erreichbar:
+
+<pre class="rust indent">
+fn rc_as_usize&lt;T: ?Sized&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
+    &amp;**p as *const T as *const () as usize
+}
+</pre>
+
+<p>Der Trait-Bound <code>?Sized</code> drückt hierbei aus, dass
+<code>Rc&lt;T&gt;</code> bzw. <code>&amp;T</code> auch ein
+dicker Zeiger sein kann. Die Variante ohne Unterstützung von
+dicken Zeigern ist ein wenig kürzer:
+
+<pre class="rust indent">
+fn rc_as_usize&lt;T&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
+    &amp;**p as *const T as usize
+}
+</pre>
+
+<p>Eine Warnung noch: Man könnte auf die Idee kommen,
+<code>rc_as_usize</code> zu
+<pre class="rust indent">
+fn ptr_as_usize&lt;T: ?Sized&gt;(p: &amp;T) -&gt; usize {
+    p as *const T as *const () as usize
+}
+</pre>
+
+<p>zu verallgemeinern. Dann ist aber folgendes Programm möglich:
+<pre class="rust indent">
+fn main() {
+    let id: Rc&lt;str&gt; = Rc::from("A");
+    println!("0x{:x}",rc_as_usize(&amp;id));
+    println!("0x{:x}",ptr_as_usize(&amp;*id));
+    println!("0x{:x}",ptr_as_usize(&amp;id));
+}
+</pre>
+<p>Die Ausgabe jagt mir einen Schauer über den Rücken:
+<pre class="indent">
+0xf3a408
+0xf3a408
+0xbffe09a8
+</pre>
+
+<p>Ein genauer Blick auf die Typsignatur von <code>ptr_as_usize</code>
+bringt die Erklärung. Nämlich bekommt die Funktion beim ersten
+Aufruf <code>&amp;T&nbsp;=&nbsp;&amp;str</code>, beim zweiten jedoch
+<code>&amp;T&nbsp;=&nbsp;&amp;Rc&lt;str&gt;</code>. Diese
+gefährliche Subtilität will man eigentlich mittels der
+Abstraktion verhindern. Die starke Verallgemeinerung konterkariert
+dieses Unterfangen jedoch.
 
 </body>
 </html>

@@ -9,20 +9,28 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Typsicherheit</h1>
+<h1>Sichere Programmierung</h1>
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Validierung">Validierung</a>
-<li><a href="#ADT">Abstrakte Datentypen</a>
-<li><a href="#Read-only">Schreibgeschützte Komponenten</a>
-<li><a href="#Typzustaende">Typzustände</a>
-<li><a href="#Einheiten">Einheiten</a>
-<li><a href="#Terminierung">Terminierung erzwingen</a>
-<li><a href="#Contracts">Vertragsbasierte Programmierung</a>
+<li><a href="#Typsicherheit">Typsicherheit ausnutzen</a>
+  <ol>
+  <li><a href="#Validierung">Validierung</a>
+  <li><a href="#ADT">Abstrakte Datentypen</a>
+  <li><a href="#Schreibschutz">Schreibgeschützte Komponenten</a>
+  <li><a href="#Typzustaende">Typzustände</a>
+  <li><a href="#Einheiten">Einheiten</a>
+  <li><a href="#Terminierung">Terminierung erzwingen</a>
+  </ol>
+<li><a href="#Laufzeit">Prüfungen zur Laufzeit</a>
+  <ol>
+  <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
+  </ol>
 </ol>
 
-<h2 id="Validierung">Validierung</h2>
+<h2 id="Typsicherheit">Typsicherheit ausnutzen</h2>
+
+<h3 id="Validierung">Validierung</h3>
 
 <p>Angenommen, wir erhalten über eine Schnittstelle eine
 Zeichenkette die aus genau vier dezimalen Ziffern bestehen soll.
@@ -117,7 +125,7 @@ werden kann, wenn man nicht vorsichtig ist.
 möglichst strenge Typisierung der gesamten Datenverarbeitung sein
 sollte.
 
-<h2 id="ADT">Abstrakte Datentypen</h2>
+<h3 id="ADT">Abstrakte Datentypen</h3>
 <p>Ein abstrakter Datentyp, kurz ADT, ist ein Datentyp mit Operationen,
 bei dem die interne Struktur und die interne Implementation der
 Operationen vor der Öffentlichkeit verschwiegen wird. Bei einem
@@ -226,7 +234,7 @@ fn main() {
 }
 </pre>
 
-<h2 id="Read-only">Schreibgeschützte Komponenten</h2>
+<h3 id="Schreibschutz">Schreibgeschützte Komponenten</h3>
 
 <p>Oft möchte man bei Datenstrukturen von außen nur Lesezugriff
 auf Komponenten zulassen. Ein solcher Schreibschutz gehört neben
@@ -421,7 +429,7 @@ macro_rules! define_read_only {
 }
 </pre>
 
-<h2 id="Typzustaende">Typzustände</h2>
+<h3 id="Typzustaende">Typzustände</h3>
 
 <p>Manchmal müssen Methoden in einer bestimmten Reihenfolge aufgerufen
 werden. Dass die Reihenfolge schon zur Kompilierzeit bekannt ist,
@@ -524,7 +532,7 @@ fn main() {
 }
 </pre>
 
-<h2 id="Einheiten">Einheiten</h2>
+<h3 id="Einheiten">Einheiten</h3>
 
 <p>Einheiten beugen bei technischen oder physikalischen Rechnungen
 gegen Missverständnisse vor. Zur Schaffung einer erhöhten Sicherheit
@@ -641,7 +649,7 @@ fn main() {
 }
 </pre>
 
-<h2 id="Terminierung">Terminierung erzwingen</h2>
+<h3 id="Terminierung">Terminierung erzwingen</h3>
 
 <p>Programme können die Ausdrücke <code>panic!()</code> und
 <code>unreachable!()</code> enthalten. Diese sind überall erlaubt,
@@ -751,7 +759,9 @@ Speicherallokation in Rust kann zu <code>panic!()</code> führen. Man
 müsste stattdessen sogenannte <i>fehlbare</i> Speicherallokation
 benutzen oder aber den Speicher ganz am Anfang des Programms allozieren.
 
-<h2 id="Contracts">Vertragsbasierte Programmierung</h2>
+<h2 id="Laufzeit">Prüfungen zur Laufzeit</h2>
+
+<h3 id="Contracts">Vertragsbasierte Programmierung</h3>
 
 <p>Bei der vertragsbasierten Programmierung, engl. contract programming,
 sichern Laufzeitprüfungen das korrekte Arbeiten von Algorithmen ab.
