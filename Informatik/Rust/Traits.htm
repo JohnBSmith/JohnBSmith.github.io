@@ -168,12 +168,12 @@ verfolgen. Rust bietet uns nun die Mittel, um den polymorphen Code
 in ein monomorphisiertes Interface einzuhüllen. Das gestaltet sich wie
 folgt:
 
-<pre class="rust">
+<pre class="rust indent">
 pub mod polyvec {
     use std::any::Any;
     use std::marker::PhantomData;
     pub struct PolyVec&lt;T&gt; {
-        v: Vec&lt;Box&lt;Any&gt;&gt;,
+        v: Vec&lt;Box&lt;dyn Any&gt;&gt;,
         _marker: PhantomData&lt;T&gt;
     }
     impl&lt;T: 'static&gt; PolyVec&lt;T&gt; {

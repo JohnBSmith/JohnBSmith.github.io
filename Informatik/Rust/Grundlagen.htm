@@ -616,6 +616,7 @@ fn input(prompt: &amp;str) -&gt; String {
     io::stdout().flush().unwrap();
     io::stdin().read_line(&amp;mut buffer).unwrap();
     buffer.pop();
+    if cfg!(windows) {buffer.pop();}
     return buffer;
 }
 

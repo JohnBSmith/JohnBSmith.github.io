@@ -20,7 +20,7 @@ zurückgibt.  Der Syntaxbaum wird anschließend von der Funktion
 <p>Die Aufgabe kann auf unterschiedlichste Art bewerkstelligt werden.
 Als Musterlösung ist ein rekursiver Abstieg angegeben.
 
-<pre>
+<pre class="indent">
 <b>Formale Grammatik</b>
 Produktionsregeln in EBNF
 
@@ -38,9 +38,6 @@ Beispiel-Eingabe:
 <h2>Musterlösung</h2>
 
 <pre class="rust">
-use std::io;
-use std::io::Write;
-
 #[derive(Debug)]
 enum Symbol {
     Identifier(String),
@@ -72,7 +69,7 @@ fn syntax_error(col: usize, s: &amp;str) -&gt; SyntaxError {
     SyntaxError{col, text: format!("Syntax-Fehler: {}.",s)}
 }
 
-fn print_syntax_error(e: SyntaxError, s: &amp;str){
+fn print_syntax_error(e: SyntaxError, s: &amp;str) {
     println!("\n{}",s);
     for _ in 0..e.col {
         print!(" ");
@@ -254,25 +251,25 @@ fn ast(s: &amp;str) -&gt; Result&lt;AST,SyntaxError&gt; {
     return full_expression(&amp;a);
 }
 
+fn input(prompt: &amp;str) -&gt; String {
+    use std::{io,io::Write};
+    let mut buffer = String::new();
+    print!("{}",prompt);
+    io::stdout().flush().unwrap();
+    io::stdin().read_line(&amp;mut buffer).unwrap();
+    buffer.pop();
+    if cfg!(windows) {buffer.pop();}
+    return buffer;
+}
+
 fn main() {
-    let mut input: String;
     loop{
-        input = String::new();
-        print!("&gt; ");
-        io::stdout().flush().ok();
-        match io::stdin().read_line(&amp;mut input) {
-            Ok(_) =&gt; {},
+        let line = input("&gt; ");
+        if line=="" {continue;}
+        let t = match ast(&amp;line) {
+            Ok(x) =&gt; x,
             Err(e) =&gt; {
-                println!("Konnte die Eingabe nicht lesen: {}.",e);
-                continue;
-            }
-        }
-        input.pop();
-        if input=="" {continue;}
-        let t = match ast(&amp;input) {
-            Ok(a) =&gt; a,
-            Err(e) =&gt; {
-                print_syntax_error(e,&amp;input);
+                print_syntax_error(e,&amp;line);
                 continue;
             }
         };
