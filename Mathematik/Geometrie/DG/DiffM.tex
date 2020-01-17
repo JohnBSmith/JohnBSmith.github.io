@@ -130,21 +130,31 @@ sein und es gilt $p(t)=c(t+t_1)$. Setze speziell $t=t_2$.\;\qedsymbol
 \newpage
 \section{Optimierung unter Nebenbedingungen}
 
+Manchmal möchte man für eine Funktion $f(x,y)$ ein Optimum finden,
+wobei der Definitionsbereich durch eine Nebenbedingung $g(x,y)=0$
+eingeschränkt wird. Laut dem Verfahren der lagrangeschen
+Multiplikatoren ist die Gleichung $\nabla f = \lambda\nabla g$
+eine notwendige Bedingung dafür. Eigentlich benötigt man anstelle
+der Gradienten bloß die totalen Differentiale, es ist nur so, dass
+im Koordinatenraum beides koinzidiert. Infolgedessen ist das
+Verfahren allgemein für Funktionen auf Mannigfaltigkeiten
+formulierbar.
+
 \begin{theorem}[Notwendiges Kriterium]\mbox{}\\*
 Sei $M$ eine zweidimensionale differenzierbare Mannigfaltigkeit.
 Seien $f\colon M\to\R$ und $g\colon M\to\R$
-differenzierbar. Hat die Einschränkung $f|g^{-1}(0)$ an der Stelle
-$p$ einen lokalen Extremwert, dann muss $\mathrm df_p$ kollinear
-zu $\mathrm dg_p$ sein, d.\,h. es gibt ein $\lambda\in\R$ mit
+differenzierbar. Sei $N:=g^{-1}(0)$. Hat die Einschränkung $f|N$ an
+der Stelle $p$ einen lokalen Extremwert, dann muss $\mathrm df_p$
+kollinear zu $\mathrm dg_p$ sein, d.\,h. es gibt ein $\lambda\in\R$ mit
 $\mathrm df_p = \lambda\mathrm dg_p$, bzw.
 es ist $\mathrm df_p\land\mathrm dg_p=0$.
 \end{theorem}
 \noindent\strong{Beweis.}
 Bei einer lokalen Extremstelle $p$ liegt eine waagerechte Tangente vor.
 Das bedeutet, dass die Richtungsableitung $\mathrm df_p(v)$ für alle
-Vektoren $v$ verschwindet, die tangential an $g^{-1}(0)$ liegen. Zur
+Vektoren $v$ verschwindet, die tangential an $N$ liegen. Zur
 Bestätigung dieser Beobachtung betrachten wir eine Parametrisierung
-$\varphi\colon (-\varepsilon,\varepsilon) \to g^{-1}(0)$ mit
+$\varphi\colon (-\varepsilon,\varepsilon) \to N$ mit
 $\varphi(0)=p$ und $\varphi'(0)\ne 0$. Die Prämisse lautet nun
 $(f\circ\varphi)'(0)=0$. Gemäß Kettenregel ist
 \begin{equation}
@@ -157,7 +167,7 @@ $(e,\varphi'(0))$ eine Orthogonalbasis von $T_p M$. Gemäß der
 Vorbetrachtung ist $\mathrm df_p$ alleinig von $v\in\R e$ abhängig.
 
 Die Funktion $g$ verschwindet definitionsgemäß auf ihrer
-Nullstellenmenge $g^{-1}(0)$, ist dort also konstant. Demnach
+Nullstellenmenge $N$, ist dort also konstant. Demnach
 ist auch $(g\circ\varphi)'(0)=0$. Nach der gleichen Argumentation
 kann $\mathrm dg_p$ also auch nur von $v\in\R e$ abhängig sein.
 
@@ -167,4 +177,17 @@ Aufgrund der Homogenität linearer Abbildungen ergibt sich daraus
 \begin{equation}
 \mathrm df_p(v) = \lambda\mathrm dg_p(v).\;\qedsymbol
 \end{equation}
+In Retrospektive kann man das ganze auch etwas abstrakter
+betrachten: Die Nullstellenmenge $N$ ist eine Untermannigfaltigkeit von
+$M$ und es gilt $T_p N=\operatorname{ker}(\mathrm dg_p)=\R\varphi'(0)$.
+Die Beobachtung war gewesen, dass
+$T_p N\subseteq \operatorname{ker}(\mathrm df_p)$
+sein muss.
 
+Hat man für ein lokales Koordinatensystem $\varphi\colon U\to M$ die
+lokalen Darstellungen $\tilde f = f\circ\varphi$ und
+$\tilde g = g\circ\varphi$, dann bekommt die Bedingung laut
+\eqref{eq:Richtungsableitung-lokal} die klassische Form
+\begin{equation}
+\nabla\tilde f = \lambda\nabla\tilde g.
+\end{equation}
