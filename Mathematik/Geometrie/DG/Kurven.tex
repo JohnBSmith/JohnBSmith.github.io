@@ -723,7 +723,7 @@ ergibt sich schließlich
 K = |\gamma''(s)| = \frac{|\tilde\gamma'(t)\wedge\tilde\gamma''(t)|}{|\tilde\gamma'(t)|^3}
 = \frac{\sqrt{\det(A^T A)}}{|\tilde\gamma'(t)|^3},
 \end{equation}
-wobei $A=(\gamma'(t),\gamma''(t))$ ist.
+wobei $A=(\tilde\gamma'(t),\tilde\gamma''(t))$ ist.
 
 Speziell in der Ebene ist die
 Matrix $A$ quadratisch, womit sich $\sqrt{\det(A^T A)}$
@@ -731,7 +731,7 @@ zu $|\det(A)|$ vereinfacht. Die Betragsstriche können fallengelassen
 werden um auch zu kodieren, ob die Kurve nach links oder rechts
 gekrümmt ist. Für $\tilde\gamma(t)=(x(t),y(t))$ ergibt
 sich die Formel%
-\begin{equation}
+\begin{equation}\label{eq:Kruemmung-t-Ebene}
 K = \frac{\det(A)}{|\tilde\gamma'(t)|^3}
 = \frac{|x'(t)y''(t)-y'(t)x''(t)|}{(x'(t)^2+y'(t)^2)^{3/2}}.
 \end{equation}
@@ -988,11 +988,36 @@ parametrisierte Kurven.
 \begin{definition}[Totalkrümmung]\mbox{}\\*
 Ist $c\colon [a,b]\to\R^2$ nach Bogenlänge parametrisiert, dann ist
 \begin{equation}
-K_c := \int_a^b K(c,s)\,\mathrm ds.
+K(\gamma) := \int_a^b K(\gamma,s)\,\mathrm ds
+= \int_a^b \gamma''(s)\,\mathrm ds.
 \end{equation}
 \end{definition}
+Die Totalkrümmung ist eine geometrische Eigenschaft der Kurve
+und nicht der Parametrisierung. Dies ergibt sich automatisch
+daraus, dass Parametrisierung nach der Bogenlänge gewählt wurde.
+Für eine nicht nach Bogenlänge parametrisierte Kurve
+$\tilde \gamma(t) := (x(t),y(t))$ ergibt sich gemäß Formel
+\eqref{eq:Kruemmung-t-Ebene} und
+$\mathrm ds = |\tilde \gamma'(t)|\,\mathrm dt$
+die Formel
+\begin{equation}
+K(\tilde\gamma) = \int_{t_0}^{t_1}
+\frac{x'(t)y''(t)-x''(t)y'(t)}{x'(t)^2+y'(t)^2}\,\mathrm dt.
+\end{equation}
+Speziell für eine Funktion $f\colon [a,b]\to\R$, als Kurve
+$(t,f(t))$ betrachtet, gewinnt man daraus das Resultat
+\begin{equation}
+K(f) = \int_a^b \frac{f''(x)}{f'(x)+1}\,\mathrm dx
+= \int_a^b \tfrac{\mathrm d}{\mathrm dx}\arctan f'(x)\,\mathrm dx
+= [\arctan f'(x)]_a^b.
+\end{equation}
+Da der Anstieg der Tangens des Steigungswinkels ist, ist die
+Totalkrümmung einfach die Differenz der Steigungswinkel.
+Das ist natürlich klar, wenn man weiß, dass die Krümmung
+die Winkeländerung des Tangentialvektors ist.
+
 Aus der Totalkrümmung ergibt sich die Tangentenumlaufzahl
-$K_c/(2\pi)$, die, wie sich herausstellen wird, eine topologische
+$K(\gamma)/(2\pi)$, die, wie sich herausstellen wird, eine topologische
 Größe ist. Man kann dazu mal eine Strecke mit einer Delle
 betrachten. Beim Durchlaufen der Delle krümmt sich die Kurve
 in unterschiedliche Richtungen, insgesamt hebt sich die Totalkrümmung
@@ -1025,5 +1050,6 @@ auf der Differentialgeometrie aufbauende Theorie ergeben hat,
 die sogenannte \emph{Differentialtopologie}. Die Invarianz der
 Tangentenumlaufzahl ist eine der einfachsten Einsichten aus
 dieser Theorie.
+
 
 
