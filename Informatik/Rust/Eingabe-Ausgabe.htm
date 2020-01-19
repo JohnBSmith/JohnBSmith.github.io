@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="main.css" rel="stylesheet">
+  <script src="rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Eingabe und Ausgabe</h1>
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Stdio">Die Standard-Ströme</a>
+  <ol>
+  <li><a href="#Standard-Ausgabe">Standard-Ausgabe</a>
+  <li><span class="modest">Standard-Fehlerausgabe</span>
+  <li><span class="modest">Standard-Eingabe</span>
+  <li><span class="modest">Pipelines</span>
+  </ol>
+<li><a href="#Dateien">Dateien</a>
+  <ol>
+  <li><a href="#Dateien-lesen">Dateien lesen</a>
+  <li><a href="#Dateien-schreiben">Dateien schreiben</a>
+  <li><span class="modest">Binärdaten</span>
+  <li><span class="modest">Datenströme</span>
+  </ol>
+</ol>
+
+<h2 id="Stdio">Die Standard-Ströme</h2>
+
+<h3 id="Standard-Ausgabe">Standard-Ausgabe</h3>
+
+<p>Die Standard-Ausgabe <code>stdout</code> lässt sich auf mehrere
+Arten ansprechen. Zunächst kann man einfach <code>println</code>
+benutzen.
+
+<pre class="rust indent">
+fn main() {
+    println!("{}","Ausgabe");
+}
+</pre>
+
+<p>Man kann die Standard-Ausgabe auf Linux aber auch manuell als
+Geräte-Datei öffnen:
+
+<pre class="rust indent">
+use std::{io,io::Write,fs::File};
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let mut stdout = File::create("/dev/stdout")?;
+    stdout.write_all("Ausgabe".as_bytes())?;
+    return Ok(());
+}
+</pre>
+
+<p>Das ist aber nicht empfehlenswert, da das Verzeichnis
+<code>/dev/stdout</code> nur in Unix-artigen Betriebssystemen
+existiert, das Programm also weniger portabel wird. Aus diesem
+Grund steht die Funktion <code>io::stdout</code> zur Verfügung:
+
+<pre class="rust indent">
+use std::{io,io::Write};
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let mut stdout = io::stdout();
+    stdout.write_all("Ausgabe".as_bytes())?;
+    return Ok(());
+}
+</pre>
+
+<h2 id="Dateien">Dateien</h2>
+
+<h3 id="Dateien-lesen">Dateien lesen</h3>
+
+<p>Zum Lesen von Text-Dateien gibt es die Komfort-Funktion
+<code>read_to_string</code>, das macht die Sache besonders einfach.
+<pre class="rust indent">
+use std::{fs,io};
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let s = fs::read_to_string("Datei.txt")?;
+    println!("{}",s);
+    return Ok(());
+}
+</pre>
+
+<p>Die Funktion vereinfacht die Benutzung von vielseitigeren
+Werkzeugen. Unter Verwendung dieser gestaltet sich die Funktion so:
+<pre class="rust indent">
+use std::{fs,io,io::Read};
+
+fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
+    let mut file = fs::File::open(path)?;
+    let mut buffer = String::new();
+    file.read_to_string(&amp;mut buffer)?;
+    return Ok(buffer);
+}
+</pre>
+
+<p>Diese Formulierung der Funktion ist jedoch etwas ineffizient,
+weil der Puffer beim Lesen öfters realloziert werden muss. Besser,
+man initialisiert den Puffer gleich mit der benötigten Kapazität:
+
+<pre class="rust indent">
+use std::{fs,io,io::Read,convert::TryFrom};
+
+fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
+    let info = fs::metadata(path)?;
+    let len = match usize::try_from(info.len()) {
+        Ok(value) =&gt; value, Err(_) =&gt; 0
+    };
+    let mut file = fs::File::open(path)?;
+    let mut buffer = String::with_capacity(len);
+    file.read_to_string(&amp;mut buffer)?;
+    return Ok(buffer);
+}
+</pre>
+
+<p>Der spitzfindige Leser fragt sich jetzt natürlich, wie lang
+denn so eine Geräte-Datei wie <code>/dev/stdin</code> ist. Bei stdin
+handelt es sich ja um einen Datenstrom, der kann potenziell unendlich
+lang sein. Probieren wir das aus:
+
+<pre class="rust indent">
+fn main() -&gt; Result&lt;(),std::io::Error&gt; {
+    println!("{}",std::fs::metadata("/dev/stdin")?.len());
+    return Ok(());
+}
+</pre>
+
+<p>Bei mir kommt da null raus.
+
+<p>Da eine Zeichenkette in Rust korrektes UTF-8 enthalten muss, wird
+die Funktion <code>read_to_string</code> zwangsläufig eine
+Validierung vornehmen.
+
+<h3 id="Dateien-schreiben">Dateien schreiben</h3>
+
+<p>Daten in Dateien schreiben ist denkbar einfach. Man erzeugt
+einfach eine neue Datei und schreibt die Daten da rein.
+
+<pre class="rust indent">
+use std::{io,io::Write,fs::File};
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let mut file = File::create("Datei.txt")?;
+    file.write_all("Daten".as_bytes())?;
+    return Ok(());
+}
+</pre>
+
+<p>Falls die Datei schon vorhanden war, wird sie überschrieben.
+Manchmal möchte man nicht dass Dateien einfach so überschreibbar
+sind, das ist vor allem wichtig bei Programmen die mit Benutzern
+interagieren. Man kann vor dem Schreiben der Datei prüfen, ob der
+angegebene Pfad schon existiert. Dies lässt sich wie folgt
+bewerkstelligen:
+
+<pre class="rust indent">
+use std::{io,io::Write,fs::File,path::Path};
+
+fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
+    if Path::new(path).exists() {
+        Err(io::Error::new(io::ErrorKind::PermissionDenied,
+            format!("Pfad '{}' existiert schon",path)))
+    }else{
+        let mut file = File::create(path)?;
+        file.write_all(data)
+    }
+}
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    write("Datei.txt","Daten".as_bytes())?;
+    return Ok(());
+}
+</pre>
+
+<p>Alternativ bietet sich auch das passende
+<code>ErrorKind::AlreadyExists</code> an.
+
+
+</body>
+</html>
+
