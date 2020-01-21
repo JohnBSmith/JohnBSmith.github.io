@@ -22,8 +22,8 @@
 <li><a href="#Dateien">Dateien</a>
   <ol>
   <li><a href="#Dateien-lesen">Dateien lesen</a>
+  <li><a href="#Binaer-lesen">Binärdateien lesen</a>
   <li><a href="#Dateien-schreiben">Dateien schreiben</a>
-  <li><span class="modest">Binärdaten</span>
   <li><span class="modest">Datenströme</span>
   </ol>
 </ol>
@@ -107,11 +107,11 @@ man initialisiert den Puffer gleich mit der benötigten Kapazität:
 use std::{fs,io,io::Read,convert::TryFrom};
 
 fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
-    let info = fs::metadata(path)?;
+    let mut file = fs::File::open(path)?;
+    let info = file.metadata()?;
     let len = match usize::try_from(info.len()) {
         Ok(value) =&gt; value, Err(_) =&gt; 0
     };
-    let mut file = fs::File::open(path)?;
     let mut buffer = String::with_capacity(len);
     file.read_to_string(&amp;mut buffer)?;
     return Ok(buffer);
@@ -130,11 +130,38 @@ fn main() -&gt; Result&lt;(),std::io::Error&gt; {
 }
 </pre>
 
-<p>Bei mir kommt da null raus.
+<p>Bei mir kommt da null raus. Das muss natürlich nicht heißen, dass
+da immer null herauskommen müsse. Es wäre z.B. denkbar, dass der
+Rückgabewert die Länge der aktuellen Pufferbelegung ist. Um Gewissheit
+über das Verhalten zu haben, müsste man die Spezifikation der
+Betriebssystem-Schnittstelle konsultieren, wenn es diese denn gibt.
+Wir wollen uns mit diesen technischen Details jetzt nicht aufhalten,
+da diese eigentlich immer unerheblich sind.
+
+<h3 id="Binaer-lesen">Binärdateien lesen</h3>
 
 <p>Da eine Zeichenkette in Rust korrektes UTF-8 enthalten muss, wird
 die Funktion <code>read_to_string</code> zwangsläufig eine
-Validierung vornehmen.
+Validierung vornehmen. Möchte man auch eine Datei mit invalidem UTF-8
+verarbeiten können, sollte diese zunächst als Binärdatei
+eingelesen werden, hierfür steht die Funktion <code>fs::read</code>
+zur Verfügung. Mit den Binärdaten kann man dann machen was man will.
+
+<pre class="rust indent">
+use std::{fs::read, error::Error};
+
+fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
+    let data: Vec&lt;u8&gt; = read("Datei.txt")?;
+    let s = String::from_utf8(data)?;
+    println!("{}",s);
+    return Ok(());
+}
+</pre>
+
+<p>Hier ist nun alternativ möglich:
+<pre class="rust indent">
+let s = String::from_utf8_lossy(&amp;data);
+</pre>
 
 <h3 id="Dateien-schreiben">Dateien schreiben</h3>
 
@@ -164,7 +191,7 @@ use std::{io,io::Write,fs::File,path::Path};
 fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
     if Path::new(path).exists() {
         Err(io::Error::new(io::ErrorKind::PermissionDenied,
-            format!("Pfad '{}' existiert schon",path)))
+            format!("Pfad '{}' existiert bereits",path)))
     }else{
         let mut file = File::create(path)?;
         file.write_all(data)
