@@ -1,4 +1,6 @@
 
+syntax = true;
+
 function isalpha(s){
     return /^[a-z]+$/i.test(s);
 }
@@ -17,7 +19,7 @@ var rust_keyword = {
     "where": 0, "while": 0
 };
 
-function rust_syntax(s){
+function rust_node_syntax(s){
     var id,s2,st,c;
     s2 = "";
     var i = 0;
@@ -105,11 +107,11 @@ function rust_syntax(s){
     return s2;
 }
 
-function main(){
+function rust_syntax(){
     var a = document.getElementsByClassName("rust");
     for(var i=0; i<a.length; i++){
-        a[i].innerHTML = rust_syntax(a[i].innerHTML);
+        a[i].innerHTML = rust_node_syntax(a[i].innerHTML);
     }
 }
 
-window.onload = main;
+window.onload = rust_syntax;
