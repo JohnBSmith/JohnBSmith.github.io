@@ -26,6 +26,7 @@
 <li><a href="#Laufzeit">Prüfungen zur Laufzeit</a>
   <ol>
   <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
+  <li><a href="#Rekursionstiefe">Beschränkung der Rekursionstiefe</a>
   </ol>
 </ol>
 
@@ -809,6 +810,50 @@ fn main() {
 dass return-Anweisungen in einer solchen Funktion nicht erlaubt sind.
 Um dies zu erzwingen bräuchte man ein zusätzliches Werkzeug, welches
 sich als prozedurales Makro formulieren ließe.
+
+<h3 id="Rekursionstiefe">Beschränkung der Rekursionstiefe</h3>
+
+<p>Erlaubt eine Funktion beliebige Rekursionstiefe, kommt es irgendwann
+zu einem Überlauf des Laufzeitstapels, es kommt zum Abbruch des
+laufenden Programms. Wir würden für bestimmte Anwendungen aber gerne
+haben, dass das Programm nicht abstürzt bzw. so terminiert wie wir es
+wollen. Man kann sich dabei z.&nbsp;B. eine Flugzeugavionik vorstellen
+oder einen Parser für unbekannte Daten aus dem Internet.
+
+<p>Eine Möglichkeit wäre es, rekursive Funktionen schlicht zu
+verbieten, wie in MISRA-C gefordert. Dies kann man aber als zu
+einschränkend empfinden, da viele praktische Verfahren wie der
+rekursive Abstieg mittels wechselseitiger Rekursion formuliert sind.
+
+<p>Eine weitere Überlegung bestünde darin, das Programm in einem
+extra vorgesehenen Thread auszuführen. Beim Überlauf des
+Laufzeitstapels kommt es jedoch unweigerlich zum Abbruch des
+gesamten Programms, nicht nur des aktuellen Threads.
+
+<p>Wir können das Problem umgehen, indem die maximale Rekursionstiefe
+vorab beschränkt wird. Betrachten wir exemplarisch
+die rekursive Berechnung der Addition:
+<pre class="rust indent">
+fn add(x: u32, y: u32) -&gt; u32 {
+    if y==0 {x} else {add(x,y-1)+1}
+}
+</pre>
+<p>Auf meinem Computer lag die maximale Rekursionstiefe
+für <code>fn main() {add(0,N);}</code> bei <code>N=174551</code>.
+Der genaue Wert ist von unbekannten technischen Details der
+Laufzeitumgebung abhängig und muss nicht unbedingt eine feste Konstante
+sein. Wenn man unbedingt möchte, kann man diesen Wert durch
+Vergrößerung des Laufzeitstapels erhöhen, der Compiler oder das
+Laufzeitsystem sollte dafür eine Konfiguration bereithalten.
+
+<p>Man modifiziert die Funktion nun so:
+<pre class="rust indent">
+fn add(x: u32, y: u32, depth_max: u32) -&gt; Result&lt;u32,()&gt; {
+    if depth_max==0 {return Err(());}
+    if y==0 {Ok(x)} else {Ok(add(x,y-1,depth_max-1)?+1)}
+}
+</pre>
+
 
 </body>
 </html>
