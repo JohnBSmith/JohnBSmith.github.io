@@ -140,6 +140,25 @@ oder über
 \sqrt[3]{2} = 2^{1/3} = \exp(\tfrac{1}{3}\ln(2)).
 \end{equation}
 
+\subsection{Differentialrechnung}
+\begin{Aufgabe}
+Sei $f\colon\R\to\R$ bijektiv und sei $f(0)=0$. Sei $f$ bei an der
+Stelle 0 differenzierbar mit $f'(0)=0$. Zeige: Dann wird $f^{-1}$
+bei $0$ nicht differenzierbar sein.
+\end{Aufgabe}
+\strong{Beweis.} Angenommen, $(f^{-1})'(0)$ würde existieren. Gemäß
+Kettenregel muss dann gelten:
+\begin{equation}
+(f^{-1}\circ f)'(0) = (f^{-1})'(f(0))\cdot f'(0) = (f^{-1})'(0)\cdot 0 = 0.
+\end{equation}
+Jedoch ist
+\begin{equation}
+(f^{-1}\circ f)'(0) = \operatorname{id}'(0) = (x\mapsto 1)(0) = 1.
+\end{equation}
+Man erhält den Widerspruch $1=0$. Nach Reductio ad absurdum muss
+die Annahme also falsch sein.\;\qedsymbol
+
+\newpage
 
 \subsection{Integralrechnung}
 \begin{Aufgabe}
@@ -619,7 +638,7 @@ mit $F'(t)>K$ für alle $t>t_0$, dann wächst%
 Die Bedingung $K<F'(t)=ra^{r-1}$ ist gesichert, da $a^{r-1}$
 für $r>1$ über alle Grenzen wächst.
 
-Zusammenfassung: Für $r<1$ ist $L=$ und
+Zusammenfassung: Für $r<1$ ist $L=0$ und
 für $r>1$ ist $L=\infty$.\;\qedsymbol
 
 \begin{Aufgabe}
@@ -1059,6 +1078,86 @@ finden lässt. Für $xg=0$ ergibt sich analog%
 0 = 0\cdot g^{-1} = (xg)g^{-1} = x(gg^{-1}) = x.
 \end{equation}
 Bei $g$ kann es sich also niemals um einen Nullteiler handeln.
+
+\begin{Aufgabe}\label{Trafo-L-N}
+Ein Objekt sei bezüglich kartesischen Koordinaten
+$(x,y,z)$ beschrieben. Dass Objekt soll so transformiert werden,
+dass $e_x$ zum Vektor $L$ und $e_z$ zum Normalenvektor $N$ mit
+$N\perp L$ wird. Bestimme die Transformationsmatrix $A$.
+\end{Aufgabe}
+\strong{Lösung.} Aus der Basis $(e_x,e_y,e_z)$ wird die Basis
+$(L,N\times L,N)$. Beachte dazu $e_y = e_z\times e_x$. Zu Lösen ist
+daher das Gleichungssystem $L=Ae_x$, $N\times L=Ae_y$, $N=Ae_z$,
+das ist
+\begin{equation}
+\begin{bmatrix}
+L_x\\ L_y\\ L_z
+\end{bmatrix}
+= A\begin{bmatrix}
+1\\ 0\\ 0
+\end{bmatrix},\qquad
+\begin{bmatrix}
+(N\times L)_x\\ (N\times L)_y\\ (N\times L)_z
+\end{bmatrix}
+= A\begin{bmatrix}
+0\\ 1\\ 0
+\end{bmatrix},\qquad
+\begin{bmatrix}
+N_x\\ N_y\\ N_z
+\end{bmatrix}
+= A\begin{bmatrix}
+0\\ 0\\ 1
+\end{bmatrix}.
+\end{equation}
+Die Lösung lässt sich direkt ablesen:
+\begin{equation}
+A = \begin{bmatrix}
+L_x & (N\times L)_x & N_x\\
+L_y & (N\times L)_y & N_y\\
+L_z & (N\times L)_z & N_z
+\end{bmatrix} = \begin{bmatrix}
+L_x & N_y L_z-L_y N_z & N_x\\
+L_y & N_z L_x-N_x L_z & N_y\\
+L_z & N_x L_y-L_x N_y & N_z
+\end{bmatrix}.\;\qedsymbol
+\end{equation}
+
+\begin{Aufgabe}
+In Aufgabe \ref{Trafo-L-N} sei $|L|=1$ und $|N|=1$.
+Zeige: Dann ist $A$ orthogonal.
+\end{Aufgabe}
+
+\noindent\strong{Lösung.} Die Matrix $A$ muss der
+Gleichung $A^T A = E$ genügen, also
+\begin{align}
+A^T A &= \begin{bmatrix}
+L_x & L_y & L_z\\
+(N\times L)_x & (N\times L)_y & (N\times L)_z\\
+N_x & N_y & N_z
+\end{bmatrix}\,
+\begin{bmatrix}
+L_x & (N\times L)_x & N_x\\
+L_y & (N\times L)_y & N_y\\
+L_z & (N\times L)_z & N_z
+\end{bmatrix}\\
+&= \begin{bmatrix}
+|L|^2 & \langle L,N\times L\rangle & \langle L,N\rangle\\
+\langle N\times L,L\rangle & |N\times L|^2 & \langle N\times L,N\rangle\\
+\langle N,L\rangle & \langle N,N\times L\rangle & |N|^2\\
+\end{bmatrix}
+= \begin{bmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{bmatrix} = E.
+\end{align}
+Wegen $L\perp N$ ist $\langle L,N\rangle=0$. Wegen $N\times L\perp L$
+ist $\langle N\times L,L\rangle=0$. Wegen $N\times L\perp N$ ist
+$\langle N\times L,N\rangle=0$. Schließlich hat man noch
+\begin{equation}
+|N\times L| = |N|\cdot|L|\cdot\sin \varphi,\quad \varphi=\angle(N,L)=90^\circ\implies |N\times L|=1.
+\end{equation}
+Somit ist die Gleichung erfüllt.\;\qedsymbol
 
 \newpage
 \section{Kombinatorik}
