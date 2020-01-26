@@ -267,3 +267,81 @@ und
 ergeben sich aus den Rechnungen \eqref{eq:matrix-repr-complex-add}
 und \eqref{eq:matrix-repr-complex-mul}.\;\qedsymbol
 \end{Beweis}
+
+\newpage
+\section{Bilinearformen}
+
+\begin{Definition}[Nicht ausgeartete Bilinearform]%
+\label{def:degenerate}\mbox{}\\*
+Sei $B\colon V\times W\to K$ eine Bilinearform, sei
+\begin{align*}
+B_1\colon V\to W^*,\quad B_1(v)(w):=B(v,w),\\
+B_2\colon W\to V^*,\quad B_2(w)(v):=B(v,w).
+\end{align*}
+Man nennt $B$ nicht ausgeartet, wenn $B_1$ und $B_2$ injektiv sind.
+\end{Definition}
+
+\begin{Korollar}\label{degenerate-char}
+Eine Bilinearform $B\colon V\times W\to K$ ist genau dann nicht
+ausgeartet, wenn $B_1(v)$ für alle $v\ne 0$ und $B_2(w)$ für alle
+$w\ne 0$ nicht die Nullabbildung ist. Die Abbildungen $B_1,B_2$
+aus Def. \ref{def:degenerate}.
+\end{Korollar}
+\begin{Beweis}
+Die lineare Abbildung $B_1$ ist genau dann injektiv, wenn
+\begin{equation}
+\{0\} = \operatorname{Kern}(B_1) := \{v\mid B_1(v)=0\}
+\end{equation}
+ist. Wegen $B_1(0)=0$ ist $B_1$ schon dann injektiv, wenn
+\begin{equation}
+B_1(v)=0\implies v=0,
+\end{equation}
+was per Kontraposition äquivalent ist zu $v\ne 0\implies B_1(v)\ne 0$.
+Für $B_2$ gilt eine analoge Argumentation.\;\qedsymbol
+\end{Beweis}
+\begin{Korollar}\label{sym-degenerate-char}
+Eine symmetrische Bilinearform $B\colon V\times V\to K$ ist genau
+dann nicht ausgeartet, wenn es für alle $v\ne 0$ ein $w$ gibt, so
+dass $B(v,w)\ne 0$.
+\end{Korollar}
+\begin{Beweis}
+Da $B$ symmetrisch ist, ist $B_1=B_2$ in Def. \ref{def:degenerate}.
+Es genügt also, $B_1$ zu
+betrachten. Nun gilt%
+\begin{equation}
+B_1(v)=0 \iff (\forall w\colon B_1(v)(w)=0(w)) \iff (\forall w\colon B(v,w)=0).
+\end{equation}
+Aus Korollar \ref{degenerate-char} ergibt sich dann die Behauptung,
+d.\,h. die Äquivalenz zu
+\begin{equation}
+v\ne 0\implies \exists w\colon B(v,w)\ne 0.\;\qedsymbol
+\end{equation}
+\end{Beweis}
+\begin{Korollar}
+Ein reelles Skalarprodukt $\langle v,w\rangle$ ist nicht ausgeartet.
+\end{Korollar}
+\begin{Beweis}
+In Korollar \ref{sym-degenerate-char} setze
+$B(v,w):=\langle v,w\rangle$. Wegen
+\begin{equation}
+\langle v,v\rangle = 0 \iff v=0
+\end{equation}
+kann man für $v\ne 0$ immer $w:=v$ setzen, dann ist
+$B(v,w)=\langle v,v\rangle\ne 0$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sind $V,W$ endlichdimensional, dann sind bei einer nicht ausgearteten
+Bilinearform $B\colon V\times W\to K$ die Abbildungen $B_1,B_2$ aus
+Def. \ref{def:degenerate} Isomorphismen.
+\end{Satz}
+\begin{Beweis}
+Es gilt $\dim B_1(V)\le\dim W^*$ und $\dim B_2(W)\le\dim V^*$. Gemäß
+Rangsatz erhält man $\dim V=\dim B_1(V)$ und $\dim W=\dim B_2(W)$,
+da $B_1,B_2$ nach Voraussetzung injektiv sind. Demnach ist
+\begin{equation}
+\dim V \le \dim W^* = \dim W \le \dim V^* = \dim V.
+\end{equation}
+Folglich muss $\dim V=\dim W=\dim V^*=\dim W^*$ sein. Somit haben
+$B_1,B_2$ vollen Rang, sind also surjektiv.\;\qedsymbol
+\end{Beweis}
