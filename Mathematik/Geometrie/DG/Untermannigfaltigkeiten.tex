@@ -396,7 +396,7 @@ Anwendung der Kettenregel bringt nun
 \frac{\mathrm da^i}{\mathrm dt}
 = \sum_{j=1}^n \frac{\partial a^i}{\partial u_j}
 \frac{\mathrm d\tilde c_j}{\mathrm dt},\qquad
-\frac{\mathrm dg^i}{\mathrm dt}
+\frac{\mathrm dg_i}{\mathrm dt}
 = \sum_{j=1}^n \frac{\partial g_i}{\partial u_j}
 \frac{\mathrm d\tilde c_j}{\mathrm dt}.
 \end{equation}
@@ -442,4 +442,58 @@ Kurz
 \nabla_v X = \sum_k \bigg(\sum_j v^j\partial_j a^k
 +\sum_{i,j} \Gamma_{ij}^k v^j a^i\bigg)g_k.
 \end{equation}
-Oder kürzer $(\nabla_v X)^k = v^j \partial_j a^k + \Gamma_{ij}^k v^j a^i$.
+Oder kürzer: $(\nabla_v X)^k = v^j \partial_j a^k + \Gamma_{ij}^k v^j a^i$.
+
+Man kann die kovariante Ableitung analog auch für ein Kovektorfeld
+$X\colon M\to T^*M$ definieren. Der Vektor $v$ verbleibt in $T_p M$.
+Der einzige Unterschied ist, dass
+man $X=a_k g^k$ ansetzen muss. Dann wird \eqref{eq:kov-Ableitung1} zu
+\begin{equation}
+(\nabla_v X)(p) = \sum_{i,j} \frac{\partial a_i}{\partial u_j}(u_0) v^j g^i(u_0)
++ \sum_{i,j} v^j a_i(u_0) \Pi_p(\frac{\partial g^i}{\partial u_j}(u_0)).
+\end{equation}
+Nun stellt sich noch die Frage, was
+$\Pi_p((\partial_j g^i)(u_0))$
+ist. Hier muss $\Pi_p$ orthogonal auf $T_p^* M$ projizieren.
+Entsprechend machen wir den Ansatz
+\begin{equation}
+\Pi_p((\partial_j g^i)(u_0)) = \sum_{k=1}^n \Xi_{ij}^k g^k(u_0).
+\end{equation}
+Verblüffend gilt $\Xi_{ij}^k = -\Gamma_{kj}^i$. Setzen wir der
+Einfachheit halber zunächst $\Pi_p=\id$, das ist der Fall, wenn
+es keine äußere Krümmung in einen ambienten Raum gibt. Die duale
+Paarung $\omega(X)=\langle\omega,X\rangle$ ergibt ein Skalarfeld,
+das totale Differential davon ist
+\begin{equation}
+\mathrm d\langle\omega,X\rangle = \sum_j\partial_j\langle\omega,X\rangle g^j
+= \sum_j (\langle\partial_j\omega,X\rangle+\langle\omega,\partial_j X\rangle)g^j.
+\end{equation}
+Setzt man nun $\omega:=g^b$ und $X:=g_a$, dann ergibt sich
+\begin{align}
+0 &= \mathrm d\delta_a^b = \mathrm d\langle g^b,g_a\rangle
+= \sum_j (\langle\partial_j g^b,g_a\rangle+\langle g^b,\partial_j g_a\rangle)g^j\\
+&= \sum_j (\langle{\textstyle\sum_k}\Xi_{bj}^k g^k,g_a\rangle
+  +\langle g^b,{\textstyle\sum_k}\Gamma_{aj}^k g_k\rangle)g^j
+= \sum_j (\Xi_{bj}^a+\Gamma_{aj}^b)g^j.
+\end{align}
+Koeffizientenvergleich mit dem Nullvektor bringt
+$\Xi_{bj}^a+\Gamma_{aj}^b=0$.
+
+Für die kovariante Ableitung des Kovektorfeldes ergibt sich damit
+\begin{equation}
+\nabla_v X = \sum_k \bigg(\sum_j v^j\partial_j a_k
+-\sum_{i,j} \Gamma_{kj}^i v^j a_i\bigg)g^k,
+\end{equation}
+bzw. kurz: $(\nabla_v X)_k = v^j\partial_j a_k-\Gamma_{kj}^i v^j a_i$.
+
+\newpage
+Man führt noch die Kurzschreibweise $\nabla_i X := \nabla_{g_i} X$
+ein. Für $v=g_i$ ist dann $v^j = \delta_i^j$. Somit ergibt sich
+\begin{align}
+(\nabla_j X)^k &= \partial_j a^k + {\textstyle\sum_i}\Gamma_{ij}^k a^i,\\
+(\nabla_j X)_k &= \partial_j a_k - {\textstyle\sum_i}\Gamma_{kj}^i a_i.
+\end{align}
+Zu Bemerken ist noch, dass $\Gamma_{ij}^k = \Gamma_{ji}^k$ gilt,
+denn $\partial_i\partial_j\varphi = \partial_j\partial_i\varphi$,
+wobei $\varphi$ als zweimal stetig differenzierbar vorausgesetzt ist.
+

@@ -128,7 +128,85 @@ $p(0)=\Phi(0,c(t_1))=c(t_1)$. Dann muss $p$ zu $c$ Parameter"=verschoben
 sein und es gilt $p(t)=c(t+t_1)$. Setze speziell $t=t_2$.\;\qedsymbol
 
 \newpage
-\section{Optimierung unter Nebenbedingungen}
+\section{Extremwerte}
+
+\subsection{Notwendiges Kriterium}
+
+Hat eine differenzierbare reelle Funktion $f$ an einer Stelle einen
+lokalen Extremwert, dann muss dort ihre erste Ableitung $f'$
+verschwinden. Daraus ergibt sich ein grundlegendes Verfahren zur
+Bestimmung der Extremwerte: Man braucht nur solche Stellen $x$
+untersuchen, dan denen $f'(x)=0$ ist. Diese Stellen nennt man
+kritische Stellen. Jedoch muss nicht unbedingt an jeder kritischen
+Stelle auch ein Extrempunkt vorliegen, es kann sich auch um einen
+Sattelpunkt handeln. Daher handelt es sich bei $f'(x)=0$ nur um
+ein notwendiges Kriterium, nicht aber um ein hinreichendes.
+
+Das notwendige Kriterium gilt auch allgemeiner für eine Funktion $f$
+von mehreren Variablen. Hier muss $\mathrm df(x)=0$ sein.
+Wir können dieses Kriterium auch für Skalarfelder auf
+Mannigfaltigkeiten formulieren.
+
+Sei $M$ eine differenzierbare Mannigfaltigkeit und sei
+$f\colon M\to\R$ differenzierbar. Sei $\varphi$ eine lokale
+Karte. Hat $f\circ\varphi$ an der Stelle $u$ einen lokalen Extremwert,
+dann muss wie gesagt $\mathrm d(f\circ\varphi)(u)=0$ sein.
+Mit $p:=\varphi(u)$ und Kettenregel ergibt sich%
+\begin{equation}
+0 = \mathrm d(f\circ\varphi)_u = \mathrm df_p\circ\mathrm d\varphi_u.
+\end{equation}
+An keiner Stelle $u$ kann $\mathrm d\varphi_u=0$ sein, da
+$\mathrm d\varphi_u$ als injektiv vorausgesetzt ist. Demnach muss
+$\mathrm df_p=0$ sein.
+
+
+\subsection{Hinreichendes Kriterium}
+
+Sei $f\colon U\to\R$ und $U\subseteq\R^n$ offen. Dann definiert
+man die Hesse"=Matrix als $H_{ij}:=\partial_i\partial_j f$.
+Ist nun $x$ eine kritische Stelle von $f$, dann ist ein
+hinreichendes Kriterium für einen Extremwert, dass $H(f)(x)$ nicht
+indefinit sein darf. Ist $H$ positiv definit, liegt ein lokales
+Minimum vor, ist $H$ negativ definit, liegt ein lokales Maximum
+vor. Ist $H$ indefinit, handelt es ich um einen Sattelpunkt.
+Ist $H$ semidefinit, versagt das Kriterium.
+
+Da sich das notwendige Kriterium auf Mannigfaltigkeiten formulieren
+lässt, müsste dies beim hinreichenden Kriterium auch möglich sein.
+Sei $f\in C^2(M,\R)$ und $\varphi$ eine lokale Karte von $M$. Dann
+gilt%
+\begin{align}
+\partial_i\partial_j(f\circ\varphi)
+&= \partial_i(\mathrm df(\partial_j\varphi))
+= \partial_i(\sum_k \partial_k f\partial_j\varphi_k)\\
+&= \sum_k \partial_i\partial_k f\partial_j\varphi_k
++ \sum_k \partial_k f\partial_i\partial_j\varphi_k,
+\qquad (\partial_j\varphi_k=\delta_{kj})\\
+&= \partial_i\partial_j f + \sum_k\Gamma_{ij}^k\partial_k f.
+\end{align}
+Für die Christoffel"=Symbole
+$\Gamma_{ij}^k = \partial_i\partial_j\varphi_k$
+benötigt man entweder eine Karte oder einen Zusammenhang.
+Ein genauer Blick klärt uns jedoch darüber auf, dass der Summand
+an den kritischen Stellen wegen $\mathrm df=0$ entfällt, denn
+dann ist auch $\partial_k f=0$ für alle $k$.
+
+Definiert man in Anlehnung an den Nabla"=Operator die formale Notation
+$\mathrm d := \sum_k\mathrm dx^k\partial_k$,
+dann kann man formal rechnen%
+\begin{equation}\textstyle
+\mathrm d\otimes\mathrm d
+= (\sum_i\mathrm dx^i\partial_i)\otimes(\sum_j\mathrm dx^j\partial_j)
+= \sum_{i,j} (\partial_i\partial_j)\,\mathrm dx^i\otimes\mathrm dx^j.
+\end{equation}
+Man definiert nun den reduzierten Hesse-Tensor als%
+\begin{equation}\textstyle
+H(f) = (\mathrm d\otimes\mathrm d)(f)
+= \sum_{i,j} \partial_i\partial_j f\,\mathrm dx^i\otimes\mathrm dx^j.
+\end{equation}
+
+\newpage
+\section{Extremwerte unter Nebenbedingungen}
 
 Manchmal möchte man für eine Funktion $f(x,y)$ ein Optimum finden,
 wobei der Definitionsbereich durch eine Nebenbedingung $g(x,y)=0$
@@ -209,7 +287,7 @@ L\colon M\times\R\to\R,\quad L(p,\lambda) := f(p)-\lambda g(p).
 Man bezeichne $L$ als Lagrange"=Funktion. Einer kritischen Stelle unter
 Nebenbedingung entspricht nun eine gewöhnliche kritische Stelle von $L$.
 Um dies einzusehen, gehen wir von der gewöhnlichen notwendigen
-Bedingung $\mathrm dL=0$ aus. Einsetzen von $L$ ergibt
+Bedingung $\mathrm dL=0$ aus. Einsetzen von $L$ ergibt%
 \begin{equation}
 0 = \mathrm dL = \mathrm df-\lambda\mathrm dg-g\mathrm d\lambda.
 \end{equation}
@@ -222,41 +300,46 @@ $\mathrm df=\lambda\mathrm dg$.
 
 Man darf nun allerdings nicht voreilig sein und pauschal davon
 ausgehen, numerische Verfahren sofort anwenden zu können. Nämlich
-lässt $\mathrm dL=0$ auch Sattelpunkte zu, und tatsächlich ist
-jede Lösung des ursprünglichen Problems ein Sattelpunkt von $L$.
+lässt $\mathrm dL=0$ auch Sattelpunkte zu.
 Nehmen wir dazu zunächst den flachen Raum $M=\R^2$ an. Nun gibt
-die Definitheit der Hesse"=Matrix $H(L)(x,y,\lambda)$ Aufschluss
-über die Art von Verhalten an den kritischen Stellen $(x,y,\lambda)$.
+die Definitheit der Hesse"=Matrix $H(L)(\lambda,x,y)$ Aufschluss
+über die Art von Verhalten an den kritischen Stellen $(\lambda,x,y)$.
 
-Die Matrix ist
+Diese spezielle Hesse"=Matrix wird geränderte Hesse"=Matrix genannt.
+Es ergibt sich%
 \begin{equation}
 H = \begin{bmatrix}
-\partial_x\partial_x L & \partial_x\partial_y L & \partial_x\partial_\lambda L\\
-\partial_y\partial_x L & \partial_y\partial_y L & \partial_y\partial_\lambda L\\
-\partial_\lambda\partial_x L & \partial_\lambda \partial_y L & \partial_\lambda\partial_\lambda L
+\partial_\lambda\partial_\lambda L & \partial_\lambda\partial_x L & \partial_\lambda \partial_y L\\
+\partial_x\partial_\lambda L & \partial_x\partial_x L & \partial_x\partial_y L\\
+\partial_y\partial_\lambda L & \partial_y\partial_x L & \partial_y\partial_y L
 \end{bmatrix}
 = \begin{bmatrix}
-\partial_x\partial_x f-\lambda\partial_x\partial_x g
-& \partial_x\partial_y f-\lambda\partial_x\partial_y g
-& -\partial_x g\\
-\partial_y\partial_x f-\lambda\partial_y\partial_x g
-& \partial_y\partial_y f-\lambda\partial_y\partial_y g
+0
+& -\partial_x g
 & -\partial_y g\\
 -\partial_x g
-& -\partial_y g
-& 0
+& \partial_x\partial_x f-\lambda\partial_x\partial_x g
+& \partial_x\partial_y f-\lambda\partial_x\partial_y g\\
+-\partial_y g
+& \partial_y\partial_x f-\lambda\partial_y\partial_x g
+& \partial_y\partial_y f-\lambda\partial_y\partial_y g
 \end{bmatrix}.
 \end{equation}
-Wegen der Null in der letzten Zelle kann $H$ nicht definit sein:
-Setze $\mathbf e_3=(0,0,1)^T$ in die Definition der Definitheit ein,
-das ergibt $\mathbf e_3^T H\mathbf e_3 = 0$. Folglich befindet sich an
-jeder kritischen Stelle ein Sattelpunkt.
+Wegen $H_{00}=0$ kann $H$ nur indefinit oder
+semidefinit sein: Setze $\mathbf e_1=(1,0,0)^T$ in die Definition der
+Definitheit ein, das ergibt $\mathbf e_1^T H\mathbf e_1 = 0$. Der
+Hauptminor $[H]_{33} = -(\partial_x g)^2$ ist außerdem nichtpositiv.
+Da es sich um einen führenden Hauptminor handelt,
+kann $H$ weder positiv definit noch positiv semidefinit sein. Daher
+ist $H$ negativ semidefinit, das hinreichende Kriterium versagt
+in diesem Fall. Wir können nicht ausschließen, dass auch Sattelpunkte
+vorliegen.
 
 Das wirkt auf den ersten Blick recht enttäuschend. Wir können
-eine Funktion $L$ aber so adaptieren, dass ihre Sattelpunkte zu
-Minimumspunkten werden. Wegen $\mathrm dL=0$ liegen an den
-Sattelpunkten Nullstellen von $\mathrm dL$ vor. Demnach muss
-$|\mathrm dL|$ bzw. $|\mathrm dL|^2$ an der Sattelstelle ein
+eine Funktion $L$ aber so adaptieren, dass ihre kritischen Stellen zu
+Minimumsstellen werden. Wegen $\mathrm dL=0$ ist jede kritische
+Stelle eine Nullstelle von $\mathrm dL$. Demnach muss
+$|\mathrm dL|$ bzw. $|\mathrm dL|^2$ an der Stelle ein
 lokales Minimum haben. Für die numerischen Verfahren kann man dabei
 das Differential $\mathrm dL$ auch numerisch berechnen lassen.
 
