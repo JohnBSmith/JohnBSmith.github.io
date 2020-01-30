@@ -20,11 +20,3 @@ function query_style() {
 }
 query_style();
 
-function main() {
-    if(syntax) {rust_syntax();}
-}
-
-var syntax = false;
-
-window.onload = main;
-

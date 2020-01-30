@@ -1,6 +1,4 @@
 
-syntax = true;
-
 function isalpha(s){
     return /^[a-z]+$/i.test(s);
 }
@@ -114,4 +112,5 @@ function rust_syntax(){
     }
 }
 
-window.onload = rust_syntax;
+window.addEventListener("load",rust_syntax);
+

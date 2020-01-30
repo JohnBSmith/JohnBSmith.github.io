@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Zeichen">Zeichen</a>
+<li><a href="#Literale">Zeichenkettenliterale</a>
 <li><a href="#Puffer">Puffer</a>
 <li><a href="#Formatierung">Formatierung mit Schablonen</a>
 <li><a href="#Unicode">Unicode und UTF-8</a>
@@ -50,6 +51,81 @@ let c = 97 as char;
 ist auch für mich unklar. Man kann sich die abstrakten Datentypen
 aber grundsätzlich mit <code>struct</code> selbst definieren, wobei
 inline-Funktionen eine Zero-Cost-Abstraktion ermöglichen.
+
+<h2 id="Literale">Zeichenkettenliterale</h2>
+
+<p>Literale dienen der Angabe von Zeichenketten im Quelltext.
+Im einfachsten Fall steht die Zeichenkette in Anführungszeichen
+in einer Zeile:
+<pre class="rust indent">
+let s = "Die Ordnung der Dinge";
+</pre>
+
+<p>Längere Zeichenketten passen ja nun nicht mehr in eine Zeile.
+Ein Zeilenumbruch im Literal ist gestattet, jedoch erzeugt dieser
+auch einen Zeilenumbruch in der Zeichenkette. Um dies zu verhindern,
+schreibt man einen Backslash an das Ende der Zeile, dann wird
+jeglicher Freiraum bis zum nächsten Zeichen aufgefressen.
+Ein äquivalente Angabe der vorherigen Zeichenkette ist demnach:
+
+<pre class="rust indent">
+let s = "Die Ordnung \
+         der Dinge";
+</pre>
+
+<p>Wenn die Zeichenkette tatsächlich auch einen Umbruch enthalten soll,
+dann könnte man einfach schreiben:
+
+<pre class="rust indent">
+let s = "Die Ordnung
+der Dinge";
+</pre>
+
+<p>Das ist jedoch etwas unästhetisch, man schreibt besser:
+
+<pre class="rust indent">
+let s = "Die Ordnung\n\
+         der Dinge";
+</pre>
+
+<p>Folgende Escape-Sequenzen sind in einem Literal erlaubt.
+<table class="bt indent">
+<tr><th>Sequenz <th>Bedeutung
+<tr><td><code>\n</code> <td>Zeilenumbruch
+<tr><td><code>\r</code> <td>Wagenrücklauf
+<tr><td><code>\t</code> <td>Tabulator
+<tr><td><code>\\</code> <td>Backslash
+<tr><td><code>\'</code> <td>einfaches Anführungszeichen
+<tr><td><code>\"</code> <td>doppeltes Anführungszeichen
+<tr><td><code>\u{221e}</code> <td>Unicode-Zeichen 0x221e
+<tr><td><code>\0</code> <td>Kurzschreibweise für <code>\u{0}</code>
+<tr><td><code>\x61</code> <td>Kurzschreibweise für <code>\u{61}</code>
+</table>
+
+<p>Dann gibt es noch die rohen Literale, bei denen
+keine Escape-Sequenzen vorkommen. Diese dürfen daher auch
+den Backslash enthalten:
+
+<pre class="rust indent">
+let s = "\\sin(\\varphi)";
+let s = r"\sin(\varphi)";
+</pre>
+
+<p>Umringt man die Anführungszeichen mit Rautezeichen,
+dürfen doppelte Anführungszeichen auch im Literal vorkommen:
+
+<pre class="indent">
+<span class='keyword'>let</span> s = r<span class='string'>#"&lt;span class="a"&gt;"#</span>;
+</pre>
+
+<p>Wenn man die Anführungszeichen mit <code>##</code>
+umringt, darf auch <code>"#</code> im Literal vorkommen,
+bei <code>###</code> entsprechend <code>"##</code> usw.
+
+<pre class="indent">
+<span class='keyword'>let</span> s = r<span class='string'>##"&lt;a href="#id"&gt;"##</span>;
+</pre>
+
 
 <h2 id="Puffer">Puffer</h2>
 
