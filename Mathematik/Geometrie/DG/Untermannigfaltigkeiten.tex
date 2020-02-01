@@ -1,6 +1,102 @@
 
 \chapter{Untermannigfaltigkeiten des Koordinatenraums}
 
+\section{Vorbereitungen}
+
+Wir wollen in diesem Abschnitt später benötigte Ergebnisse der
+linearen Algebra rekapitulieren und für unsere Zwecke anpassen.
+
+\subsection{Orthogonalität}
+
+Sei $V$ ein endlichdimensionaler reeller Vektorraum und
+$B\colon V^2\to\R$ eine nicht ausgeartete symmetrische Bilinearform.
+Weil $B$ nicht ausgartet ist, ist die lineare Abbildung%
+\begin{equation}
+\Phi\colon V\to V^*,\quad \Phi(v)(w):=B(v,w)
+\end{equation}
+ein Isomorphismus. Man bezeichnet $\Phi$ als
+\emph{kanonischen Isomorphimus}
+bezüglich $B$ und spricht in den Schreibweisen $v^\flat:=\Phi(v)$
+und $\omega^\sharp:=\Phi^{-1}(\omega)$ von den \emph{musikalischen
+Isomorphismen}.
+
+Sei nun $(g_k)$ eine Basis von $V$. Man bzeichnet die Matrix
+$g=g({ij})$ mit $g_{ij}:=B(g_i,g_j)$ dann als \emph{gramsche Matrix}
+der Bilinearform $B$ bezüglich der gewählten Basis. Man bezeichnet
+$g$ außerdem als Darstellungsmatrix von $B$ bezüglich $(g_k)$,
+weil $B$ durch $g$ dargestellt wird. Es ist nun aber so, dass
+$g$ auch Darstellungsmatrix von $\Phi$ ist. Weil $\Phi$ bijektiv
+ist, muss $g$ invertierbar sein, bzw. $\det g\ne 0$.
+
+Weil $g$ eine reelle symmetrische Matrix ist, besitzt $g$ nur reelle
+Eigenwerte, algebraische und geometrische Vielfachheit jedes
+Eigenwerts stimmen überein, somit ist $g$ diagonalisierbar.
+Nach dem Trägheitssatz von Sylvester gibt es eine Basis, so
+dass $g$ diagonal wird. Eine solche Basis bezeichnen wir als
+\emph{Orthogonalbasis} bezüglich $B$. Der Trägheitssatz macht auch
+noch die schärfere Aussage, dass man eine Basis finden kann, bei der
+die Diagonale von $g$ nur aus $+1$, $-1$ $0$ besteht. Wegen
+$\det\ge 0$ kann $0$ bei uns nicht auftreten, der Trägheitsindex von
+$B$ ist also $(p,q,0)$.
+
+Zwei Vektoren $v,w$ nennen wir genau dann \emph{orthonormal},
+wenn $B(v,w)$ verschwindet:%
+\begin{equation}
+v\perp w \defiff B(v,w)=0.
+\end{equation}
+
+\subsection{Orthogonale Projektion}
+
+Sei $V$ ein Vektorraum und $U$ ein Untervektorraum. Sei
+$B\colon V^2\to\R$ eine symmetrische Bilinearform. Dann definert
+man das orthogonale Komplement von $U$ bezüglich $B$ als
+\begin{equation}
+U^\perp := \{v\in V\mid \forall u\in U\colon B(u,v)=0\}.
+\end{equation}
+\begin{theorem}
+Sei $B$ sowohl auf $V$ als auch auf $U$ nicht ausgeartet.
+Dann gibt es eine Zerlegung $V=U\oplus U^\perp$. Demnach
+existiert auch die orthogonale Projektion $P(v):=u$
+für $v=u+u_n$ mit $u\in U$ und $u_n\in U^\perp$.
+\end{theorem}
+\strong{Beweis.} Zu zeigen ist zunächst $U\cap U^\perp=\{0\}$.
+Weil die Einschränkung von $B$ auf $U$ nicht ausgeartet ist, ist
+$\Phi_U(v)(w):=B_{|U}(v,w)$ injektiv, das bedeutet
+$\Kern\Phi_U=\{0\}$. Man kann nun rechnen:
+\begin{align}
+U\cap U^\perp &= U\cap\{v\in V\mid \forall u\in U\colon B(u,v)=0\}\\
+&= \{v\in U\mid\forall u\in U\colon\Phi_U(v)(u)=0\}\\
+&= \{v\in U\mid \Phi_U(v)=0\} = \Kern\Phi_U = \{0\}.
+\end{align}
+Nun muss man noch $V=U+U^\perp$ zeigen. Das kann man tun, indem
+zu jedem $v\in V$ ein $u\in U$ und $v_n\in U^\perp$ konstruiert
+wird, so dass $v=u+u_n$. Haben wir die Projektion $P$ bei Hand,
+kann diese Konstruktion sofort als $u:=P(v)$ und $u_n:=v-P(v)$
+herbeigeschafft werden. Nun muss man aber die Projektion
+konstruieren. Diese soll eine lineare Abbildung sein, die%
+\begin{align}
+&\forall v\in V\colon\; P(v)\in U,\\
+&\forall v\in V, u\in U\colon\; B(v-P(v),u) = 0
+\end{align}
+erfüllt. Die zweite Bedingung lässt sich zu $B(P(v),u)=B(v,u)$
+umformen. Sei nun $(g_k)$ eine Basis von $U$, dann muss sich
+$P(v)$ als Linearkombination aus der Basis darstellen lassen,
+also $P(v)=\sum_{i=1}^n a_i g_i$. Aufgrund der Bilinearität von $B$
+genügt es, wenn die zweite Bedingung für die Basisvektoren
+$u\in\{g_k\}$ erfüllt ist, anstellen für alle $u\in U$. Einsetzen
+ergibt nun
+\begin{equation}
+B(v,g_j) = B(P(v),g_j) = B(\sum_{i=1}^n a_i g_i,g_j)
+= \sum_{i=1}^n a_i B(g_i,g_j) = \sum_{i=1}^n a_i g_{ij}.
+\end{equation}
+Das ist ein lineares Gleichungssystem mit der System"=Matrix
+$g:=(g_{ij})$ mit $g_{ij}:=B(g_i,g_j)$. Weil $g$ aber auch
+Darstellungsmatrix des Isomorphismus $\Phi_U$ ist, muss $\det g\ne 0$
+sein. Das System besitzt also eine eindeutige Lösung $(a_k)$. Diese
+legt die Projektion eindeutig fest.\;\qedsymbol
+
+
+
 \section{Grundlagen}
 \subsection{Definition}
 
