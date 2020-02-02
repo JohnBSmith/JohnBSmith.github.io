@@ -27,6 +27,7 @@
   <ol>
   <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
   <li><a href="#Rekursionstiefe">Beschränkung der Rekursionstiefe</a>
+  <li><a href="#Tests">Automatische Tests</a>
   </ol>
 </ol>
 
@@ -854,6 +855,89 @@ fn add(x: u32, y: u32, depth_max: u32) -&gt; Result&lt;u32,()&gt; {
 }
 </pre>
 
+
+<h3 id="Tests">Automatische Tests</h3>
+
+<p>Ausreizen des Typsystems gestattet es, so viele
+Implementierungsfehler wie möglich vom Compiler
+abfangen zu lassen. Trotzdem verbleibt dann immer noch
+Programmverhalten das sich einer Beschreibung durch das Typsystem
+entzieht. Das hat unter anderem damit zu tun dass das Typsystem der
+Programmiersprache nicht reichhaltig genug ist, um die benötigten
+logischen Zusammenhänge vollständig beschreiben zu können. Außerdem
+kann der Compiler keinesfalls feststellen ob ein Algorithmus korrekt
+implementiert ist, denn dazu müsste der Compiler zunächst eine formale
+Spezifikation bekommen die der Algorithmus zu erfüllen hat. Diese
+Spezifikation liegt aber offensichtlich oft noch nicht einmal vor.
+
+<p>Ein anderer Weg zum Abfangen von fehlerhaften Algorithmen sind
+automatische Tests. Umso ausgiebiger diese Tests ausfallen, umso
+besser.
+
+<p>Tests sind gewöhnliche Funktionen, die man am besten ordentlich
+in einem Modul ansammelt. Einem solchen Modul gibt man das Attribut
+<code>#[cfg(test)]</code>,
+dies sorgt dafür, dass das Modul nur beim Testen kompiliert wird.
+Tests sind gewöhnliche Funktionen. Auch bei Tests gibt es
+Hauptfunktionen wie <code>main</code>. Im Unterschied zum Programm
+kann es aber bei den Tests mehrere unterschiedliche Testläufe geben.
+Aus diesem Grund gibt man den Hauptfunktionen gewöhnliche Namen und
+markiert sie mit dem Attribut <code>#[test]</code>.
+
+<p>Angenommen, jemand hat einen neuen Algorithmus geschrieben.
+Mir ist dazu kein besseres Beispiel eingefallen als ein Primzahltest
+<code>is_prime</code>, das ist ein recht kurzer Algorithmus.
+Der Algorithmus wird mit einem schon bekannten einfacheren Algorithmus
+<code>is_prime_basic</code> überprüft. Zur Sicherheit wird der
+einfache Algorithmus zusätzlich mit einem unabhängig ermittelten
+Resultat überprüft.
+
+<pre class="rust indent">
+fn is_prime(n: u32) -&gt; bool {
+    if n&lt;2 {return false;}
+    let mut i: u32 = 2;
+    while i*i&lt;=n {
+        if n%i==0 {return false;}
+        i+=1;
+    }
+    return true;
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::is_prime;
+
+    fn is_prime_basic(n: u32) -&gt; bool {
+        n&gt;1 &amp;&amp; (2..n).all(|k| n%k != 0)
+    }
+
+    #[test]
+    fn test0() {
+        let s: u32 = (0..10000).filter(|&amp;n| is_prime_basic(n)).sum();
+        assert_eq!(s,5736396);
+    }
+    
+    #[test]
+    fn test1() {
+        for n in 0..10000 {
+            assert_eq!(is_prime(n),is_prime_basic(n));
+        }
+    }
+}
+
+fn main() {
+    let a: Vec&lt;u32&gt; = (1..).filter(|&amp;n| is_prime(n))
+        .take(100).collect();
+    println!("{:?}",a);
+}
+</pre>
+
+<p>Das ist natürlich kein Beweis, dass der Algorithmus in jedem
+Fall das richtige Ergebnis liefert. Tatsächlich wurde hier
+der arithmetische Überlauf nicht berücksichtigt, der erst bei
+viel größeren Zahlen auftritt. Im Release-Modus
+würden Overflow-Checks entfernt werden, ein Überlauf bliebe also
+im schlimmsten Fall unentdeckt.
 
 </body>
 </html>
