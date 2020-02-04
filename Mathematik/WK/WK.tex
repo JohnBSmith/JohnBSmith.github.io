@@ -1,17 +1,27 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{ngerman}
+\usepackage[ngerman]{babel}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage{microtype}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\geometry{a4paper,left=25mm,right=10mm,top=22mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
 \numberwithin{equation}{section}
+\addtokomafont{disposition}{\rmfamily}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
 
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
@@ -21,7 +31,7 @@
 \newcommand{\uv}[1]{\underline{#1}}
 
 \begin{document}
-%\thispagestyle{empty}
+\thispagestyle{empty}
 
 \begin{huge}
 \noindent
@@ -29,21 +39,31 @@
 Werkzeugkasten}
 \par
 \end{huge}
-\vspace{1em}
-\noindent
-John Smith, 2014--2015\\
-Lizenz: Creative Commons CC0
+
+\section*{Vorwort}
+Dieses Heft war ursprünglich für Freunde gedacht, um ihnen
+für die Physik bedeutsame mathematische Formalismen zu erläutern.
+Zusätzliche Themen kamen hinzu und es wuchs noch ein wenig an. Aus
+diesem Grund fehlen Beweise, sofern es sich nicht um einfache
+algebraische Umformungen handelt, denn das hätte sehr schnell
+den Rahmen gesprengt, wir hatten damals noch andere Dinge zu tun.
+
+Einige der Formeln sind heuristisch. Das soll heißen, dass die
+Prämissen eventuell zu kompliziert sind oder nicht vollständig
+bekannt. Oft handelt es sich dabei um Fragen nach Konvergenz.
+Ich will den Text in Zukunft noch einmal überarbeiten und sämtliche
+Prämissen zu den Formeln und Sätzen hinzufügen. Heuristische Formeln
+werden dann explizit als solche gekennzeichnet.
 
 \tableofcontents
 
-%\newpage
-%\section*{Vorwort}
-%Dieses Heft war ursprünglich für Freunde gedacht, um ihnen
-%mathematische Formalismen zu erläutern, die in der Physik
-%von Bedeutung sind. Zusätzliche Themen kamen hinzu und es wuchs
-%noch ein wenig an. Aus diesem Grund fehlen Beweise, sofern es sich
-%nicht um einfache algebraische Umformungen handelt, denn das würde
-%sehr schnell den Rahmen sprengen.
+
+
+\vfill\noindent
+Finn, 2014--2015\\
+Dieser Text steht unter der Lizenz\\
+Creative Commons CC0.
+
 
 
 \newpage
@@ -51,13 +71,13 @@ Lizenz: Creative Commons CC0
 \subsection{Komplexe Zahlen}
 
 Die Winkelfunktionen stehen zur Exponentialfunktion
-in Beziehung. Es ist
+in Beziehung. Es ist%
 \begin{gather}
 \sin x = \frac{1}{2\ui}(\mathrm{e}^{\ui x}-\mathrm{e}^{-\ui x}),\\
 \cos x = \frac{1}{2}(\mathrm{e}^{\ui x}+\mathrm{e}^{-\ui x}).
 \end{gather}
 Mit diesen Formeln lassen sich die Ableitungen der Winkelfunktionen
-gewinnen. Z.\,B. ist
+gewinnen. Z.\,B. ist%
 \begin{gather}
 \sin' x = \frac{1}{2\ui}(\ee^{\ui x}-\ee^{-\ui x})'
 = \frac{1}{2\ui}(\ui\ee^{\ui x}+\ui\ee^{-\ui x})\\
@@ -65,7 +85,7 @@ gewinnen. Z.\,B. ist
 = \cos x.
 \end{gather}
 Auch die Additionstheoreme lassen sich über die Exponentialfunktion
-herleiten. Die Sinusschwingung
+herleiten. Die Sinusschwingung%
 \begin{equation}
 u = \hat u\sin(\omega t+\varphi_0)
 \end{equation}
@@ -73,7 +93,7 @@ lässt sich alternativ schreiben als
 \begin{equation}
 \underline u = \hat u\,\ee^{\ui\omega t+\ui\varphi_0}.
 \end{equation}
-Die ursprüngliche Schwingung ist dann gegeben durch den Imaginärteil
+Die ursprüngliche Schwingung ist dann gegeben durch den Imaginärteil%
 \begin{equation}
 u = \mathrm{Im}(\underline u).
 \end{equation}
@@ -90,7 +110,7 @@ Sinus"=Schwingung mit der gleichen Kreisfrequenz.
 Man betrachtet die Zeiger (welche komplexe Zahlen sind) einfach zum
 Zeitpunkt $t=0$. Selbst diese Zeiger kodieren sämtliche Information
 über die Schwingung, nämlich die Anfangsphase und die Amplitude. Man
-muss also lediglich die Summe
+muss also lediglich die Summe%
 \begin{equation}
 \underline{u}_1(0)+\underline{u}_2(0)
 = \hat u_1\ee^{\ui\varphi_1}+\hat u_2\ee^{\ui\varphi_2}
@@ -110,14 +130,14 @@ anschließend zurück in Polarkoordinaten.
 
 Um dies möglichst zügig auszuführen, sollte man die
 Transformationsformeln immer parat haben. Die Transformationsformeln
-von Polarkoordinaten in euklidische Koordinaten sind
+von Polarkoordinaten in euklidische Koordinaten sind%
 \begin{gather}
 x = r\cos\varphi,\\
 y = r\sin\varphi.
 \end{gather}
 \noindent
 Die Transformationsformeln von euklidischen Koordinaten in
-Polarkoordinaten sind
+Polarkoordinaten sind%
 \begin{gather}
 r = \sqrt{x^2+y^2},\\
 \varphi = \mathrm{sgn}(y)\arccos(x/r).
@@ -132,7 +152,7 @@ die Verwendung der eulerschen Formel.
 Man kann die Berechnung von Funktionswerten der komplexen
 Exponentialfunktion auf die Berechnung von Funktionswerten
 der reellen Exponentialfunktion zurückführen.
-Sei $a:=\mathrm{Re}(z)$ und $b:=\mathrm{Im}(z)$. Es ist
+Sei $a:=\mathrm{Re}(z)$ und $b:=\mathrm{Im}(z)$. Es ist%
 \begin{equation}
 \ee^z = \ee^{(a+b\ui)} = \ee^a \ee^{b\ui} = \ee^a(\cos b+\ui\sin b).
 \end{equation}
@@ -145,7 +165,7 @@ ermöglicht.
 Die Berechnung des komplexen Logarithmus lässt sich ebenfalls
 auf die Berechnung des reellen Logarithmus zurückführen. Dazu stellt
 man $z$ in Polarform dar. Sei also $r=|z|$ und
-$\varphi = \mathrm{arg}(z)$. Es ist
+$\varphi = \mathrm{arg}(z)$. Es ist%
 \begin{gather}
 w = \ln(z) = \ln(r\ee^{\ui\varphi})
 = \ln(r)+\ln(\ee^{\ui\varphi})\\
@@ -155,18 +175,18 @@ Ersetzt man $\varphi$ gegen $\varphi+2\pi$, so erhält man
 ebenfalls $z$, jedoch ein anderes $w$. Das Ergebnis der
 Logarithmusfunktion ist also nicht eindeutig. Sie hat unendlich
 viele sogenannte Zweige. Man verlangt nun $-\pi<\varphi$ und
-$\varphi\le\pi$. Dann definiert man den Hauptzweig als
+$\varphi\le\pi$. Dann definiert man den Hauptzweig als%
 \begin{equation}
 \ln(z):=\ln(r)+\ui\varphi.
 \end{equation}
-Die mengenwertige Logarithmusfunktion mit allen Zweigen ist dann
+Die mengenwertige Logarithmusfunktion mit allen Zweigen ist dann%
 \begin{equation}
 \mathrm{Ln}(z):=\ln(z)+2\pi k\ui.\quad(k\in\mathbf Z)
 \end{equation}
 Man muss beachten, dass die Regeln $\ln(xy)=\ln(x)+\ln(y)$
 und $\ln(x^y)=y\ln(x)$ im Allgemeinen nicht mehr gültig sind.
 Die hier dargestellte Rechnung für den Logarithmus funktioniert aber.
-Man kann sich durch die Probe überzeugen. Es ist
+Man kann sich durch die Probe überzeugen. Es ist%
 \[\ee^w = \ee^{\ln(r)+\ui\varphi+2\pi ki}
 = \ee^{\ln(r)}\ee^{\ui\varphi}\ee^{2\pi ki} = r\ee^{\ui\varphi} = z.\]
 
@@ -193,7 +213,7 @@ aber eine Nebensächlichkeit darstellt). Über das Gram-Schmidt-Verfahren
 lässt sich daher jedem Skalarproduktraum eine Orthonormalbasis geben.
 
 Sei $B:=(e_1,e_2)$ eine Orthonormalbasis des reellen Vektorraumes $V$.
-Jeder Vektor $a\in V$ kann als
+Jeder Vektor $a\in V$ kann als%
 \begin{equation}
 a = a_1 e_1+a_2 e_2
 \end{equation}
@@ -203,12 +223,12 @@ Ist $a:=a_1 e_1+a_2e_2$ und $b:=b_1 e_1+b_2 e_2$, so gilt
 \begin{equation}\label{eq:dim2SP}
 \langle a,b\rangle = a_1b_2+a_2 b_2.
 \end{equation}
-Ein Vektor $a\in V$ lässt sich auch als komplexe Zahl
+Ein Vektor $a\in V$ lässt sich auch als komplexe Zahl%
 \begin{equation}
 a = a_1+a_2\ui
 \end{equation}
 interpretieren, wobei man $e_1:=1$ und $e_2:=\ui$ setzt.
-Für $a,b\in\C$ muss hierbei
+Für $a,b\in\C$ muss hierbei%
 \begin{equation}
 \langle a,b\rangle := \mathrm{Re}(\overline ab).
 \end{equation}
@@ -220,7 +240,7 @@ Weiterhin gilt die Formel
 = |a||b|\cos\varphi
 \end{equation}
 wobei $\varphi$ der Winkel zwischen den beiden Vektoren ist.
-Die Betrag eines Vektors ist
+Die Betrag eines Vektors ist%
 \begin{equation}
 |a| = \sqrt{\langle a,a\rangle}
 = \sqrt{a_1^2+a_2^2}.
@@ -233,7 +253,7 @@ Koordinatenursprung zu dem Punkt, welcher durch die komplexe Zahl
 gegeben ist.
 
 Zwei Vektoren $a$ und $b$ lassen sich auch als Punkte in einem
-Raum interpretieren. Der Abstand ist dann gegeben durch
+Raum interpretieren. Der Abstand ist dann gegeben durch%
 \begin{equation}
 d(a,b) = |a-b|.
 \end{equation}
@@ -242,11 +262,11 @@ vernünftige Metrik und $(V,d)$ wird zu einem metrischen Raum.
 
 Den hier vorgestellten Formalismus kann man nun sofort auf den
 $n$"=dimen"-sionalen euklidischen Vektorraum $\mathbf{R}^n$
-verallgemeinern. Jeder Vektor lässt sich als Linearkombination
+verallgemeinern. Jeder Vektor lässt sich als Linearkombination%
 \begin{equation}
 a = a_1 e_1+\dots+a_n e_n
 \end{equation}
-darstellen. Das Skalarprodukt ist
+darstellen. Das Skalarprodukt ist%
 \begin{equation}
 \langle a,b\rangle = a_1b_2+\dots+a_nb_n.
 \end{equation}
@@ -268,13 +288,13 @@ Funktionen sind linear. Lineare Funktionen sind in diesem Sinn im
 Allgemeinen aber nicht linear.
 
 Lineare Differentialgleichungen heißen linear,
-weil sie sich in der Form
+weil sie sich in der Form%
 \begin{equation}
 Df(x)=g(x)
 \end{equation}
 schreiben lassen. Dabei ist $g$ eine gegebene Funktion und $f$
 die gesuchte Funktion. Der Operator $D$ ist ein linearer
-Differentialoperator. Z.\,B. lässt sich
+Differentialoperator. Z.\,B. lässt sich%
 \begin{equation}
 f''(x) + 2f'(x) + f(x) = 4
 \end{equation}
@@ -294,17 +314,17 @@ Das äußere Produkt ist eine bilineare Zuordnung%
 f(a,b)=a\wedge b,\quad f\colon V\times V\to \Lambda^2(V)
 \end{equation}
 wobei $V$ und $\Lambda^2(V)$ Vektorräume sind. Da jeder Vektorraum eine
-Dimension besitzt, muss auch $\Lambda^2(V)$ eine haben. Allgemein gilt:
+Dimension besitzt, muss auch $\Lambda^2(V)$ eine haben. Allgemein gilt:%
 \begin{equation}
 \dim(\Lambda^k(V)) = \binom{\dim(V)}{k}.
 \end{equation}
 Sei $V=\R^2$ und $B=(e_1,e_2)$ die kanonische Basis.
 Sei $a=a_1e_1+a_2e_2$ und $b=b_1e_1+b_2e_2$.
-Das äußere Produkt lässt sich in diesem Fall mit der Formel
+Das äußere Produkt lässt sich in diesem Fall mit der Formel%
 \begin{equation}
 a\wedge b = (a_1b_2-a_2b_1)\,e_1\wedge e_2
 \end{equation}
-berechnen. Das äußere Produkt ist antikommutativ, es gilt
+berechnen. Das äußere Produkt ist antikommutativ, es gilt%
 \begin{equation}
 a\wedge b = -b\wedge a.
 \end{equation}
@@ -318,7 +338,7 @@ die entgegengesetzte Richtung zeigen.
 Das äußere Produkt ist außerdem bilinear und assoziativ.
 Diese Rechenregeln genügen zusammen mit der Antikommutativität,
 um mit dem äußeren Produkt zu rechnen.
-Ein Beispiel.
+Ein Beispiel.%
 \begin{gather*}
 a\wedge b
 = (a_1e_1+a_2e_2) \wedge (b_1e_1+b_2e_2)\\
@@ -342,7 +362,7 @@ welches die beiden Vektoren aufspannen.
 \subsection{Das geometrische Produkt}
 
 Sei $V$ ein Skalarproduktraum und $a,b\in V$.
-Das geometrische Produkt für diesen Fall durch
+Das geometrische Produkt für diesen Fall durch%
 \begin{equation}
 ab := \langle a, b\rangle+a\wedge b.
 \end{equation}
@@ -353,7 +373,7 @@ handeln.
 
 Für rechtwinklige Vektoren reduziert sich das geometrische Produkt
 auf das äußere Produkt, für kollineare Vektoren auf das Skalarprodukt.
-Wenn man eine Orthonormalbasis $B=(e_1,e_2)$ wählt, gilt daher
+Wenn man eine Orthonormalbasis $B=(e_1,e_2)$ wählt, gilt daher%
 \begin{gather}
 e_1e_2 = -e_2e_1,\\
 e_1e_1=1,\\
@@ -361,30 +381,30 @@ e_2e_2=1.
 \end{gather}
 \noindent
 Allgemeiner rechnet man bei Orthonormalbasen nach dem folgenden
-Prinzip. Führt man z.\,B. in
+Prinzip. Führt man z.\,B. in%
 \[e_1e_3e_4e_1e_2e_2\]
 eine Transposition von zwei \textit{ungleichen} Basisvektoren aus,
 so ändert sich das Vorzeichen. Außerdem darf
 man wegen des Assoziativgesetzes die Klammern beliebig setzen.
 Zwei nebeneinander liegende gleiche Basisvektoren heben sich zu
-eins auf. Z.\,B. ist
+eins auf. Z.\,B. ist%
 \begin{gather*}
 e_1e_3e_4e_1e_2e_2 = e_1e_3e_4e_1\\
 = -e_1e_1e_4e_3 = -e_4e_3 = e_3e_4.
 \end{gather*}
 Diese Vereinfachungen muss man ständig machen, wenn man mit dem
-geometrischen Produkt rechnet. Multivektoren der Form
+geometrischen Produkt rechnet. Multivektoren der Form%
 \begin{equation}
 a+b\,e_1e_2
 \end{equation}
 sind isomorph zu den komplexen Zahlen.
-Es ist $e_1e_2 = e_1\wedge e_2 = \ui$. Z.\,B. ist
+Es ist $e_1e_2 = e_1\wedge e_2 = \ui$. Z.\,B. ist%
 \begin{gather}
 \ui^2 = (e_1e_2)^2 = (e_1e_2)(e_1e_2) = e_1e_2e_1e_2\\
 = -e_1e_1e_2e_2 = -1.
 \end{gather}
 \noindent
-Mit der eulerschen Formel kann man schreiben
+Mit der eulerschen Formel kann man schreiben%
 \begin{gather*}
 ab =
 \langle a,b\rangle
@@ -402,7 +422,7 @@ einzigen System zusammenfasst.
 
 Was das soll? Nun ja, man kann jetzt austesten, was passiert,
 wenn man einen gewöhnlichen Vektor mit der imaginären Einheit
-multipliziert. Es ist
+multipliziert. Es ist%
 \begin{gather*}
 \ui(a_1e_1+a_2e_2) = e_1e_2(a_1e_1+a_2e_2)\\
 = a_1e_1e_2e_1+a_2e_1e_2e_2 = -a_1e_1e_1e_2+a_2e_1\\
@@ -416,7 +436,7 @@ bzw.
 Der Vektor wird um 90~Grad im Uhrzeigersinn gedreht. Das geometrische
 Produkt ist nicht kommutativ. Wenn man von der anderen Seite mit $\ui$
 multipliziert, so dreht man gegen den Uhrzeigersinn. Bei komplexen
-Zahlen ist es egal, weil die Multiplikation ja kommutativ ist. Es ist
+Zahlen ist es egal, weil die Multiplikation ja kommutativ ist. Es ist%
 \begin{gather}
 \ui(a_1+a_2\ui) = e_1e_2(a_1+a_2e_1e_2)\\
 = a_1e_1e_2-a_2 = a_1\ui-a_2 = -a_2+a_1\ui
@@ -429,7 +449,7 @@ das geometrische Produkt kommutativ ist, obwohl es im Allgemeinen
 nicht kommutativ ist.
 
 Der Isomorphismus, der einen Vektor in eine komplexe Zahl überführt
-ist das geometrische Produkt mit $e_1$. Denn es ist
+ist das geometrische Produkt mit $e_1$. Denn es ist%
 \begin{gather}
 e_1 a = e_1(a_1e_1+a_2e_2) = a_1e_1e_1 + a_2e_1e_2\\
 = a_1 + a_2e_1e_2 = a_1+a_2i.
@@ -463,7 +483,7 @@ Ein Vektor ändert bei Rauminversion im $\mathbf R^3$ sein
 Vorzeichen, ein Pseudovektor tut das nicht. Rauminversion bedeutet,
 dass jeder Basisvektor $e_k$ gegen $-e_k$ ausgetauscht wird.
 Das rechtshändige Koordinatensystem wird dadurch zu einem
-linkshändigen. Bei einem Vektor $a$ ist nun
+linkshändigen. Bei einem Vektor $a$ ist nun%
 \begin{equation}
 \begin{split}
 & a_1(-e_1)+a_2(-e_2)+a_3(-e_3)\\
@@ -495,7 +515,7 @@ werden. Der Projektionsoperator $[A]_k$ projiziert den Anteil
 vom Grad $k$ heraus. Vom Grad null sind Skalare, vom Grad eins
 sind Vektoren und Kovektoren, vom Grad zwei sind Bivektoren
 usw. Bei negativem $k$ kann man $[A]_k=0$ setzen.
-Sind $a,b,c$ reelle Zahlen so ist z.\,B.
+Sind $a,b,c$ reelle Zahlen so ist z.\,B.%
 \begin{gather}
 [a+be_1+ce_1e_2]_0 = a,\\
 [a+be_1+ce_1e_2]_1 = be_1,\\
@@ -528,7 +548,7 @@ Vektor und $\omega$ z.\,B. vom Grad zwei sein soll. Mit der
 Rechtskontraktion würde man dann einen negativen Index zur
 Projektion erhalten.
 
-In der Physik sind die Pauli-Matrizen von Bedeutung. Es ist
+In der Physik sind die Pauli-Matrizen von Bedeutung. Es ist%
 \[
 \sigma_1 := \begin{bmatrix}0 & 1\\ 1 & 0\end{bmatrix},\quad
 \sigma_2 := \begin{bmatrix}0 & -i\\ i & 0\end{bmatrix},\quad
@@ -557,7 +577,7 @@ ist das geometrische Produkt der Basisvektoren antikommutativ.
 Das Tensorprodukt ist bilinear und assoziativ. Jedoch ist es
 weder kommutativ noch antikommutativ. Mit diesen Rechenregeln
 ist es möglich das Tensorprodukt von zwei Vektoren auszurechnen.
-Es ergibt sich
+Es ergibt sich%
 \begin{gather*}
 a\otimes b
 = (a_1e_1+a_2e_2)\otimes (b_1e_1+b_2e_2)\\
@@ -570,7 +590,7 @@ a\otimes b
 \end{gather*}
 \noindent
 Das Tensorprodukt macht aus zwei Vektoren eine Matrix, die als Tensor
-bezeichnet wird. Es ist
+bezeichnet wird. Es ist%
 \begin{equation}
 \begin{bmatrix}a_1\\ a_2\end{bmatrix}\otimes
 \begin{bmatrix}b_1\\ b_2\end{bmatrix}
@@ -593,7 +613,7 @@ Sei $B=(e_1,e_2)$ eine Basis und sei $B'=(e_1',e_2')$ eine zweite
 Basis. Ein und der selbe Vektor kann in zwei unterschiedlichen Basen
 ausgedrückt werden. Seien $a_k$ die Koordinaten bezüglich der
 Basis $B$ und $a_k'$ die Koordinaten bezüglich der Basis $B'$.
-Es ist
+Es ist%
 \begin{equation}
 a = a_1e_1+a_2e_2 = a_1'e_1'+a_2'e_2'.
 \end{equation}
@@ -626,28 +646,28 @@ schreibt man einen Tensor auch kürzer als $T_{ij}$.
 Dabei hat man sich (für $n=2$) natürlich stillschweigend auf die
 Basis $B=(e_1,e_2)$ festgelegt.
 Wir wollen diese Kurzschreibweise im Folgenden auch verwenden.
-Das Tensorprodukt wird nun kürzer
+Das Tensorprodukt wird nun kürzer%
 \begin{equation}
 T_{ij} = a_ib_j
 \end{equation}
 geschrieben. Wir können ein Tensorprodukt aus beliebig vielen
-Vektoren bilden. Z.\,B.
+Vektoren bilden. Z.\,B.%
 \begin{equation}
 T_{ijkl} = a_ib_jc_kd_l.
 \end{equation}
-Auch aus Tensoren lassen sich Tensorprodukte bilden. Z.\,B.
+Auch aus Tensoren lassen sich Tensorprodukte bilden. Z.\,B.%
 \begin{equation}
 T_{ijkl} = A_{ij}B_{kl}.
 \end{equation}
 Man kann einen Tensor nun kontrahieren.
 Bei der Kontraktion setzt man zwei Indizes gleich und summiert
 anschließend über diesen Index auf. Die Kontraktion von $T_{ij}$
-ist z.\,B.
+ist z.\,B.%
 \begin{equation}
 \sum_{k} T_{kk} = T_{11}+T_{22}.
 \end{equation}
 Das Skalarprodukt ist ein Spezialfall von Tensorprodukt gefolgt von
-Kontraktion. Das Skalarprodukt von $a_i$ und $b_j$ ist
+Kontraktion. Das Skalarprodukt von $a_i$ und $b_j$ ist%
 \begin{equation}
 \sum_{k} a_kb_k.
 \end{equation}
@@ -666,7 +686,7 @@ Tensor heben.
 Die Multiplikation von Matrizen ist ein Spezialfall
 von Tensorprodukt gefolgt von Kontraktion.
 Seien $a_{ik}$ und $b_{lj}$
-zwei Matrizen. Das Produkt ist
+zwei Matrizen. Das Produkt ist%
 \begin{equation}
 c_{ij} = \sum_{k}a_{ik}b_{kj}.
 \end{equation}
@@ -674,7 +694,7 @@ Ein antisymmetrischer Tensor ist ein Tensor mit der Eigenschaft
 $T_{ij}=-T_{ji}$. Die Hauptdiagonale von einem antisymmetrischen
 Tensor besteht zwingend aus Nullen.
 Von zwei Vektoren $\underline a,\underline b$ kann man
-einen antisymmetrischen Tensor auf folgende Art bilden. Man rechnet
+einen antisymmetrischen Tensor auf folgende Art bilden. Man rechnet%
 \begin{gather*}\underline a\otimes\underline b
 - \underline b\otimes \underline a
 = \begin{bmatrix}
@@ -704,7 +724,7 @@ erhält man
 a\wedge b = a\otimes b - b\otimes a.
 \end{equation}
 Die Formel ist auch für Vektoren mit mehr als zwei Komponenten gültig.
-Das bestätigt man durch die Rechnung
+Das bestätigt man durch die Rechnung%
 \begin{gather*}
 a\otimes b
 - b\otimes a
@@ -718,23 +738,23 @@ a\otimes b
 Ab jetzt sollen die Vektoren mit einem Index nummeriert
 werden. Das ist leider etwas verwirrend, da die
 $a_k$ bisher Komponenten waren und ab jetzt Vektoren sind.
-Man definiert
+Man definiert%
 \[\mathrm{Alt}_n(a_1\otimes\ldots\otimes a_n)
 := \frac{1}{n!}\sum_{\sigma\in S_n}\mathrm{sgn}(\sigma)\,
 a_{\sigma(1)}\otimes\ldots\otimes a_{\sigma(n)}.\]
-Für Vektoren $a_k$ gilt allgemein die Formel
+Für Vektoren $a_k$ gilt allgemein die Formel%
 \begin{equation}
 a_1\wedge\ldots\wedge a_n
 = n!\,\mathrm{Alt}_n(a_1\otimes\ldots\otimes a_n).
 \end{equation}
 Wenn man das Epsilon-Symbol verwendet, dann kann man auch alternativ
-schreiben
+schreiben%
 \[\mathrm{Alt}_n (a_1\otimes\ldots\otimes a_n)
 = \frac{1}{n!} \sum_{i_1,\ldots,i_n} \varepsilon_{i_1\ldots i_n}
 a_{i_1}\otimes\ldots\otimes a_{i_n}.\]
 An dieser Stelle soll noch festhalten werden,
 dass für einen antisymmetrischen Tensor
-gilt
+gilt%
 \[A = \sum_{i,j}a_{ij}e_i\otimes e_j
 = \frac{1}{2}\sum_{i,j}a_{ij} e_i\wedge e_j
 = \sum_{i<j}a_{ij}e_i\wedge e_j.\]
@@ -748,7 +768,7 @@ e_{i_1}\!\wedge\ldots\wedge e_{i_n}\\
 e_{i_1}\!\wedge\ldots\wedge e_{i_n}.
 \end{gather}
 Für einen antisymmetrischen Tensor mit den Komponenten
-$a[i_1,\ldots,i_n]:=a_{i_1\ldots i_n}$ gilt
+$a[i_1,\ldots,i_n]:=a_{i_1\ldots i_n}$ gilt%
 \begin{equation}
 a[i_1,\ldots,i_n]=\mathrm{sgn}(\sigma)
 a[\sigma(i_1),\ldots,\sigma(i_n)].
@@ -756,7 +776,7 @@ a[\sigma(i_1),\ldots,\sigma(i_n)].
 Ein Tensor lässt sich nun auf einen Vektor anwenden, indem immer
 über den letzten Index kontrahiert wird. Für
 $A:=\sum_{ij} a_{ij}e_i\otimes e_j$ und $v:=\sum_k v_ke_k$
-hat man nun
+hat man nun%
 \begin{equation}
 A(v) = \langle A,v\rangle = \sum_i a_{ik}v_k e_i.
 \end{equation}
@@ -767,19 +787,20 @@ Weiterhin gilt
 T(v,w) = \langle\langle T,w\rangle, v\rangle,\\
 T(u,v,w) = \langle\langle\langle T,w\rangle,v\rangle,u\rangle
 \end{gather}
-usw. Allgemein gilt dann die Formel
+usw. Allgemein gilt dann die Formel%
 \begin{equation}
 \langle T\otimes e_i,e_j\rangle = T\delta_{ij}.
 \end{equation}
-Sinnvollerweise definiert man auch
+Sinnvollerweise definiert man auch%
 \begin{equation}
 \langle e_i,e_j\otimes T\rangle := T\delta_{ij}.
 \end{equation}
-Für einen Tensor $A$ zweiter Stufe ergibt sich dann
+Für einen Tensor $A$ zweiter Stufe ergibt sich dann%
 \begin{equation}
 \langle A,v\rangle = \langle v,A^T\rangle.
 \end{equation}
-Einen Tensor zweiter Stufe transponiert man wie eine Matrix, d.\,h. man definiert
+Einen Tensor zweiter Stufe transponiert man wie eine Matrix,
+d.\,h. man definiert%
 \begin{equation}
 (\sum_{ij}a_{ij}e_i\otimes e_j)^T:=\sum_{ij} a_{ji}e_i\otimes e_j.
 \end{equation}
@@ -797,13 +818,13 @@ Orthonormalbasis $B=(e_1,e_2)$ wollen wir mit $e_k$ bezeichnen.
 Wir lassen diese Forderung nun fallen und bezeichnen mit $f_k$ die
 Basisvektoren einer allgemeinen Basis $F=(f_1,f_2)$. Es ist
 möglich, den Vektor $f_k$ als Linearkombination aus den
-$e_k$ auszudrücken. Es ist
+$e_k$ auszudrücken. Es ist%
 \begin{gather}
 f_1 = f_{11}e_1+f_{12}e_2,\\
 f_2 = f_{21}e_1+f_{22}e_2.
 \end{gather}
 \noindent
-Das können wir kompakt zusammenfassen zu
+Das können wir kompakt zusammenfassen zu%
 \begin{equation}
 f_k = f_{k1}e_1+f_{k2}e_2
 \end{equation}
@@ -811,7 +832,7 @@ bzw. noch kompakter zu
 \begin{equation}
 f_k = \sum_{i}f_{ki}e_i.
 \end{equation}
-Wir wollen jetzt ein Skalarprodukt berechnen. Es ergibt sich
+Wir wollen jetzt ein Skalarprodukt berechnen. Es ergibt sich%
 \begin{gather*}
 \langle a,b\rangle
 = \langle a_1f_1+a_2f_2,b_1f_1+b_2f_2\rangle\\
@@ -829,7 +850,7 @@ Wir wollen jetzt ein Skalarprodukt berechnen. Es ergibt sich
 \noindent
 Die Skalarprodukte $g_{ij} = \langle f_i,f_j\rangle$ kann man
 zum metrischen Tensor zusammenfassen. Der metrische Tensor ist also
-die Matrix
+die Matrix%
 \begin{equation}
 g = \begin{bmatrix}
 g_{11} & g_{12}\\
@@ -841,7 +862,7 @@ g_{21} & g_{22}
 \end{equation}
 Mit $a' = a_1e_1+a_2e_2$ wollen wir den
 Koordinatenvektor zum Vektor $a = a_1f_1+a_2f_2$
-bezeichnen. Wir können das Skalarprodukt nicht mehr mit
+bezeichnen. Wir können das Skalarprodukt nicht mehr mit%
 \begin{equation}
 \langle a',b'\rangle = \sum_{i}a_ib_i
 \end{equation}
@@ -852,7 +873,7 @@ berechnen, sondern müssen es mit
 = \sum_{i,j} g_{ij}a_ib_j
 \end{equation}
 berechnen. Ab jetzt wollen wir die Indizes aller Koordinaten
-nach oben stellen und schreiben
+nach oben stellen und schreiben%
 \begin{gather}
 a = a^1f_1+a^2f_2,\\
 a'= a^1e_1+a^2e_2.
@@ -861,12 +882,12 @@ Zu den Koordinaten $a^k$ des Vektors $a$ bezüglich der
 Basis $F$ gibt es duale Koordinaten $a_k$. Der Duale
 Koordinatenvektor von $a'$ ist $ga'$.
 Das bedeutet der Koordinatenvektor wird mit dem metrischen Tensor
-multipliziert. Es ist also
+multipliziert. Es ist also%
 \begin{equation}
 a_k = \sum_{k,i}g_{ki}a^i.
 \end{equation}
 Außerdem gibt es eine zu $F$ duale Basis $F^\ast=(f^1,f^2)$.
-Es ist
+Es ist%
 \begin{gather}
 f_k = \sum_{k,i}g_{ki}f^k,\\
 f^k = \sum_{k,i}g^{ki}f_k.
@@ -884,7 +905,7 @@ g_{22} & -g_{12}\\
 -g_{21} & g_{11}
 \end{bmatrix}.\]
 \noindent
-Mit diesem Formalismus lässt sich das Skalarprodukt auch durch
+Mit diesem Formalismus lässt sich das Skalarprodukt auch durch%
 \begin{equation}
 \langle a,b\rangle = a^1b_1+a^2b_2
 \end{equation}
@@ -894,7 +915,7 @@ berechnen. Allgemeiner ist
 = \sum_{i} a^ib_i = \sum_{i,j}g_{ij}a^ib^j.
 \end{equation}
 Ein Vektor lässt sich sowohl als Linearkombinationen mit der Basis
-als auch als Linearkombinationen mit der Dualbasis ausdrücken. Es ist
+als auch als Linearkombinationen mit der Dualbasis ausdrücken. Es ist%
 \begin{equation}
 a = a^1f_1+a^2f_2 = a_1f^1+a_2f^2.
 \end{equation}
@@ -911,36 +932,36 @@ eigentliche Vektor $\underline v$. Es stellt sich die Frage, wie man
 von den Koordinaten $x_k$ zu den Koordinaten $x_k'$ gelangt.
 
 Die Basisvektoren können als Linearkombination aus den gestrichenen
-Basisvektoren ausgedrückt werden. Es ist
+Basisvektoren ausgedrückt werden. Es ist%
 \begin{equation}
 b_k = \sum_{i} a_{ik}b_i'.
 \end{equation}
 Man kann das auch als Matrizenmultiplikation schreiben.
 Sei $A=(a_{ij})$. Da man bei der Matrizenmultiplikation über den
 zweiten Index summiert, müssen wir die Matrix transponieren. Kompakter
-schreibt man nun
+schreibt man nun%
 \begin{equation}
 B^T = A^TB'^T.
 \end{equation}
 Mit $B^T$ ist der Spaltenvektor zu $B$ gemeint, da es sich bei
 bei $B$ um einen Zeilenvektor handelt.
-Daraus erhält man mit der allgemeinen Regel $(AB)^T = B^TA^T$ auch
+Daraus erhält man mit der allgemeinen Regel $(AB)^T = B^TA^T$ auch%
 \begin{equation}
 B = B'A.
 \end{equation}
 Den Vektor können wir sowohl in der alten als auch in der neuen
 Basis ausdrücken.
-Es ist
+Es ist%
 \begin{equation}
 \underline v = \sum_{k}x_kb_k = \sum_{k}x_k'b_k'.
 \end{equation}
-Man ersetzt die $b_k$ nun und erhält
+Man ersetzt die $b_k$ nun und erhält%
 \begin{gather}
 \underline v = \sum_{k}x_k\sum_{i}a_{ik}b_i'
 = \sum_{i}\sum_{k}a_{ik}x_k b_i'\\
 = \sum_{k}\sum_{i}a_{ki}x_i b_k'.
 \end{gather}
-Durch einen Koeffizientenvergleich stellt man fest
+Durch einen Koeffizientenvergleich stellt man fest%
 \begin{equation}
 x_k' = \sum_{i} a_{ki}x_i.
 \end{equation}
@@ -949,13 +970,13 @@ Das kann man kompakt als
 \underline x' = A\underline x.
 \end{equation}
 formulieren. Die gesamte Herleitung lässt sich genauso kompakt
-schreiben. Unter Verwendung von $B=B'A$ ergibt sich
+schreiben. Unter Verwendung von $B=B'A$ ergibt sich%
 \begin{equation}
 \underline v = B'\underline x'
 = B\underline x = B'A\underline x.
 \end{equation}
 Durch einen Koeffizientenvergleich oder durch Multiplikation mit
-$B'^{-1}$ erhält man wieder
+$B'^{-1}$ erhält man wieder%
 \begin{equation}
 \underline x' = A\underline x.
 \end{equation}
@@ -964,7 +985,7 @@ Kennen wir $A^{-1}$, so müssen wir daraus noch $A$ bestimmen.
 
 Es kann auch der Fall bestehen, dass man die Koordinaten der
 Basisvektoren kennt. Man kann dann $B$ auch zu einer Matrix
-expandieren. Es ist
+expandieren. Es ist%
 \begin{equation}
 B = (b_1,b_2)
 = (\begin{bmatrix}b_{11}\\ b_{21}\end{bmatrix},
@@ -976,14 +997,14 @@ b_{21} & b_{22}
 \end{equation}
 Die Gleichung $B'A=B$ lässt sich nun als lineares Gleichungssystem
 interpretieren. Dabei sind $B'$ und $B$ gegeben und $A$ ist
-gesucht. Man hat also
+gesucht. Man hat also%
 \begin{equation}
 \left[\begin{array}{cc|cc}
 b_{11}' & b_{12}' & b_{11} & b_{12}\\
 b_{21}' & b_{22}' & b_{21} & b_{22}
 \end{array}\right].
 \end{equation}
-Mit dem Gauß-Jordan-Verfahren erhält man
+Mit dem Gauß-Jordan-Verfahren erhält man%
 \begin{equation}
 \left[\begin{array}{cc|cc}
 1 & 0 & a_{11} & a_{12}\\
@@ -992,7 +1013,7 @@ Mit dem Gauß-Jordan-Verfahren erhält man
 \end{equation}
 und kann die Einträge von $A$ direkt ablesen.
 Eigentlich handelt es sich um zwei Gleichungssysteme.
-Das erste davon ist
+Das erste davon ist%
 \begin{equation}
 \begin{bmatrix}
 b_{11}' & b_{12}'\\
@@ -1005,7 +1026,7 @@ a_{11}\\ a_{21}
 b_{11}\\ b_{21}
 \end{bmatrix}.
 \end{equation}
-Alternativ kann man $B'^{-1}$ bestimmen und dann
+Alternativ kann man $B'^{-1}$ bestimmen und dann%
 \begin{equation}
 A = B'^{-1}B
 \end{equation}
@@ -1029,7 +1050,7 @@ Sei $A$ eine quadratische Matrix. Normalerweise dreht und skaliert
 die Matrix $A$ einen Vektor $\underline v$. Man kann nun die Frage
 nach Vektoren $\underline v$ stellen, für die sich die Anwendung
 der Matrix wie eine Skalierung verhält, \textit{ohne} den Vektor zu
-drehen. Gesucht sind also Vektoren $\underline v$, für die
+drehen. Gesucht sind also Vektoren $\underline v$, für die%
 \begin{equation}
 A\underline v = \lambda\underline v
 \end{equation}
@@ -1043,30 +1064,30 @@ Nun ist $\underline v'=r\underline v$ wieder ein Vektor.
 Hat man einen Eigenvektor gefunden, so lassen sich also beliebig
 viele produzieren, die alle kollinear sind.
 
-Die Umformung der Gleichung ergibt
+Die Umformung der Gleichung ergibt%
 \begin{equation}
 (A-\lambda E)\underline v=0.
 \end{equation}
 Das lässt sich als homogenes LGS interpretieren. Ein homogenes LGS
 $A\underline v=0$ hat nur dann nichttriviale Lösungen,
-wenn $\det A=0$ ist. Es muss also
+wenn $\det A=0$ ist. Es muss also%
 \begin{equation}
 \det(A-\lambda E)=0
 \end{equation}
-sein. Sei $A$ nun eine 2$\times$2-Matrix. Es ist dann
+sein. Sei $A$ nun eine 2$\times$2-Matrix. Es ist dann%
 \begin{equation}
 \det\left(\begin{bmatrix}a_{11} & a_{12}\\
 a_{21} & a_{22}\end{bmatrix}-
 \begin{bmatrix}\lambda & 0\\
 0 & \lambda\end{bmatrix}\right)=0.
 \end{equation}
-Damit erhält man das charakteristische Polynom
+Damit erhält man das charakteristische Polynom%
 \begin{equation}
 \lambda^2 -\mathrm{Spur}(A)\lambda+\det(A)=0.
 \end{equation}
 In diesem Fall ist es eine quadratische Gleichung.
 Mit den beiden Lösungen $\lambda_1,\lambda_2$ löst man nun
-die Gleichungssysteme
+die Gleichungssysteme%
 \begin{gather*}
 (A-\lambda_1 E)\underline v=0,\\
 (A-\lambda_2 E)\underline v=0.
@@ -1077,7 +1098,7 @@ Damit kann man leichter rechnen.
 
 Jetzt kann man eine Eigenzerlegung $A=TDT^{-1}$ vornehmen.
 Dabei ist $D=\mathrm{diag}(\lambda_1,\lambda_2)$.
-Die Matrix $T$ ist
+Die Matrix $T$ ist%
 \begin{equation}
 T=[\underline v_1, \underline v_2]=\begin{bmatrix}
 v_{11} & v_{21}\\
@@ -1088,7 +1109,7 @@ Man stellt nun fest, dass
 \begin{equation}
 A^2 = (TDT^{-1})^2 = TDT^{-1}TDT^{-1} = TD^2T^{-1}.
 \end{equation}
-Im Allgemeinen hat man für eine natürliche Potenz
+Im Allgemeinen hat man für eine natürliche Potenz%
 \begin{equation}
 A^n = TD^nT^{-1}.
 \end{equation}
@@ -1100,7 +1121,7 @@ $D^n=\mathrm{diag}(\lambda_1^n,\lambda_2^n)$.
 
 Man kann sogar allgemein eine Funktion $f$ auf die Matrix $A$
 anwenden. Sei $f$ eine Funktion, die sich als Potenzreihe
-darstellen lässt. Man hat dann
+darstellen lässt. Man hat dann%
 \begin{equation}
 \begin{split}
 & f(A) = \sum_{k=0}^{\infty} a_kA^n
@@ -1114,7 +1135,7 @@ Außerdem ist $f(D)=\mathrm{diag}(f(\lambda_1),f(\lambda_2))$.
 Auch mit dem Satz von Cayley-Hamilton lässt sich die Anwendung
 einer Funktion auf eine Matrix berechnen. Der Satz von
 Cayley"=Hamilton sagt aus, dass eine Matrix eine Nullstelle ihres
-eigenen charakteristischen Polynoms ist. Es ist also
+eigenen charakteristischen Polynoms ist. Es ist also%
 \begin{equation}
 A^2 -\mathrm{Spur}(A)A+\det(A)E=0.
 \end{equation}
@@ -1129,20 +1150,20 @@ A^3 = A^2A = (pA+qE)A = pA^2+qA\\
 = (p^2+q)A+pqE = p'A+q'E.
 \end{gather}
 Das setzt sich für höhere Potenzen so fort.
-Es gibt zwei Zahlen $p,q$, sodass
+Es gibt zwei Zahlen $p,q$, sodass%
 \begin{equation}
 A^n = pA+qE
 \end{equation}
 ist. Bei Partialsummen von Potenzreihen kann man diese Methode
 auch anwenden. Die Methode funktioniert sogar für Potenzreihen.
 Sei $f$ eine Funktion, die man als Potenzreihe darstellen kann.
-Es gibt zwei Zahlen $p,q$, sodass
+Es gibt zwei Zahlen $p,q$, sodass%
 \begin{equation}
 f(A) = pA+qE
 \end{equation}
 ist. Die Frage ist jetzt natürlich, wie man auf diese Zahlen $p,q$
 kommt. Weil die gleiche Argumentation auch für die Eigenwerte
-funktioniert, erhält man
+funktioniert, erhält man%
 \begin{equation}
 \begin{split}
 f(\lambda_1) &= p\lambda_1+q,\\
@@ -1150,7 +1171,7 @@ f(\lambda_2) &= p\lambda_2+q.
 \end{split}
 \end{equation}
 Das ist ein einfaches lineares Gleichungssystem in den Unbekannten
-$p,q$. Man erhält die Lösungen
+$p,q$. Man erhält die Lösungen%
 \begin{equation}
 \begin{split}
 p &= \frac{f(\lambda_2)-f(\lambda_1)}{\lambda_2-\lambda_1},\\
@@ -1183,11 +1204,11 @@ auf Vektoren anwenden?
 Dazu betrachtet man zunächst 1-Formen. Das Skalarprodukt
 schreibt man $\langle u,v\rangle$. Wenn aber keine Orthonormalbasis
 vorliegt, so muss man den Formalismus mit Kovektoren verwenden.
-Es lässt sich dann die Formel
+Es lässt sich dann die Formel%
 \begin{equation}
 \langle\mathrm e^i,e_j\rangle = \delta_{ij}
 \end{equation}
-verwenden. Man berechnet dann
+verwenden. Man berechnet dann%
 \begin{equation}
 \omega(v) := \langle\omega,v\rangle = \omega_1v^1 + \omega_2v^2
 \end{equation}
@@ -1201,20 +1222,20 @@ zur Kontraktion von Tensoren.
 
 Allgemein wird die Anwendung einer alternierenden
 Multilinearform auf einen Vektor mit dem inneren Produkt formuliert.
-Es gilt die Rechenregel
+Es gilt die Rechenregel%
 \begin{equation}
 \omega(v_1,\ldots,v_n) = (v_1\lrcorner\omega)(v_2,\ldots,v_n).
 \end{equation}
 Für eine 1-Form ist einfach
 $v\lrcorner\omega = \langle\omega,v\rangle$.
 
-Sei $a$ der Grad von $A$. Mit der Formel
+Sei $a$ der Grad von $A$. Mit der Formel%
 \begin{equation}
 v\lrcorner(A\wedge B)
 = (v\lrcorner A)\wedge B + (-1)^a A\wedge(v\lrcorner B)
 \end{equation}
 lässt sich jede Berechnung auf 1-Formen zurückführen.
-Für eine 2-Form gilt einfach
+Für eine 2-Form gilt einfach%
 \begin{gather*}
 \omega(u,v) = (\omega_{12} e^1\wedge e^2)(u,v)\\
 = \omega_{12} u^1 v^2 - \omega_{12} u^2 v^1.
@@ -1224,14 +1245,14 @@ und Signum.
 
 Allgemeiner kann man rein kovariante Tensoren als Multilinearformen
 interpretieren. Man definiert dazu die Anwendung auf Vektoren über die
-Tensorkontraktion. D.\,h. man definiert
+Tensorkontraktion. D.\,h. man definiert%
 \begin{gather*}
 T(a,b) := \sum_{i,j} T_{ij}a^ib^j,\\
 T(a,b,c) := \sum_{i,j,k} T_{ijk}a^ib^jc^k
 \end{gather*}
 usw. Die alternierenden Multilinearformen entsprechen dann genau
 den antisymmetrischen Tensoren. Wenn also $\omega_{ij}=-\omega_{ji}$
-und $\omega_{kk}=0$ ist, so ergibt sich z.\,B.
+und $\omega_{kk}=0$ ist, so ergibt sich z.\,B.%
 \begin{gather*}
 \omega_{12}e^1\wedge e^2
 = \omega_{12}e^1\otimes e^2-\omega_{12}e^1\otimes e^2\\
@@ -1291,7 +1312,7 @@ beliebige lineare Operatoren.
 
 
 \subsection[Funktionen mit mehreren Argumenten]
-{Funktionen mit mehreren\\
+{Funktionen mit mehreren\newline
 Argumenten}
 
 Man kann anstelle einer Funktion $f(x)$ mit einem Argument auch
@@ -1313,7 +1334,7 @@ D_1f = \partial_1f = \frac{\partial}{\partial x_1}f.
 \end{equation}
 \noindent
 Die partiellen Ableitungen lassen sich zu einem Vektor zusammenfassen.
-Dieser Vektor wird dann als Nabla-Operator bezeichnet. Es ist
+Dieser Vektor wird dann als Nabla"=Operator bezeichnet. Es ist
 \begin{equation}
 \nabla = D_1e_1+D_2e_2
 \end{equation}
@@ -1873,17 +1894,17 @@ Somit kann man schreiben
 = \sum_k \frac{\partial}{\partial x_k}
 \frac{\partial l}{\partial D_k\varphi}.
 \end{equation}
-Die Euler-Lagrange-Gleichung lautet nun kurz
+Die Euler"=Lagrange"=Gleichung lautet nun kurz
 \begin{equation}
 D[\varphi]l-\langle\nabla,\nabla[\nabla\varphi]l\rangle=0.
 \end{equation}
-Die gewöhnliche Euler-Lagrange-Gleichung ist ein Spezialfall dieser
+Die gewöhnliche Euler"=Lagrange"=Gleichung ist ein Spezialfall dieser
 Gleichung. Man erhält sie, wenn man anstelle der Lagrangedichte
 die gewöhnliche Lagrangefunktion einsetzt. Bei einem Vektorfeld
-kann die allgemeine Euler-Lagrange-Gleichung wieder komponentenweise
+kann die allgemeine Euler"=Lagrange"=Gleichung wieder komponentenweise
 formuliert werden.
 
-\subsection{Extrema mit Nebenbedingungen}
+\subsection{Extrema unter Nebenbedingungen}
 
 Man denke sich einen Hügel. Der Funktionswert $y=f(x_1,x_2)$ kann
 als Höhe des Hügels an der Position $(x_1,x_2)$ interpretiert
@@ -2007,7 +2028,7 @@ D_v f := \lim_{h\rightarrow 0} \frac{f(x+hv)-f(x)}{h}\\
 = \Big[\frac{\mathrm d}{\mathrm dh}f(x+hv)\Big]_{h=0}.
 \end{gather*}
 Wenn $f$ aber ein Funktional ist, so sind doch $x(t)$ und $v(t)$
-Funktionen. In diesem Fall spricht man von der Gâteaux-Ableitung.
+Funktionen. In diesem Fall spricht man von der Gâteaux"=Ableitung.
 Diese sollte linear und stetig bezüglich $v$ sein und man schreibt dann
 auch $\delta f v$ anstelle von $D_v f$. Die Notation suggeriert
 somit
@@ -2027,7 +2048,7 @@ $(D_v f)(x_0)=0$ für alle $v$ sein.
 Analog lässt sich
 $\delta fv=0$ für alle Funktionen $v(t)$ verlangen.
 Damit ergibt sich der gleiche Ansatz wie bei der Herleitung
-der Euler-Lagrange-Gleichung.
+der Euler"=Lagrange"=Gleichung.
 
 
 \newpage
@@ -2212,8 +2233,8 @@ Der Hauptsatz und alle Integralsätze lassen sich also mit
 zusammenfassen.
 
 An dieser Stelle sollen noch zwei wichtige Eigenschaften der
-Cartan-Ableitung hergeleitet werden. Seien $A,B$ Differentialformen
-und sei $A$ vom Grad $r$. Für die Cartan-Ableitung gilt
+Cartan"=Ableitung hergeleitet werden. Seien $A,B$ Differentialformen
+und sei $A$ vom Grad $r$. Für die Cartan"=Ableitung gilt
 \begin{equation}
 \mathrm d(A\wedge B)
 = \mathrm dA\wedge B + (-1)^r A\wedge \mathrm dB.
@@ -2391,7 +2412,7 @@ Mit dieser bestimmt man
 \begin{equation}
 (J^{-1})_{ij} = \frac{\partial u^i}{\partial x_j}.
 \end{equation}
-Das Kronecker-Delta ist definiert durch
+Das Kronecker"=Delta ist definiert durch
 \begin{equation}
 \delta_{ij} = [i=j]
 = \begin{cases}
@@ -2399,7 +2420,7 @@ Das Kronecker-Delta ist definiert durch
 0 & \mathrm{sonst}.
 \end{cases}
 \end{equation}
-Die Kronecker-Deltas sind die Einträge der Einheitsmatrix.
+Die Kronecker"=Deltas sind die Einträge der Einheitsmatrix.
 Es ist noch zu überprüfen, ob $J^{-1}$ wirklich die inverse Matrix
 von $J$ ist. Das schafft die Rechnung
 \begin{gather*}
@@ -2516,7 +2537,7 @@ v^\flat = (\sum_k v^k e_k)^\flat
 \omega^\sharp = (\sum_k \omega_k\mathrm dx^k)^\sharp
 = \sum_{k,i} g^{ki}\omega_k\mathrm e_i.
 \end{gather*}
-Die Cartan-Ableitung eines Skalarfeldes $a$ berechnet man in
+Die Cartan"=Ableitung eines Skalarfeldes $a$ berechnet man in
 kartesischen Koordinaten mit
 $\mathrm da = \nabla^\flat a$. 
 Man kann jetzt auf beiden Seiten der Gleichung heben und erhält
@@ -2846,9 +2867,9 @@ Mit dieser Formel findet man
 
 \subsection{Die Volumenform}
 
-Wir wollen den Hodge-Stern-Operator definieren. Da dieser Operator
+Wir wollen den Hodge"=Stern"=Operator definieren. Da dieser Operator
 etwas kompliziert ist, wollen wir das zunächst auf Orthonormalbasen
-beschränken. Der Hodge-Operator ist linear, es ist
+beschränken. Der Hodge"=Operator ist linear, es ist
 $*(v+w) = *v+*w$ und $*(rv)=r(*v)$.
 
 Sei $n$ die Dimension des Raums. Man definiert
@@ -2980,7 +3001,7 @@ Damit erhält man
 \begin{equation}
 *{*A} = (-1)^{r(n-r)}A.
 \end{equation}
-Wie berechnet man den Hodge-Operator nun, wenn man keine
+Wie berechnet man den Hodge"=Operator nun, wenn man keine
 Orthonormalbasis hat?
 
 Ab jetzt sollen die $e_k$ nicht mehr unbedingt ein Orthonormalsystem
@@ -3337,7 +3358,7 @@ Adjunktion $H$ als
 \begin{bmatrix}a_1\\ a_2\end{bmatrix}^H
 = [\overline a_1,\overline a_2].
 \end{equation}
-In Bra-Ket-Notation ist also $\langle a|^H=|a\rangle$ und
+In Bra"=Ket"=Notation ist also $\langle a|^H=|a\rangle$ und
 $|a\rangle^H=\langle a|$. Die Adjunktion soll auch für eine Matrix
 definiert werden. Sei
 \begin{equation}
@@ -3785,7 +3806,7 @@ D^{-a}\{f(x)\}
 = \frac{1}{\Gamma(a)}
 \int_0^x (x-t)^{a-1}f(t)\,\mathrm dt.
 \end{equation}
-Dieser Operator heißt Riemann-Liouville-Integral und stellt
+Dieser Operator heißt Riemann"=Liouville"=Integral und stellt
 einen fraktionalen Integraloperator dar.
 
 Betrachtet man $\exp(hD)$ anstelle von $D^a$, so gelangt man
@@ -3861,7 +3882,8 @@ Das Stieltjes"=Integral ist
 \end{equation}
 Die verallgemeinerte Regel zur partiellen Integration ist
 \[\int_a^b f(x)\,\mathrm dg(x) = [f(x)g(x)]_a^b - \int_a^b g(x)\,\mathrm df(x).\]
-Das Stieltjes-Integral ist linear im Integranden und im Integrator. Es ist
+Das Stieltjes"=Integral ist linear im Integranden und im Integrator.
+Es ist
 \begin{gather}
 \mathrm d(g(x)+h(x)) = \mathrm dg(x)+\mathrm dh(x),\\
 \mathrm d(cg(x)) = c\,\mathrm dg(x).
@@ -4034,7 +4056,7 @@ A^n v(x) = v(f^n(x)).
 \end{equation}
 Diese Gleichung stellt eine Beziehung zwischen der Matrixpotenz und
 der Iteration von $f$ dar. Die Matrix $A(f)$ wird
-\textit{Carleman-Matrix}
+\textit{Carleman"=Matrix}
 der Funktion $f$ genannt. Anders ausgedrückt erhält man die Formeln
 $A(f\circ g) = A(f)A(g)$ und $A(f^n)=A(f)^n$.
 Wegen $f(x)=[A(f)]_1v(x)$ erhält man
@@ -4231,7 +4253,7 @@ Ein solches Zufallsexperiment bezeichnet man als
 kompliziertere Systeme, wie endliche Automaten oder zelluläre
 Automaten, mit Zufall behaften.
 
-Eine solche Markov-Kette wird als Gedächtnislos bezeichnet, da
+Eine solche Markov"=Kette wird als Gedächtnislos bezeichnet, da
 die Wahrscheinlichkeiten für den Übergang in einen anderen Zustand
 nur vom aktuellen Zustand abhängig sind.
 
@@ -4264,7 +4286,7 @@ f(z) = f(x+\ui y) = u(x,y)+\ui v(x,y).
 Somit lässt sich $f$ als Vektorfeld auffassen, welches jedem Tupel
 $(x,y)$ ein Tupel $(u,v)$ zuordnet. Die Funktion $f$ ist
 holomorph, wenn sie als Vektorfeld total differenzierbar ist und
-wenn $u,v$ die Cauchy-Riemannschen Differen"-tialgleichungen
+wenn $u,v$ die Cauchy"=Riemannschen Differen"=tialgleichungen
 erfüllen. Die Differentialgleichungen sind $D_x u=D_y v$ und
 $D_y u = -D_x v$.
 
