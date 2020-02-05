@@ -1,18 +1,27 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{article}
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
-%
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-%
-\usepackage{ngerman}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{color}
-\definecolor{c1}{RGB}{60,00,40}
-\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage{booktabs}
+
+% \usepackage{color}
+% \definecolor{c1}{RGB}{60,00,40}
+% \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
+\geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
+\addtokomafont{disposition}{\rmfamily}
+\newcommand{\bvec}[1]{\underline{#1}}
+\newcommand{\ee}{\mathrm{e}}
+
 \begin{document}
 \thispagestyle{empty}
 
@@ -23,17 +32,15 @@ Summenformel}
 \par
 \end{huge}
 
-% \tableofcontents
-% \newpage
 
 \section{Klassische Methode}
 
 Man schreibt die Summe einmal in Reihenfolge und einmal in
-umgekehrter Reihenfolge auf. Beides addiert man summandenweise.
+umgekehrter Reihenfolge auf. Beides addiert man summandenweise:%
 \begin{gather*}
-s = 1+2+\ldots+(n-1)+n\\
-s = n+(n-1)+\ldots+2+1\\
-2s = (n+1)+(n+1)+\ldots+(n+1)+(n+1)
+s = 1+2+\ldots+(n-1)+n,\\
+s = n+(n-1)+\ldots+2+1,\\
+2s = (n+1)+(n+1)+\ldots+(n+1)+(n+1).
 \end{gather*}
 Man hat also $2s=n(n+1)$. Damit erhält man
 \[s = \frac{n}{2}(n+1).\]
@@ -46,21 +53,22 @@ interpretieren. Zuerst ein Quadrat, daneben zwei übereinander,
 daneben dann drei übereinander, usw.
 Daher muss die Summe ungefähr $n^2/2$ sein. Da man Treppenstufen
 hat und keine gerade Linie, kommen noch $n$ kleine Dreiecke mit
-dem Flächeninhalt $1/2$ hinzu. Man erhält
+dem Flächeninhalt $1/2$ hinzu. Man erhält%
 \[A = \frac{n^2}{2}+\frac{n}{2} = \frac{n}{2}(n+1).\]
 
 
 \section{Vervollständigung}
 
 Man stellt sich wieder ein Treppenranddreieck vor.
-Zuerst ein Quadrat, daneben zwei übereinander, daneben dann drei übereinander, usw.
-Nun macht man die Beobachtung, dass man das Treppenranddreieck mit
-einem zweiten Treppenranddreieck, das eine Säule weniger hat,
-zu einem großen Quadrat vervollständigen kann. Es ist also
+Zuerst ein Quadrat, daneben zwei übereinander, daneben dann drei
+übereinander, usw. Nun macht man die Beobachtung, dass man das
+Treppenranddreieck mit einem zweiten Treppenranddreieck, das eine
+Säule weniger hat, zu einem großen Quadrat vervollständigen kann.
+Es ist also%
 \[s_n+s_{n-1} = n^2.\]
 Nimmt man nun noch die Rekursionsgleichung $s_{n}=s_{n-1}+n$,
-so kann man $s_{n-1}$ eliminieren und erhält $2s_n-n = n^2$
-und nach Umformung schließlich
+so kann man $s_{n-1}$ eliminieren und erhält $2s_n-n = n^2$,
+und nach Umformung schließlich%
 \[s_n = \frac{n}{2}(n+1).\]
 
 
@@ -68,12 +76,12 @@ und nach Umformung schließlich
 
 Man beobachtet, dass die Summe der ersten ungeraden Zahlen immer
 eine Quadratzahl ist. Macht man eine Wertetabelle, so findet man leicht
-die Formel
+die Formel%
 \[\sum_{k=1}^n (2k-1) = n^2.\]
 Nun ist aber
 \begin{gather*}
 \sum_{k=1}^n (2k-1) = 2\sum_{k=1}^n k - \sum_{k=1}^n 1
-= -n+2\sum_{k=1}^n k
+= -n+2\sum_{k=1}^n k.
 \end{gather*}
 Damit ergibt sich
 \[2\sum_{k=1}^n k = n^2+n.\]
@@ -90,7 +98,7 @@ der abgezogen werden muss, um zum richtigen Ergebnis zu kommen.
 \section{Pascalsches Dreieck}
 
 Man betrachtet das pascalsche Dreieck und sieht, dass
-die Summen auf der dritten Diagonalen liegen. Es ergibt sich
+die Summen auf der dritten Diagonalen liegen. Es ergibt sich%
 \begin{gather*}
 s = \binom{n+1}{2} = \frac{(n+1)!}{2!(n+1-2)!}\\
 = \frac{(n+1)n(n-1)!}{2(n-1)!} = \frac{n}{2}(n+1).
@@ -99,35 +107,41 @@ s = \binom{n+1}{2} = \frac{(n+1)!}{2!(n+1-2)!}\\
 
 \section{Interpolation}
 
-Sei $s_p(n+1)=s_p(n)+a_n$ mit $a_k=k^p$ und $s_p(0)=0$. Es ist nun so, dass sich $s_p(n)$ als Polynom vom Grad $p+1$ schreiben lässt, welches ja zwingend durch den Nullpunkt gehen muss. Mit diesem Wissen können wir das Polynom mit weiteren $p+1$ Punkten interpolieren.
+Sei $s_p(n+1)=s_p(n)+a_n$ mit $a_k=k^p$ und $s_p(0)=0$. Es ist nun so,
+dass sich $s_p(n)$ als Polynom vom Grad $p+1$ schreiben lässt, welches
+ja zwingend durch den Nullpunkt gehen muss. Mit diesem Wissen können
+wir das Polynom mit weiteren $p+1$ Punkten interpolieren.
 
-Wir haben $s(1)=1$ und $s(2)=3$. Mit dem Ansatz
+Wir haben $s(1)=1$ und $s(2)=3$. Mit dem Ansatz%
 \[s(n)=c_2n^2+c_1n.\]
 erhält man $1=c_2+c_1$ und $3=4c_2+2c_1$. Das lineare
 Gleichungssystem hat die Lösungen $c_1=1/2$ und $c_2=1/2$.
-Damit ergibt sich
+Damit ergibt sich%
 \[s=\frac{1}{2}n^2+\frac{1}{2}n = \frac{n}{2}(n+1).\]
 
-\newpage
+
 \section{Interpolationsformel}
 
 Zum Interpolieren wird man besser die Lagrange-Interpolation oder
 die Newton-Interpolation verwenden. Da man aber immer äquidistante
-Abstände der Stellen wählen kann, lässt sich die hübsche Formel
+Abstände der Stellen wählen kann, lässt sich die hübsche Formel%
 \[f(n) = \sum_{k=0} \frac{(\Delta^k f)(0)}{k!}n^{\underline k}\]
 mit $(\Delta f)(n):=f(n+1)-f(n)$ verwenden.
 Mit $n^{\underline k}$ ist die absteigende Faktorielle gemeint.
 
-Man Berechnet nun
-folgende Wertetabelle.
-
-\begin{tabular}{r|r|r|r|r|r}
+Man Berechnet nun die folgende Wertetabelle:
+\begin{table}[h]
+\qquad\begin{tabular}{@{\;}rrrrrr@{\;}}
+\toprule
 $n$    & 0 & 1 & 2 & 3 & 4\\
 $f(n)$ & 0 & 1 & 3 & 6 & 10\\
 $\Delta f(n)$ & 1 & 2 & 3 & 4\\
-$\Delta^2 f(n)$ & 1 & 1 & 1
+$\Delta^2 f(n)$ & 1 & 1 & 1\\
+\bottomrule
 \end{tabular}
+\end{table}
 
+\noindent
 Damit ergibt sich
 \begin{gather*}
 f(n) = \frac{0}{1!} + \frac{1}{1!}n + \frac{1}{2!}n(n-1)
@@ -139,7 +153,8 @@ f(n) = \frac{0}{1!} + \frac{1}{1!}n + \frac{1}{2!}n(n-1)
 Der Hauptsatz lautet
 \[\sum_{k=a}^{b-1} \Delta f(k) = [f(x)]_a^b = f(b)-f(a).\]
 Außerdem gilt die Formel $\Delta x^{\underline n} = nx^{\underline n-1}$.
-Mit $x^{\underline n}$ ist die absteigende Faktorielle gemeint. Man rechnet nun
+Mit $x^{\underline n}$ ist die absteigende Faktorielle gemeint.
+Man rechnet nun%
 \begin{gather*}\sum_{k=0}^{n} k = \sum_{k=0}^{n} k^{\underline 1}
 = \frac{1}{2}[x^{\underline{2}}]_0^{n+1}\\
 = \frac{1}{2}[x(x-1)]_0^{n+1}
@@ -164,17 +179,17 @@ Man erhält
 
 \section{Geometrische Methode}
 
-Die Summe lässt sich als Skalarprodukt von zwei Vektoren im Koordinatenraum interpretieren. Es ist
-\[\sum_{k=1}^n k = \langle \underline a,\underline b\rangle
+Die Summe lässt sich als Skalarprodukt von zwei Vektoren im
+Koordinatenraum interpretieren. Es ist%
+\[\sum_{k=1}^n k = \langle \bvec a,\bvec b\rangle
 = \langle (1,2,\ldots,n),(1,1,\ldots,1)\rangle.\]
-Man benutzt nun die erste binomische Formel
-\[|\underline a+\underline b|^2
-= |\underline a|^2+2\langle\underline a,\underline b\rangle
-+|\underline b|^2.\]
+Man benutzt nun die erste binomische Formel%
+\[|\bvec a+\bvec b|^2
+= |\bvec a|^2+2\langle\bvec a,\bvec b\rangle +|\bvec b|^2.\]
 Mit dieser Formel ist
 \begin{gather*}
-2\langle\underline a,\underline b\rangle
-= |\underline a+\underline b|^2-|\underline a|^2-|\underline b|^2\\
+2\langle\bvec a,\bvec b\rangle
+= |\bvec a+\bvec b|^2-|\bvec a|^2-|\bvec b|^2\\
 = \sum_{k=1}^n (k+1)^2-\sum_{k=1}^n k^2-n\\
 = \sum_{k=1}^n k^2+(n+1)^2-1-\sum_{k=1}^n k^2-n\\
 = (n+1)^2-1-n = n^2+2n+1-1-n\\
@@ -185,7 +200,7 @@ Man erhält also
 
 \section{Ableitungsmethode}
 
-Mit der Summe der geometrischen Folge erhält man
+Mit der Summe der geometrischen Folge erhält man%
 \[s=q\frac{\mathrm d}{\mathrm dq} \frac{q^{n+1}-1}{q-1}
 = q\frac{\mathrm d}{\mathrm dq}
 \sum_{k=0}^n q^k = \sum_{k=0}^n kq^k.\]
@@ -195,7 +210,7 @@ s=\frac{q(n+1)q^n(q-1)-q(q^{n+1}-1)}{(q-1)^2}\\
 = \frac{(n+1)(q^{n+2}-q^{n+1})-(q^{n+2}-q)}{(q-1)^2}\\
 = \frac{nq^{n+2}-(n+1)q^{n+1}+q}{(q-1)^2}.
 \end{gather*}
-Die zweimalige Anwendung der Regel von l'Hospital bringt
+Die zweimalige Anwendung der Regel von l'Hospital bringt%
 \begin{gather*}
 \lim_{q\rightarrow 1}s = \lim_{q\rightarrow 1}
 \frac{n(n+2)(n+1)q^n-n(n+1)^2q^{n-1}}{2}\\
@@ -205,15 +220,13 @@ Die zweimalige Anwendung der Regel von l'Hospital bringt
 = \frac{n}{2}(n+1).
 \end{gather*}
 
-
-
 %\newpage
 \section{Stieltjes-Integral}
 
 Man wandelt die Summe zunächst in ein Stieltjes"=Integral um. Es ist
 \[\sum_{k=1}^n f(k) = \int_0^n f(x)\,\mathrm d\lfloor x\rfloor.\]
 Nun schaut man sich an, wie dieses Integral von einem gewöhnlichen
-Integral abweicht. Man rechnet
+Integral abweicht. Man rechnet%
 \begin{gather*}
 \int_0^x f(x)\,\mathrm d\lfloor x\rfloor - \int_0^n f(x)\,\mathrm dx\\
 = \int_0^n f(x)\,\mathrm d(\lfloor x\rfloor-x)\\
@@ -228,7 +241,7 @@ Für $f(k)=k$ wird der Integrand im zweiten Integral zu
 $g(x)=x-\lfloor x\rfloor$. Die Fläche unter dem Graphen von $g(x)$
 besteht jedoch aus Dreiecken. Der gesamte Flächeninhalt unter $g(x)$
 ist also der Flächeninhalt eines Dreiecks (1/2) multipliziert
-mit der Anzahl der Dreiecke ($n$ Stück). Es ergibt sich
+mit der Anzahl der Dreiecke ($n$ Stück). Es ergibt sich%
 \begin{gather*}
 \sum_{k=1}^n k = \int_0^n x\,\mathrm dx
 +\int_0^n (x-\lfloor x\rfloor)\,\mathrm dx\\
@@ -237,35 +250,35 @@ mit der Anzahl der Dreiecke ($n$ Stück). Es ergibt sich
 
 \section{Erzeugende Funktionen}
 
-Als Hilfsmittel benötigt man die Formel
-\[\frac{1}{(1-x)^n} = \sum_{k=0}^{\infty} \binom{n+k-1}{k} x^k.\]
+Als Hilfsmittel benötigt man die Formel%
+\[\frac{1}{(1-x)^n} = \sum_{k=0}^{\infty} \binom{n+k-1}{k}\,x^k.\]
 Mit dieser Formel erhält man
 \begin{gather*}
 \frac{x}{(1-x)^2} = x\sum_{k=0}^{\infty} (k+1)x^k
 = \sum_{k=1}^{\infty} kx^k,\\
-\frac{x}{(1-x)^3} = x\sum_{k=0}^{\infty} \binom{k+2}{k} x^k
-= \sum_{k=1}^{\infty} \binom{k+1}{k-1}x^k.
+\frac{x}{(1-x)^3} = x\sum_{k=0}^{\infty} \binom{k+2}{k}\,x^k
+= \sum_{k=1}^{\infty} \binom{k+1}{k-1}\,x^k.
 \end{gather*}
-Die Dreieckszahlen erhält man mit der Rekursionsformel
+Die Dreieckszahlen erhält man mit der Rekursionsformel%
 \begin{gather*}
 s_k=s_{k-1}+k,\\
 s_0=0.
 \end{gather*}
 Man multipliziert die Formel auf beiden Seiten mit $x^k$
-und summiert ab $k=1$ auf. Die Gleichung lautet dann
+und summiert ab $k=1$ auf. Die Gleichung lautet dann%
 \[\sum_{k=1}^{\infty} s_k x^k
 = \sum_{k=1}^{\infty} s_{k-1}x^k + \sum_{k=1}^{\infty} kx^k.\]
 Die Summe auf der linken Seite kürzt man mit $A(x)$ ab.
-Die Gleichung wird umgeschrieben zu
+Die Gleichung wird umgeschrieben zu%
 \[A(x) = xA(x) + \frac{x}{(1-x)^2}.\]
 Umformung nach $A(x)$ bringt die erzeugende Funktion der
-Dreieckszahlen in expliziter Form. Es ist
+Dreieckszahlen in expliziter Form. Es ist%
 \[A(x) = \frac{x}{(1-x)^3}.\]
 Damit ergibt sich
 \begin{gather*}
 s_n = \binom{n+1}{n-1} = \frac{(n+1)!}{2(n-1)!}.
 \end{gather*}
-Mit der Rekursionsformel der Fakultät erhält man
+Mit der Rekursionsformel der Fakultät erhält man%
 \begin{gather*}
 s_n = \frac{1}{2}(n+1)n\frac{(n-1)!}{(n-1)!}
 = \frac{n}{2}(n+1).
@@ -274,7 +287,9 @@ s_n = \frac{1}{2}(n+1)n\frac{(n-1)!}{(n-1)!}
 \section{Z-Transformation}
 
 Diese Methode ist zur Methode mit den erzeugenden
-Funktionen äquivalent.
+Funktionen äquivalent. Eine erzeugende Funktion von der
+Variable $x$ geht über die Substitution $x=1/z$ in
+eine Z"=Transformierte über.
 
 \section{Operatormethode}
 
@@ -287,16 +302,16 @@ gilt die Formel
 \[[If](n) = f(n) = \Delta\sum_{k=0}^{n-1}f(k)
 = [\Delta\Delta^{-1}f](n).\]
 Der Differenzenoperator kann aufgespalten werden in
-Verschiebeoperator und Identitätsoperator, es gilt
-\[\Delta = e^D-I.\]
-Bildet man nun formal auf beiden Seiten den Kehrwert, so erhält
-man
-\[\Delta^{-1} = \frac{I}{e^D-I} = \frac{D}{e^D-I}D^{-1}.\]
+Verschiebeoperator und Identitätsoperator, es gilt%
+\[\Delta = \ee^D-I.\]
+Bildet man nun formal auf beiden Seiten den Kehrwert,
+so erhält man%
+\[\Delta^{-1} = \frac{I}{\ee^D-I} = \frac{D}{\ee^D-I}D^{-1}.\]
 Nun gilt die Formel
-\[\frac{x}{e^x-1} = \sum_{k=0}^\infty \overline{B}_k \frac{x^k}{k!}.\]
+\[\frac{x}{\ee^x-1} = \sum_{k=0}^\infty \overline{B}_k \frac{x^k}{k!}.\]
 Mit $\overline{B}_k$ sind die Bernoulli"=Zahlen mit
 $\overline{B}_1=-1/2$ gemeint.
-Der inverse Operator zur Ableitung ist das Integral, es gilt
+Der inverse Operator zur Ableitung ist das Integral, es gilt%
 \[[D^{-1}f](n) = \int_0^n f(x)\,\mathrm dx.\]
 Damit erhält man die Formel
 \begin{gather*}
@@ -314,9 +329,10 @@ Für $f(x)=x$ ergibt sich damit
 = \frac{1}{2}(n-1)n.
 \end{gather*}
 Inkrementiert man $n$ auf beiden Seiten, so ergibt sich das
-gesuchte Resultat
+gesuchte Resultat%
 \[\sum_{k=0}^n k = \frac{n}{2}(n+1).\]
 
+\newpage
 \section*{Literatur}
 
 \noindent
@@ -337,7 +353,7 @@ Addison-Wesley (1988), 2. Auflage 1994.
 
 \vspace{1em}\noindent
 [4] Martin Infinite: »\emph{Vollständige Indoktrination}«.\\
-Auf: Matroids Matheplanet (23. März 2016).
+Matroids Matheplanet (23. März 2016).
 
 \end{document}
 
