@@ -1,8 +1,11 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
 \usepackage{microtype}
-\usepackage{lmodern}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\addtokomafont{disposition}{\rmfamily}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -11,16 +14,25 @@
 \definecolor{c1}{RGB}{00,40,60}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
+\geometry{a4paper,left=25mm,right=12mm,top=24mm,bottom=28mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
+
 \newcommand{\ui}{\mathrm i}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\sgn}{\operatorname{sgn}}
 \begin{document}
+\thispagestyle{empty}
 
 \noindent
-{\LARGE\sffamily\bfseries Aufzeichnungen zur Physik}
+{\LARGE\normalfont\bfseries Aufzeichnungen zur Physik}
 \tableofcontents
 
 \section{Quantenmechanik}
@@ -243,7 +255,7 @@ anstelle von $(9.2\pm 0.4)\mathrm V$ auch angeben
 Diese Angabe ist \textit{nicht} scheingenau, da die Grenzabweichung
 mit angegeben ist.
 
-\newpage
+
 \section{Regelungstechnik}
 \subsection{Inertgaseinleitung}
 In einen Raum mit Volumen $V$ wird während einer kleinen
@@ -281,7 +293,7 @@ V\varphi_{n+1} &= V\varphi_n+(\varphi_c-\varphi_n)\Delta V,\\
 \varphi_{n+1} &= \varphi_n+(\varphi_c-\varphi_n)\frac{\Delta V}{V}.
 \end{align}
 Es ist nun so, dass \eqref{eq:Inertgas-Euler-Verfahren} gerade
-dem Euler-Verfahren bezüglich einer Dgl. entspricht. Mit
+dem Euler"=Verfahren bezüglich einer Dgl. entspricht. Mit
 \begin{equation}
 \Delta\varphi = \varphi_{n+1}-\varphi_{n}
 \end{equation}
@@ -314,8 +326,8 @@ Ableitung nach $y$ und ist somit erst recht Lipschitz-stetig
 bezüglich $y$. Nach dem Satz von Picard-Lindelöf muss das AWP
 eine eindeutig bestimmte globale Lösung besitzen.
 
-Das AWP lässt sich mit der Trennung der Veränderlichen und
-der Substitutionsregel lösen. Es ergibt sich%
+Das AWP lässt sich mit dem Ansatz \emph{Trennung der Veränderlichen}
+und der Substitutionsregel lösen. Es ergibt sich%
 \begin{align}
 \int_{y_0}^y \frac{\mathrm dy}{ay+b} &= \int_{t_0}^t\mathrm{dt},\\
 \frac{1}{a}\ln\Big|\frac{ay+b}{ay_0+b}\Big| &= t-t_0,\\
