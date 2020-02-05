@@ -16,6 +16,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Zeiger">Ungezügelte Zeiger</a>
+<li><a href="#Korrektheit">Korrektheit eines Typsystems</a>
 <li><a href="#Affin">Affine Typisierung</a>
 <li><a href="#Regional">Regionale Typisierung</a>
 </ol>
@@ -39,9 +40,9 @@ von einem gültigen Zustand in den nächsten übergeht. Es kann nun
 Operationen geben die einen Übergang in einen ungültigen Zustand
 erlauben. Das korrekte Arbeiten des Systems mag aber empfindlich
 davon abhängen, sich immer in gültigen Zuständen zu bewegen.
-Dieses korrekte Arbeiten nennt man Integrität des Systems. Verlust
-der Integrität bedeutet im besten Fall dass das System nach kurzer
-Zeit abstürzt. Problematischer ist es, wenn bis zum Absturz eine
+Dieses korrekte Arbeiten nennt man <i>Integrität</i> des Systems.
+Verlust der Integrität bedeutet im besten Fall dass das System nach
+kurzer Zeit abstürzt. Problematischer ist es, wenn bis zum Absturz eine
 lange Zeit vergeht, was mit einer Verschleierung der Ursache des
 Problems einhergehen kann. Im schlimmsten Fall findet ein Angreifer
 oder eine Schadsoftware eine Sicherheitslücke die zur
@@ -50,7 +51,7 @@ Kompromittierung des Systems führt.
 <p>Bei der Ausführung von Programmen gibt es auf der untersten Ebene
 eine grundlegende Form von Integrität, die Gewährleistung dieser
 wird als <i>Speichersicherheit</i> (memory safety) bezeichnet.
- Beim Arbeiten mit Zeigern gibt es eine Reihe von
+Beim Arbeiten mit Zeigern gibt es eine Reihe von
 unerlaubten Operationen, welche die Speichersicherheit
 unterminieren:
 
@@ -92,6 +93,39 @@ und so weiter. Es entstehen komplexe Datenstrukturen die man auch
 als gerichtete Graphen betrachten kann. Ein Zeiger ist dabei ein
 Pfeil von einem Knoten zu einem anderen. Diese Graphen können
 auch Zyklen enthalten, man spricht dann von zyklischen Datenstrukturen.
+
+<h2 id="Korrektheit">Korrektheit eines Typsystems</h2>
+
+<p>Es ist möglich das Typsystem so zu gestalten, dass es das sichere
+Arbeiten mit Zeigern erlaubt. Zur Einordnung klären wir zunächst
+ein paar allgemeine Grundbegriffe.
+
+<p>Ein Typsystem das in jedem Zustand nur solche Operationen
+zulässt, die die Integrität des Laufzeitsystems bewahren, heißt
+<i>korrekt</i> (sound) oder <i>typsicher</i> (type safe).
+Legt man das Verhalten eines Laufzeitsystems, das in einen ungültigen
+Zustand geraten ist, nicht weiter fest, spricht man von
+<i>undefiniertem Verhalten</i> (undefined behavior). Nämlich kann das
+genaue Verhalten ab einem ungültigen Zustand in der Implementation des
+Laufzeitsystems festgelegt sein. Dies ist dann ein technisches
+Detail des Laufzeitsystems, gehört bei diesem Ansatz also nicht
+mehr zur Spezifikation der Programmiersprache. Daher legt man das
+Verhalten als undefiniert fest, damit sich das Laufzeitsystem
+aussuchen kann was dann zu tun ist.
+
+<p>Nur weil ein Typsystem korrekt ist, muss das nicht heißen,
+dass der Compiler dieses auch fehlerfrei umsetzt. Wie jede andere
+Software auch, kann ein Compiler alle möglichen Arten von Bugs
+enthalten. Ein Compiler der eine fehlerlose Typprüfung vornimmt
+und Maschinencode erzeugt, welcher der geforderten formalen
+Semantik entspricht, wird <i>zertifizierend</i> genannt.
+Die Programmierung eines zertifizierenden Compilers gilt als
+schwierig, man benötigt hierzu einen Theorembeweisassistent.
+Entsprechend wenige solcher Compiler sind verfügbar. Auch für Rust
+ist das Zukunftsmusik, denn der Rust-Compiler ist recht komplex,
+womit ein solches Unterfangen zur Mammut-Aufgabe wird. Man muss dabei
+beachten, dass ein entsprechender Beweis auch für das Compiler-Backend
+(den Code-Erzeuger) erbracht werden muss.
 
 <h2 id="Affin">Affine Typisierung</h2>
 

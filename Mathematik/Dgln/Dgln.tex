@@ -1,13 +1,24 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,openany]{scrartcl}
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside,openany]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{ngerman}
+\usepackage[ngerman]{babel}
+\usepackage{amsthm}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[scaled=0.80]{DejaVuSans}
+\usepackage[scaled=0.80]{DejaVuSansMono}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsthm}
 \usepackage{textcomp}
 \usepackage{microtype}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -15,7 +26,7 @@
 \definecolor{c3}{RGB}{80,120,180}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=34mm}
+\geometry{a4paper,left=25mm,right=10mm,top=22mm,bottom=32mm}
 \setlength{\columnsep}{4mm}
 \usepackage{lipsum}
 \usepackage{multicol}
@@ -62,8 +73,14 @@
 \DeclareMathOperator*{\diag}{diag}
 \DeclareMathOperator*{\Eig}{Eig}
 
-\theoremstyle{definition}
+\newtheoremstyle{defstyle}%
+  {}{}{}{}%
+  {\normalfont\sffamily\bfseries}{.}{2pt plus 1pt minus 1pt}%
+  {}
+
+\theoremstyle{defstyle}
 \newtheorem{Definition}{Definition}
+\numberwithin{Definition}{section}
 
 \begin{document}
 \setlength{\abovedisplayskip}{6pt}
@@ -93,31 +110,31 @@ Inhaltsverzeichnis}
 \subsection{Notation}
 Manchmal werden aus pragmatischen Gründen unpräzise Schreibweisen
 gewählt. Wenn eine Variable beim bestimmten Integral sowohl als Grenze
-als auch als Integrationsvariable auftaucht, so definiert man
+als auch als Integrationsvariable auftaucht, so definiert man%
 \begin{equation}
 \int_a^x f(x)\,\mathrm dx := \int_a^x f(t)\,\mathrm dt.
 \end{equation}
 Es gibt auch Ausdrücke, wo eine solche ungenaue Schreibweise gar nicht
-möglich ist. Z.\,B. bei
+möglich ist. Z.\,B. bei%
 \begin{equation}
 \int_a^x f(xt)\,\mathrm dt.
 \end{equation}
 Beim Lösen von Differentialgleichungen
-wird an vielen Stellen die Substitutionsregel
+wird an vielen Stellen die Substitutionsregel%
 \begin{equation}
 \int_a^b f(g(x))\,g'(x)\,\mathrm dx
 = \int_{g(a)}^{g(b)} f(u)\,\mathrm du
 \end{equation}
-verwendet. Oft schreibt man dabei auch
+verwendet. Oft schreibt man dabei auch%
 \begin{equation}
 g'(x)\,\mathrm dx = u'(x)\,\mathrm dx
 = \frac{\mathrm du}{\mathrm dx}\,\mathrm dx
 = \mathrm du.
 \end{equation}
 Bei dieser ungenauen Schreibweise wird $\mathrm dx$ einfach
-{\glqq}gekürzt{\grqq}. Hier darf die Substitution bei den
+»gekürzt«. Hier darf die Substitution bei den
 Integralgrenzen nicht vergessen werden. Wird $u=g(x)$ substituiert,
-so ist $g^{-1}(u)=x$ und man schreibt präziser
+so ist $g^{-1}(u)=x$ und man schreibt präziser%
 \begin{equation}
 \int_a^b = \int_{x=a}^{x=b} = \int_{g^{-1}(u)=a}^{g^{-1}(u)=b}
 = \int_{u=g(a)}^{u=g(b)}
@@ -125,25 +142,25 @@ so ist $g^{-1}(u)=x$ und man schreibt präziser
 Die Substitutionsregel verlangt übrigens (anders als der
 Transformationssatz) nicht, dass $g$ invertierbar ist.
 
-Noch etwas: Normalerweise schreibt man den Hauptsatz als
+Noch etwas: Normalerweise schreibt man den Hauptsatz als%
 \begin{equation}
 \int_a^b y'\,\mathrm dx = y(b)-y(a).
 \end{equation}
-Man kann aber auch die Differentiale {\glqq}kürzen{\grqq},
-vergisst nicht die Grenzen zu substituieren, und schreibt dann
+Man kann aber auch die Differentiale »kürzen«,
+vergisst nicht die Grenzen zu substituieren, und schreibt dann%
 \begin{equation}
 \int_a^b \frac{\mathrm dy}{\mathrm dx}\,\mathrm dx
 = \int_{y(a)}^{y(b)}\mathrm dy.
 \end{equation}
 Auch in der Theorie gewöhnlicher Differentialgleichungen werden
 partielle Ableitungen auftreten. Für partielle Ableitungen soll
-auch die eulersche Schreibweise Verwendung finden. Man definiert
+auch die eulersche Schreibweise Verwendung finden. Man definiert%
 \begin{equation}
 D_x := \frac{\partial}{\partial x},\quad
 D_y := \frac{\partial}{\partial y}.
 \end{equation}
 Wenn die Variablen mit einem Index nummeriert werden, so
-tut man das bei den partiellen Ableitungen ebenfalls und schreibt
+tut man das bei den partiellen Ableitungen ebenfalls und schreibt%
 \begin{equation}
 D_k := \frac{\partial}{\partial x_k}.
 \end{equation}
@@ -157,7 +174,7 @@ deren Lösungsmenge nicht aus Zahlen besteht, sondern aus Funktionen.
 
 \begin{Definition}
 Sei $f\colon D\to Z$. Eine \emph{Funktionalgleichung} ist
-eine Bestimmungsgleichung der Form
+eine Bestimmungsgleichung der Form%
 \begin{equation}\label{eq:Funktionalgleichung}
 \forall x{\in}D\colon\;H(x,f)=0
 \end{equation}
@@ -180,14 +197,14 @@ Wir wollen uns daher zunächst auf reelle Funktionen beschränken.
 
 An dieser Stelle sei noch angemerkt, dass
 \eqref{eq:Funktionalgleichung} auch eine Verallgemeinerung der
-impliziten Beschreibung einer Funktion ist. Man spezifiziert dazu
+impliziten Beschreibung einer Funktion ist. Man spezifiziert dazu%
 \begin{equation}
 H(x,f) := F(x,f(x)),\quad F\colon D\times Z\to G^m.
 \end{equation}
 Auch Rekursionsgleichungen sind Spezialfälle von
 Funktionalgleichungen. Wähle dazu $f\colon\N\to Z$, d.\,h. $f$ soll
 eine Folge sein. Eine Rekursionsgleichung erster Ordnung erhält man
-nun durch die Festlegung
+nun durch die Festlegung%
 \begin{equation}
 H(x,f) := f(x)-g(x,f(x-1)).
 \end{equation}
@@ -195,7 +212,7 @@ Es ist nun so, dass irgendwo in der Berechnung von $H(x,f)$
 Differentialoperatoren enthalten sein können. Wir wollen nun,
 dass ausschließlich solche Operatoren verwendet werden
 und schränken die Struktur von \eqref{eq:Funktionalgleichung}
-durch die Festlegung
+durch die Festlegung%
 \begin{equation}
 H(x,f) := g(x,(Df)(x),(D^2 f)(x),\ldots,(D^n f)(x))
 \end{equation}
@@ -204,16 +221,16 @@ der einer Funktion ihre erste Ableitung zuordnet. Dann ist $D^2$ die
 zweite Ableitung usw. Eine solche Gleichung wird dann als
 \emph{Differentialgleichung} bezeichnet. Wichtig ist hierbei,
 dass nur die Ableitungen an der Stelle $x$ betrachtet werden.
-Z.\,B. sind Funktionalgleichungen der Form
+Z.\,B. sind Funktionalgleichungen der Form%
 \begin{equation}
 H(x,f) := g(x,(Df)(x),(Df)(x-1))
 \end{equation}
 darin nicht enthalten.
 \begin{Definition}
 Eine \emph{implizite Differentialgleichung} der Ordnung $n$
-ist eine Gleichung der Form
+ist eine Gleichung der Form%
 \begin{equation}
-\forall x\colon g(x,y_0,y_1,y_2,\ldots,y_n)=0.
+\forall x\colon g(x,y_0,y_1,y_2,\ldots,y_n)=0
 \end{equation}
 mit $y_k=(D^k f)(x)$. Dabei sollen zunächst nur solche Funktionen $f$
 in Frage kommen, die auf einem offenen Definitionsbereich
@@ -224,7 +241,7 @@ Manchmal lässt sich eine implizite Differentialgleichung
 in eine explizite Form bringen.
 \begin{Definition}
 Eine \emph{explizite Differentialgleichung} der Ordnung $n$
-ist eine Gleichung der Form
+ist eine Gleichung der Form%
 \begin{equation}
 \forall x\colon y_n = g(x,y_0,y_1,\ldots,y_{n-1})
 \end{equation}
@@ -237,31 +254,31 @@ Man betrachte das Anfangswertproblem
 f'(x) = f(x), \quad f(0)=1,
 \end{equation}
 dessen Lösung gefunden werden soll. Die Gleichung lässt sich
-beschreiben durch
+beschreiben durch%
 \begin{equation}
 y' = g(x,y)
 \end{equation}
-mit $g(x,y):=y$. Die Lipschitz-Bedingung führt hier auf%
+mit $g(x,y):=y$. Die Lipschitz"=Bedingung führt hier auf%
 \begin{equation}
 |g(x,y_2)-g(x,y_1)| = |y_2-y_1|\le L|y_2-y_1|,
 \end{equation}
-also $L\ge 1$. Somit ist $g$ global Lipschitz-stetig. Daher muss
+also $L\ge 1$. Somit ist $g$ global Lipschitz"=stetig. Daher muss
 es eine eindeutige Lösung der Dgl. geben.
 
 \subsection{Klassische Methode}
 Wir fordern zunächst, dass $f(x)$ keine Nullstellen habe. Somit
-lässt sich die Gleichung \eqref{eq:AWP-exp} in die Form
+lässt sich die Gleichung \eqref{eq:AWP-exp} in die Form%
 \begin{equation}\label{eq:AWP-exp-Umformung}
 \frac{f'(x)}{f(x)}=1
 \end{equation}
 bringen. Diese Umformung wird als \emph{Trennung der Variablen}
 bezeichnet. Eine Erklärung, was es damit auf sich hat, folgt später.
-Man verwendet nun die Substitutionsregel in der Form
+Man verwendet nun die Substitutionsregel in der Form%
 \begin{equation}
 \int_a^b h(f(x))\,f'(x)\,\mathrm dx
 = \int_{f(a)}^{f(b)} h(u)\,\mathrm du.
 \end{equation}
-Hier ist $h(u)=1/u$. Somit ergibt sich
+Hier ist $h(u)=1/u$. Somit ergibt sich%
 \begin{equation}
 \int_0^x \frac{f'(x)}{f(x)}\,\mathrm dx
 = \int_{f(0)}^{f(x)} \frac{1}{u}\,\mathrm du
@@ -271,20 +288,20 @@ Diese Rechnung wird auch als \emph{logarithmische Integration}
 bezeichnet. Es ist an dieser Stelle praktisch, die Abkürzungen
 $y:=f(x)$ und $y_0:=f(0)$ zu verwenden.
 
-Auf der anderen Seite von \eqref{eq:AWP-exp-Umformung} erhalten wir
+Auf der anderen Seite von \eqref{eq:AWP-exp-Umformung} erhalten wir%
 \begin{equation}
 \int_0^x 1\,\mathrm dx = x.
 \end{equation}
 Integriert man Gleichung \eqref{eq:AWP-exp-Umformung} auf beiden
-Seiten, so erhält man nun
+Seiten, so erhält man nun%
 \begin{equation}
 \ln|y|-\ln|y_0| = x.
 \end{equation}
-Umformung dieser Gleichung bringt
+Umformung dieser Gleichung bringt%
 \begin{equation}
 |y| = |y_0|\,\ee^x.
 \end{equation}
-Verwendet man nun die allgemeine Regel
+Verwendet man nun die allgemeine Regel%
 \begin{equation}
 |y|=y\sgn(y),
 \end{equation}
@@ -295,7 +312,7 @@ y\sgn(y) = y_0\sgn(y_0)\,\ee^x.
 Wenn $y$ nun differenzierbar sein soll, so muss $y$ auch stetig sein.
 Weil wir fordern, dass $y$ keine Nullstellen hat, muss aus
 Stetigkeitsgründen entweder $y>0$ für alle $x$ oder $y<0$ für alle
-$x$ sein. Daher ist $\sgn(y)=\sgn(y_0)$. Man erhält
+$x$ sein. Daher ist $\sgn(y)=\sgn(y_0)$. Man erhält%
 \begin{equation}
 y = y_0\,\ee^x.
 \end{equation}
@@ -303,7 +320,7 @@ Was ist, wenn die Funktion $y$ eine Nullstelle besitzt? Wenn $a$
 eine Nullstelle ist, so wird dort wegen der Dgl. \eqref{eq:AWP-exp}
 auch $y^{(n)}(a)=0$ sein. Setzt man voraus, dass $y$ analytisch ist,
 so kann die Taylorreihe an der Stelle $a$ gebildet werden und man
-erhält die Funktion
+erhält die Funktion%
 \begin{equation}
 \forall x\colon y(x)=0.
 \end{equation}
@@ -314,14 +331,14 @@ die Lösungsmenge ist leer.
 \subsection{Picard-Iteration}
 
 Als Beispiel soll wieder die Dgl. $y'=y$ dienen.
-Diese integriert man auf beiden Seiten und erhält
+Diese integriert man auf beiden Seiten und erhält%
 \begin{equation}
 y=y(0)+\int_0^x y\,\mathrm dx.
 \end{equation}
 Diese Umformung bringt uns eigentlich nicht weiter.
 Der Ansatz ist nun, zu erkennen, dass es sich um eine
 Fixpunktgleichung handelt. Sei $K:=y(0)$.
-Wir wählen nun $y_1:=0$ und iterieren gemäß
+Wir wählen nun $y_1:=0$ und iterieren gemäß%
 \begin{equation}
 y_{n+1} = K+\int_0^x y_n\,\mathrm dx.
 \end{equation}
@@ -332,7 +349,7 @@ y_3 = K+Kx,\\
 y_4 = K+Kx+\frac{1}{2}Kx^2,\\
 y_5 = K+Kx+\frac{1}{2}Kx^2+\frac{1}{6}Kx^3.
 \end{gather}
-Das geht immer so weiter, der Grenzwert ist
+Das geht immer so weiter, der Grenzwert ist%
 \begin{equation}
 y = K\sum_{k=0}^{\infty} \frac{x^k}{k!} = K\ee^x.
 \end{equation}
@@ -340,29 +357,29 @@ y = K\sum_{k=0}^{\infty} \frac{x^k}{k!} = K\ee^x.
 \subsection{Potenzreihenmethode}
 
 Als Beispiel soll wieder die Dgl. $y'=y$ dienen.
-Wenn sich die Funktion $y(x)$ als Potenzreihe darstellen lässt, so ist
+Wenn sich die Funktion $y(x)$ als Potenzreihe darstellen lässt, so ist%
 \begin{equation}
 y=\sum_{k=0}^\infty a_k(x-x_0)^k.
 \end{equation}
 Wir wählen den Entwicklungspunkt $x_0=0$. Die Potenzreihe setzt man
-nun in die Dgl. ein und erhält
+nun in die Dgl. ein und erhält%
 \begin{equation}
 \sum_{k=1}^\infty ka_kx^k = \sum_{k=0}^\infty a_kx^k.
 \end{equation}
 Mit einem Koeffizientenvergleich erhält man $ka_k=a_{k-1}$.
 Über die Rekursionsformel für die Fakultät erhält man $k!a_k=a_0$.
-Einsetzen von $a_k$ in den allgemeinen Potenzreihenansatz bringt dann
+Einsetzen von $a_k$ in den allgemeinen Potenzreihenansatz bringt dann%
 \begin{equation}
 y=\sum_{k=0}^\infty a_0\frac{x^k}{k!} = a_0\ee^x.
 \end{equation}
 Alternativ kann man auch nach folgender Methode rechnen.
 Wenn sich die Funktion $y$ an der Stelle $x_0$ in eine Potenzreihe
-entwickeln lässt, so ist nach dem Satz von Taylor
+entwickeln lässt, so ist nach dem Satz von Taylor%
 \begin{equation}
 y = \sum_{k=0}^\infty \frac{1}{k!}y^{(k)}(x_0)(x-x_0)^k.
 \end{equation}
 Entwickelt man nun an der Stelle $x_0=0$ und verwendet die Dgl.,
-so erhält man
+so erhält man%
 \begin{equation}
 y = \sum_{k=0}^\infty \frac{1}{k!}y(0)x^k
 = y(0)\sum_{k=0}^\infty \frac{x^k}{k!}
@@ -372,12 +389,12 @@ y = \sum_{k=0}^\infty \frac{1}{k!}y(0)x^k
 \subsection{Laplace-Transformation}
 
 Bei linearen Dgln. mit konstanten Koeffizienten kann man die
-Laplace-Transformation zur Lösung verwenden. Man Transformiert
+Laplace"=Transformation zur Lösung verwenden. Man Transformiert
 erst die Dgl., wobei eine algebraische Gleichung entsteht. Diese
 wird gelöst. Die Lösung kann man anschließend zurück transformieren.
 
 Als Beispiel soll wieder die Dgl. $y'=y$ dienen. Mit der Rechenregel
-$L\{y'\} = pL\{y\}-y_0$ erhält man
+$L\{y'\} = pL\{y\}-y_0$ erhält man%
 \begin{equation}
 pL\{y\}-y_0 = L\{y\}.
 \end{equation}
@@ -385,7 +402,7 @@ Umformen bringt
 \begin{equation}
 L\{y\} = \frac{y_0}{p-1}.
 \end{equation}
-Es ist $L\{x\} = 1/p$. Zusammen mit dem Dämpfungssatz erhält man
+Es ist $L\{x\} = 1/p$. Zusammen mit dem Dämpfungssatz erhält man%
 \begin{equation}
 L\{\ee^x\} = \frac{1}{p-1}.
 \end{equation}
@@ -419,7 +436,7 @@ wird in die Dgl. eingesetzt und man erhält
 $\lambda^2 \ee^{\lambda x} = -4\ee^{\lambda x}$.
 Division durch $\ee^{\lambda x}$ bringt dann $\lambda^2 = -4$.
 Man erhält die Lösungen $\lambda_1 = -2i$ und $\lambda_2 = 2i$.
-Die Linearkombinationen sind
+Die Linearkombinationen sind%
 \begin{equation}
 y=K_1\ee^{-2ix}+K_2\ee^{2ix}.
 \end{equation}
@@ -439,7 +456,7 @@ Zu lösen ist die Gleichung
 y' = ay.
 \end{equation}
 Lösungsmethoden für diesen Typ wurden schon ausführlich besprochen.
-Es ergibt sich
+Es ergibt sich%
 \begin{equation}
 y = K\ee^{ax}.
 \end{equation}
@@ -454,7 +471,7 @@ Zu lösen ist die Gleichung
 y' = ay+b.\quad (a\ne 0)
 \end{equation}
 Wähle die Substitution $y=u+c$, wobei
-$c$ eine Konstante ist. Nun gilt
+$c$ eine Konstante ist. Nun gilt%
 \begin{align}
 y' &= (u+c)' = u',\\
 ay+b &= a\cdot (u+c)+b = au+ac+b.
@@ -463,12 +480,12 @@ Wir wollen nun $ac+b$ verschwinden lassen, d.\,h. wir setzen
 $ac+b=0$. Somit ergibt sich $c=-b/a$. Als neue Dgl. ergibt sich
 $u' = au$. Diese Gleichung lässt sich aber über die Trennung
 der Variablen lösen, wobei sich $u=K\ee^{ax}$ ergibt. Resubstitution
-führt zu
+führt zu%
 \begin{equation}
 y = K\ee^{ax}-\tfrac{b}{a}.
 \end{equation}
 Die Probe durch Einsetzen in die Dgl. bestätigt die Lösung.
-Für das AWP $y'(x_0)=y_0$ ergibt sich
+Für das AWP $y'(x_0)=y_0$ ergibt sich%
 \begin{equation}
 K = \frac{y_0}{a\ee^{ax_0}}.
 \end{equation}
@@ -488,8 +505,8 @@ Vieweg, Braunschweig 1976.
 
 \vfill
 \noindent
-\texttt{Dieses Heft ist unter der Creative-\\
-Commons-Lizenz CC0 veröffentlicht.}
+\texttt{Dieses Heft steht unter der Lizenz\\
+Creative Commons CC0.}
 
 \end{document}
 
