@@ -1,21 +1,25 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-
-\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
 \usepackage[scaled=0.80]{DejaVuSans}
+\usepackage[scaled=0.80]{DejaVuSansMono}
 
-\usepackage{ngerman}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
-\usepackage{microtype}
+
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
-\setlength{\columnsep}{6mm}
+\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=26mm}
+\setlength{\columnsep}{5mm}
+
 \usepackage{graphicx}
 \numberwithin{equation}{section}
 
@@ -25,13 +29,7 @@
 \noindent
 \textbf{\sffamily\huge Elektrotechnik}\\
 \\
-Februar 2016
-\vspace{1em}
-
-\noindent
-Dieser Text steht unter der Lizenz\\
-Creative Commons CC0.
-
+{\large Februar 2016}
 
 \tableofcontents
 %\newpage
@@ -95,7 +93,7 @@ mit Wasserbad stecken und schauen wie sich die Temperatur erhöht.
 In der Praxis ist das ein relativ idiotischer Versuch. Man würde
 dann gerne ein Beckmann"=Thermometer anschaffen um präzise zu sein,
 und es muss schnell gehen, sodass man einen schnellen Rührer
-benötigt. Das kann sehr teuer werden. Die letzten Dewar-Gefäße,
+benötigt. Das kann sehr teuer werden. Die letzten Dewar"=Gefäße,
 die ich benutzt habe, waren viel zu dünn, da haben kaum ein
 Thermometer und ein Rührer gleichzeitig Platz. Man läuft Gefahr,
 mit dem Rührer das Beckmann abzurasieren. 
@@ -121,7 +119,7 @@ Ein Kondensator ist im Gegensatz zu einem Akkumulator ein Bauteil,
 welches Energie sehr schnell aufnehmen und abgeben kann. Das macht
 sich in der Praxis auch maßgeblich bemerkbar. So kann man z.B. schon
 von mittelgroßen ausreichend geladenen Elkos eine gewischt bekommen.
-Beliebt ist der Versuch einen Aluminiumring auf einem
+Beliebt ist der Versuch, einen Aluminiumring auf einem
 Permanentmagneten mit der lenzschen Regel in die Luft werfen zu
 lassen. Hierfür braucht man sehr schnell einen großen Strom, wofür
 man am besten einen Kondensator verwendet.
@@ -134,7 +132,7 @@ Hier gilt wie immer Murphys Gesetz.
 
 Für selbstgebaute Teslaspulen haben Leute für den Primärkondensator
 ein Array aus kleistschen Flaschen verwendet, die aus Trinkflaschen
-selbst baut wurden. Schon eine einzige kleistsche Flasche ist
+selbst gebaut wurden. Schon eine einzige kleistsche Flasche ist
 gefährlich, wenn sie ausreichend lange mit Hochspannung geladen wird.
 
 
@@ -244,7 +242,7 @@ u_R = -u_q -\frac{1}{\lambda}\ln\Big[\frac{u_R/R+I_S}{I_S}\Big].
 Hierdurch wird $u_R$ implizit beschrieben.
 
 Wir wollen die Gleichung für $i$ lösen. Dazu approximiert man für
-$I_S\ll 1$ die Schockley-Gleichung durch $i\approx I_S e^{\lambda u}$.
+$I_S\ll 1$ die Schockley"=Gleichung durch $i\approx I_S e^{\lambda u}$.
 Gleichung (\ref{eq:impliziti}) wird nun zu%
 \begin{equation}\label{eq:iapprox}
 i=I_Se^{-\lambda u_q}e^{-\lambda Ri} = Ke^{-\lambda Ri}.
@@ -296,7 +294,7 @@ $x=-1/e$ und des Unendlichen $x\rightarrow\infty$ der gesamte
 obere Ast von $W(x)$ beliebig gut approximiert.
 
 Die Näherung (\ref{Wapprox}) reicht für die Betrachtung des
-qualititativen Verhaltens von (\ref{eq:impliziti}) bereits aus.
+qualitativen Verhaltens von (\ref{eq:impliziti}) bereits aus.
 
 Die Gleichung (\ref{eq:impliziti}) kann mit der Lambert-W-Funktion
 aber auch exakt gelöst werden. Dazu macht man die Substitution
@@ -332,7 +330,7 @@ u_R = \frac{1}{\lambda} W(K')-RI_S.
 
 \subsection{Vergleich mit einer realen Diode}
 An dieser Stelle soll überprüft werden, ob sich eine
-reale Diode einigermaßen vernünftig mit der Schockly-Gleichung
+reale Diode einigermaßen vernünftig mit der Schockly"=Gleichung
 beschreiben lässt. Ich habe dazu noch einige Messwerte für
 die Diode \texttt{SY223 CK}. Das ist eine Siliziumdiode, die noch
 in der DDR produziert wurde. Die Germaniumdioden werden als
@@ -343,16 +341,21 @@ Ich muss auf die Angabe von Fehlergrenzen daher verzichten.
 
 Die Messwerte sind folgende:
 
-{\normalfont\ttfamily
-\begin{tabular}{r|l}
-$u/\mathrm{mV}$ & $i/\mathrm{mA}$\\
+\begin{table}[h]
+{\qquad}{\normalfont\ttfamily
+\begin{tabular}{@{\;}rl@{\;\,}}
+\toprule
+$u/\mathrm{mV}$\hspace{-4pt} & $i/\mathrm{mA}$\\
+\midrule
 300 & 0.010\\
 350 & 0.025\\
 400 & 0.055\\
 450 & 0.160\\
-500 & 0.410
+500 & 0.410\\
+\bottomrule
 \end{tabular}
 }
+\end{table}
 
 \noindent
 Der Graph scheint einen exponentiellen Zusammenhang zu
@@ -374,7 +377,7 @@ Die Berechnung ergibt:
 \overline y = -2.78+\ln(\mathrm{mA})\\
 s_{xy}/s_x = 0.0186/(\mathrm{mV})
 \end{gather*}
-Damit ergibt sich $\lambda = 0.0186/(\mathrm{mV})$ und\\
+Damit ergibt sich $\lambda = 0.0186/(\mathrm{mV})$ und
 $I_S=3.64\times 10^{-5}\,\mathrm{mA}$.
 Der empirische Korrelationskoeffizient ist%
 \begin{equation}
@@ -444,7 +447,7 @@ für Ströme bis 1\,A}
 \label{table:SY}
 \end{table}
 Es folgen noch Referenzen auf TGL-Normen und
-wei Diagramme für die Silizium"=Gleichrichterdiode \texttt{SY201}.
+zwei Diagramme für die Silizium"=Gleichrichterdiode \texttt{SY201}.
 Das erste, »Durchlaßverlustleistung in Abhängigkeit des
 Durchlaßstrommittelwertes, Parameter: Duchlaßwinkel
 $\varrho$«, zeigt  $P_F(J_F)$ mit $P_F$ in~W und $J_F$ in~A.
@@ -510,6 +513,10 @@ damit%
 i(u) = [u>u_0]g(u-u_0),
 \end{equation}
 wobei mit $[A]$ die Iverson"=Klammer gemeint ist.
+
+\vfill\noindent
+\texttt{Dieser Text steht unter der Lizenz\\
+Creative Commons CC0.}
 
 \end{document}
 

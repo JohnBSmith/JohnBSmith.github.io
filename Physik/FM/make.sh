@@ -1,6 +1,8 @@
 
-mkdir -p /tmp/FM
-pdflatex -output-directory /tmp/FM FM.tex 
-mv /tmp/FM/FM.pdf ./
+name=FM
+path=/tmp/$name-4af2
 
-
+mkdir -p $path
+pdflatex -output-format dvi -output-directory $path $name.tex
+dvipdfmx $path/$name.dvi
+# mv $path/$name.pdf ./

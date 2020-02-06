@@ -1,6 +1,8 @@
 
-mkdir -p /tmp/SRT
-pdflatex -output-directory /tmp/SRT SRT.tex 
-mv /tmp/SRT/SRT.pdf ./
+name=SRT
+path=/tmp/$name-9bd4
 
-
+mkdir -p $path
+pdflatex -output-format dvi -output-directory $path $name.tex
+dvipdfmx $path/$name.dvi
+# mv $path/$name.pdf ./
