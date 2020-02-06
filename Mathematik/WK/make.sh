@@ -3,5 +3,6 @@ name=WK
 path=/tmp/$name-1482
 
 mkdir -p $path
-pdflatex -output-directory $path $name.tex
-mv $path/$name.pdf ./
+pdflatex -output-format dvi -output-directory $path $name.tex
+dvipdfmx $path/$name.dvi
+# mv $path/$name.pdf ./
