@@ -164,6 +164,60 @@ fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
 let s = String::from_utf8_lossy(&amp;data);
 </pre>
 
+<p>Eine Binärdatei kann auch sehr groß sein, größer als dass
+sie vollständig in den Hauptspeicher geladen werden kann. Wir wollen
+den CRC32-Prüfwert von so einer Datei berechnen, siehe
+<a href="Algorithmen/Hashfunktionen.htm#CRC"
+>Algorithmen: Hashfunktionen</a>.
+Der naive Ansatz ginge so:
+
+<pre class="rust indent">
+use std::{env::args, fs::read, io};
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let crc = crc::CRC32::new();
+    let argv: Vec&lt;String&gt; = args().collect();
+    let data: Vec&lt;u8&gt; = read(&amp;argv[1])?;
+    println!("{:08x}",crc.hash(&amp;data,0));
+    return Ok(());
+}
+</pre>
+
+<p>Die Berechnung des Prüfwertes lässt sich nun aufteilen auf
+Datenblöcke. Die Blöcke kommen jeweils zunächst von der Datei in
+einen Puffer der Blockgröße, günstig ist 64 Kibibyte. Dann wird vom
+Block der Prüfwert bestimmt, wobei der Prüfwert des vorangegangenen
+Blocks mit einfließt.
+
+<pre class="rust indent">
+use std::{env::args, fs::File, io, io::Read};
+use crc::CRC32;
+
+fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; Result&lt;u32,io::Error&gt; {
+    let mut buffer = [0; 0x10000];
+    let mut hash = 0;
+    loop{
+        let n = file.read(&amp;mut buffer)?;
+        if n==0 {break;}
+        hash = crc.hash(&amp;buffer[..n],hash);
+    }
+    return Ok(hash);
+}
+
+fn main() -&gt; Result&lt;(),io::Error&gt; {
+    let crc = CRC32::new();
+    let argv: Vec&lt;String&gt; = args().collect();
+    let mut file = File::open(&amp;argv[1])?;
+    println!("{:08x}",hash(&amp;crc,&amp;mut file)?);
+    return Ok(());
+}
+</pre>
+
+<p>Hiermit lässt sich nun der Prüfwert von 10&nbsp;GB großen
+Dateien ermitteln, auch wenn man nur 256 MB Hauptspeicher zur
+Verfügung hat. Faktisch ist der Hauptspeicherbedarf des
+Programms nun verschwindend gering.
+
 <h3 id="Dateien-schreiben">Dateien schreiben</h3>
 
 <p>Daten in Dateien schreiben ist denkbar einfach. Man erzeugt
