@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zufallszahlen</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Zufallszahlen</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Xorshift-plus">Xorshift+</a>
+<li><span class="modest">Zufallszahlen aus einem Bereich</span>
+</ol>
+
+<h2 id="Xorshift-plus">Xorshift+</h2>
+
+<p>Xorshift+ ist ein moderner Algorithmus zur schnellen Erzeugung von
+Zufallszahlen relativ hoher Güte, der die wichtigsten statistischen
+Tests besteht. Der Generator soll eine Periodenlänge von
+2<sup>128</sup>&minus;1 besitzen und »BigCrush« aus der Test-Suite
+»TestU01« bestehen. Zu beachten ist, dass es sich keinesfalls um einen
+kryptografischen Generator handelt. Die folgende Implementation
+ist wie in [Vigna] beschrieben, mit der dort als günstig beschriebenen
+Belegung <code>a=23</code>, <code>b=17</code>, <code>c=26</code> und
+wird so auch im Firefox-Quellcode&nbsp;[1] und in Wikipedia&nbsp;[2][3]
+aufgeführt. Der interne Zustand <code>state</code> darf beliebig sein,
+jedoch nicht <code>(0,0)</code>.
+
+<p>Da die niederwertigen 32&nbsp;Bit eines Zufallswertes von Xorshift+
+einige statistische Tests nicht bestehen sollen, extrahiert man für
+<code>rand_u32</code> besser die höherwertigen 32&nbsp;Bit.
+
+<pre class="rust indent">
+pub struct RNG {
+    state: (u64,u64)
+}
+
+impl RNG {
+    pub fn new(seed: u64) -&gt; Self {
+        Self{state: (
+            seed^0xa4f85664d25f3e1e,
+            seed^0xb1e50bc816c7ec1d
+        )}
+    }
+    pub fn rand_u64(&amp;mut self) -&gt; u64 {
+        let (mut x,y) = self.state;
+        self.state.0 = y;
+        x ^= x &lt;&lt; 23;
+        self.state.1 = x ^ y ^ (x &gt;&gt; 17) ^ (y &gt;&gt; 26);
+        return self.state.1.wrapping_add(y);
+    }
+    pub fn rand_u32(&amp;mut self) -&gt; u32 {
+        self.rand_u64()&gt;&gt;32 as u32
+    }
+}
+
+fn main() {
+    let mut rng = RNG::new(0);
+    for _ in 0..10 {
+        println!("{:016x}",rng.rand_u64());
+    }
+}
+</pre>
+
+<p>Auch das Zeroland von Xorshift ist verschwindend klein. Als
+Zeroland bezeichnet man Bereiche der Zustandstrajektorie, die
+schlechte Zufallszahlen liefern. Bei vielen Generatoren ist das
+damit verbunden, dass viele Bits null sind, daher die Bezeichnung
+Zeroland. Der Mersenne-Twister soll z.&nbsp;B. im schlechtesten
+Fall, bei dem nur ein einziges Bit gesetzt ist, eine Aufwärmphase
+von über 700&nbsp;000 Iterationen benötigen. Das kann man als
+problematisch sehen, denn der Generator könnte das Zeroland, wenn
+auch mit einer geringen Wahrscheinlichkeit, je nach Saat zufällig
+durchqueren.
+
+<p>[Vigna] Sebastiano Vigna: »<a href="https://arxiv.org/abs/1404.0390"
+  >Further scramblings of Marsaglia's xorshift generators</a>«.
+  Journal of Computational and Applied Mathematics (Mai 2017).
+  arXiv:1404.0390. doi:10.1016/j.cam.2016.11.006.
+
+<p>[1] <a href="https://github.com/mozilla/gecko-dev/blob/master/mfbt/XorShift128PlusRNG.h"
+  >mfbt/XorShift128PlusRNG.h</a> in gecko-dev, abgerufen am 8. Feb. 2020.
+  Gecko ist die aktuelle Engine von Firefox.
+
+<p>[2] »<a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>«.
+  Englische Wikipedia, abgerufen am 8. Feb. 2020.
+
+<p>[3] »<a href="https://de.wikipedia.org/wiki/Xorshift">Xorshift</a>«.
+  Deutsche Wikipedia, abgerufen am 8. Feb. 2020.
+
+</body>
+</html>
