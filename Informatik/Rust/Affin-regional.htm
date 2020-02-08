@@ -127,7 +127,52 @@ womit ein solches Unterfangen zur Mammut-Aufgabe wird. Man muss dabei
 beachten, dass ein entsprechender Beweis auch für das Compiler-Backend
 (den Code-Erzeuger) erbracht werden muss.
 
+<p>Übrigens erlauben auch Laufzeitprüfungen die Gewährleistung
+der Typsicherheit. Auf dieses Mittel greift man normalerweise dann
+zurück, wenn eine Prüfung zur Kompilierzeit zu schwierig wäre.
+
+<p>Out of bounds access verschwindet mit einer Laufzeitprüfung der
+Arraylänge. Hierzu wird ein aus Zeiger und Länge bestehendes Paar
+gespeichert, in Rust als <i>Slice</i> bezeichnet. Arrays fester Länge
+kennen ihre eigene Länge zur Kompilierzeit, haben also nur den Zeiger,
+was etwas effizienter ist. Auch in diesem Fall gibt es die
+Laufzeitprüfung der Arraylänge. Es gibt allerdings in vielen Fällen
+Formulierungen und Optimierungen mit denen man die Laufzeitprüfungen
+reduzieren kann oder ganz los wird.
+
 <h2 id="Affin">Affine Typisierung</h2>
+
+<p>Die Benutzung von Zeigern lässt sich so einschränken, dass die
+Speichersicherheit unverletzt bleibt. Out of bounds access wurde
+schon abgearbeitet. Es verbleiben noch uninitialisierte Variablen
+und Use after free bzw. Aliasing.
+
+<p>Uninitialisierte Variablen verschwinden mit der Festlegung,
+dass jede Variable vor dem Zugriff auf sie voll initialisiert
+sein muss indem der Variable ein Wert zugewiesen wird.
+Dies kann der Compiler durch Kontrollflussanalyse
+schon zur Kompilierzeit prüfen. 
+
+<p>Eine genaue Betrachtung von Use after free führt zu der folgenden
+Beobachtung. Es entsteht durch das Kopieren von Zeigern. Gäbe es
+immer nur einen gültigen Zeiger auf die Daten, würden die Daten also
+immer nur einen einzigen Eigentümer haben, könnte man über diesen
+bedenkenlos auf die Daten zugreifen.
+
+<p>Unsere Überlegungen manifestieren sich im folgenden Formalismus:
+<ul>
+<li>Unique Ownership: Ein Wert hat zu jeder Zeit immer nur einen
+  einzigen Eigentümer. Das heißt, auf die Daten zeigt immer nur
+  ein einziger Zeiger.
+<li>Move-Semantik: Variablenzuweisung <code>p&nbsp;=&nbsp;q</code>
+  führt dazu, dass <code>q</code> ungültig wird, sonst gäbe es zwei
+  Eigentümer. Es handelt sich hierbei also anschaulich formuliert
+  um einen Wechsel des Eigentümers. Ein ungültig gewordene Variable
+  ist gleichbedeutend mit einer uninitialisierten Variable.
+</ul>
+
+<p>Dieser Formalismus wird <i>affine Logik</i> genannt. Ein Typsystem,
+das diese umsetzt, nennt man <i>affin</i>.
 
 <h2 id="Regional">Regionale Typisierung</h2>
 
