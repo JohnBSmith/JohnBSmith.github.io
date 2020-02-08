@@ -19,8 +19,8 @@
 
 <h2 id="Xorshift-plus">Xorshift+</h2>
 
-<p>Xorshift+ ist ein moderner Algorithmus zur schnellen Erzeugung von
-Zufallszahlen relativ hoher Güte, der die wichtigsten statistischen
+<p>Xorshift128+ ist ein moderner Algorithmus zur schnellen Erzeugung
+von Zufallszahlen relativ hoher Güte, der die wichtigsten statistischen
 Tests besteht. Der Generator soll eine Periodenlänge von
 2<sup>128</sup>&minus;1 besitzen und »BigCrush« aus der Test-Suite
 »TestU01« bestehen. Zu beachten ist, dass es sich keinesfalls um einen
@@ -31,9 +31,10 @@ wird so auch im Firefox-Quellcode&nbsp;[1] und in Wikipedia&nbsp;[2][3]
 aufgeführt. Der interne Zustand <code>state</code> darf beliebig sein,
 jedoch nicht <code>(0,0)</code>.
 
-<p>Da die niederwertigen 32&nbsp;Bit eines Zufallswertes von Xorshift+
-einige statistische Tests nicht bestehen sollen, extrahiert man für
-<code>rand_u32</code> besser die höherwertigen 32&nbsp;Bit.
+<p>Da die niederwertigen 32&nbsp;Bit eines Zufallswertes von
+Xorshift128+ einige statistische Tests nicht bestehen sollen,
+extrahiert man für <code>rand_u32</code> besser die höherwertigen
+32&nbsp;Bit.
 
 <pre class="rust indent">
 pub struct RNG {
@@ -43,8 +44,8 @@ pub struct RNG {
 impl RNG {
     pub fn new(seed: u64) -&gt; Self {
         Self{state: (
-            seed^0xa4f85664d25f3e1e,
-            seed^0xb1e50bc816c7ec1d
+            seed ^ 0xa4f85664d25f3e1e,
+            seed ^ 0xb1e50bc816c7ec1d
         )}
     }
     pub fn rand_u64(&amp;mut self) -&gt; u64 {
@@ -67,7 +68,7 @@ fn main() {
 }
 </pre>
 
-<p>Auch das Zeroland von Xorshift ist verschwindend klein. Als
+<p>Auch das Zeroland von Xorshift128+ ist verschwindend klein. Als
 Zeroland bezeichnet man Bereiche der Zustandstrajektorie, die
 schlechte Zufallszahlen liefern. Bei vielen Generatoren ist das
 damit verbunden, dass viele Bits null sind, daher die Bezeichnung
