@@ -1512,7 +1512,8 @@ interpretieren:
 Eine Relation ist somit auch ein Prädikat auf $A\times B$.
 
 \subsection{Äquivalenzrelationen}
-\begin{Definition}[Äquivalenzrelation]\mbox{}\\*
+\begin{Definition}[Äquivalenzrelation]%
+\index{Aequivalenzrelation@Äquivalenzrelation}\mbox{}\\*
 Seien $A$ eine Menge und seien $x,y,z\in A$. Sei $R(x,y):=(x\sim y)$ eine
 Relation. Man nennt $R$ Äquivalenzrelation, wenn gilt:
 \[\begin{array}{ll}
@@ -1569,21 +1570,24 @@ wenn $i=j$ ist. Daher ergibt sich%
 \[(\exists i)(x\in A_i\land z\in A_i),\]
 d.\,h. $x\sim z$.\;\qedsymbol
 
-\begin{Definition}[Quotientenmenge]\mbox{}\\*
+\begin{Definition}[Quotientenmenge]
+\index{Quotientenmenge}\index{Faktormenge}\mbox{}\\*
 Für eine gegebene Äquivalenzrelation wird die aus allen
 Äquivalenzklassen bestehende Menge
 \[M/{\sim} := \{[x]\mid x\in M\}\]
 als Quotientenmenge oder Faktormenge bezeichnet.
 \end{Definition}
 
-\begin{Definition}[Quotientenabbildung]\mbox{}\\*
+\begin{Definition}[Quotientenabbildung]%
+\index{Quotientenabbildung}\mbox{}\\*
 Für eine gegebene Äquivalenzrelation ist die Projektion
 \[\pi\colon M\to M/{\sim},\quad \pi(x):=[x]\]
 surjektiv und wird Quotientenabbildung genannt.
 \end{Definition}
 
 \newpage
-\begin{Definition}[Repräsentantensystem]\mbox{}\\*
+\begin{Definition}[Repräsentantensystem]%
+\index{Repräsentantensystem}\mbox{}\\*
 Für eine gegebene Äquivalenzrelation auf $M$ nennt man eine
 Teilemenge $A\subseteq M$ ein vollständiges Repräsentantensystem,
 wenn die Einschränkung $\pi|_A$ bijektiv ist, wobei mit $\pi$
@@ -1592,40 +1596,31 @@ die Quotientenabbildung gemeint ist.
 Repräsentantensysteme ermöglichen die einfache Handhabung von
 Äquivalenzklassen. Möchte man wissen, ob ein Element $x$ in der
 Äquivalenklasse $[a]$ enthalten ist, dann braucht man bloß
-zu überprüfen, ob $x\sim a$ ist.
+zu überprüfen, ob $x\sim a$ ist. Außerdem besitzt die
+Quotientenabbildung nun eine Darstellung $p\colon M\to A$,
+dergestalt dass $\pi = \pi|_{A}\circ p$. Warum sollte das von
+Bedeutung sein? Nun, Äquivalenzklassen fallen oft unendlich groß
+aus. In der Kombinatorik treten zwar auch endliche Äquivalenzklassen auf,
+diese werden trotzdem schnell unzugänglich groß. Die Äquivalenzklassen
+und die Quotientenabbildung muss man also als abstrakte mathematische
+Objekte betrachten. Abstrakte mathematische Objekte müssen wir erst
+über eine Darstellung zugänglich machen, und genau dies ermöglicht
+ein Repräsentantensystem.
 
-Eine große Fülle von Äquivalenzrelationen lässt auf die folgende
-einfache Art konstruieren. Hat man eine beliebige Abbildung
-$f\colon A\to B$, dann sind die Urbilder $f^{-1}(\{y_1\})$ und
-$f^{-1}(\{y_2\})$ disjunkt, sofern $y_1\ne y_2$:%
-\begin{align*}
-f^{-1}(\{y_1\})\cap f^{-1}(\{y_2\})
-&= \{x\mid f(x)=y_1\}\cap\{x\mid f(x)=y_2\}\\
-&= \{x\mid f(x)=y_1\land f(x)=y_2\} = \{\}.
-\end{align*}
-Im letzten Schritt wurde beachtet, dass eine Abbildung für
-das selbe Argument definitionsgemäß keine zwei unterschiedlichen
-Werte annehmen kann.
-
-Demnach ist gemäß
-\[Z = A/{\sim} = \{f^{-1}(\{y\})\mid y\in f(A)\}\]
-eine Zerlegung des Definitionsbereichs $A$ gegeben und somit auch eine
-Äquivalenzrelation. Für $x_1,x_2\in A$ gilt%
-\[x_1\sim x_2 \iff f(x_1) = f(x_2).\]
 
 \begin{Satz}[Charakterisierung von Äquivalenzklassen]\mbox{}\\*
 Sei auf der Menge $M$ eine Äquivalenzrelation gegeben. Eine
 Teilmenge $A\subseteq M$ ist genau dann eine Äquivalenzklasse,
 wenn%
 \begin{align*}
-1.\;& A\ne\{\},\\
+1.\;& A\ne\emptyset,\\
 2.\;& x,y\in A\implies x\sim y,\\
 3.\;& x\in A\land y\in M\land x\sim y\implies y\in A.
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Angenommen, $A$ ist eine Äquivalenzklasse.
 Dann gibt es definitionsgemäß ein $a$ mit $A=[a]$. Daher ist
-mindestens $a\in A$ und somit $A\ne\{\}$. Mit $x,y\in A$ ergibt
+mindestens $a\in A$ und somit $A\ne\emptyset$. Mit $x,y\in A$ ergibt
 sich $A=[x]=[y]$. Aufgrund von%
 \[x\sim y \iff [a]=[b]\]
 muss somit $x\sim y$ sein. Sei nun $x\in A$ und $y\in M$ mit
@@ -1640,7 +1635,77 @@ noch wissen, ob $x\in A$, wenn $x\sim a$ und $x\in M$ ist.
 Dies ist aber mit 3. gesichert. Es gibt also
 tatsächlich ein $a$ mit $A=\{x\in M\mid x\sim a\}$.\;\qedsymbol
 
+Eine große Fülle von Äquivalenzrelationen lässt sich auf die folgende
+einfache Art konstruieren. Hat man eine beliebige Abbildung
+$f\colon M\to N$, dann sind die Urbilder $f^{-1}(\{y_1\})$ und
+$f^{-1}(\{y_2\})$ disjunkt, sofern $y_1\ne y_2$:%
+\begin{align*}
+f^{-1}(\{y_1\})\cap f^{-1}(\{y_2\})
+&= \{x\mid f(x)=y_1\}\cap\{x\mid f(x)=y_2\}\\
+&= \{x\mid f(x)=y_1\land f(x)=y_2\} = \emptyset.
+\end{align*}
+Im letzten Schritt wurde beachtet, dass eine Abbildung für
+das selbe Argument definitionsgemäß keine zwei unterschiedlichen
+Werte annehmen kann.
 
+Demnach ist gemäß
+\[Z = M/{\sim} = \{f^{-1}(\{y\})\mid y\in f(M)\}\]
+eine Zerlegung des Definitionsbereichs $M$ gegeben und somit auch eine
+Äquivalenzrelation. Für $x_1,x_2\in M$ gilt%
+\[x_1\sim x_2 \iff f(x_1) = f(x_2).\]
+Ist $f$ zudem surjektiv, dann gehört zu jedem $N$ genau eine
+Äquivalenzklasse. Demnach definiert $f$ dann eine verallgemeinerte
+Quotientenabbildung, da die Elemente von $N$ die Äquivalenzklassen
+charakterisieren. Die Bijektion $\varphi\colon Z\to N$ hat dabei
+die Eigenschaft $f = \varphi\circ\pi$. Sofern $N$ für uns zugänglich
+ist, resultiert hieraus auch eine verallgemeinerte Darstellung der
+Quotientenabbildung, denn
+\[f = \varphi\circ\pi = \varphi\circ (\pi|_A\circ p)
+= (\varphi\circ\pi|_A)\circ p.\]
+Nun ist $\varphi\circ\pi|_A$ auch bijektiv, weil $\varphi$
+und $\pi|_A$ es sind. Somit charakterisiert $N$ ein
+vollständiges Repräsentantensystem.
+
+Was bisher erläutert wurde mag recht abstrakt erscheinen. Wir haben
+aber eigentlich ein recht intuitives Verständnis für diese
+Begrifflichkeiten. Das typische Beispiel für eine Äquivalenzrelation
+ist, wenn zwei Schüler in die gleiche Schulklasse gehen. Die
+Äquivalenzklasse ist dann schlicht diese Schulklasse. Die Menge
+der Schüler der Schule wird in disjunkte Schulklassen zerlegt.
+Die Menge dieser Schulklassen bildet die Quotientenmenge. Ein
+vollständiges Repräsentantensystem ist z.\,B. die Wahl eines
+Klassensprechers in jeder Klasse.
+
+Ein weiteres typisches Beispiel für eine Äquivalenzrelation ist die
+Kongruenz modulo $m$, die elementar in der Zahlentheorie
+und Gruppentheorie vorkommt. Die Äquivalenzklassen sind hier die
+Restklassen. Die Reste bilden ein kanonisches vollständiges
+Repräsentantensystem. Das Bilden des Restes zu einer Zahl ist
+eine Darstellung der Quotientenabbildung.
+
+Äquivalenzrelationen haben in der Mathematik eine fundamentale
+Bedeutung, da sie den Begriff der Gleichheit abstrahieren und
+verallgemeinern. Wir können nun umgekehrt den philosophischen
+Standpunkt einnehmen, dass es Identität in der wirklichen Welt, was
+damit auch immer gemeint sein soll, nirgendwo gibt, dass die Welt also
+überall eine reichhaltige Tiefe besitzt mit welcher keine zwei Dinge
+die selben sind. Ein Vergleich setzt dann von vornherein eine
+Äquivalenzrelation voraus. Man könnte einwenden, in unserem Kosmos sei
+eine in die Hand genommene Tasse die selbe Tasse. Dies ist aber wieder
+bloß eine Relation zwischen zwei Objekten in der Raumzeit. Die Tasse
+ist außerdem eine Ansammlung von Atomen, die sich in diesem Zeitraum
+wahrscheinlich an irgendeiner Stelle verändert haben wird. Ein
+neuerlicher Einwand wäre, dass eine Struktur in der Raumzeit identisch
+zu sich selbst sein muss. Diese Struktur ist denkbar, aber für uns
+niemals so zugänglich, als würden wir eine Tasse in die
+Hand nehmen und betrachten.
+
+Diesem Gedankengang liegt die Idee zugrunde, dass es zu jeder
+Äquivalenzrelation weitere Äquivalenzrelationen gibt, welche
+die Äquivalenzklassen wiederum in feinere Äquivalenzklassen zerlegen.
+Die unendliche Fortsetzung von Verfeinerungen setzt voraus, dass
+jede Äquivalenzklasse unendlich groß ist. In dieser Vorstellung einer
+wirklichen Welt gibt es daher nichts was endlich wäre.
 
 
 

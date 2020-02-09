@@ -14,7 +14,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Xorshift-plus">Xorshift+</a>
-<li><span class="modest">Zufallszahlen aus einem Bereich</span>
+<li><a href="#Bereich">Zufallszahlen aus einem Bereich</a>
 </ol>
 
 <h2 id="Xorshift-plus">Xorshift+</h2>
@@ -93,6 +93,42 @@ durchqueren.
 
 <p>[3] »<a href="https://de.wikipedia.org/wiki/Xorshift">Xorshift</a>«.
   Deutsche Wikipedia, abgerufen am 8. Feb. 2020.
+
+<h2 id="Bereich">Zufallszahlen aus einem Bereich</h2>
+
+<p>Zur Erzeugung von gleichverteilten Zufallszahlen
+<code>x&nbsp;&in;&nbsp;[i..j)</code> genügt es, Zahlen
+<code>u&nbsp;&in;&nbsp;[0..m)</code> zu erzeugen. Man kann nämlich
+<code>m&nbsp;:=&nbsp;j-i</code>
+setzen und dann <code>i</code> zur erzeugten Zahl <code>u</code>
+addieren. Ausgehend von
+
+<p class="indent"><code>0 &le; u &lt; j-i,</code>
+
+<p>bringt Addition von <code>i</code> auf beiden Seiten der jeweiligen
+Ungleichung die äquivalenten Ungleichungen
+
+<p class="indent"><code>i &le; u+i &lt; j-i+i.</code>
+
+<p>Mit <code>x&nbsp;:=&nbsp;u+i</code> ergibt sich
+
+<p class="indent"><code>i &le; x &lt; j.</code>
+
+<p>Naive Methode für Zufallszahlen aus <code>[0..m)</code>:
+<pre class="rust indent">
+pub fn rand_bounded(&amp;mut self, m: u32) -&gt; u32 {
+    self.rand_u32() % m
+}
+</pre>
+
+<p>Die mit dieser Methode erzeugten Zahlen sind jedoch nicht
+gleichverteilt. Dazu müssten alle Restklassen modulo <code>m</code>
+gleich groß sein, dies ist jedoch nicht der Fall. Die mit dieser
+Methode erzeugte Zahl <code>u</code> ist kleinster Repräsentant seiner
+Restklasse. Die Restklasse von <code>u</code> ist das Urbild von
+<code>u</code> bezüglich der Operation <code>f(r)&nbsp;:=&nbsp;r%m</code>.
+Man nennt das Urbild auch Faser, weil der Definitionsbereich
+<code>[0..2<sup>32</sup>)</code> in disjunkte Urbilder zerlegt wird.
 
 </body>
 </html>
