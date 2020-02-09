@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,fleqn,twoside,twocolumn]{scrartcl}
+\documentclass[a4paper,10pt,fleqn,twoside,twocolumn,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
@@ -37,6 +37,7 @@
 \newcommand{\chem}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\ds}{\displaystyle}
+\newcommand{\bvec}[1]{\mathbf{#1}}
 
 \newcommand{\arccot}{\operatorname{arccot}}
 \newcommand{\arsinh}{\operatorname{arsinh}}
@@ -129,6 +130,11 @@ $\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^
 $\nabla (\tfrac{1}{g}) = -\frac{\nabla g}{g^2}$
 & $\nabla(f/g) = (g\nabla f-f\nabla g)/g^2$
 \end{tabular}\\
+$f'(x) := \lim\limits_{h\to 0}\frac{f(x+h)-f(x)}{h}$\\
+$\int_a^b f(g(x))\,g'(x)\,\mathrm dx = \int_{g(a)}^{g(b)} f(u)\,\mathrm du\quad
+\Big(\begin{smallmatrix}f\in C(I,\R),\\ g\in C^1([a,b],I)\end{smallmatrix}\Big)$\\
+$\int_a^b\! f'(x)g(x)\,\mathrm dx = [f(x)g(x)]_a^b-\int_a^b\! f(x)g'(x)\,\mathrm dx$%
+\;\;{\footnotesize $(f,g\in C^1)$}\\
 \begin{tabular}{@{}l}
 $t=\tan(\frac{x}{2})$,\; $\sin x = \frac{2t}{1+t^2}$,\;
 $\cos x = \frac{1-t^2}{1+t^2}$,\; $\mathrm dx = \frac{2\mathrm dt}{1+t^2}$
@@ -136,7 +142,9 @@ $\cos x = \frac{1-t^2}{1+t^2}$,\; $\mathrm dx = \frac{2\mathrm dt}{1+t^2}$
 $L\{f(t)\} := \int_0^{\infty}\! f(t)\ee^{-pt}\mathrm dt$,\;
 $F\{f(t)\} := \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}
 f(t)\ee^{-\ui\omega t}\mathrm dt$\\
-$\int_\gamma f\mathrm ds := \int_a^b\! f(t)\,|\gamma'(t)|\,\mathrm dt$
+$\int_\gamma f\mathrm ds := \!\int_a^b\! f(t)\,|\gamma'(t)|\,\mathrm dt$,\;
+$\int_\gamma\!\langle\bvec F,\mathrm d\bvec x\rangle
+:= \!\int_a^b\! \langle\bvec F(\bvec x(t)),\bvec x'(t)\rangle\,\mathrm dt$
 
 \newpage
 \noindent
@@ -206,7 +214,9 @@ $w_k := v_k - \sum_{i=1}^{k-1}\operatorname{proj}[w_i](v_k)$\\
 $\ds y = \overline y + \frac{s_{xy}}{s_x}(x{-}\overline x)$,\;
 $s_x = \sum\limits_{k=1}^n (x_k{-}\overline x)^2$,\;
 $s_{xy} = \sum\limits_{k=1}^n (x_k{-}\overline x)(y_k{-}\overline y)$\\[4pt]
-$n! = n\cdot (n-1)!,\quad \Gamma(z+1) = z\Gamma(z)$
+$n! = n\cdot (n-1)!,\quad \Gamma(z+1) = z\Gamma(z)$\\
+$\binom{n+1}{k+1} = \binom{n}{k}+\binom{n+1}{k}$,\quad
+$\binom{n}{k} = \binom{n}{n-k}$,\quad $\binom{n}{0} = 1$
 
 \clearpage
 
