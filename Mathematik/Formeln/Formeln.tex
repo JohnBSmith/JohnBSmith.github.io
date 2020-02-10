@@ -38,6 +38,7 @@
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\ds}{\displaystyle}
 \newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\bvecgreek}[1]{\boldsymbol{#1}}
 
 \newcommand{\arccot}{\operatorname{arccot}}
 \newcommand{\arsinh}{\operatorname{arsinh}}
@@ -421,24 +422,29 @@ $n! \approx\sqrt{2\pi n}\,n^n \exp\big(\frac{1}{12n}-n\big)
 
 \noindent\strong{Mechanik}\\
 $\begin{array}{@{}l|l}
-v = s'(t) & \omega = \varphi'(t)\\
-a = v'(t) & \alpha = \omega'(t)\\
-F = p'(t) & M = L'(t)\\
-p = mv & L = J\omega\\
-F = ma & M = J\alpha\\
-E_\mathrm{kin} = \frac{1}{2}mv^2
+\bvec v = \bvec x'(t) & \omega = \varphi'(t)\\
+\bvec a = \bvec v'(t) & \alpha = \omega'(t)\\
+\bvec F = \bvec p'(t) & \bvec M = \bvec L'(t)\\
+\bvec p = m\bvec v & L = J\omega\\
+\bvec F = m\bvec a & M = J\alpha\\
+P = \langle\bvec F,\bvec v\rangle & P = \langle\bvec M,\bvecgreek\omega\rangle\\
+E_\mathrm{kin} = \frac{1}{2}m|\bvec v|^2
 & E_\mathrm{rot} = \frac{1}{2}J\omega^2
 \end{array}$\\[2pt]
 $\begin{array}{@{}l|l|l}
-s=\varphi r& M=rF & E_\mathrm{pot} = mgh\\
-v=\omega r & M=r\times F & E_\mathrm{kin}+E_\mathrm{pot} = \mathrm{const.}\\
-a=\alpha r& L=r\times p & F = Ds\quad \mathrm{(Feder)}
+s =\varphi r
+& \bvec M = \bvec r\times\bvec F & E_\mathrm{pot} = mgh\\
+v = \omega r
+& \bvec L = \bvec r\times\bvec p
+& E_\mathrm{kin}+E_\mathrm{pot} = \mathrm{const.}\\
+a =\alpha r & \bvec v = \bvecgreek\omega\times\bvec r
+& F = Ds\quad \mathrm{(Feder)}
 \end{array}$\\[4pt]
 \strong{Gleichstrom}\\
 $\begin{array}{@{}l|l|l}
-U=RI & Q=It & GR=1\\
-I=GU & W=P\;\!t\\
-P=UI & W=QU\\
+U = RI & Q = It & GR = 1\\
+I = GU & W = P\;\!t\\
+P = UI & W = QU\\
 \end{array}$\\[4pt]
 \strong{Wechselstrom}\\[2pt]
 $\begin{array}{@{}l|l|l}
@@ -475,18 +481,18 @@ u = Li'(t)
 \strong{Elektrostatisches Feld}\\[2pt]
 $\begin{array}{@{}l|l}
 \ds F=\frac{1}{4\pi\varepsilon}\frac{Q_1Q_2}{r^2}
-&\ds\vec F_1 = \frac{1}{4\pi\varepsilon}
-Q_1Q_2\frac{\underline x_1-\underline x_2}
-{|\underline x_1-\underline x_2|^3}
+&\ds\bvec F_1 = \frac{1}{4\pi\varepsilon}
+Q_1Q_2\frac{\bvec x_1-\bvec x_2}
+{|\bvec x_1-\bvec x_2|^3}
 \end{array}$\\
 $\begin{array}{@{}l|l|l}
-\vec F = q\underline E & Q=CU
+\bvec F = q\bvec E & Q=CU
 &U = \varphi(B)-\varphi(A)\\
-\underline D = \varepsilon \underline E
+\bvec D = \varepsilon \bvec E
 &\varepsilon = \varepsilon_0\varepsilon_r
 & W=QU
 \end{array}$\\
-$\underline E = -\mathrm{grad}\,\varphi$\\
+$\bvec E = -\nabla\varphi$\\
 $\varepsilon_0 E^2 = 2w_e$\\[4pt]
 \strong{Plattenkondensator}\\
 $\begin{array}{@{}l|l}
@@ -498,15 +504,15 @@ H\;\!l = NI & B\;\!l = \mu NI & \Theta = NI
 \end{array}$\\[4pt]
 \strong{Magnetostatisches Feld}\\
 $\begin{array}{@{}l|l}
-\vec F = q\underline v\times\underline B
+\bvec F = q\bvec v\times\bvec B
 & \Phi = BA\\
-F = qvB & \underline B = \mu\underline H\\
+F = qvB & \bvec B = \mu\bvec H\\
 F = BIl & \mu = \mu_0\mu_r
 \end{array}$\\
 $H = I/(2\pi r)\quad (\text{Feld um einen geraden Leiter})$\\
 $B^2 = 2\mu_0 w_m$\\[4pt]
 \strong{Elektrodynamik}\\[2pt]
-$E=-\nabla\varphi$\\
+$\bvec E = -\nabla\varphi$\\
 $\varepsilon\Delta\varphi = -\rho(x)$\\
 $\varepsilon_0 E^2 = 2w_e$\\
 $B^2 = 2\mu_0 w_m$
@@ -516,15 +522,15 @@ $B^2 = 2\mu_0 w_m$
 \noindent
 \strong{Maxwell-Gleichungen}\\
 $\begin{array}{@{}l|l}
-\langle\nabla,D\rangle = \rho_f(x)
-& \langle\nabla,\varepsilon_0 E\rangle = \rho(x)
+\langle\nabla,\bvec D\rangle = \rho_f(x)
+& \langle\nabla,\varepsilon_0\bvec E\rangle = \rho(x)
 \\
-\langle\nabla,B\rangle = 0
-& \langle\nabla,B\rangle = 0\\
-\nabla\times E = -D_t B
-& \nabla\times E = -D_t B\\
-\nabla\times H = J_f+D_t D
-& \nabla\times B = \mu_0 (J+\varepsilon_0 D_t E)
+\langle\nabla,\bvec B\rangle = 0
+& \langle\nabla,\bvec B\rangle = 0\\
+\nabla\times\bvec E = -\partial_t\bvec B
+& \nabla\times\bvec E = -\partial_t\bvec B\\
+\nabla\times\bvec H = \bvec J_f+\partial_t\bvec D
+& \nabla\times\bvec B = \mu_0 (\bvec J+\varepsilon_0\partial_t \bvec E)
 \end{array}$\\[4pt]
 \strong{Spezielle Relativitätstheorie}\\
 $\ds \gamma = \frac{1}{\sqrt{1-\beta^2}},\quad\beta=v/c$\\
@@ -533,10 +539,10 @@ $\gamma = \cosh\varphi,\quad
 \beta = \tanh\varphi$\\
 $ct'=\gamma(ct-\beta x),\;\; x'=\gamma(x-vt),
 \;\; (y,z)'=(y,z)$\\
-${}\!\!\!\begin{array}{l|l}
-t=\gamma\tau & E_\mathrm{kin} = E-E_0\\
-p=\gamma mv & E_\mathrm{kin} = \gamma mc^2-mc^2\\
-E=\gamma mc^2 & E^2 = (pc)^2 + (mc^2)^2\\
+$\begin{array}{@{}l|l}
+t = \gamma\tau & E_\mathrm{kin} = E-E_0\\
+p = \gamma mv & E_\mathrm{kin} = \gamma mc^2-mc^2\\
+E = \gamma mc^2 & E^2 = (pc)^2 + (mc^2)^2\\
 \end{array}$\\
 $\Lambda_v = \begin{bmatrix}
 \gamma & -\beta\gamma & 0 & 0\\
@@ -545,8 +551,8 @@ $\Lambda_v = \begin{bmatrix}
 0 & 0 & 0 & 1
 \end{bmatrix}$\\
 $g=\mathrm{diag}(1,-1,-1,-1)$\\
-$(D_\mu) = (D_{ct},D_x,D_y,D_z)$\\
-$(D^\mu) = (D_{ct},-D_x,-D_y,-D_z)$\\[4pt]
+$(\partial_\mu) = (\partial_{ct},\partial_x,\partial_y,\partial_z)$\\
+$(\partial^\mu) = (\partial_{ct},-\partial_x,-\partial_y,-\partial_z)$\\[4pt]
 \strong{Optik}\\
 $\ds\frac{1}{f}=\frac{1}{g}+\frac{1}{b},\quad
 A = \frac{B}{G} = \frac{b}{g}$\\
