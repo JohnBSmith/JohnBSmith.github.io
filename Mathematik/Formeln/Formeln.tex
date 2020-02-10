@@ -93,11 +93,29 @@ $\sin z = \sum_{k=0}^{\infty} (-1)^k \frac{z^{2k+1}}{(2k+1)!}$
 $\cos z = \sum_{k=0}^{\infty} (-1)^k \frac{z^{2k}}{(2k)!}$
 & $\cosh z = \sum_{k=0}^{\infty}\frac{z^{2k}}{(2k)!}$
 \end{tabular}\\[4pt]
-$\ds\frac{z}{\ee^z-1} = {\textstyle\sum\limits_{k=0}^\infty} \overline B_k \frac{x^k}{k!},\quad
-\ds\frac{z}{1-\ee^{-z}} = {\textstyle\sum\limits_{k=0}^\infty} B_k\frac{x^k}{k!}$\\
-$\ds f[a](z) := \ee^{(z-a)D}f(a) = {\textstyle\sum\limits_{k=0}^\infty} \frac{f^{(k)}(a)}{k!}(z-a)^k$\\[4pt]
-\strong{Differentialrechnung}\\[2pt]
-$f'(x) := \lim\limits_{h\to 0}\frac{f(x+h)-f(x)}{h}$\\
+\begin{tabular}{@{}l|l}
+$\ds\frac{z}{\ee^z-1} = {\textstyle\sum\limits_{k=0}^\infty} \overline B_k \frac{z^k}{k!}$
+& $\ds \ln(1-x) = (-1){\textstyle\sum\limits_{k=1}^{\infty}} \frac{x^k}{k}
+\quad (-1{\le}x{<}1)$\\
+$\ds\frac{z}{1-\ee^{-z}} = {\textstyle\sum\limits_{k=0}^\infty} B_k\frac{z^k}{k!}$
+& $\ds (z+1)^a = {\textstyle\sum\limits_{k=0}^{\infty}} \binom{a}{k}\,z^k\quad (a\in\C,|z|{<}1)$\\
+$\ds\frac{1}{1-z} = {\textstyle\sum\limits_{k=0}^\infty} z^k$
+& $\ds\frac{1}{(1-z)^n} = {\textstyle\sum\limits_{k=0}^{\infty}} \binom{n{+}k{-}1}{k}\,z^k
+\quad (|z|{<}1)$
+\end{tabular}\\
+$\ds f[a](z) := \ee^{(z-a)D}f(a)
+= {\textstyle\sum\limits_{k=0}^\infty} \frac{f^{(k)}(a)}{k!}(z-a)^k$\\[4pt]
+\strong{Differentialrechnung}\;\,|\;\,$x_{n+1} = x_n-f(x_n)/f'(x_n)$\\[2pt]
+\begin{tabular}{@{}l|l}
+\begin{tabular}{@{}l@{}}
+$f'(x) := \lim\limits_{h\to 0}\frac{f(x+h)-f(x)}{h}$
+\end{tabular}
+&
+\begin{tabular}{@{}l@{}}
+$T(x) = f(x_0)+f'(x_0)(x-x_0)$\\
+$N(x) = f(x_0)-\tfrac{1}{f'(x_0)}(x-x_0)$
+\end{tabular}
+\end{tabular}\\
 \begin{tabular}{@{}l|l}
 $(\ee^x)' = \ee^x$ & $(fg)'=f'g+g'f$\\
 $\ln' x = 1/x$ & $(f/g)'=(f'g-g'f)/g^2$\\
@@ -115,20 +133,12 @@ $\arcsin'x = 1/\sqrt{1-x^2}$ & $\arctan'x = 1/(1+x^2)$\\
 $\arccos'x = -1/\sqrt{1-x^2}$ & $\arccot'x = -1/(1+x^2)$\\ 
 $\arsinh'x = 1/\sqrt{x^2+1}$ & $\artanh'x = 1/(1-x^2)$\\
 $\arcosh'x = 1/\sqrt{x^2-1}$ & $\arcoth'x = 1/(1-x^2)$
-\end{tabular}\\
-\begin{tabular}{@{}l|l}
-$\nabla(|\mathbf x|^2) = 2\mathbf x$ & $\nabla (fg) = g\nabla f+f\nabla g$\\
-$\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^T g+(Dg)^T f$\\
-$\nabla (\tfrac{1}{g}) = -\frac{\nabla g}{g^2}$
-& $\nabla(f/g) = (g\nabla f-f\nabla g)/g^2$\\
-$\nabla\times\nabla f = 0$
-& $\langle\nabla,f\bvec v\rangle
-= \langle\nabla f,\bvec v\rangle + f\langle\nabla,\bvec v\rangle$\\
-$\langle\nabla,\nabla\times\bvec v\rangle = 0$
-& $\nabla\times(f\bvec v)
-= f(\nabla\times\bvec v) - \bvec v\times \nabla f$
 \end{tabular}\\[4pt]
 \strong{Integralrechnung}\\
+$\int_a^b f(x)\,\mathrm dx
+:= \lim\limits_{n\to\infty}\sum_{k=1}^n
+f\!\big(a+k\frac{b-a}{n}\big)\frac{b-a}{n}\quad (f\in C[a,b])$\\
+$\int_a^b f'(x)\,\mathrm dx = [f(x)]_a^b := f(a)-f(b)\qquad (f\in C^1[a,b])$\\
 $\int_a^b f(g(x))\,g'(x)\,\mathrm dx = \int_{g(a)}^{g(b)} f(u)\,\mathrm du\quad
 \Big(\begin{smallmatrix}f\in C(I,\R),\\ g\in C^1([a,b],I)\end{smallmatrix}\Big)$\\
 $\int_a^b\! f'(x)g(x)\,\mathrm dx = [f(x)g(x)]_a^b-\int_a^b\! f(x)g'(x)\,\mathrm dx$%
@@ -140,16 +150,9 @@ $\cos x = \frac{1-t^2}{1+t^2}$,\; $\mathrm dx = \frac{2\mathrm dt}{1+t^2}$
 $L\{f(t)\} := \int_0^{\infty}\! f(t)\ee^{-pt}\mathrm dt$,\;
 $F\{f(t)\} := \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}
 f(t)\ee^{-\ui\omega t}\mathrm dt$\\
-$\int_\gamma f\mathrm ds := \!\int_a^b\! f(t)\,|\gamma'(t)|\,\mathrm dt$,\;
-$\int_\gamma\!\langle\bvec F,\mathrm d\bvec x\rangle
-:= \!\int_a^b\! \langle\bvec F(\bvec x(t)),\bvec x'(t)\rangle\,\mathrm dt$\\[4pt]
-\strong{Extremwerte}\\[2pt]
-$f(x)=\text{extrem} \Rightarrow f'(x)=0$,\; $f(p)=\text{extrem} \Rightarrow \mathrm df_p=0$\\
-$f(x,y)=\text{extrem unter}\;g(x,y)=0 \Rightarrow \mathrm df = \lambda\mathrm dg$\\
-$\ds J[\bvec x] := {\textstyle\int_a^b} L(t,\bvec x(t),\bvec x'(t))\,\mathrm dt
-= \text{extrem}
-\Rightarrow\frac{\partial L}{\partial x_k}
-= \frac{\mathrm d}{\mathrm dt}\frac{\partial L}{\partial x_k'}$
+$\ds\frac{\mathrm d}{\mathrm dx}\int_{a(x)}^{b(x)} f(x,t)\,\mathrm dt
+= \int_{a(x)}^{b(x)} \frac{\partial}{\partial x}f(x,t)\,\mathrm dt+g(x)$\\
+$g(x) = f(x,b(x))b'(x) - f(x,a(x))a'(x)$
 
 \newpage
 \noindent
@@ -174,37 +177,12 @@ $\ds\frac{z_1}{z_2}
 =\frac{a_1 a_2 + b_1 b_2}{a_2^2+b_2^2}
 + \frac{a_2 b_1 - a_1 b_2}{a_2^2+b_2^2}\ui$\\
 $\ds\frac{1}{z} =\frac{1}{r}\ee^{-\ui\varphi}
-=\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\[2pt]
+=\frac{a}{a^2+b^2}-\frac{b}{a^2+b^2}\ui$\\[4pt]
 \strong{Algebra}\\
 $x^2+px+q=0\colon\; x = -\frac{p}{2}\pm\frac{1}{2}\sqrt{p^2-4q}$\\[2pt]
 \begin{tabular}{@{}ll}
 $f(x)=f(2a-x)$ & (Achsensymmetrie)\\
 $f(x)=2b-f(2a-x)$ & (Punktsymmetrie)
-\end{tabular}\\[2pt]
-\begin{tabular}{@{}l|l}
-\makecell[lt]{
-\strong{Polarkoordinaten}\\
-$x = r\cos\varphi$\\
-$y = r\sin\varphi$\\
-$\varphi\in(-\pi,\pi]$\\
-$\det J = r$\\[4pt]
-\strong{Zylinderkoordinaten}\\
-$x = r_{xy}\cos\varphi$\\
-$y = r_{xy}\sin\varphi$\\
-$z = z$\\
-$\det J = r_{xy}$
-} & \makecell[lt]{
-\strong{Kugelkoordinaten}\\
-$x = r\sin\theta\,\cos\varphi$\\
-$y = r\sin\theta\,\sin\varphi$\\
-$z = r\cos\theta$\\
-$\varphi\in(-\pi,\pi],\;\theta\in[0,\pi]$\\
-$\det J = r^2\sin\theta$\\[4pt]
-$\theta = \beta-\pi/2$\\
-$\beta\in[-\pi/2,\pi/2]$\\
-$\cos\theta = \sin\beta$\\
-$\sin\theta = \cos\beta$
-}
 \end{tabular}\\[4pt]
 \strong{Lineare Algebra}\\[2pt]
 \begin{tabular}{@{}l|l}
@@ -236,24 +214,68 @@ $R(\varphi) = \big(\begin{smallmatrix}
 \cos\varphi & \;-\sin\varphi\\
 \sin\varphi & \cos\varphi
 \end{smallmatrix}\big)$\\[4pt]
-\strong{Kombinatorik}\\
-\begin{tabular}{@{}ll}
-$\ds{\textstyle\sum\limits_{k=m}^{n-1}} q^k = \frac{q^m-q^n}{q-1}$,
-& $\ds{\textstyle\sum\limits_{k=m}^{n-1}} k^p q^k
-= \Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p\;\frac{q^m-q^n}{q-1}$
-\end{tabular}\\
 \begin{tabular}{@{}l|l}
-$\sum_{k=1}^n k = (n/2)(n+1)$ & $\sum_{k=m}^{n-1}(\Delta a)_k = a_n-a_m$\\
-$\sum_{k=1}^n k^2 = (n/6)(n+1)(2n+1)$ & $(\Delta a)_k := a_{k+1}-a_k$\\
-$\sum_{k=1}^n k^3 = (n/2)^2(n+1)^2$
+\makecell[lt]{
+\strong{Polarkoordinaten}\\
+$x = r\cos\varphi$\\
+$y = r\sin\varphi$\\
+$\varphi\in(-\pi,\pi]$\\
+$\det J = r$\\[4pt]
+\strong{Zylinderkoordinaten}\\
+$x = r_{xy}\cos\varphi$\\
+$y = r_{xy}\sin\varphi$\\
+$z = z$\\
+$\det J = r_{xy}$
+} & \makecell[lt]{
+\strong{Kugelkoordinaten}\\
+$x = r\sin\theta\,\cos\varphi$\\
+$y = r\sin\theta\,\sin\varphi$\\
+$z = r\cos\theta$\\
+$\varphi\in(-\pi,\pi],\;\theta\in[0,\pi]$\\
+$\det J = r^2\sin\theta$\\[4pt]
+$\theta = \beta-\pi/2$\\
+$\beta\in[-\pi/2,\pi/2]$\\
+$\cos\theta = \sin\beta$\\
+$\sin\theta = \cos\beta$
+}
+\end{tabular}\\[4pt]
+\strong{Vektoranalysis}\\[2pt]
+\begin{tabular}{@{}l|l}
+$\nabla(|\mathbf x|^2) = 2\mathbf x$ & $\nabla (fg) = g\nabla f+f\nabla g$\\
+$\nabla |\mathbf x| = \mathbf x/|\mathbf x|$ & $\nabla\langle f,g\rangle = (Df)^T g+(Dg)^T f$\\
+$\nabla (\tfrac{1}{g}) = -\frac{\nabla g}{g^2}$
+& $\nabla(f/g) = (g\nabla f-f\nabla g)/g^2$\\
+$\nabla\times\nabla f = 0$
+& $\langle\nabla,f\bvec v\rangle
+= \langle\nabla f,\bvec v\rangle + f\langle\nabla,\bvec v\rangle$\\
+$\langle\nabla,\nabla\times\bvec v\rangle = 0$
+& $\nabla\times(f\bvec v)
+= f(\nabla\times\bvec v) - \bvec v\times \nabla f$
 \end{tabular}\\
-$\ds (a+b)^n = {\textstyle\sum\limits_{k=0}^n} \binom{n}{k}a^{n-k} b^k$,\quad
-$\ds\binom{n}{k} := \frac{1}{k!}n^{\underline k} = \frac{n!}{k!(n-k)!}$\\
-$n! = n\cdot (n-1)!,\quad n!=\Gamma(n+1),\quad \Gamma(z+1) = z\Gamma(z)$\\
-$\binom{n+1}{k+1} = \binom{n}{k}+\binom{n+1}{k}$,\quad
-$\binom{n}{k} = \binom{n}{n-k}$,\quad $\binom{n}{0} = 1$\\[2pt]
-$n! \approx\sqrt{2\pi n}\,n^n \exp\big(\frac{1}{12n}-n\big)
-\approx\sqrt{2\pi n}\,(n/e)^n$\\[4pt]
+$\nabla\times\nabla\times\bvec v
+= \nabla\langle\nabla,\bvec v\rangle-\Delta\bvec v$\\
+$\langle\nabla,v\times w\rangle
+= \langle\bvec w,\nabla\times\bvec v\rangle
+- \langle\bvec v,\nabla\times\bvec w\rangle$\\
+$\int_\gamma f\mathrm ds := \!\int_a^b\! f(t)\,|\gamma'(t)|\,\mathrm dt$,\;
+$\int_\gamma\!\langle\bvec F,\mathrm d\bvec x\rangle
+:= \!\int_a^b\! \langle\bvec F(\bvec x(t)),\bvec x'(t)\rangle\,\mathrm dt$\\
+$\int_{\varphi(U)} f(\bvec x)\,\mathrm d\bvec x
+= \int_U f(\varphi(\bvec u))\,|{\det D\varphi(\bvec u)}|\,
+\mathrm d\bvec u$\\[4pt]
+\strong{Extremwerte}\\[2pt]
+$f(x)=\text{extrem} \Rightarrow f'(x)=0$,\; $f(p)=\text{extrem} \Rightarrow \mathrm df_p=0$\\
+$f(x,y)=\text{extrem unter}\;g(x,y)=0 \Rightarrow \mathrm df = \lambda\mathrm dg$\\
+$\ds J[\bvec x] := {\textstyle\int_a^b} L(t,\bvec x(t),\bvec x'(t))\,\mathrm dt
+= \text{extrem}
+\Rightarrow\frac{\partial L}{\partial x_k}
+= \frac{\mathrm d}{\mathrm dt}\frac{\partial L}{\partial x_k'}$\\
+\strong{Interpolation}\\
+Linear: $\ds p(x) = y_1+\frac{y_2-y_1}{x_2-x_1}(x-x_1)$\\
+Quadratisch: $p(x) = y_0+a_1(x-x_0)+a_2(x-x_0)(x-x_1)$\\
+$\ds a_1 = \frac{y_1-y_0}{x_1-x_0},\quad
+a_2 = \frac{1}{x_2-x_1}
+\Big(\frac{y_2-y_0}{x_2-x_0}-a_1\Big)$\\[4pt]
 \strong{Regression}\\[2pt]
 $\ds y = \overline y + \frac{s_{xy}}{s_x}(x{-}\overline x)$,\;
 $s_x = \sum\limits_{k=1}^n (x_k{-}\overline x)^2$,\;
@@ -261,7 +283,7 @@ $s_{xy} = \sum\limits_{k=1}^n (x_k{-}\overline x)(y_k{-}\overline y)$
 
 \clearpage
 
-\noindent
+\noindent\strong{Logik}\\[2pt]
 \begin{tabular}{@{}cccccccc@{}}
 \toprule
 $A$ & $B$ & $A\land B$ & $A\lor B$
@@ -345,7 +367,8 @@ $(M\models\varphi)\Rightarrow (M\vdash\varphi)$ & (Vollständigkeit)
 \end{tabular}\\
 $(M\cup\{\varphi\}\vdash\psi)\Leftrightarrow (M\vdash \varphi\rightarrow\psi)$\\
 $(M\cup\{\varphi\}\models\psi)\Leftrightarrow (M\models \varphi\rightarrow\psi)$\\[-4pt]
-\rule{\columnwidth}{\heavyrulewidth}\\[2pt]
+\rule{\columnwidth}{\heavyrulewidth}\\
+\strong{Mengenlehre}\\[2pt]
 \begin{tabular}{@{}l@{\;\,}|@{\;\;}l}
 \makecell[lt]{
 $A\cap B := \{x\mid x\in A\land x\in B\}$\\
@@ -370,6 +393,194 @@ $f(M\cap N) \subseteq f(M)\cap f(N)$ & $f^{-1}(M\cap N) = f^{-1}(M)\cap f^{-1}(N
 $M\subseteq N\Rightarrow f(M)\subseteq f(N)$ & $M\subseteq N\Rightarrow f^{-1}(M)\subseteq f^{-1}(N)$\\
 $(g\circ f)(M) = g(f(M))$ & $(g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M))$
 \end{tabular}
+
+\newpage
+
+\noindent
+\strong{Kombinatorik}\\[2pt]
+\begin{tabular}{@{}ll}
+$\ds{\textstyle\sum\limits_{k=m}^{n-1}} q^k = \frac{q^m-q^n}{q-1}$,
+& $\ds{\textstyle\sum\limits_{k=m}^{n-1}} k^p q^k
+= \Big(q\frac{\mathrm d}{\mathrm dq}\Big)^p\;\frac{q^m-q^n}{q-1}$
+\end{tabular}\\[2pt]
+\begin{tabular}{@{}l|l}
+$\sum_{k=1}^n k = (n/2)(n+1)$ & $\sum_{k=m}^{n-1}(\Delta a)_k = a_n-a_m$\\
+$\sum_{k=1}^n k^2 = (n/6)(n+1)(2n+1)$ & $(\Delta a)_k := a_{k+1}-a_k$\\
+$\sum_{k=1}^n k^3 = (n/2)^2(n+1)^2$ & $n! = n\cdot (n-1)!$
+\end{tabular}\\
+$\ds (a+b)^n = {\textstyle\sum\limits_{k=0}^n} \binom{n}{k}a^{n-k} b^k$,\quad
+$\ds\binom{n}{k} := \frac{1}{k!}n^{\underline k} = \frac{n!}{k!(n-k)!}$\\[4pt]
+$\quad n!=\Gamma(n+1),\;\; \Gamma(z+1) = z\Gamma(z),\;\;
+\Gamma(z)\Gamma(1-z) = \frac{\pi}{\sin(\pi z)}$\\[2pt]
+$\binom{n+1}{k+1} = \binom{n}{k}+\binom{n+1}{k}$,\quad
+$\binom{n}{k} = \binom{n}{n-k}$,\quad $\binom{n}{0} = \binom{n}{n} = 1$\\[4pt]
+$n! \approx\sqrt{2\pi n}\,n^n \exp\big(\frac{1}{12n}-n\big)
+\approx\sqrt{2\pi n}\,(n/e)^n$\\[4pt]
+
+\clearpage
+
+\noindent\strong{Mechanik}\\
+$\begin{array}{@{}l|l}
+v = s'(t) & \omega = \varphi'(t)\\
+a = v'(t) & \alpha = \omega'(t)\\
+F = p'(t) & M = L'(t)\\
+p = mv & L = J\omega\\
+F = ma & M = J\alpha\\
+E_\mathrm{kin} = \frac{1}{2}mv^2
+& E_\mathrm{rot} = \frac{1}{2}J\omega^2
+\end{array}$\\[2pt]
+$\begin{array}{@{}l|l|l}
+s=\varphi r& M=rF & E_\mathrm{pot} = mgh\\
+v=\omega r & M=r\times F & E_\mathrm{kin}+E_\mathrm{pot} = \mathrm{const.}\\
+a=\alpha r& L=r\times p & F = Ds\quad \mathrm{(Feder)}
+\end{array}$\\[4pt]
+\strong{Gleichstrom}\\
+$\begin{array}{@{}l|l|l}
+U=RI & Q=It & GR=1\\
+I=GU & W=P\;\!t\\
+P=UI & W=QU\\
+\end{array}$\\[4pt]
+\strong{Wechselstrom}\\[2pt]
+$\begin{array}{@{}l|l|l}
+\underline U = \underline Z\underline I
+& \underline Z = R+jX
+& Z^2 = R^2+X^2\\
+\underline I=\underline Y\underline U
+& \underline Y = G+jQ
+& R = Z\cos\varphi\\
+\underline S = \underline U\underline I
+& \underline S = P+jB
+& X = Z\sin\varphi
+\end{array}$\\[4pt]
+$\begin{array}{@{}l|l|l}
+\underline Z = R & \mathrm{Widerstand}
+& \omega = 2\pi f\\
+\underline Z = jX_C & \mathrm{Kondensator}
+& X_C = -1/(\omega C)\\
+\underline Z = jX_L & \mathrm{Spule}
+& X_L = \omega L
+\end{array}$\\[4pt]
+$\begin{array}{@{}l|l}
+u_s = \sqrt{2}\,U_\mathrm{eff}
+& u = u_s\sin(\omega t+\varphi_0)\\
+i_s = \sqrt{2}\,I_\mathrm{eff}
+& i = i_s\sin(\omega t+\varphi_0)
+\end{array}$\\[4pt]
+\strong{Allgemeine Gleichungen}\\
+$\begin{array}{@{}l|l}
+u = Ri & p=ui\\
+i = Cu'(t)\\
+u = Li'(t)
+\end{array}$\\[4pt]
+\strong{Elektrostatisches Feld}\\[2pt]
+$\begin{array}{@{}l|l}
+\ds F=\frac{1}{4\pi\varepsilon}\frac{Q_1Q_2}{r^2}
+&\ds\vec F_1 = \frac{1}{4\pi\varepsilon}
+Q_1Q_2\frac{\underline x_1-\underline x_2}
+{|\underline x_1-\underline x_2|^3}
+\end{array}$\\
+$\begin{array}{@{}l|l|l}
+\vec F = q\underline E & Q=CU
+&U = \varphi(B)-\varphi(A)\\
+\underline D = \varepsilon \underline E
+&\varepsilon = \varepsilon_0\varepsilon_r
+& W=QU
+\end{array}$\\
+$\underline E = -\mathrm{grad}\,\varphi$\\
+$\varepsilon_0 E^2 = 2w_e$\\[4pt]
+\strong{Plattenkondensator}\\
+$\begin{array}{@{}l|l}
+U=Ed & C=\varepsilon A/d
+\end{array}$\\[4pt]
+\strong{Homogenes Feld in der Spule}\\
+$\begin{array}{@{}l|l|l}
+H\;\!l = NI & B\;\!l = \mu NI & \Theta = NI
+\end{array}$\\[4pt]
+\strong{Magnetostatisches Feld}\\
+$\begin{array}{@{}l|l}
+\vec F = q\underline v\times\underline B
+& \Phi = BA\\
+F = qvB & \underline B = \mu\underline H\\
+F = BIl & \mu = \mu_0\mu_r
+\end{array}$\\
+$H = I/(2\pi r)\quad (\text{Feld um einen geraden Leiter})$\\
+$B^2 = 2\mu_0 w_m$\\[4pt]
+\strong{Elektrodynamik}\\[2pt]
+$E=-\nabla\varphi$\\
+$\varepsilon\Delta\varphi = -\rho(x)$\\
+$\varepsilon_0 E^2 = 2w_e$\\
+$B^2 = 2\mu_0 w_m$
+
+\newpage
+
+\noindent
+\strong{Maxwell-Gleichungen}\\
+$\begin{array}{@{}l|l}
+\langle\nabla,D\rangle = \rho_f(x)
+& \langle\nabla,\varepsilon_0 E\rangle = \rho(x)
+\\
+\langle\nabla,B\rangle = 0
+& \langle\nabla,B\rangle = 0\\
+\nabla\times E = -D_t B
+& \nabla\times E = -D_t B\\
+\nabla\times H = J_f+D_t D
+& \nabla\times B = \mu_0 (J+\varepsilon_0 D_t E)
+\end{array}$\\[4pt]
+\strong{Spezielle Relativitätstheorie}\\
+$\ds \gamma = \frac{1}{\sqrt{1-\beta^2}},\quad\beta=v/c$\\
+$\gamma = \cosh\varphi,\quad
+\beta\gamma = \sinh\varphi,\quad
+\beta = \tanh\varphi$\\
+$ct'=\gamma(ct-\beta x),\;\; x'=\gamma(x-vt),
+\;\; (y,z)'=(y,z)$\\
+${}\!\!\!\begin{array}{l|l}
+t=\gamma\tau & E_\mathrm{kin} = E-E_0\\
+p=\gamma mv & E_\mathrm{kin} = \gamma mc^2-mc^2\\
+E=\gamma mc^2 & E^2 = (pc)^2 + (mc^2)^2\\
+\end{array}$\\
+$\Lambda_v = \begin{bmatrix}
+\gamma & -\beta\gamma & 0 & 0\\
+-\beta\gamma & \gamma & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}$\\
+$g=\mathrm{diag}(1,-1,-1,-1)$\\
+$(D_\mu) = (D_{ct},D_x,D_y,D_z)$\\
+$(D^\mu) = (D_{ct},-D_x,-D_y,-D_z)$\\[4pt]
+\strong{Optik}\\
+$\ds\frac{1}{f}=\frac{1}{g}+\frac{1}{b},\quad
+A = \frac{B}{G} = \frac{b}{g}$\\
+$n_1\sin(\varphi_1) = n_2\sin(\varphi_2)$\\
+$c_0 = nc$\\[4pt]
+\strong{Thermodynamik}\\
+$\begin{array}{@{}l|l|l}
+R = N_{\!A} k_B & m = nM & V = nV_m\\
+R = R_s M & m = Nm_T & N=nN_{\!A}
+\end{array}$\\
+$pV = nRT$\\
+$\ds \frac{p_1 V_1}{T_1} = \frac{p_2 V_2}{T_2}$\\
+$Q =mc\Delta T$\\[4pt]
+\strong{Konstanten}\\
+$\varepsilon_0 = 8.8542\times 10^{-12}\,\mathrm{C/(V\,m)}$\\
+$\mu_0 = 4\pi\times 10^{-7}\,\mathrm{H/m}$\\
+$c_0 = 2.9979\times 10^{8}\,\mathrm{m/s}$\\
+$e = 1.6022\times 10^{-19}\,\mathrm{C}$\\
+$G = 6.674\times 10^{-11}\,\mathrm{m^3/(kg\,s^2)}$\\[4pt]
+%
+$N_{\!A} = 6.0221\times 10^{23}\,\mathrm{mol}^{-1}$\\
+$k_B = 1.3806\times 10^{-23}\,\mathrm{J/K}$\\
+$R = 8.3145\,\mathrm{J/(mol\,K)}$\\[4pt]
+%
+$0\,\mathrm K = -273.15\,\mathrm{{}^\circ C}$\\
+$u = 1.6605\times 10^{-27}\,\mathrm{kg}$\\
+$h = 6.6261\times 10^{-34}\,\mathrm{Js}$\\
+$\hbar = 1.0546\times 10^{-34}\,\mathrm{Js}$\\
+$\sigma = 5.6704\times 10^{-8}\,\mathrm{W/(m^2 K^4)}$\\[4pt]
+%
+$m_e = 9.1094\times 10^{-31}\,\mathrm{kg}$\\
+$m_p = 1.6726\times 10^{-27}\,\mathrm{kg}$\\
+$m_n = 1.6749\times 10^{-27}\,\mathrm{kg}$\\
+$m_\alpha = 6.6447\times 10^{-27}\,\mathrm{kg}$
 
 % \lipsum[1-20]
 
