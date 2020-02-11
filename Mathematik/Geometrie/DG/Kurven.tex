@@ -588,18 +588,82 @@ Bogenlänge"=parametrisierten Kurven automatisch normiert sind.
 
 \subsection{Kurvenintegrale}
 \begin{definition}[Kurvenintegral eines Skalarfeldes]\mbox{}\\*
-Sei $U\subseteq\R^n$ und $f\colon U\to\R$ ein Skalarfeld.
+Sei $U\subseteq\R^n$ und $f\colon U\to\R$.
 Sei $\gamma\colon [a,b]\to U$ stetig differenzierbar. Man nennt dann%
-\[\int_\gamma f(x)\,\mathrm ds := \int_a^b f(\gamma(t))\cdot |\gamma'(t)|\,\mathrm dt.\]
+\[\int_\gamma f(x)\,\mathrm ds := \int_a^b f(\gamma(t))\cdot |\gamma'(t)|\,\mathrm dt\]
 das Kurvenintegral von $f$ über $\gamma$.
-Ist $f$ zumindest stückweise stetig differenzierbar und
+Ist $\gamma$ zumindest stückweise stetig differenzierbar und
 $\gamma = \gamma_1\oplus\ldots\oplus\gamma_n$ eine Zerlegung
 in die stetig differenzierbaren Stücke $\gamma_k$, dann setzt man%
 \[\int_\gamma f(x)\,\mathrm ds := \sum_{k=1}^n \int_{\gamma_k} f(x)\,\mathrm ds.\]
 \end{definition}
-Wie bei der Bogenlänge ist das Kurvenintegral ein geometrisches
-Konzept, dafür muss die Kurve aber regulär sein. Die Bogenlänge
-erhält man als Spezialfall $f(x):=1$.
+Wie bei der Bogenlänge ist das Kurvenintegral unabhängig von
+der gewählten Parametrisierung, dafür muss die Kurve aber regulär sein.
+Die Bogenlänge erhält man als Spezialfall $f(x):=1$.
+
+\begin{definition}[Kurvenintegral eines Vektorfeldes]\mbox{}\\*
+Sei $U\subseteq\R^n$ und $F\colon U\to\R^n$.
+Sei $\gamma\colon [a,b]\to U$ stetig differenzierbar. Man nennt dann
+\begin{equation}\label{eq:Kurvenintegral-Vektorfeld}
+\int_\gamma\langle F(x),\mathrm dx\rangle
+:= \int_a^b \langle F(\gamma(t)),\gamma'(t)\rangle\,\mathrm dt
+\end{equation}
+das Kurvenintegral von $F$ über $\gamma$.
+\end{definition}
+Diese Formulierung ist speziell auf den Koordinatenraum bezogen. Zur
+späteren Übertragung dieses Begriffs auf Mannigfaltigkeiten ist
+es günstig, wenn die Formulierung einmal zur Veranschaulichung in
+abstrakte Form gebracht wird. Sei dazu $A$ ein affiner Raum mit
+Verschiebungsvektorraum $V$. Sei $U\subseteq A$. Es gibt auf
+$V$ kein Skalarprodukt. Nun kann man aber formal rechnen%
+\begin{equation}\label{eq:Kurvenintegral-1-Form}
+\omega(x) := \langle F(x),\mathrm dx\rangle = \sum_{k=1}^n F_k(x)\,\mathrm dx_k.
+\end{equation}
+Das heißt, $\omega\colon U\to V^*$ ist eine 1-Form, auch Kovektorfeld
+genannt. Nun definiert man%
+\begin{equation}
+\int_\gamma \omega
+:= \int_a^b \omega(\gamma(t))(\gamma'(t))\,\mathrm dt.
+\end{equation}
+Diese Formulierung ist nicht mehr von einer speziellen Basis von $V$
+abhängig, sofern wir vergessen dass $\omega$ als Linearkombination
+aus den $\mathrm dx_k$ aufgebaut ist. Und für eine Orthonormalbasis
+$(e_k)$ ergibt sich gemäß $\mathrm dx_i(e_j) = \langle e_i,e_j\rangle$
+wieder Formel \eqref{eq:Kurvenintegral-Vektorfeld}, was die von der
+Notation geleitete Überlegung \eqref{eq:Kurvenintegral-1-Form}
+rechtfertigt. Zur Wiederholung: Die Gleichung
+$\delta_{ij}=\mathrm dx_i(e_j)$ ist definitionsgemäß allgemeingültig,
+die Gleichung $\delta_{ij}=\langle e_i,e_j\rangle$
+jedoch nur bei einer Orthonormalbasis.
+
+Das Kurvenintegral eines Skalarfeldes lässt sich unter einem gewissen
+Vorbehalt als Kurvenintegral eines Vektorfeldes darstellen.
+Ein Vergleich der rechten Seiten der Definitionen bringt uns zur
+Überlegung, dass die Gleichung
+\begin{equation}
+\langle F(\gamma(t)),\gamma'(t)\rangle = f(\gamma(t))\, |\gamma'(t)|
+\end{equation}
+erfüllt sein muss. Aus einem genauen Blick auf diese Gleichung liest
+man das Muster $\langle v,w\rangle = |v|\cdot|w|$ heraus, dazu muss
+aber $v$ gleichsinnig parallel zu $w$ sein. Daher muss $F$ auf
+$\gamma([a,b])$ die Form $F(\gamma(t)) = f(\gamma(t))T(t)$ haben,
+wobei $T(t)=\frac{\gamma'(t)}{|\gamma'(t)|}$ der
+Tangenteneinheitsvektor ist. Nachrechnen bringt in der Tat
+\begin{equation}
+\langle F(\gamma),\gamma'\rangle
+= \langle f(\gamma)\,\frac{\gamma'}{|\gamma'|},\gamma'\rangle
+= f(\gamma)\,\frac{|\gamma'|^2}{|\gamma'|}
+= f(\gamma)\,|\gamma'|.
+\end{equation}
+Der Vorbehalt ist nun der Umstand, dass hier $|\gamma'|$ im
+Nenner vorkommt. Demnach würde der Integrand an einer Stelle $t$ mit
+$\gamma'(t)=0$ eine Singularität haben. Bei Vorhandensein von
+Singularitäten ist das bestimmte Integral aber nicht definiert.
+Demnach muss $\gamma$ eine reguläre Kurve sein. Außerdem sind nur
+orientierungserhaltende Umparametrisierungen zugelassen, denn
+das Kurvenintegral eines Vektorfeldes ist von der Orientierung
+der Kurve abhängig, das Kurvenintegral eines Skalarfeldes jedoch
+nicht.
 
 \section{Krümmung}
 \subsection{Krümmung ebener Kurven}
