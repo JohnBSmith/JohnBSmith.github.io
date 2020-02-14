@@ -153,3 +153,58 @@ darstellen:
 \[\xymatrix{
 F(X) \ar[r]^{F(f)} \ar[d]_{\eta(X)} & F(Y) \ar[d]^{\eta(Y)} \\
 G(X) \ar[r]_{G(f)} & G(Y)}\]
+Ein weiteres Beispiel ergibt sich bezüglich Äquivalenzrelationen
+in Erinnerung an \eqref{eq:induzierte-Abbildung}.
+Eine Abbildung $f\colon M\to M'$ heiße \emph{induzierend}, wenn%
+\begin{equation}
+x\sim a \implies f(x)\sim' f(a).
+\end{equation}
+\begin{Satz}
+Die Paare $(M,\sim)$, bestehend aus Menge und Äquivalenzrelation,
+bilden mit den induzierenden Abbildungen
+als Morphismen bezüglich Verkettung eine Kategorie.
+\end{Satz}
+\strong{Beweis.}
+Die identische Abbildung ist offensichtlich induzierend. Hat man
+neben $f\colon M\to M'$ eine weitere induzierende Abbildung $g\colon M'\to M''$, dann
+folgt $g(y)\sim'' g(b)$ aus $y\sim' b$. Aus $x\sim a$ folgt
+mit $y:=f(x)$ und $b:=f(a)$ somit $g(f(x))\sim'' g(f(x))$.
+Daher ist auch $g\circ f$ induzierend.\;\qedsymbol
+
+Genau dann wenn $f$ induzierend ist, existiert eine induzierte
+Abbildung
+\begin{equation}
+I(f)\colon M/\sim\to M'/\sim',\;\text{so dass}\;I(f)\circ\pi = \pi'\circ f,
+\end{equation}
+wobei $\pi,\pi'$ jeweils die kanonische Projektion ist.
+\begin{Satz}
+Bei der Induktion $I$ handelt es sich um einen kovarianten
+Funktor.
+\end{Satz}
+\strong{Beweis.} Man betrachte das folgende kommutierende Diagramm:
+\[\xymatrix{
+M \ar[r]^{f} \ar[d]_{\pi}
+& M' \ar[r]^{g} \ar[d]^{\pi'}
+& M'' \ar[d]^{\pi''}\\
+M/\sim \ar[r]_{I(f)}
+& M/\sim' \ar[r]_{I(g)}
+& M/\sim''}\]
+Die Induktion $I$ besitzt die Eigenschaften
+\begin{gather}
+I(f)\circ\pi = \pi'\circ f,\\
+I(g)\circ\pi' = \pi''\circ g,\\
+I(g\circ f)\circ\pi = \pi''\circ (g\circ f).
+\end{gather}
+Damit kann man nun rechnen
+\begin{equation}
+I(g\circ f)\circ\pi = \pi''\circ g\circ f
+= I(g)\circ\pi'\circ f = I(g)\circ I(f)\circ\pi.
+\end{equation}
+Infolge gilt $I(g\circ f)=I(g)\circ I(f)$, da die kanonische
+Projektion $\pi$ eine Surjektion ist. Aus der Forderung $I(\id)\circ\pi
+= \pi\circ\id = \pi$ ergibt sich $I(\id) = \id$,
+da $\pi$ surjektiv ist.\;\qedsymbol
+
+Die Abbildung $\eta((M,\sim)):=\pi$, die jeder Menge mit
+Äquivalenzrelation ihre kanonische Projektion zuordnet,
+ist eine natürliche Transformation.
