@@ -1,68 +1,21 @@
-\documentclass[a4paper,fleqn,11pt]{article}
+\documentclass[a4paper,fleqn,11pt,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
+\usepackage{microtype}
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\addtokomafont{disposition}{\rmfamily}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsthm}
-
-\usepackage{mdframed}
-\usepackage{lipsum}
-%\usepackage{microtype}
-
-\usepackage{lmodern}
-%\usepackage{arev}
-%\usepackage{libertine}
-%\usepackage[libertine,cmintegrals]{newtxmath}
-%\renewcommand\ttdefault{lmvtt}
 
 \usepackage{geometry}
 \geometry{a4paper,left=34mm,right=34mm,top=38mm,bottom=48mm}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{0,40,80}
-\definecolor{gray1}{RGB}{80,80,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
-
-\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
-
-\newtheoremstyle{rmbox}%
-  {0pt}% space above
-  {0pt}% space below
-  {}% bodyfont
-  {}% indent
-  {\bfseries}% head font
-  {\\[2pt]}% punctuation between head and body
-  {0pt}% space after theorem head
-  {\thmname{#1}\;\thmnumber{#2}.\;\thmnote{#3.}}
-
-\theoremstyle{rmbox}
-\newtheorem{definition}{Definition}
-\newtheorem{theorem}{Satz}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Korollar}
-\newtheorem{Aufgabe}{Aufgabe}
-
-\definecolor{greenblue}{rgb}{0.0,0.32,0.4}
-\definecolor{grayblue}{rgb}{0.2,0.2,0.4}
-
-\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=greenblue, linewidth=4pt, innerleftmargin=7pt,%
-  innertopmargin=2pt, innerbottommargin=4pt,%
-  innerrightmargin=0pt%
-]{definition}
-
-\newcommand{\framedtheorem}[1]{%
-\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=grayblue, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=2pt, innerbottommargin=6pt,%
-  innerrightmargin=0pt%
-]{#1}}
-
-\framedtheorem{theorem}
-\framedtheorem{lemma}
-\framedtheorem{corollary}
-\framedtheorem{Aufgabe}
 
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
@@ -72,22 +25,19 @@
 \newcommand{\ee}{\mathrm e}
 \newcommand{\defiff}{\;:\Longleftrightarrow\;}
 
-\DeclareMathOperator{\id}{id}
-\DeclareMathOperator{\sur}{sur}
-\DeclareMathOperator{\real}{Re}
-\DeclareMathOperator{\imag}{Im}
-
 \begin{document}
 \pagestyle{empty}
 
 \section*{Die Rotation im Raum mittels Clifford-Algebra}
 
 Im Folgenden wird die folgende Notation benutzt:
-\begin{align*}
-\langle v,w\rangle &\qquad \text{Standardskalarprodukt},\\
-v\wedge w &\qquad \text{äußeres Produkt},\\
-vw &\qquad \text{Produkt der Clifford-Algebra}.
-\end{align*}
+\[\def\arraystretch{1.2}
+\begin{array}{ll}
+\langle v,w\rangle &\quad \text{Standardskalarprodukt},\\
+v\wedge w &\quad \text{äußeres Produkt},\\
+vw &\quad \text{Produkt der Clifford-Algebra}.
+\end{array}
+\]
 Der Vektor $\vec r_0$ soll um die durch den normierten Vektor $\vec n$
 gegebene Achse rotiert werden. Die Rotation um den Winkel $\varphi$
 lässt sich berechnen gemäß
