@@ -1,14 +1,28 @@
-\documentclass[a4paper,11pt,fleqn]{article}
+\documentclass[a4paper,11pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
-\usepackage{ngerman}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[scaled=0.80]{DejaVuSansMono}
+\addtokomafont{disposition}{\rmfamily}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
+
 \usepackage{color}
-\definecolor{c1}{RGB}{00,40,80}
+\definecolor{c1}{RGB}{00,00,00}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
-%\usepackage{geometry}
-%\geometry{a4paper,left=25mm,right=15mm,top=20mm,bottom=28mm}
-%\setlength{\columnsep}{6mm}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=12mm,top=24mm,bottom=28mm}
+\setlength{\columnsep}{5mm}
+
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{xleftmargin=\mathindent}
+
 \begin{document}
 
 \noindent
@@ -21,7 +35,7 @@
 \textbf{Zusammenfassung}. Rechnen geschah anfangs mühevoll und
 langsam mittels Logarithmentafel und Rechenschieber. Dann gab
 es elektronische Taschenrechner. Der nächste Schritt waren
-Taschrechner, die auch mit komplexen Zahlen umgehen und
+Taschenrechner, die auch mit komplexen Zahlen umgehen und
 Funktionsgraphen zeichnen konnten.
 Bei vielen mehrdimensionalen Aufgaben ergibt sich nun die Situation,
 dass man sich etwa um das Lösen linearer Gleichungssysteme, die
@@ -53,15 +67,15 @@ x_1\\ \ldots\\ x_n
 b_1\\ \ldots\\ b_n
 \end{bmatrix}
 \end{gather*}
-aufschreiben. Also kurz \(Ax=b\). Nehmen wir nun erstmal
-an, \(A\) sei eine quadratische Matrix. Nun ist \(A\) genau
-dann invertierbar, wenn die Determinante \(\det(A)\ne 0\) ist. In diesem Fall
-können wir auf beiden Seiten von links mit \(A^{-1}\) multiplizieren.
-Somit ergibt sich \(A^{-1}Ax=A^{-1}b\). Wegen \(A^{-1}A=E_n\) und
-\(E_n x=x\) ergibt sich
+aufschreiben. Also kurz $Ax=b$. Nehmen wir nun erst einmal
+an, $A$ sei eine quadratische Matrix. Nun ist $A$ genau
+dann invertierbar, wenn die Determinante $\det(A)\ne 0$ ist. In diesem Fall
+können wir auf beiden Seiten von links mit $A^{-1}$ multiplizieren.
+Somit ergibt sich $A^{-1}Ax=A^{-1}b$. Wegen $A^{-1}A=E_n$ und
+$E_n x=x$ ergibt sich
 \[x=A^{-1}b.\]
-Das ist ganz analog zu \(ax=b\). Wenn hier \(a\ne 0\) ist, so kann
-man durch \(a\) dividieren und erhält \(x=a^{-1}b\).
+Das ist ganz analog zu $ax=b$. Wenn hier $a\ne 0$ ist, so kann
+man durch $a$ dividieren und erhält $x=a^{-1}b$.
 
 Ein Beispiel hierzu ist
 \begin{align*}
@@ -100,8 +114,8 @@ Betrachten wir die Matrix
  26 &  49 &  32
 \end{bmatrix}.\]
 Diese Matrix ist nilpotent. Jede nilpotente Matrix ist singulär
-(nicht invertierbar). Daher ist auch \(\det(N)=0\). Wir wollen
-den Nilpotenzgrad von \(N\) bestimmen.
+(nicht invertierbar). Daher ist auch $\det(N)=0$. Wir wollen
+den Nilpotenzgrad von $N$ bestimmen.
 \begin{verbatim}
 > N=[-15,-27,-18; -7,-17,-10; 26,49,32];
 > det(N)
@@ -111,62 +125,64 @@ den Nilpotenzgrad von \(N\) bestimmen.
 > all(all(N^3 < 1e-10))
 1
 \end{verbatim}
-Also hat \(N\) den Nilpotenzgrad drei.
+Also hat $N$ den Nilpotenzgrad drei.
 
-Die Matrix \(N\) kann nun als lineare Abbildung \(f\) von
-\(V=\mathbb R^3\) nach \(W=\mathbb R^3\) betrachtet werden. Wir
-wollen jetzt den Rang von \(N\) bestimmen.
+Die Matrix $N$ kann nun als lineare Abbildung $f$ von
+$V=\mathbb R^3$ nach $W=\mathbb R^3$ betrachtet werden. Wir
+wollen jetzt den Rang von $N$ bestimmen.
 \begin{verbatim}
 > rank(N,1e-10)
 2
 \end{verbatim}
-Damit hat \(N\) den Defekt 1. Der Bildraum ist also eine Ebene in
-\(W\), die durch den Koordinatenurspung von \(W\) verläuft. Der
-Nullraum (Kern) ist eine Gerade in \(V\), die durch den
-Koordinatenursprung von \(V\) verläuft. Angenommen wir haben nun das
+Damit hat $N$ den Defekt 1. Der Bildraum ist also eine Ebene in
+$W$, die durch den Koordinatenursprung von $W$ verläuft. Der
+Nullraum (Kern) ist eine Gerade in $V$, die durch den
+Koordinatenursprung von $V$ verläuft. Angenommen wir haben nun das
 Gleichungssystem
 \[Nx=b.\]
-Wegen \(\det(N)=0\) kann es für kein \(b\) eine eindeutige Lösung
-geben. Wenn man wahllos verschiedene \(x\) einsetzt, liegen die
-\(Nx\) alle in einer Ebene. Falls es Lösungen geben soll, muss
-\(b\) auch in dieser Ebene liegen. Sucht man sich ein zufälligen
-Vektor \(b\) aus, so wird dieser mit hoher Wahrscheinlichkeit nicht
-in der Ebene \(\mathrm{Bild}(f)=\{Nx|x\in V\}\) liegen. Setzt man
-\(b=0\), so ergibt sich \(\mathrm{Kern}(f)\) als Lösung. 
+Wegen $\det(N)=0$ kann es für kein $b$ eine eindeutige Lösung
+geben. Wenn man wahllos verschiedene $x$ einsetzt, liegen die
+$Nx$ alle in einer Ebene. Falls es Lösungen geben soll, muss
+$b$ auch in dieser Ebene liegen. Sucht man sich ein zufälligen
+Vektor $b$ aus, so wird dieser mit hoher Wahrscheinlichkeit nicht
+in der Ebene $\mathrm{Bild}(f)=\{Nx|x\in V\}$ liegen. Setzt man
+$b=0$, so ergibt sich $\mathrm{Kern}(f)$ als Lösung. 
 
-Rechnerisch gesehen braucht man ein \(b\) sodass
+Rechnerisch gesehen braucht man ein $b$ sodass
 \[\mathrm{Rang}((N|b))=\mathrm{Rang}(N)=2\]
-ist. Mit \((N|b)\) ist die erweiterte Koeffizientenmatrix von \(N\)
-gemeint. Setzt man \(b=0\), so ist das natürlich der Fall.
+ist. Mit $(N|b)$ ist die erweiterte Koeffizientenmatrix von $N$
+gemeint. Setzt man $b=0$, so ist das natürlich der Fall.
 
-Wir nehmen nun \(x=[1,0,0]^T\) und erhalten
+Wir nehmen nun $x=[1,0,0]^T$ und erhalten
 \[b=Nx = [-15,-7,26]^T.\]
 \begin{verbatim}
 > b = N*[1;0;0];
 > rank([N,b],1e-10)
 2
 \end{verbatim}
-Wie gibt man nun die Lösungen von \(Nx=b\) an? Nun, da die
+Wie gibt man nun die Lösungen von $Nx=b$ an? Nun, da die
 Lösungsmenge ein affiner Raum ist, genügt es einen Einhängepunkt
-\(P\) und eine Basis \(B=(e_k)\) anzugeben. Dann ist Lösungsmenge von
+$P$ und eine Basis $B=(e_k)$ anzugeben. Dann ist Lösungsmenge von
 der Form
 \[L = \{P+t_1e_1+\ldots t_d e_d\;|\; t\in\mathbb R^d\}.\]
 Nun ist aber auch
 \[L = P+\mathrm{Kern}(f).\]
-Daher müssen wir einen Punkt \(P\) und eine Basis von
-\(\mathrm{Kern}(f)\) angeben.
+Daher müssen wir einen Punkt $P$ und eine Basis von
+$\mathrm{Kern}(f)$ angeben. Der Funktion \texttt{null} berechnet eine
+ONB für den Nullraum (Kern):
 \begin{verbatim}
-# null berechnet eine ONB für den Nullraum (Kern)
 > B = null(N)
 [-0.45617; -0.30411; 0.83631]
-# Die ONB besteht in diesem Fall nur aus einem Vektor,
-# weil ja dim(Kern(f))=Defekt(f)=1 ist.
-# Dieser Basisvektor ist normiert.
+\end{verbatim}
+Die ONB besteht in diesem Fall nur aus einem Vektor,
+weil ja $\dim(\operatorname{Kern}(f))=\operatorname{Defekt}(f)=1$ ist.
+Dieser Basisvektor ist normiert.
+\begin{verbatim}
 > norm(B)
 1
 \end{verbatim}
-Jetzt braucht man noch einen Punkt \(P\). Wir könnten jetzt einfach
-\(x=[1,0,0]^T\) benutzen. Aber das wäre ja gemogelt. Wir müssen
+Jetzt braucht man noch einen Punkt $P$. Wir könnten jetzt einfach
+$x=[1,0,0]^T$ benutzen. Aber das wäre ja gemogelt. Wir müssen
 davon ausgehen, dass wir noch keine spezielle Lösung kennen.
 Dafür benutzt man \texttt{linsolve}.
 \begin{verbatim}
@@ -176,14 +192,14 @@ Dafür benutzt man \texttt{linsolve}.
 1
 \end{verbatim}
 Wenn man ein eindeutig lösbares System hat, dann bestimmt
-natürlich \texttt{linsolve} genau diese Lösung. Bei \(Nx=b\)
-bekommt man nur eine Lösung von vielen. Die Funktion \(g(t)=x+tB\)
-für die Lösungsgerade erhält man wie folgt.
+natürlich \texttt{linsolve} genau diese Lösung. Bei $Nx=b$
+bekommt man nur eine Lösung von vielen. Die Funktion $g(t)=x+tB$
+für die Lösungsgerade erhält man wie folgt:
 \begin{verbatim}
 > g = @(t) x+t*B;
 \end{verbatim}
-Nun wollen wir noch das \(t\) für \(g(t)=[1,0,0]^T\) bestimmen.
-Daher muss die Gleichung \(x_1+tB_1=1\) gelöst werden.
+Nun wollen wir noch das $t$ für $g(t)=[1,0,0]^T$ bestimmen.
+Daher muss die Gleichung $x_1+tB_1=1$ gelöst werden.
 \begin{verbatim}
 > t=(1-x(1))/B(1)
 -0.45617
@@ -201,7 +217,7 @@ Betrachten wir die Matrix
 2 & 4\\
 0 & 1
 \end{bmatrix}\]
-Das Matrixexponential lässt sich nun mit \texttt{expm} berechnen.
+Das Matrixexponential lässt sich nun mit \texttt{expm} berechnen:
 \begin{verbatim}
 > A = [2,4; 0,1];
 > A^0+A^1+A^2/2+A^3/6+A^4/24+A^5/120
@@ -212,11 +228,11 @@ Das Matrixexponential lässt sich nun mit \texttt{expm} berechnen.
  0.00000,  2.71828]
 \end{verbatim}
 Dieses Exponential können wir auch ohne Partialsumme selbst berechnen
-wenn eine Eigenzerlegung \(A=TDT^{-1}\) möglich ist. Es ist nämlich z.B.
+wenn eine Eigenzerlegung $A=TDT^{-1}$ möglich ist. Es ist nämlich z.B.
 \[A^3 = TDT^{-1}TDT^{-1}TDT^{-1} = TD^3T^{-1}\]
-weil Matrizenmultiplikation assoziativ ist und sich die \(T^{-1}T\)
-zur Einheitsmatrix \(E_2\) aufheben. Allgemein gilt \(A^m=TD^mT^{-1}\).
-Für die Diagonalmatrix \(D\) ist außerdem
+weil Matrizenmultiplikation assoziativ ist und sich die $T^{-1}T$
+zur Einheitsmatrix $E_2$ aufheben. Allgemein gilt $A^m=TD^mT^{-1}$.
+Für die Diagonalmatrix $D$ ist außerdem
 \[D^m = \begin{bmatrix}
 d_1 & 0\\
 0 & d_2
@@ -226,13 +242,13 @@ d_1^m & 0\\
 0 & d_2^m
 \end{bmatrix}.\]
 wie man durch Multiplizieren leicht überprüfen kann.
-Ist \(f\) allgemein eine Funktion, welche auf dem Spektrum von
-\(A\) definiert ist, so gilt \(f(A)=Tf(D)T^{-1}\) und
+Ist $f$ allgemein eine Funktion, welche auf dem Spektrum von
+$A$ definiert ist, so gilt $f(A)=Tf(D)T^{-1}$ und
 \[f(D) = f(\mathrm{diag}(d_1,\ldots,d_n))
 = \mathrm{diag}(f(d_1),\ldots,f(d_n)).\]
 Daher ist
 \[\exp(A) = T\exp(D)T^{-1}.\]
-Die Diagonalmatrix \(D\) enthält die Eigenwerte von \(A\).
+Die Diagonalmatrix $D$ enthält die Eigenwerte von $A$.
 Das lässt sich mit Octave ganz leicht bewerkstelligen.
 \begin{verbatim}
 > [T,D] = eig(A)
@@ -247,7 +263,7 @@ D = [2, 0;
 [7.38906, 18.68310;
  0.00000,  2.71828]
 \end{verbatim}
-In diesem Fall lässt sich \(\exp(A)\) sogar exakt angeben.
+In diesem Fall lässt sich $\exp(A)$ sogar exakt angeben.
 Wegen
 \[\begin{bmatrix}
 a & c\\
@@ -281,21 +297,23 @@ e^2 & 4e^2-4e\\
 
 \subsection{Simultane LGS}
 
-Angenommen man hat für die selbe Matrix \(A\) mehrere lineare
-Gleichungssysteme \(Ax=b_k\). Dann lassen sich
-die Vektoren \(b_k\) zu einer Matrix \(B\) zusammenfassen.
+Angenommen man hat für die selbe Matrix $A$ mehrere lineare
+Gleichungssysteme $Ax=b_k$. Dann lassen sich
+die Vektoren $b_k$ zu einer Matrix $B$ zusammenfassen.
 Für drei Vektoren in der Ebene setzt man z.B.
-\[B=(b_1,b_2,b_3)
+\begin{align*}
+B &= (b_1,b_2,b_3)
 = (\begin{bmatrix}b_{11}\\ b_{21}\end{bmatrix},
 \begin{bmatrix}b_{12}\\ b_{22}\end{bmatrix},
-\begin{bmatrix}b_{13}\\ b_{23}\end{bmatrix})
-= \begin{bmatrix}
+\begin{bmatrix}b_{13}\\ b_{23}\end{bmatrix})\\
+&= \begin{bmatrix}
 b_{11} & b_{12} & b_{13}\\
 b_{21} & b_{22} & b_{23}
-\end{bmatrix}.\]
-Jetzt lassen sich die drei Gleichungen \(Ax=b_1\), \(Ax=b_2\) und
-\(Ax=b_3\) zu einer Gleichung \(AX=B\) zusammenfassen.
-Gehen wir nun davon aus, dass \(A\) nicht singulär ist. Dann können
+\end{bmatrix}.
+\end{align*}
+Jetzt lassen sich die drei Gleichungen $Ax=b_1$, $Ax=b_2$ und
+$Ax=b_3$ zu einer Gleichung $AX=B$ zusammenfassen.
+Gehen wir nun davon aus, dass $A$ nicht singulär ist. Dann können
 alle drei LGS eindeutig gelöst werden. Man erhält die Lösung
 \[X = A^{-1}B.\]
 Beispielsystem:
@@ -321,46 +339,46 @@ Lösung:
 [0.0, 1.0, 0.4;
  0.5, 0.5, 1.9]
 \end{verbatim}
-Die Lösungsvektoren lassen sich auch aus \(X\) herausnehmen.
+Die Lösungsvektoren lassen sich auch aus $X$ herausnehmen.
 Den ersten Vektor bekommt man z.B. mit \texttt{X(1:2,1)}.
 
 
 \subsection{Reelle Matrixpotenzen}
 
-Man betrachte eine quadratische Matrix \(A\). Dann ist
-\(f(x)=Ax\) ein linearer Endomorphismus vom Koordinatenraum
-\(\mathbb R^n\) in den Koordinatenraum \(\mathbb R^n\). Die Matrix
-\(A^2\) lässt sich als zweimalige Anwendung von \(f\) interpretieren.
-Die Matrixpotenz \(A^m\) entspricht somit einer \(m\)-fachen Iteration
-von \(f\). Eine reelle Matrixpotenz lässt sich als fraktionale
+Man betrachte eine quadratische Matrix $A$. Dann ist
+$f(x)=Ax$ ein linearer Endomorphismus vom Koordinatenraum
+$\mathbb R^n$ in den Koordinatenraum $\mathbb R^n$. Die Matrix
+$A^2$ lässt sich als zweimalige Anwendung von $f$ interpretieren.
+Die Matrixpotenz $A^m$ entspricht somit einer $m$-fachen Iteration
+von $f$. Eine reelle Matrixpotenz lässt sich als fraktionale
 Iteration interpretieren.
 
 Da das Thema im Allgemeinen recht kompliziert ist, beschränken wir
-uns auf Rotationsmatrizen für den \(\mathbb R^2\). Diese sind von der
+uns auf Rotationsmatrizen für den $\mathbb R^2$. Diese sind von der
 Form
 \[R(\varphi) = \begin{bmatrix}
 \cos\varphi & -\sin\varphi\\
 \sin\varphi & \cos\varphi
 \end{bmatrix}.\]
-Eine solche Rotationsmatrix dreht einen Vektor \(x\) um den
-Winkel \(\varphi\) gegen den Uhrzeigersinn. Hier gilt für
+Eine solche Rotationsmatrix dreht einen Vektor $x$ um den
+Winkel $\varphi$ gegen den Uhrzeigersinn. Hier gilt für
 die Multiplikation von Matrizen
 \[R(\varphi_1)R(\varphi_2) = R(\varphi_1+\varphi_2),\]
 was man mit den Additionstheoremen bestätigen kann.
-Für eine \(m\)-fache Applikation erhält man daher
+Für eine $m$-fache Applikation erhält man daher
 \[R(\varphi)^m x = R(m\varphi)x.\]
-Für eine reelle Zahl \(r\) ist dann aber wohl
+Für eine reelle Zahl $r$ ist dann aber wohl
 \[R(\varphi)^r = R(r\varphi).\]
-Will man allgemein \(A^r\) für eine quadratische Matrix \(A\)
-berechnen, so sollte \(A\) zunächst diagonalisierbar sein und
-ausschließlich positive Eigenwerte haben. Ander ausgedrückt:
-Die Potenzfunktionen sollen auf dem Spektrum von \(A\) definiert
+Will man allgemein $A^r$ für eine quadratische Matrix $A$
+berechnen, so sollte $A$ zunächst diagonalisierbar sein und
+ausschließlich positive Eigenwerte haben. Anders ausgedrückt:
+Die Potenzfunktionen sollen auf dem Spektrum von $A$ definiert
 sein.
 
 Mit Octave lassen sich reelle Matrixpotenzen berechnen. Die hier
 dargestellten Formeln lassen sich numerisch verifizieren.
-Außerdem lässt sich mit \(\exp(A)=e^A\) das Matrixexponential
-und mit \(\ln(A)\) der Matrixlogarithmus berechnen.
+Außerdem lässt sich mit $\exp(A)=e^A$ das Matrixexponential
+und mit $\ln(A)$ der Matrixlogarithmus berechnen.
 Ich wir erklären, was es in diesem Fall damit auf sich hat.
 
 Für den Matrixlogarithmus einer Rotationsmatrix gilt zunächst einmal
@@ -374,15 +392,15 @@ Für den Matrixlogarithmus einer Rotationsmatrix gilt zunächst einmal
 1 & 0
 \end{bmatrix} = \varphi R(\pi/2).
 \]
-Mit der Formel \(A=\exp(\ln(A))\) ergibt sich dann
+Mit der Formel $A=\exp(\ln(A))$ ergibt sich dann
 \[R(\varphi) = \exp(\varphi R(\pi/2)).\]
-Bei der Menge \(\{\varphi R(\pi/2)|\varphi\in\mathbb R\}\)
-handelt es sich um eine Lie-Algebra. Diese ist aber langweilig,
-weil die Matrizen der Lie-Algebra in diesem Fall kommutativ sind.
-Das Matrixexponential ordnet den Elementen der Lie-Algebra Elemente
-der Lie-Gruppe zu. In diesem Fall besteht die Lie-Gruppe aus allen
+Bei der Menge $\{\varphi R(\pi/2)|\varphi\in\mathbb R\}$
+handelt es sich um eine Lie"=Algebra. Diese ist aber langweilig,
+weil die Matrizen der Lie"=Algebra in diesem Fall kommutativ sind.
+Das Matrixexponential ordnet den Elementen der Lie"=Algebra Elemente
+der Lie"=Gruppe zu. In diesem Fall besteht die Lie"=Gruppe aus allen
 Rotationsmatrizen. Wegen der Kommutativität kann man auf die
-BCH-Formel verzichten, sodass gilt
+BCH"=Formel verzichten, sodass gilt
 \[e^{X+Y} = e^X e^Y.\]
 Nun kann man auch schreiben
 \[R(\varphi)^r = \big(e^{\varphi R(\pi/2)}\big)^r
