@@ -39,8 +39,8 @@ Zu Bemerken ist noch, dass die analytische Geometrie nicht
 als Ersatz für die klassische euklidische Geometrie gedacht ist,
 sondern als \emph{Vervollständigung}. Die Sätze, Methoden und Beweise
 der euklidischen Geometrie behalten ihre Gültigkeit, allerdings
-kommen neue Methoden hinzu. Einige Sachverhalte sind etwas leichter mit
-klassischer Geometrie verständlich, andere sind besonders
+kommen neue Methoden hinzu. Einige Sachverhalte sind etwas leichter
+mit klassischer Geometrie verständlich, andere sind besonders
 elegant mit Vektorrechnung formulierbar.
 
 \section{Rechnen mit Koordinaten}
@@ -142,6 +142,18 @@ Die Inzidenz lässt sich nun leicht prüfen, indem einfach
 $x:=x_0$ und $y:=y_0$ eingesetzt wird. Die Gleichung ist nur
 dann erfüllt, wenn $P_0$ auf der Geraden liegt.
 
+Eine weitere Umformung der Gleichung führt zu
+\[(y_2-y_1)x-(x_2-x_1)y
+= (y_2-y_1)x_1-(x_2-x_1)y_1.\]
+Definiert man nun
+\[a_1:=y_2-y_1,\;\; a_2:=x_1-x_2,\;\; b:=a_1x_1+a_2y_1,\]
+dann bekommt die Gleichung die kurze Form
+\begin{equation}\label{eq:Gerade-kurz}
+a_1 x + a_2 y = b.
+\end{equation}
+Diese Form der Gleichung benutzen wir später als Ausgangspunkt
+zur Beschreibung der Schnittmenge von zwei Geraden.
+
 \subsection{Kreise}
 
 Viele Kurven sind mit Gleichungen beschreibbar, darunter fallen
@@ -202,3 +214,175 @@ genau nachrechnen:
 \Leftrightarrow x=x_0\;\text{und}\;y=y_0\\
 \Leftrightarrow (x,y)=(x_0,y_0).
 \end{gather*}
+
+\subsection{Schnitt von Geraden}
+
+Die Schnittmenge $g_1\cap g_2$ von zwei Geraden
+\begin{equation}
+\begin{split}
+g_1 &:= \{(x,y)\mid a_{11}x+a_{12}y = b_1\},\\
+g_2 &:= \{(x,y)\mid a_{21}x+a_{22}y = b_2\}
+\end{split}
+\end{equation}
+ist die Lösungsmenge des Gleichungssystems
+\begin{equation}
+\begin{split}\label{eq:LGS}
+a_{11}x+a_{12}y &= b_1,\\
+a_{21}x+a_{22}y &= b_2.
+\end{split}
+\end{equation}
+Der Anschauung nach ist schon klar, dass drei verschiedene
+Umstände bestehen können: die beiden Geraden haben genau
+einen Schnittpunkt, stehen entfernt parallel zueinander
+oder stimmen überein. Diese Umstände müssen sich in der Lösungsmenge
+des Gleichungssystems manifestieren.
+
+Umformung der ersten Gleichung bringt
+\[x = \frac{b_1-a_{12}y}{a_{11}}.\]
+Einsetzen von $x$ in die zweite Gleichung
+und Umformung nach $y$ bringt dann
+\begin{equation}
+y = \frac{a_{11}b_2-a_{21}b_1}{a_{11}a_{22}-a_{21}a_{12}}.
+\end{equation}
+Nun besteht noch das Problem, dass bei der Umformung eine Division
+durch null aufgetreten sein könnte, die Umformung daher ungültig ist.
+War das nicht der Fall, gab es nur Äquivalenzumformungen, das
+System besitzt demnach dann genau eine Lösung.
+
+Zwar ließe sich die Umformung auch so ausführen, dass eine Division
+umgangen wird, allerdings ist die Multiplikation mit null ebenfalls
+keine Äquivalenzumformung.
+
+Es ist allerdings so, dass man auf vier Wegen zur gleichen Lösung
+gelangt, je nachdem welche Variable welcher Gleichung eingesetzt
+wird. Demnach lässt sich eine Division durch null immer vermeiden,
+wenn nicht gleichzeitig alle Koeffizienten
+$a_{11}, a_{12}, a_{21}, a_{22}$
+verschwinden. Bei der Geradengleichung \eqref{eq:Gerade-kurz}
+können aber nicht gleichzeitig beide Koeffizienten verschwinden.
+Demnach verbleibt nur noch die Division durch die Zahl
+\begin{equation}
+D := a_{11}a_{22}-a_{21}a_{12},
+\end{equation}
+die als \emph{Determinante} bezeichnet wird. Wenn $D\ne 0$ ist,
+muss es eine eindeutige Lösung geben. Betrachten wir daher
+nun den Fall $D=0$, das führt zur Gleichung
+\begin{equation}
+a_{11}a_{22} = a_{21}a_{12}.
+\end{equation}
+Unter der Prämisse $a_{12}\ne 0$ und $a_{22}\ne 0$ ist die Gleichung
+äquivalent zu
+\begin{equation}
+-\frac{a_{11}}{a_{12}} = -\frac{a_{21}}{a_{22}}.
+\end{equation}
+Die Terme auf den beiden Seiten sind die Anstiege der Geraden
+$g_1$ und $g_2$ für den funktionalen Zusammenhang $y(x)$, was
+nach Umformung von \eqref{eq:LGS} nach $y$ ersichtlich ist:
+\begin{align}
+y &= f_1(x) = \frac{b_1}{a_{12}} - \frac{a_{11}}{a_{12}}x,\\
+y &= f_2(x) = \frac{b_2}{a_{22}} - \frac{a_{21}}{a_{22}}x.
+\end{align}
+Die Geraden müssen also zwangsläufig parallel stehen. Parallelität
+schließt allerdings nicht aus, dass die Geraden auch übereinstimmen
+könnten. Das ist genau dann der Fall, wenn $f_1=f_2$, wenn also
+zusätzlich
+\begin{equation}
+\frac{b_1}{a_{12}} = \frac{b_2}{a_{22}}
+\end{equation}
+gilt. Nun kann die Prämisse noch verletzt sein, dann ist aber
+$a_{11}\ne 0$ und $a_{21}\ne 0$, und man kann stattdessen den
+funktionalen Zusammenhang $x(y)$ betrachten.
+
+\subsection{Schnitt von Kreis und Gerade}
+
+Man kann Schnittmengen aller möglichen durch Gleichungen
+beschreibbaren Kurven betrachten, was zu unterschiedlichsten
+Gleichungssystemen führt. Wir könnten uns ewig mit dieser
+Thematik aufhalten. Beim Schnitt von Kreis und Gerade treten
+allerdings die wichtigen Begriffe Passante, Sekante und Tangente
+auf. Eine Konzepterweiterung des Begriffs Tangente lässt sich
+mittels Differentialrechnung ermitteln. Aus diesem Grund wollen wir
+uns hier mit dem Ursprung dieses Begriffs am Kreis beschäftigen.
+
+Ohne Beschränkung der Allgemeinheit lässt sich das Koordinatensystem
+so wählen, dass der Mittelpunkt des Kreises im Koordinatenursprung
+liegt. Der Einfachheit halber wollen wir vertikale Geraden
+ausschließen, dann ist der Schnitt beschrieben durch die Lösungsmenge
+des Gleichungssystems
+\begin{align}\label{eq:GS-Kreis}
+& x^2 + y^2 = r^2,\\
+& y = n+mx.
+\end{align}
+Einsetzen von $y$ in die erste Gleichung liefert
+\begin{gather*}
+x^2+(n+mx)^2 = r^2\\
+\iff x^2+n^2+2mnx+m^2 x^2 = r^2\\
+\iff (m^2+1)x^2 + 2mnx + n^2-r^2 = 0.
+\end{gather*}
+Dies ist unter allen Umständen eine quadratische Gleichung in $x$,
+denn $m^2+1\ge 1$, also insbesondere $m^2+1\ne 0$. Mit
+\[p = \frac{2mn}{m^2+1},\;\; q = \frac{n^2-r^2}{m^2+1}\]
+bekommt man die Diskriminante
+\[D = p^2-4q = \frac{4r^2}{m^2+1}-\Big(\frac{2n}{m^2+1}\Big)^2.\]
+Bei $D<0$ gibt es keine Lösung, es liegt eine Passante vor. Bei
+$D>0$ gibt es zwei Lösungen, es Sekante vor. Bei $D=0$ sind beide
+Lösungen zu einer einzigen zusammengefallen, man bekommt eine
+Tangente. Es ergibt sich das Kriterium
+\begin{equation}\label{eq:Tangentenkriterium}
+D=0\iff r^2(m^2+1)=n^2.
+\end{equation}
+Wir wollen nun aufzeigen, dass die mittels Differentialrechnung
+ermittelten Tangenten tatsächlich dieses Kriterium erfüllen.
+Umformung von Gleichung \eqref{eq:GS-Kreis} nach $y$ führt zum
+funktionalen Zusammenhang
+\begin{equation}
+y = f(x) = \sqrt{r^2-x^2}.
+\end{equation}
+An einer Stelle $x_0$ mit $y_0=f(x_0)$ ist die Tangente nun
+beschrieben durch die Funktion
+\begin{align}
+T(x) &= f(x_0)+f'(x_0)(x-x_0)\\
+&= \underbrace{f(x_0)-f'(x_0)x_0}_{n}+\underbrace{f'(x_0)}_{m}x.
+\end{align}
+Die Ableitung der Funktion $f$ ist
+\begin{equation}
+f'(x) = \frac{-x}{\sqrt{r^2-x^2}} = \frac{-x}{f(x)}.
+\end{equation}
+Es ergibt sich
+\begin{gather}
+m^2+1 = f'(x_0)^2+1 = \frac{r^2}{r^2-x_0^2} = \frac{r^2}{f(x_0)^2}.
+\end{gather}
+Man bekommt
+\begin{gather*}
+\frac{n^2}{m^2+1}
+= \frac{(f(x_0)-f'(x_0)x_0)^2}{f'(x_0)^2+1}\\
+= \frac{f(x_0)^2}{r^2}(f(x_0)-f'(x_0)x_0)^2\\
+= \frac{1}{r^2}(f(x_0)^2-f(x_0)f'(x_0)x_0)^2\\
+= \frac{1}{r^2}(f(x_0)^2+x_0^2)^2
+= \frac{1}{r^2}(r^2-x_0^2+x_0^2)^2\\
+= \frac{r^4}{r^2} = r^2.
+\end{gather*}
+Tatsächlich ergibt sich das gewünschte Resultat
+\eqref{eq:Tangentenkriterium}.
+
+\subsection{Abstände}
+
+Der Abstand $d(P_1,P_2)$ von zwei Punkten
+$P_1=(x_1,y_1)$ und $P_2=(x_2,y_2)$ lässt sich leicht berechnen,
+denn hier gilt der Satz des Pythagoras:
+\begin{equation}
+\begin{split}
+d(P_1,P_2)^2 &= (\Delta x)^2+(\Delta y)^2\\
+&= (x_2-x_1)^2+(y_2-y_1)^2.
+\end{split}
+\end{equation}
+Mit dieser Abstandsfunktion
+\[d\colon \R^2\times\R^2\to\R\]
+lässt sich ein Kreis um den Punkt $P_0$ mit Radius $r$
+auch kurz so beschreiben:
+\begin{equation}
+K(P_0,r) := \{P\mid d(P_0,P)=r\}.
+\end{equation}
+Der Kreis ist also die Menge der Punkte $P$, welche konstanten
+Abstand $r$ vom Punkt $P_0$ haben. Dieser Abstand heißt \emph{Radius}
+des Kreises.
