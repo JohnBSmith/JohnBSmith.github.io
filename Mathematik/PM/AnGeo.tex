@@ -450,5 +450,189 @@ Umformung nach $y$ bringt die neue Vorschrift
 x\mapsto y_0+f(x-x_0).
 \end{equation}
 
+\section{Vektorrechnung}
 
+\subsection{Vektoren}
+
+Ein Vektor $\bvec v$ ist ein Verschiebungspfeil, der aus einer
+Richtung und einer Länge besteht. Ein beliebiger Punkt $P$ wird damit
+verschoben zu einem Punkt $P'$. Man schreibt $P' = P+\bvec v$. Die
+Schreibweise dieser Operation als Addition ist aus folgendem Grund
+gerechtfertigt. Die Verschiebung $\bvec v$ lässt sich zerlegen in
+eine Komponente $v_1$ und eine Komponente $v_2$. Ist
+$P=(x,y)$ und $P'=(x',y')$, dann gilt $x'=x+v_1$ und $y'=y+v_2$.
+Das kann man auch so schreiben:%
+\begin{equation}
+P+\bvec v = \begin{pmatrix}x\\ y\end{pmatrix}
++\begin{pmatrix}v_1\\ v_2\end{pmatrix}
+:= \begin{pmatrix}x+v_1\\ y+v_2\end{pmatrix} = P'.
+\end{equation}
+Zu zwei Punkten $P_1=(x_1,y_2)$ und $P_2=(x_2,y_2)$ definiert man
+entsprechend die Differenz
+\begin{equation}
+P_2-P_1 = \begin{pmatrix}x_2\\ y_2\end{pmatrix}
+-\begin{pmatrix}x_1\\ y_1\end{pmatrix}
+:= \begin{pmatrix}x_2-x_1\\ y_2-y_1\end{pmatrix}.
+\end{equation}
+Diese Differenz ist genau der Verschiebungsvektor von $P_1$ nach
+$P_2$, denn es gilt
+\begin{equation}
+P_1+(P_2-P_1) = P_2,
+\end{equation}
+wie eine kurze Rechnung bestätigt:
+\begin{gather*}
+\begin{pmatrix}
+x_1\\ y_1
+\end{pmatrix}
++ \begin{pmatrix}
+x_2-x_1\\
+y_2-y_1
+\end{pmatrix}
+= \begin{pmatrix}
+x_1+x_2-x_1\\
+y_1+y_2-y_1
+\end{pmatrix}
+= \begin{pmatrix}
+x_2\\
+y_2
+\end{pmatrix}.
+\end{gather*}
+Vektoren schreibt man fettgedruckt ($\bvec v$), unterstrichen
+($\underline v$) oder mit Pfeil ($\vec v$). Die Darstellung von
+Fettdruck kann in der Handschrift auch durch Unterstreichen geschehen.
+Für Vektoren werden meistens die Buchstaben $\bvec u,\bvec v,\bvec w$
+und $\bvec a,\bvec b,\bvec c,\bvec d,\bvec e$ benutzt.
+
+Die Addition von zwei Vektoren ist wie folgt definiert:%
+\begin{equation}
+\mathbf a+\mathbf b = \begin{pmatrix}a_1\\ b_2\end{pmatrix}
++\begin{pmatrix}b_1\\ b_2\end{pmatrix}
+:= \begin{pmatrix}a_1+b_1\\ a_2+b_2\end{pmatrix}.
+\end{equation}
+Die Addition von Vektoren entspricht der Hintereinanderausführung
+der Verschiebungen, denn es gilt%
+\begin{equation}
+P+(\bvec a+\bvec b) = (P+\bvec a)+\bvec b,
+\end{equation}
+wie man leicht nachrechnen kann:
+\begin{align*}
+&\begin{pmatrix}x\\ y\end{pmatrix}
++ \begin{pmatrix}a_1+b_1\\ a_2+b_2\end{pmatrix}
+= \begin{pmatrix}x+a_1+b_1\\ y+a_2+b_2\end{pmatrix}\\
+&= \begin{pmatrix}x+a_1\\ y+a_2\end{pmatrix}
++ \begin{pmatrix}b_1\\ b_2\end{pmatrix}.
+\end{align*}
+Genauso leicht zu bestätigen sind das Kommutativ-
+und das Assoziativgesetz:%
+\begin{gather}
+\bvec a+\bvec b = \bvec b+\bvec a,\\
+\bvec a+(\bvec b+\bvec c) = (\bvec a+\bvec b)+\bvec c.
+\end{gather}
+Multipliziert man jede Komponente eines Vektors mit einer reellen
+Zahl $r$, dann wird der Vektor um diese Zahl skaliert. Daher
+wird $r$ in diesem Kontext als \emph{Skalar} bezeichnet. Man
+definiert die \emph{Skalarmultiplikation}%
+\begin{equation}
+r\bvec a = r\begin{pmatrix}a_1\\ a_2\end{pmatrix}
+:= \begin{pmatrix}ra_1\\ ra_2\end{pmatrix}.
+\end{equation}
+Wie bei Zahlen gilt dann z.\,B.
+\[\bvec a+\bvec a = 2\bvec a.\]
+Das ist auch anschaulich klar: Zweifache Anwendung der gleichen
+Verschiebung entspricht genau der Verschiebung um die doppelte Länge.
+
+Die speziellen Vektoren
+\begin{equation}
+\bvec e_1 := \begin{pmatrix}1\\ 0\end{pmatrix},\;\;
+\bvec e_2 := \begin{pmatrix}0\\ 1\end{pmatrix}
+\end{equation}
+bezeichnet man als \emph{Standardbasis}. Man kann einen
+Vektor nun wie folgt zerlegen:%
+\begin{align*}
+\bvec a &= \begin{pmatrix}a_1\\ a_2\end{pmatrix}
+= \begin{pmatrix}a_1\\ 0\end{pmatrix}
++ \begin{pmatrix}0\\ a_2\end{pmatrix}
+= a_1\begin{pmatrix}1\\ 0\end{pmatrix}
++ a_2\begin{pmatrix}0\\ 1\end{pmatrix}\\
+&= a_1\bvec e_1+a_2\bvec e_2.
+\end{align*}
+Man sagt, jeder Vektor $\bvec a$ ist als \emph{Linearkombination}
+der Standardbasis darstellbar. Der Anteil $a_1\bvec e_1$
+entspricht der waagerechten Verschiebung, der Anteil
+$a_2\bvec e_2$ der senkrechten.
+
+Die Länge eines Vektors $\bvec a$ wird Betrag
+genannt und $|\bvec a|$ geschrieben. Der Zerlegung
+$\bvec a=a_1\bvec e_1+a_2\bvec e_2$ in waagerechte und
+senkrechte Verschiebung bildet ein rechtwinkliges Dreieck. Der Satz des
+Pythagoras erlaubt demnach die Berechnung des Betrags:%
+\begin{equation}
+|\bvec a|^2 = |a_1\bvec e_1|^2+|a_2\bvec e_2|^2 = a_1^2+a_2^2.
+\end{equation}
+Aufgrund der trigonometrischen Betrachtung des rechtwinkligen
+Dreiecks können wir außerdem folgendes sagen. Ist ein Vektor $\bvec a$
+durch einen Betrag $r$ und einen Richtungswinkel $\varphi$ gegeben,
+gilt%
+\begin{equation}
+\bvec a = \begin{pmatrix}
+r\cos\varphi\\
+r\sin\varphi
+\end{pmatrix}.
+\end{equation}
+Gemäß trigonometrischem Pythagoras gilt dann%
+\begin{align*}
+|\bvec a|^2 &= (r\cos\varphi)^2+(r\sin\varphi)^2\\
+&= r^2(\cos(\varphi)^2+\sin(\varphi)^2)\\
+&= r^2\cdot 1 = r^2.
+\end{align*}
+Also ist $|\bvec a|=r$, wie gewünscht.
+
+\subsection{Das Skalarprodukt}
+
+Das \emph{Standardskalarprodukt} von zwei Vektoren%
+\[\bvec a = \begin{pmatrix}a_1\\ a_2\end{pmatrix},\;\;
+\bvec b = \begin{pmatrix}b_1\\ b_2\end{pmatrix}\]
+ist definiert als
+\begin{equation}
+\langle\bvec a,\bvec b\rangle = a_1b_1+a_2b_2.
+\end{equation}
+Das Skalarprodukt eines Vektors mit sich selbst
+ergibt das Quadrat des Betrages:
+\begin{equation}
+\langle\bvec a,\bvec a\rangle = a_1^2+a_2^2 = |\bvec a|^2.
+\end{equation}
+Das Skalarprodukt ist kommutativ:
+\begin{equation}
+\langle\bvec a,\bvec b\rangle
+= \langle\bvec b,\bvec a\rangle,
+\end{equation}
+denn
+\[a_1 b_1 + a_2 b_2 = b_1 a_1 + b_2 a_2.\]
+Das Skalarprodukt erfüllt folgende Regeln:
+\begin{gather}
+\langle r\bvec a,\bvec b\rangle = \langle\bvec a,r\bvec b\rangle
+= r\langle\bvec a,\bvec b\rangle,\\
+\langle\bvec a,\bvec b+\bvec c\rangle
+= \langle\bvec a,\bvec b\rangle+\langle\bvec a,\bvec c\rangle,\\
+\langle\bvec a+\bvec b,\bvec c\rangle
+= \langle\bvec a,\bvec c\rangle+\langle\bvec b,\bvec c\rangle.
+\end{gather}
+Diese drei Regeln bezeichnet man als \emph{Bilinearität}.
+
+Bilinearität erlaubt das Ausmultiplizieren, ganz analog zur
+gewöhnlichen Multiplikation. Man betrachte z.\,B. die
+erste binomische Formel
+\[(a+b)^2 = a^2+2ab+b^2.\]
+Zu dieser besteht ein entsprechendes Analogon:
+\begin{gather*}
+|\bvec a+\bvec b|^2
+= \langle\bvec a+\bvec b,\bvec a+\bvec b\rangle\\
+= \langle\bvec a,\bvec a+\bvec b\rangle
++ \langle\bvec b,\bvec a+\bvec b\rangle\\
+= \langle\bvec a,\bvec a\rangle
++ \langle\bvec a,\bvec b\rangle
++ \langle\bvec b,\bvec a\rangle
++ \langle\bvec b,\bvec b\rangle\\
+= |\bvec a|^2 + 2\langle\bvec a,\bvec b\rangle + |\bvec b|^2.
+\end{gather*}
 
