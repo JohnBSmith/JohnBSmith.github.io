@@ -637,6 +637,25 @@ Zu dieser besteht ein entsprechendes Analogon:
 \end{gather*}
 
 \section{Parameterkurven}
+\subsection{Begriff}
+Zur Konstruktion einer Kurve kann man auch einen Punkt $P$ abhängig
+von einem Parameter $t$ machen, der Punkt ist dann eine Funktion
+von $t$. Sei $I\subseteq\R$ und%
+\begin{equation}
+c\colon I\to\R^2, \quad c(t):=\begin{pmatrix}x(t)\\ y(t)\end{pmatrix}.
+\end{equation}
+Dann wird jedem $t$ ein Punkt $P=c(t)$ zugeordnet. Von einer
+Parameterkurve spricht man im strengen Sinn dann, wenn diese
+Funktion stetig ist, beim Durchlaufen der Kurve also nirgends
+Sprünge vorkommen. Demnach sollte $I$ auch nicht eine beliebige
+Teilmenge sein, sondern zusammenhängend, also ein Intervall.
+
+Parameterkurven stellen unter einer geometrischen Sichtweise eine
+Verallgemeinerung von reellen Funktionen dar, denn jede reelle
+Funktion $f\colon I\to\R$ ist beschreibbar als%
+\begin{equation}
+c\colon I\to \R^2,\;\; c(t):=\begin{pmatrix}t\\ f(t)\end{pmatrix}.
+\end{equation}
 
 \subsection{Differentiation}
 
@@ -691,4 +710,101 @@ f'(t) &= (f_1\bvec e_1+f_2\bvec e_2)'(t)\\
 &= (f_1\bvec e_1)'(t)+(f_2\bvec e_2)'(t)\\
 &= f_1'(t)\,\bvec e_1+f_2'(t)\,\bvec e_2 = (f_1'(t),f_2'(t)).
 \end{align*}
+
+\subsection{Beziehung zu impliziten Kurven}
+
+Für manche Parameterkurven ist eine Darstellung als implizite
+Kurve möglich. Für manche implizite Kurven ist umgekehrt eine
+Darstellung als Parameterkurve möglich.
+
+Ein einfaches Beispiel ist die Kreiskurve
+\begin{equation}
+c\colon{[0,2\pi)}\to\R^2,\;\;c(t):=\begin{pmatrix}
+r\cos t\\
+r\sin t
+\end{pmatrix}.
+\end{equation}
+Die Komponenten $x(t)=r\cos t$  und $y(t)=r\sin t$ erfüllen hier die
+Gleichung $x(t)^2+y(t)^2=r^2$. Demnach durchläuft $c(t)$ einen
+Kreis mit Radius $r$. Außerdem ist $t$ in diesem Fall als Winkel
+interpretierbar.
+
+Die \emph{Lemniskate von Gerono} ist definiert als
+\begin{equation}
+c\colon{[0,2\pi)}\to\R^2,\;\;c(t):=\begin{pmatrix}
+\cos t\\
+\sin(2t)/2
+\end{pmatrix}.
+\end{equation}
+Hier ist es schon schwieriger, eine Gleichung zu finden, die
+$x(t)=\cos t$ und $y(t)=\sin(2t)/2$ erfüllen.
+
+Gemäß den Additionstheoremen gilt
+\begin{equation}
+\sin(2t) = 2\cos t\sin t.
+\end{equation}
+Demnach ist $y=x\sin t$. Dann gilt auch $y^2=x^2\sin(t)^2$.
+Laut trigonometrischem Pythagoras ist $\sin(t)^2=1-\cos(t)^2$,
+das führt zu
+\begin{equation}
+y^2=x^2(1-x^2)\iff x^4+y^2 = x^2.
+\end{equation}
+
+
+\subsection{Bogenlänge}
+
+Gegeben sei eine differenzierbare Kurve $c: [a,b]\to\R^2$ mit
+stetiger Ableitung. Jede solche Kurve besitzt eine Bogenlänge, die sich
+mit Integralrechnung ermitteln lässt. Es folgt eine Herleitung.
+Zunächst wird das Intervall $[a,b]$ zerlegt in $n$ gleich große Teile
+\[[a+kh,\,a+(k{+}1)h],\quad k\in\{0,\ldots,n-1\}\]
+mit $h=(b-a)/n$. Für ein hinreichend kleines $h$ ist die Kurve in
+jedem Intervall nahezu gerade, für die Länge gilt gemäß dem Satz des
+Pythagoras dann
+\begin{equation}
+L_k \approx \sqrt{(\Delta x)^2+(\Delta y)^2}.
+\end{equation}
+Hierbei gilt
+\begin{align*}
+\Delta x &= x(a+(k{+}1)h)-x(a+kh),\\
+\Delta y &= y(a+(k{+}1)h)-y(a+kh).
+\end{align*}
+Für hinreichend kleines $h$ gilt zudem
+\begin{align*}
+x(t+h) \approx x(t)+x'(t)h,\\
+y(t+h) \approx y(t)+y'(t)h.
+\end{align*}
+Somit ist
+\begin{align*}
+\Delta x &\approx x'(a+kh)h,\\
+\Delta y &\approx y'(a+kh)h.
+\end{align*}
+Das führt zu
+\begin{align*}
+L_k &\approx \sqrt{x'(a+kh)^2 h^2+y'(a+kh)^2 h^2}\\
+&= \sqrt{x'(a+kh)^2+y'(a+kh)^2}\cdot h\\
+&= |c'(a+kh)|\cdot h.
+\end{align*}
+Also ist
+\begin{equation}
+L = \sum_{k=0}^{n-1} L_k
+\approx \sum_{k=0}^{n-1} \big|c'(a+k\tfrac{b-a}{n})\big|\cdot\tfrac{b-a}{n}.
+\end{equation}
+Für $n\to\infty$ ergibt sich die Formel für das bestimmte
+Integral einer auf $[a,b]$ stetigen Funktion. D.\,h.%
+\begin{equation}
+L = \int_a^b |c'(t)|\,\mathrm dt.
+\end{equation}
+Probieren wir das gleich am Einheitskreis
+\[c(t):=(cos(t),sin(t)),\;\;t\in{[0,2\pi)}\]
+aus. Wie gewünscht ergibt sich
+\begin{align*}
+L &= \int_0^{2\pi} \left|\begin{pmatrix}-\sin t\\ \cos t\end{pmatrix}\right|\,\mathrm dt\\
+&= \int_0^{2\pi} \sqrt{(-\sin t)^2+(\cos t)^2}\,\mathrm dt\\
+&= \int_0^{2\pi} 1\,\mathrm dt = [t]_{0}^{2\pi} = 2\pi.
+\end{align*}
+Aufgrund der auftretenden Wurzel ist die analytische Bestimmung
+des Integrals nur in sehr speziellen Fällen durchführbar.
+Gleichwohl lässt sich für eine konkrete Kurve mittels
+Quadraturverfahren am Computer schnell ein hochgenauer Wert ermitteln.
 
