@@ -711,6 +711,75 @@ f'(t) &= (f_1\bvec e_1+f_2\bvec e_2)'(t)\\
 &= f_1'(t)\,\bvec e_1+f_2'(t)\,\bvec e_2 = (f_1'(t),f_2'(t)).
 \end{align*}
 
+\subsection{Tangenten und Normalen}
+
+Ist eine Parameterkurve $c$ an der Stelle $t_0$ differenzier,
+dann ist der Vektor $c'(t_0)$ tangential, daher ist die Tangente
+gemäß
+\begin{equation}
+T(t) := c(t_0)+(t-t_0)c'(t_0)
+\end{equation}
+als Parametergerade gegeben. Für die Normale braucht der
+Tangentialvektor lediglich um $90^\circ$ gedreht werden,
+was durch Anwendung der Rotationsmatrix
+$(\begin{smallmatrix}0 & -1\\ 1 & 0\end{smallmatrix})$
+erfolgt. Die Normale ist also gegeben gemäß
+\begin{equation}
+N(t) := c(t_0)+(t-t_0)\begin{pmatrix}0 & -1\\ 1 & 0\end{pmatrix}c'(t_0).
+\end{equation}
+Falls sich der Leser noch nicht mit der Multiplikation einer
+Matrix mit einem Vektor beschäftigt hat: Es gilt
+\begin{equation}
+\begin{pmatrix}
+0 & -1\\ 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+v_1\\ v_2
+\end{pmatrix}
+= \begin{pmatrix}
+-v_2\\ v_1
+\end{pmatrix}.
+\end{equation}
+Haben zwei Parameterkurven $f,g$ jeweils die Tangentialvektoren
+$f'(t_1)\ne 0$ und $g'(t_2)\ne 0$, ist der Winkel $\varphi$ zwischen
+den Tangenten bestimmbar gemäß
+\begin{equation}
+\cos\varphi = \frac{\langle f'(t_1),g'(t_2)\rangle}{|f'(t_1)|\cdot |g'(t_2)|},
+\end{equation}
+dies ist eine Anwendung der Formel
+\[\langle\bvec a,\bvec b\rangle = |\bvec a|\cdot|\bvec b|\cdot\cos\varphi.\]
+Gilt zusätzlich $f(t_1)=g(t_2)$, dann spricht man vom
+\emph{Schnittwinkel der Kurven}. Die Forderung $t_1=t_2$ muss hierbei
+nicht erfüllt sein. Diese entspricht dem gleichzeitigen Eintreffen
+von sich bewegenden Punkten.
+
+Als Spezialfall betrachte man zwei bezüglich $y=m_1 x+n_1$ und
+$y=m_2 x+n_2$ gegebene Geraden. Diese lassen sich als Parameterkurven
+darstellen gemäß
+\begin{equation}
+f(t) := \begin{pmatrix}t\\ m_1 t+n_1\end{pmatrix},\;\;
+g(t) := \begin{pmatrix}t\\ m_2 t+n_2\end{pmatrix}.
+\end{equation}
+Hierzu gehören die Tangentialvektoren
+\begin{equation}
+f'(t) := \begin{pmatrix}1\\ m_1\end{pmatrix},\;\;
+g'(t) := \begin{pmatrix}1\\ m_2\end{pmatrix}.
+\end{equation}
+Die Geraden stehen rechtwinklig zueinander, wenn%
+\begin{gather*}
+0 = \langle f'(t_1),g'(t_2)\rangle = 1\cdot 1+m_1\cdot m_2\\
+\iff m_1 m_2 = -1.
+\end{gather*}
+In diesem speziellen Fall ist eigentlich keine Differentialrechnung
+notwendig, denn
+\begin{equation}
+\begin{pmatrix}t\\ m t+n\end{pmatrix}
+= \begin{pmatrix}1\\ m\end{pmatrix}t+\begin{pmatrix}0\\ n\end{pmatrix}
+\end{equation}
+hat die Form einer Parametergerade, der Richtungsvektor lässt sich
+daran direkt ablesen.
+
+
 \subsection{Beziehung zu impliziten Kurven}
 
 Für manche Parameterkurven ist eine Darstellung als implizite
