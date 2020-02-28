@@ -1,15 +1,24 @@
-\documentclass[a4paper,12pt,fleqn,twoside]{article}
+\documentclass[a4paper,11pt,fleqn,twoside,twocolumn,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
 \usepackage{libertine}
 \usepackage[libertine]{newtxmath}
-\usepackage{ngerman}
+\addtokomafont{disposition}{\rmfamily}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
-\usepackage[bindingoffset=2cm]{geometry}
+
+%\usepackage[bindingoffset=2cm]{geometry}
+\usepackage{geometry}
+\geometry{a4paper,left=24mm,right=12mm,top=24mm,bottom=30mm}
+\setlength{\columnsep}{5mm}
+\numberwithin{equation}{section}
 
 \begin{document}
 
@@ -45,11 +54,11 @@ Bezeichnen wir die Anzahl der Permutationen eines Tupels
 mit $n$ Elementen als $n!$. Fixiert man nun aber ein Element,
 so gibt es für die restlichen Elemente noch $n-1$ Permutationen.
 Bedenkt man, dass das Element an jeder der $n$ Stellen stehen
-kann, so ergibt sich die Rekursionsformel
+kann, so ergibt sich die Rekursionsformel%
 \begin{equation}
 n! = n(n-1)!.
 \end{equation}
-Benutzt man diese Rekursionsformel wiederholt, so ist
+Benutzt man diese Rekursionsformel wiederholt, so ist%
 \begin{equation}
 n! = \prod_{k=1}^n k = 1\times 2\times\ldots\times(n-1)\times n
 \end{equation}
@@ -60,7 +69,7 @@ Eine Permutation ist nun eine bijektive Funktion aus
 $\mathrm{Abb}(M,M)$. Von den Funktionen in $\mathrm{Abb}(M,M)$
 sind also genau $|M|!$ bijektiv. Bezeichnet man die Menge
 der Bijektionen aus $\mathrm{Abb(M,M)}$ mit
-$\mathrm{Bij}(M,M)$, so ergibt sich die Formel
+$\mathrm{Bij}(M,M)$, so ergibt sich die Formel%
 \begin{equation}
 |M|! = \mathrm{Bjn}(M,M).
 \end{equation}
@@ -80,7 +89,7 @@ sind. Man betrachtet nun die Zielmenge $Z$, die stets größer sein
 muss als der Definitionsbereich $D$. Von der Zielmenge zurück
 zum Definitionsbereich ist wie das Ablegen von $n=|Z|$
 unterschiedlichen Objekten auf $k=|D|$ freie Plätze. Die elementare
-Kombinatorik lehrt, dass es dafür
+Kombinatorik lehrt, dass es dafür%
 \begin{equation}
 V(n,k) = \frac{n!}{(n-k)!} = n^{\underline k}
 \end{equation}
@@ -88,7 +97,7 @@ Möglichkeiten gibt. Setzt man jetzt $n=k$ so ergibt sich wegen
 $0!=1$ wieder $n!$. Daher gilt auch $n^{\underline n}=n!$.
 
 Wenn man Wiederholungen erlaubt, so gilt stattdessen die
-Formel
+Formel%
 \begin{equation}
 V_w(n,k) = n^k.
 \end{equation}
@@ -96,7 +105,7 @@ Wenn man das gleiche Element aus $Z$ nun aber auf mehrere
 frei Plätze von $D$ legen kann, so bedeutet das umgekehrt,
 dass die Funktion nicht mehr injektiv zu sein braucht.
 Stattdessen ergibt sich die Menge aller Funktionen. Daher
-gilt
+gilt%
 \begin{equation}
 |Z|^{|D|} = |\mathrm{Abb}(D,Z)|.
 \end{equation}
@@ -111,7 +120,7 @@ Z^{\underline D}:=\mathrm{Ijn}(D,Z).
 
 \subsection{Zahlen}
 Es ist sinnvoll, auch die natürlichen Zahlen durch Mengen
-auszudrücken. Man definiert
+auszudrücken. Man definiert%
 \begin{gather*}
 0:=\{\},\\
 1:=\{0\} = \{\{\}\},\\
@@ -122,7 +131,7 @@ usw.
 
 \subsection{Produktmenge}
 Das kartesische Produkt von $A,B$, auch Produktmenge genannt,
-bezeichnet man mit $A\times B$. Nun gilt die Formel
+bezeichnet man mit $A\times B$. Nun gilt die Formel%
 \[|A\times B| = |A||B|.\]
 Bezeichnet man mit $A^2$ die Produktmenge von $A$ mit sich selbst
 und mit $A^n$ die Potenz, so gilt $|A^n|=|A|^n$. Nun gilt aber
@@ -143,7 +152,7 @@ $\mathrm{Abb}(A,\{0,1\})$ handeln. Wie kann man das interpretieren?
 Nun, eine Teilmenge $T\subseteq A$ kann als eine
 Indikatorfunktion \(\chi\) mit Werten in $\{0,1\}$ interpretiert werden.
 Für jedes Element $x\in A$ sagt die Indikatorfunktion ob $x$
-zu $T$ gehört (wahr=1) oder nicht (falsch=0). Es ist also
+zu $T$ gehört (wahr=1) oder nicht (falsch=0). Es ist also%
 \[\chi(x) = [x\in A].\]
 Zu jeder Teilmenge gibt es genau eine Indikatorfunktion.
 
@@ -159,9 +168,9 @@ Element aus $A$ maximal $n-1$ mal vorkommen darf.
 
 \subsection{Zahlen als Mengen von Folgen}
 Jede natürliche Zahl $n$ lässt sich als $n^1$ schreiben. Und $n^1$
-kann man als
+kann man als%
 \[\mathrm{Abb}(\{0\},\{0,1,\ldots,n-1\})\]
-betrachten. Die Zahl $b^k$ lässt sich als Menge aller Folgen
+betrachten. Die Zahl $b^k$ lässt sich als Menge aller Folgen%
 \[(a_0,\ldots,a_{k-1}),\qquad a_k\in\{0,\ldots,b-1\}\]
 interpretieren. Das lässt sich als Darstellung der Zahlen von null
 bis $b^k-1$ betrachten, was $b^k$ ja auch ist. Die Zahlen sind
@@ -176,12 +185,12 @@ Reihenfolgen werden jetzt als äquivalent betrachtet und zu
 einer Äquivalenzklasse zusammengefasst. Über der Menge der
 injektiven Funktionen ergibt sich eine Zerlegung in disjunkte
 Teilmengen. Man spricht von einer Partition, auch Quotientenmenge
-genannt. Die Zahl der Äquivalenzklassen ist
+genannt. Die Zahl der Äquivalenzklassen ist%
 \begin{equation}
 C(n,k) = \frac{V(n,k)}{k!} = \frac{n!}{k!\,(n-k)!}
 = \frac{n^{\underline k}}{k!}.
 \end{equation}
-So definiert man auch den Binomialkoeffizient, es ist
+So definiert man auch den Binomialkoeffizient, es ist%
 \begin{equation}
 \binom{n}{k} := \frac{n^{\underline k}}{k!}.
 \end{equation}
@@ -194,7 +203,7 @@ zu, wobei jeder Pfeil auf eine andere Karte zeigt. Wenn die
 Reihenfolge der Plätze keine Rolle spielen soll, so muss man
 alle Funktionen mit permutiertem Definitionsbereich als gleich
 ansehen. Bezeichnen wir mit $\sigma$ eine Permutation
-aus $D!$. Nun definieren man die Äquivalenzrelation
+aus $D!$. Nun definiert man die Äquivalenzrelation%
 \begin{equation}
 f\sim g  := \exists \sigma{:}\; f\circ\sigma = g.
 \end{equation}
@@ -208,7 +217,7 @@ Alle Permutationen bilden bezüglich der Komposition eine Gruppe,
 die symmetrische Gruppe $S_k$ genannt wird. Es gilt also
 $D!=S_k$. Weiterhin handelt es sich bei $f\circ\sigma$ um eine
 Gruppenaktion. Die Permutation $\sigma$ aus der symmetrischen
-Gruppe wirkt hierbei auf $f$. Man definiert nun die Menge
+Gruppe wirkt hierbei auf $f$. Man definiert nun die Menge%
 \[f\circ S_k := \{f\circ\sigma\;|\;\sigma\in S_k\}.\]
 Diese Menge wird als Orbit oder Bahn von $f$ bezeichnet.
 Bei den zuvor besprochenen Äquivalenzklassen handelt es sich
@@ -217,7 +226,7 @@ um ebendiese Orbits.
 Die Quotientenmenge ist nun genau die Menge unterschiedlicher
 Bahnen und wird daher als Bahnenraum bezeichnet. Die Kardinalität
 des Bahnenraumes ist die Anzahl der möglichen Kombinationen.
-Das heißt es ist
+Das heißt es ist%
 \begin{equation}
 C(n,k) = |\{f\circ S_k\;|\;f\in Z^{\underline D}\}|.
 \end{equation}
@@ -225,7 +234,7 @@ An dieser Stelle tut sich eine höchst interessante Frage auf,
 auf welche wir jetzt noch nicht eingehen wollen. Die symmetrische
 Gruppe $S_k$ hat Untergruppen $U$, die Permutationsgruppen
 genannt werden. Nun stellt sich aber die Frage, welche Formeln
-sich für
+sich für%
 \begin{equation}
 |\{f\circ U\;|\;f\in Z^{\underline D}\}|
 \end{equation}
@@ -239,22 +248,22 @@ $U$ berechnen. Der Satz von Lagrange sagt aus, dass $|U|$ schon einmal
 ein Teiler von $|S_k|=k!$ sein muss.
 
 Allgemeiner gibt es beliebige Teilmengen $T$ von $S_k$ wo man
-eine Formel für
+eine Formel für%
 \[|\{f\circ T\;|\;f\in Z^{\underline D}\}|\]
 angeben möchte, sofern $T$ auch durch eine Formel
 beschrieben ist. Wir diskutieren nun, in welchen Fällen die
-Formel
+Formel%
 \begin{equation}
 |\{f\circ T\;|\;f\in Z^{\underline D}\}|
 = \frac{|Z^{\underline D}|}{|T|}
 \end{equation}
 gilt, wobei wir uns auf Gruppen beschränken.
-Bei diesen gilt die Bahnformel
+Bei diesen gilt die Bahnformel%
 \begin{equation}
 |U| = |f\circ U|\,|U_f|,
 \end{equation}
 wobei mit $U_f$ die Fixgruppe (auch Stabilisator genannt) von $U$
-gemeint ist. Diese ist definiert durch
+gemeint ist. Diese ist definiert durch%
 \begin{equation}
 U_f := \{\sigma\in U\;|\; f\circ\sigma = f\}.
 \end{equation}
@@ -263,7 +272,7 @@ wenn diese nur aus der identischen Permutation $\mathrm{id}$,
 dem neutralen Element, besteht. In diesem Fall gilt $|f\circ U|=|U|$.
 Das bedeutet, jeder Orbit ist gleich groß und hat $|U|$ Elemente.
 Die Gesamtzahl ist aber die Anzahl der Orbits mal die Anzahl der
-Elemente im Orbit. Daher ergibt sich
+Elemente im Orbit. Daher ergibt sich%
 \begin{equation}
 |\{f\circ U\;|\;f\in Z^{\underline D}\}|\,|U|
 = |Z^{\underline D}|.
@@ -274,7 +283,7 @@ Funktionen ist das aber immer der Fall.
 
 Die Quotientenmenge wird auch kurz als $X/U$ bezeichnet,
 wobei $X$ die Menge sein soll, auf welche die Gruppenaktion wirkt.
-Daher ergibt sich nun die hübsche Formel
+Daher ergibt sich nun die hübsche Formel%
 \begin{equation}
 |Z^{\underline D}/U| = \frac{|Z^{\underline D}|}{|U|}
 = \frac{n^{\underline k}}{|U|}.\qquad(k=|D|,\;n=|Z|)
@@ -287,8 +296,8 @@ muss man bedenken, dass bei mehrfachen Vorkommen von Elementen
 auf den $k$ freien Plätzen die Funktion für einige Permutationen
 übereinstimmt. Die Fixgruppe ist also nicht mehr trivial.
 
-Mit der Methode {\glqq}Stars and bars{\grqq} findet man vielmehr
-die Formel
+Mit der Methode \emph{Stars and bars} findet man vielmehr
+die Formel%
 \begin{equation}
 C_w(n,k) = \binom{n+k-1}{k}.
 \end{equation}
@@ -296,35 +305,36 @@ C_w(n,k) = \binom{n+k-1}{k}.
 \subsection{Vereinigungsmenge}
 Ein grundlegendes Prinzip ist das Prinzip von Inklusion und
 Exklusion. Für die Anzahl der Elemente einer Vereinigung
-gilt
+gilt%
 \begin{equation}
 |A\cup B| = |A|+|B|+|A\cap B|.
 \end{equation}
-Bei einer disjunkten Vereinigung gilt daher
+Bei einer disjunkten Vereinigung gilt daher%
 \[|A\sqcup B| = |A|+|B|.\]
-Mit diesem Prinzip zerlegt man nun auch
+Mit diesem Prinzip zerlegt man nun auch%
 \[|A\cup B\cup C| = |A\cup B|+|C|-|(A\cup B)\cap C|.\]
 Jetzt beachtet man noch
 \[(A\cup B)\cap C = (A\cap C)\cup(B\cap C).\]
 Hiermit ergibt sich
-\begin{gather*}
-|A\cup B\cup C| = |A|+|B|+|C|-|A\cap B|-|A\cap C|-|B\cap C|\\
-+|(A\cap B)\cap (B\cap C)|.
-\end{gather*}
-Beachtet man nun noch
+\begin{align*}
+|A\cup B\cup C| =\; &|A|+|B|+|C|\\
+&-|A\cap B|-|A\cap C|-|B\cap C|\\
+&+|(A\cap B)\cap (B\cap C)|.
+\end{align*}
+Unter Beachtung von
 \[(A\cap B)\cap (B\cap C) = A\cap B\cap C\]
-so erhält man
+erhält man schließlich
 \begin{equation}
 \begin{split}
-|A\cup B\cup C| &= |A|+|B|+|C|\\
-&-|A\cap B|-|A\cap C|-|B\cap C|\\
-&+|A\cap B\cap C|.
+&|A\cup B\cup C| = |A|+|B|+|C|\\
+&\qquad -|A\cap B|-|A\cap C|-|B\cap C|\\
+&\qquad +|A\cap B\cap C|.
 \end{split}
 \end{equation}
-Man erkennt das folgende allgemeine Muster. Es lautet
+Man erkennt das folgende allgemeine Muster:%
 \begin{equation}
 \bigg|\bigcup_{i=1}^n A_i\bigg|
-= \sum_{k=1}^n (-1)^{k-1} \sum_{i_1<\ldots<i_k}
+= \sum_{k=1}^n (-1)^{k-1} \!\!\!\!\sum_{i_1<\ldots<i_k}\!\!\!\!
 |A_{i_1}\cap\ldots\cap A_{i_k}|.
 \end{equation}
 
@@ -341,7 +351,7 @@ soll?
 Zunächst wollen wir die Beziehung zwischen den Zerlegungen
 von Mengen und Zahlen klarstellen. Eine Summe ist gleichbedeutend mit
 der Vereinigung disjunkter Mengen. Hat man aber nun die Menge
-$\{a,b,c\}$ so gibt es folgende Zerlegungen in zwei Teilmengen:
+$\{a,b,c\}$ so gibt es folgende Zerlegungen in zwei Teilmengen:%
 \begin{gather*}
 \{a\}\cup\{b,c\},\\
 \{b\}\cup\{a,c\},\\
@@ -360,7 +370,7 @@ bereits erfolgt ist.
 Man nimmt nun die Menge $\{a,b,c\}$ als Definitionsbereich einer
 Funktion. Als Zielmenge nimmt man zwei Elemente $v,w$.
 Die Funktion soll surjektiv sein. Daher ergeben sich die
-sechs Funktionen
+sechs Funktionen%
 \begin{gather*}
 f_1(a)=v,\quad f_1(b)=v,\quad f_1(c)=w,\\
 f_2(a)=v,\quad f_2(b)=w,\quad f_2(c)=v,\\
@@ -375,12 +385,12 @@ entsprechen genau den Partitionen in zwei Teilmengen.
 
 Sei $n:=|Z|$ und $k:=|D|$. Bezeichne mit $\mathrm{Sjn}(D,Z)$
 die Menge der Surjektionen von $D$ nach $Z$. Eine Partition
-lässt sich nun als Orbit
+lässt sich nun als Orbit%
 \begin{equation}
 S_n\circ f := \{\sigma\circ f\;|\;\sigma\in S_n\}
 \end{equation}
 ausdrücken, wobei $f$ eine Surjektion sein soll. 
-Die Menge der Partitionen ist daher beschrieben durch
+Die Menge der Partitionen ist daher beschrieben durch%
 \begin{equation}
 \{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}.
 \end{equation}
@@ -392,7 +402,7 @@ k\\ n
 :=|\{S_n\circ f\;|\;f\in\mathrm{Sjn}(D,Z)\}|
 \end{equation}
 heißen Stirling-Zahlen zweiter Art. Wir wollen sie
-als Partitionszahlen bezeichnen. Die Zahlen
+als Partitionszahlen bezeichnen. Die Zahlen%
 \begin{equation}
 B_k:=\sum_{n=0}^k \begin{Bmatrix}
 k\\ n
@@ -404,13 +414,13 @@ Teilmengen zu zerlegen.
 
 Bei den Partitionen von Zahlen muss die Reihenfolge des
 Definitionsbereiches auch noch vergessen werden. Somit ergibt
-sich die Darstellung
+sich die Darstellung%
 \begin{equation}
 p\begin{pmatrix}k\\ n\end{pmatrix}
 :=|\{S_n\circ f\circ S_k\;|\; f\in\mathrm{Sjn}(D,Z)\}|.
 \end{equation}
 Die Funktion $p(k,n)$ gibt die Anzahl der Möglichkeiten an, die
-Zahl $k$ in $n$ Summanden zu zerlegen. Die Funktion
+Zahl $k$ in $n$ Summanden zu zerlegen. Die Funktion%
 \begin{equation}
 p(k) := \sum_{n=1}^k p\begin{pmatrix}
 k\\ n
@@ -464,18 +474,18 @@ aus. In \textit{Concrete Mathematics} beschäftigt sich ein
 \subsection{Erzeugende Funktionen}
 Viele Probleme der Kombinatorik lassen sich zunächst als
 rekursiv definierte Folge formulieren. Betrachten wir nun erst einmal
-die endliche Folge
+die endliche Folge%
 \[(a_0,a_1,a_2,a_3).\]
 Diese Folge ist ein Tupel mit vier Elementen und lässt sich
 daher auch als Punkt im Koordinatenraum der Dimension vier darstellen.
 Die kanonische Basis lässt sich mit der Polynombasis identifizieren.
-Daher lässt sich das Tupel als Linearkombination
+Daher lässt sich das Tupel als Linearkombination%
 \[a_0X^0+a_1X^1+a_2X^2+a_3X^3\]
 schreiben. Die endliche Folge lässt sich damit als ein Element
 des Polynomringes $R[X]$ mit $a_k\in R$ interpretieren.
 
 Diese Linearkombination wird nun ins unendliche fortgesetzt.
-D.h. man bildet
+D.h. man bildet%
 \begin{equation}
 G\{a_k\}(X) := \sum_{k=0}^\infty a_kX^k.
 \end{equation}
@@ -528,7 +538,7 @@ Der Differenzenoperator ist definiert durch
 \end{equation}
 Arithmetische Operationen mit Operatoren erklärt man Punktweise.
 Sind z.B. $A,B$ zwei Operatoren, so definiert man die Summe $A+B$
-durch
+durch%
 \begin{equation}
 ((A+B)f)(k):=(A f)(k)+(B f)(k).
 \end{equation}
@@ -538,23 +548,29 @@ Somit ergibt sich die Operatorengleichung
 \end{equation}
 Ferner gilt nun
 \begin{equation}
-\Delta_n^2 = (T_n-I)^2
-= T_n^2-T_nI-IT_n+I^2
-= T_{2n}-2T_n+I.
+\begin{split}
+\Delta_n^2 &= (T_n-I)^2
+= T_n^2-T_nI-IT_n+I^2\\
+&= T_{2n}-2T_n+I.
+\end{split}
 \end{equation}
 Für jeden Operator $A$ setzt man $A^0:=I$. So ist auch $T_n^0=T_0=I$.
 Da Translationsoperator und Identitätsoperator kommutieren, kann
-man den binomischen Lehrsatz verwenden. Es ergibt sich
-\[\Delta_n^m = (T_n-I)^m
-= \sum_{k=0}^m \binom{m}{k} T_n^k (-I)^{m-k}
-= \sum_{k=0}^m (-1)^{m-k}\binom{m}{k} T_{kn}.\]
-Den formalen Ableitungsoperator erklärt man durch
+man den binomischen Lehrsatz verwenden. Es ergibt sich%
+\begin{equation}
+\begin{split}
+\Delta_n^m &= (T_n-I)^m
+= \sum_{k=0}^m \binom{m}{k} T_n^k (-I)^{m-k}\\
+&= \sum_{k=0}^m (-1)^{m-k}\binom{m}{k} T_{kn}.
+\end{split}
+\end{equation}
+Den formalen Ableitungsoperator erklärt man durch%
 \begin{equation}
 D\Big(\sum_{k=0}^\infty a_kX^k\Big)
 := \sum_{k=0}^\infty a_k kX^{k-1}.
 \end{equation}
 
-
+\newpage
 % \renewcommand{\refname}{Literatur}
 \begin{thebibliography}{10}
 \setlength{\itemsep}{0pt}
