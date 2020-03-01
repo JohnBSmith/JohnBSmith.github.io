@@ -67,15 +67,68 @@ Da $e$ das einzige Element von $\{e\}$ ist, sind damit alle
 überprüft.\;\qedsymbol
 \end{Beweis}
 
+\section{Ringtheorie}
+
+\subsection{Grundlagen}
+
+\begin{Definition}[Ring]
+Eine Struktur $(R,+,\cdot)$ heißt genau dann Ring, wenn die folgenden
+Axiome erfüllt sind
+\begin{enumerate}
+\item[1.] $(R,+)$ ist eine kommutative Gruppe.
+\item[2.] $(R,\cdot)$ ist eine Halbgruppe.
+\item[3.] Für alle $a,b,c\in R$ gilt $a(b+c) = ab+ac$. (Linksdistributivgesetz)
+\item[4.] Für alle $a,b,c\in R$ gilt $(a+b)c = ac+bc$. (Rechtsdistributivgesetz)
+\end{enumerate}
+\end{Definition}
+Bemerkung: Das neutrale Element von $(R,+)$ wird als Nullelement
+bezeichnet und meist $0$ geschrieben.
+
+\begin{Definition}[Ring mit Eins]
+Ein Ring $R$ heißt genau dann Ring mit Eins, wenn $(R,\cdot)$ ein
+Monoid ist. Monoid heißt, es gibt ein Element $e\in R$, so dass
+$e\cdot a = a$ und $a\cdot e = a$ für alle $a\in R$.
+\end{Definition}
+Bemerkung: Man bezeichnet $e$ als Einselement des Rings.
+
+\begin{Korollar}
+Sei $R$ ein Ring und $0\in R$ das Nullelement.\\
+Für jedes $a\in R$ gilt $0\cdot a = 0$ und $a\cdot 0 = 0$.
+\end{Korollar}
+\begin{Beweis} Man rechnet
+\[0a = 0a+0 = 0a+0a-0a = (0+0)a-0a = 0a-0a = 0.\]
+\end{Beweis}
+Die Rechnung für $a\cdot 0$ ist analog.\;\qedsymbol
+
+\begin{Korollar}\label{Minus-vorziehen}
+Sei $R$ ein Ring und $a,b\in R$, dann gilt $(-a)b = -(ab) = a(-b)$.
+\end{Korollar}
+\begin{Beweis}
+Man rechnet
+\begin{align*}
+(-a)b &= (-a)b+0 = (-a)b+ab-(ab) = ((-a)+a)b-(ab)\\
+&= 0b-(ab) = 0-(ab) = -(ab).\;\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar}[»Minus mal minus macht plus«]\mbox{}\\*
+Sei $R$ ein Ring und $a,b\in R$, dann gilt
+$(-a)(-b) = ab$.
+\end{Korollar}
+Beachtung von $-(-x)=x$ nach zweifacher Anwendung von
+Korollar \ref{Minus-vorziehen} bringt
+\[(-a)(-b) = -((-a)b) = -(-(ab)) = ab.\;\qedsymbol\]
+
 \section{Polynomringe}
 
 \subsection{Einsetzungshomomorphismus}
 
 \begin{Satz}
-Die Abbildung $\Phi\colon\R[X]\to\Abb(X,X)$ mit $\Phi(f)(x):=f(x)$
+Die Abbildung $\Phi\colon\R[X]\to\Abb(\R,\R)$ mit $\Phi(f)(x):=f(x)$
 ist injektiv.
 \end{Satz}
-\begin{Beweis} Sei $f=\sum_{k=0}^n a_k X^k$ und $g=\sum_{k=0}^n b_k X^k$, wobei $n=\max(\deg f,\deg g)$.
+\begin{Beweis} Sei $f=\sum_{k=0}^n a_k X^k$
+und $g=\sum_{k=0}^n b_k X^k$, wobei $n=\max(\deg f,\deg g)$.
 Zu zeigen ist
 \[(\forall x\in\R)(\Phi(f)(x)=\Phi(g)(x))\implies f=g,\]
 d.\,h.
