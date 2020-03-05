@@ -54,7 +54,7 @@
 \noindent
 {\Large\textbf{Epidemiologische Betrachtungen\\
 zur Covid-19-Pandemie 2020}}\\[4pt]
-4. März 2020
+5. März 2020
 
 \tableofcontents
 
@@ -129,9 +129,9 @@ Gleichung bringt%
 \end{align}
 Für $h\to 0$ ergibt sich
 \begin{align}
-S' &= -\beta IS,\\
-I' &= \beta IS-\gamma I,\\
-R' &= \gamma I.
+\label{eq:SIR-System-S} S' &= -\beta IS,\\
+\label{eq:SIR-System-I} I' &= \beta IS-\gamma I,\\
+\label{eq:SIR-System-R} R' &= \gamma I.
 \end{align}
 Dies ist ein kontinuierliches dynamisches System, gegeben durch ein
 nichtlineares System von Differentialgleichungen. Aufgrund von
@@ -198,6 +198,53 @@ Setzt man $\gamma=\beta/R_0$ ein, gelangt man zu
 \begin{equation}
 \lambda = \beta\Big(1-\frac{1}{R_0}\Big) = \beta q_c.
 \end{equation}
+Nun ist es allerdings schwierig, Daten für $I$ zu bekommen. Was die
+WHO täglich herausgibt, ist die Anzahl der bestätigten Fälle, das
+entspricht $C:=1-S=R+I$. Die Zahl der WHO ist nicht die Zahl der
+tatsächlichen Fälle, sollte aber zu ihr proportional sein. Der
+Proportionalitätsfaktor ergibt sich aus der ermittelten
+Fallsterblichkeit.
+
+Trotzdem können wir an $\lambda$ gelangen. Integration von Dgl.
+\eqref{eq:SIR-System-R} bringt nämlich
+\begin{align}
+R &= \int_0^t \gamma I\,\mathrm dt
+= \gamma I_0 \int_0^t \ee^{\lambda t}\,\mathrm dt\\
+&= \frac{\gamma}{\lambda} I_0\ee^{\lambda t} = \frac{\gamma}{\lambda} I.
+\end{align}
+Daher ist
+\begin{equation}
+C = R+I = \frac{\gamma}{\lambda} I+I
+= \Big(\frac{\gamma}{\lambda}+1\Big)\,I_0\ee^{\lambda t}.
+\end{equation}
+Eine Regression der Daten zu $C$ ergibt folglich die gleiche
+Vermehrungskonstante $\lambda$.
+
+\newpage
+\section{Daten}
+
+\subsection{Daten zur Fallsterblichkeit}
+\begin{table}[h]
+\caption{Bestätigte Covid-19-Fälle\newline
+nach Daten der WHO.\newline
+Kumuliert, am 2. März 2020.}
+\begin{tabular}{lrrc}
+\toprule
+\strong{Land} & \strong{Fälle} & \strong{Tote} & \strong{Verhältnis}\\
+\midrule
+VR China & 80134 & 2914 & 3.6\,\%\\
+Iran & 978 & 54 & 5.5\,\%\\ 
+Italien & 1689 & 35 & 2.1\,\%\\
+Japan & 960 & 12 &  1.2\,\%\\
+Südkorea & 4212 & 22 & 0.52\,\%\\
+Rest & 975 & 6 & 0.61\,\%\\
+\midrule
+Welt & 88948 & 3043 & 3.4\,\%\\
+bereinigt* & 6147 & 31 & 0.50\,\%\\
+\bottomrule
+\end{tabular}\\[4pt]
+{\small *Welt abzüglich VR China, Iran und Italien.}
+\end{table}
 
 \clearpage
 \onecolumn
