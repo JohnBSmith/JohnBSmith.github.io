@@ -165,8 +165,8 @@ R(\infty) := \lim_{t\to\infty} R(t),
 das eine Aussage macht, wie viele Individuen die Erkrankung bei
 Abwesenheit von Quarantäne durchmachen werden. Wie sich aus einer
 numerischen Simulation ergibt, führt ein
-Startzustand $S\approx 1$ und $I\approx 0$ zu $R(\infty)>q$. Bei $R_0=3$
-ist z.\,B. $R(\infty)=94\,\%$, obwohl $q=66\,\%$ ist. Siehe Abb.
+Startzustand $S\approx 1$ und $I\approx 0$ zu $R(\infty)>q_c$. Bei $R_0=3$
+ist z.\,B. $R(\infty)=94\,\%$, obwohl $q_c=66\,\%$ ist. Siehe Abb.
 \ref{fig:R0-drei}.
 
 
@@ -185,7 +185,7 @@ Am Anfang steigt die Zahl der Infektionen exponentiell. Die Kurve
 $I(t)$ ist in dieser Phase also beschrieben durch
 $I=I_0\ee^{\lambda t}$, wobei man $\lambda$ nach Linearisierung aus
 einer Regression ermitteln kann. Es gilt $I'=\lambda I$. Für die
-Dgl. ergibt sich die Faktorisierung%
+Dgl. \eqref{eq:SIR-System-I} ergibt sich die Faktorisierung%
 \begin{equation}
 I' = \beta IS-\gamma I = (\beta S-\gamma)I.
 \end{equation}
@@ -245,6 +245,35 @@ bereinigt* & 6147 & 31 & 0.50\,\%\\
 \end{tabular}\\[4pt]
 {\small *Welt abzüglich VR China, Iran und Italien.}
 \end{table}
+
+\subsection{Dynamik der Fallzahlen}
+
+\subsubsection*{Deutschland}
+\begin{table}[h]
+\caption{Fälle in Deutschland\newline
+nach Daten des RKI.}
+\begin{tabular}{clrr}
+\toprule
+\strong{Tag} & \strong{Datum} & \strong{Fälle} & \strong{neue}\\
+\midrule
+0 & 24. Feb. & 16 & 0\\
+1 & 25. Feb. & 18 & 2\\
+2 & 26. Feb. & 21 & 3\\
+3 & 27. Feb. & 26 & 5\\
+4 & 28. Feb. & 53 & 27\\
+5 & 29. Feb. & 66 & 13\\
+6 & 01. Mär. & 117 & 51\\
+7 & 02. Mär. & 150 & 33\\
+8 & 03. Mär. & 188 & 38\\
+9 & 04. Mär. & 240 & 52\\
+10 & 05. Mär. & 349 & 109\\
+11 & 06. Mär. & 534 & 185\\
+\bottomrule
+\end{tabular}\\[6pt]
+Regression für 24. Feb. bis 06. Mär.:\\
+$C = C_0\ee^{\lambda t},\; C_0=12.83,\; \lambda=0.3353$
+\end{table}
+
 
 \clearpage
 \onecolumn
