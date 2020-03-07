@@ -144,7 +144,7 @@ $\gamma$ als \emph{Gesundungsrate}.
 Angenommen es ist $I\approx 0$, aber $I>0$. Unter welchem Umstand
 gibt es dann keine Neuerkrankungen? Dazu muss $I'=0$ sein. Dieser
 Ansatz führt zu%
-\begin{equation}
+\begin{equation}\label{eq:S-gamma-beta}
 0 = \beta IS-\gamma I \Leftrightarrow 0 = \beta S-\gamma
 \Leftrightarrow S = \frac{\gamma}{\beta}.
 \end{equation}
@@ -154,7 +154,7 @@ $q$ in Gleichung \eqref{eq:Nettoreproduktionszahl} bringt%
 R_q = R_0(1-q) = R_0 S = R_0\frac{\gamma}{\beta}.
 \end{equation}
 Weil $R_q=1$ sein muss, ergibt sich die Beziehung%
-\begin{equation}
+\begin{equation}\label{eq:R0-beta-gamma}
 R_0 = \frac{\beta}{\gamma}.
 \end{equation}
 Interessant ist nun das Grenzverhalten
@@ -218,6 +218,32 @@ C = R+I = \frac{\gamma}{\lambda} I+I
 \end{equation}
 Eine Regression der Daten zu $C$ ergibt folglich die gleiche
 Vermehrungskonstante $\lambda$.
+
+\subsection{Das SEIR-Modell}
+
+Das SEIR"=Modell stellt eine Verfeinerung des SIR"=Modells dar, indem
+berücksichtigt wird, dass sich ein Individuum in der
+Phase $E$ befinden kann, in welcher es zwar schon infiziert ist,
+jedoch noch nicht infektiös. Die Gleichungen sind
+\begin{align}
+S' &= -\beta IS,\\
+E' &= \beta IS-aE,\\
+I' &= aE-\gamma I,\\
+R' &= \gamma I.
+\end{align}
+Entsprechend gilt wieder
+\begin{gather}
+S+E+I+R=1,\\
+S'+E'+I'+R'=0.
+\end{gather}
+Der Kehrwert $1/a$ ist die mittlere \emph{Latenzzeit}, also die mittlere
+Zeit, welche ein Individuum in der Phase $E$ verbringt. Die mittlere
+Latenzzeit kann je nach Krankheit kleiner oder größer als die
+Inkubationszeit sein.
+
+Gleichung \eqref{eq:R0-beta-gamma} bleibt auch im SEIR"=Modell gültig,
+denn der Ansatz $I'=0$ und $E'=0$ führt wieder zu Gleichung
+\eqref{eq:S-gamma-beta}.
 
 \newpage
 \section{Daten}
@@ -309,7 +335,7 @@ Parameter: $\beta:=2$ und $\gamma:=\beta/R_0$ mit $R_0:=3$.}
 
 \begin{figure}[h]
 \includegraphics[width=16cm]{img/Covid-19-Simulation1.png}
-\caption{Erste Prognose für den Anteil der infektösen Bevölkerung
+\caption{Erste Prognose für den Anteil der infektiösen Bevölkerung
 in Deutschland.\newline
 Szenario, falls die Vermehrungskonstante $\lambda$ so hoch bleiben
 sollte wie bisher.\newline
@@ -317,7 +343,7 @@ Kurven für $R_0$ von 1.4 bis 3.0, die schwarze Kurve für $R_0=2.2$.}
 \end{figure}
 \begin{figure}[h]
 \includegraphics[width=16cm]{img/Covid-19-Simulation2.png}
-\caption{Erste Prognose für den Anteil der infektösen Bevölkerung
+\caption{Erste Prognose für den Anteil der infektiösen Bevölkerung
 in Deutschland.\newline
 Szenario, falls $\lambda$ aufgrund von Sommer und Quarantäne
 absinken wird.\newline
