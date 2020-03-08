@@ -53,7 +53,7 @@
 \noindent
 {\Large\textbf{Epidemiologische Betrachtungen\\
 zur Covid-19-Pandemie 2020}}\\[4pt]
-7. März 2020
+8. März 2020
 
 \tableofcontents
 
@@ -190,7 +190,7 @@ I' = \beta IS-\gamma I = (\beta S-\gamma)I.
 \end{equation}
 Am Anfang der Phase ist in guter Näherung $S\approx 1$, vor allem bei
 großer Bevölkerungszahl. Demnach gilt%
-\begin{equation}
+\begin{equation}\label{eq:lambda-beta-gamma}
 \lambda = \beta-\gamma.
 \end{equation}
 Setzt man $\gamma=\beta/R_0$ ein, gelangt man zu%
@@ -226,10 +226,10 @@ berücksichtigt wird, dass sich ein Individuum in der
 Phase $E$ befinden kann, in welcher es zwar schon infiziert ist,
 jedoch noch nicht infektiös. Die Gleichungen sind%
 \begin{align}
-S' &= -\beta IS,\\
-E' &= \beta IS-aE,\\
-I' &= aE-\gamma I,\\
-R' &= \gamma I.
+\label{SEIR-System-S} S' &= -\beta IS,\\
+\label{SEIR-System-E} E' &= \beta IS-aE,\\
+\label{SEIR-System-I} I' &= aE-\gamma I,\\
+\label{SEIR-System-R} R' &= \gamma I.
 \end{align}
 Entsprechend gilt wieder
 \begin{gather}
@@ -245,7 +245,75 @@ Gleichung \eqref{eq:R0-beta-gamma} bleibt auch im SEIR"=Modell gültig,
 denn der Ansatz $I'=0$ und $E'=0$ führt wieder zu Gleichung
 \eqref{eq:S-gamma-beta}.
 
-\newpage
+\subsection{Ermittlung der Modellparameter}
+
+Schon bekannte Abschätzungen für Parameter kann man auch der Literatur
+entnehmen, das betrifft z.\,B. $R_0$ und $a$. Verbleibende Parameter
+versucht man bezüglich einem Vergleich der numerischen Lösung mit
+den Messdaten zu gewinnen. Dies geschieht wie üblich mit der
+Methode der kleinsten Quadrate. Zur Suche des Minimums kann man einfach
+brachial absteigendes Hill"=Climbing ansetzen. Mit wachsender Anzahl
+freier Parameter könnte das Problem allerdings konkav werden (d.\,h.
+weitere ungewünschte lokale Minima enthalten), ich habe
+mich damit noch nicht näher beschäftigt.
+
+Man würde auch gerne in Erfahrung bringen, ob man für vorhandene
+Messdaten überhaupt in der Lage ist, eine Vorhersage zu treffen,
+bzw. welche Genauigkeit dabei erreicht wird. Auch ohne große Kenntnisse
+in Statistik gibt es dafür eine Methodik. Nämlich lässt sich
+das Modell auch zur \emph{Erzeugung} von Messdaten benutzen, wobei
+man entsprechend etwas statistisches Rauschen einfügt, wie es auch
+bei den echten Messdaten vorhanden ist. Für die erzeugten Messdaten
+sind nun die ursprünglichen wahren Parameter bekannt. Demnach können
+die ermittelten mit den wahren Parametern verglichen werden.
+
+Es folgen wieder analytische Betrachtungen, mit welchen sich
+Parameter unter Umständen mit weniger Rechenaufwand ermitteln
+bzw. abschätzen lassen.
+
+Auch im SEIR"=Modell stimmen die Vermehrungskonstanten von $I$
+und $C$ für den Ansatz $I=I_0\ee^{\lambda t}$ überein, denn man bekommt
+\begin{align*}
+C &= 1-S = R+E+I = \frac{\gamma}{\lambda}I+\frac{\lambda I+\gamma I}{a}+I\\
+&= \Big(\frac{\gamma}{\lambda}+\frac{\lambda+\gamma}{a}+1\Big)\,I
+= \tfrac{C(0)}{I(0)} I.
+\end{align*}
+Zur Berechnung von $\beta$ benötigen wir eine entsprechende Beziehung
+wie \eqref{eq:lambda-beta-gamma}, diese gestaltet sich nun allerdings
+etwas komplizierter. Die Auffindung dieser Beziehung gestaltet sich
+auch ein klein wenig schwieriger. Die Gleichungen müssen hierzu so
+zurechtgeformt werden, dass $I$ wieder herausgekürzt werden kann.
+Eine solche Form gewinnt man unvermittelt aus der letzten Gleichung
+für $C$. Ableiten dieser bringt nämlich
+\begin{equation}
+C' = -S' = \tfrac{C(0)}{I(0)}\,I' = \tfrac{C(0)}{I(0)}\,\lambda I.
+\end{equation}
+In Verbindung mit Dgl. \eqref{SEIR-System-S} gewinnt man
+\begin{equation}
+\beta IS = \tfrac{C(0)}{I(0)}\,\lambda I,
+\end{equation}
+und somit
+\begin{equation}
+\beta S = \tfrac{C(0)}{I(0)}\,\lambda
+= \Big(\frac{\gamma}{\lambda}+\frac{\lambda+\gamma}{a}+1\Big)\lambda,
+\end{equation}
+bzw.
+\begin{equation}
+\beta S = \Big(\frac{\lambda}{a}+1\Big)(\lambda+\gamma).
+\end{equation}
+Wegen $S\approx 1$ in sehr guter Näherung setzt man wieder
+$S=1$ ein, außerdem $\gamma=\beta/R_0$. Umformung nach $\beta$
+führt schließlich zur gewünschten Gleichung
+\begin{equation}
+\beta\Big(\frac{a}{\lambda+a}-\frac{1}{R_0}\Big) = \lambda.
+\end{equation}
+Diese Beziehung lässt sich auch wieder bezüglich der kritischen
+Immunisierungsschwelle ausdrücken:
+\begin{equation}
+\beta\Big(q_c-\frac{\lambda}{\lambda+a}\Big) = \lambda.
+\end{equation}
+
+\clearpage
 \section{Daten}
 
 \subsection{Daten zur Fallsterblichkeit}
@@ -294,6 +362,7 @@ nach Daten des RKI.}
 10 & 05. Mär. & 349 & 109\\
 11 & 06. Mär. & 534 & 185\\
 12 & 07. Mär. & 684 & 150\\
+13 & 08. Mär. & 847 & 163\\
 \bottomrule
 \end{tabular}\\[6pt]
 Regression für 24. Feb. bis 06. Mär.:\\
