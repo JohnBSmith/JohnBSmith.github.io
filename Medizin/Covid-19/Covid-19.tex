@@ -57,6 +57,21 @@ zur Covid-19-Pandemie 2020}}\\[4pt]
 
 \tableofcontents
 
+\vspace{1.2em}
+\noindent\strong{Inhaltsangabe.}
+Die Epidemiologischen Grundmodelle SIR und SEIR werden einer
+Untersuchung unterzogen. Darauf aufbauend werden Beziehungen zwischen
+den Modellparametern in der Anfangsphase und Methoden zur Ermittlung
+dieser abgeleitet, das Letztere unter der Prämisse dass hinreichend
+viele gute Daten zur Verfügung stünden. Eine anschließende Diskussion
+soll Einblick bringen, wann und ob eine Ermittlung von Parametern ohne
+fortgeschrittene epidemiologische und statistische Werkzeuge überhaupt
+möglich ist. Im Weiteren folgt eine Betrachtung von Parametern zu
+Covid"=19 aus aktuellen Arbeiten, auch mit Blick auf Variabilität
+bezüglich Sommer und Quarantäne. Schließlich soll aufbauend auf all
+diesem Wissen mit dem SEIR"=Modell der Versuch einer Prognose
+unternommen werden.
+
 \section{Theorie}
 
 \subsection{Die Reproduktionszahl}
@@ -312,11 +327,21 @@ Immunisierungsschwelle ausdrücken:
 \begin{equation}
 \beta\Big(q_c-\frac{\lambda}{\lambda+a}\Big) = \lambda.
 \end{equation}
+Als Nebenresultat können wir das Verhältnis von Infektiösen
+zu aufgetretenen Fällen abgreifen:
+\begin{equation}
+\frac{I}{C} = \frac{\lambda}{\beta} = \Big(\frac{a}{\lambda+a}-\frac{1}{R_0}\Big).
+\end{equation}
+Mit Dgl. \eqref{SEIR-System-I} bekommt man auch noch
+\begin{equation}
+\frac{I}{E} = \frac{a}{\lambda+\gamma} = \frac{a}{\lambda+\beta/R_0}.
+\end{equation}
 
 \clearpage
 \section{Daten}
 
 \subsection{Daten zur Fallsterblichkeit}
+\vspace{-6mm}
 \begin{table}[h]
 \caption{Bestätigte Covid-19-Fälle\newline
 nach Daten der WHO.\newline
@@ -342,6 +367,7 @@ bereinigt* & 6147 & 31 & 0.50\,\%\\
 \subsection{Dynamik der Fallzahlen}
 
 \subsubsection*{Deutschland}
+\vspace{-6mm}
 \begin{table}[h]
 \caption{Fälle in Deutschland\newline
 nach Daten des RKI.}
@@ -363,14 +389,19 @@ nach Daten des RKI.}
 11 & 06. Mär. & 534 & 185\\
 12 & 07. Mär. & 684 & 150\\
 13 & 08. Mär. & 847 & 163\\
+14 & 09. Mär. & 1112 & 265\\
 \bottomrule
 \end{tabular}\\[6pt]
 Regression für 24. Feb. bis 06. Mär.:\\
-$C = C_0\ee^{\lambda t},\; C_0=12.83,\; \lambda=0.3353$
+$C = C_0\ee^{\lambda t},\; C_0=12.83,\; \lambda=0.3353$\\[4pt]
+Regression für 24. Feb. bis 09. Mär.:\\
+$C_0=13.38,\;\lambda=0.3251$
+\vspace{-4em}
 \end{table}
 
 \newpage
 \subsection{Daten zur Basisreproduktionszahl}
+\vspace{-6mm}
 \begin{table}[h]
 \caption{Ermittelte Werte für $R_0$ mit\newline
 Intervall der Unsicherheit.}
@@ -404,7 +435,7 @@ Parameter: $\beta:=2$ und $\gamma:=\beta/R_0$ mit $R_0:=3$.}
 
 \begin{figure}[h]
 \includegraphics[width=16cm]{img/Covid-19-Simulation1.png}
-\caption{Erste Prognose für den Anteil der infektiösen Bevölkerung
+\caption{Naive Prognose für den Anteil der infektiösen Bevölkerung
 in Deutschland.\newline
 Szenario, falls die Vermehrungskonstante $\lambda$ so hoch bleiben
 sollte wie bisher.\newline
@@ -412,7 +443,7 @@ Kurven für $R_0$ von 1.4 bis 3.0, die schwarze Kurve für $R_0=2.2$.}
 \end{figure}
 \begin{figure}[h]
 \includegraphics[width=16cm]{img/Covid-19-Simulation2.png}
-\caption{Erste Prognose für den Anteil der infektiösen Bevölkerung
+\caption{Naive Prognose für den Anteil der infektiösen Bevölkerung
 in Deutschland.\newline
 Szenario, falls $\lambda$ aufgrund von Sommer und Quarantäne
 absinken wird.\newline
