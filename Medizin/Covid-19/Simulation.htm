@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>SEIR-Simulation zur Pandemie 2020</title>
+  <style>
+html{font-size: 120%;}
+body{
+  margin-top: 3em;
+  margin-left: 10%;
+  margin-bottom: 10em;
+  padding-left: 4%;
+  padding-right: 4%;
+  max-width: 46em;
+  font-family: "DejaVu Sans", "Verdana", sans-serif;
+  color: #404034;
+}
+@media(max-width: 64em){
+  body{margin-left: auto; margin-right: auto;}
+}
+a{color: #20506a; text-decoration: none;}
+a:hover{color: #102a40; text-decoration: underline;}
+pre, code{
+  font-family: "FreeMono", "Courier New", monospace;
+  color: #403020;
+}
+table.bt{border-collapse: collapse;}
+table.bt td, table.bt th{
+  border: 1px solid #babab2;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  text-align: left;
+  vertical-align: top;
+}
+table.bt td{
+  background-color: #fafaf0;
+}
+table.bt th{
+  background-color: #eaeada;
+}
+.indent {
+  margin-left: 1.6em;
+}
+  </style>
+</head>
+<body>
+
+<h2>SEIR-Simulation zur Covid-19-Pandemie</h2>
+<p><b>&rarr;<a href="https://cas-de.github.io/plot.htm?S(t),E(t),I(t),R(t);%5bS,E,I,R%5d%27=%5b-beta*I*S,beta*I*S-a*E,a*E-gamma*I,gamma*I%5d;p:=%5b0,1,C0*lambda/beta,C0*lambda*(lambda+gamma)/a/beta,0%5d;gamma:=beta/R0;beta:=lambda/(a/(lambda+a)-1/R0);lambda:=ln(2)/T;a:=1/L;T:=6,L:=4,R0:=2.6;C0:=2000/N;N:=83000000;tw(0,200);;scale(10,0.2),P(78,0.5)"
+>Simulation</a></b>
+<br><b>&rarr;<a href="https://cas-de.github.io/plot.htm?S(t),E(t),I(t),R(t);%5bS,E,I,R%5d%27=%5b-beta*I*S,beta*I*S-a*E,a*E-gamma*I,gamma*I%5d;p:=%5b0,1,C0*lambda/beta,C0*lambda*(lambda+gamma)/a/beta,0%5d;gamma:=beta/R0;beta:=lambda/(a/(lambda+a)-1/R0);lambda:=ln(2)/T;a:=1/L;Regler(T,4,9),Regler(L,3,7),Regler(R0,1.8,3.5);C0:=2000/N;N:=83000000;tw(0,200);step:=0.1;;scale(10,0.2),P(78,0.5)"
+>Simulation mit Reglern</a></b>
+
+<table class="bt">
+<tr><th><th>Größe<th>geschätzter Wert<th>Unsicherheit
+<tr><th>T<td>Verdopplungszeit in Tagen<td>6<td> 3&le;T&le;9
+<tr><th>L<td>Latenzzeit in Tagen<td>4<td>3&le;L&le;7
+<tr><th>R<sub>0</sub><td>Basisreproduktionszahl<td>2.6<td>1.5&le;R<sub>0</sub>&le;3.5
+</table>
+
+<br>
+<table class="bt">
+<tr><th>Größe<th>Engl.<th>Erklärung
+<tr><th>t<td>Time<td>Zeit in Tagen ab 12. März 2020
+<tr style="color: #000080"><th>S(t)<td>Susceptibles<td>Anfällige (noch nicht infiziert)
+<tr style="color: #005000"><th>E(t)<td>Exposed<td>Exponierte (infiziert, aber noch nicht infektiös)
+<tr style="color: #600040"><th>I(t)<td>Infectious<td>Infektiöse (noch nicht in Quarantäne)
+<tr style="color: #006060"><th>R(t)<td>Recovered<td>Erholte (bzw. in Quarantäne)
+</table>
+
+<p><small>&rarr;<a href="Covid-19.pdf">Mathematische Theorie und Quellen</a></small>
+
+</body>
+</html>
+
