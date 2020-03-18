@@ -1,0 +1,80 @@
+
+\chapter{Differentialgleichungen}
+
+\section{Das Euler-Verfahren}
+
+Das Auffinden symbolischer Lösungen von Anfangswertproblemen kann
+schwierig sein. Manchmal muss man dafür neue Funktionen definieren,
+diese werden zu den speziellen Funktionen gezählt. Bei manchen
+Gleichungen stellt sich die Frage, ob es denn überhaupt möglich ist,
+eine symbolische Lösung zu gewinnen.
+
+Allerdings gibt es allgemeine Verfahren zur numerischen Lösung von
+Anfangswertproblemen am Computer. Hiermit lässt sich ggf. auch eine
+numerische Probe bereits gefundener symbolischer Lösungen vornehmen.
+Das einfachste wie auch prototypische dieser Verfahren ist das
+Euler"=Verfahren, welches im Folgenden erläutert werden soll.
+
+Betrachten wir
+\begin{equation}\label{eq:AWP-O1}
+x' = f(t,x),\quad x'(t_0) = x_0,
+\end{equation}
+das ist das allgemeine Anfangswertproblem erster Ordnung. Den
+Differentialquotient approximieren wir nun durch einen
+Differenzenquotient:%
+\begin{equation}
+\frac{x(t+h)-x(h)}{h} \approx f(t,x).
+\end{equation}
+Umformung dieser Gleichung bringt
+\begin{equation}
+x(t+h)\approx x(h)+hf(t,x).
+\end{equation}
+Demnach ergibt sich eine näherungsweise Lösung des Anfangswertproblems
+als iterative Lösung der Differenzengleichung%
+\begin{align}
+t_{k} &= t_0+hk,\\
+x_{k+1} &= x_k+hf(t_k,x_k).
+\end{align}
+Diese Iteration wird als \emph{Euler"=Verfahren} bezeichnet.
+
+Nun interessieren uns auch Dgln. höherer Ordnung, und ganz besonders
+die physikalisch wichtigen Dgln. zweiter Ordnung. Jede Dgl. höherer
+Ordnung ist aber als System erster Ordnung formulierbar. Vielen
+wichtige Modellen liegt außerdem ein System erster Ordnung zugrunde.
+Es ist nun so, dass das Euler"=Verfahren ohne weitere Umstände auch
+auf ein System erster Ordnung übertragbar ist.
+
+Das Anfangswertproblem zu einem System von zwei Dgln. hat
+z.\,B. die allgemeine Form
+\begin{equation}
+\begin{split}
+x' &= f_1(t,x,y),\quad x'(t_0)=x_0,\\
+y' &= f_2(t,x,y),\quad y'(t_0)=y_0.
+\end{split}
+\end{equation}
+Fasst man die beiden Variablen $x,y$ zu einem Vektor
+$\bvec x = (x,y)$ zusammen und definiert
+\begin{equation}
+f(t,\bvec x) := \begin{pmatrix}
+f_1(t,\bvec x)\\
+f_2(t,\bvec x)
+\end{pmatrix},
+\end{equation}
+dann bekommt das Anfangswertproblem die kompakte
+vektorielle Form
+\begin{equation}
+\begin{split}
+\bvec x' &= f(t,\bvec x),\quad \bvec x'(t_0)=\bvec x_0.
+\end{split}
+\end{equation}
+Diese Gleichung stimmt strukturell mit \eqref{eq:AWP-O1} überein
+und die Vorgehensweise ist identisch übertragbar. Entsprechend ergibt
+sich
+\begin{align}
+t_{k} &= t_0+hk,\\
+\bvec x_{k+1} &= \bvec x_k+hf(t_k,\bvec x_k).
+\end{align}
+So unscheinbar diese Iteration auch ausschaut, ermöglicht sie die
+numerische Lösung einer unheimlichen Vielfalt an Gleichungen.
+
+
