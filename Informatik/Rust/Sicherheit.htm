@@ -21,6 +21,7 @@
   <li><a href="#Schreibschutz">Schreibgeschützte Komponenten</a>
   <li><a href="#Typzustaende">Typzustände</a>
   <li><a href="#Einheiten">Einheiten</a>
+  <li><a href="#Strikte-Einheiten">Strikte Einheiten</a>
   <li><a href="#Terminierung">Terminierung erzwingen</a>
   </ol>
 <li><a href="#Laufzeit">Prüfungen zur Laufzeit</a>
@@ -648,6 +649,67 @@ fn circumference(radius: Quantity&lt;Length&gt;) -&gt; Quantity&lt;Length&gt; {
 
 fn main() {
     let r = 4.0*cm+2.0*mm;
+    println!("{}",circumference(r));
+}
+</pre>
+
+<h3 id="Strikte-Einheiten">Strikte Einheiten</h3>
+
+<p>Manchmal möchte man bestimmte Einheiten pedantisch einfordern
+oder die Umrechnung in kohärente Einheiten herauskürzen. Die Größe
+bekommt dann als Typargument die konkrete Einheit anstelle der
+abstrakten Dimension.
+
+<pre class="rust indent">
+pub mod quantities {
+    use std::marker::PhantomData as Ph;
+    use std::ops::{Mul,Add};
+    use std::fmt;
+
+    pub trait Unit {
+        const NAME: &amp;'static str;
+    }
+
+    #[derive(Clone,Copy)]
+    pub struct Quantity&lt;U: Unit&gt; {
+        value: f64, unit: Ph&lt;U&gt;
+    }
+    impl&lt;U: Unit&gt; Mul&lt;Quantity&lt;U&gt;&gt; for f64 {
+        type Output = Quantity&lt;U&gt;;
+        fn mul(self, y: Quantity&lt;U&gt;) -&gt; Quantity&lt;U&gt; {
+            Quantity{value: self*y.value, unit: Ph}
+        }
+    }
+    impl&lt;U: Unit&gt; Add&lt;Quantity&lt;U&gt;&gt; for Quantity&lt;U&gt; {
+        type Output = Quantity&lt;U&gt;;
+        fn add(self, y: Quantity&lt;U&gt;) -&gt; Quantity&lt;U&gt; {
+            Quantity{value: self.value+y.value, unit: Ph}
+        }
+    }
+    impl&lt;U: Unit&gt; From&lt;f64&gt; for Quantity&lt;U&gt; {
+        fn from(x: f64) -&gt; Quantity&lt;U&gt; {Quantity{value: x, unit: Ph}}
+    }
+    impl&lt;U: Unit&gt; fmt::Display for Quantity&lt;U&gt; {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+            write!(f, "{} {}", self.value,U::NAME)
+        }
+    }
+
+    #[allow(non_camel_case_types)]
+    #[derive(Clone,Copy)]
+    pub struct cm;
+    impl Unit for cm {const NAME: &amp;'static str = "cm";}
+}
+
+use quantities::{Quantity,cm};
+use std::f64::consts::PI;
+
+fn circumference(radius: Quantity&lt;cm&gt;) -&gt; Quantity&lt;cm&gt; {
+    2.0*PI*radius
+}
+
+fn main() {
+    let r = Quantity::&lt;cm&gt;::from(4.0);
     println!("{}",circumference(r));
 }
 </pre>
