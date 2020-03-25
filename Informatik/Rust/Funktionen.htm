@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Funktionen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Tupelwertige-Funktionen">Tupelwertige Funktionen</a>
+<li><a href="#Variadische-Funktionen">Variadische Funktionen</a>
+</ol>
+
+<h2 id="Tupelwertige-Funktionen">Tupelwertige Funktionen</h2>
+
+<p>Rust erlaubt Funktionen mit mehr als einem Rückgabewert.
+Ermöglicht wird dies durch die Zusammenfassung der Rückgabewerte zu
+einem Tupel.
+
+<p>Als einfaches Beispiel bietet sich die Umrechnung zwischen
+kartesischen und polaren Koordinaten an.
+
+<pre class="rust indent">
+fn from_polar(r: f64, phi: f64) -&gt; (f64,f64) {
+    (r*phi.cos(), r*phi.sin())
+}
+
+fn polar_from(x: f64, y: f64) -&gt; (f64,f64) {
+    (x.hypot(y),y.atan2(x))
+}
+
+fn main() {
+    use std::f64::consts::PI;
+    let (x,y) = from_polar(1.0,0.5*PI);
+    println!("x = {:.4}; y = {:.4}",x,y);
+
+    let (r,phi) = polar_from(x,y);
+    println!("r = {:.4}; phi = {:.4}",r,phi);
+}
+</pre>
+
+<h2 id="Variadische-Funktionen">Variadische Funktionen</h2>
+
+<p>Als <i>variadisch</i> bezeichnet man Funktionen, die keine
+feste Arität haben, d.h. keine feste Anzahl an Argumenten. Zwar sind
+solche Funktionen in Rust nicht direkt formulierbar, allerdings
+lassen sie sich ausreichend ergonomisch nachstellen, indem der
+variadische Teil in ein Slice verpackt wird.
+
+<p>Für die Funktion <code>mean</code>, welche den Mittelwert der
+Argumente bildet, findet sich z.B. die Formulierung:
+<pre class="rust indent">
+fn mean(a: &amp;[f64]) -&gt; f64 {
+    a.iter().sum::&lt;f64&gt;()/(a.len() as f64)
+}
+
+fn main() {
+    let m = mean(&amp;[1.0,2.0,3.0,4.0]);
+    println!("{}",m);
+}
+</pre>
+
+</body>
+</html>
+
