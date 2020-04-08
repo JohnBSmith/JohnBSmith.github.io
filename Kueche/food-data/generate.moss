@@ -1,0 +1,190 @@
+
+use ser.json
+
+head = """\
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Nährwerte</title>
+  <style>
+body{
+  font-family: "DejaVu Sans", "Verdana", sans-serif;
+  font-size: 90%;
+}
+table.bt{border-collapse: collapse;}
+table.bt td, table.bt th{
+  border-top: 2px solid #babab2;
+  border-bottom: 2px solid #babab2;
+  border-left: 2px dotted #babab2;
+  border-right: 2px dotted #babab2;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  vertical-align: top;
+}
+table.bt td{
+  background-color: #fafaf0;
+  text-align: right;
+}
+table.bt th{
+  background-color: #eaeada;
+}
+  </style>
+</head>
+<body>\
+"""
+
+foot = """\
+</body>
+</html>\
+"""
+
+function proportion_to_hex(x)
+   return "{:r2(0)x}"%[int(255*x)]
+end
+
+function proportion_to_color(template,x)
+   return template % [proportion_to_hex(1-min(2.5*x,1))]
+end
+
+function cell(t,id,prec,unit,mul=null)
+   if id in t
+      val = t[id] if mul is null else mul*t[id]
+      return "<td>{}&nbsp;{}"%[str(val,"f",prec),unit]
+   else
+      return "<td>&mdash;"
+   end
+end
+
+function cell_color(t,id,max,prec,unit,mul=null)
+   if id in t
+      val = t[id] if mul is null else mul*t[id]
+      rel = val/max
+      color = proportion_to_color("#ff{0}ff",rel)
+      return "<td style='background:{}'>{}&nbsp;{}"%[color,str(val,"f",prec),unit]
+   else
+      return "<td>&mdash;"
+   end
+end
+
+function new_cell_percent(rda)
+   return fn cell_percent|t,id|
+      if id in t
+         color = proportion_to_color("#{0}ff{0}",t[id]/rda[id])
+         val = 100*t[id]/rda[id]
+         return "<td style='background:{}'>{}%"%[color,str(val,"f",0)]
+      else
+         return "<td>&mdash;"
+      end
+   end
+end
+
+function generate_table(buffer,data,dict)
+   buffer.push(head)
+   buffer.push("\n<table class='bt'>")
+   buffer.push("\n<tr><th>Name")
+   buffer.push("<th>Energie<th>Zucker<th>Fett<th>Proteine")
+   buffer.push("<th>A<th>B1<th>B2<th>B3")
+   buffer.push("<th>B6<th>B9")
+   buffer.push("<th>C<th>D<th>E")
+   buffer.push("<th>Eisen<th>Calcium<th>Zink")
+   for t in data
+      buffer.push("\n<tr>")
+      buffer.push("<td style='text-align: left'>"+dict[t["Name"]])
+      buffer.push(cell(t,"Energy",0,"kJ"))
+      buffer.push(cell(t,"Sugar",1,"g"))
+      buffer.push(cell(t,"Fat",2,"g"))
+      buffer.push(cell(t,"Protein",1,"g"))
+      buffer.push(cell(t,"Vitamin A",2,"mg"))
+      buffer.push(cell(t,"Vitamin B1",0,"µg",1000))
+      buffer.push(cell(t,"Vitamin B2",0,"µg",1000))
+      buffer.push(cell(t,"Vitamin B3",2,"mg",1))
+      buffer.push(cell(t,"Vitamin B6",2,"mg"))
+      buffer.push(cell(t,"Vitamin B9",2,"mg"))
+      buffer.push(cell(t,"Vitamin C",1,"mg"))
+      buffer.push(cell(t,"Vitamin D",1,"mg"))
+      buffer.push(cell(t,"Vitamin E",2,"mg"))
+      buffer.push(cell(t,"Fe",2,"mg"))
+      buffer.push(cell(t,"Ca",2,"mg"))
+      buffer.push(cell(t,"Zn",2,"mg"))
+   end
+   buffer.push("\n</table>")
+   buffer.push(foot)
+end
+
+function headline(buffer)
+   buffer.push("\n<tr><th>Name")
+   buffer.push("<th>Energie<th>Kh.<th>Zucker<th>Fett<th>Proteine<th>Faser")
+   buffer.push("<th>A<th>B1<th>B2<th>B3")
+   buffer.push("<th>B5<th>B6<th>B9<th>B12")
+   buffer.push("<th>C<th>D<th>E<th>K")
+   buffer.push("<th>Fe<th>Ca<th>Zn<th>Se<th>Mg<th>P")
+end
+
+function generate_percent(buffer,data,dict,rda)
+   cell_percent = new_cell_percent(rda)
+   buffer.push(head)
+   buffer.push("\n<table class='bt'>")
+
+   buffer.push("\n<tr><th colspan='2'><th colspan='5'>Masseanteile")
+   buffer.push("<th colspan='12'>Vitamine")
+   buffer.push("<th colspan='6'>Mineralstoffe")
+
+   headline(buffer)
+   for t in data
+      buffer.push("\n<tr>")
+      buffer.push("<td style='text-align: left'>"+dict[t["Name"]])
+      buffer.push(cell_color(t,"Energy",2000,0,"kJ"))
+      buffer.push(cell_color(t,"Carbohydrates",100,1,"g"))
+      buffer.push(cell_color(t,"Sugar",20,1,"g"))
+      buffer.push(cell_color(t,"Fat",10,2,"g"))
+      buffer.push(cell_color(t,"Protein",40,1,"g"))
+      buffer.push(cell_color(t,"Fiber",20,1,"g"))
+      buffer.push(cell_percent(t,"Vitamin A"))
+      buffer.push(cell_percent(t,"Vitamin B1"))
+      buffer.push(cell_percent(t,"Vitamin B2"))
+      buffer.push(cell_percent(t,"Vitamin B3"))
+      buffer.push(cell_percent(t,"Vitamin B5"))
+      buffer.push(cell_percent(t,"Vitamin B6"))
+      buffer.push(cell_percent(t,"Vitamin B9"))
+      buffer.push(cell_percent(t,"Vitamin B12"))
+      buffer.push(cell_percent(t,"Vitamin C"))
+      buffer.push(cell_percent(t,"Vitamin D"))
+      buffer.push(cell_percent(t,"Vitamin E"))
+      buffer.push(cell_percent(t,"Vitamin K"))
+      buffer.push(cell_percent(t,"Fe"))
+      buffer.push(cell_percent(t,"Ca"))
+      buffer.push(cell_percent(t,"Zn"))
+      buffer.push(cell_percent(t,"Se"))
+      buffer.push(cell_percent(t,"Mg"))
+      buffer.push(cell_percent(t,"P"))
+   end
+   # headline(buffer)
+   buffer.push("\n</table>")
+   buffer.push(foot)
+end
+
+function score(rda)
+   r = |t,id| t[id]/rda[id]
+   return |t| (
+     0.5*r(t,"Vitamin B2") + 0.2*r(t,"Vitamin C")
+     + r(t,"Ca") + r(t,"Fe") + r(t,"Zn") + 0.7*r(t,"Se"))
+end
+
+function main()
+   dict = json.load(read("de.json"))
+   rda = json.load(read("rda.json"))
+   data = json.load(read("foods.json"))
+   data.sort(score(rda)).rev()
+   buffer = []
+   # generate_table(buffer,data,dict)
+   generate_percent(buffer,data,dict,rda)
+   print(buffer.join())
+end
+
+main()
+
+
