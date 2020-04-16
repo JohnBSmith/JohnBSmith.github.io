@@ -17,6 +17,7 @@
 <li><a href="#Konzept">Das Konzept der Polymorphie</a>
 <li><a href="#Monomorphisierung">Monomorphisierung</a>
 <li><a href="#Laufzeit">Laufzeit-Polymorphie</a>
+<li><a href="#Laufzeit-allg">Laufzeit-Polymorphie allgemein</a>
 </ol>
 
 <h2 id="Konzept">Das Konzept der Polymorphie</h2>
@@ -252,6 +253,129 @@ fn main() {
 </pre>
 
 <p>Der missliebige Downcast ist nun verschwunden.
+
+<h2 id="Laufzeit-allg">Laufzeit-Polymorphie allgemein</h2>
+
+<p>Betrachten wir einmal den folgenden Algorithmus zur Berechnung
+von Potenzen mit natürlichem Exponenten.
+
+<pre class="rust indent">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    for _ in 0..n {y = y*x;}
+    return y;
+}
+
+fn main() {
+    println!("{}",pow(2,10));
+}
+</pre>
+
+<p>Eigentlich ist diese Berechnung für jede Verknüpfung möglich, die
+mit dem zugrundeliegenden Definitionsbereich ein Monoid bildet. Das
+Monoid lässt sich als ein Trait darstellen, welcher das
+neutrale Element (auch »Einselement« genannt)
+und die multiplikativ geschriebene Verknüpfung enthält.
+Der abstrakte Algorithmus nimmt dann die folgende Gestalt an:
+
+<pre class="rust indent">
+trait Monoid {
+    fn one() -&gt; Self;
+    fn mul(&amp;self, x: &amp;Self) -&gt; Self;
+}
+
+fn pow&lt;T: Monoid&gt;(x: T, n: u32) -&gt; T {
+    let mut y = T::one();
+    for _ in 0..n {y = y.mul(&amp;x);}
+    return y;
+}
+
+impl Monoid for i32 {
+    fn one() -&gt; Self {1}
+    fn mul(&amp;self, x: &amp;Self) -&gt; Self {self*x}
+}
+</pre>
+
+<p>Nun ist der Compiler bisher (Stand Mai 2020) leider nicht zur
+Erzeugung eines Laufzeit-polymorphen Maschinenprogramms in der Lage.
+Die notwendigen Mittel zur Beschreibung dessen, was wir gerne haben
+wollten, bietet Rust allerdings schon.
+
+<p>Zunächst müssen wir hier zur Einsicht kommen, dass
+<code>Monoid</code> für <code>dyn</code> unzugänglich ist.
+Man sagt, <code>Monoid</code> sei nicht <i>trait safe</i>.
+Der Grund dafür liegt im fehlenden self-Argument
+der Funktion <code>one</code>. Bei einem Trait-Objekt ergibt dies
+nämlich nicht so richtig einen Sinn, weshalb man sich gleich für
+ein Verbot entschied.
+
+<p>Eigentlich, so ist es am Algorithmus ersichtlich, wollen wir
+die Dispatch-Tabelle auch nicht fest an das Objekt binden, sondern
+in einer Variable speichern, welche den Platz der Typvariable
+<code>T</code> einnimmt. Zur Erreichung von Polymorphie muss das
+Maschinenprogramm auch die konkreten Eigenschaften des Typs vergessen
+haben. Ein sicheres Mittel zur Bewerkstelligung dieser Forderung
+ist <code>dyn Any</code>.
+
+<p>Zunächst die Struktur der Dispatch-Tabelle:
+<pre class="rust indent">
+struct MonoidPtr(Box&lt;dyn std::any::Any&gt;);
+
+struct MonoidType {
+    one: &amp;'static dyn Fn() -&gt; MonoidPtr,
+    mul: &amp;'static dyn Fn(&amp;MonoidPtr,&amp;MonoidPtr) -&gt; MonoidPtr
+}
+</pre>
+
+<p>Die Dispatch-Tabelle nun für <code>Monoid</code> implementieren:
+<pre class="rust indent">
+fn type_monoid&lt;T: Monoid + 'static&gt;() -&gt; MonoidType {
+    let one = &amp;|| -&gt; MonoidPtr {MonoidPtr(Box::new(T::one()))};
+    let mul = &amp;|a: &amp;MonoidPtr, b: &amp;MonoidPtr| -&gt; MonoidPtr {
+        if let Some(a) = a.0.downcast_ref::&lt;T&gt;() {
+            if let Some(b) = b.0.downcast_ref::&lt;T&gt;() {
+                return MonoidPtr(Box::new(a.mul(b)));
+            }
+        }
+        unreachable!();
+    };
+    return MonoidType{one,mul};
+}
+</pre>
+
+<p>Nun der explizit Laufzeit-polymorphe Algorithmus:
+<pre class="rust indent">
+fn pow_intern(t: &amp;MonoidType, x: &amp;MonoidPtr, n: u32) -&gt; MonoidPtr {
+    let mut y = (t.one)();
+    for _ in 0..n {y = (t.mul)(&amp;y,&amp;x);}
+    return y;
+}
+</pre>
+
+<p>Schließlich noch eine typsichere Einhüllung des Algorithmus:
+<pre class="rust indent">
+fn pow&lt;T: Monoid + 'static&gt;(x: T, n: u32) -&gt; T {
+    let t = type_monoid::&lt;T&gt;();
+    let px = MonoidPtr(Box::new(x));
+    return match pow_intern(&amp;t,&amp;px,n).0.downcast::&lt;T&gt;() {
+        Ok(y) =&gt; *y,
+        _ =&gt;  unreachable!()
+    };
+}
+</pre>
+
+<p>Pedantische Leser mögen nun noch fragen, was es mit dem
+Trait-Bound <code>'static</code> auf sich hat. Dieser schließt
+Lifetime-Variablen aus und ermöglicht dadurch die Benutzung von
+<code>Any</code>. Es verhält sich nämlich so, dass <code>Any</code> für
+jeden Datentyp eine Typ-Identifikation bekommt, bzw. bekommen muss,
+diese jedoch für Lifetimes nicht erzeugt werden kann.
+
+<p>Letztendlich haben wir nun echte Laufzeit-Polymorphie, mussten
+dafür aber das Typsystem kaputtbrechen. Dies hat wieder den faulen
+Beigeschmack, dass der Compiler für die interne Implementation
+keine vollständige Typprüfung mehr durchführen kann und bei den
+Downcasts unnötige if-Anweisungen entstehen.
 
 </body>
 </html>
