@@ -17,6 +17,7 @@
 <li><a href="#Strukturen">Strukturen</a>
 <li><a href="#Enumerationen">Enumerationen</a>
 <li><a href="#Nominal">Nominale Typisierung</a>
+<li><a href="#Algebra">Algebraischer Aspekt</a>
 </ol>
 
 <h2 id="Strukturen">Strukturen</h2>
@@ -159,6 +160,70 @@ Typsicherheit.
 <p>Man kann zu jedem beliebigen strukturellen Typen <code>T</code>
 einen nominalen erzeugen, indem man ihn als <code>struct Name(T)</code>
 einhüllt.
+
+<h2 id="Algebra">Algebraischer Aspekt</h2>
+
+<p>Als Zusammensetzung aus Enumerationen und Strukturen bzw. Tupeln
+konstruierte Typen bezeichnet man auch als <i>algebraische</i> Datentypen.
+Es verhält sich nämlich so, dass man mit Typen algebraisch
+Rechnen kann.
+
+<p>Betrachten wir einmal diese Komposition:
+
+<pre class="rust indent">
+enum List&lt;T&gt; {
+    Nil, Node{data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+<p>bzw.
+<pre class="rust indent">
+enum List&lt;T&gt; {
+    Nil, Node(T, Box&lt;List&lt;T&gt;&gt;)
+}
+</pre>
+
+<p>Aus dieser rekursiven Definition enstehen einfach verkettete
+Listen:
+
+<div><img src="img/List.svg">
+</div>
+
+<p>Vergessen wir nun einmal all die nominale Typisierung und
+betrachten nur die Struktur. Die Indirektion über einen Zeiger
+(<code>Box</code>) ist in Rust notwendig, damit ein Knoten feste
+Speichergröße hat, kann aber für die weitere Betrachtung fortgelassen
+werden. Der Typparameter kann außerdem entfernt werden, wenn
+<code>T</code> ein fester Typ ist. Das ergibt dann:
+
+<pre class="rust indent">
+enum List {Nil, Node(T,List)}
+</pre>
+
+<p>Man schreibt nun <code>A*B</code> anstelle von <code>(A,B)</code>,
+und <code>A+B</code> anstelle <code>enum {A,B}</code>. 
+Außerdem ist <code>Nil</code> strukturell gesehen nichts anderes als
+der Typ <code>Unit</code>, oder <code>()</code> in Rust, der
+nur das leere Tupel <code>()</code> enthält. Algebraisch sind
+Typen durch die Anzahl ihrer Elemente charakterisiert, es gilt
+also <code>Unit&nbsp;=&nbsp;1</code>. Damit bekommt man 
+<pre class="indent">
+List := 1 + T*List.
+</pre>
+
+<p>Da steht nun so eine Fixpunktgleichung. Die erste Iteration
+und anschließendes Ausmultiplizieren führt zu
+<pre class="indent">
+List = 1 + T*(1 + T*List) = 1 + T + T*T*List.
+</pre>
+
+<p>Ingesamt ergibt sich die unendliche Enumeration
+<pre class="indent">
+List = 1 + T + T*T + T*T*T + T*T*T*T + ...
+</pre>
+
+<p>Und dies ist genau die Struktur dieses Datentyps. Die
+Enerumation zählt die Möglichkeiten der Liste auf, eine bestimmte
+Länge zu haben.
 
 </body>
 </html>
