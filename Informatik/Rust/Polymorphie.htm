@@ -303,11 +303,11 @@ wollten, bietet Rust allerdings schon.
 
 <p>Zunächst müssen wir hier zur Einsicht kommen, dass
 <code>Monoid</code> für <code>dyn</code> unzugänglich ist.
-Man sagt, <code>Monoid</code> sei nicht <i>trait safe</i>.
-Der Grund dafür liegt im fehlenden self-Argument
-der Funktion <code>one</code>. Bei einem Trait-Objekt ergibt dies
-nämlich nicht so richtig einen Sinn, weshalb man sich gleich für
-ein Verbot entschied.
+Man sagt, <code>Monoid</code> sei nicht <i>object safe</i>.
+Der Grund dafür liegt im expliziten Vorkommen von <code>Self</code>.
+Die Aufgabe von <code>dyn</code> ist ja nämlich Type erasure, und da
+darf dann der Typ nicht mehr explizit vorkommen, sonst ergibt das
+nicht so richtig einen Sinn.
 
 <p>Eigentlich, so ist es am Algorithmus ersichtlich, wollen wir
 die Dispatch-Tabelle auch nicht fest an das Objekt binden, sondern
