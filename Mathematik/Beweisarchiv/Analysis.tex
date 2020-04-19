@@ -483,13 +483,22 @@ Produktregel \eqref{eq:diff-mul} bringt
 Für $f\colon\R\to\R$, $f(x):=x^n$ mit $n\in\N$ gilt
 $f'(x)=nx^{n-1}$.
 \end{Satz}
-\begin{Beweis}
+\begin{Beweis}[Beweis 1]
 Heranziehung des binomischen Lehrsatzes bringt
 \begin{align}
 f'(x) &= \lim_{h\to 0}\frac{(x+h)^n-x^n}{h}
 = \lim_{h\to 0}\frac{\sum_{k=0}^n\binom{n}{k}x^{n-k} h^k-x^n}{h}\\
 &= \lim_{h\to 0}\bigg(nx^{n-1}+\sum_{k=2}^n\binom{n}{k}x^{n-k}h^{k-1}\bigg)
 = nx^{n-1}.\;\qedsymbol
+\end{align}
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Induktiv. Der Induktionsanfang $\tfrac{\mathrm d}{\mathrm dx}x=1$ ist klar.
+Induktionsschritt mittels Produktregel \eqref{eq:diff-mul}:
+\begin{align}
+\tfrac{\mathrm d}{\mathrm dx} x^n = \tfrac{\mathrm d}{\mathrm dx} (x\cdot x^{n-1})
+= x^{n-1}+x\tfrac{\mathrm d}{\mathrm dx}x^{n-1}
+= x^{n-1}+(n-1)x^{n-1} = nx^{n-1}.\;\qedsymbol
 \end{align}
 \end{Beweis}
 
@@ -502,15 +511,15 @@ Der Fall $n=0$ ist trivial und $n\ge 1$ wurde schon in Satz
 \ref{diff-power} gezeigt. Sei nun $a\in\N$ und $n=-a$. Nach der
 Produktregel \eqref{eq:diff-mul} und Satz \ref{diff-power} gilt
 \begin{equation}
-0 = \frac{\mathrm d}{\mathrm dx} 1
-= \frac{\mathrm d}{\mathrm dx} (x^a x^{-a})
-= x^{-a}\frac{\mathrm d}{\mathrm dx} x^a+x^a\frac{\mathrm d}{\mathrm dx} x^{-a}
-= x^{-a}ax^{a-1}+x^a\frac{\mathrm d}{\mathrm dx} x^{-a}.
+0 = \tfrac{\mathrm d}{\mathrm dx} 1
+= \tfrac{\mathrm d}{\mathrm dx} (x^a x^{-a})
+= x^{-a}\tfrac{\mathrm d}{\mathrm dx} x^a+x^a\tfrac{\mathrm d}{\mathrm dx} x^{-a}
+= x^{-a}ax^{a-1}+x^a\tfrac{\mathrm d}{\mathrm dx} x^{-a}.
 \end{equation}
 Dividiert man nun durch $x^a$ und formt um, dann ergibt sich
 \begin{equation}
-\frac{\mathrm d}{\mathrm dx} x^{-a} = -ax^{-a-1}
-\implies \frac{\mathrm d}{\mathrm dx} x^n = nx^{n-1}.\;\qedsymbol
+\tfrac{\mathrm d}{\mathrm dx} x^{-a} = -ax^{-a-1}
+\implies \tfrac{\mathrm d}{\mathrm dx} x^n = nx^{n-1}.\;\qedsymbol
 \end{equation}
 \end{Beweis}
 
