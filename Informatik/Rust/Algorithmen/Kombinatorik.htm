@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Kombinatorik</title>
   <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
   <script src="../js/main.js"></script>
   <script src="../js/rust.js"></script>
 </head>
@@ -14,7 +15,9 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Produkt">Kartesisches Produkt</a>
+<li><a href="#Potenz">Kartesische Potenz</a>
 <li><a href="#Potenzmenge">Potenzmenge</a>
+<li><a href="#Permutationen">Permutationen</a>
 </ol>
 
 <h2 id="Produkt">Kartesisches Produkt</h2>
@@ -41,6 +44,71 @@ fn main() {
 }
 </pre>
 
+<h2 id="Potenz">Kartesische Potenz</h2>
+
+<h3>Rekursiv</h3>
+<pre class="rust">
+fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
+    callback: &amp;mut dyn FnMut(&amp;[u32])
+) {
+    if i == a.len() {
+        callback(a);
+    }else{
+        for k in 0..m {
+            a[i] = k;
+            pow_rec(a,m,i+1,callback);
+        }
+    }
+}
+
+fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
+    let mut buffer: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
+    let a = &amp;mut vec![0; n as usize];
+    pow_rec(a,m,0,&amp;mut |a| {
+        buffer.push(Vec::from(a));
+    });
+    return buffer;
+}
+</pre>
+
+<h3>Nach Umwandlung der Rekursion in eine Iteration</h3>
+
+<pre class="rust">
+fn pow(a: &amp;mut [u32], m: u32,
+    callback: &amp;mut dyn FnMut(&amp;[u32])
+) {
+    let n = a.len();
+    let mut stack: Vec&lt;u32&gt; = Vec::with_capacity(n);
+    let mut k = 0;
+    let mut i = 0;
+    loop{
+        if i == n {
+            callback(a);
+        }else{
+            if k&lt;m {
+                a[i] = k;
+                stack.push(k);
+                k = 0; i += 1;
+                continue;
+            }
+        }
+        match stack.pop() {
+            Some(value) =&gt; {i -= 1; k = value+1;}
+            _ =&gt; break
+        }
+    }
+}
+
+fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
+    let mut buffer: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
+    let a = &amp;mut vec![0; n as usize];
+    pow(a,m,&amp;mut |a| {
+        buffer.push(Vec::from(a));
+    });
+    return buffer;
+}
+</pre>
+
 
 <h2 id="Potenzmenge">Potenzmenge</h2>
 
@@ -64,6 +132,42 @@ fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Ve
     a.into_iter().fold(vec![vec![]],
         |mut ps, x| {ps.extend(ps.clone().into_iter()
             .map(|mut s| {s.push(x.clone()); s})); ps})
+}
+</pre>
+
+<h2 id="Permutationen">Permutationen</h2>
+
+<h3>Rekursiv</h3>
+<pre class="rust">
+// Algorithmus von Heap
+fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
+    callback: &amp;mut dyn FnMut(&amp;[T])
+) {
+    if n==1 {
+        callback(a);
+    }else{
+        perm(a,n-1,callback);
+        for i in 0..n-1 {
+            if n%2==0 {
+                a.swap(i,n-1);
+            }else{
+                a.swap(0,n-1);
+            }
+            perm(a,n-1,callback);
+        }
+    }
+}
+
+fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    let mut buffer: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
+    let n = a.len();
+    let a = &amp;mut Vec::from(a);
+    perm(a,n,&amp;mut |a| {buffer.push(Vec::from(a));});
+    return buffer;
+}
+
+fn main() {
+    println!("{:?}",permutations(&amp;[1,2,3]));
 }
 </pre>
 

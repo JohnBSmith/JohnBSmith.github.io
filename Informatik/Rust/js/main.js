@@ -14,8 +14,9 @@ function query_style() {
         sessionStorage.setItem("style",a[1]);
     }
     var style = sessionStorage.getItem("style");
+    var path = window.root_path===undefined ? "" : window.root_path;
     if(style!=null && style.length!=0) {
-        load_css("css/"+style+".css");
+        load_css(path+"css/"+style+".css");
     }
 }
 query_style();
