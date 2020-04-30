@@ -171,6 +171,47 @@ fn main() {
 }
 </pre>
 
+<h3>Iterativ</h3>
+
+<pre class="rust">
+// Algorithmus von Heap in der iterativen Formulierung
+fn perm&lt;T&gt;(a: &amp;mut [T], callback: &amp;mut dyn FnMut(&amp;[T])) {
+    let n = a.len();
+    let mut stack = vec![0;n];
+    callback(a);
+
+    let mut i = 0;
+    while i&lt;n {
+        if stack[i]&lt;i {
+            if i%2==0 {
+                a.swap(0,i);
+            }else{
+                a.swap(stack[i],i);
+            }
+            callback(a);
+            stack[i] += 1;
+            i = 0;
+        }else{
+            stack[i] = 0;
+            i += 1;
+        }
+    }
+}
+
+fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    let mut buffer: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
+    let a = &amp;mut Vec::from(a);
+    perm(a,&amp;mut |a| {buffer.push(Vec::from(a));});
+    return buffer;
+}
+
+fn main() {
+    for t in permutations(&amp;[1,2,3]) {
+        println!("{:?}",t);
+    }
+}
+</pre>
+
 </body>
 </html>
 
