@@ -51,7 +51,7 @@ Rückmeldung sollte aber einen Body mit dem eigentlichen HTML-Text
 enthalten.
 
 <p>Das Programm:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::net::TcpStream;
 use std::io::{Write,Read};
 
@@ -127,7 +127,7 @@ Nebenläufigkeit.
 
 <h3>IPv4</h3>
 <p>Die IP-Adresse muss man nicht unbedingt als Zeichenkette übergeben:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::net::{TcpStream,SocketAddrV4,Ipv4Addr};
 
 let socket = SocketAddrV4::new(Ipv4Addr::new(93,184,216,34),80);
@@ -139,12 +139,12 @@ können wir umrechnen:
 93*255<sup>3</sup> + 184*255<sup>2</sup> + 216*255 + 34
 </pre>
 <p>Die direkte Angabe als Zahl ist möglich:
-<pre class="rust indent">
+<pre class="rust ibox">
 let ip: u32 = 0x5db8d822;
 let socket = SocketAddrV4::new(Ipv4Addr::from(ip),80);
 </pre>
 <p>Oder als Zeichenkette:
-<pre class="rust indent">
+<pre class="rust ibox">
 let ip = "93.184.216.34".parse::&lt;Ipv4Addr&gt;().unwrap();
 let socket = SocketAddrV4::new(Ipv4Addr::from(ip),80);
 </pre>
@@ -161,18 +161,18 @@ bzw. kurz:
 </pre>
 
 <p>Das Programm ist dann von folgender Form:
-<pre class="rust indent">
+<pre class="rust ibox">
 let ip = Ipv6Addr::new(0,0,0,0,0,0xffff,0x5db8,0xd822);
 let socket = SocketAddrV6::new(ip,80,0,0);
 </pre>
 
 <p>Entsprechend gibt es auch hier die Angabe als Zahl:
-<pre class="rust indent">
+<pre class="rust ibox">
 let ip: u128 = 0xffff5db8d822;
 let socket = SocketAddrV6::new(Ipv6Addr::from(ip),80,0,0);
 </pre>
 <p>Oder als Zeichenkette:
-<pre class="rust indent">
+<pre class="rust ibox">
 let ip = "::ffff:5db8:d822".parse::&lt;Ipv6Addr&gt;().unwrap();
 let socket = SocketAddrV6::new(ip,80,0,0);
 </pre>

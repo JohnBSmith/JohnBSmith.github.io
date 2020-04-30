@@ -33,7 +33,7 @@ würde das Programm sogar weniger effizient sein, weil ständig
 Heap-Allokationen und -Freigaben vorgenommen würden.
 
 <p>Beispiel:
-<pre class="rust indent">
+<pre class="rust ibox">
 struct Chunck {
     data: [u64; 10]
 }
@@ -51,7 +51,7 @@ fn main() {
 </pre>
 
 <p>Es sollte besser auf <code>Box</code> verzichtet werden:
-<pre class="rust indent">
+<pre class="rust ibox">
 impl Chunck {
     fn new() -&gt; Chunck {
         Chunck{data: [0;10]}
@@ -73,7 +73,7 @@ haben.
 
 <p>Es folgt eine Demonstration anhand von Linearkombinationen.
 
-<pre class="rust">
+<pre class="rust box">
 use std::ops::{Add,Mul};
 
 struct Vector {
@@ -256,7 +256,7 @@ Komplikationen ist dabei eine abstrakte Indizierungsoperation
 sind die Strukturen zero cost, werden also vollständig
 wegoptimiert.
 
-<pre class="rust">
+<pre class="rust box">
 pub mod vector {
     use std::ops::{Add,Sub,Mul};
 

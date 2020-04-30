@@ -23,7 +23,7 @@
 <h2 id="Produkt">Kartesisches Produkt</h2>
 
 <h3>Variadisch für Faktoren gleichen Datentyps</h3>
-<pre class="rust">
+<pre class="rust box">
 fn cartesian_product&lt;T: Clone&gt;(a: &amp;[Vec&lt;T&gt;]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
     if a.len()==0 {
         return vec![Vec::new()];
@@ -47,7 +47,7 @@ fn main() {
 <h2 id="Potenz">Kartesische Potenz</h2>
 
 <h3>Rekursiv</h3>
-<pre class="rust">
+<pre class="rust box">
 fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
     callback: &amp;mut dyn FnMut(&amp;[u32])
 ) {
@@ -71,9 +71,10 @@ fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
 }
 </pre>
 
-<h3>Nach Umwandlung der Rekursion in eine Iteration</h3>
+<h3>Iterativ</h3>
 
-<pre class="rust">
+<pre class="rust box">
+// Nach Umwandlung der Rekursion in eine Iteration
 fn pow(a: &amp;mut [u32], m: u32,
     callback: &amp;mut dyn FnMut(&amp;[u32])
 ) {
@@ -113,7 +114,7 @@ fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
 <h2 id="Potenzmenge">Potenzmenge</h2>
 
 <h3>Iterativ</h3>
-<pre class="rust">
+<pre class="rust box">
 fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
     let mut ps = vec![vec![]];
     for x in a {
@@ -127,7 +128,7 @@ fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Ve
 </pre>
 
 <h3>Funktional</h3>
-<pre class="rust">
+<pre class="rust box">
 fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
     a.into_iter().fold(vec![vec![]],
         |mut ps, x| {ps.extend(ps.clone().into_iter()
@@ -138,7 +139,7 @@ fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Ve
 <h2 id="Permutationen">Permutationen</h2>
 
 <h3>Rekursiv</h3>
-<pre class="rust">
+<pre class="rust box">
 // Algorithmus von Heap
 fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
     callback: &amp;mut dyn FnMut(&amp;[T])
@@ -173,7 +174,7 @@ fn main() {
 
 <h3>Iterativ</h3>
 
-<pre class="rust">
+<pre class="rust box">
 // Algorithmus von Heap in der iterativen Formulierung
 fn perm&lt;T&gt;(a: &amp;mut [T], callback: &amp;mut dyn FnMut(&amp;[T])) {
     let n = a.len();

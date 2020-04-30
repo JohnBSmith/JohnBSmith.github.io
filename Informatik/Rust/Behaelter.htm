@@ -80,7 +80,7 @@ Da das Literal für Hashtabellen variadisch ist und die Tupel-Syntax
 für Schlüsselwert-Paare etwas umständlich ist, behilft man sich am
 besten mit einem Makro:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! hashmap {
     ($( $key:tt: $value:expr ),*) =&gt; {{
         let mut map = HashMap::new();
@@ -92,7 +92,7 @@ macro_rules! hashmap {
 
 <p>Definition und Anwendung von Hashtabellen gestaltet sich nun
 wie bei Feldern:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 
 fn main() {
@@ -112,7 +112,7 @@ in <code>m</code> enthalten ist.
 <code>Some(value)</code> bei Vorhandensein von <code>key</code> in
 <code>m</code> zurückgibt, sonst <code>None</code>. Somit ist auch
 gestattet:
-<pre class="rust indent">
+<pre class="rust ibox">
 println!("{:?}",m.get("x"));
 </pre>
 
@@ -134,7 +134,7 @@ jeden beliebigen Objekt-Typ bilden.
 
 <p>Entsprechend ergibt sich nun:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 use std::hash::{Hash,Hasher};
 use std::rc::Rc;
@@ -178,7 +178,7 @@ den Zeiger als Speicheradresse betrachten und diese zur Identifizierung
 heranziehen. Dafür sind lediglich ein paar kleine Modifikationen
 vorzunehmen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 use std::hash::{Hash,Hasher};
 use std::rc::Rc;
@@ -213,17 +213,17 @@ fn main() {
 </pre>
 <p>Bei der Berechnung des Hashwertes muss man hier aufpassen,
 dass man
-<pre class="rust indent">
+<pre class="rust ibox">
 (&amp;*self.id as *const str as *const () as usize).hash(state);
 </pre>
 anstelle von
-<pre class="rust indent">
+<pre class="rust ibox">
 (&amp;self.id as *const _ as usize).hash(state);
 </pre>
 schreibt. Es soll ja nicht die Speicheradresse der Referenz des Zeigers
 gehasht werden, sondern die Speicheradresse, welche der Zeiger enthält.
 Dies wird durch das folgende Programm verdeutlicht:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::rc::Rc;
 
 #[derive(Clone)]
@@ -253,7 +253,7 @@ beschäftigt und würden es dabei gerne vermeiden, ihren mentalen Fokus
 auf diese Feinheiten zu lenken. Glücklicherweise ist eine Abstraktion
 dieser Konvertierung erreichbar:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn rc_as_usize&lt;T: ?Sized&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
     &amp;**p as *const T as *const () as usize
 }
@@ -264,7 +264,7 @@ fn rc_as_usize&lt;T: ?Sized&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
 dicker Zeiger sein kann. Die Variante ohne Unterstützung von
 dicken Zeigern ist ein wenig kürzer:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn rc_as_usize&lt;T&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
     &amp;**p as *const T as usize
 }
@@ -272,14 +272,14 @@ fn rc_as_usize&lt;T&gt;(p: &amp;Rc&lt;T&gt;) -&gt; usize {
 
 <p>Eine Warnung noch: Man könnte auf die Idee kommen,
 <code>rc_as_usize</code> zu
-<pre class="rust indent">
+<pre class="rust ibox">
 fn ptr_as_usize&lt;T: ?Sized&gt;(p: &amp;T) -&gt; usize {
     p as *const T as *const () as usize
 }
 </pre>
 
 <p>zu verallgemeinern. Dann ist aber folgendes Programm möglich:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let id: Rc&lt;str&gt; = Rc::from("A");
     println!("0x{:x}",rc_as_usize(&amp;id));

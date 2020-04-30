@@ -31,7 +31,7 @@ Absicht besser wieder.
 <p>Für solche optionalen Werte gibt es schon einen vordefinierten
 Datentyp:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 enum Option&lt;T&gt; {
     None,
     Some(T)
@@ -44,7 +44,7 @@ beliebiger aber fester Datentyp eingesetzt wird. In der Variante
 <code>Some(T)</code> trägt der Wert genau einen Wert vom Typ
 <code>T</code>. Das Suchprogramm lässt sich damit so formulieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn find(a: &amp;[&amp;str], s: &amp;str) -&gt; Option&lt;usize&gt; {
     for index in 0..a.len() {
         if a[index] == s {return Some(index);}
@@ -78,7 +78,7 @@ des Rückgabewertes erzwingen, was sich mittels Enumerationen
 bewerkstelligen lässt.
 
 <p>Für Resultate gibt es auch einen vordefinierten Datentyp:
-<pre class="rust indent">
+<pre class="rust ibox">
 enum Result&lt;T,E&gt; {
     Ok(T),
     Err(E)
@@ -97,7 +97,7 @@ soll es geben falls die Zahl größer ausfällt als <code>u32</code>
 halten kann.
 
 <p>Zunächst die Funktion ohne Fehlerbehandlung:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn int(s: &amp;str) -&gt; u32 {
     let mut value: u32 = 0;
     for c in s.chars() {
@@ -109,7 +109,7 @@ fn int(s: &amp;str) -&gt; u32 {
 </pre>
 
 <p>Und nun mit Fehlerbehandlung:
-<pre class="rust indent">
+<pre class="rust ibox">
 enum ParseError {InvalidDigit, Overflow}
 
 fn int(s: &amp;str) -&gt; Result&lt;u32,ParseError&gt; {
@@ -146,7 +146,7 @@ fn main() {
 <p>Bei Verzicht auf detailierte Fehlerinformation erlaubt sich
 auch diese Ausgestaltung:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn int(s: &amp;str) -&gt; Option&lt;u32&gt; {
     let mut value: u32 = 0;
     for c in s.chars() {
@@ -163,7 +163,7 @@ fn int(s: &amp;str) -&gt; Option&lt;u32&gt; {
 Rückgabewert hat den Typ <code>Option&lt;u32&gt;</code>. Die
 Operation <code>x?</code> ist eine Kurzschreibweise für:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 match x {
     Some(value) =&gt; value,
     None =&gt; return None
@@ -178,7 +178,7 @@ kann <code>value</code> einfach aus <code>Some(value)</code>
 herausgeholt werden.
 
 <p>Den Fragezeichen-Operator gibt es auch für Resultate:
-<pre class="rust indent">
+<pre class="rust ibox">
 match x {
     Ok(value) => value,
     error => return error
@@ -187,7 +187,7 @@ match x {
 
 <p>Die vollständige Definition des Operators kann auch noch
 eine Konvertierung zwischen Fehlerarten vornehmen:
-<pre class="rust indent">
+<pre class="rust ibox">
 match x {
     Ok(value) => value,
     Err(error) => return Err(From::from(error))

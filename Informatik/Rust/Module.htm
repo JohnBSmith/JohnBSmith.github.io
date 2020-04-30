@@ -37,7 +37,7 @@ Konstanten und Variablen sind nur dann öffentlich, wenn sie mit
 dem Schlüsselwort <code>pub</code> markiert wurden.
 
 <p>Die Grundstruktur von Modulen sei hier am Primzahltest verdeutlicht:
-<pre class="rust indent">
+<pre class="rust ibox">
 mod number_theory {
     pub fn is_prime(n: u64) -&gt; bool {
         for k in 2..n {
@@ -73,7 +73,7 @@ Rust kurz als Crate bezeichnet wird.
 <p>Das folgende Programm arbeitet zwar korrekt, ist jedoch in
 schlechtem Stil geschrieben. 
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn is_ascii_alphabetic(c: char) -&gt; bool {
     let x = u32::from(c);
     return 65&lt;=x &amp;&amp; x&lt;=90 || 97&lt;=x &amp;&amp; x&lt;=122;
@@ -102,7 +102,7 @@ sich globale oder auch lokale Konstanten mit dem Schlüsselwort
 Öffentlich sind sie nur dann, wenn sie mit <code>pub</code> markiert
 wurden. Das verbesserte Programm ist hoffentlich angenehmer zu lesen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 mod charsets {
     const A: u32 = 'a' as u32;
     const Z: u32 = 'z' as u32;
@@ -128,12 +128,12 @@ fn main() {
 geschrieben, das wird auch vom Compiler überprüft. Empfindet man
 das in bestimmten Situation zu unschön, lässt es sich auch
 ausschalten. Man muss dafür die Zeile
-<pre class="rust indent">
+<pre class="rust ibox">
 #[allow(non_upper_case_globals)]
 </pre>
 <p>vor die Definition der Konstante schreiben, oder wenn es dutzende
 solche Konstanten gibt,
-<pre class="rust indent">
+<pre class="rust ibox">
 #![allow(non_upper_case_globals)]
 </pre>
 <p>am Anfang des Moduls.
@@ -141,7 +141,7 @@ solche Konstanten gibt,
 <p>Konstante Zeichenketten werden normalerweise mit dem Schlüsselwort
 <code>static</code> definiert, nicht mit <code>const</code>:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 static TEXT: &amp;str = "Ein Schiff taucht im Nebel auf.";
 </pre>
 
@@ -149,7 +149,7 @@ static TEXT: &amp;str = "Ein Schiff taucht im Nebel auf.";
 globale Variablen. Man sollte diese so gut es geht vermeiden, das
 heißt aber nicht dass sie unmöglich sind:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 static mut X: u32 = 0;
 
 fn main() {

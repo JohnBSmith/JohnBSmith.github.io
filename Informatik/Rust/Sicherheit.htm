@@ -57,7 +57,7 @@ dass erstens die betroffenen Unterprogramme nur Werte vom Typ
 <code>Datenbankindex</code> entgegennehmen und zweitens
 ein solcher Wert nur über eine Validierung erzeugt werden kann.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 mod db{
     #[derive(Clone,Copy)]
     pub struct Datenbankindex{
@@ -157,7 +157,7 @@ Zur Umsetzung wird die Inline-Ersetzung von Funktionsaufrufen genutzt.
 werden, der nur die Operationen <code>push</code> und <code>pop</code>
 unterstützt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 mod stack {
     pub struct Stack&lt;T&gt; {
         v: Vec&lt;T&gt;
@@ -199,7 +199,7 @@ Trait, dann lassen sich abstrakte Programme schreiben,
 welche nur noch auf die Schnittstelle zugreifen, aber nicht
 mehr auf konkrete Datentypen.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 mod stack {
     pub trait Stack&lt;T&gt; {
         fn new() -&gt; Self;
@@ -254,7 +254,7 @@ sein.
 
 <p>Der Grundaufbau der Obstkiste sieht so aus:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 struct Fruit {kind: String, weight: u32}
 struct FruitCrate {list: Vec&lt;Fruit&gt;, total_weight: u32}
 </pre>
@@ -266,7 +266,7 @@ privat. Ausgelesen werden die Komponenten stattdessen mit Methoden,
 wobei man der Methode auch den gleichen Bezeichner wie der
 Komponente geben kann.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod fruit_crate {
     pub struct Fruit {
         pub kind: String,
@@ -306,7 +306,7 @@ beschreibbare Komponente, könnte man auf diese während des Ausborgens
 nicht mehr zugreifen. Als Beispiel sei der Obstkiste eine boolesche
 Variable hinzugefügt, die angibt ob die Kiste geöffnet ist.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod fruit_crate {
     #[derive(Debug)]
     pub struct Fruit {
@@ -351,14 +351,14 @@ aufzuteilen. Hierbei werden Teil-borrows als Tupel oder Struktur
 zurückgeben. Zu <code>FruitCrate</code> müssen wir lediglich die
 folgende Methode hinzufügen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub fn borrow_parts(&amp;mut self) -&gt; (&amp;mut bool, &amp;Vec&lt;Fruit&gt;) {
     (&amp;mut self.open, &amp;self.list)
 }
 </pre>
 
 <p>So wird es vom Compiler akzeptiert:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let mut fc = FruitCrate::new();
     fc.push("Äpfel",1000);
@@ -372,7 +372,7 @@ fn main() {
 <p>Beim zweiten Ansatz hüllt man die schreibgeschützten
 Komponenten in eine Struktur <code>ReadOnly</code> ein.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod fruit_crate {
     pub struct ReadOnly&lt;T&gt;(T);
 
@@ -420,7 +420,7 @@ fn main() {
 
 <p>Da <code>ReadOnly</code> nicht aus dem Modul heraus genommen
 werden kann, definiert man dafür am besten ein Makro:
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! define_read_only {
     () =&gt; {
         pub struct ReadOnly&lt;T&gt;(T);
@@ -460,7 +460,7 @@ und <code>A3</code> definiert. Die Daten der Typzustände bleiben
 privat, damit sich die Objekte ausschließlich über Methoden konstruieren
 lassen. Jeder Typzustand bekommt jeweils seine erlaubten Methoden.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod a_state {
     pub struct A{data: ()}
     impl A {
@@ -493,7 +493,7 @@ fn main() {
 <p>Als Nebeneffekt sind hier syntaktisch angenehme Methodenketten
 erlaubt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 A::new().f1().f2a().f3();
 </pre>
 
@@ -504,7 +504,7 @@ zusammenfassen, indem der Zustand als Typparameter kodiert wird.
 Die Zustände sollen hierbei keinerlei Daten tragen, weswegen wir
 <code>PhantomData</code> heranziehen.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod a_state {
     use std::marker::PhantomData as Ph;
 
@@ -546,7 +546,7 @@ einbringen.
 <p>Zunächst ließe sich mehr Klarheit schaffen durch Definition der
 Einheiten als Konstanten:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod unit {
     #![allow(non_upper_case_globals)]
     pub const km: f64 = 1000.0;
@@ -594,7 +594,7 @@ Multiplikation einer Zahl mit einer Größe und die Addition von zwei
 Größen gleicher Dimension. Die Einheiten modellieren wir einfach
 als konstante Größen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod quantities {
     use std::marker::PhantomData as Ph;
     use std::ops::{Mul,Add};
@@ -660,7 +660,7 @@ oder die Umrechnung in kohärente Einheiten herauskürzen. Die Größe
 bekommt dann als Typargument die konkrete Einheit anstelle der
 abstrakten Dimension.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod quantities {
     use std::marker::PhantomData as Ph;
     use std::ops::{Mul,Add};
@@ -729,7 +729,7 @@ wir aber zunächst außen vor.
 
 <p>Betrachten wir das folgende Programm das einen divergenten
 Ausdruck <code>unreachable!()</code> enthält.
-<pre class="rust indent">
+<pre class="rust ibox">
 enum Symbol {Identifier, Number, Add}
 struct Token {symbol: Symbol, data: Option&lt;String&gt;}
 
@@ -769,7 +769,7 @@ der Datenstruktur gestattet aber eine Entfernung des missliebigen
 divergenten Ausdrucks, die Terminierung des Programms ist dann
 sicher.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 enum Symbol {
     Identifier(String),
     Number(u32),
@@ -843,7 +843,7 @@ müssen, die Nachbedingung dass das Ergebnis auch diese Länge besitzt.
 <p>Die Vor- und Nachbedingung kann man mittels assert-Anweisungen
 formulieren.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt; {
     let n = a.len();
     
@@ -896,7 +896,7 @@ gesamten Programms, nicht nur des aktuellen Threads.
 <p>Wir können das Problem umgehen, indem die maximale Rekursionstiefe
 vorab beschränkt wird. Betrachten wir exemplarisch
 die rekursive Berechnung der Addition:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn add(x: u32, y: u32) -&gt; u32 {
     if y==0 {x} else {add(x,y-1)+1}
 }
@@ -910,7 +910,7 @@ Vergrößerung des Laufzeitstapels erhöhen, der Compiler oder das
 Laufzeitsystem sollte dafür eine Konfiguration bereithalten.
 
 <p>Man modifiziert die Funktion nun so:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn add(x: u32, y: u32, depth_max: u32) -&gt; Result&lt;u32,()&gt; {
     if depth_max==0 {return Err(());}
     if y==0 {Ok(x)} else {Ok(add(x,y-1,depth_max-1)?+1)}
@@ -954,7 +954,7 @@ Der Algorithmus wird mit einem schon bekannten einfacheren Algorithmus
 einfache Algorithmus zusätzlich mit einem unabhängig ermittelten
 Resultat überprüft.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn is_prime(n: u32) -&gt; bool {
     if n&lt;2 {return false;}
     let mut i: u32 = 2;

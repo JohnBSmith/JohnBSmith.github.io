@@ -30,7 +30,7 @@ dienen, die für einen beliebigen Ganzzahltyp das Feld
 [<var>a</var>,&nbsp;<var>a</var>+1,&nbsp;<var>a</var>+2,&nbsp;&hellip;,&nbsp;<var>b</var>]
 erzeugt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::ops::Add;
 
 trait Cast {fn cast(n: i32) -> Self;}
@@ -63,7 +63,7 @@ fn main() {
 </pre>
 
 <p>Das hätten wir natürlich auch einfacher haben können:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let v: Vec&lt;i32&gt; = (1..11).collect();
     println!("{:?}",v);
@@ -77,7 +77,7 @@ Verhalten bekommen wir, wenn <code>as</code> durch <code>from</code>
 ersetzt wird. Nur die potentiell verlustbehaftete Typumwandlung
 von <code>u8</code> nach <code>i8</code> ist nicht erlaubt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 trait Cast {fn cast(n: u8) -&gt; Self;}
 impl&lt;T&gt; Cast for T where T: From&lt;u8&gt; {
     fn cast(n: u8) -&gt; T {T::from(n)}
@@ -96,7 +96,7 @@ Trait-Bounds beschränkt, wobei die Liste der Methoden aber leer bleiben
 kann. Wir führen nun den neuen Trait <code>Int</code> ein, der mehr oder
 weniger die ganzen Zahlen repräsentieren soll.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 trait Int: Copy + From&lt;u8&gt; + Add&lt;Output=Self&gt; + PartialOrd {}
 
 impl&lt;T&gt; Int for T
@@ -169,7 +169,7 @@ verfolgen. Rust bietet uns nun die Mittel, um den polymorphen Code
 in ein monomorphisiertes Interface einzuhüllen. Das gestaltet sich wie
 folgt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub mod polyvec {
     use std::any::Any;
     use std::marker::PhantomData;
@@ -216,7 +216,7 @@ von <code>Vec</code> zu unterscheiden ist.
 Um diesen Umstand auszunutzen, können wir einen abstrakten Datentyp
 als Typalias formulieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 type VecADT = Vec;
 // type VecADT = PolyVec;
 </pre>
@@ -248,7 +248,7 @@ Typ <code>Vec</code> eine Methode <code>sq</code> hinzugefügt
 werden, die alle Elemente quadriert und das Ergebnis als neues
 Array zurückgibt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::ops::Mul;
 use std::iter::FromIterator;
 

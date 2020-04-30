@@ -40,7 +40,7 @@ der Stapel auch leer sein darf, muss der Zeiger eine Option sein.
 Methode <code>pop</code> nimmt ein Element vom Stapel herunter und
 gibt es als Wert zurück.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 struct Node&lt;T&gt; {
     data: T,
     next: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
@@ -81,7 +81,7 @@ fn main() {
 
 <p>Für einfach verkettete Listen gibt es auch eine alternative
 Darstellung:
-<pre class="rust indent">
+<pre class="rust ibox">
 enum List&lt;T&gt; {
     Nil, Node{data: T, next: Box&lt;List&lt;T&gt;&gt;}
 }
@@ -90,7 +90,7 @@ enum List&lt;T&gt; {
 <p>Das führt zu einer leicht modifzierten, aber semantisch äquivalenten
 Implementation:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 pub enum Stack&lt;T&gt; {
     Nil, Node{data: T, next: Box&lt;Stack&lt;T&gt;&gt;}
 }
@@ -149,7 +149,7 @@ Zelle <code>RefCell</code>, die einen darin veränderlichen Inahlt
 ermöglicht. Somit bekommt die Typdefinition schließlich die
 folgende Gestalt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 type RcCell&lt;T&gt; = Rc&lt;RefCell&lt;T&gt;&gt;;
 
 struct Node&lt;T&gt; {
@@ -169,7 +169,7 @@ Der Einfachheit halber führen wir den Iterator klonend aus.
 Die folgende Implementation enthält gleich alles
 in einem Rutsch.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fmt;
@@ -265,7 +265,7 @@ zur Ermittlung der Tiefe eines Binärbaums. In puristischer Form
 fällt der Algorithmus selbst rekursiv aus, das ist typisch bei
 Algorithmen für Baumstrukturen.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 enum Tree&lt;T&gt; {
     Empty,
     Leaf(T),

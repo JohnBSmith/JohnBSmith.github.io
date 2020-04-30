@@ -29,7 +29,7 @@ Typ besitzen.
 Konstruktion als Summentyp (<code>enum</code>)
 zu verwirklichen:
 
-<pre class="indent rust">
+<pre class="rust ibox">
 enum Item{
     Int(i32),
     String(String)
@@ -105,7 +105,7 @@ vom Typ <code>&amp;A</code> und <code>&amp;mut A</code>
 sind Fat-Pointer.
 
 <p>Der polymorphe Ansatz gestaltet sich wie folgt:
-<pre class="rust indent">
+<pre class="rust ibox">
 trait Item {
     fn to_string(&amp;self) -&gt; String;
 }
@@ -162,7 +162,7 @@ Dispatch-Tabelle erzeugt, bei der automatisch die Methodenzeiger der
 anderen Trait-Implementationen hinzugefügt werden. Die Angabe der Methode
 <code>to_string</code> wird überflüssig:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::string::ToString;
 trait Item: ToString {}
 impl Item for i32 {}
@@ -176,7 +176,7 @@ impl Item for String {}
 von Dispatch-Tabellen bei Vererbung aussehen kann.
 
 <p>Angenommen wir haben die folgende Situation:
-<pre class="rust indent">
+<pre class="rust ibox">
 trait A {fn f(); fn g();}
 trait B {fn h();}
 trait S: A,B {fn s();}
@@ -185,7 +185,7 @@ trait S: A,B {fn s();}
 <p>Für jeden Typ <code>T</code> mit Trait-Implementationen zu
 <code>A,B,S</code> werden nun die folgenden
 Dispatch-Tabellen erzeugt:
-<pre class="rust indent">
+<pre class="rust ibox">
 (S for T).vtable = (T::f, T::g, T::h, T::s);
 (A for T).vtable = (T::f, T::g);
 (B for T).vtable = (T::h);
@@ -193,14 +193,14 @@ Dispatch-Tabellen erzeugt:
 
 <p>Da hier eine Einbettung vorliegt, können die Bestandteile
 der größten Dispatch-Tabelle gemeinsam genutzt werden:
-<pre class="rust indent">
+<pre class="rust ibox">
 (S for T).vtable = (T::f, T::g, T::h, T::s);
 (A for T).vtable = (S for T).vtable[0..2];
 (B for T).vtable = (S for T).vtable[2..3];
 </pre>
 
 <p>Der Methodenaufruf geschieht nun wie folgt:
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: Box&lt;S&gt; = Box::new(T);
 let (pdata,pvtable): (&amp;T,&amp;(S for T)) = x;
 
@@ -210,7 +210,7 @@ x.h() == pvtable.2(),
 x.s() == pvtable.3()
 </pre>
 <p>Bzw. wenn ein self-Argument vorliegt:
-<pre class="rust indent">
+<pre class="rust ibox">
 x.f() == pvtable.0(pdata)
 </pre>
 
@@ -227,7 +227,7 @@ Indirektion notwendig.
 <p>Der Funktionalität der Typ-Identifikation ist im Trait
 <code>Any</code> implementiert. Hier zunächst ein einfaches Beispiel
 mit einem Upcast und einem Downcast:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::any::Any;
 
 fn main() {
@@ -241,7 +241,7 @@ fn main() {
 </pre>
 
 <p>Es lässt sich auch einfach ein Typtest vornehmen:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::any::Any;
 
 fn main() {
@@ -251,7 +251,7 @@ fn main() {
 </pre>
 
 <p>Beim Methoden-Aufruf ist zunächst auch ein Downcast notwendig:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::any::Any;
 
 trait Item{
@@ -275,7 +275,7 @@ fn main() {
 eine Methode <code>as_any</code> ermöglichen, die einen
 Upcast nach <code>Any</code> durchführt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::any::Any;
 
 trait Item{
@@ -302,7 +302,7 @@ fn main() {
 <p>Hierbei lässt sich <code>Item</code> auch für eigene Datentypen
 implementieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 struct Point{
   x: i32, y: i32
 }

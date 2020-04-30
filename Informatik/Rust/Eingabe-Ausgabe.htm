@@ -37,7 +37,7 @@
 Arten ansprechen. Zunächst kann man einfach <code>println</code>
 benutzen.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     println!("{}","Ausgabe");
 }
@@ -46,7 +46,7 @@ fn main() {
 <p>Man kann die Standard-Ausgabe auf Linux aber auch manuell als
 Geräte-Datei öffnen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{io,io::Write,fs::File};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
@@ -61,7 +61,7 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
 existiert, das Programm also weniger portabel wird. Aus diesem
 Grund steht die Funktion <code>io::stdout</code> zur Verfügung:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{io,io::Write};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
@@ -77,7 +77,7 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
 
 <p>Zum Lesen von Text-Dateien gibt es die Komfort-Funktion
 <code>read_to_string</code>, das macht die Sache besonders einfach.
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{fs,io};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
@@ -89,7 +89,7 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
 
 <p>Die Funktion vereinfacht die Benutzung von vielseitigeren
 Werkzeugen. Unter Verwendung dieser gestaltet sich die Funktion so:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{fs,io,io::Read};
 
 fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
@@ -104,7 +104,7 @@ fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
 weil der Puffer beim Lesen öfters realloziert werden muss. Besser,
 man initialisiert den Puffer gleich mit der benötigten Kapazität:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{fs,io,io::Read,convert::TryFrom};
 
 fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
@@ -124,7 +124,7 @@ denn so eine Geräte-Datei wie <code>/dev/stdin</code> ist. Bei stdin
 handelt es sich ja um einen Datenstrom, der kann potenziell unendlich
 lang sein. Probieren wir das aus:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() -&gt; Result&lt;(),std::io::Error&gt; {
     println!("{}",std::fs::metadata("/dev/stdin")?.len());
     return Ok(());
@@ -148,7 +148,7 @@ verarbeiten können, sollte diese zunächst als Binärdatei
 eingelesen werden, hierfür steht die Funktion <code>fs::read</code>
 zur Verfügung. Mit den Binärdaten kann man dann machen was man will.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{fs::read, error::Error};
 
 fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
@@ -160,7 +160,7 @@ fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
 </pre>
 
 <p>Hier ist nun alternativ möglich:
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = String::from_utf8_lossy(&amp;data);
 </pre>
 
@@ -171,7 +171,7 @@ den CRC32-Prüfwert von so einer Datei berechnen, siehe
 >Algorithmen: Hashfunktionen</a>.
 Der naive Ansatz ginge so:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{env::args, fs::read, io};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
@@ -189,7 +189,7 @@ einen Puffer der Blockgröße, günstig ist 64 Kibibyte. Dann wird vom
 Block der Prüfwert bestimmt, wobei der Prüfwert des vorangegangenen
 Blocks mit einfließt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{env::args, fs::File, io, io::Read};
 use crc::CRC32;
 
@@ -223,7 +223,7 @@ Programms nun verschwindend gering.
 <p>Daten in Dateien schreiben ist denkbar einfach. Man erzeugt
 einfach eine neue Datei und schreibt die Daten da rein.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{io,io::Write,fs::File};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
@@ -240,7 +240,7 @@ interagieren. Man kann vor dem Schreiben der Datei prüfen, ob der
 angegebene Pfad schon existiert. Dies lässt sich wie folgt
 bewerkstelligen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::{io,io::Write,fs::File,path::Path};
 
 fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {

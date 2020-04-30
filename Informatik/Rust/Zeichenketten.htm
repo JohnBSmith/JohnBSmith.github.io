@@ -42,7 +42,7 @@
 
 <p>Ein UTF-32-Zeichen kann über einen expliziten Typcast in eine blanke
 32-Bit-Zahl umgewandelt werden und umgekehrt:
-<pre class="rust indent">
+<pre class="rust ibox">
 let x = 'a' as u32;
 let c = 97 as char;
 </pre>
@@ -57,7 +57,7 @@ inline-Funktionen eine Zero-Cost-Abstraktion ermöglichen.
 <p>Literale dienen der Angabe von Zeichenketten im Quelltext.
 Im einfachsten Fall steht die Zeichenkette in Anführungszeichen
 in einer Zeile:
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = "Die Ordnung der Dinge";
 </pre>
 
@@ -68,7 +68,7 @@ schreibt man einen Backslash an das Ende der Zeile, dann wird
 jeglicher Freiraum bis zum nächsten Zeichen aufgefressen.
 Ein äquivalente Angabe der vorherigen Zeichenkette ist demnach:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = "Die Ordnung \
          der Dinge";
 </pre>
@@ -76,14 +76,14 @@ let s = "Die Ordnung \
 <p>Wenn die Zeichenkette tatsächlich auch einen Umbruch enthalten soll,
 dann könnte man einfach schreiben:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = "Die Ordnung
 der Dinge";
 </pre>
 
 <p>Das ist jedoch etwas unästhetisch, man schreibt besser:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = "Die Ordnung\n\
          der Dinge";
 </pre>
@@ -106,7 +106,7 @@ let s = "Die Ordnung\n\
 keine Escape-Sequenzen vorkommen. Diese dürfen daher auch
 den Backslash enthalten:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let s = "\\sin(\\varphi)";
 let s = r"\sin(\varphi)";
 </pre>
@@ -114,7 +114,7 @@ let s = r"\sin(\varphi)";
 <p>Umringt man die Anführungszeichen mit Rautezeichen,
 dürfen doppelte Anführungszeichen auch im Literal vorkommen:
 
-<pre class="indent">
+<pre class="ibox">
 <span class='keyword'>let</span> s = r<span class='string'>#"&lt;span class="a"&gt;"#</span>;
 </pre>
 
@@ -122,7 +122,7 @@ dürfen doppelte Anführungszeichen auch im Literal vorkommen:
 umringt, darf auch <code>"#</code> im Literal vorkommen,
 bei <code>###</code> entsprechend <code>"##</code> usw.
 
-<pre class="indent">
+<pre class="ibox">
 <span class='keyword'>let</span> s = r<span class='string'>##"&lt;a href="#id"&gt;"##</span>;
 </pre>
 
@@ -132,7 +132,7 @@ bei <code>###</code> entsprechend <code>"##</code> usw.
 <p>Zeichenketten sind in Rust dynamisch und lassen sich als
 Puffer benutzen. Ein Puffer ist eine dynamische Zeichenkette,
 an die beliebig viele Zeichenketten angehängt werden können.
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let mut s = "".to_string();
     s += "Hier";
@@ -145,7 +145,7 @@ fn main() {
 
 <p>Es folgt ein Beispiel wo ein Puffer mit zwei dynamischen Ketten
 gefüttert wird.
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let s1 = "Text1\n".to_string();
     let s2 = "Text2\n".to_string();
@@ -161,7 +161,7 @@ fn main() {
 bei diesen Operationen nicht ihren Besitz verlieren.
 
 <p>Die Ketten können auch von Unterprogrammen erzeugt worden sein.
-<pre class="rust indent">
+<pre class="rust ibox">
 fn p1() -> String {
     return "Text1\n".to_string();
 }
@@ -183,7 +183,7 @@ fn main() {
 <h3>Mit Schablonen geht es am kürzesten</h3>
 <p>Ein Paar von Zahlen in eine Zeichenkette umwandeln ließe
 sich so bewerkstelligen:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pair_to_string(x: i32, y: i32) -&gt; String {
     let mut buffer = String::new();
     buffer.push_str("(");
@@ -200,7 +200,7 @@ fn main() {
 </pre>
 
 <p>Etwas weniger umständlich geht es auch so:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pair_to_string(x: i32, y: i32) -&gt; String {
     ["(", &amp;x.to_string(), ", ", &amp;y.to_string(), ")"].join("")
 }
@@ -208,14 +208,14 @@ fn pair_to_string(x: i32, y: i32) -&gt; String {
 
 <p>Formatierung mit Schablonen bietet aber eine kurze und prägnante
 Formulierung dieser Funktion:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pair_to_string(x: i32, y: i32) -&gt; String {
     format!("({}, {})",x,y)
 }
 </pre>
 
 <p>Man kann die Funktion auch gleich polymorph schreiben:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pair_to_string&lt;X,Y&gt;(x: X, y: Y) -&gt; String
 where X: std::fmt::Display, Y: std::fmt::Display
 {
@@ -234,7 +234,7 @@ wird.
 <p>Die Schablonen für die Darstellung von Zahlen im Binärsystem,
 Dezimalsystem und Hexadezimalsystem sind
 <code>{:b}</code>, <code>{:o}</code>, <code>{:x}</code>:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn bin(n: u32) -&gt; String {format!("0b{:b}",n)}
 fn oct(n: u32) -&gt; String {format!("0o{:o}",n)}
 fn hex(n: u32) -&gt; String {format!("0x{:x}",n)}
@@ -243,7 +243,7 @@ fn hex(n: u32) -&gt; String {format!("0x{:x}",n)}
 <h3>Ausrichtung</h3>
 <p>Man kann Text in Freiraum ausrichten. Beispiele für 10 Zeichen
 Freiraum:
-<pre class="rust indent">
+<pre class="rust ibox">
 println!("|{:10}|","Text");  // Text linksbündig ausrichten
 println!("|{:&lt;10}|","Text"); // Text linksbündig ausrichten
 println!("|{:&gt;10}|","Text"); // Text rechtsbündig ausrichten
@@ -287,7 +287,7 @@ Startbyte und <var>n</var>&minus;1 Folgebytes.
 <p>Das folgende Programm kann korrektes UTF-8 in ein Array
 von Unicode-Zeichen dekodieren. Es wird auch niemals fehlschlagen,
 da <code>&amp;str</code> nur korrektes UTF-8 enthalten darf.
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::convert::TryFrom;
 
 fn multibyte_count(byte: u8) -&gt; u32 {
@@ -334,7 +334,7 @@ fn main() {
 
 <p>Die Standardbibliothek enthält diese Funktionalität
 natürlich bereits:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let a: Vec&lt;char&gt; = "Café äöü ∀∃".chars().collect();
     println!("{:?}",a);

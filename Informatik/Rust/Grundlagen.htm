@@ -29,7 +29,7 @@
 <h2 id="Erstes-Programm">Das erste Programm</h2>
 
 <p>Es folgt das obligatorische Hallo-Welt-Programm:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     println!("Hallo Welt!");
 }
@@ -46,7 +46,7 @@ es nur sinnvoll, wenn die Programmiersprache die einfache Angabe
 einer Berechnung ermöglicht. Und ja, arithmetische Ausdrücke schreibt
 man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
 <code>1+2</code> aus« lautet kurz:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     println!("{}",1+2);
 }
@@ -59,7 +59,7 @@ ausgegeben, woraufhin ein Zeilenumbruch folgt.
 <h3>Variablen</h3>
 <p>Der Wert eines Ausdrucks lässt sich mittels <code>let</code> auch
 in einer Variablen speichern. Ein einfaches Beispiel hierzu:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let x = 1;
     let y = 2;
@@ -87,7 +87,7 @@ der Compiler in der Lage ist, diesen Typ abzuleiten. Der Vorgang
 des Ableitens eines Typs wird als <i>Typinferenz</i> bezeichnet,
 und davon wurde auch bereits gebrauch gemacht. Vollständig typisiert
 schaut das Programm so aus:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let x: i32 = 1;
     let y: i32 = 2;
@@ -152,7 +152,7 @@ Wert haben.
 <p>Das folgende Beispiel zeigt die Berechnung des Umfangs zu einem
 gegebenen Radius mittels der Funktion <code>circumference</code>.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::f64::consts::PI;
 
 fn circumference(radius: f64) -&gt; f64 {
@@ -167,7 +167,7 @@ fn main() {
 <p>Steht die Rücksprunganweisung ganz am Ende der Funktion,
 darf diese auch entfallen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn circumference(radius: f64) -> f64 {
     2.0*PI*radius
 }
@@ -182,7 +182,7 @@ Variablen. Das folgende Programm macht z.&nbsp;B. unterschiedliche
 Ausgaben, je nachdem welcher Wert für die Temperatur <code>theta</code>
 angegeben wird.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let theta = 4.0;
     print!("Draußen ist es ");
@@ -203,7 +203,7 @@ Ausdruck. Demnach lässt sich ein if-Ausdruck auch dort angeben,
 wo ein Ausdruck bzw. Term erwartet wird. Dies erlaubt eine etwas
 elegantere Formulierung des letzten Programms:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let theta = 4.0;
     let text = if theta &lt;  0.0 {"eisig"}
@@ -224,7 +224,7 @@ Potenzierung&nbsp;ist:
 <p>Diese Definition lässt sich in Rust direkt als rekursive Funktion
 angeben:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pow(x: f64, n: u32) -&gt; f64 {
     if n==0 {1.0} else {pow(x,n-1)*x}
 }
@@ -239,7 +239,7 @@ Dieser Ausdruck vergleicht einen Wert mit einer Liste von Mustern
 und wählt den Ausdruck zum ersten passenden Muster. Für die
 Potenzierung ergibt sich damit eine äquivalente Formulierung:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pow(x: f64, n: u32) -> f64 {
     match n {
         0 => 1.0,
@@ -266,7 +266,7 @@ besonders tief sind und demnach nur geringe Rekursionstiefe benötigen.
 ein iterativer Algorithmus zur Berechnung gewinnen. Unter Benutzung
 einer while-Schleife ist der Algorithmus von folgender Gestalt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pow(x: f64, n: u32) -&gt; f64 {
     let mut p = 1.0;
     let mut i = 0;
@@ -285,7 +285,7 @@ Iterationen. Die Anweisung <code>i = i+1</code> bedeutet
 die Variable <code>i</code> mit diesem Wert«. Entsprechend ist
 die Anweisung <code>p = p*x</code> zu verstehen. Für beide Anweisungen
 gibt es auch eine Kurzschreibweise:
-<pre class="rust indent">
+<pre class="rust ibox">
 p *= x; i += 1;
 </pre>
 
@@ -295,7 +295,7 @@ p *= x; i += 1;
 <p>Oft günstiger ist die Benutzung von for-Schleifen anstelle von
 while-Schleifen. Zur Verdeutlichung hier nochmals die Berechnung
 der Potenzierung:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn pow(x: f64, n: u32) -&gt; f64 {
     let mut p = 1.0;
     for _ in 0..n {p *= x;}
@@ -331,7 +331,7 @@ Als Anfangswert kann <var>x</var><sub>0</sub>=<var>a</var>/2 benutzt werden.
 
 <p>Eine einfache Implementation des Verfahrens lässt sich mit
 einer for-Schleife wie folgt angeben:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn sqrt(a: f64) -&gt; f64 {
     let mut x = 0.5*a;
     for _ in 0..20 {
@@ -353,7 +353,7 @@ wie viele Iterationen für eine bestimmte Zahl <var>a</var> notwendig
 sind. Eine elegantere Formulierung verzichtet aber auf dieses Wissen
 und benutzt stattdessen eine Abbruchbedingung. Der Abbruch der
 Schleife wird durch den Befehl <code>break</code> ausgelöst:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn sqrt(a: f64) -&gt; f64 {
     let mut x = 0.5*a;
     for _ in 0..1000 {
@@ -367,7 +367,7 @@ fn sqrt(a: f64) -&gt; f64 {
 <p>Die folgende Modifikation des Programms gibt auch die Anzahl der
 benötigten Iterationen an. Dazu gibt die Funktion ein aus Wert
 und Anzahl bestehendes Paar zurück:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn sqrt_count(a: f64) -&gt; (f64,u32) {
     let mut x = 0.5*a;
     for k in 0..1000 {
@@ -394,7 +394,7 @@ liegen. Jedes Feld hat eine Länge, das ist die Anzahl der Elemente.
 Betrachten wir ein einfaches Programm, welches ein Feld mit
 vier Ganzzahlen ausgibt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let a: [i32;4] = [1,2,3,4];
     println!("{:?}",a);
@@ -413,7 +413,7 @@ a[0]==1, a[1]==2, a[2]==3, a[3]==4.
 <p>Nun soll eine Funktion angegeben werden, welche ein Feld nimmt
 und die Summe der Elemente zurückgibt. Das lässt sich z.&nbsp;B.
 wie folgt bewerkstelligen:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn sum(a: &amp;[i32;4]) -&gt; i32 {
     let mut s = 0;
     for x in a {s += x;}
@@ -446,7 +446,7 @@ Anfang des Feldes und der Länge des Feldes. Slices können auch
 zusammenhängende Teilbereiche eines Feldes beschreiben. Wenn
 nur die ersten drei Zahlen des Feldes aufsummiert werden sollen,
 sieht das Programm wie folgt aus:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let a: [i32;4] = [1,2,3,4];
     println!("{}",sum(&amp;a[0..3]));
@@ -464,7 +464,7 @@ viele Problemstellungen zu hinderlich ist, gibt es für Felder
 noch den Datentyp <code>Vec&lt;T&gt;</code>, der dynamische Felder ermöglicht.
 Dynamische Felder werden ganz analog zu den Feldern fester Länge
 gehandhabt:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let a: Vec&lt;i32&gt; = vec![1,2,3,4];
     println!("{}",sum(&amp;a));
@@ -497,7 +497,7 @@ keine Gedanken machen. Es folgt eine Funktion
 rückwärts durch das Feld iteriert und dabei die Elemente zu einem
 neuen Feld <code>b</code> hinzufügt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn reverse(a: &amp;[i32]) -> Vec&lt;i32&gt; {
     let mut b: Vec&lt;i32&gt; = vec![];
     for x in a.iter().rev() {
@@ -531,7 +531,7 @@ Das Feld lässt sich auch selbst umdrehen, man nennt diese Vorgehensweise
 <i>in place</i>. Der folgende Algorithmus vertauscht das erste
 Element mit dem letzten, das zweite mit dem vorletzten usw. bis
 das Verfahren in der Mitte des Feldes angekommen ist.
-<pre class="rust indent">
+<pre class="rust ibox">
 fn reverse(a: &amp;mut [i32]) {
     let n = a.len();
     for i in 0..n/2 {
@@ -570,7 +570,7 @@ Programmierung.
 einem Slice ein Teilslice bilden und aus diesem wieder ein Teilslice
 usw. Solange bis man den leeren Slice erhält. Ein Beispiel dazu ist
 diese Implementation der Summierung: 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn sum(a: &amp;[i32]) -&gt; i32 {
     if a.len()==0 {0} else {a[0]+sum(&amp;a[1..])}
 }
@@ -587,7 +587,7 @@ hat <code>&amp;a[..]</code> die Bedeutung <code>&amp;a[0..a.len()]</code>.
 <p>Slices sind recht praktisch, daher sind für diese eine ganze Reihe
 von Methoden definiert. Beispielsweise ist eine Methode zur
 Sortierung eines veränderlichen Slices vorhanden:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let mut a: Vec&lt;i32&gt; = vec![4,2,1,3];
     a[..].sort();
@@ -609,7 +609,7 @@ technischen Details darein.
 <p>Als Beispiel erweitern wir das Programm für die gefühlte
 Temperatur um Nutzereingaben.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn input(prompt: &amp;str) -&gt; String {
     use std::{io,io::Write};
     let mut buffer = String::new();
@@ -651,7 +651,7 @@ fn main() {
 bei welchem zwischen Erfolg (<code>Ok</code>) und Fehler
 (<code>Err</code>) unterschieden wird.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let path = "Datei.txt";
     let s = match std::fs::read_to_string(path) {
@@ -666,7 +666,7 @@ fn main() {
 geöffnet wird. Der Dateipfad kann auch als Kommandozeilenargument
 gelesen werden:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let argv: Vec&lt;String&gt; = std::env::args().collect();
 let path = &amp;argv[1];
 </pre>

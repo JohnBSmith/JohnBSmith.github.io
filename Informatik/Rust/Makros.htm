@@ -25,7 +25,7 @@ genutzt werden.
 
 <p>Die Standardbibliothek enthält zwar schon ein Makro für
 dynamische Felder, jedoch kann dies etwas umständlich sein:
-<pre class="rust indent">
+<pre class="rust ibox">
 let v: Vec&lt;String&gt; = vec![
     "Ahorn".to_string(),
     "Eiche".to_string(),
@@ -36,7 +36,7 @@ let v: Vec&lt;String&gt; = vec![
 
 <p>Ein Literal für ein dynamisches Feld von Zeichenketten
 erlaubt die gewünschte Verkürzung:
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! vec_string {
     ( $( $x:expr ),* ) =&gt; {{
         let mut temp_vec = Vec::new();
@@ -60,14 +60,14 @@ Außerdem kann man das Literal auch auf <code>vec![]</code> zurückführen,
 welches effizienter implementiert ist. Beides kombiniert ergibt
 folgendes Makro:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! vec_from {
     ($($item:expr),* $(,)?) =&gt; {vec![$($item.into(),)*]}
 }
 </pre>
 
 <p>Literal für ein assoziatives Feld:
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 
 macro_rules! map {
@@ -99,7 +99,7 @@ sich um ein Atom handeln soll, wobei auch ein geklammerter Ausdruck
 als Atom zugelassen ist. Nach leichter Modifikation ergibt sich
 also:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 
 macro_rules! map {
@@ -126,7 +126,7 @@ fn main() {
 Mit der Trait-Methode <code>into</code> lässt es sich
 aber auf andere Typen verallgemeinern:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 
 macro_rules! map {
@@ -151,7 +151,7 @@ fn main() {
 <p>Etwas allgemeiner lassen sich beliebige Transformationen
 <code>tk</code> und <code>tv</code> anwenden:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::collections::HashMap;
 
 macro_rules! map {
@@ -179,7 +179,7 @@ fn main() {
 genannt, gibt es Rust nicht. Da Rust aber Ausdruck-orientiert ist,
 lassen sich diese mithilfe von Makros selbst programmieren.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! list {
     ($expr:expr; for $x:tt in $range:expr) =&gt; {{
         let mut _a = Vec::new();
@@ -197,7 +197,7 @@ fn main() {
 <p>Die Anzahl der notwendigen Reallokationen lässt sich durch
 Ausnutzen von <code>size_hint</code> erheblich reduzieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! list {
     ($expr:expr; for $x:tt in $range:expr) =&gt; {{
         let _r = $range;
@@ -212,7 +212,7 @@ macro_rules! list {
 Produkte als Definitionsbereich. Diese for-Ausdrücke kann man jeweils
 separat bis zu einer maximalen Anzahl implementieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! list {
     ($expr:expr; for $x:tt in $range:expr) =&gt; {{
         let mut _a = Vec::new();
@@ -246,7 +246,7 @@ in einen Anfang und einen Rest <code>$tail</code> zerlegt.
 Mit einem weiteren Makro-Aufruf geschieht dann das Parsen von
 <code>$tail</code>, was sich auch rekursiv formulieren lässt.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! expand_tail {
     ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
         for $x in $range {$v.push($expr);}
@@ -276,7 +276,7 @@ sich Elemente ausfiltern lassen. Diese können wir nun auch
 noch einbauen. Als einfaches Beispiel ist die Auflistung
 von pythagoräischen Tripeln angegeben.
 
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! expand_tail {
     ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
         for $x in $range {$v.push($expr);}

@@ -27,7 +27,7 @@ erst dann, wenn der Wert auch benötigt wird.
 
 <p>Wir können Closures zur Implementation von Lazy Evaluation
 heranziehen.
-<pre class="rust indent">
+<pre class="rust ibox">
 macro_rules! lazy {
     ($x:expr) =&gt; {Lazy{value: Box::new(move || $x)}}
 }
@@ -43,7 +43,7 @@ impl&lt;T&gt; Lazy&lt;T&gt; {
 
 <p>Als konkretes Beispiel soll ein unendlicher Baum
 formuliert werden.
-<pre class="rust indent">
+<pre class="rust ibox">
 struct Tree{
     left: Lazy&lt;Tree&gt;,
     right: Lazy&lt;Tree&gt;,
@@ -91,7 +91,7 @@ fn main() {
 </pre>
 
 <p>Auch if-Ausdrücke lassen sich mit Lazy Evaluation darstellen:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn if_cond&lt;T&gt;(cond: bool, a: Lazy&lt;T&gt;, b: Lazy&lt;T&gt;) -&gt; T {
     (if cond {a} else {b}).force()
 }
@@ -104,7 +104,7 @@ fn fac(n: u32) -&gt; u32 {
 <h2 id="Sharing">Sharing</h2>
 
 <p>Betrachten wir das folgende Programm:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn log(x: i32) -&gt; i32 {
     println!("Auswertung");
     return x;
@@ -122,7 +122,7 @@ statt. Bei referentiell transparenten Funktionen ist die Wiederholung
 von Berechnungen eigentlich nicht notwendig. Diesem Umstand könnte man
 so Rechnung tragen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::cell::RefCell;
 
 macro_rules! lazy {

@@ -55,7 +55,7 @@ um mit Speicheradressen rechnen zu können, unabhängig davon ob eine
 <p>Wir wollen nun die Zahl 12 an den Bezeichner <code>x</code> binden.
 Das geschieht wie folgt:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: i32 = 12i32;
 </pre>
 
@@ -64,7 +64,7 @@ Lage ist, den Typ von <code>x</code> aus dem Ausdruck auf der
 rechten Seite vom Zuweisungszeichen »=« zu erkennen. Dieser Vorgang
 nennt sich <i>Typinferenz</i>. Man darf also kürzer schreiben:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x = 12i32;
 </pre>
 
@@ -72,7 +72,7 @@ let x = 12i32;
 wird dieser angenommen, falls kein Typ abgeleitet werden kann.
 Man kann hier also kurz schreiben:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x = 12;
 </pre>
 
@@ -82,7 +82,7 @@ ist. Rust bietet diese Möglichkeit der Abstraktion, indem es uns einen
 Typ-Alias definieren lässt, welcher ähnlich wie <code>usize</code>
 verwendet wird:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 type uint = u32;
 let x: uint = 12;
 </pre>
@@ -102,7 +102,7 @@ späteren Kapitel.
 <p>Rust erlaubt die binäre, oktale und hexadezimale
 Darstellung einer Zahl im Quelltext:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: u32 = 0b00000000_00000000_00000000_00001100; // binär
 let x: u32 = 0b1100; // binär, kurz
 let x: u32 = 0x00_00_00_0c; // hexadezimal
@@ -116,7 +116,7 @@ und dient ausschließlich als Mittel um bessere Lesbarkeit
 zu ermöglichen. Auch die Ausgabe in den unterschiedlichen
 Darstellungen ist möglich:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: u32 = 12;
 println!("{}, 0b{:b}, 0x{:x}, 0o{:o}",x,x,x,x);
 
@@ -136,7 +136,7 @@ schmerzlich ist.
 
 <p>Wird keine weitere Typ-Annotation angegeben, die Zahl aber
 mit einen Punkt dargestellt, dann wird <code>f64</code> angenommen:
-<pre class="rust indent">
+<pre class="rust ibox">
 let x = 1.0; //  let x: f64 = 1.0;
 </pre>
 
@@ -144,7 +144,7 @@ let x = 1.0; //  let x: f64 = 1.0;
 verfügbar, müssen jedoch als Methodenaufruf geschrieben
 werden:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::f64::consts::PI;
 const GRAD: f64 = PI/180.0;
 
@@ -154,7 +154,7 @@ let y = (90.0*GRAD).sin();
 
 <p>Neue Funktionen lassen sich ganz einfach definieren:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn f(x: f64) -&gt; f64 {
     return 1.0/(x.abs()+1.0);
 }
@@ -171,7 +171,7 @@ fn main(){
 <p>Für sichere Typumwandlungen steht die Funktion <code>from</code>
 zur Verfügung:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: u8 = 0;
 let y: i32 = i32::from(x);
 </pre>
@@ -203,7 +203,7 @@ man das Verhalten dann gerne selbst festlegen. Dies erlaubt die Funktion
 <code>try_from</code>. Wenn man bei Verlust auf den selben Wert
 abbilden möchte, dann lässt sich dies wie folgt bewerkstelligen:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 use std::convert::TryFrom;
 
 const VERLUST: u8 = 0;
@@ -220,7 +220,7 @@ fn main() {
 <p>Wenn man aber von vornherein weiß, dass das Argument im Wertebereich
 von <code>u8</code> liegt, sollte man stattdessen dies schreiben:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let y: u8 = match u8::try_from(x) {
     Ok(value) =&gt; value,
     Err(_) =&gt; unreachable!()
@@ -239,7 +239,7 @@ daher also mit Vorsicht zu genießen.
 wenn sie nicht mit <code>from</code> möglich sind, beispielsweise
 bei einer potentiell verlustbehafteten Umwandlung:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 let x: u32 = 12;
 let y: u8 = x as u8;
 </pre>
@@ -255,7 +255,7 @@ Nachher:  u8: 00001100
 
 <p>Die Operation »<code>x as u8</code>« ist demnach äquivalent zu:
 
-<pre class="rust indent">
+<pre class="rust ibox">
 match u8::try_from(x &amp; 0xff) {
     Ok(value) =&gt; value,
     Err(_) =&gt; unreachable!()
@@ -273,7 +273,7 @@ maschinennahe Programmierung.
 
 <p>Betrachten wir z.&nbsp;B. die Umwandlung von <code>i32</code>
 in <code>u32</code>:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let x: i32 = -1;
     println!("{}", x as u32);
@@ -330,7 +330,7 @@ a[7]*2<sup>0</sup> + a[6]*2<sup>1</sup> + a[5]*2<sup>2</sup> +<!--
 
 <p>Die Zweierpotenzen kodiert man als Bitmasken, anstelle von 
 Addition benutzt man bitweises Oder:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
     u8::from(a[7])*0b00000001 | u8::from(a[6])*0b00000010 |
     u8::from(a[5])*0b00000100 | u8::from(a[4])*0b00001000 |
@@ -345,7 +345,7 @@ fn main() {
 </pre>
 
 <p>Man könnte das auch wie gewohnt schreiben:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
     let mut y = 0;
     for k in 0..7 {
@@ -356,7 +356,7 @@ fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
 </pre>
 
 <p>Eigentlich nimmt man dafür aber Linksshift und bitweises Oder:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
     let mut y = 0;
     for k in 0..7 {
@@ -367,7 +367,7 @@ fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
 </pre>
 
 <p>Schließlich lässt sich die Multiplikation noch beseitigen:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
     let mut y = 0;
     for k in 0..7 {
@@ -378,7 +378,7 @@ fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
 </pre>
 
 <p>Entsprechend gestaltet sich die Formulierung der umgekehrten Funktion:
-<pre class="rust indent">
+<pre class="rust ibox">
 fn bits_from_u8(x: u8) -&gt; [bool;8] {
     let mut a: [bool;8] = [false;8];
     for k in 0..7 {
@@ -423,7 +423,7 @@ durchführen lassen, es gibt ein Compiler-Flag dafür.
 <p>Das Wrapping-Verhalten entspricht bei vorzeichenlosen Ganzzahlen
 der modularen Arithmetik. Die folgenden drei Beispiele sind im
 Release-Modus äquivalent: 
-<pre class="rust indent">
+<pre class="rust ibox">
 fn main() {
     let x: u8 = 100;
     let y: u8 = 200;
