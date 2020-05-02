@@ -17,6 +17,7 @@
 <li><a href="#Funktionenzeiger">Funktionenzeiger</a>
 <li><a href="#Closures">Closures</a>
 <li><a href="#Higher-order">Funktionen höherer Ordnung</a>
+<li><a href="#Monaden">Monaden</a>
 </ol>
 
 <h2 id="Funktionenzeiger">Funktionenzeiger</h2>
@@ -271,6 +272,127 @@ where A: IntoIterator&lt;Item=X&gt;, F: Fn(&amp;X)-&gt;Y
 fn main() {
     let b = map(1..=4,|x| x.to_string());
     println!("{:?}",b);
+}
+</pre>
+
+<h2 id="Monaden">Monaden</h2>
+
+<p>Die arithmetischen Operationen der gewöhnlichen primitiven
+Datentypen sind eigentlich nicht fehlerfrei zu verwenden, dergestalt
+dass es während der Laufzeit aufgrund von Überlauf und Division durch
+null zum Programmabbruch kommen kann. Mathematisch gesehen spricht
+man von einer partiellen Funktion. Damit ist gemeint, dass die
+Operation bzw. Funktion für bestimmte Werte des Definitionsbereichs
+nicht definiert ist. Wir nehmen jetzt einfach mal
+den Standpunkt ein, uns genüge das nicht und wir wollten, dass
+arithmetische Berechnungen immer terminieren.
+
+<p>Eine naheliegende Überlegung ist die Einschränkung des
+Definitionsbereichs, die allerdings zur kurz gedacht ist.
+Nämlich haben die arithmetischen Operationen ja die Signaturen
+<var>M</var>&nbsp;&rarr;&nbsp;<var>M</var> und
+<var>M</var>&times;<var>M</var>&nbsp;&rarr;&nbsp;<var>M</var>.
+Aufgrund der Übereinstimmung von Definitionsbereich und Zielmenge
+ist die Einschränkung widersprüchlich.
+
+<p>Stattdessen definieren wir einen neuen Typ <code>Ru32</code>,
+ein Resultat-Typ zu <code>u32</code>, der zusätzlich den
+Fehlerwert <i>undefiniert</i> enthält, im Folgenden intern kodiert
+als <code>Ru32(None)</code>. Mit diesem Winkelzug erreicht man nämlich
+wieder totale Funktionen, d.&nbsp;h. solche die für alle Werte des
+Definitionsbereichs definiert sind und daher Funktionen im
+mathematischen Sinn darstellen.
+
+<pre class="rust ibox">
+mod ru32 {
+    #[derive(Debug,Clone,Copy)]
+    pub struct Ru32(Option&lt;u32&gt;);
+    
+    impl Ru32 {
+        pub fn new(x: u32) -&gt; Self {Self(Some(x))}
+    }
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            match self.0 {
+                Some(x) =&gt; match y.0 {
+                    Some(y) =&gt; Self(x.checked_add(y)),
+                    None =&gt; Self(None)
+                },
+                None =&gt; Self(None)
+            }
+        }
+    }
+}
+
+use ru32::Ru32;
+
+fn main() {
+    let x = Ru32::new(1);
+    println!("{:?}",x+x);
+}
+</pre>
+
+<p>Auffällig sind die umständlichen Fallunterscheidungen die für
+jede arithmetische Operation zu implementieren sind. Nun kommt man
+aber auch zu der Einsicht, dass es sich bei diesen Fallunterscheidungen
+immer um das gleiche Muster handelt, was die Vermutung nahe legt,
+das Muster lässt sich aus der Implementation herausfaktorisieren.
+
+<p>Im Zusammenhang damit steht die Eigenschaft von <code>Ru32</code>,
+ein monadischer Typ zu sein. Damit ist gemeint, dass sich für
+<code>Ru32</code> mehr oder weniger praktisch die Funktionen
+<code>unit</code> und <code>bind</code> so formulieren lassen, dass
+sie die Axiome für Monaden erfüllen. Zum Verständnis dieser Funktionen
+betrachten wir die folgende Umformulierung, wobei zunächst nur
+<code>bind</code> für uns wesentlich ist.
+
+<pre class="rust ibox">
+mod ru32 {
+    trait Monad&lt;T&gt; where Self: Sized {
+        fn unit(x: T) -&gt; Self;
+        fn bind(self, f: impl Fn(T)-&gt;Self) -&gt; Self;
+    }
+
+    #[derive(Debug,Clone,Copy)]
+    pub struct Ru32 (Option&lt;u32&gt;);
+    
+    impl Ru32 {
+        pub fn new(x: u32) -&gt; Self {Self(Some(x))}
+    }
+    impl Monad&lt;u32&gt; for Ru32 {
+        fn unit(x: u32) -&gt; Self {Self::new(x)}
+        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
+            match self.0 {
+                Some(x) =&gt; f(x), None =&gt; Self(None)
+            }
+        }
+    }
+    
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self(x.checked_add(y))))
+        }
+    }
+}
+</pre>
+
+<p>Bevor es mit Monaden weitergeht, ein kurzer Zusatz. Das
+ursprüngliche Ziel ist schließlich mit einer weiteren Hilfsfunktion
+<code>bind_binary</code> erreichbar:
+<pre class="rust ibox">
+fn bind_binary(x: Ru32, y: Ru32,
+    f: impl Fn(u32,u32)-&gt;Option&lt;u32&gt;
+) -&gt; Ru32 {
+    x.bind(|x| y.bind(|y| Ru32(f(x,y))))
+}
+
+impl std::ops::Add&lt;Self&gt; for Ru32 {
+    type Output = Self;
+    fn add(self, y: Self) -&gt; Self {
+        bind_binary(self,y,u32::checked_add)
+    }
 }
 </pre>
 
