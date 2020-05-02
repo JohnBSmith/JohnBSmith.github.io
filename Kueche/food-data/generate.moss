@@ -6,7 +6,7 @@ head = """\
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Nährwerte</title>
+  <title>Nährwert-Tabelle</title>
   <style>
 body{
   font-family: "DejaVu Sans", "Verdana", sans-serif;
@@ -32,6 +32,9 @@ table.bt td{
 table.bt th{
   background-color: #eaeada;
 }
+.modest{
+  color: #808080;
+}
   </style>
 </head>
 <body>\
@@ -40,6 +43,13 @@ table.bt th{
 foot = """\
 </body>
 </html>\
+"""
+
+note = """\
+<p class='modest'>
+Prozentwerte: EU-RDA 2008.
+<br>Nicht berücksichtigt: Phytat, Oxalsäure, Verhältnisse von Fettsäuren.
+<br>Quelle: United States Department of Agriculture.
 """
 
 function proportion_to_hex(x)
@@ -164,6 +174,7 @@ function generate_percent(buffer,data,dict,rda)
    end
    # headline(buffer)
    buffer.push("\n</table>")
+   buffer.push(note)
    buffer.push(foot)
 end
 
