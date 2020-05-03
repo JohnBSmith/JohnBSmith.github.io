@@ -53,7 +53,8 @@ def generate_index():
     index.sort(key=key_function)
     return index
 
-def generate_index_exclusive(index_set):
+def generate_index_exclusive():
+    index_set = get_indexlist()
     a = list(os.walk("./"))
     d = {}
     for t in a:
@@ -101,7 +102,6 @@ def index_to_json(index):
     return "\n,".join(buffer)
 
 def main():
-    index_set = get_indexlist()
     cwd = os.getcwd()
     os.chdir(sys.argv[1])
     index = generate_index()
@@ -110,9 +110,9 @@ def main():
     f = open("index.js", "w")
     f.write(s)
     f.close()
-    f = open("wlist.txt", "w")
-    f.write(wlist(index))
-    f.close()
+    # f = open("wlist.txt", "w")
+    # f.write(wlist(index))
+    # f.close()
 
 main()
 
