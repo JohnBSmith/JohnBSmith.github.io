@@ -13,10 +13,10 @@
 <h1>Eingabe und Ausgabe</h1>
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Stdio">Die Standard-Ströme</a>
+<li><a href="#stdio">Die Standard-Ströme</a>
   <ol>
-  <li><a href="#Standard-Ausgabe">Standard-Ausgabe</a>
-  <li><span class="modest">Standard-Fehlerausgabe</span>
+  <li><a href="#stdout">Standard-Ausgabe</a>
+  <li><a href="#stderr">Standard-Fehlerausgabe</a>
   <li><span class="modest">Standard-Eingabe</span>
   <li><span class="modest">Pipelines</span>
   </ol>
@@ -29,9 +29,9 @@
   </ol>
 </ol>
 
-<h2 id="Stdio">Die Standard-Ströme</h2>
+<h2 id="stdio">Die Standard-Ströme</h2>
 
-<h3 id="Standard-Ausgabe">Standard-Ausgabe</h3>
+<h3 id="stdout">Standard-Ausgabe</h3>
 
 <p>Die Standard-Ausgabe <code>stdout</code> lässt sich auf mehrere
 Arten ansprechen. Zunächst kann man einfach <code>println</code>
@@ -70,6 +70,51 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
     return Ok(());
 }
 </pre>
+
+<h3 id="stderr">Standard-Fehlerausgabe</h3>
+
+<p>Bei manchen Programmen möchte man neben normalen Ausgaben
+gleichzeitig auch Fehlermeldungen produzieren. Nun müssen diesen beiden
+Ausgaben auf irgendeine Art getrennt sein wenn man keine Vermischung
+haben möchte. Eine einfache Herangehensweise daran ist die Einleitung
+der Fehlerausgabe in eine andere Datei bzw. in einen anderen
+Datenstrom.
+
+<p>Bereits zur Verfügung stehen dafür die Makros <code>eprint</code>
+und <code>eprintln</code>, die sich so verhalten wie <code>print</code>
+und <code>println</code>, mit dem Unterschied in die Fehlerausgabe
+<code>stderr</code> zu schreiben. Alternativ ist auch
+<code>io::stderr()</code> benutzbar, wie zuvor schon für
+<code>stdout</code> beschrieben.
+
+<p>Ruft man so ein Programm, nennen wir es <code>p0</code>, nun mit
+dem Shell-Befehl
+<pre class="indent">
+./p0 &gt; Datei.txt
+</pre>
+
+<p>auf, wird die normale Ausgabe in <code>Datei.txt</code> geleitet,
+die Fehlermeldungen verbleiben jedoch im Terminal. Umgekehrt geht
+auch
+<pre class="indent">
+./p0 2&gt; Fehler.txt
+</pre>
+<p>womit die Fehlermeldungen in eine Datei geleitet werden, die
+normale Ausgabe aber im Terminal verbleibt. Der Befehl
+<pre class="indent">
+./p0 &gt; Datei.txt 2&gt; Fehler.txt
+</pre>
+leitet <code>stdout</code> und <code>stderr</code> in jeweils
+eine Datei.
+
+<p>Möchte man die Fehlermeldungen nicht irgendwohin schreiben, sondern
+einfach nur verwerfen, steht dafür eine sonderbare Gerätedatei
+zur Verfügung, das sogenannte Nullgerät <code>/dev/null</code>.
+Daten die man in diese Datei leitet, verschwinden einfach. Der Befehl
+<pre class="indent">
+./p0 2&gt; /dev/null
+</pre>
+<p>führt also zur Unterdrückung der Fehlerausgabe.
 
 <h2 id="Dateien">Dateien</h2>
 
