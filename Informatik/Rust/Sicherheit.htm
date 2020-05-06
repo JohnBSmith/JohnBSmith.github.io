@@ -26,6 +26,7 @@
   </ol>
 <li><a href="#Laufzeit">Prüfungen zur Laufzeit</a>
   <ol>
+  <li><a href="#Monaden">Monaden</a>
   <li><a href="#Contracts">Vertragsbasierte Programmierung</a>
   <li><a href="#Rekursionstiefe">Beschränkung der Rekursionstiefe</a>
   <li><a href="#Tests">Automatische Tests</a>
@@ -826,13 +827,120 @@ benutzen oder aber den Speicher ganz am Anfang des Programms allozieren.
 
 <h2 id="Laufzeit">Prüfungen zur Laufzeit</h2>
 
+<h3 id="Monaden">Monaden</h3>
+
+<p>Wie gesagt stellen sich einem bei der Programmierung von
+ausfallsicheren System gewisse Schwierigkeiten. Dies fängt schon bei
+den arithmetischen Operationen an, denn nicht einmal diese sind total.
+Kommt es zum arithmetischen Überlauf, bricht das Programm ab &ndash;
+zumindest wenn die Erzeugung von automatischen Überlauf-Prüfungen
+aktiviert sind, andernfalls kommt es zu einer Verschleierung der
+Fehlerursache, was man als Verschlimmerung empfinden kann. Die
+Division durch null führt bei Ganzzahlen immer zu einem
+Programmabbruch.
+
+<p>Wie im Abschnitt ›<a href="Funktional.htm#Monaden">Monaden</a>‹
+im Kapitel ›Funktionale Programmierung‹ erläutert, lassen sich mit
+einem Wrapper-Typ totale Funktionen aus partiellen gewinnen.
+Unter Beschränkung auf solche monadischen Typen erreicht man dann
+sichere Terminierung, da schlicht keine partiellen Funktionen mehr
+zur Verfügung stehen, vorausgesetzt man benutzt die normalen
+Datentypen nicht mehr. Das folgende Beispiel zeigt eine ausfallsichere
+Umwandlung einer Zeichenkette in eine Ganzzahl &ndash; ein recht
+kurzes Beispiel, wobei aber auch ein kompletter mit monadischen Typen
+arbeitender Parser denkbar und machbar ist.
+
+<pre class="rust ibox">
+mod ru32 {
+    trait Monad&lt;T&gt; where Self: Sized {
+        fn unit(x: T) -&gt; Self;
+        fn bind(self, f: impl Fn(T)-&gt;Self) -&gt; Self;
+    }
+
+    #[derive(Debug,Clone,Copy)]
+    pub struct Ru32 (Option&lt;u32&gt;);
+
+    impl Ru32 {pub fn err() -&gt; Self {return Ru32(None);}}
+    impl From&lt;u32&gt; for Ru32 {
+        fn from(x: u32) -&gt; Self {Self(Some(x))}
+    }
+    impl From&lt;char&gt; for Ru32 {
+        fn from(c: char) -&gt; Self {Self(Some(u32::from(c)))}
+    }
+    impl Monad&lt;u32&gt; for Ru32 {
+        fn unit(x: u32) -&gt; Self {Self::from(x)}
+        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
+            match self.0 {
+                Some(x) =&gt; f(x), None =&gt; Self(None)
+            }
+        }
+    }
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self(x.checked_add(y))))
+        }
+    }
+    impl std::ops::Sub&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn sub(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self(x.checked_sub(y))))
+        }
+    }
+    impl std::ops::Mul&lt;Ru32&gt; for u32 {
+        type Output = Ru32;
+        fn mul(self, y: Ru32) -&gt; Ru32 {
+            y.bind(|y| Ru32(self.checked_mul(y)))
+        }
+    }
+}
+
+use ru32::Ru32;
+
+fn str_to_u32(s: &amp;str) -&gt; Ru32 {
+    let mut x = Ru32::from(0);
+    for digit in s.chars() {
+        if !digit.is_digit(10) {return Ru32::err();}
+        x = 10*x + (Ru32::from(digit) - Ru32::from('0'));
+    }
+    return x;
+}
+
+fn main() {
+    println!("{:?}",str_to_u32("1440"));
+    println!("{:?}",str_to_u32("10000000000"));
+}
+</pre>
+
+<p>Nun kann man einwenden, dass das Programm ineffizient ist weil es
+unnötigen Aufwand enthält. Das ist ein gutes und richtiges Argument,
+der springende Punkt soll hier aber darin bestehen, das Programm
+erst einmal sicher zu machen. Nach dieser mentalen Trennung kümmern
+wir uns um Optimierungen bezüglich Laufzeit und Speicherverbrauch nun
+<i>im Nachhinein</i>. Dabei kann man die Korrektheit von
+Optimierungen auch mit dem Hoare-Kalkül beweisen oder nicht, je
+nachdem wie pedantisch man es halten will.
+
+<p>Die Bedingung <code>digit.is_digit(10)</code> lieftert z.&nbsp;B. die
+Einschränkung <code>'0'&nbsp;&le;&nbsp;digit&nbsp;&le;&nbsp;'9'</code>,
+infolge ist <code>0&nbsp;&le;&nbsp;digit-'0'</code>. Demnach darf man
+<pre class="rust ibox">
+Ru32::from(digit) - Ru32::from('0')
+</pre>
+
+<p>ersetzen gegen:
+<pre class="rust ibox">
+Ru32::from(u32::from(digit) - u32::from('0'))
+</pre>
+
+
 <h3 id="Contracts">Vertragsbasierte Programmierung</h3>
 
 <p>Bei der vertragsbasierten Programmierung, engl. contract programming,
 sichern Laufzeitprüfungen das korrekte Arbeiten von Algorithmen ab.
-Die Prüfungen haben eine strukturierte Form, sie kommen als Prüfung von
-<i>Vorbedingungen</i>, <i>Nachbedingungen</i> und <i>Invarianten</i>
-vor.
+Die Prüfungen haben eine strukturierte Form, sie kommen als Prüfung
+von <i>Vorbedingungen</i>, <i>Nachbedingungen</i> und
+<i>Invarianten</i> vor.
 
 <p>Nehmen wir als Beispiel eine Funktion <code>zip</code>, welche
 zwei Arrays <code>a,b</code> entgegennimmt und ein Array
@@ -904,8 +1012,8 @@ fn add(x: u32, y: u32) -&gt; u32 {
 <p>Auf meinem Computer lag die maximale Rekursionstiefe
 für <code>fn main() {add(0,N);}</code> bei <code>N=174551</code>.
 Der genaue Wert ist von unbekannten technischen Details der
-Laufzeitumgebung abhängig und muss nicht unbedingt eine feste Konstante
-sein. Wenn man unbedingt möchte, kann man diesen Wert durch
+Laufzeitumgebung abhängig und muss nicht unbedingt eine feste
+Konstante sein. Wenn man unbedingt möchte, kann man diesen Wert durch
 Vergrößerung des Laufzeitstapels erhöhen, der Compiler oder das
 Laufzeitsystem sollte dafür eine Konfiguration bereithalten.
 
