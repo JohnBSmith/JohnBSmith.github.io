@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Computergrafik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Einstieg">Eine Aufgabe zum Einstieg</a>
+<li><a href="#Farben">Darstellung von Farben</a>
+<li><a href="#Canvas">Der Grafikpuffer</a>
+<li><a href="#Speichern">Grafiken speichern</a>
+</ol>
+
+<h2 id="Einstieg">Eine Aufgabe zum Einstieg</h2>
+
+<p>Die Technik der Computergrafik ist komplex. Zum Einstieg in die
+Thematik verzichten wir zunächst auf die Ansteuerung von Grafiksystemen
+und ihrer Hardwarebeschleunigung bis wir Grundwissen darüber erlangt
+haben, wie Computer Grafiken erzeugen und verarbeiten.
+
+<p>Das einfachst mögliche Grafiksystem ist ein eigens definierter
+Grafikpuffer. Zur Betrachtung schreiben wir diesen in eine
+Bilddatei im PPM-Format, die dann mit externen Programmen in ein
+komprimiertes Bildformat umgewandelt werden kann.
+
+<p>Eine typische geeignete Aufgabe ist die Erzeugung so eines Bildes
+der Mandelbrotmenge. Der Programmieraufwand dafür ist recht gering.
+
+<h2 id="Farben">Darstellung von Farben</h2>
+
+<p>Zunächst steht die Überlegung an, wie die Darstellung von Farben
+erfolgen soll. Üblicherweise geschieht dies mit dem RGB-Farbraum, wo
+jede Farbe ein Tripel aus Rot-, Grün- und Blau-Anteil ist, die jeweils
+Werte von 0 bis 255 annehmen. Alle Farben sind additiv aus diesen drei
+Anteilen zusammengesetzt. Die Farbe Schwarz ist (0,&nbsp;0,&nbsp;0)
+und Weiß ist (255,&nbsp;255,&nbsp;255). Man kann sich jetzt darüber
+streiten, ob Schwarz, Weiß und die Grautöne dazwischen zu den Farben zu
+zählen sind. Da diese aber auch im Farbraum liegen, liegt mir das nahe.
+
+<p>Weil Lese- und Schreiboperationen in den Speicher langsam sind,
+reduziert man deren Anzahl am besten durch Zusammenfassung der
+Bytes zu einer u32-Zahl. Hierbei bleibt ein Byte unbesetzt, das
+später für den Alpha-Wert benutzt wird. Die Definition eines
+neuen abstrakten Datentyps <code>Color</code> sorgt dafür, dass wir
+uns um die interne Bit-Arithmetik keine Gedanken mehr machen müssen.
+Die interne Reihenfolge kann man dann später ggf. leicht an die
+genutzte Binärschnittstelle eines weiteren Grafiksystems adaptieren.
+
+<pre class="rust ibox">
+#[derive(Clone,Copy)]
+struct Color(u32);
+
+impl Color {
+    pub fn rgb(r: u8, g: u8, b: u8) -&gt; Self {
+        Color(u32::from(b)&lt;&lt;16 | u32::from(g)&lt;&lt;8 | u32::from(r))
+    }
+    pub fn to_rgb(self) -&gt; (u8, u8, u8) {
+        (self.0 as u8, (self.0&gt;&gt;8) as u8, (self.0&gt;&gt;16) as u8)
+    }
+}
+</pre>
+
+<h2 id="Canvas">Der Grafikpuffer</h2>
+
+<p>Zum Setzen von Pixeln wird eine Funktion <code>pset(x,y)</code>
+dienen, wobei <code>x,y</code> die nichtnegativen ganzzahligen
+Koordinaten sind. Es ist üblich, dass man in der linken oberen
+Ecke des Bildes startet, <code>x</code> nach rechts zählt und
+<code>y</code> nach unten. Hat das Bild eine Größe von
+<code>width*height</code> Pixeln, ist
+<code>0&nbsp;&le;&nbsp;x&nbsp;&lt;&nbsp;width</code>
+und <code>0&nbsp;&le;&nbsp;y&nbsp;&lt;&nbsp;height</code>.
+
+<p>Da der Computer die Pixel sequenziell im Speicher anordnet
+und nichts von der zweidimensionalen Struktur weiß, bedarf es
+einer <i>Speicherabbildungsfunktion</i> <code>index(x,y)</code>, die
+die beiden Koordinaten in einen Index eines eindimensionalen Feldes
+<code>data</code> überführt. Das ist
+
+<pre class="indent">
+index(x,y) = width*y + x.
+</pre>
+
+<p>Ein neuer abstrakter Datentyp <code>Canvas</code> (Leinwand)
+schafft wieder eine Abstraktion von den internen Details.
+
+<pre class="rust ibox">
+struct Canvas {
+    width: u32, height: u32,
+    data: Box&lt;[Color]&gt;
+}
+impl Canvas {
+    pub fn new(width: u32, height: u32, color: Color) -&gt; Self {
+        let data = Box::from(vec![color; (width*height) as usize]);
+        return Canvas{width,height,data};
+    }
+    pub fn pset(&amp;mut self, x: u32, y: u32, color: Color) {
+        self.data[(self.width*y+x) as usize] = color;
+    }
+    pub fn width(&amp;self) -&gt; u32 {self.width}
+    pub fn height(&amp;self) -&gt; u32 {self.height}
+}
+</pre>
+
+<h2 id="Speichern">Grafiken speichern</h2>
+
+<p>Schließlich braucht es noch Funktionalität zur Umwandlung des
+Puffers in eine PPM-Datei und eine Funktion zum Speichern der
+Datei.
+
+<pre class="rust ibox">
+struct PPM {data: Vec&lt;u8&gt;}
+
+impl Canvas {
+    fn encode(&amp;self) -&gt; PPM {
+        let cap = 3*self.data.len() + 20;
+        let mut buffer: Vec&lt;u8&gt; = Vec::with_capacity(cap);
+        buffer.append(&amp;mut format!("P6 {} {} 255\n",
+            self.width, self.height).into_bytes());
+        for color in self.data.iter() {
+            let (r,g,b) = color.to_rgb();
+            buffer.push(r);
+            buffer.push(g);
+            buffer.push(b);
+        }
+        return PPM{data: buffer};
+    }
+    pub fn save(&amp;self, path: &amp;str) -&gt; Result&lt;(),std::io::Error&gt; {
+        use std::io::Write;
+        let ppm = self.encode();
+        let mut file = std::fs::File::create(path)?;
+        file.write_all(&amp;ppm.data)
+    }
+}
+</pre>
+
+</body>
+</html>
+
