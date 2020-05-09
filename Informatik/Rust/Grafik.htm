@@ -18,6 +18,8 @@
 <li><a href="#Farben">Darstellung von Farben</a>
 <li><a href="#Canvas">Der Grafikpuffer</a>
 <li><a href="#Speichern">Grafiken speichern</a>
+<li><a href="#Koordinatensystem">Koordinatensystem</a>
+<li><a href="#Berechnung">Die Berechnung</a>
 </ol>
 
 <h2 id="Einstieg">Eine Aufgabe zum Einstieg</h2>
@@ -142,6 +144,191 @@ impl Canvas {
     }
 }
 </pre>
+
+<h2 id="Koordinatensystem">Koordinatensystem</h2>
+
+<p>Benötigt ist nun ein Übergang von Pixelkoordinaten zu einer
+vektoriellen Beschreibung. Hierfür definieren wir ein
+Koordinatensystem <code>System</code>, das auch gleich die Information
+über die Position und Skalierung in der komplexen Zahlenebene
+enthält. Jedem Pixel wird damit eine komplexe Zahl zugeordnet.
+
+<p>Die Pixelkoordinaten seien <code>(px,py)</code>. Wir wollen jetzt
+haben, dass der Koordinatenursprung in der Bildmitte liegt. Das wird
+Erreicht durch Subtraktion der halben Breite bzw. Höhe:
+<pre class="indent">
+px' = px - 0.5*width,
+py' = py - 0.5*height.
+</pre>
+
+<p>Bei Einheitsskalierung soll bei x&nbsp;=&nbsp;1 die rechte
+Bildkante erreicht werden. Wir wollen haben:
+<pre class="indent">
+x = 1 =&gt; px = width.
+</pre>
+
+<p>Keine komplizierte Mathematik, nur ein paar proportionale
+und lineare Gleichungen.
+<pre class="indent">
+x = 1/(0.5*width)*(px - 0.5*width),
+y = 1/(0.5*width)*(py - 0.5*height).
+</pre>
+
+<p>Zu beachten ist nun noch, dass <code>y</code> in spiegelverkehrte
+Richtung läuft, was durch die Substitution
+<code>y&nbsp;:=&nbsp;-y</code> beseitigt wird.
+Hinzufügen von Skalierung <code>scale</code> und Position
+<code>(x0,y0)</code> bringt schließlich
+<pre class="indent">
+x = x0 + scale/(0.5*width)*(px - 0.5*width),
+y = y0 - scale/(0.5*width)*(py - 0.5*height).
+</pre>
+
+<h2 id="Berechnung">Die Berechnung</h2>
+
+<p>Definieren wir kurz die Arithmetik von komplexen Zahlen.
+
+<pre class="rust ibox">
+mod complex {
+    #[derive(Clone,Copy)]
+    pub struct C64 {pub re: f64, pub im: f64}
+    impl C64 {
+        pub fn abs_sq(self) -&gt; f64 {
+            self.re*self.re + self.im*self.im
+        }
+    }
+    impl std::ops::Add&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            Self{re: self.re + y.re, im: self.im + y.im}
+        }
+    }
+    impl std::ops::Sub&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn sub(self, y: Self) -&gt; Self {
+            Self{re: self.re - y.re, im: self.im - y.im}
+        }
+    }
+    impl std::ops::Mul&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn mul(self, y: Self) -&gt; Self {
+            Self{
+                re: self.re*y.re - self.im*y.im,
+                im: self.re*y.im + self.im*y.re
+            }
+        }
+    }
+}
+</pre>
+
+<p>Für die Funktion
+
+<p class="indent"><var>f</var><sub><var>c</var></sub>(<var>z</var>)
+= <var>z</var><sup>2</sup>&nbsp;+&nbsp;<var>c</var>
+
+<p>mit festem
+<var>c</var>&nbsp;=&nbsp;<var>x</var>&nbsp;+&nbsp;<var>y</var>i 
+nimmt man nun eine Iteration
+
+<p class="indent"><var>z</var><sub><var>n</var>+1</sub>
+= <var>f</var><sub><var>c</var></sub>(<var>z</var><sub><var>n</var></sub>)
+
+<p>mit Startwert <var>z</var><sub>0</sub>&nbsp;=&nbsp;0 vor.
+Den Startwert machen wir am besten gleich zu einer Funktion
+von <var>c</var>, damit man mit dem Programm auch Julia-Mengen
+zeichnen lassen kann. Die Iteration geht solange wie
+|<var>z</var><sub><var>n</var></sub>|<sup>2</sup>&nbsp;&lt;&nbsp;4
+ist.
+
+<pre class="rust ibox">
+use complex::C64;
+
+fn sigmoid(x: f64) -&gt; f64 {
+    return x/(x+1.0);
+}
+
+fn choose_color(i: u32, gradient: f64) -&gt; Color {
+    let t = (255.0-255.0*sigmoid(gradient*f64::from(i))) as u8;
+    return Color::rgb(t,t,t);
+}
+
+struct System {
+    canvas: Canvas, scale: f64, pos: (f64,f64),
+    gradient: f64, max_iter: u32
+}
+impl System {
+    fn new(canvas: Canvas, scale: f64, pos: (f64,f64)) -&gt; System {
+        System{canvas,scale,pos, gradient: 0.04, max_iter: 1000}
+    }
+    fn fractal(&amp;mut self,
+        f: &amp;dyn Fn(C64,C64) -&gt; C64,
+        z0: &amp;dyn Fn(C64)-&gt;C64
+    ) {
+        let w = self.canvas.width();
+        let h = self.canvas.height();
+        let w2 = 0.5*f64::from(w);
+        let h2 = 0.5*f64::from(h);
+
+        let scale = self.scale/w2; 
+        let (x0,y0) = self.pos;
+
+        let max = self.max_iter;
+        let gradient = self.gradient;
+        let canvas = &amp;mut self.canvas;
+
+        for py in 0..h {
+            for px in 0..w {
+                let x = x0 + scale*(f64::from(px)-w2);
+                let y = y0 - scale*(f64::from(py)-h2);
+                let c = C64{re: x, im: y};
+                let mut z = z0(c);
+                let mut count: u32 = 0;
+                while count &lt; max {
+                    z = f(z,c);
+                    if z.abs_sq() &gt; 4.0 {break;}
+                    count += 1;
+                }
+                if count &lt; max {
+                    canvas.pset(px,py,choose_color(count,gradient));
+                }
+            }
+        }
+    }
+}
+</pre>
+
+<p>Nun endlich die Berechnung. Für die Bildmaße benutze ich
+gerne hochzusammengesetzte Zahlen. Als Seitenverhältnis benutze ich oft
+3/2, das kommt dem goldenen Schnitt einigermaßen nahe.
+
+<pre class="rust ibox">
+fn main() -&gt; Result&lt;(),std::io::Error&gt; {
+    let canvas = Canvas::new(720,480,Color::rgb(0,0,0));
+    let mut s = System::new(canvas,2.0,(-0.5,0.0));
+    s.fractal(&amp;|z,c| z*z+c, &amp;|_| C64{re: 0.0, im: 0.0});
+    s.canvas.save("Fraktal.ppm")?;
+    return Ok(());
+}
+</pre>
+
+<p>Das Resultat:
+
+<div>
+<img src="img/Fraktal.png" style="border: 2px solid #d0d0d0">
+</div>
+
+<p>Die Datei ist etwas über 1&nbsp;MB groß. Mit <code>pnmtopng</code>
+aus Netpbm kann man die in eine schon stark komprimierte PNG-Datei
+umwandeln. Mit <code>optipng</code> und <code>zopflipng</code> lässt
+sich diese anschließend auf ca. 20&nbsp;KB komprimieren.
+
+<pre class="ibox">
+pnmtopng Fraktal.ppm > Fraktal.png
+optipng Fraktal.png
+zopflipng -ym Fraktal.png Fraktal.png
+</pre>
+
+
 
 </body>
 </html>
