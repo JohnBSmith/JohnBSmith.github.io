@@ -176,6 +176,138 @@ das diese umsetzt, nennt man <i>affin</i>.
 
 <h2 id="Regional">Regionale Typisierung</h2>
 
+<h3>Lebenszeitverlängerung</h3>
+
+<p>Manchmal möchte man die Referenz auf einen Wert haben, welcher
+in einem bestimmten lexikalischen Bereich erzeugt wurde. Betrachten
+wir das folgende Programm.
+
+<pre class="rust ibox">
+enum Object {Int(i32), String(String)}
+
+fn print_object(x: &amp;Object) {
+    match x {
+        Object::Int(x) =&gt; println!("{}",x),
+        Object::String(x) =&gt; println!("{}",&amp;x)
+    }
+}
+
+fn main() {
+    print_object(&amp;Object::Int(12));
+    print_object(&amp;Object::String("Tee".to_string()));
+}
+</pre>
+
+<p>Angenommen, aus unerfindlichen Gründen ist nun eine Formulierung
+gesucht, bei welcher der Aufruf von <code>println</code> nur noch
+einmal vorkommt. Die naive Überlegung dazu ist:
+
+<pre class="rust ibox">
+fn print_object(x: &amp;Object) {
+    let s: &amp;str = match x {
+        Object::Int(x) =&gt; &amp;x.to_string(),
+        Object::String(x) =&gt; &amp;x
+    };
+    println!("{}",s);
+}
+</pre>
+
+<p>Das würgt der Compiler jedoch ab, weil die Lebenszeit der mit
+<code>x.to_string()</code> erzeugten Zeichenkette auf ihren
+lexikalischen Bereich beschränkt ist. Um ein wesentliches Problem
+handelt es sich hierbei aber nicht. Einführung einer zusätzlichen
+Variable sorgt für die gewünschte Verlängerung der Lebenszeit.
+
+<pre class="rust ibox">
+fn print_object(x: &amp;Object) {
+    let ts;
+    let s: &amp;str = match x {
+        Object::Int(x) =&gt; {ts = x.to_string(); &amp;ts},
+        Object::String(x) =&gt; &amp;x
+    };
+    println!("{}",s);
+}
+</pre>
+
+<p>Man würde nun auch gerne haben, dass die in <code>s</code>
+gespeicherte Referenz die Funktion verlassen kann. Hierzu kann der
+Smart-Pointer-Typ <code>Cow</code> herangezogen werden.
+
+<pre class="rust ibox">
+use std::borrow::Cow;
+
+enum Object {Int(i32), String(String)}
+
+impl Object {
+    fn as_str(&amp;self) -&gt; Cow&lt;str&gt; {
+        match self {
+            Object::Int(x) =&gt; Cow::Owned(x.to_string()),
+            Object::String(x) =&gt; Cow::Borrowed(&amp;x)
+        }
+    }
+}
+
+fn main() {
+    let x = Object::Int(12);
+    let y = Object::String("Tee".to_string());
+    println!("{}",x.as_str());
+    println!("{}",y.as_str());
+}
+</pre>
+
+<p>Explizit ausgeschrieben besitzt <code>as_str</code> die Signatur:
+
+<pre class="rust indent">
+fn as_str&lt;'a&gt;(&amp;'a self) -&gt; Cow&lt;'a,str&gt;
+</pre>
+
+<p>Ein anderes Beispiel für die Notwendigkeit von Hilfsvariablen
+sind Trait-Objekte. Gerne schreiben würde man z.&nbsp;B. folgendes:
+
+<pre class="rust ibox">
+fn f1() -&gt; impl Fn(i32)-&gt;i32 {|x| x+1}
+fn f2() -&gt; impl Fn(i32)-&gt;i32 {|x| 2*x}
+
+fn phi(n: i32) -&gt; i32 {
+    let f = if n==1 {f1()} else {f2()};
+    return f(10);
+}
+
+fn main() {
+    println!("{}, {}",phi(1),phi(2));
+}
+</pre>
+
+<p>Das soll bedeuten, in einer Fallunterscheidung wird eine
+der beiden (dynamisch erzeugten) Funktionen <code>f(x):=x+1</code> und
+<code>f(x):=2*x</code> gewählt. Nun verhält es sich so, dass die Typen
+von <code>f1()</code> und <code>f2()</code> unterschiedlich sind. Was
+die Typsignatur jetzt genau bedeutet, ist nicht so wichtig. Beide Typen
+implementieren aber den gleichen Trait. Um die beiden Typen gleich zu
+bekommen, müssen diese in Trait-Objekte umgewandelt werden. Man würde
+also gerne schreiben:
+<pre class="rust ibox">
+let f: &amp;dyn Fn(i32)-&gt;i32 = if n==1 {&amp;f1()} else {&amp;f2()};
+</pre>
+
+<p>Das klappt wegen der Lebenszeitproblematik nicht. Wir könnten
+das durch Boxen umgehen, das ist möglich:
+
+<pre class="rust ibox">
+let f: Box&lt;dyn Fn(i32)-&gt;i32&gt; =
+    if n==1 {Box::new(f1())} else {Box::new(f2())};
+</pre>
+
+<p>Allerdings führt das zu unnötigen Speicherallokationen.
+Die Lösung des Problems liegt wieder in der Benutzung von
+Hilfsvariablen:
+
+<pre class="rust ibox">
+let (tf1,tf2);
+let f: &amp;dyn Fn(i32)-&gt;i32 =
+    if n==1 {tf1 = f1(); &amp;tf1} else {tf2 = f2(); &amp;tf2};
+</pre>
+
 </body>
 </html>
 

@@ -24,33 +24,57 @@
 
 <h2 id="Zeichen">Zeichen</h3>
 
-<p>In Rust gibt es folgende Typen für einzelne Zeichen:
-<table class="bt indent">
-<tr>
-<th>Typ
-<th>Erklärung
-<tr>
-<td><code>u8</code>
-<td>ein Byte
-<tr>
-<td><code>u16</code>
-<td>ein UTF-16-Zeichen
-<tr>
-<td><code>char</code>
-<td>ein UTF-32-Zeichen
-</table>
+<p>Der Darstellung von Zeichen dient der Typ <code>char</code>,
+&ndash; im Prinzip nicht viel mehr als eine u32-Zahl zur Kodierung von
+Unicode-Zeichen. Aufgrund der strengen Typisierung wird allerdings
+ein Unterschied zwischen Zeichen und Zahlen gemacht.
 
-<p>Ein UTF-32-Zeichen kann über einen expliziten Typcast in eine blanke
-32-Bit-Zahl umgewandelt werden und umgekehrt:
+<p>Genau genommen muss erst einmal erklärt sein, was man unter
+»Unicode-Zeichen« genau versteht. In Unicode bekommen Zeichen und
+andere semantische Informationseinheiten einen numerischen Wert
+zugewiesen wie schon bei ASCII. Dieser numerische Wert wird
+<i>code point</i> genannt, der Bereich reicht von
+&ge;0 bis &le;0x10FFFF. Als kleine technische Komplikation kommt
+allerdings noch hinzu, dass darin verbotene Surrogate-Werte enthalten
+sind. Glücklicherweise sind die beiden Bereiche der Surrogate-Werte
+wenigstens zusammenhängend. Schließt man diese Surrogate-Werte aus,
+spricht man nun von einem <i>unicode scalar value</i>. Und genau
+dies speichert <code>char</code>.
+
+<p>Eine Ketten von solchen »Skalarwerten« muss nun auch
+irgendwie physisch auf einem Datenträger dargestellt sein. Die
+Darstellung als Abfolge von u32-Zahlen bezeichnet man als
+UTF-32-Kodierung.
+
+<p>Nehmen wir das bisher gesagte ernst, ist eine Umwandlung eines
+Zeichens in eine u32-Zahl immer durchführbar:
 <pre class="rust ibox">
-let x = 'a' as u32;
-let c = 97 as char;
+let x = u32::from('a');
 </pre>
 
-<p>Warum es für ASCII und UTF-16 keine eigenen Datentypen gibt,
-ist auch für mich unklar. Man kann sich die abstrakten Datentypen
-aber grundsätzlich mit <code>struct</code> selbst definieren, wobei
-inline-Funktionen eine Zero-Cost-Abstraktion ermöglichen.
+<p>Speziell für <code>u8</code> ist die umgekehrte Umwandlung noch
+allgemeingültig:
+<pre class="rust ibox">
+let c = char::from(97u8);
+</pre>
+
+<p>Die Umwandlung einer u32-Zahl in ein Zeichen ist aber offenbar
+nicht immer möglich, was es zu berücksichtigen gilt:
+<pre class="rust ibox">
+use std::convert::TryFrom;
+
+let c = match char::try_from(97u32) {
+    Ok(value) =&gt; value,
+    _ =&gt; unreachable!()
+};
+</pre>
+
+<p>Will man sich an fehlerhaften Eingaben nicht weiter stören,
+lassen sich diese auch mit einem Ersatzzeichen ignorieren:
+<pre class="rust ibox">
+let c = char::try_from(97u32).unwrap_or('?');
+</pre>
+
 
 <h2 id="Literale">Zeichenkettenliterale</h2>
 
