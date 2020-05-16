@@ -212,7 +212,7 @@ fn main() {
     let x: u32 = 12;
     let y: u8 = match u8::try_from(x) {
         Ok(value) =&gt; value,
-        Err(_) =&gt; VERLUST
+        _ =&gt; VERLUST
     };
     println!("{}",y);
 }
@@ -223,8 +223,42 @@ von <code>u8</code> liegt, sollte man stattdessen dies schreiben:
 <pre class="rust ibox">
 let y: u8 = match u8::try_from(x) {
     Ok(value) =&gt; value,
-    Err(_) =&gt; unreachable!()
+    _ =&gt; unreachable!()
 };
+</pre>
+
+<p>Für die Fallunterscheidung mit <code>match</code> gibt es auch
+Kurzschreibweisen:
+<pre class="rust ibox">
+let y = u8::try_from(x).unwrap_or(VERLUST);
+</pre>
+
+<p>bzw.
+<pre class="rust ibox">
+let y = u8::try_from(x).unwrap_or_else(|_| unreachable!());
+</pre>
+
+<p>Besteht Unklarheit darüber wie sich ein Fehler am besten lokal
+handhaben lässt, ist der Ausweg das Weiterreichen des Fehlers
+nach oben an den Aufrufer.
+
+<pre class="rust ibox">
+use std::convert::TryFrom;
+
+fn main() -&gt; Result&lt;(),std::num::TryFromIntError&gt; {
+    let x: u32 = 12;
+    let y = match u8::try_from(x) {
+        Ok(value) =&gt; value,
+        Err(e) =&gt; return Err(e)
+    };
+    println!("{}",y);
+    return Ok(());
+}
+</pre>
+
+<p>Auch hier gibt es wieder eine Kurzschreibweise:
+<pre class="rust ibox">
+let y = u8::try_from(x)?;
 </pre>
 
 <h3>Verlustbehaftete Typumwandlungen</h3>
@@ -258,11 +292,12 @@ Nachher:  u8: 00001100
 <pre class="rust ibox">
 match u8::try_from(x &amp; 0xff) {
     Ok(value) =&gt; value,
-    Err(_) =&gt; unreachable!()
+    _ =&gt; unreachable!()
 }
 </pre>
 
 <h3>Transmutierende Typumwandlungen</h3>
+
 <p>Bei transmutierenden Umwandlungen werden Daten einfach als
 von anderem Typ interpretiert, ohne eine semantische Umwandlung
 vorzunehmen. Aus einer puristischen Sichtweise heraus ist das

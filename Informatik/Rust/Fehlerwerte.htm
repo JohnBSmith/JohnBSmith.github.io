@@ -14,12 +14,13 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Optional">Optionale Werte</a>
+<li><a href="#Option">Optionale Werte</a>
 <li><a href="#Result">Resultate</a>
 <li><a href="#Fragezeichen">Fehler weiterreichen</a>
+<li><a href="#Error">Universeller Fehlertyp</a>
 </ol>
 
-<h2 id="Optional">Optionale Werte</h2>
+<h2 id="Option">Optionale Werte</h2>
 
 <p>Wir wollen eine Funktion programmieren die ein Array nach einem
 Wert durchsucht und den ersten Index zurückgibt wo dieser Wert gefunden
@@ -66,7 +67,7 @@ fn main() {
 }
 </pre>
 
-<h2 id="Resultate">Resultate</h2>
+<h2 id="Result">Resultate</h2>
 
 <p>Blieb der Erfolg bei der Ausführung einer Funktion aus, würde man
 gerne mehr darüber erfahren wie es dazu kam. Die Funktion muss dafür
@@ -193,6 +194,26 @@ match x {
     Err(error) => return Err(From::from(error))
 }
 </pre>
+
+<h2 id="Error">Universeller Fehlertyp</h2>
+
+<p>Nicht immer ist die lokale Verarbeitung von Fehlern zielführend.
+Wie schon dargelegt besteht die Vorgehensweise dann im Weiterreichen
+des Fehlers nach oben an den Aufrufer. Dabei tut sich nun recht
+schnell die Unbequemlichkeit auf, dass eine Funktion zwei oder
+mehr unterschiedliche Fehlertypen zurückgeben können muss.
+
+<p>Natürlich ließen sich die Fehlertypen mittels Enumeration zu einem
+gemeinsamen Typ zusammenfassen. Bei fortwährendem Weiterreichen kann
+dies allerdings zum umständlichen Verschachteln oder Neugruppieren von
+Enumerationen führen.
+
+<p>Was wir bräuchten wäre so eine Art Enumeration aus unendlich
+vielen Typen. Solche Datentypen gibt es in Rust tatsächlich, sie
+heißen <i>Trait-Objekt-Typen</i> und werden mit dem Schlüsselwort
+<code>dyn</code> eingeleitet. Hinter dem Schlüsselwort befindet
+sich der Name einer Traitsignatur, in welcher die abstrakte
+Schnittstelle des Typen kodiert ist.
 
 </body>
 </html>
