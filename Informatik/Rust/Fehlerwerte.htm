@@ -213,7 +213,58 @@ vielen Typen. Solche Datentypen gibt es in Rust tatsächlich, sie
 heißen <i>Trait-Objekt-Typen</i> und werden mit dem Schlüsselwort
 <code>dyn</code> eingeleitet. Hinter dem Schlüsselwort befindet
 sich der Name einer Traitsignatur, in welcher die abstrakte
-Schnittstelle des Typen kodiert ist.
+Schnittstelle des Typen kodiert ist. Konzeptuell kommt weiter hinzu
+dass <code>dyn</code> eine Zusammenfassung von Typen
+aller möglichen Speichergrößen ist. Aus diesem Grund kann
+<code>dyn Trait</code> keine feste Speichergröße besitzen &ndash; man
+spricht von einem <i>Typ dynamischer Größe</i>. Um überhaupt
+damit arbeiten zu können, darf ein solcher Typ nur eingehüllt durch
+einen Zeiger vorkommen &ndash; also z.&nbsp;B. als Referenz
+<code>&amp;dyn Trait</code> oder mittels Smart-Pointer-Typ
+<code>Box</code> als <code>Box&lt;dyn Trait&gt;</code>.
+
+<p>Die Standardbibliothek enthält so einen Trait
+<code>std::error::Error</code>. Damit lässt sich ein Kontrollfluss
+formulieren, welcher dem aus anderen Programmiersprachen
+bekannten Werfen und Abfangen von Ausnahmen nahe kommt.
+
+<pre class="rust ibox">
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn get_path() -&gt; Result&lt;String,String&gt; {
+    match std::env::args().nth(1) {
+        Some(path) =&gt; Ok(path),
+        None =&gt; Err(String::from(
+            "Kommandozeilenargument erwartet"))
+    }
+}
+
+fn load() -&gt; Result&lt;String,Error&gt; {
+    let path = get_path()?;
+    let text = std::fs::read_to_string(path)?;
+    return Ok(text);
+}
+
+fn main() -&gt; Result&lt;(),Error&gt; {
+    let text = load()?;
+    println!("{}",text);
+    return Ok(());
+}
+</pre>
+
+<p>Das Programm verhält sich so als würde im Fehlerfall
+<code>panic</code> geworfen. Was haben wir demgegenüber nun gewonnen?
+Nun, Fehler lassen sich jetzt an jeder Stelle nach Wunsch abfangen,
+umformen und verarbeiten.
+
+<p>Zum Schluss noch eine Warnung. Werte vom universellen Fehlertyp
+<code>Box&lt;dyn std::error::Error&gt;</code> sind &ndash;
+gerade weil er alle möglichen Fehler enthalten kann &ndash;
+<i>untypisiert</i>. Man sollte Programme immer so stark wie
+möglich typisieren und solche universellen Typen nur als letzten
+Ausweg benutzen. Andernfalls kann es leichter dazu kommen dass
+ein bestimmtes Programmverhalten übersehen bzw. falsch verarbeitet
+wird.
 
 </body>
 </html>
