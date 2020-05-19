@@ -18,6 +18,7 @@
 <li><a href="#Result">Resultate</a>
 <li><a href="#Fragezeichen">Fehler weiterreichen</a>
 <li><a href="#Error">Universeller Fehlertyp</a>
+<li><a href="#Aufzeichnung">Fehler aufzeichnen</a>
 </ol>
 
 <h2 id="Option">Optionale Werte</h2>
@@ -265,6 +266,35 @@ möglich typisieren und solche universellen Typen nur als letzten
 Ausweg benutzen. Andernfalls kann es leichter dazu kommen dass
 ein bestimmtes Programmverhalten übersehen bzw. falsch verarbeitet
 wird.
+
+<h2 id="Aufzeichnung">Fehler aufzeichnen</h2>
+
+<p>Beim Ablauf eines Programms kann es zu unkritischen Fehlern kommen,
+die zwar bedeuten dass eine bestimmte Funktionalität nicht richtig
+arbeitet, allerdings nicht sofort zum Programmabbruch führen müssen.
+Nur weil beim einem Flugzeug beispielsweise ein Instrument oder
+Navigationsgerät ausfällt, muss das nicht gleich heißen dass die
+gesamte Avionik den Geist aufgibt. Damit solche Fehler nicht übersehen
+werden, sollten diese zumindest in einen Fehler-Log einfließen.
+Das kann man z.&nbsp;B. so machen:
+
+<pre class="rust ibox">
+fn log_err(file: &amp;str, line: u32, text: String) {
+    eprintln!("Huch, da ist ein Fehler in Datei {}, \
+        Zeile {} aufgetreten:\n{}",file,line,text);
+}
+
+fn main() {
+    use std::convert::TryFrom;
+    const VERLUST: u8 = 0;
+    let x: u32 = 1000;
+    let y = u8::try_from(x).unwrap_or_else(|err| {
+        log_err(file!(),line!(),err.to_string());
+        VERLUST
+    });
+    println!("{}",y);
+}
+</pre>
 
 </body>
 </html>

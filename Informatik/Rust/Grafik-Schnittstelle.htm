@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Computergrafik: Multimedia-Schnittstelle</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Einstieg">Einstieg</a>
+</ol>
+
+<h2 id="Einstieg">Einstieg</h2>
+
+<pre class="rust ibox">
+use sdl2::{pixels::Color, rect::Rect};
+use sdl2::{event::Event, keyboard::Keycode};
+use std::{time::Duration, thread::sleep};
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+pub fn main() -&gt; Result&lt;(),Error&gt; {
+    let sdl_context = sdl2::init()?;
+    let video_subsystem = sdl_context.video()?;
+    let window = video_subsystem.window("Fenster",960,600)
+        .position_centered().build()?;
+    let mut canvas = window.into_canvas().build()?;
+
+    canvas.set_draw_color(Color::RGB(0,0,0));
+    canvas.clear();
+    canvas.set_draw_color(Color::RGB(255,255,255));
+    canvas.fill_rect(Rect::new(20,20,10,10))?;
+ 
+    canvas.present();
+
+    let duration = Duration::from_millis(100); 
+    let mut event_pump = sdl_context.event_pump()?;
+    'running: loop {
+        for event in event_pump.poll_iter() {
+            match event {
+                Event::Quit{..} |
+                Event::KeyDown{keycode: Some(Keycode::Escape), ..} =&gt; {
+                    break 'running
+                },
+                _ =&gt; {}
+            }
+        }
+        sleep(duration);
+    }
+    return Ok(());
+}
+</pre>
+
+
+
+</body>
+</html>
+
