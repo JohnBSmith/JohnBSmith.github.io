@@ -41,7 +41,7 @@ wenigstens zusammenhängend. Schließt man diese Surrogate-Werte aus,
 spricht man nun von einem <i>unicode scalar value</i>. Und genau
 dies speichert <code>char</code>.
 
-<p>Eine Ketten von solchen »Skalarwerten« muss nun auch
+<p>Eine Kette von solchen »Skalarwerten« muss nun auch
 irgendwie physisch auf einem Datenträger dargestellt sein. Die
 Darstellung als Abfolge von u32-Zahlen bezeichnet man als
 UTF-32-Kodierung.
@@ -55,7 +55,8 @@ let x = u32::from('a');
 <p>Speziell für <code>u8</code> ist die umgekehrte Umwandlung noch
 allgemeingültig:
 <pre class="rust ibox">
-let c = char::from(97u8);
+let x: u8 = 97;
+let c = char::from(x);
 </pre>
 
 <p>Die Umwandlung einer u32-Zahl in ein Zeichen ist aber offenbar
@@ -63,7 +64,8 @@ nicht immer möglich, was es zu berücksichtigen gilt:
 <pre class="rust ibox">
 use std::convert::TryFrom;
 
-let c = match char::try_from(97u32) {
+let x: u32 = 97;
+let c = match char::try_from(x) {
     Ok(value) =&gt; value,
     _ =&gt; unreachable!()
 };
@@ -72,9 +74,30 @@ let c = match char::try_from(97u32) {
 <p>Will man sich an fehlerhaften Eingaben nicht weiter stören,
 lassen sich diese auch mit einem Ersatzzeichen ignorieren:
 <pre class="rust ibox">
-let c = char::try_from(97u32).unwrap_or('?');
+let c = char::try_from(x).unwrap_or('?');
 </pre>
 
+<p>Werden die Zeichen wieder auf irgendeine Art der Ausgabe zugeführt,
+sollte man allerdings als Ersatzzeichen eines wählen, welches nicht
+in der normalen Ausgabe vorkommt. Dies bringt den Vorteil, dass man
+dann Dateien mit einem Suchprogramm wie <code>grep</code> nach diesem
+Zeichen durchsuchen kann. In Unicode ist für diesen Zweck das Zeichen
+<code>'&#xfffd;'</code> mit Wert U+FFFD vorgesehen, das auch als
+Konstante  <code>std::char::REPLACEMENT_CHARACTER</code> verfügbar ist.
+Eventuell möchte man einen solchen Fehler auch zumindest aufzeichnen,
+damit dieser nicht unbemerkt bleibt. Das Programm gestaltet sich
+dann so:
+
+<pre class="rust ibox">
+fn log_error(file: &amp;str, line: u32, text: String) {
+    eprintln!("Fehler in {}:{}:\n{}",file,line,text);
+}    
+
+let c = char::try_from(x).unwrap_or_else(|e| {
+    log_error(file!(),line!(),e.to_string());
+    std::char::REPLACEMENT_CHARACTER
+});
+</pre>
 
 <h2 id="Literale">Zeichenkettenliterale</h2>
 
