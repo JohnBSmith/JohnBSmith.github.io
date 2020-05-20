@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#ggT">Größter gemeinsamer Teiler</a>
 <li><a href="#kgV">Kleinstes gemeinsames Vielfaches</a>
+<li><a href="#Potenz">Modulare Potenzfunktion</a>
 <li><a href="#Primzahlen">Primzahlen</a>
 <li><a href="#Teiler">Teiler</a>
 </ol>
@@ -66,6 +67,24 @@ fn lcm(a: u32, b: u32) -&gt; u32 {
 
 fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
     return a.iter().fold(1,|a,&amp;b| {a*b/gcd(a,b)});
+}
+</pre>
+
+<h2 id="Potenz">Modulare Potenzfunktion</h2>
+
+<h3>Ohne Überlauf-Prüfung</h3>
+<pre class="rust box">
+fn pow_mod(mut a: u32, mut n: u32, m: u32) -&gt; u32 {
+    let mut y = 1;
+    a = a%m;
+    while n&gt;0 {
+        if n%2==0 {
+            n/=2; a = (a*a)%m;
+        } else {
+            n-=1; y = (y*a)%m;
+        }
+    }
+    return y;
 }
 </pre>
 

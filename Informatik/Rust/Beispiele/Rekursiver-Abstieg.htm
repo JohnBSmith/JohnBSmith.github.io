@@ -19,7 +19,7 @@ und einen abstrakten Syntaxbaum aus Lisp-Ausdrücken
 zurückgibt.  Der Syntaxbaum wird anschließend von der Funktion
 <code>eval</code> ausgewertet.
 
-<p>Die Aufgabe kann auf unterschiedlichste Art bewerkstelligt werden.
+<p>Die Aufgabe kann auf unterschiedlichste Art bewältigt werden.
 Als Musterlösung ist ein rekursiver Abstieg angegeben.
 
 <pre class="indent">
@@ -126,7 +126,9 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;,SyntaxError&gt; {
     return Ok(a);
 }
 
-fn atom(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+type SyntaxResult = Result&lt;(AST,usize),SyntaxError&gt;;
+
+fn atom(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     return match a[i].symbol {
         Symbol::Number(x) =&gt; Ok((AST::Number(x),i+1)),
         Symbol::Identifier(ref x) =&gt; Ok((AST::Identifier(x.clone()),i+1)),
@@ -140,8 +142,8 @@ fn atom(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
                         "schließende Klammer wurde erwartet"))
                 }
             }else{
-                Err(syntax_error(a[i].col,
-                    &amp;format!("das Symbol '{}' wurde nicht erwartet",c)))
+                Err(syntax_error(a[i].col,&amp;format!(
+                    "das Symbol '{}' wurde nicht erwartet",c)))
             }
         },
         Symbol::None =&gt; {
@@ -150,7 +152,7 @@ fn atom(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
     };
 }
 
-fn power(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+fn power(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     let (x,i) = atom(a,i)?;
     if let Symbol::Symbol('^') = a[i].symbol {
         let (y,i) = negation(a,i+1)?;
@@ -160,7 +162,7 @@ fn power(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; 
     }
 }
 
-fn negation(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+fn negation(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     if let Symbol::Symbol('-') = a[i].symbol {
         let (x,i) = power(a,i+1)?;
         return Ok((AST::List(Box::new([AST::Symbol('~'),x])),i));
@@ -169,7 +171,7 @@ fn negation(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&g
     }
 }
 
-fn multiplication(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+fn multiplication(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     let (mut x, mut i) = negation(a,i)?;
     loop{
         let op = match a[i].symbol {
@@ -187,7 +189,7 @@ fn multiplication(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxE
     return Ok((x,i));
 }
 
-fn addition(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+fn addition(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     let (mut x, mut i) = multiplication(a,i)?;
     loop{
         let op = match a[i].symbol {
@@ -205,7 +207,7 @@ fn addition(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&g
     return Ok((x,i));
 }
 
-fn expression(a: &amp;[Token], i: usize) -&gt; Result&lt;(AST,usize),SyntaxError&gt; {
+fn expression(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     return addition(a,i);
 }
 
@@ -214,7 +216,8 @@ fn full_expression(a: &amp;[Token]) -&gt; Result&lt;AST,SyntaxError&gt; {
     if let Symbol::None = a[i].symbol {
         return Ok(x);
     }else{
-        return Err(syntax_error(a[i].col,"Ende der Eingabe wurde erwartet"));
+        return Err(syntax_error(a[i].col,
+            "Ende der Eingabe wurde erwartet"));
     }
 }
 
