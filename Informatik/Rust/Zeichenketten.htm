@@ -388,6 +388,36 @@ fn main() {
 }
 </pre>
 
+<p>Bei der Umwandlung von <code>&amp;[u8]</code> in
+<code>&amp;str</code> sind Prüfungen notwendig. Hierfür steht
+<code>from_utf8</code> zur Verfügung:
+
+<pre class="rust ibox">
+let a: &amp;[u8] = &amp;[97,98,99,100,128];
+let s = std::str::from_utf8(a)?;
+</pre>
+
+<p>Zusätzlich gibt es eine Funktion <code>from_utf8_lossy</code>,
+die fehlerhaftes UTF-8 gegen das Ersatzzeichen
+<code>std::char::REPLACEMENT_CHARACTER</code> mit dem Wert U+FFFD
+ersetzt.
+
+<pre class="rust ibox">
+use std::borrow::Cow;
+
+fn main() {
+    let a: &amp;[u8] = &amp;[97,98,99,100,128];
+    let s = String::from_utf8_lossy(a);
+    match s {
+        Cow::Owned(_) =&gt; eprintln!(
+            "Fehlerhaftes UTF-8 detektiert in {}:{}.",
+            file!(),line!()),
+        Cow::Borrowed(_) =&gt; {}
+    }
+    println!("{}",s);
+}
+</pre>
+
 <h2 id="Komplexität">Eine gewisse Komplexität</h3>
 
 <p>An dieser Stelle muss einmal gesagt werden, dass Rust eine
