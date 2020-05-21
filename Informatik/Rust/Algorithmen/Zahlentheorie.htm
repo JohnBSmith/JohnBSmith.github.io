@@ -19,6 +19,7 @@
 <li><a href="#Potenz">Modulare Potenzfunktion</a>
 <li><a href="#Primzahlen">Primzahlen</a>
 <li><a href="#Teiler">Teiler</a>
+<li><a href="#phi">Eulersche Phi-Funktion</a>
 </ol>
 
 <h2 id="ggT">Größter gemeinsamer Teiler</h2>
@@ -74,17 +75,27 @@ fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
 
 <h3>Ohne Überlauf-Prüfung</h3>
 <pre class="rust box">
-fn pow_mod(mut a: u32, mut n: u32, m: u32) -&gt; u32 {
-    let mut y = 1;
-    a = a%m;
-    while n&gt;0 {
-        if n%2==0 {
-            n/=2; a = (a*a)%m;
-        } else {
-            n-=1; y = (y*a)%m;
-        }
+fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; u32 {
+    let mut y: u32 = 1;
+    while n&gt;1 {
+        if n%2 == 1 {y = (y*x)%m;}
+        n /= 2; x = (x*x)%m;
     }
+    if n==1 {y = (y*x)%m;}
     return y;
+}
+</pre>
+
+<h3>Mit Überlauf-Prüfung</h3>
+<pre class="rust box">
+fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
+    let mut y: u32 = 1;
+    while n&gt;1 {
+        if n%2 == 1 {y = y.checked_mul(x)?%m;}
+        n /= 2; x = x.checked_mul(x)?%m;
+    }
+    if n==1 {y = y.checked_mul(x)?%m;}
+    return Some(y);
 }
 </pre>
 
@@ -176,13 +187,11 @@ pub fn is_prime(n: u32) -&gt; bool {
 <h3>Primfaktorzerlegung</h3>
 <pre class="rust box">
 fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
-    let mut v: Vec&lt;(u64,u8)&gt; = Vec::new();
-    let mut i = 2;
-    while i&lt;=n {
-        let mut p = 0;
-        while n%i==0 {n = n/i; p += 1;}
-        if p != 0 {v.push((i,p));}
-        i += 1;
+    let mut v: Vec&lt;(u64,u8)&gt; = vec![];
+    for p in 2..=n {
+        let mut k = 0;
+        while n%p==0 {n = n/p; k += 1;}
+        if k != 0 {v.push((p,k));}
     }
     return v;
 }
@@ -203,6 +212,21 @@ fn sigma0(n: u64) -&gt; usize {
 // Teilerfunktion
 fn sigma(x: u32, n: u64) -&gt; u64 {
     return (1..n+1).filter(|i| n%i==0).map(|i| i.pow(x)).sum();
+}
+</pre>
+
+<h2 id="phi">Eulersche Phi-Funktion</h2>
+
+<pre class="rust box">
+fn phi(mut n: u32) -&gt; u32 {
+    if n==0 {return 0;}
+    let mut y: u32 = 1;
+    for p in 2..=n {
+        let mut k = 0;
+        while n%p==0 {n = n/p; k += 1;}
+        if k != 0 {y *= p.pow(k-1)*(p-1);}
+    }
+    return y;
 }
 </pre>
 
