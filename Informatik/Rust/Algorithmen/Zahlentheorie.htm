@@ -188,10 +188,12 @@ pub fn is_prime(n: u32) -&gt; bool {
 <pre class="rust box">
 fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
     let mut v: Vec&lt;(u64,u8)&gt; = vec![];
-    for p in 2..=n {
+    let mut p = 2;
+    while p&lt;=n {
         let mut k = 0;
         while n%p==0 {n = n/p; k += 1;}
         if k != 0 {v.push((p,k));}
+        p += 1;
     }
     return v;
 }
@@ -221,10 +223,12 @@ fn sigma(x: u32, n: u64) -&gt; u64 {
 fn phi(mut n: u32) -&gt; u32 {
     if n==0 {return 0;}
     let mut y: u32 = 1;
-    for p in 2..=n {
+    let mut p = 2;
+    while p&lt;=n {
         let mut k = 0;
         while n%p==0 {n = n/p; k += 1;}
         if k != 0 {y *= p.pow(k-1)*(p-1);}
+        p += 1;
     }
     return y;
 }
