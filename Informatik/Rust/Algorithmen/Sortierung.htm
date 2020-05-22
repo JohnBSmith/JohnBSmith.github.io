@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Bubblesort">Bubblesort</a>
+<li><a href="#Quicksort">Quicksort</a>
 </ol>
 
 <h2 id="Bubblesort">Bubblesort</h2>
@@ -36,6 +37,25 @@ fn main() {
 </pre>
 
 <h2 id="Quicksort">Quicksort</h2>
+
+<h3>Rekursiv</h3>
+<pre class="rust box">
+fn qsort&lt;T: Ord+Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    if a.len()==0 {return vec![];}
+    let l: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|x| *x&lt;a[0]).collect();
+    let r: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|x| *x&gt;=a[0]).collect();
+    [qsort(&amp;l), qsort(&amp;r)].join(&amp;a[0])
+}
+</pre>
+
+<pre class="rust box">
+fn qsort&lt;T: Ord+Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    if a.len()==0 {return vec![];}
+    let (l, r): (Vec&lt;T&gt;, Vec&lt;T&gt;)
+        = a[1..].iter().cloned().partition(|x| *x&lt;a[0]);
+    [qsort(&amp;l), qsort(&amp;r)].join(&amp;a[0])
+}
+</pre>
 
 <h3>Rekursiv, in-place</h3>
 <pre class="rust box">
