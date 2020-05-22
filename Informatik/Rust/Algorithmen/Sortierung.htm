@@ -35,6 +35,29 @@ fn main() {
 }
 </pre>
 
+<h2 id="Quicksort">Quicksort</h2>
+
+<h3>Rekursiv, in-place</h3>
+<pre class="rust box">
+fn partition&lt;T: Ord&gt;(a: &amp;mut [T], k: usize) -&gt; usize {
+    let pivot = a.len()-1;
+    a.swap(k,pivot);
+    let mut i = 0;
+    for j in 0..pivot {
+        if a[j] &lt;= a[pivot] {a.swap(i,j); i += 1;}
+    }
+    a.swap(i,pivot);
+    return i;
+}
+
+fn qsort&lt;T: Ord&gt;(a: &amp;mut [T]) {
+    if a.len()&lt;2 {return;}
+    let i = partition(a,0);
+    qsort(&amp;mut a[..i]);
+    qsort(&amp;mut a[i+1..]);
+}
+</pre>
+
 </body>
 </html>
 

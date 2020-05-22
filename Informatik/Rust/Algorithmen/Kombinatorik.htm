@@ -18,6 +18,7 @@
 <li><a href="#Potenz">Kartesische Potenz</a>
 <li><a href="#Potenzmenge">Potenzmenge</a>
 <li><a href="#Permutationen">Permutationen</a>
+<li><a href="#Binomialkoeffizient">Binomialkoeffizient</a>
 </ol>
 
 <h2 id="Produkt">Kartesisches Produkt</h2>
@@ -210,6 +211,37 @@ fn main() {
     for t in permutations(&amp;[1,2,3]) {
         println!("{:?}",t);
     }
+}
+</pre>
+
+<h2 id="Binomialkoeffizient">Binomialkoeffizient</h2>
+
+<pre class="rust box">
+fn choose(n: u64, mut k: u64) -&gt; u64 {
+    if k&gt;n {return 0;}
+    if k&gt;n-k {k = n-k;}
+    let mut y = 1;
+    for i in 0..k {
+        y = y*(n-i)/(i+1);
+    }
+    return y;
+}
+
+fn tabluate(label: &amp;str, a0: u64, a1: u64, b0: u64, b1: u64,
+    shift: usize, f: &amp;dyn Fn(u64,u64)-&gt;u64)
+{
+    print!("{:^5}|",label);
+    for b in b0..=b1 {print!("{:&gt;1$}",b,shift);}
+    println!("\n{:\u{2500}&lt;1$}","",6+shift*((b1-b0+1) as usize));
+    for a in a0..=a1 {
+        print!("{:&gt;4} |",a);
+        for b in b0..=b1 {print!("{:&gt;1$}",f(a,b),shift);}
+        println!();
+    }
+}
+
+fn main() {
+    tabluate("n\\k",0,10,0,10,4,&amp;choose);
 }
 </pre>
 
