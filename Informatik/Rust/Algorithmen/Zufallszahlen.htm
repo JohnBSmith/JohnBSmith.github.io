@@ -43,26 +43,26 @@ pub struct RNG {
 }
 
 impl RNG {
-    pub fn new(seed: u64) -&gt; Self {
+    pub fn from_seed(seed: u64) -&gt; Self {
         Self{state: (
             seed ^ 0xa4f85664d25f3e1e,
             seed ^ 0xb1e50bc816c7ec1d
         )}
     }
     pub fn rand_u64(&amp;mut self) -&gt; u64 {
-        let (mut x,y) = self.state;
+        let (mut x, y) = self.state;
         self.state.0 = y;
         x ^= x &lt;&lt; 23;
         self.state.1 = x ^ y ^ (x &gt;&gt; 17) ^ (y &gt;&gt; 26);
         return self.state.1.wrapping_add(y);
     }
     pub fn rand_u32(&amp;mut self) -&gt; u32 {
-        self.rand_u64()&gt;&gt;32 as u32
+        (self.rand_u64()&gt;&gt;32) as u32
     }
 }
 
 fn main() {
-    let mut rng = RNG::new(0);
+    let mut rng = RNG::from_seed(0);
     for _ in 0..10 {
         println!("{:016x}",rng.rand_u64());
     }

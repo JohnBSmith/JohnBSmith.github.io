@@ -12,6 +12,7 @@
 \usepackage{mdframed}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{booktabs}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,80}
@@ -1651,6 +1652,75 @@ print(expected_value(Omega4, lambda t: sum(t)-min(t)))
 \end{lstlisting}
 \caption{Algorithmus zur Berechnung des Erwartungswertes}
 \label{fig:Algorithmus-Erwartungswert}
+\end{figure}
+
+\begin{Aufgabe}
+In einer Urne befinden sich fünf Kugeln mit den Werten $0,0,1,2,8$.
+Nach dem zufälligem Ziehen ohne Zurücklegen wird das Produkt der
+gezogenen Werte ausgezahlt. Wie oft muss man ziehen, um den Gewinn zu
+maximieren?
+\end{Aufgabe}
+\strong{Lösung 1.} Zu jeder Anzahl von gezogenen Kugeln liegt ein
+unterschiedliches Zufallsexperiment vor. Bei $k$ Kugeln ist das
+Experiment $k$"=stufig. Das Produkt der Werte ist eine Zufallsgröße,
+deren Erwartungswert zu ermitteln ist. Gesucht ist schließlich der
+größte dieser Erwartungswerte.
+
+Die Ergebnissemenge des jeweilien Zufallsexperiments sei $\Omega$,
+die Zufallsgröße sei $X$. Der Erwartungswert ist
+\[E(X) = \!\!\sum_{x\in X(\Omega)}\!\! x\cdot P(X=x).\]
+Weil es sich um ein Laplace"=Experiment handelt, gilt
+\[P(X=x) = \frac{|\{X=x\}|}{|\Omega|}.\]
+Nun muss man den Pfadbaum für das jeweilige Experiment aufschreiben.
+Die Ziehung einer Null braucht man dabei nicht zu beachten.
+Aus den Bäumen ermittelt man Tabelle~\ref{tab:Produkt-Gewinn}.
+Der Gewinn hat demnach bei $k=2$ Ziehungen den maximalen
+Erwartungswert.\;\qedsymbol
+\begin{table}
+\center
+\begin{tabular}{rrllr}
+\toprule
+$k$ & $|\Omega|$ & $X(\Omega)$ & $x\mapsto |\{X=x\}|$ & $E(X)$\\
+\midrule
+$1$ & $5$ & $\{0,1,2,8\}$ & $\{0\mapsto 2,1\mapsto 1,2\mapsto 1,8\mapsto 1\}$ & $2.2$\\
+$2$ & $20$ & $\{0,2,8,16\}$ & $\{0\mapsto 14,2\mapsto 2,8\mapsto 2,16\mapsto 2\}$ & $2.6$\\
+$3$ & $60$ & $\{0,16\}$ & $\{0\mapsto 54,16\mapsto 6\}$ & $1.6$\\
+$4$ & $120$ & $\{0\}$ & $\{0\mapsto 120\}$ & $0$ \\
+$5$ & $120$ & $\{0\}$ & $\{0\mapsto 120\}$ & $0$\\
+\bottomrule
+\end{tabular}
+\caption{Erwartungswert für $k$ Ziehungen.}
+\label{tab:Produkt-Gewinn}
+\end{table}
+
+\strong{Lösung 2.} Jedes elementare Ereignis besitzt die
+Wahrscheinlichkeit $\tfrac{1}{|\Omega|}$. Alternativ lässt sich der
+Erwartungswert daher bestimmen mittels
+\[E(X) = \frac{1}{|\Omega|}\sum_{\omega\in\Omega} X(\omega).\]
+Zur Berechnung muss man über alle $5^{\underline k}$ Variationen
+iterieren. Die Berechnung ist automatisierbar, der Algorithmus in
+Abb.~\ref{fig:Erwartungswerte} dargestellt.\;\qedsymbol
+
+\begin{figure}[b!]
+\begin{lstlisting}[language=Python]
+from itertools import permutations
+
+def prod(t):
+    y = 1
+    for x in t: y = y*x
+    return y
+
+def Mittelwert(a):
+    return sum(a)/len(a)
+
+def Erwartungswert(k,a):
+    return Mittelwert([prod(t) for t in permutations(a,k)])
+
+for k in range(1,6):
+    print("{} | {}".format(k,Erwartungswert(k,[0,0,1,2,8])))
+\end{lstlisting}
+\caption{Algorithmus zur Berechnung des Erwartungswertes}
+\label{fig:Erwartungswerte}
 \end{figure}
 
 \newpage

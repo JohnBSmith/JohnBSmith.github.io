@@ -405,15 +405,21 @@ ersetzt.
 <pre class="rust ibox">
 use std::borrow::Cow;
 
+fn log_error(file: &amp;str, line: u32, text: &amp;str) {
+    eprintln!("{} bei {}:{}.",text,file,line);
+}
+
+fn from_utf8_lossy(a: &amp;[u8]) -&gt; Cow&lt;str&gt; {
+    let s = String::from_utf8_lossy(a);
+    if let Cow::Owned(_) = s {
+        log_error(file!(),line!(),"Fehlerhaftes UTF-8 detektiert");
+    }
+    return s;
+}
+
 fn main() {
     let a: &amp;[u8] = &amp;[97,98,99,100,128];
-    let s = String::from_utf8_lossy(a);
-    match s {
-        Cow::Owned(_) =&gt; eprintln!(
-            "Fehlerhaftes UTF-8 detektiert in {}:{}.",
-            file!(),line!()),
-        Cow::Borrowed(_) =&gt; {}
-    }
+    let s = from_utf8_lossy(a);
     println!("{}",s);
 }
 </pre>

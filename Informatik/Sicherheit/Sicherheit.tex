@@ -52,7 +52,7 @@ Grundwissen zur\\
 Datensicherheit\par}
 
 \vspace{1em}\noindent
-September 2019
+Mai 2020
 
 \tableofcontents
 
@@ -170,14 +170,36 @@ Tabelle~\ref{Datenspeicher} zeigt die Kosten für unterschiedliche
 Datenspeicher. Hierbei ist zunächst zu beachten, dass Datenträger
 durch Beschädigung ab und zu unbrauchbar werden. Solches kommt auch
 bei allergrößter Sorgfalt vor. Aus diesem Grund möchte man von
-wichtigen Daten immer mehrere Replikate haben, es wäre also gefährlich,
+wichtigen Daten immer mehrere Replikate haben. Es wäre also gefährlich,
 alle Daten auf eine einzelne HDD zu speichern. Ich würde empfehlen,
-wichtige Daten redundant auf drei USB-Sticks und drei DVD-R zu
-speichern. Zwei bis drei Replikate sollte man an einen anderen
-Ort bringen, damit diese im Falle eines Brands erhalten bleiben.
+wichtige Daten redundant auf USB-Sticks, DVD-R und HDD zu
+speichern. Man sollte auch Replikate an einen zweiten Ort bringen,
+damit diese im Falle eines Brands erhalten bleiben.
 
 Bei hohen Speichergrößen wird man entsprechend mehrere
 redundante Replikate von BD bis HDD wählen.
+
+Grundsätzlich gilt: Ein Sicherungsmedium darf nicht mit einem Rechner
+verbunden sein. Andernfalls könnte es bei einer Überspannung, wie sie
+durch einen Blitzeinschlag versursacht werden kann, beschädigt werden
+oder Schadsoftware könnte sofort auf dieses zugreifen.
+
+\subsection{Fehlerkorrektur}
+
+Hochwertige Backup"=Systeme sind mit Mitteln zur Fehlerkorrektur
+ausgestattet. Solche Verfahren erhöhen die Redundanz der Daten
+geringfügig und erlauben dadurch eine höhere Fehlerresistenz.
+Ein historisch wichtiges Verfahren ist z.\,B.
+die Reed"=Solomon"=Fehlerkorrektur.
+
+Fehlerkorrektur wird gemeinsam mit kryptografischen Hashfunktionen
+benutzt, um Beschädigungen sicher identifizieren zu können. Sollte
+eine Datei nicht wieder korrekt hergestellt werden können, wird das
+Backup"=System diesen Fehler melden. In diesem Fall muss man zur
+Wiederherstellung ein Replikat benutzen. Sollte das Replikat
+ebenfalls zu stark beschädigt sein, muss man die Replikate
+vereinigen. Sollte dies fehlschlagen, muss man zur Vereinigung
+weitere Replikate hinzuziehen.
 
 \section{Kryptografische Methoden}
 
@@ -212,24 +234,35 @@ Moderne Verschlüsselung gibt es in zwei Konzepten, der
 An dieser Stelle ist zunächst nur die symmetrische Verschlüsselung
 von Bedeutung.
 
-Das empfohlene moderne Verfahren zur Verschlüsselung
-ist die Blockverschlüsselung AES-128. Eine Blockverschlüsselung
-lässt sich in verschiedenen Betriesmodi benutzen. Einige
-Betriebsmodi gewährleisten leider nicht die Integrität. Dies lässt
-sich experimentell überprüfen, indem man mit einem Hexeditor Bytes
-einer verschlüsselten Datei manipuliert. Man könnte Integrität
-erzwingen, indem man ein Hashverfahren oder eine Datenkompression
-vorschaltet. Eine bessere Möglichkeit ist allerdings der Betriebsmodus
-EAX, der extra dafür geschaffen worden ist.
+Zwei der empfohlenen modernen Verfahren zur Verschlüsselung
+sind die Blockverschlüsselung AES und die Stromverschlüsselung
+ChaCha20. Eine Blockverschlüsselung lässt sich in verschiedenen
+Betriesmodi betreiben, von denen für die Verschlüsselung von Archivdaten
+der Counter"=Mode (CTR) am sichersten zu benutzen ist. Der
+Counter"=Mode wandelt die Blockchiffre in eine Stromchiffre um.
+Bei einer solchen werden die Klardaten mit einem durch den Schlüssel
+erzeugten Zufallsdatenstrom bitweise XOR"=Verknüpft. Diese Technik ist
+daher am sichersten, weil Beschädigungen von Bits im Chiffrat nur
+beschädigte Bits an der gleichen Stelle in den Klardaten nach sich
+ziehen, womit ein Zusammenspiel mit Algorithmen zur Fehlererkennung
+(z.\,B. CRC-32) bzw. Fehlerkorrektur ermöglicht wird.
+
+Einige Betriebsmodi und auch eine reine Stromchiffre gewährleisten
+leider nicht die Integrität. Dies lässt sich experimentell überprüfen,
+indem man mit einem Hexeditor Bytes einer verschlüsselten Datei
+manipuliert, -- bei der Entschlüsselung wird man keine Fehlermeldung
+erhalten. Zur Befreiung von dieser Ungenügsamkeit wurden
+aufbauende Techniken wie der Galois"=Counter"=Mode (GCM)
+und das Poly1305"=Verfahren geschaffen.
 
 Verschlüsselung ist kein Kinderspielzeug. Kommt der Schlüssel
-abhanden, ist die Entschlüsselung der Chiffrats unmöglich.
+abhanden, ist die Entschlüsselung des Chiffrats unmöglich.
 Es gibt keinen Schlüsseldienst. Man kann auch nicht irgendwo
 seinen Personalausweis vorlegen und bekommt dann einen neuen
 Schlüssel zugeschickt. Mit dem Schlüssel gehen auch die Klardaten
-für immer verloren. Aus diesem Grund sollte man von den Klardaten
-besser irgendwo unverschlüsselte Kopien aufbewahren. Auch sollte
-man die Kopien der Klardaten nicht wegwerfen, bevor man sich sicher
-ist, den Schlüssel korrekt eingegeben zu haben.
+für immer verloren. Aus diesem Grund sollte man, falls möglich, von
+den Klardaten besser irgendwo unverschlüsselte Kopien aufbewahren.
+Auch sollte man die Kopien der Klardaten nicht wegwerfen, bevor man
+sich sicher ist, den Schlüssel korrekt eingegeben zu haben.
 
 \end{document}
