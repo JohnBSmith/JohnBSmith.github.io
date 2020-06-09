@@ -208,3 +208,136 @@ da $\pi$ surjektiv ist.\;\qedsymbol
 Die Abbildung $\eta((M,\sim)):=\pi$, die jeder Menge mit
 Äquivalenzrelation ihre kanonische Projektion zuordnet,
 ist eine natürliche Transformation.
+
+\strong{Beispiel zur Vertiefung.}
+Ein weiteres Beispiel berührt einen Grundbegriff der linearen Algebra.
+Hat man einen Vektorraum $Y$ über dem Körper $K$, ohne dass wir jetzt
+genau verstehen müssen was das bedeutet -- man stelle sich $Y:=\R$
+und $K:=\R$ vor --, dann bildet für eine beliebige Menge $X\ne\emptyset$
+auch $\Abb(X,Y)$ einen Vektorraum über diesem Körper bezüglich den
+punktweisen Operationen%
+\begin{gather}
+(\lambda f)(x) := \lambda f(x),\\
+(f_1+f_2)(x) := f_1(x)+f_2(x),
+\end{gather} 
+wobei $\lambda\in K$, $x\in X$, $f,f_1,f_2\in\Abb(X,Y)$. Die lineare
+Algebra handelt von \emph{linearen Abbildungen}. Seien $V,W$
+Vektorräume über dem Körper $K$, wobei auch $V=W$ sein darf. Eine
+Abbildung $\varphi\colon V\to W$ heißt linear, falls%
+\begin{gather}
+\forall v_1,v_2\in V\colon\;\varphi(v_1+v_2) = \varphi(v_1)+\varphi(v_2),\\
+\forall \lambda\in K,v\in V\colon\;\varphi(\lambda v) = \lambda\varphi(v).
+\end{gather}
+Man kann zeigen dass die Vektorräume mit den linearen Abbildungen
+als Morphismen auch eine Kategorie bilden, aber darauf will ich an
+dieser Stelle nicht hinaus. Hat man nun eine feste, aber beliebige
+Abbildung $g\colon X'\to X$, dann ist%
+\begin{equation}
+\varphi\colon\Abb(X,Y)\to\Abb(X',Y),\quad \varphi(f):=f\circ g
+\end{equation}
+eine lineare Abbildung, man spricht auch von einem
+\emph{linearen Operator}, dem \emph{Kompositionsoperator}
+$C_g=\varphi$. Die Bestätigung ist nicht sonderlich schwer, man
+muss bloß blind die Definitionen einsetzen und dem Formalismus
+folgen. Es gilt%
+\begin{align}
+\varphi(\lambda f)(x) &= ((\lambda f)\circ g)(x)
+= (\lambda f)(g(x)) = \lambda f(g(x))\\
+&= \lambda (f\circ g)(x) = \lambda (\varphi(f))(x)
+= (\lambda\varphi(f))(x),
+\end{align}
+kurz $\varphi(\lambda f)=\lambda\varphi(f)$. Und es gilt
+\begin{align}
+\varphi(f_1+f_2)(x) &= ((f_1+f_2)\circ g)(x)
+= (f_1+f_2)(g(x)) = f_1(g(x)) + f_2(g(x))\\
+&= (f_1\circ g)(x) + (f_2\circ g)(x)
+= \varphi(f_1)(x)+\varphi(f_2)(x)\\
+&= (\varphi(f_1)+\varphi(f_2))(x),
+\end{align}
+kurz $\varphi(f_1+f_2)=\varphi(f_1)+\varphi(f_2)$.
+
+Man bemerkt nun, dass diese Rechnungen lediglich auf der Eigenschaft
+der Operationen beruhen, punktweise zu sein. Dies soll im Folgenden
+präzisiert werden. Die Formulierung wollen wir allgemein für
+Operationen beliebiger Stelligkeit haben. Sei also $p\colon Y^n\to Y$
+eine $n$-stellige Operation, man stelle sich dabei $Y:=\R$ vor. Man
+definiert nun die punktweise Anwendung von $p$ als%
+\begin{equation}\label{eq:eta-punktweise}
+\eta_p\colon\Abb(X,Y)^n\to\Abb(X,Y),\quad
+\eta_p(f)(x) := p(f_1(x),\ldots,f_n(x)),
+\end{equation}
+wobei $f:=(f_1,\ldots,f_n)$ ein Tupel von Funktionen ist. Sei außerdem%
+\begin{equation}
+F(\varphi)(f) := (\varphi(f_1),\ldots,\varphi(f_n)).
+\end{equation}
+Zeigen wollen wir für $\varphi(f):=f\circ g$ nun
+\begin{equation}
+\varphi(\eta_p(f))(x) = \eta_p(F(\varphi)(f))(x),
+\quad\text{kurz}\quad
+\varphi\circ\eta_p = \eta_p\circ F(\varphi).
+\end{equation}
+Bei der Bestätigung folgt man wieder blind den Definitionen und dem
+Formalismus. Es gilt%
+\begin{align}
+\varphi(\eta_p(f))(x)
+&= \eta_p(f)(g(x)) = p(f_1(g(x)),\ldots,f_n(g(x)))\\
+&= p(\varphi(f_1)(x),\ldots,\varphi(f_n)(x))
+= \eta_p(\varphi(f_1),\ldots,\varphi(f_n))(x)\\
+&= \label{eq:Ende-eta-punktweise}\eta_p(F(\varphi)(f))(x).
+\end{align}
+Das bedeutet, dieses Diagramm kommutiert:
+\[\xymatrix{
+\Abb(X,Y)^n \ar[r]^{F(\varphi)} \ar[d]_{\eta_p}
+& \Abb(X',Y)^n \ar[d]^{\eta_p} \\
+\Abb(X,Y) \ar[r]_{\varphi} & \Abb(X',Y)}\]
+Das legt den Verdacht nahe, dass es sich bei $F$ um einen Funktor
+und bei $\eta_p$ um eine natürliche Transformation handelt.
+
+\begin{Satz}[Kategorie mit Kompositionsoperatoren als Morphismen]\mbox{}\\*
+Sei $Y\ne\emptyset$. Sei $\Omega:=\{\Abb(X,Y)\mid X\;\text{ist beliebig}\}$.
+Sei%
+\[\mathrm{Hom}(\Abb(X,Y),\Abb(X',Y))
+:= \{\varphi\mid\exists f{\in}\Abb(X,Y), g{\in}\Abb(X',X)\colon
+\varphi = f\circ g\}.\]
+Sei $\psi\circ \varphi$ die gewöhnliche Verkettung. Dann bildet
+$\strong{Komp}:=(\Omega,\mathrm{Hom},\circ)$ eine Kategorie.
+\end{Satz}
+\strong{Beweis.}
+Zunächst müssen wir bestätigen, dass $\mathrm{Hom}$ bezüglich
+$\circ$ abgeschlossen ist. Sei $\varphi_1(f):=f\circ g_1$ und
+$\varphi_2(f):=f\circ g_2$ mit $\dom(\varphi_2)=\cod(\varphi_1)$, so
+dass man $\varphi:=\varphi_2\circ\varphi_1$ bilden kann.
+Gesucht ist ein $g$, so dass $\varphi = f\circ g$. Nun gilt%
+\begin{equation}
+(\varphi_2\circ\varphi_1)(f) = (f\circ g_1)\circ g_2
+= f\circ g_1\circ g_2 = f\circ (g_1\circ g_2).
+\end{equation}
+Man kann also $g:=g_1\circ g_2$ setzen. Nun verbleibt bloß noch die
+Existenz fester Identitäten $\id$ zu bestätigen. Man definiert dazu
+$\id(f):=f\circ\id$. Für $\varphi(f):=f\circ g$ gilt dann%
+\begin{gather}
+(\varphi\circ\id)(f) = (f\circ \id)\circ g = f\circ g = \varphi(f),\\
+(\id\circ\varphi)(f) = (f\circ g)\circ\id = f\circ g = \varphi(f).\;\qedsymbol
+\end{gather}
+\begin{Satz}
+Bei $F(\varphi)(f):=(\varphi(f_1),\ldots,\varphi(f_n))$ für
+$f=(f_1,\ldots,f_n)$ handelt es sich um einen kovarianten Funktor.
+\end{Satz}
+\strong{Beweis.} Es gilt
+\begin{align}
+F(\psi\circ\varphi)(f) &= (\psi(\varphi(f_1)),\ldots,\psi(\varphi(f_n)))
+= F(\psi)(F(\varphi)(f))
+= (F(\psi)\circ F(\varphi))(f),
+\end{align}
+kurz $F(\psi\circ\varphi) = F(\psi)\circ F(\varphi)$. Und es gilt
+\begin{equation}
+F(\id)(f) = (\id(f_1),\ldots,\id(f_n)) = (f_1,\ldots,f_n) = f = \id(f),
+\end{equation}
+kurz $F(\id) = \id$.\;\qedsymbol
+\begin{Satz}
+Die in \eqref{eq:eta-punktweise} definierte Operation $\eta_p$ ist
+eine natürliche Transformation.
+\end{Satz}
+\strong{Beweis.} Wurde in \eqref{eq:eta-punktweise} bis
+\eqref{eq:Ende-eta-punktweise} schon gezeigt.\;\qedsymbol
+
