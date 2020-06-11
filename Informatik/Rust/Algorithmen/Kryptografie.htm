@@ -14,13 +14,64 @@
 <h1>Algorithmen: Kryptografie</h1>
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Konzept-Stromchiffre">Das Konzept der Stromchiffre</a>
 <li><a href="#ChaCha20">ChaCha20</a>
 </ol>
+
+<h2 id="Konzept-Stromchiffre">Das Konzept der Stromchiffre</h2>
+
+<p>Eine Stromchiffre ist ein durch einen Schlüssel (key) und eine
+Nonce (number used exactly once) parametrisierter deterministischer
+kryptografischer Zufallszahlengenerator. Der vom Generator erzeugte
+geheime Datenstrom muss die gleichen Eigenschaften wie ein One-Time-Pad
+besitzen und wird wie dieses bitweise mit den Klardaten XOR-verknüpft
+um das Chiffrat zu erhalten. Zur Entschlüsselung wird diese Operation
+ein zweites Mal mit gleichem Schlüssel und Nonce angewandt &ndash; die
+Reinform einer Stromchiffre ist also involutorisch. Wie bei einem
+One-Time-Pad darf der geheime Datenstrom nur ein einziges Mal benutzt
+werden.
+
+<p>Die moderne Kryptografie kennt Stromchiffren als Mittel der
+Wahl. Dies hat die folgenden Gründe:
+<ul>
+<li>Weil die Reinform einer Stromchiffre involutorisch ist,
+  gestaltet sich die Implementation einfacher. Viele Stromchiffren
+  sind zudem recht minimalistisch.
+<li>Beschädigung von Bits im Chiffrat spiegelt sich lediglich
+  in den gleichen Bits in den Klardaten wieder. Dies macht
+  Stromchiffren kompatibel mit fehlererkennenden und -korrigierenden
+  Codes, womit sie sich z.&nbsp;B. auch für Funkübertragung oder
+  verschlüsselte Archivierung von Daten eignen.
+<li>Zudem sind auch Synchronisationsfehler korrigierbar,
+  indem der Zufallsstrom solange gegenüber dem Chiffrat verschoben wird,
+  bis ein Schlüsselwort gefunden wird oder der Prüfwert eines
+  Datenblocks stimmt.
+<li>Man bekommt als Nebenresultat einen kryptografischen
+  Zufallszahlengenerator geschenkt. Zur Initialisierung muss allerdings
+  eine sichere Entropiequelle zur Verfügung stehen.
+<li>Bei Blockchiffren muss man zusätzlich einen Betriebsmodus
+  implementieren und ggf. mit Datenblöcken und Padding arbeiten.
+  Dieser erhöhte kognitive Aufwand macht Blockchiffren
+  undidaktisch. Allerdings lässt sich eine Blockchiffre durch den
+  Counter Mode (CTR) in eine Stromchiffre umwandeln.
+</ul>
+
+<p>Zu bemerken ist noch, dass Echtzeitanwendungen und schnelle
+Datenübertragungen, wie sie gerade im Internet überall vorkommen,
+eine erhöhte Anforderung an die Implementation einer Chiffre haben.
+Bei solchen Anwendungen muss das Verfahren vor Seitenkanalattacken
+wie Rechenzeitattacken (timing attacks) geschützt werden.
+
+<p>Zudem besteht das grundsätzliche Problem, dass aus der Länge des
+Chiffrats unter manchen Umständen auf die Klardaten geschlossen werden
+kann. Natürlich ist eine Verschleierung möglich, allerdings
+verträgt sich dies nicht mit der gewünschten Datensparsamkeit
+im Internet.
 
 <h2 id="ChaCha20">ChaCha20</h2>
 
 <pre class="rust box">
-// Das Stromchiffre ChaCha20 von Daniel Bernstein.
+// Die Stromchiffre ChaCha20 von Daniel Bernstein.
 
 fn u32_from_bytes_le(a: &amp;[u8]) -&gt; u32 {
     u32::from(a[0]) | u32::from(a[1])&lt;&lt;8 |
@@ -131,6 +182,76 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
 }
 </pre>
 
+<p>Kommt ChaCha20 als kryptografischer Zufallszahlengenerator
+zur Anwendung, besteht Bedarf an einer externen Iteration.
+Das führt zu der folgenden Modifikation, wobei der zugrundeliegende
+Algorithmus identisch bleibt.
+
+<pre class="rust box">
+struct ChaCha20Stream {
+    state: [u32;16],
+    obuff: [u8;64],
+    index: usize
+}
+impl ChaCha20Stream {
+    fn new(key: &amp;[u8;32], iv: &amp;[u8;8]) -&gt; Self {
+        let mut state: [u32;16] = [0;16];
+        state[0] = u32_from_bytes_le("expa".as_bytes());
+        state[1] = u32_from_bytes_le("nd 3".as_bytes());
+        state[2] = u32_from_bytes_le("2-by".as_bytes());
+        state[3] = u32_from_bytes_le("te k".as_bytes());
+        for i in 0..8 {
+            state[4+i] = u32_from_bytes_le(&amp;key[4*i..4*(i+1)]);
+        }
+        state[12] = 0; // Counter, niederwertige Bits
+        state[13] = 0; // Counter, höherwertige Bits
+        state[14] = u32_from_bytes_le(&amp;iv[0..4]);
+        state[15] = u32_from_bytes_le(&amp;iv[4..8]);
+        return Self{state, obuff: [0;64], index: 64};
+    }
+    fn next_block(&amp;mut self) {
+        let mut x: [u32;16] = self.state;
+        for _ in 0..10 {
+            quarter_round(&amp;mut x, 0, 4,  8, 12);
+            quarter_round(&amp;mut x, 1, 5,  9, 13);
+            quarter_round(&amp;mut x, 2, 6, 10, 14);
+            quarter_round(&amp;mut x, 3, 7, 11, 15);
+            quarter_round(&amp;mut x, 0, 5, 10, 15);
+            quarter_round(&amp;mut x, 1, 6, 11, 12);
+            quarter_round(&amp;mut x, 2, 7,  8, 13);
+            quarter_round(&amp;mut x, 3, 4,  9, 14);
+        }
+        for i in 0..16 {
+            let value = self.state[i].wrapping_add(x[i]);
+            self.obuff[4*i] = value as u8;
+            self.obuff[4*i+1] = (value&gt;&gt;8) as u8;
+            self.obuff[4*i+2] = (value&gt;&gt;16) as u8;
+            self.obuff[4*i+3] = (value&gt;&gt;24) as u8;
+        }
+        self.state[12] = self.state[12].wrapping_add(1);
+        if self.state[12] == 0 {self.state[13] += 1;}
+    }
+}
+
+impl Iterator for ChaCha20Stream {
+    type Item = u8;
+    fn next(&amp;mut self) -&gt; Option&lt;u8&gt; {
+        if self.index == 64 {
+            self.next_block();
+            self.index = 0;
+        }
+        self.index += 1;
+        return Some(self.obuff[self.index-1]);
+    }
+}
+
+fn encipher(key: &amp;[u8;32], iv: &amp;[u8;8], data: &amp;mut [u8]) {
+    let stream = ChaCha20Stream::new(key,iv);
+    for (x,y) in data.iter_mut().zip(stream) {
+        *x ^= y;
+    }
+}
+</pre>
 
 </body>
 </html>
