@@ -24,6 +24,7 @@
   <ol>
   <li><a href="#Dateien-lesen">Dateien lesen</a>
   <li><a href="#Binaer-lesen">Binärdateien lesen</a>
+  <li><a href="#Exakte-Blockgroesse">In Blöcken exakter Größe lesen</a>
   <li><a href="#Dateien-schreiben">Dateien schreiben</a>
   <li><span class="modest">Datenströme</span>
   </ol>
@@ -47,7 +48,7 @@ fn main() {
 Geräte-Datei öffnen:
 
 <pre class="rust ibox">
-use std::{io,io::Write,fs::File};
+use std::{io, io::Write, fs::File};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut stdout = File::create("/dev/stdout")?;
@@ -62,7 +63,7 @@ existiert, das Programm also weniger portabel wird. Aus diesem
 Grund steht die Funktion <code>io::stdout</code> zur Verfügung:
 
 <pre class="rust ibox">
-use std::{io,io::Write};
+use std::{io, io::Write};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut stdout = io::stdout();
@@ -123,7 +124,7 @@ Daten die man in diese Datei leitet, verschwinden einfach. Der Befehl
 <p>Zum Lesen von Text-Dateien gibt es die Komfort-Funktion
 <code>read_to_string</code>, das macht die Sache besonders einfach.
 <pre class="rust ibox">
-use std::{fs,io};
+use std::{fs, io};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let s = fs::read_to_string("Datei.txt")?;
@@ -135,7 +136,7 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
 <p>Die Funktion vereinfacht die Benutzung von vielseitigeren
 Werkzeugen. Unter Verwendung dieser gestaltet sich die Funktion so:
 <pre class="rust ibox">
-use std::{fs,io,io::Read};
+use std::{fs, io, io::Read};
 
 fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
     let mut file = fs::File::open(path)?;
@@ -150,7 +151,7 @@ weil der Puffer beim Lesen öfters realloziert werden muss. Besser,
 man initialisiert den Puffer gleich mit der benötigten Kapazität:
 
 <pre class="rust ibox">
-use std::{fs,io,io::Read,convert::TryFrom};
+use std::{fs, io, io::Read, convert::TryFrom};
 
 fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
     let mut file = fs::File::open(path)?;
@@ -259,9 +260,134 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
 </pre>
 
 <p>Hiermit lässt sich nun der Prüfwert von 10&nbsp;GB großen
-Dateien ermitteln, auch wenn man nur 256 MB Hauptspeicher zur
+Dateien ermitteln, auch wenn man nur wenige MB Hauptspeicher zur
 Verfügung hat. Faktisch ist der Hauptspeicherbedarf des
 Programms nun verschwindend gering.
+
+<h3 id="Exakte-Blockgroesse">In Blöcken exakter Größe lesen</h3>
+
+<p>Ein wenig schwieriger ist das Lesen einer Datei in Blöcken,
+wenn diese mit Ausnahme des letzten eine exakte Blockgröße haben
+sollen. Eine naive Bewerkstelligung wäre die folgende, bei
+der ich zur Verdeutlichung zusätzlich eine Variable <code>last</code>
+und eine Zusicherung hinzugefügt habe. Das Problem ist nämlich, dass
+die Erfüllung dieser Zusicherung nicht garantiert ist. Beim Linux,
+auf dem ich gerade diesen Text schreibe, klappt das zwar, aber das
+muss ja nicht heißen dass es überall gut geht.
+
+<pre class="rust ibox">
+use std::{io, io::Read, fs::File};
+const BLOCK_SIZE: usize = 0x10000;
+
+fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
+-&gt; io::Result&lt;()&gt;
+{
+    let mut buffer: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
+    let mut last = false;
+    loop{
+        let n = file.read(&amp;mut buffer)?;
+        if n == 0 {break;}
+        if n &lt; BLOCK_SIZE {
+            assert!(last == false);
+            last = true;
+        }
+        callback(&amp;buffer[..n]);
+    }
+    return Ok(());
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    let mut file = File::open(&amp;argv[1])?;
+    process_file(&amp;mut file, |data| {
+        println!("{}",data.len());
+    })?;
+    return Ok(());
+}
+</pre>
+
+<p>Nun ist in der Standardbibliothek die Funktion
+<code>read_exact</code> vorhanden. Diese gibt allerdings keine
+Information darüber, wie viele Bytes der letzte Block hat, wenn
+der Puffer nicht vollständig gefüllt werden konnte. Wir müssten das
+im Voraus wissen. Beschaffen wir uns vorher die Länge der Datei,
+können wir die Anzahl <code>count</code> der vollen Blöcke und
+den Rest <code>rem</code> ausrechnen.
+
+<pre class="rust ibox">
+fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
+-&gt; io::Result&lt;()&gt;
+{
+    let len = file.metadata()?.len();
+    let count = len/(BLOCK_SIZE as u64);
+    let rem = (len%(BLOCK_SIZE as u64)) as usize;
+    let mut buffer: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
+    for _ in 0..count {
+        file.read_exact(&amp;mut buffer)?;
+        callback(&amp;buffer);
+    }
+    if rem != 0 {
+        file.read_exact(&amp;mut buffer[..rem])?;
+        callback(&amp;buffer[..rem]);
+    }
+    return Ok(());
+}
+</pre>
+
+<p>Allerdings ist diese Variante nicht mehr streamingfähig, denn bei
+einem Datenstrom muss die Länge nicht unbedingt im Vorhinein bekannt
+sein. Man muss nun wissen, dass <code>read_exact</code> auch nur mittels
+<code>read</code> implementiert wird, nämlich wird <code>read</code>
+solange aufgerufen, bis der Puffer gefüllt ist. Da
+<code>read_exact</code> nicht besonders kompliziert ist, bietet sich
+die Formulierung einer eigenen angepassten Variante an.
+
+<pre class="rust ibox">
+fn read_exact(file: &amp;mut impl Read, mut buffer: &amp;mut [u8])
+-&gt; io::Result&lt;usize&gt;
+{
+    let mut sum = 0;
+    while !buffer.is_empty() {
+        let n = file.read(&amp;mut buffer)?;
+        if n == 0 {break;}
+        buffer = &amp;mut buffer[n..];
+        sum += n;
+    }
+    return Ok(sum);
+}
+
+fn process_file(file: &amp;mut impl Read,
+    mut callback: impl FnMut(&amp;[u8])
+) -&gt; io::Result&lt;()&gt;
+{
+    let mut buffer = [0; BLOCK_SIZE];
+    loop{
+        let n = read_exact(file, &amp;mut buffer)?;
+        if n != 0 {callback(&amp;buffer[..n]);}
+        if n &lt; BLOCK_SIZE {break;}
+    }
+    return Ok(());
+}
+</pre>
+
+<p>Den Typ <code>File</code> habe ich zusätzlich gegen Polymorphie
+über den Trait <code>Read</code> ersetzt. Das erlaubt auch, einfach
+mal so <code>BufReader</code> dazwischen zu klemmen. Die Aufrufe
+von <code>read</code> können unter Umständen einen gewissen Aufwand
+bedeuten. Falls <code>BLOCK_SIZE</code> recht klein ist, wäre es
+besser, man hätte noch einen größeren Puffer dazwischen, damit die
+Anzahl der Aufrufe von <code>read</code> gering bleibt. Das geht
+nun super einfach:
+
+<pre class="rust ibox">
+fn main() -&gt; io::Result&lt;()&gt; {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    let mut file = io::BufReader::new(File::open(&amp;argv[1])?);
+    process_file(&amp;mut file, |data| {
+        println!("{}",data.len());
+    })
+}
+</pre>
 
 <h3 id="Dateien-schreiben">Dateien schreiben</h3>
 
@@ -269,7 +395,7 @@ Programms nun verschwindend gering.
 einfach eine neue Datei und schreibt die Daten da rein.
 
 <pre class="rust ibox">
-use std::{io,io::Write,fs::File};
+use std::{io, io::Write, fs::File};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut file = File::create("Datei.txt")?;
@@ -286,7 +412,7 @@ angegebene Pfad schon existiert. Dies lässt sich wie folgt
 bewerkstelligen:
 
 <pre class="rust ibox">
-use std::{io,io::Write,fs::File,path::Path};
+use std::{io, io::Write, fs::File, path::Path};
 
 fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
     if Path::new(path).exists() {
