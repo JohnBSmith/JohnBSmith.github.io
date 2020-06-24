@@ -1,0 +1,334 @@
+\documentclass{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{brown1}{rgb}{0.26,0.14,0}
+\definecolor{brown2}{rgb}{0.20,0.10,0}
+\definecolor{urlcolor}{rgb}{0,0.4,0.6}
+\setbeamercolor*{palette primary}{fg=white,bg=brown1}
+\setbeamercolor*{palette secondary}{fg=white,bg=brown2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=brown2}
+\setbeamercolor{itemize item}{fg=black}
+
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+
+\title{Datensicherung, ja. Aber wie?}
+\date{Juni 2020}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}[t]
+\vspace{3em}
+In die Cloud?\pause
+
+\vspace{1em}
+Wohl nicht unbedingt eine gute Idee. Fallstudie:
+
+\vspace{1em}
+»Apple bewahrt iCloud-Backups nur sechs Monate auf«.\\
+{\footnotesize »iPhone- und iPad-Backups werden 180 Tage nach der letzten
+Datensicherung still aus iCloud gelöscht -- auch bei zahlenden Abonnenten.«}\\
+In: Heise online (12. Juni 2020).\\
+{\tiny\href{https://www.heise.de/news/Apple-bewahrt-iCloud-Backups-nur-sechs-Monate-auf-4782483.html}%
+{\color{urlcolor}{https://www.heise.de/news/Apple-bewahrt-iCloud-Backups-nur-sechs-Monate-auf-4782483.html}}}
+\end{frame}
+
+\begin{frame}
+Ein Backup-System lässt sich einteilen in eine niedere und eine
+höhere Ebene.\pause
+
+\vspace{1em}
+\strong{Niedere Ebene} -- Umgang mit den eigentlichen Daten:
+\begin{itemize}
+\item Verpackung, ggf. Datenkompression
+\item Schutz vor Verlust durch Redundanz (Duplikate)
+\item Schutz der Integrität
+\item Wahrung der Vertraulichkeit
+\end{itemize}\pause
+
+\vspace{1em}
+\strong{Höhere Ebene} -- höhere logische Prozesse:
+\begin{itemize}
+\item Sicherungsarten, Deduplikation
+\item Versionsverwaltung
+\item Integrität der Verwaltung
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Wir wollen uns hier auf die niedere Ebene beschränken.\pause
+
+\vspace{1em}
+Klassisches Anliegen: private Langzeitarchivierung.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\strong{Auftakt --- Poor Man's Backup}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Naiver Ansatz: Schreibe Verzeichnis auf einen Datenträger.\pause
+
+\vspace{1em}
+\strong{Probleme:}
+\begin{itemize}
+\item Fremdes Dateisystem soll Metadaten nicht anfassen.
+\item Einige Dateisysteme unterstützen keine langen Dateinamen
+  bzw. kein Unicode.
+\item Bestimmte Programme erfordern die Verpackung zu einem Paket.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Naive Lösung: Verpacke Verzeichnis als »\texttt{Paket.tar.xz}«.\pause
+
+\vspace{2em}
+\strong{Problem:}
+\begin{itemize}
+\item Schon ein beschädigtes Bit kann dazu führen, dass sich
+  das Archiv nicht mehr entpacken lässt.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Verpacke ohne Kompression als »\texttt{Paket.tar}«.\pause
+
+\vspace{2em}
+\strong{Problem:}
+\begin{itemize}
+\item Beschädigung fällt nicht auf.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Berechne kryptografischen Hashwert des Pakets.\pause
+
+\vspace{2em}
+\strong{Problem:}
+\begin{itemize}
+\item Erlaubt keine Rückschlüsse auf Ort und Umfang der
+  Beschädigungen.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Verpacke als »Paket.zip«. 
+
+\vspace{1em}
+Das ZIP-Format schützt vor Datenverlust, indem es
+\begin{itemize}
+\item für jede Datei einen CRC-32-Prüfwert speichert,
+\item das Inhaltsverzeichnis zweimal enthält.
+\end{itemize}\pause
+
+\vspace{1em}
+\strong{Probleme:}
+\begin{itemize}
+\item Prüfwert nur pro Datei, daher ungenau.
+\item Leider kein Prüfwert der komprimierten Daten.
+\item Eventuell Komplikationen, falls der Teil mit dem
+  Inhaltsverzeichnis verloren geht.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Ansatz: Das Tar-Format benutzen und die Hashwerte aller Dateien
+\emph{vor} dem Verpacken berechnen lassen und anbeifügen.\pause
+
+\vspace{1em}
+\strong{Verbleibendes Problem:}
+\begin{itemize}
+\item Lokalisierung von Beschädigungen nicht genau genug.
+Betrachte z.\,B. sehr große Dateien.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\strong{Kurze Pause}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{1em}
+Was für Beschädigungen können eigentlich auftreten?\pause
+
+\vspace{1em}
+Das sind:
+\begin{itemize}
+\item Uniformer Bit-Rot: Verlust einzelner Bits oder Bytes,
+  gleichverteilt über den gesamten Datenträger. Thermisches Rauschen,
+  allgegenwärtige Ladungslecks, etc.
+\item Burst-Fehler: Verlust mehrerer Bits oder Bytes hintereinander.
+\item Wegfall ganzer Blöcke.
+\item Zerstörung des gesamten Datenträgers, z.\,B. durch Wegfall
+  zentraler Steuerungseinheiten.
+\item Verschiebung: Daten an falscher Stelle, z.\,B. durch
+  Synchronisationsfehler.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Betrachten wir zunächst den uniformen Bit-Verlust. Angenommen, ein Byte
+ist nach 10 Jahren mit einer sehr hohen Wahrscheinlichkeit $p$, sagen
+wir $p=0.999999$, noch intakt, d.\,h. das Risiko für Beschädigung beträgt
+1 zu 1\,Mio.\pause
+
+\vspace{1em}
+Bei 1\,MB Daten hat man $N=10^6$ Bytes und nur noch eine
+Wahrscheinlichkeit $p' = p^N \approx 0.37$ für die Intaktheit aller Daten.
+Das ist schon ein Risiko von ca. 2/3.\pause
+
+\vspace{1em}
+Man beachte: Komprimierte Bilder können z.\,B. schon bei einem einzigen
+Bitfehler unlesbar werden.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Angenommen wir haben nun zwei Duplikate einer Datei,
+beide sind jedoch beschädigt.\pause
+
+\vspace{1em}
+Die Hashwerte nützen uns zunächst nichts.\pause
+
+\vspace{1em}
+Mit einer gewissen Wahrscheinlichkeit kann man zumindest alle
+Beschädigungen lokalisieren, -- nämlich dann wenn die Daten an den
+Stellen nicht mehr übereinstimmen. Allerdings gibt es selbst dann
+irgendwann eine kombinatorische Explosion an Möglichkeiten für
+die Fehlerkorrektur.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Dieser Problematik kann man leicht ausweichen. Wir fügen jedem
+Datenblock einen Paritätswert hinzu. Eignen tut sich dafür ein
+CRC"=32"=Prüftwert (32 Bit lang) oder ein kryptografischer
+Hashwert (128 bis 256 Bit lang).\pause
+
+\vspace{1em}
+Pro 256 Byte ein CRC"=32"=Prüfwert vergrößert den Speicherbedarf
+lediglich um $4/256 \approx 1.6\,\%$.\pause
+
+\vspace{1em}
+Ermöglicht bei geringen Beschädigungen sogar eine
+Fehlerkorrektur ohne ein Duplikat.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Man beachte: CRC-32 erkennt einen größeren Fehler nur mit einer
+Wahrscheinlichkeit von höchstens $1-\tfrac{1}{2^{32}}$.\pause
+
+\vspace{1em}
+$\rightarrow$ Fasse eine feste Zahl an Blöcken zu einem Bündel
+zusammen und berechne für dieses zusätzlich einen kryptografischen
+Hashwert. Bei einer idealen Hashfunktion wird ein Fehler dann mit einer
+Wahrscheinlichkeit $p\approx 1-\tfrac{1}{2^{256}}$ erkannt. Man darf
+nun $p=1$ setzen.
+\end{frame}
+
+\begin{frame}
+Die Integrität ist nun mehr oder weniger geschützt, die
+Vertraulichkeit jedoch nicht. Verteilt man Datenträger mit Duplikaten
+auf unterschiedliche Orte, nimmt die Wahrscheinlichkeit für einen
+Diebstahl zu.\pause
+
+\vspace{1em}
+Schlimmer: Man bemerkt nicht, wenn jemand in Besitz der Daten
+gelangt ist.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{3em}
+Daten vor dem Speichern verschlüsseln.\pause
+
+\vspace{1em}
+\strong{Problem:}
+\begin{itemize}
+\item Blockchiffre verträgt sich in einigen Betriebsmodi
+  nicht mit Fehlerkorrektur.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+\strong{Lösung:}
+\begin{itemize}
+\item Benutze eine Stromchiffre,
+\item oder Blockchiffre im Counter-Mode.
+\end{itemize}\pause
+\vspace{1em}
+$\rightarrow$ Schlüsselstrom wird mit den Klardaten bitweise
+XOR-verknüpft. Folglich führen fehlerhafte Bits im Chiffrat
+lediglich zu entsprechenden fehlerhaften Bits in den Klardaten.
+Verträgt sich mit der Fehlerkorrektur. Verträgt sich auch mit
+der Korrektur von Verschiebungsfehlern: Schlüsselstrom z.\,B. einfach
+solange verschieben, bis der CRC-32-Prüfwert eines Datenblocks
+stimmt.
+\end{frame}
+
+\begin{frame}
+Vorsicht: Die Nonce darf nicht abhanden kommen.\pause
+
+\vspace{1em}
+Idee: Einmalschlüssel anstelle von Nonce benutzen.\pause
+
+\vspace{1em}
+Leider heikel. Idee: Einmalschlüssel bei der Verschlüsselung
+von einem kryptografischen Zufallszahlengenerator erzeugen lassen
+und auf Papierblätter schreiben.
+\end{frame}
+
+\begin{frame}
+\strong{Welche Chiffre konkret?}
+
+\vspace{1em}
+Z.\,B. die Stromchiffre ChaCha20 von Daniel
+Bernstein. Ein ziemlich minimalistisches Verfahren (der eigentliche
+Algorithmus beträgt weniger als 100 Zeilen Rust oder Python).
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill
+\modest{Creative Commons CC0}
+\end{frame}
+
+
+
+\end{document}
+
+
