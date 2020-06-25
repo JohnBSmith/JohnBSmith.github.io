@@ -396,12 +396,12 @@ vier Ganzzahlen ausgibt:
 
 <pre class="rust ibox">
 fn main() {
-    let a: [i32;4] = [1,2,3,4];
+    let a: [i32; 4] = [1,2,3,4];
     println!("{:?}",a);
 }
 </pre>
 
-<p>Hier liegt ein Feld <code>a</code> vom Typ <code>[i32;4]</code> vor,
+<p>Hier liegt ein Feld <code>a</code> vom Typ <code>[i32;&nbsp;4]</code> vor,
 also vier Speicherzellen mit jeweils einer Zahl vom Typ <code>i32</code>.
 Jedes Element lässt sich über eine Indizierung <code>a[i]</code> ansprechen.
 Der Index <code>i</code> startet immer ab null. Im genannten Beispiel
@@ -414,21 +414,21 @@ a[0]==1, a[1]==2, a[2]==3, a[3]==4.
 und die Summe der Elemente zurückgibt. Das lässt sich z.&nbsp;B.
 wie folgt bewerkstelligen:
 <pre class="rust ibox">
-fn sum(a: &amp;[i32;4]) -&gt; i32 {
+fn sum(a: &amp;[i32; 4]) -&gt; i32 {
     let mut s = 0;
     for x in a {s += x;}
     return s;
 }
 
 fn main() {
-    let a: [i32;4] = [1,2,3,4];
+    let a: [i32; 4] = [1,2,3,4];
     println!("{}",sum(&amp;a));
 }
 </pre>
 
 <p>Das Feld braucht für diese Aufgabe lediglich ausgeborgt werden,
 es genügt hier daher eine Referenz auf das Feld, deshalb die Signatur
-<code>a:&nbsp;&amp;[i32;4]</code>. Die Anweisung <code>s += x;</code>
+<code>a:&nbsp;&amp;[i32;&nbsp;4]</code>. Die Anweisung <code>s += x;</code>
 ist eine Kurzschreibweise für <code>s = s+x;</code>. Das steht für
 »berechne den Wert von <code>s+x</code> und überschreibe die
 Variable <code>s</code> mit diesem Wert«.
@@ -448,7 +448,7 @@ nur die ersten drei Zahlen des Feldes aufsummiert werden sollen,
 sieht das Programm wie folgt aus:
 <pre class="rust ibox">
 fn main() {
-    let a: [i32;4] = [1,2,3,4];
+    let a: [i32; 4] = [1,2,3,4];
     println!("{}",sum(&amp;a[0..3]));
 }
 </pre>
@@ -458,7 +458,7 @@ Daher beschreibt der Slice <code>&amp;a[0..3]</code> eine Referenz auf
 <code>[a[0],a[1],a[2]]</code>.
 
 <h3>Dynamische Felder</h3>
-<p>Felder vom Typ <code>[T;N]</code> haben immer eine feste, schon zur
+<p>Felder vom Typ <code>[T;&nbsp;N]</code> haben immer eine feste, schon zur
 Kompilierzeit bekannte Länge <code>N</code>. Da diese Einschränkung für
 viele Problemstellungen zu hinderlich ist, gibt es für Felder
 noch den Datentyp <code>Vec&lt;T&gt;</code>, der dynamische Felder ermöglicht.

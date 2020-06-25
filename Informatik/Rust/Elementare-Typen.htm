@@ -296,6 +296,56 @@ match u8::try_from(x &amp; 0xff) {
 }
 </pre>
 
+<p>Möchte man ganz pedantisch sein, sollte die Absicht klargestellt
+werden. Unmissverständlich wäre
+
+<pre class="rust ibox">
+fn u8_wrapping_from_u32(x: u32) -&gt; u8 {
+    x as u8
+}
+</pre>
+
+<p>oder kurz:
+
+<pre class="rust ibox">
+trait WFrom&lt;T&gt; {
+    fn wfrom(x: T) -&gt; Self;
+}
+
+impl WFrom&lt;u32&gt; for u8 {
+    fn wfrom(x: u32) -&gt; u8 {x as u8}
+}
+</pre>
+
+<p>Man kann dann <code>u8::wfrom(x)</code> schreiben. Was ein Trait
+ist, ist jetzt nicht so wichtig, das wird später ausführlich erklärt.
+
+<p>Einige Leser mögen sich fragen, warum es <code>usize::from(x)</code>
+nicht für <code>x: u32</code> gibt. Dies liegt daran,
+dass <code>usize</code> auf 16-Bit-Architekturen nur 16&nbsp;Bit
+groß ist. Per Definition ist <code>from</code> frei von Verlust
+und <code>panic</code>, was die Umwandlung von 32&nbsp;Bit zu
+16&nbsp;Bit aber nicht gestattet.
+
+<p>Zieht man Unterstützung für 16-Bit-Architekturen in Erwägung und
+will man auf weitergehende algorithmische Anpassung verzichten,
+ist die folgende Funktion etwas sicherer als die direkte Benutzung
+von <code>as usize</code>.
+
+<pre class="rust ibox">
+#[cfg(not(target_pointer_width = "16"))]
+fn usize_from_u32(x: u32) -> usize {
+    x as usize
+}
+
+#[cfg(target_pointer_width = "16")]
+fn usize_from_u32(x: u32) -> usize {
+    use std::convert::TryFrom;
+    usize::try_from(x).unwrap()
+}
+</pre>
+
+
 <h3>Transmutierende Typumwandlungen</h3>
 
 <p>Bei transmutierenden Umwandlungen werden Daten einfach als
@@ -320,6 +370,20 @@ dazu führt, dass <code>-1</code> als <code>std::u32::MAX</code>
 interpretiert wird. Wer noch nie von der Zweierkomplement-Darstellung
 gehört hat, wird über das riesig große Ergebnis verblüfft sein.
 
+<p>Wer pedantisch sein will, sollte auch hier die Absicht klarstellen,
+z.&nbsp;B. als <code>u32::transmutate_from(x)</code>.
+
+<pre class="rust ibox">
+trait TransmutateFrom&lt;T&gt; {
+    fn transmutate_from(x: T) -&gt; Self;
+}
+
+impl TransmutateFrom&lt;i32&gt; for u32 {
+    fn transmutate_from(x: i32) -&gt; u32 {x as u32}
+}
+</pre>
+
+
 <h2 id="Bitweise">Bitweise Operationen</h2>
 <p>Zahlen sind abstrakte Objekte die physisch auf irgendeine Art
 dargestellt werden müssen. Eine praktische Methode dafür sind
@@ -343,8 +407,18 @@ In Rust haben diese Operationen folgende Syntax:
 <tr><td>Konjunktion<td>AND<td><code>a&amp;b</code>
 <tr><td>Disjunktion<td>OR<td><code>a|b</code>
 <tr><td>Kontravalenz<td>XOR<td><code>a^b</code>
+</table>
+
+<br>
+<table class="bt indent">
+<tr>
+<th>Operation
+<th>Op.
+<th>Rust
 <tr><td>Linksshift<td>SHL<td><code>a&lt;&lt;n</code>
 <tr><td>Rechtsshift<td>SHR<td><code>a&gt;&gt;n</code>
+<tr><td>Linksrotation<td>ROTL<td><code>a.rotate_left(n)</code>
+<tr><td>Rechtsrotation<td>ROTR<td><code>a.rotate_right(n)</code>
 </table>
 
 <p>Man kann auch ein ganzes Byte aus Bits zusammensetzen.
@@ -424,7 +498,7 @@ fn bits_from_u8(x: u8) -&gt; [bool;8] {
 </pre>
 
 <p>Effizienter ist es jedoch, den Zugriff auf sämtliche Bits einer
-Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits
+Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits,
 welche für den jeweiligen Zweck von Interesse sind.
 
 <h2 id="Ueberlauf">Umgang mit Überlauf</h2>
