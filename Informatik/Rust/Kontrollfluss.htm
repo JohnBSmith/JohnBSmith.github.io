@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Kontrollfluss</h1>
+
+<p>Fortführung von ›<a href="Grundbegriffe.htm#Kontrollfluss"
+>Grundbegriffe: Kontrollfluss</a>‹.
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Kurzschreibweisen">Kurzschreibweisen</a>
+<li><a href="#Ausbruch">Ausbruch aus Schleifen in Schleifen</a>
+<li><a href="#Pattern-Matching">Pattern-Matching</a>
+</ol>
+
+<h2 id="Kurzschreibweisen">Kurzschreibweisen</h2>
+
+<p>Manchmal gibt man nur für eine bestimmte Enum-Variante eine
+Ausführung an. Das ist vor allem dann der Fall, wenn es wie bei
+<code>Option</code> und <code>Result</code> nur zwei Varianten
+gibt.
+
+<pre class="rust ibox">
+match expression {
+    E::A(x) => {/* Ausführung von Zweig A */},
+    _ => {}
+}
+</pre>
+
+<p>Hierfür steht eine Kurzschreibweise zur Verfügung:
+<pre class="rust ibox">
+if let E::A(x) = expression {
+    /* Ausführung von Zweig A */
+}
+</pre>
+
+<p>Für das Konstrukt
+<pre class="rust ibox">
+match expression {
+    E::A(x) => {/* Ausführung von Zweig A */},
+    _ => {/* Ausführung sonst */}
+}
+</pre>
+
+<p>gibt es entsprechend:
+<pre class="rust ibox">
+if let E::A(x) = expression {
+    /* Ausführung von Zweig A */
+} else {
+    /* Ausführung sonst */
+}
+</pre>
+
+<p>Erlaubt ist auch <code>else if let</code>. Mehr noch, man
+darf je Zweig frei zwischen <code>if</code> bzw. <code>else if</code>
+und <code>if let</code> bzw. <code>else if let</code> wählen.
+
+
+<h2 id="Ausbruch">Ausbruch aus Schleifen in Schleifen</h2>
+
+<p>Bekommt eine Schleife eine Marke <code>'label</code>, führt
+<code>break 'label</code> zum Ausbruch aus dieser Schleife. Dies
+erlaubt den Ausbruch aus mehreren verschachtelten Schleifen.
+
+<p>Dieses Mittel sei an der folgenden Funktion demonstriert, die eine
+Sequenz von Werten in ein Array von vollständigen Blöcken der
+Größe&nbsp;<code>n</code> zerlegt.
+
+<pre class="rust ibox">
+fn complete_chunks&lt;T: Clone&gt;(a: &amp;[T], n: u32) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    let mut b = vec![];
+    let mut i = a.into_iter();
+    'outer: loop{
+        let mut t = vec![];
+        for _ in 0..n {
+            match i.next() {
+                Some(x) =&gt; t.push(x.clone()),
+                None =&gt; break 'outer
+            }
+        }
+        b.push(t);
+    }
+    return b;
+}
+
+fn main() {
+    let a: Vec&lt;u32&gt; = (0..10).collect();
+    println!("{:?}", complete_chunks(&amp;a,4));
+}
+</pre>
+
+<p>Außerdem ist es möglich, mit einem Wert aus der Schleife
+auszubrechen. Man könnte das Beispiel also auch so schreiben:
+<pre class="rust ibox">
+return 'outer: loop{
+    let mut t = vec![];
+    for _ in 0..n {
+        match i.next() {
+            Some(x) =&gt; t.push(x.clone()),
+            None =&gt; break 'outer b
+        }
+    }
+    b.push(t);
+};
+</pre>
+
+<p>Natürlich hätte man das in diesem Fall auch anders formulieren
+können, z.&nbsp;B. durch Einführung einer Hilfsvariable oder einfach
+<pre class="rust ibox">
+None =&gt; return b
+</pre>
+
+<h2 id="Pattern-Matching">Pattern-Matching</h2>
+
+<h3>Oder-Verknüpfung von Mustern</h3>
+
+<p>Sollen mehrere Muster zum gleichen Ausführungszweig führen,
+lassen sich diese mit einem senkrechten Strich Oder-verknüpfen.
+Betrachten wir dazu die Fibonacci-Folge
+
+<p class="indent"><var>a</var><sub>0</sub> := 0;&emsp;<!--
+--><var>a</var><sub>1</sub> := 1;&emsp;<!--
+--><var>a</var><sub><var>n</var></sub> :=
+<var>a</var><sub><var>n</var>&minus;1</sub>
++ <var>a</var><sub><var>n</var>&minus;2</sub>.
+
+<p>Die Funktion
+<pre class="rust ibox">
+fn fib(n: u32) -&gt; u32 {
+    if n==0 || n==1 {1} else {fib(n-1) + fib(n-2)}
+}
+</pre>
+
+<p>ist äquivalent zu:
+<pre class="rust ibox">
+fn fib(n: u32) -&gt; u32 {
+    match n {
+        0 | 1 =&gt; 1,
+        n =&gt; fib(n-1) + fib(n-2)
+    }
+}
+</pre>
+
+</body>
+</html>
+
