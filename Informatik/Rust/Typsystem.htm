@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Typsystem und Typtheorie</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Funktionen">Typisierung von Funktionen</a>
+<li><a href="#Polymorphe-Typisierung">Polymorphe Typisierung</a>
+</ol>
+
+<h2 id="Funktionen">Typisierung von Funktionen</h2>
+
+<p>Zu zwei Typen <code>X</code>,&nbsp;<code>Y</code> gibt es den
+Typ <code>X&nbsp;&rarr;&nbsp;Y</code>, der alle Funktionen mit
+Argument vom Typ <code>X</code> und Wert vom Typ <code>Y</code>
+beschreibt. Z.&nbsp;B. besitzt die Funktion
+<pre class="rust ibox">
+fn f(x: u32) -> bool {x%2 == 0}
+</pre>
+
+<p>die Typisierung
+<p class="indent"><code>f: u32 &rarr; bool</code>.
+
+
+<p>Für Funktionen gilt die folgende Schlussregel:
+<pre class="indent">
+&Gamma; |- f: X &rarr; Y,  &Gamma; |- x: X
+─────────────────────────
+      &Gamma; |- f(x): Y
+</pre>
+
+<p>Diese Schlussregel nennt man die Regel der Applikation, kurz
+App. geschrieben. Für den Kontext
+<p class="indent"><code>&Gamma;&nbsp;:=&nbsp;{n: u32, f: u32 &rarr; bool}</code>
+
+<p>gilt z.&nbsp;B. die Schlussfolgerung:
+<pre class="indent">
+1. &Gamma; |- f: u32 &rarr; bool
+2. &Gamma; |- n: u32
+3. &Gamma; |- f(n): bool  (App. 1., 2.)
+</pre>
+
+<h2 id="Polymorphe-Typisierung">Polymorphe Typisierung</h2>
+
+<p>Polymorphe Typisierung erkennt man an Typvariablen. Polymorphe
+Typen sind solche, die über Typvariablen allquantifiziert sind.
+Das ist eine Schreibweise analog zur Prädikatenlogik, es handelt
+sich allerdings um eine andere Art von formalem System.
+
+<p>Hat ein Term den Typ <code>&forall;T.A</code>,
+bedeutet dies, der Term ist vom Typ <code>A[T:=U]</code> für jeden
+beliebigen Typ <code>U</code>. Das heißt, der Term hat nicht nur
+einen Typ, sondern unendliche viele, die durch die Substitution
+der Typvariable <code>T</code> durch beliebige Typen entstehen.
+Diese Substitution bezeichnet man als <i>Spezialisierung</i>.
+
+<p>In Rust stehen die Typvariablen in spitzen Klammern. Betrachten wir
+dazu einmal die identische Funktion, das ist:
+<pre class="rust ibox">
+fn id&lt;T&gt;(x: T) -&gt; T {x}
+</pre>
+
+<p>Diese Funktion hat die Typisierung
+<p class="indent"><code>id: &forall;T. T &rarr; T</code>.
+
+<p>Sagen wir mal, wir haben den Kontext
+
+<p class="indent"><code>&Gamma;&nbsp;:=&nbsp;{n: u32, id: &forall;T. T &rarr; T}</code>.
+
+<p>Dann kann man schlussfolgern:
+
+<pre class="indent">
+1. &Gamma; |- id: &forall;T. T &rarr; T
+2. &Gamma; |- id: u32 &rarr; u32  (1. [T:=u32])
+3. &Gamma; |- n: u32          
+4. &Gamma; |- id(n): u32  (App. 2., 3.)
+</pre>
+
+<p>Bei Vorhandensein von Trait-Bounds wird das nun ein wenig
+komplizierter. Betrachten wir dazu:
+<pre class="rust ibox">
+fn dup&lt;T: Clone&gt;(x: T) -&gt; (T,T) {(x.clone(),x)}
+</pre>
+
+<p>Diese Funktion hat die Typisierung
+
+<p class="indent"><code>dup: &forall;T&in;Clone. T &rarr; (T,T)</code>.
+
+<p>Eine Substitution <code>T:=U</code> ist nur noch dann
+durchführbar, wenn <code>U</code> in <code>Clone</code> liegt, das
+heißt wenn <code>Clone</code> für <code>U</code> implementiert wurde.
+
+</body>
+</html>
+

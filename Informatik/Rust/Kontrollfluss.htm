@@ -150,6 +150,44 @@ fn fib(n: u32) -&gt; u32 {
 }
 </pre>
 
+<h3>Bereiche als Muster</h3>
+
+<p>Als Muster sind auch Bereiche erlaubt. Z.&nbsp;B. lässt sich
+in der obigen Funktion <code>fib</code> das Muster <code>0 | 1</code>
+gegen <code>0..=1</code> ersetzen. Ein besseres Beispiel ist
+die folgende Funktion <code>char_class</code>, die ASCII-Zeichen
+auf eine Zeichenklasse projiziert.
+
+<pre class="rust ibox">
+enum CharClass {None, Digit, Lower, Upper}
+
+fn char_class(c: char) -&gt; CharClass {
+    match c {
+        '0'..='9' =&gt; CharClass::Digit,
+        'a'..='b' =&gt; CharClass::Lower,
+        'A'..='B' =&gt; CharClass::Upper,
+        _ =&gt; CharClass::None
+    }
+}
+</pre>
+
+<p>Auch Bereiche lassen sich mit dem senkrechten Strich
+Oder-verknüpfen. Dies sei an einer Variation der letzten
+Funktion verdeutlicht.
+
+<pre class="rust ibox">
+enum CharClass {None, Digit, Alpha}
+
+fn char_class(c: char) -&gt; CharClass {
+    match c {
+        '0'..='9' =&gt; CharClass::Digit,
+        'a'..='b' |
+        'A'..='B' =&gt; CharClass::Alpha,
+        _ =&gt; CharClass::None
+    }
+}
+</pre>
+
 </body>
 </html>
 
