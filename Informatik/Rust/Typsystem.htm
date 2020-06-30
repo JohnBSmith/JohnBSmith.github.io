@@ -14,8 +14,11 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><span class="modest">Produkte von Typen</span>
+<li><span class="modest">Summen von Typen</span>
 <li><a href="#Funktionen">Typisierung von Funktionen</a>
-<li><a href="#Polymorphe-Typisierung">Polymorphe Typisierung</a>
+<li><a href="#Polymorphe-Typen">Polymorphe Typen</a>
+<li><a href="#Existentielle-Typen">Existentielle Typen</a>
 </ol>
 
 <h2 id="Funktionen">Typisierung von Funktionen</h2>
@@ -35,7 +38,7 @@ fn f(x: u32) -> bool {x%2 == 0}
 <p>Für Funktionen gilt die folgende Schlussregel:
 <pre class="indent">
 &Gamma; |- f: X &rarr; Y,  &Gamma; |- x: X
-─────────────────────────
+───────────────────────── (App.)
       &Gamma; |- f(x): Y
 </pre>
 
@@ -50,12 +53,10 @@ App. geschrieben. Für den Kontext
 3. &Gamma; |- f(n): bool  (App. 1., 2.)
 </pre>
 
-<h2 id="Polymorphe-Typisierung">Polymorphe Typisierung</h2>
+<h2 id="Polymorphe-Typen">Polymorphe Typen</h2>
 
 <p>Polymorphe Typisierung erkennt man an Typvariablen. Polymorphe
 Typen sind solche, die über Typvariablen allquantifiziert sind.
-Das ist eine Schreibweise analog zur Prädikatenlogik, es handelt
-sich allerdings um eine andere Art von formalem System.
 
 <p>Hat ein Term den Typ <code>&forall;T.A</code>,
 bedeutet dies, der Term ist vom Typ <code>A[T:=U]</code> für jeden
@@ -99,6 +100,69 @@ fn dup&lt;T: Clone&gt;(x: T) -&gt; (T,T) {(x.clone(),x)}
 <p>Eine Substitution <code>T:=U</code> ist nur noch dann
 durchführbar, wenn <code>U</code> in <code>Clone</code> liegt, das
 heißt wenn <code>Clone</code> für <code>U</code> implementiert wurde.
+
+<h2 id="Existentielle-Typen">Existentielle Typen</h2>
+
+<p>Existentielle Typisierung erlaubt es, Wissen über die genaue
+Struktur eines Wertes zu Vergessen, womit sich abstrakte Schnittstellen
+erstellen lassen. Dies bildet die theoretische Grundlage für
+Module und abstrakte Datentypen.
+
+<p>Regel zur Einführung existentieller Typen:
+<pre class="indent">
+&Gamma; |- t: X[T:=U]
+──────────────── (Pack)
+&Gamma; |- (U,t): &exist;T.X
+</pre>
+
+<p>In Worten: Vorausgesetzt sei, der Term <code>t</code> ist vom Typ
+<code>X</code> nachdem in <code>X</code> jedes Vorkommen der
+Typvariable <code>T</code> gegen den Typ <code>U</code> ersetzt wurde.
+Dann ist das Paar <code>(U,t)</code> vom
+existentiellen Typ <code>&exist;T.X</code>.
+
+<p>Zu bemerken ist dazu noch, dass der Term <code>(U,t)</code> mehrere
+unterschiedliche existentielle Typen haben kann. Zur eindeutigen
+Zuordnung schreibt man explizit <code>(U,t) as &exist;T.X</code>.
+
+<p>Nun muss man Terme mit existentiell typisierten Variablen auch
+auswerten können, wofür es an weiteren Regeln bedarf. Wir definieren
+
+<p class="indent"><code>unpack (T,x) = (U,t) in s</code>
+
+<p>als <code>s[x:=t][T:=U]</code>. In Worten: Enthält der Term
+<code>s</code> eine Variable <code>x</code> und ist ein Wert
+<code>(U,t)</code> gegeben, und möchte man <code>x=t</code> haben,
+kann man <code>s</code> auswerten, indem jedes Vorkommen von
+<code>x</code> in <code>s</code> durch <code>t</code> ersetzt wird.
+
+<p>Damit das einen Sinn ergibt, darf für <code>x</code> natürlich
+kein beliebiger Term ersetzt werden. Zusätzliche Forderung ist
+<code>x: X</code>. Das führt zu der folgenden Schlussregel:
+
+<pre class="indent">
+&Gamma; |- e: &exist;T.X,  &Gamma;&cup;{x: X} |- s: Y,  T &notin; FV(Y)
+─────────────────────────────────────────── (Unpack)
+      &Gamma; |- (unpack (T,x) = e in s): Y
+</pre>
+
+<p>Der Typ <code>X</code> kodiert die abstrakte Schnittstelle und
+<code>x: X</code> sagt aus, dass man auf <code>x</code> lediglich
+Operationen dieser Schnittstelle anwenden darf.
+
+<p>Betrachten wir als Beispiel den Struktur-Typ
+<pre class="indent">
+X := {a: T; even: T &rarr; bool}.
+</pre>
+
+<p>Ohne die Forderung, dass <code>T</code> nicht in den freien
+Variablen <code>FV(Y)</code> nicht vorkommen darf, würde die
+Abstraktion kaputt brechen, womit interne Struktur von <code>x</code>
+in den Wert von <code>s</code> entweichen würde. Z.&nbsp;B. kann man
+nicht einfach <code>s:=x.a</code> setzen. Dann wäre ja <code>s: T</code>,
+also <code>Y=T</code> und daher <code>T&nbsp;&in;&nbsp;FV(Y)</code>.
+
+
 
 </body>
 </html>
