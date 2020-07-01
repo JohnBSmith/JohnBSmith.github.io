@@ -14,12 +14,80 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><span class="modest">Produkte von Typen</span>
+<li><a href="#Produkte">Produkte von Typen</a>
 <li><span class="modest">Summen von Typen</span>
 <li><a href="#Funktionen">Typisierung von Funktionen</a>
 <li><a href="#Polymorphe-Typen">Polymorphe Typen</a>
 <li><a href="#Existentielle-Typen">Existentielle Typen</a>
 </ol>
+
+<p>Dieses Kapitel erläutert Beziehungen zwischen dem Typsystem von
+Rust und der Typtheorie. Das soll der tiefergehenden Einordnung
+dienen, ist aber für das Verständnis der Programmiersprache und
+der nachfolgenden Kapitel nicht essentiell.
+
+<h2 id="Produkte">Produkte von Typen</h2>
+
+<h3>Typen von Tupeln</h3>
+
+<p>Zu zwei Typen <code>X</code>,&nbsp;<code>Y</code> lässt sich
+der Typ <code>X&times;Y</code> bilden, auch <code>(X,Y)</code>
+geschrieben. Dies ist der Datentyp der Paare <code>(x,y)</code> mit
+<code>x:&nbsp;X</code> und <code>y:&nbsp;Y</code>.
+
+<p>Die Schlussregel zur Einführung von Paaren ist
+eigentlich straightforward:
+<pre class="indent">
+&Gamma; |- x: X,  &Gamma; |- y: Y
+───────────────────── (Prod.)
+  &Gamma; |- (x,y): (X,Y)
+</pre>
+
+<p>Hinzu kommen Regeln zur Projektion:
+<table class="indent" style="border-collapse: collapse">
+<tr><td style="padding-right: 1.5em">
+<pre style="margin: 0">
+&Gamma; |- t: (X,Y)
+───────────── (Proj. 0)
+ &Gamma; |- t.0: X
+</pre>
+
+<td style="padding-left: 1.5em">
+<pre style="margin: 0">
+&Gamma; |- t: (X,Y)
+───────────── (Proj. 1)
+ &Gamma; |- t.1: Y
+</pre>
+</table>
+
+<p>Die Regeln für Produkte von mehr als zwei Faktoren sind
+analog. Zu beachten ist, dass es einen Unterschied zwischen
+<code>(X,Y,Z)</code> und <code>(X,(Y,Z))</code> gibt.
+
+<h3>Typen von Strukturen</h3>
+
+<p>Strukturen, auch Records genannt, sind Tupel mit frei wählbaren
+Bezeichnern zur Indizierung. Die Regel zur Einführung einer Struktur
+mit zwei Einträgen lautet:
+
+<pre class="indent">
+    &Gamma; |- x: X,    &Gamma; |- y: Y
+───────────────────────────────
+&Gamma; |- {a: x, b: y}: {a: X, b: Y}
+</pre>
+
+<p>Entsprechend gibt es wieder Regeln zur Projektion:
+<pre class="indent">
+&Gamma; |- s: {a: X, b: Y}
+────────────────────
+    &Gamma; |- s.a: X
+</pre>
+
+<p>Die Bezeichner <code>a</code>,&nbsp;<code>b</code> gehören zum
+Typ dazu. Infolge bedeuten andere Bezeichner einen anderen Typ.
+
+<p>Die Regeln für Strukturen mit mehr als zwei Einträgen sind analog
+zu den genannten.
 
 <h2 id="Funktionen">Typisierung von Funktionen</h2>
 
@@ -156,7 +224,7 @@ X := {a: T; even: T &rarr; bool}.
 </pre>
 
 <p>Ohne die Forderung, dass <code>T</code> nicht in den freien
-Variablen <code>FV(Y)</code> nicht vorkommen darf, würde die
+Variablen <code>FV(Y)</code> vorkommen darf, würde die
 Abstraktion kaputt brechen, womit interne Struktur von <code>x</code>
 in den Wert von <code>s</code> entweichen würde. Z.&nbsp;B. kann man
 nicht einfach <code>s:=x.a</code> setzen. Dann wäre ja <code>s: T</code>,
