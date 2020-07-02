@@ -31,6 +31,10 @@
   <li><a href="#Rekursionstiefe">Beschränkung der Rekursionstiefe</a>
   <li><a href="#Tests">Automatische Tests</a>
   </ol>
+<li><a href="#Lints">Lints ausnutzen</a>
+  <ol>
+  <li><a href="#must-use">Implizites Verwerfen verhindern</a>
+  </ol>
 </ol>
 
 <h2 id="Typsicherheit">Typsicherheit ausnutzen</h2>
@@ -977,10 +981,42 @@ fn main() {
 }
 </pre>
 
-<p>Ein Nachteil bei dieser Formulierung von Nachbedingungen ist,
-dass return-Anweisungen in einer solchen Funktion nicht erlaubt sind.
-Um dies zu erzwingen bräuchte man ein zusätzliches Werkzeug, welches
-sich als prozedurales Makro formulieren ließe.
+<p>Ein Nachteil bei dieser Formulierung ist, dass eine
+return-Anweisung die Nachbedingung unterdrücken würde.
+Eine Konstruktion zur Entfernung dieses Schönheitsfehlers ist
+die Verhüllung in einer inneren Funktion, wobei ein Makro für
+hübsche Syntax sorgt.
+
+<pre class="rust ibox">
+macro_rules! contract {
+    (precondition $pre:tt $body:tt
+     postcondition($arg:ident) $post:tt)
+    =&gt; {
+        $pre;
+        let y = (|| $body)();
+        let $arg = &amp;y;
+        $post;
+        return y;
+    }
+}
+
+fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt; {
+    let n = a.len();
+    contract! {
+        precondition {
+            assert!(n == b.len(), "zip(a,b): a.len() == b.len()");
+        }{
+            let mut v = Vec::with_capacity(n);
+            for k in 0..n {
+                v.push((a[k].clone(),b[k].clone()));
+            }
+            return v;
+        } postcondition(v) {
+            assert!(n == v.len());
+        }
+    }
+}
+</pre>
 
 <h3 id="Rekursionstiefe">Beschränkung der Rekursionstiefe</h3>
 
@@ -1108,6 +1144,46 @@ der arithmetische Überlauf nicht berücksichtigt, der erst bei
 viel größeren Zahlen auftritt. Im Release-Modus
 würden Overflow-Checks entfernt werden, ein Überlauf bliebe also
 im schlimmsten Fall unentdeckt.
+
+<h2 id="Lints">Lints ausnutzen</h2>
+
+<h3 id="must-use">Implizites Verwerfen verhindern</h3>
+
+<p>Oft stellt es einen logischen Fehler dar, wenn der Rückgabewert
+einer Funktion einfach verworfen wird. Bspw. ergibt das Aufrufen einer
+reinen Funktion wie
+
+<pre class="rust ibox">
+fn even(x: i32) -&gt; bool {x%2 == 0}
+</pre>
+
+<p>ohne Verwendung des Rückgabewertes keinen Sinn. Zur Vorbeugung
+gegen diese Art von logischen Fehlern steht das Attribut
+<code>must_use</code> zur Verfügung.
+
+<pre class="rust ibox">
+#[must_use]
+fn even(x: i32) -&gt; bool {x%2 == 0}
+</pre>
+
+<p>Die Anweisung
+<pre class="rust ibox">
+even(0);
+</pre>
+
+<p>führt dann bei der Kompilation zu einer Warnung. Möchte man den
+Wert trotzdem verwerfen, muss man dies nun explizit tun:
+
+<pre class="rust ibox">
+let _ = even(0);
+</pre>
+
+<p>Neben den Funktionen sind auch die Definitionen von Strukturen,
+Enumerationen und Traits mit dem Attribut <code>must_use</code>
+behaftbar. So hat der Typ <code>Result</code> dieses bekommen,
+damit die Err-Variante nicht versehentlich ignoriert wird,
+auch wenn die Ok-Variante nicht gebraucht wird. Ein solcher Fall
+zeigt sich ganz klar etwa bei <code>Result&lt;(),E&gt;</code>.
 
 </body>
 </html>
