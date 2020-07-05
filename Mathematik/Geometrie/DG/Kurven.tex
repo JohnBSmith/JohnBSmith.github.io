@@ -206,8 +206,7 @@ Sei $I$ ein offenes Intervall, welches $t_0$ enthält. Wenn die einseitige
 Ableitung betrachtet wird, darf $t_0$ natürlich auch Randpunkt von $I$
 sein. Sei $c\colon I\to E_n$ eine Parameterkurve im euklidischen
 Raum. Ist nun $t$ eine weitere Stelle, dann ist die Strecke von
-$c(t_0)$ nach $c(t)$ eine Sekante der Kurve. Für $t\to t_0$
-müsste sich dann die Richtung der Tangente ergeben.
+$c(t_0)$ nach $c(t)$ eine Sekante der Kurve.
 
 Ist $p_0\in E_n$ ein Punkt im euklidischen Raum und $v\in V$ ein Vektor
 aus dem dazugehörigen Verschiebungsvektorraum, dann ergibt sich
@@ -220,14 +219,21 @@ verstanden werden:%
 \begin{equation}
 v = p-p_0 \iff p = p_0+v.
 \end{equation}
-Der Sekantenvektor der Kurve lautet demnach
+Betrachtet man die Kurve am Punkt $c(t_0)$ unter einer hinreichend
+starken Vergrößerung, sollte sie sich dort gut durch
+eine Gerade approximieren lassen. D.\,h. es muss einen Vektor $v$
+geben, so dass
 \begin{equation}
-\Delta c = c(t)-c(t_0).
+c(t_0+h) \approx c(t_0)+hv.
 \end{equation}
-Jetzt ergibt sich aber das Problem, dass dieser Vektor für $t\to t_0$
-immer kleiner wird und schließlich verschwindet. Dies wird analog
-zur Ableitung einer reellen Funktion verhindert, indem durch $h=t-t_0$
-dividiert wird.
+Umformung liefert $v \approx \tfrac{c(t_0+h)-c(t_0)}{h}$.
+Die Approximation sollte umso genauer werden, je kleiner $h$ ist.
+Nach der vorherigen Ausführung wissen wir auch, dass es sich bei
+$v$ um einen Sekantenvektor handelt. Für $h\to 0$ bzw.
+$t\to t_0$ mit $t:=t_0+h$ müsste $v$ dann die Richtung der Tangente
+haben. Die in der Berechnung von $v$ enthaltene Skalarmultiplikation
+mit $h^{-1}$ ändert nur die Länge. Ohne diese Änderung würde bei $h\to 0$
+immer der Fall $|v|=0$ eintreten.
 \begin{definition}[Differenzierbare Parameterkurve]%
 \label{diff-Parameterkurve}\mbox{}\\*
 Sei $c\colon I\to E_n$ eine Parameterkurve. Wenn der Grenzwert
@@ -257,14 +263,15 @@ wenn sie an jeder Stelle regulär ist.
 Die Analogie zwischen reellen Funktionen und Parameterkurven
 verschärft sich unter dem folgenden Satz.
 
+\pagebreak
 \begin{theorem}
 Eine Parameterkurve $c\colon I\to\R^n$ ist genau dann
 differenzierbar, wenn sie komponentenweise differenzierbar
 ist. Es gilt
 \begin{equation}
 c'(t) = \sum_{k=1}^n x_k'(t)\,\mathbf e_k,
+\quad\text{wobei}\; c(t)=(x_1,\ldots,x_n)=\sum_{k=1}^n x_k(t)\,\mathbf e_k.
 \end{equation}
-wobei $c(t)=(x_1,\ldots,x_n)=\sum_{k=1}^n x_k(t)\,\mathbf e_k$.
 \end{theorem}
 
 \noindent\strong{Beweis.}

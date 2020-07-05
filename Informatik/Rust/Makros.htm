@@ -39,9 +39,9 @@ erlaubt die gewünschte Verkürzung:
 <pre class="rust ibox">
 macro_rules! vec_string {
     ( $( $x:expr ),* ) =&gt; {{
-        let mut temp_vec = Vec::new();
-        $(temp_vec.push($x.to_string());)*
-        temp_vec
+        let mut _temp_vec = Vec::new();
+        $(_temp_vec.push($x.to_string());)*
+        _temp_vec
     }}
 }
 
@@ -52,6 +52,10 @@ fn main() {
     println!("{:?}",v);
 }
 </pre>
+
+<p>Der Unterstrich vor <code>temp_vec</code> unterdrückt beim
+leeren Array <code>vec_string![]</code> die Meldung, dass
+die Veränderbarkeit von <code>temp_vec</code> überflüssig ist.
 
 <p>Mit den Verbesserungen geht es aber noch weiter voran. Der Ausdruck
 <code>s.to_string()</code> lässt sich auch ersetzen gegen
@@ -72,9 +76,9 @@ use std::collections::HashMap;
 
 macro_rules! map {
     ( $( [$key:expr]: $value:expr ),* ) =&gt; {{
-        let mut temp_map = HashMap::new();
-        $(temp_map.insert($key.to_string(),$value.to_string());)*
-        temp_map
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.to_string(),$value.to_string());)*
+        _temp_map
     }}
 }
 
@@ -104,9 +108,9 @@ use std::collections::HashMap;
 
 macro_rules! map {
     ( $( $key:tt: $value:expr ),* ) =&gt; {{
-        let mut temp_map = HashMap::new();
-        $(temp_map.insert($key.to_string(),$value.to_string());)*
-        temp_map
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.to_string(),$value.to_string());)*
+        _temp_map
     }}
 }
 
@@ -131,9 +135,9 @@ use std::collections::HashMap;
 
 macro_rules! map {
     ( $( $key:tt: $value:expr ),* ) =&gt; {{
-        let mut temp_map = HashMap::new();
-        $(temp_map.insert($key.into(),$value.into());)*
-        temp_map
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.into(),$value.into());)*
+        _temp_map
     }}
 }
 
@@ -156,9 +160,9 @@ use std::collections::HashMap;
 
 macro_rules! map {
     ( $tk:expr, $tv:expr; $( $key:tt: $value:expr ),*) =&gt; {{
-        let mut temp_map = HashMap::new();
-        $(temp_map.insert($tk($key),$tv($value));)*
-        temp_map
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($tk($key),$tv($value));)*
+        _temp_map
     }}
 }
 
