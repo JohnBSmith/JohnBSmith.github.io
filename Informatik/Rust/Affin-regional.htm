@@ -176,6 +176,33 @@ das diese umsetzt, nennt man <i>affin</i>.
 
 <h2 id="Regional">Regionale Typisierung</h2>
 
+<h3>Regionen</h3>
+
+<p>Betrachten wir das folgende Programm.
+<pre class="rust ibox">
+fn main() {
+    let mut v: Vec&lt;u32&gt; = vec![0, 0];
+    let p: &amp;[u32] = &amp;v;
+    v.push(0);
+    println!("{:?}",p);
+}
+</pre>
+
+<p>Dieses Programm erzeugt als erstes ein dynamisches Feld
+<code>v</code>. Als nächstes lassen wir einen Zeiger <code>p</code>
+auf den internen Puffer von <code>v</code> zeigen. Damit gibt es nun
+zwei Zeiger auf den selben Puffer, einmal den internen Zeiger von
+<code>v</code> und einmal <code>p</code>. Dies bezeichnet
+man als <i>Aliasing</i>. Die nächste Operation <code>v.push(0)</code>
+kann nun dazu führen, dass der interne Puffer realloziert wird.
+Gehen wir davon aus, dies geschieht.
+Hierdurch kommt es zu einer Zeiger-Invalidierung von <code>p</code>,
+womit <code>p</code> nunmehr ein hängender Zeiger ist. Die Benutzung
+von <code>p</code> in der nächsten Zeile ist dann undefiniertes
+Verhalten in Form von use after free, weil der ursprüngliche
+Speicherbereich bereits an den Allokator freigegeben wurde. Dies stellt
+einen Bug dar, der im schlimmsten Fall eine Sicherheitslücke bedeuten kann.
+
 <h3>Lebenszeitverlängerung</h3>
 
 <p>Manchmal möchte man die Referenz auf einen Wert haben, welcher

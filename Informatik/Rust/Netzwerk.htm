@@ -63,7 +63,7 @@ fn main() -&gt; Result&lt;(),std::io::Error&gt; {
         "GET {} HTTP/1.0\r\nHost: {}\r\n\r\n",
         path, host
     );
-    stream.write(message.as_bytes())?;
+    stream.write_all(message.as_bytes())?;
     let mut response = String::new();
     stream.read_to_string(&amp;mut response)?;
     println!("{}",response);
