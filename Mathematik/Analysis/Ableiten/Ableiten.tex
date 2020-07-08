@@ -17,12 +17,13 @@
 \begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
 \hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
 
-\definecolor{brown1}{rgb}{0.26,0.14,0}
-\definecolor{brown2}{rgb}{0.20,0.10,0}
-\setbeamercolor*{palette primary}{fg=white,bg=brown1}
-\setbeamercolor*{palette secondary}{fg=white,bg=brown2}
-\setbeamercolor*{palette tertiary}{fg=white,bg=brown2}
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
 \setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
 \newcommand{\modest}[1]{{\small\color{gray}#1}}
 
 \newcommand{\ee}{\mathrm e}
@@ -55,85 +56,332 @@
 \maketitle
 \end{frame}
 
-\begin{frame}
-Betrachten wir eine beliebige reelle Funktion $f$ an einer beliebigen
-Stelle $x_0$. Betrachten wir den Graph am Punkt $(x_0,f(x_0))$
-unter einer Lupe oder einem Mikroskop.
+\begin{frame}[t]
+\vspace{2em}
+Gegeben sei eine beliebige reelle Funktion $f$\\
+und eine beliebige feste Stelle $x_0$.\pause
+
+\vspace{-1em}
+\begin{center}
+\includegraphics[width=80mm]{img/Funktion.pdf}
+\end{center}
+
 \end{frame}
 
-\begin{frame}
-Bei vielen Funktionen schaut der Graph unter hinreichend starker
-Vergrößerung aus wie eine Gerade. Nehmen wir einmal an, das ist
-auch bei $f$ der Fall.
-\end{frame}
-
-\begin{frame}
-Sei $h$ eine hinreichend kleine Zahl, also $h\approx 0$, aber $h\ne 0$.
-Nun ist $f(x_0+h)$ näherungsweise als lineare Funktion in $h$
-beschreibbar, also $f(x_0+h)\approx f(x_0)+mh$, wobei $m$ ein
-unbekannter Anstieg ist.
-\end{frame}
-
-\begin{frame}
-Den Wert $f(x_0+h)$ können wir allerdings ausrechnen, da wir $f$
-ja vorliegen haben. Umformung der Gleichung nach $m$ ergibt
-\[m \approx \frac{f(x_0+h)-f(x_0)}{h}.\]
-\end{frame}
-
-\begin{frame}
-Das muss umso genauer werden, je kleiner $h$ ist. Das bringt uns
-auf die folgende Idee.
-\end{frame}
-
-\begin{frame}
-\strong{Defintion.} Eine Funktion $f$ heißt \emph{differenzierbar}
-an der Stelle $x_0$, wenn der Grenzwert
-\[Df(x_0) = \lim_{h\to 0}\frac{f(x_0+h)-f(x_0)}{h}\]
-existiert.
-\end{frame}
-
-\begin{frame}
-Geometrische Interpretation: $Df(x_0)$ ist der Anstieg der Tangente
-von $f$ an der Stelle $x_0$.
-\end{frame}
-
-\begin{frame}
-Wozu braucht man das?
-\end{frame}
-
-\begin{frame}
-Nun, hat eine differenzierbare Funktion $f$ an einer Stelle $x_0$ ein
-Extremum, dann muss dort eine waagerechte Tangente vorliegen.
-
+\begin{frame}[t]
 \vspace{1em}
-Umgekehrt können wir also durch Lösen der Gleichung $Df(x)=0$ nach
+
+Betrachten wir den Graph am Punkt $(x_0,f(x_0))$ unter einem
+genügend starken Mikroskop.\pause
+
+\vspace{0.5em}
+$\Longrightarrow$ Bei einer gutartigen Funktion wird der Graph dann näherungsweise
+aussehen wie eine Gerade.\pause
+
+\vspace{-1em}
+\begin{center}
+\includegraphics[width=80mm]{img/Funktion-Tangente.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\strong{Das ist eine wichtige Beobachtung!}
+\end{frame}
+
+\begin{frame}
+Wir wissen, dass die Gerade durch die Funktion
+\[x\mapsto f(x_0)+a\cdot (x-x_0)\]
+beschrieben wird, wobei der Anstieg $a$ zunächst\\
+unbekannt ist.\pause
+
+\vspace{0.8em}
+Für ein $x\approx x_0$ ist also $f(x)\approx f(x_0)+a\cdot (x-x_0)$.
+\pause
+
+\vspace{0.8em}
+Stellt man diese Gleichung nach $a$ um,\pause{} findet man
+
+\[a \approx \frac{f(x)-f(x_0)}{x-x_0}.\]
+\end{frame}
+
+\begin{frame}
+Das muss umso genauer werden, je geringer der Abstand zwischen
+$x$ und $x_0$ ist.\pause
+
+\vspace{0.8em}
+Für $x\to x_0$ kommt da ein ganz bestimmter Anstieg heraus, den
+wir \emph{Differentialquotient} nennen. Die Gerade mit diesem
+Anstieg bezeichnet man als \emph{Tangente}.
+\end{frame}
+
+\begin{frame}
+\begin{Definition}
+Eine Funktion $f$ heißt \emph{differenzierbar}
+an der Stelle $x_0$, wenn der Grenzwert
+\[f'(x_0) := \lim_{x\to x_0}\frac{f(x)-f(x_0)}{x-x_0}\]
+existiert. Man bezeichnet die Zahl $f'(x_0)$ als \emph{Ableitung} oder
+\emph{Differentialquotient} von $f$ an der Stelle $x_0$.
+\end{Definition}
+\end{frame}
+
+\begin{frame}
+Eine Bemerkung dazu. Die Substitution $x=x_0+h$ vereinfacht einige
+Rechnungen.\pause
+
+\vspace{0.8em}
+Man bekommt die äquivalente Formel
+\[f'(x_0) := \lim_{h\to 0} \frac{f(x_0+h)-f(x_0)}{h}.\]
+\end{frame}
+
+\begin{frame}
+Die Bestimmung von Ableitungen ist recht einfach, weil man dafür
+\emph{Ableitungsregeln} herleiten kann, die das auf die Terme
+zurückführen, aus denen der gegebene Funktionsterm
+zusammengesetzt ist.\pause
+
+\vspace{0.8em}
+Außerdem lässt sich die Ableitung näherungsweise auch ganz leicht
+numerisch berechnen. Man setzt z.\,B. für $h$ einfach eine sehr
+kleine Zahl ein.
+\end{frame}
+
+\begin{frame}
+Ja, gut. Aber wozu soll das denn nützlich sein?
+\end{frame}
+
+\begin{frame}
+Eine der wichtigsten Anwendungen sind Extremwert-Aufgaben.
+\end{frame}
+
+\begin{frame}
+Angenommen $f(x)$ ist eine Größe in Abhängigkeit von $x$, die
+man maximieren oder minimieren möchte.\pause
+
+\vspace{0.8em}
+Das kann z.\,B. sein, Maximierung des Gewinns oder Minimierung der Kosten,
+des Materialverbrauchs,
+oder mehr bedeutungsschwer, Minimierung des Energieverbrauchs.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{1em}
+Grundlegende Beobachtung: Hat eine differenzierbare Funktion $f$ an
+einer Stelle $x$ ein Extremum, dann muss dort eine waagerechte
+Tangente vorliegen.
+\pause
+
+\vspace{-1em}
+\begin{center}
+\includegraphics[width=80mm]{img/Minimum.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Ergo: Bei einer Extremstelle muss $f'(x)=0$ sein.
+\pause
+
+\vspace{0.8em}
+Umgekehrt können wir nun durch Lösen der Gleichung $f'(x)=0$ nach
 solchen Stellen fischen. Zwar müssen nicht alle Lösungen auch
 Extremstellen sein, aber es kann keine Extremstelle geben, die nicht
 Lösung dieser Gleichung ist. {\footnotesize
 --- Ausgenommen davon sind die Randstellen des Definitionsbereichs.}
+\pause
+
+\vspace{0.8em}
+Man nennt $f'(x)=0$ ein \emph{notwendiges Kriterium} für eine
+Extremstelle.
 \end{frame}
 
 \begin{frame}
-Solche Extremwertaufgaben, auch Optimierungsprobleme genannt,
-sind für
+Die Funktion $f'$, d.\,h. $x\mapsto f'(x)$, nennt man
+\emph{Ableitungsfunktion}.
+\pause
+
+\vspace{0.8em}
+Wir können also Extremstellen finden, indem wir die Nullstellen
+der Ableitungsfunktion ermitteln.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\strong{Höhere Mathematik}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Angenommen, $f$ ist von mehreren Variablen abhängig. Wir würden
+auch gerne Extremstellen einer solchen Funktion ermitteln.
+\end{frame}
+
+\begin{frame}
+Fasse die Variablen zu einem Vektor
+$\mathbf x:=(x_1,\ldots,x_n)$
+zusammen.\pause
+
+\vspace{0.8em}
+Man betrachte an einer Stelle $\mathbf x$ nun den Verschiebungsvektor
+$\mathbf v$. Die Funktion $g(t):=f(\mathbf x+t\mathbf v)$ ist wieder
+eine gewöhnliche reelle Funktion, von welcher wir ja die Ableitung
+$g'(0)$ bestimmen können. Diese nennt man \emph{Richtungsableitung}
+von $f$ in Richtung $\mathbf v$ an der Stelle $\mathbf x$.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Für die Anschauung betrachten wir immer den Fall
+$\mathbf x = (x_1,x_2)$.
+\pause
+
+\vspace{-1em}
+\begin{center}
+\includegraphics[width=80mm]{img/Richtungsableitung.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{Definition}
+Die Richtungsableitung von $f$ an der Stelle $\mathbf x$ in
+Richtung $\mathbf v$ ist definiert als der Grenzwert
+\[D_{\mathbf v} f(\mathbf x) := \lim_{h\to 0}\frac{f(\mathbf x+h\mathbf v)-f(\mathbf x)}{h}.\]
+\end{Definition}
+\end{frame}
+
+\begin{frame}
+Beobachtung: Bei einer Extremstelle liegt eine waagerechte
+Tangentialebene vor. D.\,h. es muss $D_{\mathbf v} f(\mathbf x)=0$
+sein, und das in jede Richtung $\mathbf v$.\pause
+
+\vspace{0.8em}
+\emph{Wir haben eine Verallgemeinerung des notwendigen Kriteriums
+gefunden.}
+\end{frame}
+
+\begin{frame}
+Bemerkung: Speziell für $\mathbf v = \mathbf e_k$, wobei
+$\mathbf e_k$ der Einheitsvektor in Richtung der $k$-ten Achse ist,
+spricht man von der \emph{partiellen Ableitung}
+$\partial_k f(\mathbf x)$.
+\pause
+
+\vspace{0.8em}
+Bei einer gutartigen Funktion $f$ ist $Df_{\mathbf v}(\mathbf x)=0$
+damit gleichbedeutend, dass $\partial_k f(\mathbf x)=0$ für alle
+$k$ gilt.
+\end{frame}
+
+\begin{frame}
+Die partiellen Ableitungen fasst man zu einem (Ko)Vektor zusammen,
+der \emph{totales Differential} genannt wird.\pause
+
+\begin{Definition}
+Totales Differential von $f$ an der Stelle $\mathbf x$:
+\[\mathrm df(\mathbf x) := \sum_{k=1}^n \partial_k f(\mathbf x)\,\mathrm dx_k.\]
+\end{Definition}
+\pause
+
+Die Aussage $\partial_k f(\mathbf x)=0$ für alle $k$ lautet dann
+kurz $\mathrm df(\mathbf x)=0$.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\strong{Noch höhere Mathematik}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Bei der Richtungsableitung kann man auf die Idee kommen, für
+$\mathbf x$ und $\mathbf v$ Funktionen einzusetzen.
+\pause
+
+\vspace{0.6em}
+Warum das?
+\pause
+
+\vspace{0.6em}
+Im Ausdruck $\mathbf x+h\mathbf v$ kommt lediglich eine
+Multiplikation mit dem Skalar $h$ und eine vektorielle Addition vor.
+Das klappt in allen Vektorräumen, und damit auch in Funktionenräumen.
+\pause
+
+\vspace{0.8em}
+Diese Verallgemeinerung der Richtungsableitung wird
+\emph{funktionale Ableitung} genannt. -- Unter zusätzlichen
+Prämissen spricht man von der \emph{Gâteaux-Ableitung}.
+\end{frame}
+
+\begin{frame}
+\begin{Definition}
+Sei $V$ ein Vektorraum und $F$ ein Funktional, d.\,h. $F\colon V\to\R$.
+
+\vspace{0.6em}
+Funktionale Ableitung von $F$ an der Stelle $x$ in Richtung $v$:
+\[\delta_v F(x) := \lim_{h\to 0}\frac{F(x+hv)-F(x)}{h}.\]
+\end{Definition}\pause
+
+Bemerkung: Die Größe $hv$ nennt man \emph{Variation} von $v$.
+\end{frame}
+
+\begin{frame}
+Bei der Extremwert-Aufgabe muss wieder $\delta_v F(x)=0$ für alle
+$v$ sein.
+\pause
+
+\vspace{0.8em}
+Das führt nun allerdings zu einem frappierenden Rechenwerkzeug,
+der \emph{Variationsrechnung}.
+\end{frame}
+
+\begin{frame}
+Für das als bestimmtes Integral* formulierte Funktional
+\[F(x) := \int_a^b L(t,x(t),x'(t))\,\mathrm dt,\]
+führt die Extremwert-Aufgabe -- d.\,h. die Suche nach einem Extremwert
+von $F$ -- zur Euler-Lagrange-Gleichung der Variationsrechnung.
+\end{frame}
+
+\begin{frame}
+
+{\footnotesize
+*Das bestimmte Integral $\int_a^b f(t)\,\mathrm dt$
+ist der Flächeninhalt unter dem Graph von $f$ für $a\le t\le b$.}
+\begin{center}
+\includegraphics[width=80mm]{img/Integral.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Wozu braucht man das?\pause
+
+\vspace{0.8em}
+Die Variationsrechnung hat sich als fundamentales Werkzeug der Physik
+erwiesen. Im 20. Jhd. gewann man damit das tiefsten liegende
+physikalische Verständnis das man heute hat.
+\end{frame}
+
+\begin{frame}
+Anwendungen der Variationsrechnung:
 \begin{itemize}
-\item die Mathematik,
-\item alle Naturwissenschaften,
-\item Ingenieurswissenschaften und
-\item die Wirtschaftslehre
-\end{itemize}
-von \emph{grundlegender} Bedeutung.
-\end{frame}
+\item Der Lagrange-Formalismus, Grundstein der analytischen Mechanik.
 
-\begin{frame}
-Außerdem ist die Differentialrechnung mit vielen Konzepten der
-Analysis eng verwoben.
+\item Damit auch Verständnis des Noether-Theorems, einem
+Fundamentalsatz der Physik, der Symmetrien und Erhaltungsgrößen
+in Beziehung setzt.
+
+\item Herleitung der Grundgleichungen von klassischen Feldtheorien,
+z.\,B. die Maxwell-Gleichungen.
+
+\item Herleitung der Feldgleichungen der allgemeinen
+Relativitätstheorie (Einstein-Hilbert-Wirkung).
+
+\item Maßgebliches Werkzeug der Quantenfeldtheorien.
+\end{itemize}
 \end{frame}
 
 \begin{frame}
 Ende.
-\vfill\hfill
-\modest{Creative Commons CC0}
+\vfill\hfill\modest{Juli 2020}\\
+\hfill\modest{Creative Commons CC0}
 \end{frame}
 
 
