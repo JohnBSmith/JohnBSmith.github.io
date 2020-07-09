@@ -65,7 +65,33 @@ und eine beliebige feste Stelle $x_0$.\pause
 \begin{center}
 \includegraphics[width=80mm]{img/Funktion.pdf}
 \end{center}
+\end{frame}
 
+\begin{frame}[t]
+\vspace{1em}
+Was ist eine reelle Funktion?\pause
+
+\vspace{0.6em}
+\strong{Beispiel.} Wir wollen ein
+rechteckiges Gartenbeet mit einem festen Umfang $u=4\,\unit{m}$
+anlegen. Die Länge des Beetes sei $x$, und die Breite sei $b$.
+Der Flächeninhalt des Beetes sei $y$, also gilt $y=x\cdot b$.\pause
+
+\vspace{-1em}
+\begin{center}
+\includegraphics[width=60mm]{img/Beet.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Außerdem gilt $u=2x+2b$. Umstellen dieser Gleichung nach $b$ bringt
+uns $b=\tfrac{u}{2}-x$.\pause{}
+Setzen wir dies in die Gleichung $y=xb$ ein,
+gewinnen wir den funktionalen Zusammenhang
+\[y = f(x),\;\text{wobei}\;\; f(x) := x\cdot (\tfrac{u}{2}-x).\]
+\pause
+Frage: Wie müsste man $x$ wählen, damit der Flächeninhalt $y$
+maximal wird? 
 \end{frame}
 
 \begin{frame}[t]
@@ -75,8 +101,8 @@ Betrachten wir den Graph am Punkt $(x_0,f(x_0))$ unter einem
 genügend starken Mikroskop.\pause
 
 \vspace{0.5em}
-$\Longrightarrow$ Bei einer gutartigen Funktion wird der Graph dann näherungsweise
-aussehen wie eine Gerade.\pause
+$\Longrightarrow$ Bei einer gutartigen Funktion wird der Graph dann
+näherungsweise aussehen wie eine Gerade.\pause
 
 \vspace{-1em}
 \begin{center}
@@ -150,17 +176,11 @@ Ja, gut. Aber wozu soll das denn nützlich sein?
 \end{frame}
 
 \begin{frame}
-Eine der wichtigsten Anwendungen sind Extremwert-Aufgaben.
-\end{frame}
-
-\begin{frame}
-Angenommen $f(x)$ ist eine Größe in Abhängigkeit von $x$, die
-man maximieren oder minimieren möchte.\pause
+Eine der wichtigsten Anwendungen sind Extremwert-Aufgaben.\pause
 
 \vspace{0.8em}
-Das kann z.\,B. sein, Maximierung des Gewinns oder Minimierung der Kosten,
-des Materialverbrauchs,
-oder mehr bedeutungsschwer, Minimierung des Energieverbrauchs.
+Hierbei ist $f(x)$ eine Größe in Abhängigkeit von $x$, die
+man maximieren oder minimieren möchte.
 \end{frame}
 
 \begin{frame}[t]
@@ -172,7 +192,7 @@ Tangente vorliegen.
 
 \vspace{-1em}
 \begin{center}
-\includegraphics[width=80mm]{img/Minimum.pdf}
+\includegraphics[width=80mm]{img/Maximum.pdf}
 \end{center}
 \end{frame}
 
@@ -185,7 +205,7 @@ Umgekehrt können wir nun durch Lösen der Gleichung $f'(x)=0$ nach
 solchen Stellen fischen. Zwar müssen nicht alle Lösungen auch
 Extremstellen sein, aber es kann keine Extremstelle geben, die nicht
 Lösung dieser Gleichung ist. {\footnotesize
---- Ausgenommen davon sind die Randstellen des Definitionsbereichs.}
+(Ausgenommen davon sind die Randstellen des Definitionsbereichs.)}
 \pause
 
 \vspace{0.8em}
@@ -194,13 +214,28 @@ Extremstelle.
 \end{frame}
 
 \begin{frame}
-Die Funktion $f'$, d.\,h. $x\mapsto f'(x)$, nennt man
-\emph{Ableitungsfunktion}.
+Zurück zum Beet.\pause{} Hier rechnet man
+\begin{align*}f(x+h)-f(x) &= (x+h)(\tfrac{u}{2}-x-h) - x(\tfrac{u}{2}-x)\\
+&= x(\tfrac{u}{2}-x) + (\tfrac{u}{2}-x)h - hx - h^2 - x(\tfrac{u}{2}-x)\\
+&= (\tfrac{u}{2}-x)h - hx - h^2.
+\end{align*}\pause
+Somit gilt
+\[\frac{f(x+h)-f(x)}{h} = (\tfrac{u}{2}-x) - x - h = \tfrac{u}{2}-2x-h.
+\]\pause
+Für $h\to 0$ ergibt sich schließlich $f'(x) = \tfrac{u}{2}-2x$.
+\end{frame}
+
+\begin{frame}
+Die notwendige Bedingung $0=f'(x)=\tfrac{u}{2}-2x$ formen wir nach
+$x$ um.\pause
+
+\vspace{0.8em}
+Das bringt $x = \tfrac{u}{4} = \tfrac{4\,\unit{m}}{4} = 1\,\unit{m}$.
 \pause
 
 \vspace{0.8em}
-Wir können also Extremstellen finden, indem wir die Nullstellen
-der Ableitungsfunktion ermitteln.
+Fazit: Nur die Länge $x = 1\,\unit{m}$ führt zum maximalen
+Flächeninhalt, sofern es überhaupt einen solchen gibt.
 \end{frame}
 
 \begin{frame}
@@ -220,8 +255,12 @@ $\mathbf x:=(x_1,\ldots,x_n)$
 zusammen.\pause
 
 \vspace{0.8em}
-Man betrachte an einer Stelle $\mathbf x$ nun den Verschiebungsvektor
-$\mathbf v$. Die Funktion $g(t):=f(\mathbf x+t\mathbf v)$ ist wieder
+Man betrachte an einer Stelle $\mathbf x$ nun einen Verschiebungsvektor
+$\mathbf v$, der $\mathbf x$ an eine andere Stelle im selben
+Definitionsbereich verschiebt. Skaliert man $\mathbf v$ vorher
+mit der Zahl $t$, wird die Verschiebung beschrieben durch den Term
+$\mathbf x+t\mathbf v$. Die Funktion
+$g(t):=f(\mathbf x+t\mathbf v)$ ist wieder
 eine gewöhnliche reelle Funktion, von welcher wir ja die Ableitung
 $g'(0)$ bestimmen können. Diese nennt man \emph{Richtungsableitung}
 von $f$ in Richtung $\mathbf v$ an der Stelle $\mathbf x$.
@@ -265,7 +304,7 @@ $\partial_k f(\mathbf x)$.
 \pause
 
 \vspace{0.8em}
-Bei einer gutartigen Funktion $f$ ist $Df_{\mathbf v}(\mathbf x)=0$
+Bei einer gutartigen Funktion $f$ ist $D_{\mathbf v}f(\mathbf x)=0$
 damit gleichbedeutend, dass $\partial_k f(\mathbf x)=0$ für alle
 $k$ gilt.
 \end{frame}
@@ -320,7 +359,7 @@ Funktionale Ableitung von $F$ an der Stelle $x$ in Richtung $v$:
 \[\delta_v F(x) := \lim_{h\to 0}\frac{F(x+hv)-F(x)}{h}.\]
 \end{Definition}\pause
 
-Bemerkung: Die Größe $hv$ nennt man \emph{Variation} von $v$.
+Bemerkung: Die Größe $hv$ nennt man \emph{Variation} von $x$.
 \end{frame}
 
 \begin{frame}
@@ -355,8 +394,8 @@ Wozu braucht man das?\pause
 
 \vspace{0.8em}
 Die Variationsrechnung hat sich als fundamentales Werkzeug der Physik
-erwiesen. Im 20. Jhd. gewann man damit das tiefsten liegende
-physikalische Verständnis das man heute hat.
+erwiesen. Im 20. Jhd. gewann man damit einen äußerst tief liegenden
+Einblick in die Beschaffenheit des Kosmos.
 \end{frame}
 
 \begin{frame}
