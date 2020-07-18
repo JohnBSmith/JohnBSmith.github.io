@@ -17,6 +17,14 @@
 \begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
 \hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
 
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
 \newcommand{\real}{\operatorname{Re}}
@@ -37,7 +45,7 @@
 \newcommand{\chem}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 
-\title{Was ist \emph{Ableiten}?}
+\title{Was ist Ableiten?}
 \date{}
 
 \begin{document}
@@ -50,8 +58,9 @@
 
 \begin{frame}
 
-\begin{Definition}[Ableitung]
-\[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}\]
+\begin{Definition}
+Ableitung von $f$ an der Stelle $x$:
+\[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
 \end{Definition}
 
 \end{frame}
@@ -141,10 +150,10 @@ Wir können die Ebenengleichung mittels Skalarprodukt kompakter schreiben:
 
 \begin{frame}
 Der Vektor
-\[(\nabla f)(x_0,y_0) := \begin{bmatrix}(D_x f)(x_0,y_0)\\ (D_y f)(x_0,y_0)\end{bmatrix}
+\[(\nabla f)(x_0,y_0) := \begin{bmatrix}(\partial_x f)(x_0,y_0)\\ (\partial_y f)(x_0,y_0)\end{bmatrix}
 = \begin{bmatrix}a\\ b\end{bmatrix}\]
-heißt \emph{Gradient} von $f$ an der Stelle $(x_0,y_0)$, wobei $D_x f$
-und $D_y f$ die partiellen Ableitungen sind.
+heißt \emph{Gradient} von $f$ an der Stelle $(x_0,y_0)$, wobei $\partial_x f$
+und $\partial_y f$ die partiellen Ableitungen sind.
 \end{frame}
 
 \begin{frame}
@@ -167,9 +176,9 @@ dass $f(x,y)$ durch eine Ebene approximiert werden kann?
 \begin{frame}
 Ja. Das Skalarprodukt ist hier in Wirklichkeit eine duale Paarung aus
 einem Kovektor mit einem Vektor. Der Gradient
-\[(\nabla f)(x_0,y_0) = (D_x f)(x_0,y_0)\mathbf e_x + (D_y f)(x_0,y_0)\mathbf e_y\]
+\[(\nabla f)(x_0,y_0) = (\partial_x f)(x_0,y_0)\mathbf e_x + (\partial_y f)(x_0,y_0)\mathbf e_y\]
 muss gegen das Differential
-\[(\mathrm df)(x_0,y_0) = (D_x f)(x_0,y_0)\mathrm dx + (D_y f)(x_0,y_0)\mathrm dy\]
+\[(\mathrm df)(x_0,y_0) = (\partial_x f)(x_0,y_0)\mathrm dx + (\partial_y f)(x_0,y_0)\mathrm dy\]
 ausgetauscht werden. Das Differential ist der Kovektor.
 Die Differentiale $\mathrm dx$ und $\mathrm dy$
 sind die Basisvektoren der Dualbasis zu $(\mathbf e_x,\mathbf e_y)$.
@@ -180,7 +189,7 @@ Duale Paarung?
 \end{frame}
 
 \begin{frame}
-Das ist banal. Bei einer dualen Paarung eines Kovektors
+Das ist fast banal. Bei einer dualen Paarung eines Kovektors
 $\omega=\omega_x\mathrm dx+\omega_y\mathrm dy$ mit
 einem Vektor $\mathbf v = v_x\mathbf e_x+v_y\mathbf e_y$ darf man einfach
 das Standardskalarprodukt auf die Komponententupel anwenden, auch
@@ -205,7 +214,7 @@ $F\colon\R^2\to\R^3$ kann man doch auch eine Tangentialebene zuordnen?
 \begin{frame}
 Die partielle Ableitung lässt sich Komponentenweise berechnen.
 Insgesamt ergibt sich ein Tangentialvektor. Die beiden
-Tangentialvektoren $(D_u F)(u_0,v_0)$ und $(D_v F)(u_0,v_0)$
+Tangentialvektoren $(\partial_u F)(u_0,v_0)$ und $(\partial_v F)(u_0,v_0)$
 bilden dann eine Tangentialbasis des Tangentialraums. Der
 \emph{Tangentialraum}, das ist wenn man die Tangentialebene als
 Vektorraum betrachtet.
@@ -222,9 +231,9 @@ Die Tangentialvektoren lassen sich nach Wahl eines
 Koordinatensystems als Komponententupel betrachten und
 zur Jacobimatrix
 \[DF = \begin{bmatrix}
-D_u F_x & D_v F_x\\
-D_u F_y & D_v F_y\\
-D_u F_z & D_v F_z
+\partial_u F_x & \partial_v F_x\\
+\partial_u F_y & \partial_v F_y\\
+\partial_u F_z & \partial_v F_z
 \end{bmatrix}\]
 zusammenfassen.
 \end{frame}

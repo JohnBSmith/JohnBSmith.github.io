@@ -1,5 +1,5 @@
 
-name=Ableitung
+name=Ableiten
 path=/tmp/$name-f1ab
 
 mkdir -p $path
