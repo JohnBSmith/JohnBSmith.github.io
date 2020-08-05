@@ -188,6 +188,100 @@ fn char_class(c: char) -&gt; CharClass {
 }
 </pre>
 
+<h3 id="Tupel-Muster">Tupel-Muster</h3>
+
+<p>Entpacken eines Tupels <code>t = (1,2)</code> als
+<pre class="rust ibox">
+let x = t.0;
+let y = t.1;
+</pre>
+
+<p>geht auch kürzer mittels:
+<pre class="rust ibox">
+let (x,y) = t;
+</pre>
+
+<p>Zudem ist auch teilweises Entpacken möglich. Z.&nbsp;B.
+sind für ein Tupel <code>t = (1,2,3)</code> die folgenden
+drei Zeilen gleichbedeutend:
+
+<pre class="rust ibox">
+let x = t.0;
+let (x,_,_) = t;
+let (x,..) = t;
+</pre>
+
+<p>Man bekommt sogar
+<pre class="rust ibox">
+let x = t.0;
+let z = t.2;
+</pre>
+<p>mittels:
+<pre class="rust ibox">
+let (x,..,z) = t;
+</pre>
+
+<p>Des Weiteren darf das Entpacken von Tupeln auch in Verbindung
+mit dem Pattern-Matching vorkommen. Wollen wir bspw. die
+Potenzfunktion
+
+<pre class="rust ibox">
+fn pow(x: u32, n: u32) &gt; u32 {
+    if n==0 {1} else {x*pow(x,n-1)}
+}
+</pre>
+
+<p>als einstellige Funktion formulieren, führt das zu:
+<pre class="rust ibox">
+fn pow(t: (u32,u32)) -&gt; u32 {
+    match t {
+        (_,0) =&gt; 1,
+        (x,n) =&gt; x*pow((x,n-1))
+    }
+}
+</pre>
+
+<p>Obendrein darf das Entpacken sogar in der Angabe der Argumente
+vorkommen, womit sich die alternative Formulierung
+
+<pre class="rust ibox">
+fn pow((x,n): (u32,u32)) -&gt; u32 {
+    if n==0 {1} else {x*pow((x,n-1))}
+}
+</pre>
+
+<p>erlaubt.
+
+<h3 id="Enum-Muster">Enum-Muster</h3>
+
+<p>Matching von Enumerationen ist schon öfters vorgekommen.
+Der Vollständigkeit halber hier nochmals ein Beispiel. Die
+Funktion <code>checked_mul</code> hat Rückgabewerte vom Typ
+<pre class="rust ibox">
+enum Option&lt;T&gt; {None, Some(T)}.
+</pre>
+
+<p>Hiermit gestattet sich die Formulierung der
+Potenzfunktion mit Überlauf-Prüfung als:
+<pre class="rust ibox">
+fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
+    if n==0 {Some(1)} else {
+        x.checked_mul(match pow(x,n-1) {
+            Some(value) =&gt; value,
+            None =&gt; return None
+        })
+    }
+}
+</pre>
+
+<p>Dieser spezielle Fall gewährt zudem die Abkürzung mit dem
+Fragezeichen-Operator:
+<pre class="rust ibox">
+fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
+    if n==0 {Some(1)} else {x.checked_mul(pow(x,n-1)?)}
+}
+</pre>
+
 </body>
 </html>
 

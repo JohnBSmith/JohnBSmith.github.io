@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[9pt]{beamer}
 \usetheme{Antibes}
 \useinnertheme{rectangles}
 \useoutertheme{infolines}
@@ -39,8 +39,7 @@
 \maketitle
 \end{frame}
 
-\begin{frame}[t]
-\vspace{3em}
+\begin{frame}
 In die Cloud?\pause
 
 \vspace{1em}
@@ -90,8 +89,7 @@ Klassisches Anliegen: private Langzeitarchivierung.
 \end{center}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Naiver Ansatz: Schreibe Verzeichnis auf einen Datenträger.\pause
 
 \vspace{1em}
@@ -104,8 +102,7 @@ Naiver Ansatz: Schreibe Verzeichnis auf einen Datenträger.\pause
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Naive Lösung: Verpacke Verzeichnis als »\texttt{Paket.tar.xz}«.\pause
 
 \vspace{2em}
@@ -116,8 +113,7 @@ Naive Lösung: Verpacke Verzeichnis als »\texttt{Paket.tar.xz}«.\pause
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Verpacke ohne Kompression als »\texttt{Paket.tar}«.\pause
 
 \vspace{2em}
@@ -127,8 +123,7 @@ Verpacke ohne Kompression als »\texttt{Paket.tar}«.\pause
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Berechne kryptografischen Hashwert des Pakets.\pause
 
 \vspace{2em}
@@ -139,8 +134,7 @@ Berechne kryptografischen Hashwert des Pakets.\pause
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Verpacke als »Paket.zip«. 
 
 \vspace{1em}
@@ -160,8 +154,7 @@ Das ZIP-Format schützt vor Datenverlust, indem es
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Ansatz: Das Tar-Format benutzen und die Hashwerte aller Dateien
 \emph{vor} dem Verpacken berechnen lassen und anbeifügen.\pause
 
@@ -179,8 +172,7 @@ Betrachte z.\,B. sehr große Dateien.
 \end{center}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{1em}
+\begin{frame}
 Was für Beschädigungen können eigentlich auftreten?\pause
 
 \vspace{1em}
@@ -198,8 +190,7 @@ Das sind:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Betrachten wir zunächst den uniformen Bit-Verlust. Angenommen, ein Byte
 ist nach 10 Jahren mit einer sehr hohen Wahrscheinlichkeit $p$, sagen
 wir $p=0.999999$, noch intakt, d.\,h. das Risiko für Beschädigung beträgt
@@ -215,8 +206,7 @@ Man beachte: Komprimierte Bilder können z.\,B. schon bei einem einzigen
 Bitfehler unlesbar werden.
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Angenommen wir haben nun zwei Duplikate einer Datei,
 beide sind jedoch beschädigt.\pause
 
@@ -231,8 +221,7 @@ irgendwann eine kombinatorische Explosion an Möglichkeiten für
 die Fehlerkorrektur.
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Dieser Problematik kann man leicht ausweichen. Wir fügen jedem
 Datenblock einen Paritätswert hinzu. Eignen tut sich dafür ein
 CRC"=32"=Prüftwert (32 Bit lang) oder ein kryptografischer
@@ -247,8 +236,7 @@ Ermöglicht bei geringen Beschädigungen sogar eine
 Fehlerkorrektur ohne ein Duplikat.
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 Man beachte: CRC-32 erkennt einen größeren Fehler nur mit einer
 Wahrscheinlichkeit von höchstens $1-\tfrac{1}{2^{32}}$.\pause
 
@@ -268,12 +256,10 @@ Diebstahl zu.\pause
 
 \vspace{1em}
 Schlimmer: Man bemerkt nicht, wenn jemand in Besitz der Daten
-gelangt ist.
-\end{frame}
+gelangt ist.\pause
 
-\begin{frame}[t]
-\vspace{3em}
-Daten vor dem Speichern verschlüsseln.\pause
+\vspace{1em}
+$\rightarrow$ Daten vor dem Speichern verschlüsseln.\pause
 
 \vspace{1em}
 \strong{Problem:}
@@ -283,8 +269,7 @@ Daten vor dem Speichern verschlüsseln.\pause
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]
-\vspace{2em}
+\begin{frame}
 \strong{Lösung:}
 \begin{itemize}
 \item Benutze eine Stromchiffre,
@@ -308,8 +293,7 @@ Idee: Einmalschlüssel anstelle von Nonce benutzen.\pause
 
 \vspace{1em}
 Leider heikel. Idee: Einmalschlüssel bei der Verschlüsselung
-von einem kryptografischen Zufallszahlengenerator erzeugen lassen
-und auf Papierblätter schreiben.
+von einem kryptografischen Zufallszahlengenerator erzeugen lassen.
 \end{frame}
 
 \begin{frame}
