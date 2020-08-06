@@ -19,6 +19,7 @@
 <li><a href="#Higher-order">Funktionen höherer Ordnung</a>
 <li><a href="#Monaden">Monaden</a>
 <li><a href="#Iteratoren">Iteratoren</a>
+<li><a href="#Currying">Currying</a>
 </ol>
 
 <h2 id="Funktionenzeiger">Funktionenzeiger</h2>
@@ -469,6 +470,102 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
 
     println!("{}", mean(stream));
     return Ok(());
+}
+</pre>
+
+<h2 id="Currying">Currying</h2>
+
+<p>Currying ist die Umformung einer mehrstelligen Funktion in eine
+äquivalente Funktion höherer Ordnung, bei der die Argumente
+nacheinander einstellig aufgerufen werden. Betrachten wir bspw.
+die Funktion
+
+<p class="indent"><var>f</var>: <b>Z</b>×<b>Z</b>×<b>Z</b>
+&rarr; <b>Z</b>,&emsp;(<var>x</var>, <var>y</var>, <var>z</var>)
+&mapsto; <var>x</var> + <var>y</var> + <var>z</var>,
+
+<p>die in der Form
+<var>f</var>(<var>x</var>,&nbsp;<var>y</var>,&nbsp;<var>z</var>)
+aufgerufen wird. Currying führt zu der Funktion
+<p class="indent"><var>f</var>: <b>Z</b> &rarr; <b>Z</b> &rarr;
+<b>Z</b> &rarr; <b>Z</b>,&emsp;<var>x</var>
+&mapsto; <var>y</var> &mapsto; <var>z</var>
+&mapsto; <var>x</var> + <var>y</var> + <var>z</var>,
+
+<p>die in der Form
+<var>f</var>(<var>x</var>)(<var>y</var>)(<var>z</var>)
+aufgerufen wird.
+
+<p>Weil Rust Closures bietet, erlaubt es auch Currying.
+Allerdings ergibt sich dabei eine kleinere Komplikation, die
+damit zusammenhängt, dass <code>impl Trait</code> nicht
+an jeder Stelle verwendbar ist. Betrachten wir
+die Entsprechung von <var>f</var> in Rust.
+
+<pre class="rust ibox">
+fn f(x: i32, y: i32, z: i32) -&gt; i32 {
+    x + y + z
+}
+</pre>
+
+<p>Currying des ersten Arguments stellt kein Problem dar:
+<pre class="rust ibox">
+fn f(x: i32) -&gt; impl Fn(i32,i32) -&gt; i32 {
+    move |y,z| x + y + z
+}
+</pre>
+
+<p>Vollständiges Currying wäre nun:
+<pre class="rust ibox">
+fn f(x: i32) -> impl Fn(i32) -> impl Fn(i32) -> i32 {
+    move |y| move |z| x + y + z
+}
+</pre>
+
+<p>Leider ist das nicht erlaubt. Es würde sich durch Boxen
+umgehen lassen:
+<pre class="rust ibox">
+fn f(x: i32) -&gt; Box&lt;dyn Fn(i32) -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt;&gt; {
+    Box::new(move |y| Box::new(move |z| x + y + z))
+}
+</pre>
+
+<p>bzw.
+<pre class="rust ibox">
+fn f(x: i32) -&gt; impl Fn(i32) -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt; {
+    move |y| Box::new(move |z| x + y + z)
+}
+</pre>
+
+<p>Allerdings führt das nun zu unnötigen Speicherallokationen.
+Ein gängiges Mittel zur Lösung dieser Art von Problemen ist die
+Einführung einer Helfer-Struktur.
+
+<pre class="rust ibox">
+struct FunFromf {x: i32, y: i32}
+
+impl FunFromf {
+    fn call(self, z: i32) -&gt; i32 {self.x + self.y + z}
+}
+
+fn f(x: i32) -&gt; impl Fn(i32) -&gt; FunFromf {
+    move |y| FunFromf{x,y}
+}
+</pre>
+
+<p>Oder alternativ:
+
+<pre class="rust ibox">
+struct FunFromf {x: i32}
+
+impl FunFromf {
+    fn call(self, y: i32) -&gt; impl Fn(i32)-&gt;i32 {
+        move |z| self.x + y + z
+    }
+}
+
+fn f(x: i32) -&gt; FunFromf {
+    FunFromf{x}
 }
 </pre>
 
