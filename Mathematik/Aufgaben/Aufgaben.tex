@@ -64,7 +64,7 @@
 {\huge\normalfont\sffamily\bfseries Aufgaben\par}
 
 \vspace{2mm}
-\noindent Oktober 2019
+\noindent August 2020
 
 \vspace{2mm}
 \noindent
@@ -1470,14 +1470,43 @@ sind $A=1/(1-q)$ und $B=q/(q-1)$. Nun ergibt sich
 Hierbei ist
 \[ A+Bq^n = \frac{1}{1-q}+\frac{q}{q-1}q^n = \frac{q^{n+1}-1}{q-1}.\]
 Insgesamt ergibt sich
-\[ a_n = a_0q^n + r\frac{q^n-1}{q-1}.\;\Box\]
+\[ a_n = a_0q^n + r\frac{q^n-1}{q-1}.\;\qedsymbol\]
 
+\newpage
 \subsection{Kombinatorische Probleme}
 \begin{Aufgabe}
 In einem euklidischen Raum gibt es zwischen zwei Punkten genau einen
 kürzesten Weg. Wie viele kürzeste Wege von Knoten $(0,0)$ zu Knoten
-$(m,n)$ gibt es auf einem diskreten Gitter mit Manhatten-Metrik?
+$(x,y)$ gibt es auf einem diskreten Gitter mit Manhatten-Metrik? D.\,h.
+wie viele Wege gibt es, falls nur Schritte nach rechts oder nach
+oben erlaubt sind?
 \end{Aufgabe}
+\strong{Lösung 1.} Die wichtige Beobachtung ist, dass jeder Pfad genau
+$x$ Schritte nach rechts und $y$ Schritte nach oben enthält, also
+eine Länge von $x+y$ Schritten besitzt. Aus dieser Abfolge von
+$x+y$ Schritten kann man nun $x$ ohne Wiederholung auswählen, wo es
+nach rechts gehen soll, oder $y$ auswählen, wo es nach oben gehen soll.
+Die Anzahl der Möglichkeiten ist die Anzahl von Kombinationen,
+weil die Reihenfolge bei der Auswahl keine Rolle spielt. Die
+Pfadzahl beträgt demnach
+\[\binom{x+y}{x} = \binom{x+y}{y} = \frac{(x+y)!}{x!y!}.\;\qedsymbol\]
+\strong{Lösung 2.} Eine andere wichtige Beobachtung ist, dass ein
+Knoten nur von links oder von unten erreicht werden kann. Daher muss
+die Anzahl der Pfade die Summe der Anzahl zum linken und unteren
+Nachbarknoten sein. Nennen wir die Anzahl $f(x,y)$, dann ist
+\[f(x,y) = f(x-1,y) + f(x,y-1)\]
+mit Anfangswerten $f(x,0)=1$ und $f(0,y)=1$. Erzeugt man mit
+dieser Rekursionsgleichung eine Tabelle von $f(x,y)$, wird ein
+pascalsches Dreieck ersichtlich, an dem man ablesen kann, dass
+\begin{equation}\label{eq:Pfadzahl-Binomk}
+f(x,y) = \binom{x+y}{x}.
+\end{equation}
+Substituiert man nun $n=x+y$ und $k=x$, wird
+die Rekursionsgleichung zu
+\[\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}.\]
+Die Anfangswerte bedeuten $\binom{x}{x} = 1$ und $\binom{y}{0} = 1$.
+Das ist genau die rekursive Darstellung des Binomialkoeffizienten,
+womit Formel \eqref{eq:Pfadzahl-Binomk} bewiesen ist.\;\qedsymbol
 
 \newpage
 \section{Wahrscheinlichkeitsrechnung}
@@ -1750,7 +1779,7 @@ Z.\,B. eine bijektive Abbildung $f\colon A\to A$ und
 $g:=f^{-1}$, wobei $f$ keine Involution sein darf.\;\qedsymbol
 
 \vfill\noindent
-\texttt{Dieses Heft steht unter der Lizenz Creative Commons CC0.}
+\texttt{Dieses Heft steht unter der Lizenz Creative Commons CC0 1.0.}
 
 \end{document}
 

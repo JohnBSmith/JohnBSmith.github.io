@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Speicherverwaltung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Zeiger">Zeiger</a>
+<li><a href="#Box">Der Zeigertyp Box</a>
+</ol>
+
+<h2 id="Zeiger">Zeiger</h2>
+
+<p>Ein Zeiger ist eine Variable, die die Speicheradresse einer
+anderen Variable als Wert enthält.
+
+<h3>Zeigerarithmetik</h3>
+
+<p>Die in Hochsprache formulierte Funktion
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    for x in a {
+        println!("{}",x);
+    }
+}
+</pre>
+
+<p>nimmt nach Absenkung diese Gestalt an:
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    let mut p = a.as_ptr();
+    let p_end = unsafe{p.add(a.len())};
+    while p != p_end {
+        println!("{}",unsafe{*p});
+        p = unsafe{p.add(1)};
+    }
+}
+</pre>
+
+<p>Oder alternativ:
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    let mut p = a.as_ptr();
+    let mut n = a.len();
+    while n&gt;0 {
+        println!("{}",unsafe{*p});
+        p = unsafe{p.add(1)};
+        n -= 1;
+    }
+}
+</pre>
+
+<p>Die Formulierung
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    for i in 0..a.len() {
+        println!("{}",a[i]);
+    }
+}
+</pre>
+
+<p>entspricht
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    let p = a.as_ptr();
+    let n = a.len();
+    let mut i = 0;
+    while i&lt;n {
+        println!("{}",unsafe{*p.add(i)});
+        i += 1;
+    }
+}
+</pre>
+
+<h2 id="Box">Der Zeigertyp Box</h2>
+
+<p>Die Daten, die ein Programm verarbeitet, müssen notgedrungen auf
+irgendeine Art im RAM-Speicher des Computers untergebracht werden.
+Dafür gibt es zwei Verfahren:
+
+<dl class="indent">
+<dt><b>1. Stapelspeicher, engl. <i>stack</i></b>
+<dd>Die Zuweisung von Speicher geschieht hier besonders
+schnell, da dafür lediglich der Stapelzeiger, engl.
+<i>stack pointer</i>, inkrementiert werden braucht. Allerdings muss
+der Speicher aus diesem Grund auch in der umgekehrten Reihenfolge
+freigegeben werden, wie er zugewiesen wurde. Weil dies nun gerade
+der Verwaltung von lokalen Variablen beim Aufrufen und Verlassen von
+Unterprogrammen entspricht, arbeiten die meisten Laufzeitsysteme
+bevorzugt mit dem Stack.
+
+<dt><b>2. Haldenspeicher, engl. <i>heap</i></b>
+<dd>Bei diesem darf Speicher in beliebiger Reihenfolge zugewiesen
+und freigegeben werden. Infolge ist der Heap vergleichsweise
+kompliziert und langsam.
+</dl>
+
+<p>Die folgende Funktion <code>new_data</code> gibt ein Array
+zurück, das bspw. Bilddaten eines Bildes mit Breite 480 Pixel
+und Höhe 300 Pixel aufnehmen soll.
+
+<pre class="rust ibox">
+const DATA_LEN: usize = 480*300;
+
+fn new_data() -&gt; [u32; DATA_LEN] {
+    [0; DATA_LEN]
+}
+</pre>
+
+<p>Nun ist der Stack in nativen Laufzeitsystemen begrenzt. Typische
+Werte für die Begrenzung liegen bei 1 bis 10&nbsp;MB. Zwar lässt sich
+dies ändern, bspw. indem das Hauptprogramm in einem neuen Thread
+mit größerem Stack ausgeführt wird, nehmen wir aber zunächst an, dies
+wäre uns nicht gegeben. Wollen wir nun ein größeres Array speichern,
+oder ein Array von Arrays, ist der Stapel bald aufgebraucht.
+
+<p>Für gewöhnlich wird für solche Datenmengen stattdessen
+Haldenspeicher zugewiesen. Dafür zuständig ist die Funktion
+<code>Box::new</code>, die einen Zeiger auf den zugewiesenen
+Speicher zurückgibt. 
+
+<pre class="rust ibox">
+fn new_data() -&gt; Box&lt;[u32; DATA_LEN]&gt; {
+    Box::new([0; DATA_LEN])
+}
+</pre>
+
+<p>Bei einem Zeiger vom Typ <code>Box</code> handelt es sich um einen
+sogenannten <i>Smart-Pointer</i>. Ein solcher zeichnet sich durch die
+Eigenschaft aus, dass der Speicher automatisch wieder freigegeben wird,
+sobald die Lebenszeit des Zeigerwertes endet.
+
+</body>
+</html>
