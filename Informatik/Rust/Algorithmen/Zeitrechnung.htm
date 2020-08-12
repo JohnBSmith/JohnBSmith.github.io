@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zeitrechnung</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Zeitrechnung</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#JD">Julianisches Datum</a>
+</ol>
+
+<h2 id="JD">Julianisches Datum</h2>
+
+<p>Das julianische Datum ist eine Zählung der Tage seit
+dem 1. Januar &minus;4712 um 12:00 Uhr. Die Bewandtnis der
+Umrechnung zwischen Kalendardatum und julianischem Daten ist
+<ol>
+<li>die Entfernung der Komplexität des gregorianischen Kalenders,
+  die astronomische Rechnungen obstruieren würde,
+<li>die Erzeugung von Kalenderdaten.
+</ol>
+
+<h3>Umrechnung</h3>
+<pre class="rust ibox">
+// Angabe des Kalenders.
+// Greg für gregorianischer Kalender,
+// Jul  für julianischer Kalender.
+pub enum Calendar {Greg, Jul}
+
+// Bruchteil eines Tages sind Stunden/24 + Minuten/(24*60).
+pub struct Date {
+    pub year: i32, pub month: i32, pub day: f64
+}
+
+// Umrechnung eines Kalenderdatums ins julianische Datum.
+pub fn julian_date(calendar: Calendar, date: Date) -&gt; f64
+{
+    let (y, m) = if date.month &gt; 2 {
+        (f64::from(date.year), f64::from(date.month))
+    } else {
+        (f64::from(date.year-1), f64::from(date.month+12))
+    };
+
+    let b = if let Calendar::Jul = calendar {0.0} else {
+        2.0 - (y/100.0).floor() + (y/400.0).floor()
+    };
+
+    return (365.25*(y+4716.0)).floor()
+         + (30.6001*(m+1.0)).floor()
+         + date.day + b - 1524.5;
+}
+
+// Umrechnung eines julianischen Datums ins Kalenderdatum.
+#[allow(non_snake_case)]
+pub fn calendar_date(calendar: Calendar, jd: f64) -&gt; Date {
+    let Z = (jd + 0.5).floor();
+    let F = jd + 0.5 - Z;
+    let A = if let Calendar::Jul = calendar {Z} else {
+        let alpha = ((Z - 1867216.25)/36524.25).floor();
+        Z + 1.0 + alpha - (alpha/4.0).floor()
+    };
+    let B = A + 1524.0;
+    let C = ((B - 122.1)/365.25).floor();
+    let D = (365.25*C).floor();
+    let E = ((B - D)/30.6001).floor();
+
+    let day = B - D - (30.6001*E).floor() + F;
+    return if E &lt;= 13.0 {
+        Date{day, month: E as i32 - 1, year: C as i32 - 4716}
+    } else {
+        Date{day, month: E as i32 - 13, year: C as i32 - 4715}
+    };
+}
+</pre>
+
+<h3>Erzeugung Kalenderdaten</h3>
+<p>Diesen Umrechnungen dienen nun als Hilfsmittel zur Formulierung
+der Funktion <code>shift_date</code>, die das um eine Anzahl von Tagen
+verschobene Datum berechnet. Im julianischen Datum ist diese
+Verschiebung nämlich einfach die Addition der Anzahl. Demzufolge muss
+man zunächst ins julianische Datum umrechnen, dann die Anzahl addieren,
+und schließlich wieder zurück ins Kalenderdatum umrechnen.
+
+<pre class="rust ibox">
+pub fn shift_date(date: Date, days: f64) -&gt; Date {
+    let jd = julian_date(Calendar::Greg,date);
+    let mut date = calendar_date(Calendar::Greg,jd+days);
+    date.day = date.day.round();
+    return date;
+}
+</pre>
+
+</body>
+</html>
