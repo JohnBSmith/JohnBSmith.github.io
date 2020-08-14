@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Asynchrone Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Futures">Futures</a>
+</ol>
+
+<h2 id="Futures">Futures</h2>
+
+<p>Einige Anwendungen erfordern den Umgang mit Prozeduren, die erst
+nach einer gewissen Zeit abgearbeitet sind. Das kann bspw. sein
+
+<ul>
+<li>das Warten auf eine Nutzereingabe,
+<li>das Warten auf die Antwort eines Clients oder Servers,
+<li>eine langwierige Berechnung.
+</ul>
+
+<p>Ein recht interessantes Beispiel ist für mich
+ein Funktionenplotter. Erfordert eine Funktion einen hohen
+Rechenaufwand, dauert es ein wenig bis der Graph vollständig
+gezeichnet ist. Würde das Programm solange warten, würde es
+um so schlimmer ruckeln, je höher die Rechenzeit ist. Die Idee ist
+nun, die Prozedur zu pausieren und nach neuer Abfrage von
+Nutzereingabe zu entscheiden ob die Prozedur abgebrochen oder
+weitergeführt werden soll.
+
+<p>Weil diese Beispiele alle recht komplizierte Technik enthalten
+können, simulieren wir so einen Ablauf zunächst am besten möglichst
+einfach mit einer Prozedur, die intern nichts anderes tut als eine
+bestimmte Zeit warten.
+
+<p>Wie modelliert man solche Prozeduren nun? Eine Möglichkeit wären
+Threads, aber um die geht ja schon in einem anderen Kapitel.
+
+<p>Die Prozedur muss pausieren können. Demzufolge muss man die
+Prozedur so oft aufrufen können, bis sie fertig ist. Den
+Rückgabewert der Prozedur formulieren wir daher als eine
+Enumeration <code>Poll</code> in den Varianten <code>Ready</code>
+und <code>Pending</code>. Ist die Prozedur fertig, hat sie
+den Wert <code>Ready</code>, andernfalls <code>Pending</code>.
+Eine solche Prozedur bezeichnet man als <i>Future</i>.
+
+<p>Nun brauchen wir auch noch Hilfsfunktion <code>block_on</code>,
+die die Prozedur solange in einer Schleife aufruft, bis sie
+abgearbeitet ist. Damit der Prozessor dabei nicht heiß läuft,
+fügen wir noch einen Aufruf <code>sleep</code> ein, der das
+Hauptprogramm für einen Sekundenbruchteil schlafen legt.
+
+<p>Die folgende Umsetzung gestaltet nun die bisherigen Überlegungen aus.
+
+<pre class="rust ibox">
+use std::time::{Duration, Instant};
+use std::thread::sleep;
+
+enum Poll&lt;T&gt; {Ready(T), Pending}
+
+type Future&lt;T&gt; = Box&lt;dyn FnMut() -&gt; Poll&lt;T&gt;&gt;;
+
+fn block_on&lt;T&gt;(mut f: Future&lt;T&gt;) -&gt; T {
+    loop {
+        match f() {
+            Poll::Ready(x) =&gt; return x,
+            Poll::Pending =&gt; {}
+        }
+        sleep(Duration::from_millis(100));
+    }
+}
+
+fn new_task(time: u64) -&gt; Future&lt;()&gt; {
+    let clock = Instant::now();
+    Box::new(move || {
+        if clock.elapsed().as_secs() &lt; time {
+            Poll::Pending
+        } else {
+            Poll::Ready(())
+        }
+    })
+}
+
+fn main() {
+    let f1 = new_task(10);
+    block_on(f1);
+}
+</pre>
+
+<p>Gibt es nun zwei Aufgaben zu bewältigen, die jeweils 10 Sekunden
+dauern, braucht das Programm bei sequentieller Ausführung schon
+20 Sekunden.
+<pre class="rust ibox">
+fn main() {
+    let f1 = new_task(10);
+    block_on(f1);
+    let f2 = new_task(10);
+    block_on(f2);
+}
+</pre>
+
+<p>Um die beiden Aufgaben parallel ausführen zu können, schreiben
+wir eine Funktion <code>join_all</code>, die eine Liste von Aufgaben
+entgegennimmt und einen Scheduler zurückgibt. Der Scheduler kümmert
+sich solange um die Ausführung der Aufgaben, bis alle Aufgaben erledigt
+sind. Wir formulieren auch den Scheduler als Future, denn dann können
+wir <code>block_on</code> wiederbenutzen.
+
+<pre class="rust ibox">
+fn join_all(a: Vec&lt;Future&lt;()&gt;&gt;) -&gt; Future&lt;()&gt; {
+    let mut a: Vec&lt;_&gt; = a.into_iter().map(Some).collect();
+    Box::new(move || {
+        let mut empty = true;
+        for x in &amp;mut a {
+            if let Some(f) = x {
+                empty = false;
+                if let Poll::Ready(()) =  f() {*x = None;}
+            }
+        }
+        if empty {Poll::Ready(())} else {Poll::Pending}
+    })
+}
+
+fn main() {
+    let f1 = new_task(10);
+    let f2 = new_task(10);
+    let s = join_all(vec![f1,f2]);
+    block_on(s);
+}
+</pre>
+
+<p>Die Funktion <code>join_all</code> ist so verallgemeinerbar,
+dass sie auch die Werte der Futures zurückgeben kann.
+
+<pre class="rust ibox">
+fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec&lt;T&gt;&gt; {
+    enum Either&lt;X,Y&gt; {Left(X), Right(Y)}
+    let mut a: Vec&lt;_&gt; = a.into_iter().map(Either::Left).collect();
+    Box::new(move || {
+        let mut empty = true;
+        for x in &amp;mut a {
+            if let Either::Left(f) = x {
+                empty = false;
+                if let Poll::Ready(value) = f() {
+                    *x = Either::Right(value);
+                }
+            }
+        }
+        match empty {
+            false =&gt; Poll::Pending,
+            true =&gt; Poll::Ready(std::mem::take(&amp;mut a)
+                .into_iter().map(|x| match x {
+                    Either::Right(value) =&gt; value,
+                    _ =&gt; unreachable!()
+                }).collect()),
+        }
+    })
+}
+</pre>
+
+</body>
+</html>
+
