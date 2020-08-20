@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Const Generics</h1>
+
+<h2>Beispiel: Der Typ einer Restklasse</h2>
+
+<p>Das Rechnen mit Restklassen ist in der Algebra zentral und kommt
+auch in manchen Bereichen der Informatik vor. Möchte man nun die
+Arithmetik mit Restklassen auf ordentliche Art implementieren,
+muss man einen Datentyp für den Restklassenring
+<b>Z</b>/<var>m</var><b>Z</b> formulieren. Dieser ist nun allerdings
+vom Modul <var>m</var> abhängig. Das bereitet uns zwei Probleme:
+<ol>
+<li>müsste das Modul zur Laufzeit mit dem Wert mitgeschleppt werden,
+<li>dürften bei strenger Typisierung Restklassen mit unterschiedlichem
+Modul nicht addiert und multipliziert werden.
+</ol>
+
+<p>Hat man 1., ließe sich 2. durch eine Zusicherung zur Laufzeit
+prüfen. Eigentlich möchten wir dies alles aber schon zur Kompilierzeit
+haben. Die nähere Betrachtung dieser Komplikation bringt uns zu einer
+mysteriösen Einsicht: Der Typ muss vom Modul, einem Wert, abhängig sein.
+Einen solchen Typ nennt man <i>abhängigen Typ</i>, ein Typsystem
+das mit diesen umgehen kann <i>abhängiges Typsystem</i>.
+
+<p>Rust enthält eine recht eingeschränkte Form von abhängigen
+Typen, die sich <i>Const Generics</i> nennen. Eine wesentliche
+Notwendigkeit für die Einführung dieser ist der Umgang mit Arrays vom
+Typ <code>[T;N]</code>, wo <code>N</code> eine schon zur Kompilierzeit
+bekannte Konstante ist. Man kam dabei zu der Einsicht, dass sich einige
+Algorithmen ohne Const Generics nicht vernünftig formulieren
+ließen. Das ist deshalb problematisch, weil solche Arrays Bestandteil
+vieler laufzeitkritischer Programme sind.
+
+<p>Soll ein Typ abhängig von einem Wert sein bzw. polymorph über Werte,
+wird der Typvariable bei der Definition und Implementation das
+Schlüsselwort <code>const</code> vorangestellt. Den Restklassenring
+zum Modul <code>M</code> schreiben wir <code>Z&lt;M&gt;</code>.
+Die Umsetzung gestaltet sich nun wie folgt.
+
+<pre class="rust ibox">
+use std::fmt;
+
+#[derive(Clone,Copy)]
+struct Z&lt;const M: u32&gt; (u32);
+
+impl&lt;const M: u32&gt; fmt::Display for Z&lt;M&gt; {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt;fmt::Result {
+        write!(f, "{}", self.0 % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Add for Z&lt;M&gt; {
+    type Output = Self;
+    fn add(self, y: Self) -&gt; Self {
+        Z((self.0 + y.0) % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Sub for Z&lt;M&gt; {
+    type Output = Self;
+    fn sub(self, y: Self) -&gt; Self {
+        Z((self.0 - y.0) % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Add&lt;u32&gt; for Z&lt;M&gt; {
+    type Output = Self;
+    fn add(self, y: u32) -&gt; Self {
+        Z((self.0 + y) % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Sub&lt;u32&gt; for Z&lt;M&gt; {
+    type Output = Self;
+    fn sub(self, y: u32) -&gt; Self {
+        Z((self.0 - y) % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Mul for Z&lt;M&gt; {
+    type Output = Self;
+    fn mul(self, y: Self) -&gt; Self {
+        Z((self.0*y.0) % M)
+    }
+}
+
+impl&lt;const M: u32&gt; std::ops::Mul&lt;Z&lt;M&gt;&gt; for u32 {
+    type Output = Z&lt;M&gt;;
+    fn mul(self, y: Z&lt;M&gt;) -&gt; Z&lt;M&gt; {
+        Z((self*y.0) % M)
+    }
+}
+
+fn main() {
+    let x: Z&lt;5&gt; = Z(4);
+    let y: Z&lt;5&gt; = Z(3);
+    println!("{}", x*x + 2*y + 1);
+}
+</pre>
+
+</body>
+</html>
+
