@@ -14,10 +14,23 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Futures">Futures</a>
+<li><a href="#Grundlagen">Grundlagen</a>
+  <ol>
+  <li><a href="#Futures">Futures</a>
+  <li><a href="#AsyncFn">Asynchrone Funktionen</a>
+  </ol>
+<li><span class="modest">Technische Umsetzung</span>
+  <ol>
+  <li><span class="modest">Selbstreferenzen und Anheftung</span>
+  <li><span class="modest">Koroutinen</span>
+  <li><span class="modest">Exekutoren</span>
+  <li><span class="modest">Waker</span>
+  </ol>
 </ol>
 
-<h2 id="Futures">Futures</h2>
+<h2 id="Grundlagen">Grundlagen</h2>
+
+<h3 id="Futures">Futures</h3>
 
 <p>Einige Anwendungen erfordern den Umgang mit Prozeduren, die erst
 nach einer gewissen Zeit abgearbeitet sind. Das kann bspw. sein
@@ -43,7 +56,13 @@ einfach mit einer Prozedur, die intern nichts anderes tut als eine
 bestimmte Zeit warten.
 
 <p>Wie modelliert man solche Prozeduren nun? Eine Möglichkeit wären
-Threads, aber um die geht ja schon in einem anderen Kapitel.
+Threads, die sich vor allem auch bei langwierigen Berechnungen
+wie dem Funktionenplotter anbieten würden. Der Grund dafür liegt
+darin, dass übermäßig lange Rechenzeit in einem Thread nicht
+dazu führt, dass der Hauptthread blockiert wird.
+
+<p>Um Threads geht es nun aber schon in einem
+anderen Kapitel.
 
 <p>Die Prozedur muss pausieren können. Demzufolge muss man die
 Prozedur so oft aufrufen können, bis sie fertig ist. Den
@@ -91,19 +110,19 @@ fn new_task(time: u64) -&gt; Future&lt;()&gt; {
 }
 
 fn main() {
-    let f1 = new_task(10);
+    let f1 = new_task(2);
     block_on(f1);
 }
 </pre>
 
-<p>Gibt es nun zwei Aufgaben zu bewältigen, die jeweils 10 Sekunden
+<p>Gibt es nun zwei Aufgaben zu bewältigen, die jeweils zwei Sekunden
 dauern, braucht das Programm bei sequentieller Ausführung schon
-20 Sekunden.
+vier Sekunden.
 <pre class="rust ibox">
 fn main() {
-    let f1 = new_task(10);
+    let f1 = new_task(2);
     block_on(f1);
-    let f2 = new_task(10);
+    let f2 = new_task(2);
     block_on(f2);
 }
 </pre>
@@ -131,8 +150,8 @@ fn join_all(a: Vec&lt;Future&lt;()&gt;&gt;) -&gt; Future&lt;()&gt; {
 }
 
 fn main() {
-    let f1 = new_task(10);
-    let f2 = new_task(10);
+    let f1 = new_task(2);
+    let f2 = new_task(2);
     let s = join_all(vec![f1,f2]);
     block_on(s);
 }
@@ -166,6 +185,100 @@ fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec
     })
 }
 </pre>
+
+<h3 id="AsyncFn">Asynchrone Funktionen</h3>
+
+<p>Wurde bisher eine gewöhnliche Funktion zur <i>äußerlichen</i>
+Darstellung des Pausierens genutzt, wollen wir das nun
+eigentlich <i>innerhalb</i> der Prozedur durchführen. Dafür bedarf es
+allerdings der Semantik einer Koroutine, die man nicht über gewöhnliche
+Funktionen ausdrücken kann. Eine Koroutine ist eine Prozedur, die
+mit <code>yield</code> an einer Stelle im Ablauf unterbrochen wird
+und sich später an dieser Stelle fortführen lässt.
+
+<p>Asynchrone Funktionen bieten eine Abwandlung des Konzeptes einer
+Koroutine. Anstelle von <code>yield</code> gibt es bei einer
+asynchronen Funktion eine Anweisung <code>await</code>, die die
+Fortführung des Programmablaufs der Funktion solange unterbricht, bis
+vom Argument von <code>await</code> ein Wert erhalten wurde.
+
+<p>Ab nun erforderlich ist die Einbindung der Bibliotheken
+›<a href="https://crates.io/crates/futures">futures</a>‹ und
+›<a href="https://crates.io/crates/async-std">async-std</a>‹.
+
+<pre class="rust ibox">
+use std::time::Duration;
+use async_std::task;
+use futures::{future::join_all, executor::block_on};
+
+async fn new_task(time: u64) {
+    task::sleep(Duration::from_secs(time)).await;
+}
+
+fn main() {
+    let f1 = new_task(2);
+    let f2 = new_task(2);
+    block_on(join_all(vec![f1,f2]));
+}
+</pre>
+
+<p>Eine asynchrone Funktion ist äquivalent zu einer gewöhnlichen
+Funktion, die ein Future als asynchronen Closure-Block zurückgibt.
+Außerdem ist das Argument von <code>await</code> selbst ein
+Future.
+
+<pre class="rust ibox">
+use std::future::Future;
+
+fn new_task(time: u64) -> impl Future&lt;Output=()&gt; {
+    async move{task::sleep(Duration::from_secs(time)).await;}
+}
+</pre>
+
+<p>Die Funktion <code>join_all</code> ist leider mit zwei Problemen
+behaftet. Zum einen kommt dort mit der Erzeugung von
+<code>vec![f1,f2]</code> offenbar eine unnötige Heap-Allokation vor.
+Zum anderen müssen die Rückgabewerte von <code>f1</code> und
+<code>f2</code> den gleichen Datentyp besitzen. Aus diesen Gründen gibt
+es noch die Funktion <code>join</code>.
+
+<pre class="rust ibox">
+use std::time::Duration;
+use async_std::task;
+use futures::{future::join, executor::block_on};
+
+struct S1 {value: &amp;'static str}
+struct S2 {value: &amp;'static str}
+
+async fn task1(time: u64) -&gt; S1 {
+    task::sleep(Duration::from_secs(time)).await;
+    S1{value: "Wert 1"}
+}
+
+async fn task2(time: u64) -&gt; S2 {
+    task::sleep(Duration::from_secs(time)).await;
+    S2{value: "Wert 2"}
+}
+
+fn main() {
+    let f1 = task1(2);
+    let f2 = task2(2);
+    let (s1, s2) = block_on(join(f1,f2));
+    println!("{}, {}", s1.value, s2.value);
+}
+</pre>
+
+<p>Analog gibt es <code>join3</code>, <code>join4</code>,
+<code>join5</code> und das variadische Makro <code>join</code>,
+das auch mehr als fünf Futures verbinden kann.
+Beim Makro muss man
+
+<pre class="rust indent">
+block_on(async{join!(f1,f2)})
+</pre>
+
+<p>schreiben.
+
 
 </body>
 </html>
