@@ -1,0 +1,228 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,dvipdfmx]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+% \usepackage{mathptmx}
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+\addtokomafont{disposition}{\rmfamily}
+% \renewcommand\ttdefault{lmtt}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{color}
+\definecolor{c1}{RGB}{60,0,40}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+
+\numberwithin{equation}{section}
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{{\sffamily\bfseries #1}}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\section*{Epidemiologische Grundmodelle}
+
+\tableofcontents
+
+\section{Das klassische SIR-Modell}
+\subsection{Modelldefinition}
+
+Die Population von $N$ Individuen wird aufgespalten in die Anteile
+$S,I,R$ mit%
+\begin{equation}
+S+I+R=N.
+\end{equation}
+Die Ausbreitung der Krankheit verläuft nun gemäß%
+\begin{align}
+S' &= -\tfrac{1}{N} \beta SI,\\
+I' &= \tfrac{1}{N} \beta SI - \gamma I,\\
+R' &= \gamma I.
+\end{align}
+Hierbei handelt es sich um ein autonomes System von gewöhnlichen
+Differentialgleichungen für $S(t)$, $I(t)$, $R(t)$.
+Wie bei jedem autonomen System ist durch die Gleichungen ein
+dynamisches System beschrieben.
+
+Weil dieses Modell noch keine demografische Dynamik enthält,
+ist $N$ eine Konstante. Günstig ist daher die Verwendung der
+relativen Größen $s:=S/N$, $i:=I/N$, $r:=R/N$. Das System nimmt
+damit die Gestalt%
+\begin{align}
+\label{eq:sir-s} s' &= -\beta si,\\
+\label{eq:sir-i} i' &= \beta si - \gamma i,\\
+\label{eq:sir-r} r' &= \gamma i
+\end{align}
+an.
+
+\subsection{Beziehung zur Reproduktionszahl}
+
+Die \emph{effektive Reproduktionszahl} ist definiert gemäß
+$R_q := R_0 s$, wobei $R_0$ die \emph{Basisreproduktionszahl} ist.
+Hierbei ist $q:=1-s$, so dass man $R_q=R_0$ für $q=0$ erhält. Man nennt
+$q$ den immunen Anteil der Population.
+
+Die Reproduktionszahl steht natürlich im Zusammenhang mit dem weiteren
+Verlauf der Epidemie. Zur Herleitung fragen wir, unter welchem Umstand
+sich die Epidemie bei $i\ne 0$ nicht weiter ausbreitet. Dazu muss
+$i'=0$ sein. Eingesetzt in \eqref{eq:sir-i} bedeutet das%
+\begin{equation}
+0 = (\beta s - \gamma) i \;\Leftrightarrow\; 0 = \beta s - \gamma
+\;\Leftrightarrow\; s = \gamma/\beta.
+\end{equation}
+Nun bedeutet $i'=0$ aber auch $R_q=1$, und daher %
+\begin{equation}
+1 = R_q = R_0 s = R_0 \tfrac{\gamma}{\beta}.
+\end{equation}
+Wir finden die Beziehung
+\begin{equation}
+R_0 = \beta/\gamma.
+\end{equation}
+
+\subsection{Exponentielle Anfangsphase}
+
+Ist am Anfang der Epidemie $s\approx 1$, verläuft die Ausbreitung
+der Krankheit exponentiell. Dies lässt sich leicht einsehen. Setzt
+man $s=1$ in \eqref{eq:sir-i} ein, ergibt sich nämlich%
+\begin{equation}\label{eq:i-ode-exp}
+i' = \lambda i,\quad \lambda := \beta-\gamma.
+\end{equation}
+Das ist die Dgl. von Exponentialfunktionen, d.\,h. der Lösungen
+$i(t) = i(0)\,\ee^{\lambda t}$.
+
+Mathematisch kann man das noch ein wenig genauer herausarbeiten.
+Dazu werden die Größen zum Zustandsvektor $x=(s,i,r)$ zusammengefasst.
+Das System ist dann abstrakt beschrieben in der Form $x'=f(x)$. Ist
+nun $x_0$ eine Ruhelage des dynamischen Systems, genügt die Dynamik
+in der Nähe dieser Ruhelage unter gewissen Voraussetzungen
+näherungsweise dem linearen System $x' = J_0 x$. Hierbei ist
+$J_0:=Df(x_0)$ die Jacobimatrix von $f$ an der Stelle $x_0$.
+
+Eine Ruhelage ist definiert durch $x'(t)=0$ und wird bei den
+epidemiologischen Modellen auch als Gleichgewicht (engl.
+\emph{equilibrium}) bezeichnet. Dieses kann stabil oder instabil sein.
+
+Der Funktionswert $f(x)$ ist hier die Zusammenfassung der rechten
+Seiten der Gleichungen \eqref{eq:sir-s} bis \eqref{eq:sir-r} zu einem
+Tupel. Darin darf \eqref{eq:sir-r} entfallen, redundant weil von
+den anderen beiden Gleichungen entkoppelt. Das macht%
+\begin{equation}
+f(\begin{pmatrix}s\\ i\end{pmatrix})
+:= \begin{pmatrix}-\beta s i\\ \beta si - \gamma i\end{pmatrix}.
+\end{equation}
+Somit ergibt sich
+\begin{equation}
+Df = \begin{pmatrix}
+-\beta i & -\beta s\\
+\beta i & \beta s - \gamma
+\end{pmatrix}.
+\end{equation}
+Auswertung der Matrix an der Ruhelage $(s,i)=(1,0)$ führt zum linearen
+System%
+\begin{equation}
+\begin{pmatrix}
+s'\\ i'
+\end{pmatrix}
+= \begin{pmatrix}
+0 & -\beta\\
+0 & \beta-\gamma
+\end{pmatrix}
+\begin{pmatrix}
+s\\ i
+\end{pmatrix}.
+\end{equation}
+Das System enthält \eqref{eq:i-ode-exp} wie gewünscht.
+
+Es gibt noch eine zweite Ruhelage, nämlich $(s,i)=(0,0)$. Die
+Auswertung der Matrix bei dieser führt zum System
+\begin{equation}
+\begin{pmatrix}
+s'\\ i'
+\end{pmatrix}
+= \begin{pmatrix}
+0 & 0\\
+0 & -\gamma
+\end{pmatrix}
+\begin{pmatrix}
+s\\ i
+\end{pmatrix}.
+\end{equation}
+Demnach verläuft das Abklingen der Epidemie näherungsweise exponentiell
+gemäß $i' = -\gamma i$. Zum gleichen Ergebnis gelangt man durch
+Einsetzen von $s\approx 0$ in \eqref{eq:sir-i}.
+
+\subsection{Peakhöhe der Infektiösen}
+
+Mit \eqref{eq:sir-i} und \eqref{eq:sir-s} gewinnt man die Dgl.%
+\begin{equation}
+\frac{\mathrm di}{\mathrm ds} = \frac{i'(t)}{s'(t)}
+= \frac{\beta si - \gamma i}{-\beta si} = -1 + \frac{1}{R_0 s},
+\end{equation}
+deren Lösung
+\begin{equation}
+i-i_0 = - (s-s_0) + \tfrac{1}{R_0}(\ln s - \ln s_0)
+\end{equation}
+man durch Separation der Variablen erhält. Umformung dieser
+Gleichung liefert%
+\begin{equation}\label{eq:const-of-motion}
+(i+s)R_0-\ln s = (i_0+s_0)R_0-\ln s_0 = \mathrm{const}.
+\end{equation}
+D.\,h. die Funktion
+\begin{equation}
+F(t,(s,i)) := (i+s)R_0 - \ln s
+\end{equation}
+ist eine erstes Integral der Bewegung. Eine nichtkonstante, stetig
+differenzierbare, skalarwertige Funktion $F(t,x)$
+heißt \emph{erstes Integral der Bewegung} eines Systems
+von Differentialgleichungen erster Ordnung, $x'=f(t,x)$,
+wenn $F$ lokal konstant für jede Lösung $x(t)$ ist, d.\,h.
+$\tfrac{\mathrm d}{\mathrm dt}F(t,x(t))=0$.
+
+Da hier ein dynamisches System vorliegt, bedeutet dies, dass
+das erste Integral der Bewegung auf den
+Phasenraum"=Trajektorien $x(t):=(s(t),i(t))$ konstant ist.
+
+Bei $i_\mathrm{max}$ muss $R_0 s = 1$ bzw. $s = 1/R_0$ sein, womit wir
+\begin{equation}
+i_\mathrm{max} = i_0 + s_0 - \tfrac{1}{R_0} - \tfrac{1}{R_0}\ln(R_0 s_0)
+\end{equation}
+aus \eqref{eq:const-of-motion} erhalten.
+
+\begin{table}
+\begin{tabular}{cll}
+\toprule
+\strong{Größe} & \strong{Einheit} & \strong{Erklärung}\\
+\midrule
+$t$ & $\unit{d}$ & Zeit in Tagen\\
+$N$ & $\unit{indv}$ & Population\\
+$S$ & $\unit{indv}$ & Anfällige, engl. \emph{susceptibles}\\
+$E$ & $\unit{indv}$ & Exponierte, engl. \emph{exposed}\\
+$I$ & $\unit{indv}$ & Infektiöse, engl. \emph{infectious}\\
+$R$ & $\unit{indv}$ & Erholte, engl. \emph{recovered}\\
+$\alpha$ & $1/\unit d$ & Kehrwert der Latenzzeit\\
+$\beta$ & $1/\unit d$ & Transmissionsrate\\
+$\gamma$ & $1/\unit d$ & Erholungsrate\\
+$\mu$ & $1/\unit d$ & Sterberate\\
+\bottomrule
+\end{tabular}
+\caption{Größen der Modelle SIR und SEIR.}
+\end{table}
+
+\mbox{}
+\vfill
+
+\noindent
+{\small Dieser Text steht unter der Lizenz\\
+Creative Commons CC0.}
+
+\end{document}
