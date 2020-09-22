@@ -218,6 +218,51 @@ $\mu$ & $1/\unit d$ & Sterberate\\
 \caption{Größen der Modelle SIR und SEIR.}
 \end{table}
 
+\subsection{Ausmaß der Epidemie}
+
+Mit \eqref{eq:sir-s} und \eqref{eq:sir-r} gewinnt man die Dgl.
+\begin{equation}
+\frac{\mathrm ds}{\mathrm dr} = \frac{s'(t)}{r'(t)}
+= \frac{-\beta si}{\gamma i} = -R_0 s.
+\end{equation}
+Diese besitzt die Lösung
+\begin{equation}
+s = s(r_0)\,\ee^{-R_0 (r-r_0)}.
+\end{equation}
+Nach Ablauf der Epidemie gilt $i=0$, also $s=1-r$. Man gelangt zu%
+\begin{equation}
+1-r = s(r_0)\,\ee^{-R_0 (r-r_0)}.
+\end{equation}
+Dieser Gleichung, \emph{Final size equation} genannt,
+kommt eine über das SIR-Modell hinausgehende Bedeutung zu.
+
+Die Gleichung lässt sich in die Form
+\begin{equation}
+(r-1)R_0\ee^{(r-1)R_0} = -s(r_0)\,R_0\ee^{(r_0-1)R_0}
+\end{equation}
+bringen, welche von der mathematischen Gestalt $y\ee^y = x$ ist.
+Die Anwendung der lambertschen W-Funktion formt diese Gleichung
+nach $y$ um, liefert also $y=W(x)$. Demnach erhält man%
+\begin{equation}
+r = 1+\tfrac{1}{R_0}W(-s(r_0)\,R_0\ee^{(r_0-1)R_0}).
+\end{equation}
+Unter der Annahme $r_0=0$ und $s(r_0)=1$ hängt $r$ nur von
+$R_0$ ab.
+
+Zur praktischen Berechnung des hier relevanten Teils der W-Funktion
+betrachtet man das quadratische Taylorpolynom der
+Funktion $f(w):=w\ee^w-x$ an der Stelle $-1$ und
+bestimmt von diesem die Nullstelle, auf welche noch einmalig die
+Fixpunktiteration $w\mapsto x\ee^{-w}$ angewendet
+wird. Das Resultat ist
+\[w = x\exp(1-\sqrt{2\ee x+2}).\]
+Eine gute Näherung der W-Funktion erhält man nun als
+\[W(x)\approx \varphi^n(w),\]
+wobei $\varphi^n$ die $n$-te Iteration des Newtonverfahrens
+\[\varphi(w) = w-\frac{f(w)}{f'(w)} = \frac{x\ee^{-w}+w^2}{w+1}\]
+ist. Bereits bei $n=4$ ist der Wert überall in etwa so genau wie
+doppelt genaue Fließkommazahlen es erlauben.
+
 \mbox{}
 \vfill
 
