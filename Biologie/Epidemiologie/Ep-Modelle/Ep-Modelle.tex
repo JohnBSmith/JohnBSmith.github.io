@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,fleqn,twocolumn,dvipdfmx]{scrartcl}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
@@ -9,10 +9,15 @@
 \usepackage[libertine,smallerops]{newtxmath}
 \addtokomafont{disposition}{\rmfamily}
 % \renewcommand\ttdefault{lmtt}
+\usepackage[scaled=0.84]{DejaVuSansMono}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,commentstyle=\ttfamily}
+
+\usepackage{graphicx}
 \usepackage{color}
 \definecolor{c1}{RGB}{60,0,40}
 
@@ -23,15 +28,18 @@
 \numberwithin{equation}{section}
 
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\newcommand{\R}{\mathbb R}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\unit}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{{\sffamily\bfseries #1}}
 
 \begin{document}
 
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
-\section*{Epidemiologische Grundmodelle}
+\noindent
+{\huge\textbf{Epidemiologische\\
+Grundmodelle}\par}
 
 \tableofcontents
 
@@ -262,6 +270,150 @@ wobei $\varphi^n$ die $n$-te Iteration des Newtonverfahrens
 \[\varphi(w) = w-\frac{f(w)}{f'(w)} = \frac{x\ee^{-w}+w^2}{w+1}\]
 ist. Bereits bei $n=4$ ist der Wert überall in etwa so genau wie
 doppelt genaue Fließkommazahlen es erlauben.
+
+\subsection{Infektiöse Zeit}
+
+Der Kehrwert der Erholungsrate $\gamma$ ist interpretierbar
+als die mittlere Zeit, die ein Individuum infektiös bleibt. Zur
+Untersuchung sei $p(t-t_0)$ die Wahrscheinlichkeit, dass ein zum Zeitpunkt
+$t_0$ infiziertes Individuum zum Zeitpunkt $t$ noch infektiös ist.
+Hierbei gelte $p(t)=0$ für $t<0$.
+
+Wir würden nun gerne in Erfahrung bringen, welcher Gestalt $p$
+denn ist. Dazu schalten wir die Transmission zum Zeitpunkt $t=0$
+ab, setzen also ab diesem Zeitpunkt $\beta=0$. Dann gilt einerseits
+$i(t)=i(0)p(t)$ und laut \eqref{eq:sir-i} andererseits
+$i'=\gamma i$. Einsetzen der Lösung $i(t)=i(0)\ee^{-\gamma t}$
+liefert%
+\begin{equation}
+p(t) = \ee^{-\gamma t}.
+\end{equation}
+Die Wahrscheinlichkeit zum Zeitpunkt $t$ nicht mehr infektiös zu sein,
+$F(t)=1-p(t)$ für $t\ge 0$, ist demnach
+die Verteilungsfunktion einer Exponentialverteilung.
+Zu dieser gehört die Dichte
+$f(t)=\gamma\ee^{-\gamma t}$ und der Erwartungswert
+$\mathrm E(X) = 1/\gamma$. In der Tat ist $1/\gamma$ die mittlere
+infektiöse Dauer.
+
+Nun drängt sich natürlich die Frage auf, wie sich das Modell so
+verallgemeinern lässt, dass $p$ beliebig sein darf.
+Unabhängig davon ob $\beta$ konstant ist oder nicht sei
+\[(\beta si)(t) := \beta(t)s(t)i(t).\]
+Zum Zeitpunkt $t$ sind von $i(0)$ noch $i(0)p(t)$ verblieben.
+Zu jedem Zeitpunkt $\tau$ kommen $(\beta si)(\tau)$ hinzu,
+wovon zum Zeitpunkt $t$ noch $(\beta si)(\tau)p(t-\tau)$ verbleiben.
+Das macht%
+\begin{equation}\label{eq:int-eq-i}
+i(t) = i(0)p(t) + \int_0^t (\beta si)(\tau)p(t-\tau)\,\mathrm d\tau.
+\end{equation}
+Das Integral kann als Faltung von $\beta si$ und $p$ betrachtet
+werden. Die Träger der Funktionen müssen dafür Teilmengen von
+$[0,\infty)$ sein, damit das Integrationsintervall äquivalent
+von $\R$ auf $[0,t]$ eingeschränkt werden kann.
+
+Aus \eqref{eq:sir-s} erhält man zudem
+\begin{equation}\label{eq:int-eq-s}
+s(t) = s(0) - \int_0^t (\beta si)(\tau)\,\mathrm d\tau.
+\end{equation}
+Die Gleichungen \eqref{eq:int-eq-s} und \eqref{eq:int-eq-i}
+bilden nun ein nichtlineares System von volterraschen
+Integralgleichungen. Zur numerischen
+Lösung betrachtet man dieses System als Fixpunktgleichung
+$x=\varphi(x)$ mit $x(t)=(s(t),i(t))$. Die Picard"=Iteration
+$x_{k+1} = \varphi(x_k)$ sollte dann gegen die Lösung konvergieren.
+Als Startfunktion wählt man die konstante Funktion
+$x_0(t) := (s_0,i_0)$.
+
+Die Darstellung der Funktionen $x_k(t)$ als lineare Interpolation
+aus äquidistanten Stützstellen erlaubt hierbei die Benutzung
+normaler Quadraturverfahren. Der Programmieraufwand bleibt damit gering.
+
+
+\section{Das klassische SEIR-Modell}
+
+\subsection{Modelldefinition}
+Die Ausbreitung der Krankheit verläuft gemäß%
+\begin{align}
+S' &= -\tfrac{1}{N} \beta SI,\\
+E' &= \tfrac{1}{N} \beta SI - \alpha E,\\
+I' &= \alpha E - \gamma I,\\
+R' &= \gamma I.
+\end{align}
+Umformuliert in relative Größen ist
+\begin{align}
+s' &= - \beta si,\\
+e' &= \beta si - \alpha e,\\
+i' &= \alpha e - \gamma i,\\
+r' &= \gamma i.
+\end{align}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=80mm]{img/01-sir.pdf}
+Parameter: $R_0 = 2$,\, $\gamma = 1/4$,\, $\beta = R_0\gamma$,\newline
+$s_0 = 0$,\, $i_0 = 10000/N$,\, $N = 83200000$.
+\end{center}
+\caption{Epidemieverlauf im SIR-Modell.}
+\end{figure}
+
+\newpage
+
+\mbox{}\newpage
+\section{Berechnung}
+
+\begin{figure}[h!]
+\begin{lstlisting}[language=Python]
+from numpy import array as vector
+
+# Explizites Euler-Verfahren
+def euler_method(f,t0,x0,t1,h):
+    t = t0; x = x0
+    a = [[t,x]]
+    for k in range(0,1+int((t1-t0)/h)):
+        t = t0 + k*h
+        x = x + h*f(t,x)
+        a.append([t,x])
+    return a
+
+def sir_model(beta,gamma):
+    def f(t,x):
+        s,i,r = x
+        return vector([
+            -beta*s*i,
+            beta*s*i - gamma*i,
+            gamma*i
+        ])
+    return f
+
+def sir_simulation(beta,gamma,i0,days,step=0.1):
+    x0 = vector([1.0-i0,i0,0.0])
+    model = sir_model(beta,gamma)
+    return euler_method(model,0,x0,days,step)
+
+def diagram(simulation):
+    import matplotlib.pyplot as plot
+    figure,axes = plot.subplots()
+    t,x = zip(*simulation())
+    s,i,r = zip(*x)
+    axes.plot(t,s, color = "#000000")
+    axes.plot(t,i, color = "#000000")
+    axes.plot(t,r, color = "#000000",
+        linestyle = '--')
+    plot.show()
+
+# N: Einwohnerzahl von Deutschland 2019/2020
+def simulation1():
+    R0 = 2.0; gamma = 1/4.0; N = 83200000
+    return sir_simulation(
+        beta = R0*gamma, gamma = gamma,
+        i0 = 10000.0/N, days = 80)
+
+diagram(simulation1)
+\end{lstlisting}
+\caption{Simulation mittels SIR-Modell}
+\end{figure}
+
 
 \mbox{}
 \vfill
