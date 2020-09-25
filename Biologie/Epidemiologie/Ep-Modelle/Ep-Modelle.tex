@@ -89,12 +89,12 @@ $i'=0$ sein. Eingesetzt in \eqref{eq:sir-i} bedeutet das%
 \;\Leftrightarrow\; s = \gamma/\beta.
 \end{equation}
 Nun bedeutet $i'=0$ aber auch $R_q=1$, und daher %
-\begin{equation}
+\begin{equation}\label{eq:R0-beta-gamma-from-Rq}
 1 = R_q = R_0 s = R_0 \tfrac{\gamma}{\beta}.
 \end{equation}
 Wir finden die Beziehung
 \begin{equation}
-R_0 = \beta/\gamma.
+\beta = R_0\gamma.
 \end{equation}
 
 \subsection{Exponentielle Anfangsphase}
@@ -200,11 +200,14 @@ Da hier ein dynamisches System vorliegt, bedeutet dies, dass
 das erste Integral der Bewegung auf den
 Phasenraum"=Trajektorien $x(t):=(s(t),i(t))$ konstant ist.
 
-Bei $i_\mathrm{max}$ muss $R_0 s = 1$ bzw. $s = 1/R_0$ sein, womit wir
+Bei $i_\mathrm{max}$ muss $R_q = 1$ sein, also $R_0 s = 1$ bzw.
+$s = 1/R_0$. Zur gleichen Einsicht gelangt man natürlich auch
+mit der Forderung $\frac{\mathrm di}{\mathrm ds}=0$, deren Lösung auch
+$\frac{\mathrm d^2 i}{\mathrm ds^2}<0$ erfüllt. Damit erhalten wir
 \begin{equation}
 i_\mathrm{max} = i_0 + s_0 - \tfrac{1}{R_0} - \tfrac{1}{R_0}\ln(R_0 s_0)
 \end{equation}
-aus \eqref{eq:const-of-motion} erhalten.
+aus \eqref{eq:const-of-motion}.
 
 \begin{table}
 \begin{tabular}{cll}
@@ -221,6 +224,7 @@ $\alpha$ & $1/\unit d$ & Kehrwert der Latenzzeit\\
 $\beta$ & $1/\unit d$ & Transmissionsrate\\
 $\gamma$ & $1/\unit d$ & Erholungsrate\\
 $\mu$ & $1/\unit d$ & Sterberate\\
+$\nu$ & $1/\unit d$ & Geburtenrate\\
 \bottomrule
 \end{tabular}
 \caption{Größen der Modelle SIR und SEIR.}
@@ -229,7 +233,7 @@ $\mu$ & $1/\unit d$ & Sterberate\\
 \subsection{Ausmaß der Epidemie}
 
 Mit \eqref{eq:sir-s} und \eqref{eq:sir-r} gewinnt man die Dgl.
-\begin{equation}
+\begin{equation}\label{eq:ODE-s-r}
 \frac{\mathrm ds}{\mathrm dr} = \frac{s'(t)}{r'(t)}
 = \frac{-\beta si}{\gamma i} = -R_0 s.
 \end{equation}
@@ -299,7 +303,7 @@ infektiöse Dauer.
 Nun drängt sich natürlich die Frage auf, wie sich das Modell so
 verallgemeinern lässt, dass $p$ beliebig sein darf.
 Unabhängig davon ob $\beta$ konstant ist oder nicht sei
-\[(\beta si)(t) := \beta(t)s(t)i(t).\]
+\[(\beta si)(\tau) := \beta(\tau)s(\tau)i(\tau).\]
 Zum Zeitpunkt $t$ sind von $i(0)$ noch $i(0)p(t)$ verblieben.
 Zu jedem Zeitpunkt $\tau$ kommen $(\beta si)(\tau)$ hinzu,
 wovon zum Zeitpunkt $t$ noch $(\beta si)(\tau)p(t-\tau)$ verbleiben.
@@ -325,9 +329,18 @@ $x_{k+1} = \varphi(x_k)$ sollte dann gegen die Lösung konvergieren.
 Als Startfunktion wählt man die konstante Funktion
 $x_0(t) := (s_0,i_0)$.
 
-Die Darstellung der Funktionen $x_k(t)$ als lineare Interpolation
-aus äquidistanten Stützstellen erlaubt hierbei die Benutzung
-normaler Quadraturverfahren. Der Programmieraufwand bleibt damit gering.
+Der geringste Programmieraufwand fällt an, wenn man die Funktionen
+bezüglich äquidistanter Stützstellen linear Interpoliert und dabei
+für die Integrale übliche Quadraturverfahren heranzieht.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=80mm]{img/01-sir.pdf}
+Parameter: $R_0 = 2$,\, $\gamma = 1/4$,\, $\beta = R_0\gamma$,\newline
+$s_0 = 0$,\, $i_0 = 10000/N$,\, $N = 83200000$.
+\end{center}
+\caption{Epidemieverlauf im SIR-Modell.}
+\end{figure}
 
 
 \section{Das klassische SEIR-Modell}
@@ -342,24 +355,112 @@ R' &= \gamma I.
 \end{align}
 Umformuliert in relative Größen ist
 \begin{align}
-s' &= - \beta si,\\
-e' &= \beta si - \alpha e,\\
-i' &= \alpha e - \gamma i,\\
-r' &= \gamma i.
+\label{eq:seir-s} s' &= - \beta si,\\
+\label{eq:seir-e} e' &= \beta si - \alpha e,\\
+\label{eq:seir-i} i' &= \alpha e - \gamma i,\\
+\label{eq:seir-r} r' &= \gamma i.
 \end{align}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=80mm]{img/01-sir.pdf}
-Parameter: $R_0 = 2$,\, $\gamma = 1/4$,\, $\beta = R_0\gamma$,\newline
-$s_0 = 0$,\, $i_0 = 10000/N$,\, $N = 83200000$.
-\end{center}
-\caption{Epidemieverlauf im SIR-Modell.}
-\end{figure}
+\subsection{Beziehung zur Reproduktionszahl}
+
+Damit $R_q=1$ gilt, muss $e'=0$ und $i'=0$ sein. Eingesetzt in
+\eqref{eq:seir-e} und \eqref{eq:seir-i} bringt das $\alpha e=\beta si$
+und $\alpha e = \gamma i$. Somit ist $\beta s = \gamma$. Wie
+bei \eqref{eq:R0-beta-gamma-from-Rq} ergibt sich
+\begin{equation}
+\beta = R_0\gamma.
+\end{equation}
+
+\subsection{Ausmaß der Epidemie}
+
+Die Dgl. \eqref{eq:ODE-s-r} und der weitere Abschnitt
+einschließlich der Final size equation sind weiterhin gültig.
+Nach Ablauf der Epidemie gilt neben $i=0$ nun zusätzlich $e=0$.
+
+\subsection{Exponentielle Anfangsphase}
+
+Am Anfang der Epidemie kann man wie beim SIR"=Modell $s\approx 1$ setzen
+bzw. die Linearisierung mit der Jacobimatrix $Df(x_0)$ betrachten.
+Beide Ansätze führen zum linearen System
+\begin{equation}\label{eq:ei-linear}
+\begin{pmatrix}e'\\ i'
+\end{pmatrix}
+= A\begin{pmatrix}
+e\\ i
+\end{pmatrix}
+= \begin{pmatrix}
+-\alpha & \beta\\
+\alpha & -\gamma
+\end{pmatrix}
+\begin{pmatrix}
+e\\ i
+\end{pmatrix}.
+\end{equation}
+Für die Eigenwerte der Matrix gilt
+\begin{equation}\label{eq:ei-eigenvalue}
+0 = \det(A-\lambda E_2) = (\alpha+\lambda)(\gamma+\lambda)-\alpha\beta.
+\end{equation}
+Für $R_0>1$ sind das unter normalen Umständen zwei Eigenwerte,
+einer positiv, der andere negativ. Demnach ist die Ruhelage
+vom Typ Sattelpunkt und somit instabil, wie zu erwarten war.
+Für $R_0<1$ sind es zwei negative Eigenwerte, die Ruhelage daher
+asymptotisch stabil und vom Typ uneigentlicher Knoten.
+
+Der Ansatz $i=i(0)\ee^{\lambda t}$ ist zielführend und
+ergibt $e=\tfrac{1}{\alpha}(\gamma+\lambda)i$. Ferner lässt sich
+zeigen, dass die Wachstumskonstante $\lambda$ der Eigenwert
+aus \eqref{eq:ei-eigenvalue} ist. Einerseits muss das aus
+\eqref{eq:ei-linear} hervorgehen. Alternativ benutzt man $i'=\lambda i$,
+womit %
+\[1-s = e + i + r
+= \tfrac{\gamma+\lambda}{\alpha}i + i + \tfrac{\gamma}{\lambda} i
+= (\tfrac{\gamma+\lambda}{\alpha} + 1 + \tfrac{\gamma}{\lambda})i\]
+ist. Leitet man diese Gleichung nun auf beiden Seiten ab,
+benutzt $-s' = \beta si$ und dividiert anschließend durch $i$,
+kommt man auf%
+\begin{equation}
+\beta s = (\tfrac{\gamma+\lambda}{\alpha} + 1 + \tfrac{\gamma}{\lambda})\lambda.
+\end{equation}
+Mit $s\approx 1$ ergibt sich daraus \eqref{eq:ei-eigenvalue}.
+
+Somit ist eine Beziehung zwischen $\lambda$ und den Parametern
+$\alpha,\beta,\gamma$ gewonnen.
+
+\section{SIR-Modell mit Demografie}
+\subsection{Modelldefinition}
+Angenommen, es gibt eine Geburtenrate $\nu$ (lat.-engl. \emph{natality rate}), 
+und eine Sterberate $\mu$ (lat.-engl. \emph{mortality rate}). Zur Änderung der
+Anfälligen kommen dann $\nu N$ hinzu, wobei $N$ die aktuelle
+Bevölkerungszahl ist. Von jeder Gruppe $X$ versterben außerdem $\mu X$.
+
+Die Ausbreitung verläuft demnach gemäß%
+\begin{align}
+S' &= \nu N - \tfrac{1}{N}\beta SI - \mu S,\\
+I' &= \tfrac{1}{N}\beta SI - \gamma I - \mu I,\\
+R' &= \gamma I - \mu R.
+\end{align}
+Zu beachten ist, dass $N=S+I+R$ nun keine Konstante mehr
+ist. Aus den Dgln. ergibt sich allerdings
+\begin{equation}\label{eq:ODE-N}
+\begin{split}
+N' &= S'+I'+R' = \nu N - \mu S - \mu I - \mu R\\
+&= \nu N - \mu N = (\nu-\mu)N.
+\end{split}
+\end{equation}
+Bei der Umrechnung in die relativen Größen ist nun bei der
+Ableitung jeweils die Produktregel anzuwenden, also
+\[S' = (Ns)' = N's + Ns'\]
+usw. Das führt mit \eqref{eq:ODE-N} zum System
+\begin{align}
+s' &= \nu - \beta si - \nu s,\\
+i' &= \beta si - \gamma i - \nu i,\\
+r' &= \gamma i - \nu r.
+\end{align}
+Verblüffend ergibt sich das gleiche System, als wäre
+$N$ konstant mit $\nu = \mu$. Es genügt daher ohne Beschränkung
+der Allgemeinheit die Betrachtung dieses Falls.
 
 \newpage
-
-\mbox{}\newpage
 \section{Berechnung}
 
 \begin{figure}[h!]
