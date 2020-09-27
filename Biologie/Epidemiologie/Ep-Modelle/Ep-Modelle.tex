@@ -41,6 +41,9 @@
 {\huge\textbf{Epidemiologische\\
 Grundmodelle}\par}
 
+\vspace{1em}\noindent
+{\large September 2020}
+
 \tableofcontents
 
 \section{Das klassische SIR-Modell}
@@ -333,6 +336,32 @@ Der geringste Programmieraufwand fällt an, wenn man die Funktionen
 bezüglich äquidistanter Stützstellen linear Interpoliert und dabei
 für die Integrale übliche Quadraturverfahren heranzieht.
 
+Weiterhin stellt sich die Frage, wie es sich nun mit der
+Basisreproduktionszahl verhält. Diese ist definiert als die Zahl der
+Sekundärfälle die von einem Infizierten ausgehen. Im klassischen
+SIR-Modell ist $R_0 = \beta\gamma^{-1}$, also die Zahl der Fälle die
+durch $\beta$ Transmissionen pro Zeit während einer mittleren
+infektiösen Dauer $\gamma^{-1}$ zustande kommen. Demnach ist
+allgemeiner $R_0 = \beta\operatorname{E}(X)$.
+
+In einer weiteren Verallgemeinerung ist auch die Transmissionsrate
+vom \emph{Infektionsalter} -- der Zeit seit dem Beginn der
+Infektion -- abhängig. Für eine Dauer $x$ ergeben sich dann%
+\begin{equation}
+g(x) := \int_0^x \beta(t)\,\mathrm dt
+\end{equation}
+sekundäre Infektionen. Nach dem
+\emph{Law of the unconscious statistician}
+gilt nun%
+\begin{equation}
+R_0 = \operatorname{E}(g(X)) = \int_0^\infty g(t)\,\mathrm dF(t).
+\end{equation}
+Dieses Stieltjes"=Integral lässt sich bezüglich $F(t)=1-p(t)$
+mittels partieller Integration umformen in%
+\begin{equation}
+R_0 = \int_0^\infty \beta(t)p(t)\,\mathrm dt.
+\end{equation}
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=80mm]{img/01-sir.pdf}
@@ -460,6 +489,16 @@ Verblüffend ergibt sich das gleiche System, als wäre
 $N$ konstant mit $\nu = \mu$. Es genügt daher ohne Beschränkung
 der Allgemeinheit die Betrachtung dieses Falls.
 
+\subsection{Beziehung zur Reproduktionszahl}
+
+Wie beim Modell ohne Demografie ist der Ansatz $R_q = 1$.
+Hier muss man zwischen $I'=0$ und $i'=0$ unterscheiden. Davon ist
+$I'=0$ richtig, denn $R_0$ soll uns etwas über den Verlauf in
+absoluten Zahlen verraten. Man bekommt
+\begin{equation}
+\beta = R_0(\gamma+\mu).
+\end{equation}
+
 \newpage
 \section{Berechnung}
 
@@ -515,8 +554,16 @@ diagram(simulation1)
 \caption{Simulation mittels SIR-Modell}
 \end{figure}
 
+\newpage
+\begin{thebibliography}{00}
+\bibitem{Keeling} Matt J. Keeling, Pejman Rohani:
+»\emph{Modeling Infectious Diseases in Humans and Animals}«.
+Princeton University Press, 2008.
 
-\mbox{}
+\bibitem{Heuser} Harro Heuser: »\emph{Gewöhnliche Differentialgleichungen}«.
+Teubner, 1989, 4. Auflage 2004. In Abschnitt 69 (S.\,559):
+»\emph{Ausbreitungsdynamik ansteckender Krankheiten}«.
+\end{thebibliography}
 \vfill
 
 \noindent
