@@ -27,7 +27,9 @@
 
 \numberwithin{equation}{section}
 
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,%
+urlcolor=black]{hyperref}
+
 \newcommand{\R}{\mathbb R}
 \newcommand{\ee}{\mathrm e}
 \newcommand{\unit}[1]{\mathrm{#1}}
@@ -314,11 +316,6 @@ Das macht%
 \begin{equation}\label{eq:int-eq-i}
 i(t) = i(0)p(t) + \int_0^t (\beta si)(\tau)p(t-\tau)\,\mathrm d\tau.
 \end{equation}
-Das Integral kann als Faltung von $\beta si$ und $p$ betrachtet
-werden. Die Träger der Funktionen müssen dafür Teilmengen von
-$[0,\infty)$ sein, damit das Integrationsintervall äquivalent
-von $\R$ auf $[0,t]$ eingeschränkt werden kann.
-
 Aus \eqref{eq:sir-s} erhält man zudem
 \begin{equation}\label{eq:int-eq-s}
 s(t) = s(0) - \int_0^t (\beta si)(\tau)\,\mathrm d\tau.
@@ -335,6 +332,14 @@ $x_0(t) := (s_0,i_0)$.
 Der geringste Programmieraufwand fällt an, wenn man die Funktionen
 bezüglich äquidistanter Stützstellen linear Interpoliert und dabei
 für die Integrale übliche Quadraturverfahren heranzieht.
+
+Mit der Leibnizregel bekommt \eqref{eq:int-eq-i} die Form
+\begin{equation}
+i'(t) = (\beta si)(t)-i(0)f(t)-\!\int_0^t \!(\beta si)(\tau)f(t-\tau)\mathrm d\tau
+\end{equation}
+mit $f=-p'$. Speziell bei der Exponentialverteilung gilt $f=\gamma p$,
+womit sich die Gleichung in diesem Fall wie gewünscht zu
+\eqref{eq:sir-i} reduziert.
 
 Weiterhin stellt sich die Frage, wie es sich nun mit der
 Basisreproduktionszahl verhält. Diese ist definiert als die Zahl der
@@ -563,6 +568,22 @@ Princeton University Press, 2008.
 \bibitem{Heuser} Harro Heuser: »\emph{Gewöhnliche Differentialgleichungen}«.
 Teubner, 1989, 4. Auflage 2004. In Abschnitt 69 (S.\,559):
 »\emph{Ausbreitungsdynamik ansteckender Krankheiten}«.
+
+\bibitem{Ma} Junling Ma: »\emph{Estimating epidemic exponential growth
+rate and basic reproduction number}«. In: Infectious Disease Modelling 5
+(2020), S. 129--141.\\
+\href{https://doi.org/10.1016/j.idm.2019.12.009}%
+{doi:10.1016/j.idm.2019.12.009}
+
+\bibitem{Hethcote} Herbert W. Hethcote, David W. Tudor:
+»\emph{Integral Equation Models for Endemic Infectious Diseases}«.
+Journal of Mathematical Biology 9 (1980), S. 37--47.
+
+\bibitem{Wallinga} Jacco Wallinga, Marc Lipsitch:
+»\emph{How generation intervals shape the relationship
+between growth rates and reproductive numbers}«.
+In: Proceedings of the Royal Society B 274 (2007), S. 599--604.\\
+\href{https://doi.org/10.1098/rspb.2006.3754}{doi:10.1098/rspb.2006.3754}
 \end{thebibliography}
 \vfill
 
