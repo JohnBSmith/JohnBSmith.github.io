@@ -341,6 +341,15 @@ mit $f=-p'$. Speziell bei der Exponentialverteilung gilt $f=\gamma p$,
 womit sich die Gleichung in diesem Fall wie gewünscht zu
 \eqref{eq:sir-i} reduziert.
 
+\begin{figure}
+\begin{center}
+\includegraphics[width=80mm]{img/01-sir.pdf}
+Parameter: $R_0 = 2$,\, $\gamma = 1/4$,\, $\beta = R_0\gamma$,\newline
+$s_0 = 0$,\, $i_0 = 10000/N$,\, $N = 83200000$.
+\end{center}
+\caption{Epidemieverlauf im SIR-Modell.}
+\end{figure}
+
 Weiterhin stellt sich die Frage, wie es sich nun mit der
 Basisreproduktionszahl verhält. Diese ist definiert als die Zahl der
 Sekundärfälle die von einem Infizierten ausgehen. Im klassischen
@@ -366,15 +375,43 @@ mittels partieller Integration umformen in%
 \begin{equation}
 R_0 = \int_0^\infty \beta(t)p(t)\,\mathrm dt.
 \end{equation}
+Stellen wir eine allgemeine Überlegung an, die aus \cite{Wallinga}
+entstammt. Sei $c(t)$ die
+\emph{Inzidenzrate} zum Zeitpunkt $t$, das ist die Zahl der
+Neuinfektionen pro Zeiteinheit. Für diese Neuinfektionen sind
+Inzidenzen aus der Vergangenheit verantwortlich. Um $a$ in der Zeit
+zurück hat daran die Rate $c(t-a)$ Anteil. Weil die
+Infektion durch diesen Anteil im Infektionsalter $a$ geschieht, ist
+die Auswirkung davon $\beta(a)p(a)$. Weil aber aktuell zum Zeitpunkt
+$t$ nur der Anteil $s(t)$ anfällig ist, ist die Auswirkung nur
+$s(t)\beta(a)p(a)$. Das macht
+\begin{equation}
+c(t) = s(t)\int_0^\infty c(t-a)\beta(a)p(a)\,\mathrm da.
+\end{equation}
+Diese Formel muss auch für das klassische SIR"=Modell und
+\eqref{eq:int-eq-i} gültig sein. Dort sei $\beta$ eine Konstante.
+Wegen $c(t):=-s'(t)$ ist zudem $c=\beta si$. Numerische
+Bestätigung erbringt die Einsetzung von Lösungen $s,i$
+aus dem Euler"=Verfahren, die zuvor durch stückweise lineare
+Interpolation in Funktionen umgewandelt wurden. Zu beachten ist
+hierbei, dass auch die Vergangenheit berechnet werden muss, bis in
+guter Näherung $i\approx 0$ ist.
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=80mm]{img/01-sir.pdf}
-Parameter: $R_0 = 2$,\, $\gamma = 1/4$,\, $\beta = R_0\gamma$,\newline
-$s_0 = 0$,\, $i_0 = 10000/N$,\, $N = 83200000$.
-\end{center}
-\caption{Epidemieverlauf im SIR-Modell.}
-\end{figure}
+Zur symbolischen Bestätigung erfolgt zunächst die Substitution
+$\tau=t-a$, die in
+\begin{equation}
+c(t) = s(t)\int_{-\infty}^t c(\tau)\beta p(t-\tau)\,\mathrm d\tau
+\end{equation}
+resultiert. Ersetzung $c=\beta si$ und Kürzen führt zu
+\begin{equation}\label{eq:i-int-inf-past}
+i(t) = \beta\int_{-\infty}^t (si)(\tau) p(t-\tau)\,\mathrm d\tau.
+\end{equation}
+Für einen allgemeinen Start $t_0$ ist \eqref{eq:int-eq-i}
+von der Gestalt
+\begin{equation}
+i(t) = i(t_0)p(t-t_0)+\int_{t_0}^t (\beta si)(\tau)p(t-\tau)\,\mathrm d\tau,
+\end{equation}
+die \eqref{eq:i-int-inf-past} bei $t_0\to -\infty$ hervorbringt.
 
 
 \section{Das klassische SEIR-Modell}
