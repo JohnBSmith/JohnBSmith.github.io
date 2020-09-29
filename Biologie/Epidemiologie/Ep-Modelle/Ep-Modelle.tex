@@ -385,7 +385,7 @@ Infektion durch diesen Anteil im Infektionsalter $a$ geschieht, ist
 die Auswirkung davon $\beta(a)p(a)$. Weil aber aktuell zum Zeitpunkt
 $t$ nur der Anteil $s(t)$ anfällig ist, ist die Auswirkung nur
 $s(t)\beta(a)p(a)$. Das macht
-\begin{equation}
+\begin{equation}\label{eq:c-integral-equation}
 c(t) = s(t)\int_0^\infty c(t-a)\beta(a)p(a)\,\mathrm da.
 \end{equation}
 Diese Formel muss auch für das klassische SIR"=Modell und
@@ -398,20 +398,57 @@ hierbei, dass auch die Vergangenheit berechnet werden muss, bis in
 guter Näherung $i\approx 0$ ist.
 
 Zur symbolischen Bestätigung erfolgt zunächst die Substitution
-$\tau=t-a$, die in
+$\tau=t-a$, die in%
 \begin{equation}
 c(t) = s(t)\int_{-\infty}^t c(\tau)\beta p(t-\tau)\,\mathrm d\tau
 \end{equation}
-resultiert. Ersetzung $c=\beta si$ und Kürzen führt zu
+resultiert. Ersetzung $c=\beta si$ und Kürzen führt zu%
 \begin{equation}\label{eq:i-int-inf-past}
 i(t) = \beta\int_{-\infty}^t (si)(\tau) p(t-\tau)\,\mathrm d\tau.
 \end{equation}
 Für einen allgemeinen Start $t_0$ ist \eqref{eq:int-eq-i}
-von der Gestalt
+von der Gestalt%
 \begin{equation}
 i(t) = i(t_0)p(t-t_0)+\int_{t_0}^t (\beta si)(\tau)p(t-\tau)\,\mathrm d\tau,
 \end{equation}
 die \eqref{eq:i-int-inf-past} bei $t_0\to -\infty$ hervorbringt.
+
+Die Funktion $\beta p$ lässt sich durch Normierung zu einer
+Dichtefunktion machen, das ist%
+\begin{equation}
+g(a) := \frac{1}{R_0} \beta(a)p(a).
+\end{equation}
+Dann gilt
+\begin{equation}
+\int_0^\infty g(a)\,\mathrm da = 1.
+\end{equation}
+Gleichung \eqref{eq:c-integral-equation} nimmt bezüglich
+$g$ die Gestalt%
+\begin{equation}
+c(t) = R_0s(t)\int_0^\infty c(t-a)g(a)\,\mathrm da
+\end{equation}
+an. Am Anfang der Epidemie wächst die Inzidenzrate in guter Näherung
+exponentiell, womit für diese Zeit $c(t)=c_0\ee^{\lambda t}$
+eingesetzt werden kann. Zudem gilt in dieser Phase $s(t)\approx 1$.
+Nach dem Kürzen bringt dies%
+\begin{equation}
+1 = R_0\int_0^\infty \ee^{-\lambda a}g(a)\,\mathrm da,
+\end{equation}
+die epidemiologische \emph{Euler"=Lotka"=Gleichung}.
+
+Der Erwartungswert
+\begin{equation}
+M(r) := \operatorname{E}(\ee^{rX})
+= \int_0^\infty \ee^{rx}g(x)\,\mathrm dx
+\end{equation}
+wird allg. als \emph{momenterzeugnde Funktion} bezeichnet.
+
+Der Zusammenhang lautet dann kurz
+\begin{equation}
+R_0 = \frac{1}{M(-\lambda)}.
+\end{equation}
+Die Basisreproduktionszahl hängt folglich einzig und allein von
+der Dichte $g$ und der Wachstumskonstante $\lambda$ ab.
 
 
 \section{Das klassische SEIR-Modell}
