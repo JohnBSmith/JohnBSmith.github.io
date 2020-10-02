@@ -101,6 +101,18 @@ Wir finden die Beziehung
 \begin{equation}
 \beta = R_0\gamma.
 \end{equation}
+Bei $R_q<1$ klingt die Epidemie ab. Von
+\begin{equation}
+1 = R_q = (1-q)R_0
+\end{equation}
+betrachten wir die Umformung
+\begin{equation}
+q_c := q = 1-\frac{R_q}{R_0} = 1-\frac{1}{R_0}.
+\end{equation}
+Ist der immune Anteil der Bevölkerung am Anfang bereits größer
+als $q_c$, kommt es per se nicht zum Ausbruch der Epidemie. Man nennt
+$q_c$ aus diesem Grund die \emph{kritische Immunisierungsschwelle} oder
+\emph{Schwelle zur Herdenimmunität}.
 
 \subsection{Exponentielle Anfangsphase}
 
@@ -372,7 +384,7 @@ R_0 = \operatorname{E}(g(X)) = \int_0^\infty g(t)\,\mathrm dF(t).
 \end{equation}
 Dieses Stieltjes"=Integral lässt sich bezüglich $F(t)=1-p(t)$
 mittels partieller Integration umformen in%
-\begin{equation}
+\begin{equation}\label{eq:R0-from-beta-p}
 R_0 = \int_0^\infty \beta(t)p(t)\,\mathrm dt.
 \end{equation}
 Stellen wir eine allgemeine Überlegung an, die aus \cite{Wallinga}
@@ -533,6 +545,68 @@ Mit $s\approx 1$ ergibt sich daraus \eqref{eq:ei-eigenvalue}.
 
 Somit ist eine Beziehung zwischen $\lambda$ und den Parametern
 $\alpha,\beta,\gamma$ gewonnen.
+
+\subsection{Infektiöse Zeit}
+
+Wir schalten ab $t=0$ wieder $\beta=0$. Dies führt zum
+entkoppelten linearen System
+\begin{align}
+e' &= -\alpha e,\\
+i' &= \alpha e-\gamma i,
+\end{align}
+welches die Lösungen $e = e_0\ee^{-\alpha t}$ und
+\begin{equation}\label{eq:ei-prob-ode}
+i = i_0\ee^{-\gamma t} - \frac{\alpha e_0}{\gamma-\alpha}(\ee^{-\gamma t}-\ee^{-\alpha t})
+\end{equation}
+besitzt. Für $i_0=0$ und $e_0=1$ ist $p(t)=i(t)$
+die Wahrscheinlichkeit, dass das eine Individuum $e_0$ zur Zeit $t$
+nach der Infektion infektiös ist. Man erhält
+\begin{equation}\label{eq:seir-p}
+p(t) = \frac{\alpha}{\alpha-\gamma}(\ee^{-\gamma t}-\ee^{-\alpha t}).
+\end{equation}
+Zu bemerken ist, dass es sich bei $1-p$ nur im Fall $\alpha\to\infty$
+um eine Verteilungsfunktion handelt.
+
+Angenommen, die Dauer der latenten Phase ist eine Zufallsgröße
+$T_1$ mit Verteilungsfunktion $F_1$. Danach beginnt die infektiöse
+Phase, deren Dauer eine Zufallsgröße $T_2$ mit Verteilung $F_2$ ist.
+Wir fragen nun nach der Wahrscheinlichkeit, dass ein Individuum
+im Infektionsalter $a$ gerade infetiös ist.
+
+Das kontinuierliche Analogon zum Gesetz der totalen
+Wahrscheinlichkeit ist
+\begin{equation}
+P(A) = \int_{-\infty}^\infty P(A\mid X=x)\,\mathrm dF(x).
+\end{equation}
+Hiermit können wir rechnen
+\begin{gather*}
+p(a) = P(T_1\le a < T_1+T_2)\\
+= \int_{-\infty}^\infty P(T_1\le a < T_1+T_2\mid T_1=t)\,\mathrm dF_1(t)\\
+= \int_0^a P(t\le a < t+T_2 \mid T_1=t)\,\mathrm dF_1(t)\\
+= \int_0^a P(a < t+T_2)\,\mathrm dF_1(t)\\
+= \int_0^a P(T_2 > a-t)\,\mathrm dF_1(t)\\
+= \int_0^a (1-P(T_2\le a-t))\,\mathrm dF_1(t),
+\end{gather*}
+und kommen zum Resultat
+\begin{equation}\label{eq:p-from-F1F2}
+p(a) = \int_0^a (1-F_2(a-t))\,\mathrm dF_1(t).
+\end{equation}
+Betrachten wir nun nochmals \eqref{eq:ei-prob-ode}.
+
+Für $e_0=1$ und $i_0=0$ gewinnt man
+\begin{equation}
+F_1(t) = 1-e(t) = 1-\ee^{-\alpha t}.
+\end{equation}
+
+Für $e_0=0$ und $i_0=1$ stattdessen
+\begin{equation}
+F_2(t) = 1-i(t) = 1-\ee^{-\gamma t}.
+\end{equation}
+Eingesetzt in \eqref{eq:p-from-F1F2} liefert dies
+wie gewünscht \eqref{eq:seir-p}. Der Überlegung nach bleibt
+\eqref{eq:R0-from-beta-p} allgemeingültig. Das Resultat
+ist $R_0=\beta/\gamma$, wie gewünscht.
+
 
 \section{SIR-Modell mit Demografie}
 \subsection{Modelldefinition}
