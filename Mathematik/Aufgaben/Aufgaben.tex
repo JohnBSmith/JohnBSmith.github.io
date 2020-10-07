@@ -1753,6 +1753,33 @@ for k in range(1,6):
 \end{figure}
 
 \newpage
+\subsection{Kontinuierliche Verteilungen}
+\begin{Aufgabe}
+Gegeben sind zwei Zufallsgrößen $X_1,X_2$, deren Verteilungsfunktionen
+$F_1,F_2$ stetig differenzierbar sind und nichtnegativen Träger haben.
+Sei $F$ die Verteilungsfunktion von $X:=X_1+X_2$. Zu bestimmen sind
+$F$ und deren Dichte $f$.
+\end{Aufgabe}
+\strong{Lösung.}
+Das Gesetz der totalen Wahrscheinlichkeit in kontinuierlicher Form
+lautet
+\[P(A) = \int_{-\infty}^\infty P(A\mid X=x)\,\mathrm dF(x),\]
+wobei $A$ ein beliebiges Ereignis, $X$ eine beliebige Zufallsgröße
+und $F$ die Verteilungsfunktion von $X$ ist. Hiermit gilt
+\begin{align*}
+F(x) &= P(X_1+X_2\le x)
+= \int_0^\infty P(X_1+X_2\le x\mid X_2=a)\,\mathrm dF_2(a)\\
+&= \int_0^\infty P(X_1\le x-a)\,\mathrm dF_2(a)
+= \int_0^x F_1(x-a)\,\mathrm dF_2(a).
+\end{align*}
+Mit der Leibnizregel gewinnt man
+\begin{align*}
+f(x) &= F'(x) = \frac{\mathrm d}{\mathrm dx}\int_0^x F_1(x-a)f_2(a)\,\mathrm da
+= \underbrace{F_1(0)}_{=0}f_2(x) + \int_0^x \frac{\partial}{\partial x}F_1(x-a)f_2(a)\,\mathrm da\\
+&= \int_0^x f_1(x-a)f_2(a)\,\mathrm da = \int_{-\infty}^\infty f_1(x-a)f_2(a)\,\mathrm da
+= (f_1*f_2)(x).
+\end{align*}
+Die Dichte $f$ ist die Faltung der Dichten $f_1,f_2$.\;\qedsymbol
 
 \section{Mengelehre}
 \subsection{Abbildungen}

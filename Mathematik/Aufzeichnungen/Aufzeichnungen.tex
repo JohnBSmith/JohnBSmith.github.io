@@ -1034,8 +1034,36 @@ P(X\le x) = P(X_u\le F(x)) = U(F(x)) = F(x).
 \end{gather}
 Somit hat $X$ tatsächlich die gewünschte Verteilung.
 
+\subsection{Gesetz der totalen Wahrscheinlichkeit}
 
-\newpage
+Sei $\Omega$ eine Ergebnismenge, sei $A\subseteq\Omega$ ein
+Ereignis und $(B_k)_{k=1}^n$ eine Zerlegung von $\Omega$ in
+paarweise disjunkte Ereignisse. Dann können wir rechnen
+\begin{align*}
+P(A) &= P(A\cap\bigcup_{k=1}^n B_k) = 
+P(\bigcup_{k=1}^n (A\cap B_k))\\
+&= \sum_{k=1}^n P(A\cap B_k)
+= \sum_{k=1}^n P(A\mid B_k)P(B_k).
+\end{align*}
+Dies ist das \emph{Gesetz der totalen Wahrscheinlichkeit}, eine der
+wichtigen Rechenregeln in den Grundlagen der
+Wahrscheinlichkeitsrechnung.
+
+Sei $X\colon\Omega\to [a,b]$ eine Zufallsgröße mit einer
+Dichte $f\colon [a,b]\to \R$. Sei
+$(I_k)_{k=0}^{n-1}$ eine Zerlegung von $[a,b]$ in $n$ gleichgroße
+disjunkte Intervalle. Sei $h=(b-a)/n$. Für großes $n$
+ist nach dem Gesetz der totalen Wahrscheinlichkeit die Rechnung
+\begin{align*}
+P(A) &= \sum_{k=0}^{n-1} P(A\mid X^{-1}(I_k))P(X^{-1}(I_k))\\
+&\approx \sum_{k=0}^{n-1} P(A\mid X\in I_k)f(a+kh)h.
+\end{align*}
+gültig. Im Übergang $n\to\infty$ ist
+\begin{equation}
+P(A) = \int_a^b P(A\mid X=x)f(x)\,\mathrm dx.
+\end{equation}
+Diese Formel ist die kontinuierliche Form des Gesetzes.
+
 \begin{thebibliography}{x}
 \bibitem{} Joakim Munkhammar: »Riemann"=Liouville Fractional Derivatives
 and the Taylor"=Riemann Series«. U.U.D.M. Project Report 2004:7.
