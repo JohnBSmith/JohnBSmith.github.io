@@ -17,6 +17,8 @@
 \usepackage{geometry}
 \geometry{a4paper,left=34mm,right=34mm,top=30mm,bottom=40mm}
 
+\numberwithin{equation}{section}
+
 \newcommand{\ee}{\mathrm e}
 \newcommand{\ui}{\mathrm i}
 \newcommand{\real}{\operatorname{Re}}
@@ -93,6 +95,37 @@ m\in\C\setminus\{x\in\R\mid x\ge 1\}.
 The relation between the arithmetic geometric mean and $K(m)$ holds
 even for complex numbers, but one has to take care of the branch
 cut of the square root.
+
+\newpage
+\subsection{Complete elliptic integral of the second Kind}
+
+The complete elliptic integral of the second kind is defined as
+\begin{equation}\label{eq:definition-E}
+E(m) := \int_0^{\pi/2} \sqrt{1-m\sin^2\theta}\;\mathrm d\theta.
+\end{equation}
+It is calculated by
+\begin{equation}
+E(m) = \frac{\pi}{2}\lim_{n\to\infty}\frac{a_n}{x_n},
+\end{equation}
+where
+\begin{equation}
+\begin{bmatrix}
+x_{n+1}\\ y_{n+1}\\ a_{n+1}\\ b_{n+1}
+\end{bmatrix}
+= \begin{bmatrix}
+\tfrac{1}{2}(x_n+y_n)\\
+\sqrt{x_n y_n}\\
+\tfrac{1}{2}(a_n+b_n)\\
+\tfrac{a_n y_n+b_n x_n}{x_n+y_n}
+\end{bmatrix},\quad
+\begin{bmatrix}
+x_0\\ y_0\\ a_0\\ b_0
+\end{bmatrix}
+= \begin{bmatrix}
+1\\ \sqrt{1-m}\\ 1\\ 1-m
+\end{bmatrix}.
+\end{equation}
+
 
 \newpage
 \section{Polynomials and related}

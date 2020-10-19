@@ -1508,6 +1508,48 @@ Die Anfangswerte bedeuten $\binom{x}{x} = 1$ und $\binom{y}{0} = 1$.
 Das ist genau die rekursive Darstellung des Binomialkoeffizienten,
 womit Formel \eqref{eq:Pfadzahl-Binomk} bewiesen ist.\;\qedsymbol
 
+\begin{Aufgabe}
+Aus einem Alphabet von sechs Buchstaben werden vier gewählt, wobei
+jeder Buchstabe maximal zweimal vorkommen darf. Wie viele Möglichkeiten
+gibt es bei Berücksichtigung der Reihenfolge?
+\end{Aufgabe}
+\strong{Lösung.} Sei $A$ das Alphabet und $a:=|A|=6$. Sei
+$M$ die Indexmenge der Ziehungen und $m:=|M|=4$. Unterscheiden
+wir die beiden Alphabete zunächst als $A$ und $A'$. Dann wäre die
+Anzahl $|X|$, wobei $X$ die Menge der Injektionen $M\to A\cup A'$
+ist.
+
+Nun wollen wir die Unterscheidung fallenlassen. Dazu dienen
+solche Permutationen
+\[A\cup A'\to A\cup A',\]
+die einige der Buchstaben in $A$ jeweils mit ihrem Partner aus $A'$
+vertauschen. Die Menge dieser Abbildungen bildet eine Gruppe $G$.
+Die gesuchte Zahl ist $|X/G|$, die Anzahl der Äquivalenzklassen der
+Faktormenge $X/G$.
+
+Laut dem Lemma von Burnside gilt
+\begin{equation}
+|X/G| = \frac{1}{|G|}\sum_{g\in G} |X^g|,\quad X^g := \{f\in X\mid g\circ f=f\}.
+\end{equation}
+Ein $g$ ist eindeutig dadurch festgelegt, welche Buchstaben aus $A$
+mit ihrem Partner aus $A'$ zu vertauschen sind (Ziffer 1) oder
+identisch bleiben (Ziffer 0). Die Funktionswerte für $A'$ sind dadurch
+automatisch festgelegt. Demnach ist $g$ als Binärzahl der Länge $2a$
+betrachtbar, die durch den Teil der Länge $a$ festgelegt ist.
+Demnach ist $|G|=2^a$.
+
+Wir zählen die $g\in G$ nun nach der Zahl $k$ ihrer Einsen auf. Bei
+$k$ Einsen gibt es $\binom{a}{k}$ mögliche $g$, alle mit dem
+gleichen $|X^g|$. Damit $g\circ f=f$ gilt, darf $f$ nur die $2a-2k$
+Nullen erreichen, wofür es $(2a-2k)^{\underline m}$ Möglichkeiten
+gibt, wobei mit dem Unterstrich die fallende Faktorielle gemeint ist.
+Das macht
+\begin{equation}
+|X/G| = \frac{1}{2^a}\sum_{k=0}^a \binom{a}{k}(2a-2k)^{\underline m}
+= \frac{m!}{2^a}\sum_{k=0}^a \binom{a}{k}\binom{2a-2k}{m}
+= 1170.\;\qedsymbol
+\end{equation}
+
 \newpage
 \section{Wahrscheinlichkeitsrechnung}
 \subsection{Diskrete Verteilungen}
