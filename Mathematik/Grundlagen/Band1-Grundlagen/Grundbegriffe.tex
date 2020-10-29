@@ -1472,7 +1472,28 @@ x\in f^{-1}[\bigcup_{i\in I} B_i]
 \end{align*}
 Für den Schnitt ist das wieder analog.\;\qedsymbol
 
-\newpage
+Diese Beweise waren ziemlich angenehm zu führen, vergleichsweise fast
+ein Kinderspiel, braucht man doch ohne viel Nachdenken lediglich dem
+Formalismus folgen. Wer besonders spitzfindig ist, mag darin
+allerdings die fehlende Definition für »$f(x)\in B$« erkennen.
+Wir haben zwar $y=f(x)$ definiert als $(x,y)\in f$, allerdings
+nicht $f(x)$ als solches. Die Bedeutung von $f(x)$ mag klar sein,
+aber wir wollen ja so gut es geht alle Formeln zu prädikatenlogischen
+Ausdrücken reduzieren können, die nur vorher bereits definierte
+Begriffe enthalten. Nun siehe da, aus dem Kaninchenbau kommen
+neue Quantoren hervor, die die Argumentation ein wenig verkomplizieren:
+\[f(x)\in B \defiff (\exists y\in B)(y=f(x)).\]
+Wir müssen nun zeigen
+\[f(x)\in B_1\cap B_2 \iff f(x)\in B_1\land f(x)\in B_2.\]
+Expandiert man dies, ist zu zeigen
+\[(\exists y)(y\in B_1\land y\in B_2\land y=f(x))
+\iff (\exists y)(y\in B_1\land y=f(x))\land (\exists y)(y\in B_2\land y=f(x)).\]
+Die Implikation von links nach rechts ist wahr, denn es gilt ganz allgemein
+\[(\exists y)(P(y)\land Q(y)) \implies (\exists y)P(y)\land (\exists y)Q(y).\]
+Zur Bestätigung der Implikation von rechts nach links muss man
+allerdings die Bedingung $y=f(x)$ ausnutzen. Nur dadurch ist gesichert,
+dass das $y\in B_1$ das gleiche ist wie das $y\in B_2$.
+
 \subsection{Verkettung von Abbildungen}
 \begin{Definition}[Verkettung]\mbox{}\\*
 Sei $f\colon A\to B$ und $g\colon B\to C$. Die Abbildung
@@ -1520,8 +1541,6 @@ Auf der rechten Seite ergibt sich nun
 \equiv (\exists x)(x\in M\land (\exists y)(y=f(x)\land z=g(y)))\\
 \equiv (\exists x)(x\in M\land z=g(f(x))).\;\qedsymbol
 \end{gather*}
-
-\newpage
 
 \noindent
 Bei der Urbildoperation dreht sich die Reihenfolge um.

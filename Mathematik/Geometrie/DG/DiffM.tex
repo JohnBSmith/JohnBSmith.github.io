@@ -347,5 +347,82 @@ $|\mathrm dL|$ bzw. $|\mathrm dL|^2$ an der Stelle ein
 lokales Minimum haben. Für die numerischen Verfahren kann man dabei
 das Differential $\mathrm dL$ auch numerisch berechnen lassen.
 
+\section{Differentialformen}
 
+\subsection{Definition}
+
+Ist $M$ eine differenzierbare Mannigfaltigkeit, so besitzt sie an
+jedem Punkt $p\in M$ einen Tangentialraum $T_p M$, zu dem ein
+Kotangentialraum $T_p^* M$ gehört. Infolge gibt es auch die
+äußere Potenz $\Lambda^k(T_p^* M)$, das ist der Vektorraum der
+alternierenden Multilinearformen in $k$ Argumenten.
+
+\begin{definition}[Differentialform]\mbox{}\\*
+Eine $k$-Form ist eine Abbildung
+$\omega\colon M\to \Lambda^k(T_p^* M)$,
+die jedem Punkt $p\in M$ eine alternierende Multilinearform
+$\omega_p$ zuordnet.
+\end{definition}
+
+\subsection{Äußere Ableitung}
+
+Sei $M$ eine differenzierbare Mannigfaltigkeit und $(x_i)$ eine
+lokale Karte. Sei $\omega$ eine $k$-Form auf $M$. Die äußere Ableitung
+$\mathrm d\omega$ ist dann definiert als das formale äußere Produkt%
+\begin{equation}
+\mathrm d\omega := \mathrm d\wedge\omega,\quad
+\mathrm d = \sum_{i=1}^n \partial_i\mathrm dx_i
+\end{equation}
+Der formale Operator $\mathrm d$ auf der rechten Seite ist analog
+zum Nablaoperator aus der Vektoranalysis.
+Expansion von $\mathrm d\wedge\omega$ resultiert allgemein in%
+\begin{align}
+\mathrm d\omega &= \Big(\sum_i \partial_i\mathrm dx^i\Big)\wedge \Big(\sum_{i_1,\ldots,i_k}
+\omega_{i_1,\ldots,i_k}\mathrm dx^{i_1}\wedge\ldots\wedge\mathrm dx^{i_k}\Big)\\
+&= \sum_i\sum_{i_1,\ldots,i_k} \partial_i\omega_{i_1,\ldots,i_k}
+\mathrm dx^i\wedge\mathrm dx^{i_1}\wedge\ldots\wedge\mathrm dx^{i_k}.
+\end{align}
+Unter Nutzung von Summenkonvention sowie $I:=(i_1,\ldots,i_k)$ und
+$\mathrm dx^I := \mathrm dx^{i_1}\wedge\ldots\wedge\mathrm dx^{i_k}$
+verkürzt sich die Formel zu%
+\begin{equation}
+\mathrm d\omega = (\partial_i \mathrm dx^i)\wedge (\omega_I\mathrm dx^I)
+= \partial_i\omega_I\mathrm dx^i\wedge\mathrm dx^I.
+\end{equation}
+Für eine 1-Form in der Dimension zwei,
+$\omega = \omega_1\mathrm dx^1+\omega_2\mathrm dx^2$, gilt bspw.
+\begin{align}
+\mathrm d\omega &= \partial_i\omega_j\mathrm dx^i\wedge\mathrm dx^j
+= \partial_1\omega_2\mathrm dx^1\wedge\mathrm dx^2
++ \partial_2\omega_1\mathrm dx^2\wedge\mathrm dx^1\\
+&= (\partial_1\omega_2-\partial_2\omega_1)\,\mathrm dx^1\wedge\mathrm dx^2.
+\end{align}
+Für eine 1-From $\omega=\omega_j\mathrm dx^j$ gilt allgemein
+\begin{equation}
+\mathrm d\omega = \sum_{i,j}\partial_i\omega_j\mathrm dx^i\wedge\mathrm dx^j
+= \sum_{i<j}(\partial_i\omega_j-\partial_j\omega_i)\,\mathrm dx^i\wedge\mathrm dx^j.
+\end{equation}
+
+\subsection{Exakte und geschlossene Formen}
+
+Wir setzen im Folgenden voraus, dass die Differentialformen hinreichend
+oft stetig differenzierbar sind -- so oft wie wir die entsprechenden
+äußeren Ableitungen bilden wolen.
+
+Von einem beliebigen
+$\varphi$ darf man $\omega = \mathrm d\varphi$ bilden. Man nennt
+in diesem Zusammenhang $\varphi$ die \emph{Potentialform} von
+$\omega$, und $\omega$ selbst nennt man eine \emph{exakte} Form.
+Eine Differentialform ist also genau dann exakt, wenn sie eine
+Potentialform besitzt.
+
+Gilt für eine beliebige Differentialform $\omega$ die Gleichung
+$\mathrm d\omega=0$, spricht man von einer \emph{geschlossenen} Form.
+Die Gleichung $\mathrm d\omega=0$ wird auch
+\emph{Integrabilitätsbedingung} genannt.
+
+Jede exakte Form ist auch geschlossen, denn für jedes $\varphi$ gilt
+$\mathrm d\mathrm d\varphi=0$. Mit der Umkehrung dieser Implikation
+verhält es sich nicht ganz so einfach; diese ist Gegenstand des
+\emph{Lemmas von Poincaré}.
 
