@@ -23,11 +23,11 @@ das ist das allgemeine Anfangswertproblem erster Ordnung. Den
 Differentialquotient approximieren wir nun durch einen
 Differenzenquotient:%
 \begin{equation}
-\frac{x(t+h)-x(h)}{h} \approx f(t,x).
+\frac{x(t+h)-x(t)}{h} \approx f(t,x).
 \end{equation}
 Umformung dieser Gleichung bringt
-\begin{equation}
-x(t+h)\approx x(h)+hf(t,x).
+\begin{equation}\label{eq:x-step-approx}
+x(t+h)\approx x(t)+hf(t,x).
 \end{equation}
 Demnach ergibt sich eine näherungsweise Lösung des Anfangswertproblems
 als iterative Lösung der Differenzengleichung%
@@ -77,4 +77,17 @@ t_{k} &= t_0+hk,\\
 So unscheinbar diese Iteration auch ausschaut, ermöglicht sie die
 numerische Lösung einer unheimlichen Vielfalt an Gleichungen.
 
+Es folgt noch eine alternative Herleitung des Euler"=Verfahrens. Beide
+Seiten der Dgl. $x'=f(x,t)$ werden
+von $a$ bis $b$ integriert. Das macht%
+\begin{equation}
+x(b)-x(a) = \int_a^b f(t,x)\,\mathrm dt.
+\end{equation}
+Die Dgl. ist hiermit zu einer äquivalenten Integralgleichung umgeformt.
+
+Ist der Abstand zwischen den Stellen $a$ und $b$ klein genug, erhält
+man eine genügend gute Näherung%
+\[\int_a^b f(t,x)\,\mathrm dt \approx (b-a)f(a,x).\]
+Setzen wir $a:=t$ und $b:=t+h$ ein, finden wir
+wieder die näherungsweise Gleichung \eqref{eq:x-step-approx}.
 
