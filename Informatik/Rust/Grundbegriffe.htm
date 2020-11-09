@@ -303,34 +303,24 @@ fn pow(x: f64, n: u32) -&gt; f64 {
 }
 </pre>
 
-<p>Es wird nun gezeigt, wie sich Quadratwurzeln mit dem Computer
-berechnen lassen. Die Wurzel <var>x</var>&nbsp;=&nbsp;&radic;<var>a</var> lässt
-sich als positive Lösung der quadratischen Gleichung
-<var>x</var><sup>2</sup>&nbsp;=&nbsp;<var>a</var> betrachten. Umstellen
-bringt nun <var>x</var><sup>2</sup>&minus;<var>a</var>&nbsp;=&nbsp;0. Demnach ist
-die positive Nullstelle der Funktion
-<var>f</var>(<var>x</var>)&nbsp;:=&nbsp;<var>x</var><sup>2</sup>&minus;<var>a</var>
-gesucht. Man betrachte nun die rekursiv
-gegebene Folge
+<p>Hinter dem <code>for</code> steht eigentlich die Laufvariable,
+die hier entfallen darf, da in der Schleife kein Zugriff darauf
+vorkommt.
+
+<p>Von den meisten mathematischen Funktionen
+weiß der Computer nichts. Ein paar wenige liegen als
+Schaltkreise in der Hardware vor, für alle anderen bedarf es eines
+Programms. Ein effizientes Verfahren zur Berechnung der Quadratwurzel
+einer Zahl <var>a</var> ist das Heron-Verfahren, das ist die Iteration
 <var>x</var><sub><var>n</var>+1</sub>&nbsp;=&nbsp;&phi;(<var>x</var><sub><var>n</var></sub>)
-mit
-&phi;(<var>x</var>)&nbsp;:= <var>x</var>&minus;<var>f</var>(<var>x</var>)/<var>f</var>'(<var>x</var>).
-Das ist das Newton-Verfahren, und die Theorie zu diesem Verfahren sagt
-uns, dass diese Folge unter gewissen Bedingungen schnell zur gesuchten
-Nullstelle konvergiert. In diesem Fall gilt
-<var>f</var>'(<var>x</var>)&nbsp;=&nbsp;2<var>x</var> und daher 
+mit Startwert <var>x</var><sub>0</sub>=<var>a</var>/2
+und Abbildung
 
 <p class="indent">&phi;(<var>x</var>)
-= <var>x</var>&minus;(<var>x</var><sup>2</sup>&minus;<var>a</var>)/(2<var>x</var>)
-= (<var>x</var><sup>2</sup>+a)(2<var>x</var>)
 = (<var>x</var>+<var>a</var>/<var>x</var>)/2.
 
-<p>Hierbei handelt es sich natürlich um das Heron-Verfahren, das sich
-wie gezeigt als Spezialfall aus dem Newton-Verfahren ergibt.
-Als Anfangswert kann <var>x</var><sub>0</sub>=<var>a</var>/2 benutzt werden. 
-
-<p>Eine einfache Implementation des Verfahrens lässt sich mit
-einer for-Schleife wie folgt angeben:
+<p>Zur iterativen Formulierung benutzen
+wir wieder einfach eine for-Schleife:
 <pre class="rust ibox">
 fn sqrt(a: f64) -&gt; f64 {
     let mut x = 0.5*a;
@@ -346,7 +336,7 @@ fn main() {
 </pre>
 
 <p>Das Programm sollte <code>1.414213562373095</code> ausgeben.
-Wie viele Iterationen benötigt man? Für Zahlen die nicht gigantisch
+Wie viele Iterationen benötigt man? Für Zahlen, die nicht gigantisch
 groß oder winzig klein sind, reichen 20 Iterationen mit Sicherheit aus.
 Man kann durch Experimente oder mathematische Analyse sicherlich herausfinden,
 wie viele Iterationen für eine bestimmte Zahl <var>a</var> notwendig

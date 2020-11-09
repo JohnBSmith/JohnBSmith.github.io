@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Zeichen">Zeichen</a>
 <li><a href="#Literale">Zeichenkettenliterale</a>
+<li><a href="#Zeichenketten">Zeichenketten</a>
 <li><a href="#Puffer">Puffer</a>
 <li><a href="#Formatierung">Formatierung mit Schablonen</a>
 <li><a href="#Unicode">Unicode und UTF-8</a>
@@ -173,12 +174,74 @@ bei <code>###</code> entsprechend <code>"##</code> usw.
 <span class='keyword'>let</span> s = r<span class='string'>##"&lt;a href="#id"&gt;"##</span>;
 </pre>
 
+<h2 id="Zeichenketten">Zeichenketten</h2>
+<p>Zur Vereinfachung beschränken wir uns zunächst auf die
+ASCII-Kodierung, dann gehört anders als bei UTF-8 zu jedem Zeichen
+genau eine Speicherzelle. Wie wir eine Zeichenkette im Speicher
+gestalten, ist nun ganz klar, das muss ein Array von Bytes sein.
+
+<p>Zur genauen Darstellung gibt es mehrere Möglichkeiten. Zunächst
+wäre die Festlegung einer festen Länge denkbar, also ein Typ
+<code>&amp;[u8;N]</code>. Für bestimmte Optimierungen, etwa bei einem
+Array von kurzen Zeichenketten, kann das Vorteilhaft sein, für allgemeine
+Aufgaben ist es jedoch zu unflexibel. Historisch gab und gibt es
+dann noch die Möglichkeit, das Ende der Kette durch ein
+Terminalzeichen zu markieren, dafür wird das Zeichen mit dem
+Wert null benutzt. Allerdings ist dies problematisch, da die Länge
+dann nicht effizient ermittelbar ist. Zudem hat dies im Zusammenspiel
+mit mangelnder Typsicherheit in der Vergangenheit oft
+zu Sicherheitslücken geführt. Übrig bleibt die Möglichkeit,
+Byteketten über Zeiger und Länge anzusprechen, also als
+<code>&amp;[u8]</code>. Das kann man tatsächlich direkt so
+hinschreiben:
+
+<pre class="rust ibox">
+let a: &amp;[u8] = &amp;[b'E', b'u', b'l', b'e']; 
+println!("{:?}",a);
+</pre>
+
+<p>Die Ausgabe ist hier nicht die Zeichenkette, sondern
+das Array von Zahlenwerten der Zeichen in ASCII.
+Die Literale können wir auch kompakter notieren:
+
+<pre class="rust ibox">
+let a: &amp;[u8] = b"Eule"; 
+</pre>
+
+<p>Der neue Datentyp <code>&amp;str</code> sorgt nun bei
+Beibehaltung der Darstellung <code>&amp;[u8]</code> dafür,
+dass dem Array die Bedeutung einer Zeichenkette zukommt:
+
+<pre class="rust ibox">
+let s: &amp;str = "Eule"; 
+println!("{}",s);
+</pre>
+
+<p>Somit ist jede Zeichenkette als Bytearray betrachtbar:
+<pre class="rust ibox">
+let s: &amp;str = "Eule";
+let a: &amp;[u8] = s.as_bytes();
+</pre>
+
+<p>Jedoch ist nicht jedes Bytearray eine gültige Zeichenkette:
+<pre class="rust ibox">
+let a: &amp;[u8] = b"Eule";
+let s: &amp;str = std::str::from_utf8(a).unwrap();
+</pre>
+
 
 <h2 id="Puffer">Puffer</h2>
 
-<p>Zeichenketten sind in Rust dynamisch und lassen sich als
-Puffer benutzen. Ein Puffer ist eine dynamische Zeichenkette,
-an die beliebig viele Zeichenketten angehängt werden können.
+<p>So wie Arrays über Slices vom Typ <code>&amp;[u8]</code> angesprochen
+werden oder als <code>Vec&lt;u8&gt;</code> bezüglich ihrer Länge
+dynamisch sind, gibt es eine Unterscheidung zwischen
+Zeichenketten-Slices vom Typ <code>&amp;str</code> und Zeichenketten
+vom Typ <code>String</code>.
+
+<p>Zeichenketten vom Typ <code>String</code> sind in Rust dynamisch
+und lassen sich als Puffer benutzen. Ein Puffer ist eine dynamische
+Zeichenkette, an die beliebig viele Zeichenketten angehängt
+werden können.
 <pre class="rust ibox">
 fn main() {
     let mut s = "".to_string();
@@ -500,13 +563,13 @@ wäre da nicht das Prinzip der Orthogonalität.
 <td>Besitz einer dynamischen Byte-Kette
 <tr>
 <td><code>&amp;[u16]</code>
-<td>unveränderbare UTF-16-Kette
+<td>unveränderbare ungeprüfte UTF-16-Kette
 <tr>
 <td><code>&amp;mut [u16]</code>
-<td>veränderbare UTF-16-Kette fester Länge
+<td>veränderbare ungeprüfte UTF-16-Kette fester Länge
 <tr>
 <td><code>Vec&lt;u16&gt;</code>
-<td>Besitz einer dynamischen UTF-16-Kette
+<td>Besitz einer dynamischen ungeprüften UTF-16-Kette
 <tr>
 <td><code>&amp;CStr</Code>
 <td>unveränderbare nullterminierte Kette
