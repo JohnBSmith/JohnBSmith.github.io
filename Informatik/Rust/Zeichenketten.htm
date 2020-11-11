@@ -20,6 +20,7 @@
 <li><a href="#Puffer">Puffer</a>
 <li><a href="#Formatierung">Formatierung mit Schablonen</a>
 <li><a href="#Unicode">Unicode und UTF-8</a>
+<li><a href="#Laenge">Länge von Zeichenketten</a>
 <li><a href="#Komplexität">Eine gewisse Komplexität</a>
 </ol>
 
@@ -324,15 +325,6 @@ fn pair_to_string(x: i32, y: i32) -&gt; String {
 }
 </pre>
 
-<p>Man kann die Funktion auch gleich polymorph schreiben:
-<pre class="rust ibox">
-fn pair_to_string&lt;X,Y&gt;(x: X, y: Y) -&gt; String
-where X: std::fmt::Display, Y: std::fmt::Display
-{
-    format!("({}, {})",x,y)
-}
-</pre>
-
 <p>Das Makro <code>format!</code> setzt Argumente in eine Schablone
 ein. Die Paare von geschweiften Klammern werden durch die Argumente
 ersetzt und die dadurch entstandene Zeichenkette zurückgegeben.
@@ -343,7 +335,7 @@ wird.
 <h3>Formatierung von Ganzzahlen</h3>
 <p>Die Schablonen für die Darstellung von Zahlen im Binärsystem,
 Dezimalsystem und Hexadezimalsystem sind
-<code>{:b}</code>, <code>{:o}</code>, <code>{:x}</code>:
+<code>{:b}</code>, <code>{:o}</code>, <code>{:x}</code>.
 <pre class="rust ibox">
 fn bin(n: u32) -&gt; String {format!("0b{:b}",n)}
 fn oct(n: u32) -&gt; String {format!("0o{:o}",n)}
@@ -486,6 +478,62 @@ fn main() {
     println!("{}",s);
 }
 </pre>
+
+<h2 id="Laenge">Länge von Zeichenketten</h2>
+
+<p>Die Länge einer Zeichenkette <code>s</code> bekommt man
+mit dem Methodenaufruf <code>s.len()</code>. Hierbei handelt es
+sich allerdings nicht um die Anzahl der Zeichen, sondern um die
+Anzahl der Bytes. Dieser Umstand wird dadurch verschleiert, dass
+die Diskrepanz bei der Untermenge ASCII noch nicht auftritt, erst
+bei den UTF-8-Multibyte-Sequenzen. Bspw. gilt
+
+<pre class="rust ibox">
+"Wüste".len() == 6.
+</pre>
+
+<p>Zur Zählung der Zeichen muss die Kette zwangsläufig durchgegangen
+werden, was aufwändig ist. Man schreibt hierfür
+<code>s.chars().count()</code>. Das liefert
+
+<pre class="rust ibox">
+"Wüste".chars().count() == 5.
+</pre>
+
+<p>Eigentlich handelt es sich herbei allerdings um eine Zählung
+der Unicode-Skalarwerte. Die wissenschaftliche Bezeichnung für ein
+Zeichen lautet <i>Graphem</i>. In Unicode sind einige Grapheme als
+Zusammensetzung aus Skalarwerten darstellbar, was die Zählung weiter
+verkompliziert. Bei den Umlauten gehört zu jedem Graphem genau
+ein Skalarwert, aber auch nur dann, wenn die Zeichenkette
+<i>normalisiert</i> wurde. Bei einer nicht normalisierten Kette
+kann man 0x00fc (ü) auch zusammensetzen aus 0x0075 (u) und
+0x0308 (Combining diaeresis). Genau genommen gibt es eine
+Unterscheidung zwischen Trema (Diärese) und Umlaut, aber Unicode
+kodiert diesen Unterschied nicht.
+
+<pre class="rust ibox">
+let s = "Wu\u{0308}ste";
+println!("{}, len = {}, count = {}", s, s.len(), s.chars().count());
+</pre>
+
+<p>Die Ausgabe ist:
+<pre class="ibox">
+Wüste, len = 7, count = 6
+</pre>
+
+<p>Technisch wird diese Zusammensetzung aus Skalarwerten
+als <i>Graphemkluster</i> oder <i>Graphemhaufen</i> bezeichnet. Manche
+Grapheme können in Unicode also als Graphemkluster dargestellt sein,
+so die Sprechweise.
+
+<p>Zur allgemeinen Bestimmung der Anzahl der Grapheme bedarf es
+letztendlich einer Funktion, die eine Zeichenkette in Graphemkluster
+zerlegt &ndash; man spricht von einer <i>Segmentierung</i> der Kette.
+Solche Funktionen sind in der Standardbibliothek nicht enthalten.
+Sicherlich braucht auch nicht jedes Programm diese Komplexität.
+Wichtig wird das erst für die fortgeschrittene Verarbeitung und
+Darstellung von Texten.
 
 <h2 id="Komplexität">Eine gewisse Komplexität</h3>
 
