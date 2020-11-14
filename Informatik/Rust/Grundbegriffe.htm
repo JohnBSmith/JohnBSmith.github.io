@@ -23,6 +23,14 @@
   <li><a href="#Schleifen">Schleifen</a>
   </ol>
 <li><a href="#Felder">Felder</a>
+  <ol>
+  <li><a href="#Felder-fester-Laenge">Felder fester Länge</a>
+  <li><a href="#Ausschnitte">Ausschnitte von Feldern</a>
+  <li><a href="#Dynamische-Felder">Dynamische Felder</a>
+  <li><a href="#Alleinige-Referenzen">Alleinige Referenzen auf ein Feld</a>
+  <li><a href="#Nochmals-Ausschnitte">Nochmals Ausschnitte</a>
+  <li><a href="#Stapelspeicher">Stapelspeicher</a>
+  </ol>
 <li><a href="#Eingaben">Eingaben</a>
 </ol>
 
@@ -376,7 +384,7 @@ fn main() {
 
 <h2 id="Felder">Felder</h2>
 
-<h3>Felder fester Länge</h3>
+<h3 id="Felder-fester-Laenge">Felder fester Länge</h3>
 <p>Ein <i>Feld</i>, auch <i>Array</i> genannt, ist eine zusammenhängende
 Folge von Elementen des selben Datentyps. Die Elemente werden dabei
 in Speicherzellen gespeichert, welche auch zusammenhängend im Speicher
@@ -400,8 +408,8 @@ gilt daher
 a[0]==1, a[1]==2, a[2]==3, a[3]==4.
 </pre>
 
-<p>Nun soll eine Funktion angegeben werden, welche ein Feld nimmt
-und die Summe der Elemente zurückgibt. Das lässt sich z.&nbsp;B.
+<p>Nun wird eine Funktion gezeigt, welche ein Feld nimmt
+und die Summe der Elemente zurückgibt. Das lässt sich
 wie folgt bewerkstelligen:
 <pre class="rust ibox">
 fn sum(a: &amp;[i32; 4]) -&gt; i32 {
@@ -423,12 +431,12 @@ ist eine Kurzschreibweise für <code>s = s+x;</code>. Das steht für
 »berechne den Wert von <code>s+x</code> und überschreibe die
 Variable <code>s</code> mit diesem Wert«.
 
-<h3>Ausschnitte von Feldern</h3>
+<h3 id="Ausschnitte">Ausschnitte von Feldern</h3>
 <p>Dem Leser mag nun aber sofort auffallen, dass diese Funktion lediglich
 Felder der Länge vier verarbeiten kann. Zur Lösung dieses Problems
 existiert ein eigener Datentyp, der <i>Slice</i> eines Feldes, geschrieben
 <code>&amp;[i32]</code>. Die Signatur der Funktion <code>sum</code>
-braucht lediglich auf <code>a:&nbsp;&amp;[i32]</code> abgeändert zu
+braucht lediglich auf <code>a:&nbsp;&amp;[i32]</code> abgeändert
 werden und schon lassen sich Summen von Feldern beliebiger Länge bilden.
 
 <p>Ein Slice besteht intern aus zwei Bestandteilen, einem Zeiger auf den
@@ -447,13 +455,14 @@ fn main() {
 Daher beschreibt der Slice <code>&amp;a[0..3]</code> eine Referenz auf
 <code>[a[0],a[1],a[2]]</code>.
 
-<h3>Dynamische Felder</h3>
-<p>Felder vom Typ <code>[T;&nbsp;N]</code> haben immer eine feste, schon zur
-Kompilierzeit bekannte Länge <code>N</code>. Da diese Einschränkung für
-viele Problemstellungen zu hinderlich ist, gibt es für Felder
-noch den Datentyp <code>Vec&lt;T&gt;</code>, der dynamische Felder ermöglicht.
-Dynamische Felder werden ganz analog zu den Feldern fester Länge
-gehandhabt:
+<h3 id="Dynamische-Felder">Dynamische Felder</h3>
+
+<p>Felder vom Typ <code>[T;&nbsp;N]</code> haben immer eine feste,
+schon zur Kompilierzeit bekannte Länge <code>N</code>. Da diese
+Einschränkung für viele Problemstellungen zu hinderlich ist, gibt es
+noch den Datentyp <code>Vec&lt;T&gt;</code> zur Beschreibung von
+Feldern, die ihre Länge automatisch vergrößern. Dynamische Felder
+werden ganz analog zu den Feldern fester Länge gehandhabt:
 <pre class="rust ibox">
 fn main() {
     let a: Vec&lt;i32&gt; = vec![1,2,3,4];
@@ -461,28 +470,8 @@ fn main() {
 }
 </pre>
 
-<p>Man stellt hier fest, dass sich offenbar
-auch von einem dynamischen Feld ein Slice bilden lassen muss.
-Ein Wert von Typ <code>Vec&lt;T&gt;</code> besteht intern aus drei
-Informationen: einem Zeiger auf den aktuellen Puffer, der aktuellen
-Länge und der aktuellen Kapazität. Man kann sich das so vorstellen:
-<pre class="rust indent">
-struct Vec&lt;T&gt; {ptr: *mut T, len: usize, cap: usize}
-</pre>
-
-<p>Die tatsächliche Formulierung ist noch etwas ausgeklügelter,
-besitzt aber die gleiche Struktur. Der Zeiger auf den Puffer 
-verhält sich zusammen mit der Länge wie ein Slice eines Feldes fester
-Länge. Jedoch können sich durch Manipulation des
-Feldes alle drei genannten Informationen verändern. Die aktuelle Länge
-des Feldes lässt sich via <code>a.len()</code> auslesen, die aktuelle
-Kapazität mit <code>a.capacity()</code>.
-
-<p>Die Kapazität eines Feldes macht eine Aussage darüber, wie viele
-Elemente zum leeren Feld hinzugefügt werden können, ohne dass der
-Puffer zur Erhöhung der Kapazität realloziert werden muss.
-Da dies alles automatisch geschieht, muss man sich darüber aber
-keine Gedanken machen. Es folgt eine Funktion
+<p>Der Aufruf <code>a.push(x)</code> fügt ein Element <code>x</code>
+zum Ende von <code>a</code> hinzu. Es folgt eine Funktion
 <code>reverse</code>, die ein Feld <code>a</code> umdreht, indem sie
 rückwärts durch das Feld iteriert und dabei die Elemente zu einem
 neuen Feld <code>b</code> hinzufügt.
@@ -502,20 +491,8 @@ fn main() {
 }
 </pre>
 
-<p>Wie man sieht, ist nirgendwo eine manuelle Handhabung des Puffers
-notwendig. Die Reallokation des Puffers wird von der Methode
-<code>push</code> automatisch aufgerufen, wenn die Länge gleich der
-Kapazität ist. Die Kapazität ändert sich normalerweise in
-Zweierpotenzen, über den
-genauen Algorithmus werden jedoch keine Garantien gemacht, um sich
-Potential für Optimierungen zu behalten. Die anfängliche
-Kapazität darf aber zur Verhinderung der Reallokation auch manuell
-festgelegt werden:
-<pre class="rust indent">
-let mut b: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
-</pre>
+<h3 id="Alleinige-Referenzen">Alleinige Referenzen auf ein Feld</h3>
 
-<h3>Ungemeinschaftliche Referenzen auf ein Feld</h3>
 <p>Zum Umdrehen eines Feldes muss man eigentlich kein neues erzeugen.
 Das Feld lässt sich auch selbst umdrehen, man nennt diese Vorgehensweise
 <i>in place</i>. Der folgende Algorithmus vertauscht das erste
@@ -536,25 +513,15 @@ fn main() {
 }
 </pre>
 <p>Da dem Feld selbst Veränderung widerfährt, ist hier eine
-ungemeinschaftliche Referenz auf den Slice des Feldes notwendig.
-Eine ausführliche Erläuterung warum das so ist folgt später.
-Zunächst muss man nur wissen dass diese Art von Referenz die Signatur
+<i>alleinige</i> oder <i>ungemeinschaftliche Referenz</i>
+(<i>unique reference</i>) auf den Slice des Feldes notwendig. Eine
+ausführliche Erläuterung warum das so ist folgt später. Zunächst muss
+man nur wissen dass diese Art von Referenz die Signatur
 <code>&amp;mut</code> anstelle von <code>&amp;</code> besitzt.
 Das <code>mut</code> (mutable) weist daraufhin, dass die Daten,
 auf die die Referenz zeigt, verändert werden dürfen.
 
-<p>Dieser Algorithmus kann ohne die geringste Schwierigkeit generisch für
-einen beliebigen<sup>1</sup> Typ <code>T</code> angegeben werden.
-Dazu ist die Signatur lediglich in die folgende zu ändern:
-<pre class="rust indent">
-fn reverse&lt;T&gt;(a: &amp;mut [T])
-</pre>
-
-<p class="footer"><sup>1</sup>Fast beliebig. Es gibt exotische Typen die nicht
-erlaubt sind. Solche benötigt man aber erst in der fortgeschrittenen
-Programmierung.
-
-<h3>Nochmals Ausschnitte von Feldern</h3>
+<h3 id="Nochmals-Ausschnitte">Nochmals Ausschnitte von Feldern</h3>
 
 <p>Slices bestehen nur aus Zeiger und Länge. Intuitiv lässt sich aus
 einem Slice ein Teilslice bilden und aus diesem wieder ein Teilslice
@@ -582,6 +549,79 @@ fn main() {
     let mut a: Vec&lt;i32&gt; = vec![4,2,1,3];
     a[..].sort();
     println!("{:?}",a);
+}
+</pre>
+
+<h3 id="Stapelspeicher">Stapelspeicher</h3>
+
+<p>Ein wichtiges Hilfsmittel in der Programmierung sind
+Stapelspeicher. Diese lassen sich mit Feldern modellieren.
+Als Anwendung wird ein Programm gezeigt, das herausfindet
+ob die Klammersetzung in einer Zeichenkette korrekt verschachtelt ist.
+
+<p>Das machen wir so: Die Zeichenkette wird von vorne bis hinten
+durchgegangen. Trifft das Programm auf eine öffnende Klammer, packet es
+diese auf einen Stapel. Trifft es auf eine schließende, nimmt es die
+oberste Klammer vom Stapel und schaut ob diese zur schließenden
+passt. Wir müssen außerdem bedenken: Ist der Stapel vorzeitig leer
+oder verbleiben am Ende noch Klammern auf dem Stapel, liegt auch
+ein Mismatch vor.
+
+<p>Die erste Variante benutzt ein Feld <code>stack</code> von
+fester Länge und zur Indizierung einen sogenannten <i>Stapelzeiger</i>
+<code>sp</code>, engl. <i>stack pointer</i>. Der Stapelzeiger
+zeigt immer auf bzw. indiziert immer die leerstehende Stapelzelle
+oberhalb des Stapels. Weil die maximale Stapelhöhe fest ist,
+sagen wir zehn Zeichen, arbeitet das Programm nur dann korrekt,
+falls die Verschachtelung der Klammerung nicht mehr als
+zehn Klammern tief ist.
+
+<pre class="rust ibox">
+fn close(c: char) -&gt; char {
+    match c {
+        '(' =&gt; ')', '[' =&gt; ']', '{' =&gt; '}', _ =&gt; '?'
+    }
+}
+
+fn is_valid(s: &amp;str) -&gt; bool {
+    let mut stack: [char;10] = ['-';10];
+    let mut sp = 0;
+    for c in s.chars() {
+        if c=='(' || c=='[' || c=='{' {
+            stack[sp] = c;
+            sp += 1;
+        } else if c==')' || c==']' || c=='}' {
+            if sp==0 || c != close(stack[sp-1]) {
+                return false;
+            } else {
+                sp -= 1;
+            }
+        }
+    }
+    return sp==0;
+}
+</pre>
+
+<p>Bei der zweiten Variante kommt nun ein dynamisches Feld
+zur Anwendung, das die Beschränkung der maximalen Verschachtelungstiefe
+aufhebt. Ein Stapelzeiger ist hier nicht notwendig, da die
+Methoden <code>push</code> und <code>pop</code> vorliegen, die
+gerade die Funktionalität eines Stapelspeichers auszeichnen.
+
+<pre class="rust ibox">
+fn is_valid(s: &amp;str) -&gt; bool {
+    let mut stack: Vec&lt;char&gt; = Vec::new();
+    for c in s.chars() {
+        if c=='(' || c=='[' || c=='{' {
+            stack.push(c);
+        } else if c==')' || c==']' || c=='}' {
+            match stack.pop() {
+                Some(x) =&gt; if c != close(x) {return false;},
+                None =&gt; {return false;}
+            }
+        }
+    }
+    return stack.is_empty();
 }
 </pre>
 

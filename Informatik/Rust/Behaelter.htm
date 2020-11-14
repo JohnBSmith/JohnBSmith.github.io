@@ -16,6 +16,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Arten">Arten von Behältern</a>
+<li><a href="#Dynamische-Felder">Dynamische Felder</a>
 <li><a href="#Hashtabellen">Hashtabellen</a>
 </ol>
 
@@ -45,6 +46,39 @@ der Mathematik. Sie lassen sich als assoziative Felder mit fehlenden
 Werten betrachten. Es gibt hier <code>HashSet</code> für Mengen
 und <code>BTreeSet</code> für geordnete Mengen.
 </dl>
+
+<h2 id="Dynamische-Felder">Dynmaische Felder</h2>
+
+<h3>Interner Aufbau</h3>
+<p>Ein Wert von Typ <code>Vec&lt;T&gt;</code> besteht intern aus drei
+Informationen: einem Zeiger auf den aktuellen Puffer, der aktuellen
+Länge und der aktuellen Kapazität. Man kann sich das so vorstellen:
+<pre class="rust indent">
+struct Vec&lt;T&gt; {ptr: *mut T, len: usize, cap: usize}
+</pre>
+
+<p>Die tatsächliche Formulierung ist noch etwas ausgeklügelter,
+besitzt aber die gleiche Struktur. Der Zeiger auf den Puffer 
+verhält sich zusammen mit der Länge wie ein Slice eines Feldes fester
+Länge. Jedoch können sich durch Manipulation des
+Feldes alle drei genannten Informationen verändern. Die aktuelle Länge
+des Feldes lässt sich via <code>a.len()</code> auslesen, die aktuelle
+Kapazität mit <code>a.capacity()</code>.
+
+<p>Die Kapazität eines Feldes macht eine Aussage darüber, wie viele
+Elemente zum leeren Feld hinzugefügt werden können, ohne dass der
+Puffer zur Erhöhung der Kapazität realloziert werden muss.
+Da dies alles automatisch geschieht, muss man sich darüber aber
+keine Gedanken machen. Die Reallokation des Puffers wird
+von der Methode <code>push</code> automatisch aufgerufen, wenn die
+Länge gleich der Kapazität ist. Die Kapazität ändert sich normalerweise
+in Zweierpotenzen, über den genauen Algorithmus werden jedoch keine
+Garantien gemacht, um sich Potential für Optimierungen zu behalten.
+Die anfängliche Kapazität darf aber zur Verhinderung der Reallokation
+auch manuell festgelegt werden:
+<pre class="rust indent">
+let mut a: Vec&lt;i32&gt; = Vec::with_capacity(n);
+</pre>
 
 <h2 id="Hashtabellen">Hashtabellen</h2>
 
