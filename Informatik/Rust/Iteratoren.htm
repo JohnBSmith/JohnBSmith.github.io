@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Iteratoren</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Motivation">Motivation</a>
+<li><a href="#Arten">Arten von Iteratoren</a>
+  <ol>
+  <li><a href="#Interne-Iteratoren">Interne Iteratoren</a>
+  <li><a href="#Externe-Iteratoren">Externe Iteratoren</a>
+  </ol>
+</ol>
+
+<h2 id="Motivation">Motivation</h2>
+
+<p>Was sind Iteratoren und wozu sind sie wichtig? Diese Fragen sollen
+anhand eines motivierenden Beispiels beantwortet werden.
+Vorzulegen sei ein Programm, das von einer Reihe von Werten
+den Mittelwert berechnet. Die klassische Formulierung für die
+Berechnung des Mittelwerts sieht wie folgt aus.
+
+<pre class="rust ibox">
+fn mean(a: &amp;[f64]) -&gt; f64 {
+    let mut sum = 0.0;
+    for i in 0..a.len() {
+        sum += a[i];
+    }
+    return sum/(a.len() as f64);
+}
+</pre>
+
+<p>Angenommen, die Werte kommen nun aus einer Datei. Man müsste nun
+zunächst die Werte aus der Datei extrahieren und in einem Array
+zwischenspeichern. Ist die Zahl der Werte allerdings sehr groß, kann
+das Array eine immense Menge an Hauptspeicher belegen. Zur Umgehung
+dieses Problems formuliert man dann eine Anpassung die auf das
+Zwischenspeichern verzichtet. Infolge liegen nun aber zwei
+unterschiedliche Varianten vom gleichen Algorithmus vor, was man als
+unelegant und umständlich betrachten kann.
+
+<p>Was wir bräuchten wäre eine Funktion die nicht von der Form der
+zu verarbeitenden Datenstruktur abhängig ist. Die obige Funktion
+erlaubt nur Arrays, Slices und dynamische Arrays, jedoch z.&nbsp;B.
+keine verketteten Listen. Das zentrale Problem dabei ist, dass die
+Schnittstelle der Funktion die interne Struktur der Datenstruktur
+offenlegt. Wir benötigen stattdessen eine abstrakte Schnittstelle.
+
+<p>An dieser Stelle kommen Iteratoren ins Spiel. Ein Iterator kann als
+Schnittstelle zum Zugriff auf die Elemente einer Datenstruktur
+betrachtet werden. Die über alle iterierbaren Typen polymorphe
+Formulierung der Berechnung des Mittelwertes gestaltet sich so:
+
+<pre class="rust ibox">
+fn mean(a: impl Iterator&lt;Item=f64&gt;) -&gt; f64 {
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x; count += 1;
+    }
+    return sum/(count as f64);
+}
+</pre>
+
+<p>Diese Funktion erlaubt sowohl Arrays:
+<pre class="rust ibox">
+fn main() {
+    let a = &amp;[1.0, 2.0, 3.0, 4.0];
+    println!("{}", mean(a.iter().cloned()));
+}
+</pre>
+
+<p>als auch Datenströme aus Dateien:
+<pre class="rust ibox">
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| s.unwrap().parse::&lt;f64&gt;().unwrap());
+
+    println!("{}", mean(stream));
+    return Ok(());
+}
+</pre>
+
+<h2 id="Arten">Arten von Iteratoren</h2>
+
+<h3 id="Interne-Iteratoren">Interne Iteratoren</h3>
+
+<p>Ein interner Iterator manifestiert sich im Aufruf einer Funktion
+höherer Ordnung, die kontrolliert welche Argumente an einen
+Funktionenzeiger übergeben werden. Die Argumente sind die Werte des
+Iterators. Betrachten wir als Beispiel die Methode
+<code>for_each</code>, die jedes Element mit dem Funktionenzeiger
+<code>cb</code> (callback) aufruft. Nur <code>for_each</code> besitzt
+die Kontrolle darüber, mit welchen Elementen <code>cb</code> aufgerufen
+wird.
+
+<pre class="rust ibox">
+trait ForEach&lt;T&gt; {
+    fn for_each(self, cb: impl Fn(&amp;T));
+}
+
+impl&lt;T&gt; ForEach&lt;T&gt; for &amp;[T] {
+    fn for_each(self, cb: impl Fn(&amp;T)) {
+        for i in 0..self.len() {
+            cb(&amp;self[i]);
+        }
+    }
+}
+
+fn main() {
+    let a = ["Eiche", "Buche", "Ahorn", "Birke"];
+    a.for_each(|x| {
+        println!("{}",x);
+    });
+}
+</pre>
+
+<p>Hier ist <code>x</code> der Wert des zu <code>for_each</code>
+gehörenden verborgenen Iterators.
+
+<h3 id="Externe-Iteratoren">Externe Iteratoren</h3>
+
+<p>Ein externer Iterator ist ein Objekt, welches den Trait
+<code>Iterator</code> implmentiert, d.&nbsp;h. eine Methode
+<code>next</code> besitzt, die den nächsten Wert der Iteration
+liefert.
+
+<pre class="rust ibox">
+struct SliceIterator&lt;'a,T&gt; {
+    a: &amp;'a [T],
+    i: usize
+}
+
+impl&lt;'a,T&gt; Iterator for SliceIterator&lt;'a,T&gt; {
+    type Item = &amp;'a T;
+    fn next(&amp;mut self) -&gt; Option&lt;&amp;'a T&gt; {
+        match self.i &lt; self.a.len() {
+            false =&gt; None,
+            _ =&gt; {self.i +=1; Some(&amp;self.a[self.i-1])}
+        }
+
+    }
+}
+
+fn iter&lt;T&gt;(a: &amp;[T]) -&gt; SliceIterator&lt;T&gt; {
+    SliceIterator{a: a, i: 0}
+}
+
+fn main() {
+    let a = ["Eiche", "Buche", "Ahorn", "Birke"];
+    for x in iter(&amp;a) {
+        println!("{}",x);
+    }
+}
+</pre>
+
+</body>
+</html>
+

@@ -18,6 +18,7 @@
 <li><a href="#Arten">Arten von Behältern</a>
 <li><a href="#Dynamische-Felder">Dynamische Felder</a>
 <li><a href="#Hashtabellen">Hashtabellen</a>
+<li><a href="#Mengen">Mengen</a>
 </ol>
 
 <h2 id="Arten">Arten von Behältern</h2>
@@ -152,7 +153,7 @@ println!("{:?}",m.get("x"));
 
 <p>Man kann <code>m.get(key)</code> als Verallgemeinerung von
 <code>m[key]</code> betrachten, da <code>m[key]</code> im
-Wesentlichen das gleiche bedeutet wie <code>m.get(key).unwrap()</code>.
+Wesentlichen das Gleiche bedeutet wie <code>m.get(key).unwrap()</code>.
 
 <h3>Äquivalenz per Zeigervergleich</h3>
 
@@ -335,6 +336,90 @@ Aufruf <code>&amp;T&nbsp;=&nbsp;&amp;str</code>, beim zweiten jedoch
 gefährliche Subtilität will man eigentlich mittels der
 Abstraktion verhindern. Die starke Verallgemeinerung konterkariert
 dieses Unterfangen jedoch.
+
+<h2 id="Mengen">Mengen</h2>
+
+<h3>Hashtabellen ohne Werte</h3>
+<p>Mengen vom Typ <code>HashSet</code> sind als Hashtabellen
+interpretierbar, deren Schlüssel keine Werte zugeordnet sind.
+Eine Menge gibt demnach Antwort auf die Frage, ob ein bestimmter
+Schlüssel enthalten ist, enthält aber sonst keine weiteren
+Informationen.
+
+<p>Beachtenswert ist, dass Mengen sogar durch Hashtabellen
+modellierbar sind. Wir müssen uns dafür an den Typ <code>()</code>
+erinnern, dessen Wertebereich nur aus dem einzigen informationslosen
+Wert <code>()</code> besteht. Das ist genau das, was wir für die
+Werte haben wollen. Demnach ist <code>HashSet&lt;T&gt;</code> im
+Wesentlichen das Gleiche wie <code>HashMap&lt;T,()&gt;</code>.
+
+<h3>Mengen definieren und anwenden</h3>
+
+<p>Ein Literal definieren wir wieder mittels Makro:
+<pre class="rust ibox">
+macro_rules! hashset {
+    ($( $key:expr ),*) =&gt; {{
+        let mut _set = HashSet::new();
+        $(_set.insert($key.into());)*
+        _set
+    }}
+}
+</pre>
+
+<p>Die Handhabung gestaltet sich wie üblich:
+<pre class="rust ibox">
+use std::collections::HashSet;
+
+fn main() {
+    let m: HashSet&lt;i32&gt; = hashset!{1, 2, 3, 4};
+    println!("{:?}",m);
+}
+</pre>
+
+<p>Grundlegende mathematische Relationen und Operationen
+stehen zur Verfügung.
+
+<table class="bt">
+<tr>
+<th>Bezeichnung
+<th>Mathematik
+<th>Rust
+<tr>
+<td>Element-Relation
+<td><var>x</var>&isin;<var>a</var>
+<td><code>a.contains(&amp;x)</code>
+<tr>
+<td>Teilmenge-Relation
+<td><var>a</var>&subseteq;</var>b</var>
+<td><code>a.is_subset(&amp;b)</code>
+<tr>
+<td>Vereinigungsmenge
+<td><var>a</var>&cup;<var>b</var>
+<td><code>a.union(&amp;b)</code>
+<tr>
+<td>Schnittmenge
+<td><var>a</var>&cap;<var>b</var>
+<td><code>a.intersection(&amp;b)</code>
+<tr>
+<td>Differenzmenge
+<td><var>a</var>\<var>b</var>
+<td><code>a.difference(&amp;b)</code>
+<tr>
+<td>Symmetrische Differenz
+<td><var>a</var>&Delta;<var>b</var>
+<td><code>a.symmetric_difference(&amp;b)</code>
+</table>
+
+<p>Die Operationen Vereinigung, Schnitt, Differenz und symmetrische
+Differenz geben hierbei nicht direkt eine Menge zurück, sondern
+aus Effizienzgründen einen Iterator (nominal verhüllt) aus dem
+anschließend ein Array oder eine Menge gewonnen werden kann.
+
+<pre class="rust ibox">
+let m1: HashSet&lt;i32&gt; = hashset!{1, 2};
+let m2: HashSet&lt;i32&gt; = hashset!{2, 3};
+let m: HashSet&lt;i32&gt; = m1.union(&amp;m2).cloned().collect();
+</pre>
 
 </body>
 </html>

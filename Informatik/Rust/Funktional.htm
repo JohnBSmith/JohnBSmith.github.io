@@ -18,7 +18,6 @@
 <li><a href="#Closures">Closures</a>
 <li><a href="#Higher-order">Funktionen höherer Ordnung</a>
 <li><a href="#Monaden">Monaden</a>
-<li><a href="#Iteratoren">Iteratoren</a>
 <li><a href="#Currying">Currying</a>
 </ol>
 
@@ -395,81 +394,6 @@ impl std::ops::Add&lt;Self&gt; for Ru32 {
     fn add(self, y: Self) -&gt; Self {
         bind_binary(self,y,u32::checked_add)
     }
-}
-</pre>
-
-<h2 id="Iteratoren">Iteratoren</h2>
-
-<h3>Motivation</h3>
-
-<p>Was sind Iteratoren und wozu sind sie wichtig? Diese Fragen sollen
-anhand eines motivierenden Beispiels beantwortet werden.
-Vorzulegen sei ein Programm, das von einer Reihe von Werten
-den Mittelwert berechnet. Die klassische Formulierung für die
-Berechnung des Mittelwerts sie wie folgt aus.
-
-<pre class="rust ibox">
-fn mean(a: &amp;[f64]) -&gt; f64 {
-    let mut sum = 0.0;
-    for i in 0..a.len() {
-        sum += a[i];
-    }
-    return sum/(a.len() as f64);
-}
-</pre>
-
-<p>Angenommen, die Werte kommen nun aus einer Datei. Man müsste nun
-zunächst die Werte aus der Datei extrahieren und in einem Array
-zwischenspeichern. Ist die Zahl der Werte allerdings sehr groß, kann
-das Array eine immense Menge an Hauptspeicher belegen. Zur Umgehung
-dieses Problems formuliert man dann eine Anpassung die auf das
-Zwischenspeichern verzichtet. Infolge liegen nun aber zwei
-unterschiedliche Varianten vom gleichen Algorithmus vor, was man als
-unelegant und umständlich betrachten kann.
-
-<p>Was wir bräuchten wäre eine Funktion die nicht von der Form der
-zu verarbeitenden Datenstruktur abhängig ist. Die obige Funktion
-erlaubt nur Arrays, Slices und dynamische Arrays, jedoch z.&nbsp;B.
-keine verketteten Listen. Das zentrale Problem dabei ist, dass die
-Schnittstelle der Funktion die interne Struktur der Datenstruktur
-offenlegt. Wir benötigen stattdessen eine abstrakte Schnittstelle.
-
-<p>An dieser Stelle kommen Iteratoren ins Spiel. Ein Iterator kann als
-Schnittstelle zum Zugriff auf die Elemente einer Datenstruktur
-betrachtet werden. Die über alle iterierbaren Typen polymorphe
-Formulierung der Berechnung des Mittelwertes gestaltet sich so:
-
-<pre class="rust ibox">
-fn mean(a: impl Iterator&lt;Item=f64&gt;) -&gt; f64 {
-    let mut count: u64 = 0;
-    let mut sum = 0.0;
-    for x in a {
-        sum += x; count += 1;
-    }
-    return sum/(count as f64);
-}
-</pre>
-
-<p>Diese Funktion erlaubt sowohl Arrays:
-<pre class="rust ibox">
-fn main() {
-    let a = &amp;[1.0, 2.0, 3.0, 4.0];
-    println!("{}", mean(a.iter().cloned()));
-}
-</pre>
-
-<p>als auch Datenströme aus Dateien:
-<pre class="rust ibox">
-fn main() -&gt; std::io::Result&lt;()&gt; {
-    use std::{fs::File, io::BufReader, io::BufRead};
-    let argv: Vec&lt;String&gt; = std::env::args().collect();
-
-    let file = BufReader::new(File::open(&amp;argv[1])?);
-    let stream = file.lines()
-        .map(|s| s.unwrap().parse::&lt;f64&gt;().unwrap());
-
-    println!("{}", mean(stream));
-    return Ok(());
 }
 </pre>
 
