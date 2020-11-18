@@ -17,6 +17,7 @@
 <li><a href="#Strukturen">Strukturen</a>
 <li><a href="#Enumerationen">Enumerationen</a>
 <li><a href="#Nominal">Nominale Typisierung</a>
+<li><a href="#Methoden">Methoden</a>
 <li><a href="#Algebra">Algebraischer Aspekt</a>
 </ol>
 
@@ -36,7 +37,7 @@ als <code>(A,B)</code>. Zu beachten ist, dass die Indizierung
 nicht bei eins startet, sondern bei null. Ein Beispiel dazu:
 
 <pre class="rust ibox">
-fn main(){
+fn main() {
     let t: (u32, u32) = (360, 240);
     println!("({}|{})", t.0, t.1);
 }
@@ -45,16 +46,16 @@ fn main(){
 <p>Aus ergonomischen Gründen ist es nun wünschenswert,
 die Komponenten der Tupel nicht unter ihrem Index anzusprechen,
 sondern über Bezeichner. Man schreibt in Rust dann z.&nbsp;B.
-<code>struct Name{a: A, b: B}</code>, wobei die erste Komponente unter
+<code>struct Name {a: A, b: B}</code>, wobei die erste Komponente unter
 dem Bezeichner <code>a</code> und die zweite unter <code>b</code>
 angesprochen wird. Ein Beispiel dazu:
 
 <pre class="rust ibox">
-struct Point{
+struct Point {
     a: u32, b: u32
 }
 
-fn main(){
+fn main() {
     let t: Point = Point{a: 360, b: 240};
     println!("({}|{})", t.a, t.b);
 }
@@ -89,7 +90,7 @@ Eine solche Konstruktion wird in Rust als <code>enum</code> bezeichnet.
 Ein Beispiel:
 
 <pre class="rust ibox">
-enum E{
+enum E {
     Int(i32), Char(char)
 }
 
@@ -100,7 +101,7 @@ fn print(x: E) {
     }
 }
 
-fn main(){
+fn main() {
     let x: E = E::Int(12);
     let y: E = E::Char('y');
     print(x);
@@ -157,9 +158,10 @@ strukturelle Typen in Rust erstellt werden:
 Komfort. Die nominale Typisierung ist dagegen grundlegend für die
 Typsicherheit.
 
-<p>Man kann zu jedem beliebigen strukturellen Typen <code>T</code>
-einen nominalen erzeugen, indem man ihn als <code>struct Name(T)</code>
-einhüllt.
+<p>Man kann zu jedem beliebigen Typ <code>T</code> einen neuen
+nominalen erzeugen, indem man ihn als <code>struct Name(T)</code>
+einhüllt. Dieser neue Typ wird <i>Hülle</i>, engl. <i>wrapper</i>,
+genannt.
 
 <p>Die Konstruktion komplexer struktureller Typen führt nun zu langer
 Syntax, da tut sich die Frage auf, ob sich das denn nicht abkürzen
@@ -171,6 +173,65 @@ type Zahlenpaar = (i32,i32);
 
 <p>dann ist <code>Zahlenpaar</code> an jeder Stelle des Moduls
 synonym zu <code>(i32,i32)</code>.
+
+<h2 id="Methoden">Methoden</h2>
+
+<p>Jedem neu definierten nominalen Typ darf man angebundene
+Funktionen hinzufügen. Dies geschieht durch Platzierung der
+Funktionsdefinitionen in einen Block, eingeleitet mit dem Schlüsselwort
+<code>impl</code> und dem Typname.
+Bei den angebundenen Funktionen gibt es eine Unterscheidung
+zwischen Methoden und assoziierten Funktionen.
+Die <i>assoziierten Funktionen</i> sind ganz gewöhnliche Funktionen,
+während die <i>Methoden</i> das Argument <code>self</code>
+besitzen. Das Argument <code>self</code> ist zunächst ein gewöhnliches
+Argument, erlaubt aber beim Aufruf die Punkt-Schreibweise.
+
+<p>Das folgende Beispiel zeigt einen Typ für Koordinatenvektoren in
+der Ebene. Hinzugefügt ist eine assoziierte Funktion <code>new</code>
+zur Konstruktion und eine Methode <code>abs</code> zur Berechnung des
+Vektorbetrags.
+
+<pre class="rust ibox">
+struct Vector {x: f64, y: f64}
+
+impl Vector {
+    fn new(x: f64, y: f64) -&gt; Self {
+        Self{x,y}
+    }
+    fn abs(&amp;self) -&gt; f64 {
+        f64::sqrt(self.x*self.x + self.y*self.y)
+    }
+}
+
+fn main() {
+    let v = Vector::new(1.0,1.0);
+    println!("{}",v.abs());
+}
+</pre>
+
+<p>Hier ist <code>Self</code> ein Typalias für <code>Vector</code>.
+Außerdem ist <code>&amp;self</code> eine Kurzschreibweise für
+<code>self:&nbsp;&amp;Self</code>. Die Punkt-Schreibweise
+<code>v.abs()</code> ist eine Kurzschreibweise für
+<code>Vector::abs(&amp;v)</code>. Somit ist die folgende Angabe
+äquivalent:
+
+<pre class="rust ibox">
+impl Vector {
+    fn new(x: f64, y: f64) -&gt; Vector {
+        Vector{x,y}
+    }
+    fn abs(self: &amp;Vector) -&gt; f64 {
+        f64::sqrt(self.x*self.x + self.y*self.y)
+    }
+}
+
+fn main() {
+    let v = Vector::new(1.0,1.0);
+    println!("{}",Vector::abs(&amp;v));
+}
+</pre>
 
 <h2 id="Algebra">Algebraischer Aspekt</h2>
 
@@ -193,7 +254,7 @@ enum List&lt;T&gt; {
 }
 </pre>
 
-<p>Aus dieser rekursiven Definition enstehen einfach verkettete
+<p>Aus dieser rekursiven Definition entstehen einfach verkettete
 Listen:
 
 <div><img src="img/List.svg">
@@ -233,7 +294,7 @@ List = 1 + T + T*T + T*T*T + T*T*T*T + ...
 </pre>
 
 <p>Und dies ist genau die Struktur dieses Datentyps. Die
-Enerumation zählt die Möglichkeiten der Liste auf, eine bestimmte
+Enumeration zählt die Möglichkeiten der Liste auf, eine bestimmte
 Länge zu haben.
 
 </body>
