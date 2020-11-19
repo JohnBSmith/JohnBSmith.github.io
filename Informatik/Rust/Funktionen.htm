@@ -33,7 +33,7 @@ fn from_polar(r: f64, phi: f64) -&gt; (f64,f64) {
 }
 
 fn polar_from(x: f64, y: f64) -&gt; (f64,f64) {
-    (x.hypot(y),y.atan2(x))
+    (x.hypot(y), y.atan2(x))
 }
 
 fn main() {
@@ -48,6 +48,8 @@ fn main() {
 
 <h2 id="Variadische-Funktionen">Variadische Funktionen</h2>
 
+<h3>Homogene Argumente</h3>
+
 <p>Als <i>variadisch</i> bezeichnet man Funktionen, die keine
 feste Arität haben, d.h. keine feste Anzahl an Argumenten. Zwar sind
 solche Funktionen in Rust nicht direkt formulierbar, allerdings
@@ -55,15 +57,45 @@ lassen sie sich ausreichend ergonomisch nachstellen, indem der
 variadische Teil in ein Slice verpackt wird.
 
 <p>Für die Funktion <code>mean</code>, welche den Mittelwert der
-Argumente bildet, findet sich z.B. die Formulierung:
+Argumente bildet, findet sich bspw. die Formulierung:
 <pre class="rust ibox">
 fn mean(a: &amp;[f64]) -&gt; f64 {
     a.iter().sum::&lt;f64&gt;()/(a.len() as f64)
 }
 
 fn main() {
-    let m = mean(&amp;[1.0,2.0,3.0,4.0]);
+    let m = mean(&amp;[1.0, 2.0, 3.0, 4.0]);
     println!("{}",m);
+}
+</pre>
+
+<h3>Heterogene Argumente</h3>
+
+<p>Bei heterogenen Argumenten möchte man für die Argumente einer
+variadischen Funktion jeweils einen unterschiedlichen Typ zulassen.
+Ein Ansatz, wie sich das erreichen lässt, ist das Hochcasten der
+Argumente in einen Trait-Typ. Das kann im Extremfall auch der
+Trait <code>Any</code> sein. Dafür muss von den Argumenten jeweils
+ein Borrow gebildet werden. Wir definieren für die Borrows ein Makro
+<code>argv</code>, das sorgt für hübsche Syntax.
+
+<p>Das Beispiel zeigt eine variadische Funktion die Argumente
+unterschiedlichen Typs verträgt, solange diese nur den
+Trait <code>Display</code> implementieren.
+
+<pre class="rust ibox">
+macro_rules! argv {
+    ($($x:expr),*) =&gt; {&amp;[$(&amp;$x),*]}
+}
+
+fn display(a: &amp;[&amp;dyn std::fmt::Display]) {
+    for x in a {
+        println!("{}",x);
+    }
+}
+
+fn main() {
+    display(argv!["Eule", 24, true]);
 }
 </pre>
 
