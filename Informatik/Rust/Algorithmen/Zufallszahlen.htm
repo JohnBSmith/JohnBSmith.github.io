@@ -131,5 +131,60 @@ Restklasse. Die Restklasse von <code>u</code> ist das Urbild von
 Man nennt das Urbild auch Faser, weil der Definitionsbereich
 <code>[0..2<sup>32</sup>)</code> in disjunkte Urbilder zerlegt wird.
 
+<p>Wie bekommen wir nun auf <code>[0..m)</code> gleichverteilte
+Zufallszahlen? Eine wichtiges Grundverfahren ist die
+Verwerfungsmethode. Das geht so: Erzeugen wir zunächst gleichverteilte
+Zufallszahlen aus einem größeren Bereich und verwerfen davon alle
+außerhalb <code>[0..m)</code>, verbleiben die restlichen Zufallszahlen
+gleichverteilt.
+
+<p>Da die Zufallzahlen jedoch aus <code>[0..2<sup>32</sup>)</code>
+entstammen, enstehen bei der Methode für ein kleines <code>m</code> 
+viel zu viele Verwerfungen, was zu einem enormen Rechenaufwand
+führt. Die Idee: Schneiden wir Bits von einer Zufallszahl ab,
+verbleiben die übrigen Bits gleichverteilt. Somit sind wir im Besitz
+von gleichverteilten Zufallszahlen aus <code>[0..2<sup>k</sup>)</code>
+zu jeder Zweierpotenz <code>2<sup>k</sup></code>. Zu <code>m</code>
+suchen wir die nächste Zweiterpotenz
+<code>2<sup>k</sup>&nbsp;&ge;&nbsp;m</code>.
+Infolge sinkt der Rechenaufwand bei der Verwerfungsmethode
+drastisch ab. Die Standardbibliothek besitzt sogar die Funktion
+<code>next_power_of_two</code>.
+
+<pre class="rust ibox">
+pub fn rand_bounded(&amp;mut self, m: u32) -&gt; u32 {
+    let mask = m.next_power_of_two() - 1;
+    loop {
+        let x = mask &amp; self.rand_u32();
+        if x &lt; m {return x;}
+    }
+}
+</pre>
+
+<p>Für <code>m&nbsp;&gt;&nbsp;2<sup>31</sup></code> kommt es
+bei der Berechnung der nächsten Zweiterpotenz zu einem Überlauf.
+Korrektes Verhalten für diesen Fall wird so berücksichtigt:
+<pre class="rust ibox">
+let mask = m.wrapping_next_power_of_two().wrapping_sub(1);
+</pre>
+
+<p>Außerdem ist die wiederholte Berechnung der Bitmaske
+bei festem <code>m</code> eigentlich nicht notwendig.
+Partielle Applikation gestattet die Abtrennung dieser Berechnung.
+
+<pre class="rust ibox">
+pub fn rand_bounded&lt;'a&gt;(&amp;'a mut self, m: u32)
+-&gt; impl 'a + FnMut()-&gt;u32
+{
+    let mask = m.next_power_of_two() - 1;
+    return move || {
+        loop {
+            let x = mask &amp; self.rand_u32();
+            if x &lt; m {return x;}
+        }
+    };
+}
+</pre>
+
 </body>
 </html>
