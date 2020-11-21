@@ -19,10 +19,10 @@
   <li><a href="#Futures">Futures</a>
   <li><a href="#AsyncFn">Asynchrone Funktionen</a>
   </ol>
-<li><span class="modest">Technische Umsetzung</span>
+<li><a href="#Umsetzung">Technische Umsetzung</a>
   <ol>
-  <li><span class="modest">Selbstreferenzen und Anheftung</span>
   <li><span class="modest">Koroutinen</span>
+  <li><a href="#Anheftung">Selbstreferenzen und Anheftung</a>
   <li><span class="modest">Exekutoren</span>
   <li><span class="modest">Waker</span>
   </ol>
@@ -279,6 +279,53 @@ block_on(async{join!(f1,f2)})
 
 <p>schreiben.
 
+<h2 id="Umsetzung">Technische Umsetzung</h2>
+
+<h3 id="Anheftung">Selbstreferenzen und Anheftung</h3>
+
+<p>Anders als eine gewöhnliche Funktion muss eine Koroutine ihre
+Variablenzustände auch während Unterbrechungen speichern. Eine
+gewöhnliche Funktion besitzt das Konzept der Unterbrechung nicht,
+&ndash; sie wird aufgerufen, für die Variablenzustände und für
+Verwaltungsinformation wird hierbei ein neuer Aktivierungsrecord als
+Stack frame im Aufrufstapel alloziert, und beim Verlassen der Funktion
+wird das Stack frame wieder freigegeben. Bei der Koroutine muss der
+Speicherbereich für die Variablenzustände solange zur Verfügung stehen,
+wie die Instanz der Koroutine existiert. Diese Speicherbereich kann
+auf dem Aufrufstapel oder auf dem Haldenspeicher liegen.
+
+<p>Wie wir wissen besitzt Rust Zeigervariablen bzw. Referenzvariablen
+als Sprachmittel. Im Zusammenhang mit dem Speicherbereich der
+Variablenzustände tut sich nun ein Problem auf. Nämlich kann es ja sein,
+dass der Wert einer lokalen Variablen ein Zeiger auf eine andere lokale
+Variable in diesem Speicherbereich ist. Wir haben es in einem solchen
+Fall mit einer <i>Selbstreferenz</i> zu tun. Diese Situation kann man
+sich vorstellen als eine Struktur, die einen Zeiger
+enthält der gerade auf eine andere Variable der Struktur oder
+die Struktur selbst zeigt.
+
+<p>Würden wir die Struktur im Speicher verschieben, würde der
+Zeiger ungültig werden, &ndash; eine allgemeine Problematik bei
+Zeigern, bekannt als <i>hängender Zeiger</i>. Infolge dürften wir
+keinen Besitz über eine solche selbstreferenzielle Struktur bekommen,
+denn sonst wären wie bei jedem Wert Verschiebungen erlaubt. Bei
+gewöhnlichen Strukturen ist ja die Situation herstellbar, dass
+keine Zeiger auf die Struktur mehr vorliegen. Bei einer
+selbstreferenziellen Struktur ist dies ausgeschlossen, weil mit dem
+Besitz der Struktur der Zugriff auf die Zeigervariable einhergeht.
+
+<p>Es gibt mehrere technische Möglichkeiten, wie man dieser Misere
+entgehen kann:
+<ol>
+<li>Anstelle einer Speicheradresse speichert der Zeiger nur ein
+Offset. Diese Technik ist analog zum <i>Position independent code</i>.
+<li>Das Verschieben wird mit Mitteln des Typsystems verboten,
+&ndash; die Struktur besitzt damit eine feste <i>Anheftung</i> im
+Speicher.
+</ol>
+
+<p>Man hat sich für das Konzept der Anheftung entschieden, für die
+der Typ <code>Pin</code> geschaffen wurde.
 
 </body>
 </html>

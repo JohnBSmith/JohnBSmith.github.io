@@ -36,8 +36,8 @@ fn simpson(f: &amp;dyn Fn(f64)-&gt;f64, a: f64, b: f64, n: u32) -&gt; f64 {
     let h = (b-a)/(n as f64);
     let mut s = 0.0;
     for i in 0..n {
-        let x = a+h*(i as f64);
-        s += f(x)+4.0*f(x+0.5*h)+f(x+h);
+        let x = a + h*(i as f64);
+        s += f(x) + 4.0*f(x+0.5*h) + f(x+h);
     }
     return s*h/6.0
 }
@@ -86,7 +86,7 @@ fn gauss(f: &amp;dyn Fn(f64)-&gt;f64, a: f64, b: f64, n: u32) -&gt; f64 {
     let p = 0.5*h;
     let mut s = 0.0;
     for j in 0..n {
-        let q = p+a+(j as f64)*h;
+        let q = p + a + (j as f64)*h;
         let mut sj = 0.0;
         for t in &amp;GL32 {
             sj += t[1]*f(p*t[0]+q);
