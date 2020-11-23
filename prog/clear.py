@@ -55,6 +55,7 @@ files = [
 "./Mathematics/sf-implementation/sf-implementation.pdf",
 "./Chemie/PC/PC.pdf",
 "./Chemie/PCH/PCH.pdf",
+"./Sprache/Woerter/Woerter-romantisch.pdf",
 "./prog/index.js"
 ]
 

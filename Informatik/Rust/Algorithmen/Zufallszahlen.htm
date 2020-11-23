@@ -16,6 +16,8 @@
 <ol>
 <li><a href="#Xorshift-plus">Xorshift+</a>
 <li><a href="#Bereich">Zufallszahlen aus einem Bereich</a>
+<li><a href="#Stetig">Stetig verteilte Zufallszahlen</a>
+<li><a href="#Verteilung">Zufallszahlen mit Verteilung</a>
 </ol>
 
 <h2 id="Xorshift-plus">Xorshift+</h2>
@@ -186,6 +188,102 @@ pub fn rand_bounded&lt;'a&gt;(&amp;'a mut self, m: u32)
     };
 }
 </pre>
+
+<h2 id="Stetig">Stetig verteilte Zufallszahlen</h2>
+
+<p>Dividiert man gleichverteilte Zufallszahlen aus
+<code>[0..2<sup>32</sup>)</code> durch <code>2<sup>32</sup></code>,
+resultiert dies näherungsweise in gleichverteilten
+Zufallszahlen aus <code>[0,1)</code>.
+
+<pre class="rust ibox">
+pub fn rand_float(&amp;mut self) -&gt; f64 {
+    f64::from(self.rand_u32())*2.3283064365386963E-10
+}
+</pre>
+
+<p>Dies liefert 32 Bit Genauigkeit, &ndash; umgerechnet sind das
+ca. neun dezimale Nachkommastellen. Warum nicht eine Zahl
+aus <code>[0..2<sup>64</sup>)</code> durch <code>2<sup>64</sup></code>
+teilen? Dazu muss man bedenken dass bei <code>f64</code>
+die Mantisse 53&nbsp;Bit lang ist. Die Mantisse kann die erzeugten
+64&nbsp;Bit folglich nicht aufnehmen. Dies könnte zu einer
+Verzerrung der Verteilung führen.
+
+<p>Bei <code>u32</code> haben wir den großen Vorteil, eine Berechnung
+über den gesamten Definitionsbereich laufen lassen zu können.
+Bei <code>u64</code> geht dies aufgrund der schieren Größe nicht
+mehr. Erhält die Zuordnung
+<pre class="rust ibox">
+fn float(x: u32) -> f64 {
+    f64::from(x)*2.3283064365386963E-10
+}
+</pre>
+wirklich die Gleichverteilung, müssen zwei
+gleich lange Teilintervalle von <code>[0,1)</code> beim Durchlaufen
+aller Werte aus <code>[0..2<sup>32</sup>)</code> gleich häufig getroffen
+werden. Oder anders ausgedrückt, die Urbilder von gleich langen
+Teilintervallen müssen gleich groß sein. Diese Experimente können
+wir machen, ohne die genaue Implementation von <code>f64::from</code>
+zu kennen.
+
+<h2 id="Verteilung">Zufallszahlen mit Verteilung</h2>
+
+<h3>Inversionsmethode</h3>
+
+<p>Gegeben sei eine Verteilungsfunktion <code>F</code>. Ist
+<code>u</code> eine Zufallszahl bezüglich Gleichverteilung auf
+<code>[0,1]</code>, so ist <code>F<sup>&minus;1</sup>(u)</code>
+eine Zufallszahl bezüglich Verteilungsfunktion <code>F</code>.
+Hierbei ist <code>F<sup>&minus;1</sup></code> die Umkehrfunktion
+von <code>F</code>. Dieses Verfahren zur Erzeugung von Zufallszahlen
+einer bestimmten Verteilung nennt sich <i>Inversionsmethode</i>.
+
+<p>Nun ist die Umkehrfunktion nicht bei jeder Verteilungsfunktion
+einfach bestimmbar. Wir sind aber gierig und wollen doch irgendwie
+an die Zufallszahlen herankommen. Den Schwierigkeiten aus dem Weg
+geht die Berechnung mit dem Bisektionsverfahren.
+
+<pre class="rust ibox">
+// Bestimme y &isin; [a,b], so dass x = f(y).
+fn bisection(f: impl Fn(f64)-&gt;f64,
+    x: f64, mut a: f64, mut b: f64
+) -&gt; f64
+{
+    for _ in 0..80 {
+        let m = 0.5*(a+b);
+        if f(m)-x &lt; 0.0 {a = m;} else {b = m;}
+    }
+    return a;
+}
+
+// Zufallszahlengenerator zu einer Verteilungsfunktion,
+// engl. cumulative distribution function.
+fn rng_from_cdf(mut rng: RNG,
+    a: f64, b: f64, cdf: impl Fn(f64)-&gt;f64
+) -&gt; impl FnMut()-&gt;f64
+{
+    move || bisection(&amp;cdf,rng.rand_float(),a,b)
+}
+</pre>
+
+<p>Als Beispiel diene die Exponentialverteilung mit Erwartungswert
+<code>1/&lambda;</code>.
+<pre class="rust ibox">
+fn rng_from_exp(rng: RNG, lambda: f64) -&gt; impl FnMut()-&gt;f64 {
+    rng_from_cdf(rng, 0.0, 100.0/lambda, move |x|
+        if x &lt;= 0.0 {0.0} else {1.0 - f64::exp(-lambda*x)})
+}
+
+fn main() {
+    let rng = RNG::from_seed(0);
+    let mut rand = rng_from_exp(rng,1.0);
+    for _ in 0..10 {
+        println!("{:.6}", rand());
+    }
+}
+</pre>
+
 
 </body>
 </html>

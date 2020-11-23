@@ -54,6 +54,7 @@ paths = [
 "./Mathematics/sf-implementation/",
 "./Chemie/PC/",
 "./Chemie/PCH/",
+"./Sprache/Woerter/"
 ]
 
 import os
