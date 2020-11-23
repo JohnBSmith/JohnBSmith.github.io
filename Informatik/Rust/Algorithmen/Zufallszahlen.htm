@@ -18,6 +18,7 @@
 <li><a href="#Bereich">Zufallszahlen aus einem Bereich</a>
 <li><a href="#Stetig">Stetig verteilte Zufallszahlen</a>
 <li><a href="#Verteilung">Zufallszahlen mit Verteilung</a>
+<li><a href="#Iteratoren">Iteratoren</a>
 </ol>
 
 <h2 id="Xorshift-plus">Xorshift+</h2>
@@ -280,6 +281,41 @@ fn main() {
     let mut rand = rng_from_exp(rng,1.0);
     for _ in 0..10 {
         println!("{:.6}", rand());
+    }
+}
+</pre>
+
+<h2 id="Iteratoren">Iteratoren</h2>
+
+<p>Oft möchte man Zufallszahlen in Form eines Iterators haben, wofür
+<code>from_fn</code> nützlich ist.
+
+<pre class="rust ibox">
+pub fn iter_u32&lt;'a&gt;(&amp;'a mut self)
+-&gt; impl 'a + Iterator&lt;Item=u32&gt;
+{
+    std::iter::from_fn(move || Some(self.rand_u32()))
+}
+</pre>
+
+<p>Wir können Methoden auch als gewöhnliche Funktionen aufrufen.
+Benutzung eines Funktionenzeigers lässt eine Anpassung mit
+generischer Funktionalität zu.
+
+<pre class="rust ibox">
+pub fn iter&lt;'a, T: 'static&gt;(&amp;'a mut self, rand: fn(&amp;mut Self)-&gt;T)
+-&gt; impl 'a + Iterator&lt;Item=T&gt;
+{
+    std::iter::from_fn(move || Some(rand(self)))
+}
+</pre>
+
+<p>Die Benutzung schaut so aus:
+<pre class="rust ibox">
+fn main() {
+    let mut rng = RNG::from_seed(0);
+    for x in rng.iter(RNG::rand_u32).take(10) {
+        println!("{:08x}",x);
     }
 }
 </pre>
