@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Schnittstellen zum Betriebssystem</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Kommandos">Kommandos ausführen</a>
+</ol>
+
+<h2 id="Kommandos">Kommandos ausführen</h2>
+
+<p>Manchmal benötigt ein Programm zur Erledigung einer Aufgabe die
+Hilfe eines anderen Programms. In der modernen Programmierung
+sollte dieses andere Programm als Bibliothek vorliegen und eine
+streng typisierte öffentliche Schnittstelle anbieten, &ndash; das ist
+am effizientesten und sichersten. Bisweilen kommt aber auch der
+Weg zum Einsatz, das andere Programm als Kindprozess über das
+Betriebssystem aufrufen zu lassen. Ein großer Vorteil liegt hierbei
+darin, dass das andere Programm in einer beliebigen anderen
+Programmiersprache formuliert sein darf. Zudem ist das andere
+Programm abgekoppelt, womit man quasi dynamisches Laden bekommt.
+Nachteile sind ggf. weniger formal festgelegte Schnittstellen bishin
+zu Benutzerschnittstellen die eigentlich nicht für die Verarbeitung
+durch Maschinen gedacht sind.
+
+<p>Die Standardbibliothek stellt im Modul <code>std::process</code>
+einen Mechanismus zum Aufruf anderer Programme zur Verfügung.
+Zur Erläuterung ein Beispiel.
+Unter Linux gibt es so ein Programm <code>date</code>.
+Führt man dieses im Terminal aus, schreibt es das aktuelle
+Datum und die aktuelle Uhrzeit in die Ausgabe.
+Ein Aufruf als Kindprozess gestaltet sich folgendermaßen:
+
+<pre class="rust ibox">
+use std::process::Command;
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    let mut child = Command::new("date").spawn()?;
+    let _status = child.wait()?;
+    return Ok(());
+}
+</pre>
+
+<p>Die Methode <code>status</code> fasst <code>spawn</code>
+und <code>wait</code> zusammen:
+<pre class="rust ibox">
+let _status = Command::new("date").status()?;
+</pre>
+
+<p>Die Methode <code>output</code> fängt <code>stdout</code> und
+<code>stderr</code> auf und macht diese als Rückgabewert verfügbar.
+<pre class="rust ibox">
+let output = Command::new("date").output()?;
+let date = std::str::from_utf8(&amp;output.stdout).unwrap();
+println!("[{}]", date.trim());
+</pre>
+
+<p>Die Methode <code>arg</code> legt ein Kommandozeilenargument
+fest. Gibt es mehrere Argumente, ist ein Aufruf von <code>arg</code>
+je Argument notwendig. Bspw. entspricht das Kommando
+<pre class="ibox">
+Werkzeug -x -y Datei.txt
+</pre>
+
+<p>dieser Verkettung:
+<pre class="rust ibox">
+Command::new("Werkzeug").arg("-x").arg("-y").arg("Datei.txt")
+</pre>
+
+<p>Alternativ steht dafür die Methode <code>args</code> zur
+Verfügung:
+
+<pre class="rust ibox">
+Command::new("Werkzeug").args(&amp;["-x", "-y", "Datei.txt"])
+</pre>
+
+<p>Das Datum im Format <code>Jahr-Monat-Tag</code> bekommt
+man bspw. so:
+<pre class="rust ibox">
+let output = Command::new("date").arg("+%Y-%m-%d").output()?;
+let s = std::str::from_utf8(&amp;output.stdout).unwrap();
+let date: Vec&lt;&amp;str&gt; = s.trim().split("-").collect();
+println!("{:?}", date);
+</pre>
+
+<p>Basteleien wie die folgende sind höchst fragwürdig:
+<pre class="rust ibox">
+use std::process::Command;
+use std::io::Write;
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    loop {
+        let mut s = String::new();
+        std::io::stdin().read_line(&amp;mut s)?;
+        let mut iter = s.trim().split_ascii_whitespace();
+        if let Some(cmd) = iter.next() {
+            let output = Command::new(cmd).args(iter).output()?;
+            std::io::stdout().write(&amp;output.stdout)?;
+        }
+    }
+}
+</pre>
+
+<p>Der Nutzer erhält hiermit Zugriff auf alle möglichen Programme,
+womit das Benutzerkonto letztendlich kompromitierbar ist. Ein Angreifer
+könnte bspw. unbemerkt mit GET von irgendwoher ein Skript downloaden,
+welches bei jedem Login automatisch gestartet wird und für den
+Angreifer eine SSH-Verbindung aufbaut, womit dieser oder dessen
+Skripte in aller Ruhe unbemerkte Manipulationen vornehmen können.
+Eine solcher Angriff wird <i>Command injection</i> genannt
+und fällt unter den Obergriff <i>Code injection</i>.
+
+<p>Das Fazit lautet, dass <code>Command</code> so restriktiv wie
+möglich genutzt werden sollte und niemals unvalidierte
+Zeichenketten bekommen darf.
+
+
+</body>
+</html>

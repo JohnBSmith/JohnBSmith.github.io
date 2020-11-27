@@ -16,9 +16,10 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Box">Verzicht auf Box</a>
+<li><a href="#Komprimierung">Komprimierung von Datentypen</a>
 <li><a href="#Verkettung">Verkettung von Operatoren</a>
 <li><a href="#Verkettung2">Nochmals Verkettung</a>
-<li><a href="#Komprimierung">Komprimierung von Datentypen</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <h2 id="Box">Verzicht auf Box</h2>
@@ -57,6 +58,85 @@ impl Chunck {
     fn new() -&gt; Chunck {
         Chunck{data: [0;10]}
     }
+}
+</pre>
+
+<h2 id="Komprimierung">Komprimierung von Datentypen</h2>
+
+<p>Betrachten wir nochmals den Typ <code>Ru32</code> aus dem
+Abschnitt ›<a href="Sicherheit.htm#Monaden">Monaden</a>‹ im Kapitel
+›Sichere Programmierung‹. Mit einem gewissen Unbehagen stellt man
+bei diesem fest, dass <code>std::mem::size_of::&lt;Ru32&gt;()</code>
+auf einer 32&nbsp;Bit-Architektur den Wert&nbsp;8 liefert.
+
+<p>Da ist nun wie in einem Hefezopf viel Luft im Typ enthalten.
+Benutzt man für die Fehlerinformation stattdessen Werte aus dem
+ursprünglichen Definitionsbereich, erlaubt dies die Kompression auf den
+ursprünglichen Speicherplatz von 32&nbsp;Bit. Den Fehlerwert kodieren
+wir einfach als <code>u32::MAX</code>. Unter geringfügigen semantischen
+Änderungen nimmt das Programm dann die folgende Form an:
+
+<pre class="rust ibox">
+mod ru32 {
+    #[derive(Clone,Copy)]
+    pub struct Ru32 (u32);
+    impl Ru32 {
+        pub fn err() -&gt; Self {Ru32(u32::MAX)}
+        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
+            match self.0 {
+                u32::MAX =&gt; Self::err(),
+                x =&gt; f(x)
+            }
+        }
+    }
+    impl std::fmt::Display for Ru32 {
+        fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
+        -&gt; std::fmt::Result
+        {
+            match self.0 {
+                u32::MAX =&gt; write!(f,"Ru32(Err)"),
+                x =&gt; write!(f,"Ru32({})",x)
+            }
+        }
+    }
+    impl From&lt;u32&gt; for Ru32 {
+        fn from(x: u32) -&gt; Self {Self(x)}
+    }
+    impl From&lt;char&gt; for Ru32 {
+        fn from(c: char) -&gt; Self {Self(u32::from(c))}
+    }
+    impl From&lt;Option&lt;u32&gt;&gt; for Ru32 {
+        fn from(x: Option&lt;u32&gt;) -&gt; Self {Self(x.unwrap_or(u32::MAX))}
+    }
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self::from(x.checked_add(y))))
+        }
+    }
+    impl std::ops::Mul&lt;Ru32&gt; for u32 {
+        type Output = Ru32;
+        fn mul(self, y: Ru32) -&gt; Ru32 {
+            y.bind(|y| Ru32::from(self.checked_mul(y)))
+        }
+    }
+}
+
+use ru32::Ru32;
+
+fn str_to_u32(s: &amp;str) -&gt; Ru32 {
+    let mut x = Ru32::from(0);
+    for digit in s.chars() {
+        if !digit.is_digit(10) {return Ru32::err();}
+        x = 10*x + Ru32::from(u32::from(digit) - u32::from('0'));
+    }
+    return x;
+}
+
+fn main() {
+    println!("size of Ru32: {}",std::mem::size_of::&lt;Ru32&gt;());
+    println!("{}",str_to_u32("1440"));
+    println!("{}",str_to_u32("10000000000"));
 }
 </pre>
 
@@ -394,84 +474,13 @@ fn main() {
 }
 </pre>
 
-<h2 id="Komprimierung">Komprimierung von Datentypen</h2>
+<h2 id="Literatur">Literatur</h2>
 
-<p>Betrachten wir nochmals den Typ <code>Ru32</code> aus dem
-Abschnitt ›<a href="Sicherheit.htm#Monaden">Monaden</a>‹ im Kapitel
-›Sichere Programmierung‹. Mit einem gewissen Unbehagen stellt man
-bei diesem fest, dass <code>std::mem::size_of::&lt;Ru32&gt;()</code>
-auf einer 32&nbsp;Bit-Architektur den Wert&nbsp;8 liefert.
-
-<p>Da ist nun wie in einem Hefezopf viel Luft im Typ enthalten.
-Benutzt man für die Fehlerinformation stattdessen Werte aus dem
-ursprünglichen Definitionsbereich, erlaubt dies die Kompression auf den
-ursprünglichen Speicherplatz von 32&nbsp;Bit. Den Fehlerwert kodieren
-wir einfach als <code>u32::MAX</code>. Unter geringfügigen semantischen
-Änderungen nimmt das Programm dann die folgende Form an:
-
-<pre class="rust ibox">
-mod ru32 {
-    #[derive(Clone,Copy)]
-    pub struct Ru32 (u32);
-    impl Ru32 {
-        pub fn err() -&gt; Self {Ru32(u32::MAX)}
-        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
-            match self.0 {
-                u32::MAX =&gt; Self::err(),
-                x =&gt; f(x)
-            }
-        }
-    }
-    impl std::fmt::Display for Ru32 {
-        fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
-        -&gt; std::fmt::Result
-        {
-            match self.0 {
-                u32::MAX =&gt; write!(f,"Ru32(Err)"),
-                x =&gt; write!(f,"Ru32({})",x)
-            }
-        }
-    }
-    impl From&lt;u32&gt; for Ru32 {
-        fn from(x: u32) -&gt; Self {Self(x)}
-    }
-    impl From&lt;char&gt; for Ru32 {
-        fn from(c: char) -&gt; Self {Self(u32::from(c))}
-    }
-    impl From&lt;Option&lt;u32&gt;&gt; for Ru32 {
-        fn from(x: Option&lt;u32&gt;) -&gt; Self {Self(x.unwrap_or(u32::MAX))}
-    }
-    impl std::ops::Add&lt;Self&gt; for Ru32 {
-        type Output = Self;
-        fn add(self, y: Self) -&gt; Self {
-            self.bind(|x| y.bind(|y| Self::from(x.checked_add(y))))
-        }
-    }
-    impl std::ops::Mul&lt;Ru32&gt; for u32 {
-        type Output = Ru32;
-        fn mul(self, y: Ru32) -&gt; Ru32 {
-            y.bind(|y| Ru32::from(self.checked_mul(y)))
-        }
-    }
-}
-
-use ru32::Ru32;
-
-fn str_to_u32(s: &amp;str) -&gt; Ru32 {
-    let mut x = Ru32::from(0);
-    for digit in s.chars() {
-        if !digit.is_digit(10) {return Ru32::err();}
-        x = 10*x + Ru32::from(u32::from(digit) - u32::from('0'));
-    }
-    return x;
-}
-
-fn main() {
-    println!("size of Ru32: {}",std::mem::size_of::&lt;Ru32&gt;());
-    println!("{}",str_to_u32("1440"));
-    println!("{}",str_to_u32("10000000000"));
-}
-</pre>
+<ol>
+<li>Nicholas Nethercote et al.:
+  »<a href="https://nnethercote.github.io/perf-book/"
+  >The Rust Performance Book</a>«.
+</ol>
 
 </body>
 </html>
