@@ -94,14 +94,14 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;,SyntaxError&gt; {
         {
             a.push(Token{col,symbol: Symbol::Symbol(c)});
             i+=1; col+=1;
-        }else if c.is_alphabetic() {
+        } else if c.is_alphabetic() {
             let j = i;
             while i&lt;n &amp;&amp; s[i].is_alphanumeric() {
                 i+=1; col+=1;
             }
             let id: String = s[j..i].iter().collect();
             a.push(Token{col,symbol: Symbol::Identifier(id)});
-        }else if c.is_digit(10) {
+        } else if c.is_digit(10) {
             let j = i;
             while i&lt;n &amp;&amp; (s[i]=='.' || s[i].is_digit(10)) {
                 i+=1; col+=1;
@@ -114,10 +114,10 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;,SyntaxError&gt; {
                 }
             };
             a.push(Token{col,symbol: Symbol::Number(x)});
-        }else if c==' ' || c=='\t' || c=='\n' {
+        } else if c==' ' || c=='\t' || c=='\n' {
             i+=1;
             if c=='\n' {col=0} else {col+=1;}
-        }else{
+        } else {
             return Err(syntax_error(col,
                 &amp;format!("unerwartetes Zeichen: '{}'",c)));
         }
@@ -137,11 +137,11 @@ fn atom(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
                 let (x,i) = expression(a,i+1)?;
                 if let Symbol::Symbol(')') = a[i].symbol {
                     Ok((x,i+1))
-                }else{
+                } else {
                     Err(syntax_error(a[i].col,
                         "schließende Klammer wurde erwartet"))
                 }
-            }else{
+            } else {
                 Err(syntax_error(a[i].col,&amp;format!(
                     "das Symbol '{}' wurde nicht erwartet",c)))
             }
@@ -157,7 +157,7 @@ fn power(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     if let Symbol::Symbol('^') = a[i].symbol {
         let (y,i) = negation(a,i+1)?;
         return Ok((AST::List(Box::new([AST::Symbol('^'),x,y])),i));
-    }else{
+    } else {
         return Ok((x,i));
     }
 }
@@ -166,7 +166,7 @@ fn negation(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
     if let Symbol::Symbol('-') = a[i].symbol {
         let (x,i) = power(a,i+1)?;
         return Ok((AST::List(Box::new([AST::Symbol('~'),x])),i));
-    }else{
+    } else {
         return power(a,i);
     }
 }
@@ -182,7 +182,7 @@ fn multiplication(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
             let (y,j) = negation(a,i+1)?;
             x = AST::List(Box::new([AST::Symbol(op),x,y]));
             i = j;
-        }else{
+        } else {
             break;
         }
     }
@@ -200,7 +200,7 @@ fn addition(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
             let (y,j) = multiplication(a,i+1)?;
             x = AST::List(Box::new([AST::Symbol(op),x,y]));
             i = j;
-        }else{
+        } else {
             break;
         }
     }
@@ -215,7 +215,7 @@ fn full_expression(a: &amp;[Token]) -&gt; Result&lt;AST,SyntaxError&gt; {
     let (x,i) = expression(a,0)?;
     if let Symbol::None = a[i].symbol {
         return Ok(x);
-    }else{
+    } else {
         return Err(syntax_error(a[i].col,
             "Ende der Eingabe wurde erwartet"));
     }

@@ -54,7 +54,7 @@ fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
 ) {
     if i == a.len() {
         callback(a);
-    }else{
+    } else {
         for k in 0..m {
             a[i] = k;
             pow_rec(a,m,i+1,callback);
@@ -86,7 +86,7 @@ fn pow(a: &amp;mut [u32], m: u32,
     loop{
         if i == n {
             callback(a);
-        }else{
+        } else {
             if k&lt;m {
                 a[i] = k;
                 stack.push(k);
@@ -147,12 +147,12 @@ fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
 ) {
     if n==1 {
         callback(a);
-    }else{
+    } else {
         perm(a,n-1,callback);
         for i in 0..n-1 {
             if n%2==0 {
                 a.swap(i,n-1);
-            }else{
+            } else {
                 a.swap(0,n-1);
             }
             perm(a,n-1,callback);
@@ -187,13 +187,13 @@ fn perm&lt;T&gt;(a: &amp;mut [T], callback: &amp;mut dyn FnMut(&amp;[T])) {
         if stack[i]&lt;i {
             if i%2==0 {
                 a.swap(0,i);
-            }else{
+            } else {
                 a.swap(stack[i],i);
             }
             callback(a);
             stack[i] += 1;
             i = 0;
-        }else{
+        } else {
             stack[i] = 0;
             i += 1;
         }
