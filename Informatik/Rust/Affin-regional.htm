@@ -178,30 +178,56 @@ das diese umsetzt, nennt man <i>affin</i>.
 
 <h3>Regionen</h3>
 
-<p>Betrachten wir das folgende Programm.
+<p>Die Beschränkung auf Move-Semantik ist ziemlich einschränkend.
+Viele Funktionen bleiben nicht Eigentümer eines Wertes, sie borgen
+sich den Wert nur zum Lesen oder zur Manipulation aus.
+In einigen Fällen könnte man das zwar so formulieren, dass der Wert
+wieder als Rückgabewert auftaucht anstatt zu verschwinden, jedoch
+ist dies recht umständlich.
+
+<p>Stattdessen wollen wir das Ausborgen von Werten erlauben, indem
+ein Zeiger zum Wert an die Funktion übergeben wird. Wir sprechen
+von einer <i>Leihgabe</i>, engl. <i>borrow</i>.
+Dies wirft Probleme auf. Betrachten wir das folgende Programm.
 <pre class="rust ibox">
 fn main() {
-    let mut v: Vec&lt;u32&gt; = vec![0, 0];
-    let p: &amp;[u32] = &amp;v;
+    let mut v: Vec&lt;u32&gt; = vec![0, 0, 0, 0];
+    let p: &amp;u32 = &amp;v[0];
     v.push(0);
-    println!("{:?}",p);
+    println!("{}",*p);
 }
 </pre>
 
 <p>Dieses Programm erzeugt als erstes ein dynamisches Feld
 <code>v</code>. Als nächstes lassen wir einen Zeiger <code>p</code>
-auf den internen Puffer von <code>v</code> zeigen. Damit gibt es nun
-zwei Zeiger auf den selben Puffer, einmal den internen Zeiger von
-<code>v</code> und einmal <code>p</code>. Dies bezeichnet
-man als <i>Aliasing</i>. Die nächste Operation <code>v.push(0)</code>
-kann nun dazu führen, dass der interne Puffer realloziert wird.
-Gehen wir davon aus, dies geschieht.
+auf das erste Element des internen Puffers von <code>v</code> zeigen.
+Damit gibt es nun zwei Zeiger auf den selben Puffer, einmal den
+internen Zeiger von <code>v</code> und einmal <code>p</code>. Dies
+bezeichnet man als <i>Aliasing</i>. Die nächste Operation
+<code>v.push(0)</code> kann nun dazu führen, dass der interne Puffer
+realloziert wird. Gehen wir davon aus, dies geschieht.
 Hierdurch kommt es zu einer Zeiger-Invalidierung von <code>p</code>,
 womit <code>p</code> nunmehr ein hängender Zeiger ist. Die Benutzung
-von <code>p</code> in der nächsten Zeile ist dann undefiniertes
+<code>*p</code> in der nächsten Zeile ist dann undefiniertes
 Verhalten in Form von use after free, weil der ursprüngliche
 Speicherbereich bereits an den Allokator freigegeben wurde. Dies stellt
-einen Bug dar, der im schlimmsten Fall eine Sicherheitslücke bedeuten kann.
+einen Bug dar, der im schlimmsten Fall eine Sicherheitslücke
+bedeuten kann.
+
+<p>Zwei kritische Beobachtungen:
+
+<ol>
+<li>Jede Eigentümerschaft ist nur in einer bestimmten Region
+gültig. Für Rust sagt man, die Variable mit dieser Eigentümerschaft
+besitzt eine begrenzte Lebenszeit. Damit es nicht zu Use after free
+kommt, muss jede Leihgabe innerhalb der Region liegen bzw. jede eine
+Leihgabe tragende Variable von begrenzterer Lebenszeit sein.
+
+<li>Eine geteilte Leihgabe an mehrere Variablen ist erlaubt, aber nur
+dann wenn die Variablen alle ausschließlich lesend auf den Wert
+zugreifen. Für eine Veränderung des Wertes bedarf es einer alleinigen
+Leihgabe.
+</ol>
 
 <h3>Lebenszeitverlängerung</h3>
 

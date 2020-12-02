@@ -13,10 +13,35 @@
 <h1>Makros</h1>
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Konzept">Was sind Markos?</a>
 <li><a href="#Literale">Literale</a>
+<li><a href="#Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</a>
 <li><a href="#Komprehensionen">Komprehensionen</a>
 <li><a href="#TT-muncher">TT muncher</a>
 </ol>
+
+
+<h2 id="Konzept">Was sind Makros?</h2>
+
+<p>Makros sind zur Kompilierzeit ausgeführte »Funktionen« zur
+Umformung von Syntax. Sie dienen dort als Hilfsmittel zur
+Faktorisierung wiederkehrender Muster, wo gewöhnliche Funktionen
+dafür nicht genügen. Charakteristisch für Makros ist, dass sie in
+der Programmiersprache an Oberfläche agieren, &ndash; eine tiefere
+Interaktion mit dem Typsystem findet nicht statt.
+
+<p>In Rust gibt es zwei Arten von Makros:
+<dl class="indent">
+<dt><b>1. Deklarative Makros</b>
+<dd>Diese wandeln Syntax über einen
+Musterabgleich in andere Syntax um.
+<dt><b>2. Prozedurale Makros</b>
+<dd>Diese dürfen eigene Parser
+und Syntax-Erzeuger enthalten.
+</dl>
+
+<p>Dieses Kapitel beschäftigt sich nur mit den deklarativen
+Makros.
 
 <h2 id="Literale">Literale</h2>
 <p>Makros können genutzt werden, um Datentypen mit Literalen
@@ -177,6 +202,74 @@ fn main() {
 }
 </pre>
 
+<h2 id="Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</h2>
+
+<p>Gewöhnliche Funktionen sind mit dem Hindernis behaftet, nicht
+mit Kontrollfluss zu harmonisieren. Zunächst ist die Auswertung
+von Argumenten in Rust immer eifrig, engl. <i>eager evaluation</i>.
+D.&nbsp;h. die Auswertung von Argumenten findet immer statt, egal ob
+sie benötigt werden oder nicht. Die Nachstellung der Fallunterscheidung
+als Funktion
+
+<pre class="rust ibox">
+fn cond&lt;T&gt;(c: bool, x: T, y: T) -&gt; T {
+    if c {x} else {y}
+}
+</pre>
+
+<p>ist bspw. nicht zielführend. Hier möchte man eine Bedarfsauswertung,
+engl. <i>lazy evaluation</i>, haben. Diese ist darstellbar durch
+Verhüllung der Argumente durch Funktionen:
+
+<pre class="rust ibox">
+fn cond&lt;Fx,Fy,T&gt;(c: bool, x: Fx, y: Fy) -&gt; T
+where Fx: FnOnce()-&gt;T, Fy: FnOnce()-&gt;T
+{
+    if c {x()} else {y()}
+}
+</pre>
+
+<p>Eine Funktion der Standardbibliothek, wo von dieser Methodik
+Gebrauch gemacht wird, ist <code>unwrap_or_else</code>. Leider
+verträgt sich die Konstruktion nicht mit den Sprunganweisungen
+<code>break</code>, <code>continue</code>, <code>return</code>
+und dem Fragezeichen-Operator. Die Formulierung als Makro
+befreit uns schließlich von diesen Beschränkungen.
+
+<pre class="rust ibox">
+macro_rules! cond {
+    ($c:expr, $x:expr) =&gt; {if $c {$x}};
+    ($c:expr, $x:expr, $y:expr) =&gt; {if $c {$x} else {$y}}
+}
+</pre>
+
+<p>Ein nützliches Beispiel ist der folgende allgemeine
+Erwartungsoperator zum Entpacken von Enum-Varianten.
+
+<pre class="rust ibox">
+macro_rules! expect {
+    ($e:expr, $variant:path) =&gt; {
+        match $e {$variant(value) =&gt; value, _ =&gt; panic!()}
+    };
+    ($e:expr, $variant:path, $otherwise:expr) =&gt; {
+        match $e {$variant(value) =&gt; value, _ =&gt; $otherwise}
+    }
+}
+</pre>
+
+<p>Gegenüber den Methoden <code>unwrap</code>, <code>unwrap_or</code>
+und <code>unwrap_or_else</code> hat <code>expect</code> drei Vorteile:
+<ol>
+<li>Es funktioniert bezüglich beliebigen Enum-Varianten.
+Als Funktion lässt sich dies nicht ausdrücken, da im Pattern-Matching
+keine Varianten-Variablen gestattet sind.
+
+<li>Natürliche Bedarfsauswertung von <code>otherwise</code>.
+Eine extra Methode ist nicht notwendig.
+
+<li>Harmonie mit Sprunganweisungen und dem Fragezeichen-Operator.
+</ol>
+
 <h2 id="Komprehensionen">Komprehensionen</h2>
 
 <p>For-Audrücke, auch Listen-Komprehension oder Iterator-Komprehension
@@ -311,7 +404,7 @@ macro_rules! list {
 fn main() {
     let a = list![[x,y,z];
         for x in 1..100; for y in 1..100; for z in 1..100;
-        if x&lt;y &amp;&amp; x*x+y*y == z*z];
+        if x&lt;y &amp;&amp; x*x + y*y == z*z];
     println!("{:?}",a);
 }
 </pre>
