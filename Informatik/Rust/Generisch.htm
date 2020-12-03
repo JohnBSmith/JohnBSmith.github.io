@@ -10,17 +10,71 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Parametrische Polymorphie</h1>
+<h1>Generische Programmierung</h1>
 
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Konzept">Das Konzept der Polymorphie</a>
-<li><a href="#Monomorphisierung">Monomorphisierung</a>
-<li><a href="#Laufzeit">Laufzeit-Polymorphie</a>
-<li><a href="#Laufzeit-allg">Laufzeit-Polymorphie allgemein</a>
+<li><a href="#Parametrische-Polymorphie">Parametrische Polymorphie</a>
+  <ol>
+  <li><a href="#Generische-Funktionen">Generische Funktionen</a>
+  <li><a href="#Generische-Typen">Generische Typen</a>
+  <li><a href="#Bounds">Beschränkte Quantifizierung</a>
+  </ol>
+<li><a href="#Technik">Technische Aspekte</a>
+  <ol>
+  <li><a href="#Konzept">Das Konzept der Polymorphie</a>
+  <li><a href="#Monomorphisierung">Monomorphisierung</a>
+  <li><a href="#Laufzeit">Laufzeit-Polymorphie</a>
+  <li><a href="#Laufzeit-allg">Laufzeit-Polymorphie allgemein</a>
+  <li><a href="#Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</a>
+  </ol>
 </ol>
 
-<h2 id="Konzept">Das Konzept der Polymorphie</h2>
+<h2 id="Parametrische-Polymorphie">Parametrische Polymorphie</h2>
+
+<h3 id="Generische-Funktionen">Generische Funktionen</h3>
+
+<p>Betrachten wir nochmals die Funktion zur Umkehrung der Reihenfolge
+eines Feldes, das war:
+<pre class="rust ibox">
+fn reverse(a: &amp;mut [i32]) {
+    let n = a.len();
+    for i in 0..n/2 {a.swap(i,n-1-i);}
+}
+</pre>
+
+<p>Für jeden weiteren Element-Typ wäre diese neu zu schreiben.
+Hierbei stellt man jedoch fest, dass die Funktion für jeden
+Element-Typ die gleiche Gestalt besitzt. Es liegt auf der Hand.
+Wir würden die Funktion gerne für <i>alle</i> denkbaren Element-Typen
+auf einmal schreiben.
+
+<p>Zur Realisierung dieser Idee führt man ein neues Konzept ein.
+Der Element-Typ wird durch eine <i>Typvariable</i> ersetzt.
+In die so gegebene Typsignatur darf für die Typvariable dann jeder beim
+Aufruf vorgefundene Typ eingesetzt werden. Um Typvariablen besser
+von gewöhnlichen Typen unterscheiden zu können, werden diese
+zusätzlich in spitzen Klammern hinter den Bezeichner der Funktion
+gestellt.
+
+<pre class="rust ibox">
+fn reverse&lt;T&gt;(a: &amp;mut [T]) {
+    let n = a.len();
+    for i in 0..n/2 {a.swap(i,n-1-i);}
+}
+</pre>
+
+<p>Man spricht von einer <i>Allquantifizierung</i> über die
+Typvariable <code>T</code>. Eine solche Funktion nennt man
+<i>generisch</i> oder <i>parametrisch polymorph</i>.
+
+<h3 id="Generische-Typen">Generische Typen</h3>
+
+<h3 id="Bounds">Beschränkte Quantifizierung</h3>
+
+<h2 id="Technik">Technische Umsetzung</h2>
+
+<h3 id="Konzept">Das Konzept der Polymorphie</h3>
 
 <p>Eine Funktion zur elementweisen Addition zweier Arrays lässt sich
 ohne Schwierigkeiten umsetzen:
@@ -97,7 +151,7 @@ fn add&lt;T: Copy + Add&lt;Output=T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&
 Trait macht bestimmte Aussagen über die Eigenschaften eines Datentyps.
 Daher entstammt auch die Bezeichnung Trait.
 
-<h2 id="Monomorphisierung">Monomorphisierung</h2>
+<h3 id="Monomorphisierung">Monomorphisierung</h3>
 
 <p>Was fängt der Compiler nun damit an? Nun ja, das ist nicht schwer
 zu verstehen. Der Compiler prüft bei der Anwendung der Funktion einfach
@@ -113,7 +167,7 @@ eingesetzt wird. Danach liegt die Funktion ja in monomorpher Form vor,
 so dass sie auf ganz gewöhnliche Art vom Compiler kompiliert werden
 kann.
 
-<h2 id="Laufzeit">Laufzeit-Polymorphie</h2>
+<h3 id="Laufzeit">Laufzeit-Polymorphie</h3>
 
 <p>Die bisherige Umsetzung von Polymorphie enthält noch einen kleinen
 Schönheitsfehler. Angenommen, die Datentypen sind zahlreich und die
@@ -177,7 +231,6 @@ Typs werden in Rust zuweilen auch als Trait-Objekte bezeichnet.
 Speziell sind das z.&nbsp;B. <code>Box&lt;dyn Trait&gt;</code>
 und <code>Rc&lt;dyn Trait&gt;</code>, außerdem auch
 <code>&amp;dyn Trait</code> und <code>&amp;mut dyn Trait</code>.
-
 
 <p>Betrachten wir z.&nbsp;B. eine polymorphe Funktion zur Umkehrung
 der Reihenfolge eines Arrays:
@@ -254,7 +307,7 @@ fn main() {
 
 <p>Der missliebige Downcast ist nun verschwunden.
 
-<h2 id="Laufzeit-allg">Laufzeit-Polymorphie allgemein</h2>
+<h3 id="Laufzeit-allg">Laufzeit-Polymorphie allgemein</h3>
 
 <p>Betrachten wir einmal den folgenden Algorithmus zur Berechnung
 von Potenzen mit natürlichem Exponenten.
@@ -376,6 +429,110 @@ dafür aber das Typsystem kaputtbrechen. Dies hat wieder den faulen
 Beigeschmack, dass der Compiler für die interne Implementation
 keine vollständige Typprüfung mehr durchführen kann und bei den
 Downcasts unnötige if-Anweisungen entstehen.
+
+<h2 id="Laufzeit-polymorphe-Container">Laufzeit-polymorphe Container</h2>
+
+<p>Beim Schreiben generischer Programme tut sich oft das Problem des
+<i>Code Bloats</i> auf. Das soll am Beispiel von <code>Vec</code>, dem
+Datentyp dynamischer Felder, verdeutlicht werden. Weil der Compiler
+bei der Monomorphisierung von <code>Vec</code>
+für unterschiedliche Typen <code>A,B,C</code>
+jeweils neuen optimierten Programmcode zu
+<code>Vec&lt;A&gt;,Vec&lt;B&gt;,Vec&lt;C&gt;</code>
+erzeugt, können generische Programme zu großen Binärdateien führen.
+
+<p>Zur Lösung dieses Problems bieten sich vier Ansätze an:
+<ol>
+<li>Die Monomorphisierung wird schlicht verhindert,
+  indem mit polymorphen Zeigern gearbeitet wird.
+<li>Die Implementation ist intern polymorph gestaltet mit
+  <code>str::ptr::copy</code>, eventuell mit
+  ein paar Spezialisierungen zur Optimierung.
+<li>Der Compiler erzeugt bei der Monomorphisierung eine
+Zwischenrepräsentation, die z.&nbsp;B. nur <code>str::ptr::copy</code>
+verwendet und erkennt dabei, dass Funktionen wiederverwendet werden
+können.
+<li>Die Monomorphisierung findet zur Laufzeit statt. Das bietet sich
+  bei Rust nicht an, weil dafür eine Laufzeitumgebung
+  benötigt wird, die unter Umständen groß und kompliziert ausfallen kann.
+</ol>
+<p>Davon wollen wir uns auf 1. beschränken.
+Zunächst ist denkbar, dass der Compiler schon bei
+<code>Vec&lt;Box&lt;T&gt;&gt;</code> für unterschiedliche Typen
+<code>T</code> bei der Monomorphisierung die gleichen Funktionen
+erzeugt und wiederverwendet. Ein guter Compiler sollte das auf jeden
+Fall bewerkstelligen. Um das zu erzwingen, können aber Trait-Pointer
+<code>Box&lt;dyn A&gt;</code> des selben Traits <code>A</code> benutzt
+werden. Oder aber man verwendet <code>Box&lt;Any&gt;</code>.
+
+<p>Wir wollen den allgemeinen Ansatz mit <code>Box&lt;Any&gt;</code>
+verfolgen. Rust bietet uns nun die Mittel, um den polymorphen Code
+in ein monomorphisiertes Interface einzuhüllen. Das gestaltet sich wie
+folgt:
+
+<pre class="rust ibox">
+pub mod polyvec {
+    use std::any::Any;
+    use std::marker::PhantomData;
+    pub struct PolyVec&lt;T&gt; {
+        v: Vec&lt;Box&lt;dyn Any&gt;&gt;,
+        _marker: PhantomData&lt;T&gt;
+    }
+    impl&lt;T: 'static&gt; PolyVec&lt;T&gt; {
+        pub fn new() -&gt; Self {
+            Self{v: Vec::new(), _marker: PhantomData}
+        }
+        pub fn push(&amp;mut self, x: T) {
+            self.v.push(Box::new(x));
+        }
+        pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+            match self.v.pop() {
+                None =&gt; None,
+                Some(x) =&gt; {
+                    if let Ok(x) = x.downcast::&lt;T&gt;() {
+                        Some(*x)
+                    } else {
+                        unreachable!()
+                    }
+                }
+            }
+        }
+    }
+}
+
+use polyvec::PolyVec;
+
+struct LargeChunk{}
+
+fn main() {
+    let mut v: PolyVec&lt;LargeChunk&gt; = PolyVec::new();
+    v.push(LargeChunk{});
+    v.push(LargeChunk{});
+}
+</pre>
+
+<p>Interessant ist, dass <code>PolyVec</code> eine Teilmenge
+der Operationen von <code>Vec</code> unterstützt und dabei nicht
+von <code>Vec</code> zu unterscheiden ist.
+Um diesen Umstand auszunutzen, können wir einen abstrakten Datentyp
+als Typalias formulieren:
+
+<pre class="rust ibox">
+type VecADT = Vec;
+// type VecADT = PolyVec;
+</pre>
+
+<p>Aber Vorsicht: hierbei handelt es sich nicht um einen echten
+abstrakten Datentyp, sondern um eine Typvariable.
+
+<p>Man kann nun zu jeder Zeit zwischen <code>Vec</code>
+und <code>PolyVec</code> umschalten, um zu sehen wie sich
+die Speichergröße der erzeugten Binärdatei verändert.
+
+<p>Da <code>PolyVec</code> mit <code>Box</code> Indirektionen und
+zusätzliche Speicherallokationen erzeugt, ist dieser Container natürlich
+nicht für laufzeitkritische Unterprogramme geeignet. Wie immer gilt,
+dass zur Entscheidungsfindung konkrete Messungen hilfreich sein können.
 
 </body>
 </html>
