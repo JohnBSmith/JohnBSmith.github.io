@@ -82,6 +82,30 @@ fn main() {
 
 <h4>Realisierung mit Trait-Objekten</h4>
 
+<p>Was wir bräuchten, wäre eine Art Enumeration von allen beliebigen
+Typen. Weil die Speichergröße von Typen unbeschränkt hoch sein kann,
+muss dies ein Typ dynamischer Größe sein. Werte eines solchen Typs
+sind nur über Zeiger ansprechbar.
+
+<p>Zudem muss eine Schnittstelle der Operationen vorhanden sein,
+die alle Typen gemeinsam haben. In diesem Beispiel ist das die
+Methode <code>to_string</code>. Was <code>to_string</code> tut, ist
+für jeden Typ unterschiedlich, nur die Schnittstelle bleibt gleich.
+Um dies zu erreichen, bekommt jeder Typ zur Laufzeit eine eigene
+Dispatch-Tabelle. Diese Tabelle enthält Funktionenzeiger
+auf die gewünschten Operationen. Zum Zugriff auf die Tabelle bekommt
+der Wert-Zeiger den Zeiger auf die Dispatch-Tabelle nachgestellt.
+
+<p>Der Compiler macht dies alles automatisch für uns. Die Schnittstelle
+wird als Trait definiert, nennen wir ihn <code>Object</code>.
+Der durch das Schlüsselwort <code>dyn</code> eingeleitete Operator
+ordnet dem Trait den zugehörigen opaken Typ mit dieser Schnittstelle
+zu. Weil <code>dyn Object</code> wie gesagt ein Typ dynamischer
+Größe ist, sind die Werte nur über Zeigertypen wie
+<code>&amp;dyn Object</code> oder <code>Box&lt;dyn Object&gt;</code>
+ansprechbar. Die Zeiger dieser Typen sind wie gesagt Paare von
+Zeigern auf Wert und Dispatch-Tabelle.
+
 <pre class="rust ibox">
 trait Object {
     fn to_string(&amp;self) -&gt; String;
@@ -107,6 +131,14 @@ fn main() {
 </pre>
 
 <h4>Gemischte Realisierung</h4>
+
+<p>Es ist nicht besonders effizient, Werte von kleinen Typen wie
+<code>i32</code> über Zeiger anzusprechen, geschweige denn, deren
+Speicherplätze über <code>Box</code> auf dem Haldenspeicher zu
+allozieren. Ein Ansatz zur Vermeidung von solchen Zeiger-Indirektionen
+ist eine Zusammenfügung aus Enumeration und Trait-Objekt.
+Das Trait-Objekt wird hierbei als residuale Variante der Enumeration
+betrachtet.
 
 <pre class="rust ibox">
 trait Interface {
