@@ -269,122 +269,58 @@ fn main() {
 
 <h4>Benutzung von Any für Downcasts</h3>
 
-<p>Manchmal möchte man ein Trait-Objekt vom Trait <code>A</code>
-zum Typ <code>T</code> wieder in das passende Objekt vom Typ
-<code>T</code> umwandeln. Um Typsicherheit zu gewährleisten muss
-zur Laufzeit eine Typ-Identifikation überprüft werden, die im
-Objekt gespeichert wird. Prinzipiell ließe sich die Speicheradresse
-der Dispatch-Tabelle als Typ-Identifikation nehmen. Da diese
-neben dem Objektzeiger liegt, wäre zum Laden nicht einmal eine
-Indirektion notwendig.
+<p>Einen Downcast möchte man nun für beliebige Trait-Objekte
+zur Verfügung haben, nicht bloß für <code>dyn Any</code>.
+Um dies zu erreichen, macht man sich genau den durch <code>Any</code>
+zur Verfügung gestellten Mechanismus zunutze. Hierfür bedarf es
+lediglich eines weiteren Upcasts nach <code>dyn Any</code>.
+Der direkte Upcast von Trait-Objekt-Typ zu Trait-Objekt-Typ
+ist allerdings nicht möglich. Um dennoch zum Ziel zu gelangen,
+müssen wir einen kleinen Umweg gehen. Bei Trait-Methoden besitzt
+das self-Argument jeweils den ursprünglichen Typ. Daher dürfen wir
+eine Methode zum Upcast schreiben, nennen wir sie <code>as_any</code>.
 
-<p>Der Funktionalität der Typ-Identifikation ist im Trait
-<code>Any</code> implementiert. Hier zunächst ein einfaches Beispiel
-mit einem Upcast und einem Downcast:
+<p>Dies wollen wir erreichen:
+<div class="indent">
+<img src="img/Downcast.png">
+</div>
+
+<p>Diesen Umweg müssen wir gehen:
+<div class="indent">
+<img src="img/as-any.png">
+</div>
+
+<p>Die Implementation gestaltet sich so:
 <pre class="rust ibox">
 use std::any::Any;
 
-fn main() {
-    let x: Box&lt;Any&gt; = Box::new(12);
-    let n: i32 = *match x.downcast_ref::&lt;i32&gt;() {
-        Some(n)=&gt;n,
-        None=>panic!()
-    };
-    println!("{}",n);
-}
-</pre>
-
-<p>Es lässt sich auch einfach ein Typtest vornehmen:
-<pre class="rust ibox">
-use std::any::Any;
-
-fn main() {
-    let x: Box&lt;Any&gt; = Box::new(12);
-    assert_eq!(true,x.is::&lt;i32&gt;());
-}
-</pre>
-
-<p>Beim Methoden-Aufruf ist zunächst auch ein Downcast notwendig:
-<pre class="rust ibox">
-use std::any::Any;
-
-trait Item {
-    fn to_string(&amp;self) -&gt; String;
-}
-
-impl Item for i32 {
-    fn to_string(&amp;self) -&gt; String {
-        format!("{}",self)
-    }
-}
-
-fn main() {
-    let x: Box&lt;Any&gt; = Box::new(12);
-    let item = x.downcast_ref::&lt;i32&gt;().unwrap() as &amp;Item;
-    println!("{}",item.to_string());
-}
-</pre>
-
-<p>Ein Downcast für ein allgemeines Objekt lässt sich durch
-eine Methode <code>as_any</code> ermöglichen, die einen
-Upcast nach <code>Any</code> durchführt:
-
-<pre class="rust ibox">
-use std::any::Any;
-
-trait Item {
-    fn to_string(&amp;self) -&gt; String;
+trait Object {
     fn as_any(&amp;self) -&gt; &amp;dyn Any;
 }
-impl Item for i32 {
-    fn to_string(&amp;self) -&gt; String {
-        format!("{}",self)
-    }
-    fn as_any(&amp;self) -&gt; &amp;dyn Any {
-        self
-    }
+
+struct Duck {name: String}
+
+impl Object for Duck {
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {self}
 }
 
 fn main() {
-    let x: Box&lt;dyn Item&gt; = Box::new(12);
-    println!("{}",x.to_string());
-    let n: i32 = *x.as_any().downcast_ref::&lt;i32&gt;().unwrap();
-    println!("{}",n);
+    let object: &amp;dyn Object = &amp;Duck{name: "Donald".into()};
+
+    assert!(object.as_any().is::&lt;Duck&gt;());
+
+    if let Some(duck) = object.as_any().downcast_ref::&lt;Duck&gt;() {
+        println!("{} ist eine Ente.", duck.name);
+    }
 }
 </pre>
 
-<p>Hierbei lässt sich <code>Item</code> auch für eigene Datentypen
-implementieren:
-
-<pre class="rust ibox">
-struct Point {
-  x: i32, y: i32
-}
-
-impl Item for Point {
-    fn to_string(&amp;self) -&gt; String {
-        format!("({}|{})",self.x,self.y)
-    }
-    fn as_any(&amp;self) -&gt; &amp;dyn Any {
-        self
-    }
-}
-
-fn main() {
-    let x: Box&lt;dyn Item&gt; = Box::new(Point{x: 1, y: 2});
-    println!("{}",x.to_string());
-    let p: &amp;Point = x.as_any().downcast_ref::&lt;Point&gt;().unwrap();
-    println!("({}|{})",p.x,p.y);
-}
-</pre>
-<p>Eine andere Überlegung geht davon aus, dass <code>Item</code>
-von <code>Any</code> erben soll. Ein solcher Ansatz ist aber aus
-bestimmten Gründen nicht möglich.<sup><a href="#1">1</a></sup>
-
-<p>Man kann <code>as_any</code> aber generisch für alle Typen mit Trait
+<p>Man kann <code>as_any</code> auch gleich für alle Typen mit Trait
 <code>Any</code> implementieren:
 
 <pre class="rust ibox">
+use std::any::Any;
+
 trait AsAny {
     fn as_any(&amp;self) -&gt; &amp;dyn Any;
 }
@@ -392,15 +328,50 @@ impl&lt;T: Any&gt; AsAny for T {
     fn as_any(&amp;self) -&gt; &amp;dyn Any {self}
 }
 
-trait Item: AsAny {
-    // ...
+trait Object: AsAny {}
+
+struct Duck {name: String}
+
+impl Object for Duck {}
+
+fn main() {
+    let object: Box&lt;dyn Object&gt; = Box::new(Duck{
+        name: "Donald".into()
+    });
+
+    assert!((&amp;*object).as_any().is::&lt;Duck&gt;());
+
+    if let Some(duck) = (&amp;*object).as_any().downcast_ref::&lt;Duck&gt;() {
+        println!("{} ist eine Ente.", duck.name);
+    }
 }
 </pre>
 
 <p>Hier muss man allerdings vorsichtig sein, denn nun ist zwingend
-<code>(&amp;*x).as_any()</code> anstelle von <code>x.as_any()</code>
+<code>(&amp;*object).as_any()</code> anstelle von <code>object.as_any()</code>
 zu schreiben. Das muss man machen, weil <code>as_any</code>
-als Nebenefekt nun auch für <code>Box&lt;dyn Item&gt;</code> vorliegt.
+als Nebeneffekt nun auch für <code>Box&lt;dyn Object&gt;</code>
+vorliegt. Um diese Problematik aufzuzeigen, wurde <code>Box</code>
+in das Beispiel eingebracht.
+
+<p>Dieses Problem besteht aber nur, solange <code>AsAny</code>
+eingebunden ist. Das wissen wir zu verhindern, indem
+<code>AsAny</code> durch ein Modul verhüllt wird:
+
+<pre class="rust ibox">
+mod as_any {
+    use std::any::Any;
+    
+    pub trait AsAny {
+        fn as_any(&amp;self) -&gt; &amp;dyn Any;
+    }
+    impl&lt;T: Any&gt; AsAny for T {
+        fn as_any(&amp;self) -&gt; &amp;dyn Any {self}
+    }
+}
+
+trait Object: as_any::AsAny {}
+</pre>
 
 
 <h2 id="Technik">Technische Aspekte</h2>
