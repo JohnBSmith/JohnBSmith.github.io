@@ -19,7 +19,10 @@
   <li><a href="#Heterogene-Felder">Heterogene Felder</a>
   <li><a href="#Downcasts">Downcasts</a>
   </ol>
-<li><a href="#Technik">Teschnische Aspekte</a>
+<li><a href="#Technik">Technische Umsetzung</a>
+  <ol>
+  <li><a href="#Dispatch">Dispatch-Tabellen</a>
+  </ol>
 </ol>
 
 <h2 id="Laufzeit-Polymorphie">Laufzeit-Polymorphie</h2>
@@ -92,9 +95,11 @@ die alle Typen gemeinsam haben. In diesem Beispiel ist das die
 Methode <code>to_string</code>. Was <code>to_string</code> tut, ist
 für jeden Typ unterschiedlich, nur die Schnittstelle bleibt gleich.
 Um dies zu erreichen, bekommt jeder Typ zur Laufzeit eine eigene
-Dispatch-Tabelle. Diese Tabelle enthält Funktionenzeiger
-auf die gewünschten Operationen. Zum Zugriff auf die Tabelle bekommt
-der Wert-Zeiger den Zeiger auf die Dispatch-Tabelle nachgestellt.
+<i>Dispatch-Tabelle</i>, etwas schwammig auch <i>Tabelle virtueller
+Methoden</i> oder kurz <i>virtual table</i> genannt. Diese Tabelle
+enthält Funktionenzeiger auf die gewünschten Operationen. Zum Zugriff
+auf die Tabelle bekommt der Wert-Zeiger den Zeiger auf die
+Dispatch-Tabelle nachgestellt.
 
 <p>Der Compiler macht dies alles automatisch für uns. Die Schnittstelle
 wird als Trait definiert, nennen wir ihn <code>Object</code>.
@@ -374,205 +379,166 @@ trait Object: as_any::AsAny {}
 </pre>
 
 
-<h2 id="Technik">Technische Aspekte</h2>
+<h2 id="Technik">Technische Umsetzung</h2>
 
-<p>In Rust dient das Trait-System auch dem Zweck der Verwirklichung
-von Laufzeit-Polymorphie. Zum Beispiel ist es möglich ein Feld
-zu konstruieren, dessen Elemente jeweils einen unterschiedlichen
-Typ besitzen.
+<h3 id="Dispatch">Dispatch-Tabellen</h3>
 
-<h3>Summentypen</h3>
-<p>Zunächst kommt man auf die Idee eine solche
-Konstruktion als Summentyp (<code>enum</code>)
-zu verwirklichen:
+<p>Zum besseren Verständnis von Trait-Objekten wird im Folgenden
+ein Nachbau des Dispatch-Mechanismus gezeigt. Der Typ
+<code>Box&lt;dyn Object&gt;</code> ist als Struktur
+<code>BoxDynObject</code> modelliert. Diese besteht aus zwei Zeigern,
+dem untypisierten Zeiger <code>data</code> auf die Daten und
+dem Zeiger <code>dispatch</code> auf die jeweilige Dispatch-Tabelle.
+
+<p>Für den untypisierten Zeiger dient zunächst
+<code>Box&lt;dyn Any&gt;</code> als Hilfsmittel. Dies gestattet
+die Konstruktion des Dispatch-Mechanismus ohne Rückgriff auf
+unsichere Mittel.
 
 <pre class="rust ibox">
-enum Item {
-    Int(i32),
-    String(String)
+use std::any::Any;
+
+struct Dispatch {
+    to_string: fn(pself: &amp;dyn Any) -&gt; String
 }
 
-impl Item {
-    pub fn items_to_string(a: &amp;[Item]) -&gt; String {
-        let mut s = "[".to_string();
-        let mut first = true;
-        for x in a {
-            if first {first=false;} else {s.push_str(", ");}
-            s.push_str(&amp;match *x {
-                Item::Int(i)=&gt;format!("{}",i),
-                Item::String(ref s)=&gt;format!("{}",s)
-            });
+struct BoxDynObject {
+    data: Box&lt;dyn Any&gt;,
+    dispatch: &amp;'static Dispatch
+}
+impl BoxDynObject {
+    fn to_string(&amp;self) -&gt; String {
+        (self.dispatch.to_string)(&amp;*self.data)
+    }
+}
+
+fn to_string_i32(pself: &amp;dyn Any) -&gt; String {
+    let pself = pself.downcast_ref::&lt;i32&gt;().unwrap();
+    format!("{}", pself)
+}
+
+fn to_string_string(pself: &amp;dyn Any) -&gt; String {
+    let pself = pself.downcast_ref::&lt;String&gt;().unwrap();
+    pself.clone()
+}
+
+static DISPATCH_I32: Dispatch = Dispatch{
+    to_string: to_string_i32
+};
+static DISPATCH_STRING: Dispatch = Dispatch{
+    to_string: to_string_string
+};
+
+impl From&lt;i32&gt; for BoxDynObject {
+    fn from(x: i32) -&gt; Self {
+        BoxDynObject{
+            data: Box::new(x),
+            dispatch: &amp;DISPATCH_I32
         }
-        s.push_str("]");
-        return s;
+    }
+}
+impl From&lt;&amp;str&gt; for BoxDynObject {
+    fn from(x: &amp;str) -&gt; Self {
+        BoxDynObject{
+            data: Box::new(String::from(x)),
+            dispatch: &amp;DISPATCH_STRING
+        }
     }
 }
 
 fn main() {
-    let v = vec![
-        Item::String("Boot".to_string()),
-        Item::Int(12)
-    ];
-    println!("{}",Item::items_to_string(&amp;v));
+    let v: Vec&lt;BoxDynObject&gt; = vec!["Boot".into(), 12.into()];
+    for object in &amp;v {
+        println!("{}", object.to_string());
+    }
 }
 </pre>
 
-<p>Ein solcher Ansatz ist für große Felder mit vielen kleinen
-Elementen effizienter als Konstruktionen mit Referenz-Strukturen.
-Referenz-Strukturen müssen auf der Halde (oder auf einer Arena)
-alloziert werden. Außerdem kann man die Überlegung aufstellen, ob die
-Referenz-Strukturen durch die Indirektion zu fragmentiertem Speicher
-zu schlechterer Cache-Lokalität führen können. Fragmentierung kann unter
-bestimmten Voraussetzungen natürlich durch einen vernünftigen
-Arena-Allokator vermieden werden.
+<p>Wir verlassen nun die sicheren Gefilde und tauschen
+<code>Box&lt;dyn Any&gt;</code> gegen <code>*mut u8</code> aus.
+Als Nebeneffekt kommt hinzu, dass wir uns nun selbst um
+die Destruktoraufrufe kümmern müssen. Da der Destruktor
+<code>drop</code> selbst von Typ zu Typ unterschiedlich ausfällt,
+muss auch dieser als Methode in der Dispatch-Tabelle vorkommen.
 
-<h3>Dispatch-Tabellen</h3>
-<p>Eine allgemeine Polymorphie ergibt sich bei einfachen Summentypen
-aber nicht, da die verfügbaren Varianten im Vorhinein bekannt sein
-müssen. Zur Aufhebung dieser Beschränkung wird die Grundkonstruktion
-der objektorientierten Programmierung herangezogen: eine
-Dispatch-Tabelle, auch »Tabelle virtueller Methoden«
-genannt.
-
-<p>Jedes Objekt bekommt einen Zeiger auf eine Dispatch-Tabelle,
-die eine untrennbare Verbindung von Methoden zu ihrem Objekt
-ermöglicht. Jede Methode eines Objektes wird dann über diese
-Dispatch-Tabelle aufgerufen. Die Polymorphie ergibt sich nun dadurch,
-dass für jeden Datentyp eine separate Dispatch-Tabelle vorhanden ist.
-
-<p>In Rust ist es nun so, dass der Zeiger auf die Dispatch-Tabelle
-nicht in der Struktur des Objektes gespeichert ist, sondern dem
-Objekt-Zeiger nachgestellt wird. Man spricht von einem
-<i>Fat-Pointer</i>, das ist einfach ein Tupel aus den beiden Zeigern.
-
-<p>Ein Datentyp <code>T</code> soll nun den Trait <code>A</code>
-implementieren. Hierbei werden die (Methodenzeiger auf die)
-Implementationen der Methoden von <code>A</code> zur Dispatch-Tabelle
-von <code>T</code> hinzugefügt. Man kann auch von den »realen«
-Implementationen der »virtuellen« Methoden von <code>A</code> sprechen,
-womit ausgerückt wird dass der Trait <code>A</code> für sich allein
-nur ein Interface ist.
-
-<p>Bei einem Upcast von <code>T</code> zu <code>Box&lt;A&gt;</code>
-wird automatisch ein Fat-Pointer erstellt. Bei <code>Box&lt;T&gt;</code>
-ist das offensichtlich nicht notwendig, da die Methode hier bereits zur
-Kompilierzeit angegeben werden kann. Ein Objekt vom Typ
-<code>Box&lt;A&gt;</code> wird Trait-Objekt genannt. Auch die Borrows
-vom Typ <code>&amp;A</code> und <code>&amp;mut A</code>
-sind Fat-Pointer.
-
-<p>Der polymorphe Ansatz gestaltet sich wie folgt:
 <pre class="rust ibox">
-trait Item {
-    fn to_string(&amp;self) -&gt; String;
+struct Dispatch {
+    to_string: fn(pself: *const u8) -&gt; String,
+    drop: fn(pself: *mut u8)
 }
 
-impl Item for i32 {
+struct BoxDynObject {
+    data: *mut u8,
+    dispatch: &amp;'static Dispatch
+}
+impl BoxDynObject {
     fn to_string(&amp;self) -&gt; String {
-        format!("{}",self)
+        (self.dispatch.to_string)(self.data)
     }
 }
 
-impl Item for String {
-    fn to_string(&amp;self) -&gt; String {
-        self.clone()
+fn to_string_i32(pself: *const u8) -&gt; String {
+    let pself = pself as *const i32;
+    format!("{}", unsafe{&amp;*pself})
+}
+
+fn to_string_string(pself: *const u8) -&gt; String {
+    let pself = pself as *const String;
+    unsafe{&amp;*pself}.clone()
+}
+
+fn drop_i32(pself: *mut u8) {
+    drop(unsafe{Box::from_raw(pself as *mut i32)});
+}
+
+fn drop_string(pself: *mut u8) {
+    drop(unsafe{Box::from_raw(pself as *mut String)});
+}
+
+static DISPATCH_I32: Dispatch = Dispatch{
+    to_string: to_string_i32,
+    drop: drop_i32
+};
+static DISPATCH_STRING: Dispatch = Dispatch{
+    to_string: to_string_string,
+    drop: drop_string
+};
+
+impl Drop for BoxDynObject {
+    fn drop(&amp;mut self) {
+        (self.dispatch.drop)(self.data)
     }
 }
 
-fn items_to_string(a: &amp;[Box&lt;Item&gt;]) -&gt; String {
-    let mut s = "[".to_string();
-    let mut first = true;
-    for x in a {
-        if first {first=false;} else {s.push_str(", ");}
-        s.push_str(&amp;x.to_string());
+impl From&lt;i32&gt; for BoxDynObject {
+    fn from(x: i32) -&gt; Self {
+        BoxDynObject{
+            data: Box::into_raw(Box::new(x)) as *mut u8,
+            dispatch: &amp;DISPATCH_I32
+        }
     }
-    s.push_str("]");
-    return s;
+}
+impl From&lt;&amp;str&gt; for BoxDynObject {
+    fn from(x: &amp;str) -&gt; Self {
+        let data = Box::new(String::from(x));
+        BoxDynObject{
+            data: Box::into_raw(data) as *mut u8,
+            dispatch: &amp;DISPATCH_STRING
+        }
+    }
 }
 
 fn main() {
-    let v: Vec&lt;Box&lt;Item&gt;&gt; = vec![
-        Box::new("Boot".to_string()),
-        Box::new(12)
-    ];
-    println!("{}",items_to_string(&amp;v));
+    let v: Vec&lt;BoxDynObject&gt; = vec!["Boot".into(), 12.into()];
+    for object in &amp;v {
+        println!("{}", object.to_string());
+    }
 }
 </pre>
-<p>Durch Hinzufügen von <code>impl Item for T</code> für eine
-unbeschränkte Anzahl von weiteren, erst in speziellen Situationen
-bekannten Typen <code>T</code> lässt die polymorphe Funktion
-<code>items_to_string</code> für alle diese Typen nutzen.
-Die Funktion <code>items_to_string</code> liegt dabei tatsächlich
-polymorph im Maschinencode vor.
 
-
-<p>Zufälligerweise enthält der Trait <code>ToString</code>
-aus der Standardbibliothek bereits die Methode <code>to_string</code>,
-einschließlich der Implementationen für die grundlegenden Datentypen.
-Hätten wir <code>to_representation</code> genommen, die
-Anführungszeichen um Zeichenketten zeigen soll, wäre das nicht der Fall.
-
-<p>Rust besitzt <i>Trait-Vererbung</i>. Hierbei werden einfach die
-Methoden aus anderen Traits automatisch zum Trait hinzugefügt.
-Für jeden implementierten Typ wird dabei zur Kompilierzeit eine
-Dispatch-Tabelle erzeugt, bei der automatisch die Methodenzeiger der
-anderen Trait-Implementationen hinzugefügt werden. Die Angabe der Methode
-<code>to_string</code> wird überflüssig:
-
-<pre class="rust ibox">
-use std::string::ToString;
-trait Item: ToString {}
-impl Item for i32 {}
-impl Item for String {}
-</pre>
-
-<h3>Dispatch-Tabellen bei Vererbung</h3>
-
-<p>Wir wollen uns kurz anschauen, wie eine mögliche Implementation
-von Dispatch-Tabellen bei Vererbung aussehen kann.
-
-<p>Angenommen wir haben die folgende Situation:
-<pre class="rust ibox">
-trait A {fn f(); fn g();}
-trait B {fn h();}
-trait S: A,B {fn s();}
-</pre>
-
-<p>Für jeden Typ <code>T</code> mit Trait-Implementationen zu
-<code>A,B,S</code> werden nun die folgenden
-Dispatch-Tabellen erzeugt:
-<pre class="rust ibox">
-(S for T).vtable = (T::f, T::g, T::h, T::s);
-(A for T).vtable = (T::f, T::g);
-(B for T).vtable = (T::h);
-</pre>
-
-<p>Da hier eine Einbettung vorliegt, können die Bestandteile
-der größten Dispatch-Tabelle gemeinsam genutzt werden:
-<pre class="rust ibox">
-(S for T).vtable = (T::f, T::g, T::h, T::s);
-(A for T).vtable = (S for T).vtable[0..2];
-(B for T).vtable = (S for T).vtable[2..3];
-</pre>
-
-<p>Der Methodenaufruf geschieht nun wie folgt:
-<pre class="rust ibox">
-let x: Box&lt;S&gt; = Box::new(T);
-let (pdata,pvtable): (&amp;T,&amp;(S for T)) = x;
-
-x.f() == pvtable.0(),
-x.g() == pvtable.1(),
-x.h() == pvtable.2(),
-x.s() == pvtable.3()
-</pre>
-<p>Bzw. wenn ein self-Argument vorliegt:
-<pre class="rust ibox">
-x.f() == pvtable.0(pdata)
-</pre>
-
-<h2>Fußnoten</h2>
+<h2>Referenzen</h2>
 <ol>
-<li id="1">Siehe hierzu
+<li id="1">
   »<a href="https://stackoverflow.com/questions/33687447/how-to-get-a-struct-reference-from-a-boxed-trait"
   >How to get a struct reference from a boxed trait?</a>«. In: StackOverflow (rust, traits) (13. November 2015).
 </ol>
