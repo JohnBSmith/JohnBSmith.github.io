@@ -70,6 +70,80 @@ Typvariable <code>T</code>. Eine solche Funktion nennt man
 
 <h3 id="Generische-Typen">Generische Typen</h3>
 
+<p>So wie Funktionen dürfen auch andere Typen generisch sein.
+Betrachten wir zunächst die folgende Konstruktion eines
+dynamischen Stapels.
+
+<pre class="rust ibox">
+struct Node {
+    data: i32,
+    next: Option&lt;Box&lt;Node&gt;&gt;
+}
+
+struct Stack {
+    top: Option&lt;Box&lt;Node&gt;&gt;
+}
+
+impl Stack {
+    fn new() -&gt; Self {
+        Stack{top: None}
+    }
+    fn push(&amp;mut self, x: i32) {
+        let node = self.top.take();
+        self.top = Some(Box::new(Node{data: x, next: node}));
+    }
+    fn pop(&amp;mut self) -&gt; Option&lt;i32&gt; {
+        if let Some(node) = self.top.take() {
+            self.top = node.next;
+            Some(node.data)
+        } else {
+            None
+        }
+    }
+}
+</pre>
+
+<p>Wie bei Funktionen enthält die Formulierung eine Typvariable,
+in die bei der Benutzung der jeweilige Element-Typ eingesetzt
+wird.
+
+<pre class="rust ibox">
+struct Node&lt;T&gt; {
+    data: T,
+    next: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+struct Stack&lt;T&gt; {
+    top: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    fn new() -&gt; Self {
+        Stack{top: None}
+    }
+    fn push(&amp;mut self, x: T) {
+        let node = self.top.take();
+        self.top = Some(Box::new(Node{data: x, next: node}));
+    }
+    fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if let Some(node) = self.top.take() {
+            self.top = node.next;
+            Some(node.data)
+        } else {
+            None
+        }
+    }
+}
+</pre>
+
+<p>Man beachte, dass <code>Stack</code> und dessen Methoden
+<code>push</code> und <code>pop</code> über dieselbe Typvariable
+parametrisiert sind. Steht der in die Typvariable eingesetzte
+Typ an einer Stelle fest, muss der gleiche Typ auch an allen
+anderen Stellen für die Typvariable eingesetzt werden. Aufgrund
+der Typinferenz besteht hierbei nicht immer die Notwendigkeit,
+den Typ explizit anzugeben.
+
 <h3 id="Bounds">Beschränkte Quantifizierung</h3>
 
 <h2 id="Technik">Technische Umsetzung</h2>
