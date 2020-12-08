@@ -146,6 +146,139 @@ den Typ explizit anzugeben.
 
 <h3 id="Bounds">Beschränkte Quantifizierung</h3>
 
+<p>Nun sind auch generische Funktionen denkbar, bei denen für die
+Typvariable nur solche Typen einsetzbar sind, die notwendige
+Eigenschaften erfüllen. Betrachten wir dazu die Berechnung des
+Maximums eines nicht-leeren Feldes:
+
+<pre class="rust ibox">
+fn max(a: &amp;[i32]) -&gt; i32 {
+    let mut m = a[0];
+    for &amp;x in a[1..].iter() {
+        if m&lt;x {m = x;}
+    }
+    return m;
+}
+</pre>
+
+<p>Auf den ganzen Zahlen ist auf natürliche Weise eine Totalordnung
+definiert. Wollen wir diese Funktion generisch formulieren, brauchen
+wir Zugriff auf die Ordnungsrelation. Die zielführende Idee dazu ist
+ein Funktionenzeiger auf die Ordnungsrelation.
+
+<pre class="rust ibox">
+fn max&lt;T&gt;(a: &amp;[T], lt: fn(&amp;T,&amp;T) -&gt; bool) -&gt; &amp;T {
+    let mut m = &amp;a[0];
+    for x in a[1..].iter() {
+        if lt(m,x) {m = x;}
+    }
+    return m;
+}
+
+fn lt_i32(x: &amp;i32, y: &amp;i32) -&gt; bool {
+    x&lt;y
+}
+
+fn main() {
+    let a = [2, 4, 1, 3];
+    println!("{}", max(&amp;a, lt_i32));
+}
+</pre>
+
+<p>Die Benutzung von Funktionenzeigern kommt hier als unbefangener
+Ansatz daher, doch liegt darin ein kritischer Schritt, der das
+Potential der generischen Programmierung schlagartig um Größenordnungen
+ausweitet.
+
+<p>Weiterführende Überlegungen bringen die Einsicht, dass
+generische Funktionen durch Tabellen von Funktionenzeigern gesteuert
+werden, man spricht von sogenannten Dispatch-Tabellen.
+Wohlgemerkt darf der Compiler das Dispatching im Rahmen der
+Monomorphisierung bereits zur Kompilierzeit auflösen, womit die
+Dispatch-Tabellen zur Laufzeit verschwunden sein dürfen. Allerdings
+muss eine generische Funktion hierzu für jeden Typ neu kompiliert
+werden.
+
+<p>Zur Gewährleistung erhöhter Typsicherheit wollen wir nun aber
+haben, dass es zwischen einem Typ und seinen Eigenschaften eine
+feste Verbindung geben kann. Dazu wurde das Konzept der <i>Traits</i>
+in die Programmiersprache eingeführt. Ein Trait fasst analog
+zur Dispatch-Tabelle die Funktionen zusammen, die die generische
+Funktion benötigt.
+
+<p>In der Definition der generischen Funktion bekommt die Typvariable
+den benötigten Trait annotiert. Ein solcher <i>Trait-Bound</i>
+sagt aus, dass die Funktion nicht mehr über alle möglichen
+Typen parametrisiert ist, sondern nur noch über solche,
+die diese Eigenschaft erfüllen. Anders ausgedrückt ist die
+Allquantifizierung der Typvariable durch den Trait-Bound
+beschränkt.
+
+<p>Der Trait <code>Ord</code> stellt die Totalordnung dar.
+Für Ganzzahltypen wie <code>i32</code> ist dieser bereits durch die
+Standardbibliothek implementiert. Damit dürfen wir formulieren:
+
+<pre class="rust ibox">
+fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
+    let mut m = &amp;a[0];
+    for x in a[1..].iter() {
+        if m&lt;x {m = x;}
+    }
+    return m;
+}
+</pre>
+
+<p>Wir können auch die gesamte Funktionalität nachbauen.
+Das geht so:
+<pre class="rust ibox">
+trait Ord {
+    fn lt(x: &amp;Self, y: &amp;Self) -&gt; bool;
+}
+
+impl Ord for i32 {
+    fn lt(x: &amp;i32, y: &amp;i32) -&gt; bool {x&lt;y}
+}
+
+fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
+    let mut m = &amp;a[0];
+    for x in a[1..].iter() {
+        if Ord::lt(m,x) {m = x;}
+    }
+    return m;
+}
+</pre>
+
+<p>Der eigentlichen Definition, wie sie in der Standardbibliothek
+auftritt, kommt die folgende Formulierung näher.
+<pre class="rust ibox">
+enum Ordering {
+    Less, Equal, Greater
+}
+
+trait Ord {
+    fn cmp(&amp;self, other: &amp;Self) -&gt; Ordering;
+    fn lt(&amp;self, other: &amp;Self) -&gt; bool {
+        matches!(Ord::cmp(self,other), Ordering::Less)
+    }
+}
+
+impl Ord for i32 {
+    fn cmp(&amp;self, other: &amp;i32) -&gt; Ordering {
+        if self &lt; other {Ordering::Less}
+        else if self == other {Ordering::Equal}
+        else {Ordering::Greater}
+    }
+}
+
+fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
+    let mut m = &amp;a[0];
+    for x in a[1..].iter() {
+        if m.lt(x) {m = x;}
+    }
+    return m;
+}
+</pre>
+
 <h2 id="Technik">Technische Umsetzung</h2>
 
 <h3 id="Konzept">Das Konzept der Polymorphie</h3>
