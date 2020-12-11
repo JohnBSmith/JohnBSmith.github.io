@@ -14,6 +14,7 @@
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Konzept">Was sind Markos?</a>
+<li><a href="#Definition">Makrodefinition</a>
 <li><a href="#Literale">Literale</a>
 <li><a href="#Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</a>
 <li><a href="#Komprehensionen">Komprehensionen</a>
@@ -42,6 +43,135 @@ und Syntax-Erzeuger enthalten.
 
 <p>Dieses Kapitel beschäftigt sich nur mit den deklarativen
 Makros.
+
+<h2 id="Definition">Makrodefinition</h2>
+
+<p>Die Definition eines deklarativen Makros hat eine ähnliche
+Gestalt wie das Pattern-Matching. Beim Aufruf des Makros wird zu der
+Liste von Syntaxmustern die Umformung zum ersten passenden Muster
+gewählt.
+
+<pre class="ibox">
+macro_rules! Name {
+    (Muster) =&gt; {Umformung},
+    (Muster) =&gt; {Umformung},
+    ...
+    (Muster) =&gt; {Umformung}
+}
+</pre>
+
+<p>Im Muster dürfen durch ein Dollar-Zeichen eingeleitete
+Syntaxvariablen auftreten. Die Syntaxvariable nimmt eine
+bestimmte Art von Syntaxfragment auf. Im Muster bekommt jede
+Syntaxvariable hinter einem Doppelpunkt einen Spezifikator
+nachgestellt, der zur Angabe der Art von Fragment dient.
+Die vorhandenen Spezifikatoren sind in der folgenden
+Tabelle aufgelistet.
+
+<table class="bt">
+<tr>
+<th>Spez.
+<th>Erklärung
+<th>Beispiele
+<tr>
+<td><code>ident</code>
+<td>ein Bezeichner
+<td><code>x</code>, <code>bool</code>, <code>self</code>
+<tr>
+<td><code>lifetime</code>
+<td>eine Lebenszeit
+<td><code>'x</code>, <code>'static</code>
+<tr>
+<td><code>literal</code>
+<td>ein Literal
+<td><code>24</code>, <code>'a'</code>, <code>"Tee"</code>
+<tr>
+<td><code>ty</code>
+<td>ein Typ
+<td><code>i32</code>, <code>Result&lt;i32&gt;</code>
+<tr>
+<td><code>path</code>
+<td>ein Pfad
+<td><code>x::y::z</code>, <code>E::X</code>
+<tr>
+<td><code>expr</code>
+<td>ein Ausdruck
+<td><code>a*x + b</code>
+<tr>
+<td><code>stmt</code>
+<td>eine Anweisung
+<td><code>x = f(u)</code>, <code>let x = f(u)</code>
+<tr>
+<td><code>pat</code>
+<td>ein Muster
+<td><code>Ok(x)</code>, <code>(x,y)</code>
+<tr>
+<td><code>block</code>
+<td>ein Blockausdruck
+<td><code>{let x = f(u); a*x + b}</code>
+<tr>
+<td><code>meta</code>
+<td>ein Attribut
+<td><code>attr</code>, <code>attr(x)</code>
+<tr>
+<td><code>vis</code>
+<td>eine Sichtbarkeit
+<td><code>pub</code>, <code>pub(crate)</code>
+<tr>
+<td><code>item</code>
+<td>ein Programmteil
+<td><code>fn f() {}</code>, <code>struct S{}</code>, <code>type X = Y;</code>
+<tr>
+<td><code>tt</code>
+<td>ein Token
+<td><code>x</code>, <code>(x + y)</code>, <code>[1, 2]</code>, <code>{f(); g()}</code>
+</table>
+
+<br>
+<table class="bt">
+<tr>
+<th>Spez.
+<th>erlaubte Nachfolgetoken
+<tr>
+<td><code>ident</code>
+<td>beliebig
+<tr>
+<td><code>lifetime</code>
+<td>beliebig
+<tr>
+<td><code>literal</code>
+<td>beliebig
+<tr>
+<td><code>ty</code>
+<td><code>{ [ =&gt; , &gt; = : ; | as where</code>
+<tr>
+<td><code>path</code>
+<td><code>{ [ =&gt; , &gt; = : ; | as where</code>
+<tr>
+<td><code>expr</code>
+<td><code>=&gt; , ;</code>
+<tr>
+<td><code>stmt</code>
+<td><code>=&gt; , ;</code>
+<tr>
+<td><code>pat</code>
+<td><code>=&gt; , = | if in</code>
+<tr>
+<td><code>block</code>
+<td>beliebig
+<tr>
+<td><code>meta</code>
+<td>beliebig
+<tr>
+<td><code>vis</code>
+<td><code>,</code> Typ Bezeichner 
+<tr>
+<td><code>item</code>
+<td>beliebig
+<tr>
+<td><code>tt</code>
+<td>beliebig
+</table>
 
 <h2 id="Literale">Literale</h2>
 <p>Makros können genutzt werden, um Datentypen mit Literalen
