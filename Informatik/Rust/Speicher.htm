@@ -191,7 +191,66 @@ erniedrigt.
 
 <p>Der Mechanismus der Referenzzählung ist durch den Typ
 <code>Rc</code> implementiert, das steht für <i>reference counted</i>.
+So wie bei <code>Box</code> ist der Speicherplatz, auf den der
+Zeiger zeigt, auf der Halde alloziert. Erstellt wird eine neue
+Allokation mit <code>Rc::new</code> oder <code>Rc::from</code>.
+Die Methode <code>Rc::clone</code> bewirkt gerade nicht eine
+Kopie der Daten, sondern nur eine Kopie des Zeigers und entsprechend
+eine Inkrementation des Referenzzählers.
 
+<p>Ein Beispiel zur Benutzung von <code>Rc</code> bieten
+Ausschnitte mit Eigentümerschaft. Betrachten wir zunächst 
+folgendes Programm.
+
+<pre class="rust ibox">
+fn main() {
+    let slice: &amp;[u8] = &amp;[0, 0, 0, 0, 1, 1, 1, 1];
+    let sub_slice = &amp;slice[4..8];
+    println!("{:?}", sub_slice);
+}
+</pre>
+
+<p>Die Ausschnitte bedingen hier Leihgaben der zugrunde liegenden
+Bytesequenz. Stattdessen wollen wir nun Ausschnitte mit gemeinsamer
+Eigentümerschaft an der Bytesequenz haben. Um dies zu erreichen,
+konstruieren wir für diese Ausschnitte den neuen Typ <code>Slice</code>,
+dessen Eintrag <code>data</code> eine gezählte Referenz auf die
+Bytesequenz ist.
+
+<pre class="rust ibox">
+use std::{fmt, rc::Rc, ops::Range};
+
+struct Slice {
+    data: Rc&lt;[u8]&gt;,
+    start: usize,
+    len: usize
+}
+impl Slice {
+    fn new(data: Rc&lt;[u8]&gt;) -&gt; Self {
+        let len = data.len();
+        Self{data, start: 0, len}
+    }
+    fn slice(&amp;self, r: Range&lt;usize&gt;) -&gt; Self {
+        let start = self.start + r.start;
+        let len = r.end - r.start;
+        Self{data: self.data.clone(), start, len}    
+    }
+}
+
+impl fmt::Debug for Slice {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        let start = self.start;
+        write!(f, "{:?}", &amp;self.data[start..start+self.len])
+    }
+}
+
+fn main() {
+    let data: Rc&lt;[u8]&gt; = Rc::from([0, 0, 0, 0, 1, 1, 1, 1]);
+    let slice = Slice::new(data);
+    let sub_slice = slice.slice(4..8);
+    println!("{:?}", sub_slice);
+}
+</pre>
 
 </body>
 </html>
