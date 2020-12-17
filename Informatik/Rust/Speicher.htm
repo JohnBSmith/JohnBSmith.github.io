@@ -15,7 +15,11 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Zeiger">Zeiger</a>
-<li><a href="#Box">Der Zeigertyp Box</a>
+<li><a href="#Allokation">Allokation</a>
+<li><a href="#Box">Zeiger vom Typ Box</a>
+<li><a href="#Rc">Zeiger vom Typ Rc</a>
+<li><span class="modest">Zellen vom Typ Cell</span>
+<li><span class="modest">Zellen vom Typ RefCell</span>
 </ol>
 
 <h2 id="Zeiger">Zeiger</h2>
@@ -81,7 +85,7 @@ fn print_array(a: &amp;[char]) {
 }
 </pre>
 
-<h2 id="Box">Der Zeigertyp Box</h2>
+<h2 id="Allokation">Allokation</h2>
 
 <p>Die Daten, die ein Programm verarbeitet, müssen notgedrungen auf
 irgendeine Art im RAM-Speicher des Computers untergebracht werden.
@@ -103,6 +107,8 @@ bevorzugt mit dem Stack.
 und freigegeben werden. Infolge ist der Heap vergleichsweise
 kompliziert und langsam.
 </dl>
+
+<h2 id="Box">Zeiger vom Typ Box</h2>
 
 <p>Die folgende Funktion <code>new_data</code> gibt ein Array
 zurück, das bspw. Bilddaten eines Bildes mit Breite 480 Pixel
@@ -138,6 +144,54 @@ fn new_data() -&gt; Box&lt;[u32; DATA_LEN]&gt; {
 sogenannten <i>Smart-Pointer</i>. Ein solcher zeichnet sich durch die
 Eigenschaft aus, dass der Speicher automatisch wieder freigegeben wird,
 sobald die Lebenszeit des Zeigerwertes endet.
+
+<h2 id="Rc">Zeiger vom Typ Rc</h2>
+
+<p>Stellt man sich Zeiger als Speicheradressen vor, liegt der Gedanke
+nicht fern, mehrere Zeiger auf den gleichen Wert zeigen zu lassen.
+Der Typ <code>Box</code> schließt dies jedoch aus, weil ein Zeiger
+dieses Typs der Eigentümer des Wertes ist. Wir müssen uns hierzu
+daran erinnern, dass die Unteilbarkeit von Eigentümerschaft eine
+entscheidende Eigenschaft des Typsystems ist.
+
+<p>Was man ohne Frage tun kann, ist die Erstellung beliebig
+vieler Zeiger vom Typ <code>&amp;Box&lt;T&gt;</code>, da diese
+nur Leihgaben darstellen. Dies bringt jedoch eine Reihe von
+Problemen mit sich:
+
+<ul>
+<li>Sobald es zu einer Leihgabe kommt, ist die den Wert tragende
+Datenstruktur als zugrundeliegender Eigentümer gefroren.
+Andernfalls könnte man den Wert entfernen oder verschieben,
+was zu Use after free führen würde.
+
+<li>Denkbar sind Situationen, wo man Zeiger auf denselben Wert in zwei
+oder mehreren Datenstrukturen speichern möchte, wo nicht bekannt ist,
+welcher Zeiger von längerer Lebenszeit ist.
+</ul>
+
+<p>Eine Lösung für die Problematik bestünde in der Benutzung eines
+sogenannten Arena-Allokators. Bei diesem dauert die Lebenszeit aller
+erstellten Werte genau so lange an wie die des Allokators.
+Das heißt, im Unterschied zu einem gewöhnlichen Allokator sind
+Freigaben nicht zu beliebigen Zeitpunkten möglich. Eines Eigentümers
+bedarf es nicht mehr, weil die Arena der eigentliche Eigentümer ist.
+An dieser Stelle soll nicht näher auf dieses Konzept eingegangen werden.
+
+<p>Eigentlich ist die Forderung nach Unteilbarkeit von Eigentum
+zu streng. Solange einem Wert keine Veränderung widerfährt, dürfte
+es mehrere Zeiger auf diesen geben. Nur dann muss der Wert solange
+erhalten bleiben, bis der letzte Zeiger verschwunden ist. Allerdings
+wissen wir nicht immer, in welcher Reihenfolge die Zeiger kommen
+und gehen. Diesem Umstand trägt die Benutzung eines Referenzzählers
+Rechnung, der dem Wert hinzugefügt wird. Der Referenzzähler zählt die
+Anzahl vorhandener Zeiger. Bei der Erstellung eines neuen Zeigers wird
+dieser um eins erhöht, beim Verschwinden eines Zeigers um eins
+erniedrigt.
+
+<p>Der Mechanismus der Referenzzählung ist durch den Typ
+<code>Rc</code> implementiert, das steht für <i>reference counted</i>.
+
 
 </body>
 </html>
