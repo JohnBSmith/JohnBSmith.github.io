@@ -18,8 +18,8 @@
 <li><a href="#Allokation">Allokation</a>
 <li><a href="#Box">Zeiger vom Typ Box</a>
 <li><a href="#Rc">Zeiger vom Typ Rc</a>
-<li><span class="modest">Zellen vom Typ Cell</span>
-<li><span class="modest">Zellen vom Typ RefCell</span>
+<li><a href="#Cell">Zellen vom Typ Cell</a>
+<li><a href="#RefCell">Zellen vom Typ RefCell</a>
 </ol>
 
 <h2 id="Zeiger">Zeiger</h2>
@@ -251,6 +251,84 @@ fn main() {
     println!("{:?}", sub_slice);
 }
 </pre>
+
+<p>Wir müssen näher darauf blicken, was hier gemacht wurde. Der Typ
+<code>&amp;[u8]</code> ist eigentlich über Lebenszeiten
+parametrisiert, die Notation unterdrückt dies bloß. Bei der Definition
+eines Aliastypen tritt die Abhängigkeit von der Lebenszeit
+explizit hervor:
+
+<pre class="rust ibox">
+type BorrowSlice&lt;'a&gt; = &amp;'a [u8];
+</pre>
+
+<p>Im Typ <code>Slice</code> ist diese Parametrisierung verloren
+gegangen. Der Typ <code>Slice</code> ist demnach nicht mehr von
+der Lebenszeit eines anderen Datums abhängig.
+
+<h2 id="Cell">Zellen vom Typ Cell</h2>
+
+<p>Der Typ <code>Rc</code> gewährt nur gemeinsame Referenzen, womit
+die Daten darunter unveränderlich bleiben. Infolge liegt die gesamte
+Datenstruktur immerwährend fest wie ein Kristall. Einem gleichartigen
+Problem steht man auch in anderen Situationen gegenüber, &ndash;
+überall dort, wo man nur gemeinsame Referenzen bekommt. Dem Ziel
+der Programmierung von dynamischen Datenstrukturen läuft diese
+Einschränkung offensichtlich zuwider. Zur Auflösung dieser
+Einschränkung stehen daher ausgeklügelte Mechanismen zur Verfügung.
+
+<p>Erinnern wir uns daran, dass bei gemeinsamen Referenzen
+Veränderungen an den Daten verboten sind, weil es sonst zu Aliasing
+und Use after free kommen kann. Einen Teil der Daten unter einer
+gemeinsamen Referenz wollen wir nun dennoch verändern dürfen.
+Angenommen, wir verbieten Zeiger auf diesen Teil, womit dieser Teil nur
+als ganze gelesen und geschrieben werden darf,
+dann dürfte es niemals zu den genannten Problemen kommen.
+
+<p>Mit der technischen Ausgestaltung dieser Idee ist der Typ
+<code>Cell</code> entstanden. Einen Zeiger auf das Innere eines
+Wertes dieses Typs kann man nicht bekommen. Lediglich ist es gestattet,
+die Zelle mit der Methode <code>Cell::get</code> gänzlich zu
+lesen oder mit <code>Cell:set</code> gänzlich zu schreiben.
+Außerdem gibt es noch ein paar Hilfsmethoden zum flexibleren
+Ausreizen der zugrundeliegenden Idee.
+
+<p>Eine Anwendung von <code>Cell</code> zeigt die folgende
+Implementierung eines Zählers, der sich auch dann verändern
+darf, wenn man nur »veränderungslosen« Zugriff auf ihn hat.
+
+<pre class="rust ibox">
+use std::{rc::Rc, cell::Cell};
+
+struct Counter {
+    value: Cell&lt;u32&gt;
+}
+impl Counter {
+    fn new() -&gt; Self {
+        Self{value: Cell::new(0)}
+    }
+    fn next(&amp;self) -&gt; u32 {
+        let value = self.value.get();
+        self.value.set(value + 1);
+        value
+    }
+}
+
+fn main() {
+    // Scheinbar absurd: Veränderung hinter einer
+    // gemeinsamen Referenz.
+    let counter = &amp;Counter::new();
+    println!("{}", counter.next());
+    println!("{}", counter.next());
+
+    // Entsprechend erlaubt.
+    let counter = Rc::new(Counter::new());
+    println!("{}", counter.next());
+    println!("{}", counter.next());
+}
+</pre>
+
+<h2 id="RefCell">Zellen vom Typ RefCell</h2>
 
 </body>
 </html>
