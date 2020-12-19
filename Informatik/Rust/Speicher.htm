@@ -330,5 +330,59 @@ fn main() {
 
 <h2 id="RefCell">Zellen vom Typ RefCell</h2>
 
+<p>Leider ist <code>Cell</code> nur für kleine Typen mit Trait
+<code>Copy</code> effizient, womit <code>Cell</code> auf
+spezielle Situationen beschränkt bleibt. Ein allgemeiner
+Mechanismus liegt mit <code>RefCell</code> vor. So wie
+<code>Cell</code> gewährt eine Zelle vom Typ <code>RefCell</code>
+Veränderungen innerhalb von gemeinsamen Leihgaben. Im Unterschied
+zu <code>Cell</code> erlaubt <code>RefCell</code> das 
+eigentlich Verbotene &ndash; eine alleinige Leihgabe eines Teils
+einer gemeinsamen Leihgabe.
+
+<p>Wie kann das möglich sein? Der Compiler verhindert Aliasing
+normalerweise, indem zur Kompilierzeit geprüft wird, dass für
+Veränderungen immer nur eine einzige alleinige Leihgabe vorhanden ist.
+Der Mechanismus von <code>RefCell</code> besteht nun gerade darin,
+diese Prüfung stattdessen zur Laufzeit vorzunehmen, womit wir einen
+großen Sprung an Flexibilität gewinnen. Zur Umsetzung fügt
+<code>RefCell&lt;T&gt;</code> dem Wert des Typs <code>T</code>
+einen Referenzzähler hinzu. Man kann dann mit <code>borrow</code>
+beliebig viele gemeinsame Leihgaben bekommen, oder mit
+<code>borrow_mut</code> eine alleinige Leihgabe. Die technische
+Umsetzung kann man so konstruieren:
+
+<ul>
+<li>Mit <code>borrow</code> wird der Referenzzähler um eins
+erhöht, aber nur falls er nicht-negativ ist. Andernfalls kommt
+es zum Programmabbruch.
+<li>Mit <code>borrow_mut</code> wird der Referenzzähler auf &minus;1
+erniedrigt, aber nur falls er null war. Andernfalls kommt es
+zum Programmabbruch.
+</ul>
+
+<p>Es folgt ein erstes einfaches Beispiel, &ndash; die Implementierung
+des bereits zuvor beschriebenen Zählers <code>Counter</code>, aber
+dieses Mal mit <code>RefCell</code> anstelle von <code>Cell</code>.
+
+<pre class="rust ibox">
+use std::cell::RefCell;
+
+struct Counter {
+    value: RefCell&lt;u32&gt;
+}
+impl Counter {
+    fn new() -&gt; Self {
+        Self{value: RefCell::new(0)}
+    }
+    fn next(&amp;self) -&gt; u32 {
+        let mut p = self.value.borrow_mut();
+        let value = *p;
+        *p = value + 1;
+        value
+    }
+}
+</pre>
+
 </body>
 </html>
