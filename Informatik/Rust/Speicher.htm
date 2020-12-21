@@ -20,6 +20,7 @@
 <li><a href="#Rc">Zeiger vom Typ Rc</a>
 <li><a href="#Cell">Zellen vom Typ Cell</a>
 <li><a href="#RefCell">Zellen vom Typ RefCell</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <h2 id="Zeiger">Zeiger</h2>
@@ -150,8 +151,8 @@ sobald die Lebenszeit des Zeigerwertes endet.
 <p>Stellt man sich Zeiger als Speicheradressen vor, liegt der Gedanke
 nicht fern, mehrere Zeiger auf den gleichen Wert zeigen zu lassen.
 Der Typ <code>Box</code> schließt dies jedoch aus, weil ein Zeiger
-dieses Typs der Eigentümer des Wertes ist. Wir müssen uns hierzu
-daran erinnern, dass die Unteilbarkeit von Eigentümerschaft eine
+dieses Typs der Besitzer des Wertes ist. Wir müssen uns hierzu
+daran erinnern, dass die Unteilbarkeit von Besitzerschaft eine
 entscheidende Eigenschaft des Typsystems ist.
 
 <p>Was man ohne Frage tun kann, ist die Erstellung beliebig
@@ -161,7 +162,7 @@ Problemen mit sich:
 
 <ul>
 <li>Sobald es zu einer Leihgabe kommt, ist die den Wert tragende
-Datenstruktur als zugrundeliegender Eigentümer gefroren.
+Datenstruktur als zugrundeliegender Besitzer gefroren.
 Andernfalls könnte man den Wert entfernen oder verschieben,
 was zu Use after free führen würde.
 
@@ -174,11 +175,11 @@ welcher Zeiger von längerer Lebenszeit ist.
 sogenannten Arena-Allokators. Bei diesem dauert die Lebenszeit aller
 erstellten Werte genau so lange an wie die des Allokators.
 Das heißt, im Unterschied zu einem gewöhnlichen Allokator sind
-Freigaben nicht zu beliebigen Zeitpunkten möglich. Eines Eigentümers
-bedarf es nicht mehr, weil die Arena der eigentliche Eigentümer ist.
+Freigaben nicht zu beliebigen Zeitpunkten möglich. Eines Besitzers
+bedarf es nicht mehr, weil die Arena der eigentliche Besitzer ist.
 An dieser Stelle soll nicht näher auf dieses Konzept eingegangen werden.
 
-<p>Eigentlich ist die Forderung nach Unteilbarkeit von Eigentum
+<p>Eigentlich ist die Forderung nach Unteilbarkeit von Besitzerschaft
 zu streng. Solange einem Wert keine Veränderung widerfährt, dürfte
 es mehrere Zeiger auf diesen geben. Nur dann muss der Wert solange
 erhalten bleiben, bis der letzte Zeiger verschwunden ist. Allerdings
@@ -199,7 +200,7 @@ Kopie der Daten, sondern nur eine Kopie des Zeigers und entsprechend
 eine Inkrementation des Referenzzählers.
 
 <p>Ein Beispiel zur Benutzung von <code>Rc</code> bieten
-Ausschnitte mit Eigentümerschaft. Betrachten wir zunächst 
+Ausschnitte mit Besitzerschaft. Betrachten wir zunächst 
 folgendes Programm.
 
 <pre class="rust ibox">
@@ -212,7 +213,7 @@ fn main() {
 
 <p>Die Ausschnitte bedingen hier Leihgaben der zugrunde liegenden
 Bytesequenz. Stattdessen wollen wir nun Ausschnitte mit gemeinsamer
-Eigentümerschaft an der Bytesequenz haben. Um dies zu erreichen,
+Besitzerschaft an der Bytesequenz haben. Um dies zu erreichen,
 konstruieren wir für diese Ausschnitte den neuen Typ <code>Slice</code>,
 dessen Eintrag <code>data</code> eine gezählte Referenz auf die
 Bytesequenz ist.
@@ -268,6 +269,8 @@ der Lebenszeit eines anderen Datums abhängig.
 
 <h2 id="Cell">Zellen vom Typ Cell</h2>
 
+<h3>Grundmechanismus</h3>
+
 <p>Der Typ <code>Rc</code> gewährt nur gemeinsame Referenzen, womit
 die Daten darunter unveränderlich bleiben. Infolge liegt die gesamte
 Datenstruktur immerwährend fest wie ein Kristall. Einem gleichartigen
@@ -282,7 +285,7 @@ Veränderungen an den Daten verboten sind, weil es sonst zu Aliasing
 und Use after free kommen kann. Einen Teil der Daten unter einer
 gemeinsamen Referenz wollen wir nun dennoch verändern dürfen.
 Angenommen, wir verbieten Zeiger auf diesen Teil, womit dieser Teil nur
-als ganze gelesen und geschrieben werden darf,
+als Ganzes gelesen und geschrieben werden darf,
 dann dürfte es niemals zu den genannten Problemen kommen.
 
 <p>Mit der technischen Ausgestaltung dieser Idee ist der Typ
@@ -328,8 +331,134 @@ fn main() {
 }
 </pre>
 
+<h3>Projektion von Ausschnitten</h3>
+
+<p>Zu Produkttypen wie Strukturen, Tupeln und Feldern gehören
+Projektionen auf ihre Elemente. Zum Zugriff über Leihgaben muss
+hierbei auch die Projektion über Leihgaben formuliert sein.
+Für Ausschnitte ist die Projektion so definiert:
+
+<pre class="rust ibox">
+fn proj&lt;T&gt;(a: &amp;[T], i: usize) -> &amp;T {
+    &amp;a[i]
+}
+</pre>
+
+<p>Entsprechend ist definiert:
+
+<pre class="rust ibox">
+fn proj_mut&lt;T&gt;(a: &amp;mut [T], i: usize) -> &amp;mut T {
+    &amp;mut a[i]
+}
+</pre>
+
+<p>Nun lässt sich zu jedem Typ <code>T</code> der Typ
+<code>&amp;mut T</code> als Subtyp von <code>&amp;Cell&lt;T&gt;</code>
+betrachten. Nämlich gibt es den »Upcast« <code>Cell::from_mut</code>
+mit der Signatur
+
+<pre class="rust indent">
+fn from_mut(t: &amp;mut T) -> &amp;Cell&lt;T&gt;.
+</pre>
+
+<p>Speziell können wir <code>&amp;mut [T]</code> in
+<code>&amp;Cell&lt;[T]&gt;</code> umwandeln. Nun würden wir den
+Ausschnitt gerne indizieren. Das heißt, wir brauchen nicht den
+Zugriff auf den Ausschnitt als Ganzes, sondern die Projektionen
+auf dessen Elemente. Das notwendige Hilfsmittel dafür ist die Methode
+<code>as_slice_of_cells</code>, die <code>&amp;Cell&lt;[T]&gt;</code>
+weiter in <code>&amp;[Cell&lt;T&gt;]</code> umwandelt.
+
+<p>Der Nutzen liegt darin, gleichzeitig <i>mit Zeigern</i> über ein
+Feld iterieren zu können, während dessen Elemente modifiziert werden.
+Betrachten wir bspw. die folgende Implementierung von Buble sort.
+
+<pre class="rust ibox">
+fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
+    let n = a.len();
+    for _ in 0..n {
+        for i in 1..n {
+            if a[i] &lt; a[i-1] {a.swap(i,i-1);}
+        }
+    }
+}
+</pre>
+
+<p>Bei der Indizierung tritt für gewöhnlich eine Bereichsprüfung
+auf. Manchmal sieht sich der Compiler auch in der Lage, diese
+während der Optimierung zu entfernen. Ein alternativer Weg
+ist die Benutzung von Zeigern anstelle von Indizes. Wir würden
+gerne schreiben:
+
+<pre class="rust ibox">
+fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
+    for _ in 0..a.len() {
+        let mut y = &amp;mut a[0];
+        for x in &amp;mut a[1..] {
+            if x &lt; y {std::mem::swap(x,y);}
+            y = x;
+        }
+    }
+}
+</pre>
+
+<p>Jedoch ist dieses Programm nicht kompilierbar, weil zwei
+alleinige Leihgaben des gleichen Ausschnitts verboten sind.
+Der beschriebene Formalismus eröffnet nun eine Formulierung,
+bei welcher stattdessen gemeinsame Leihgaben auftreten.
+
+<pre class="rust ibox">
+use std::cell::Cell;
+
+fn bubble_sort&lt;T: Ord + Copy&gt;(a: &amp;mut [T]) {
+    let a = Cell::from_mut(a).as_slice_of_cells();
+    for _ in 0..a.len() {
+        let mut y = &amp;a[0];
+        for x in &amp;a[1..] {
+            if x.get() &lt; y.get() {Cell::swap(x,y);}
+            y = x;
+        }
+    }
+}
+</pre>
+
+<p>Ein praktischeres Beispiel bietet die folgende Implementierung
+von <code>Vec::retain</code>.<sup><a href="#1">1</a></sup>
+Da das Prädikat für die Betrachtung nicht wesentlich ist,
+sei es zur Vereinfachung auf <code>is_even</code> festgelegt.
+Die Formulierung mit Indizierung:
+
+<pre class="rust ibox">
+fn retain_even(a: &amp;mut Vec&lt;i32&gt;) {
+    let mut i = 0;
+    for j in 0..a.len() {
+        if is_even(a[j]) {
+            a[i] = a[j];
+            i += 1;
+        }
+    }
+    a.truncate(i);
+}
+</pre>
+
+<p>Die Formulierung mit einem Zeiger:
+<pre class="rust ibox">
+use std::cell::Cell;
+
+fn retain_even(a: &amp;mut Vec&lt;i32&gt;) {
+    let s = Cell::from_mut(&amp;mut a[..]).as_slice_of_cells();
+    let mut i = 0;
+    for x in s.iter().filter(|x| is_even(x.get())) {
+        s[i].set(x.get());
+        i += 1;
+    }
+    a.truncate(i);
+}
+</pre>
+
 <h2 id="RefCell">Zellen vom Typ RefCell</h2>
 
+<h3>Grundmechanismus</h3>
 <p>Leider ist <code>Cell</code> nur für kleine Typen mit Trait
 <code>Copy</code> effizient, womit <code>Cell</code> auf
 spezielle Situationen beschränkt bleibt. Ein allgemeiner
@@ -383,6 +512,55 @@ impl Counter {
     }
 }
 </pre>
+
+<h3>Fehlbares Ausleihen</h3>
+
+<p>Die Methoden <code>borrow</code> und <code>borrow_mut</code>
+besitzen die totalen Pendants <code>try_borrow</code> und
+<code>try_borrow_mut</code>, die Rückgabe vom Typ <code>Result</code>
+haben, anstelle mit <code>panic</code> den Programmabbruch
+einzuleiten.
+
+<p>Die folgende Anwendung zeigt eine Funktion, die bestimmt ob
+ein Graph mindestens einen Zyklus enthält. Die Überlegung dazu
+ist eigentlich recht einfach. Man schreibt naiv die rekursive
+Traversierung des Graphen, als wäre es ein Baum oder ein gerichteter
+azyklischer Graph. Ein Zyklus ist genau dann vorhanden, wenn das
+Programm beim Traversieren auf einen bereits zuvor
+ausgeliehenen Knoten trifft.
+
+<pre class="rust ibox">
+use std::{rc::Rc, cell::RefCell};
+
+type RcNode = Rc&lt;RefCell&lt;Node&gt;&gt;;
+
+struct Node {
+    data: i32, links: Vec&lt;RcNode&gt;
+}
+impl Node {
+    fn new(data: i32, links: Vec&lt;RcNode&gt;) -&gt; RcNode {
+        Rc::new(RefCell::new(Node{data, links}))
+    }
+}
+
+fn is_cyclic(graph: &amp;RcNode) -&gt; bool {
+    if let Ok(node) = graph.try_borrow_mut() {
+        for link in &amp;node.links {
+            if is_cyclic(link) {return true}
+        }
+        false
+    } else {
+        true
+    }
+}
+</pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li id="1">Alice Ryhl: »<a href="https://ryhl.io/blog/temporary-shared-mutation/"
+  >Temporarily opt-in to shared mutation</a>«. (15. August 2020).
+</ol>
 
 </body>
 </html>

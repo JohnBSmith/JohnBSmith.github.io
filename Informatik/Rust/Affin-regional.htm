@@ -156,18 +156,18 @@ schon zur Kompilierzeit prüfen.
 <p>Eine genaue Betrachtung von Use after free führt zu der folgenden
 Beobachtung. Es entsteht durch das Kopieren von Zeigern. Gäbe es
 immer nur einen gültigen Zeiger auf die Daten, würden die Daten also
-immer nur einen einzigen Eigentümer haben, könnte man über diesen
+immer nur einen einzigen Besitzer haben, könnte man über diesen
 bedenkenlos auf die Daten zugreifen.
 
 <p>Unsere Überlegungen manifestieren sich im folgenden Formalismus:
 <ul>
 <li>Unique Ownership: Ein Wert hat zu jeder Zeit immer nur einen
-  einzigen Eigentümer. Das heißt, auf die Daten zeigt immer nur
+  einzigen Besitzer. Das heißt, auf die Daten zeigt immer nur
   ein einziger Zeiger.
 <li>Move-Semantik: Variablenzuweisung <code>p&nbsp;=&nbsp;q</code>
   führt dazu, dass <code>q</code> ungültig wird, sonst gäbe es zwei
-  Eigentümer. Es handelt sich hierbei also anschaulich formuliert
-  um einen Wechsel des Eigentümers. Ein ungültig gewordene Variable
+  Besitzer. Es handelt sich hierbei also anschaulich formuliert
+  um einen Wechsel des Besitzers. Ein ungültig gewordene Variable
   ist gleichbedeutend mit einer uninitialisierten Variable.
 </ul>
 
@@ -179,7 +179,7 @@ das diese umsetzt, nennt man <i>affin</i>.
 <h3>Regionen</h3>
 
 <p>Die Beschränkung auf Move-Semantik ist ziemlich einschränkend.
-Viele Funktionen bleiben nicht Eigentümer eines Wertes, sie borgen
+Viele Funktionen bleiben nicht Besitzer eines Wertes, sie borgen
 sich den Wert nur zum Lesen oder zur Manipulation aus.
 In einigen Fällen könnte man das zwar so formulieren, dass der Wert
 wieder als Rückgabewert auftaucht anstatt zu verschwinden, jedoch
@@ -209,7 +209,7 @@ realloziert wird. Gehen wir davon aus, dies geschieht.
 Hierdurch kommt es zu einer Zeiger-Invalidierung von <code>p</code>,
 womit <code>p</code> nunmehr ein hängender Zeiger ist. Die Benutzung
 <code>*p</code> in der nächsten Zeile ist dann undefiniertes
-Verhalten in Form von use after free, weil der ursprüngliche
+Verhalten in Form von Use after free, weil der ursprüngliche
 Speicherbereich bereits an den Allokator freigegeben wurde. Dies stellt
 einen Bug dar, der im schlimmsten Fall eine Sicherheitslücke
 bedeuten kann.
@@ -217,11 +217,11 @@ bedeuten kann.
 <p>Zwei kritische Beobachtungen:
 
 <ol>
-<li>Jede Eigentümerschaft ist nur in einer bestimmten Region
-gültig. Für Rust sagt man, die Variable mit dieser Eigentümerschaft
-besitzt eine begrenzte Lebenszeit. Damit es nicht zu Use after free
-kommt, muss jede Leihgabe innerhalb der Region liegen bzw. jede eine
-Leihgabe tragende Variable von begrenzterer Lebenszeit sein.
+<li>Jede Besitzerschaft ist nur in einer bestimmten <i>Region</i>
+gültig. Für Rust sagt man, die Variable mit dieser Besitzererschaft
+besitzt eine begrenzte <i>Lebenszeit</i>. Damit es nicht zu Use after
+free kommt, muss jede Leihgabe innerhalb der Region liegen bzw. jede
+eine Leihgabe tragende Variable von begrenzterer Lebenszeit sein.
 
 <li>Eine geteilte Leihgabe an mehrere Variablen ist erlaubt, aber nur
 dann wenn die Variablen alle ausschließlich lesend auf den Wert
