@@ -176,7 +176,7 @@ Struktur eines Wertes zu Vergessen, womit sich abstrakte Schnittstellen
 erstellen lassen. Dies bildet die theoretische Grundlage für
 Module und abstrakte Datentypen.
 
-<p>Regel zur Einführung existentieller Typen:
+<p>Regel zur Einführung existentiell quantifizierter Typen:
 <pre class="indent">
 &Gamma; |- t: X[T:=U]
 ──────────────── (Pack)
@@ -220,7 +220,7 @@ Operationen dieser Schnittstelle anwenden darf.
 
 <p>Betrachten wir als Beispiel den Struktur-Typ
 <pre class="indent">
-X := {a: T; even: T &rarr; bool}.
+X := {a: T; to_string: T &rarr; String}.
 </pre>
 
 <p>Ohne die Forderung, dass <code>T</code> nicht in den freien
@@ -230,7 +230,97 @@ in den Wert von <code>s</code> entweichen würde. Z.&nbsp;B. kann man
 nicht einfach <code>s:=x.a</code> setzen. Dann wäre ja <code>s: T</code>,
 also <code>Y=T</code> und daher <code>T&nbsp;&in;&nbsp;FV(Y)</code>.
 
+<p>In Rust ist <code>&exist;X.T</code> für die genannte Struktur
+<code>X</code> als opaker Typ <code>impl ToString</code> modellierbar.
+Wir betrachten die bereits in der Standardbibliothek definierte
+Schnittstelle:
+<pre class="rust ibox">
+trait ToString {
+    fn to_string(&amp;self) -> String;
+}
+</pre>
 
+<p>Man braucht nun lediglich <code>self := a</code> zu setzen.
+Beispielprogramm:
+
+<pre class="rust ibox">
+fn f(a: i32) -&gt; impl ToString {a}
+
+fn main() {
+    let x = f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Die Formulierung ist äquivalent zu der existenziell quantifizierten
+Struktur, weil man erstens an den Typ von <code>a</code> nicht mehr
+herankommt, und zweitens die Funktion <code>to_string</code>
+trotzdem auf <code>a</code> anwendbar bleibt. Darin besteht genau der
+springende Punkt, den wir haben wollen.
+
+<p>Man darf sich das so vorstellen, als würde die Struktur während der
+Optimierung durch den Compiler entfernt, weil kein Bedarf am
+dynamischen Dispatch besteht. Nämlich kann der Compiler schon zur
+Kompilierzeit in Erfahrung bringen, dass <code>to_string</code> auf
+einen Wert des Typs <code>i32</code> angewendet wird.
+
+<p>Im Gegensatz zu <code>impl Trait</code> ist beim opaken Typ
+<code>Box&lt;dyn Trait&gt;</code> auch dynamischer Dispatch zulässig.
+Dieser Typ entspricht dem Zeigerpaar
+<pre class="indent">
+&exist;T.(Box&lt;T&gt;, &amp;{to_string: &amp;T &rarr; String}).
+</pre>
+
+<p>Das äquivalente Beispielprogramm:
+<pre class="rust ibox">
+fn f(a: i32) -> Box&lt;dyn ToString&gt; {Box::new(a)}
+
+fn main() {
+    let x = f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Eine andere Modellierung von existentiell quantifizierten Typen
+sind Module mit privaten Variablen und Funktionen.
+Das äquivalente Beispielprogramm:
+
+<pre class="rust ibox">
+mod mx {
+    pub struct X {a: i32}
+    impl X {
+        pub fn to_string(&amp;self) -&gt; String {
+            format!("{}", &amp;self.a)
+        }
+    }
+    pub fn f(a: i32) -&gt; X {X{a}}
+}
+
+fn main() {
+    let x = mx::f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Wieder ist erreicht, dass man an <code>a</code> nicht mehr
+herankommt, die Funktion <code>to_string</code> aber auf
+<code>a</code> anwendbar bleibt.
+
+<p>Auch Closures bieten die Möglichkeit zur Auftrennung zwischen
+Schnittstellen und privaten Daten. Das ist ein Grund dafür,
+warum Closures opake Typen haben müssen.
+Nochmals das äquivalente Beispielprogramm:
+
+<pre class="rust ibox">
+fn f(a: i32) -&gt; impl Fn() -&gt; String {
+    move || format!("{}", a)
+}
+
+fn main() {
+    let to_string = f(0);
+    println!("{}", to_string());
+}
+</pre>
 
 </body>
 </html>
