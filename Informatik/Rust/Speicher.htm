@@ -148,6 +148,8 @@ sobald die Lebenszeit des Zeigerwertes endet.
 
 <h2 id="Rc">Zeiger vom Typ Rc</h2>
 
+<h3>Gemeinsamer Besitz</h3>
+
 <p>Stellt man sich Zeiger als Speicheradressen vor, liegt der Gedanke
 nicht fern, mehrere Zeiger auf den gleichen Wert zeigen zu lassen.
 Der Typ <code>Box</code> schließt dies jedoch aus, weil ein Zeiger
@@ -267,6 +269,76 @@ type BorrowSlice&lt;'a&gt; = &amp;'a [u8];
 gegangen. Der Typ <code>Slice</code> ist demnach nicht mehr von
 der Lebenszeit eines anderen Datums abhängig.
 
+<h3>Zur Laufzeit erzeugte Symbole</h3>
+
+<p>Brauchbar ist <code>Rc</code> auch zur Erzeugung von Symbolen.
+Unter einem Symbolvorrat wollen wir schlicht einen Wertebereich
+verstehen, dessen Elemente schnell zu kopieren und zu vergleichen
+sind. Ist der Symbolvorrat bereits zur Kompilierzeit bekannt, würde man
+diesen als Enumeration darstellen. Ist der Vorrat allerdings erst
+zur Laufzeit bekannt, muss man sich eine andere Darstellung überlegen.
+
+<p>Eine Idee ist die Darstellung von Symbolen als Zeiger. Zwei
+Symbole sind genau dann gleich, wenn die Zeiger auf dasselbe
+Objekt zeigen. Demnach wird mit <code>Rc::new</code> einmalig ein
+neues Symbol erzeugt, das irgendwo in der Laufzeitumgebung oder
+einer zugänglichen Datenstruktur hinterlegt werden muss. Von diesem
+lassen sich nun mit <code>Rc::clone</code> beliebig viele Kopien
+anfertigen. Zum Vergleich zweier Symbole wird <code>Rc::ptr_eq</code>
+genutzt.
+
+<pre class="rust ibox">
+use std::rc::Rc;
+
+fn main() {
+    let a = Rc::new(());
+    let b = a.clone();
+    assert!(Rc::ptr_eq(&amp;a,&amp;b));
+}
+</pre>
+
+<p>Durchaus bestehen noch andere Wege zur Darstellung von Symbolen.
+Effizient ist bspw. ein Zähler in der Laufzeitumgebung.
+Zur Erzeugung eines neuen Symbols wird das Symbol als Zählerwert
+dargestellt und der Zähler zudem inkrementiert, womit garantiert ist,
+dass jedes mal ein neues, einmaliges &ndash; d.&nbsp;h. zu allen
+anderen verschiedenes &ndash; Symbol geschaffen wird.
+
+<p>Allerdings bietet <code>Rc</code> zusätzlich die Möglichkeit,
+Symbole mit einem Namen zu versehen. Zu beachten ist hierbei,
+dass unterschiedliche Symbole den gleichen Namen tragen
+dürfen, was zur Verwirrung führen kann.
+
+<pre class="rust ibox">
+use std::rc::Rc;
+
+fn main() {
+    let a: Rc&lt;str&gt; = Rc::from("A");
+    let b = a.clone();
+    assert!(Rc::ptr_eq(&amp;a,&amp;b));
+    println!("{}", a);
+}
+</pre>
+
+<p>Zur Bemerkung sei noch erwähnt, dass <code>Rc::ptr_eq</code>
+bei <code>Rc&lt;str&gt;</code> sowohl den Zeiger als auch die
+Länge vergleicht. Effizienter ist für unseren Zweck der reine
+Vergleich der Zeiger. Dies wird durch die folgende
+Funktion <code>ptr_eq_plain</code> erreicht. 
+
+<pre class="rust ibox">
+fn ptr_eq_plain&lt;T: ?Sized&gt;(p: &amp;Rc&lt;T&gt;, q: &amp;Rc&lt;T&gt;) -&gt; bool {
+    let p = &amp;**p as *const T as *const ();
+    let q = &amp;**q as *const T as *const ();
+    std::ptr::eq(p,q)
+}
+</pre>
+
+<p>Wie man Symbole im Zusammenhang mit Hashtabellen benutzt,
+wurde im Abschnitt ›<a href="Behaelter.htm#Eq-Zeiger"
+>Behälter: Hashtabellen: Äquivalenz per Zeigervergleich</a>‹ schon
+erläutert.
+
 <h2 id="Cell">Zellen vom Typ Cell</h2>
 
 <h3>Grundmechanismus</h3>
@@ -353,15 +425,15 @@ fn proj_mut&lt;T&gt;(a: &amp;mut [T], i: usize) -> &amp;mut T {
 </pre>
 
 <p>Nun lässt sich zu jedem Typ <code>T</code> der Typ
-<code>&amp;mut T</code> als Subtyp von <code>&amp;Cell&lt;T&gt;</code>
-betrachten. Nämlich gibt es den »Upcast« <code>Cell::from_mut</code>
-mit der Signatur
+<code>&amp;mut T</code> als in einer Subtyp-ähnlichen Beziehung zu
+<code>&amp;Cell&lt;T&gt;</code> betrachten. Die Rolle des Upcasts
+nimmt hierbei <code>Cell::from_mut</code> mit der Signatur
 
 <pre class="rust indent">
-fn from_mut(t: &amp;mut T) -> &amp;Cell&lt;T&gt;.
+fn from_mut(t: &amp;mut T) -> &amp;Cell&lt;T&gt;
 </pre>
 
-<p>Speziell können wir <code>&amp;mut [T]</code> in
+<p>ein. Speziell können wir <code>&amp;mut [T]</code> in
 <code>&amp;Cell&lt;[T]&gt;</code> umwandeln. Nun würden wir den
 Ausschnitt gerne indizieren. Das heißt, wir brauchen nicht den
 Zugriff auf den Ausschnitt als Ganzes, sondern die Projektionen

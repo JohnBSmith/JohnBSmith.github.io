@@ -15,7 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Produkte">Produkte von Typen</a>
-<li><span class="modest">Summen von Typen</span>
+<li><a href="#Summen">Summen von Typen</a>
 <li><a href="#Funktionen">Typisierung von Funktionen</a>
 <li><a href="#Polymorphe-Typen">Polymorphe Typen</a>
 <li><a href="#Existentielle-Typen">Existentielle Typen</a>
@@ -88,6 +88,33 @@ Typ dazu. Infolge bedeuten andere Bezeichner einen anderen Typ.
 
 <p>Die Regeln für Strukturen mit mehr als zwei Einträgen sind analog
 zu den genannten.
+
+<h2 id="Summen">Summen von Typen</h2>
+
+<p>Für eine Enumeration
+<p class="indent"><code>enum E{V(T), ...}</code>
+
+<p>gibt es zur jeweiligen Variante <code>E::V</code> die Regel:
+<pre class="indent">
+   &Gamma; |- x: T
+───────────────
+&Gamma; |- E::V(x): E
+</pre>
+
+<p>Zur Zerlegung von Enumerationen bedarf es einer weiteren Regel:
+<pre class="indent">
+             &Gamma; |- t: E
+  &Gamma; &cup; {xi: Ti} |- ti: T für jedes i
+──────────────────────────────────────
+&Gamma; |- match t {E::V0(x0) =&gt; t0, ...}: T
+</pre>
+
+<p>In Worten: Der Term <code>t</code> sei vom Typ <code>E</code>.
+Außerdem sei angenommen, dass wenn jeweils die Variable <code>xi</code>
+vom Typ <code>Ti</code> ist, dann der zugehörige Term <code>ti</code>
+vom Typ <code>T</code>. Weil daher jeder der Terme vom gleichen
+Typ <code>T</code> ist, ist auch der Musterabgleich von diesem
+Typ.
 
 <h2 id="Funktionen">Typisierung von Funktionen</h2>
 
