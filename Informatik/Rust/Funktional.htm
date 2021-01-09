@@ -20,6 +20,7 @@
 <li><a href="#Higher-order">Funktionen höherer Ordnung</a>
 <li><a href="#Monaden">Monaden</a>
 <li><a href="#Currying">Currying</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <h2 id="Funktionenzeiger">Funktionenzeiger</h2>
@@ -60,19 +61,19 @@ Die positive Nullstelle ist die Wurzel von zwei.
 <pre class="rust ibox">
 fn diff(f: fn(f64)-&gt;f64, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f(x+h)-f(x-h))/(2.0*h);
+    return (f(x+h) - f(x-h))/(2.0*h);
 }
 
 fn newton(f: fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x-f(x)/diff(f,x);
+        x = x - f(x)/diff(f,x);
     }
     return x;
 }
 
 fn main() {
-    fn f(x: f64) -&gt; f64 {x*x-2.0}
+    fn f(x: f64) -&gt; f64 {x*x - 2.0}
     println!("{}",newton(f,1.0));
 }
 </pre>
@@ -118,36 +119,36 @@ gestatten sowohl Funktionen als auch Closures als Argumente. Zwischen
 Funktionen und Closures  besteht einen kleiner Unterschied in der
 Syntax. Anstelle von
 <pre class="rust ibox">
-fn f(x: f64) -&gt; f64 {x*x-2.0}
+fn f(x: f64) -&gt; f64 {x*x - 2.0}
 </pre>
 
 <p>schreibt man:
 <pre class="rust ibox">
-let f = |x: f64| -&gt; f64 {x*x-2.0};
+let f = |x: f64| -&gt; f64 {x*x - 2.0};
 </pre>
 
 <p>oder mittels Typinferenz kurz:
 <pre class="rust ibox">
-let f = |x| x*x-2.0;
+let f = |x| x*x - 2.0;
 </pre>
 
 <p>Das gewünschte Programm:
 <pre class="rust ibox">
 fn diff(f: &amp;dyn Fn(f64)-&gt;f64, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f(x+h)-f(x-h))/(2.0*h);
+    return (f(x+h) - f(x-h))/(2.0*h);
 }
 
 fn newton(f: &amp;dyn Fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x-f(x)/diff(f,x);
+        x = x - f(x)/diff(f,x);
     }
     return x;
 }
 
 fn sqrt(a: f64) -&gt; f64 {
-    let f = |x| x*x-a;
+    let f = |x| x*x - a;
     return newton(&amp;f,1.0);
 }
 
@@ -190,13 +191,13 @@ trait Fun&lt;X,Y&gt; {
 
 fn diff(f: &amp;dyn Fun&lt;f64,f64&gt;, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f.call(x+h)-f.call(x-h))/(2.0*h);
+    return (f.call(x+h) - f.call(x-h))/(2.0*h);
 }
 
 fn newton(f: &amp;dyn Fun&lt;f64,f64&gt;, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x-f.call(x)/diff(f,x);
+        x = x - f.call(x)/diff(f,x);
     }
     return x;
 }
@@ -204,7 +205,7 @@ fn newton(f: &amp;dyn Fun&lt;f64,f64&gt;, x0: f64) -&gt; f64 {
 fn sqrt(a: f64) -&gt; f64 {
     struct F {a: f64}
     impl Fun&lt;f64,f64&gt; for F {
-        fn call(&amp;self, x: f64) -&gt; f64 {x*x-self.a}
+        fn call(&amp;self, x: f64) -&gt; f64 {x*x - self.a}
     }
     return newton(&amp;F{a},1.0);
 }
@@ -374,7 +375,7 @@ den Standpunkt ein, uns genüge das nicht und wir wollten, dass
 arithmetische Berechnungen immer terminieren.
 
 <p>Eine naheliegende Überlegung ist die Einschränkung des
-Definitionsbereichs, die allerdings zur kurz gedacht ist.
+Definitionsbereichs, die allerdings zu kurz gedacht ist.
 Nämlich haben die arithmetischen Operationen ja die Signaturen
 <var>M</var>&nbsp;&rarr;&nbsp;<var>M</var> und
 <var>M</var>&times;<var>M</var>&nbsp;&rarr;&nbsp;<var>M</var>.
@@ -415,7 +416,7 @@ use ru32::Ru32;
 
 fn main() {
     let x = Ru32::new(1);
-    println!("{:?}",x+x);
+    println!("{:?}", x + x);
 }
 </pre>
 
@@ -577,6 +578,14 @@ fn f(x: i32) -&gt; FunFromf {
     FunFromf{x}
 }
 </pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Rusty Yato:
+  »<a href="https://rustyyato.github.io/rust/syntactic/sugar/2019/01/17/Closures-Magic-Functions.html"
+  >Closures: Magic Functions</a>«.
+</ol>
 
 </body>
 </html>
