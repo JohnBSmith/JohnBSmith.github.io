@@ -15,10 +15,12 @@
 
 <ol>
 <li><a href="#rustc">Direkter Aufruf des Compilers</a>
+<li><a href="#cargo">Ein Programm erstellen</a>
 <li><a href="#Abhaengigkeiten">Abhängigkeiten</a>
 <li><a href="#Aufraeumen">Aufräumen</a>
 <li><a href="#Dokumentation">Dokumentation</a>
 </ol>
+
 
 <h2 id="rustc">Direkter Aufruf des Compilers</h2>
 
@@ -28,7 +30,7 @@ Stattdessen kann man den Compiler auch direkt aufrufen.
 Zunächst erstellt man dafür in einem Verzeichnis die Datei
 »<code>main.rs</code>«, in welche das Programm
 
-<pre class="ibox">
+<pre class="rust ibox">
 fn main() {}
 </pre>
 
@@ -87,6 +89,112 @@ Mehrfachinstallation vorkommen, dass die globale Installation durch
 die lokale überschattet wird, da die lokale in <code>PATH</code>
 zuerst kommt.
 
+<h2 id="cargo">Ein Programm erstellen</h2>
+
+<p>Anstelle des direkten Aufrufs des Compilers benutzt man eigentlich
+allermeistens das komfortable Erstellungswerkzeug <i>Cargo</i>.
+Eine wesentliche Aufgabe von Cargo ist die automatische Beschaffung
+und Kompilierung von benötigten Bibliotheken. Daneben enthält Cargo
+aber auch viele weitere Teilwerkzeuge.
+
+<p>Zunächst sei erläutert, wie die Erstellung eines Programms
+abläuft. In einem Verzeichnis öffnet man ein Terminal und führt
+die folgenden Befehle aus:
+
+<pre class="ibox">
+&gt; cargo new prog0
+&gt; cd prog0
+</pre>
+
+<p>Der erste Befehl erzeugt ein neues Verzeichnis <code>prog0</code>.
+Die vom Compiler erzeugte ausführbare Datei wird standardmäßig
+ebenfalls <code>prog0</code> heißen. Der zweite Befehl wechselt in
+dieses Verzeichnis. Man findet die folgende Struktur vor:
+
+<pre class="ibox">
+prog0/
+├─ src/
+│  └─ main.rs
+└─ Cargo.toml
+</pre>
+
+<p>Das Verzeichnis <code>src</code> enthält die Quelltexte.
+Die Benennung <code>src</code> ist eine Abkürzung für
+<i>source</i>, das englische Wort für <i>Quelle</i>. Zunächst
+liegt dort nur die Datei <code>main.rs</code> vor, welche die
+Hauptfunktion <code>main</code> enthält. Die Datei
+<code>Cargo.toml</code> dient zur Eintragung von Konfigurationen,
+Informationen und Abhängigkeiten.
+
+<p>Zur Kompilierung führt man nun der Reihe nach die folgenden
+Befehle aus:
+
+<pre class="ibox">
+&gt; cargo check
+&gt; cargo build
+&gt; cargo build --release
+</pre>
+
+<p>Der erste Befehl prüft lediglich die Korrektheit des Programms,
+erstellt aber keine ausführbare Datei.
+Der zweite Befehl erstellt zusätzlich die ausführbare Datei im
+Debug-Modus. Mit der Option <code>--release</code> wird die
+ausführbare Datei stattdessen im Release-Modus erstellt,
+bei dem Optimierungen eingeschaltet sind. Wir finden nun die
+folgende Verzeichnis-Struktur vor:
+
+<pre class="ibox">
+prog0/
+├─ src/
+│  └─ main.rs
+├─ target/
+│  ├─ debug/
+│  └─ release/
+├─ Cargo.lock
+└─ Cargo.toml
+</pre>
+
+<p>Von der ausführbaren Datei gibt es zwei Varianten.
+Die im Debug-Modus erstellte Datei befindet sich im
+Verzeichnis <code>target/debug</code>, die im Relase-Modus
+erstellte in <code>target/release</code>.
+
+<p>Zusätzlich gibt es einen Komfort-Befehl, der das Programm nach
+der Erstellung sogleich ausführt:
+<pre class="ibox">
+&gt; cargo run
+&gt; cargo run --release
+</pre>
+
+<p>Kommandozeilen-Argumente kommen hinter einen doppelten
+Strich. Betrachten wir dazu dieses Programm:
+
+<pre class="rust ibox">
+fn main() {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    println!("{:?}", argv);
+}
+</pre>
+
+<p>Der Aufruf
+
+<pre class="ibox">
+&gt; cargo run -- arg1 arg2
+</pre>
+
+<p>ist dann gleichbedeutend mit:
+
+<pre class="ibox">
+&gt; cargo build
+&gt; ./target/debug/prog0 arg1 arg2
+</pre>
+
+<p>Zu bemerken ist, dass sich <code>cargo</code> in allen
+Unterverzeichnissen aufrufen lässt. Das Arbeitsverzeichnis des
+Programms <code>prog0</code> ist hierbei das Verzeichnis, in
+welchem <code>cargo</code> aufgerufen wurde.
+
+
 <h2 id="Abhaengigkeiten">Abhängigkeiten</h2>
 
 <p>Die Datei <code>Cargo.lock</code> enthält alle transitiven
@@ -135,7 +243,7 @@ besitzt Hyperlinks und eine bequeme Suchfunktion.
 <code>pub</code> versehen wurde. Wir fügen in
 <code>lib0/src/lib.rs</code> eine öffentliche Funktion hinzu:
 
-<pre class="ibox">
+<pre class="rust ibox">
 /// Die identische Funktion
 pub fn id(x: i32) -&gt; i32 {x}
 </pre> 
