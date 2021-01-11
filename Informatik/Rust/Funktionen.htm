@@ -110,6 +110,83 @@ fn main() {
 }
 </pre>
 
+<p>Es ist auch machbar, variadische Funktionen ohne Rückgriff auf
+Zeiger-Indirektionen zu konstruieren. Grundlage dafür ist ein
+Helfer-Trait, der ein vom Typ abhängiges Verhalten schafft.
+Die Idee ist nun, die Liste der Argumente als Tupel zu kodieren.
+Weil Tupel unterschiedlicher Länge einen unterschiedlichen
+Typ haben, kann man so das Verhalten von der Arität abhängig machen.
+
+<pre class="rust ibox">
+trait DisplayFn {
+    fn display(self);
+}
+
+impl DisplayFn for (&amp;str,) {
+    fn display(self) {
+        println!("{}", self.0);
+    }
+}
+
+impl DisplayFn for (&amp;str, i32) {
+    fn display(self) {
+        println!("{}", self.0);
+        println!("{}", self.1);
+    }
+} 
+
+fn display&lt;T: DisplayFn&gt;(x: T) {
+    DisplayFn::display(x)
+}
+
+fn main() {
+    display(("Eule",));
+    display(("Eule", 24));
+}
+</pre>
+
+<p>Man mag nun einwenden, dass die Arität bei der dargestellten
+Konstruktion immer beschränkt bleibt. Von dieser Einschränkung können
+wir uns aber lösen, indem wir anstelle der Tupel eine heterogene Liste
+<code>List</code> benutzen. Mit dieser gelingt eine rekursive
+Formulierung, die <code>display</code> allgemein implementiert.
+
+<pre class="rust ibox">
+struct Nil;
+struct List&lt;Head, Tail&gt; (Head, Tail);
+
+macro_rules! list {
+    () =&gt; {Nil};
+    ($x:expr) =&gt; {List($x,Nil)};
+    ($x:expr, $($tail:expr),*) =&gt; {List($x,list![$($tail),*])}
+}
+
+trait DisplayFn {
+    fn display(self);
+}
+
+impl DisplayFn for Nil {
+    fn display(self) {}
+}
+
+impl&lt;H,T&gt; DisplayFn for List&lt;H,T&gt;
+where H: std::fmt::Display, T: DisplayFn
+{
+    fn display(self) {
+        println!("{}", self.0);
+        DisplayFn::display(self.1);
+    }
+}
+
+fn display&lt;T: DisplayFn&gt;(x: T) {
+    DisplayFn::display(x)
+}
+
+fn main() {
+    display(list!["Eule", 24, true]);
+}
+</pre>
+
 </body>
 </html>
 
