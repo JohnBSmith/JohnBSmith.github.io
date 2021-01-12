@@ -12,7 +12,14 @@
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
 <h1>Const Generics</h1>
 
-<h2>Beispiel: Der Typ einer Restklasse</h2>
+<h2>Inhaltsverzeichnis</h2>
+
+<ol>
+<li><a href="#Restklassen">Beispiel: Der Typ einer Restklasse</a>
+<li><a href="#Vektoren">Zerklüftungsfreie Vektoren</a>
+</ol>
+
+<h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
 
 <p>Das Rechnen mit Restklassen ist in der Algebra zentral und kommt
 auch in manchen Bereichen der Informatik vor. Möchte man nun die
@@ -106,6 +113,163 @@ fn main() {
     let x: Z&lt;5&gt; = Z(4);
     let y: Z&lt;5&gt; = Z(3);
     println!("{}", x*x + 2*y + 1);
+}
+</pre>
+
+<h2 id="Vektoren">Zerklüftungsfreie Vektoren</h2>
+
+<p>Die Implementierung der Vektorrechnung aus dem Abschnitt
+›<a href="Effizienz.htm#Verkettung2"
+>Effiziente Programmierung: Nochmals Verkettung</a>‹
+ist in der Hinsicht makelhaft, dass intern der Typ
+<code>Vec&lt;f64&gt;</code> zur Anwendung kommt, womit zumindest für
+die Initialisierung der Puffervariablen eine Heap-Allokation
+stattfinden muss. Somit kommt es außerdem zu einer Zeigerindirektion
+und einer Cache-unfreundlichen Fragmentierung der
+Speicherbereichs-Nutzung.
+
+<p>Man kann das Programm von diesem Makel befreien, indem
+<code>Vec&lt;f64&gt;</code> gegen <code>[f64; N]</code> ausgetauscht
+wird. Nämlich beobachten wir, dass die Array-Länge bei der
+Vektorrechnung bereits zur Kompilierzeit feststeht. Die
+Anpassung des Programms fällt erfreulicherweise fast trivial aus,
+&ndash; man muss an den entsprechenden Stellen lediglich
+<code>N</code> einfügen.
+
+<pre class="rust ibox">
+pub mod vector {
+    use std::ops::{Add,Sub,Mul};
+
+    pub struct Vector&lt;const N: usize&gt;(pub [f64; N]);
+    pub struct Addition&lt;A: Get, B: Get&gt;(A,B);
+    pub struct ScalarMul&lt;A: Get&gt;(f64,A);
+
+    impl&lt;const N: usize&gt; Vector&lt;N&gt; {
+        pub fn flush&lt;A: Get&gt;(&amp;mut self, a: A) {
+            for (i,v) in self.0.iter_mut().enumerate() {
+                *v = a.get(i);
+            }
+        }
+    }
+    
+    impl&lt;const N: usize&gt; std::fmt::Display for Vector&lt;N&gt; {
+        fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
+        -&gt; std::fmt::Result
+        {
+            write!(f,"{:?}",self.0)
+        }
+    }
+
+    pub trait Get {
+        fn len(&amp;self) -&gt; usize;
+        fn get(&amp;self, i: usize) -&gt; f64;
+    }
+    impl&lt;const N: usize&gt; Get for &amp;Vector&lt;N&gt; {
+        fn len(&amp;self) -&gt; usize {self.0.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {self.0[i]}
+    }
+    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A,B&gt; {
+        fn len(&amp;self) -&gt; usize {self.0.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {
+            self.0.get(i) + self.1.get(i)
+        }
+    }
+    impl&lt;A: Get&gt; Get for ScalarMul&lt;A&gt; {
+        fn len(&amp;self) -&gt; usize {self.1.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {
+            self.0*self.1.get(i)
+        }
+    }
+    
+    impl&lt;'a, B: Get, const N: usize&gt; Add&lt;B&gt; for &amp;'a Vector&lt;N&gt; {
+        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;,B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self,b)
+        }
+    }
+    impl&lt;'a, B: Get, const N: usize&gt; Sub&lt;B&gt; for &amp;'a Vector&lt;N&gt; {
+        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;,ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self,ScalarMul(-1.0,b))
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0,A1&gt; {
+        type Output = Addition&lt;Self,B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self,b)
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0,A1&gt; {
+        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self,ScalarMul(-1.0,b))
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Add&lt;B&gt; for ScalarMul&lt;A&gt; {
+        type Output = Addition&lt;Self,B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self,b)
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Sub&lt;B&gt; for ScalarMul&lt;A&gt; {
+        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self,ScalarMul(-1.0,b))
+        }
+    }
+    impl&lt;'a, const N: usize&gt; Mul&lt;&amp;'a Vector&lt;N&gt;&gt; for f64 {
+        type Output = ScalarMul&lt;&amp;'a Vector&lt;N&gt;&gt;;
+        fn mul(self, a: &amp;'a Vector&lt;N&gt;) -&gt; Self::Output {
+            ScalarMul(self,a)
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A,B&gt;&gt; for f64 {
+        type Output = ScalarMul&lt;Addition&lt;A,B&gt;&gt;;
+        fn mul(self, a: Addition&lt;A,B&gt;) -&gt; Self::Output {
+            ScalarMul(self,a)
+        }
+    }
+    impl&lt;B: Get, const N: usize&gt; Mul&lt;B&gt; for &amp;Vector&lt;N&gt; {
+        type Output = f64;
+        fn mul(self, b: B) -&gt; f64 {
+            let a = &amp;self.0;
+            let mut s = 0.0;
+            for i in 0..a.len() {
+                s += a[i]*b.get(i);
+            }
+            return s;
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0,A1&gt; {
+        type Output = f64;
+        fn mul(self, b: B) -&gt; f64 {
+            let mut s = 0.0;
+            for i in 0..self.len() {
+                s += self.get(i)*b.get(i);
+            }
+            return s;
+        }
+    }
+    pub fn norm&lt;A: Get&gt;(v: A) -&gt; f64 {
+        let mut s = 0.0;
+        for i in 0..v.len() {
+            let a = v.get(i);
+            s += a*a;
+        }
+        return s.sqrt();
+    }
+}
+
+use vector::Vector;
+
+fn main() {
+    let v = &amp;Vector([1.0, 2.0]);
+    let w = &amp;Vector([3.0, 4.0]);
+    let mut buf = Vector([0.0, 0.0]);
+    buf.flush(2.0*v + 4.0*w + 5.0*(v-2.0*w));
+    println!("{}", buf);
+    println!("{}", (v+w)*(v-w));
+    println!("{}", v*v - w*w);
 }
 </pre>
 
