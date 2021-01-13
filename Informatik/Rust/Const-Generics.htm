@@ -16,7 +16,8 @@
 
 <ol>
 <li><a href="#Restklassen">Beispiel: Der Typ einer Restklasse</a>
-<li><a href="#Vektoren">Zerklüftungsfreie Vektoren</a>
+<li><a href="#Vektoren">Beispiel: Zerklüftungsfreie Vektoren</a>
+<li><a href="#Einheiten">Beispiel: Einheiten</a>
 </ol>
 
 <h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
@@ -116,7 +117,7 @@ fn main() {
 }
 </pre>
 
-<h2 id="Vektoren">Zerklüftungsfreie Vektoren</h2>
+<h2 id="Vektoren">Beispiel: Zerklüftungsfreie Vektoren</h2>
 
 <p>Die Implementierung der Vektorrechnung aus dem Abschnitt
 ›<a href="Effizienz.htm#Verkettung2"
@@ -270,6 +271,142 @@ fn main() {
     println!("{}", buf);
     println!("{}", (v+w)*(v-w));
     println!("{}", v*v - w*w);
+}
+</pre>
+
+<h2 id="Einheiten">Beispiel: Einheiten</h2>
+
+<p>Betrachten wir nochmals die Schaffung von Einheiten aus dem Abschnitt
+›<a href="Sicherheit.htm#Einheiten">Sichere Programmierung: Einheiten</a>‹.
+Ein über Konstanten generischer Typ eröffnet uns die Möglichkeit einer
+etwas eleganteren Umsetzung.
+
+<p>Jede Größenart besitzt im MKS-System (Meter-Kilogramm-Sekunde)
+ein Tripel <code>(L,M,T)</code> zur Kodierung der Dimension
+
+<p class="indent">Länge<sup>L</sup> &times; Masse<sup>M</sup> &times; Zeit<sup>T</sup>.
+
+<p>Es liegt in der Natur der Sache, dieses Tripel
+nun als über Konstanten generischen Typ <code>Quantity</code>
+zu konstruieren. Dies bietet den Vorteil, die arithmetischen
+Operationen generisch formulieren zu können. Wie früher
+trägt <code>Quantity</code> nur Werte in kohärenten Einheiten.
+Bei nicht-kohärenten Einheiten findet intern eine Umrechnung
+in kohärente Einheiten statt.
+
+<pre class="rust ibox">
+pub mod quantities {
+    use std::ops::{Add, Mul};
+
+    #[derive(Clone,Copy)]
+    pub struct Quantity&lt;const L: i32, const M: i32, const T: i32&gt; {
+        value: f64
+    }
+
+    impl&lt;const L: i32, const M: i32, const T: i32&gt;
+    Add&lt;Quantity&lt;L,M,T&gt;&gt; for Quantity&lt;L,M,T&gt;
+    {
+        type Output = Quantity&lt;L,M,T&gt;;
+        fn add(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
+            Quantity{value: self.value + y.value}
+        }
+    }
+
+    impl&lt;const L: i32, const M: i32, const T: i32&gt;
+    Mul&lt;Quantity&lt;L,M,T&gt;&gt; for f64
+    {
+        type Output = Quantity&lt;L,M,T&gt;;
+        fn mul(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
+            Quantity{value: self*y.value}
+        }
+    }
+
+    // Leider ist der Compiler bisher (Stand Januar 2021)
+    // nicht fortgeschritten genug, um die generische
+    // Multiplikation von Größen kompilieren zu können.
+    // Wir implementieren die benötigten Multiplikationen
+    // im Folgenden daher einzeln.
+
+    // Geschwindigkeit*Geschwindigkeit
+    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;0,1,-1&gt; {
+        type Output = Quantity&lt;0,2,-2&gt;;
+        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+            Quantity{value: self.value*y.value}
+        }
+    }
+
+    // Masse*Geschwindigkeitsquadrat
+    impl Mul&lt;Quantity&lt;0,2,-2&gt;&gt; for Quantity&lt;1,0,0&gt; {
+        type Output = Quantity&lt;1,2,-2&gt;;
+        fn mul(self, y: Quantity&lt;0,2,-2&gt;) -&gt; Self::Output {
+            Quantity{value: self.value*y.value}
+        }
+    }
+
+    // Moment*Geschwindigkeit
+    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,1,-1&gt; {
+        type Output = Quantity&lt;1,2,-2&gt;;
+        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+            Quantity{value: self.value*y.value}
+        }
+    }
+
+    // Masse*Geschwindigkeit
+    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,0,0&gt; {
+        type Output = Quantity&lt;1,1,-1&gt;;
+        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+            Quantity{value: self.value*y.value}
+        }
+    }
+
+    pub type Mass = Quantity&lt;1,0,0&gt;;
+    pub type Speed = Quantity&lt;0,1,-1&gt;;
+    pub type Energy = Quantity&lt;1,2,-2&gt;;
+
+    use std::fmt;
+    impl fmt::Display for Energy {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+            write!(f, "{} Joule", self.value)
+        }
+    }
+
+    pub mod unit {
+        use std::ops::Mul;
+        use super::{Mass, Speed};
+
+        pub struct Kilogramm;
+        pub struct MeterPerSecond;
+
+        impl Mul&lt;Kilogramm&gt; for f64 {
+            type Output = Mass;
+            fn mul(self, _y: Kilogramm) -&gt; Self::Output {
+                Mass{value: self}
+            }
+        }
+        impl Mul&lt;MeterPerSecond&gt; for f64 {
+            type Output = Speed;
+            fn mul(self, _y: MeterPerSecond) -&gt; Self::Output {
+                Speed{value: self}
+            }
+        }
+    }
+}
+
+macro_rules! quantity {
+    ($v:tt kg) =&gt; {$v*unit::Kilogramm};
+    ($v:tt m/s) =&gt; {$v*unit::MeterPerSecond}
+}
+
+use quantities::{unit, Mass, Speed, Energy};
+
+fn kinetic_energy(m: Mass, v: Speed) -&gt; Energy {
+    0.5*m*v*v
+}
+
+fn main() {
+    let m = quantity!{1.0 kg};
+    let v = quantity!{2.0 m/s};
+    println!("{}", kinetic_energy(m,v));
 }
 </pre>
 
