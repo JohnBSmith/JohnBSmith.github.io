@@ -11,7 +11,8 @@ function load_css(path) {
 function query_style() {
     var a = window.location.href.split("?");
     if(a.length>1) {
-        sessionStorage.setItem("style",a[1]);
+        var query = window.location.search.slice(1);
+        sessionStorage.setItem("style",query);
     }
     var style = sessionStorage.getItem("style");
     var path = window.root_path===undefined ? "" : window.root_path;
