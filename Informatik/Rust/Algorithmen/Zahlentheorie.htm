@@ -46,7 +46,7 @@ fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
 
 // Moderner euklidischer Algorithmus, rekursiv
 fn gcd(a: u32, b: u32) -&gt; u32 {
-    return if b==0 {a} else {gcd(b,a%b)};
+    if b==0 {a} else {gcd(b,a%b)}
 }
 
 // Moderner euklidischer Algorithmus, iterativ
@@ -63,11 +63,11 @@ fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
 <h2 id="kgV">Kleinstes gemeinsames Vielfaches</h2>
 <pre class="rust box">
 fn lcm(a: u32, b: u32) -&gt; u32 {
-    return a*b/gcd(a,b);
+    a*b/gcd(a,b)
 }
 
 fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
-    return a.iter().fold(1,|a,&amp;b| {a*b/gcd(a,b)});
+    a.iter().fold(1,|a,&amp;b| {a*b/gcd(a,b)})
 }
 </pre>
 
@@ -104,7 +104,7 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
 <h3>Naiver Primzahltest</h3>
 <pre class="rust box">
 fn is_prime(n: u64) -&gt; bool {
-    return (1..n+1).filter(|i| n%i==0).count()==2;
+    (1..n+1).filter(|i| n%i==0).count()==2
 }
 
 fn is_prime(n: u64) -&gt; bool {
@@ -121,7 +121,7 @@ fn is_prime(n: u64) -&gt; bool {
     let mut i: u64 = 2;
     while i*i&lt;=n {
         if n%i==0 {return false;}
-        i+=1;
+        i += 1;
     }
     return true;
 }
@@ -146,7 +146,7 @@ fn pow_mod(a: u32, mut n: u32, m: u32) -&gt; u64 {
     let mut p: u64 = 1;
     let mut a: u64 = u64::from(a%m);
     while n&gt;1 {
-        if n&amp;1 == 1 {p = (p*a)%u64::from(m);}
+        if n&amp;1==1 {p = (p*a)%u64::from(m);}
         n &gt;&gt;= 1; a = (a*a)%u64::from(m);
     }
     if n==1 {p = (p*a)%u64::from(m);}
@@ -203,17 +203,17 @@ fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
 <pre class="rust box">
 // Teilerliste
 fn divisors(n: u64) -> Vec&lt;u64&gt; {
-    return (1..n+1).filter(|i| n%i==0).collect();
+    (1..n+1).filter(|i| n%i==0).collect()
 }
 
 // Teileranzahlfunktion
 fn sigma0(n: u64) -&gt; usize {
-    return (1..n+1).filter(|i| n%i==0).count();
+    (1..n+1).filter(|i| n%i==0).count()
 }
 
 // Teilerfunktion
 fn sigma(x: u32, n: u64) -&gt; u64 {
-    return (1..n+1).filter(|i| n%i==0).map(|i| i.pow(x)).sum();
+    (1..n+1).filter(|i| n%i==0).map(|i| i.pow(x)).sum()
 }
 </pre>
 

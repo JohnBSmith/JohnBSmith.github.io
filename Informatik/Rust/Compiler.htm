@@ -228,6 +228,7 @@ aus. Das Verzeichnis <code>target</code> verschwindet dann.
 
 <h2 id="Dokumentation">Dokumentation</h2>
 
+<h3>Dokumentation erstellen</h3>
 <p>Mit dem Unterbefehl <code>cargo doc</code> steht ein
 Werkzeug zur Verfügung, welches die Dokumentation der
 Schnittstellen aus dem Quelltext extrahiert. Das erzeugte HTML
@@ -267,6 +268,45 @@ Dokumentations-Kommentierung sind dort einsehbar.
 
 <p>auch offline abrufbar.
 
+<h3>Dokumentation schreiben</h3>
+
+<p>Zur Beschreibung einer Schnittstelle stellt man dieser einen
+Dokumentations-Kommentar voran. Im Gegensatz zu gewöhnlichen
+Kommentaren wird eine Zeile Dokumentations-Kommentierung mit
+drei anstelle zwei Schrägstrichen eingeleitet.
+
+<pre class="rust ibox">
+/// Kurzbeschreibung im ersten Absatz.
+///
+/// Ausführliche Beschreibung in den nachfolgenden
+/// Absätzen.
+pub fn id(x: i32) -&gt; i32 {x}
+</pre>
+
+<p>Bei längeren Passagen mag das Einfügen der Schrägstriche ein wenig
+mühsam sein, etwa wenn man die Zeilen neu umbrechen will. Analog zu
+den gewöhnlichen Kommentaren gibt es daher bei
+Dokumentations-Kommentaren ebenfalls die Möglichkeit der Klammerung
+zur Umfassung mehrerer Zeilen.
+
+<pre class="rust ibox">
+/**
+Kurzbeschreibung im ersten Absatz.
+
+Ausführliche Beschreibung in den nachfolgenden
+Absätzen.
+*/
+pub fn id(x: i32) -&gt; i32 {x}
+</pre>
+
+<p>Die Zeichenanordnung in der Dokumentation ist nicht gänzlich
+beliebig, sondern wird als
+<a href="https://de.wikipedia.org/wiki/Markdown">Markdown</a>
+interpretiert. Herbei sind ein paar Kleinigkeiten zu beachten.
+So sollte man Programmterme und mathematische Ausdrücke mit
+Backticks (Gravis-Zeichen) umklammern.
+Außerdem ist die Syntax für Zeilenumbrüche in einem gewöhnlichen
+Texteditor unsichtbar.
 
 </body>
 </html>

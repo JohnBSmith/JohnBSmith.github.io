@@ -627,6 +627,74 @@ fn is_cyclic(graph: &amp;RcNode) -&gt; bool {
 }
 </pre>
 
+<h3>RefCell als Ausweg</h3>
+
+<p>Einige Algorithmen besitzen hinsichtlich alleinigen Leihgaben
+eine gewissen Komplexität, so dass es sich schwierig gestalten
+kann, eine Formulierung zu finden, die vom Leihgabe-Prüfer
+durchgewunken wird. Weiß man sich nicht anders zu helfen,
+kann man das Programm mit <code>RefCell</code> letztendlich
+aus dieser Problematik entziehen.
+
+<p>Betrachten wir dazu die folgende Implementierung eines
+abstrakten Stapels.
+
+<pre class="rust ibox">
+use std::{rc::Rc, cell::RefCell};
+
+fn new_stack&lt;T&gt;() -&gt; (impl Fn(T), impl Fn() -&gt; Option&lt;T&gt;) {
+    let a = Rc::new(RefCell::new(vec![]));
+    let b = a.clone();
+    (move |x| a.borrow_mut().push(x), move || b.borrow_mut().pop())
+}
+
+fn main() {
+    let (push, pop) = new_stack();
+    push(1);
+    push(2);
+    println!("{:?}, {:?}, {:?}", pop(), pop(), pop());
+}
+</pre>
+
+<p>Die Benutzung von <code>Rc</code> ist hierbei nicht wesentlich.
+Eine Umformulierung, bei welcher der Speicher in einer extra Variable
+gehalten wird, kommt auch ohne <code>Rc</code> aus.
+
+<pre class="rust ibox">
+use std::cell::RefCell;
+
+struct Stack&lt;T&gt;(RefCell&lt;Vec&lt;T&gt;&gt;);
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    fn new() -&gt; Self {
+        Stack(RefCell::new(vec![]))
+    }
+    fn methods&lt;'a&gt;(&amp;'a self)
+    -&gt; (impl 'a + Fn(T), impl 'a + Fn()-&gt;Option&lt;T&gt;)
+    {
+        (move |x| self.0.borrow_mut().push(x),
+         move ||  self.0.borrow_mut().pop())
+    }
+}
+
+fn main() {
+    let stack = Stack::new();
+    let (push, pop) = stack.methods();
+    push(1);
+    push(2);
+    println!("{:?}, {:?}, {:?}", pop(), pop(), pop());
+}
+</pre>
+
+<p>In einem nicht-nebenläufigen Programm sind die Funktionsaufrufe
+zudem sequenziell, so dass <code>push</code> und <code>pop</code>
+niemals gleichzeitig auf den Stapel zugreifen. Allerdings sind alleinige
+Leihgaben nicht kopierbar, womit uns die Erstellung beider Closures
+ohne <code>RefCell</code> verwehrt bliebe. Um auszudrücken dass die
+Leihgaben nur abwechselnd stattfinden, bliebe uns nichts anderes übrig,
+als den Stapel aus dem Closure herauszunehmen und auf die übliche
+Art als Argument an die Methoden zu übergeben.
+
 <h2 id="Literatur">Literatur</h2>
 
 <ol>

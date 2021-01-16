@@ -57,33 +57,30 @@ validiert werden müssen.
 
 <p>In Rust kann eine solche Validierung vom Typsystem erzwungen
 werden, indem für die validierten Daten ein eigener Datentyp definiert
-wird, nennen wir ihn <code>Datenbankindex</code>. Die Idee dabei ist,
+wird, nennen wir ihn <code>DatabaseIndex</code>. Die Idee dabei ist,
 dass erstens die betroffenen Unterprogramme nur Werte vom Typ
-<code>Datenbankindex</code> entgegennehmen und zweitens
+<code>DatabaseIndex</code> entgegennehmen und zweitens
 ein solcher Wert nur über eine Validierung erzeugt werden kann.
 
 <pre class="rust ibox">
 mod db{
     #[derive(Clone,Copy)]
-    pub struct Datenbankindex{
+    pub struct DatabaseIndex {
         index: u16
     }
-    fn is_digit(c: char) -&gt; bool {
-        48&lt;=(c as u32) &amp;&amp; (c as u32)&lt;=57
-    }
-    impl Datenbankindex{
+    impl DatabaseIndex {
         pub fn new(s: &amp;str) -&gt; Option&lt;Self&gt; {
             let a: Vec&lt;char&gt; = s.chars().collect();
-            if a.len()==4 &amp;&amp;
-                is_digit(a[0]) &amp;&amp; is_digit(a[1]) &amp;&amp;
-                is_digit(a[2]) &amp;&amp; is_digit(a[3])
+            return if a.len() == 4 &amp;&amp;
+                a[0].is_digit(10) &amp;&amp; a[1].is_digit(10) &amp;&amp;
+                a[2].is_digit(10) &amp;&amp; a[3].is_digit(10)
             {
-                return Some(Datenbankindex{
+                Some(DatabaseIndex{
                     index: s.parse::&lt;u16&gt;().unwrap()
-                });
-            }else{
-                return None;
-            }
+                })
+            } else {
+                None
+            };
         }
         pub fn get(&amp;self) -&gt; u16 {
             self.index
@@ -91,19 +88,18 @@ mod db{
     }
 }
 
-use std::io;
-use std::io::Write;
+use std::{io, io::Write};
 
-fn main(){
+fn main() {
     loop {
         print!("Index: ");
         if io::stdout().flush().is_err() {println!();}
         let mut s = String::new();
         io::stdin().read_line(&amp;mut s).unwrap();
         s.pop();
-        match db::Datenbankindex::new(&amp;s) {
+        match db::DatabaseIndex::new(&amp;s) {
             Some(index) =&gt; {
-                DatenbankZugriff(index)
+                database_access(index)
             },
             None =&gt; {
                 println!("Fehler: ungültiger Datenbankindex.");
@@ -113,8 +109,7 @@ fn main(){
     }
 }
 
-#[allow(non_snake_case)]
-fn DatenbankZugriff(index: db::Datenbankindex){
+fn database_access(index: db::DatabaseIndex) {
     println!("Validierter Index: {}",index.get());
 }
 </pre>
@@ -175,7 +170,7 @@ mod stack {
             self.v.push(x);
         }
         pub fn pop(&amp;mut self) -&gt; T {
-            match self.v.pop() {Some(x)=&gt;x, None=&gt;panic!()}
+            match self.v.pop() {Some(x) =&gt; x, None =&gt; panic!()}
         }
     }
 }
@@ -223,7 +218,7 @@ mod stack {
             self.v.push(x);
         }
         fn pop(&amp;mut self) -&gt; T {
-            match self.v.pop() {Some(x)=&gt;x, None=&gt;panic!()}
+            match self.v.pop() {Some(x) =&gt; x, None =&gt; panic!()}
         }
     }
 }
@@ -620,7 +615,7 @@ pub mod quantities {
     impl&lt;D: Dimension&gt; Add&lt;Quantity&lt;D&gt;&gt; for Quantity&lt;D&gt; {
         type Output = Quantity&lt;D&gt;;
         fn add(self, y: Quantity&lt;D&gt;) -&gt; Quantity&lt;D&gt; {
-            Quantity{value: self.value+y.value, dim: Ph}
+            Quantity{value: self.value + y.value, dim: Ph}
         }
     }
     
@@ -638,8 +633,8 @@ pub mod quantities {
         use crate::quantities::{Quantity,Length};
         use std::marker::PhantomData as Ph;
         pub const km: Quantity&lt;Length&gt; = Quantity{value: 1.000, dim: Ph};
-        pub const  m: Quantity&lt;Length&gt; = Quantity{value: 1.0, dim: Ph};
-        pub const cm: Quantity&lt;Length&gt; = Quantity{value: 0.01, dim: Ph};
+        pub const  m: Quantity&lt;Length&gt; = Quantity{value: 1.0,   dim: Ph};
+        pub const cm: Quantity&lt;Length&gt; = Quantity{value: 0.01,  dim: Ph};
         pub const mm: Quantity&lt;Length&gt; = Quantity{value: 0.001, dim: Ph};
     }
 }
@@ -653,7 +648,7 @@ fn circumference(radius: Quantity&lt;Length&gt;) -&gt; Quantity&lt;Length&gt; {
 }
 
 fn main() {
-    let r = 4.0*cm+2.0*mm;
+    let r = 4.0*cm + 2.0*mm;
     println!("{}",circumference(r));
 }
 </pre>
@@ -688,7 +683,7 @@ pub mod quantities {
     impl&lt;U: Unit&gt; Add&lt;Quantity&lt;U&gt;&gt; for Quantity&lt;U&gt; {
         type Output = Quantity&lt;U&gt;;
         fn add(self, y: Quantity&lt;U&gt;) -&gt; Quantity&lt;U&gt; {
-            Quantity{value: self.value+y.value, unit: Ph}
+            Quantity{value: self.value + y.value, unit: Ph}
         }
     }
     impl&lt;U: Unit&gt; From&lt;f64&gt; for Quantity&lt;U&gt; {
@@ -1044,7 +1039,7 @@ vorab beschränkt wird. Betrachten wir exemplarisch
 die rekursive Berechnung der Addition:
 <pre class="rust ibox">
 fn add(x: u32, y: u32) -&gt; u32 {
-    if y==0 {x} else {add(x,y-1)+1}
+    if y == 0 {x} else {add(x,y-1) + 1}
 }
 </pre>
 <p>Auf meinem Computer lag die maximale Rekursionstiefe
@@ -1058,8 +1053,8 @@ Laufzeitsystem sollte dafür eine Konfiguration bereithalten.
 <p>Man modifiziert die Funktion nun so:
 <pre class="rust ibox">
 fn add(x: u32, y: u32, depth_max: u32) -&gt; Result&lt;u32,()&gt; {
-    if depth_max==0 {return Err(());}
-    if y==0 {Ok(x)} else {Ok(add(x,y-1,depth_max-1)?+1)}
+    if depth_max == 0 {return Err(());}
+    if y == 0 {Ok(x)} else {Ok(add(x,y-1,depth_max-1)? + 1)}
 }
 </pre>
 
@@ -1102,11 +1097,11 @@ Resultat überprüft.
 
 <pre class="rust ibox">
 fn is_prime(n: u32) -&gt; bool {
-    if n&lt;2 {return false;}
+    if n &lt; 2 {return false;}
     let mut i: u32 = 2;
-    while i*i&lt;=n {
-        if n%i==0 {return false;}
-        i+=1;
+    while i*i &lt;= n {
+        if n%i == 0 {return false;}
+        i += 1;
     }
     return true;
 }
@@ -1116,7 +1111,7 @@ mod tests {
     use crate::is_prime;
 
     fn is_prime_basic(n: u32) -&gt; bool {
-        n&gt;1 &amp;&amp; (2..n).all(|k| n%k != 0)
+        n &gt; 1 &amp;&amp; (2..n).all(|k| n%k != 0)
     }
 
     #[test]
