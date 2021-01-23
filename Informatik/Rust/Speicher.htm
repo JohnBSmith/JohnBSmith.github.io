@@ -20,6 +20,7 @@
 <li><a href="#Rc">Zeiger vom Typ Rc</a>
 <li><a href="#Cell">Zellen vom Typ Cell</a>
 <li><a href="#RefCell">Zellen vom Typ RefCell</a>
+<li><a href="#DST">Typen dynamischer Größe</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -694,6 +695,90 @@ ohne <code>RefCell</code> verwehrt bliebe. Um auszudrücken dass die
 Leihgaben nur abwechselnd stattfinden, bliebe uns nichts anderes übrig,
 als den Stapel aus dem Closure herauszunehmen und auf die übliche
 Art als Argument an die Methoden zu übergeben.
+
+<h2 id="DST">Typen dynamischer Größe</h2>
+
+<p>Ein gewöhnlicher Typ besitzt eine feste Größe, d.&nbsp;h. dessen
+Werte belegen im Speicher eine feste Zahl von Bytes. Zur
+Ermittlung der Größe eines Typs steht die Funktion
+<code>size_of</code> zur Verfügung.
+
+<pre class="rust ibox">
+use std::mem::size_of;
+
+fn main() {
+    println!("{}", size_of::&lt;u8&gt;());
+}
+</pre>
+
+<p>Es gibt in Rust jedoch auch Typen ohne feste Größe.
+Ein Beispiel dafür ist <code>[u8]</code>, bei dem die Abfrage
+
+<pre class="rust ibox">
+size_of::&lt;[u8]&gt;()
+</pre>
+
+<p>entsprechend verwehrt bleibt. Werte von solchen Typen sind nicht
+direkt verwendbar, sondern erfordern Zeiger. Bspw. ist
+<code>[u8]</code> als <code>&amp;[u8]</code> oder
+<code>Box&lt;[u8]&gt;</code> verwendbar.
+
+<p>Sei <code>DST</code> &ndash; das steht für <i>dynamically sized
+type</i> &ndash; ein Typ dynamischer Größe. Man darf zu diesem
+die folgenden Typen konstruieren, welche infolge ebenfalls von
+dynamischer Größe sind:
+<ul>
+<li>Regel (1): Den Hülltyp <code>struct S(DST)</code>.
+<li>Regel (2): Allgemeiner eine Struktur oder ein Tupel, wo einmalig ein
+Eintrag vom Typ <code>DST</code> enthalten ist.
+</ul>
+
+<p>Die basalen Typen dynamischer Größe sind die folgenden:
+<table class="bt">
+<tr>
+<th>Typ
+<th>Erklärung
+<tr>
+<td><code>[T]</code>
+<td> Ausschnitt eines Feldes vom Typ <code>T</code>
+<tr>
+<td><code>dyn Trait</code>
+<td> Typ des Trait-Objektes vom Trait <code>Trait</code>
+</table>
+
+<p>Die Standardbibliothek enthält unter anderem die folgenden
+Konstruktionen:
+<table class="bt">
+<tr>
+<th>Typ
+<th>Konstruktion
+<tr><td><code>str</code>
+<td>(1) von <code>[u8]</code> &mdash; wird allerdings als primitiver Typ gehandhabt
+<tr><td><code>OsStr</code>
+<td>(1) von <code>[u8]</code> &mdash; allerdings ein Implementationsdetail
+<tr><td><code>Path</code>
+<td>(1) von <code>OsStr</code>
+<tr><td><code>RefCell&lt;DST&gt;
+<td>(2) von <code>DST</code>
+</table>
+
+<p>Die folgenden Zeiger-Typen wandeln einen Typ dynamischer Größe
+in einen Typ fester Größe um, wobei zu beachten ist, dass dabei ein
+dicker Zeiger entsteht. Dicke Zeiger kommen in zwei Varianten vor.
+Bei einem Ausschnitt entsteht ein Paar aus Zeiger und Länge, bei
+Trait-Objekt-Typen ein Paar aus Zeiger und Zeiger auf die
+Dispatch-Tabelle.
+
+<table class="bt">
+<tr><th>Typ<th>Kommentar
+<tr><td><code>*const DST</code><td>einfacher Zeiger auf unveränderbare Daten
+<tr><td><code>*mut DST</code><td>einfacher Zeiger auf veränderbare Daten
+<tr><td><code>&amp;'a DST</code><td>gemeinsame Leihgabe
+<tr><td><code>&amp;'a mut DST</code><td>alleinige Leihgabe
+<tr><td><code>Box&lt;DST&gt;</code><td>besitzender Zeiger
+<tr><td><code>Rc&lt;DST&gt;</code><td>Referenz-gezählter Zeiger
+<tr><td><codE>Arc&lt;DST&gt;</code><td>atomar Referenz-gezählter Zeiger
+</table>
 
 <h2 id="Literatur">Literatur</h2>
 
