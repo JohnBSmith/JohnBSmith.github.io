@@ -54,7 +54,7 @@ function rust_node_syntax(s){
             st+="\"</span>";
             s2+=st;
         }else if(c=="'"){
-            if(i+2<s.length && (s[i+2]=="'" || s[i+1]=='\\')){
+            if(i+2<s.length && (s[i+2]=="'" || s[i+1]=='\\' || s[i+1]=='&')){
                 st = "<span class='string'>'";
                 i++;
                 while(i<s.length && s[i]!="'"){st+=s[i]; i++;}
