@@ -21,7 +21,7 @@
   <li><a href="#Interne-Iteratoren">Interne Iteratoren</a>
   <li><a href="#Externe-Iteratoren">Externe Iteratoren</a>
   </ol>
-<li><span class="modest">Die Mechanik der for-Schleife</span>
+<li><a href="#for-Schleife">Die Mechanik der for-Schleife</a>
 </ol>
 
 <h2 id="Motivation">Motivation</h2>
@@ -170,7 +170,94 @@ fn main() {
 }
 </pre>
 
+<h2 id="for-Schleife">Die Mechanik der for-Schleife</h2>
 
+<p>In Rust besteht zwischen Iteratoren und der for-Schleife ein
+enger Zusammenhang. Und zwar ist die for-Schleife eine Kurzschreibweise
+für die Erzeugung eines Iterators durch den Aufruf von
+<code>into_iter</code> und dessen Abarbeitung durch den Aufruf von
+<code>next</code>. Der erzeugte Iterator ist hierbei nur implizit
+vorhanden, &ndash; damit meine ich, er kommt aus äußerer Sicht
+nicht vor.
+
+<p>Zur näheren Erläuterung ein Beispiel. Das Programm
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+for x in v {
+    println!("{}", x);
+}
+</pre>
+
+<p>ist äquivalent zu
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+let mut i = v.into_iter();
+while let Some(x) = i.next() {
+    println!("{}", x);
+}
+</pre>
+
+<p>bzw.
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+let mut i = v.into_iter();
+loop {
+    let x = match i.next() {
+        Some(value) =&gt; value,
+        None =&gt; break
+    };
+    println!("{}", x);
+}
+</pre>
+
+<p>Von Belang ist für uns, dass die Methode <code>into_iter</code>
+ihr Argument konsumiert, wie man an ihrer Signatur
+<pre class="rust ibox">
+fn into_iter(self) -&gt; Self::IntoIter
+</pre>
+
+<p>ablesen kann. In vielen Fällen ist allerdings eine Leihgabe anstelle
+einer Besitzübertragung gewünscht. Erreicht wird dies meistens
+einfach, indem man zuvor eine Leihgabe bildet. Nämlich ist
+<code>into_iter</code>
+die Methode des Traits <code>IntoIterator</code>, welcher für viele
+unterschiedliche Typen implementiert ist. Die Idee dabei: Zwar
+konsumiert <code>into_iter</code> immer ihr Argument. Aber falls
+dieses Argument eine Leihgabe ist, wird ja lediglich diese Leihgabe
+konsumiert.
+
+<p>Alternativ schaltet man den Aufruf einer der Methoden
+<code>iter</code> oder <code>iter_mut</code> vor, welche
+auch für viele Typen implementiert sind, &ndash; allerdings nicht
+in Form von Trait-Methoden. Diese Methoden erzeugen einen Iterator
+aus Leihgaben, welcher daraufhin durch <code>into_iter</code>
+konsumiert wird. Es ist nämlich so, dass <code>into_iter</code>
+für jeden Iterator generisch als identische Abbildung implementiert
+ist. D.&nbsp;h. falls bereits ein Iterator vorliegt, ist
+<code>into_iter</code> schlicht wirkungslos.
+
+<p>Zu beachten ist noch, dass die Bildung von Leihgaben mit der
+Leihgabe der Iteratorwerte einhergeht. Das muss auch so sein.
+Wurde der Iterator lediglich aus einer Leihgabe heraus erzeugt, darf
+dieser keinesfalls die Elemente konsumieren, da diese Elemente nicht im
+Besitz des Iterators liegen.
+
+<p>Der Typ <code>Vec&lt;T&gt;</code> ist zudem mit der Besonderheit
+behaftet, die Methoden <code>iter</code> und <code>iter_mut</code>
+nicht extra implementieren zu müssen, weil die Leihgabe bei diesem
+über den Deref-Mechanismus auf die Leihgabe der Belegung des internen
+Puffers zurückgeführt wird. Dieser Puffer-Ausschnitt ist vom Typ
+<code>[T]</code>, welcher bereits die entsprechenden Methoden besitzt.
+
+<table class="bt">
+<tr><th>Methode<th>Typ des Arguments<th>Typ des Iteratorwertes
+<tr><td><code>iter</code><td><code>&amp;[T]</code><td><code>&amp;T</code>
+<tr><td><code>iter_mut</code><td><code>&amp;mut [T]</code><td><code>&amp;mut T</code>
+<tr><td><code>into_iter</code><td><code>Vec&lt;T&gt;</code><td><code>T</code>
+</table>
 
 
 </body>
