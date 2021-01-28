@@ -19,6 +19,7 @@
 <li><a href="#Komprimierung">Komprimierung von Datentypen</a>
 <li><a href="#Verkettung">Verkettung von Operatoren</a>
 <li><a href="#Verkettung2">Nochmals Verkettung</a>
+<li><a href="#Inline-Ersetzung">Inline-Ersetzung kontrollieren</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -473,6 +474,65 @@ fn main() {
     println!("{}",v*v-w*w);
 }
 </pre>
+
+<h2 id="Inline-Ersetzung">Inline-Ersetzung kontrollieren</h2>
+
+<p>Funktionsaufrufe kosten einen gewissen Verwaltungsaufwand, weil ein
+Teil des Maschinenzustands gespeichert werden muss, damit der
+Programmablauf beim Verlassen der Funktion wieder zurückfindet.
+Aus diesem Grund setzt der Compiler bei kurzen Funktionen die
+Berechnungen der Funktion anstelle des Aufrufs direkt ein, womit der
+Verwaltungsaufwand entfällt. Man spricht von einer
+<i>Inline-Ersetzung</i>. Dieses Verfahren ist einer Makro-Expansion
+recht ähnlich, &ndash; und als diese Art von Optimierung in der
+Frühzeit der Computer-Programmierung noch nicht zur Verfügung stand,
+hat man dafür tatsächlich Makros herangezogen.
+
+<p>Im Normalfall entscheidet der Compiler darüber, ob eine
+Inline-Ersetzung günstig ist. Zur manuellen Kontrolle kann man
+Funktionen aber auch mit einem Attribut versehen.
+
+<table class="bt">
+<tr><th>Attribut<th>Wirkung
+<tr><td><code>#[inline]</code><td>Inline-Ersetzung über die Crate-Grenze hinaus gewünscht
+<tr><td><code>#[inline(always)]</code><td>Inline-Ersetzung nachdrücklich gewünscht
+<tr><td><code>#[inline(never)]</code><td>Inline-Ersetzung nachdrücklich ungewünscht
+</table>
+
+<p>Nun kann es sein, dass man Inline-Ersetzung derselben Funktion
+lediglich an bestimmten Stellen geschehen lassen möchte. In Programmen
+sind nur bestimmte Ausführungspfade <i>heiß</i>. Viele <i>kalte</i>
+Pfade liegen dagegen außerhalb von berechnungsintensiven Schleifen.
+Durch übermäßige Inline-Ersetzung, die auch an kalten Pfaden
+vorgenommen wird, kann sich ein Programm mehr oder weniger aufblähen,
+sodass mit der erhöhten Programmgröße auch der Cache-Speicher höher
+belegt wird, was der Performanz im Extremfall paradoxerweise
+zuwiderlaufen kann.
+
+<p>Um die feinere Kontrolle über die Inline-Ersetzung einer
+Funktion <code>f</code> zu erhalten, schreibt man zunächst die
+Variante <code>f_inline</code> der Funktion, bei welcher die
+Inline-Ersetzung stattfinden soll. Zum Verhindern der Ersetzung
+schreibt man eine zweite Variante <code>f</code>, welche den
+Aufruf schlicht an <code>f_inline</code> weitergibt, woraufhin die
+Berechnung aus <code>f_inline</code> in den Körper
+von <code>f</code> inline-ersetzt wird. Weil <code>f</code>
+eine separate Funktion ist, darf <code>f</code> nun ein anderes
+Attribut als <code>f_inline</code> erhalten.
+
+<p>Kurzes Beispiel:
+<pre class="rust ibox">
+#[inline(always)]
+fn f_inline(x: i32) -&gt; i32 {x + 1}
+
+#[inline(never)]
+fn f(x: i32) -&gt; i32 {f_inline(x)}
+</pre>
+
+<p>Um in Erfahrung zu bringen ob die Inline-Ersetzung an einer
+bestimmten kritischen Stelle zielführend ist, sollte man sicherlich
+Messungen durchführen und das erzeugte Maschinenprogramm
+untersuchen.
 
 <h2 id="Literatur">Literatur</h2>
 
