@@ -21,6 +21,8 @@
 <li><a href="#Cell">Zellen vom Typ Cell</a>
 <li><a href="#RefCell">Zellen vom Typ RefCell</a>
 <li><a href="#DST">Typen dynamischer Größe</a>
+<li><a href="#Ersetzung">Ersetzung von Werten</a>
+<li><a href="#Vertauschung">Vertauschung von Werten</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -779,6 +781,147 @@ Dispatch-Tabelle.
 <tr><td><code>Rc&lt;DST&gt;</code><td>Referenz-gezählter Zeiger
 <tr><td><codE>Arc&lt;DST&gt;</code><td>atomar Referenz-gezählter Zeiger
 </table>
+
+<h2 id="Ersetzung">Ersetzung von Werten</h2>
+
+<p>In einigen Situationen bekommt eine Prozedur lediglich eine
+alleinige Leihgabe eines Eintrages oder Elementes, ohne den Besitz
+darüber zu erlangen. Dennoch erreichbar ist vermittels Ersetzung die
+Übertragung des Wertes an einen anderen Besitzer. Möglich gemacht
+wird dies durch die Funktion <code>replace</code>, die einen anderen
+Wert anstelle des ursprünglichen Wertes einsetzt. Notwendig ist
+das, weil die Speicherzelle andernfalls ungültig wäre wie eine
+uninitialisierte Variable es ist. Dieser Zustand darf nicht sein,
+weil die Speichersicherheit in Konsequenz nicht mehr
+gewährleistet wäre.
+
+<p>Die Funktion hat die Signatur
+<pre class="rust ibox">
+fn replace&lt;T&gt;(dest: &amp;mut T, src: T) -&gt; T.
+</pre>
+
+<p>Sie gibt den begehrten Wert von <code>dest</code>
+(<i>destination</i>, dt. <i>Ziel</i>) zurück und fügt dafür den Wert
+von <code>src</code> (<i>source</i>, dt. <i>Quelle</i>) in
+<code>dest</code> ein.
+
+<p>Einfaches Beispiel:
+
+<pre class="rust ibox">
+fn main() {
+    let s1 = &amp;mut String::from("Tee");
+    let s2 = std::mem::replace(s1, String::new());
+    println!("s1 = '{}', s2 = '{}'", s1, s2);
+}
+</pre>
+
+<p>Im Beispiel wurde der Wert von <code>s1</code> gegen einen
+Dummy-Wert ersetzt, das ist oft eine leere Datenstruktur.
+Bemerkenswert ist hierbei, dass die Erzeugung von leeren Dummy-Werten
+wie <code>String::new()</code> oder <code>Vec::new()</code>
+keiner Allokation von Haldenspeicher bedarf, womit
+<code>replace</code> recht flott bleibt.
+
+<p>Weil die Einsetzung von Dummy-Werten recht oft vorkommt, wurde
+dafür extra die Komfort-Funktion <code>take</code> geschaffen.
+Es ist so, dass <code>String::new()</code> der Vorgabewert
+des Typs <code>String</code> ist. Man kann für jeden neuen
+Typ durch Implementierung des Traits <code>Default</code> einen
+frei wählbaren Vorgabewert erzeugen lassen. So wie
+<code>replace</code> beschafft <code>take</code> den begehrten Wert,
+fügt an dessen Stelle aber den Vorgabewert ein. Die Implementierung
+von <code>take</code> ist denkbar einfach:
+
+<pre class="rust ibox">
+fn take&lt;T: Default&gt;(dest: &amp;mut T) -&gt; T {
+    replace(dest, T::default())
+}
+</pre>
+
+<p>Äquivalent zum dargestellten Beispiel ist daher:
+<pre class="rust ibox">
+fn main() {
+    let s1 = &amp;mut String::from("Tee");
+    let s2 = std::mem::take(s1);
+    println!("s1 = '{}', s2 = '{}'", s1, s2);
+}
+</pre>
+
+<p>Manchmal liegt ein Typ vor, für den es keinen Dummy-Wert gibt, oder
+für den dessen Erzeugung zu Aufwändig wäre. Eine Notlösung besteht
+dann darin, den Wert in einer <code>Option</code> einzuhüllen,
+denn für <code>Option</code> ist immer der Wert <code>None</code>
+als effizienter Dummy verfügbar. Erwartungsgemäß ist <code>None</code>
+zudem der Vorgabewert von <code>Option</code>.
+
+<h2 id="Vertauschung">Vertauschung von Werten</h2>
+
+<p>Gelegentlich notwendig ist die Vertauschung von Werten,
+bspw. bei Sortier-Algorithmen. Zwar ist die Vertauschung der
+Ersetzung ähnlich, im Unterschied zu dieser kann sie jedoch auch
+ohne Dummy-Werte vorgenommen werden. Hat man Besitz, könnte man eine
+Vertauschung von Werten mit einer Hilfsvariable <code>h</code>
+vornehmen. Betrachten wir dazu die Vertauschung der Komponenten
+eines Paares:
+
+<pre class="rust ibox">
+fn main() {
+    let mut t = (String::from("Tag"), String::from("Nacht"));
+    let h = t.0;
+    t.0 = t.1;
+    t.1 = h;
+    println!("{:?}", t);
+}
+</pre>
+
+<p>In vielen Situationen hat man nun wieder keinen Besitz des Wertes,
+sondern nur eine alleinige Leihgabe an diesem. Wir brauchen nur
+die Zeile
+<pre class="rust ibox">
+let mut t = (String::from("Tag"), String::from("Nacht"));
+</pre>
+zu
+<pre class="rust ibox">
+let t = &amp;mut (String::from("Tag"), String::from("Nacht"));
+</pre>
+
+<p>abändern, und schon verweigert sich der Compiler. Eine Möglichkeit
+zur Umgehung der Problematik ist <code>replace</code>. Wir gelangen
+zu dieser Formulierung:
+
+<pre class="rust ibox">
+fn main() {
+    let t = &amp;mut (String::from("Tag"), String::from("Nacht"));
+    let h = std::mem::take(&amp;mut t.0);
+    t.0 = std::mem::replace(&amp;mut t.1, h);
+    println!("{:?}", t);
+}
+</pre>
+
+<p>Lieber würden wir <code>take</code> vermeiden und
+
+<pre class="rust ibox">
+fn main() {
+    let mut t = (String::from("Tag"), String::from("Nacht"));
+    t.0 = std::mem::replace(&amp;mut t.1, t.0);
+    println!("{:?}", t);
+}
+</pre>
+
+<p>schreiben. Bei der Leihgabe geht das allerdings ebenfalls nicht.
+Aufgrund der beschriebenen Problematik und zur Erhöhung der Effizienz
+wurde daher die Funktion <code>swap</code> geschaffen, mit der wir
+die vernünftige Formulierung
+
+<pre class="rust ibox">
+fn main() {
+    let t = &amp;mut (String::from("Tag"), String::from("Nacht"));
+    std::mem::swap(&amp;mut t.0, &amp;mut t.1);
+    println!("{:?}", t);
+}
+</pre>
+
+<p>erhalten.
 
 <h2 id="Literatur">Literatur</h2>
 

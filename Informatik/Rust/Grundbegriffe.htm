@@ -394,7 +394,7 @@ vier Ganzzahlen ausgibt:
 
 <pre class="rust ibox">
 fn main() {
-    let a: [i32; 4] = [1,2,3,4];
+    let a: [i32; 4] = [1, 2, 3, 4];
     println!("{:?}",a);
 }
 </pre>
@@ -419,7 +419,7 @@ fn sum(a: &amp;[i32; 4]) -&gt; i32 {
 }
 
 fn main() {
-    let a: [i32; 4] = [1,2,3,4];
+    let a: [i32; 4] = [1, 2, 3, 4];
     println!("{}",sum(&amp;a));
 }
 </pre>
@@ -446,7 +446,7 @@ nur die ersten drei Zahlen des Feldes aufsummiert werden sollen,
 sieht das Programm wie folgt aus:
 <pre class="rust ibox">
 fn main() {
-    let a: [i32; 4] = [1,2,3,4];
+    let a: [i32; 4] = [1, 2, 3, 4];
     println!("{}",sum(&amp;a[0..3]));
 }
 </pre>
@@ -465,7 +465,7 @@ Feldern, die ihre Länge automatisch vergrößern. Dynamische Felder
 werden ganz analog zu den Feldern fester Länge gehandhabt:
 <pre class="rust ibox">
 fn main() {
-    let a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    let a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
     println!("{}",sum(&amp;a));
 }
 </pre>
@@ -486,7 +486,7 @@ fn reverse(a: &amp;[i32]) -> Vec&lt;i32&gt; {
 }
 
 fn main() {
-    let a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    let a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
     println!("{:?}",reverse(&amp;a));
 }
 </pre>
@@ -507,7 +507,7 @@ fn reverse(a: &amp;mut [i32]) {
 }
 
 fn main() {
-    let mut a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    let mut a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
     reverse(&amp;mut a);
     println!("{:?}",a);
 }
@@ -529,7 +529,7 @@ usw. Solange bis man den leeren Slice erhält. Ein Beispiel dazu ist
 diese Implementation der Summierung: 
 <pre class="rust ibox">
 fn sum(a: &amp;[i32]) -&gt; i32 {
-    if a.len()==0 {0} else {a[0]+sum(&amp;a[1..])}
+    if a.len()==0 {0} else {a[0] + sum(&amp;a[1..])}
 }
 </pre>
 
@@ -546,7 +546,7 @@ von Methoden definiert. Beispielsweise ist eine Methode zur
 Sortierung eines veränderlichen Slices vorhanden:
 <pre class="rust ibox">
 fn main() {
-    let mut a: Vec&lt;i32&gt; = vec![4,2,1,3];
+    let mut a: Vec&lt;i32&gt; = vec![4, 2, 1, 3];
     a[..].sort();
     println!("{:?}",a);
 }
@@ -646,8 +646,10 @@ fn input(prompt: &amp;str) -&gt; String {
     print!("{}",prompt);
     io::stdout().flush().unwrap();
     io::stdin().read_line(&amp;mut buffer).unwrap();
-    buffer.pop();
-    if cfg!(windows) {buffer.pop();}
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
     return buffer;
 }
 
