@@ -854,6 +854,33 @@ denn für <code>Option</code> ist immer der Wert <code>None</code>
 als effizienter Dummy verfügbar. Erwartungsgemäß ist <code>None</code>
 zudem der Vorgabewert von <code>Option</code>.
 
+<p>Ersetzung macht es außerdem möglich, Typen ohne Trait
+<code>Copy</code> in <code>Cell</code> einzuhüllen. Allerdings ist
+dies verglichen mit <code>RefCell</code> nicht unbedingt vorteilhaft,
+denn zur Modifikation müsste man den Wert erst raus- und dann wieder
+reinschieben. Und nicht vergessen: Zudem braucht es dafür
+einen effizient erzeugbaren Dummy.
+
+<p>Spitzfindigen wird umgehend auffallen dass bei
+<code>Cell</code> eine separate Ausführung von <code>replace</code>
+gebraucht wird. Nämlich um die Hülle abzustreifen, denn andernfalls
+bräuchte man für <code>mem::replace</code> eine alleinige Leihgabe
+des Inneren von <code>Cell</code>, die es ja nicht geben darf.
+
+<pre class="rust ibox">
+use std::cell::Cell;
+
+fn main() {
+    let s1 = Cell::new(String::from("Tee"));
+    let s2 = s1.replace(String::new());
+    println!("{}", s2);
+}
+</pre>
+
+<p>Die Komfort-Funktion <code>take</code> ist auch mit dabei.
+Anstelle <code>s1.replace(String::new())</code> darf man
+<code>s1.take()</code> schreiben.
+
 <h2 id="Vertauschung">Vertauschung von Werten</h2>
 
 <p>Gelegentlich notwendig ist die Vertauschung von Werten,

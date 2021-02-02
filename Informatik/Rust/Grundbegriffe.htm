@@ -36,11 +36,33 @@
 
 <h2 id="Erstes-Programm">Das erste Programm</h2>
 
-<p>Es folgt das obligatorische Hallo-Welt-Programm:
+<p>Es ist üblich, als erstes ein Programm zu schreiben, welches
+nichts weiter tut als »Hallo Welt!« auf dem Terminal auszugeben.
+Es folgt das obligatorische Hallo-Welt-Programm:
 <pre class="rust ibox">
 fn main() {
     println!("Hallo Welt!");
 }
+</pre>
+
+<p>Wie aus diesem Quelltext ein ausführbares Programm gemacht wird,
+steht in ›<a href="Compiler.htm">Compiler und Erstellungswerkzeuge</a>‹
+erläutert.
+
+<p>Der Befehl <code>println</code> (print line) sorgt für die
+Ausgabe der Zeichenkette in den Anführungszeichen.
+
+<p>Das Schlüsselwort <code>fn</code> steht für <i>function</i> und
+leitet die Definition einer Funktion ein. In Rust versteht man unter
+einer Funktion jegliche Art von Prozedur (Unterprogramm), das betrifft
+auch solche Prozeduren die keine Funktionen im mathematischen Sinn
+darstellen. Der Bezeichner <code>main</code> deutet an, dass die
+Hauptprozedur des Programms definiert wird. Jedes ausführbare Programm
+muss diese Hauptprozedur enthalten. Das kürzeste ausführbare Programm
+ist demnach:
+
+<pre class="rust ibox">
+fn main() {}
 </pre>
 
 
@@ -50,16 +72,16 @@ fn main() {
 <h3>Ausdrücke</h3>
 <p>Das Wesen von Computern liegt in gewisser Hinsicht in ihrer Fähigkeit,
 Berechnungen schnell ausführen zu können. Aus diesem Grund erscheint
-es nur sinnvoll, wenn die Programmiersprache die einfache Angabe
-einer Berechnung ermöglicht. Und ja, arithmetische Ausdrücke schreibt
-man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
+es erwartungsgemäß, wenn die Programmiersprache in bequemer Weise
+die Angabe einer Berechnung ermöglicht. Arithmetische Ausdrücke
+schreibt man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
 <code>1+2</code> aus« lautet kurz:
 <pre class="rust ibox">
 fn main() {
-    println!("{}",1+2);
+    println!("{}", 1 + 2);
 }
 </pre>
-<p>Der Befehl <code>println</code> (print line) nimmt die Zeichenkette
+<p>Der Befehl <code>println</code> nimmt hier die Zeichenkette
 <code>"{}"</code> als Schablone und ersetzt das geschweifte Klammerpaar
 gegen den Wert des Ausdrucks. Die resultierende Zeichenkette wird dann
 ausgegeben, woraufhin ein Zeilenumbruch folgt.
@@ -71,7 +93,7 @@ in einer Variablen speichern. Ein einfaches Beispiel hierzu:
 fn main() {
     let x = 1;
     let y = 2;
-    println!("{} plus {} ist {}",x,y,x+y);
+    println!("{} plus {} ist {}", x, y, x + y);
 }
 </pre>
 <p>Das ist wie in der Mathematik: »Sei <var>x</var>&nbsp;=&nbsp;1 und
@@ -80,7 +102,7 @@ sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
 
 <h3>Typen</h3>
 <p>In der Sprache Rust besitzt jeder Wert und jede Variable einen
-<i>Datentyp</i>, kurz <i>Typ</i>. Um auszudrücken, dass die Variable
+<i>Datentyp</i>, kurz <i>Typ</i>. Um auszudrücken dass die Variable
 <code>v</code> vom Typ <code>T</code> ist, schreibt man
 <code>v:&nbsp;T</code>. Beispielsweise sagt <code>x:&nbsp;i32</code> aus, dass
 <code>x</code> eine Ganzzahl sein soll,
@@ -91,7 +113,7 @@ mit Farben zu verrechnen. Dies ergibt keinen Sinn, und der Compiler
 verweigert sich auch, ein solches Programm zu übersetzen.
 
 <p>Der Typ einer Variablen muss nicht unbedingt angegeben sein, sofern
-der Compiler in der Lage ist, diesen Typ abzuleiten. Der Vorgang
+sich der Compiler in der Lage sieht, diesen Typ abzuleiten. Der Vorgang
 des Ableitens eines Typs wird als <i>Typinferenz</i> bezeichnet,
 und davon wurde auch bereits Gebrauch gemacht. Vollständig typisiert
 schaut das Programm so aus:
@@ -99,7 +121,7 @@ schaut das Programm so aus:
 fn main() {
     let x: i32 = 1;
     let y: i32 = 2;
-    println!("{} plus {} ist {}",x,y,x+y);
+    println!("{} plus {} ist {}", x, y, x + y);
 }
 </pre>
 <p>Typen werden in Rust eigentlich mit einem großen Anfangsbuchstaben
@@ -145,10 +167,6 @@ gibt es aber nur eine Hand voll. Das sind:
 <h2 id="Kontrollfluss">Kontrollfluss</h2>
 <h3 id="Funktionen">Funktionen</h3>
 
-<p>Jede Art von Unterprogramm wird in Rust als Funktion
-bezeichnet. Das betrifft auch solche Unterprogramme, die keine
-Funktionen im mathematischen Sinn sind.
-
 <p>Trifft der Kontrollfluss auf den Aufruf eines Unterprogramms,
 dann kommt es zu einem Sprung in das Unterprogramm, woraufhin
 der darin vorhandene Code ausgeführt wird. Mit
@@ -181,12 +199,11 @@ fn circumference(radius: f64) -> f64 {
 }
 </pre>
 
-
 <h3 id="Verzweigungen">Verzweigungen</h3>
 
-<p>Bei vielen Programmen kommen im Kontrollfluss Verzweigungen vor.
+<p>Bei vielen Prozeduren kommen im Kontrollfluss Verzweigungen vor.
 Das Programm ändert dabei sein Verhalten aufgrund des Wertes von
-Variablen. Das folgende Programm macht z.&nbsp;B. unterschiedliche
+Variablen. Das folgende Programm macht bspw. unterschiedliche
 Ausgaben, je nachdem welcher Wert für die Temperatur <code>theta</code>
 angegeben wird.
 

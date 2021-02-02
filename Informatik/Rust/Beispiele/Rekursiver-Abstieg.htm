@@ -257,13 +257,15 @@ fn ast(s: &amp;str) -&gt; Result&lt;AST,SyntaxError&gt; {
 }
 
 fn input(prompt: &amp;str) -&gt; String {
-    use std::{io,io::Write};
+    use std::{io, io::Write};
     let mut buffer = String::new();
     print!("{}",prompt);
     io::stdout().flush().unwrap();
     io::stdin().read_line(&amp;mut buffer).unwrap();
-    buffer.pop();
-    if cfg!(windows) {buffer.pop();}
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
     return buffer;
 }
 
