@@ -19,6 +19,7 @@
   <li><a href="#Generische-Funktionen">Generische Funktionen</a>
   <li><a href="#Generische-Typen">Generische Typen</a>
   <li><a href="#Bounds">Beschränkte Quantifizierung</a>
+  <li><a href="#AT">Assoziierte Typen</a>
   </ol>
 <li><a href="#Technik">Technische Aspekte</a>
   <ol>
@@ -222,7 +223,7 @@ Standardbibliothek implementiert. Damit dürfen wir formulieren:
 fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
     let mut m = &amp;a[0];
     for x in a[1..].iter() {
-        if m&lt;x {m = x;}
+        if m &lt; x {m = x;}
     }
     return m;
 }
@@ -278,6 +279,129 @@ fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
     return m;
 }
 </pre>
+
+<p>Eine kurze Bemerkung noch. Zur Notation von Trait-Schranken
+darf man alternativ eine wobei-Klausel schreiben. Die Signatur
+<pre class="rust ibox">
+fn max&lt;T: Ord&gt;(a: &amp;[T]) -> &amp;T
+</pre>
+
+<p>ist äquivalent zu:
+<pre class="rust ibox">
+fn max&lt;T&gt;(a: &amp;[T]) -> &amp;T
+where T: Ord
+</pre>
+
+<p>Solche wobei-Klauseln bieten sich an, wenn die Signatur mehrere
+Typparameter und Trait-Schranken enthält, und man dabei
+Übersichtlichkeit wahren will. Wir werden darüber hinaus später auf
+Signaturen stoßen, bei denen die Benutzung der wobei-Klausel
+obligatorisch ist.
+
+<h3 id="AT">Assoziierte Typen</h3>
+
+<p>Nun verhält es sich so dass Traits selbst Typparameter enthalten
+können. Wozu das nützlich ist, will ich am folgenden Beispiel
+erklären. Vorzulegen sei ein Trait, dessen Methode die Reihenfolge der
+Elemente eines sequentiellen Typs umdreht. Man könnte diesen Trait
+so formulieren:
+
+<pre class="rust ibox">
+trait Rev {
+    fn rev(self) -&gt; Self;
+}
+
+impl Rev for [i32; 2] {
+    fn rev(self) -&gt; Self {[self[1], self[0]]}
+}
+
+fn main() {
+    let a = [1, 2];
+    println!("{:?}", a.rev());
+}
+</pre>
+
+<p>Soweit mag das in Ordnung sein. Gleichwohl stoßen wir umgehend
+auf eine Komplikation. Nämlich ist der Trait nicht für Leihgaben
+implementierbar, da die Rückgabe aufgrund der Signatur ebenfalls
+eine Leihgabe sein muss. Die Lebenszeit des erzeugten Wertes, zu
+welchem diese Leihgabe bestehen soll, wäre über die Funktion hinaus
+auszudehnen, was nicht machbar ist. Das heißt, wir würden gerne
+haben:
+
+<pre class="ibox rust">
+impl Rev for &amp;[i32; 2] {
+    fn rev(self) -&gt; Self {&amp;[self[1], self[0]]}
+}
+</pre>
+
+<p>Diese Funktion ist jedoch nicht kompilierbar. Stattdessen bedarf
+es einer Besitzübertragung des erzeugten Wertes von der aufgerufenen
+an die aufrufende Funktion. Dafür müssen wir zwangsläufig die
+Signatur abändern. Erreichbar ist dies durch Parametrisierung des
+Traits über den Rückgabetyp:
+
+<pre class="ibox rust">
+trait Rev&lt;Return&gt; {
+    fn rev(self) -&gt; Return;
+}
+
+impl Rev&lt;[i32; 2]&gt; for &amp;[i32; 2] {
+    fn rev(self) -&gt; [i32; 2] {[self[1], self[0]]}
+}
+
+fn main() {
+    let a = &amp;[1, 2];
+    println!("{:?}", &amp;a.rev());
+}
+</pre>
+
+<p>Nun gestattet die Parametrisierung das Hinzufügen einer jeweiligen
+Implementierung zu weiteren Rückgabetypen. Bspw. darf man
+hinzufügen:
+
+<pre class="rust ibox">
+impl Rev&lt;(i32, i32)&gt; for &amp;[i32; 2] {
+    fn rev(self) -&gt; (i32, i32) {(self[1], self[0])}
+}
+</pre>
+
+<p>Der Aufruf braucht infolge allerdings die qualifizierte
+Angabe der Methode, da nicht mehr eindeutig abgeleitet werden kann,
+mit welchem Typ <code>Return</code> zu belegen ist. Das heißt, man
+muss den Aufruf <code>a.rev()</code> gegen
+<code>Rev::&lt;[i32;&nbsp;2]&gt;::rev(a)</code> ersetzen.
+
+<p>Auf der anderen Seite möchte man unter Umständen die Beschränkung
+haben, dass dem sequentiellen Typ genau ein Typ <code>Return</code>
+zugeordnet ist. Um diese Beschränkung zum Ausdruck bringen zu können,
+wurde das Konzept der <i>assoziierten Typen</i> in die
+Programmiersprache eingebracht. Zur Angabe des assoziierten Typs wird
+der Typparameter in den Trait geschoben und dort mit dem Schlüsselwort
+<code>type</code> eingeleitet.
+
+<pre class="rust ibox">
+trait Rev {
+    type Return;
+    fn rev(self) -&gt; Self::Return;
+}
+
+impl Rev for &amp;[i32; 2] {
+    type Return = [i32; 2];
+    fn rev(self) -&gt; [i32; 2] {[self[1], self[0]]}
+}
+
+fn main() {
+    let a = &amp;[1, 2];
+    println!("{:?}", &amp;a.rev());
+}
+</pre>
+
+<p>Ersichtlich wird am gewählten Beispiel auch, dass nicht unbedingt
+eine Notwendigkeit am Einsatz von assoziierten Typen besteht. Es
+handelt sich hier vielmehr um eine Entwurfsentscheidung zur
+Klarstellung der eindeutigen Zuordnung.
+
 
 <h2 id="Technik">Technische Umsetzung</h2>
 
