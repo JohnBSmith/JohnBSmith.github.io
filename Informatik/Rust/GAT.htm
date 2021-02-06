@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Generische assoziierte Typen</h1>
+
+<h2>Funktoren</h2>
+
+<p>Typen und Funktionen zwischen diesen lassen sich aus einer
+mathematischen Sichtweise als Kategorie betrachten. Die Typen sind
+hierbei Objekte der Kategorie, die Funktionen die Morphismen.
+
+<p>Ein Typkonstruktor <code>F</code> bildet zusammen mit einer
+ebenfalls <code>F</code> genannten Abbildung höherer Ordnung
+einen Funktor, sofern die beiden Regeln
+
+<p class="indent"><code>F(id) = id</code>,
+
+<p class="indent"><code>F(g∘f) = F(g)∘F(f)</code>
+
+<p>erfüllt sind.
+
+<p>Der Typkonstruktor <code>F:=Option</code> bildet zusammen mit
+seiner Methode <code>F:=map</code> einen Funktor. Anstelle von
+<code>map(f)(x)</code> schreiben wir in Rust <code>x.map(f)</code>.
+
+<p>Es gilt <code>map(id) = id</code>, denn
+<pre class="rust indent">
+x.map(id)
+    = match x {Some(x) =&gt; Some(id(x)), None =&gt; None}
+    = match x {Some(x) =&gt; Some(x), None =&gt; None}
+    = id(x).
+</pre>
+
+<p>Zudem gilt <code>map(g∘f) = map(g)∘map(f)</code>, denn
+
+<pre class="rust indent">
+x.map(|x| g(f(x)))
+    = match x {Some(x) =&gt; Some(g(f(x))), None =&gt; None}
+    = match x {Some(x) =&gt; Some(f(x)).map(g), None =&gt; None}
+    = match x {Some(x) =&gt; Some(f(x)), None =&gt; None}.map(g)
+    = x.map(f).map(g).
+</pre>
+
+<p>Im Weiteren tut sich dann irgendwann die Frage auf, ob sich zum
+Funktor-Konzept eine Schnittstelle programmieren lässt.
+Bei Beschränkung auf Selbstabbildungen finden wir recht mühelos
+eine Umsetzung, etwa so:
+
+<pre class="rust ibox">
+trait Functor&lt;X&gt; {
+    fn map(self, f: impl Fn(X) -&gt; X) -&gt; Self;
+}
+
+impl&lt;X&gt; Functor&lt;X&gt; for Option&lt;X&gt; {
+    fn map(self, f: impl Fn(X) -&gt; X) -&gt; Self {
+        match self {Some(x) =&gt; Some(f(x)), None =&gt; None}
+    }
+}
+
+fn main() {
+    println!("{:?}", Functor::map(Some(0), |x| x+1));
+}
+</pre>
+
+<p>Als nächstes müssen wir uns um die Loslösung von der Beschränkung
+auf Selbstabbildungen kümmern. Zunächst ein Zwischenschritt:
+
+<pre class="rust ibox">
+trait Functor&lt;X&gt; {
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Option&lt;Y&gt;;
+}
+
+impl&lt;X&gt; Functor&lt;X&gt; for Option&lt;X&gt; {
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Option&lt;Y&gt; {
+        match self {Some(x) =&gt; Some(f(x)), None =&gt; None}
+    }
+}
+</pre>
+
+<p>Nun stellt sich die Frage, wie man das Artefakt
+<code>Option&lt;Y&gt;</code> entfernt. An dieser Stelle kommen
+<i>generische assoziierte Typen</i> ins Spiel. Darunter versteht man
+die Erweiterung des Begriffs der assoziierten Typen auf
+Typkonstruktoren. Zur Notation bekommt der assoziierte Typ schlicht
+einen Typparameter.
+
+<pre class="rust ibox">
+trait Functor&lt;X&gt; {
+    type F&lt;T&gt;: Functor&lt;T&gt;;
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Self::F&lt;Y&gt;;
+}
+
+impl&lt;X&gt; Functor&lt;X&gt; for Option&lt;X&gt; {
+    type F&lt;T&gt; = Option&lt;T&gt;;
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Self::F&lt;Y&gt; {
+        match self {Some(x) =&gt; Some(f(x)), None =&gt; None}
+    }
+}
+
+fn main() {
+    println!("{:?}", Functor::map(Some(0), |x| x+1));
+}
+</pre>
+
+</body>
+</html>
+
