@@ -12,7 +12,14 @@
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
 <h1>Generische assoziierte Typen</h1>
 
-<h2>Funktoren</h2>
+<h2>Inhaltsverzeichnis</h2>
+
+<ol>
+<li><a href="#Funktoren">Funktoren</a>
+<li><a href="#Monaden">Monaden</a>
+</ol>
+
+<h2 id="Funktoren">Funktoren</h2>
 
 <p>Typen und Funktionen zwischen diesen lassen sich aus einer
 mathematischen Sichtweise als Kategorie betrachten. Die Typen sind
@@ -67,7 +74,7 @@ impl&lt;X&gt; Functor&lt;X&gt; for Option&lt;X&gt; {
 }
 
 fn main() {
-    println!("{:?}", Functor::map(Some(0), |x| x+1));
+    println!("{:?}", Functor::map(Some(0), |x| x + 1));
 }
 </pre>
 
@@ -107,7 +114,109 @@ impl&lt;X&gt; Functor&lt;X&gt; for Option&lt;X&gt; {
 }
 
 fn main() {
-    println!("{:?}", Functor::map(Some(0), |x| x+1));
+    println!("{:?}", Functor::map(Some(0), |x| x + 1));
+}
+</pre>
+
+<p>Warum wurde hier <code>Fn</code> anstelle von <code>FnOnce</code>
+angegeben, wo die Methode <code>Option::map</code> doch
+<code>FnOnce</code> bekommen darf? Die Antwort liegt in der
+Komplikation, die daraus entstehen würde. Es gibt auch
+Implementierungen, wo <code>f</code> mehrmals aufgerufen wird,
+die sich bei <code>FnOnce</code> verbieten würden. So haben wir:
+
+<pre class="rust ibox">
+impl&lt;X&gt; Functor&lt;X&gt; for Vec&lt;X&gt; {
+    type F&lt;T&gt; = Vec&lt;T&gt;;
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Self::F&lt;Y&gt; {
+        self.into_iter().map(f).collect()
+    }
+}
+</pre>
+
+<h2 id="Monaden">Monaden</h2>
+
+<p>Betrachten wir nochmals die Trait-Definition aus dem
+Abschnitt ›<a href="FP.htm#Monaden">Monaden</a>‹.
+Die Implementierung für <code>Option</code> geht so:
+
+<pre class="rust ibox">
+trait Monad&lt;X&gt; {
+    fn unit(x: X) -&gt; Self;
+    fn bind(self, f: impl Fn(X) -&gt; Self) -&gt; Self;
+}
+
+impl&lt;X&gt; Monad&lt;X&gt; for Option&lt;X&gt; {
+    fn unit(x: X) -&gt; Self {Some(x)}
+    fn bind(self, f: impl Fn(X) -&gt; Self) -&gt; Self {
+        match self {Some(x) =&gt; f(x), None =&gt; None}
+    }
+}
+
+fn main() {
+    let mx = Option::unit(0);
+    println!("{:?}", mx.bind(|x| Some(x + 1)));
+}
+</pre>
+
+<p>Wie bei <code>Functor</code> würden wir die Funktionalität
+gerne so verallgemeinern, dass in
+
+<pre class="rust ibox">
+f: impl Fn(X) - &gt; Option&lt;Y&gt;
+</pre>
+
+<p>nicht mehr <code>X&nbsp;=&nbsp;Y</code> vorausgesetzt ist.
+Die Umsetzung benutzt ganz analog zu der von <code>Functor</code>
+einen generischen assoziierten Typ.
+
+<pre class="rust ibox">
+trait Monad&lt;X&gt; {
+    type M&lt;T&gt;: Monad&lt;T&gt;;
+    fn unit(x: X) -&gt; Self;
+    fn bind&lt;Y&gt;(self, f: impl Fn(X) -&gt; Self::M&lt;Y&gt;) -&gt; Self::M&lt;Y&gt;;
+}
+
+impl&lt;X&gt; Monad&lt;X&gt; for Option&lt;X&gt; {
+    type M&lt;T&gt; = Option&lt;T&gt;;
+    fn unit(x: X) -&gt; Self {Some(x)}
+    fn bind&lt;Y&gt;(self, f: impl Fn(X) -&gt; Self::M&lt;Y&gt;) -&gt; Self::M&lt;Y&gt; {
+        match self {Some(x) =&gt; f(x), None =&gt; None}
+    }
+}
+
+fn main() {
+    let mx = Option::unit(0);
+    println!("{:?}", mx.bind(|x| Some([x + 1, x + 2])));
+}
+</pre>
+
+<p>Es verhält sich nun so, dass jede Monade auch ein Funktor ist.
+Wir haben nämlich
+
+<pre class="indent">
+map(f)(x) = bind(unit∘f)(x),
+</pre>
+
+<p>bzw. in Rust-Schreibweise
+
+<pre class="indent">
+x.map(f) = x.bind(|x| unit(f(x))).
+</pre>
+
+<p>Die allgemeine Implementierung:
+
+<pre class="rust ibox">
+impl&lt;X, M: Monad&lt;X&gt;&gt; Functor&lt;X&gt; for M {
+    type F&lt;T&gt; = M::M&lt;T&gt;;
+    fn map&lt;Y&gt;(self, f: impl Fn(X) -&gt; Y) -&gt; Self::F&lt;Y&gt; {
+        self.bind(|x| M::M::unit(f(x)))
+    }
+}
+
+fn main() {
+    let mx = Option::unit(0);
+    println!("{:?}", Functor::map(mx, |x| [x + 1, x + 2]));
 }
 </pre>
 
