@@ -24,6 +24,7 @@ schrittweisen Deduktionen zu konstruieren.
 <li><a href="#Schlussregeln">Schlussregeln</a>
 <li><a href="#Beispiel-1">Beispiel 1</a>
 <li><a href="#Beispiel-2">Beispiel 2</a>
+<li><a href="#Probe">Probe</a>
 </ol>
 
 <h2 id="Zusicherungen">Zusicherungen</h2>
@@ -344,7 +345,7 @@ Weil vor der Schleife <code>i&nbsp;&le;&nbsp;n</code> ist und
 schnelle Potenzierung.
 
 <pre class="rust ibox">
-fn pow(mut x: i32, mut n: u32) -&gt; u32 {
+fn pow(mut x: i32, mut n: u32) -&gt; i32 {
     let mut y = 1;
     while n&gt;1 {
         if n%2 == 1 {y = y*x;}
@@ -361,7 +362,7 @@ Argumente konstant bleiben. Das ist notwendig, weil diese in die
 transformiert zu:
 
 <pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; u32 {
+fn pow(x: i32, n: u32) -&gt; i32 {
     let mut y = 1;
     let mut a = x;
     let mut i = n;
@@ -460,7 +461,7 @@ zu beweisen verbleibt, ist auch der Algorithmus bewiesen.
 Der Algorithmus mit sämtlichen Zusicherungen:
 
 <pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; u32 {
+fn pow(x: i32, n: u32) -&gt; i32 {
     let mut y = 1;
     let mut a = x;
     let mut i = n;
@@ -480,6 +481,77 @@ fn pow(x: i32, n: u32) -&gt; u32 {
     return y;
 }
 </pre>
+
+<h2 id="#Probe">Probe</h2>
+
+<p>So schön die Beweise anmuten, können auch diese von Fehlern
+unterlaufen sein. Ein naheliegender Weg zur Vermeidung sind Proben
+zur Laufzeit, denn die Zusicherungen lassen sich ja für konkrete
+Variablenbelegungen zur Laufzeit ausführen.
+
+<p>Im Algorithmus zur Potenzierung sollte es nirgends zum
+Überlauf kommen, sofern die ursprüngliche Definition keinen
+Überlauf berechnet. Eine Schleife grast nun im Folgenden den
+Definitionsbereich ab, wobei der Algorithmus lediglich für die
+verbleibenden Fälle ohne Überlauf ausgeführt wird.
+
+<pre class="rust ibox">
+// Definition der Potenzfunktion
+fn pow_rec(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
+    if n==0 {Some(1)} else {x.checked_mul(pow_rec(x,n-1)?)}
+}
+
+// Partielle Funktion zu pow_rec
+fn pow(x: i32, n: u32) -&gt; i32 {
+    pow_rec(x,n).unwrap()
+}
+
+fn pow_iter(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut a = x;
+    let mut i = n;
+    let p = pow(x,n);
+    assert!(y*pow(a,i) == p);
+    while i&gt;1 {
+        assert!(y*pow(a,i) == p);
+        if i%2 == 1 {y = y*a;}
+        assert!(y*pow(a,i-i%2) == p);
+        i /= 2;
+        assert!(y*pow(a,2*i) == p);
+        a = a*a;
+        assert!(y*pow(a,i) == p);
+    }
+    assert!(y*pow(a,i) == p &amp;&amp; i&lt;=1);
+    if i == 1 {y = y*a;}
+    assert!(y == p);
+    return y;
+}
+
+fn main() {
+    for x in -65536..65536 {
+        for n in 0..32 {
+            if let Some(y) = pow_rec(x,n) {
+                assert!(y == pow_iter(x,n));
+            }
+        }
+    }
+}
+</pre>
+
+<p>Maßgeblich sind abschließend zudem die Beweise, dass im späteren
+Programm die Aufrufe von <code>pow_iter</code> niemals Zahlen bekommen,
+die zum Überlauf führen würden. In Wirklichkeit besitzt <code>pow_iter</code>
+daher die Signatur
+
+<pre class="rust ibox">
+fn pow_iter(x: i32, n: u32) -&gt; i32
+where pow_rec(x,n).is_some().
+</pre>
+
+<p>Das heißt, der Typ von <code>pow_iter</code> ist in Wirklichkeit
+ein sogenannter <i>Verfeinerungstyp</i>, engl. <i>refinement type</i>.
+Darunter versteht man einen Typ, bei dem die Menge der zulässigen
+Werte durch ein logisches Prädikat eingeschränkt ist.
 
 </body>
 </html>
