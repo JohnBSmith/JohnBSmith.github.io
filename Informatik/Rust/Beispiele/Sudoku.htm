@@ -18,7 +18,7 @@
 // Listet sämtliche Lösungen eines Sudokus auf.
 
 struct Sudoku {
-    data: [[u32;9];9]
+    data: [[u32; 9]; 9]
 }
 
 impl std::fmt::Display for Sudoku {
@@ -26,25 +26,25 @@ impl std::fmt::Display for Sudoku {
     -&gt; std::fmt::Result
     {
         for (i,row) in self.data.iter().enumerate() {
-            if i != 0 &amp;&amp; i%3==0 {
-                let _ = writeln!(f, "------+-------+------");
+            if i != 0 &amp;&amp; i%3 == 0 {
+                writeln!(f, "------+-------+------")?;
             }
             for (j,cell) in row.iter().enumerate() {
                 if j != 0 {
-                    let _ = write!(f, "{}",
-                        if j%3==0 {" | "} else {" "});
+                    write!(f, "{}",
+                        if j%3 == 0 {" | "} else {" "})?;
                 }
-                let _ = write!(f, "{}", cell);
+                write!(f, "{}", cell)?;
             }
-            let _ = writeln!(f);
+            writeln!(f)?;
         }
-        return Ok(());
+        Ok(())
     }
 }
 
 impl Sudoku {
     fn from_input(s: &amp;str) -&gt; Self {
-        let mut data = [[0;9];9];
+        let mut data = [[0; 9]; 9];
         let mut i = 0;
         let mut j = 0;
         for c in s.chars() {
@@ -55,9 +55,9 @@ impl Sudoku {
                 data[i][j] = 0;
                 j += 1;
             }
-            if j==9 {j = 0; i += 1;}
+            if j == 9 {j = 0; i += 1;}
         }
-        return Self{data};
+        Self {data}
     }
     fn unique(&amp;self, digit: u32, i: usize, j: usize) -&gt; bool {
         for k in 0..9 {
@@ -71,14 +71,14 @@ impl Sudoku {
                 if digit == self.data[i+x][j+y] {return false;}
             }
         }
-        return true;
+        true
     }
 }
 
 fn solve(s: &amp;mut Sudoku, callback: &amp;mut dyn FnMut(&amp;Sudoku)) {
     for i in 0..9 {
         for j in 0..9 {
-            if s.data[i][j]==0 {
+            if s.data[i][j] == 0 {
                 for digit in 1..10 {
                     if s.unique(digit,i,j) {
                         s.data[i][j] = digit;
@@ -124,10 +124,10 @@ static S2: &amp;str = "
 fn solve_sudoku(input: &amp;str) {
     let s = &amp;mut Sudoku::from_input(input);
     let mut count = 0;
-    solve(s, &amp;mut |x| {
+    solve(s, &amp;mut |solution| {
         count += 1;
-        println!("Lösung Nr. {}",count);
-        println!("{}",x);
+        println!("Lösung Nr. {}", count);
+        println!("{}", solution);
     });
 }
 

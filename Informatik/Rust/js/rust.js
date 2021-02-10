@@ -13,7 +13,7 @@ var rust_keyword = {
     "else": 0, "enum": 0, "false": 0, "fn": 0, "for": 0,
     "if": 0, "impl": 0, "in": 0, "let": 0, "loop": 0,
     "match": 0, "mod": 0, "move": 0, "mut": 0, "pub": 0,
-    "return": 0, "self": 0, "static": 0, "struct": 0,
+    "return": 0, "self": 0, "Self": 0, "static": 0, "struct": 0,
     "trait": 0, "true": 0, "type": 0, "use": 0, "unsafe": 0,
     "where": 0, "while": 0
 };

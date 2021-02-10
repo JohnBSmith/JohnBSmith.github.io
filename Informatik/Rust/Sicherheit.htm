@@ -64,7 +64,7 @@ dass erstens die betroffenen Unterprogramme nur Werte vom Typ
 ein solcher Wert nur über eine Validierung erzeugt werden kann.
 
 <pre class="rust ibox">
-mod db{
+mod db {
     #[derive(Clone,Copy)]
     pub struct DatabaseIndex {
         index: u16
@@ -463,19 +463,19 @@ lassen. Jeder Typzustand bekommt jeweils seine erlaubten Methoden.
 
 <pre class="rust ibox">
 pub mod a_state {
-    pub struct A{data: ()}
+    pub struct A {data: ()}
     impl A {
         pub fn new() -&gt; A {A{data: ()}}
         pub fn f1(self) -&gt; A2 {A2{data: self.data}}
     }
     
-    pub struct A2{data: ()}
+    pub struct A2 {data: ()}
     impl A2 {
         pub fn f2a(self) -&gt; A3 {A3{data: self.data}}
         pub fn f2b(self) -&gt; A3 {A3{data: self.data}}
     }
     
-    pub struct A3{data: ()}
+    pub struct A3 {data: ()}
     impl A3 {
         pub fn f3(self) {let _ = self.data;}
     }
@@ -1015,6 +1015,10 @@ fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt
     }
 }
 </pre>
+
+<p>Zuweilen findet man auch die Benennung der Zusicherungen als
+Verben vor. Dann wird die Vorbedingung durch <i>require</i>
+eingeleitet, die Nachbedingung durch <i>ensure</i>.
 
 <h3 id="Rekursionstiefe">Beschränkung der Rekursionstiefe</h3>
 
