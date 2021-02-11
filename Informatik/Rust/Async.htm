@@ -23,7 +23,7 @@
   <ol>
   <li><span class="modest">Koroutinen</span>
   <li><a href="#Anheftung">Selbstreferenzen und Anheftung</a>
-  <li><span class="modest">Exekutoren</span>
+  <li><a href="#Exekutoren">Exekutoren</a>
   <li><span class="modest">Waker</span>
   </ol>
 <li><a href="#Literatur">Literatur</a>
@@ -253,12 +253,12 @@ struct S2 {value: &amp;'static str}
 
 async fn task1(time: u64) -&gt; S1 {
     task::sleep(Duration::from_secs(time)).await;
-    S1{value: "Wert 1"}
+    S1 {value: "Wert 1"}
 }
 
 async fn task2(time: u64) -&gt; S2 {
     task::sleep(Duration::from_secs(time)).await;
-    S2{value: "Wert 2"}
+    S2 {value: "Wert 2"}
 }
 
 fn main() {
@@ -327,6 +327,140 @@ Speicher.
 
 <p>Man hat sich für das Konzept der Anheftung entschieden, für die
 der Typ <code>Pin</code> geschaffen wurde.
+
+<h3 id="Exekutoren">Exekutoren</h3>
+
+<p>Zur Untersuchung, wie die Ausführung asynchroner Funktionen
+tatsächlich abläuft, gehen wir am besten schrittweise vor und
+passen die zuvor dargestellte Konstruktion von <code>block_on</code>
+zunächst an die echten Schnittstellen an. Diese Schnittstellen
+sind technisch ein wenig komplizierter ausgestaltet, da sie
+zusätzlich die Programmierung eines Aufweck-Systems erlauben.
+
+<p>Das Aufweck-System können wir erst einmal außen vor lassen.
+Erwirkt wird dies durch die Festlegung eines Dummy-Wakers, dessen
+Aufweck-Operation wirkungslos bleibt.
+
+<pre class="rust ibox">
+use std::future::Future;
+use std::pin::Pin;
+use std::sync::Arc;
+use std::task::{Poll, Context, Wake, Waker};
+use std::time::{Duration, Instant};
+use std::thread::sleep;
+
+struct DummyWaker;
+
+impl Wake for DummyWaker {
+    fn wake(self: Arc&lt;Self&gt;) {}
+}
+
+fn block_on&lt;T&gt;(f: impl Future&lt;Output = T&gt;) -&gt; T {
+    let mut f = Box::pin(f);
+    let waker = Waker::from(Arc::new(DummyWaker));
+    let context = &amp;mut Context::from_waker(&amp;waker);
+    loop {
+        match f.as_mut().poll(context) {
+            Poll::Ready(x) =&gt; return x,
+            Poll::Pending =&gt; {}
+        }
+        sleep(Duration::from_millis(100));
+        println!("\t(tick)");
+    }
+}
+
+struct Sleep {clock: Instant, time: u64}
+
+impl Sleep {
+    fn new_task(time: u64) -&gt; Self {
+        Self {clock: Instant::now(), time}
+    }
+}
+
+impl Future for Sleep {
+    type Output = ();
+    fn poll(self: Pin&lt;&amp;mut Self&gt;, _: &amp;mut Context&lt;'_&gt;)
+    -&gt; Poll&lt;Self::Output&gt;
+    {
+        if self.clock.elapsed().as_secs() &lt; self.time {
+            Poll::Pending
+        } else {
+            Poll::Ready(())
+        }
+    }
+}
+
+fn main() {
+    let f1 = Sleep::new_task(2);
+    block_on(f1);
+}
+</pre>
+
+<p>Die Mechanismen sind bis auf die Schnittstellen bisher
+im Wesentlichen gleich geblieben. Gleichwohl liegt nun ein
+echtes, zur Ausführung asynchroner Funktionen befähigtes
+<code>block_on</code> vor:
+
+<pre class="rust ibox">
+async fn task1() {
+    println!("Anfang");
+    Sleep::new_task(2).await;
+    println!("Fortsetzung");
+    Sleep::new_task(2).await;
+    println!("Ende");
+}
+
+fn main() {
+    let f1 = task1();
+    block_on(f1);
+}
+</pre>
+
+<p>Als nächstes portieren wir die Konstruktion von
+<code>join_all</code>.
+
+<pre class="rust ibox">
+struct JoinAll&lt;F: Future&gt;(Vec&lt;Option&lt;Pin&lt;Box&lt;F&gt;&gt;&gt;&gt;);
+
+fn join_all&lt;I&gt;(i: I) -&gt; impl Future&lt;Output = ()&gt;
+where I: IntoIterator, I::Item: Future&lt;Output = ()&gt;
+{
+    JoinAll(i.into_iter().map(|x| Some(Box::pin(x))).collect())
+}
+
+impl&lt;F: Future&lt;Output = ()&gt;&gt; Future for JoinAll&lt;F&gt; {
+    type Output = ();
+    fn poll(mut self: Pin&lt;&amp;mut Self&gt;, context: &amp;mut Context&lt;'_&gt;)
+    -&gt; Poll&lt;Self::Output&gt;
+    {
+        let mut empty = true;
+        for x in &amp;mut self.0 {
+            if let Some(f) = x {
+                empty = false;
+                match f.as_mut().poll(context) {
+                    Poll::Ready(()) =&gt; {*x = None;},
+                    Poll::Pending =&gt; {}
+                }
+            }
+        }
+        if empty {Poll::Ready(())} else {Poll::Pending}
+    }
+}
+
+async fn task(index: u32) {
+    println!("Anfang ({})", index);
+    Sleep::new_task(2).await;
+    println!("Fortsetzung ({})", index);
+    Sleep::new_task(2).await;
+    println!("Ende ({})", index);
+}
+
+fn main() {
+    let f1 = task(1);
+    let f2 = task(2);
+    block_on(join_all(vec![f1, f2]));
+}
+</pre>
 
 <h2 id="Literatur">Literatur</h2>
 
