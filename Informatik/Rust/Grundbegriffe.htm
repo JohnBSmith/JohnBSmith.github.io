@@ -255,7 +255,7 @@ fn pow(x: f64, n: u32) -&gt; f64 {
 }
 
 fn main() {
-    print!("{}",pow(2.0,10));
+    print!("{}", pow(2.0,10));
 }
 </pre>
 
@@ -297,7 +297,7 @@ fn pow(x: f64, n: u32) -&gt; f64 {
     let mut i = 0;
     while i&lt;n {
         p = p*x;
-        i = i+1;
+        i = i + 1;
     }
     return p;
 }
@@ -350,13 +350,13 @@ wir wieder einfach eine for-Schleife:
 fn sqrt(a: f64) -&gt; f64 {
     let mut x = 0.5*a;
     for _ in 0..20 {
-        x = 0.5*(x+a/x);
+        x = 0.5*(x + a/x);
     }
     return x;
 }
 
 fn main() {
-    println!("{}",sqrt(2.0))
+    println!("{}", sqrt(2.0))
 }
 </pre>
 
@@ -372,8 +372,8 @@ Schleife wird durch den Befehl <code>break</code> ausgelöst:
 fn sqrt(a: f64) -&gt; f64 {
     let mut x = 0.5*a;
     for _ in 0..1000 {
-        if (x*x-a).abs() &lt; 1E-14 {break;}
-        x = 0.5*(x+a/x);
+        if (x*x - a).abs() &lt; 1E-14 {break;}
+        x = 0.5*(x + a/x);
     }
     return x;
 }
@@ -386,16 +386,16 @@ und Anzahl bestehendes Paar zurück:
 fn sqrt_count(a: f64) -&gt; (f64,u32) {
     let mut x = 0.5*a;
     for k in 0..1000 {
-        if (x*x-a).abs() &lt; 1E-14 {return (x,k);}
-        x = 0.5*(x+a/x);
+        if (x*x - a).abs() &lt; 1E-14 {return (x,k);}
+        x = 0.5*(x + a/x);
     }
     return (x,1000);
 }
 
 fn main() {
     let (x,n) = sqrt_count(2.0);
-    println!("Wert: {};",x);
-    println!("Iterationen: {}",n); 
+    println!("Wert: {};", x);
+    println!("Iterationen: {}", n); 
 }
 </pre>
 
@@ -412,7 +412,7 @@ vier Ganzzahlen ausgibt:
 <pre class="rust ibox">
 fn main() {
     let a: [i32; 4] = [1, 2, 3, 4];
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -437,7 +437,7 @@ fn sum(a: &amp;[i32; 4]) -&gt; i32 {
 
 fn main() {
     let a: [i32; 4] = [1, 2, 3, 4];
-    println!("{}",sum(&amp;a));
+    println!("{}", sum(&amp;a));
 }
 </pre>
 
@@ -464,7 +464,7 @@ sieht das Programm wie folgt aus:
 <pre class="rust ibox">
 fn main() {
     let a: [i32; 4] = [1, 2, 3, 4];
-    println!("{}",sum(&amp;a[0..3]));
+    println!("{}", sum(&amp;a[0..3]));
 }
 </pre>
 
@@ -483,7 +483,7 @@ werden ganz analog zu den Feldern fester Länge gehandhabt:
 <pre class="rust ibox">
 fn main() {
     let a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
-    println!("{}",sum(&amp;a));
+    println!("{}", sum(&amp;a));
 }
 </pre>
 
@@ -504,7 +504,7 @@ fn reverse(a: &amp;[i32]) -> Vec&lt;i32&gt; {
 
 fn main() {
     let a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
-    println!("{:?}",reverse(&amp;a));
+    println!("{:?}", reverse(&amp;a));
 }
 </pre>
 
@@ -519,14 +519,14 @@ das Verfahren in der Mitte des Feldes angekommen ist.
 fn reverse(a: &amp;mut [i32]) {
     let n = a.len();
     for i in 0..n/2 {
-        a.swap(i,n-1-i);
+        a.swap(i, n-1-i);
     }
 }
 
 fn main() {
     let mut a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
     reverse(&amp;mut a);
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 <p>Da dem Feld selbst Veränderung widerfährt, ist hier eine
@@ -546,7 +546,7 @@ usw. Solange bis man den leeren Slice erhält. Ein Beispiel dazu ist
 diese Implementation der Summierung: 
 <pre class="rust ibox">
 fn sum(a: &amp;[i32]) -&gt; i32 {
-    if a.len()==0 {0} else {a[0] + sum(&amp;a[1..])}
+    if a.len() == 0 {0} else {a[0] + sum(&amp;a[1..])}
 }
 </pre>
 
@@ -565,7 +565,7 @@ Sortierung eines veränderlichen Slices vorhanden:
 fn main() {
     let mut a: Vec&lt;i32&gt; = vec![4, 2, 1, 3];
     a[..].sort();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -601,21 +601,21 @@ fn close(c: char) -&gt; char {
 }
 
 fn is_valid(s: &amp;str) -&gt; bool {
-    let mut stack: [char;10] = ['-';10];
+    let mut stack: [char; 10] = ['-'; 10];
     let mut sp = 0;
     for c in s.chars() {
-        if c=='(' || c=='[' || c=='{' {
+        if c == '(' || c == '[' || c == '{' {
             stack[sp] = c;
             sp += 1;
-        } else if c==')' || c==']' || c=='}' {
-            if sp==0 || c != close(stack[sp-1]) {
+        } else if c == ')' || c == ']' || c == '}' {
+            if sp == 0 || c != close(stack[sp-1]) {
                 return false;
             } else {
                 sp -= 1;
             }
         }
     }
-    return sp==0;
+    return sp == 0;
 }
 </pre>
 
@@ -629,9 +629,9 @@ gerade die Funktionalität eines Stapelspeichers auszeichnen.
 fn is_valid(s: &amp;str) -&gt; bool {
     let mut stack: Vec&lt;char&gt; = Vec::new();
     for c in s.chars() {
-        if c=='(' || c=='[' || c=='{' {
+        if c == '(' || c == '[' || c == '{' {
             stack.push(c);
-        } else if c==')' || c==']' || c=='}' {
+        } else if c == ')' || c == ']' || c == '}' {
             match stack.pop() {
                 Some(x) =&gt; if c != close(x) {return false;},
                 None =&gt; {return false;}
@@ -675,7 +675,7 @@ fn message(theta: f64) -&gt; String {
           else if theta &lt; 10.0 {"kalt"}
           else if theta &lt; 16.0 {"mild"}
           else {"warm"};
-    return format!("Draußen ist es {}.",text);
+    return format!("Draußen ist es {}.", text);
 }
 
 fn main() {
@@ -683,7 +683,7 @@ fn main() {
         let s = input("Gib eine Temperatur ein: ");
         match s.trim().parse::&lt;f64&gt;() {
             Ok(theta) =&gt; {
-                println!("{}",message(theta));
+                println!("{}", message(theta));
             },
             _ =&gt; {
                 println!("Eine Zahl bitte.");
@@ -707,7 +707,7 @@ fn main() {
         Ok(value) =&gt; value,
         _ =&gt; panic!("Fehler: Konnte Datei '{}' nicht finden/lesen.",path)
     };
-    println!("Inhalt von Datei '{}':\n{}",path,s);
+    println!("Inhalt von Datei '{}':\n{}", path, s);
 }
 </pre>
 

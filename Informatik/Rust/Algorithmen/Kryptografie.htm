@@ -23,12 +23,13 @@
 <p>Eine Stromchiffre ist ein durch einen Schlüssel (key) und eine
 Nonce (number used exactly once) parametrisierter deterministischer
 kryptografischer Zufallszahlengenerator. Der vom Generator erzeugte
-geheime Datenstrom muss die gleichen Eigenschaften wie ein One-Time-Pad
-besitzen und wird wie dieses bitweise mit den Klardaten XOR-verknüpft
+geheime Datenstrom heißt <i>Schlüsselstrom</i>. Der Schlüsselstrom
+muss die gleichen Eigenschaften wie ein One-Time-Pad besitzen und wird
+wie dieses bitweise mit den Klardaten XOR-verknüpft
 um das Chiffrat zu erhalten. Zur Entschlüsselung wird diese Operation
-ein zweites Mal mit gleichem Schlüssel und Nonce angewandt &ndash; die
+ein zweites Mal mit gleichem Schlüsselstrom angewandt &ndash; die
 Reinform einer Stromchiffre ist also involutorisch. Wie bei einem
-One-Time-Pad darf der geheime Datenstrom nur ein einziges Mal benutzt
+One-Time-Pad darf der Schlüsselstrom nur ein einziges Mal benutzt
 werden.
 
 <p>Die moderne Kryptografie kennt Stromchiffren als Mittel der
@@ -43,7 +44,7 @@ Wahl. Dies hat die folgenden Gründe:
   Codes, womit sie sich z.&nbsp;B. auch für Funkübertragung oder
   verschlüsselte Archivierung von Daten eignen.
 <li>Zudem sind auch Synchronisationsfehler korrigierbar,
-  indem der Zufallsstrom solange gegenüber dem Chiffrat verschoben wird,
+  indem der Schlüsselstrom solange gegenüber dem Chiffrat verschoben wird,
   bis ein Schlüsselwort gefunden wird oder der Prüfwert eines
   Datenblocks stimmt.
 <li>Man bekommt als Nebenresultat einen kryptografischen
@@ -78,7 +79,7 @@ fn u32_from_bytes_le(a: &amp;[u8]) -&gt; u32 {
     u32::from(a[2])&lt;&lt;16 | u32::from(a[3])&lt;&lt;24
 }
 
-fn quarter_round(x: &amp;mut [u32;16],
+fn quarter_round(x: &amp;mut [u32; 16],
     a: usize, b: usize, c: usize, d: usize
 ) {
     x[a] = x[a].wrapping_add(x[b]);
@@ -91,11 +92,11 @@ fn quarter_round(x: &amp;mut [u32;16],
     x[b] = (x[b]^x[c]).rotate_left(7);
 }
 
-fn chacha20_stream(key: &amp;[u8;32], iv: &amp;[u8;8],
+fn chacha20_stream(key: &amp;[u8; 32], iv: &amp;[u8; 8],
     callback: &amp;mut dyn FnMut(u8) -&gt; bool
 ) {
-    let mut state: [u32;16] = [0;16];
-    let x: &amp;mut [u32;16] = &amp;mut [0;16];
+    let mut state: [u32; 16] = [0; 16];
+    let x: &amp;mut [u32; 16] = &amp;mut [0; 16];
 
     state[0] = u32_from_bytes_le("expa".as_bytes());
     state[1] = u32_from_bytes_le("nd 3".as_bytes());
@@ -133,18 +134,18 @@ fn chacha20_stream(key: &amp;[u8;32], iv: &amp;[u8;8],
     }
 }
 
-fn encipher(key: &amp;[u8;32], iv: &amp;[u8;8], data: &amp;mut [u8]) {
+fn encipher(key: &amp;[u8; 32], iv: &amp;[u8; 8], data: &amp;mut [u8]) {
     let mut i = data.iter_mut();
-    chacha20_stream(key,iv,&amp;mut |y| {
+    chacha20_stream(key, iv, &amp;mut |y| {
         if let Some(x) = i.next() {*x ^= y; false} else {true}
     });
 }
 
-fn key_from(text: &amp;str) -&gt; [u8;32] {
-    let mut key: [u8;32] = [0;32];
+fn key_from(text: &amp;str) -&gt; [u8; 32] {
+    let mut key: [u8; 32] = [0; 32];
     let n = text.len().min(32);
     key[0..n].clone_from_slice(&amp;text.as_bytes()[0..n]);
-    return key;
+    key
 }
 
 fn input(prompt: &amp;str) -&gt; String {
@@ -153,16 +154,18 @@ fn input(prompt: &amp;str) -&gt; String {
     print!("{}",prompt);
     io::stdout().flush().unwrap();
     io::stdin().read_line(&amp;mut buffer).unwrap();
-    buffer.pop();
-    if cfg!(windows) {buffer.pop();}
-    return buffer;
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
+    buffer
 }
 
 fn main() -&gt; std::io::Result&lt;()&gt; {
     let argv: Vec&lt;String&gt; = std::env::args().collect();
     let mut data = std::fs::read(&amp;argv[1])?;
 
-    let nonce: [u8;8] = [0;8];
+    let nonce: [u8; 8] = [0; 8];
     // Eine Nonce wird bei einem Einmalschlüssel nicht benötigt,
     // der dann aber nur ein einziges Mal benutzt werden darf.
     // In der Praxis z.B. mit /dev/urandom initialisieren und
@@ -175,10 +178,10 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
     // Eingabe anwenden -- da gibt es extra Algorithmen für --
     // und die Nonce als Salt benutzen.
 
-    encipher(&amp;key,&amp;nonce,&amp;mut data);
+    encipher(&amp;key, &amp;nonce, &amp;mut data);
 
-    std::fs::write(&amp;argv[2],data)?;
-    return Ok(());
+    std::fs::write(&amp;argv[2], data)?;
+    Ok(())
 }
 </pre>
 
@@ -189,13 +192,13 @@ Algorithmus identisch bleibt.
 
 <pre class="rust box">
 struct ChaCha20Stream {
-    state: [u32;16],
-    obuff: [u8;64],
+    state: [u32; 16],
+    obuff: [u8; 64],
     index: usize
 }
 impl ChaCha20Stream {
-    fn new(key: &amp;[u8;32], iv: &amp;[u8;8]) -&gt; Self {
-        let mut state: [u32;16] = [0;16];
+    fn new(key: &amp;[u8; 32], iv: &amp;[u8; 8]) -&gt; Self {
+        let mut state: [u32; 16] = [0; 16];
         state[0] = u32_from_bytes_le("expa".as_bytes());
         state[1] = u32_from_bytes_le("nd 3".as_bytes());
         state[2] = u32_from_bytes_le("2-by".as_bytes());
@@ -207,7 +210,7 @@ impl ChaCha20Stream {
         state[13] = 0; // Counter, höherwertige Bits
         state[14] = u32_from_bytes_le(&amp;iv[0..4]);
         state[15] = u32_from_bytes_le(&amp;iv[4..8]);
-        return Self{state, obuff: [0;64], index: 64};
+        Self {state, obuff: [0; 64], index: 64}
     }
     fn next_block(&amp;mut self) {
         let mut x: [u32;16] = self.state;
@@ -241,7 +244,7 @@ impl Iterator for ChaCha20Stream {
             self.index = 0;
         }
         self.index += 1;
-        return Some(self.obuff[self.index-1]);
+        Some(self.obuff[self.index-1])
     }
 }
 

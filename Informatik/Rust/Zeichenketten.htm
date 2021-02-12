@@ -472,7 +472,7 @@ fn chars_from_utf8(s: &amp;str) -&gt; Vec&lt;char&gt; {
     for byte in s.bytes() {
         if byte&lt;128 {
             buffer.push(char::from(byte));
-        }else{
+        } else {
             if count==0 {
                 count = multibyte_count(byte);
                 c = u32::from(byte &amp; match count {
@@ -481,7 +481,7 @@ fn chars_from_utf8(s: &amp;str) -&gt; Vec&lt;char&gt; {
                     3 =&gt; 0b00000111,
                     _ =&gt; unreachable!()
                 });
-            }else{
+            } else {
                 c = (c&lt;&lt;6) | u32::from(byte&amp;0b00111111);
                 count -=1;
                 if count==0 {

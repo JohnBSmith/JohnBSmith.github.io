@@ -118,7 +118,7 @@ Darstellungen ist möglich:
 
 <pre class="rust ibox">
 let x: u32 = 12;
-println!("{}, 0b{:b}, 0x{:x}, 0o{:o}",x,x,x,x);
+println!("{}, 0b{:b}, 0x{:x}, 0o{:o}", x, x, x, x);
 
 // Ausgabe:
 // 12, 0b1100, 0xc, 0o14
@@ -148,19 +148,19 @@ werden:
 use std::f64::consts::PI;
 const GRAD: f64 = PI/180.0;
 
-let x = (2.0f64).sqrt();
-let y = (90.0*GRAD).sin();
+let x = f64::sqrt(2.0);
+let y = f64::sin(90.0*GRAD);
 </pre>
 
 <p>Neue Funktionen lassen sich ganz einfach definieren:
 
 <pre class="rust ibox">
 fn f(x: f64) -&gt; f64 {
-    return 1.0/(x.abs()+1.0);
+    1.0/(x.abs() + 1.0)
 }
 
 fn main(){
-    println!("{}",f(1.0))
+    println!("{}", f(1.0))
 }
 </pre>
 
@@ -214,7 +214,7 @@ fn main() {
         Ok(value) =&gt; value,
         _ =&gt; VERLUST
     };
-    println!("{}",y);
+    println!("{}", y);
 }
 </pre>
 <p>Wenn man aber von vornherein weiß, dass das Argument im Wertebereich
@@ -251,7 +251,7 @@ fn main() -&gt; Result&lt;(),std::num::TryFromIntError&gt; {
         Ok(value) =&gt; value,
         Err(e) =&gt; return Err(e)
     };
-    println!("{}",y);
+    println!("{}", y);
     return Ok(());
 }
 </pre>
@@ -449,7 +449,7 @@ fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
 
 fn main() {
     let bits = &amp;[false,false,false,false,true,false,true,false];
-    println!("0b{:08b}",u8_from_bits(bits));
+    println!("0b{:08b}", u8_from_bits(bits));
 }
 </pre>
 
@@ -536,19 +536,19 @@ Release-Modus äquivalent:
 fn main() {
     let x: u8 = 100;
     let y: u8 = 200;
-    println!("{}",x+y);
+    println!("{}", x + y);
 }
 
 fn main() {
     let x: u8 = 200;
     let y: u8 = 100;
-    println!("{}",x.wrapping_add(y));
+    println!("{}" ,x.wrapping_add(y));
 }
 
 fn main() {
     let x: u32 = 200;
     let y: u32 = 100;
-    println!("{}",(x+y)%256);
+    println!("{}", (x + y)%256);
 }
 </pre>
 

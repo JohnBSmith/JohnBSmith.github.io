@@ -479,20 +479,20 @@ impl BoxDynObject {
 
 fn to_string_i32(pself: *const u8) -&gt; String {
     let pself = pself as *const i32;
-    format!("{}", unsafe{&amp;*pself})
+    format!("{}", unsafe {&amp;*pself})
 }
 
 fn to_string_string(pself: *const u8) -&gt; String {
     let pself = pself as *const String;
-    unsafe{&amp;*pself}.clone()
+    unsafe {&amp;*pself}.clone()
 }
 
 fn drop_i32(pself: *mut u8) {
-    drop(unsafe{Box::from_raw(pself as *mut i32)});
+    drop(unsafe {Box::from_raw(pself as *mut i32)});
 }
 
 fn drop_string(pself: *mut u8) {
-    drop(unsafe{Box::from_raw(pself as *mut String)});
+    drop(unsafe {Box::from_raw(pself as *mut String)});
 }
 
 static DISPATCH_I32: Dispatch = Dispatch{

@@ -72,7 +72,7 @@ laufen. Dazu startet man zwei Threads und ruft in beiden jeweils
 use std::{thread,thread::sleep,time::Duration};
 
 fn metronome(msg: &amp;str, time: u64) {
-    loop{
+    loop {
         println!("{}",msg);
         sleep(Duration::from_millis(time));
     }
@@ -116,7 +116,7 @@ fn produce(transmitter: Sender&lt;String&gt;) {
 }
 
 fn consume(receiver: Receiver&lt;String&gt;) {
-    loop{
+    loop {
         sleep(Duration::from_millis(100));
         let value = receiver.recv().unwrap();
         println!("Erhalte: {}",value);

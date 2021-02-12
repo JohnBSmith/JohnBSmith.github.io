@@ -40,7 +40,7 @@ benutzen.
 
 <pre class="rust ibox">
 fn main() {
-    println!("{}","Ausgabe");
+    println!("{}", "Ausgabe");
 }
 </pre>
 
@@ -53,7 +53,7 @@ use std::{io, io::Write, fs::File};
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut stdout = File::create("/dev/stdout")?;
     stdout.write_all("Ausgabe".as_bytes())?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -68,7 +68,7 @@ use std::{io, io::Write};
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut stdout = io::stdout();
     stdout.write_all("Ausgabe".as_bytes())?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -128,8 +128,8 @@ use std::{fs, io};
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let s = fs::read_to_string("Datei.txt")?;
-    println!("{}",s);
-    return Ok(());
+    println!("{}", s);
+    Ok(())
 }
 </pre>
 
@@ -142,7 +142,7 @@ fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
     let mut file = fs::File::open(path)?;
     let mut buffer = String::new();
     file.read_to_string(&amp;mut buffer)?;
-    return Ok(buffer);
+    Ok(buffer)
 }
 </pre>
 
@@ -161,7 +161,7 @@ fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
     };
     let mut buffer = String::with_capacity(len);
     file.read_to_string(&amp;mut buffer)?;
-    return Ok(buffer);
+    Ok(buffer)
 }
 </pre>
 
@@ -172,8 +172,8 @@ lang sein. Probieren wir das aus:
 
 <pre class="rust ibox">
 fn main() -&gt; Result&lt;(),std::io::Error&gt; {
-    println!("{}",std::fs::metadata("/dev/stdin")?.len());
-    return Ok(());
+    println!("{}", std::fs::metadata("/dev/stdin")?.len());
+    Ok(())
 }
 </pre>
 
@@ -200,8 +200,8 @@ use std::{fs::read, error::Error};
 fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
     let data: Vec&lt;u8&gt; = read("Datei.txt")?;
     let s = String::from_utf8(data)?;
-    println!("{}",s);
-    return Ok(());
+    println!("{}", s);
+    Ok(())
 }
 </pre>
 
@@ -224,8 +224,8 @@ fn main() -&gt; Result&lt;(),io::Error&gt; {
     let crc = crc::CRC32::new();
     let argv: Vec&lt;String&gt; = args().collect();
     let data: Vec&lt;u8&gt; = read(&amp;argv[1])?;
-    println!("{:08x}",crc.hash(&amp;data,0));
-    return Ok(());
+    println!("{:08x}", crc.hash(&amp;data,0));
+    Ok(())
 }
 </pre>
 
@@ -242,20 +242,20 @@ use crc::CRC32;
 fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; Result&lt;u32,io::Error&gt; {
     let mut buffer = [0; 0x10000];
     let mut hash = 0;
-    loop{
+    loop {
         let n = file.read(&amp;mut buffer)?;
-        if n==0 {break;}
-        hash = crc.hash(&amp;buffer[..n],hash);
+        if n == 0 {break;}
+        hash = crc.hash(&amp;buffer[..n], hash);
     }
-    return Ok(hash);
+    Ok(hash)
 }
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let crc = CRC32::new();
     let argv: Vec&lt;String&gt; = args().collect();
     let mut file = File::open(&amp;argv[1])?;
-    println!("{:08x}",hash(&amp;crc,&amp;mut file)?);
-    return Ok(());
+    println!("{:08x}", hash(&amp;crc,&amp;mut file)?);
+    Ok(())
 }
 </pre>
 
@@ -284,7 +284,7 @@ fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
 {
     let mut buffer: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
     let mut last = false;
-    loop{
+    loop {
         let n = file.read(&amp;mut buffer)?;
         if n == 0 {break;}
         if n &lt; BLOCK_SIZE {
@@ -293,16 +293,16 @@ fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
         }
         callback(&amp;buffer[..n]);
     }
-    return Ok(());
+    Ok(())
 }
 
 fn main() -&gt; io::Result&lt;()&gt; {
     let argv: Vec&lt;String&gt; = std::env::args().collect();
     let mut file = File::open(&amp;argv[1])?;
     process_file(&amp;mut file, |data| {
-        println!("{}",data.len());
+        println!("{}", data.len());
     })?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -330,7 +330,7 @@ fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
         file.read_exact(&amp;mut buffer[..rem])?;
         callback(&amp;buffer[..rem]);
     }
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -353,7 +353,7 @@ fn read_exact(file: &amp;mut impl Read, mut buffer: &amp;mut [u8])
         buffer = &amp;mut buffer[n..];
         sum += n;
     }
-    return Ok(sum);
+    Ok(sum)
 }
 
 fn process_file(file: &amp;mut impl Read,
@@ -361,12 +361,12 @@ fn process_file(file: &amp;mut impl Read,
 ) -&gt; io::Result&lt;()&gt;
 {
     let mut buffer = [0; BLOCK_SIZE];
-    loop{
+    loop {
         let n = read_exact(file, &amp;mut buffer)?;
         if n != 0 {callback(&amp;buffer[..n]);}
         if n &lt; BLOCK_SIZE {break;}
     }
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -384,7 +384,7 @@ fn main() -&gt; io::Result&lt;()&gt; {
     let argv: Vec&lt;String&gt; = std::env::args().collect();
     let mut file = io::BufReader::new(File::open(&amp;argv[1])?);
     process_file(&amp;mut file, |data| {
-        println!("{}",data.len());
+        println!("{}", data.len());
     })
 }
 </pre>
@@ -400,7 +400,7 @@ use std::{io, io::Write, fs::File};
 fn main() -&gt; Result&lt;(),io::Error&gt; {
     let mut file = File::create("Datei.txt")?;
     file.write_all("Daten".as_bytes())?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -417,15 +417,15 @@ use std::{io, io::Write, fs::File, path::Path};
 fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
     if Path::new(path).exists() {
         Err(io::Error::new(io::ErrorKind::PermissionDenied,
-            format!("Pfad '{}' existiert bereits",path)))
-    }else{
+            format!("Pfad '{}' existiert bereits", path)))
+    } else {
         let mut file = File::create(path)?;
         file.write_all(data)
     }
 }
 
 fn main() -&gt; Result&lt;(),io::Error&gt; {
-    write("Datei.txt","Daten".as_bytes())?;
+    write("Datei.txt", "Daten".as_bytes())?;
     return Ok(());
 }
 </pre>
