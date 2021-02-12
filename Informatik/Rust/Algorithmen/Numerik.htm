@@ -17,6 +17,7 @@
 <ol>
 <li><a href="#Differentiation">Numerische Differentiation</a>
 <li><a href="#Integration">Numerische Integration</a>
+<li><a href="#Interpolation">Interpolation</a>
 </ol>
 <br>
 
@@ -114,6 +115,26 @@ fn gauss(f: &amp;dyn Fn(f64)-&gt;f64, a: f64, b: f64, n: u32) -&gt; f64 {
         s += sj;
     }
     return p*s;
+}
+</pre>
+
+<br>
+<h2 id="Interpolation">Interpolation</h2>
+
+<h3>Stückweise lineare interpolation</h3>
+
+<pre class="rust ibox">
+// Für äquidistante Stützstellen [x0 + k*d, y[k]].
+
+fn pli(x0: f64, d: f64, y: Vec&lt;f64&gt;) -&gt; impl Fn(f64) -&gt; f64 {
+    let n = y.len() as isize;
+    move |x| {
+        let k = f64::floor((x-x0)/d) as isize;
+        if k &lt; 0 || k+1 &gt;= n {f64::NAN} else {
+            let k = k as usize;
+            y[k] + (y[k+1] - y[k])/d*(x - x0 - (k as f64)*d)
+        }
+    }
 }
 </pre>
 
