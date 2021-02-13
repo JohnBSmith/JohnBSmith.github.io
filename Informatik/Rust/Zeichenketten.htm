@@ -92,11 +92,11 @@ dann so:
 
 <pre class="rust ibox">
 fn log_error(file: &amp;str, line: u32, text: String) {
-    eprintln!("Fehler in {}:{}:\n{}",file,line,text);
+    eprintln!("Fehler in {}:{}:\n{}", file, line, text);
 }    
 
 let c = char::try_from(x).unwrap_or_else(|e| {
-    log_error(file!(),line!(),e.to_string());
+    log_error(file!(), line!(), e.to_string());
     std::char::REPLACEMENT_CHARACTER
 });
 </pre>
@@ -198,7 +198,7 @@ hinschreiben:
 
 <pre class="rust ibox">
 let a: &amp;[u8] = &amp;[b'E', b'u', b'l', b'e']; 
-println!("{:?}",a);
+println!("{:?}", a);
 </pre>
 
 <p>Die Ausgabe ist hier nicht die Zeichenkette, sondern
@@ -221,7 +221,7 @@ dass dem Array die Bedeutung einer Zeichenkette zukommt:
 
 <pre class="rust ibox">
 let s: &amp;str = "Eule"; 
-println!("{}",s);
+println!("{}", s);
 </pre>
 
 <p>Somit ist jede Zeichenkette als Bytearray betrachtbar:
@@ -244,11 +244,11 @@ eingebettete Zeichenketten enthalten.
 
 <pre class="rust ibox">
 fn decode_ascii(a: &amp;[u8]) -&gt; String {
-    let mut s = String::new();
+    let mut acc = String::new();
     for &amp;x in a {
-        s.push(if x.is_ascii() {char::from(x)} else {'?'});
+        acc.push(if x.is_ascii() {char::from(x)} else {'?'});
     }
-    return s;
+    acc
 }
 </pre>
 
@@ -256,15 +256,15 @@ fn decode_ascii(a: &amp;[u8]) -&gt; String {
 <pre class="rust ibox">
 fn decode_ascii(a: &amp;[u8]) -&gt; String {
     use std::fmt::Write;
-    let mut s = String::new();
+    let mut acc = String::new();
     for &amp;x in a {
-        if x.is_ascii_graphic() || x==b' ' || x==b'\n' {
-            s.push(char::from(x));
+        if x.is_ascii_graphic() || x == b' ' || x == b'\n' {
+            acc.push(char::from(x));
         } else {
-            let _ = write!(s,"[{:02x}]",x);
+            let _ = write!(acc, "[{:02x}]", x);
         }
     }
-    return s;
+    acc
 }
 </pre>
 
@@ -302,7 +302,7 @@ fn main() {
     let mut s = "".to_string();
     s += &amp;s1;
     s += &amp;s2;
-    println!("{}",s);
+    println!("{}", s);
 }
 </pre>
 
@@ -312,18 +312,18 @@ bei diesen Operationen nicht ihren Besitz verlieren.
 <p>Die Ketten können auch von Unterprogrammen erzeugt worden sein.
 <pre class="rust ibox">
 fn p1() -> String {
-    return "Text1\n".to_string();
+    "Text1\n".to_string()
 }
 
 fn p2() -> String {
-    return "Text2\n".to_string();
+    "Text2\n".to_string()
 }
 
 fn main() {
     let mut s = "".to_string();
     s += &amp;p1();
     s += &amp;p2();
-    println!("{}",s);
+    println!("{}", s);
 }
 </pre>
 
@@ -334,17 +334,17 @@ fn main() {
 sich so bewerkstelligen:
 <pre class="rust ibox">
 fn pair_to_string(x: i32, y: i32) -&gt; String {
-    let mut buffer = String::new();
-    buffer.push_str("(");
-    buffer.push_str(&amp;x.to_string());
-    buffer.push_str(", ");
-    buffer.push_str(&amp;y.to_string());
-    buffer.push_str(")");
-    return buffer;
+    let mut acc = String::new();
+    acc.push_str("(");
+    acc.push_str(&amp;x.to_string());
+    acc.push_str(", ");
+    acc.push_str(&amp;y.to_string());
+    acc.push_str(")");
+    acc
 }
 
 fn main() {
-    println!("{}",pair_to_string(1,2));
+    println!("{}", pair_to_string(1,2));
 }
 </pre>
 
@@ -359,14 +359,14 @@ fn pair_to_string(x: i32, y: i32) -&gt; String {
 Formulierung dieser Funktion:
 <pre class="rust ibox">
 fn pair_to_string(x: i32, y: i32) -&gt; String {
-    format!("({}, {})",x,y)
+    format!("({}, {})", x, y)
 }
 </pre>
 
-<p>Das Makro <code>format!</code> setzt Argumente in eine Schablone
+<p>Das Makro <code>format</code> setzt Argumente in eine Schablone
 ein. Die Paare von geschweiften Klammern werden durch die Argumente
 ersetzt und die dadurch entstandene Zeichenkette zurückgegeben.
-Das kennen wir schon vom Makro <code>println!</code>, mit dem einzigen
+Das kennen wir schon vom Makro <code>println</code>, mit dem einzigen
 Unterschied, dass die Zeichenkette dort in der Konsole ausgegeben
 wird.
 
@@ -375,9 +375,9 @@ wird.
 Oktalsystem und Hexadezimalsystem sind
 <code>{:b}</code>, <code>{:o}</code>, <code>{:x}</code>.
 <pre class="rust ibox">
-fn bin(n: u32) -&gt; String {format!("0b{:b}",n)}
-fn oct(n: u32) -&gt; String {format!("0o{:o}",n)}
-fn hex(n: u32) -&gt; String {format!("0x{:x}",n)}
+fn bin(n: u32) -&gt; String {format!("0b{:b}", n)}
+fn oct(n: u32) -&gt; String {format!("0o{:o}", n)}
+fn hex(n: u32) -&gt; String {format!("0x{:x}", n)}
 </pre>
 
 <p>Neben <code>{:x}</code> gibt es auch noch die Formatierung
@@ -388,21 +388,21 @@ Großbuchstaben besteht.
 <p>Man kann Text in Freiraum ausrichten. Beispiele für 10 Zeichen
 Freiraum:
 <pre class="rust ibox">
-println!("|{:10}|","Text");  // Text linksbündig ausrichten
-println!("|{:&lt;10}|","Text"); // Text linksbündig ausrichten
-println!("|{:&gt;10}|","Text"); // Text rechtsbündig ausrichten
-println!("|{:^10}|","Text"); // Text zentriert ausrichten
+println!("|{:10}|", "Text");  // Text linksbündig ausrichten
+println!("|{:&lt;10}|", "Text"); // Text linksbündig ausrichten
+println!("|{:&gt;10}|", "Text"); // Text rechtsbündig ausrichten
+println!("|{:^10}|", "Text"); // Text zentriert ausrichten
 
-println!("|{:.&lt;10}|","Text"); // Punkte anstelle von Leerzeichen
-println!("|{:.&gt;10}|","Text"); // Punkte anstelle von Leerzeichen
-println!("|{:.^10}|","Text"); // Punkte anstelle von Leerzeichen
+println!("|{:.&lt;10}|", "Text"); // Punkte anstelle von Leerzeichen
+println!("|{:.&gt;10}|", "Text"); // Punkte anstelle von Leerzeichen
+println!("|{:.^10}|", "Text"); // Punkte anstelle von Leerzeichen
 
-println!("|{:10}|",360);  // Zahl rechtsbündig ausrichten
-println!("|{:&lt;10}|",360); // Zahl linksbündig ausrichten
-println!("|{:&gt;10}|",360); // Zahl rechtsbündig ausrichten
+println!("|{:10}|", 360);  // Zahl rechtsbündig ausrichten
+println!("|{:&lt;10}|", 360); // Zahl linksbündig ausrichten
+println!("|{:&gt;10}|", 360); // Zahl rechtsbündig ausrichten
 
-println!("|{:010}|",360); // Zahl mit führenden Nullen
-println!("|{:010}|",-360); // Klappt auch für negative Zahlen
+println!("|{:010}|", 360); // Zahl mit führenden Nullen
+println!("|{:010}|", -360); // Klappt auch für negative Zahlen
 </pre>
 
 <p>Man beachte: Die Standard-Ausrichtung von Text ist linksbündig,
@@ -420,16 +420,16 @@ Verschachtelungen eingerückt werden.
 
 <pre class="rust ibox">
 println!("{:?}", [1, 2, 3, 4]);
-println!("{:#?}",[1, 2, 3, 4]); // Zahlen untereinander
-println!("{:?}",[[1, 2], [3, 4]]); // Arrays von Arrays
-println!("{:#?}",[[1, 2], [3, 4]]); // Verschachtelung eingrückt
+println!("{:#?}", [1, 2, 3, 4]); // Zahlen untereinander
+println!("{:?}", [[1, 2], [3, 4]]); // Arrays von Arrays
+println!("{:#?}", [[1, 2], [3, 4]]); // Verschachtelung eingrückt
 </pre>
 
 <p>Byte-Arrays kann man dezimal oder auch hexadezimal darstellen.
 
 <pre class="rust ibox">
-println!("{:?}",b"Eule");    // Byte-Array, dezimal
-println!("{:02x?}",b"Eule"); // Byte-Array, hexadezimal
+println!("{:?}", b"Eule");    // Byte-Array, dezimal
+println!("{:02x?}", b"Eule"); // Byte-Array, hexadezimal
 </pre>
 
 <h2 id="Unicode">Unicode und UTF-8</h2>
@@ -459,42 +459,39 @@ use std::convert::TryFrom;
 fn multibyte_count(byte: u8) -&gt; u32 {
     let mut count = 0;
     for k in (0..7).rev() {
-        if (1&lt;&lt;k)&amp;byte !=0 {count+=1;}
-        else {break;}
+        if (1&lt;&lt;k)&amp;byte == 0 {break;} else {count += 1;}
     }
-    return count;
+    count
 }
 
 fn chars_from_utf8(s: &amp;str) -&gt; Vec&lt;char&gt; {
-    let mut buffer: Vec&lt;char&gt; = Vec::new();
+    let mut acc: Vec&lt;char&gt; = Vec::new();
     let mut count = 0;
     let mut c: u32 = 0;
     for byte in s.bytes() {
         if byte&lt;128 {
-            buffer.push(char::from(byte));
+            acc.push(char::from(byte));
+        } else if count == 0 {
+            count = multibyte_count(byte);
+            c = u32::from(byte &amp; match count {
+                1 =&gt; 0b00011111,
+                2 =&gt; 0b00001111,
+                3 =&gt; 0b00000111,
+                _ =&gt; unreachable!()
+            });
         } else {
-            if count==0 {
-                count = multibyte_count(byte);
-                c = u32::from(byte &amp; match count {
-                    1 =&gt; 0b00011111,
-                    2 =&gt; 0b00001111,
-                    3 =&gt; 0b00000111,
-                    _ =&gt; unreachable!()
-                });
-            } else {
-                c = (c&lt;&lt;6) | u32::from(byte&amp;0b00111111);
-                count -=1;
-                if count==0 {
-                    buffer.push(char::try_from(c).unwrap());
-                }
+            c = (c&lt;&lt;6) | u32::from(byte&amp;0b00111111);
+            count -= 1;
+            if count == 0 {
+                acc.push(char::try_from(c).unwrap());
             }
         }
     }
-    return buffer;
+    acc
 }
 
 fn main() {
-    println!("{:?}",chars_from_utf8("Café äöü ∀∃"));
+    println!("{:?}", chars_from_utf8("Café äöü ∀∃"));
 }
 </pre>
 
@@ -503,7 +500,7 @@ natürlich bereits:
 <pre class="rust ibox">
 fn main() {
     let a: Vec&lt;char&gt; = "Café äöü ∀∃".chars().collect();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -512,7 +509,7 @@ fn main() {
 <code>from_utf8</code> zur Verfügung:
 
 <pre class="rust ibox">
-let a: &amp;[u8] = &amp;[97,98,99,100,128];
+let a: &amp;[u8] = &amp;[97, 98, 99, 100, 128];
 let s = std::str::from_utf8(a)?;
 </pre>
 
@@ -525,21 +522,21 @@ ersetzt.
 use std::borrow::Cow;
 
 fn log_error(file: &amp;str, line: u32, text: &amp;str) {
-    eprintln!("{} bei {}:{}.",text,file,line);
+    eprintln!("{} bei {}:{}.", text, file, line);
 }
 
 fn from_utf8_lossy(a: &amp;[u8]) -&gt; Cow&lt;str&gt; {
     let s = String::from_utf8_lossy(a);
     if let Cow::Owned(_) = s {
-        log_error(file!(),line!(),"Fehlerhaftes UTF-8 detektiert");
+        log_error(file!(), line!(), "Fehlerhaftes UTF-8 detektiert");
     }
     return s;
 }
 
 fn main() {
-    let a: &amp;[u8] = &amp;[97,98,99,100,128];
+    let a: &amp;[u8] = &amp;[97, 98, 99, 100, 128];
     let s = from_utf8_lossy(a);
-    println!("{}",s);
+    println!("{}", s);
 }
 </pre>
 

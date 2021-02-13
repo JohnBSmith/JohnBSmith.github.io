@@ -74,7 +74,7 @@ fn newton(f: fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
 
 fn main() {
     fn f(x: f64) -&gt; f64 {x*x - 2.0}
-    println!("{}",newton(f,1.0));
+    println!("{}", newton(f,1.0));
 }
 </pre>
 
@@ -153,7 +153,7 @@ fn sqrt(a: f64) -&gt; f64 {
 }
 
 fn main() {
-    println!("{}",sqrt(2.0));
+    println!("{}", sqrt(2.0));
 }
 </pre>
 
@@ -211,7 +211,7 @@ fn sqrt(a: f64) -&gt; f64 {
 }
 
 fn main() {
-    println!("{}",sqrt(2.0));
+    println!("{}", sqrt(2.0));
 }
 </pre>
 
@@ -233,7 +233,7 @@ compose(g,f,x) := g(f(x)),
 <p>ist implementierbar als:
 <pre class="rust ibox">
 fn compose&lt;G,F&gt;(g: G, f: F, x: f64) -&gt; f64
-where G: Fn(f64)-&gt;f64, F: Fn(f64)-&gt;f64
+where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
 {
     g(f(x))
 }
@@ -268,8 +268,8 @@ als »<i>opaker Typ, der A implementiert</i>«. Die gewünschte Funktion
 wird damit formulierbar:
 
 <pre class="rust ibox">
-fn compose&lt;G,F&gt;(g: G, f: F) -&gt; impl Fn(f64)-&gt;f64
-where G: Fn(f64)-&gt;f64, F: Fn(f64)-&gt;f64
+fn compose&lt;G,F&gt;(g: G, f: F) -&gt; impl Fn(f64) -&gt; f64
+where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
 {
     move |x| g(f(x))
 }
@@ -279,15 +279,15 @@ where G: Fn(f64)-&gt;f64, F: Fn(f64)-&gt;f64
 schreiben, was zunächst etwas verwirrend sein dürfte:
 
 <pre class="rust ibox">
-fn compose(g: impl Fn(f64)-&gt;f64, f: impl Fn(f64)-&gt;f64)
--&gt; impl Fn(f64)-&gt;f64
+fn compose(g: impl Fn(f64) - &gt;f64, f: impl Fn(f64) - &gt;f64)
+-&gt; impl Fn(f64) -&gt; f64
 {
     move |x| g(f(x))
 }
 </pre>
 
-<p>Was hat es damit auf sich? Hierbei handelt sich lediglich um eine
-andere Schreibweise, die eine äquivalente Typsignatur darstellt.
+<p>Was hat es damit auf sich? Obwohl die beiden Typsignaturen nicht
+identisch sind, verhalten sie sich äquivalent.
 Die Idee dabei ist, dass die parametrische Polymorphie aus Sicht
 außerhalb der Funktion einer opaken Typisierung aus Sicht innerhalb
 der Funktion entspricht. Was wissen wir denn innerhalb der Funktion
@@ -299,13 +299,37 @@ nichts über sie, außer dass sie die Schnittstelle
 Mathematik definiert ist, ersetzen wir ferner die Typen zu Argumenten
 und Rückgabewerten von <code>g</code>,&nbsp;<code>f</code>
 durch Typvariablen und gelangen schließlich zu:
+
 <pre class="rust ibox">
-fn compose&lt;X,Y,Z&gt;(g: impl Fn(Y)-&gt;Z, f: impl Fn(X)-&gt;Y)
--&gt; impl Fn(X)-&gt;Z
+fn compose&lt;X,Y,Z&gt;(g: impl Fn(Y) -&gt; Z, f: impl Fn(X) -&gt; Y)
+-&gt; impl Fn(X) -&gt; Z
 {
     move |x| g(f(x))
 }
 </pre>
+
+<p>Wie gesagt ist parametrische Polymorphie nicht identisch mit
+opak typisierten Argumenten. So darf man bei
+
+<pre class="rust ibox">
+fn print&lt;T: std::fmt::Display&gt;(x: T) {
+    println!("{}", x);
+}
+</pre>
+
+<p>den Typparameter explizit belegen, also bspw.
+<code>print::&lt;i32&gt;</code> schreiben. Bei
+
+<pre class="rust ibox">
+fn print(x: impl std::fmt::Display) {
+    println!("{}", x);
+}
+</pre>
+
+<p>ist das allerdings nicht erlaubt. Mit diesen Wissen sieht man,
+dass die vollständig explizite Angabe der Typparameter bei
+<code>compose</code> nur in beschränkter Weise sinnfällig ist,
+da Closure-Typen per se nicht benennbar sind.
 
 <h2 id="Higher-order">Funktionen höherer Ordnung</h2>
 
@@ -315,18 +339,18 @@ fn compose&lt;X,Y,Z&gt;(g: impl Fn(Y)-&gt;Z, f: impl Fn(X)-&gt;Y)
 Element eines Arrays an.
 
 <pre class="rust ibox">
-fn map&lt;X,Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X)-&gt;Y) -&gt; Vec&lt;Y&gt; {
-    let mut b = Vec::with_capacity(a.len());
+fn map&lt;X,Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X) -&gt; Y) -&gt; Vec&lt;Y&gt; {
+    let mut acc = Vec::with_capacity(a.len());
     for x in a {
-        b.push(f(x));
+        acc.push(f(x));
     }
-    return b;
+    acc
 }
 
 fn main() {
-    let a = vec![1,2,3,4];
+    let a = vec![1, 2, 3 ,4];
     let b = map(&amp;a,&amp;|x| x.to_string());
-    println!("{:?}",b);
+    println!("{:?}", b);
 }
 </pre>
 
@@ -349,16 +373,16 @@ fn map&lt;X,Y,A,F&gt;(a: A, f: F) -&gt; Vec&lt;Y&gt;
 where A: IntoIterator&lt;Item=X&gt;, F: Fn(&amp;X)-&gt;Y
 {
     let it = a.into_iter();
-    let mut b = Vec::with_capacity(it.size_hint().0);
+    let mut acc = Vec::with_capacity(it.size_hint().0);
     for x in it {
-        b.push(f(&amp;x));
+        acc.push(f(&amp;x));
     }
-    return b;
+    acc
 }
 
 fn main() {
     let b = map(1..=4,|x| x.to_string());
-    println!("{:?}",b);
+    println!("{:?}", b);
 }
 </pre>
 
