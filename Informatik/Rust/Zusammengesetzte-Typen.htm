@@ -56,7 +56,7 @@ struct Point {
 }
 
 fn main() {
-    let t: Point = Point{a: 360, b: 240};
+    let t: Point = Point {a: 360, b: 240};
     println!("({}|{})", t.a, t.b);
 }
 </pre>
@@ -96,8 +96,8 @@ enum E {
 
 fn print(x: E) {
     match x {
-        E::Int(i) =&gt; {println!("Zahl: {}.",i);},
-        E::Char(c) =&gt; {println!("Zeichen: {}.",c);}
+        E::Int(i) =&gt; {println!("Zahl: {}.", i);},
+        E::Char(c) =&gt; {println!("Zeichen: {}.", c);}
     }
 }
 
@@ -197,7 +197,7 @@ struct Vector {x: f64, y: f64}
 
 impl Vector {
     fn new(x: f64, y: f64) -&gt; Self {
-        Self{x,y}
+        Self {x, y}
     }
     fn abs(&amp;self) -&gt; f64 {
         f64::sqrt(self.x*self.x + self.y*self.y)
@@ -206,7 +206,7 @@ impl Vector {
 
 fn main() {
     let v = Vector::new(1.0,1.0);
-    println!("{}",v.abs());
+    println!("{}", v.abs());
 }
 </pre>
 
@@ -220,7 +220,7 @@ Außerdem ist <code>&amp;self</code> eine Kurzschreibweise für
 <pre class="rust ibox">
 impl Vector {
     fn new(x: f64, y: f64) -&gt; Vector {
-        Vector{x,y}
+        Vector {x, y}
     }
     fn abs(self: &amp;Vector) -&gt; f64 {
         f64::sqrt(self.x*self.x + self.y*self.y)
@@ -229,7 +229,7 @@ impl Vector {
 
 fn main() {
     let v = Vector::new(1.0,1.0);
-    println!("{}",Vector::abs(&amp;v));
+    println!("{}", Vector::abs(&amp;v));
 }
 </pre>
 

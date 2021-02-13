@@ -43,7 +43,7 @@ mod number_theory {
         for k in 2..n {
             if n%k==0 {return false;}
         }
-        return true;
+        true
     }
 }
 
@@ -52,7 +52,7 @@ use number_theory::is_prime;
 fn main() {
     let a: Vec&lt;u64&gt; = (1..).filter(|n| is_prime(*n))
         .take(10).collect();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -76,13 +76,13 @@ schlechtem Stil geschrieben.
 <pre class="rust ibox">
 fn is_ascii_alphabetic(c: char) -&gt; bool {
     let x = u32::from(c);
-    return 65&lt;=x &amp;&amp; x&lt;=90 || 97&lt;=x &amp;&amp; x&lt;=122;
+    65&lt;=x &amp;&amp; x&lt;=90 || 97&lt;=x &amp;&amp; x&lt;=122
 }
 
 fn main() {
     let a: Vec&lt;&amp;str&gt; = "Ein Schiff taucht im Nebel auf."
         .split(|x| !is_ascii_alphabetic(x)).collect();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -111,7 +111,7 @@ mod charsets {
 
     pub fn is_ascii_alphabetic(c: char) -&gt; bool {
         let x = u32::from(c);
-        return CAPA&lt;=x &amp;&amp; x&lt;=CAPZ || A&lt;=x &amp;&amp; x&lt;=Z;
+        CAPA&lt;=x &amp;&amp; x&lt;=CAPZ || A&lt;=x &amp;&amp; x&lt;=Z
     }
 }
 
@@ -120,7 +120,7 @@ use charsets::is_ascii_alphabetic;
 fn main() {
     let a: Vec&lt;&amp;str&gt; = "Ein Schiff taucht im Nebel auf."
         .split(|x| !is_ascii_alphabetic(x)).collect();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 

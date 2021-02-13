@@ -135,8 +135,8 @@ fn main() {
     let m: HashMap&lt;String,i32&gt; = hashmap!{
         "x": 1, "y": 2
     };
-    println!("{:?}",m);
-    println!("{}",m["x"]);
+    println!("{:?}", m);
+    println!("{}", m["x"]);
 }
 </pre>
 <p>So wie <code>a[k]</code> zum Programmabbruch via <code>panic</code>
@@ -149,7 +149,7 @@ in <code>m</code> enthalten ist.
 <code>m</code> zurückgibt, sonst <code>None</code>. Somit ist auch
 gestattet:
 <pre class="rust ibox">
-println!("{:?}",m.get("x"));
+println!("{:?}", m.get("x"));
 </pre>
 
 <p>Man kann <code>m.get(key)</code> als Verallgemeinerung von
@@ -181,7 +181,7 @@ struct Id {
 }
 impl Id {
     fn new(id: u32, name: &amp;str) -&gt; Self {
-        Self{id, name: Rc::from(name)}
+        Self {id, name: Rc::from(name)}
     }
 }
 impl Hash for Id {
@@ -200,7 +200,7 @@ fn main() {
     let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
     m.insert(Id::new(0,"A"),());
     m.insert(Id::new(1,"A"),());
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -225,7 +225,7 @@ struct Id {
 }
 impl Id {
     fn new(text: &amp;str) -&gt; Self {
-        Self{id: Rc::from(text)}
+        Self {id: Rc::from(text)}
     }
 }
 impl Hash for Id {
@@ -244,7 +244,7 @@ fn main() {
     let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
     m.insert(Id::new("A"),());
     m.insert(Id::new("A"),());
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 <p>Bei der Berechnung des Hashwertes muss man hier aufpassen,
@@ -266,15 +266,15 @@ use std::rc::Rc;
 struct Id {id: Rc&lt;str&gt;}
 
 fn main() {
-    let a = Id{id: Rc::from("A")};
+    let a = Id {id: Rc::from("A")};
     let b = a.clone();
     println!("Diese Adressen stimmen nicht überein:");
-    println!("0x{:x}",&amp;a.id as *const _ as usize);
-    println!("0x{:x}",&amp;b.id as *const _ as usize);
+    println!("0x{:x}", &amp;a.id as *const _ as usize);
+    println!("0x{:x}", &amp;b.id as *const _ as usize);
     println!();
     println!("Diese Adressen stimmen überein:");
-    println!("0x{:x}",&amp;*a.id as *const str as *const () as usize);
-    println!("0x{:x}",&amp;*b.id as *const str as *const () as usize);
+    println!("0x{:x}", &amp;*a.id as *const str as *const () as usize);
+    println!("0x{:x}", &amp;*b.id as *const str as *const () as usize);
 }
 </pre>
 
@@ -318,9 +318,9 @@ fn ptr_as_usize&lt;T: ?Sized&gt;(p: &amp;T) -&gt; usize {
 <pre class="rust ibox">
 fn main() {
     let id: Rc&lt;str&gt; = Rc::from("A");
-    println!("0x{:x}",rc_as_usize(&amp;id));
-    println!("0x{:x}",ptr_as_usize(&amp;*id));
-    println!("0x{:x}",ptr_as_usize(&amp;id));
+    println!("0x{:x}", rc_as_usize(&amp;id));
+    println!("0x{:x}", ptr_as_usize(&amp;*id));
+    println!("0x{:x}", ptr_as_usize(&amp;id));
 }
 </pre>
 <p>Die Ausgabe jagt mir einen Schauer über den Rücken:
@@ -373,7 +373,7 @@ use std::collections::HashSet;
 
 fn main() {
     let m: HashSet&lt;i32&gt; = hashset!{1, 2, 3, 4};
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -424,4 +424,3 @@ let m: HashSet&lt;i32&gt; = m1.union(&amp;m2).cloned().collect();
 
 </body>
 </html>
-

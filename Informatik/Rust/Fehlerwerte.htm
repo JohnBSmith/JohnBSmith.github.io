@@ -35,8 +35,8 @@ Datentyp:
 
 <pre class="rust ibox">
 enum Option&lt;T&gt; {
-    None,
-    Some(T)
+    Some(T),
+    None
 }
 </pre>
 
@@ -51,20 +51,20 @@ fn find(a: &amp;[&amp;str], s: &amp;str) -&gt; Option&lt;usize&gt; {
     for index in 0..a.len() {
         if a[index] == s {return Some(index);}
     }
-    return None;
+    None
 }
 
 fn print_index(a: &amp;[&amp;str], s: &amp;str) {
     match find(a,s) {
-        Some(index) =&gt; println!("Der Index zu '{}' ist {}.",s,index),
-        None =&gt; println!("Konnte '{}' nicht finden.",s)
+        Some(index) =&gt; println!("Der Index zu '{}' ist {}.", s, index),
+        None =&gt; println!("Konnte '{}' nicht finden.", s)
     }
 }
 
 fn main() {
     let a = vec!["Kaffee", "Tee", "Mate"];
-    print_index(&amp;a,"Tee");
-    print_index(&amp;a,"Pfefferminztee");
+    print_index(&amp;a, "Tee");
+    print_index(&amp;a, "Pfefferminztee");
 }
 </pre>
 
@@ -103,10 +103,10 @@ halten kann.
 fn int(s: &amp;str) -&gt; u32 {
     let mut value: u32 = 0;
     for c in s.chars() {
-        let digit = u32::from(c)-u32::from('0');
-        value = 10*value+digit;
+        let digit = u32::from(c) - u32::from('0');
+        value = 10*value + digit;
     }
-    return value;
+    value
 }
 </pre>
 
@@ -120,18 +120,18 @@ fn int(s: &amp;str) -&gt; Result&lt;u32,ParseError&gt; {
         if !c.is_ascii_digit() {
             return Err(ParseError::InvalidDigit);
         }
-        let digit = u32::from(c)-u32::from('0');
-        value = 10*value+u64::from(digit);
+        let digit = u32::from(c) - u32::from('0');
+        value = 10*value + u64::from(digit);
         if value&gt;u64::from(std::u32::MAX) {
             return Err(ParseError::Overflow);
         }
     }
-    return Ok(value as u32);
+    Ok(value as u32)
 }
 
 fn print_number(s: &amp;str) {
     match int(s) {
-        Ok(value) =&gt; println!("Zahl: {}",value),
+        Ok(value) =&gt; println!("Zahl: {}", value),
         Err(ParseError::InvalidDigit) =&gt; println!("Keine Zahl."),
         Err(ParseError::Overflow) =&gt; println!("Zahl zu groß.")
     }
@@ -153,10 +153,10 @@ fn int(s: &amp;str) -&gt; Option&lt;u32&gt; {
     let mut value: u32 = 0;
     for c in s.chars() {
         if !c.is_ascii_digit() {return None;}
-        let digit = u32::from(c)-u32::from('0');
+        let digit = u32::from(c) - u32::from('0');
         value = value.checked_mul(10)?.checked_add(digit)?;
     }
-    return Some(value);
+    Some(value)
 }
 </pre>
 
@@ -243,13 +243,13 @@ fn get_path() -&gt; Result&lt;String,String&gt; {
 fn load() -&gt; Result&lt;String,Error&gt; {
     let path = get_path()?;
     let text = std::fs::read_to_string(path)?;
-    return Ok(text);
+    Ok(text)
 }
 
 fn main() -&gt; Result&lt;(),Error&gt; {
     let text = load()?;
-    println!("{}",text);
-    return Ok(());
+    println!("{}", text);
+    Ok(())
 }
 </pre>
 
@@ -281,7 +281,7 @@ Das kann man z.&nbsp;B. so bewerkstelligen:
 <pre class="rust ibox">
 fn log_err(file: &amp;str, line: u32, text: String) {
     eprintln!("Huch, da ist ein Fehler in Datei {}, \
-        Zeile {} aufgetreten:\n{}",file,line,text);
+        Zeile {} aufgetreten:\n{}", file, line, text);
 }
 
 fn main() {
@@ -289,10 +289,10 @@ fn main() {
     const VERLUST: u8 = 0;
     let x: u32 = 1000;
     let y = u8::try_from(x).unwrap_or_else(|err| {
-        log_err(file!(),line!(),err.to_string());
+        log_err(file!(), line!(), err.to_string());
         VERLUST
     });
-    println!("{}",y);
+    println!("{}", y);
 }
 </pre>
 

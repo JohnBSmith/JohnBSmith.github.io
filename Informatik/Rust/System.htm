@@ -47,7 +47,7 @@ use std::process::Command;
 fn main() -&gt; std::io::Result&lt;()&gt; {
     let mut child = Command::new("date").spawn()?;
     let _status = child.wait()?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -85,7 +85,7 @@ Command::new("Werkzeug").args(&amp;["-x", "-y", "Datei.txt"])
 </pre>
 
 <p>Das Datum im Format <code>Jahr-Monat-Tag</code> bekommt
-man bspw. so:
+man unter Linux bspw. so:
 <pre class="rust ibox">
 let output = Command::new("date").arg("+%Y-%m-%d").output()?;
 let s = std::str::from_utf8(&amp;output.stdout).unwrap();

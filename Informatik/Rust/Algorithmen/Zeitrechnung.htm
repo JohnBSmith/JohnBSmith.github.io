@@ -75,9 +75,9 @@ pub fn calendar_date(calendar: Calendar, jd: f64) -&gt; Date {
 
     let day = B - D - (30.6001*E).floor() + F;
     return if E &lt;= 13.0 {
-        Date{day, month: E as i32 - 1, year: C as i32 - 4716}
+        Date {day, month: E as i32 - 1, year: C as i32 - 4716}
     } else {
-        Date{day, month: E as i32 - 13, year: C as i32 - 4715}
+        Date {day, month: E as i32 - 13, year: C as i32 - 4715}
     };
 }
 </pre>
@@ -139,7 +139,7 @@ Datum möglich. Den abgerundeten Wert braucht man nur um
 
 <pre class="rust ibox">
 pub fn day_of_the_week(year: i32, month: i32, day: i32) -&gt; Day {
-    let date = Date{year, month, day: f64::from(day)};
+    let date = Date {year, month, day: f64::from(day)};
     let jd = julian_date(Calendar::Greg,date);
     return Day((jd as i32 + 3) % 7);
 }

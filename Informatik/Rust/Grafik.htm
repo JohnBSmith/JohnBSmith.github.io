@@ -103,10 +103,10 @@ struct Canvas {
 impl Canvas {
     pub fn new(width: u32, height: u32, color: Color) -&gt; Self {
         let data = Box::from(vec![color; (width*height) as usize]);
-        return Canvas{width,height,data};
+        Self {width, height, data}
     }
     pub fn pset(&amp;mut self, x: u32, y: u32, color: Color) {
-        self.data[(self.width*y+x) as usize] = color;
+        self.data[(self.width*y + x) as usize] = color;
     }
     pub fn width(&amp;self) -&gt; u32 {self.width}
     pub fn height(&amp;self) -&gt; u32 {self.height}
@@ -134,7 +134,7 @@ impl Canvas {
             buffer.push(g);
             buffer.push(b);
         }
-        return PPM{data: buffer};
+        PPM {data: buffer}
     }
     pub fn save(&amp;self, path: &amp;str) -&gt; Result&lt;(),std::io::Error&gt; {
         use std::io::Write;
@@ -200,19 +200,19 @@ mod complex {
     impl std::ops::Add&lt;C64&gt; for C64 {
         type Output = Self;
         fn add(self, y: Self) -&gt; Self {
-            Self{re: self.re + y.re, im: self.im + y.im}
+            Self {re: self.re + y.re, im: self.im + y.im}
         }
     }
     impl std::ops::Sub&lt;C64&gt; for C64 {
         type Output = Self;
         fn sub(self, y: Self) -&gt; Self {
-            Self{re: self.re - y.re, im: self.im - y.im}
+            Self {re: self.re - y.re, im: self.im - y.im}
         }
     }
     impl std::ops::Mul&lt;C64&gt; for C64 {
         type Output = Self;
         fn mul(self, y: Self) -&gt; Self {
-            Self{
+            Self {
                 re: self.re*y.re - self.im*y.im,
                 im: self.re*y.im + self.im*y.re
             }
@@ -244,12 +244,12 @@ ist.
 use complex::C64;
 
 fn sigmoid(x: f64) -&gt; f64 {
-    return x/(x+1.0);
+    x/(x + 1.0)
 }
 
 fn choose_color(i: u32, gradient: f64) -&gt; Color {
     let t = (255.0-255.0*sigmoid(gradient*f64::from(i))) as u8;
-    return Color::rgb(t,t,t);
+    Color::rgb(t,t,t)
 }
 
 struct System {
@@ -257,12 +257,12 @@ struct System {
     gradient: f64, max_iter: u32
 }
 impl System {
-    fn new(canvas: Canvas, scale: f64, pos: (f64,f64)) -&gt; System {
-        System{canvas,scale,pos, gradient: 0.04, max_iter: 1000}
+    fn new(canvas: Canvas, scale: f64, pos: (f64,f64)) -&gt; Self {
+        Self {canvas, scale, pos, gradient: 0.04, max_iter: 1000}
     }
     fn fractal(&amp;mut self,
         f: &amp;dyn Fn(C64,C64) -&gt; C64,
-        z0: &amp;dyn Fn(C64)-&gt;C64
+        z0: &amp;dyn Fn(C64) -&gt; C64
     ) {
         let w = self.canvas.width();
         let h = self.canvas.height();
@@ -280,7 +280,7 @@ impl System {
             for px in 0..w {
                 let x = x0 + scale*(f64::from(px)-w2);
                 let y = y0 - scale*(f64::from(py)-h2);
-                let c = C64{re: x, im: y};
+                let c = C64 {re: x, im: y};
                 let mut z = z0(c);
                 let mut count: u32 = 0;
                 while count &lt; max {
@@ -306,9 +306,9 @@ Vielfachen, das kommt dem goldenen Schnitt einigermaßen nahe.
 fn main() -&gt; Result&lt;(),std::io::Error&gt; {
     let canvas = Canvas::new(720,480,Color::rgb(0,0,0));
     let mut s = System::new(canvas,2.0,(-0.5,0.0));
-    s.fractal(&amp;|z,c| z*z+c, &amp;|_| C64{re: 0.0, im: 0.0});
+    s.fractal(&amp;|z,c| z*z+c, &amp;|_| C64 {re: 0.0, im: 0.0});
     s.canvas.save("Fraktal.ppm")?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 

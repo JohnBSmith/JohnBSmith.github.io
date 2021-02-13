@@ -413,14 +413,14 @@ ohne Schwierigkeiten umsetzen:
 fn add(a: &amp;[i32], b: &amp;[i32]) -&gt; Vec&lt;i32&gt; {
     let mut c: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
     for i in 0..a.len() {
-        c.push(a[i]+b[i]);
+        c.push(a[i] + b[i]);
     }
     return c;
 }
 
 fn main() {
-    let a = vec![1,2,3,4];
-    println!("{:?}",add(&amp;a,&amp;a));
+    let a = vec![1, 2, 3, 4];
+    println!("{:?}", add(&amp;a,&amp;a));
 }
 </pre>
 
@@ -472,7 +472,7 @@ use std::ops::Add;
 fn add&lt;T: Copy + Add&lt;Output=T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
     let mut c: Vec&lt;T&gt; = Vec::with_capacity(a.len());
     for i in 0..a.len() {
-        c.push(a[i]+b[i]);
+        c.push(a[i] + b[i]);
     }
     return c;
 }
@@ -569,13 +569,13 @@ der Reihenfolge eines Arrays:
 <pre class="rust ibox">
 fn reverse&lt;T&gt;(a: &amp;mut [T]){
     let n = a.len();
-    for i in 0..n/2 {a.swap(i,n-1-i);}
+    for i in 0..n/2 {a.swap(i, n-1-i);}
 }
 
 fn main(){
-    let mut a: Vec&lt;i32&gt; = vec![1,2,3,4];
+    let mut a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
     reverse(&amp;mut a);
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -590,7 +590,7 @@ use std::any::Any;
 fn reverse(a: &amp;mut [&amp;dyn Any]) {
     let n = a.len();
     for i in 0..n/2 {
-        a.swap(i,n-1-i);
+        a.swap(i, n-1-i);
     }
 }
 
@@ -599,9 +599,9 @@ fn downcast(a: &amp;[&amp;dyn Any]) -&gt; Vec&lt;i32&gt; {
 }
 
 fn main() {
-    let mut a: Vec&lt;&amp;dyn Any&gt; = vec![&amp;1,&amp;2,&amp;3,&amp;4];
+    let mut a: Vec&lt;&amp;dyn Any&gt; = vec![&amp;1, &amp;2, &amp;3, &amp;4];
     reverse(&amp;mut a);
-    println!("{:?}",downcast(&amp;a));
+    println!("{:?}", downcast(&amp;a));
 }
 </pre>
 
@@ -625,14 +625,14 @@ impl&lt;T: Display+Debug&gt; Object for T {}
 fn reverse(a: &amp;mut [&amp;dyn Object]) {
     let n = a.len();
     for i in 0..n/2 {
-        a.swap(i,n-1-i);
+        a.swap(i, n-1-i);
     }
 }
 
 fn main() {
-    let mut a: Vec&lt;&amp;dyn Object&gt; = vec![&amp;1,&amp;2,&amp;3,&amp;4];
+    let mut a: Vec&lt;&amp;dyn Object&gt; = vec![&amp;1, &amp;2, &amp;3, &amp;4];
     reverse(&amp;mut a);
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -651,7 +651,7 @@ fn pow(x: i32, n: u32) -&gt; i32 {
 }
 
 fn main() {
-    println!("{}",pow(2,10));
+    println!("{}", pow(2,10));
 }
 </pre>
 

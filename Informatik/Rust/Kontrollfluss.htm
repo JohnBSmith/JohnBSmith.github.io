@@ -77,7 +77,7 @@ Größe&nbsp;<code>n</code> zerlegt.
 
 <pre class="rust ibox">
 fn complete_chunks&lt;T: Clone&gt;(a: &amp;[T], n: u32) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
-    let mut b = vec![];
+    let mut acc = vec![];
     let mut i = a.into_iter();
     'outer: loop {
         let mut t = vec![];
@@ -87,9 +87,9 @@ fn complete_chunks&lt;T: Clone&gt;(a: &amp;[T], n: u32) -&gt; Vec&lt;Vec&lt;T&gt
                 None =&gt; break 'outer
             }
         }
-        b.push(t);
+        acc.push(t);
     }
-    return b;
+    acc
 }
 
 fn main() {
@@ -101,22 +101,26 @@ fn main() {
 <p>Außerdem ist es möglich, mit einem Wert aus der Schleife
 auszubrechen. Man könnte das Beispiel also auch so schreiben:
 <pre class="rust ibox">
-return 'outer: loop {
-    let mut t = vec![];
-    for _ in 0..n {
-        match i.next() {
-            Some(x) =&gt; t.push(x.clone()),
-            None =&gt; break 'outer b
+fn complete_chunks&lt;T: Clone&gt;(a: &amp;[T], n: u32) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    let mut acc = vec![];
+    let mut i = a.into_iter();
+    'outer: loop {
+        let mut t = vec![];
+        for _ in 0..n {
+            match i.next() {
+                Some(x) =&gt; t.push(x.clone()),
+                None =&gt; break 'outer acc
+            }
         }
+        acc.push(t);
     }
-    b.push(t);
-};
+}
 </pre>
 
 <p>Natürlich hätte man das in diesem Fall auch anders formulieren
 können, z.&nbsp;B. durch Einführung einer Hilfsvariable oder einfach
 <pre class="rust ibox">
-None =&gt; return b
+None =&gt; return acc
 </pre>
 
 <h2 id="Pattern-Matching">Pattern-Matching</h2>
@@ -136,7 +140,7 @@ Betrachten wir dazu die Fibonacci-Folge
 <p>Die Funktion
 <pre class="rust ibox">
 fn fib(n: u32) -&gt; u32 {
-    if n==0 || n==1 {1} else {fib(n-1) + fib(n-2)}
+    if n == 0 || n == 1 {1} else {fib(n-1) + fib(n-2)}
 }
 </pre>
 
@@ -227,7 +231,7 @@ Potenzfunktion
 
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) &gt; u32 {
-    if n==0 {1} else {x*pow(x,n-1)}
+    if n == 0 {1} else {x*pow(x,n-1)}
 }
 </pre>
 
@@ -246,7 +250,7 @@ vorkommen, womit sich die alternative Formulierung
 
 <pre class="rust ibox">
 fn pow((x,n): (u32,u32)) -&gt; u32 {
-    if n==0 {1} else {x*pow((x,n-1))}
+    if n == 0 {1} else {x*pow((x,n-1))}
 }
 </pre>
 
@@ -265,7 +269,7 @@ enum Option&lt;T&gt; {None, Some(T)}.
 Potenzfunktion mit Überlauf-Prüfung als:
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
-    if n==0 {Some(1)} else {
+    if n == 0 {Some(1)} else {
         x.checked_mul(match pow(x,n-1) {
             Some(value) =&gt; value,
             None =&gt; return None
@@ -278,7 +282,7 @@ fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
 Fragezeichen-Operator:
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
-    if n==0 {Some(1)} else {x.checked_mul(pow(x,n-1)?)}
+    if n == 0 {Some(1)} else {x.checked_mul(pow(x,n-1)?)}
 }
 </pre>
 

@@ -53,7 +53,7 @@ enthalten.
 <p>Das Programm:
 <pre class="rust ibox">
 use std::net::TcpStream;
-use std::io::{Write,Read};
+use std::io::{Write, Read};
 
 fn main() -&gt; Result&lt;(),std::io::Error&gt; {
     let host = "www.example.com";
@@ -66,8 +66,8 @@ fn main() -&gt; Result&lt;(),std::io::Error&gt; {
     stream.write_all(message.as_bytes())?;
     let mut response = String::new();
     stream.read_to_string(&amp;mut response)?;
-    println!("{}",response);
-    return Ok(());
+    println!("{}", response);
+    Ok(())
 }
 </pre>
 
@@ -128,7 +128,7 @@ Nebenläufigkeit.
 <h3>IPv4</h3>
 <p>Die IP-Adresse muss man nicht unbedingt als Zeichenkette übergeben:
 <pre class="rust ibox">
-use std::net::{TcpStream,SocketAddrV4,Ipv4Addr};
+use std::net::{TcpStream, SocketAddrV4, Ipv4Addr};
 
 let socket = SocketAddrV4::new(Ipv4Addr::new(93,184,216,34),80);
 let mut stream = TcpStream::connect(socket)?;
