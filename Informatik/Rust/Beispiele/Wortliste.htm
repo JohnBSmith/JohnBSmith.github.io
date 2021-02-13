@@ -34,7 +34,7 @@ fn string_to_words(s: &amp;str) -&gt; Vec&lt;String&gt; {
         if c.is_alphabetic() {
             buffer.push(c);
         } else {
-            if buffer.len()&gt;0 {
+            if !buffer.is_empty() {
                 acc.push(buffer.clone());
                 buffer.clear();
             }
@@ -79,12 +79,11 @@ use std::collections::HashSet;
 use std::iter::FromIterator;
 use std::hash::Hash;
 
-fn string_to_words(s: &amp;str) -&gt; impl Iterator&lt;Item=String&gt; + '_ {
-    s.split(|x: char| !x.is_alphabetic())
-        .filter(|&amp;x| x != "").map(String::from)
+fn string_to_words(s: &amp;str) -&gt; impl Iterator&lt;Item=&amp;str&gt; + '_ {
+    s.split(|x: char| !x.is_alphabetic()).filter(|&amp;x| x != "")
 }
 
-fn unique&lt;T: Eq+Hash&gt;(i: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;T&gt; {
+fn unique&lt;T: Eq + Hash&gt;(i: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;T&gt; {
     HashSet::&lt;T&gt;::from_iter(i.into_iter()).into_iter().collect()
 }
 
@@ -103,6 +102,7 @@ fn main() {
     println!("{:?}", words);
 }
 </pre>
+
 
 
 </body>
