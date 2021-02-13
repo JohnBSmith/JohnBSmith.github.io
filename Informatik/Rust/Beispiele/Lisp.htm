@@ -130,17 +130,17 @@ struct Token {
 }
 
 enum ErrorEnum {
-    Syntax{line: usize, col: usize, text: String},
-    Value{text: String}
+    Syntax {line: usize, col: usize, text: String},
+    Value {text: String}
 }
 impl std::fmt::Display for ErrorEnum {
     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
         match self {
-            ErrorEnum::Syntax{text, line, col} =&gt; {
+            ErrorEnum::Syntax {text, line, col} =&gt; {
                 write!(f, "Syntax error (line {}, col {}): {}",
                     line + 1, col + 1, text)
             },
-            ErrorEnum::Value{text} =&gt; {
+            ErrorEnum::Value {text} =&gt; {
                 write!(f, "Error: {}", text)
             }
         }
@@ -151,7 +151,7 @@ impl std::fmt::Display for ErrorEnum {
 type Error = Rc&lt;ErrorEnum&gt;;
 
 fn syntax_error(line: usize, col: usize, text: String) -&gt; Error {
-    Rc::new(ErrorEnum::Syntax{line,col,text})
+    Rc::new(ErrorEnum::Syntax {line, col, text})
 }
 
 fn mul10_add(value: i32, digit: u8) -&gt; Option&lt;i32&gt; {
@@ -185,10 +185,10 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
                     }
                     i += 1; col += 1;
                 } else {
-                    break
+                    break;
                 }
             }
-            tokens.push(Token{value: Symbol::Int(value), line, col: col0});
+            tokens.push(Token {value: Symbol::Int(value), line, col: col0});
         } else if is_letter(c) {
             let col0 = col;
             let mut id = String::new();
@@ -199,18 +199,18 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
                     id.push(char::from(c));
                     i += 1; col += 1;
                 } else {
-                    break
+                    break;
                 }
             }
-            tokens.push(Token{value: Symbol::Identifier(id), line, col: col0});
+            tokens.push(Token {value: Symbol::Identifier(id), line, col: col0});
         } else {
             match c {
                 b'(' =&gt; {
-                    tokens.push(Token{value: Symbol::ParenLeft, line, col});
+                    tokens.push(Token {value: Symbol::ParenLeft, line, col});
                     i += 1; col += 1;
                 },
                 b')' =&gt; {
-                    tokens.push(Token{value: Symbol::ParenRight, line, col});
+                    tokens.push(Token {value: Symbol::ParenRight, line, col});
                     i += 1; col += 1;
                 },
                 b' ' | b'\t' =&gt; {
@@ -236,7 +236,7 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
                         if c == b'\n' {col = 0; line += 1;}
                         s.push(char::from(c));
                     }
-                    tokens.push(Token{value: Symbol::String(s), line, col: col0});                    
+                    tokens.push(Token {value: Symbol::String(s), line, col: col0});                    
                 }
                 c =&gt; {
                     return Err(syntax_error(line, col,
@@ -245,7 +245,7 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
             }
         }
     }
-    tokens.push(Token{value: Symbol::None, line, col});
+    tokens.push(Token {value: Symbol::None, line, col});
     Ok(tokens)
 }
 
@@ -270,7 +270,7 @@ fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;,Error&gt; {
                     Rc::from(StrObj(Rc::from(&amp;**id)))));
             },
             Symbol::ParenLeft =&gt; {
-                stack.push(ParserFrame{
+                stack.push(ParserFrame {
                     list: std::mem::take(&amp;mut list),
                     token: t
                 });
@@ -281,7 +281,7 @@ fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;,Error&gt; {
                     if app.is_empty() {
                         list.push(Object::None);
                     } else {
-                        list.push(Object::App(Rc::new(App{
+                        list.push(Object::App(Rc::new(App {
                             list: app,
                             line: frame.token.line,
                             col: frame.token.col
@@ -297,7 +297,7 @@ fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;,Error&gt; {
                     return Err(syntax_error(t.line, t.col,
                         "bracket mismatch.".into()));
                 }
-                break
+                break;
             }
         }
     }
@@ -337,23 +337,21 @@ mod scope_table {
             if self.context.is_empty() {
                 Object::None
             } else {
-                Object::App(Rc::new(App{
+                Object::App(Rc::new(App {
                     line: UNDEFINED, col: UNDEFINED,
                     list: std::mem::take(&amp;mut self.context)}))
             }
         }
     }
-    pub struct ScopeTable{
+    pub struct ScopeTable {
         env: Option&lt;Rc&lt;ScopeTable&gt;&gt;,
         pub frame: RefCell&lt;Frame&gt;
     }
     impl ScopeTable {
         pub fn new(env: Option&lt;Rc&lt;Self&gt;&gt;) -&gt; Rc&lt;Self&gt; {
-            Rc::new(Self{
-                env,
+            Rc::new(Self {env,
                 frame: RefCell::new(Frame {map: HashMap::new(),
-                count_arg: 0, count_context: 0, context: vec![]})
-            })
+                count_arg: 0, count_context: 0, context: vec![]})})
         }
         pub fn get(&amp;self, key: &amp;Rc&lt;str&gt;) -&gt; Option&lt;VarInfo&gt; {
             if let Some(info) = self.frame.borrow().map.get(key) {
@@ -418,11 +416,11 @@ fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
             _ =&gt; return let_syntax_error(app)
         }
     }
-    let f = Object::App(Rc::new(App{
+    let f = Object::App(Rc::new(App {
         line: app.line, col: app.col,
         list: vec![
             Object::Symbol(Rc::from("fn")),
-            Object::App(Rc::new(App{
+            Object::App(Rc::new(App {
                 line: app.line, col: app.col, list: args})),
             app.list[2].clone()]}));
     let mut a: Vec&lt;Object&gt; = vec![];
@@ -433,7 +431,7 @@ fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
             _ =&gt; return let_syntax_error(app)
         }        
     }
-    transform_app(env,&amp;Rc::new(App{
+    transform_app(env,&amp;Rc::new(App {
         line: app.line, col: app.col, list: a}))
 }
 
@@ -445,10 +443,10 @@ fn transform_symbol(env: &amp;Rc&lt;ScopeTable&gt;, id: &amp;Rc&lt;str&gt;) -&gt
             VarInfo::Argument(index) =&gt; (index, load_arg),
             VarInfo::Context(index) =&gt; (index, load_context)
         };
-        Object::App(Rc::new(App{
+        Object::App(Rc::new(App {
             line: UNDEFINED, col: UNDEFINED,
             list: vec![
-                Object::FnLazy(Rc::new(FnLazyObj{fp, id: "load",
+                Object::FnLazy(Rc::new(FnLazyObj {fp, id: "load",
                     argc_min: 1, argc_max: 1})),
                 Object::Int(index as i32)]}))
     } else {
@@ -472,7 +470,7 @@ fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
             let argc = insert_args(&amp;tab, &amp;app.list[1])?;
             let body = transform(&amp;tab, &amp;app.list[2])?;
             let context = tab.frame.borrow_mut().context();
-            return Ok(Object::App(Rc::new(App{
+            return Ok(Object::App(Rc::new(App {
                 line: app.line, col: app.col,
                 list: vec![
                     Object::Symbol(id.clone()),
@@ -488,7 +486,7 @@ fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
     }
     let list = app.list.iter().map(|x| transform(env,x))
         .collect::&lt;Result&lt;Vec&lt;Object&gt;,_&gt;&gt;()?;
-    Ok(Object::App(Rc::new(App{line: app.line, col: app.col, list})))
+    Ok(Object::App(Rc::new(App {line: app.line, col: app.col, list})))
 }
 
 fn transform(env: &amp;Rc&lt;ScopeTable&gt;, t: &amp;Object)
@@ -707,7 +705,7 @@ fn log(env: &amp;mut Env) -&gt; Object {
 }
 
 fn cons(env: &amp;mut Env) -&gt; Object {
-    Object::Interface(Rc::new(Node{
+    Object::Interface(Rc::new(Node {
         first: env.arg(0).clone(),
         rest: env.arg(1).clone()
     }))
@@ -734,7 +732,7 @@ fn empty(env: &amp;mut Env) -&gt; Object {
 fn list_literal(env: &amp;mut Env) -&gt; Object {
     let mut list = Object::None;
     for arg in env.argv().iter().rev() {
-        list = Object::Interface(Rc::new(Node{
+        list = Object::Interface(Rc::new(Node {
             first: arg.clone(),
             rest: list
         }));
@@ -776,7 +774,7 @@ fn lambda(env: &amp;mut Env, app: &amp;App) -&gt; Object {
         _ =&gt; Vec::new()
     };
     let body = argv[3].clone();
-    let f: Rc&lt;Function&gt; = Rc::new(FnObj{
+    let f: Rc&lt;Function&gt; = Rc::new(FnObj {
         argc_min: argc, argc_max: argc,
         id: id.0.clone(), context,
         fp: move |env: &amp;mut Env| eval(env, &amp;body),
@@ -802,7 +800,7 @@ fn tail_call(env: &amp;mut Env, app: &amp;App) -&gt; Object {
         if let Object::Err(_) = value {return value;}
         list.push(value);
     }
-    Object::App(Rc::new(App{line: app.line, col: app.col, list}))
+    Object::App(Rc::new(App {line: app.line, col: app.col, list}))
 }
 
 fn tail_iter(env: &amp;mut Env, app: &amp;App) -&gt; Object {
@@ -859,23 +857,23 @@ impl Env {
         let mut map = HashMap::new();
         for (id, f, argc_min, argc_max) in FN_TABLE {
             let id: Rc&lt;str&gt; = Rc::from(*id);
-            map.insert(id.clone(), Object::Fn(Rc::new(FnObj{
+            map.insert(id.clone(), Object::Fn(Rc::new(FnObj {
                 fp: f, id,
                 argc_min: *argc_min, argc_max: *argc_max,
                 context: Vec::new()
             })));
         }
         for (id, fp, argc_min, argc_max) in FN_LAZY_TABLE {
-            map.insert(Rc::from(*id), Object::FnLazy(Rc::new(FnLazyObj{
+            map.insert(Rc::from(*id), Object::FnLazy(Rc::new(FnLazyObj {
                 fp, id, argc_min: *argc_min, argc_max: *argc_max})));
         }
         map.insert(Rc::from("true"), Object::Bool(true));
         map.insert(Rc::from("false"), Object::Bool(false));
-        let main_fn = Rc::new(FnObj{
+        let main_fn = Rc::new(FnObj {
             fp: |_: &amp;mut Env| Object::None, id: Rc::from("main"),
             argc_min: 0, argc_max: 0, context: Vec::new()
         });
-        Self{map, stack: Vec::new(), base_pointer: 0,
+        Self {map, stack: Vec::new(), base_pointer: 0,
             traceback: vec![], active_fn: main_fn}
     }
     fn arg(&amp;self, index: usize) -&gt; &amp;Object {
@@ -893,7 +891,7 @@ impl Env {
 }
 
 fn value_error(text: String) -&gt; Error {
-    Rc::new(ErrorEnum::Value{text})
+    Rc::new(ErrorEnum::Value {text})
 }
 
 fn argc_error(env: &amp;mut Env, id: &amp;Rc&lt;str&gt;, argc: usize,
