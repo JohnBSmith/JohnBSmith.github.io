@@ -40,8 +40,8 @@ fn cartesian_product&lt;T: Clone&gt;(a: &amp;[Vec&lt;T&gt;]) -&gt; Vec&lt;Vec&lt
 }
 
 fn main() {
-    let p = cartesian_product(&amp;[vec![0,1],vec![0,1]]);
-    println!("{:?}",p);
+    let p = cartesian_product(&amp;[vec![0, 1], vec![0, 1]]);
+    println!("{:?}", p);
 }
 </pre>
 
@@ -63,12 +63,12 @@ fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
 }
 
 fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
-    let mut buffer: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
+    let mut acc: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
     let a = &amp;mut vec![0; n as usize];
-    pow_rec(a,m,0,&amp;mut |a| {
-        buffer.push(Vec::from(a));
+    pow_rec(a,m,0, &amp;mut |a| {
+        acc.push(Vec::from(a));
     });
-    return buffer;
+    return acc;
 }
 </pre>
 
@@ -95,19 +95,19 @@ fn pow(a: &amp;mut [u32], m: u32,
             }
         }
         match stack.pop() {
-            Some(value) =&gt; {i -= 1; k = value+1;}
+            Some(value) =&gt; {i -= 1; k = value + 1;}
             _ =&gt; break
         }
     }
 }
 
 fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
-    let mut buffer: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
+    let mut acc: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
     let a = &amp;mut vec![0; n as usize];
-    pow(a,m,&amp;mut |a| {
-        buffer.push(Vec::from(a));
+    pow(a,m, &amp;mut |a| {
+        acc.push(Vec::from(a));
     });
-    return buffer;
+    return acc;
 }
 </pre>
 
@@ -145,12 +145,12 @@ fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Ve
 fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
     callback: &amp;mut dyn FnMut(&amp;[T])
 ) {
-    if n==1 {
+    if n == 1 {
         callback(a);
     } else {
         perm(a,n-1,callback);
         for i in 0..n-1 {
-            if n%2==0 {
+            if n%2 == 0 {
                 a.swap(i,n-1);
             } else {
                 a.swap(0,n-1);
@@ -161,15 +161,15 @@ fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
 }
 
 fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
-    let mut buffer: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
+    let mut acc: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
     let n = a.len();
     let a = &amp;mut Vec::from(a);
-    perm(a,n,&amp;mut |a| {buffer.push(Vec::from(a));});
-    return buffer;
+    perm(a,n, &amp;mut |a| {acc.push(Vec::from(a));});
+    return acc;
 }
 
 fn main() {
-    println!("{:?}",permutations(&amp;[1,2,3]));
+    println!("{:?}", permutations(&amp;[1, 2, 3]));
 }
 </pre>
 
@@ -201,15 +201,15 @@ fn perm&lt;T&gt;(a: &amp;mut [T], callback: &amp;mut dyn FnMut(&amp;[T])) {
 }
 
 fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
-    let mut buffer: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
+    let mut acc: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
     let a = &amp;mut Vec::from(a);
-    perm(a,&amp;mut |a| {buffer.push(Vec::from(a));});
-    return buffer;
+    perm(a, &amp;mut |a| {acc.push(Vec::from(a));});
+    return acc;
 }
 
 fn main() {
-    for t in permutations(&amp;[1,2,3]) {
-        println!("{:?}",t);
+    for t in permutations(&amp;[1, 2, 3]) {
+        println!("{:?}", t);
     }
 }
 </pre>
@@ -218,8 +218,8 @@ fn main() {
 
 <pre class="rust box">
 fn choose(n: u64, mut k: u64) -&gt; u64 {
-    if k&gt;n {return 0;}
-    if k&gt;n-k {k = n-k;}
+    if k &gt; n {return 0;}
+    if k &gt; n-k {k = n-k;}
     let mut y = 1;
     for i in 0..k {
         y = y*(n-i)/(i+1);
@@ -230,12 +230,12 @@ fn choose(n: u64, mut k: u64) -&gt; u64 {
 fn tabluate(label: &amp;str, a0: u64, a1: u64, b0: u64, b1: u64,
     shift: usize, f: &amp;dyn Fn(u64,u64)-&gt;u64)
 {
-    print!("{:^5}|",label);
-    for b in b0..=b1 {print!("{:&gt;1$}",b,shift);}
-    println!("\n{:\u{2500}&lt;1$}","",6+shift*((b1-b0+1) as usize));
+    print!("{:^5}|", label);
+    for b in b0..=b1 {print!("{:&gt;1$}", b, shift);}
+    println!("\n{:\u{2500}&lt;1$}", "", 6 + shift*((b1-b0+1) as usize));
     for a in a0..=a1 {
-        print!("{:&gt;4} |",a);
-        for b in b0..=b1 {print!("{:&gt;1$}",f(a,b),shift);}
+        print!("{:&gt;4} |", a);
+        for b in b0..=b1 {print!("{:&gt;1$}", f(a,b), shift);}
         println!();
     }
 }

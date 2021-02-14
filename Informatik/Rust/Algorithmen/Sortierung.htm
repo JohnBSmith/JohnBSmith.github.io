@@ -24,15 +24,15 @@ fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
     let n = a.len();
     for _ in 0..n {
         for i in 0..n-1 {
-            if a[i+1]&lt;a[i] {a.swap(i,i+1);}
+            if a[i+1] &lt; a[i] {a.swap(i,i+1);}
         }
     }
 }
 
 fn main() {
-    let mut a = [3,1,4,2];
+    let mut a = [3, 1, 4, 2];
     bubble_sort(&amp;mut a);
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -40,19 +40,19 @@ fn main() {
 
 <h3>Rekursiv</h3>
 <pre class="rust box">
-fn qsort&lt;T: Ord+Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
-    if a.len()==0 {return vec![];}
-    let l: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|x| *x&lt;a[0]).collect();
-    let r: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|x| *x&gt;=a[0]).collect();
+fn qsort&lt;T: Ord + Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    if a.is_empty() {return vec![];}
+    let l: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|&amp;x| x &lt; a[0]).collect();
+    let r: Vec&lt;T&gt; = a[1..].iter().cloned().filter(|&amp;x| x &gt;= a[0]).collect();
     [qsort(&amp;l), qsort(&amp;r)].join(&amp;a[0])
 }
 </pre>
 
 <pre class="rust box">
-fn qsort&lt;T: Ord+Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
-    if a.len()==0 {return vec![];}
+fn qsort&lt;T: Ord + Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
+    if a.is_empty() {return vec![];}
     let (l, r): (Vec&lt;T&gt;, Vec&lt;T&gt;)
-        = a[1..].iter().cloned().partition(|x| *x&lt;a[0]);
+        = a[1..].iter().cloned().partition(|&amp;x| x &lt; a[0]);
     [qsort(&amp;l), qsort(&amp;r)].join(&amp;a[0])
 }
 </pre>
@@ -60,7 +60,7 @@ fn qsort&lt;T: Ord+Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;T&gt; {
 <h3>Rekursiv, in-place</h3>
 <pre class="rust box">
 fn partition&lt;T: Ord&gt;(a: &amp;mut [T], k: usize) -&gt; usize {
-    let pivot = a.len()-1;
+    let pivot = a.len() - 1;
     a.swap(k,pivot);
     let mut i = 0;
     for j in 0..pivot {
@@ -71,7 +71,7 @@ fn partition&lt;T: Ord&gt;(a: &amp;mut [T], k: usize) -&gt; usize {
 }
 
 fn qsort&lt;T: Ord&gt;(a: &amp;mut [T]) {
-    if a.len()&lt;2 {return;}
+    if a.len() &lt; 2 {return;}
     let i = partition(a,0);
     qsort(&amp;mut a[..i]);
     qsort(&amp;mut a[i+1..]);

@@ -29,9 +29,11 @@ hierbei Objekte der Kategorie, die Funktionen die Morphismen.
 ebenfalls <code>F</code> genannten Abbildung höherer Ordnung
 einen Funktor, sofern die beiden Regeln
 
-<p class="indent"><code>F(id) = id</code>,
+<pre class="indent">
+F(id) = id,
 
-<p class="indent"><code>F(g∘f) = F(g)∘F(f)</code>
+F(g∘f) = F(g)∘F(f)
+</pre>
 
 <p>erfüllt sind.
 
@@ -133,6 +135,41 @@ impl&lt;X&gt; Functor&lt;X&gt; for Vec&lt;X&gt; {
     }
 }
 </pre>
+
+<p>Der Typkonstruktor <code>Option</code> besitzt noch eine weitere
+Eigenschaft. Bei diesem gibt es zu jedem Typ <code>X</code> eine
+Funktion
+<pre class="rust indent">
+fn Some(x: X) -&gt; Option&lt;X&gt;.
+</pre>
+
+<p>Die Familie dieser Funktionen ist eine sogenannte
+natürliche Transformation, denn es gilt
+<pre class="indent">
+Some(f(x)) = map(f)(Some(x)),
+</pre>
+
+<p>kurz
+<pre class="indent">
+Some∘f = map(f)∘Some,
+</pre>
+
+<p>oder abstrakt
+
+<pre class="indent">
+&eta;∘f = F(f)∘&eta;.
+</pre>
+
+<p>Übersichtlich ausgedrückt bedeutet diese Gleichung, dass das
+Diagramm
+
+<div class="indent"><img src="img/Funktor.png"></div>
+
+<p>bzw.
+
+<div class="indent"><img src="img/Funktor-map.png"></div>
+
+<p>kommutiert.
 
 <h2 id="Monaden">Monaden</h2>
 

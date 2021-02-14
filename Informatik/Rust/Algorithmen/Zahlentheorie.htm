@@ -26,19 +26,19 @@
 <pre class="rust box">
 // Klassischer euklidischer Algorithmus, rekursiv
 fn gcd(a: u32, b: u32) -&gt; u32 {
-    return if b==0 {a}
-      else if a==0 {b}
-      else if b&lt;a {gcd(a-b,b)}
+    return if b == 0 {a}
+      else if a == 0 {b}
+      else if b &lt; a {gcd(a-b,b)}
       else {gcd(a,b-a)};
 }
 
 // Klassischer euklidischer Algorithmus, iterativ
 fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
-    if a==0 {
+    if a == 0 {
         return b;
     } else {
         while b != 0 {
-            if b&lt;a {a = a-b;} else {b = b-a;}
+            if b &lt; a {a = a-b;} else {b = b-a;}
         }
         return a;
     }
@@ -46,7 +46,7 @@ fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
 
 // Moderner euklidischer Algorithmus, rekursiv
 fn gcd(a: u32, b: u32) -&gt; u32 {
-    if b==0 {a} else {gcd(b,a%b)}
+    if b == 0 {a} else {gcd(b,a%b)}
 }
 
 // Moderner euklidischer Algorithmus, iterativ
@@ -77,11 +77,11 @@ fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
 <pre class="rust box">
 fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; u32 {
     let mut y: u32 = 1;
-    while n&gt;1 {
+    while n &gt; 1 {
         if n%2 == 1 {y = (y*x)%m;}
         n /= 2; x = (x*x)%m;
     }
-    if n==1 {y = (y*x)%m;}
+    if n == 1 {y = (y*x)%m;}
     return y;
 }
 </pre>
@@ -90,11 +90,11 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; u32 {
 <pre class="rust box">
 fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
     let mut y: u32 = 1;
-    while n&gt;1 {
+    while n &gt; 1 {
         if n%2 == 1 {y = y.checked_mul(x)?%m;}
         n /= 2; x = x.checked_mul(x)?%m;
     }
-    if n==1 {y = y.checked_mul(x)?%m;}
+    if n == 1 {y = y.checked_mul(x)?%m;}
     return Some(y);
 }
 </pre>
@@ -104,12 +104,12 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
 <h3>Naiver Primzahltest</h3>
 <pre class="rust box">
 fn is_prime(n: u64) -&gt; bool {
-    (1..n+1).filter(|i| n%i==0).count()==2
+    (1..n+1).filter(|i| n%i==0).count() == 2
 }
 
 fn is_prime(n: u64) -&gt; bool {
     for i in 2..n {
-        if n%i==0 {return false;}
+        if n%i == 0 {return false;}
     }
     return true;
 }
@@ -119,8 +119,8 @@ fn is_prime(n: u64) -&gt; bool {
 <pre class="rust box">
 fn is_prime(n: u64) -&gt; bool {
     let mut i: u64 = 2;
-    while i*i&lt;=n {
-        if n%i==0 {return false;}
+    while i*i &lt;= n {
+        if n%i == 0 {return false;}
         i += 1;
     }
     return true;
@@ -130,12 +130,12 @@ fn is_prime(n: u64) -&gt; bool {
 <h3>Schneller Primzahltest</h3>
 <pre class="rust box">
 fn is_prime_trial_div(n: u32) -&gt; bool {
-    if n&lt;4 {return n&gt;1;}
-    if n%2==0 || n%3==0 {return false;}
+    if n &lt; 4 {return n &gt; 1;}
+    if n%2 == 0 || n%3 == 0 {return false;}
     let mut i = 5;
     let mut w = 2;
-    while i*i&lt;=n {
-        if n%i==0 {return false;}
+    while i*i &lt;= n {
+        if n%i == 0 {return false;}
         i += w;
         w = 6-w;
     }
@@ -145,17 +145,17 @@ fn is_prime_trial_div(n: u32) -&gt; bool {
 fn pow_mod(a: u32, mut n: u32, m: u32) -&gt; u64 {
     let mut p: u64 = 1;
     let mut a: u64 = u64::from(a%m);
-    while n&gt;1 {
-        if n&amp;1==1 {p = (p*a)%u64::from(m);}
+    while n &gt; 1 {
+        if n&amp;1 == 1 {p = (p*a)%u64::from(m);}
         n &gt;&gt;= 1; a = (a*a)%u64::from(m);
     }
-    if n==1 {p = (p*a)%u64::from(m);}
+    if n == 1 {p = (p*a)%u64::from(m);}
     return p;
 }
 
 fn witness(a: u32, d: u32, n: u32, mut r: u32) -&gt; bool {
     let mut p = pow_mod(a,d,n);
-    if p==1 {
+    if p == 1 {
         return true;
     } else {
         while r != 0 {
@@ -168,16 +168,16 @@ fn witness(a: u32, d: u32, n: u32, mut r: u32) -&gt; bool {
 }
 
 pub fn is_prime(n: u32) -&gt; bool {
-    if n&lt;13000000 {
+    if n &lt; 13000000 {
         return is_prime_trial_div(n);
-    } else if n&amp;1==0 {
+    } else if n&amp;1 == 0 {
         return false;
     }
 
     // let (2^r)*d = n-1;
     let mut r = 0;
     let mut d = n-1;
-    while d&amp;1==0 {r += 1; d &gt;&gt;= 1;}
+    while d&amp;1 == 0 {r += 1; d &gt;&gt;= 1;}
 
     // Miller-Rabin-Test
     return [2,7,61].iter().all(|&amp;a| witness(a,d,n,r));
@@ -189,9 +189,9 @@ pub fn is_prime(n: u32) -&gt; bool {
 fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
     let mut v: Vec&lt;(u64,u8)&gt; = vec![];
     let mut p = 2;
-    while p&lt;=n {
+    while p &lt;= n {
         let mut k = 0;
-        while n%p==0 {n = n/p; k += 1;}
+        while n%p == 0 {n = n/p; k += 1;}
         if k != 0 {v.push((p,k));}
         p += 1;
     }
@@ -203,17 +203,17 @@ fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
 <pre class="rust box">
 // Teilerliste
 fn divisors(n: u64) -> Vec&lt;u64&gt; {
-    (1..n+1).filter(|i| n%i==0).collect()
+    (1..n+1).filter(|i| n%i == 0).collect()
 }
 
 // Teileranzahlfunktion
 fn sigma0(n: u64) -&gt; usize {
-    (1..n+1).filter(|i| n%i==0).count()
+    (1..n+1).filter(|i| n%i == 0).count()
 }
 
 // Teilerfunktion
 fn sigma(x: u32, n: u64) -&gt; u64 {
-    (1..n+1).filter(|i| n%i==0).map(|i| i.pow(x)).sum()
+    (1..n+1).filter(|i| n%i == 0).map(|i| i.pow(x)).sum()
 }
 </pre>
 
@@ -221,12 +221,12 @@ fn sigma(x: u32, n: u64) -&gt; u64 {
 
 <pre class="rust box">
 fn phi(mut n: u32) -&gt; u32 {
-    if n==0 {return 0;}
+    if n == 0 {return 0;}
     let mut y: u32 = 1;
     let mut p = 2;
-    while p&lt;=n {
+    while p &lt;= n {
         let mut k = 0;
-        while n%p==0 {n = n/p; k += 1;}
+        while n%p == 0 {n = n/p; k += 1;}
         if k != 0 {y *= p.pow(k-1)*(p-1);}
         p += 1;
     }
