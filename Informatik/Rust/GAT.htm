@@ -137,14 +137,14 @@ impl&lt;X&gt; Functor&lt;X&gt; for Vec&lt;X&gt; {
 </pre>
 
 <p>Der Typkonstruktor <code>Option</code> besitzt noch eine weitere
-Eigenschaft. Bei diesem gibt es zu jedem Typ <code>X</code> eine
+Eigenschaft. Durch diesen kommt jedem Typ <code>X</code> eine
 Funktion
 <pre class="rust indent">
-fn Some(x: X) -&gt; Option&lt;X&gt;.
+fn Some(x: X) -&gt; Option&lt;X&gt;
 </pre>
 
-<p>Die Familie dieser Funktionen ist eine sogenannte
-natürliche Transformation, denn es gilt
+<p>zu. Die Familie dieser Funktionen ist eine sogenannte
+natürliche Transformation, denn
 <pre class="indent">
 Some(f(x)) = map(f)(Some(x)),
 </pre>
@@ -255,6 +255,119 @@ fn main() {
     let mx = Option::unit(0);
     println!("{:?}", Functor::map(mx, |x| [x + 1, x + 2]));
 }
+</pre>
+
+<p>Eine weitere, für das Verständnis wichtige, Funktion im
+Zusammenhang mit Monaden ist <code>join</code>, die als
+<code>bind(id)</code> definiert ist. Nun mag die Frage aufkommen,
+warum man denn die identische Funktion <code>id</code> einsetzen
+darf, wo die Signatur nichts über eine Selbstabbildung sagt.
+Die Signatur ist hier
+
+<pre class="indent">
+bind: (X -&gt; M&lt;Y&gt;) -&gt; M&lt;X&gt; -&gt; M&lt;Y&gt;,
+</pre>
+
+<p>bzw. ohne Currying und in umgedrehter Reihenfolge
+
+<pre class="indent">
+bind: (M&lt;X&gt;, X -&gt; M&lt;Y&gt;) -&gt; M&lt;Y&gt;.
+</pre>
+
+<p>Man darf hier nicht vergessen dass die Typsignatur immer noch
+eine polymorphe ist. Wir dürfen also
+<code>X&nbsp;=&nbsp;M&lt;Y&gt;</code> verlangen. Das macht
+
+<pre class="indent">
+bind: (M&lt;M&lt;Y&gt;&gt;, M&lt;Y&gt; -&gt; M&lt;Y&gt;) -&gt; M&lt;Y&gt;.
+</pre>
+
+<p>Nach Umbenennung <code>Y:=X</code> bekommt man
+
+<pre class="indent">
+bind: (M&lt;M&lt;X&gt;&gt;, M&lt;X&gt; -&gt; M&lt;X&gt;) -&gt; M&lt;X&gt;.
+</pre>
+
+<p>Die Implementierung für <code>Option</code>:
+
+<pre class="rust ibox">
+fn join&lt;X&gt;(m: Option&lt;Option&lt;X&gt;&gt;) -&gt; Option&lt;X&gt; {
+    m.bind(|x| x)
+}
+</pre>
+
+<p>Mathematisch betrachtet ist eine Monade kodiert durch das Tripel
+
+<pre class="indent">
+((Typkonstruktor, map), unit, join),
+</pre>
+
+bzw. abstrakt
+
+<pre class="indent">
+(F, &eta;, &mu;).
+</pre>
+
+<p>Hierbei ist <code>F</code> der Funktor. Die beiden Funktionen
+<code>&eta;</code> und <code>&mu;</code> sind natürliche
+Transformationen.
+
+<p>Jede Monade muss die Axiome
+
+<pre class="indent">
+&mu;∘F(&mu;) = &mu;∘&mu;,
+
+&mu;∘F(&eta;) = &mu;∘&eta; = id
+</pre>
+
+<p>erfüllen, bzw.
+
+<pre class="indent">
+join ∘ map(join) = join ∘ join,
+
+join ∘ map(unit) = join ∘ unit = id.
+</pre>
+
+<p>Bei <code>Option</code> treten nur endlich viele Fälle
+auf, die man jeweils nachrechnen kann.
+
+<p>Für <code>join(Functor::map(mmx,join))</code> gilt
+
+<pre class="indent">
+join(Functor::map(None,join)) = join(None) = None,
+
+join(Functor::map(Some(None),join)) = join(Some(join(None)))
+= join(Some(None)) = None,
+
+join(Functor::map(Some(Some(x)),join)) = join(Some(join(Some(x))))
+= join(Some(x)) = x.
+</pre>
+
+<p>Bei <code>join(join(mmx)</code> erhält man die gleichen
+Ergebnisse
+
+<pre class="indent">
+join(join(None)) = join(None) = None,
+
+join(join(Some(None))) = join(None) = None,
+
+join(join(Some(Some(x)))) = join(Some(x)) = x.
+</pre>
+
+<p>Für <code>join(Functor::map(mx,unit))</code> gilt
+
+<pre class="indent">
+join(Functor::map(None,unit)) = join(None) = None,
+
+join(Functor::map(Some(x),unit)) = join(Some(Some(x))) = Some(x).
+</pre>
+
+<p>Bei <code>join(unit(mx))</code> erhält man die gleichen Ergebnisse
+
+<pre class="indent">
+join(unit(None)) = join(Some(None)) = None,
+
+join(unit(Some(x))) = join(Some(Some(x))) = Some(x).
 </pre>
 
 </body>
