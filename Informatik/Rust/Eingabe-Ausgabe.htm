@@ -17,7 +17,7 @@
   <ol>
   <li><a href="#stdout">Standard-Ausgabe</a>
   <li><a href="#stderr">Standard-Fehlerausgabe</a>
-  <li><span class="modest">Standard-Eingabe</span>
+  <li><a href="#stdin">Standard-Eingabe</a>
   <li><span class="modest">Pipelines</span>
   </ol>
 <li><a href="#Dateien">Dateien</a>
@@ -116,6 +116,47 @@ Daten die man in diese Datei leitet, verschwinden einfach. Der Befehl
 ./p0 2&gt; /dev/null
 </pre>
 <p>führt also zur Unterdrückung der Fehlerausgabe.
+
+<h3 id="stdin">Standard-Eingabe</h3>
+
+<p>Das folgende Programm zeigt, wie zeilenweises Einlesen von
+Eingaben vonstattengeht.
+
+<pre class="rust ibox">
+use std::{io, io::stdin};
+
+fn chomp(buffer: &amp;mut String) {
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let buffer = &amp;mut String::new();
+    loop {
+        let n = stdin().read_line(buffer)?;
+        if n == 0 {break;}
+        chomp(buffer);
+        println!("[{}]", buffer);
+        buffer.clear();
+    }
+    Ok(())
+}
+</pre>
+
+<p>Die Schleife läuft solange weiter, bis ein EOF kommt.
+Unter unixoiden Systemen wie Linux kann man EOF durch die
+Tastenkombination <code>Strg+D</code> erzeugen.
+
+<p>Der Aufruf
+
+<pre class="indent">
+./p0 &lt; Datei.txt
+</pre>
+
+<p>bewirkt die Eingabe aus der angegebenen Datei, anstelle
+auf eine Terminaleingabe zu warten.
 
 <h2 id="Dateien">Dateien</h2>
 
