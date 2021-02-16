@@ -50,7 +50,7 @@ Geräte-Datei öffnen:
 <pre class="rust ibox">
 use std::{io, io::Write, fs::File};
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let mut stdout = File::create("/dev/stdout")?;
     stdout.write_all("Ausgabe".as_bytes())?;
     Ok(())
@@ -65,12 +65,15 @@ Grund steht die Funktion <code>io::stdout</code> zur Verfügung:
 <pre class="rust ibox">
 use std::{io, io::Write};
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let mut stdout = io::stdout();
     stdout.write_all("Ausgabe".as_bytes())?;
     Ok(())
 }
 </pre>
+
+<p>Der Typ <code>io::Result&lt;()&gt;</code> ist lediglich ein Alias
+für <code>Result&lt;(),io::Error&gt;</code>.
 
 <h3 id="stderr">Standard-Fehlerausgabe</h3>
 
@@ -167,7 +170,7 @@ auf eine Terminaleingabe zu warten.
 <pre class="rust ibox">
 use std::{fs, io};
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let s = fs::read_to_string("Datei.txt")?;
     println!("{}", s);
     Ok(())
@@ -179,7 +182,7 @@ Werkzeugen. Unter Verwendung dieser gestaltet sich die Funktion so:
 <pre class="rust ibox">
 use std::{fs, io, io::Read};
 
-fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
+fn read_to_string(path: &amp;str) -&gt; io::Result&lt;String&gt; {
     let mut file = fs::File::open(path)?;
     let mut buffer = String::new();
     file.read_to_string(&amp;mut buffer)?;
@@ -194,11 +197,11 @@ man initialisiert den Puffer gleich mit der benötigten Kapazität:
 <pre class="rust ibox">
 use std::{fs, io, io::Read, convert::TryFrom};
 
-fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
+fn read_to_string(path: &amp;str) -&gt; io::Result&lt;String&gt; {
     let mut file = fs::File::open(path)?;
     let info = file.metadata()?;
     let len = match usize::try_from(info.len()) {
-        Ok(value) =&gt; value, Err(_) =&gt; 0
+        Ok(value) =&gt; value, _ =&gt; 0
     };
     let mut buffer = String::with_capacity(len);
     file.read_to_string(&amp;mut buffer)?;
@@ -206,13 +209,13 @@ fn read_to_string(path: &amp;str) -&gt; Result&lt;String,io::Error&gt; {
 }
 </pre>
 
-<p>Der spitzfindige Leser fragt sich jetzt natürlich, wie lang
+<p>Spitzfindige fragen sich jetzt natürlich, wie lang
 denn so eine Geräte-Datei wie <code>/dev/stdin</code> ist. Bei stdin
 handelt es sich ja um einen Datenstrom, der kann potenziell unendlich
 lang sein. Probieren wir das aus:
 
 <pre class="rust ibox">
-fn main() -&gt; Result&lt;(),std::io::Error&gt; {
+fn main() -&gt; std::io::Result&lt;()&gt; {
     println!("{}", std::fs::metadata("/dev/stdin")?.len());
     Ok(())
 }
@@ -254,18 +257,18 @@ let s = String::from_utf8_lossy(&amp;data);
 <p>Eine Binärdatei kann auch sehr groß sein, größer als dass
 sie vollständig in den Hauptspeicher geladen werden kann. Wir wollen
 den CRC32-Prüfwert von so einer Datei berechnen, siehe
-<a href="Algorithmen/Hashfunktionen.htm#CRC"
->Algorithmen: Hashfunktionen</a>.
+›<a href="Algorithmen/Hashfunktionen.htm#CRC"
+>Algorithmen: Hashfunktionen</a>‹.
 Der naive Ansatz ginge so:
 
 <pre class="rust ibox">
 use std::{env::args, fs::read, io};
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let crc = crc::CRC32::new();
     let argv: Vec&lt;String&gt; = args().collect();
     let data: Vec&lt;u8&gt; = read(&amp;argv[1])?;
-    println!("{:08x}", crc.hash(&amp;data,0));
+    println!("{:08x}", crc.hash(&amp;data, 0));
     Ok(())
 }
 </pre>
@@ -280,7 +283,7 @@ Blocks mit einfließt.
 use std::{env::args, fs::File, io, io::Read};
 use crc::CRC32;
 
-fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; Result&lt;u32,io::Error&gt; {
+fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; io::Result&lt;u32&gt; {
     let mut buffer = [0; 0x10000];
     let mut hash = 0;
     loop {
@@ -291,18 +294,18 @@ fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; Result&lt;u32,io::Error&gt; 
     Ok(hash)
 }
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let crc = CRC32::new();
     let argv: Vec&lt;String&gt; = args().collect();
     let mut file = File::open(&amp;argv[1])?;
-    println!("{:08x}", hash(&amp;crc,&amp;mut file)?);
+    println!("{:08x}", hash(&amp;crc, &amp;mut file)?);
     Ok(())
 }
 </pre>
 
 <p>Hiermit lässt sich nun der Prüfwert von 10&nbsp;GB großen
-Dateien ermitteln, auch wenn man nur wenige MB Hauptspeicher zur
-Verfügung hat. Faktisch ist der Hauptspeicherbedarf des
+Dateien ermitteln, auch wenn man nur wenige MB Arbeitsspeicher zur
+Verfügung hat. Faktisch ist der Arbeitsspeicherbedarf des
 Programms nun verschwindend gering.
 
 <h3 id="Exakte-Blockgroesse">In Blöcken exakter Größe lesen</h3>
@@ -438,7 +441,7 @@ einfach eine neue Datei und schreibt die Daten da rein.
 <pre class="rust ibox">
 use std::{io, io::Write, fs::File};
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     let mut file = File::create("Datei.txt")?;
     file.write_all("Daten".as_bytes())?;
     Ok(())
@@ -455,7 +458,7 @@ bewerkstelligen:
 <pre class="rust ibox">
 use std::{io, io::Write, fs::File, path::Path};
 
-fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
+fn write(path: &amp;str, data: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
     if Path::new(path).exists() {
         Err(io::Error::new(io::ErrorKind::PermissionDenied,
             format!("Pfad '{}' existiert bereits", path)))
@@ -465,9 +468,9 @@ fn write(path: &amp;str, data: &amp;[u8]) -&gt; Result&lt;(),io::Error&gt; {
     }
 }
 
-fn main() -&gt; Result&lt;(),io::Error&gt; {
+fn main() -&gt; io::Result&lt;()&gt; {
     write("Datei.txt", "Daten".as_bytes())?;
-    return Ok(());
+    Ok(())
 }
 </pre>
 

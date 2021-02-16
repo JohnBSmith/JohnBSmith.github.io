@@ -331,19 +331,19 @@ join ∘ map(unit) = join ∘ unit = id.
 <p>Bei <code>Option</code> treten nur endlich viele Fälle
 auf, die man jeweils nachrechnen kann.
 
-<p>Für <code>join(Functor::map(mmx,join))</code> gilt
+<p>Für <code>join(mmx.map(join))</code> gilt
 
 <pre class="indent">
-join(Functor::map(None,join)) = join(None) = None,
+join(None.map(join)) = join(None) = None,
 
-join(Functor::map(Some(None),join)) = join(Some(join(None)))
+join(Some(None).map(join)) = join(Some(join(None)))
 = join(Some(None)) = None,
 
-join(Functor::map(Some(Some(x)),join)) = join(Some(join(Some(x))))
+join(Some(Some(x)).map(join)) = join(Some(join(Some(x))))
 = join(Some(x)) = x.
 </pre>
 
-<p>Bei <code>join(join(mmx)</code> erhält man die gleichen
+<p>Bei <code>join(join(mmx))</code> erhält man die gleichen
 Ergebnisse
 
 <pre class="indent">
@@ -354,12 +354,12 @@ join(join(Some(None))) = join(None) = None,
 join(join(Some(Some(x)))) = join(Some(x)) = x.
 </pre>
 
-<p>Für <code>join(Functor::map(mx,unit))</code> gilt
+<p>Für <code>join(mx.map(unit))</code> gilt
 
 <pre class="indent">
-join(Functor::map(None,unit)) = join(None) = None,
+join(None.map(unit)) = join(None) = None,
 
-join(Functor::map(Some(x),unit)) = join(Some(Some(x))) = Some(x).
+join(Some(x).map(unit)) = join(Some(Some(x))) = Some(x).
 </pre>
 
 <p>Bei <code>join(unit(mx))</code> erhält man die gleichen Ergebnisse
