@@ -126,6 +126,8 @@ Daten die man in diese Datei leitet, verschwinden einfach. Der Befehl
 Eingaben vonstattengeht.
 
 <pre class="rust ibox">
+// Programm p1
+
 use std::{io, io::stdin};
 
 fn chomp(buffer: &amp;mut String) {
@@ -155,11 +157,34 @@ Tastenkombination <code>Strg+D</code> erzeugen.
 <p>Der Aufruf
 
 <pre class="indent">
-./p0 &lt; Datei.txt
+./p1 &lt; Datei.txt
 </pre>
 
 <p>bewirkt die Eingabe aus der angegebenen Datei, anstelle
-auf eine Terminaleingabe zu warten.
+auf eine Terminaleingabe zu warten. Außerdem ist es möglich,
+die Ausgabe eines anderen Programms als Eingabe zu nutzen.
+Zur genauen Darlegung brauchen wir ein kurzes Programm,
+welches eine Ausgabe erzeugt:
+
+<pre class="rust ibox">
+// Programm p0
+
+fn main() {
+    for i in 0..4 {println!("{}", i);}
+}
+</pre>
+
+<p>Mit dem Pipe-Operator wird nun die Ausgabe von <code>p0</code>
+der Eingabe von <code>p1</code> zugeführt:
+
+<pre class="indent">
+./p0 | ./p1
+</pre>
+
+<p>Angegeben ist der Aufruf von im aktuellen Arbeitsverzeichnis
+befindlichen Programmen. Beide Programmdateien müssen sich
+dafür in diesem Verzeichnis befinden.
+
 
 <h2 id="Dateien">Dateien</h2>
 
