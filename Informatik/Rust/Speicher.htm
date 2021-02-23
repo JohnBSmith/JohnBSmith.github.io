@@ -23,6 +23,7 @@
 <li><a href="#DST">Typen dynamischer Größe</a>
 <li><a href="#Ersetzung">Ersetzung von Werten</a>
 <li><a href="#Vertauschung">Vertauschung von Werten</a>
+<li><a href="#Cow">Zeiger vom Typ Cow</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -949,6 +950,96 @@ fn main() {
 </pre>
 
 <p>erhalten.
+
+<h2 id="Cow">Zeiger vom Typ Cow</h2>
+
+<p>Hin und wieder kommt eine Situation vor, wo bestimmte Werte
+eines Definitionsbereichs auf andere abgebildet werden, ein Großteil
+hingegen unverändert bleibt. Betrachten wir dazu die Funktion
+
+<pre class="rust ibox">
+fn replace_hyphen(s: &amp;str) -&gt; String {
+    s.replace("-", "_")
+}
+</pre>
+
+<p>die Bindestriche in Zeichenketten gegen Unterstriche ersetzt.
+Bei der Anwendung dieser Funktion findet in jedem Fall eine
+Speicherallokation und eine Kopie der Daten statt, auch dann wenn die
+Kette keine Bindestriche enthält. Nun sind Allokationen und Kopien
+ineffizient, und daher möglichst zu vermeiden. Es wäre also schön,
+wenn die Funktion das unterlassen würde, solange es nicht notwendig
+ist.
+
+<p>Bewerkstelligen tut dies der Typ <code>Cow</code>, der den
+Mechanismus <i>Copy-On-Write</i> implementiert, oder genau
+genommen <i>Clone-On-Write</i>. Die erste ist die allgemeine
+Bezeichnung, die zweite ein Rust-spezifischer Terminus, der
+aus der Unterscheidung zwischen <code>Clone</code> und
+<code>Copy</code> entspringt.
+
+<p>Mit Hilfe von <code>Cow</code> gelingt die
+gewünschte Adaptierung von <code>replace_hyphen</code>.
+
+<pre class="rust ibox">
+use std::borrow::Cow;
+
+fn replace_hyphen(s: &amp;str) -&gt; Cow&lt;str&gt; {
+    if let Some(_) = s.find('-') {
+        Cow::from(s.replace("-", "_"))
+    } else {
+        Cow::from(s)
+    }
+}
+
+fn cow_variant(s: &amp;Cow&lt;str&gt;) -&gt; &amp;'static str {
+    if let Cow::Owned(_) = s {"Owned"} else {"Borrowed"}
+}
+
+fn main() {
+    let a = ["Suppe", "Kartoffel-Brokkoli-Suppe"];
+    for s in &amp;a {
+        let s = replace_hyphen(s);
+        println!("{} ({})", s, cow_variant(&amp;s));
+    }
+}
+</pre>
+
+<p>Die Ausgabe:
+
+<pre class="ibox">
+Suppe (Borrowed)
+Kartoffel_Brokkoli_Suppe (Owned)
+</pre>
+
+<p>Der Mechanismus von <code>Cow</code> ist eigentlich kein
+großes Geheimnis. Zur Unterscheidung von <code>Borrowed</code>
+und <code>Owned</code> dient schlicht eine Enumeration, deren
+Nachbildung ohne weitere Umstände machbar ist:
+
+<pre class="rust ibox">
+#[derive(Debug)]
+enum CowStr&lt;'a&gt; {
+    Borrowed(&amp;'a str),
+    Owned(String)
+}
+
+fn replace_hyphen(s: &amp;str) -&gt; CowStr {
+    if let Some(_) = s.find('-') {
+        CowStr::Owned(s.replace("-", "_"))
+    } else {
+        CowStr::Borrowed(s)
+    }
+}
+
+fn main() {
+    let a = ["Suppe", "Kartoffel-Brokkoli-Suppe"];
+    for s in &amp;a {
+        let s = replace_hyphen(s);
+        println!("{:?}", s);
+    }
+}
+</pre>
 
 <h2 id="Literatur">Literatur</h2>
 
