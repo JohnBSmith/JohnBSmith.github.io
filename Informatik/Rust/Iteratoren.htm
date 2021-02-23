@@ -38,7 +38,7 @@ fn mean(a: &amp;[f64]) -&gt; f64 {
     for i in 0..a.len() {
         sum += a[i];
     }
-    return sum/(a.len() as f64);
+    sum/(a.len() as f64)
 }
 </pre>
 
@@ -70,7 +70,7 @@ fn mean(a: impl Iterator&lt;Item=f64&gt;) -&gt; f64 {
     for x in a {
         sum += x; count += 1;
     }
-    return sum/(count as f64);
+    sum/(count as f64)
 }
 </pre>
 
@@ -93,7 +93,7 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
         .map(|s| s.unwrap().parse::&lt;f64&gt;().unwrap());
 
     println!("{}", mean(stream));
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -126,7 +126,7 @@ impl&lt;T&gt; ForEach&lt;T&gt; for &amp;[T] {
 fn main() {
     let a = ["Eiche", "Buche", "Ahorn", "Birke"];
     a.for_each(|x| {
-        println!("{}",x);
+        println!("{}", x);
     });
 }
 </pre>
@@ -152,20 +152,19 @@ impl&lt;'a,T&gt; Iterator for SliceIterator&lt;'a,T&gt; {
     fn next(&amp;mut self) -&gt; Option&lt;&amp;'a T&gt; {
         match self.i &lt; self.a.len() {
             false =&gt; None,
-            _ =&gt; {self.i +=1; Some(&amp;self.a[self.i-1])}
+            _ =&gt; {self.i += 1; Some(&amp;self.a[self.i-1])}
         }
-
     }
 }
 
 fn iter&lt;T&gt;(a: &amp;[T]) -&gt; SliceIterator&lt;T&gt; {
-    SliceIterator{a: a, i: 0}
+    SliceIterator {a, i: 0}
 }
 
 fn main() {
     let a = ["Eiche", "Buche", "Ahorn", "Birke"];
     for x in iter(&amp;a) {
-        println!("{}",x);
+        println!("{}", x);
     }
 }
 </pre>
@@ -236,10 +235,10 @@ in Form von Trait-Methoden. Diese Methoden erzeugen einen Iterator
 aus Leihgaben, welcher daraufhin durch <code>into_iter</code>
 konsumiert wird. Es ist nämlich so, dass <code>into_iter</code>
 für jeden Iterator generisch als identische Abbildung implementiert
-ist. D.&nbsp;h. falls bereits ein Iterator vorliegt, ist
+ist. Das heißt, falls bereits ein Iterator vorliegt, ist
 <code>into_iter</code> schlicht wirkungslos.
 
-<p>Zu beachten ist noch, dass die Bildung von Leihgaben mit der
+<p>Zu beachten ist noch dass die Bildung von Leihgaben mit der
 Leihgabe der Iteratorwerte einhergeht. Das muss auch so sein.
 Wurde der Iterator lediglich aus einer Leihgabe heraus erzeugt, darf
 dieser keinesfalls die Elemente konsumieren, da diese Elemente nicht im

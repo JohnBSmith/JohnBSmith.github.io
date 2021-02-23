@@ -87,11 +87,11 @@ struct Stack {
 
 impl Stack {
     fn new() -&gt; Self {
-        Stack{top: None}
+        Stack {top: None}
     }
     fn push(&amp;mut self, x: i32) {
         let node = self.top.take();
-        self.top = Some(Box::new(Node{data: x, next: node}));
+        self.top = Some(Box::new(Node {data: x, next: node}));
     }
     fn pop(&amp;mut self) -&gt; Option&lt;i32&gt; {
         if let Some(node) = self.top.take() {
@@ -120,11 +120,11 @@ struct Stack&lt;T&gt; {
 
 impl&lt;T&gt; Stack&lt;T&gt; {
     fn new() -&gt; Self {
-        Stack{top: None}
+        Stack {top: None}
     }
     fn push(&amp;mut self, x: T) {
         let node = self.top.take();
-        self.top = Some(Box::new(Node{data: x, next: node}));
+        self.top = Some(Box::new(Node {data: x, next: node}));
     }
     fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
         if let Some(node) = self.top.take() {
@@ -411,11 +411,11 @@ Klarstellung der eindeutigen Zuordnung.
 ohne Schwierigkeiten umsetzen:
 <pre class="rust ibox">
 fn add(a: &amp;[i32], b: &amp;[i32]) -&gt; Vec&lt;i32&gt; {
-    let mut c: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
+    let mut acc: Vec&lt;i32&gt; = Vec::with_capacity(a.len());
     for i in 0..a.len() {
-        c.push(a[i] + b[i]);
+        acc.push(a[i] + b[i]);
     }
-    return c;
+    acc
 }
 
 fn main() {
@@ -461,7 +461,7 @@ so formulieren:
 
 <pre class="rust ibox">
 fn add&lt;T: Add&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
-    // ...
+    ...
 }
 </pre>
 
@@ -470,11 +470,11 @@ fn add&lt;T: Add&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
 use std::ops::Add;
 
 fn add&lt;T: Copy + Add&lt;Output=T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
-    let mut c: Vec&lt;T&gt; = Vec::with_capacity(a.len());
+    let mut acc: Vec&lt;T&gt; = Vec::with_capacity(a.len());
     for i in 0..a.len() {
-        c.push(a[i] + b[i]);
+        acc.push(a[i] + b[i]);
     }
-    return c;
+    acc
 }
 </pre>
 
@@ -617,10 +617,10 @@ der Sicherheit zuwider, die uns das Typsystem eigentlich bieten soll.
 Code abhängige Programmteile selbst polymorph gestalten:
 
 <pre class="rust ibox">
-use std::fmt::{Display,Debug};
+use std::fmt::{Display, Debug};
 
-trait Object: Display+Debug {}
-impl&lt;T: Display+Debug&gt; Object for T {}
+trait Object: Display + Debug {}
+impl&lt;T: Display + Debug&gt; Object for T {}
 
 fn reverse(a: &amp;mut [&amp;dyn Object]) {
     let n = a.len();
@@ -723,7 +723,7 @@ fn type_monoid&lt;T: Monoid + 'static&gt;() -&gt; MonoidType {
         }
         unreachable!();
     };
-    return MonoidType{one,mul};
+    MonoidType {one,mul};
 }
 </pre>
 
@@ -741,10 +741,10 @@ fn pow_intern(t: &amp;MonoidType, x: &amp;MonoidPtr, n: u32) -&gt; MonoidPtr {
 fn pow&lt;T: Monoid + 'static&gt;(x: T, n: u32) -&gt; T {
     let t = type_monoid::&lt;T&gt;();
     let px = MonoidPtr(Box::new(x));
-    return match pow_intern(&amp;t,&amp;px,n).0.downcast::&lt;T&gt;() {
+    match pow_intern(&amp;t,&amp;px,n).0.downcast::&lt;T&gt;() {
         Ok(y) =&gt; *y,
         _ =&gt;  unreachable!()
-    };
+    }
 }
 </pre>
 
@@ -811,7 +811,7 @@ pub mod polyvec {
     }
     impl&lt;T: 'static&gt; PolyVec&lt;T&gt; {
         pub fn new() -&gt; Self {
-            Self{v: Vec::new(), _marker: PhantomData}
+            Self {v: Vec::new(), _marker: PhantomData}
         }
         pub fn push(&amp;mut self, x: T) {
             self.v.push(Box::new(x));
@@ -833,12 +833,12 @@ pub mod polyvec {
 
 use polyvec::PolyVec;
 
-struct LargeChunk{}
+struct LargeChunk {}
 
 fn main() {
     let mut v: PolyVec&lt;LargeChunk&gt; = PolyVec::new();
-    v.push(LargeChunk{});
-    v.push(LargeChunk{});
+    v.push(LargeChunk {});
+    v.push(LargeChunk {});
 }
 </pre>
 

@@ -349,7 +349,7 @@ fn map&lt;X,Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X) -&gt; Y) -&gt; Vec&lt;Y&gt
 
 fn main() {
     let a = vec![1, 2, 3 ,4];
-    let b = map(&amp;a,&amp;|x| x.to_string());
+    let b = map(&amp;a, &amp;|x| x.to_string());
     println!("{:?}", b);
 }
 </pre>
@@ -381,10 +381,77 @@ where A: IntoIterator&lt;Item=X&gt;, F: Fn(&amp;X)-&gt;Y
 }
 
 fn main() {
-    let b = map(1..=4,|x| x.to_string());
+    let b = map(1..=4, |x| x.to_string());
     println!("{:?}", b);
 }
 </pre>
+
+<p>Die Funktion <code>map</code> der Standardbibliothek ist
+nochmals vielseitiger. Diese arbeitet auf ausgeklügelte Weise
+mit Iteratoren und abstrahiert so von den iterierbaren
+Datenstrukturen. Man benutzt sie so:
+
+<pre class="rust ibox">
+fn main() {
+    let a = [1, 2, 3, 4];
+    let b: Vec&lt;_&gt; = a.iter().map(|x| x.to_string()).collect();
+    assert_eq!(b, ["1", "2", "3", "4"]);
+}
+</pre>
+
+<p>Führt man <code>map</code> eine fehlbare Operation zu,
+ist das Ergebnis wie erwartet ein Array von Resultaten. Bspw.
+macht das Programm
+
+<pre class="rust ibox">
+fn main() {
+    let a = ["1", "2", "3", "4"];
+    let b: Vec&lt;_&gt; = a.iter().map(|x| x.parse::&lt;i32&gt;()).collect();
+    println!("{:?}", b);
+}
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+[Ok(1), Ok(2), Ok(3), Ok(4)]
+</pre>
+
+<p>Man kann <code>collect</code> aber auch zu verstehen geben, dass
+beim ersten auftretenden Fehler abgebrochen werden soll. So liefert
+
+<pre class="rust ibox">
+fn main() {
+    let a = ["1", "2", "3", "4"];
+    let b: Result&lt;Vec&lt;_&gt;, _&gt; = a.iter()
+        .map(|x| x.parse::&lt;i32&gt;()).collect();
+    println!("{:?}", b);
+}
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+Ok([1, 2, 3, 4])
+</pre>
+
+<p>So wie <code>parse</code> ist <code>collect</code> eine
+generische Funktion, dessen Typparameter durch Typinferenz
+bestimmt werden kann, wofür der Kontext allerdings genügend
+Information über die Typstruktur enthalten muss. Die Notation
+
+<pre class="rust ibox">
+let b: Typ = it.collect();
+</pre>
+
+<p>ist demnach mit
+
+<pre class="rust ibox">
+let b = it.collect::&lt;Typ&gt;();
+</pre>
+
+<p>gleichbedeutend. 
+
 
 <h2 id="Monaden">Monaden</h2>
 

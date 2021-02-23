@@ -18,7 +18,7 @@
   <li><a href="#stdout">Standard-Ausgabe</a>
   <li><a href="#stderr">Standard-Fehlerausgabe</a>
   <li><a href="#stdin">Standard-Eingabe</a>
-  <li><span class="modest">Pipelines</span>
+  <li><a href="#Pipelines">Pipelines</span>
   </ol>
 <li><a href="#Dateien">Dateien</a>
   <ol>
@@ -161,10 +161,13 @@ Tastenkombination <code>Strg+D</code> erzeugen.
 </pre>
 
 <p>bewirkt die Eingabe aus der angegebenen Datei, anstelle
-auf eine Terminaleingabe zu warten. Außerdem ist es möglich,
-die Ausgabe eines anderen Programms als Eingabe zu nutzen.
-Zur genauen Darlegung brauchen wir ein kurzes Programm,
-welches eine Ausgabe erzeugt:
+auf eine Terminaleingabe zu warten.
+
+<h3 id="Pipelines">Pipelines</h3>
+
+<p>Außerdem ist es möglich, die Ausgabe eines anderen Programms
+als Eingabe zu nutzen. Zur genauen Darlegung brauchen wir ein kurzes
+Programm, welches eine Ausgabe erzeugt:
 
 <pre class="rust ibox">
 // Programm p0
@@ -185,6 +188,22 @@ der Eingabe von <code>p1</code> zugeführt:
 befindlichen Programmen. Beide Programmdateien müssen sich
 dafür in diesem Verzeichnis befinden.
 
+<p>Die Programme in einer Pipeline dürfen auch aus unterschiedlichen
+Programmiersprachen entstammen. Anstelle des obigen
+Programms <code>p0</code> könnte man genauso gut das Python-Programm
+
+<pre class="ibox">
+# Programm p0
+
+for i in range(0,4):
+    print(i)
+</pre>
+
+<p>benutzen. Der Aufruf:
+
+<pre class="indent">
+python ./p0 | ./p1
+</pre>
 
 <h2 id="Dateien">Dateien</h2>
 

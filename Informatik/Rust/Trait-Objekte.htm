@@ -205,7 +205,7 @@ use std::any::Any;
 struct Duck {name: String}
 
 fn main() {
-    let object: &amp;dyn Any = &amp;Duck{name: "Donald".into()};
+    let object: &amp;dyn Any = &amp;Duck {name: "Donald".into()};
 
     assert!(object.is::&lt;Duck&gt;());
 
@@ -258,7 +258,7 @@ use std::any::Any;
 struct Duck {}
 
 fn main() {
-    let object: Box&lt;dyn Any&gt; = Box::new(Duck{});
+    let object: Box&lt;dyn Any&gt; = Box::new(Duck {});
     let object = &amp;object;
 
     let x: &amp;dyn Any = object;
@@ -310,7 +310,7 @@ impl Object for Duck {
 }
 
 fn main() {
-    let object: &amp;dyn Object = &amp;Duck{name: "Donald".into()};
+    let object: &amp;dyn Object = &amp;Duck {name: "Donald".into()};
 
     assert!(object.as_any().is::&lt;Duck&gt;());
 
@@ -340,7 +340,7 @@ struct Duck {name: String}
 impl Object for Duck {}
 
 fn main() {
-    let object: Box&lt;dyn Object&gt; = Box::new(Duck{
+    let object: Box&lt;dyn Object&gt; = Box::new(Duck {
         name: "Donald".into()
     });
 
@@ -422,16 +422,16 @@ fn to_string_string(pself: &amp;dyn Any) -&gt; String {
     pself.clone()
 }
 
-static DISPATCH_I32: Dispatch = Dispatch{
+static DISPATCH_I32: Dispatch = Dispatch {
     to_string: to_string_i32
 };
-static DISPATCH_STRING: Dispatch = Dispatch{
+static DISPATCH_STRING: Dispatch = Dispatch {
     to_string: to_string_string
 };
 
 impl From&lt;i32&gt; for BoxDynObject {
     fn from(x: i32) -&gt; Self {
-        BoxDynObject{
+        BoxDynObject {
             data: Box::new(x),
             dispatch: &amp;DISPATCH_I32
         }
@@ -439,7 +439,7 @@ impl From&lt;i32&gt; for BoxDynObject {
 }
 impl From&lt;&amp;str&gt; for BoxDynObject {
     fn from(x: &amp;str) -&gt; Self {
-        BoxDynObject{
+        BoxDynObject {
             data: Box::new(String::from(x)),
             dispatch: &amp;DISPATCH_STRING
         }
@@ -495,11 +495,11 @@ fn drop_string(pself: *mut u8) {
     drop(unsafe {Box::from_raw(pself as *mut String)});
 }
 
-static DISPATCH_I32: Dispatch = Dispatch{
+static DISPATCH_I32: Dispatch = Dispatch {
     to_string: to_string_i32,
     drop: drop_i32
 };
-static DISPATCH_STRING: Dispatch = Dispatch{
+static DISPATCH_STRING: Dispatch = Dispatch {
     to_string: to_string_string,
     drop: drop_string
 };
@@ -512,7 +512,7 @@ impl Drop for BoxDynObject {
 
 impl From&lt;i32&gt; for BoxDynObject {
     fn from(x: i32) -&gt; Self {
-        BoxDynObject{
+        BoxDynObject {
             data: Box::into_raw(Box::new(x)) as *mut u8,
             dispatch: &amp;DISPATCH_I32
         }
@@ -521,7 +521,7 @@ impl From&lt;i32&gt; for BoxDynObject {
 impl From&lt;&amp;str&gt; for BoxDynObject {
     fn from(x: &amp;str) -&gt; Self {
         let data = Box::new(String::from(x));
-        BoxDynObject{
+        BoxDynObject {
             data: Box::into_raw(data) as *mut u8,
             dispatch: &amp;DISPATCH_STRING
         }
