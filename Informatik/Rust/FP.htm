@@ -333,7 +333,7 @@ da Closure-Typen per se nicht benennbar sind.
 
 <h2 id="Higher-order">Funktionen höherer Ordnung</h2>
 
-<h3>Map</h3>
+<h3 id="map">Map</h3>
 
 <p>Die Funktion <code>map</code> wendet eine Funktion auf jedes
 Element eines Arrays an.
@@ -450,8 +450,72 @@ let b: Typ = it.collect();
 let b = it.collect::&lt;Typ&gt;();
 </pre>
 
-<p>gleichbedeutend. 
+<p>gleichbedeutend.
 
+<h3 id="filter">Filter</h3>
+
+<p>Die Funktion <code>filter</code> trennt von einem Array alle
+Elemente ab, welche ein mitgegebenes Prädikat erfüllen. Dem Prädikat
+widersprechende Elemente werden verworfen.
+
+<p>Das folgende Programm zeigt die Implementierung speziell für
+<code>Vec</code>. Die Funktion greift aus dem Array <code>a</code>
+Elemente ab, welche das Prädikat <code>p</code> erfüllen.
+
+<pre class="rust ibox">
+fn filter&lt;T&gt;(a: Vec&lt;T&gt;, p: impl Fn(&amp;T) -&gt; bool) -&gt; Vec&lt;T&gt; {
+    let mut acc = Vec::new();
+    for x in a {
+        if p(&amp;x) {acc.push(x);}
+    }
+    acc
+}
+
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    let a: Vec&lt;u32&gt; = (1..=n).collect();
+    filter(a, |&amp;k| n%k == 0)
+}
+
+fn main() {
+    println!("{:?}", divisors(12));
+}
+</pre>
+
+<p>Zur Anwendung kam <code>filter</code> in diesem Programm zur
+Berechnung der Teilerliste einer Zahl. Die Erzeugung eines Arrays
+als Zwischenwert war dabei jedoch unnötig. Ersetzung von
+<code>Vec</code> gegen eine Typvariable <code>I</code> vom
+Trait <code>IntoIterator</code> verallgemeinert <code>filter</code>
+dergestalt dass man die Erzeugung des Zwischenwertes entfallen
+lassen kann.
+
+<pre class="rust ibox">
+fn filter&lt;T,I,P&gt;(a: I, p: P) -&gt; Vec&lt;T&gt;
+where I: IntoIterator&lt;Item = T&gt;, P: Fn(&amp;T) -&gt; bool
+{
+    let mut acc = Vec::new();
+    for x in a {
+        if p(&amp;x) {acc.push(x);}
+    }
+    acc
+}
+
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    filter(1..=n, |&amp;k| n%k == 0)
+}
+</pre>
+
+<p>Die Funktion <code>filter</code> der Standardbibliothek ist nochmals
+vielseitiger. So wie <code>map</code> arbeitet diese auf ausgeklügelte
+Weise mit Iteratoren und abstrahiert so von den iterierbaren
+Datenstrukturen. Man benutzt sie wie folgt zur Berechnung der
+Teilerliste:
+
+<pre class="rust ibox">
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    (1..=n).filter(|&amp;k| n%k == 0).collect()
+}
+</pre>
 
 <h2 id="Monaden">Monaden</h2>
 
