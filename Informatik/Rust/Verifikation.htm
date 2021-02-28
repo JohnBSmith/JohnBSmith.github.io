@@ -12,11 +12,6 @@
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
 <h1>Programmverifikation</h1>
 
-<p>Dieses Kapitel beschäftigt sich damit, wie man die Korrektheit von
-Programmen beweist. Das grundlegende Hilfsmittel hierfür ist
-der Hoare-Kalkül, der es erlaubt, Beweise systematisch aus
-schrittweisen Deduktionen zu konstruieren.
-
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Zusicherungen">Zusicherungen</a>
@@ -29,10 +24,21 @@ schrittweisen Deduktionen zu konstruieren.
 
 <h2 id="Zusicherungen">Zusicherungen</h2>
 
+<p>Dieses Kapitel beschäftigt sich damit, wie man die Korrektheit von
+Programmen beweist. Das grundlegende Hilfsmittel hierfür ist
+der Hoare-Kalkül, der es erlaubt, Beweise systematisch aus
+schrittweisen Deduktionen zu konstruieren.
+
 <p>Der Hoare-Kalkül ist ein Beweisverfahren, bei dem Algorithmen
 <i>Zusicherungen</i>, engl. <i>assertions</i>, bekommen. Das sind
 logische Aussagen, welche das Programm nicht verändern, aber beim
 Ablauf des Programms an der jeweiligen Stelle erfüllt sein müssen.
+Es läge nahe, diese Zusicherungen einfach in das Programm einzufügen
+und zu schauen wie es sich beim Durchlaufen verhält.
+Der springende Punkt liegt allerdings nicht in der Erfüllung der
+Zusicherung für eine bestimmte Belegung der Argumente, sondern darin
+dass die Zusicherung für alle möglichen erlaubten Belegungen
+erfüllt ist.
 
 <p>Zusicherungen befinden sich vor und hinter jeder Anweisung, infolge
 auch vor und hinter jeder Sequenz von Anweisungen. Darin eingeschlossen
@@ -80,7 +86,7 @@ der Korrektheit:
 falls es terminiert.
 
 <dt><b>Totale Korrektheit</b>
-<dd>Ein total korrektes Programm ist ein partiell korrektes welches
+<dd>Ein total korrektes Programm ist ein partiell korrektes, welches
 immer terminiert.
 </dl>
 
