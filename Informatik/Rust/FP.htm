@@ -517,6 +517,103 @@ fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
 }
 </pre>
 
+<h3 id="fold">Fold</h3>
+
+<p>Wer das erste Mal die Definition der Funktion <code>fold</code>
+einschließlich ihrer Typsignatur zu Gesicht bekommt, dem mag
+diese Funktion ein wenig verworren erscheinen. Das hat wohl damit
+zu tun dass im Gegensatz zu konkreten Algorithmen aufgrund der
+Abstraktion nicht unmittelbar klar wird was diese Funktion denn
+bewerkstelligen soll.
+
+<p>Daher möchte ich <code>fold</code> ausgehend von konkreten
+Funktionen verdeutlichen. Betrachten wir die Algorithmen zur Berechnung
+der Summe und des Produktes der Elemente eines Arrays.
+
+<pre class="rust ibox">
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    let mut acc = 0.0;
+    for &amp;x in a {acc = acc + x;}
+    acc
+}
+
+fn prod(a: &amp;[f64]) -&gt; f64 {
+    let mut acc = 1.0;
+    for &amp;x in a {acc = acc*x;}
+    acc
+}
+</pre>
+
+<p>Beide Funktionen sind irgendwie von der gleichen Gestalt.
+Betrachtet man das genauer, kommt man zur folgenden Präzisierung:
+Eigentlich unterscheidet sich lediglich der Anfangswert und die
+Operation. Eine Abstraktion entsteht demnach, wenn diese als Argumente
+an den Algorithmus übergeben werden. Wir gelangen zu:
+
+<pre class="rust ibox">
+fn fold(a: &amp;[f64], init: f64, op: impl Fn(f64, f64) -&gt; f64) -&gt; f64 {
+    let mut acc = init;
+    for &amp;x in a {acc = op(acc,x);}
+    acc
+}
+
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 0.0, |acc, x| acc + x)
+}
+
+fn prod(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 1.0, |acc, x| acc*x)
+}
+</pre>
+
+<p>Ist das Prinzip klar geworden, möchte man <code>fold</code>
+im Weiteren über den Element-Typ parametrisieren. Eine nochmals
+weitergehende Verallgemeinerung entsteht dadurch, dass man
+für linkes und rechtes Argument der Operation einen unterschiedlichen
+Typ zulässt, womit <code>fold</code> einen zweiten Typparameter erhält.
+
+<p>Außerdem verschiebt man die Dereferenzierung der Laufvariable
+<code>x</code> am besten in die Operation <code>op</code>, sodass
+der Element-Typ nicht geklont werden braucht.
+
+<pre class="rust ibox">
+fn fold&lt;X,Y&gt;(a: &amp;[X], init: Y, op: impl Fn(Y, &amp;X) -&gt; Y) -&gt; Y {
+    let mut acc = init;
+    for x in a {acc = op(acc,x);}
+    acc
+}
+
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 0.0, |acc, &amp;x| acc + x)
+}
+</pre>
+
+<p>Auch <code>fold</code> ist ohne besondere Schwierigkeiten
+über beliebige iterierbare Typen parametrisierbar. Wir gelangen
+schließlich zu:
+
+<pre class="rust ibox">
+fn fold&lt;X,Y,I,F&gt;(a: I, init: Y, f: F) -&gt; Y
+where I: IntoIterator&lt;Item = X&gt;, F: Fn(Y,X) -&gt; Y
+{
+    let mut acc = init;
+    for x in a {acc = f(acc,x);}
+    acc
+}
+</pre>
+
+<p>Die Standardbibliothek implementiert <code>fold</code>
+nicht für <code>IntoIterator</code>, sondern für
+<code>Iterator</code>. Das heißt, falls nicht bereits ein Iterator
+vorliegt, muss man vorher erst einen bilden. Bei <code>sum</code>
+geht das mit <code>iter</code>:
+
+<pre class="rust ibox">
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    a.iter().fold(0.0, |acc, &amp;x| acc + x)
+}
+</pre>
+
 <h2 id="Monaden">Monaden</h2>
 
 <p>Die arithmetischen Operationen der gewöhnlichen primitiven
