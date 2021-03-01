@@ -26,7 +26,7 @@
   <li><a href="#Binaer-lesen">Binärdateien lesen</a>
   <li><a href="#Exakte-Blockgroesse">In Blöcken exakter Größe lesen</a>
   <li><a href="#Dateien-schreiben">Dateien schreiben</a>
-  <li><span class="modest">Datenströme</span>
+  <li><a href="#Stroeme">Datenströme</a>
   </ol>
 </ol>
 
@@ -266,7 +266,7 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
 </pre>
 
 <p>Bei mir kommt da null raus. Das muss natürlich nicht heißen, dass
-da immer null herauskommen müsse. Es wäre z.B. denkbar, dass der
+da immer null herauskommen müsse. Es wäre z.&nbsp;B. denkbar, dass der
 Rückgabewert die Länge der aktuellen Pufferbelegung ist. Um Gewissheit
 über das Verhalten zu haben, müsste man die Spezifikation der
 Betriebssystem-Schnittstelle konsultieren, wenn es diese denn gibt.
@@ -516,7 +516,7 @@ use std::{io, io::Write, fs::File, path::Path};
 
 fn write(path: &amp;str, data: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
     if Path::new(path).exists() {
-        Err(io::Error::new(io::ErrorKind::PermissionDenied,
+        Err(io::Error::new(io::ErrorKind::AlreadyExists,
             format!("Pfad '{}' existiert bereits", path)))
     } else {
         let mut file = File::create(path)?;
@@ -530,9 +530,60 @@ fn main() -&gt; io::Result&lt;()&gt; {
 }
 </pre>
 
-<p>Alternativ bietet sich auch das passende
-<code>ErrorKind::AlreadyExists</code> an.
+<h3 id="Stroeme">Datenströme</h3>
 
+<p>Einen Datenstrom kann man als eine Datei verstehen, deren
+Ende nicht im Voraus bekannt ist. Damit verbieten sich per se
+alle Algorithmen, welche die Datei zur Verarbeitung zunächst
+gänzlich einlesen wollen. Das Einlesen der Daten muss stattdessen
+auf irgendeine Art häppchenweise vonstattengehen.
+
+<p>Betrachten wir beispielhaft <code>/dev/urandom</code>, den
+Zufallszahlengenerator des Betriebssystems. Diese Gerätedatei
+liefert einen endlosen Strom gleichverteilt zufälliger Bytes.
+Das folgende Programm zeigt, wie sich damit Zufallszahlen
+des Typs <code>u32</code> erzeugen lassen.
+
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+use std::{thread::sleep, time::Duration};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut buffer: [u8; 4] = [0; 4];
+    let mut file = fs::File::open("/dev/urandom")?;
+    loop {
+        file.read_exact(&amp;mut buffer)?;
+        let value = u32::from_ne_bytes(buffer);
+        println!("0x{:08x}", value);
+        sleep(Duration::from_millis(1000));
+    }
+}
+</pre>
+
+<p>Eine Alternative zum gezeigten Ansatz besteht in der Umwandlung
+der Datei in einen Iterator über ihre Bytes. Weil Iteratoren endlos
+sein dürfen, eignen sie sich auch zur Beschreibung von Datenströmen.
+
+<p>Das folgende Programm zeigt, wie der Zufallszahlengenerator
+des Betriebssystems zur Simulation eines Spielwürfels genutzt
+werden kann. Zur Berechnung der Ergebnisse kommt hierbei die
+Verwerfungsmethode zur Anwendung.
+
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+use std::{thread::sleep, time::Duration};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let file = fs::File::open("/dev/urandom")?;
+    for byte in file.bytes() {
+        let value = byte? &amp; 0b111;
+        if value &gt; 5 {continue;}
+        println!("{}", value + 1);
+        sleep(Duration::from_millis(1000));
+    }
+    Ok(())
+}
+</pre>
 
 </body>
 </html>
