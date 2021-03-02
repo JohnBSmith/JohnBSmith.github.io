@@ -277,7 +277,9 @@ fn pow(x: f64, n: u32) -> f64 {
 
 
 <h3 id="Schleifen">Schleifen</h3>
+
 <h4>While-Schleifen</h4>
+
 <p>Anstelle von rekursiver Programmierung ist in Rust eher die
 iterative Programmierung üblich, was unterschiedliche Gründe hat.
 Zum einen lassen sich iterative Programme leichter vom Compiler
@@ -339,6 +341,7 @@ der Faltung kommt später im Kapitel über funktionale Programmierung.
 <p>Oft günstiger ist die Benutzung von for-Schleifen anstelle von
 while-Schleifen. Zur Verdeutlichung hier nochmals die Berechnung
 der Potenzierung:
+
 <pre class="rust ibox">
 fn pow(x: f64, n: u32) -&gt; f64 {
     let mut acc = 1.0;
@@ -350,6 +353,68 @@ fn pow(x: f64, n: u32) -&gt; f64 {
 <p>Hinter dem <code>for</code> steht eigentlich die Laufvariable,
 die hier entfallen darf, da in der Schleife kein Zugriff darauf
 vorkommt.
+
+<p>Im nächsten Programm kommen for-Schleifen zur Suche von
+pythagoreischen Tripeln zur Anwendung. Pythagoreische Tripel sind
+solche Tripel aus natürlichen Zahlen, zu denen es ein rechtwinkliges
+Dreieck mit diesen Zahlen als Seitenlängen gibt. Demnach sind
+natürliche Zahlen <var>a</var>,&nbsp;<var>b</var>,&nbsp;<var>c</var>
+gesucht, die die im Satz des Pythagoras enthaltene Gleichung
+
+<p class="indent"><var>a</var><sup>2</sup> + <var>b</var><sup>2</sup>
+= <var>c</var><sup>2</sup>
+
+<p>erfüllen. Das Programm findet alle Tripel, bei denen jede
+der Seitenlängen maximal 20 beträgt.
+
+<pre class="rust ibox">
+fn main() {
+    let n = 20;
+    for a in 1..=n {
+        for b in 1..=n {
+            for c in 1..=n {
+                if a*a + b*b == c*c {
+                    println!("{:2}, {:2}, {:2}", a, b, c);
+                }
+            }
+        }
+    }
+}
+</pre>
+
+<p>Die Ausgabe:
+
+<pre class="ibox">
+ 3,  4,  5
+ 4,  3,  5
+ 5, 12, 13
+ 6,  8, 10
+ 8,  6, 10
+ 8, 15, 17
+ 9, 12, 15
+12,  5, 13
+12,  9, 15
+12, 16, 20
+15,  8, 17
+16, 12, 20
+</pre>
+
+<p>Das Programm ist ein einfaches Beispiel für eine <i>erschöpfende
+Suche</i>, auch <i>Brute-Force-Methode</i> genannt. Hierbei wird
+der gesamte Suchraum auf naive Weise durchsucht, ohne weitergehende
+mathematische Einsichten zur Anwendung zu bringen. Typisch für diese
+Methode ist die hohe Inanspruchnahme des Computers. So kann sich der
+Suchraum mit steigenden Parametern beträchtlich vergrößern. Der
+Aufwand kann dabei quadratisch, kubisch oder sogar exponentiell
+steigen. Irgendwann ist eine Grenze erreicht, wo der Aufwand die
+Rechenkapazitäten des Computers übersteigt, so dass die Berechnung
+nicht mehr in überschaubarer Zeit zum Ende kommt. Man spricht
+auch von einer sogenannten kombinatorischen Explosion.
+
+<p>Im obigen Programm steigt die Zahl der Prüfungen kubisch in
+Abhängigkeit der maximalen Seitenlänge. Sind es bei einer Seitenlänge
+von 20 noch 8000 Prüfungen, so sind es bei einer Seitenlänge von
+100 schon 1&nbsp;Mio. Prüfungen
 
 <p>Von den meisten mathematischen Funktionen
 weiß der Computer nichts. Ein paar wenige liegen als
