@@ -43,7 +43,7 @@ wenigstens jeweils zusammenhängend. Schließt man diese Surrogate-Werte
 aus, spricht man nun von einem <i>unicode scalar value</i>. Und genau
 dies speichert <code>char</code>.
 
-<p>Eine Kette von solchen »Skalarwerten« muss nun auch
+<p>Eine Kette von solchen Skalarwerten muss nun auch
 irgendwie physisch auf einem Datenträger dargestellt sein. Die
 Darstellung als Abfolge von u32-Zahlen bezeichnet man als
 UTF-32-Kodierung.
@@ -138,6 +138,7 @@ let s = "Die Ordnung\n\
 </pre>
 
 <p>Folgende Escape-Sequenzen sind in einem Literal erlaubt.
+
 <table class="bt indent">
 <tr><th>Sequenz <th>Bedeutung
 <tr><td><code>\n</code> <td>Zeilenumbruch
@@ -301,31 +302,32 @@ Zeichenketten-Slices vom Typ <code>&amp;str</code> und Zeichenketten
 vom Typ <code>String</code>.
 
 <p>Zeichenketten vom Typ <code>String</code> sind in Rust dynamisch
-und lassen sich als Puffer benutzen. Ein Puffer ist eine dynamische
-Zeichenkette, an die beliebig viele Zeichenketten angehängt
-werden können.
+und lassen sich als Akkumulator benutzen. Ein Akkumulator oder
+akkumulierender Puffer ist eine dynamische Zeichenkette, an die
+beliebig viele Zeichenketten angehängt werden können.
+
 <pre class="rust ibox">
 fn main() {
-    let mut s = "".to_string();
-    s += "Hier";
-    s += " steht";
-    s += " ein";
-    s += " Text.";
-    println!("{}",s);
+    let mut acc = "".to_string();
+    acc += "Die";
+    acc += " Ordnung";
+    acc += " der";
+    acc += " Dinge";
+    println!("{}", acc);
 }
 </pre>
 
-<p>Es folgt ein Beispiel wo ein Puffer mit zwei dynamischen Ketten
+<p>Es folgt ein Beispiel wo ein Akkumulator mit zwei dynamischen Ketten
 gefüttert wird.
 <pre class="rust ibox">
 fn main() {
     let s1 = "Text1\n".to_string();
     let s2 = "Text2\n".to_string();
 
-    let mut s = "".to_string();
-    s += &amp;s1;
-    s += &amp;s2;
-    println!("{}", s);
+    let mut acc = "".to_string();
+    acc += &amp;s1;
+    acc += &amp;s2;
+    println!("{}", acc);
 }
 </pre>
 
@@ -343,10 +345,10 @@ fn p2() -> String {
 }
 
 fn main() {
-    let mut s = "".to_string();
-    s += &amp;p1();
-    s += &amp;p2();
-    println!("{}", s);
+    let mut acc = "".to_string();
+    acc += &amp;p1();
+    acc += &amp;p2();
+    println!("{}", acc);
 }
 </pre>
 
@@ -621,7 +623,7 @@ Darstellung von Texten.
 
 <h2 id="Komplexität">Eine gewisse Komplexität</h3>
 
-<p>An dieser Stelle muss einmal gesagt werden, dass Rust eine
+<p>An dieser Stelle muss einmal gesagt werden dass Rust eine
 Programmiersprache mit einer gewissen Komplexität ist. Der Zeitpunkt
 ist günstig, dies einfach mal an den Datentypen für Zeichenketten zu
 verdeutlichen. In einer einfachen Programmiersprache gibt es einen
@@ -640,9 +642,6 @@ wäre da nicht das Prinzip der Orthogonalität.
 <td><code>&amp;'a str</code>
 <td>unveränderbare UTF-8-Kette mit Lebenszeit a
 <tr>
-<td><code>&amp;str</code>
-<td>unveränderbare UTF-8-Kette
-<tr>
 <td><code>String</code>
 <td>Besitz einer dynamischen UTF-8-Kette
 <tr>
@@ -656,10 +655,13 @@ wäre da nicht das Prinzip der Orthogonalität.
 <td>Besitz einer UTF-8-Kette fixer Länge
 <tr>
 <td><code>Rc&lt;str&gt;</code>
-<td>gemeinschaftlicher Besitz unveränderbaren UTF-8-Kette
+<td>gemeinschaftlicher Besitz unveränderbarer UTF-8-Kette
 <tr>
 <td><code>Rc&lt;RefCell&lt;String&gt;&gt;</code>
 <td>gemeinschaftlicher Besitz einer dynamischen UTF-8-Kette
+<tr>
+<td><code>Cow&lt;str&gt;</code>
+<td>Besitz einer UTF-8-Kette bei Clone-on-Write
 <tr>
 <td><code>&amp;'static [char]</Code>
 <td>unveränderbare UTF-32-Kette, statisch in der Binärdatei

@@ -1108,7 +1108,7 @@ fn is_prime(n: u32) -&gt; bool {
         if n%i == 0 {return false;}
         i += 1;
     }
-    return true;
+    true
 }
 
 #[cfg(test)]
@@ -1122,13 +1122,13 @@ mod tests {
     #[test]
     fn test0() {
         let s: u32 = (0..10000).filter(|&amp;n| is_prime_basic(n)).sum();
-        assert_eq!(s,5736396);
+        assert_eq!(s, 5736396);
     }
     
     #[test]
     fn test1() {
         for n in 0..10000 {
-            assert_eq!(is_prime(n),is_prime_basic(n));
+            assert_eq!(is_prime(n), is_prime_basic(n));
         }
     }
 }
@@ -1136,7 +1136,7 @@ mod tests {
 fn main() {
     let a: Vec&lt;u32&gt; = (1..).filter(|&amp;n| is_prime(n))
         .take(100).collect();
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
