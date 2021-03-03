@@ -276,6 +276,73 @@ fn main() {
 }
 </pre>
 
+<p>Alternativ zum gezeigten Ansatz lassen sich die Typparameter der
+Traits auch zu den Funktionen hin verschieben, wodurch meines Erachtens
+mehr Klarheit geschaffen wird.
+
+<pre class="rust ibox">
+trait Functor {
+    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where
+        F: Fn(X) -&gt; Y, F: Copy,
+        Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
+}
+
+impl Functor for OptionType {
+    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.map(f)
+    }
+}
+
+impl Functor for VecType {
+    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.into_iter().map(f).collect()
+    }
+}
+
+trait Monad {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; where Self: AppliedTo&lt;X&gt;;
+    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where
+        F: Fn(X) -&gt; App&lt;Self,Y&gt;, F: Copy,
+        Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
+}
+
+impl Monad for OptionType {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; {Some(x)}
+    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+    {
+        x.and_then(f)
+    }
+}
+
+impl Monad for VecType {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; {vec![x]}
+    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+    {
+        x.into_iter().flat_map(f).collect()
+    }
+}
+</pre>
+
+<p>Der Compiler bekommt jetzt allerdings irgendwie Probleme mit der
+Typinferenz in <code>join</code>, weshalb der zweite
+Typparameter von <code>bind</code> manuell festgelegt werden muss:
+
+<pre class="rust ibox">
+fn join&lt;M,X&gt;(mmx: App&lt;M,App&lt;M,X&gt;&gt;) -&gt; App&lt;M,X&gt;
+where M: Monad + AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;M,X&gt;&gt;
+{
+    M::bind::&lt;_, X, _&gt;(mmx, |mx| mx)
+}
+</pre>
+
 <h2 id="Literatur">Literatur</h2>
 
 <ol>
