@@ -34,9 +34,9 @@ function trim_extension(name){
 function file_list_to_html(a){
     var buffer=[];
     for(var i=0; i<a.length; i++){
-        console.log(last_part(a[i]));
-        buffer.push(["<a href='", get_ref(a[i]),
-            "'>"+trim_extension(last_part(a[i])), "</a>"].join(""));
+        var path = pool[a[i]];
+        buffer.push(["<a href='", get_ref(path), "'>",
+            trim_extension(last_part(path)), "</a>"].join(""));
     }
     return buffer.join(", ");
 }
