@@ -15,7 +15,14 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Erstes-Programm">Das erste Programm</a>
-<li><a href="#Ausdruecke-Variablen-Typen">Ausdrücke, Variablen, Typen</a>
+<li><a href="#Ausdruecke">Ausdrücke</a>
+  <ol>
+  <li><a href="#Auswertung">Auswertung</a>
+  <li><a href="#Variablen">Variablen</a>
+  <li><a href="#Typen">Typen</a>
+  <li><a href="#Bloecke">Blöcke</a>
+  <li><a href="#Zuweisungen">Zuweisungen</a>
+  </ol>
 <li><a href="#Kontrollfluss">Kontrollfluss</a>
   <ol>
   <li><a href="#Funktionen">Funktionen</a>
@@ -66,10 +73,10 @@ fn main() {}
 </pre>
 
 
-<h2 id="Ausdruecke-Variablen-Typen"
->Ausdrücke, Variablen, Typen</h2>
+<h2 id="Ausdruecke">Ausdrücke</h2>
 
-<h3>Ausdrücke</h3>
+<h3 id="Auswertung">Auswertung</h3>
+
 <p>Das Wesen von Computern liegt in gewisser Hinsicht in ihrer Fähigkeit,
 Berechnungen schnell ausführen zu können. Aus diesem Grund erscheint
 es erwartungsgemäß, wenn die Programmiersprache in bequemer Weise
@@ -86,7 +93,7 @@ fn main() {
 gegen den Wert des Ausdrucks. Die resultierende Zeichenkette wird dann
 ausgegeben, woraufhin ein Zeilenumbruch folgt.
 
-<h3>Variablen</h3>
+<h3 id="Variablen">Variablen</h3>
 <p>Der Wert eines Ausdrucks lässt sich mittels <code>let</code> auch
 in einer Variablen speichern. Ein einfaches Beispiel hierzu:
 <pre class="rust ibox">
@@ -100,7 +107,8 @@ fn main() {
 sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
 <var>y</var> abhängiger Ausdruck.
 
-<h3>Typen</h3>
+<h3 id="Typen">Typen</h3>
+
 <p>In der Sprache Rust besitzt jeder Wert und jede Variable einen
 <i>Datentyp</i>, kurz <i>Typ</i>. Um auszudrücken dass die Variable
 <code>v</code> vom Typ <code>T</code> ist, schreibt man
@@ -164,7 +172,116 @@ gibt es aber nur eine Hand voll. Das sind:
 <td>Zeichenkette
 </table>
 
+<h3 id="Bloecke">Blöcke</h3>
+
+<p>Überall dort wo ein Ausdruck oder eine Anweisung stehen darf, darf
+auch ein von geschweiften Klammern umfasster Block vorkommen.
+Ein Block schränkt das Vorhandensein von lokal definierten Variablen
+auf einen kleineren Bereich ein. Formal gesprochen ist mit dem Block
+ein lexikalischer Bereich, engl. <i>lexical scope</i>, verbunden.
+
+<p>Betrachten wir folgendes Programm:
+<pre class="rust ibox">
+fn main() {
+    {
+        let x = 1;
+        println!("{}", x);
+    }
+    println!("{}", x);
+}
+</pre>
+
+<p>Dieses Programm ist nicht korrekt, denn außerhalb des
+Blocks kann auf die Variable <code>x</code> nicht mehr
+zugegriffen werden.
+
+<p>Die Sprache Rust ist, wie die Sprachen der ML-Familie, eine
+ausdrucksorientierte. So stellt bestimmte Syntax einen Ausdruck
+dar, die in anderen Sprachen lediglich eine Anweisung bildet.
+Dies trifft auch auf Blöcke zu.
+
+<p>Nun ist dem Wert eines Ausdrucks aber immer ein Typ zugeordnet.
+Welchen Typ besitzt denn ein Block dort, wo kein Wert erwartet wird?
+Dies wurde auf mathematisch besonders reine Art gelöst, indem ein
+wertloser Ausdruck den <i>Einheitstyp</i>, engl. <i>unit type</i>,
+bekommt. In Rust ist dieser Typ als leeres Tupel <code>()</code>
+kodiert. Dieser Typ enthält einen einzigen informationslosen Wert,
+den leeren Tupelwert <code>()</code>.
+
+<p>Bspw. erzeugt das Programm
+<pre class="rust ibox">
+fn main() {
+    println!("{:?}", {
+        println!("Die Ordnung");
+        println!("der Dinge");
+    });
+}
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+Die Ordnung
+der Dinge
+()
+</pre>
+
+<p>Einen Wert besitzt ein Block dann, wenn der letzte Teil
+des Blocks ein Ausdruck ist. Der Wert des Blocks ist dann
+erwartungsgemäß der Wert dieses letzten Ausdrucks.
+Zu beachten ist hierbei, den letzten Ausdruck nicht mit einem
+Semikolon abzuschließen.
+
+<p>Betrachten wir dazu die Auswertung eines Polynoms vierten Grades:
+
+<pre class="rust ibox">
+let (a0, a1, a2, a3, a4) = (5, 4, 3, 2, 1);
+let x = 10;
+let y = a0 + a1*x + a2*x*x + a3*x*x*x + a4*x*x*x*x;
+println!("{}", y);
+</pre>
+
+<p>In der Berechnung stecken vier Additionen und zehn Multiplikationen
+drin. In kritischen Situationen kostet jede Berechnung Zeit
+und Energie. Es wäre daher schön, wenn wir irgendwie Operationen
+einsparen könnten.
+
+<p>Einführung von Hilfsvariablen reduziert die Anzahl der
+Multiplikationen auf sieben:
+
+<pre class="rust ibox">
+let (a0, a1, a2, a3, a4) = (5, 4, 3, 2, 1);
+let x = 10;
+let y = {
+    let x2 = x*x;
+    let x3 = x2*x;
+    let x4 = x2*x2;
+    a0 + a1*x + a2*x2 + a3*x3 + a4*x4
+};
+println!("{}", y);
+</pre>
+
+<p>Weil die Hilfsvariablen in einem Block definiert wurden,
+sind sie auf diesen beschränkt. Außerhalb des Blocks sind
+die Variablen nicht mehr sichtbar.
+
+<p>Manchmal gewährt die Mathematik allerdings noch wesentlich
+umfangreichere Einsparungen. Die Überführung ins Horner-Schema
+reduziert hier die Anzahl der Multiplikationen auf lediglich vier.
+
+<pre class="rust ibox">
+let (a0, a1, a2, a3, a4) = (5, 4, 3, 2, 1);
+let x = 10;
+let y = a0 + x*(a1 + x*(a2 + x*(a3 + a4*x)));
+println!("{}", y);
+</pre>
+
+<h3 id="Zuweisungen">Zuweisungen</h3>
+
+
+
 <h2 id="Kontrollfluss">Kontrollfluss</h2>
+
 <h3 id="Funktionen">Funktionen</h3>
 
 <p>Trifft der Kontrollfluss auf den Aufruf eines Unterprogramms,
