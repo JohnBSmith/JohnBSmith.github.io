@@ -29,6 +29,7 @@ Lisp. Die folgenden Funktionen stehen zur Verfügung.
 <tr><td><code>(+ x y) (- x y)</code><td>Addition, Subtraktion
 <tr><td><code>(* x y) (/ x y) (% x y)</code><td>Multiplikation, Division, Rest
 <tr><td><code>(= x y) (&lt; x y) (&lt;= x y)</code><td>Relationen
+<tr><td><code>(not x) (and x y) (or x y)</code><td>Logische Operationen
 <tr><td><code>(if cond x y)</code><td>Verzweigung
 <tr><td><code>(fn (x y ...) body)</code><td>Lambda-Ausdruck
 <tr><td><code>(define x value)</code><td>Globale Variablenbindung
@@ -236,7 +237,7 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
                         if c == b'\n' {col = 0; line += 1;}
                         s.push(char::from(c));
                     }
-                    tokens.push(Token {value: Symbol::String(s), line, col: col0});                    
+                    tokens.push(Token {value: Symbol::String(s), line, col: col0});
                 }
                 c =&gt; {
                     return Err(syntax_error(line, col,
@@ -429,7 +430,7 @@ fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
         match object {
             Object::App(t) =&gt; a.push(t.list[1].clone()),
             _ =&gt; return let_syntax_error(app)
-        }        
+        }
     }
     transform_app(env,&amp;Rc::new(App {
         line: app.line, col: app.col, list: a}))
@@ -740,26 +741,50 @@ fn list_literal(env: &amp;mut Env) -&gt; Object {
     list
 }
 
+fn not(env: &amp;mut Env) -&gt; Object {
+    let value = env.arg(0);
+    if let Object::Err(e) = value {
+        return Object::Err(e.clone());
+    }
+    Object::Bool(match value {Object::Bool(x) =&gt; !x, _ =&gt; false})
+}
+
 fn define(env: &amp;mut Env, app: &amp;App) -&gt; Object {
     let id = expect!(&amp;app.list[1],Object::Symbol).clone();
-    let value = eval(env,&amp;app.list[2]);
-    if let Object::Err(e) = value {
-        return Object::Err(e);
-    }
+    let value = eval(env, &amp;app.list[2]);
+    if let Object::Err(_) = value {return value;}
     env.map.insert(id,value);
     Object::None
 }
 
 fn if_fn(env: &amp;mut Env, app: &amp;App) -&gt; Object {
     let argv = &amp;app.list[1..];
-    let cond = eval(env,&amp;argv[0]);
+    let cond = eval(env, &amp;argv[0]);
     if let Object::Bool(cond) = cond {
-        eval(env,&amp;argv[if cond {1} else {2}])
+        eval(env, &amp;argv[if cond {1} else {2}])
     } else {
         if let Object::Err(_) = cond {return cond;}
         Object::Err(value_error(
             format!("in (if cond x y): expected cond: Bool, got {}.",
                 cond)))
+    }
+}
+
+fn and(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    match eval(env, &amp;argv[0]) {
+        Object::Err(e) =&gt; Object::Err(e),
+        Object::Bool(cond) if !cond =&gt; Object::Bool(false),
+        _ =&gt; eval(env, &amp;argv[1])
+    }
+}
+
+fn or(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    match eval(env, &amp;argv[0]) {
+        Object::Err(e) =&gt; Object::Err(e),
+        Object::Bool(cond) if !cond =&gt; eval(env, &amp;argv[1]),
+        cond =&gt; cond
     }
 }
 
@@ -816,7 +841,7 @@ fn load_file(env: &amp;mut Env) -&gt; Object {
         Some(s) =&gt; s.0.as_ref(),
         _ =&gt; return op1_err(env,"load")
     };
-    let file_input = expect!(std::fs::read(path), Ok, 
+    let file_input = expect!(std::fs::read(path), Ok,
         return Object::Err(value_error(
             format!("could not load file '{}'.",path))));
     let result = eval_string(env, &amp;file_input);
@@ -833,14 +858,15 @@ static FN_TABLE: &amp;[(&amp;str, Fp, usize, usize)] = &amp;[
     ("+", add, 2, 2), ("-", sub, 2, 2),
     ("*", mul, 2, 2), ("/", div, 2, 2), ("%", rem, 2, 2),
     ("=", obj_eq, 2, 2), ("&lt;", obj_lt, 2, 2), ("&lt;=", obj_le, 2, 2),
-    ("print", print, 1, 1), ("empty", empty, 1, 1),
+    ("print", print, 1, 1), ("empty", empty, 1, 1), ("not", not, 1, 1),
     ("cons", cons, 2, 2), ("first", first, 1, 1), ("rest", rest, 1, 1),
     ("block", block, 1, VARIADIC), ("list", list_literal, 0, VARIADIC),
-    ("load", load_file, 1, 1), ("log", log, 1, 1),
+    ("load", load_file, 1, 1), ("log", log, 1, 1)
 ];
 
 static FN_LAZY_TABLE: &amp;[(&amp;str, LazyFp, usize, usize)] = &amp;[
-    ("define", define, 2, 2), ("if", if_fn, 3, 3), ("fn", lambda, 4, 4),
+    ("define", define, 2, 2), ("fn", lambda, 4, 4),
+    ("if", if_fn, 3, 3), ("and", and, 2, 2), ("or", or, 2, 2),
     ("tail-call", tail_call, 1, VARIADIC),
     ("tail-iter", tail_iter, 1, 1)
 ];
