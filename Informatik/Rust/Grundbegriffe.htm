@@ -21,7 +21,7 @@
   <li><a href="#Variablen">Variablen</a>
   <li><a href="#Typen">Typen</a>
   <li><a href="#Bloecke">Blöcke</a>
-  <li><a href="#Zuweisungen">Zuweisungen</a>
+  <li><a href="#Ueberschattung">Überschattung</a>
   </ol>
 <li><a href="#Kontrollfluss">Kontrollfluss</a>
   <ol>
@@ -276,9 +276,60 @@ let y = a0 + x*(a1 + x*(a2 + x*(a3 + a4*x)));
 println!("{}", y);
 </pre>
 
-<h3 id="Zuweisungen">Zuweisungen</h3>
+<h3 id="Ueberschattung">Überschattung</h3>
 
+<p>Befindet sich innerhalb eines Blocks die Definition einer
+Variable, die denselben Namen trägt wie eine bereits außerhalb
+des Blocks vorkommende Variable, dann überschattet die innere
+die äußere Variable. Die Überschattung bleibt auf den Block
+beschränkt.
 
+<p>Probieren wir es aus. Das Programm
+
+<pre class="rust ibox">
+let x = 1;
+{
+    let x = 2;
+    println!("{}", x);
+}
+println!("{}", x);
+</pre>
+
+<p>liefert die Ausgabe:
+
+<pre class="ibox">
+2
+1
+</pre>
+
+<p>Überschattung kann auch ohne explizite Blöcke stattfinden.
+Man muss das so verstehen, dass dabei implizit ein innerer Block
+gebildet wird, der ganz bis zum Ende des äußeren Blocks verläuft.
+Das heißt, man kann das Programm
+
+<pre class="rust ibox">
+fn main() {
+    let x = 1;
+    println!("{}", x);
+    let x = 2;
+    println!("{}", x);
+}
+</pre>
+
+<p>als
+
+<pre class="rust ibox">
+fn main() {
+    let x = 1;
+    println!("{}", x);
+    {
+        let x = 2;
+        println!("{}", x);
+    }
+}
+</pre>
+
+<p>lesen.
 
 <h2 id="Kontrollfluss">Kontrollfluss</h2>
 
