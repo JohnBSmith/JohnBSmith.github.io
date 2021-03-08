@@ -1044,7 +1044,97 @@ fn main() {
 
 <h2 id="Freigabe">Freigabe des Speichers</h2>
 
-<p>
+<p>Verliert ein Wert sämtliche seiner Besitzer, wird dieser schließlich
+verworfen. Bei Smart-Pointern wie <code>Box</code> und <code>Rc</code>
+wird der vom Wert belegte Speicher hierbei automatisch
+freigegeben.
+
+<p>Genau genommen ist jedem Typ je nach seiner Struktur ein
+Destruktor zugeordnet. Zum Einen ist in diesem ein vom Compiler
+automatisch erzeugter Code enthalten, welcher die entsprechenden
+Destruktoren der Bestandteile aufruft. Zum Anderen kann man diesem
+Code zusätzliche Funktionalität voranstellen, indem
+der Trait <code>Drop</code> implementiert wird.
+
+<p>Bei lokalen Variablen findet der Destruktor-Aufruf statt,
+sobald die Variable out of scope geht, d.&nbsp;h. ihr lexikalischer
+Bereich endet. Betrachten wir dazu dieses Programm:
+
+<pre class="rust ibox">
+struct Duck {name: String}
+
+impl Duck {
+    fn dive(&amp;self) {
+        println!("{} taucht.", self.name);
+    }
+}
+
+impl Drop for Duck {
+    fn drop(&amp;mut self) {
+        println!("{} fliegt davon!", self.name);
+    }
+}
+
+fn main() {
+    let duck = Duck {name: String::from("Donald")};
+    duck.dive();
+    println!("Programm endet.");
+}
+</pre>
+
+<p>Die Ausgabe ist:
+
+<pre class="ibox">
+Donald taucht.
+Programm endet.
+Donald fliegt davon!
+</pre>
+
+<p>Man kann einen vorzeitigen Destruktor-Aufruf durch
+Besitzübergabe an <code>mem::drop</code> erzwingen:
+
+<pre class="rust ibox">
+fn main() {
+    let duck = Duck {name: String::from("Donald")};
+    duck.dive();
+    std::mem::drop(duck);
+    println!("Programm endet.");
+}
+</pre>
+
+<p>Oder durch Einschließung des Programmteils in einen kürzeren
+Bereich:
+
+<pre class="rust ibox">
+fn main() {
+    {
+        let duck = Duck {name: String::from("Donald")};
+        duck.dive();
+    }
+    println!("Programm endet.");
+}
+</pre>
+
+<p>Die Ausgabe ist dann von dieser Reihenfolge:
+
+<pre class="ibox">
+Donald taucht.
+Donald fliegt davon!
+Programm endet.
+</pre>
+
+<p>Auch Smart-Pointer-Typen wie <code>Rc</code> besitzen einen
+Destruktor. Bei <code>Rc</code> übernimmt <code>drop</code> die
+Dekrementierung des Referenz-Zählers. Der Aufruf des Destruktors der
+eigentlichen Daten findet hierbei erst dann statt, wenn der
+Referenz-Zähler den Wert null erreicht.
+
+<p>Die freistehende Funktion <code>mem::drop</code> ist streng von
+der Methode <code>drop</code> zu unterscheiden. Während
+<code>mem::drop</code> ihr Argument aufisst und dadurch den
+vollen Destruktor ausführt, enthält die Methode
+<code>drop</code> nur die zusätzliche Funktionalität, die lediglich
+einen Teil des Destruktors darstellt.
 
 <h2 id="Literatur">Literatur</h2>
 
