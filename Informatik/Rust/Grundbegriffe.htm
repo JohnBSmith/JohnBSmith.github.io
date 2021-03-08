@@ -17,7 +17,7 @@
 <li><a href="#Erstes-Programm">Das erste Programm</a>
 <li><a href="#Ausdruecke">Ausdrücke</a>
   <ol>
-  <li><a href="#Auswertung">Auswertung</a>
+  <li><a href="#Arithmetik">Arithmetik</a>
   <li><a href="#Variablen">Variablen</a>
   <li><a href="#Typen">Typen</a>
   <li><a href="#Bloecke">Blöcke</a>
@@ -75,37 +75,87 @@ fn main() {}
 
 <h2 id="Ausdruecke">Ausdrücke</h2>
 
-<h3 id="Auswertung">Auswertung</h3>
+<h3 id="Arithmetik">Arithmetik</h3>
 
 <p>Das Wesen von Computern liegt in gewisser Hinsicht in ihrer Fähigkeit,
 Berechnungen schnell ausführen zu können. Aus diesem Grund erscheint
 es erwartungsgemäß, wenn die Programmiersprache in bequemer Weise
 die Angabe einer Berechnung ermöglicht. Arithmetische Ausdrücke
 schreibt man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
-<code>1+2</code> aus« lautet kurz:
+<code>1+2</code> aus« geht so:
 <pre class="rust ibox">
 fn main() {
     println!("{}", 1 + 2);
 }
 </pre>
+
 <p>Der Befehl <code>println</code> nimmt hier die Zeichenkette
 <code>"{}"</code> als Schablone und ersetzt das geschweifte Klammerpaar
 gegen den Wert des Ausdrucks. Die resultierende Zeichenkette wird dann
 ausgegeben, woraufhin ein Zeilenumbruch folgt.
 
-<h3 id="Variablen">Variablen</h3>
-<p>Der Wert eines Ausdrucks lässt sich mittels <code>let</code> auch
-in einer Variablen speichern. Ein einfaches Beispiel hierzu:
+<p>Zu den Grundrechenarten liegen Operatoren vor:
+
+<table class="bt indent">
+<tr><th>Operation <th>Erklärung
+<tr><td style="text-align: center"><code>x+y</code> <td>Addition
+<tr><td style="text-align: center"><code>x-y</code> <td>Subtraktion
+<tr><td style="text-align: center"><code>x*y</code> <td>Multiplikation
+<tr><td style="text-align: center"><code>x/y</code> <td>Division
+<tr><td style="text-align: center"><code>x%y</code> <td>Rest-Bildung
+<tr><td style="text-align: center"><code>-x</code> <td>Negation
+</table>
+
+<p>Die Division von ganzen Zahlen hat ein ganzzahliges Ergebnis.
+Ist der Zähler nichtnegativ und Nenner positiv, ist der Quotient der
+abgerundete Wert. Das folgende Programm zeigt eine
+Division mit Rest.
+
 <pre class="rust ibox">
 fn main() {
-    let x = 1;
-    let y = 2;
-    println!("{} plus {} ist {}", x, y, x + y);
+    println!("{}/{} = {} Rest {}", 17, 5, 17/5, 17%5);
 }
 </pre>
-<p>Das ist wie in der Mathematik: »Sei <var>x</var>&nbsp;=&nbsp;1 und
-sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
-<var>y</var> abhängiger Ausdruck.
+
+<p>Die Ausgabe:
+
+<pre class="ibox">
+17/5 = 3 Rest 2
+</pre>
+
+<h3 id="Variablen">Variablen</h3>
+
+<p>Im Programm zur Division mit Rest wurden mehrmals
+die gleichen Zahlen wiederholt. Wollte man den Nenner oder
+den Zähler ändern, müsste man dies an mehreren Stellen tun.
+Es wäre doch vorteilhaft, wenn wir einen Wert an eine Variable
+binden könnten, womit man den Wert nur noch an einer
+Stelle ändern bräuchte.
+
+<p>Das Schlüsselwort <code>let</code> leitet eine solche
+Bindung einer Variablen an einen Wert ein. Wir dürfen
+schreiben:
+
+<pre class="rust ibox">
+fn main() {
+    let x = 17;
+    let y = 5;
+    println!("{}/{} = {} Rest {}", x, y, x/y, x%y);
+}
+</pre>
+
+<p>Die Bindungen sind auch in der kompakten Form
+
+<pre class="rust ibox">
+let (x, y) = (17, 5);
+</pre>
+
+<p>möglich. Man darf dies als ein Abgleich von Tupeln
+verstehen. In der Mathematik ist definiert:
+
+<pre class="indent">
+(x, y) = (a, b) gelte genau dann, wenn x = a und y = b.
+</pre>
 
 <h3 id="Typen">Typen</h3>
 
@@ -116,26 +166,30 @@ sei <var>y</var>&nbsp;=&nbsp;2«, es folgt ein von <var>x</var> und
 <code>x</code> eine Ganzzahl sein soll,
 welche binär in einer 32&nbsp;Bit langen Speicherzelle gespeichert
 werden kann. Alle Berechnungen müssen den Regeln des
-<i>Typsystems</i> genügen. Z.&nbsp;B. ist es nicht erlaubt, Zahlen
+<i>Typsystems</i> genügen. So ist es nicht erlaubt, Zahlen
 mit Farben zu verrechnen. Dies ergibt keinen Sinn, und der Compiler
 verweigert sich auch, ein solches Programm zu übersetzen.
 
 <p>Der Typ einer Variablen muss nicht unbedingt angegeben sein, sofern
-sich der Compiler in der Lage sieht, diesen Typ abzuleiten. Der Vorgang
-des Ableitens eines Typs wird als <i>Typinferenz</i> bezeichnet,
-und davon wurde auch bereits Gebrauch gemacht. Vollständig typisiert
-schaut das Programm so aus:
+sich der Compiler in der Lage sieht, diesen Typ aus dem Zusammenhang
+abzuleiten. Der Vorgang des Ableitens eines Typs wird als
+<i>Typinferenz</i> bezeichnet, und davon wurde im Programm zur Division
+mit Rest auch bereits Gebrauch gemacht. Vollständig typisiert schaut
+das Programm so aus:
+
 <pre class="rust ibox">
 fn main() {
-    let x: i32 = 1;
-    let y: i32 = 2;
-    println!("{} plus {} ist {}", x, y, x + y);
+    let x: i32 = 17;
+    let y: i32 = 5;
+    println!("{}/{} = {} Rest {}", x, y, x/y, x%y);
 }
 </pre>
+
 <p>Typen werden in Rust eigentlich mit einem großen Anfangsbuchstaben
-geschrieben, bei den <i>primitiven Datentypen</i> wurde da
+geschrieben. Bei den <i>primitiven Datentypen</i> wurde da
 jedoch eine Ausnahme gemacht. Von diesen primitiven Datentypen
-gibt es aber nur eine Hand voll. Das sind:
+gibt es allerdings nur eine Hand voll. Sie sind in der folgenden
+Tabelle aufgeführt.
 
 <table class="bt">
 <tr>
@@ -165,7 +219,7 @@ gibt es aber nur eine Hand voll. Das sind:
 <tr>
 <td><code>bool</code>
 <td>boolean, i.e. logical values
-<td>boolesch, d.h. logische Werte
+<td>boolesch, d.&nbsp;h. logische Werte
 <tr>
 <td><code>str</code>
 <td>string

@@ -10,7 +10,7 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Const Generics</h1>
+<h1>Konstanten als Typparameter</h1>
 
 <h2>Inhaltsverzeichnis</h2>
 
@@ -157,7 +157,7 @@ pub mod vector {
         fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
         -&gt; std::fmt::Result
         {
-            write!(f,"{:?}",self.0)
+            write!(f, "{:?}", self.0)
         }
     }
 
@@ -234,21 +234,21 @@ pub mod vector {
         type Output = f64;
         fn mul(self, b: B) -&gt; f64 {
             let a = &amp;self.0;
-            let mut s = 0.0;
+            let mut acc = 0.0;
             for i in 0..a.len() {
-                s += a[i]*b.get(i);
+                acc += a[i]*b.get(i);
             }
-            return s;
+            acc
         }
     }
     impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0,A1&gt; {
         type Output = f64;
         fn mul(self, b: B) -&gt; f64 {
-            let mut s = 0.0;
+            let mut acc = 0.0;
             for i in 0..self.len() {
-                s += self.get(i)*b.get(i);
+                acc += self.get(i)*b.get(i);
             }
-            return s;
+            acc
         }
     }
     pub fn norm&lt;A: Get&gt;(v: A) -&gt; f64 {
@@ -257,7 +257,7 @@ pub mod vector {
             let a = v.get(i);
             s += a*a;
         }
-        return s.sqrt();
+        s.sqrt()
     }
 }
 
@@ -308,7 +308,7 @@ pub mod quantities {
     {
         type Output = Quantity&lt;L,M,T&gt;;
         fn add(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
-            Quantity{value: self.value + y.value}
+            Quantity {value: self.value + y.value}
         }
     }
 
@@ -317,7 +317,7 @@ pub mod quantities {
     {
         type Output = Quantity&lt;L,M,T&gt;;
         fn mul(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
-            Quantity{value: self*y.value}
+            Quantity {value: self*y.value}
         }
     }
 
@@ -331,7 +331,7 @@ pub mod quantities {
     impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;0,1,-1&gt; {
         type Output = Quantity&lt;0,2,-2&gt;;
         fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
-            Quantity{value: self.value*y.value}
+            Quantity {value: self.value*y.value}
         }
     }
 
@@ -339,7 +339,7 @@ pub mod quantities {
     impl Mul&lt;Quantity&lt;0,2,-2&gt;&gt; for Quantity&lt;1,0,0&gt; {
         type Output = Quantity&lt;1,2,-2&gt;;
         fn mul(self, y: Quantity&lt;0,2,-2&gt;) -&gt; Self::Output {
-            Quantity{value: self.value*y.value}
+            Quantity {value: self.value*y.value}
         }
     }
 
@@ -355,7 +355,7 @@ pub mod quantities {
     impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,0,0&gt; {
         type Output = Quantity&lt;1,1,-1&gt;;
         fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
-            Quantity{value: self.value*y.value}
+            Quantity {value: self.value*y.value}
         }
     }
 
@@ -380,13 +380,13 @@ pub mod quantities {
         impl Mul&lt;Kilogramm&gt; for f64 {
             type Output = Mass;
             fn mul(self, _y: Kilogramm) -&gt; Self::Output {
-                Mass{value: self}
+                Mass {value: self}
             }
         }
         impl Mul&lt;MeterPerSecond&gt; for f64 {
             type Output = Speed;
             fn mul(self, _y: MeterPerSecond) -&gt; Self::Output {
-                Speed{value: self}
+                Speed {value: self}
             }
         }
     }
