@@ -645,9 +645,9 @@ von Potenzen mit natürlichem Exponenten.
 
 <pre class="rust ibox">
 fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    for _ in 0..n {y = y*x;}
-    return y;
+    let mut acc = 1;
+    for _ in 0..n {acc = acc*x;}
+    acc
 }
 
 fn main() {
@@ -669,9 +669,9 @@ trait Monoid {
 }
 
 fn pow&lt;T: Monoid&gt;(x: T, n: u32) -&gt; T {
-    let mut y = T::one();
-    for _ in 0..n {y = y.mul(&amp;x);}
-    return y;
+    let mut acc = T::one();
+    for _ in 0..n {acc = acc.mul(&amp;x);}
+    acc
 }
 
 impl Monoid for i32 {
@@ -723,16 +723,16 @@ fn type_monoid&lt;T: Monoid + 'static&gt;() -&gt; MonoidType {
         }
         unreachable!();
     };
-    MonoidType {one,mul};
+    MonoidType {one, mul}
 }
 </pre>
 
 <p>Nun der explizit Laufzeit-polymorphe Algorithmus:
 <pre class="rust ibox">
 fn pow_intern(t: &amp;MonoidType, x: &amp;MonoidPtr, n: u32) -&gt; MonoidPtr {
-    let mut y = (t.one)();
-    for _ in 0..n {y = (t.mul)(&amp;y,&amp;x);}
-    return y;
+    let mut acc = (t.one)();
+    for _ in 0..n {acc = (t.mul)(&amp;acc, &amp;x);}
+    acc
 }
 </pre>
 
@@ -741,7 +741,7 @@ fn pow_intern(t: &amp;MonoidType, x: &amp;MonoidPtr, n: u32) -&gt; MonoidPtr {
 fn pow&lt;T: Monoid + 'static&gt;(x: T, n: u32) -&gt; T {
     let t = type_monoid::&lt;T&gt;();
     let px = MonoidPtr(Box::new(x));
-    match pow_intern(&amp;t,&amp;px,n).0.downcast::&lt;T&gt;() {
+    match pow_intern(&amp;t, &amp;px, n).0.downcast::&lt;T&gt;() {
         Ok(y) =&gt; *y,
         _ =&gt;  unreachable!()
     }
@@ -766,13 +766,19 @@ Downcasts unnötige if-Anweisungen entstehen.
 <p>Beim Schreiben generischer Programme tut sich oft das Problem des
 <i>Code Bloats</i> auf. Das soll am Beispiel von <code>Vec</code>, dem
 Datentyp dynamischer Felder, verdeutlicht werden. Weil der Compiler
-bei der Monomorphisierung von <code>Vec</code>
-für unterschiedliche Typen <code>A,B,C</code>
-jeweils neuen optimierten Programmcode zu
-<code>Vec&lt;A&gt;,Vec&lt;B&gt;,Vec&lt;C&gt;</code>
+bei der Monomorphisierung von <code>Vec</code> für unterschiedliche
+Typen <code>A</code>,&nbsp;<code>B</code>,&nbsp;<code>C</code>
+jeweils neuen optimierten Programmcode zu <code>Vec&lt;A&gt;</code>,
+<code>Vec&lt;B&gt;</code>, <code>Vec&lt;C&gt;</code>
 erzeugt, können generische Programme zu großen Binärdateien führen.
 
-<p>Zur Lösung dieses Problems bieten sich vier Ansätze an:
+<p>Allerdings muss dies nicht bei jeder Funktionalität
+zwangsläufig geschehen. Sind die Funktionen recht kurz,
+könnte durch die inline-Optimierungen nach der Monomorphisierung
+sogar kürzerer Maschinencode entstehen, oder moderat aufgeblähter,
+aber dafür hocheffizienter Maschinencode.
+
+<p>Zur Lösung des Problems bieten sich vier Ansätze an:
 <ol>
 <li>Die Monomorphisierung wird schlicht verhindert,
   indem mit polymorphen Zeigern gearbeitet wird.
@@ -794,9 +800,9 @@ Zunächst ist denkbar, dass der Compiler schon bei
 erzeugt und wiederverwendet. Ein guter Compiler sollte das auf jeden
 Fall bewerkstelligen. Um das zu erzwingen, können aber Trait-Pointer
 <code>Box&lt;dyn A&gt;</code> desselben Traits <code>A</code> benutzt
-werden. Oder aber man verwendet <code>Box&lt;Any&gt;</code>.
+werden. Oder aber man verwendet <code>Box&lt;dyn&nbsp;Any&gt;</code>.
 
-<p>Wir wollen den allgemeinen Ansatz mit <code>Box&lt;Any&gt;</code>
+<p>Wir wollen den allgemeinen Ansatz mit <code>Box&lt;dyn&nbsp;Any&gt;</code>
 verfolgen. Rust bietet uns nun die Mittel, um den polymorphen Code
 in ein monomorphisiertes Interface einzuhüllen. Das gestaltet sich wie
 folgt:

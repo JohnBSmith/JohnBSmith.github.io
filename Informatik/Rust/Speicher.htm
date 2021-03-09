@@ -61,7 +61,7 @@ fn print_array(a: &amp;[char]) {
 fn print_array(a: &amp;[char]) {
     let mut p = a.as_ptr();
     let mut n = a.len();
-    while n&gt;0 {
+    while n &gt; 0 {
         println!("{}", unsafe {*p});
         p = unsafe {p.add(1)};
         n -= 1;
@@ -84,12 +84,38 @@ fn print_array(a: &amp;[char]) {
     let p = a.as_ptr();
     let n = a.len();
     let mut i = 0;
-    while i&lt;n {
+    while i &lt; n {
         println!("{}", unsafe {*p.add(i)});
         i += 1;
     }
 }
 </pre>
+
+<p>Zeigerarithmetik ist ein auf einfache Zeiger beschränktes
+Konzept. Weder Leihgaben noch Smart-Pointer unterstützen sie.
+Das muss auch so sein, denn diese Typen besitzen keine
+Möglichkeit zur Prüfung, ob das Ergebnis der arithmetischen
+Operation im gültigen Bereich bleibt, womit per se keine Sicherheit
+gewährleistet werden kann.
+
+<p>Ausschnitt-Leihgaben bieten allerdings tatsächlich die Möglichkeit
+einer Arithmetik, denn diese sind Paare aus Zeiger und Länge.
+Durch Prüfung der Länge ist eine sichere Dereferenzierung
+realisierbar. Die folgende Formulierung von <code>print_array</code>
+verdeutlicht die Überlegung.
+
+<pre class="rust ibox">
+fn print_array(a: &amp;[char]) {
+    let mut p = &amp;a[..];
+    while !p.is_empty() {
+        println!("{}", p[0]);
+        p = &amp;p[1..];
+    }
+}
+</pre>
+
+<p>Hier entspricht <code>p[0]</code> der Dereferenzierung
+und <code>&amp;p[1..]</code> der Inkrementierung.
 
 <h2 id="Allokation">Allokation</h2>
 
