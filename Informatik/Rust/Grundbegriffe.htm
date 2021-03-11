@@ -61,9 +61,9 @@ Ausgabe der Zeichenkette in den Anführungszeichen.
 
 <p>Das Schlüsselwort <code>fn</code> steht für <i>function</i> und
 leitet die Definition einer Funktion ein. In Rust versteht man unter
-einer Funktion jegliche Art von Prozedur (Unterprogramm), das betrifft
-auch solche Prozeduren die keine Funktionen im mathematischen Sinn
-darstellen. Der Bezeichner <code>main</code> deutet an, dass die
+einer Funktion jegliche Art von Prozedur (Unterprogramm), &ndash; das
+betrifft auch solche Prozeduren die keine Funktionen im mathematischen
+Sinn darstellen. Der Bezeichner <code>main</code> deutet an, dass die
 Hauptprozedur des Programms definiert wird. Jedes ausführbare Programm
 muss diese Hauptprozedur enthalten. Das kürzeste ausführbare Programm
 ist demnach:
@@ -172,9 +172,9 @@ verweigert sich auch, ein solches Programm zu übersetzen.
 
 <p>Der Typ einer Variablen muss nicht unbedingt angegeben sein, sofern
 sich der Compiler in der Lage sieht, diesen Typ aus dem Zusammenhang
-abzuleiten. Der Vorgang des Ableitens eines Typs wird als
-<i>Typinferenz</i> bezeichnet, und davon wurde im Programm zur Division
-mit Rest auch bereits Gebrauch gemacht. Vollständig typisiert schaut
+abzuleiten. Der Vorgang des Ableitens wird als <i>Typinferenz</i>
+bezeichnet, und davon wurde im Programm zur Division mit Rest auch
+bereits Gebrauch gemacht. Vollständig typisiert schaut
 das Programm so aus:
 
 <pre class="rust ibox">
@@ -321,7 +321,7 @@ die Variablen nicht mehr sichtbar.
 
 <p>Manchmal gewährt die Mathematik allerdings noch wesentlich
 umfangreichere Einsparungen. Die Überführung ins Horner-Schema
-reduziert hier die Anzahl der Multiplikationen auf lediglich vier.
+reduziert hier die Anzahl der Multiplikationen auf lediglich vier:
 
 <pre class="rust ibox">
 let (a0, a1, a2, a3, a4) = (5, 4, 3, 2, 1);
@@ -357,7 +357,7 @@ println!("{}", x);
 </pre>
 
 <p>Überschattung kann auch ohne explizite Blöcke stattfinden.
-Man muss das so verstehen, dass dabei implizit ein innerer Block
+Man muss das so verstehen dass dabei implizit ein innerer Block
 gebildet wird, der ganz bis zum Ende des äußeren Blocks verläuft.
 Das heißt, man kann das Programm
 
@@ -757,6 +757,13 @@ des Feldes, engl. <i>borrow</i>. Unter einer Leihgabe versteht man
 einen Zeiger auf das Feld, der durch das Typsystem
 um eine sogenannte Lebenszeit angereichert ist.
 
+<p>Ein Zeiger enthält lediglich eine darüber Auskunft gebende Adresse,
+wo sich das Feld im Speicher befindet. Der Sinn dahinter besteht darin,
+dass ein Unterprogramm auf diese Weise effizient auf das Feld zugreifen
+kann. Andernfalls müsste das Feld in den Speicher des Unterprogramms
+verschoben oder kopiert werden. Je nach Größe des Feldes bedeutet
+das einen erhöhten bis außerordentlichen Aufwand.
+
 <p>Das Konzept der Lebenszeiten gewährleistet bereits zur
 Kompilierzeit, dass für Zeiger kritische Probleme wie
 <i>Use after free</i> niemals auftreten. Bei Verzicht auf
@@ -781,7 +788,7 @@ lediglich Felder der Länge vier verarbeiten kann. Zur Lösung dieses
 Problems existiert ein eigener Datentyp, der <i>Slice</i> eines Feldes,
 geschrieben <code>&amp;[i32]</code>. Die Signatur der Funktion
 <code>sum</code> braucht lediglich auf <code>a:&nbsp;&amp;[i32]</code>
-abgeändert werden und schon lassen sich Summen von Feldern beliebiger
+abgeändert werden, und schon lassen sich Summen von Feldern beliebiger
 Länge bilden.
 
 <p>Ein Slice besteht intern aus zwei Bestandteilen, einem Zeiger auf den
@@ -858,20 +865,20 @@ fn main() {
 }
 </pre>
 <p>Da dem Feld selbst Veränderung widerfährt, ist hier eine
-<i>alleinige</i> oder <i>ungemeinschaftliche Referenz</i>
-(<i>unique reference</i>) auf den Slice des Feldes notwendig. Eine
-ausführliche Erläuterung warum das so ist folgt später. Zunächst muss
-man nur wissen dass diese Art von Referenz die Signatur
+<i>alleinige Referenz</i> (<i>unique reference</i>) auf den
+Gesamtausschnitt des Feldes notwendig. Eine ausführliche Erläuterung,
+warum das so ist, folgt später. Zunächst muss man nur wissen dass diese
+Art von Referenz die Signatur
 <code>&amp;mut</code> anstelle von <code>&amp;</code> besitzt.
 Das <code>mut</code> (mutable) weist daraufhin, dass die Daten,
 auf die die Referenz zeigt, verändert werden dürfen.
 
 <h3 id="Nochmals-Ausschnitte">Nochmals Ausschnitte von Feldern</h3>
 
-<p>Slices bestehen nur aus Zeiger und Länge. Intuitiv lässt sich aus
-einem Slice ein Teilslice bilden und aus diesem wieder ein Teilslice
-usw. Solange bis man den leeren Slice erhält. Ein Beispiel dazu ist
-diese Implementation der Summierung: 
+<p>Ausschnitte bestehen nur aus Zeiger und Länge. Intuitiv lässt sich
+von einem Ausschnitt ein Teilausschnitt bilden und von diesem wieder
+ein Teilausschnitt usw. Solange bis man den leeren Ausschnitt erhält.
+Ein Beispiel dazu ist diese Implementation der Summierung: 
 <pre class="rust ibox">
 fn sum(a: &amp;[i32]) -&gt; i32 {
     if a.is_empty() {0} else {a[0] + sum(&amp;a[1..])}
@@ -881,14 +888,14 @@ fn sum(a: &amp;[i32]) -&gt; i32 {
 <p>Eine solche rekursive Formulierung ist zwar mathematisch elegant,
 in der Praxis jedoch leider ineffizient.
 
-<p>Der Slice <code>&amp;a[i..]</code> ist eine Abkürzung für
+<p>Der Ausschnitt <code>&amp;a[i..]</code> ist eine Abkürzung für
 <code>&amp;a[i..a.len()]</code>. Außerdem gibt es noch
 <code>&amp;a[..j]</code>, das ist <code>&amp;a[0..j]</code>. Demnach
 hat <code>&amp;a[..]</code> die Bedeutung <code>&amp;a[0..a.len()]</code>.
 
-<p>Slices sind recht praktisch, daher sind für diese eine ganze Reihe
-von Methoden definiert. Beispielsweise ist eine Methode zur
-Sortierung eines veränderlichen Slices vorhanden:
+<p>Ausschnitte sind recht praktisch, daher sind für diese eine ganze
+Reihe von Methoden definiert. Beispielsweise ist eine Methode zur
+Sortierung eines veränderbaren Ausschnittes vorhanden:
 <pre class="rust ibox">
 fn main() {
     let mut a: Vec&lt;i32&gt; = vec![4, 2, 1, 3];

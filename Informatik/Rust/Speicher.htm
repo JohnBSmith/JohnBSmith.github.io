@@ -14,7 +14,7 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Zeiger">Zeiger</a>
+<li><a href="#Zeiger">Einfache Zeiger</a>
 <li><a href="#Allokation">Allokation</a>
 <li><a href="#Box">Zeiger vom Typ Box</a>
 <li><a href="#Rc">Zeiger vom Typ Rc</a>
@@ -28,14 +28,70 @@
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
-<h2 id="Zeiger">Zeiger</h2>
+<h2 id="Zeiger">Einfache Zeiger</h2>
 
 <p>Ein Zeiger ist eine Variable, die die Speicheradresse einer
 anderen Variable als Wert enthält.
 
 <h3>Zeigerarithmetik</h3>
 
+<p>Ein Array ist im Speicher als Sequenz seiner Elemente dargestellt.
+Ein Zeiger auf das Array enthält die Speicheradresse des ersten
+Elements. Addiert man zu der Adresse nun eine Zahl, ergibt sich
+eine neue Adresse, die einen verschobenen Zeiger darstellt.
+
+<p>Damit diese Verschiebung einwandfrei funktioniert, darf zur
+Adresse immer nur ein ganzzahliges Vielfaches der Elementgröße
+addiert werden. Erreicht wird dies, indem die Zahl vor der Addition
+implizit mit der Elementgröße multipliziert wird.
+
+<p>Die Arithmetik von Zeigern umfasst die folgenden Konzepte:
+
+<ul>
+<li>Zu einem Zeiger darf eine Zahl addiert werden. Das Ergebnis
+ist ein um diese Zahl von Elementen verschobener Zeiger.
+<li>Die Differenz zweier Zeiger darf gebildet werden. Das Ergebnis
+ist eine Zahl von Elementen, die dem Vorzeichen-behafteten Abstand
+der Zeiger entspricht.
+<li>Zeiger dürfen auf Gleichheit geprüft werden.
+<li>Für Zeiger ist eine Ordnungsrelation definiert.
+Ein erster Zeiger ist kleiner als ein zweiter, wenn die
+Speicheradresse des ersten kleiner als die des zweiten ist.
+</ul>
+
+<p>Eine Analogie aus der Mathematik sind Punkte und Vektoren.
+Der Zeiger entspricht einem Punkt im euklidischen Raum, die Zahl
+einem Vektor. So wie man zum Zeiger eine Zahl addieren
+kann, kann man zum Punkt einen Vektor addieren, wodurch sich eine
+Verschiebung des Punktes um diesen Vektor ergibt. Die
+Ordnungsrelation ist nur auf einem eindimensionalen Raum definierbar.
+
+<p>In Rust ist die Arithmetik für einfache Zeiger definiert.
+Die folgende Tabelle listet die wesentlichen Operationen auf.
+
+<table class="bt">
+<tr>
+<th>Operation
+<th>Erklärung
+<tr>
+<td><code>p.add(i)</code>
+<td>Verschiebt den Zeiger <code>p</code> um <code>i</code> Elemente.
+<tr>
+<td><code>p.offset(i)</code>
+<td>Verschiebt <code>p</code> um <code>i</code> Elemente, wobei <code>i</code> auch negativ sein darf.
+<tr>
+<td><code>p1.offset_from(p2)</code>
+<td>Vorzeichen-behafteter Abstand der Zeiger.
+<tr>
+<td><code>p1 == p2</code>
+<td>Die beiden Zeiger zeigen auf dieselbe Speicherzelle.
+<tr>
+<td><code>p1 &lt; p2</code>
+<td>Der zweite Zeiger zeigt auf eine spätere Speicherzelle.
+</table>
+
 <p>Die in Hochsprache formulierte Funktion
+
 <pre class="rust ibox">
 fn print_array(a: &amp;[char]) {
     for x in a {
@@ -94,8 +150,8 @@ fn print_array(a: &amp;[char]) {
 <p>Zeigerarithmetik ist ein auf einfache Zeiger beschränktes
 Konzept. Weder Leihgaben noch Smart-Pointer unterstützen sie.
 Das muss auch so sein, denn diese Typen besitzen keine
-Möglichkeit zur Prüfung, ob das Ergebnis der arithmetischen
-Operation im gültigen Bereich bleibt, womit per se keine Sicherheit
+Möglichkeit zur Prüfung, ob das Ergebnis einer Verschiebung im
+gültigen Bereich bleibt, womit per se keine Sicherheit
 gewährleistet werden kann.
 
 <p>Ausschnitt-Leihgaben bieten allerdings tatsächlich die Möglichkeit
