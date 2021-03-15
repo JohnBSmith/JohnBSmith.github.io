@@ -56,6 +56,7 @@ files = [
 "./Chemie/PC/PC.pdf",
 "./Chemie/PCH/PCH.pdf",
 "./Sprache/Woerter/Woerter-romantisch.pdf",
+"./Biologie/Epidemiologie/Ep-Modelle/Ep-Modelle.pdf",
 "./prog/index.js"
 ]
 

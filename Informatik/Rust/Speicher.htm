@@ -467,7 +467,7 @@ struct Counter {
 }
 impl Counter {
     fn new() -&gt; Self {
-        Self{value: Cell::new(0)}
+        Self {value: Cell::new(0)}
     }
     fn next(&amp;self) -&gt; u32 {
         let value = self.value.get();
@@ -661,7 +661,7 @@ struct Counter {
 }
 impl Counter {
     fn new() -&gt; Self {
-        Self{value: RefCell::new(0)}
+        Self {value: RefCell::new(0)}
     }
     fn next(&amp;self) -&gt; u32 {
         let mut p = self.value.borrow_mut();
@@ -1033,6 +1033,17 @@ fn main() {
 </pre>
 
 <p>erhalten.
+
+<p>Die Funktion <code>swap</code> stellt sogar eine Verallgemeinerung
+von <code>replace</code> dar, denn <code>replace</code> lässt
+sich mit <code>swap</code> ausdrücken:
+
+<pre class="rust ibox">
+fn replace&lt;T&gt;(dest: &amp;mut T, mut src: T) -&gt; T {
+    std::mem::swap(dest, &amp;mut src);
+    src
+}
+</pre>
 
 <h2 id="Cow">Zeiger vom Typ Cow</h2>
 
