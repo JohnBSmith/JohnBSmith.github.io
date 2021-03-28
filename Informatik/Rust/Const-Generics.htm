@@ -59,7 +59,7 @@ Die Umsetzung gestaltet sich nun wie folgt.
 <pre class="rust ibox">
 use std::fmt;
 
-#[derive(Clone,Copy)]
+#[derive(Clone, Copy)]
 struct Z&lt;const M: u32&gt; (u32);
 
 impl&lt;const M: u32&gt; fmt::Display for Z&lt;M&gt; {
@@ -139,15 +139,15 @@ Anpassung des Programms fällt erfreulicherweise fast trivial aus,
 
 <pre class="rust ibox">
 pub mod vector {
-    use std::ops::{Add,Sub,Mul};
+    use std::ops::{Add, Sub, Mul};
 
     pub struct Vector&lt;const N: usize&gt;(pub [f64; N]);
-    pub struct Addition&lt;A: Get, B: Get&gt;(A,B);
-    pub struct ScalarMul&lt;A: Get&gt;(f64,A);
+    pub struct Addition&lt;A: Get, B: Get&gt;(A, B);
+    pub struct ScalarMul&lt;A: Get&gt;(f64, A);
 
     impl&lt;const N: usize&gt; Vector&lt;N&gt; {
         pub fn flush&lt;A: Get&gt;(&amp;mut self, a: A) {
-            for (i,v) in self.0.iter_mut().enumerate() {
+            for (i, v) in self.0.iter_mut().enumerate() {
                 *v = a.get(i);
             }
         }
@@ -169,7 +169,7 @@ pub mod vector {
         fn len(&amp;self) -&gt; usize {self.0.len()}
         fn get(&amp;self, i: usize) -&gt; f64 {self.0[i]}
     }
-    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A,B&gt; {
+    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A, B&gt; {
         fn len(&amp;self) -&gt; usize {self.0.len()}
         fn get(&amp;self, i: usize) -&gt; f64 {
             self.0.get(i) + self.1.get(i)
@@ -183,51 +183,51 @@ pub mod vector {
     }
     
     impl&lt;'a, B: Get, const N: usize&gt; Add&lt;B&gt; for &amp;'a Vector&lt;N&gt; {
-        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;,B&gt;;
+        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
     impl&lt;'a, B: Get, const N: usize&gt; Sub&lt;B&gt; for &amp;'a Vector&lt;N&gt; {
-        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;,ScalarMul&lt;B&gt;&gt;;
+        type Output = Addition&lt;&amp;'a Vector&lt;N&gt;, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0,A1&gt; {
-        type Output = Addition&lt;Self,B&gt;;
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0,A1&gt; {
-        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
     impl&lt;A: Get, B: Get&gt; Add&lt;B&gt; for ScalarMul&lt;A&gt; {
-        type Output = Addition&lt;Self,B&gt;;
+        type Output = Addition&lt;Self, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
     impl&lt;A: Get, B: Get&gt; Sub&lt;B&gt; for ScalarMul&lt;A&gt; {
-        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
     impl&lt;'a, const N: usize&gt; Mul&lt;&amp;'a Vector&lt;N&gt;&gt; for f64 {
         type Output = ScalarMul&lt;&amp;'a Vector&lt;N&gt;&gt;;
         fn mul(self, a: &amp;'a Vector&lt;N&gt;) -&gt; Self::Output {
-            ScalarMul(self,a)
+            ScalarMul(self, a)
         }
     }
-    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A,B&gt;&gt; for f64 {
-        type Output = ScalarMul&lt;Addition&lt;A,B&gt;&gt;;
-        fn mul(self, a: Addition&lt;A,B&gt;) -&gt; Self::Output {
-            ScalarMul(self,a)
+    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A, B&gt;&gt; for f64 {
+        type Output = ScalarMul&lt;Addition&lt;A, B&gt;&gt;;
+        fn mul(self, a: Addition&lt;A, B&gt;) -&gt; Self::Output {
+            ScalarMul(self, a)
         }
     }
     impl&lt;B: Get, const N: usize&gt; Mul&lt;B&gt; for &amp;Vector&lt;N&gt; {
@@ -241,7 +241,7 @@ pub mod vector {
             acc
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0,A1&gt; {
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0, A1&gt; {
         type Output = f64;
         fn mul(self, b: B) -&gt; f64 {
             let mut acc = 0.0;
@@ -267,9 +267,9 @@ fn main() {
     let v = &amp;Vector([1.0, 2.0]);
     let w = &amp;Vector([3.0, 4.0]);
     let mut buf = Vector([0.0, 0.0]);
-    buf.flush(2.0*v + 4.0*w + 5.0*(v-2.0*w));
+    buf.flush(2.0*v + 4.0*w + 5.0*(v - 2.0*w));
     println!("{}", buf);
-    println!("{}", (v+w)*(v-w));
+    println!("{}", (v + w)*(v - w));
     println!("{}", v*v - w*w);
 }
 </pre>
@@ -343,7 +343,7 @@ pub mod quantities {
         }
     }
 
-    // Moment*Geschwindigkeit
+    // Impuls*Geschwindigkeit
     impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,1,-1&gt; {
         type Output = Quantity&lt;1,2,-2&gt;;
         fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {

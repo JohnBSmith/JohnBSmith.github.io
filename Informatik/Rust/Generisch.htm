@@ -338,7 +338,7 @@ impl Rev for &amp;[i32; 2] {
 <p>Diese Funktion ist jedoch nicht kompilierbar. Stattdessen bedarf
 es einer Besitzübertragung des erzeugten Wertes von der aufgerufenen
 an die aufrufende Funktion. Dafür müssen wir zwangsläufig die
-Signatur abändern. Erreichbar ist dies durch Parametrisierung des
+Signatur ändern. Erreichbar ist dies durch Parametrisierung des
 Traits über den Rückgabetyp:
 
 <pre class="ibox rust">
@@ -397,10 +397,20 @@ fn main() {
 }
 </pre>
 
-<p>Ersichtlich wird am gewählten Beispiel auch, dass nicht unbedingt
-eine Notwendigkeit am Einsatz von assoziierten Typen besteht. Es
-handelt sich hier vielmehr um eine Entwurfsentscheidung zur
-Klarstellung der eindeutigen Zuordnung.
+<p>Der aufgezeigte Weg verdeutlicht die Entbehrlichkeit assoziierter
+Typen bezüglich dieser Art von Problemstellung. Sie dienen zur
+Klarstellung der eindeutigen Zuordnung, bringen abseits dieser
+Verschärfung aber zunächst keine neue Funktionalität.
+
+<p>Aufgrund der eindeutigen Zuordnung kann man allerdings des Weiteren
+zu jedem Typ die assoziierten Typen erhalten, was bei der Schaffung
+fortgeschrittener generischer Konstruktionen dienlich ist. Ist
+<code>Rev</code> für einen Typ <code>X</code> mit
+<code>Return&nbsp;=&nbsp;Y</code> implementiert, gilt
+
+<pre class="rust indent">
+Y = &lt;X as Rev&gt;::Return.
+</pre>
 
 
 <h2 id="Technik">Technische Umsetzung</h2>
