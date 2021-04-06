@@ -1,0 +1,406 @@
+\documentclass[9pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+% \usepackage[all]{xy}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{brown1}{rgb}{0.26,0.14,0}
+\definecolor{brown2}{rgb}{0.26,0.14,0}
+\definecolor{urlcolor0}{rgb}{0.8,0,0.5}
+\setbeamercolor*{palette primary}{fg=white,bg=brown1}
+\setbeamercolor*{palette secondary}{fg=white,bg=brown2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=brown2}
+\setbeamercolor{itemize item}{fg=black,bg=white}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks=true,urlcolor=urlcolor0}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\renewcommand{\qedsymbol}{\ensuremath{\square}}
+\newcommand{\kw}[1]{\textbf{#1}}
+
+\title{Aussagen als Typen}
+\subtitle{Curry-Howard für Eilige}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+In der Aussagenlogik sind zusammengesetzte Aussagen aus einem
+Satz von Grundverknüpfungen konstruierbar, meist UND, ODER, NICHT.\pause
+
+\vspace{1em}
+Betrachten wir $A\land B$.\pause{} Wertetabelle:
+
+\begin{table}
+\begin{tabular}{ccc}
+$A$ & $B$ & $A\land B$\\
+\midrule
+0 & 0 & 0\\
+0 & 1 & 0\\
+1 & 0 & 0\\
+1 & 1 & 1
+\end{tabular}
+\end{table}\pause
+
+Betrachten wir $A$, $B$ als Zahlen und multiplizieren diese,
+kommt doch dasselbe Ergebnis bei heraus.
+\end{frame}
+
+\begin{frame}
+Wie verhält es sich dann mit $A\lor B$?\pause{} Addieren?\pause
+
+\vspace{1em}
+Wertetabelle:
+\begin{table}
+\begin{tabular}{cccc}
+$A$ & $B$ & $A\lor B$ & $A + B$\\
+\midrule
+0 & 0 & 0 & 0\\
+0 & 1 & 1 & 1\\
+1 & 0 & 1 & 1\\
+1 & 1 & 1 & 2
+\end{tabular}
+\end{table}\pause
+Wir könnten $A+B - AB$ rechnen, dann stimmt es.\pause
+
+\vspace{1em}
+Aber angenommen, uns würde nur interessieren ob da null herauskommt
+oder nicht, dann könnten wir uns die Subtraktion von $AB$ sparen.
+\end{frame}
+
+\begin{frame}
+Wir teilen die natürlichen Zahlen in zwei Äquivalenzklassen auf,
+einmal $0$ für falsch, und die restlichen Zahlen $x\ne 0$
+für wahr.\pause
+
+\vspace{1em}
+Dann klappt es:
+\begin{table}
+\begin{tabular}{cccc}
+$A$ & $B$ & $AB$ & $A+B$\\
+\midrule
+0 & 0 & 0 & 0\\
+0 & x & 0 & x\\
+x & 0 & 0 & x\\
+x & x & x & x
+\end{tabular}
+\end{table}
+(In der Tabelle steht $x$ für die Äquivalenzklasse.)
+\end{frame}
+
+\begin{frame}
+Eine entsprechende Operation gibt es auch für die
+Implikation $A\to B$.\pause
+
+\vspace{1em}
+Na?\pause{} Das ist $B^A$.\pause{} Wertetabelle:
+\begin{table}
+\begin{tabular}{cccc}
+$A$ & $B$ & $B^A$ & $A\to B$\\
+\midrule
+0 & 0 & 1 & 1\\
+0 & x & 1 & 1\\
+x & 0 & 0 & 0\\
+x & x & x & 1
+\end{tabular}
+\end{table}\pause
+
+Tolle Spielerei. Und was bringt uns das jetzt?
+\end{frame}
+
+\begin{frame}
+Aus der Mengenlehre, speziell der Kardinalzahltheorie ist bekannt,
+dass zu jeder dieser Operationen eine einfache Mengenkonstruktion
+gehört.\pause
+
+\vspace{1em}
+Die Entsprechnungen sind:
+\begin{table}
+\begin{tabular}{ccc}
+Aussagen & Zahlen & Mengen\\
+\midrule
+$A\land B$ & $AB$  & $A\times B$ \\
+$A\lor B$  & $A+B$ & $A\sqcup B$\\
+$A\to B$   & $B^A$ & $\Abb(A,B)$
+\end{tabular}
+\end{table}\pause
+
+Mit $A\sqcup B$ ist die disjunkte Vereinigung
+\[(\{0\}\times A)\cup (\{1\}\times B) \cong 
+(\{\text{Grün}\}\times A)\cup (\{\text{Blau}\}\times B)\]
+gemeint. Das heißt, die Elemente werden vorher eingefärbt,
+damit bekannt bleibt, aus welcher der Mengen ein Element der
+Vereinigung entstammt.\pause
+
+\vspace{1em}
+Mit $\Abb(A,B)$ ist die Menge der Abbildungen von $A$ nach $B$
+gemeint.
+\end{frame}
+
+\begin{frame}
+Eine Menge kann die leere Menge $\emptyset$ sein, oder eine
+nichtleere Menge. Wir haben $|\emptyset|=0$ und
+$|X|=x\ne 0$ für $X\ne\emptyset$.\pause
+
+\vspace{1em}
+Das ist genau das, was wir haben wollen, denn
+\begin{gather*}
+|A\times B| = |A|\cdot |B|,\\
+|A\sqcup B| = |A| + |B|,\\
+|\Abb(A,B)| = |B|^{|A|}.
+\end{gather*}
+\end{frame}
+
+\begin{frame}
+Für die Allquantifizierung $\forall_{x\in M}P(x)$ brauchen wir
+unbedingt auch eine Entsprechung, wie später klar werden wird.\pause
+
+\vspace{1em}
+Sei $M$ zunächst endlich, sagen wir
+\[M:=\{x_0,x_1,x_2,x_3\}.\]
+Dann gilt
+\[\forall_{x\in M}P(x) = P(x_0)\land P(x_1)\land P(x_2)\land P(x_3).
+\]\pause
+Die Entsprechung ist
+\[P(x_0)\times P(x_1)\times P(x_2)\times P(x_3),\]
+wobei $P\colon M\to\{0,1\}$ gegen $P'\colon M\to U$
+zu ersetzen ist, so dass
+\[P(x)\iff |P'(x)|\ne\emptyset.\]
+\end{frame}
+
+\begin{frame}
+Die Elemente dieses Produkts sind Tupel
+\[(y_0, y_1, y_2, y_3).\]\pause
+Ein solches Tupel können wir auch als Abbildung
+\[\{0\mapsto y_0, 1\mapsto y_1, 2\mapsto y_2, 3\mapsto y_3\}\]
+betrachten. Das ist schlicht die Indizierung des Tupels.\pause
+
+\vspace{1em}
+Die Menge $M$ enthält nun jedes Element genau einmal.
+Dann können wir doch auch $M$ selbst als Indexmenge verwenden,
+richtig? Das Tupel ist demnach kodierbar als
+\[\{x_0\mapsto y_0, x_1\mapsto y_1, x_2\mapsto y_2, x_3\mapsto y_3\}.\]
+\end{frame}
+
+\begin{frame}
+Das sind Abbildungen $x\mapsto y(x)$, wobei $x\in M$
+und $y(x)\in P'(x)$.\pause
+
+\vspace{1em}
+So eine Konstruktion gibt es in der Mathematik tatsächlich.
+Es handelt sich um das allgemeine Mengenprodukt
+\[\prod_{x\in M} P'(x) := \{f\colon M\to \bigcup_{x\in M}P'(x)\mid \forall x\in M\colon f(x)\in P'(x)\}.\]
+\end{frame}
+
+\begin{frame}
+Aber was bringt uns das denn jetzt?\pause
+
+\vspace{1em}
+Betrachten wir die aussagenlogische Formel
+\[A\land B\to A.\]
+Wir wollen beweisen dass das eine Tautologie ist.\pause
+
+\vspace{1em}
+Es handelt sich genau dann um eine Tautologie, wenn
+\[\forall_A\forall_B (A\land B\to A)\]
+eine wahre Aussage ist.\pause{} Das ist wiederum genau dann der
+Fall, wenn die entsprechende Menge
+\[\Pi_A\Pi_B (A\times B\to A)\]
+nichtleer ist, wobei wir $A\times B\to A$ für $\Abb(A\times B,A)$ schreiben.
+\end{frame}
+
+\begin{frame}
+Ein Element dieser Menge ist konstruierbar -- die Projektion
+auf das linke Element, das ist
+\[\mathrm{proj_0} := A\mapsto B\mapsto (a,b)\mapsto a\;\;\text{mit}\;\;
+(a,b)\in A\times B,\]
+bzw. anders geschrieben
+\[\mathrm{proj_0}(A)(B)((a,b)) := a.\]\pause
+Es gibt daher mindestens dieses Element $\mathrm{proj}_0$. Die Menge
+ist somit nichtleer, die ursprüngliche Formel daher bewiesen.
+\end{frame}
+
+\begin{frame}
+Irgendwie erinnert das an ein Programm, wie man es in einer
+Programmiersprache konstruieren kann.\pause
+
+\vspace{1em}
+\strong{Standard ML}\\[4pt]
+\texttt{\kw{val} proj0: 'a * 'b -> 'a = \kw{fn} (a, b) => a;}\\[8pt]
+
+Alternativ:\\[4pt]
+
+\texttt{\kw{fun} proj0((a, b): 'a*'b): 'a = a;}\pause
+
+\vspace{1.4em}
+\strong{Rust}\\[4pt]
+\texttt{\kw{fn} proj0<A, B>((a, \_b): (A, B)) -> A \{a\}}
+\end{frame}
+
+\begin{frame}
+Das heißt, den Mengen entsprechen Typen? Ein Typsystem
+hilft uns dabei, korrekte Terme zu konstruieren. Dann hilft es
+uns auch, korrekte Beweise zu konstruieren?\pause
+
+\vspace{1em}
+Ja, das geht. Die genannten Programmiersprachen schaffen das aber
+nur teilweise. Wir wollen ja Funktionen im mathematischen
+Sinn haben.\pause
+
+\vspace{1em}
+Das heißt:
+\begin{itemize}
+\item Die Funktion muss einem Argument immer denselben Wert
+zuordnen, denn eine mathematische Funktion ordnet einem Element
+\emph{genau einen} Wert zu. Eine solche Funktion nennt man
+\emph{rein}, -- \emph{rein funktional}.
+
+\item Die Funktion muss immer terminieren und damit einen
+Wert liefern, denn eine mathematische Funktion ordnet \emph{jedem}
+Element einen Wert zu. Eine solche Funktion nennt man
+\emph{total}.
+\end{itemize}\pause
+
+{\small
+Würden wir partielle Funktionen zulassen, könnte man zu jedem Typ
+als Term ein Programm einfügen, welches sich in einer
+Endlosschleife verfängt, und hätte damit sofort einen »Beweis« für jede
+beliebige Aussage.}
+\end{frame}
+
+\begin{frame}
+Zudem muss das Typsystem reichhaltig genug sein, um die
+gewünschten Mengenkonstruktionen überhaupt ausdrücken zu können.\pause
+
+\vspace{1em}
+Das Typsystem muss erlauben:
+\begin{itemize}
+\item algebraische Typen,
+\item abhängige Typen.
+\end{itemize}\pause
+
+\vspace{1em}
+Abhängige Typen sind eine fortgeschrittene Form von parametrischer
+Polymorphie, bei denen Typen nicht nur über Typen parametrisiert
+werden können, sondern auch über Werte.
+\end{frame}
+
+\begin{frame}
+Das heißt, wenn wir so eine pedantische Typprüfung bauen würden,
+könnten wir\ldots?\pause
+
+\vspace{1em}
+Solche Systeme wurden bereits vor langer Zeit geschaffen. Der
+Theorembeweisassistent Coq enthält eine Gallina genannte Sprache,
+die zentraler Gegenstand des Programmkerns zur Verfikiation der
+konstruierten Beweise ist.\pause
+
+\vspace{1em}
+\strong{Gallina}\\[4pt]
+\texttt{\kw{Definition} proj0: \kw{forall}(A B: Type), A*B -> A :=\\
+\ \ \kw{fun} (A B: Type) (t: A*B) =>\\
+\ \ \ \ \kw{match} t \kw{with} (a, b) => a \kw{end}.}
+\end{frame}
+
+\begin{frame}
+Zwischen Aussagen und Typen wird eine enge Entsprechung erkennbar,
+die im \emph{Curry-Howard-Isomorphismus} ihre Präzisierung findet.\pause
+\begin{table}
+\begin{tabular}{rl}
+\toprule
+\strong{Aussagen} & \strong{Typen}\\
+\midrule
+Konjunktion --- $A\land B$ & $A\times B$ --- Produkt\\
+Disjunktion --- $A\lor B$ & $A+B$ --- Summe\\
+Implikation --- $A\to B$ & $A\to B$ --- Funktionentyp\\
+Allquant. --- $\forall_{x\in M} P(x)$ & $\Pi_{x\colon M} P(x)$ --- abhängige Summe\\
+Existenzquant. --- $\exists_{x\in M} P(x)$ & $\Sigma_{x\colon M}P(x)$ --- abhängiges Produkt\\
+\bottomrule
+\end{tabular}
+\end{table}\pause
+
+Zum Beweis einer Aussage konstruiert man zum entsprechenden Typ
+einen Term, dessen Wert von diesem Typ ist. Der Wert, den wir
+\emph{Zeuge} nennen, belegt dass der Typ durch mindestens
+einen Wert \emph{bewohnt} ist. Dies erbringt den Beweis der
+ursprünglichen Aussage.
+\end{frame}
+
+\begin{frame}
+\strong{Ausblick}
+
+\vspace{1em}
+Ausgelassen wurden die folgenden Themen:
+\begin{itemize}
+\item Summentypen und Pattern-Matching (Fallunterscheidung).
+\item Die Negation $\neg A$ muss als $A\to 0$ kodiert werden.
+\item Wie verhält es sich mit der Gleichheit?
+\item Man erhält auf diese Weise intuitionistische Logik.
+  Ist auch klassische Aussagenlogik möglich?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\strong{Literatur}
+
+\begin{itemize}
+\item Stefan Müller-Stach: »\href{https://export.arxiv.org/abs/1805.05419}%
+{Äquivalenz und Wahrheit}«, Kapitel 9:
+»Typentheorie und ihre Semantik«.
+\item Benjamin C. Pierce et al.:
+»\href{https://softwarefoundations.cis.upenn.edu/lf-current/index.html}%
+{Software Foundations. Volume 1: Logical Foundations}«.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ende.
+
+\vfill
+\modest{Dieser Text steht unter der Lizenz\\
+Creative Commons CC0 1.0}
+\end{frame}
+
+\end{document}
+
+

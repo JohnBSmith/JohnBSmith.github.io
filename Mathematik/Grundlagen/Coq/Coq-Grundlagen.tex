@@ -1,0 +1,281 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+% \usepackage{mathptmx}
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+% \addtokomafont{disposition}{\rmfamily}
+% \renewcommand\ttdefault{lmtt}
+\usepackage[scaled=0.84]{DejaVuSans}
+\usepackage[scaled=0.84]{DejaVuSansMono}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,commentstyle=\ttfamily}
+
+\usepackage{graphicx}
+\usepackage{color}
+\definecolor{c1}{RGB}{60,0,40}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{6mm}
+
+\numberwithin{equation}{section}
+
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,%
+urlcolor=black]{hyperref}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{{\sffamily\bfseries #1}}
+
+\lstdefinelanguage{Coq}{
+  morekeywords = {Definition, fun, match, with, end, Fixpoint, struct,
+    where, Inductive, forall},
+  sensitive=false,
+  morecomment=[s]{(*}{*)},
+  morestring=[b]",
+}
+
+\begin{document}
+
+%\thispagestyle{empty}
+
+\section*{\huge Grundlagen von Coq}
+
+\vspace{1em}\noindent
+{\large April 2021}
+
+\tableofcontents
+
+\subsection*{Vorwort}
+
+Im Laufe der letzten Jahrhunderte scheint sich in unserer Welt mit der
+Vertiefung der Erkenntnis und dem neu hinzugekommenen Wissen immer mehr
+Komplexität aufgetan zu haben. Insbesondere kommen in der Mathematik
+immer wieder verwickelte Sätze und Theorien hinzu, bei deren Beweisen
+ein unaufhörliches Wachstum der Länge zu beobachten ist. Eine ähnliche
+Schwierigkeit keimt in der Informatik auf, wo mit der wachsenden
+Vielfalt an Anforderungen die Länge von Programmen fortlaufend
+zunimmt.
+
+Aus diesem Grund kommen wir letztendlich irgendwann in den Zugzwang,
+dieser Komplexität auf irgendeine Art Einhalt gebieten zu müssen.
+
+Der folgende Text erkläutert, wie sich unter Zuhilfenahme von Computern
+mathematische Beweise verfizieren lassen. 
+Grundlegend dafür ist der Curry"=Howard"=Isomorphismus, ein
+fundementaler Zusammenhang zwischen mathematischen Aussagen
+und Typsignaturen. Hierauf baut der Konstruktionenkalkül auf,
+mit dessen Erweiterung, dem Kalkül der induktiven Konstruktionen,
+man auf systematische Art Beweise in Programmterme umwandeln kann.
+
+Wie läuft das ab? Zu jeder mathematischen Aussage gehört eine
+äquivalente Typsignatur. Findet man nun einen Programmterm, welcher
+einen Wert des Typs berechnet, so ist der Typ offenbar nichtleer.
+Diese Feststellung bedeutet aber nichts anderes, als dass der Beweis
+der ursprünglichen Aussage erbracht ist.
+
+Damit diese Argumentation stichhaltig bleibt, darf der Term
+ausschließlich \emph{reine} Funktionen enthalten. Das sind solche
+Funktionen, bei denen der Rückgabewert ausschließlich von den
+Argumenten abhängig ist. Die Berechnung läuft hierbei strikt
+funktional ab, -- damit ist gemeint dass alle Daten unveränderlich
+sind und die Berechnung somit frei von Seiteneffekten ist.
+Außerdem muss jede Berechnung stets terminieren, darf sich also niemals
+in einer Endlosschleife verfangen. Mathematisch gesprochen bedeutet
+dies, dass jede auftretende Funktion \emph{total} ist, dass also keine
+partiellen Funktionen vorkommen. Beide Forderungen gemeinsam,
+Reinheit und Totalität, bedeuten, dass wir es mit Funktionen
+im mathematischen Sinn zu tun haben.
+
+Schließlich muss das Typsystem reichhaltig genug sein, um alle
+erdenklichen Aussagen kodieren zu können. Hierzu bedarf es der
+\emph{parametrischen Polymorphie}, d.\,h. der Parametrisierung
+von Typen über Typparameter, die bei vielen modernen
+Programmiersprachen Grundlage für die generische Programmierung
+bildet. Darüber hinaus sind \emph{abhängige Typen} notwendig, die die
+Parametrisierung so erweitern, dass als Typparameter nicht nur Typen,
+sondern auch Werte erlaubt sind.
+
+Der vertrauenswürdige Programmkern, die \emph{trusted computing base},
+ist klein. Es ist dieser Flaschenhals, der uns ruhiger Schlafen lässt.
+
+Ich hoffe der Text ist auch horizonterweiternd, wenn man nun nicht
+jeden Beweis mit diesem System verfizieren möchte. So handelt es
+sich hier um eine Berührregion zwischen Mathematik und Informatik.
+
+\section{Gallinas Typsystem}
+\subsection{Programmieren in Gallina}
+
+\section{Logik}
+
+\subsection{Modus ponens}
+
+Wir wollen den Modus ponens%
+\begin{equation}
+P\land (P\rightarrow Q)\rightarrow Q
+\end{equation}
+beweisen. Der Typ zu dieser Aussage ist%
+\begin{equation}
+P\times (P\rightarrow Q)\rightarrow Q.
+\end{equation}
+Die Aussage ist wahr, wenn dieser Typ mindestens einen Wert enhält.
+Gesucht ist also eine Funktion, die einen Wert vom Typ $P$ und
+eine Funktion vom Typ $P\rightarrow Q$ nimmt und einen Wert vom
+Typ $Q$ liefert. Die kann man direkt angeben:%
+\begin{equation}
+(p, f)\mapsto f(p).
+\end{equation}
+Die freien Variablen müssen wir noch allquantifizieren, damit später
+im Programm keine ungebundenen Variablen mehr auftauchen. Das macht%
+\begin{equation}
+\forall_{P, Q}(P\times (P\to Q)\to Q).
+\end{equation}
+Ein Wert dieses Typs ist entsprechend%
+\begin{equation}
+(P, Q) \mapsto (p, f)\colon P\times (P\to Q)\mapsto f(p).
+\end{equation}
+In Coq geschrieben lautet der Term:%
+\begin{lstlisting}[language=Coq]
+Definition modus_ponens:
+forall (P Q: Type), P*(P -> Q) -> Q :=
+  fun (P Q: Type) =>
+    fun (t: P*(P -> Q)) =>
+      match t with (p, f) => f p end.
+\end{lstlisting}
+Allgemein gilt die äquivalente Umformung%
+\begin{equation}
+\begin{aligned}
+& A\land B\to C \iff \overline{A\land B}\lor C
+\iff\overline A\lor\overline B\lor C\\
+&\iff A\to \overline B\lor C
+\iff A\to B\to C.
+\end{aligned}
+\end{equation}
+Dies entspricht dem Schönfinkeln der Funktion. Demnach kodiert
+der Typ%
+\begin{equation}
+P\to (P\to Q)\to Q.
+\end{equation}
+ebenfalls den Modus ponens. In Coq sind geschönfinkelte Formulierungen
+natürlicher. Das sieht man hier am Entfallen des match"=Operators:%
+\begin{lstlisting}[language=Coq]
+Definition modus_ponens:
+forall (P Q: Type), P -> (P -> Q) -> Q :=
+  fun (P Q: Type) =>
+    fun (p: P) =>
+      fun (f: P -> Q) => f p.
+\end{lstlisting}
+Nun sind in Coq Kurzschreibweisen erlaubt, die das Schönfinkeln
+syntaktisch rückgängig machen:%
+\begin{lstlisting}[language=Coq]
+Definition modus_ponens:
+forall (P Q: Type), P -> (P -> Q) -> Q :=
+  fun (P Q: Type) (p: P) (f: P -> Q) => f p.
+\end{lstlisting}
+
+\subsection{Formeln der Aussagenlogik}
+
+Betrachten wir $P\land Q\to P$, der Typ dazu ist
+\[P\times Q\to P.\]
+Ein Wert dieses Typs ist ja einfach die Projektion auf das linke
+Element, also
+\[(p, q)\mapsto p.\]
+Das Programm:
+\begin{lstlisting}[language=Coq]
+Definition left: forall(P Q: Type), P*Q -> P :=
+  fun (P Q: Type) (t: P*Q) =>
+    match t with (p, q) => p end.
+\end{lstlisting}
+Zum Kommutativgesetz $P\land Q\to Q\land P$ gehört der Typ
+\begin{equation}
+P\times Q\to Q\times P.
+\end{equation}
+Ein Wert dieses Typs ist die Funktion, welches linkes und rechtes
+Element vertauscht, das ist
+\[(p, q)\mapsto (q, p).\]
+Das Programm ist entsprechend:
+\begin{lstlisting}[language=Coq]
+Definition conjunction_commutativity:
+forall(P Q: Type), P*Q -> Q*P :=
+  fun (P Q: Type) (t: P*Q) =>
+    match t with (p, q) => (q, p) end.
+\end{lstlisting}
+Zum Kommutativgesetz $P\lor Q\to Q\lor P$ gehört der Typ
+\begin{equation}
+P+Q\to Q+P.
+\end{equation}
+Eine Funktion dieses Typs ergibt sich durch Fallunterscheidung.
+Wir finden
+\begin{equation}
+\begin{cases}
+  (\mathrm{left},p)  \mapsto (\mathrm{right},p),\\
+  (\operatorname{right},q) \mapsto (\operatorname{left},q).\end{cases}
+\end{equation}
+Das Programm:
+\begin{lstlisting}[language=Coq]
+Definition disjunction_commutativity:
+forall(P Q: Type), P + Q -> Q + P :=
+  fun (P Q: Type) (s: P + Q) =>
+    match s with
+      | inl p => inr p
+      | inr q => inl q 
+    end.
+\end{lstlisting}
+Betrachten wir noch $P\to P\lor Q$ bzw. $P\to P+Q$. Eine Funktion
+dieses Typs ist offenbar die Injektion mit Bild im linken Summand,
+das ist
+\begin{equation}
+p\mapsto (\mathrm{left},p).
+\end{equation}
+Das Programm:
+\begin{lstlisting}[language=Coq]
+Definition injection_left:
+forall(P Q: Type), P -> P + Q :=
+  fun (P Q: Type) (p: P) => inl p.
+\end{lstlisting}
+Zeigen wir nun noch das Assoziativgesetz
+\begin{equation}
+P\land (Q\land R) \leftrightarrow (P\land Q)\land R.
+\end{equation}
+Wir betrachten lediglich
+\begin{equation}
+P\times (Q\times R) \to (P\times Q)\times R,
+\end{equation}
+denn die Gegenimplikation geht analog.
+Eine Funktion von diesem Typ ist
+\begin{equation}
+(p, (q, r))\mapsto ((p, q), r).
+\end{equation}
+Das Programm:
+\begin{lstlisting}[language=Coq]
+Definition conjunction_assoc1:
+forall(P Q R: Type), P*(Q*R) -> (P*Q)*R :=
+  fun (P Q R: Type) (t: P*(Q*R)) =>
+    match t with (p, (q, r)) => ((p, q), r) end.
+\end{lstlisting}
+
+\subsection{Umstieg auf Prop}
+
+\newpage
+\begin{thebibliography}{00}
+\bibitem{ProofObjects} Benjamin C. Pierce et al.:
+»\href{https://softwarefoundations.cis.upenn.edu/lf-current/index.html}{%
+\emph{Software Foundations. Volume 1: Logical Foundations}}«.
+\end{thebibliography}
+
+
+\vfill
+\noindent
+{\small Dieser Text steht unter der Lizenz\\
+Creative Commons CC0 1.0.}
+
+\end{document}
