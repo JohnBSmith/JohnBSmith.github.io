@@ -51,10 +51,12 @@ urlcolor=black]{hyperref}
 Grundmodelle}\par}
 
 \vspace{1em}\noindent
-{\large September 2020}
+{\large April 2021}
 
+\vspace{-0.5em}
 \tableofcontents
 
+\vspace{-0.5em}
 \section{Das klassische SIR-Modell}
 \subsection{Modelldefinition}
 
@@ -266,7 +268,7 @@ Diese besitzt die Lösung
 s = s(r_0)\,\ee^{-R_0 (r-r_0)}.
 \end{equation}
 Nach Ablauf der Epidemie gilt $i=0$, also $s=1-r$. Man gelangt zu%
-\begin{equation}
+\begin{equation}\label{eq:final-size}
 1-r = s(r_0)\,\ee^{-R_0 (r-r_0)}.
 \end{equation}
 Dieser Gleichung, \emph{Final size equation} genannt,
@@ -665,6 +667,92 @@ R_0 = \frac{\beta}{\gamma+\mu}.
 \end{equation}
 
 \newpage
+\section{Allgemeines SIR-Modell}
+
+\subsection{Modelldefinition}
+
+Bereits in der Arbeit \cite{Kermack} von Kermack und McKendrick aus
+dem Jahr 1927, in der das SIR"=Modell zum ersten Mal aufgetaucht ist,
+wurde ein verallgemeinertes Modell hergeleitet, in welchem
+sowohl die Transmissions- als auch die Erhohlungsrate vom
+Infektionsalter abhängig sind. Dies führt erwartungsgemäß
+zu einem Integralgleichungen beinhaltenden Modell. Die Gleichungen sind
+\begin{gather}
+\label{eq:Kermack-s1}
+s'(t) = -s(t)(A_t i_0 - \int_0^t A_a s'(t-a)\,\mathrm da),\\
+\label{eq:Kermack-i}
+i(t) = B_t i_0 - \int_0^t B_a s'(t-a)\,\mathrm da,\\
+\label{eq:Kermack-r1}
+r'(t) = C_t i_0 - \int_0^t C_a s'(t-a)\,\mathrm da,
+\end{gather}
+wobei
+\[A_a := \beta_a B_a,\;\;
+B_a := \exp(-{\textstyle\int_0^a} \gamma(t)\,\mathrm dt),\;\;
+C_a := \gamma_a B_a.\]
+Aus den Gleichungen ergibt sich $s+i+r=1$.
+
+Wir würden gerne in Erfahrung bringen, wie diese allgemeinen
+Gleichungen in Beziehung zu den Integralgleichungen
+\eqref{eq:int-eq-s} und \eqref{eq:int-eq-i} stehen.
+
+Wie sich aus der folgenden kurzen Rechnung ergibt, ist das
+System (\ref{eq:int-eq-s}, \ref{eq:int-eq-i}) als Spezialfall
+betrachtbar, sofern wir eine Einschränkung von $p$ hinnehmen.
+Unter der Annahme, $\beta$ ist konstant,
+lassen sich beide Systeme nämlich mit $B_a = p(a)$ unifizieren.
+
+Das konstante $\beta$ können wir aus dem Integral in
+\eqref{eq:Kermack-s1} ziehen und die Gleichung
+danach mit \eqref{eq:Kermack-i} zu $s'=-\beta si$ reduzieren.
+
+Mit der Substitution $\tau = t-a$ rechnet man kurz
+\begin{equation}
+\int_0^t p(a)s'(t-a)\,\mathrm da = \int_0^t p(t-\tau)s'(\tau)\,\mathrm d\tau.
+\end{equation}
+Nun sind beide Systeme identisch.
+
+Es tut sich die Frage auf, ob sich der spezielle Term $B_a$ im Weiteren
+gegen die allgemein wählbare Wahrscheinlichkeit $p(a)$ ersetzen lässt.
+
+\subsection{Ausmaß der Epidemie}
+
+Die folgende Herleitung ist bereits in \cite{Kermack} zu finden.
+
+Für zwei allgemeine Funktionen $f,g$ mit $f(t)=0$ für $t<0$
+gilt die Umformung
+\begin{gather*}
+\int_0^\infty\!\!\!\int_0^t\! f(t-\tau)g(\tau)\,\mathrm d\tau\mathrm dt
+= \int_0^\infty\!\!\!\int_0^\infty\!\! f(t-\tau)g(\tau)\,\mathrm d\tau\mathrm dt\\
+= \int_0^\infty \!\!\! g(\tau)\int_0^\infty\!\!\! f(t-\tau)\,\mathrm dt\mathrm d\tau
+= \int_0^\infty\!\!\! g(\tau)\int_{-\tau}^{\infty}\!\! f(u)\,\mathrm du\mathrm d\tau\\
+= \int_0^\infty\!\! g(\tau)\int_0^\infty\!\! f(u)\,\mathrm du\mathrm d\tau
+= \int_0^\infty\!\! g(\tau)\,\mathrm d\tau\int_0^\infty\!\! f(u)\,\mathrm du.
+\end{gather*}
+Daher gilt
+\begin{align*}
+\int_0^\infty\!\!\!\int_0^t\! A_{t-\tau}s'(\tau)\,\mathrm d\tau\mathrm dt
+&= \int_0^\infty\! s'(t)\,\mathrm dt\int_0^\infty\! A_t\mathrm dt\\
+&= (s_\infty-s_0)R_0.
+\end{align*}
+Integration von \eqref{eq:Kermack-s1} ergibt
+\begin{gather*}
+\int_0^\infty \frac{s'(t)}{s(t)}\,\mathrm dt = -i_0\int_0^\infty\!\! A_t\,\mathrm dt
++ \int_0^\infty\!\!\!\int_0^t\! A_a s'(t-a)\,\mathrm da\mathrm dt\\
+= -R_0 i_0 + \int_0^\infty\!\!\!\int_0^t A_{t-\tau} s'(\tau)\,\mathrm d\tau\mathrm dt.
+\end{gather*}
+Das macht
+\begin{equation}
+\ln s_\infty - \ln s_0 = -R_0i_0 + (s_\infty - s_0)R_0.
+\end{equation}
+Setzt man nun $r:=1-s_\infty$, gelangt man mit $s_0+i_0 = 1-r_0$ zur
+Gleichung
+\begin{equation}
+\ln (1-r) - \ln s_0 = (r_0 - r)R_0.
+\end{equation}
+Somit ist die Final size quation \eqref{eq:final-size}
+wiedergefunden.
+
+\newpage
 \section{Berechnung}
 
 \begin{figure}[h!]
@@ -744,6 +832,10 @@ Journal of Mathematical Biology 9 (1980), S. 37--47.
 between growth rates and reproductive numbers}«.
 In: Proceedings of the Royal Society B 274 (2007), S. 599--604.\\
 \href{https://doi.org/10.1098/rspb.2006.3754}{doi:10.1098/rspb.2006.3754}
+
+\bibitem{Kermack} W. O. Kermack, A. G. McKendrick:
+»\emph{A Contribution to the Mathematical Theory of Epidemics}«.
+In: Proceedings of the Royal Society A 115 (1927), S. 700--721.
 \end{thebibliography}
 \vfill
 
