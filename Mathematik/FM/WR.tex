@@ -92,12 +92,12 @@ $n$-stufigen Experiment gilt
 Sei $a\in\Omega_1$, $b\in\Omega_2$, $A=\{a\}\times\Omega_2$
 und $B=\Omega_1\times\{b\}$. Es gilt
 \begin{equation}
-P(\{(a,b)\}) = P(A\cap B) = P(A)\,P(B|A).
+P(\{(a,b)\}) = P(A\cap B) = P(A)\,P(B\mid A).
 \end{equation}
 Das Ereignis $\{(a,b)\}$ tritt ein, wenn zuerst
 der Pfad $A$ eingetreten ist, und dann auch der Pfad $B$.
 Die Wahrscheinlichkeit ist das Produkt der Pfadwahrscheinlichkeiten
-$P(A)$ und $P(B|A)$.
+$P(A)$ und $P(B\mid A)$.
 
 \strong{Zweite Pfadregel.}
 Sind $a,b\in\Omega$ zwei unterschiedliche
@@ -132,20 +132,29 @@ und für jeden Pfad ergibt sich eine Wahrscheinlichkeit von $(1/6)^n$.
 \index{bedingte Wahrscheinlichkeit}
 Für zwei Ereignisse $A,B$ mit $P(B)>0$ nennt man
 \begin{equation}
-P(A|B) := \frac{P(A\cap B)}{P(B)}
+P(A\mid B) := \frac{P(A\cap B)}{P(B)}
 \end{equation}
 die \emdef{bedingte Wahrscheinlichkeit} von $A$, vorausgesetzt $B$.
 \end{definition}
 Bei
 \begin{equation}
-P'(A) := P(A|B),\quad P'\colon 2^B\to [0,1]
+P'(A) := P(A\mid B),\quad P'\colon 2^B\to [0,1]
 \end{equation}
 handelt es sich wieder um ein Wahrscheinlichkeitsmaß.
 
 \strong{Satz von Bayes.} Für $P(A)>0$ und $P(B)>0$ gilt
 \begin{equation}
-P(A|B) = \frac{P(B|A)\, P(A)}{P(B)}.
+P(A\mid B) = \frac{P(B\mid A)\, P(A)}{P(B)}.
 \end{equation}
+
+\strong{Gesetz der totalen Wahrscheinlichkeit.} Bilden die $B_i$
+eine Zerlegung des Wahrscheinlichkeitsraums, dann gilt
+\begin{equation}
+P(A) = \sum_{i\in I} P(A\mid B_i)P(B_i).
+\end{equation}
+Das Gesetz kann als eine Form zweiten in Verbindung mit
+der ersten Pfadregel betrachtet werden.
+
 
 \newpage
 \subsection{Unabhängige Ereignisse}
@@ -228,7 +237,7 @@ Für eine Verteilungsfunktion $F$ gilt:
 Sei $(X_k)$ eine Folge von unabhängigen und
 identisch verteilten Zufallsgrößen. Eine Folge
 $(x_k)$ von Realisierungen $x_k=X_k(\omega_k)$ wird
-Zufallszahlengenerator (kurz RNG, engl. random number generator)
+Zufallszahlengenerator (kurz RNG, engl. \emph{random number generator})
 genannt.
 \end{definition}
 
@@ -259,4 +268,8 @@ ist $F^{-1}$ die Umkehrfunktion von $F$, andernfalls setzt man
 F^{-1}(u) := \inf\{x\in\R\mid F(x)\ge u\}.
 \end{equation}
 
-
+\minisection\strong{Gesetz der totalen Wahrscheinlichkeit.}
+Für eine Zufallsgröße $X$ mit Verteilungsfunktion $F$ gilt
+\begin{equation}
+P(A) = \int_{-\infty}^\infty P(A\mid X=x)\,\mathrm dF(x).
+\end{equation}

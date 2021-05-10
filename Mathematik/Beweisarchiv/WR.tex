@@ -112,4 +112,76 @@ P(\{X\in A\}\cap\{Y\in B\})
 = P(X\in A)P(Y\in B).\;\qedsymbol
 \end{gather*}
 
+\begin{Definition}[Bedingter Erwartungswert]%
+\label{def:cond-expected-value}\mbox{}\\*
+\[E(X\mid A) = \frac{E(1_A X)}{P(A)} = \frac{1}{P(A)}\sum_{\omega\in A} X(\omega)P(\{\omega\}).\]
+\end{Definition}
+
+\begin{Satz} Es gilt
+\[E(X\mid A) = \frac{1}{P(A)}\sum_x xP(\{X=x\}\cap A)
+= \sum_x xP(X=x\mid A),\]
+wobei sich die Summe über alle $x\in X(\Omega)$ erstreckt.
+\end{Satz}
+\strong{Beweis.} Man kann rechnen
+\begin{align*}
+E(1_A X) &= \sum_{\omega\in\Omega} 1_A(\omega) X(\omega) P(\{\omega\})
+= \sum_x\sum_{\omega\in X^{-1}(x)} 1_A(\omega) X(\omega) P(\{\omega\})\\
+&= \sum_x x\sum_{\omega\in X^{-1}(x)} 1_A(\omega) P(\{\omega\})
+= \sum_x x\sum_{\omega\in X^{-1}(x)\cap A} P(\{\omega\})\\
+&= \sum_x x P(X^{-1}(x)\cap A),
+\end{align*}
+wobei $X^{-1}(x) = \{X=x\}$.\;\qedsymbol
+
+\begin{Korollar}\label{prob-as-expected-value}
+Es gilt $P(A) = E(1_A)$, wobei $1_A$ die Indikatorfunktion ist.
+\end{Korollar}
+\strong{Beweis.} Gemäß Definition des Erwartungswertes ist
+\[E(1_A) = \sum_{\omega\in\Omega} 1_A(\omega)P(\{\omega\})
+= \sum_{\omega\in A}P(\{\omega\}) = P(A).\;\qedsymbol\]
+
+\begin{Korollar}
+Es gilt $P(A\mid B) = E(1_A\mid B)$, wobei $1_A$ die Indikatorfunktion ist.
+\end{Korollar}
+\strong{Beweis.} Gemäß Definition \ref{def:cond-expected-value}
+und Korollar \ref{prob-as-expected-value} ist
+\[E(1_A\mid B) = \frac{E(1_A 1_B)}{P(B)} = \frac{E(1_{A\cap B})}{P(B)}
+= \frac{P(A\cap B)}{P(B)} = P(A\mid B).\qedsymbol\]
+
+\section{Allgemeine Wahrscheinlichkeitsräume}
+
+\begin{Satz}\label{rv-transform-pdf}
+Sei $g\colon\R\to\R$ eine streng monotone Funktion. Seien
+$X,Y$ Zufallsgrößen mit Dichten $f_X,f_Y$. Ist $Y=g(X)$,
+dann gilt
+\[f_Y(y) = \frac{f_X(g^{-1}(y))}{|g'(g^{-1}(y))|}.\]
+\end{Satz}
+\strong{Beweis.} Sei $g$ streng monoton steigend. Dann kann man rechnen
+\[F_Y(y) = P(Y\le y) = P(g(X)\le y) = P(X\le g^{-1}(y)) = F_X(g^{-1}(y)).\]
+Gemäß der Kettenregel findet man
+\[f_Y(y) = \frac{\mathrm d}{\mathrm dy}F_Y(y)
+= f_X(g^{-1}(y))\frac{\mathrm d}{\mathrm dy}g^{-1}(y) = \frac{f_X(g^{-1}(y))}{g'(g^{-1}(y))}.\]
+Sei $g$ nun streng monoton fallend. Dann kann man rechnen
+\[F_Y(y) = P(g(X)\le y) = P(X\ge g^{-1}(y)) = 1 - P(X < g^{-1}(y))
+= 1 - F_X(g^{-1}(y)).\]
+Entsprechend findet man
+\[f_Y(y) = -\frac{f_X(g^{-1}(y))}{g'(g^{-1}(y))}.\]
+Nun ist $g'$ in beiden Fällen frei von Nullstellen. Demnach ist
+$\sgn(g'(x))$ konstant für alle $x$ und wir haben allgemein
+\[f_Y(y) = \sgn(g'(x))\frac{f_X(x)}{g'(x)} = \frac{f_X(x)}{|g'(x)|}\]
+mit $x=g^{-1}(y)$.\;\qedsymbol
+
+\begin{Satz}[LOTUS: Law of the unconscious statistican]\mbox{}\\*
+Ist $g\colon\R\to\R$ streng monoton, dann muss gelten
+\[E(g(X)) = \int_{-\infty}^\infty g(x)f_X(x)\,\mathrm dx.\]
+\end{Satz}
+\strong{Beweis.} Sei $Y=g(X)$. Mit Satz \ref{rv-transform-pdf}
+und Substitution $y=g(x)$ kann man rechnen
+\begin{align*}
+E(g(X)) &= E(Y) = \int_{-\infty}^\infty yf_Y(y)\,\mathrm dy
+= \int_{-\infty}^\infty y\frac{f_X(g^{-1}(y))}{|g'(g^{-1}(y))|}\,\mathrm dy\\
+&= \int_{g^{-1}(-\infty)}^{g^{-1}(\infty)} g(x)
+\frac{f_X(x)}{|g'(x)|}g'(x)\,\mathrm dx\\
+&= \sgn(g')\int_{-\sgn(g')\infty}^{\sgn(g')\infty}g(x) f_X(x)\mathrm dx
+= \int_{-\infty}^\infty g(x) f_X(x)\mathrm dx.\;\qedsymbol
+\end{align*}
 
