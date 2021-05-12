@@ -1,0 +1,132 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+\usepackage[scaled=0.8]{DejaVuSans}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{00,00,00}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
+\usepackage{geometry}
+\geometry{a4paper,left=23mm,right=12mm,top=23mm,bottom=27mm}
+\setlength{\columnsep}{5mm}
+% \addtokomafont{disposition}{\rmfamily}
+
+\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\ui}{\mathrm{i}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\begin{document}
+
+\section*{\LARGE Tipps zur Mathematik}
+
+\tableofcontents
+
+\section{Differentialrechnung}
+
+\subsection{Ermitteln der Ableitung}
+
+Die Ableitung einer reellen Funktion $f$ ist definiert als%
+\[f'(x) = \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
+Möchte man in Erfahrung bringen, ob sie unter Anwendung
+der Ableitungsregeln richtig ermittelt wurde, kann man die Probe
+machen, indem der Differenzenquotient%
+\[D_h f(x) = \frac{f(x+h)-f(x)}{h}\]
+an einer konkreten Stelle $x$ für ein kleines $h$ numerisch
+berechnet und mit $f'(x)$ verglichen wird.
+
+Da dies recht umständlich ist, ist es sinnvoll, diese Aufgabe einem
+Funktionenplotter zu überlassen. Numerisch günstiger ist es, den
+Differenzenquotient nicht naiv gemäß der Definition zu berechnen,
+sondern als%
+\[D_h f(x) = \frac{f(x+h)-f(x-h)}{2h}.\]
+Mit dem Plotter kann man schließlich
+\[10^n (D_h f(x) - f'(x)) \approx 0\]
+für $n\in\{0,1,2,\ldots\}$ prüfen.
+
+\section{Komplexe Zahlen}
+
+Jeder komplexen Zahl ist gemäß
+\[\Phi(a+b\ui) = \begin{pmatrix}a & -b\\ b & a\end{pmatrix}\]
+oder äquivalent
+\[\Phi(r\ee^{\ui\varphi}) = r\begin{pmatrix}
+\cos\varphi & -\sin\varphi\\
+\sin\varphi & \cos\varphi
+\end{pmatrix}\]
+genau eine Matrix zugeordnet. Die Abbildung $\Phi$ ist ein
+Isomorphismus vom Körper der komplexen Zahlen in einen Körper,
+der eine Unterstruktur des Matrizenrings darstellt.
+
+Diese Beziehung schafft eine Verbindung zwischen dem
+Rechnen mit komplexen Zahlen und Konzepten der linearen Algebra.
+
+\section{Wahrscheinlichkeitsrechnung}
+
+\subsection{Zufallsgrößen}
+
+Was ist eine Zufallsgröße? Eine Zufallsgröße kann man sich zunächst
+einfach als eine Abbildung $X\colon\Omega\to\Omega'$ zwischen
+Ergebnismengen vorstellen. Sei bspw.
+\[\Omega := \{(w_1,w_2)\mid w_1,w_2\in\{1,\ldots,6\}\}\]
+die Menge der Ergebnisse des Wurfs zweier gewöhnlicher
+Würfel. Das heißt, wurde mit dem ersten Würfel eine Drei
+gewürfelt, und mit dem zweiten eine Fünf, ist das Ergebnis $(3, 5)$.
+Jedes elementare Ereignis $\{(w_1,w_2)\}$ besitzt offenbar
+dieselbe Wahrscheinlichkeit%
+\[P(\{(w_1,w_2)\}) = \frac{1}{|\Omega|} = \frac{1}{36}.\]
+Für ein beliebiges Ereignis $A$ gilt daher%
+\[P(A) = \frac{|A|}{|\Omega|}.\]
+Ein gutes Beispiel für eine Zufallsgröße ist die Summe der
+Augenzahlen, also%
+\[X((w_1,w_2)) := w_1 + w_2.\]
+Des Pudels Kern liegt nun in der Beantwortung der Frage, wie
+wahrscheinlich ein aus Funktionswerten von $X$ bestehendes Ereignis
+ist.
+
+Ein elementares Ereignis $\{x\}$ tritt doch genau dann ein,
+wenn $x$ der Funktionswert $x=X(\omega)$ zum Ergebnis
+$\omega$ ist. Wurde bspw. das Ergebnis $\omega=(3, 5)$
+gewürfelt, ist das elementare Ereignis%
+\[\{X(\omega)\} = \{3 + 5\} = \{8\}\]
+eingetreten.
+
+Das Ereignis $\{x\}$ tritt also genau dann ein, wenn das Ergebnis
+$\omega$ im Urbild $X^{-1}(x)$ liegt, für das sich die Schreibweise%
+\[X^{-1}(x)=\{X=x\}\]
+eingebürgert hat. Demnach stimmt die Wahrscheinlichkeit von $\{x\}$
+mit der des Urbildereignisses $\{X=x\}$ überein. Das heißt, es gilt%
+\[P_X(\{x\}) = P(X^{-1}(x)) = P(\{X=x\}) = P(X=x).\]
+Bspw. ist
+\[\{X=8\} = \{(2,6), (6,2), (3,5), (5,3), (4,4)\}.\]
+Damit ergibt sich
+\[P(X=8) = \frac{|\{X=8\}|}{|\Omega|} = \frac{5}{36}\]
+als Wahrscheinlichkeit der Augensumme acht.
+
+% Dieses Heft steht unter der Lizenz\\
+% Creative Commons CC0 1.0.
+
+\end{document}
+
