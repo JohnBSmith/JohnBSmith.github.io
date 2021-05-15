@@ -629,3 +629,121 @@ Zu Bemerken ist noch, dass $\Gamma_{ij}^k = \Gamma_{ji}^k$ gilt,
 denn $\partial_i\partial_j\varphi = \partial_j\partial_i\varphi$,
 wobei $\varphi$ als zweimal stetig differenzierbar vorausgesetzt ist.
 
+\section{Konforme Abbildungen}
+
+Eine differenzierbare Abbildung wollen wir
+\emph{konform}\index{konforme Abbildung} nennen, wenn
+sie \emph{winkeltreu}\index{winkeltreu}\index{winkelerhaltend} ist.
+Sei $f\colon U\to V$ eine konforme Abbildung, wobei $U\subseteq\R^n$
+offen ist und $V\subseteq\R^m$ mit $n\le m$. Wir betrachten nun
+einen Punkt $p\in U$ und zwei sich in diesem Punkt
+schneidende Kurven $\gamma_1,\gamma_2$. Das bedeutet $p=\gamma_1(0)$
+und $p=\gamma_2(0)$. Der Schnittwinkel der Kurven muss erhalten
+bleiben. Das heißt, die
+Bildkurven müssen im Bildpunkt den gleichen Schnittwinkel besitzen
+wie die ursprünglichen. Somit muss gelten%
+\begin{equation}
+\cos\varphi =
+\frac{\langle v_1,v_2\rangle}{|v_1|\cdot |v_2|}
+= \frac{\langle(f\circ\gamma_1)'(0),(f\circ\gamma_2)'(0)\rangle}
+{|(f\circ\gamma_1)'(0)|\cdot |(f\circ\gamma_2)'(0)|}
+= \frac{\langle Jv_1,Jv_2\rangle}{|Jv_1|\cdot |Jv_2|},
+\end{equation}
+wobei
+\[J:=Df(p),\quad v_1:=\gamma_1'(0),\quad v_2:=\gamma_2'(0).\]
+Wir betrachten die $\gamma_k(t):=p+t\mathbf e_k$, das sind die zu
+den Koordinatenachsen parallelen Geraden. Somit muss gelten%
+\begin{equation}\label{eq:winkeltreu-ONB}
+\delta_{ij} = \frac{\langle\mathbf e_i,\mathbf e_j\rangle}
+{|\mathbf e_i|\cdot |\mathbf e_j|}
+= \frac{\langle J\mathbf e_i,J\mathbf e_j\rangle}
+{|J\mathbf e_i|\cdot |J\mathbf e_j|}
+= \frac{g_{ij}}{|J\mathbf e_i|\cdot |J\mathbf e_j|}.
+\end{equation}
+Schärfer lässt sich zeigen, dass es an jedem Punkt eine reelle Zahl
+$\lambda$ gibt, sodass $g_{ij} = \lambda^2\delta_{ij}$,
+bzw. $G = \lambda^2 E$ in Matrix"=Schreibweise.
+
+\begin{theorem}
+Sei $J\colon\R^n\to\R^m$ eine injektive lineare Abbildung. Ist $J$
+winkelerhaltend, dann gibt es eine reelle Zahl $\lambda\ne 0$, so dass
+$\langle Jv,Jw\rangle = \lambda^2\langle v,w\rangle$ für alle
+$v,w$ gilt.
+\end{theorem}
+
+\noindent\strong{Beweis.}
+Zunächst soll gezeigt werden, dass $|Jv|$ für alle normierten
+Vektoren $v$ denselben Wert besitzt. Oder pathetisch ausgedrückt,
+dass die Abbildung $v\mapsto |Jv|$ auf der Einheitssphäre konstant ist.
+Wir folgen dem Ansatz aus \cite{Kriegl} auf S. 277--278
+»33.7 Lemma (Lineare konforme Abbildungen)«. Wir beachten
+\begin{equation}
+|v| = |w| \iff 0 = |v|^2 - |w|^2 = \langle v+w,v-w\rangle \iff v+w\perp v-w.
+\end{equation}
+Weil $J$ winkelerhaltend ist, muss für $|v|=|w|$ gelten
+\begin{equation}
+0 = \langle J(v+w), J(v-w)\rangle = \langle Jv+Jw,Jv-Jw\rangle
+= |Jv|^2-|Jw|^2.
+\end{equation}
+Sei nun $\lambda:=|Jv|$ für $|v|=1$. Somit ist $|J\mathbf e_k|=\lambda$
+für jeden Basisvektor $\mathbf e_k$ der Standardbasis. Gemäß
+\eqref{eq:winkeltreu-ONB} gilt somit $g_{ij} = \lambda^2\delta_{ij}$.
+Für $v = \sum_k v_k \mathbf e_k$ und $w = \sum_k w_k\mathbf e_k$
+können wir die restliche Aussage über die Linearität von $J$
+und Bilinearität des Skalarproduktes direkt ausrechnen. Das ist die
+Rechnung
+\begin{align*}
+\langle Jv,Jw\rangle &= \langle J\sum_i v_i\mathbf e_i,J\sum_j v_j\mathbf e_j\rangle
+= \sum_{i,j} v_i w_j\langle J\mathbf e_i,J\mathbf e_j\rangle
+= \sum_{i,j} v_i w_j g_{ij}\\
+&= \sum_{i,j} v_i w_j\lambda^2 \delta_{ij}
+= \lambda^2\sum_k v_k w_k = \lambda^2\langle v,w\rangle.\;\qedsymbol
+\end{align*}
+Eine orientierungserhaltende konforme Abbildung zwischen Räumen
+gleicher Dimension ist an jedem Punkt eine
+Drehskalierung\index{Drehskalierung} des
+Tangentialraums. Die Jacobi"=Matrix ist dann nämlich quadratisch,
+und es gilt
+\begin{equation}
+\lambda^2 E = G = J^T J \iff E = (J/\lambda)^T(J/\lambda).
+\end{equation}
+Somit ist $J/\lambda$ eine orthogonale Matrix, und daher wegen
+Orientierungserhaltung eine Rotationsmatrix. Demzufolge ist $J$ eine
+um $\lambda$ skalierte Rotationsmatrix.
+
+\begin{corollary}
+Sei $U\subseteq\C$ offen und $f\colon U\to\C$. Die Funktion
+$f$ ist genau dann orientierungserhaltend konform, wenn sie holomorph
+ist und ihre Ableitung keine Nullstellen besitzt.\index{holomorph}
+\end{corollary}
+
+\noindent
+\strong{Beweis.} Sei $f$ holomorph und $f'$ frei von Nullstellen.
+Dann ist $f'(z)$ an jeder Stelle $z$ eine nichtverschwindende
+komplexe Zahl, also eine Drehskalierung, denn jede solche komplexe Zahl
+kann gemäß dem Körperisomorphismus
+\begin{equation}
+\Phi(a+b\ui) = \begin{pmatrix}a & -b\\ b & a\end{pmatrix},\;\;
+\text{bzw.}\;\;\Phi(r\ee^{\ui\varphi})
+= r\begin{pmatrix}\cos\varphi & -\sin\varphi\\
+\sin\varphi & \cos\varphi\end{pmatrix}
+\end{equation}
+als Drehskalierung betrachtet werden. Eine Drehskalierung ist
+offensichtlich winkelerhaltend.
+Sei $f$ nun orientierungserhaltend konform. Dann muss die
+Jacobi"=Matrix als Drehskalierung von der Form
+\begin{equation}
+Df(x,y) = \begin{pmatrix}
+\partial_x u & \partial_y u\\
+\partial_x v & \partial_y v
+\end{pmatrix}
+= \begin{pmatrix}
+\partial_x u & -\partial_x v\\
+\partial_x v & \partial_x u
+\end{pmatrix}
+\end{equation}
+sein, wobei $f(z)=u+v\ui$ und $z=x+y\ui$. Somit sind die
+Cauchy"=Riemann"=Gleichungen erfüllt. Infolge ist $f$ holomorph,
+wobei $\Phi(f'(z))=Df(z)$.\;\qedsymbol
+
+
