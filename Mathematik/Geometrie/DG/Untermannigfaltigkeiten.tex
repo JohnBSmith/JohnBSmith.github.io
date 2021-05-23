@@ -771,7 +771,7 @@ B'(Jv,Jw) = \lambda^2 B(v,w)
 \end{equation}
 für alle $v,w$ gilt.
 \end{definition}
-\begin{corollary}
+\begin{corollary}\label{konform-QF}
 Eine Abbildung $J\colon V\to V'$ ist genau dann konform, wenn
 $Q'(Jv)=\lambda^2 Q(v)$ für alle $v$ gilt, wobei $Q,Q'$
 die quadratische Form des jeweiligen Raums ist.
@@ -793,6 +793,21 @@ gilt
 B(v,w) = \sum_{i,j} v^i v^j B(\mathbf e_i,\mathbf e_j)
 = \sum_{i,j}\eta_{ij} v^i v^j = \sum_{k}\eta_{kk}v^k v^k.
 \end{equation}
+\begin{corollary}
+Sind $f\colon M\to M'$ und $g\colon M'\to M''$ konforme Abbildungen,
+dann ist auch die Komposition $g\circ f$ eine konforme Abbildung.
+\end{corollary}
+\strong{Beweis.} Gemäß der Prämisse besitzt $f$ am Punkt $p$
+bezüglich Korollar \ref{konform-QF} ein $\lambda_1^2$ und $g$ am Punkt
+$f(p)$ ein $\lambda_2^2$. Die Komposition $g\circ f$ besitzt am
+Punkt $p$ das $\lambda_3^2 = \lambda_2^2\lambda_1^2$, denn unter
+Anwendung der Kettenregel ist
+\begin{align}
+Q''(\mathrm d(g\circ f)_p(v)) &=
+Q''(\mathrm dg_{f(p)}(\mathrm df_p(v)))
+= \lambda_2^2 Q'(\mathrm df_p(v))
+= \lambda_2^2 \lambda_1^2 Q(v).\;\qedsymbol
+\end{align}
 Sei $f\colon\R^n\to\R^m$ eine Abbildung zwischen pseudo"=euklidischen
 Koordinatenräumen $\R^n,\R^m$, dergestalt dass die jeweilige
 Standardbasis eine Orthogonalbasis ist. Für die induzierte Metrik
@@ -824,4 +839,78 @@ Mit $\lambda^2 = 4(x^2-y^2)$ liegt daher eine konforme Abbildung vor.
 Der Definitionsbereich ist allerdings so einzuschränken,
 dass $x\ne y$ bleibt. Der Kegel $x=y$ zerschneidet diesen
 in die beiden Bereiche $y<x$ und $x<y$.
+
+Die Analogie zur komplexen Funktion $z\mapsto z^2$ ist kein Zufall.
+Analog zum Differentialquotient komplexer Funktion definiert man diesen
+für anormal"=komplexe Funktionen. Analog zu den
+Cauchy"=Riemann-Gleichungen ergibt sich für $f(z)=u+v\mathrm{j}$ und
+$z=x+y\mathrm{j}$ eine Charakterisierung über
+die Gleichungen
+$\partial_x u=\partial_y v$ und $\partial_y u = \partial_x v$.
+Schließlich gelten analoge Ableitungsregeln, womit wir eine Fülle
+von konformen Abbildungen erhalten, denn es gilt einer analoger
+Zusammenhang zwischen konformen und anormal"=komplex differenzierbaren
+Abbildungen.
+\begin{lemma}\label{konforme-Matrix-2x2}
+Genügt die Matrix $A\in\R^{2\times 2}$ mit $\det A>0$ der
+Gleichung $Q(Av)=\lambda^2 Q(v)$ mit $Q(v)=v_1^2-v_2^2$, dann muss $A$
+von der Form $\big(\begin{smallmatrix}a & b\\ b & a\end{smallmatrix}\big)$
+sein, wobei $b^2<a^2$.
+\end{lemma}
+\strong{Beweis.} Die Forderung
+\begin{equation}
+Q(\begin{pmatrix}a & b\\ c & d\end{pmatrix}v) = \lambda^2 Q(v)
+\end{equation}
+bringt zunächst $ab=cd$ und $\lambda^2 = a^2-c^2 = d^2-b^2$. Infolge ist
+$a^2=c^2$ oder $b^2=c^2$. Da die Determinante $ad-bc$ aufgrund der
+Regularität nicht verschwindet, muss $a^2d^2\ne b^2c^2$ sein. Der Fall
+$a^2=c^2$ scheidet somit aus. Es folgt $c=sb$ und $d=sa$, wobei
+$s=\pm 1$ ist. Wegen $\lambda^2>0$ ist $b^2<a^2$. Die
+Orientierungserhaltung
+\begin{equation}
+0 < \det A = (a^2-b^2)s = \lambda^2 s
+\end{equation}
+liefert schließlich $s=1$.\;\qedsymbol
+\begin{corollary}
+Sei $U\subseteq\R^{1,1}$ offen und
+$f\colon U\to\R^{1,1}$. Die Funktion $f$ ist genau dann orientierungserhaltend
+konform, wenn sie anormal"=holomorph ist und ihre Ableitung an keiner
+Stelle den Isotropie"=Kegel überschreitet.
+\end{corollary}
+\strong{Beweis.} Es gelte die rechte Seite der Äquivalenz. Dann ist
+$f'(z)$ an jeder Stelle $z$ eine anormal"=komplexe Zahl,
+die gemäß dem Ringisomorphismus
+\begin{equation}
+\Phi(a+b\mathrm j) = \begin{pmatrix} a & b\\ b & a\end{pmatrix},
+\;\;\text{bzw.}\;\;
+\Phi(r\mathrm e^{\varphi\uj}) = r\begin{pmatrix}\cosh\varphi & \sinh\varphi\\
+\sinh\varphi & \cosh\varphi\end{pmatrix}
+\end{equation}
+als lineare Abbildung dargestellt werden kann. Diese ist konform, denn
+\begin{align}
+Q(\begin{pmatrix} a & b\\ b & a\end{pmatrix}\begin{pmatrix}v_1\\ v_2\end{pmatrix})
+&= Q(\begin{pmatrix}av_1 + bv_2\\ bv_1+av_2\end{pmatrix})
+= (av_1 + bv_2)^2 - (bv_1+av_2)^2\\
+&= (a^2 - b^2)(v_1^2 - v_2^2)
+= (a^2 - b^2)Q(\begin{pmatrix}v_1\\ v_2\end{pmatrix})
+\end{align}
+und $a^2-b^2=Q(f'(z))>0$, weil
+$f'(z)$ nirgends den Isotropie"=Kegel überschreitet.
+
+Es gelte die linke Seite der Äquivalenz. Dann ist die Jacobi"=Matrix
+gemäß Lemma \ref{konforme-Matrix-2x2} von der Form
+\begin{equation}
+Df(x,y) = \begin{pmatrix}
+\partial_x u & \partial_y u\\
+\partial_x v & \partial_y v
+\end{pmatrix}
+= \begin{pmatrix}
+\partial_x u & \partial_x v\\
+\partial_x v & \partial_x u
+\end{pmatrix},
+\end{equation}
+womit $\partial_x u=\partial_y v$ und $\partial_y u=\partial_x v$
+gilt. Die Orientierungserhaltung $\det Df(x,y)>0$
+bedeutet $Q(f'(z))>0$, womit $f'(z)$ nirgends den Isotropie"=Kegel
+überschreitet.\;\qedsymbol
 
