@@ -9,9 +9,15 @@
 \exists O(O\in T\land x\in O\land O\subseteq U)\}.\]
 \end{Definition}
 
-\begin{Definition}[int: offener Kern]
-\label{def:int}\index{offener Kern}
-\[\operatorname{int}(M) := \{x\in M\mid M\in \underline U(x)\}\]
+\begin{Definition}[int: Inneres]\mbox{}\\*
+\label{def:int}\index{offener Kern}%
+Das Innere von $M$, auch offener Kern genannt, ist
+\[\operatorname{int}(M) := \{x\in M\mid M\in \underline U(x)\}.\]
+\end{Definition}
+
+\begin{Definition}[ext: Äußeres]\mbox{}\\*
+Sei $X$ ein topologischer Raum und $M\subseteq X$. Das Äußere von $M$ ist
+\[\operatorname{ext}(M) := \operatorname{int}(X\setminus M).\]
 \end{Definition}
 
 \begin{Satz}
@@ -41,6 +47,13 @@ $x\in O\implies x\in M$. Demnach kann $x\in M$ entfallen.
 Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{boundary-point-char}
+Ein Punkt $p$ liegt genau dann auf dem Rand einer Menge $M$, wenn
+jede Umgebung von $p$ mindestens einen Punkt aus $M$ und
+einen Punkt aus dem Komplement von $M$ enthält.
+\end{Satz}
+
+\newpage
 \section{Metrische Räume}
 \subsection{Metrischer Räume}
 \begin{Definition}[metric-space: metrischer Raum]%
@@ -145,5 +158,52 @@ Da $f$ injektiv ist, ist die Rechnung
 = f(\R_{\ge 0})\setminus f(\{0\}) = \R\setminus\{f(0)\}\]
 gültig gemäß Satz \ref{inj-img-setminus}. Da $\R_{>0}$ zusammenhängend
 ist, $\R\setminus\{f(0)\}$ aber nicht, kann $f$ laut Satz
-\ref{intermediate-value-general} nicht stetig sein.\;\qedsymbol
+\ref{intermediate-value-general} nicht stetig sein.\,\qedsymbol
+\end{Beweis}
+
+\section{Übungen}
+
+\begin{Satz}
+Sei $M\subseteq\R^n$. Das Innere von $M$ besitze den Punkt $p$,
+das Äußere den Punkt $q$. Dann schneidet das Bild jedes Weges von $p$
+nach $q$ den Rand von $M$.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Sei $\gamma\colon [0,1]\to\R^n$ so ein Weg mit
+$\gamma(0)=p$ und $\gamma(1)=q$. Angenommen, das Bild schneidet
+den Rand nicht. Das heißt $\gamma([0,1])\cap\partial M = \emptyset$,
+oder äquivalent $\gamma^{-1}(\partial M)=\emptyset$.
+Allgemein ist
+\[\R^n = \operatorname{int}(M) \cup \partial M \cup \operatorname{ext}(M)\]
+eine disjunkte Zerlegung. Es gilt
+\[[0,1] = \gamma^{-1}(\R^n) = \gamma^{-1}(\operatorname{int}(M))
+\cup \gamma^{-1}(\partial M)\cup \gamma^{-1}(\operatorname{ext}(M)),\]
+was auch eine disjunkte Zerlegung ist, weil je zwei disjunkte Mengen
+gemäß Korollar \ref{disjoint-preimg} disjunkte Urbilder haben.
+Weil $\gamma$ gemäß Definition stetig ist,
+sind die Urbilder $\gamma^{-1}(\operatorname{int}(M))$ und
+$\gamma^{-1}(\operatorname{ext}(M))$ offen im Raum $[0,1]$. Sie sind
+nichtleer, weil sie jeweils laut Prämisse mindestens einen Punkt
+enthalten. Damit ist $[0,1]$ eine Zerlegung in disjunkte nichtleere
+offene Mengen, gemäß Definition also ein unzusammhängender Raum. Das
+steht im Widerspruch zur Erkenntnis, dass alle Intervalle
+zusammenhängend sind.\,\qedsymbol
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2]
+Sei $\gamma\colon [0,1]\to\R^n$ ein solcher Weg mit $\gamma(0)=p$ und
+$\gamma(1)=q$. Wir nehmen nun eine Bisektion vor. Sei $a_0:=0$ und
+$b_0:=1$. Sei $m:=\tfrac{1}{2}(a_{k}+b_{k})$ der Mittelwert. Liegt
+$\gamma(m)$ im Inneren, dann ist $[a_{k+1},b_{k+1}]=[m,b_k]$ das nächste
+Intervall. Liegt $\gamma(m)$ im Äußeren, dann $[a_{k+1},b_{k+1}]=[a_k,m]$.
+Liegt $\gamma(m)$ auf dem Rand, ist ein Schnittpunkt gefunden und
+das Verfahren bricht ab. Betrachten wir daher
+den Fall, dass das Verfahren nicht abbricht. Als
+Intervallschachtelung konvergieren die Folgen $a_k,b_k$ gegen
+denselben Grenzwert $a$. Weil $\gamma$ stetig ist, konvergiert
+$\gamma(a_k)\to \gamma(a)$ für $a_k\to a$ und $\gamma(b_k)\to\gamma(a)$
+für $b_k\to a$. Demnach sind in jeder Umgebung von $\gamma(a)$ sowohl
+Punkte aus dem Inneren als auch Punkte aus dem Äußeren. Gemäß
+Satz \ref{boundary-point-char} muss $\gamma(a)$ infolge
+auf dem Rand liegen.\,\qedsymbol
 \end{Beweis}
