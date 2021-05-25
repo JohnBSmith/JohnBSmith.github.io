@@ -3,10 +3,30 @@
 \section{Grundbegriffe}
 \subsection{Definitionen}
 
-\begin{Definition}[nhfilter: Umgebungsfilter]%
-\label{def:nhfilter}\index{Umgebungsfilter}
+\begin{Definition}[Topologischer Raum]
+Sei $X$ eine Menge und $T$ eine Menge von Teilmengen von $X$.
+Man nennt das System $T$ eine Topologie und $(X,T)$ einen topologischen
+Raum, falls die folgenden drei Axiome erfüllt sind:
+\begin{enumerate}
+\item Es gilt $\emptyset\in T$ und $X\in T$.
+\item Sind $A,B\in T$, dann ist auch $A\cap B\in T$.
+\item Sind die $A_i\in T$, dann ist auch $\bigcup_I A_i\in T$, wobei $I$ unendlich sein darf.
+\end{enumerate}
+Die Elemente der Topologie nennt man offene Mengen.
+\end{Definition}
+
+\begin{Definition}[Abgeschlossene Menge]
+Sei $X$ ein topologischer Raum. Eine Menge $M\subseteq X$
+nennt man abgeschlossen, wenn das Komplement $X\setminus M$ offen ist.
+\end{Definition}
+
+\begin{Definition}[nh-filter: Umgebungsfilter]%
+\label{def:nh-filter}\index{Umgebungsfilter}
+Zu einem Punkt $x\in X$ ist
 \[\underline U(x) := \{U{\subseteq}X\mid
-\exists O(O\in T\land x\in O\land O\subseteq U)\}.\]
+\exists O(O\in T\land x\in O\land O\subseteq U)\}\]
+der Umgebungsfilter. Eine Menge $U\in\underline U(x)$ heißt
+Umgebung von $x$.
 \end{Definition}
 
 \begin{Definition}[int: Inneres]\mbox{}\\*
@@ -17,23 +37,57 @@ Das Innere von $M$, auch offener Kern genannt, ist
 
 \begin{Definition}[ext: Äußeres]\mbox{}\\*
 Sei $X$ ein topologischer Raum und $M\subseteq X$. Das Äußere von $M$ ist
-\[\operatorname{ext}(M) := \operatorname{int}(X\setminus M).\]
+\[\operatorname{ext}(M) := \operatorname{int}(X\setminus M) = \operatorname{int}(M^\comp).\]
 \end{Definition}
 
+\begin{Definition}[Abgeschlossene Hülle]\mbox{}\\*
+Sei $X$ ein topologischer Raum und $M\subseteq X$. Die abgeschlossene Hülle von $M$ ist%
+\[\overline M := X\setminus\operatorname{ext}(M) = \operatorname{int}(M^\comp)^\comp.\]
+\end{Definition}
+
+\begin{Definition}[Rand]
+Der Rand einer Menge $M$ ist
+\[\partial M := \overline M\setminus\operatorname{int}(M)
+= \overline M\cap\operatorname{int}(M)^\comp.\]
+\end{Definition}
+
+\newpage
+\subsection{Elementares}
+
+\begin{Korollar}\label{partition-int-bd-ext}
+Sei $X$ ein topologischer Raum. Für jede Menge $M\subseteq X$ ist%
+\[X = \operatorname{int}(M)\cup\partial M\cup\operatorname{ext}(M)\]
+eine disjunkte Zerlegung.
+\end{Korollar}
+\begin{Beweis} Sei $A:=\operatorname{int}(M)$ und $B:=\operatorname{ext}(M)$. Dann ist
+\begin{gather*}
+\operatorname{int}(M)\cup\partial M\cup\operatorname{ext}(M)
+= A\cup B^\comp\cap A^\comp\cup B
+= A\cup A^\comp\cup B = X\cup B = X.
+\end{gather*}
+Nun verbleibt zu prüfen, dass die Mengen paarweise disjunkt sind. Wir haben%
+\begin{align*}
+\operatorname{int}(M)\cap\partial M &= A\cap B^\comp\cap A^\comp = \emptyset,\\
+\operatorname{ext}(M)\cap\partial M &= B\cap B^\comp\cap A^\comp = \emptyset.
+\end{align*}
+Wegen $M\cap M^\comp=\emptyset$ ist erst recht $A\cap B=\emptyset$,
+denn $A\subseteq M$ und $B\subseteq M^\comp$.\,\qedsymbol
+\end{Beweis}
+
 \begin{Satz}
-Der offene Kern von $M$ ist die Vereinigung der offenen Teilmengen
-von $M$. Kurz:%
+Das Innere von $M$ ist die Vereinigung der offenen Teilmengen
+von $M$, kurz%
 \[\operatorname{int}(M) = \bigcup_{O\in 2^M\cap T} O.\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) und Def. \ref{def:int} (int)
-expandieren:
+expandieren:%
 \[\forall x[x\in M\land M\in\underline U(x)
 \iff x\in\bigcup_{O\in 2^M\cap T} O].\]
 Den äußeren Allquantor brauchen wir nicht weiter mitschreiben, da alle
 freien Variablen automatisch allquantifiziert werden.
-Nach Def. \ref{def:nhfilter} (nhfilter) weiter expandieren, wobei die
+Nach Def. \ref{def:nh-filter} (nh-filter) weiter expandieren, wobei die
 Bedingung $U\subseteq X$ als tautologisch entfallen kann,
 weil $X$ die Grundmenge ist. Auf der rechten Seite wird nach Def.
 \ref{def:union} (union) expandiert. Es ergibt sich:
@@ -55,7 +109,7 @@ einen Punkt aus dem Komplement von $M$ enthält.
 
 \newpage
 \section{Metrische Räume}
-\subsection{Metrischer Räume}
+\subsection{Metrische Räume}
 \begin{Definition}[metric-space: metrischer Raum]%
 \index{metrischer Raum}\label{metric-space}
 Man bezeichet $(M,d)$ mit $d\colon M^2\to\R$ genau dann als
@@ -175,7 +229,8 @@ den Rand nicht. Das heißt $\gamma([0,1])\cap\partial M = \emptyset$,
 oder äquivalent $\gamma^{-1}(\partial M)=\emptyset$.
 Allgemein ist
 \[\R^n = \operatorname{int}(M) \cup \partial M \cup \operatorname{ext}(M)\]
-eine disjunkte Zerlegung. Es gilt
+laut Korollar \ref{partition-int-bd-ext} eine disjunkte Zerlegung.
+Gemäß Satz \ref{preimg-dl} (preimg-dl) gilt
 \[[0,1] = \gamma^{-1}(\R^n) = \gamma^{-1}(\operatorname{int}(M))
 \cup \gamma^{-1}(\partial M)\cup \gamma^{-1}(\operatorname{ext}(M)),\]
 was auch eine disjunkte Zerlegung ist, weil je zwei disjunkte Mengen
