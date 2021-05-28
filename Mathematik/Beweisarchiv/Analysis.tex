@@ -488,6 +488,7 @@ weil $g$ an der Stelle $x$ differenzierbar ist und dort somit ganz
 sicher stetig.\;\qedsymbol
 \end{Beweis}
 
+\newpage
 \begin{Satz}
 Sei $I$ ein Intervall. Sind $f,g\colon I\to\R$ an der Stelle
 $x$ differenzierbar und ist $g(x)\ne 0$, dann
@@ -593,6 +594,66 @@ muss die rechtsseitige Ableitung an der Stelle $x=0$ immer
 verschwinden.\;\qedsymbol
 \end{Beweis}
 
+\subsection{Richtungsableitung}
+
+\begin{Definition}[Richtungsableitung]
+Sei $U\subseteq\R^n$ offen, $x\in U$ eine Stelle und $v\in\R^n$
+ein Vektor. Man betrachte für ein kleines $\varepsilon>0$
+die Parametergerade
+\[\gamma\colon(-\varepsilon,\varepsilon)\to U,\; \gamma(t):=x+tv.\]
+Für eine Funktion $f\colon U\to\R$ ist die Zahl
+\[D_v f(x) := (f\circ\gamma)'(0) = \lim_{h\to 0}\frac{f(x+hv)-f(x)}{h},\]
+falls sie existiert, die Richtungsableitung von $f$ an der Stelle $x$ in
+Richtung $v$.
+\end{Definition}
+\begin{Korollar}
+Die Funktionen $f,g$ seien an der Stelle $x$ in Richtung $v$
+differenzierbar. Sei $c$ eine reelle Zahl. Dann sind auch
+$f+g$, $f-g$, $cf$, $fg$ differenzierbar und es gelten die
+den üblichen Ableitungsregeln analogen Regeln
+\begin{align*}
+D_v(f+g)(x) &= D_v f(x)+D_v g(x),\\
+D_v(f-g)(x) &= D_v f(x)+D_v g(x),\\
+D_v(cf)(x) &= cD_v f(x),\\
+D_v(fg)(x) &= g(x)D_v f(x) + f(x)D_v g(x).
+\end{align*}
+\end{Korollar}
+\begin{Beweis}
+Die Ableitungsregeln werden über die Definition
+auf die Ableitungsregeln für gewöhnliche reelle Funktionen
+zurückgeführt. So ist
+\begin{align*}
+D_v(f+g)(x) &= ((f+g)\circ\gamma)'(0)
+= ((f\circ\gamma)+(g\circ\gamma))'(0)\\
+&= (f\circ\gamma)'(0)+(g\circ\gamma)'(0)
+= D_v f(x) + D_v g(x).
+\end{align*}
+Der Beweis der restlichen Regeln ist analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Kettenregel]\mbox{}\\*
+Sei $g\colon\R\to\R$ differenzierbar und
+$f$ differenzierbar an der Stelle $x$ in Richtung $v$. Dann ist
+auch $g\circ f$ entsprechend differenzierbar, und es gilt
+\[D_v(g\circ f)(x) = (g'\circ f)(x)\cdot D_v f(x).\]
+\end{Korollar}
+\begin{Beweis}
+Die Regel ist gemäß der Definition auf die gewöhnliche Kettenregel
+zurückführbar. Man bekommt
+\begin{align*}
+D_v(g\circ f)(x) = (g\circ f\circ\gamma)'(0)
+= g'(f(\gamma(0)))\cdot (f\circ\gamma)'(0)
+= g'(f(x))\cdot D_v f(x).\;\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Definition}[Partielle Ableitung]\mbox{}\\*
+Sei $(\mathbf e_1,\ldots,\mathbf e_n)$ die Standardbasis. 
+Die partielle Ableitung $\partial_k f(x)$ ist definiert als
+die Richtungsableitung $D_v f(x)$ bezüglich $v=\mathbf e_k$.
+\end{Definition}
+
+\newpage
 \section{Fixpunkt-Iterationen}%
 \index{Fixpunkt-Iteration}
 
@@ -628,7 +689,6 @@ D.\,h. $\varphi$ ist eine Kontraktion. Die Konvergenz der Folge
 $(x_n)$ ist gemäß Satz \ref{Banach-fixed-point-theorem}
 gewährleistet.\;\qedsymbol
 \end{Beweis}
-\newpage
 
 \begin{Satz}[Hinreichendes Konvergenzkriterium zum Newton-Verfahren]%
 \index{Newton-Verfahren}\mbox{}\\

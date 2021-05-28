@@ -815,7 +815,7 @@ Gemäß den Additionstheoremen gilt
 Demnach ist $y=x\sin t$. Dann gilt auch $y^2=x^2\sin(t)^2$.
 Laut trigonometrischem Pythagoras ist $\sin(t)^2=1-\cos(t)^2$,
 das führt zu
-\begin{equation}
+\begin{equation}\label{eq:Gerono-implizit}
 y^2=x^2(1-x^2)\iff x^4+y^2 = x^2.
 \end{equation}
 
@@ -876,4 +876,94 @@ Aufgrund der auftretenden Wurzel ist die analytische Bestimmung
 des Integrals nur in sehr speziellen Fällen durchführbar.
 Gleichwohl lässt sich für eine konkrete Kurve mittels
 Quadraturverfahren am Computer schnell ein hochgenauer Wert ermitteln.
+
+\newpage
+\section{Implizite Kurven}
+\subsection{Differenzieren impliziter Kurven}
+
+Betrachten wir eine gutartige Funktion $f$, bei der die Lösungsmenge
+der Gleichung $f(x,y)=0$ eine Kurve in der Ebene ist. Sei außerdem
+$p=(x_0,y_0)$ ein Punkt der Kurve. Ist es machbar, die Gleichung
+der Tangente am Punkt $p$ aufzustellen, ohne die Gleichung der Kurve
+bezüglich $x$ oder $y$ in eine explizite Form zu bringen?
+
+Angenommen wir würden eine die Kurve durchlaufende Parameterkurve
+$c$ kennen, so dass $c(0)=p$ ist und $c'(0)$ der Tangentialvektor,
+dessen Richtung mit der Tangente am Punkt $p$ übereinstimmt.
+Demnach gilt $f(c(t))=0$ für alle Parameterwerte $t$. Infolge
+verschwindet auch die Ableitung nach $t$ an allen Stellen. Auch
+für die Verkettung $f\circ c$ gilt eine bestimmte Form der
+Kettenregel, so dass wir erhalten%
+\begin{equation}
+0 = (f\circ c)'(t) = \langle\nabla f(p), c'(t)\rangle.
+\end{equation}
+Der Vektor $\nabla f(p)$ ist hierbei der Gradient der Funktion
+$f$ an der Stelle $p$. Weil das Skalarprodukt verschwindet,
+muss der Gradient also rechtwinklig zum Tangentialvektor stehen.
+
+Die Kurve $c$ vergessen wir nun wieder, sie ist nicht länger
+von Bedeutung. Rotieren wir den Gradient mit
+$R(90^\circ)=\big(\begin{smallmatrix}0 & -1\\ 1 & 0\end{smallmatrix}\big)$
+um $90^\circ$ gegen den Uhrzeigersinn, bringt uns dies als
+Ergebnis einen Tangentialvektor. Die Tangente am Punkt $p$ ist
+demzufolge gemäß%
+\begin{equation}
+t\mapsto p + tR(90^\circ)\nabla f(p)
+\end{equation}
+als Parametergerade beschrieben.
+
+Alternativ können wir wie folgt vorgehen. Wir suchen einen zum
+Gradient rechtwinkligen Vektor $\mathbf v$, so dass gilt%
+\begin{equation}
+\langle\nabla f(p),\mathbf v\rangle = 0.
+\end{equation}
+Mit $\nabla f(p) = \begin{pmatrix}\partial_1 f(p)\\ \partial_2 f(p)\end{pmatrix}$
+und $\mathbf v = \begin{pmatrix}v_1\\ v_2\end{pmatrix}$ erhalten wir
+\begin{equation}
+\langle\nabla f(p),\mathbf v\rangle
+= \partial_1 f(p)v_1 + \partial_2 f(p)v_2.
+\end{equation}
+Man darf sich nun $v_1,v_2$ so aussuchen, dass die Gleichung erfüllt
+ist. Wir wählen $v_1:=1$, dann ist $v_2$ nämlich der Anstieg der
+Geraden. Wir bekommen
+\begin{equation}
+v_2 = -\frac{\partial_1 f(p)}{\partial_2 f(p)}.
+\end{equation}
+Die Gerade ist beschrieben durch
+\begin{equation}
+y = y_0 + v_2(x-x_0).
+\end{equation}
+Als Beispiel diene Geronos Lemniskate
+\eqref{eq:Gerono-implizit}, also
+\begin{equation}
+f(x,y) := x^4+y^2-x^2.
+\end{equation}
+Die partiellen Ableitungen sind
+\begin{align}
+\partial_1 f(x,y) &= 4x^3-2x,\\
+\partial_2 f(x,y) &= 2y.
+\end{align}
+Das resultiert in
+\begin{align}
+v_2 = -\frac{\partial_1 f(x,y)}{\partial_2 f(x,y)}
+= \frac{x-2x^3}{y}.
+\end{align}
+Benötigt wird nun ein Punkt der Kurve. Dazu stellen wir
+\eqref{eq:Gerono-implizit} nach $y$ um und erhalten
+\begin{equation}
+y = \pm\sqrt{x^2-x^4}.
+\end{equation}
+Wir können den Anstieg nun in Abhängigkeit von $x$ angeben, das ist
+\begin{equation}
+v_2(x) = \frac{x-2x^3}{\pm\sqrt{x^2-x^4}}.
+\end{equation}
+Die Gerade ist
+\begin{equation}
+y = y(x_0) + v_2(x_0)(x-x_0).
+\end{equation}
+Weil bei diesem Beispiel mit die Findung einer expliziten Form für $y$
+möglich war, können wir nun $\frac{\mathrm dy}{\mathrm dx}$ alternativ
+mit üblicher Differentialrechnung bestimmen und gelangen so zum
+gleichen Ergebnis für $v_2$.
+
 

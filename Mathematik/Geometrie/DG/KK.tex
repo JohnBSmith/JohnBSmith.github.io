@@ -1,0 +1,139 @@
+
+\chapter{Krummlinige Koordinaten}
+
+\section{Partielle Ableitungen}
+
+Wir betrachten die stetig differenzierbare Koordinatentransformation
+$\Phi\colon U\to V$ mit offenen $U,V\subseteq\R^n$, so dass
+$u$ die krummlinigen Koordinaten sind und $x = \Phi(u)$ die
+kartesischen. Zudem sei $\mathrm d\Phi$ an jeder Stelle
+invertierbar. Gegeben sei außerdem ein stetig differenzierbares
+Skalarfeld $f(u)$. Nun stellt sich die Frage, wie $\partial_k f(u)$ zu
+verstehen ist. Sei $f'(x)$ die Darstellung des Skalarfeldes in
+kartesischen Koordinaten, so dass $f = f'\circ\Phi$ ist. Mit der
+Kettenregel bekommen wir die Beziehung
+\begin{equation}\label{eq:partial-Phi}
+\partial_k f(u) = \partial_k (f'\circ\Phi)(u)
+= \mathrm df'(\Phi(u))(\partial_k\Phi(u))
+= \mathrm df'(x)(\mathbf g_k).
+\end{equation}
+Die $k$-te partielle Ableitung in krummlinigen Koordinaten ist also
+die Richtungsableitung in Richtung des $k$-ten Tangentialvektors der
+Koordinatenlinien.
+
+Sei nun $\gamma(t):=u+t\mathbf e_k$ die Parametergerade. Die
+partielle Ableitung ist definiert als
+$\partial_k f(u):=(f\circ\gamma)'(0)$. Nun kann man das Konzept
+allerdings auch für Parameterkurven anstelle von Parametergeraden
+definieren. Man betrachtet daher die Linie $\Phi\circ\gamma$ und
+definiert damit die partielle Linienableitung nach der $k$-ten
+Koordinatenlinie als
+\begin{equation}
+\tilde\partial_k f'(x) := (f'\circ\Phi\circ\gamma)'(0).
+\end{equation}
+Damit ergibt sich aber
+\begin{equation}
+\tilde\partial_k f'(x) = (f\circ\gamma)'(0) = \partial_k f(u).
+\end{equation}
+Die Linienableitungen der Darstellung in kartesischen Koordinaten sind
+also die gewöhnlichen partiellen Ableitungen der Darstellung in
+krummlinigen Koordinaten.
+
+Von wichtigem Interesse ist, wie die gewöhnlichen partiellen
+Ableitungen $\partial_k f'(x)$ in Beziehung zu den partiellen
+Ableitungen $\partial_k f(u)$ stehen. Analog zu \eqref{eq:partial-Phi}
+bekommen wir
+\begin{equation}
+\partial_k f'(x) = \partial_k(f\circ\Phi^{-1})(x)
+= \mathrm df(u)(\partial_k\Phi^{-1}(x))
+= \sum\nolimits_i\partial_i f(u)\partial_k\Phi^{-1}(x)_i.
+\end{equation}
+gemäß der Kettenregel.
+
+\section{Gradient}
+
+Weil in Koordinaten gerechnet wird, ist das Differential
+$J=\mathrm d\Phi(u)$ die Jacobi"=Matrix. Ihre Inverse ist die Matrix
+\begin{equation}
+J^{-1} = \mathrm d\Phi(u)^{-1} = \mathrm d\Phi^{-1}(x).
+\end{equation}
+Kurze Vorbetrachtung. Die $\mathbf e_k$ müssen als Linearkombination
+der $\mathbf g_k$ dargestellt werden. Die $\mathbf g_k$ sind aber
+gerade die Spalten der Jacobi"=Matrix. Somit können wir rechnen
+\begin{equation}
+E = JJ^{-1},\;\text{folglich}\;\, (\mathbf e_j)_i = \delta_{ij}
+= \sum_k J_{ik}(J^{-1})_{kj} = \sum_k (J^{-1})_{kj} (\mathbf g_k)_i.
+\end{equation}
+Wir bekommen $\mathbf e_j = \sum_k (J^{-1})_{kj}\mathbf g_k$.
+Außerdem ist
+\begin{equation}
+\partial_k\Phi^{-1}(x) = \mathrm d\Phi^{-1}(x)(\mathbf e_k)
+= \mathrm d\Phi(u)^{-1}(\mathbf e_k)
+= J^{-1}\mathbf e_k,
+\end{equation}
+womit $\partial_k\Phi^{-1}(x)_i = (J^{-1})_{ik}$ gilt.
+
+Ausgehend von der kartesischen Darstellung rechnen wir den
+Gradienten nun in die Darstellung bezüglich
+krummliniger Koordinaten um. Das macht
+\begin{align}
+\nabla f'(x) &= \sum_k\partial_k f'(x)\mathbf e_k
+= \sum_{k,i}\partial_i f(u)\partial_k\Phi^{-1}(x)_i\mathbf e_k\\
+&= \sum_{k,i}\partial_i f(u) (J^{-1})_{ik}\mathbf e_k
+= \sum_{k,i,j}\partial_i f(u) (J^{-1})_{ik}(J^{-1})_{jk}\mathbf g_j.
+\end{align}
+Da steckt eine Matrizenmultiplikation drin, nämlich
+\begin{equation}
+\sum_{k} (J^{-1})_{ik}(J^{-1})_{jk} = (J^{-1}(J^{-1})^T)_{ij}
+= ((J^T J)^{-1})_{ij} = (G^{-1})_{ij} = g^{ij}.
+\end{equation}
+Man kommt zum Ergebnis
+\begin{equation}
+\operatorname{grad} f(u) = \nabla f'(x)
+= \sum_{i,j}\partial_i f(u) g^{ij}\mathbf g_j.
+\end{equation}
+In klassischer Notation würde man schreiben
+\begin{equation}
+\partial_k\Phi^{-1}(x)_i = \frac{\partial u_i}{\partial x_k},\quad
+\mathbf g_j = \frac{\partial x}{\partial u_j},\quad
+\mathbf e_k = \frac{\partial x}{\partial x_k}.
+\end{equation}
+Man rechnet dann lediglich zweimal Kettenregel, das ist
+\begin{equation}
+\nabla f'(x) = \sum_k\frac{\partial f'}{\partial x_k}\frac{\partial x}{\partial x_k}
+= \sum_{k,i}\frac{\partial f}{\partial u_i}
+\frac{\partial u_i}{\partial x_k}\frac{\partial x}{\partial x_k}
+= \sum_{k,i,j}\frac{\partial f}{\partial u_i}\frac{\partial u_i}{\partial x_k}
+\frac{\partial u_j}{\partial x_k}\frac{\partial x}{\partial u_j},
+\end{equation}
+und beachtet
+\begin{equation}
+g^{ij} = \sum_k\frac{\partial u_i}{\partial x_k}\frac{\partial u_j}{\partial x_k}.
+\end{equation}
+Speziell für orthogonale Koordinaten ist $G=(g_{ij})$ eine
+Diagonalmatrix. Wegen $G^{-1}=(g^{ij})$ ist dann
+$g^{kk} = |\mathbf g_k|^2$ der Kehrwert von
+$g_{kk} = |\mathbf g_k|^2$. Infolge ist
+\begin{equation}
+\operatorname{grad} f(u)
+= \sum_k\partial_k f(u)g^{kk}\mathbf g_k
+= \sum_k\partial_k f(u)\frac{\mathbf g_k}{|\mathbf g_k|^2}
+= \sum_k\partial_k f(u)\frac{\mathbf {\hat g}_k}{|\mathbf g_k|}.
+\end{equation}
+Für Polarkoordinaten
+\begin{equation}
+\begin{pmatrix}x\\ y\end{pmatrix}
+= \Phi\begin{pmatrix}r\\ \varphi\end{pmatrix}
+= \begin{pmatrix}r\cos\varphi\\ r\sin\varphi\end{pmatrix},\quad
+\mathbf g_r = \begin{pmatrix}\cos\varphi\\ \sin\varphi\end{pmatrix},\quad
+\mathbf g_\varphi = \begin{pmatrix}-r\sin\varphi\\ r\cos\varphi\end{pmatrix}
+\end{equation}
+gilt bspw.
+\begin{equation}
+\operatorname{grad} f(u)
+= \partial_r f(u)\frac{\mathbf g_r}{|\mathbf g_r|^2}
++ \partial_\varphi f(u)\frac{\mathbf g_\varphi}{|\mathbf g_\varphi|^2}
+= \partial_r f(u)\mathbf g_r
++ \frac{1}{r^2}\partial_\varphi f(u)\mathbf g_\varphi.
+\end{equation}
+
