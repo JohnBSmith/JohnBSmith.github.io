@@ -653,6 +653,49 @@ Die partielle Ableitung $\partial_k f(x)$ ist definiert als
 die Richtungsableitung $D_v f(x)$ bezüglich $v=\mathbf e_k$.
 \end{Definition}
 
+\begin{Korollar}
+Zur jeder gewöhnlichen Ableitungsregel besitzt die
+Richtungsableitung eine analoge Regel.
+\end{Korollar}
+\strong{Vorbereitung.}
+Sei $f=(f_1,\ldots,f_n)$ ein Tupel von Funktionen aus einem
+Funktionenraum und sei entsprechend
+$f(x):=(f_1(x),\ldots, f_n(x))$. Sei $p$ eine beliebige mehrstellige
+Operation. Sei $\eta_p(f)(x)$ die punktweise Anwendung von $p$.
+Ein Beispiel ist die Addition $p(y_1,y_2):=y_1+y_2$. Dann ist
+$\eta_p(f_1,f_2)(x)=f_1(x)+f_2(x)$. Sei%
+\[F(T)(f) := (T f_1,\ldots ,T f_n)\]
+die komponentenweise Anwendung eines Operators $T$.
+Sei $C_\gamma$ der durch $C_\gamma f := f\circ\gamma$ definierte
+Kompositionsoperator. Allgemein gilt%
+\[C_\gamma\circ\eta_p = \eta_p\circ F(C_\gamma).\]
+
+\begin{Beweis}
+Prämisse ist, dass der gewöhnliche Ableitungsoperator $D$ die Regel
+\[D(\eta_p(f))(x) = (D\circ\eta_p)(f)(x) = Y(f(x),F(D)(f)(x))\]
+erfüllt. Für die Richtungsableitung von $\eta_p(f)$ gilt dann
+\begin{gather*}
+D_v(\eta_p(f))(x) = (\eta_p(f)\circ\gamma)'(0)
+= (D\circ C_\gamma\circ\eta_p)(f)(0)
+= (D\circ\eta_p\circ F(C_\gamma))(f)(0)\\
+= (D\circ\eta_p)(F(C_\gamma)(f))(0)
+= Y(F(C_\gamma)(f)(0),F(D)(F(C_\gamma)(f))(0))\\
+= Y(f(x),F(D\circ C_\gamma)(f)(0))
+= Y(f(x),F(D_v)(f)(x)).\;\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\noindent
+Beispiele sind
+\begin{gather*}
+\begin{array}{ll}
+p(y_1,y_2) = y_1+y_2, & Y((y_1,y_2),(y_1',y_2')) = y_1'+y_2',\\[4pt]
+p(y_1,y_2) = y_1 y_2, & Y((y_1,y_2),(y_1',y_2')) = y_1'y_2 + y_1y_2',\\[4pt]
+p(y) = cy, & Y(y,y') = cy',\\[4pt]
+p(y) = g(y), & Y(y,y') = g'(y)y'.
+\end{array}
+\end{gather*}
+
 \newpage
 \section{Fixpunkt-Iterationen}%
 \index{Fixpunkt-Iteration}
