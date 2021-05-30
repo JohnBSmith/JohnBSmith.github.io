@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt,fleqn,twocolumn,twoside]{scrartcl}
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
@@ -19,19 +19,17 @@
 \usepackage{geometry}
 \geometry{a4paper,left=25mm,right=10mm,top=20mm,bottom=28mm}
 \setlength{\columnsep}{6mm}
-\newcommand{\bvec}[1]{\underline{#1}}
+\newcommand{\bvec}[1]{\mathbf{#1}}
 \newcommand{\ee}{\mathrm{e}}
 
 \begin{document}
 \thispagestyle{empty}
 
-\begin{huge}
-\noindent
-\textbf{Die gaußsche\\
-Summenformel}
-\par
-\end{huge}
+\section*{\huge Die Dreieckszahlen}
 
+Für die Dreieckszahlen gilt die gaußsche Summenformel%
+\[\sum_{k=1}^n k = \frac{n}{2}(n+1).\]
+Wie findet man diese Formel?
 
 \section{Klassische Methode}
 
@@ -44,7 +42,12 @@ s = n+(n-1)+\ldots+2+1,\\
 \end{gather*}
 Man hat also $2s=n(n+1)$. Damit erhält man
 \[s = \frac{n}{2}(n+1).\]
-
+Dieselbe Rechnung ist auch mit dem Summierungsoperator möglich.
+Man bekommt
+\begin{align*}
+2s &= s + s = \sum_{k=1}^n k + \sum_{k=1}^n (n-k+1)\\
+&= \sum_{k=1}^n (k+n-k+1) = \sum_{k=1}^n (n+1) = n(n+1).
+\end{align*}
 
 \section{Flächeninhalt}
 
@@ -122,15 +125,15 @@ Damit ergibt sich%
 
 \section{Interpolationsformel}
 
-Zum Interpolieren wird man besser die Lagrange-Interpolation oder
-die Newton-Interpolation verwenden. Da man aber immer äquidistante
+Zum Interpolieren wird man besser die Lagrange"=Interpolation oder
+die Newton"=Interpolation verwenden. Da man aber immer äquidistante
 Abstände der Stellen wählen kann, lässt sich die hübsche Formel%
 \[f(n) = \sum_{k=0} \frac{(\Delta^k f)(0)}{k!}n^{\underline k}\]
 mit $(\Delta f)(n):=f(n+1)-f(n)$ verwenden.
 Mit $n^{\underline k}$ ist die absteigende Faktorielle gemeint.
 
 Man Berechnet nun die folgende Wertetabelle:
-\begin{table}[h]
+\begin{table}[h!]
 \qquad\begin{tabular}{@{\;}rrrrrr@{\;}}
 \toprule
 $n$    & 0 & 1 & 2 & 3 & 4\\
@@ -278,7 +281,7 @@ Damit ergibt sich
 \begin{gather*}
 s_n = \binom{n+1}{n-1} = \frac{(n+1)!}{2(n-1)!}.
 \end{gather*}
-Mit der Rekursionsformel der Fakultät erhält man%
+Mit der Rekursionsgleichung der Fakultät erhält man%
 \begin{gather*}
 s_n = \frac{1}{2}(n+1)n\frac{(n-1)!}{(n-1)!}
 = \frac{n}{2}(n+1).
@@ -297,10 +300,10 @@ Die folgende Rechnung ist nur formal dargestellt. Eine
 mathematisch strenge Begründung fehlt.
 
 Mit dem Differenzenoperator
-\[[\Delta f](n) := f(n+1)-f(n)\]
+\[(\Delta f)(n) := f(n+1)-f(n)\]
 gilt die Formel
-\[[If](n) = f(n) = \Delta\sum_{k=0}^{n-1}f(k)
-= [\Delta\Delta^{-1}f](n).\]
+\[(If)(n) = f(n) = \Delta\sum_{k=0}^{n-1}f(k)
+= (\Delta\Delta^{-1}f)(n).\]
 Der Differenzenoperator kann aufgespalten werden in
 Verschiebeoperator und Identitätsoperator, es gilt%
 \[\Delta = \ee^D-I.\]
@@ -312,10 +315,10 @@ Nun gilt die Formel
 Mit $\overline{B}_k$ sind die Bernoulli"=Zahlen mit
 $\overline{B}_1=-1/2$ gemeint.
 Der inverse Operator zur Ableitung ist das Integral, es gilt%
-\[[D^{-1}f](n) = \int_0^n f(x)\,\mathrm dx.\]
+\[(D^{-1}f)(n) = \int_0^n f(x)\,\mathrm dx.\]
 Damit erhält man die Formel
 \begin{gather*}
-[\Delta^{-1} f](n) = \sum_{k=0}^{n-1} f(k)\\
+(\Delta^{-1} f)(n) = \sum_{k=0}^{n-1} f(k)\\
 = \int_0^n f(x)\,\mathrm dx
 + \sum_{k=1}^\infty \overline{B}_k
 \frac{f^{(k-1)}(n)-f^{(k-1)}(0)}{k!}.
@@ -332,22 +335,86 @@ Inkrementiert man $n$ auf beiden Seiten, so ergibt sich das
 gesuchte Resultat%
 \[\sum_{k=0}^n k = \frac{n}{2}(n+1).\]
 
+\section{Homogene Koordinaten}
+
+In der Rekursionsgleichung $s_{n+1} = s_n+n+1$ substituieren wir
+$a_n = n+1$ und erhalten damit das System
+\begin{align*}
+s_{n+1} &= s_n + a_n,\\
+a_{n+1} &= a_n + 1.
+\end{align*}
+Das System ist linear, aber inhomogen. Wir können aus diesem durch
+Einführung homogener Koordinaten allerdings das homogene
+lineare System
+\[\begin{bmatrix}
+s_{n+1}\\ a_{n+1}\\ 1
+\end{bmatrix} = \begin{bmatrix}
+1 & 1 & 0\\
+0 & 1 & 1\\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+s_n\\ a_n\\ 1
+\end{bmatrix}\]
+gewinnen. Das System ist von der Form
+\[\bvec v_{n+1} = A\bvec v_{n}.\]
+Wie bei der geometrischen Folge ist demnach
+\[\bvec v_n = A^n\bvec v_0.\]
+Weil die Matrix schon in Stufenform ist, bekommen wir mit der
+Eigenwertgleichung
+\[0 = \det(A-\lambda E) = (1-\lambda)^3\]
+sofort den dreifachen Eigenwert $\lambda = 1$. Hier liegt ein
+einziger Jordanblock vor. Für die Anwendung einer Matrixfunktion $f$
+auf so einen Jordanblock gilt allgemein%
+\[f(\begin{bmatrix}
+\lambda & 1 & 0\\[2pt]
+0 & \lambda & 1\\[2pt]
+0 & 0 & \lambda
+\end{bmatrix})
+= \begin{bmatrix}
+\frac{f(\lambda)}{0!} & \frac{f'(\lambda)}{1!} & \frac{f''(\lambda)}{2!}\\[2pt]
+0 & \frac{f(\lambda)}{0!} & \frac{f'(\lambda)}{1!}\\[2pt]
+0 & 0 & \frac{f(\lambda)}{0!}
+\end{bmatrix}.\]
+Zu berechnen ist $f(A)=A^n$. Die Ableitungen sind
+\begin{align*}
+f(\lambda) &= \lambda^n,\\
+f'(\lambda) &= n\lambda^{n-1},\\
+f''(\lambda) &= n(n-1)\lambda^{n-2}.
+\end{align*}
+Die explizite Formel ist demzufolge
+\[\begin{bmatrix}
+s_n\\ a_n\\ 1
+\end{bmatrix} = A^n\begin{bmatrix}
+s_0\\ a_0\\ 1
+\end{bmatrix}
+= \begin{bmatrix}
+1 & n & \frac{n(n-1)}{2}\\
+0 & 1 & n\\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+0\\ 1\\ 1
+\end{bmatrix}.\]
+Schließlich kommt man zum Ergebnis
+\[s_n = n + \frac{n(n-1)}{2} = \frac{n}{2}(n+1).\]
+
 \newpage
 \section*{Literatur}
 
 \noindent
 [1] Daniel Grieser: »\emph{Mathematisches Problemlösen und Beweisen}«.
-Springer-Verlag, Wiesbaden (2013),\\
+Springer-Verlag, Wiesbaden (2013),
 2.~Auflage 2017.
 Abschnitt 1.3: »\emph{Ein Problem über Geraden in der Ebene}«.
 
 \vspace{1em}\noindent
 [2] Harro Heuser: »\emph{Lehrbuch der Analysis, Teil 1}«.\\
-Teubner, Stuttgart/Leipzig/Wiesbaden (1980),\\
+Teubner, Stuttgart/Leipzig/Wiesbaden (1980),
 15. Auflage 2003. Abschnitt 95: »\emph{Die Eulersche Summenformel}«.
 
 \vspace{1em}\noindent
-[3] Ronald L. Graham, Donald Knuth, Oren Patashnik:
+[3] Ronald L. Graham, Donald Knuth, Oren Patashnik:\\
 »\emph{Concrete Mathematics: A Foundation for Computer Science}«.
 Addison-Wesley (1988), 2. Auflage 1994. 
 
