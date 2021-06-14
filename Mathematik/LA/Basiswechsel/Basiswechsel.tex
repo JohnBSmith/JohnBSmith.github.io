@@ -46,6 +46,7 @@
 \newcommand{\chem}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
 
 \newcommand{\icol}[1]{
   \big(\!\begin{smallmatrix}#1\end{smallmatrix}\!\big)%
@@ -68,7 +69,7 @@
 Betrachten wir einen Vektor $\bv v$ im Koordinatenraum $\R^2$.
 
 \parspace
-Z.\,B. $\bv v:=\icol{9\\ 5}$.\pause
+Beispielsweise $\bv v:=\icol{9\\ 5}$.\pause
 
 \vspace{-1em}
 \begin{center}
@@ -78,39 +79,39 @@ Z.\,B. $\bv v:=\icol{9\\ 5}$.\pause
 
 \begin{frame}[t]
 \vspace{3em}
-Bezüglich einer Basis $B=(\bv b_1,\bv b_2)$ besitzt der
+Bezüglich einer Basis $A=(\bv a_1,\bv a_2)$ besitzt der
 Vektor eine andere Darstellung.\pause
 
-\vspace{0.8em}
-Sei z.\,B. $\bv b_1 := \icol{4\\ 1}$ und $\bv b_2 := \icol{1\\ 3}$.%
+\parspace
+Sei z.\,B. $\bv a_1 := \icol{4\\ 1}$ und $\bv a_2 := \icol{1\\ 3}$.%
 \pause
 
 \vspace{-1.6em}
 \begin{center}
-\includegraphics[width=72mm]{img/Vektor-in-Basis-B.pdf}
+\includegraphics[width=72mm]{img/Vektor-in-Basis-A.pdf}
 \end{center}
 \end{frame}
 
 \begin{frame}[t]
 \vspace{4em}
-Bezüglich $B$ besitzt der Vektor die Darstellung
-\[\bv v = 2\bv b_1 + 1\bv b_2 = x'\bv b_1 + y'\bv b_2.
+Bezüglich $A$ besitzt der Vektor die Darstellung
+\[\bv v = 2\bv a_1 + 1\bv a_2 = x\bv a_1 + y\bv a_2.
 \]\pause
-Das Tupel $\bv v_B = (x',y')$ nennen wir \emph{Koordinatenvektor}
-zum Vektor $\bv v$ bezüglich Basis $B$.\pause
+Das Tupel $\bv v_A = (x,y)$ nennen wir \emph{Koordinatenvektor}
+zum Vektor $\bv v$ bezüglich Basis $A$.\pause
 
 \parspace
-Angenommen, es gibt nun noch eine weitere Basis $A=(\bv a_1,\bv a_2)$.\\
-Z.\,B. $\bv a_1:=\icol{7\\ 1}$ und $\bv a_2:=\icol{1\\ 2}$.\pause
+Angenommen, es gibt nun noch eine weitere Basis $B=(\bv b_1,\bv b_2)$.\\
+Z.\,B. $\bv b_1:=\icol{7\\ 1}$ und $\bv b_2:=\icol{1\\ 2}$.\pause
 
 \vspace{1.2em}
-Wie findet man dann den Koordinatenvektor $\bv v_A=(x,y)$ mit
-\[\bv v = x\bv a_1 + y\bv a_2?\]
+Wie findet man dann den Koordinatenvektor $\bv v_B=(x',y')$ mit
+\[\bv v = x'\bv b_1 + y'\bv b_2?\]
 \end{frame}
 
 \begin{frame}
 \begin{center}
-\includegraphics[width=72mm]{img/Vektor-in-Basis-BA.pdf}
+\includegraphics[width=72mm]{img/Vektor-in-Basis-AB.pdf}
 \end{center}
 \end{frame}
 
@@ -133,39 +134,49 @@ zu.\pause{} Dann gilt nämlich
 
 \begin{frame}
 Für die Basis $B$ gilt diese Überlegung ebenfalls. Daher ist
-\[\bv v = A\bv v_A = B\bv v_B.\]\pause
-Weil $A$ eine Basis ist, ist $\det(A)\ne 0$, womit $A$ eine
-inverse Matrix $A^{-1}$ besitzt. Multiplizieren wir beide Seiten
-der Gleichung von links mit $A^{-1}$, bekommen wir
-\[\bv v_A = E\bv v_A = A^{-1}A\bv v_A = A^{-1}B\bv v_B.\]
+\[\bv v = B\bv v_B = A\bv v_A.\]\pause
+Weil $B$ eine Basis ist, ist $\det(B)\ne 0$, womit $B$ eine
+inverse Matrix $B^{-1}$ besitzt. Multiplizieren wir beide Seiten
+der Gleichung von links mit $B^{-1}$, erhalten wir
+\[\bv v_B = B^{-1}B\bv v_B = B^{-1}A\bv v_A.\]
 Das ist der gesuchte Koordinatenvektor.
 \end{frame}
 
 \begin{frame}
-Anders ausgedrückt ist $A\bv v_A = B\bv v_B$ ein lineares
-Gleichungssystem in $\bv v_A=(x,y)$.\pause{} Das ist
-\[\begin{pmatrix}a_{11} & a_{12}\\ a_{21} & a_{22}\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}
-= \begin{pmatrix}b_{11} & b_{12}\\ b_{21} & b_{22}\end{pmatrix}\begin{pmatrix}x'\\ y'\end{pmatrix}.
-\]\pause{}
-Im Beispiel ist
-\[\begin{pmatrix}7 & 1\\ 1 & 2\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}
-= \begin{pmatrix}4 & 1\\ 1 & 3\end{pmatrix}\begin{pmatrix}2\\ 1\end{pmatrix}
-= \begin{pmatrix}9\\ 5\end{pmatrix}.\]\pause
-Das macht $x=1$ und $y=2$.
+\strong{Bemerkung.} Für eine beliebige Matrix
+\[B = \begin{pmatrix}b_{11} & b_{12}\\ b_{21} & b_{22}\end{pmatrix}\]
+mit $0\ne \det(B) = b_{11}b_{22}-b_{12}b_{21}$ gibt es die Formel
+\[B^{-1} = \frac{1}{\det(B)}\begin{pmatrix}
+ b_{22} & -b_{12}\\
+-b_{21} &  b_{11}
+\end{pmatrix}.\]
 \end{frame}
 
 \begin{frame}
-Woher ist eigentlich die Darstellung $\bv v_B$ bekannt?\pause
+Anders ausgedrückt ist $B\bv v_B = A\bv v_A$ ein lineares
+Gleichungssystem in $\bv v_B=(x',y')$.\pause{} Das ist
+\[\begin{pmatrix}b_{11} & b_{12}\\ b_{21} & b_{22}\end{pmatrix}\begin{pmatrix}x'\\ y'\end{pmatrix}
+= \begin{pmatrix}a_{11} & a_{12}\\ a_{21} & a_{22}\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}.
+\]\pause{}
+Im Beispiel ist
+\[\begin{pmatrix}7 & 1\\ 1 & 2\end{pmatrix}\begin{pmatrix}x'\\ y'\end{pmatrix}
+= \begin{pmatrix}4 & 1\\ 1 & 3\end{pmatrix}\begin{pmatrix}2\\ 1\end{pmatrix}
+= \begin{pmatrix}9\\ 5\end{pmatrix}.\]\pause
+Das macht $x'=1$ und $y'=2$.
+\end{frame}
 
-\vspace{0.8em}
+\begin{frame}
+Woher ist eigentlich die Darstellung $\bv v_A$ bekannt?\pause
+
+\parspace
 Die bekommen wir auf die gleiche Art.  Die Gleichung
-\[\bv v = B\bv v_B\]
-müssen wir dazu bloß nach $\bv v_B$ umformen. D.\,h.
-$\bv v_B = B^{-1}\bv v$.\pause
+\[\bv v = A\bv v_A\]
+müssen wir dazu bloß nach $\bv v_A$ umformen. Man erhält
+$\bv v_A = A^{-1}\bv v$.\pause
 
-\vspace{0.8em}
-Bzw. es liegt ein lineares Gleichungssystem
-in $\bv v_B$ vor.
+\parspace
+Anders ausgedrückt liegt ein lineares Gleichungssystem
+in $\bv v_A$ vor.
 \end{frame}
 
 \begin{frame}
@@ -173,11 +184,11 @@ in $\bv v_B$ vor.
 \[\bv v = \begin{pmatrix}9\\ 5\end{pmatrix} = 
 9\begin{pmatrix}1\\ 0\end{pmatrix} + 5\begin{pmatrix}0\\ 1\end{pmatrix}
 = 9\bv e_1 + 5\bv e_2.\]\pause
-Die Matrix zur Standardbasis $(\bv e_1,\bv e_2)$
+Die Matrix zur Standardbasis $E=(\bv e_1,\bv e_2)$
 ist die Einheitsmatrix
 \[E=\begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}.
 \]\pause
-Daher gilt $\bv v = E\bv v_E = \bv v_E$. D.\,h. ein Koordinatenvektor
+Daher gilt $\bv v = E\bv v_E = \bv v_E$. Das heißt, ein Koordinatenvektor
 ist sein eigener Koordinatenvektor. 
 \end{frame}
 
@@ -192,12 +203,12 @@ Nun tauschen wir $\R^2$ gegen einen abstrakten Vektorraum $V$ aus.
 Damit ist gemeint, dass nun nicht mehr a priori ein absolutes
 Koordinatensystem vorliegt.\pause
 
-\vspace{0.8em}
+\parspace
 Dies zieht einige Konsequenzen nach sich. Zum einen existiert für
 $\bv v$ keine absolute Darstellung mehr. Zudem sind auch die
 Basisvektoren davon betroffen.\pause
 
-\vspace{0.8em}
+\parspace
 Da die Matrizen $A$ und $B$ jeweils aus der absoluten Darstellung
 ihrer Basisvektoren aufgebaut sind, existieren auch diese nicht mehr.
 \end{frame}
@@ -207,7 +218,7 @@ ihrer Basisvektoren aufgebaut sind, existieren auch diese nicht mehr.
 
 \vspace{-2em}
 \begin{center}
-\includegraphics[width=72mm]{img/Vektor-in-Basis-BA.pdf}
+\includegraphics[width=72mm]{img/Vektor-in-Basis-AB.pdf}
 \end{center}
 \end{frame}
 
@@ -216,24 +227,24 @@ ihrer Basisvektoren aufgebaut sind, existieren auch diese nicht mehr.
 
 \vspace{-2em}
 \begin{center}
-\includegraphics[width=72mm]{img/Abstrakt-in-Basis-BA.pdf}
+\includegraphics[width=72mm]{img/Abstrakt-in-Basis-AB.pdf}
 \end{center}
 \end{frame}
 
 \begin{frame}
 Was allerdings existiert, ist die Matrix
-\[T_A^B := A^{-1}B.\]\pause
+\[T_B^A := B^{-1}A.\]\pause
 Diese Matrix nennen wir \emph{Transformationsmatrix}. Sie wandelt die
-Koordinaten von $\bv v$ bezüglich Basis $B$ in die Koordinaten
-bezüglich Basis $A$ um.\pause
+Koordinaten von $\bv v$ bezüglich Basis $A$ in die Koordinaten
+bezüglich Basis $B$ um.\pause
 
-\vspace{0.8em}
+\parspace
 Als Formel:
-\[\bv v_A = T_A^B \bv v_B.\]
+\[\bv v_B = T_B^A \bv v_A.\]
 \end{frame}
 
 \begin{frame}
-Wie bekommt man nun aber die Transformationsmatrix, wenn nur
+Wie bekommt man nun aber die Transformationsmatrix, wenn lediglich
 eine Beziehung zwischen den Basisvektoren vorliegt? Gegeben sei
 die Beziehung
 \begin{align*}
@@ -248,7 +259,7 @@ Dies lässt sich in Kurzform schreiben als
 Betrachten wir zur Hilfe kurz noch einmal den $\R^2$.
 Da muss gelten
 \[a_{ki} = \sum_{j=1}^2 s_{ji}b_{kj}.\]\pause
-Na das ist doch eine Matrizenmultiplikation. Nämlich
+Aber das ist doch eine Matrizenmultiplikation. Nämlich
 \[A^T = S^T B^T\]
 mit
 \[S = \begin{pmatrix}s_{11} & s_{12}\\
@@ -261,46 +272,79 @@ s_{21} & s_{22}\end{pmatrix}.\]
 \vspace{1em}
 Transposition auf beiden Seiten der Gleichung bringt
 \[A = (S^T B^T)^T = BS.\]\pause
-Infolge gilt $A^{-1} = S^{-1} B^{-1}$, und somit
-$A^{-1}B = S^{-1}.$\pause
+Infolge gilt $S = B^{-1}A$.\pause
 
 \vspace{1em}
-Schließlich haben wir $T_A^B=S^{-1}$. Und dies ist auch wieder
-im abstrakten Vektorraum gültig.
+Schließlich gelangen wir zu $T_B^A=S$.
 \end{frame}
 
 \begin{frame}
-Umgekehrt ist mit dieser Einsicht die Beziehung für das betrachtete
-Beispiel ermittelbar. Es gilt
-\[S = (A^{-1}B)^{-1} = B^{-1}A.\]\pause
-Das macht
-\[S = \begin{pmatrix}4 & 1\\ 1 & 3\end{pmatrix}^{-1}
-\begin{pmatrix}7 & 1\\ 1 & 2\end{pmatrix}
-= \tfrac{1}{11}\begin{pmatrix}20 & 1\\ -3 & 7\end{pmatrix}.\]
-Konkret ist
+Dies verbleibt auch dann gültig, wenn der Vektor $\bv v$
+nicht in den Koordinatenraum $\R^2$ eingebettet ist.\pause
+
+\vspace{1em}
+\strong{Beweis.} Laut der Beziehung zwischen den Basen gilt
+\[\bv v = \sum_{i=1}^2 (\bv v_A)_i\bv a_i
+= \sum_{i=1}^2 (\bv v_A)_i\sum_{j=1}^2 s_{ji}\bv b_j
+= \sum_{j=1}^2\bigg(\sum_{i=1}^2 s_{ji}(\bv v_A)_i\bigg)\bv b_j,\]
+und somit
+\[(\bv v_B)_j = \sum_{i=1}^2 s_{ji}(\bv v_A)_i.\pause\]
+Kurz $\bv v_B = S\bv v_A$.
+Demzufolge gilt $T_B^A = S$.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\strong{Bemerkung.}
+Auf die folgende Weise kann man den Beweis in kompakter Form ohne
+Indexrechnungen durchführen.\pause
+
+\vspace{1em}
+Zwar gibt es die Matrizen $A,B$ nicht mehr, wir können aber dennoch
+die linearen Abbildungen $\Phi_A,\Phi_B$ mit
+\[\bv v = \Phi_B(\bv v_B) = \Phi_A(\bv v_A)\]
+betrachten. Man beachte, dass $\bv a_k = \Phi_A(\bv e_k)$
+und $\bv b_k = \Phi_B(\bv e_k)$ gilt. Die Beziehung ist damit
+kompakt notierbar als
+\[\Phi_A = \Phi_B\circ S.\]\pause
+Demzufolge gilt
+\[\Phi_B(\bv v_B) = \Phi_A(\bv v_A) = (\Phi_B\circ S)(\bv v_A) = \Phi_B(S\bv v_A).\]
+Weil $\Phi_B$ invertierbar ist, darf man $\Phi_B^{-1}$ auf beide
+Seiten anwenden. Man erhält wieder $\bv v_B = S\bv v_A$.
+\end{frame}
+
+\begin{frame}
+Wurde eine ähnliche Rechnung nicht bereits mit Matrizen
+durchgeführt?\pause
+
+\vspace{1em}
+\strong{Das ist kein Zufall.} Bei Einbettung in den
+Koordinatenraum gilt
 \begin{align*}
-\bv a_1 &= \tfrac{20}{11}\bv b_1 - \tfrac{3}{11}\bv b_2,\\
-\bv a_2 &= \tfrac{1}{11}\bv b_1 + \tfrac{7}{11}\bv b_2.
+\Phi_A &= A,\\
+\Phi_B &= B.
+\end{align*}
+Das heißt, die Rechnung mit $\Phi_A,\Phi_B$ ist lediglich eine
+abstrakte Form der bereits zuvor durchgeführten Rechnung mit
+$A,B$.
+\end{frame}
+
+\begin{frame}
+Umgekehrt ist mit der Einsicht $S = B^{-1}A$ die Beziehung
+für das betrachtete Beispiel ermittelbar. Mit
+\[S = \begin{pmatrix}7 & 1\\ 1 & 2\end{pmatrix}^{-1}
+\begin{pmatrix}4 & 1\\ 1 & 3\end{pmatrix}
+= \tfrac{1}{13}\begin{pmatrix}7 & -1\\ 3 & 20\end{pmatrix}\]
+findet man
+\begin{align*}
+\bv a_1 &= \tfrac{7}{13}\bv b_1 + \tfrac{3}{13}\bv b_2,\\
+\bv a_2 &= \tfrac{-1}{13}\bv b_1 + \tfrac{20}{13}\bv b_2.
 \end{align*}
 \end{frame}
 
 \begin{frame}
-\strong{Bemerkung.} Für eine beliebige Matrix
-\[B = \begin{pmatrix}b_{11} & b_{12}\\ b_{21} & b_{22}\end{pmatrix}\]
-mit $0\ne \det(B) = b_{11}b_{22}-b_{12}b_{21}$ gibt es die Formel
-\[B^{-1} = \frac{1}{\det(B)}\begin{pmatrix}
- b_{22} & -b_{12}\\
--b_{21} &  b_{11}
-\end{pmatrix}.\]
-\end{frame}
-
-\begin{frame}
 Ende.
-\vfill\hfill\modest{Juli 2020}\\
+\vfill\hfill\modest{Juni 2021}\\
 \hfill\modest{Creative Commons CC0 1.0}
 \end{frame}
 
-
 \end{document}
-
-

@@ -64,7 +64,7 @@
 {\huge\normalfont\sffamily\bfseries Aufgaben\par}
 
 \vspace{2mm}
-\noindent August 2020
+\noindent Juni 2021
 
 \vspace{2mm}
 \noindent
@@ -182,7 +182,7 @@ Zusammen ergibt das
 \begin{equation}
 \int x^2\sin x\,\mathrm dx = -x^2\cos x +2x\sin x+2\cos x.
 \end{equation}
-Probe durch Ableiten: ok. $\Box$
+Probe durch Ableiten: OK. $\Box$
 
 \begin{Aufgabe}
 Berechne $\displaystyle\int\ee^x\sin x\,\mathrm dx$.
@@ -207,7 +207,7 @@ und somit
 \begin{equation}
 \int \ee^x\sin x\,\mathrm dx = \frac{1}{2}\ee^x(\sin x-\cos x)
 \end{equation}
-Probe durch Ableiten: ok. $\Box$
+Probe durch Ableiten: OK. $\Box$
 
 Auf diese Art lässt sich auch $\displaystyle\int \ee^{ax}\sin x\,\mathrm dx$
 berechnen.
@@ -1586,25 +1586,25 @@ $A=\{1,(0,1)\}$. Zerlegen wir $A$ nun in disjunkte Teilereignisse,
 dann dürfen wir die Wahrscheinlichkeiten dieser Summieren (zweite
 Pfadregel):
 \[P(A) = P(\{1\}\cup\{(0,1)\}) = P(\{1\})+P(\{(0,1)\})
-= \frac{1}{2}+\frac{1}{4} = \frac{3}{4} = 75\%.\]
+= \frac{1}{2}+\frac{1}{4} = \frac{3}{4} = 75\,\%.\]
 Gibt es nun noch einen dritten Versuch, dann ist
 \[\Omega = \{1,(0,1),(0,0,1),(0,0,0)\}\]
 und $A=\{0,(0,1),(0,0,1)\}$ (das sind die Tupel wo eine 1 vorkommt).
 Es ergibt sich
-\[P(A) = \frac{1}{2}+\frac{1}{4}+\frac{1}{8} = \frac{7}{8} = 87.5\%.\]
+\[P(A) = \frac{1}{2}+\frac{1}{4}+\frac{1}{8} = \frac{7}{8} = 87.5\,\%.\]
 Macht man immer so weiter, dann ergibt sich die Ergebnismenge
 \[\Omega = \{1,(0,1),(0,0,1),(0,0,0,1),(0,0,0,0,1),\ldots\}.\]
 Die Warscheinlichkeit spätestens beim $n$-ten Glas einen Ingwer-Smoothie
 zu erhalten ist dann offenbar
 \[P_n = \sum_{k=1}^n \frac{1}{2^k} = \frac{100\%}{2^n}\sum_{k=1}^n 2^{n-k}.\]
 Es ergibt sich
-\[(P_n) = (50\%,75\%,87.5\%,93.75\%,96.875\%,\ldots).\]
+\[(P_n) = (50\,\%,75\,\%,87.5\,\%,93.75\,\%,96.875\,\%,\ldots).\]
 Befinden sich nun 20 Gläser auf dem Tisch, dann haben im ersten
 Versuch beide Zweige eine Wahrscheinlichkeit von $10/20$. Im
 zweiten Versuch gilt jedoch $10/19$ für Ergebnis~$1$ und $9/19$ für
 Ergebnis~$0$. Somit ist
 \[P(A) = \frac{10}{20}+\frac{10}{20}\cdot\frac{10}{19}
-= \frac{29}{38} \approx 76.32\%.\]
+= \frac{29}{38} \approx 76.32\,\%.\]
 Wie erwartet, wird es wahrscheinlicher, spätestens beim zweiten
 Versuch einen Ingwer-Smoothie zu erhalten. Für spätestens beim $n$-ten
 Glas ergibt sich die relativ komplizierte Formel
@@ -1698,7 +1698,7 @@ Schließlich ergibt sich
 
 \begin{figure}[t]
 \begin{lstlisting}[language=Python]
-def quotient_set(M,proj):
+def quotient_set(M, proj):
     d = {}
     for t in M:
         y = proj(t)
@@ -1708,18 +1708,18 @@ def quotient_set(M,proj):
             d[y] = [t]
     return d
 
-def expected_value(Omega,proj):
+def expected_value(Omega, proj):
     p = 1.0/len(Omega)
-    Q = quotient_set(Omega,proj)
-    return p*sum(s*len(a) for s,a in Q.items())
+    Q = quotient_set(Omega, proj)
+    return p*sum(s*len(a) for s, a in Q.items())
 
-Omega4 = [[W1,W2,W3,W4]
-    for W1 in range(1,7)
-    for W2 in range(1,7)
-    for W3 in range(1,7)
-    for W4 in range(1,7)]
+Omega4 = [[W1, W2, W3, W4]
+    for W1 in range(1, 7)
+    for W2 in range(1, 7)
+    for W3 in range(1, 7)
+    for W4 in range(1, 7)]
     
-print(expected_value(Omega4, lambda t: sum(t)-min(t)))
+print(expected_value(Omega4, lambda t: sum(t) - min(t)))
 \end{lstlisting}
 \caption{Algorithmus zur Berechnung des Erwartungswertes}
 \label{fig:Algorithmus-Erwartungswert}
@@ -1784,14 +1784,45 @@ def prod(t):
 def Mittelwert(a):
     return sum(a)/len(a)
 
-def Erwartungswert(k,a):
-    return Mittelwert([prod(t) for t in permutations(a,k)])
+def Erwartungswert(k, a):
+    return Mittelwert([prod(t) for t in permutations(a, k)])
 
-for k in range(1,6):
-    print("{} | {}".format(k,Erwartungswert(k,[0,0,1,2,8])))
+for k in range(1, 6):
+    print("{} | {}".format(k, Erwartungswert(k, [0, 0, 1, 2, 8])))
 \end{lstlisting}
 \caption{Algorithmus zur Berechnung des Erwartungswertes}
 \label{fig:Erwartungswerte}
+\end{figure}
+
+\newpage
+\begin{Aufgabe}
+Gegeben sind zwei Urnen. In der ersten Urne befinden sich drei
+blaue und zwei grüne Kugeln. In der zweiten Urne befinden sich
+zwei blaue und drei grüne Kugeln. Die Urne wird durch den
+Wurf einer Münze gewählt. Aus der gewählten Urne werden ohne Zurücklegen
+eine erste und eine zweite Kugel gezogen. Wie groß ist die
+Wahrscheinlichkeit, eine zweite blaue Kugel zu ziehen, falls bereits
+eine erste blaue Kugel gezogen wurde?
+\end{Aufgabe}
+\strong{Lösung.} Der relevante
+Teil des Pfadbaums ist in Abb.~\ref{fig:Pfadbaum-zwei-Urnen} dargestellt.
+Sei $B_1$ das Ereignis, die erste Kugel blau zu ziehen und
+$B_2$ das Ereignis, die zweite Kugel blau zu ziehen. Gemäß den
+Pfadregeln ist
+\[P(B_1\cap B_2)\;=\; \frac{1}{2}\cdot\frac{3}{5}\cdot\frac{2}{4}
+\;+\; \frac{1}{2}\cdot\frac{2}{5}\cdot\frac{1}{4} \;=\; \frac{1}{5}\]
+und
+\[P(B_1) \;=\; \frac{1}{2}\cdot\frac{3}{5}\;+\;\frac{1}{2}\cdot\frac{2}{5}
+\;=\; \frac{1}{2}.\]
+Man erhält die bedingte Wahrscheinlichkeit
+\[P(B_2\mid B_1) = \frac{P(B_1\cap B_2)}{P(B_1)} = \frac{2}{5} = 40\,\%.\;\qedsymbol\]
+
+\begin{figure}[b]
+\begin{center}
+\includegraphics[width=0.42\textwidth]{img/Zwei-Urnen.pdf}
+\end{center}
+\caption{Pfadbaum der Ziehung blauer Kugeln}
+\label{fig:Pfadbaum-zwei-Urnen}
 \end{figure}
 
 \newpage

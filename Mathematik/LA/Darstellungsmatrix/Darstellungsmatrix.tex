@@ -1,0 +1,163 @@
+\documentclass[9pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% patch the look of +, = in arev
+\usefonttheme{serif} 
+
+\usepackage{arev}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+
+\newcommand{\ee}{\mathrm e}
+\newcommand{\ui}{\mathrm i}
+\newcommand{\real}{\operatorname{Re}}
+\newcommand{\imag}{\operatorname{Im}}
+\newcommand{\uv}[1]{\underline{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
+
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Abb}{\operatorname{Abb}}
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\chem}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+
+\newcommand{\icol}[1]{
+  \big(\!\begin{smallmatrix}#1\end{smallmatrix}\!\big)%
+}
+\newcommand{\parspace}{\vspace{0.8em}}
+
+\title{Was ist eine Darstellungsmatrix?}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+
+\end{frame}
+
+\begin{frame}
+Gegeben sei eine lineare Abbildung
+\[f\colon\R^2\to\R^2,\quad
+f(\bv v) = M\bv v,\]
+beispielsweise durch die Matrix
+\[M := \begin{pmatrix}0 & -1\\ 1 & 0\end{pmatrix}.\]\pause
+Außerdem seien zwei Basen gegeben. Diese seien wieder
+\[A = (\bv a_1,\bv a_2),\quad \bv a_1 := \icol{4\\ 1},\quad \bv a_2 := \icol{1\\ 3}\phantom{,}\]
+und
+\[B = (\bv b_1,\bv b_2),\quad \bv b_1 := \icol{7\\ 1},\quad \bv b_2 := \icol{1\\ 2}.\]
+\end{frame}
+
+\begin{frame}
+Wir wollen eine Darstellung der linearen Abbildung bezüglich Basis
+$A$ für das Argument und Basis $B$ für das Bild bestimmen.
+Betrachten wir dazu die Gleichung $\bv w = f(\bv v)$.\pause
+
+\parspace
+Eingesetzt wird $\bv v = A\bv v_A$ und $\bv w = B\bv w_B$. Die
+Gleichung nimmt die Form
+\[B\bv w_B = f(A\bv v_A) = MA\bv v_A\]
+an. Umformung führt zu
+\[\bv w_B = B^{-1}MA\bv v_A.\]\pause
+Die Matrix
+\[M_B^A(f) := B^{-1}MA\]
+nennt man die \emph{Darstellungsmatrix} der linearen Abbildung $f$
+bezüglich $A$ für das Argument und $B$ für das Bild.
+\end{frame}
+
+\begin{frame}
+Man bekommt
+\[M_B^A(f) = \tfrac{1}{13}\begin{pmatrix}
+-6 & -7\\
+29 & 10
+\end{pmatrix}.\]
+\end{frame}
+
+\begin{frame}
+\strong{Bemerkung.} Betrachten wir die Standardbasis $E=(\bv e_1,\bv e_2)$, so dass
+\[E = \begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}\]
+die Einheitsmatrix ist. Für diese gilt $E^{-1}=E$. Dementsprechend ist
+\[M_E^E(f) = E^{-1}ME = M.\]
+Das heißt, eine als Matrix betrachtete lineare Abbildung zwischen
+Koordinatenräumen ist ihre eigene Darstellungsmatrix bezüglich der
+Standardbasis.
+\end{frame}
+
+\begin{frame}
+Für abstrakte Vektorräume gilt eine analoge Überlegung.
+
+\parspace
+Sei $f\colon V\to W$ eine lineare Abbildung zwischen abstrakten
+Vektorräumen.\pause
+
+\parspace
+Um die Vektorräume zugänglich zu machen, benötigen wir
+\begin{itemize}
+\item eine Basis $A$ von $V$,
+\item eine Basis $B$ von $W$.
+\end{itemize}
+
+\parspace
+Damit erhalten wir
+\begin{itemize}
+\item ein Koordinatensystem $\Phi_A$, so dass $\bv v = \Phi_A(\bv v_A)$,
+\item ein Koordinatensystem $\Phi_B$, so dass $\bv w = \Phi_B(\bv w_B)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Die Gleichung $\bv w = f(\bv v)$ nimmt damit die Gestalt
+\[\Phi_B(\bv w_B) = f(\Phi_A\bv v_A)\]
+an. Umformung führt zu
+\[\bv w_B = \Phi_B^{-1}(f(\Phi_A(\bv v))) = (\Phi_B^{-1}\circ f\circ\Phi_A)(\bv v_A).\]\pause
+Weil
+\[M_B^A(f) := \Phi_B^{-1}\circ f\circ\Phi_A\]
+ein lineare Abbildung zwischen Koordinatenräumen ist, darf man sie
+als Matrix betrachten. Wie zuvor sprechen wir von der Darstellungsmatrix.
+\end{frame}
+
+\begin{frame}
+\strong{Bemerkung.} Aus der Definition folgt
+\[M_B^A(\id) = \Phi_B^{-1}\circ\id\circ\Phi_A = \Phi_B^{-1}\circ\Phi_A = T_B^A.\]
+Für $\id(\bv v)=E\bv v$ ist das die Matrizenrechnung
+\[M_B^A(\id) = B^{-1}EA = B^{-1}A = T_B^A.\]
+Das heißt, die Darstellungsmatrix der identischen Abbildung ist die
+Transformationsmatrix für den Basiswechsel von $A$ zu $B$.
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{Juni 2021}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+\end{document}
+
+
