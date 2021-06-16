@@ -749,7 +749,7 @@ fn main() {
 
 <p>Das Feld braucht für diese Aufgabe lediglich ausgeborgt werden,
 wofür eine Referenz auf das Feld genügt. Aus disem Grund befindet
-sich in der Typ-Signatur des Arguments ein
+sich in der Typsignatur des Arguments ein
 Et-Zeichen&nbsp;(<code>&amp;</code>). Das Feld selbst besitzt
 den Typ <code>[i32;&nbsp;4]</code>. Der Typ
 <code>&amp;[i32;&nbsp;4]</code> beschreibt eine <i>Leihgabe</i>
@@ -791,11 +791,11 @@ geschrieben <code>&amp;[i32]</code>. Die Signatur der Funktion
 abgeändert werden, und schon lassen sich Summen von Feldern beliebiger
 Länge bilden.
 
-<p>Ein Slice besteht intern aus zwei Bestandteilen, einem Zeiger auf den
-Anfang des Feldes und der Länge des Feldes. Slices können auch
-zusammenhängende Teilbereiche eines Feldes beschreiben. Wenn
-nur die ersten drei Zahlen des Feldes aufsummiert werden sollen,
-sieht das Programm wie folgt aus:
+<p>Ein Slice besteht intern aus zwei Bestandteilen: erstens einem
+Zeiger auf den Anfang des Feldes, und zweitens der Länge des Feldes.
+Slices können auch zusammenhängende Teilbereiche eines Feldes
+beschreiben. Wenn nur die ersten drei Zahlen des Feldes aufsummiert
+werden sollen, sieht das Programm wie folgt aus:
 <pre class="rust ibox">
 fn main() {
     let a: [i32; 4] = [1, 2, 3, 4];
@@ -867,7 +867,7 @@ fn main() {
 <p>Da dem Feld selbst Veränderung widerfährt, ist hier eine
 <i>alleinige Referenz</i> (<i>unique reference</i>) auf den
 Gesamtausschnitt des Feldes notwendig. Eine ausführliche Erläuterung,
-warum das so ist, folgt später. Zunächst muss man nur wissen dass diese
+warum das so ist, folgt später. Zunächst genügt es zu wissen dass diese
 Art von Referenz die Signatur
 <code>&amp;mut</code> anstelle von <code>&amp;</code> besitzt.
 Das <code>mut</code> (mutable) weist daraufhin, dass die Daten,
@@ -893,8 +893,8 @@ in der Praxis jedoch leider ineffizient.
 <code>&amp;a[..j]</code>, das ist <code>&amp;a[0..j]</code>. Demnach
 hat <code>&amp;a[..]</code> die Bedeutung <code>&amp;a[0..a.len()]</code>.
 
-<p>Ausschnitte sind recht praktisch, daher sind für diese eine ganze
-Reihe von Methoden definiert. Beispielsweise ist eine Methode zur
+<p>Ausschnitte sind recht praktisch, weshalb für diese eine ganze
+Reihe von Methoden definiert sind. Beispielsweise ist eine Methode zur
 Sortierung eines veränderbaren Ausschnittes vorhanden:
 <pre class="rust ibox">
 fn main() {
