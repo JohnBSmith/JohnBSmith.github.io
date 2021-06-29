@@ -27,11 +27,12 @@ ein $k$ mit $b-a=km$. Dann ist $a-b=-km$. Setze $k'=-k$.
 Es gibt also $k'$ mit $a-b=k'm$, somit gilt $b\equiv a$.
 
 Bei der Transitivität gibt es nach Voraussetzung $k$ mit
-$b-a=km$ und $l$ mit $b-c=lm$. D.\,h. es gilt
+$b-a=km$ und $l$ mit $b-c=lm$. Das heißt, es gilt
 \[b = a+km = c+lm\implies c-a = km-lm = (k-l)m.\]
-Setze $k'=k-l$. Es gibt also $k'$ mit $c-a=k'm$. Somit gilt $a\equiv c$.\;\qedsymbol
+Setze $k'=k-l$. Es gibt also $k'$ mit $c-a=k'm$.
+Somit gilt $a\equiv c$.\;\qedsymbol
 
-\begin{Satz}
+\begin{Satz}\label{Kongruenz-add-sub}
 Sind $a,b,c$ ganze Zahlen, dann gilt
 \begin{align*}
 a\equiv b\pmod{m}&\iff a+c\equiv b+c\pmod{m},\\
@@ -49,7 +50,7 @@ a\equiv b\pmod{m}
 Für die Subtraktion von $c$ ist die Überlegung analog.\;\qedsymbol
 
 \newpage
-\begin{Satz}
+\begin{Satz}\label{Kongruenz-mul}
 Sind $a,b,c$ ganze Zahlen, dann gilt
 \[a\equiv b\pmod{m} \implies ac\equiv bc\pmod{m}.\]
 \end{Satz}
@@ -97,3 +98,89 @@ Es gilt
 Setze $k=1$. Bei
 \[a\equiv a-m\pmod{m}\iff (\exists k\in\Z)(km=(a-m)-a=-m)\]
 setze $k=-1$.\;\qedsymbol
+
+\section{Der Restklassenring}
+
+Wir könnten nun beginnen, mit der Kongruenzenrechnung interessante
+Probleme zu lösen. Zunächst möchte ich aber erläutern, wie die
+Kongruenzenrechnung mit dem Restklassenring zusammenhängt. Unter
+diesem Blickwinkel bekommen wir ein tieferes Verständnis und können
+Mittel der Ringtheorie und Gruppentheorie anwenden.
+
+Zu einer ganzen Zahl $a$ ist die Restklasse modulo $m$ definiert als 
+\[[a]_m := \{x\mid x\equiv a\pmod m\}.\]
+Eine alternative Schreibweise für $[a]_m$ ist $a+m\Z$. Weil die
+Kongruenz eine Äquivalenzrelation ist, handelt es sich bei den
+Restklassen um Äquivalenzklassen. Wir betrachten nun die
+Quotientenmenge
+\[\Z/m\Z := \{[a]_m\mid a\in\Z\}.\]
+Nun können wir die Addition und Multiplikation von Restklassen
+definieren.
+\begin{Satz}
+Auf $\Z/m\Z$ sind die beiden Operationen
+\begin{align*}
+[a]_m + [b]_m &:= [a+b]_m,\\
+[a]_m\cdot [b]_m &:= [ab]_m
+\end{align*}
+wohldefiniert.
+\end{Satz}
+\strong{Beweis.} Zu zeigen ist, dass $a+b\equiv x+y$ gilt, sofern
+$a\equiv x$ und $b\equiv y$ ist. Gemäß Satz \ref{Kongruenz-add-sub} gilt
+\begin{align*}
+a\equiv x &\iff a+b\equiv x+b,\\
+b\equiv y &\iff x+b\equiv x+y.
+\end{align*}
+Aus den beiden Prämssen erhalten wir demzufolge
+$a+b\equiv x+b\equiv x+y$.
+Die Argumentation zur Multiplikation ist analog, wobei
+Satz \ref{Kongruenz-mul} zur Anwendung kommt.\,\qedsymbol
+
+Die Struktur $(\Z/m\Z,+,\cdot)$ nennt man den \emph{Restklassenring}
+zum Modul $m$.
+
+\begin{Lemma}\label{Surjektion-strukturerhaltend}
+Sei $M$ eine Struktur mit einer Verknüpfung, von
+Magma bis kommutative Gruppe. Ist
+$\varphi\colon M\to M'$ eine strukturerhaltende Surjektion,
+dergestalt dass $\varphi(ab)=\varphi(a)\varphi(b)$, dann ist
+$M'$ von derselben Struktur und $\varphi$ ein Homomorphismus.
+\end{Lemma}
+\strong{Beweis.} Die Verknüpfung auf $M$ sei abgeschlossen. Weil
+$\varphi$ surjektiv ist, gibt es zu $a',b'\in M'$ immer
+$a,b\in M$ mit $a'=\varphi(a)$ und $b'=\varphi(b)$. Somit gilt
+\[a'b' = \varphi(a)\varphi(b) = \varphi(ab)\in M'.\]
+Die Verknüpfung auf $M$ erfülle das Assoziativgesetz. Dann gilt
+\[(a'b')c' = \varphi(ab)\varphi(c) = \varphi(abc)
+= \varphi(a)\varphi(bc) = a'(b'c').\]
+Die Verknüpfung auf $M$ habe ein neutrales Element $e$. Dann gilt
+\[\varphi(a)=\varphi(ea) = \varphi(e)\varphi(a),\quad
+\varphi(a)=\varphi(ae)=\varphi(a)\varphi(e).\]
+Demzufolge besitzt $M'$ mit $e':=\varphi(e)$ ein neutrales Element.
+
+Zur Verknüpfung auf $M$ gebe es zu jedem Element ein inverses. Dann gilt
+\[\varphi(e) = \varphi(aa^{-1}) = \varphi(a)\varphi(a^{-1}),\quad
+\varphi(e) = \varphi(a^{-1}a) = \varphi(a^{-1})\varphi(a).\]
+Demzufolge ist $\varphi(a)^{-1}=\varphi(a^{-1})$.
+
+Die Verknüpfung auf $M$ sei kommutativ. Dann gilt
+\[a'b' = \varphi(a)\varphi(b) = \varphi(ab) = \varphi(ba) = \varphi(b)\varphi(a) = b'a'.\]
+Somit ist die Verknüpfung auf $M'$ kommutativ.\,\qedsymbol
+
+\begin{Satz} Jeder Restklassenring ist ein kommutativer unitärer Ring.
+\end{Satz}
+\strong{Beweis.} Bereits bewiesen wurde, dass die ganzen Zahlen einen
+kommutativen unitären Ring bilden. Wir betrachten nun die
+Quotientenabbildung
+\[\pi\colon\Z \to \Z/m\Z,\quad \pi(a):=[a]_m.\]
+Die Operationen wurden so definiert dass
+$\pi(a+b)=\pi(a)+\pi(b)$ und $\pi(ab)=\pi(a)\pi(b)$ gilt.
+Gemäß Lemma \ref{Surjektion-strukturerhaltend} ist $(\Z/m\Z,+)$ also
+eine kommutative Gruppe und $(\Z/m\Z,\cdot)$ ein kommutatives
+Monoid. Es verbleibt noch das Distributivgesetz zu prüfen. Man rechnet
+\begin{align*}
+a'(b'+c') &= \pi(a)(\pi(b)+\pi(c)) = \pi(a)(\pi(b+c))
+= \pi(a(b+c)) = \pi(ab+ac)\\
+&= \pi(ab)+\pi(ac) = \pi(a)\pi(b)+\pi(a)\pi(c) = a'b'+a'c'.
+\end{align*}
+Damit ist der Satz gezeigt, und ferner ist gezeigt dass $\pi$ ein
+Eins"=erhaltender Ringhomomorphismus ist.\,\qedsymbol
