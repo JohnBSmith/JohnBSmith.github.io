@@ -138,26 +138,21 @@ Satz \ref{Kongruenz-mul} zur Anwendung kommt.\,\qedsymbol
 Die Struktur $(\Z/m\Z,+,\cdot)$ nennt man den \emph{Restklassenring}
 zum Modul $m$.
 
-\begin{Satz} Jeder Restklassenring ist ein kommutativer unitärer Ring.
-\end{Satz}
+\begin{Korollar}
+Jeder Restklassenring ist ein kommutativer unitärer Ring.
+\end{Korollar}
 \strong{Beweis.} Bereits bewiesen wurde, dass die ganzen Zahlen einen
-kommutativen unitären Ring bilden. Wir betrachten nun die
-Quotientenabbildung
-\[\varphi\colon\Z \to \Z/m\Z,\quad \varphi(a):=[a]_m.\]
-Aufgrund der Wohldefiniertheit der Addition und Multiplikation ist
-Kongruenz modulo $m$ eine Kongruenzrelation. Gemäß Satz
-\ref{Kongruenz-Quotient} ist $(\Z/m\Z,+)$ also eine kommutative Gruppe
-und $(\Z/m\Z,\cdot)$ ein kommutatives Monoid. Es verbleibt noch das
-Distributivgesetz zu prüfen. Man rechnet
-\begin{align*}
-a'(b'+c') &= \varphi(a)(\varphi(b)+\varphi(c)) = \varphi(a)(\varphi(b+c))
-= \varphi(a(b+c)) = \varphi(ab+ac)\\
-&= \varphi(ab)+\varphi(ac) = \varphi(a)\varphi(b)+\varphi(a)\varphi(c)
-= a'b'+a'c'.
-\end{align*}
-Damit ist der Satz gezeigt, und ferner ist gezeigt dass $\varphi$ ein
-Eins"=erhaltender Ringhomomorphismus ist.\,\qedsymbol
+kommutativen unitären Ring bilden. Aufgrund der Wohldefiniertheit der
+Addition und Multiplikation ist Kongruenz modulo $m$ eine
+Kongruenzrelation. Satz \ref{Kongruenz-Ring-Quotient} zeigt somit die
+Behauptung.\,\qedsymbol
 
+Zudem ist die Quotientenabbildung
+\[\varphi\colon\Z \to \Z/m\Z,\quad \varphi(a):=[a]_m.\]
+ein Eins-erhaltender Ringhomomorphismus, wie aus dem Beweis
+von Satz \ref{Kongruenz-Ring-Quotient} hervorgeht.
+
+\newpage
 \section{Euklidische Division}
 
 \begin{Lemma}[Lemma zur euklidischen Division]\mbox{}\\*
@@ -185,4 +180,21 @@ Sei nun $a$ beliebig und $b<0$. Dann gibt es $q,r$ mit $a=(-b)q+r$.
 Setze also $q':=-q$ und $r':=r$. Damit gilt $a=bq'+r'$, womit
 auch in diesem Fall ein Quotient und ein Rest gefunden ist.\,\qedsymbol
 
+\strong{Beweis der Eindeutigkeit.} Das Paar $q,r$ erfülle
+$a=bq+r$ und $q',r'$ erfülle ebenfalls $a=bq'+r'$. Dann gilt
+\[bq+r = bq'+r',\iff b(q-q') = r'-r,\implies |b| |q-q'| = |r'-r|.\]
+Aus $0<r<|b|$ und $0<r'<|b|$ erhält man außerdem $|r'-r|<|b|$. Somit
+muss $|b| |q-q'| < |b|$ sein, also $|q-q'| < 1$. Eine nichtnegative
+ganze Zahl kann aber nur dann kleiner als eins sein, wenn sie null
+ist. Damit hat man
+\[|q-q'|=0,\iff q-q'=0,\iff q=q'.\]
+Entsprechend folgt $r=r'$.\,\qedsymbol
+
+Bei der euklidischen Division $a:b$ ist $(a\bmod b)$ eine geläufige
+Schreibweise für den Rest. Das Lemma zur euklidischen Division sagt uns,
+dass jede Restklasse von $\Z/m\Z$ einen kanonischen Repräsentant
+besitzt. Nämlich besitzt die Restklasse $[a]_m$ den kanonischen
+Repräsentant $r=(a\bmod m)$, denn $a=mq+r$ bedeutet dass $a-r$ durch
+$m$ teilbar ist, also
+\[a\equiv r\pmod m,\quad\text{bzw.}\quad [a]_m = [r]_m.\]
 

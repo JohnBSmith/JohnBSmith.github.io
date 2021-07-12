@@ -21,9 +21,9 @@ der Zweiwertigkeit}\index{Prinzip der Zweiwertigkeit} geläufig.
 Wir schreiben $0=\text{falsch}$ und $1=\text{wahr}$, das ist schön
 kurz und knapp.
 
-Für die Aussage »$n$ ist ohne Rest durch $m$ teilbar« bzw.
-»$m$ teilt $n$«, schreibt man kurz $m|n$. Aus Aussagen lassen sich
-in der Aussagenlogik zusammengesetzte Aussagen bilden, z.\,B.
+Für die Aussage »$n$ ist ohne Rest durch $m$ teilbar«
+bzw.\ »$m$ teilt $n$«, schreibt man kurz $m|n$. Aus Aussagen lassen
+sich in der Aussagenlogik zusammengesetzte Aussagen bilden, z.\,B.%
 \[\text{Aus $2|n$ und $3|n$ folgt, dass $6|n$},\]
 als Formel:
 \[2|n\land 3|n \implies 6|n.\]
@@ -54,19 +54,23 @@ Anstelle von $\neg A$ schreibt man auch $\overline A$.
 \begin{table}
 \centering
 \begin{tabular}{cc}
-\begin{tabular}{c|c}
+\begin{tabular}{cc}
+\toprule
 $A$ & $\neg A$\\
-\hline
+\midrule
 $0$ & $1$\\
-$1$ & $0$
+$1$ & $0$\\
+\bottomrule
 \end{tabular}
-&\qquad \begin{tabular}{c|c|c|c|c|c}
+&\qquad \begin{tabular}{cc@{\qquad}c@{\qquad}c@{\qquad}c@{\qquad}c}
+\toprule
 $A$ & $B$ & $A\land B$ & $A\lor B$ & $A\Rightarrow B$ & $A\Leftrightarrow B$\\
-\hline
+\midrule
 $0$ & $0$ & $0$ & $0$ & $1$ & $1$\\
 $1$ & $0$ & $0$ & $1$ & $0$ & $0$\\
 $0$ & $1$ & $0$ & $1$ & $1$ & $0$\\
-$1$ & $1$ & $1$ & $1$ & $1$ & $1$
+$1$ & $1$ & $1$ & $1$ & $1$ & $1$\\
+\bottomrule
 \end{tabular}
 \end{tabular}
 \caption{Definition der grundlegenden logischen Verknüpfungen.}
@@ -75,16 +79,19 @@ $1$ & $1$ & $1$ & $1$ & $1$ & $1$
 
 \begin{table}
 \centering
-\begin{tabular}{c|c|c|c|c}
+\begin{tabular}{cc@{\qquad}c@{\qquad}c@{\qquad}c}
+\toprule
 $A$ & $B$ & $A\land B$ & $B\land A$ & $A{\land}B\Rightarrow B{\land}A$\\
-\hline
+\midrule
 $0$ & $0$ & $0$ & $0$ & $1$\\
 $1$ & $0$ & $0$ & $0$ & $1$\\
 $0$ & $1$ & $0$ & $0$ & $1$\\
-$1$ & $1$ & $1$ & $1$ & $1$
+$1$ & $1$ & $1$ & $1$ & $1$\\
+\bottomrule
 \end{tabular}
-\caption{Wahrheitstafel zu $A\land B\Rightarrow B\land A$.}
+\caption{Wahrheitstafel zu »$A\land B\Rightarrow B\land A$«.}
 \label{tab:Wahrheitstafel1}
+\vspace{-1em}
 \end{table}
 
 Es gibt Formeln, die immer wahr sind, unabhängig davon, mit
@@ -96,7 +103,7 @@ und schreibt dafür kurz $\models\varphi$.
 \end{Definition}
 Beispielsweise gilt die Tautologie
 \[\models A\land B\Rightarrow B\land A.\]
-Es lässt sich leicht überprüfen, ob eine Formel tautologisch ist.
+Es lässt sich leicht überprüfen ob eine Formel tautologisch ist.
 Dazu wird einfach die Wahrheitstafel zu dieser Formel aufgestellt,
 hier Tabelle $\ref{tab:Wahrheitstafel1}$.
 Die Wahrheitstafel\index{Wahrheitstafel} ist eine Wertetabelle,
@@ -1958,3 +1965,30 @@ Die Verknüpfung auf $M$ sei kommutativ. Dann gilt
 Somit ist die Verknüpfung auf der Quotientenstruktur $M/\equiv$ ebenfalls
 kommutativ.\,\qedsymbol
 
+\begin{Satz}\label{Kongruenz-Ring-Quotient}
+Satz \ref{Kongruenz-Quotient} gilt auch für Ringe, unitäre Ringe,
+kommutative Ringe und kommutative unitäre Ringe, sofern die
+Relation eine Kongruenzrelation sowohl bezüglich der additiven
+als auch der multiplikativen Verknüpfung ist.
+\end{Satz}
+\strong{Beweis.} Sei $(R,+,\cdot)$ der Ring und $\equiv$ die
+Kongruenzrelation. Gemäß Satz \ref{Kongruenz-Quotient} ist
+$(R/\equiv,+)$ eine kommutative Gruppe und $(R/\equiv,\cdot)$
+eine Halbgruppe. Bei einem unitären Ring ist $(R/\equiv,\cdot)$
+ein Monoid, und bei einem kommutativen unitären Ring ein
+kommutatives Monoid.
+
+Es verbleiben noch die Distributivgesetze zu prüfen.
+Sei $\varphi$ die Quotientenabbildung. Man rechnet
+\begin{align*}
+a'(b'+c') &= \varphi(a)(\varphi(b)+\varphi(c)) = \varphi(a)(\varphi(b+c))
+= \varphi(a(b+c)) = \varphi(ab+ac)\\
+&= \varphi(ab)+\varphi(ac) = \varphi(a)\varphi(b)+\varphi(a)\varphi(c)
+= a'b'+a'c'.
+\end{align*}
+Die Rechnung zum Rechtsdistributivgesetz ist analog.
+
+Damit ist der Satz gezeigt, und ferner ist gezeigt dass $\varphi$ ein
+Ringhomomorphismus ist. Und für einen unitären Ring ist $\varphi$
+Eins-erhaltend, wie bereits aus Satz \ref{Kongruenz-Quotient}
+hervorgeht.\,\qedsymbol

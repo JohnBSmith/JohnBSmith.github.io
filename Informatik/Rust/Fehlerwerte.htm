@@ -81,7 +81,7 @@ bewerkstelligen lässt.
 
 <p>Für Resultate gibt es auch einen vordefinierten Datentyp:
 <pre class="rust ibox">
-enum Result&lt;T,E&gt; {
+enum Result&lt;T, E&gt; {
     Ok(T),
     Err(E)
 }
@@ -114,7 +114,7 @@ fn int(s: &amp;str) -&gt; u32 {
 <pre class="rust ibox">
 enum ParseError {InvalidDigit, Overflow}
 
-fn int(s: &amp;str) -&gt; Result&lt;u32,ParseError&gt; {
+fn int(s: &amp;str) -&gt; Result&lt;u32, ParseError&gt; {
     let mut value: u64 = 0;
     for c in s.chars() {
         if !c.is_ascii_digit() {
@@ -232,7 +232,7 @@ bekannten Werfen und Abfangen von Ausnahmen nahe kommt.
 <pre class="rust ibox">
 type Error = Box&lt;dyn std::error::Error&gt;;
 
-fn get_path() -&gt; Result&lt;String,String&gt; {
+fn get_path() -&gt; Result&lt;String, String&gt; {
     match std::env::args().nth(1) {
         Some(path) =&gt; Ok(path),
         None =&gt; Err(String::from(
@@ -240,13 +240,13 @@ fn get_path() -&gt; Result&lt;String,String&gt; {
     }
 }
 
-fn load() -&gt; Result&lt;String,Error&gt; {
+fn load() -&gt; Result&lt;String, Error&gt; {
     let path = get_path()?;
     let text = std::fs::read_to_string(path)?;
     Ok(text)
 }
 
-fn main() -&gt; Result&lt;(),Error&gt; {
+fn main() -&gt; Result&lt;(), Error&gt; {
     let text = load()?;
     println!("{}", text);
     Ok(())

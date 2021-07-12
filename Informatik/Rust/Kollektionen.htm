@@ -120,9 +120,9 @@ besten mit einem Makro:
 
 <pre class="rust ibox">
 macro_rules! hashmap {
-    ($( $key:tt: $value:expr ),*) =&gt; {{
+    ($( $key:expr =&gt; $value:expr ),*) =&gt; {{
         let mut _map = HashMap::new();
-        $(_map.insert($key.into(),$value.into());)*
+        $(_map.insert($key.into(), $value.into());)*
         _map
     }}
 }
@@ -134,8 +134,8 @@ wie bei Feldern:
 use std::collections::HashMap;
 
 fn main() {
-    let m: HashMap&lt;String,i32&gt; = hashmap!{
-        "x": 1, "y": 2
+    let m: HashMap&lt;String, i32&gt; = hashmap!{
+        "x" =&gt; 1, "y" =&gt; 2
     };
     println!("{:?}", m);
     println!("{}", m["x"]);
@@ -174,7 +174,7 @@ jeden beliebigen Objekt-Typ bilden.
 
 <pre class="rust ibox">
 use std::collections::HashMap;
-use std::hash::{Hash,Hasher};
+use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -199,9 +199,9 @@ impl PartialEq for Id {
 impl Eq for Id {}
 
 fn main() {
-    let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
-    m.insert(Id::new(0,"A"),());
-    m.insert(Id::new(1,"A"),());
+    let mut m: HashMap&lt;Id, ()&gt; = HashMap::new();
+    m.insert(Id::new(0, "A"), ());
+    m.insert(Id::new(1, "A"), ());
     println!("{:?}", m);
 }
 </pre>
@@ -218,10 +218,10 @@ vorzunehmen:
 
 <pre class="rust ibox">
 use std::collections::HashMap;
-use std::hash::{Hash,Hasher};
+use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 struct Id {
     id: Rc&lt;str&gt;
 }
@@ -243,9 +243,9 @@ impl PartialEq for Id {
 impl Eq for Id {}
 
 fn main() {
-    let mut m: HashMap&lt;Id,()&gt; = HashMap::new();
-    m.insert(Id::new("A"),());
-    m.insert(Id::new("A"),());
+    let mut m: HashMap&lt;Id, ()&gt; = HashMap::new();
+    m.insert(Id::new("A"), ());
+    m.insert(Id::new("A"), ());
     println!("{:?}", m);
 }
 </pre>

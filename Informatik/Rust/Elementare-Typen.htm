@@ -18,6 +18,7 @@
 <li><a href="#Fliesskommazahlen">Fließkommazahlen</a>
 <li><a href="#Typumwandlungen">Typumwandlungen</a>
 <li><a href="#Bitweise">Bitweise Operationen</a>
+<li><a href="#Bitmasken">Bitmasken</a>
 <li><a href="#Ueberlauf">Umgang mit Überlauf</a>
 </ol>
 
@@ -245,14 +246,14 @@ nach oben an den Aufrufer.
 <pre class="rust ibox">
 use std::convert::TryFrom;
 
-fn main() -&gt; Result&lt;(),std::num::TryFromIntError&gt; {
+fn main() -&gt; Result&lt;(), std::num::TryFromIntError&gt; {
     let x: u32 = 12;
     let y = match u8::try_from(x) {
         Ok(value) =&gt; value,
         Err(e) =&gt; return Err(e)
     };
     println!("{}", y);
-    return Ok(());
+    Ok(())
 }
 </pre>
 
@@ -440,7 +441,7 @@ a[7]*2<sup>0</sup> + a[6]*2<sup>1</sup> + a[5]*2<sup>2</sup> +<!--
 <p>Die Zweierpotenzen kodiert man als Bitmasken, anstelle von 
 Addition benutzt man bitweises Oder:
 <pre class="rust ibox">
-fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
     u8::from(a[7])*0b00000001 | u8::from(a[6])*0b00000010 |
     u8::from(a[5])*0b00000100 | u8::from(a[4])*0b00001000 |
     u8::from(a[3])*0b00010000 | u8::from(a[2])*0b00100000 |
@@ -448,58 +449,97 @@ fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
 }
 
 fn main() {
-    let bits = &amp;[false,false,false,false,true,false,true,false];
+    let bits = &amp;[false, false, false, false, true, false, true, false];
     println!("0b{:08b}", u8_from_bits(bits));
 }
 </pre>
 
 <p>Man könnte das auch wie gewohnt schreiben:
 <pre class="rust ibox">
-fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
-    let mut y = 0;
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
     for k in 0..7 {
-        y += u8::from(a[k as usize])*(2u8).pow(7-k);
+        acc += u8::from(a[k as usize])*(2u8).pow(7-k);
     }
-    return y;
+    acc
 }
 </pre>
 
 <p>Eigentlich nimmt man dafür aber Linksshift und bitweises Oder:
 <pre class="rust ibox">
-fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
-    let mut y = 0;
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
     for k in 0..7 {
-        y |= u8::from(a[k])*(2&lt;&lt;(6-k));
+        acc |= u8::from(a[k])*(2&lt;&lt;(6-k));
     }
-    return y;
+    acc
 }
 </pre>
 
 <p>Schließlich lässt sich die Multiplikation noch beseitigen:
 <pre class="rust ibox">
-fn u8_from_bits(a: &amp;[bool;8]) -&gt; u8 {
-    let mut y = 0;
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
     for k in 0..7 {
-        y |= u8::from(a[k])&lt;&lt;(7-k);
+        acc |= u8::from(a[k])&lt;&lt;(7-k);
     }
-    return y;
+    acc
 }
 </pre>
 
 <p>Entsprechend gestaltet sich die Formulierung der umgekehrten Funktion:
 <pre class="rust ibox">
-fn bits_from_u8(x: u8) -&gt; [bool;8] {
-    let mut a: [bool;8] = [false;8];
+fn bits_from_u8(x: u8) -&gt; [bool; 8] {
+    let mut bits: [bool; 8] = [false; 8];
     for k in 0..7 {
-        if (x&gt;&gt;(7-k)) &amp; 0b00000001 == 1 {a[k] = true;}
+        if (x&gt;&gt;(7-k)) &amp; 0b00000001 == 1 {bits[k] = true;}
     }
-    return a;
+    bits
 }
 </pre>
 
 <p>Effizienter ist es jedoch, den Zugriff auf sämtliche Bits einer
 Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits,
 welche für den jeweiligen Zweck von Interesse sind.
+
+<h2 id="Bitmasken">Bitmasken</h2>
+
+<p>Manchmal möchte man nicht eine ganze Speicherzelle auf einen
+bestimmten Wert setzen, sondern lediglich eine in ihr enthaltene
+Bitgruppe. Zur Bewerkstelligung sind Bitmasken hilfreich.
+
+<p>Aufgabe sei es, die niedrigstwertigen vier Bits eines Bytes
+<code>byte</code> auf einen bestimmten Wert <code>value</code> zu
+setzen. Da die höchstwertigen vier Bits erhalten bleiben sollen,
+extrahieren wir diese zunächst durch UND-Verknüpfung mit der Bitmaske
+<code>0xf0</code> bzw. <code>0b11110000</code>. Diese Operation
+resultiert in einem Wert, bei dem die niedrigstwertigen vier Bits null
+sind. Vom Wert <code>value</code> sollen auf der anderen Seite nur die
+niedrigstwertigen vier Bits von Bedeutung sein. Die Sicherheit, dass
+die höchstwertigen vier null sind, schafft die UND-Verknüpfung mit
+der Bitmaske <code>0x0f</code> bzw. <code>0b00001111</code>.
+Schließlich kombinieren wir die beiden Resultate durch eine
+ODER-Verknüpfung. Die Gesamtoperation ist:
+
+<pre class="rust ibox">
+// Set least significant 4 bits
+fn set_ls4(byte: &amp;mut u8, value: u8) {
+    *byte = (0xf0 &amp; *byte) | (0x0f &amp; value);
+}
+</pre>
+
+<p>Arbeitet man stattdessen mit Speicherzellen vom Typ <code>u32</code>,
+nimmt die Operation die Form
+
+<pre class="rust ibox">
+fn set_ls4(cell: &amp;mut u32, value: u32) {
+    *cell = (0xfff0 &amp; *cell) | (0xf &amp; value);
+}
+</pre>
+
+<p>an. Befinden sich die Bitgruppen von Speicherzelle und Wert an
+verschiedenwertigen Stellen, muss man entsprechend Bitverschiebungen
+hinzufügen.
 
 <h2 id="Ueberlauf">Umgang mit Überlauf</h2>
 
@@ -542,7 +582,7 @@ fn main() {
 fn main() {
     let x: u8 = 200;
     let y: u8 = 100;
-    println!("{}" ,x.wrapping_add(y));
+    println!("{}", x.wrapping_add(y));
 }
 
 fn main() {

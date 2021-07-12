@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Makroprozessor</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: Makroprozessor</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Aufgabe">Aufgabe</a>
+<li><a href="#Naiv">Naive Umsetzung</a>
+<li><a href="#Byteketten">Byteketten</a>
+</ol>
+
+<h2 id="Aufgabe">Aufgabe</h2>
+
+<p>Ziel ist ein sehr einfacher Makroprozessor. Darunter ist ein
+Programm zu verstehen, welches Befehle in einem Text gegen Zeichenketten
+ersetzt, ähnlich der Interpolation von Zeichenketten. Zur Vereinfachung
+betrachten wir lediglich parameterlose Makros. Die Makros seien von
+geschweiften Klammern umschlossen, analog zu den Platzhaltern in den
+Schablonen zur Formatierung von Zeichenketten.
+
+<p>Definiert man beispielsweise Makros für die Verknüpfungssymbole
+der Aussagenlogik, dann wird die Zeichenkette
+
+<pre class="indent">
+A {and} (A {imp} B) {imp} B
+</pre>
+
+<p>zu
+
+<pre class="indent">
+A ∧ (A → B) → B
+</pre>
+
+<p>expandiert.
+
+<h2 id="Naiv">Naive Umsetzung</h2>
+
+<p>Bestandteil der Expansion muss ein kleiner Parser sein, der
+die Makros vom Rest der Eingabe trennt. Hier muss man sich überlegen,
+wie man genau vorgehen will, denn aufgrund der UTF-8-Kodierung tun
+sich mehrere Möglichkeiten auf.
+
+<p>Die erste Variante des Programms zeigt eine recht unkomplizierte
+Vorgehensweise.
+
+<pre class="rust ibox">
+static MACROS: &amp;[(&amp;str, fn() -&gt; String)] = &amp;[
+    ("not", || String::from("¬")),
+    ("and", || String::from("∧")),
+    ("or",  || String::from("∨")),
+    ("imp", || String::from("→"))
+];
+
+fn expand_macro(name: &amp;str) -&gt; Result&lt;String, String&gt; {
+    for t in MACROS {
+        if t.0 == name {return Ok(t.1());}
+    }
+    Err(format!("Makro '{}' wurde nicht gefunden.", name))
+}
+
+fn expand(text: &amp;str) -&gt; Result&lt;String, String&gt; {
+    let a: Vec&lt;char&gt; = text.chars().collect();
+    let n = a.len();
+    let mut acc = String::new();
+    let mut i = 0;
+    while i &lt; n {
+        if a[i] == '{' {
+            i += 1;
+            let mut name = String::new();
+            while i &lt; n &amp;&amp; a[i] != '}' {
+                name.push(a[i]);
+                i += 1;
+            }
+            acc.push_str(&amp;expand_macro(&amp;name)?);
+            i += 1;
+        } else {
+            acc.push(a[i]);
+            i += 1;
+        }
+    }
+    Ok(acc)
+}
+
+fn main() {
+    println!("{:?}", expand("A {and} (A {imp} B) {imp} B"));
+}
+</pre>
+
+<h2 id="Byteketten">Byteketten</h2>
+
+<p>Man kann das vorherige Programm als ein wenig ineffizient
+betrachten, weil es vermeidbare Speicherallokationen enthält.
+Dies wurde im folgenden Programm beseitigt, im Wesentlichen indem
+die aufwändige Umwandlung des Textes zu einem Zeichen-Array
+ausgetauscht wurde durch eine Betrachtung des Textes als Bytekette.
+Als kleines Manko nimmt man dabei in Kauf, dass das Hantieren
+mit Byteketten nun das gesamte Programm durchzieht.
+
+<p>Ferner wurde lineare Suche gegen eine binäre Suche ersetzt, wobei
+nun darauf zu achten ist, dass die Makrotabelle ab jetzt
+lexikographisch sortiert bleibt.
+
+<pre class="rust ibox">
+static MACROS: &amp;[(&amp;[u8], fn(&amp;mut dyn FnMut(&amp;[u8])))] = &amp;[
+    (b"and", |cb| cb("∧".as_bytes())),
+    (b"imp", |cb| cb("→".as_bytes())),
+    (b"not", |cb| cb("¬".as_bytes())),
+    (b"or",  |cb| cb("∨".as_bytes()))
+];
+
+fn expand_macro(acc: &amp;mut Vec&lt;u8&gt;, name: &amp;[u8]) -&gt; Result&lt;(), String&gt; {
+    match MACROS.binary_search_by_key(&amp;name, |t| t.0) {
+        Ok(i) =&gt; Ok(MACROS[i].1(&amp;mut |data| acc.extend(data))),
+        _ =&gt; Err(format!("Makro '{}' wurde nicht gefunden.",
+             std::str::from_utf8(name).unwrap()))
+    }
+}
+
+fn expand(text: &amp;str) -&gt; Result&lt;String, String&gt; {
+    let a = text.as_bytes();
+    let n = a.len();
+    let mut acc: Vec&lt;u8&gt; = Vec::with_capacity(n);
+    let mut i = 0;
+    while i &lt; n {
+        if a[i] == b'{' {
+            i += 1;
+            let j = i;
+            while i &lt; n &amp;&amp; a[i] != b'}' {i += 1;}
+            expand_macro(&amp;mut acc, &amp;a[j..i])?;
+            i += 1;
+        } else {
+            acc.push(a[i]);
+            i += 1;
+        }
+    }
+    Ok(String::from_utf8(acc).unwrap())
+}
+
+fn main() {
+    println!("{:?}", expand("A {and} (A {imp} B) {imp} B"));
+}
+</pre>
+
+<p>Bei dieser Umsetzung drängt sich auf, die
+Schnittstelle von <code>expand</code> so zu modifizieren, dass
+das Programm ausschließlich mit Byteketten arbeitet, womit die
+Voraussetzung der Korrektheit der UTF-8-Daten entfällt. Nämlich
+darf die Prüfung der Korrektheit beim Einlesen der Datei dann ebenfalls
+entfallen, indem man die Datei stattdessen als Binärdatei einlesen
+lässt. Das macht das Programm nochmals effizienter.
+
+</body>
+</html>
+
