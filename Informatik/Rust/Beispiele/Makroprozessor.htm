@@ -17,6 +17,7 @@
 <ol>
 <li><a href="#Aufgabe">Aufgabe</a>
 <li><a href="#Naiv">Naive Umsetzung</a>
+<li><a href="#Iterator">Einsatz eines Iterators</a>
 <li><a href="#Byteketten">Byteketten</a>
 </ol>
 
@@ -97,15 +98,105 @@ fn main() {
 }
 </pre>
 
-<h2 id="Byteketten">Byteketten</h2>
+<h2 id="Iterator">Einsatz eines Iterators</h2>
 
 <p>Man kann das vorherige Programm als ein wenig ineffizient
 betrachten, weil es vermeidbare Speicherallokationen enthält.
 Dies wurde im folgenden Programm beseitigt, im Wesentlichen indem
 die aufwändige Umwandlung des Textes zu einem Zeichen-Array
-ausgetauscht wurde durch eine Betrachtung des Textes als Bytekette.
-Als kleines Manko nimmt man dabei in Kauf, dass das Hantieren
-mit Byteketten nun das gesamte Programm durchzieht.
+ausgetauscht wurde durch die Benutzung eines Iterators.
+
+<pre class="rust ibox">
+static MACROS: &amp;[(&amp;str, fn(&amp;mut String))] = &amp;[
+    ("not", |acc| acc.push_str("¬")),
+    ("and", |acc| acc.push_str("∧")),
+    ("or",  |acc| acc.push_str("∨")),
+    ("imp", |acc| acc.push_str("→"))
+];
+
+fn expand_macro(acc: &amp;mut String, name: &amp;str) -&gt; Result&lt;(), String&gt; {
+    for t in MACROS {
+        if t.0 == name {return Ok(t.1(acc));}
+    }
+    Err(format!("Makro '{}' wurde nicht gefunden.", name))
+}
+
+fn expand(text: &amp;str) -&gt; Result&lt;String, String&gt; {
+    let mut acc = String::with_capacity(text.len());
+    let mut name = String::with_capacity(16);
+    let mut it = text.chars();
+    while let Some(c) = it.next() {
+        if c == '{' {
+            name.clear();
+            while let Some(c) = it.next() {
+                if c == '}' {break;} else {name.push(c);}
+            }
+            expand_macro(&amp;mut acc, &amp;name)?;
+        } else {
+            acc.push(c);
+        }
+    }
+    Ok(acc)
+}
+
+fn main() {
+    println!("{:?}", expand("A {and} (A {imp} B) {imp} B"));
+}
+</pre>
+
+<p>Würde lediglich die Grundfunktionalität der Iteration zur
+Verfügung stehen, wären wir gezwungen, wie gezeigt einen Puffer
+für die Makronamen zu Verwenden. Allerdings haben wir bei einem
+Iterator über Zeichenketten zusätzlich <code>as_str</code> zur
+Verfügung, damit erhält man den verbleibenden Rest der Zeichenkette.
+Dieses Hilfsmittel ermöglicht die folgende Modifikation.
+
+<pre class="rust ibox">
+fn expand(text: &amp;str) -&gt; Result&lt;String, String&gt; {
+    let mut acc = String::with_capacity(text.len());
+    let mut it = text.chars();
+    while let Some(c) = it.next() {
+        if c == '{' {
+            let rest = it.as_str();
+            let mut len = 0;
+            while let Some(c) = it.next() {
+                if c == '}' {break;} else {len += c.len_utf8();}
+            }
+            expand_macro(&amp;mut acc, &amp;rest[..len])?;
+        } else {
+            acc.push(c);
+        }
+    }
+    Ok(acc)
+}
+</pre>
+
+<p>Man muss bei der Programmierung solcher Algorithmen genau darauf
+achten, was man tut. Ersetzen wir
+
+<pre class="rust ibox">
+len += c.len_utf8();
+</pre>
+
+<p>gegen die naive Inkrementierung <code>len&nbsp;+=&nbsp;1;</code>,
+ist Unicode in Makronamen nicht mehr gestattet.
+Zudem führt die Ausschnitt-Bildung <code>&amp;rest[..len]</code>
+dann bei bestimmten Unicode enthaltenden Namen zum Programmabbruch.
+Nämlich immer dann, wenn der Index <code>len</code> durch die
+fehlerhafte Semantik inmitten einer UTF-8-Sequenz liegt. Das ist
+beispielsweise bei
+
+<pre class="rust ibox">
+expand("{Café}")
+</pre>
+
+<p>der Fall.
+
+<h2 id="Byteketten">Byteketten</h2>
+
+<p>Eine weitere Alternative besteht in der Betrachtung des Textes als
+Bytekette. Als kleines Manko nimmt man dabei in Kauf, dass das
+Hantieren mit Byteketten nun das gesamte Programm durchzieht.
 
 <p>Ferner wurde lineare Suche gegen eine binäre Suche ersetzt, wobei
 nun darauf zu achten ist, dass die Makrotabelle ab jetzt
@@ -156,9 +247,9 @@ fn main() {
 Schnittstelle von <code>expand</code> so zu modifizieren, dass
 das Programm ausschließlich mit Byteketten arbeitet, womit die
 Voraussetzung der Korrektheit der UTF-8-Daten entfällt. Nämlich
-darf die Prüfung der Korrektheit beim Einlesen der Datei dann ebenfalls
-entfallen, indem man die Datei stattdessen als Binärdatei einlesen
-lässt. Das macht das Programm nochmals effizienter.
+darf die Prüfung der Korrektheit beim Einlesen der Eingabe aus einer
+Datei dann ebenfalls entfallen, indem man die Datei stattdessen als
+Binärdatei einlesen lässt. Das macht das Programm nochmals effizienter.
 
 </body>
 </html>
