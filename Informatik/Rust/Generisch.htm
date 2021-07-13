@@ -40,7 +40,7 @@ eines Feldes, das war:
 <pre class="rust ibox">
 fn reverse(a: &amp;mut [i32]) {
     let n = a.len();
-    for i in 0..n/2 {a.swap(i,n-1-i);}
+    for i in 0..n/2 {a.swap(i, n-1-i);}
 }
 </pre>
 
@@ -61,7 +61,7 @@ gestellt.
 <pre class="rust ibox">
 fn reverse&lt;T&gt;(a: &amp;mut [T]) {
     let n = a.len();
-    for i in 0..n/2 {a.swap(i,n-1-i);}
+    for i in 0..n/2 {a.swap(i, n-1-i);}
 }
 </pre>
 
@@ -156,9 +156,9 @@ Maximums eines nicht-leeren Feldes:
 fn max(a: &amp;[i32]) -&gt; i32 {
     let mut m = a[0];
     for &amp;x in a[1..].iter() {
-        if m&lt;x {m = x;}
+        if m &lt; x {m = x;}
     }
-    return m;
+    m
 }
 </pre>
 
@@ -168,16 +168,16 @@ wir Zugriff auf die Ordnungsrelation. Die zielführende Idee dazu ist
 ein Funktionenzeiger auf die Ordnungsrelation.
 
 <pre class="rust ibox">
-fn max&lt;T&gt;(a: &amp;[T], lt: fn(&amp;T,&amp;T) -&gt; bool) -&gt; &amp;T {
+fn max&lt;T&gt;(a: &amp;[T], lt: fn(&amp;T, &amp;T) -&gt; bool) -&gt; &amp;T {
     let mut m = &amp;a[0];
     for x in a[1..].iter() {
-        if lt(m,x) {m = x;}
+        if lt(m, x) {m = x;}
     }
-    return m;
+    m
 }
 
 fn lt_i32(x: &amp;i32, y: &amp;i32) -&gt; bool {
-    x&lt;y
+    x &lt; y
 }
 
 fn main() {
@@ -225,7 +225,7 @@ fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
     for x in a[1..].iter() {
         if m &lt; x {m = x;}
     }
-    return m;
+    m
 }
 </pre>
 
@@ -243,9 +243,9 @@ impl Ord for i32 {
 fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
     let mut m = &amp;a[0];
     for x in a[1..].iter() {
-        if Ord::lt(m,x) {m = x;}
+        if Ord::lt(m, x) {m = x;}
     }
-    return m;
+    m
 }
 </pre>
 
@@ -259,7 +259,7 @@ enum Ordering {
 trait Ord {
     fn cmp(&amp;self, other: &amp;Self) -&gt; Ordering;
     fn lt(&amp;self, other: &amp;Self) -&gt; bool {
-        matches!(Ord::cmp(self,other), Ordering::Less)
+        matches!(Ord::cmp(self, other), Ordering::Less)
     }
 }
 
@@ -276,7 +276,7 @@ fn max&lt;T: Ord&gt;(a: &amp;[T]) -&gt; &amp;T {
     for x in a[1..].iter() {
         if m.lt(x) {m = x;}
     }
-    return m;
+    m
 }
 </pre>
 
@@ -430,7 +430,7 @@ fn add(a: &amp;[i32], b: &amp;[i32]) -&gt; Vec&lt;i32&gt; {
 
 fn main() {
     let a = vec![1, 2, 3, 4];
-    println!("{:?}", add(&amp;a,&amp;a));
+    println!("{:?}", add(&amp;a, &amp;a));
 }
 </pre>
 
@@ -479,7 +479,7 @@ fn add&lt;T: Add&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
 <pre class="rust ibox">
 use std::ops::Add;
 
-fn add&lt;T: Copy + Add&lt;Output=T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
+fn add&lt;T: Copy + Add&lt;Output = T&gt;&gt;(a: &amp;[T], b: &amp;[T]) -&gt; Vec&lt;T&gt; {
     let mut acc: Vec&lt;T&gt; = Vec::with_capacity(a.len());
     for i in 0..a.len() {
         acc.push(a[i] + b[i]);

@@ -69,21 +69,21 @@ laufen. Dazu startet man zwei Threads und ruft in beiden jeweils
 <code>metronome</code> auf.
 
 <pre class="rust ibox">
-use std::{thread,thread::sleep,time::Duration};
+use std::{thread, thread::sleep, time::Duration};
 
 fn metronome(msg: &amp;str, time: u64) {
     loop {
-        println!("{}",msg);
+        println!("{}", msg);
         sleep(Duration::from_millis(time));
     }
 }
 
 fn main() {
     let t1 = thread::spawn(|| {
-        metronome("tick",500);
+        metronome("tick", 500);
     });
     let t2 = thread::spawn(|| {
-        metronome("*ping*",2000);
+        metronome("*ping*", 2000);
     });
     t1.join().unwrap();
     t2.join().unwrap();
@@ -104,13 +104,13 @@ Ein Kanal ist eine gerichtete Verbindung zur Übertragung von Daten
 zwischen zwei Threads.
 
 <pre class="rust ibox">
-use std::{thread,thread::sleep,time::Duration};
-use std::sync::mpsc::{channel,Sender,Receiver};
+use std::{thread, thread::sleep, time::Duration};
+use std::sync::mpsc::{channel, Sender, Receiver};
 
 fn produce(transmitter: Sender&lt;String&gt;) {
     for count in 0.. {
         sleep(Duration::from_millis(500));
-        let value = format!("Daten Nr. {}",count);
+        let value = format!("Daten Nr. {}", count);
         transmitter.send(value).unwrap();
     }
 }
@@ -119,12 +119,12 @@ fn consume(receiver: Receiver&lt;String&gt;) {
     loop {
         sleep(Duration::from_millis(100));
         let value = receiver.recv().unwrap();
-        println!("Erhalte: {}",value);
+        println!("Erhalte: {}", value);
     }
 }
 
 fn main() {
-    let (transmitter,receiver) = channel();
+    let (transmitter, receiver) = channel();
     let t1 = thread::spawn(|| {
         produce(transmitter);
     });

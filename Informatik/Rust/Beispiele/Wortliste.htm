@@ -44,9 +44,9 @@ fn string_to_words(s: &amp;str) -&gt; Vec&lt;String&gt; {
 }
 
 fn unique(v: &amp;[String]) -&gt; Vec&lt;String&gt; {
-    let mut m: HashMap&lt;String,()&gt; = HashMap::new();
+    let mut m: HashMap&lt;String, ()&gt; = HashMap::new();
     for s in v {
-        m.insert(s.clone(),());
+        m.insert(s.clone(), ());
     }
     let mut acc: Vec&lt;String&gt; = Vec::new();
     for (key, _) in m {
@@ -79,11 +79,11 @@ use std::collections::HashSet;
 use std::iter::FromIterator;
 use std::hash::Hash;
 
-fn string_to_words(s: &amp;str) -&gt; impl Iterator&lt;Item=&amp;str&gt; + '_ {
+fn string_to_words(s: &amp;str) -&gt; impl Iterator&lt;Item = &amp;str&gt; + '_ {
     s.split(|x: char| !x.is_alphabetic()).filter(|&amp;x| x != "")
 }
 
-fn unique&lt;T: Eq + Hash&gt;(i: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;T&gt; {
+fn unique&lt;T: Eq + Hash&gt;(i: impl IntoIterator&lt;Item = T&gt;) -&gt; Vec&lt;T&gt; {
     HashSet::&lt;T&gt;::from_iter(i.into_iter()).into_iter().collect()
 }
 

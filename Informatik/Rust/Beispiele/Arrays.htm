@@ -80,7 +80,7 @@ use std::iter::FromIterator;
 use std::collections::HashSet;
 use std::hash::Hash;
 
-fn unique&lt;T: Eq+Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+fn unique&lt;T: Eq + Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
     HashSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
 }
 
@@ -95,13 +95,13 @@ fn main() {
 use std::iter::FromIterator;
 use std::collections::BTreeSet;
 
-fn unique&lt;T: Eq+Ord&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+fn unique&lt;T: Eq + Ord&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
     BTreeSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
 }
 
 fn main() {
     let v: Vec&lt;i32&gt; = vec![1, 4, 5, 2, 3, 1, 4];
-    println!("{:?}",unique(v));
+    println!("{:?}", unique(v));
 }
 </pre>
 

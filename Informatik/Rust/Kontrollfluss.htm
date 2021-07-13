@@ -209,7 +209,7 @@ let y = t.1;
 
 <p>geht auch kürzer mittels:
 <pre class="rust ibox">
-let (x,y) = t;
+let (x, y) = t;
 </pre>
 
 <p>Zudem ist auch teilweises Entpacken möglich. Z.&nbsp;B.
@@ -218,8 +218,8 @@ drei Zeilen gleichbedeutend:
 
 <pre class="rust ibox">
 let x = t.0;
-let (x,_,_) = t;
-let (x,..) = t;
+let (x, _, _) = t;
+let (x, ..) = t;
 </pre>
 
 <p>Man bekommt sogar
@@ -229,7 +229,7 @@ let z = t.2;
 </pre>
 <p>mittels:
 <pre class="rust ibox">
-let (x,..,z) = t;
+let (x, .., z) = t;
 </pre>
 
 <p>Des Weiteren darf das Entpacken von Tupeln auch in Verbindung
@@ -238,16 +238,16 @@ Potenzfunktion
 
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) &gt; u32 {
-    if n == 0 {1} else {x*pow(x,n-1)}
+    if n == 0 {1} else {x*pow(x, n-1)}
 }
 </pre>
 
 <p>als einstellige Funktion formulieren, führt das zu:
 <pre class="rust ibox">
-fn pow(t: (u32,u32)) -&gt; u32 {
+fn pow(t: (u32, u32)) -&gt; u32 {
     match t {
-        (_,0) =&gt; 1,
-        (x,n) =&gt; x*pow((x,n-1))
+        (_, 0) =&gt; 1,
+        (x, n) =&gt; x*pow((x, n-1))
     }
 }
 </pre>
@@ -256,8 +256,8 @@ fn pow(t: (u32,u32)) -&gt; u32 {
 vorkommen, womit sich die alternative Formulierung
 
 <pre class="rust ibox">
-fn pow((x,n): (u32,u32)) -&gt; u32 {
-    if n == 0 {1} else {x*pow((x,n-1))}
+fn pow((x, n): (u32,u32)) -&gt; u32 {
+    if n == 0 {1} else {x*pow((x, n-1))}
 }
 </pre>
 
@@ -277,7 +277,7 @@ Potenzfunktion mit Überlauf-Prüfung als:
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
     if n == 0 {Some(1)} else {
-        x.checked_mul(match pow(x,n-1) {
+        x.checked_mul(match pow(x, n-1) {
             Some(value) =&gt; value,
             None =&gt; return None
         })
@@ -289,7 +289,7 @@ fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
 Fragezeichen-Operator:
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
-    if n == 0 {Some(1)} else {x.checked_mul(pow(x,n-1)?)}
+    if n == 0 {Some(1)} else {x.checked_mul(pow(x, n-1)?)}
 }
 </pre>
 
@@ -342,7 +342,7 @@ Potenzfunktion auch als
 fn pow(x: u32, n: u32) -&gt; u32 {
     match n {
         n if n == 0 =&gt; 1,
-        n =&gt; x*pow(x,n-1)
+        n =&gt; x*pow(x, n-1)
     }
 }
 </pre>
@@ -353,7 +353,7 @@ fn pow(x: u32, n: u32) -&gt; u32 {
 fn pow(x: u32, n: u32) -&gt; u32 {
     match () {
         () if n == 0 =&gt; 1,
-        () =&gt; x*pow(x,n-1)
+        () =&gt; x*pow(x, n-1)
     }
 }
 </pre>
@@ -377,4 +377,3 @@ match () {
 
 </body>
 </html>
-

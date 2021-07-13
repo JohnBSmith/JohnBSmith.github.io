@@ -318,12 +318,12 @@ struct Slice {
 impl Slice {
     fn new(data: Rc&lt;[u8]&gt;) -&gt; Self {
         let len = data.len();
-        Self{data, start: 0, len}
+        Self {data, start: 0, len}
     }
     fn slice(&amp;self, r: Range&lt;usize&gt;) -&gt; Self {
         let start = self.start + r.start;
         let len = r.end - r.start;
-        Self{data: self.data.clone(), start, len}    
+        Self {data: self.data.clone(), start, len}    
     }
 }
 
@@ -380,7 +380,7 @@ use std::rc::Rc;
 fn main() {
     let a = Rc::new(());
     let b = a.clone();
-    assert!(Rc::ptr_eq(&amp;a,&amp;b));
+    assert!(Rc::ptr_eq(&amp;a, &amp;b));
 }
 </pre>
 
@@ -402,7 +402,7 @@ use std::rc::Rc;
 fn main() {
     let a: Rc&lt;str&gt; = Rc::from("A");
     let b = a.clone();
-    assert!(Rc::ptr_eq(&amp;a,&amp;b));
+    assert!(Rc::ptr_eq(&amp;a, &amp;b));
     println!("{}", a);
 }
 </pre>
@@ -417,7 +417,7 @@ Funktion <code>ptr_eq_plain</code> erreicht.
 fn ptr_eq_plain&lt;T: ?Sized&gt;(p: &amp;Rc&lt;T&gt;, q: &amp;Rc&lt;T&gt;) -&gt; bool {
     let p = &amp;**p as *const T as *const ();
     let q = &amp;**q as *const T as *const ();
-    std::ptr::eq(p,q)
+    std::ptr::eq(p, q)
 }
 </pre>
 
@@ -537,7 +537,7 @@ fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
     let n = a.len();
     for _ in 0..n {
         for i in 1..n {
-            if a[i] &lt; a[i-1] {a.swap(i,i-1);}
+            if a[i] &lt; a[i-1] {a.swap(i, i-1);}
         }
     }
 }
@@ -554,7 +554,7 @@ fn bubble_sort&lt;T: Ord&gt;(a: &amp;mut [T]) {
     for _ in 0..a.len() {
         let mut y = &amp;mut a[0];
         for x in &amp;mut a[1..] {
-            if x &lt; y {std::mem::swap(x,y);}
+            if x &lt; y {std::mem::swap(x, y);}
             y = x;
         }
     }
@@ -574,7 +574,7 @@ fn bubble_sort&lt;T: Ord + Copy&gt;(a: &amp;mut [T]) {
     for _ in 0..a.len() {
         let mut y = &amp;a[0];
         for x in &amp;a[1..] {
-            if x.get() &lt; y.get() {Cell::swap(x,y);}
+            if x.get() &lt; y.get() {Cell::swap(x, y);}
             y = x;
         }
     }
@@ -698,7 +698,7 @@ struct Node {
 }
 impl Node {
     fn new(data: i32, links: Vec&lt;RcNode&gt;) -&gt; RcNode {
-        Rc::new(RefCell::new(Node{data, links}))
+        Rc::new(RefCell::new(Node {data, links}))
     }
 }
 

@@ -194,7 +194,7 @@ fn main() {
     let mut v: Vec&lt;u32&gt; = vec![0, 0, 0, 0];
     let p: &amp;u32 = &amp;v[0];
     v.push(0);
-    println!("{}",*p);
+    println!("{}", *p);
 }
 </pre>
 
@@ -240,8 +240,8 @@ enum Object {Int(i32), String(String)}
 
 fn print_object(x: &amp;Object) {
     match x {
-        Object::Int(x) =&gt; println!("{}",x),
-        Object::String(x) =&gt; println!("{}",&amp;x)
+        Object::Int(x) =&gt; println!("{}", x),
+        Object::String(x) =&gt; println!("{}", &amp;x)
     }
 }
 
@@ -261,7 +261,7 @@ fn print_object(x: &amp;Object) {
         Object::Int(x) =&gt; &amp;x.to_string(),
         Object::String(x) =&gt; &amp;x
     };
-    println!("{}",s);
+    println!("{}", s);
 }
 </pre>
 
@@ -278,7 +278,7 @@ fn print_object(x: &amp;Object) {
         Object::Int(x) =&gt; {ts = x.to_string(); &amp;ts},
         Object::String(x) =&gt; &amp;x
     };
-    println!("{}",s);
+    println!("{}", s);
 }
 </pre>
 
@@ -303,31 +303,31 @@ impl Object {
 fn main() {
     let x = Object::Int(12);
     let y = Object::String("Tee".to_string());
-    println!("{}",x.as_str());
-    println!("{}",y.as_str());
+    println!("{}", x.as_str());
+    println!("{}", y.as_str());
 }
 </pre>
 
-<p>Explizit ausgeschrieben besitzt <code>as_str</code> die Signatur:
+<p>Explizit ausgeschrieben besitzt <code>as_str</code> die Signatur
 
-<pre class="rust indent">
-fn as_str&lt;'a&gt;(&amp;'a self) -&gt; Cow&lt;'a,str&gt;
+<pre class="rust ibox">
+fn as_str&lt;'a&gt;(&amp;'a self) -&gt; Cow&lt;'a, str&gt;.
 </pre>
 
 <p>Ein anderes Beispiel für die Notwendigkeit von Hilfsvariablen
 sind Trait-Objekte. Gerne schreiben würde man z.&nbsp;B. folgendes:
 
 <pre class="rust ibox">
-fn f1() -&gt; impl Fn(i32)-&gt;i32 {|x| x+1}
+fn f1() -&gt; impl Fn(i32)-&gt;i32 {|x| x + 1}
 fn f2() -&gt; impl Fn(i32)-&gt;i32 {|x| 2*x}
 
 fn phi(n: i32) -&gt; i32 {
-    let f = if n==1 {f1()} else {f2()};
-    return f(10);
+    let f = if n == 1 {f1()} else {f2()};
+    f(10)
 }
 
 fn main() {
-    println!("{}, {}",phi(1),phi(2));
+    println!("{}, {}", phi(1), phi(2));
 }
 </pre>
 
@@ -336,19 +336,19 @@ der beiden (dynamisch erzeugten) Funktionen <code>f(x):=x+1</code> und
 <code>f(x):=2*x</code> gewählt. Nun verhält es sich so, dass die Typen
 von <code>f1()</code> und <code>f2()</code> unterschiedlich sind. Was
 die Typsignatur jetzt genau bedeutet, ist nicht so wichtig. Beide Typen
-implementieren aber den gleichen Trait. Um die beiden Typen gleich zu
+implementieren aber denselben Trait. Um die beiden Typen gleich zu
 bekommen, müssen diese in Trait-Objekte umgewandelt werden. Man würde
 also gerne schreiben:
 <pre class="rust ibox">
-let f: &amp;dyn Fn(i32)-&gt;i32 = if n==1 {&amp;f1()} else {&amp;f2()};
+let f: &amp;dyn Fn(i32) -&gt; i32 = if n == 1 {&amp;f1()} else {&amp;f2()};
 </pre>
 
 <p>Das klappt wegen der Lebenszeitproblematik nicht. Wir könnten
 das durch Boxen umgehen, das ist möglich:
 
 <pre class="rust ibox">
-let f: Box&lt;dyn Fn(i32)-&gt;i32&gt; =
-    if n==1 {Box::new(f1())} else {Box::new(f2())};
+let f: Box&lt;dyn Fn(i32) -&gt; i32&gt; =
+    if n == 1 {Box::new(f1())} else {Box::new(f2())};
 </pre>
 
 <p>Allerdings führt das zu unnötigen Speicherallokationen.
@@ -356,9 +356,9 @@ Die Lösung des Problems liegt wieder in der Benutzung von
 Hilfsvariablen:
 
 <pre class="rust ibox">
-let (tf1,tf2);
-let f: &amp;dyn Fn(i32)-&gt;i32 =
-    if n==1 {tf1 = f1(); &amp;tf1} else {tf2 = f2(); &amp;tf2};
+let (tf1, tf2);
+let f: &amp;dyn Fn(i32) -&gt; i32 =
+    if n == 1 {tf1 = f1(); &amp;tf1} else {tf2 = f2(); &amp;tf2};
 </pre>
 
 </body>

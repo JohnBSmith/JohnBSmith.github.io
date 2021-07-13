@@ -43,13 +43,13 @@ struct Chunck {
 
 impl Chunck {
     fn new() -&gt; Box&lt;Chunck&gt; {
-        Box::new(Chunck{data: [0;10]})
+        Box::new(Chunck {data: [0; 10]})
     }
 }
 
 fn main() {
     let a = Chunck::new();
-    println!("{:?}",a.data);
+    println!("{:?}", a.data);
 }
 </pre>
 
@@ -57,7 +57,7 @@ fn main() {
 <pre class="rust ibox">
 impl Chunck {
     fn new() -&gt; Chunck {
-        Chunck{data: [0;10]}
+        Chunck {data: [0; 10]}
     }
 }
 </pre>
@@ -79,7 +79,7 @@ wir einfach als <code>u32::MAX</code>. Unter geringfügigen semantischen
 
 <pre class="rust ibox">
 mod ru32 {
-    #[derive(Clone,Copy)]
+    #[derive(Clone, Copy)]
     pub struct Ru32 (u32);
     impl Ru32 {
         pub fn err() -&gt; Self {Ru32(u32::MAX)}
@@ -95,8 +95,8 @@ mod ru32 {
         -&gt; std::fmt::Result
         {
             match self.0 {
-                u32::MAX =&gt; write!(f,"Ru32(Err)"),
-                x =&gt; write!(f,"Ru32({})",x)
+                u32::MAX =&gt; write!(f, "Ru32(Err)"),
+                x =&gt; write!(f, "Ru32({})", x)
             }
         }
     }
@@ -126,18 +126,18 @@ mod ru32 {
 use ru32::Ru32;
 
 fn str_to_u32(s: &amp;str) -&gt; Ru32 {
-    let mut x = Ru32::from(0);
+    let mut acc = Ru32::from(0);
     for digit in s.chars() {
         if !digit.is_digit(10) {return Ru32::err();}
-        x = 10*x + Ru32::from(u32::from(digit) - u32::from('0'));
+        acc = 10*acc + Ru32::from(u32::from(digit) - u32::from('0'));
     }
-    return x;
+    acc
 }
 
 fn main() {
-    println!("size of Ru32: {}",std::mem::size_of::&lt;Ru32&gt;());
-    println!("{}",str_to_u32("1440"));
-    println!("{}",str_to_u32("10000000000"));
+    println!("size of Ru32: {}", std::mem::size_of::&lt;Ru32&gt;());
+    println!("{}", str_to_u32("1440"));
+    println!("{}", str_to_u32("10000000000"));
 }
 </pre>
 
@@ -156,19 +156,19 @@ haben.
 <p>Es folgt eine Demonstration anhand von Linearkombinationen.
 
 <pre class="rust box">
-use std::ops::{Add,Mul};
+use std::ops::{Add, Mul};
 
 struct Vector {
     data: Vec&lt;f64&gt;
 }
 
 impl Vector {
-    pub fn new(v: Vec&lt;f64&gt;) -&gt; Self {Vector{data: v}}
+    pub fn new(v: Vec&lt;f64&gt;) -&gt; Self {Vector {data: v}}
 }
 
 impl std::fmt::Display for Vector {
     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
-        write!(f,"{:?}",self.data)
+        write!(f, "{:?}", self.data)
     }
 }
 
@@ -200,39 +200,39 @@ impl Mul&lt;f64&gt; for Vector {
     type Output = Vector;
     fn mul(mut self, r: f64) -&gt; Vector {
         for x in &amp;mut self.data {*x *= r;}
-        return self;
+        self
     }
 }
 
 impl Mul&lt;Vector&gt; for f64 {
     type Output = Vector;
-    fn mul(self, mut b: Vector) -&gt; Vector {
-        for x in &amp;mut b.data {*x *= self;}
-        return b;
+    fn mul(self, mut rhs: Vector) -&gt; Vector {
+        for x in &amp;mut rhs.data {*x *= self;}
+        rhs
     }
 }
 
 impl&lt;'a&gt; Mul&lt;&amp;'a Vector&gt; for f64 {
     type Output = Multiplication&lt;'a&gt;;
     fn mul(self, b: &amp;'a Vector) -&gt; Multiplication&lt;'a&gt; {
-        Multiplication{r: self, v: b}
+        Multiplication {r: self, v: b}
     }
 }
 
 impl&lt;'a&gt; Mul&lt;&amp;'a mut Vector&gt; for f64 {
     type Output = Multiplication&lt;'a&gt;;
     fn mul(self, b: &amp;'a mut Vector) -&gt; Multiplication&lt;'a&gt; {
-        Multiplication{r: self, v: b}
+        Multiplication {r: self, v: b}
     }
 }
 
 impl Add&lt;&amp;Vector&gt; for Vector {
     type Output = Vector;
     fn add(mut self, b: &amp;Vector) -&gt; Vector {
-        for (i,x) in self.data.iter_mut().enumerate() {
+        for (i, x) in self.data.iter_mut().enumerate() {
             *x += b.data[i];
         }
-        return self;
+        self
     }
 }
 
@@ -244,21 +244,21 @@ impl Add&lt;Vector&gt; for Vector {
 impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for &amp;'a Vector {
     type Output = Addition&lt;'a&gt;;
     fn add(self, b: &amp;'a Vector) -&gt; Addition&lt;'a&gt; {
-        Addition{v: self, w: b}
+        Addition {v: self, w: b}
     }
 }
 
 impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for Multiplication&lt;'a&gt; {
     type Output = AddMul&lt;'a&gt;;
     fn add(self, b: &amp;'a Vector) -&gt; AddMul&lt;'a&gt; {
-        AddMul{m: self, v: b}
+        AddMul {m: self, v: b}
     }
 }
 
 impl&lt;'a&gt; Add&lt;Multiplication&lt;'a&gt;&gt; for Multiplication&lt;'a&gt; {
     type Output = AddMulMul&lt;'a&gt;;
     fn add(self, b: Multiplication&lt;'a&gt;) -&gt; AddMulMul&lt;'a&gt; {
-        AddMulMul{ma: self, mb: b}
+        AddMulMul {ma: self, mb: b}
     }
 }
 
@@ -268,17 +268,17 @@ impl&lt;'a&gt; Flush for Multiplication&lt;'a&gt; {
         for (i,x) in data.iter_mut().enumerate() {
             *x = self.r*self.v.data[i];
         }
-        return buffer;
+        buffer
     }
 }
 
 impl&lt;'a&gt; Flush for Addition&lt;'a&gt; {
     fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
         let data = &amp;mut buffer.data;
-        for (i,x) in data.iter_mut().enumerate() {
-            *x = self.v.data[i]+self.w.data[i];
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = self.v.data[i] + self.w.data[i];
         }
-        return buffer;
+        buffer
     }
 }
 
@@ -287,10 +287,10 @@ impl&lt;'a&gt; Flush for AddMul&lt;'a&gt; {
         let data = &amp;mut buffer.data;
         let m = &amp;self.m;
         let v = &amp;self.v;
-        for (i,x) in data.iter_mut().enumerate() {
-            *x = m.r*m.v.data[i]+v.data[i];
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = m.r*m.v.data[i] + v.data[i];
         }
-        return buffer;
+        buffer
     }
 }
 
@@ -299,10 +299,10 @@ impl&lt;'a&gt; Flush for AddMulMul&lt;'a&gt; {
         let data = &amp;mut buffer.data;
         let ma = &amp;self.ma;
         let mb = &amp;self.mb;
-        for (i,x) in data.iter_mut().enumerate() {
-            *x = ma.r*ma.v.data[i]+mb.r*mb.v.data[i];
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = ma.r*ma.v.data[i] + mb.r*mb.v.data[i];
         }
-        return buffer;
+        buffer
     }
 }
 
@@ -319,10 +319,10 @@ fn main() {
     let a = &amp;mut Vector::new(vec![0.0, 0.0]);
     let b = &amp;mut Vector::new(vec![0.0, 0.0]);
 
-    calc!{a = 2.0*e1+4.0*e2};
-    calc!{b = 2.0*(a as &amp;Vector)+2.0*e2};
-    println!("{}",a);
-    println!("{}",b);
+    calc!{a = 2.0*e1 + 4.0*e2};
+    calc!{b = 2.0*(a as &amp;Vector) + 2.0*e2};
+    println!("{}", a);
+    println!("{}", b);
 }
 </pre>
 
@@ -340,25 +340,25 @@ wegoptimiert.
 
 <pre class="rust box">
 pub mod vector {
-    use std::ops::{Add,Sub,Mul};
+    use std::ops::{Add, Sub, Mul};
 
     pub struct Vector(pub Vec&lt;f64&gt;);
-    pub struct Addition&lt;A: Get, B: Get&gt;(A,B);
-    pub struct ScalarMul&lt;A: Get&gt;(f64,A);
+    pub struct Addition&lt;A: Get, B: Get&gt;(A, B);
+    pub struct ScalarMul&lt;A: Get&gt;(f64, A);
 
     impl Vector {
         pub fn flush&lt;A: Get&gt;(&amp;mut self, a: A) {
-            for (i,v) in self.0.iter_mut().enumerate() {
+            for (i, v) in self.0.iter_mut().enumerate() {
                 *v = a.get(i);
             }
         }
     }
-    
+
     impl std::fmt::Display for Vector {
         fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
         -&gt; std::fmt::Result
         {
-            write!(f,"{:?}",self.0)
+            write!(f, "{:?}", self.0)
         }
     }
 
@@ -370,10 +370,10 @@ pub mod vector {
         fn len(&amp;self) -&gt; usize {self.0.len()}
         fn get(&amp;self, i: usize) -&gt; f64 {self.0[i]}
     }
-    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A,B&gt; {
+    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A, B&gt; {
         fn len(&amp;self) -&gt; usize {self.0.len()}
         fn get(&amp;self, i: usize) -&gt; f64 {
-            self.0.get(i)+self.1.get(i)
+            self.0.get(i) + self.1.get(i)
         }
     }
     impl&lt;A: Get&gt; Get for ScalarMul&lt;A&gt; {
@@ -384,72 +384,72 @@ pub mod vector {
     }
     
     impl&lt;'a, B: Get&gt; Add&lt;B&gt; for &amp;'a Vector {
-        type Output = Addition&lt;&amp;'a Vector,B&gt;;
+        type Output = Addition&lt;&amp;'a Vector, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
     impl&lt;'a, B: Get&gt; Sub&lt;B&gt; for &amp;'a Vector {
-        type Output = Addition&lt;&amp;'a Vector,ScalarMul&lt;B&gt;&gt;;
+        type Output = Addition&lt;&amp;'a Vector, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0,A1&gt; {
-        type Output = Addition&lt;Self,B&gt;;
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0,A1&gt; {
-        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
     impl&lt;A: Get, B: Get&gt; Add&lt;B&gt; for ScalarMul&lt;A&gt; {
-        type Output = Addition&lt;Self,B&gt;;
+        type Output = Addition&lt;Self, B&gt;;
         fn add(self, b: B) -&gt; Self::Output {
-            Addition(self,b)
+            Addition(self, b)
         }
     }
     impl&lt;A: Get, B: Get&gt; Sub&lt;B&gt; for ScalarMul&lt;A&gt; {
-        type Output = Addition&lt;Self,ScalarMul&lt;B&gt;&gt;;
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
         fn sub(self, b: B) -&gt; Self::Output {
-            Addition(self,ScalarMul(-1.0,b))
+            Addition(self, ScalarMul(-1.0, b))
         }
     }
     impl&lt;'a&gt; Mul&lt;&amp;'a Vector&gt; for f64 {
         type Output = ScalarMul&lt;&amp;'a Vector&gt;;
         fn mul(self, a: &amp;'a Vector) -&gt; Self::Output {
-            ScalarMul(self,a)
+            ScalarMul(self, a)
         }
     }
-    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A,B&gt;&gt; for f64 {
-        type Output = ScalarMul&lt;Addition&lt;A,B&gt;&gt;;
-        fn mul(self, a: Addition&lt;A,B&gt;) -&gt; Self::Output {
-            ScalarMul(self,a)
+    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A, B&gt;&gt; for f64 {
+        type Output = ScalarMul&lt;Addition&lt;A, B&gt;&gt;;
+        fn mul(self, a: Addition&lt;A, B&gt;) -&gt; Self::Output {
+            ScalarMul(self, a)
         }
     }
     impl&lt;B: Get&gt; Mul&lt;B&gt; for &amp;Vector {
         type Output = f64;
         fn mul(self, b: B) -&gt; f64 {
             let a = &amp;self.0;
-            let mut s = 0.0;
+            let mut acc = 0.0;
             for i in 0..a.len() {
-                s += a[i]*b.get(i);
+                acc += a[i]*b.get(i);
             }
-            return s;
+            acc
         }
     }
-    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0,A1&gt; {
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0, A1&gt; {
         type Output = f64;
         fn mul(self, b: B) -&gt; f64 {
-            let mut s = 0.0;
+            let mut acc = 0.0;
             for i in 0..self.len() {
-                s += self.get(i)*b.get(i);
+                acc += self.get(i)*b.get(i);
             }
-            return s;
+            acc
         }
     }
     pub fn norm&lt;A: Get&gt;(v: A) -&gt; f64 {
@@ -458,20 +458,20 @@ pub mod vector {
             let a = v.get(i);
             s += a*a;
         }
-        return s.sqrt();
+        s.sqrt()
     }
 }
 
 use vector::Vector;
 
 fn main() {
-    let v = &amp;Vector(vec![1.0,2.0]);
-    let w = &amp;Vector(vec![3.0,4.0]);
-    let mut buf = Vector(vec![0.0,0.0]);
-    buf.flush(2.0*v + 4.0*w + 5.0*(v-2.0*w));
-    println!("{}",buf);
-    println!("{}",(v+w)*(v-w));
-    println!("{}",v*v-w*w);
+    let v = &amp;Vector(vec![1.0, 2.0]);
+    let w = &amp;Vector(vec![3.0, 4.0]);
+    let mut buf = Vector(vec![0.0, 0.0]);
+    buf.flush(2.0*v + 4.0*w + 5.0*(v - 2.0*w));
+    println!("{}", buf);
+    println!("{}", (v + w)*(v - w));
+    println!("{}", v*v - w*w);
 }
 </pre>
 
