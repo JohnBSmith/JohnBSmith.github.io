@@ -18,6 +18,7 @@
 <li><a href="#Restklassen">Beispiel: Der Typ einer Restklasse</a>
 <li><a href="#Vektoren">Beispiel: Zerklüftungsfreie Vektoren</a>
 <li><a href="#Einheiten">Beispiel: Einheiten</a>
+<li><a href="#Stapel">Beispiel: Beschränkter Stapelspeicher</a>
 </ol>
 
 <h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
@@ -406,7 +407,54 @@ fn kinetic_energy(m: Mass, v: Speed) -&gt; Energy {
 fn main() {
     let m = quantity!{1.0 kg};
     let v = quantity!{2.0 m/s};
-    println!("{}", kinetic_energy(m,v));
+    println!("{}", kinetic_energy(m, v));
+}
+</pre>
+
+<h2 id="Stapel">Beispiel: Beschränkter Stapelspeicher</h2>
+
+<p>Die Nutzung von <code>Vec</code> zur Erstellung von
+Stapelspeichern ist mit dem Nachteil der Haldenspeicher-Allokation
+behaftet. Ein Ausweg besteht darin, Stapelspeicher stattdessen mit
+Feldern fester Länge zu erstellen, sofern eine Beschränkung der
+Kapazität tolerierbar erscheint.
+
+<p>Für diesen Stapel wünscht man sich darüber hinaus einen
+eigenen abstrakten Datentyp. Weil dieser Typ allerdings über seine
+Kapazität zu parametrisieren ist, benötigen wir eine Konstante
+als Typparameter. Die folgende Darstellung zeigt einen Prototyp,
+bei dem der Elementtyp zur Vereinfachung durch die Traits
+<code>Copy</code> und <code>Default</code> beschränkt wurde.
+
+<pre class="rust ibox">
+struct Stack&lt;T, const N: usize&gt; {
+    sp: usize, buff: [T; N]
+}
+
+impl&lt;T: Copy + Default, const N: usize&gt; Stack&lt;T, N&gt; {
+    fn new() -&gt; Self {
+        Self {sp: 0, buff: [T::default(); N]}
+    }
+    fn push(&amp;mut self, value: T) -&gt; Result&lt;(), ()&gt; {
+        match self.buff.get_mut(self.sp) {
+            Some(p) =&gt; {*p = value; self.sp += 1; Ok(())},
+            None =&gt; Err(())
+        }
+    }
+    fn pop(&amp;mut self) -&gt; Result&lt;T, ()&gt; {
+        match self.buff.get(self.sp - 1) {
+            Some(value) =&gt; {self.sp -= 1; Ok(*value)},
+            None =&gt; Err(())
+        }
+    }
+}
+
+fn main() {
+    let mut stack = Stack::&lt;i32, 10&gt;::new();
+    let _ = stack.push(1);
+    let _ = stack.push(2);
+    println!("{}", stack.pop().unwrap());
+    println!("{}", stack.pop().unwrap());
 }
 </pre>
 
