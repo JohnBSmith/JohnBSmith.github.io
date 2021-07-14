@@ -19,6 +19,7 @@
 <li><a href="#Vektoren">Beispiel: Zerklüftungsfreie Vektoren</a>
 <li><a href="#Einheiten">Beispiel: Einheiten</a>
 <li><a href="#Stapel">Beispiel: Beschränkter Stapelspeicher</a>
+<li><a href="#Restriktion">Einschränkung auf einzelne Konstanten</a>
 </ol>
 
 <h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
@@ -455,6 +456,46 @@ fn main() {
     let _ = stack.push(2);
     println!("{}", stack.pop().unwrap());
     println!("{}", stack.pop().unwrap());
+}
+</pre>
+
+<h2 id="Restriktion">Einschränkung auf einzelne Konstanten</h2>
+
+<p>Manchmal möchte man den Bereich einer Parametrisierung
+auf einzelne Konstanten einschränken. Das ist erreichbar, indem
+für diese konkreten Konstanten ein Trait implementiert wird.
+Man stößt hierbei jedoch auf die Komplikation, dass Traits lediglich
+für reguläre Typen implementierbar sind, nicht aber für Konstanten.
+Dieses Problem lässt sich allerdings durch den folgenden Trick
+umgehen. Wir definieren einen Typkonstruktor <code>Const</code>,
+der eine Konstante <code>N</code> in einen gewöhnlichen Typ
+<code>Const&lt;N&gt;</code> umwandelt. Der Trait wird dann stattdessen
+für diesen Typ implementiert.
+
+<p>Das folgende Beispiel verdeutlicht das Vorgehen anhand eines
+bitweisen Linksshifts, der nur für solche Distanzen definiert
+sein soll, welche nichtnegative ganzzahlige Vielfache von acht sind.
+
+<pre class="rust ibox">
+struct Const&lt;const N: u32&gt;;
+
+macro_rules! implement {
+    ($t:ty, for [$($value:expr),*]) =&gt; {
+        $(impl $t for Const&lt;$value&gt; {})*
+    }
+}
+
+trait ShiftAmount {}
+implement!(ShiftAmount, for [0, 8, 16, 24]);
+
+fn shift_left&lt;const N: u32&gt;(x: u32) -&gt; u32
+where Const&lt;N&gt;: ShiftAmount
+{
+    x &lt;&lt; N
+}
+
+fn main() {
+    println!("{}", shift_left::&lt;8&gt;(1));
 }
 </pre>
 
