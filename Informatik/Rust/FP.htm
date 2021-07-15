@@ -61,20 +61,20 @@ Die positive Nullstelle ist die Wurzel von zwei.
 <pre class="rust ibox">
 fn diff(f: fn(f64)-&gt;f64, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f(x+h) - f(x-h))/(2.0*h);
+    (f(x+h) - f(x-h))/(2.0*h)
 }
 
 fn newton(f: fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x - f(x)/diff(f,x);
+        x = x - f(x)/diff(f, x);
     }
-    return x;
+    x
 }
 
 fn main() {
     fn f(x: f64) -&gt; f64 {x*x - 2.0}
-    println!("{}", newton(f,1.0));
+    println!("{}", newton(f, 1.0));
 }
 </pre>
 
@@ -98,8 +98,8 @@ Quadratwurzel-Funktion <code>sqrt</code> implementieren. Die
 Funktion ergäbe sich offenbar so:
 <pre class="rust ibox">
 fn sqrt(a: f64) -&gt; f64 {
-    fn f(x: f64) -&gt; f64 {x*x-a}
-    return newton(f,1.0);
+    fn f(x: f64) -&gt; f64 {x*x - a}
+    newton(f, 1.0)
 }
 </pre>
 
@@ -136,20 +136,20 @@ let f = |x| x*x - 2.0;
 <pre class="rust ibox">
 fn diff(f: &amp;dyn Fn(f64)-&gt;f64, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f(x+h) - f(x-h))/(2.0*h);
+    (f(x+h) - f(x-h))/(2.0*h)
 }
 
 fn newton(f: &amp;dyn Fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x - f(x)/diff(f,x);
+        x = x - f(x)/diff(f, x);
     }
-    return x;
+    x
 }
 
 fn sqrt(a: f64) -&gt; f64 {
     let f = |x| x*x - a;
-    return newton(&amp;f,1.0);
+    newton(&amp;f, 1.0)
 }
 
 fn main() {
@@ -185,21 +185,21 @@ Trait-Objekts erzeugt wird.
 
 <p>Die Formulierung ist nun lediglich ein klein wenig umständlicher:
 <pre class="rust ibox">
-trait Fun&lt;X,Y&gt; {
+trait Fun&lt;X, Y&gt; {
     fn call(&amp;self, x: X) -&gt; Y;
 }
 
-fn diff(f: &amp;dyn Fun&lt;f64,f64&gt;, x: f64) -&gt; f64 {
+fn diff(f: &amp;dyn Fun&lt;f64, f64&gt;, x: f64) -&gt; f64 {
     let h = 0.001;
-    return (f.call(x+h) - f.call(x-h))/(2.0*h);
+    (f.call(x+h) - f.call(x-h))/(2.0*h)
 }
 
-fn newton(f: &amp;dyn Fun&lt;f64,f64&gt;, x0: f64) -&gt; f64 {
+fn newton(f: &amp;dyn Fun&lt;f64, f64&gt;, x0: f64) -&gt; f64 {
     let mut x = x0;
     for _ in 0..20 {
-        x = x - f.call(x)/diff(f,x);
+        x = x - f.call(x)/diff(f, x);
     }
-    return x;
+    x
 }
 
 fn sqrt(a: f64) -&gt; f64 {
@@ -207,7 +207,7 @@ fn sqrt(a: f64) -&gt; f64 {
     impl Fun&lt;f64,f64&gt; for F {
         fn call(&amp;self, x: f64) -&gt; f64 {x*x - self.a}
     }
-    return newton(&amp;F{a},1.0);
+    newton(&amp;F {a}, 1.0)
 }
 
 fn main() {
@@ -228,11 +228,11 @@ der Funktionsaufruf.
 <var>g</var>,&nbsp;<var>f</var> an der Stelle <var>x</var>,
 das ist
 <pre class="ibox">
-compose(g,f,x) := g(f(x)),
+compose(g, f, x) := g(f(x)),
 </pre>
 <p>ist implementierbar als:
 <pre class="rust ibox">
-fn compose&lt;G,F&gt;(g: G, f: F, x: f64) -&gt; f64
+fn compose&lt;G, F&gt;(g: G, f: F, x: f64) -&gt; f64
 where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
 {
     g(f(x))
@@ -245,7 +245,7 @@ Typ wie gesagt bei jedem Closure unterschiedlich ist.
 
 <p>Nun wollen wir <code>compose</code> abändern zu
 <pre class="ibox">
-compose(g,f) := |x| g(f(x)).
+compose(g, f) := |x| g(f(x)).
 </pre>
 
 <p>Die Frage stellt sich, wie das zu typisieren ist, da nun
@@ -268,7 +268,7 @@ als »<i>opaker Typ, der A implementiert</i>«. Die gewünschte Funktion
 wird damit formulierbar:
 
 <pre class="rust ibox">
-fn compose&lt;G,F&gt;(g: G, f: F) -&gt; impl Fn(f64) -&gt; f64
+fn compose&lt;G, F&gt;(g: G, f: F) -&gt; impl Fn(f64) -&gt; f64
 where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
 {
     move |x| g(f(x))
@@ -301,7 +301,7 @@ und Rückgabewerten von <code>g</code>,&nbsp;<code>f</code>
 durch Typvariablen und gelangen schließlich zu:
 
 <pre class="rust ibox">
-fn compose&lt;X,Y,Z&gt;(g: impl Fn(Y) -&gt; Z, f: impl Fn(X) -&gt; Y)
+fn compose&lt;X, Y, Z&gt;(g: impl Fn(Y) -&gt; Z, f: impl Fn(X) -&gt; Y)
 -&gt; impl Fn(X) -&gt; Z
 {
     move |x| g(f(x))
@@ -339,7 +339,7 @@ da Closure-Typen per se nicht benennbar sind.
 Element eines Arrays an.
 
 <pre class="rust ibox">
-fn map&lt;X,Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X) -&gt; Y) -&gt; Vec&lt;Y&gt; {
+fn map&lt;X, Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X) -&gt; Y) -&gt; Vec&lt;Y&gt; {
     let mut acc = Vec::with_capacity(a.len());
     for x in a {
         acc.push(f(x));
@@ -360,8 +360,8 @@ f: impl Fn(&amp;X)->Y
 </pre>
 <p>erlaubt, bzw. äquivalent:
 <pre class="rust ibox">
-fn map&lt;X,Y,F&gt;(a: &amp;[X], f: F) -&gt; Vec&lt;Y&gt;
-where F: Fn(&amp;X)-&gt;Y
+fn map&lt;X, Y, F&gt;(a: &amp;[X], f: F) -&gt; Vec&lt;Y&gt;
+where F: Fn(&amp;X) -&gt; Y
 </pre>
 <p>Dies kann zu besser optimiertem Code führen, da die
 Monomorphisierung mehr Inlining ermöglicht.
@@ -369,8 +369,8 @@ Monomorphisierung mehr Inlining ermöglicht.
 <p>Weitere Abstraktion erlaubt die Anwendung der Funktion auf
 beliebige iterierbare Objekte:
 <pre class="rust ibox">
-fn map&lt;X,Y,A,F&gt;(a: A, f: F) -&gt; Vec&lt;Y&gt;
-where A: IntoIterator&lt;Item=X&gt;, F: Fn(&amp;X)-&gt;Y
+fn map&lt;X, Y, A, F&gt;(a: A, f: F) -&gt; Vec&lt;Y&gt;
+where A: IntoIterator&lt;Item = X&gt;, F: Fn(&amp;X) -&gt; Y
 {
     let it = a.into_iter();
     let mut acc = Vec::with_capacity(it.size_hint().0);
@@ -490,7 +490,7 @@ dergestalt dass man die Erzeugung des Zwischenwertes entfallen
 lassen kann.
 
 <pre class="rust ibox">
-fn filter&lt;T,I,P&gt;(a: I, p: P) -&gt; Vec&lt;T&gt;
+fn filter&lt;T, I, P&gt;(a: I, p: P) -&gt; Vec&lt;T&gt;
 where I: IntoIterator&lt;Item = T&gt;, P: Fn(&amp;T) -&gt; bool
 {
     let mut acc = Vec::new();
@@ -553,7 +553,7 @@ an den Algorithmus übergeben werden. Wir gelangen zu:
 <pre class="rust ibox">
 fn fold(a: &amp;[f64], init: f64, op: impl Fn(f64, f64) -&gt; f64) -&gt; f64 {
     let mut acc = init;
-    for &amp;x in a {acc = op(acc,x);}
+    for &amp;x in a {acc = op(acc, x);}
     acc
 }
 
@@ -577,9 +577,9 @@ Typ zulässt, womit <code>fold</code> einen zweiten Typparameter erhält.
 der Element-Typ nicht geklont werden braucht.
 
 <pre class="rust ibox">
-fn fold&lt;X,Y&gt;(a: &amp;[X], init: Y, op: impl Fn(Y, &amp;X) -&gt; Y) -&gt; Y {
+fn fold&lt;X, Y&gt;(a: &amp;[X], init: Y, op: impl Fn(Y, &amp;X) -&gt; Y) -&gt; Y {
     let mut acc = init;
-    for x in a {acc = op(acc,x);}
+    for x in a {acc = op(acc, x);}
     acc
 }
 
@@ -593,11 +593,11 @@ fn sum(a: &amp;[f64]) -&gt; f64 {
 schließlich zu:
 
 <pre class="rust ibox">
-fn fold&lt;X,Y,I,F&gt;(a: I, init: Y, f: F) -&gt; Y
-where I: IntoIterator&lt;Item = X&gt;, F: Fn(Y,X) -&gt; Y
+fn fold&lt;X, Y, I, F&gt;(a: I, init: Y, f: F) -&gt; Y
+where I: IntoIterator&lt;Item = X&gt;, F: Fn(Y, X) -&gt; Y
 {
     let mut acc = init;
-    for x in a {acc = f(acc,x);}
+    for x in a {acc = f(acc, x);}
     acc
 }
 </pre>
@@ -644,7 +644,7 @@ mathematischen Sinn darstellen.
 
 <pre class="rust ibox">
 mod ru32 {
-    #[derive(Debug,Clone,Copy)]
+    #[derive(Debug, Clone, Copy)]
     pub struct Ru32(Option&lt;u32&gt;);
     
     impl Ru32 {
@@ -693,7 +693,7 @@ mod ru32 {
         fn bind(self, f: impl Fn(T)-&gt;Self) -&gt; Self;
     }
 
-    #[derive(Debug,Clone,Copy)]
+    #[derive(Debug, Clone, Copy)]
     pub struct Ru32 (Option&lt;u32&gt;);
     
     impl Ru32 {
@@ -730,7 +730,7 @@ fn bind_binary(x: Ru32, y: Ru32,
 impl std::ops::Add&lt;Self&gt; for Ru32 {
     type Output = Self;
     fn add(self, y: Self) -&gt; Self {
-        bind_binary(self,y,u32::checked_add)
+        bind_binary(self, y, u32::checked_add)
     }
 }
 </pre>
@@ -772,7 +772,7 @@ fn f(x: i32, y: i32, z: i32) -&gt; i32 {
 
 <p>Currying des ersten Arguments stellt kein Problem dar:
 <pre class="rust ibox">
-fn f(x: i32) -&gt; impl Fn(i32,i32) -&gt; i32 {
+fn f(x: i32) -&gt; impl Fn(i32, i32) -&gt; i32 {
     move |y,z| x + y + z
 }
 </pre>
@@ -811,7 +811,7 @@ impl FunFromf {
 }
 
 fn f(x: i32) -&gt; impl Fn(i32) -&gt; FunFromf {
-    move |y| FunFromf{x,y}
+    move |y| FunFromf {x, y}
 }
 </pre>
 
@@ -827,7 +827,7 @@ impl FunFromf {
 }
 
 fn f(x: i32) -&gt; FunFromf {
-    FunFromf{x}
+    FunFromf {x}
 }
 </pre>
 

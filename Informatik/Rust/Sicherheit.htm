@@ -65,7 +65,7 @@ ein solcher Wert nur über eine Validierung erzeugt werden kann.
 
 <pre class="rust ibox">
 mod db {
-    #[derive(Clone,Copy)]
+    #[derive(Clone, Copy)]
     pub struct DatabaseIndex {
         index: u16
     }
@@ -76,7 +76,7 @@ mod db {
                 a[0].is_digit(10) &amp;&amp; a[1].is_digit(10) &amp;&amp;
                 a[2].is_digit(10) &amp;&amp; a[3].is_digit(10)
             {
-                Some(DatabaseIndex{
+                Some(DatabaseIndex {
                     index: s.parse::&lt;u16&gt;().unwrap()
                 })
             } else {
@@ -111,7 +111,7 @@ fn main() {
 }
 
 fn database_access(index: db::DatabaseIndex) {
-    println!("Validierter Index: {}",index.get());
+    println!("Validierter Index: {}", index.get());
 }
 </pre>
 
@@ -165,7 +165,7 @@ mod stack {
     }
     impl&lt;T&gt; Stack&lt;T&gt; {
         pub fn new() -&gt; Self {
-            Stack{v: Vec::new()}
+            Stack {v: Vec::new()}
         }
         pub fn push(&amp;mut self, x: T) {
             self.v.push(x);
@@ -182,8 +182,8 @@ fn main() {
     let mut a: Stack&lt;i32&gt; = Stack::new();
     a.push(1);
     a.push(2);
-    println!("{}",a.pop());
-    println!("{}",a.pop());
+    println!("{}", a.pop());
+    println!("{}", a.pop());
 }
 </pre>
 
@@ -213,7 +213,7 @@ mod stack {
     }
     impl&lt;T&gt; Stack&lt;T&gt; for VecStack&lt;T&gt; {
         fn new() -&gt; Self {
-            VecStack{v: Vec::new()}
+            VecStack {v: Vec::new()}
         }
         fn push(&amp;mut self, x: T) {
             self.v.push(x);
@@ -230,8 +230,8 @@ fn routine&lt;S: Stack&lt;i32&gt;&gt;() {
     let mut a: S = S::new();
     a.push(1);
     a.push(2);
-    println!("{}",a.pop());
-    println!("{}",a.pop());
+    println!("{}", a.pop());
+    println!("{}", a.pop());
 }
 
 fn main() {
@@ -294,9 +294,9 @@ use fruit_crate::FruitCrate;
 
 fn main() {
     let mut fc = FruitCrate::new();
-    fc.push("Äpfel",1000);
-    fc.push("Birnen",1000);
-    println!("Die Obstkiste wiegt {}g.",fc.total_mass());
+    fc.push("Äpfel", 1000);
+    fc.push("Birnen", 1000);
+    println!("Die Obstkiste wiegt {}g.", fc.total_mass());
 }
 </pre>
 
@@ -331,11 +331,11 @@ use fruit_crate::FruitCrate;
 
 fn main() {
     let mut fc = FruitCrate::new();
-    fc.push("Äpfel",1000);
-    fc.push("Birnen",1000);
+    fc.push("Äpfel", 1000);
+    fc.push("Birnen", 1000);
     let a = fc.list();
     fc.open = false;
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -362,11 +362,11 @@ pub fn borrow_parts(&amp;mut self) -&gt; (&amp;mut bool, &amp;Vec&lt;Fruit&gt;) 
 <pre class="rust ibox">
 fn main() {
     let mut fc = FruitCrate::new();
-    fc.push("Äpfel",1000);
-    fc.push("Birnen",1000);
+    fc.push("Äpfel", 1000);
+    fc.push("Birnen", 1000);
     let (open,list) = fc.borrow_parts();
     *open = false;
-    println!("{:?}",list);
+    println!("{:?}", list);
 }
 </pre>
 
@@ -411,11 +411,11 @@ use fruit_crate::FruitCrate;
 
 fn main() {
     let mut fc = FruitCrate::new();
-    fc.push("Äpfel",1000);
-    fc.push("Birnen",1000);
+    fc.push("Äpfel", 1000);
+    fc.push("Birnen", 1000);
     let list = &amp;*fc.list;
     fc.open = false;
-    println!("{:?}",list);
+    println!("{:?}", list);
 }
 </pre>
 
@@ -465,14 +465,14 @@ lassen. Jeder Typzustand bekommt jeweils seine erlaubten Methoden.
 pub mod a_state {
     pub struct A {data: ()}
     impl A {
-        pub fn new() -&gt; A {A{data: ()}}
-        pub fn f1(self) -&gt; A2 {A2{data: self.data}}
+        pub fn new() -&gt; A {A {data: ()}}
+        pub fn f1(self) -&gt; A2 {A2 {data: self.data}}
     }
     
     pub struct A2 {data: ()}
     impl A2 {
-        pub fn f2a(self) -&gt; A3 {A3{data: self.data}}
-        pub fn f2b(self) -&gt; A3 {A3{data: self.data}}
+        pub fn f2a(self) -&gt; A3 {A3 {data: self.data}}
+        pub fn f2b(self) -&gt; A3 {A3 {data: self.data}}
     }
     
     pub struct A3 {data: ()}
@@ -517,13 +517,13 @@ pub mod a_state {
     pub struct A&lt;S: State&gt; {
         data: (), marker: Ph&lt;S&gt;
     }
-    pub fn new_a() -&gt; A&lt;A1&gt; {A{data: (), marker: Ph}}
+    pub fn new_a() -&gt; A&lt;A1&gt; {A {data: (), marker: Ph}}
     impl A&lt;A1&gt; {
-        pub fn f1(self) -&gt; A&lt;A2&gt; {A{data: self.data, marker: Ph}}
+        pub fn f1(self) -&gt; A&lt;A2&gt; {A {data: self.data, marker: Ph}}
     }
     impl A&lt;A2&gt; {
-        pub fn f2a(self) -&gt; A&lt;A3&gt; {A{data: self.data, marker: Ph}}
-        pub fn f2b(self) -&gt; A&lt;A3&gt; {A{data: self.data, marker: Ph}}
+        pub fn f2a(self) -&gt; A&lt;A3&gt; {A {data: self.data, marker: Ph}}
+        pub fn f2b(self) -&gt; A&lt;A3&gt; {A {data: self.data, marker: Ph}}
     }
     impl A&lt;A3&gt; {
         pub fn f3(self) {}
@@ -565,7 +565,7 @@ fn circumference(radius: f64) -&gt; f64 {
 
 fn main() {
     let r = 4.0*cm + 2.0*mm;
-    println!("{} m",circumference(r));
+    println!("{} m", circumference(r));
 }
 </pre>
 
@@ -598,7 +598,7 @@ als konstante Größen:
 <pre class="rust ibox">
 pub mod quantities {
     use std::marker::PhantomData as Ph;
-    use std::ops::{Mul,Add};
+    use std::ops::{Mul, Add};
     use std::fmt;
 
     pub trait Dimension {}
@@ -631,17 +631,17 @@ pub mod quantities {
 
     pub mod unit {
         #![allow(non_upper_case_globals)]
-        use crate::quantities::{Quantity,Length};
+        use crate::quantities::{Quantity, Length};
         use std::marker::PhantomData as Ph;
-        pub const km: Quantity&lt;Length&gt; = Quantity{value: 1.000, dim: Ph};
-        pub const  m: Quantity&lt;Length&gt; = Quantity{value: 1.0,   dim: Ph};
-        pub const cm: Quantity&lt;Length&gt; = Quantity{value: 0.01,  dim: Ph};
-        pub const mm: Quantity&lt;Length&gt; = Quantity{value: 0.001, dim: Ph};
+        pub const km: Quantity&lt;Length&gt; = Quantity {value: 1.000, dim: Ph};
+        pub const  m: Quantity&lt;Length&gt; = Quantity {value: 1.0,   dim: Ph};
+        pub const cm: Quantity&lt;Length&gt; = Quantity {value: 0.01,  dim: Ph};
+        pub const mm: Quantity&lt;Length&gt; = Quantity {value: 0.001, dim: Ph};
     }
 }
 
-use quantities::{Quantity,Length};
-use quantities::unit::{cm,mm};
+use quantities::{Quantity, Length};
+use quantities::unit::{cm, mm};
 use std::f64::consts::PI;
 
 fn circumference(radius: Quantity&lt;Length&gt;) -&gt; Quantity&lt;Length&gt; {
@@ -650,7 +650,7 @@ fn circumference(radius: Quantity&lt;Length&gt;) -&gt; Quantity&lt;Length&gt; {
 
 fn main() {
     let r = 4.0*cm + 2.0*mm;
-    println!("{}",circumference(r));
+    println!("{}", circumference(r));
 }
 </pre>
 
@@ -664,7 +664,7 @@ abstrakten Dimension.
 <pre class="rust ibox">
 pub mod quantities {
     use std::marker::PhantomData as Ph;
-    use std::ops::{Mul,Add};
+    use std::ops::{Mul, Add};
     use std::fmt;
 
     pub trait Unit {
@@ -692,17 +692,17 @@ pub mod quantities {
     }
     impl&lt;U: Unit&gt; fmt::Display for Quantity&lt;U&gt; {
         fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
-            write!(f, "{} {}", self.value,U::NAME)
+            write!(f, "{} {}", self.value, U::NAME)
         }
     }
 
     #[allow(non_camel_case_types)]
-    #[derive(Clone,Copy)]
+    #[derive(Clone, Copy)]
     pub struct cm;
     impl Unit for cm {const NAME: &amp;'static str = "cm";}
 }
 
-use quantities::{Quantity,cm};
+use quantities::{Quantity, cm};
 use std::f64::consts::PI;
 
 fn circumference(radius: Quantity&lt;cm&gt;) -&gt; Quantity&lt;cm&gt; {
@@ -711,7 +711,7 @@ fn circumference(radius: Quantity&lt;cm&gt;) -&gt; Quantity&lt;cm&gt; {
 
 fn main() {
     let r = Quantity::&lt;cm&gt;::from(4.0);
-    println!("{}",circumference(r));
+    println!("{}", circumference(r));
 }
 </pre>
 
@@ -751,16 +751,16 @@ fn tokens_to_string(a: &amp;[Token]) -&gt; String {
         }
         buffer.push(' ');
     }
-    return buffer;
+    buffer
 }
 
 fn main() {
     let a = vec![
-        Token{symbol: Symbol::Identifier, data: Some("x".to_string())},
-        Token{symbol: Symbol::Add, data: None},
-        Token{symbol: Symbol::Number, data: Some("1".to_string())}
+        Token {symbol: Symbol::Identifier, data: Some("x".to_string())},
+        Token {symbol: Symbol::Add, data: None},
+        Token {symbol: Symbol::Number, data: Some("1".to_string())}
     ];
-    println!("{}",tokens_to_string(&amp;a))
+    println!("{}", tokens_to_string(&amp;a))
 }
 </pre>
 
@@ -793,7 +793,7 @@ fn tokens_to_string(a: &amp;[Symbol]) -&gt; String {
         }
         buffer.push(' ');
     }
-    return buffer;
+    buffer
 }
 
 fn main() {
@@ -802,7 +802,7 @@ fn main() {
         Symbol::Add,
         Symbol::Number(1)
     ];
-    println!("{}",tokens_to_string(&amp;a))
+    println!("{}", tokens_to_string(&amp;a))
 }
 </pre>
 
@@ -857,7 +857,7 @@ mod ru32 {
         fn bind(self, f: impl Fn(T)-&gt;Self) -&gt; Self;
     }
 
-    #[derive(Debug,Clone,Copy)]
+    #[derive(Debug, Clone, Copy)]
     pub struct Ru32 (Option&lt;u32&gt;);
 
     impl Ru32 {pub fn err() -&gt; Self {return Ru32(None);}}
@@ -898,17 +898,17 @@ mod ru32 {
 use ru32::Ru32;
 
 fn str_to_u32(s: &amp;str) -&gt; Ru32 {
-    let mut x = Ru32::from(0);
+    let mut acc = Ru32::from(0);
     for digit in s.chars() {
         if !digit.is_digit(10) {return Ru32::err();}
-        x = 10*x + (Ru32::from(digit) - Ru32::from('0'));
+        acc = 10*acc + (Ru32::from(digit) - Ru32::from('0'));
     }
-    return x;
+    acc
 }
 
 fn main() {
-    println!("{:?}",str_to_u32("1440"));
-    println!("{:?}",str_to_u32("10000000000"));
+    println!("{:?}", str_to_u32("1440"));
+    println!("{:?}", str_to_u32("10000000000"));
 }
 </pre>
 
@@ -952,7 +952,7 @@ müssen, die Nachbedingung dass das Ergebnis auch diese Länge besitzt.
 formulieren.
 
 <pre class="rust ibox">
-fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt; {
+fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X, Y)&gt; {
     let n = a.len();
     
     // Precondition
@@ -970,10 +970,10 @@ fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt
 }
 
 fn main() {
-    let a = vec![1,2,3,4];
-    let b = vec!["a","b","c","d"];
-    let c = zip(&amp;a,&amp;b);
-    println!("{:?}",c);
+    let a = vec![1, 2, 3, 4];
+    let b = vec!["a", "b", "c", "d"];
+    let c = zip(&amp;a, &amp;b);
+    println!("{:?}", c);
 }
 </pre>
 
@@ -998,7 +998,7 @@ macro_rules! contract {
     }
 }
 
-fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X,Y)&gt; {
+fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X, Y)&gt; {
     let n = a.len();
     contract! {
         precondition {
@@ -1044,7 +1044,7 @@ vorab beschränkt wird. Betrachten wir exemplarisch
 die rekursive Berechnung der Addition:
 <pre class="rust ibox">
 fn add(x: u32, y: u32) -&gt; u32 {
-    if y == 0 {x} else {add(x,y-1) + 1}
+    if y == 0 {x} else {add(x, y - 1) + 1}
 }
 </pre>
 <p>Auf meinem Computer lag die maximale Rekursionstiefe
@@ -1059,7 +1059,7 @@ Laufzeitsystem sollte dafür eine Konfiguration bereithalten.
 <pre class="rust ibox">
 fn add(x: u32, y: u32, depth_max: u32) -&gt; Result&lt;u32,()&gt; {
     if depth_max == 0 {return Err(());}
-    if y == 0 {Ok(x)} else {Ok(add(x,y-1,depth_max-1)? + 1)}
+    if y == 0 {Ok(x)} else {Ok(add(x, y - 1, depth_max - 1)? + 1)}
 }
 </pre>
 
@@ -1202,4 +1202,3 @@ zeigt sich ganz klar etwa bei <code>Result&lt;(),E&gt;</code>.
 
 </body>
 </html>
-

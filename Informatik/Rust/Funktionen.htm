@@ -28,21 +28,21 @@ einem Tupel.
 kartesischen und polaren Koordinaten an.
 
 <pre class="rust ibox">
-fn from_polar(r: f64, phi: f64) -&gt; (f64,f64) {
+fn from_polar(r: f64, phi: f64) -&gt; (f64, f64) {
     (r*phi.cos(), r*phi.sin())
 }
 
-fn polar_from(x: f64, y: f64) -&gt; (f64,f64) {
+fn polar_from(x: f64, y: f64) -&gt; (f64, f64) {
     (x.hypot(y), y.atan2(x))
 }
 
 fn main() {
     use std::f64::consts::PI;
-    let (x,y) = from_polar(1.0,0.5*PI);
-    println!("x = {:.4}; y = {:.4}",x,y);
+    let (x, y) = from_polar(1.0, 0.5*PI);
+    println!("x = {:.4}; y = {:.4}", x, y);
 
-    let (r,phi) = polar_from(x,y);
-    println!("r = {:.4}; phi = {:.4}",r,phi);
+    let (r, phi) = polar_from(x, y);
+    println!("r = {:.4}; phi = {:.4}", r, phi);
 }
 </pre>
 
@@ -65,7 +65,7 @@ fn mean(a: &amp;[f64]) -&gt; f64 {
 
 fn main() {
     let m = mean(&amp;[1.0, 2.0, 3.0, 4.0]);
-    println!("{}",m);
+    println!("{}", m);
 }
 </pre>
 
@@ -90,7 +90,7 @@ macro_rules! argv {
 
 fn display(a: &amp;[&amp;dyn std::fmt::Display]) {
     for x in a {
-        println!("{}",x);
+        println!("{}", x);
     }
 }
 
@@ -157,8 +157,8 @@ struct List&lt;Head, Tail&gt; (Head, Tail);
 
 macro_rules! list {
     () =&gt; {Nil};
-    ($x:expr) =&gt; {List($x,Nil)};
-    ($x:expr, $($tail:expr),*) =&gt; {List($x,list![$($tail),*])}
+    ($x:expr) =&gt; {List($x, Nil)};
+    ($x:expr, $($tail:expr),*) =&gt; {List($x, list![$($tail),*])}
 }
 
 trait DisplayFn {
@@ -169,7 +169,7 @@ impl DisplayFn for Nil {
     fn display(self) {}
 }
 
-impl&lt;H,T&gt; DisplayFn for List&lt;H,T&gt;
+impl&lt;H, T&gt; DisplayFn for List&lt;H, T&gt;
 where H: std::fmt::Display, T: DisplayFn
 {
     fn display(self) {
@@ -189,4 +189,3 @@ fn main() {
 
 </body>
 </html>
-

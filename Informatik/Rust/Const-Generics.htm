@@ -149,8 +149,8 @@ pub mod vector {
 
     impl&lt;const N: usize&gt; Vector&lt;N&gt; {
         pub fn flush&lt;A: Get&gt;(&amp;mut self, a: A) {
-            for (i, v) in self.0.iter_mut().enumerate() {
-                *v = a.get(i);
+            for i in 0..N {
+                self.0[i] = a.get(i);
             }
         }
     }
@@ -300,16 +300,16 @@ in kohärente Einheiten statt.
 pub mod quantities {
     use std::ops::{Add, Mul};
 
-    #[derive(Clone,Copy)]
+    #[derive(Clone, Copy)]
     pub struct Quantity&lt;const L: i32, const M: i32, const T: i32&gt; {
         value: f64
     }
 
     impl&lt;const L: i32, const M: i32, const T: i32&gt;
-    Add&lt;Quantity&lt;L,M,T&gt;&gt; for Quantity&lt;L,M,T&gt;
+    Add&lt;Quantity&lt;L, M, T&gt;&gt; for Quantity&lt;L, M, T&gt;
     {
-        type Output = Quantity&lt;L,M,T&gt;;
-        fn add(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
+        type Output = Quantity&lt;L, M, T&gt;;
+        fn add(self, y: Quantity&lt;L, M, T&gt;) -&gt; Quantity&lt;L, M, T&gt; {
             Quantity {value: self.value + y.value}
         }
     }
@@ -317,8 +317,8 @@ pub mod quantities {
     impl&lt;const L: i32, const M: i32, const T: i32&gt;
     Mul&lt;Quantity&lt;L,M,T&gt;&gt; for f64
     {
-        type Output = Quantity&lt;L,M,T&gt;;
-        fn mul(self, y: Quantity&lt;L,M,T&gt;) -&gt; Quantity&lt;L,M,T&gt; {
+        type Output = Quantity&lt;L, M, T&gt;;
+        fn mul(self, y: Quantity&lt;L, M, T&gt;) -&gt; Quantity&lt;L, M, T&gt; {
             Quantity {value: self*y.value}
         }
     }
@@ -330,40 +330,40 @@ pub mod quantities {
     // im Folgenden daher einzeln.
 
     // Geschwindigkeit*Geschwindigkeit
-    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;0,1,-1&gt; {
-        type Output = Quantity&lt;0,2,-2&gt;;
-        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+    impl Mul&lt;Quantity&lt;0, 1, -1&gt;&gt; for Quantity&lt;0, 1, -1&gt; {
+        type Output = Quantity&lt;0, 2, -2&gt;;
+        fn mul(self, y: Quantity&lt;0, 1, -1&gt;) -&gt; Self::Output {
             Quantity {value: self.value*y.value}
         }
     }
 
     // Masse*Geschwindigkeitsquadrat
-    impl Mul&lt;Quantity&lt;0,2,-2&gt;&gt; for Quantity&lt;1,0,0&gt; {
-        type Output = Quantity&lt;1,2,-2&gt;;
-        fn mul(self, y: Quantity&lt;0,2,-2&gt;) -&gt; Self::Output {
+    impl Mul&lt;Quantity&lt;0, 2, -2&gt;&gt; for Quantity&lt;1, 0, 0&gt; {
+        type Output = Quantity&lt;1, 2, -2&gt;;
+        fn mul(self, y: Quantity&lt;0, 2, -2&gt;) -&gt; Self::Output {
             Quantity {value: self.value*y.value}
         }
     }
 
     // Impuls*Geschwindigkeit
-    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,1,-1&gt; {
-        type Output = Quantity&lt;1,2,-2&gt;;
-        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+    impl Mul&lt;Quantity&lt;0, 1, -1&gt;&gt; for Quantity&lt;1, 1, -1&gt; {
+        type Output = Quantity&lt;1, 2, -2&gt;;
+        fn mul(self, y: Quantity&lt;0, 1, -1&gt;) -&gt; Self::Output {
             Quantity{value: self.value*y.value}
         }
     }
 
     // Masse*Geschwindigkeit
-    impl Mul&lt;Quantity&lt;0,1,-1&gt;&gt; for Quantity&lt;1,0,0&gt; {
-        type Output = Quantity&lt;1,1,-1&gt;;
-        fn mul(self, y: Quantity&lt;0,1,-1&gt;) -&gt; Self::Output {
+    impl Mul&lt;Quantity&lt;0, 1, -1&gt;&gt; for Quantity&lt;1, 0, 0&gt; {
+        type Output = Quantity&lt;1, 1, -1&gt;;
+        fn mul(self, y: Quantity&lt;0, 1, -1&gt;) -&gt; Self::Output {
             Quantity {value: self.value*y.value}
         }
     }
 
-    pub type Mass = Quantity&lt;1,0,0&gt;;
-    pub type Speed = Quantity&lt;0,1,-1&gt;;
-    pub type Energy = Quantity&lt;1,2,-2&gt;;
+    pub type Mass = Quantity&lt;1, 0, 0&gt;;
+    pub type Speed = Quantity&lt;0, 1, -1&gt;;
+    pub type Energy = Quantity&lt;1, 2, -2&gt;;
 
     use std::fmt;
     impl fmt::Display for Energy {
@@ -473,7 +473,7 @@ der eine Konstante <code>N</code> in einen gewöhnlichen Typ
 für diesen Typ implementiert.
 
 <p>Das folgende Beispiel verdeutlicht das Vorgehen anhand eines
-bitweisen Linksshifts, der nur für solche Distanzen definiert
+Linksshifts, der nur für solche Distanzen definiert
 sein soll, welche nichtnegative ganzzahlige Vielfache von acht sind.
 
 <pre class="rust ibox">

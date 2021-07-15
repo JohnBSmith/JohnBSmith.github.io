@@ -99,11 +99,11 @@ impl&lt;T&gt; Stack&lt;T&gt; {
         Stack::Nil
     }
     pub fn push(&amp;mut self, x: T) {
-        let node = std::mem::replace(self,Stack::Nil);
+        let node = std::mem::replace(self, Stack::Nil);
         *self = Stack::Node {data: x, next: Box::new(node)};
     }
     pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
-        match std::mem::replace(self,Stack::Nil) {
+        match std::mem::replace(self, Stack::Nil) {
             Stack::Node {data, next} =&gt; {
                 *self = *next;
                 Some(data)
@@ -190,7 +190,7 @@ impl&lt;T&gt; List&lt;T&gt; {
         List{first: None, last: None}
     }
     fn push(&amp;mut self, x: T) {
-        let node = Rc::new(RefCell::new(Node{data: x, next: None}));
+        let node = Rc::new(RefCell::new(Node {data: x, next: None}));
         if let Some(last) = &amp;self.last {
             last.borrow_mut().next = Some(node.clone());
             self.last = Some(node);
@@ -224,7 +224,7 @@ impl&lt;T: Clone&gt; Iterator for ListIterator&lt;T&gt; {
     }
 }
 
-impl&lt;T: Clone+fmt::Display&gt; fmt::Display for List&lt;T&gt; {
+impl&lt;T: Clone + fmt::Display&gt; fmt::Display for List&lt;T&gt; {
     fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
         write!(f, "[")?;
         let mut first = true;

@@ -120,7 +120,7 @@ Tabelle aufgelistet.
 <tr>
 <td><code>item</code>
 <td>ein Programmteil
-<td><code>fn f() {}</code>, <code>struct S{}</code>, <code>type X = Y;</code>
+<td><code>fn f() {}</code>, <code>struct S {}</code>, <code>type&nbsp;X&nbsp;=&nbsp;Y;</code>
 <tr>
 <td><code>tt</code>
 <td>ein Token
@@ -204,7 +204,7 @@ fn main() {
     let v: Vec&lt;String&gt; = vec_string![
         "Ahorn", "Eiche", "Erle", "Esche"
     ];
-    println!("{:?}",v);
+    println!("{:?}", v);
 }
 </pre>
 
@@ -232,19 +232,19 @@ use std::collections::HashMap;
 macro_rules! map {
     ( $( [$key:expr]: $value:expr ),* ) =&gt; {{
         let mut _temp_map = HashMap::new();
-        $(_temp_map.insert($key.to_string(),$value.to_string());)*
+        $(_temp_map.insert($key.to_string(), $value.to_string());)*
         _temp_map
     }}
 }
 
 fn main() {
-    let m: HashMap&lt;String,String&gt; = map!{
+    let m: HashMap&lt;String, String&gt; = map!{
         ["Ahorn"]: "Acer",
         ["Eiche"]: "Quercus",
         ["Erle" ]: "Alnus",
         ["Esche"]: "Fraxinus excelsior"
     };
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -264,19 +264,19 @@ use std::collections::HashMap;
 macro_rules! map {
     ( $( $key:tt: $value:expr ),* ) =&gt; {{
         let mut _temp_map = HashMap::new();
-        $(_temp_map.insert($key.to_string(),$value.to_string());)*
+        $(_temp_map.insert($key.to_string(), $value.to_string());)*
         _temp_map
     }}
 }
 
 fn main() {
-    let m: HashMap&lt;String,String&gt; = map!{
+    let m: HashMap&lt;String, String&gt; = map!{
         "Ahorn": "Acer",
         "Eiche": "Quercus",
         "Erle" : "Alnus",
         "Esche": "Fraxinus excelsior"
     };
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -291,19 +291,19 @@ use std::collections::HashMap;
 macro_rules! map {
     ( $( $key:tt: $value:expr ),* ) =&gt; {{
         let mut _temp_map = HashMap::new();
-        $(_temp_map.insert($key.into(),$value.into());)*
+        $(_temp_map.insert($key.into(), $value.into());)*
         _temp_map
     }}
 }
 
 fn main() {
-    let m: HashMap&lt;String,String&gt; = map!{
+    let m: HashMap&lt;String, String&gt; = map!{
         "Ahorn": "Acer",
         "Eiche": "Quercus",
         "Erle" : "Alnus",
         "Esche": "Fraxinus excelsior"
     };
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -316,19 +316,19 @@ use std::collections::HashMap;
 macro_rules! map {
     ( $tk:expr, $tv:expr; $( $key:tt: $value:expr ),*) =&gt; {{
         let mut _temp_map = HashMap::new();
-        $(_temp_map.insert($tk($key),$tv($value));)*
+        $(_temp_map.insert($tk($key), $tv($value));)*
         _temp_map
     }}
 }
 
 fn main() {
-    let m = map!{String::from,String::from;
+    let m = map!{String::from, String::from;
         "Ahorn": "Acer",
         "Eiche": "Quercus",
         "Erle" : "Alnus",
         "Esche": "Fraxinus excelsior"
     };
-    println!("{:?}",m);
+    println!("{:?}", m);
 }
 </pre>
 
@@ -352,8 +352,8 @@ engl. <i>lazy evaluation</i>, haben. Diese ist darstellbar durch
 Verhüllung der Argumente durch Funktionen:
 
 <pre class="rust ibox">
-fn cond&lt;Fx,Fy,T&gt;(c: bool, x: Fx, y: Fy) -&gt; T
-where Fx: FnOnce()-&gt;T, Fy: FnOnce()-&gt;T
+fn cond&lt;Fx, Fy, T&gt;(c: bool, x: Fx, y: Fy) -&gt; T
+where Fx: FnOnce() -&gt; T, Fy: FnOnce() -&gt; T
 {
     if c {x()} else {y()}
 }
@@ -417,7 +417,7 @@ macro_rules! list {
 
 fn main() {
     let a = list![2*x; for x in 0..10];
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -459,7 +459,7 @@ macro_rules! list {
 
 fn main() {
     let a = list![x*y; for x in 0..2; for y in 0..2];
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -492,9 +492,9 @@ macro_rules! list {
 }
 
 fn main() {
-    let a = list![[x,y,z];
+    let a = list![[x, y, z];
         for x in 0..2; for y in 0..2; for z in 0..2];
-    println!("{:?}",arr);
+    println!("{:?}", a);
 }
 </pre>
 
@@ -535,7 +535,7 @@ fn main() {
     let a = list![[x,y,z];
         for x in 1..100; for y in 1..100; for z in 1..100;
         if x&lt;y &amp;&amp; x*x + y*y == z*z];
-    println!("{:?}",a);
+    println!("{:?}", a);
 }
 </pre>
 

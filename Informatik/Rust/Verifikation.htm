@@ -221,7 +221,7 @@ Korrektheit des iterativen Berechnungsverfahrens
 fn pow(x: i32, n: u32) -&gt; i32 {
     let mut y = 1;
     for _ in 0..n {y *= x;}
-    return y;
+    y
 }
 </pre>
 
@@ -234,9 +234,9 @@ fn pow(x: i32, n: u32) -&gt; i32 {
     let mut i = 0;
     while i != n {
         y = x*y;
-        i = i+1;
+        i = i + 1;
     }
-    return y;
+    y
 }
 </pre>
 
@@ -260,12 +260,12 @@ fn pow(x: i32, n: u32) -&gt; i32 {
         // {y == x<sup>i</sup>}
         y = x*y;
         // {y == x<sup>i+1</sup>}
-        i = i+1;
+        i = i + 1;
         // {y == x<sup>i</sup>}
     }
     // {y == x<sup>i</sup> und nicht i != n}
     // {y == x<sup>n</sup>}
-    return y;
+    y
 }
 </pre>
 
@@ -330,9 +330,9 @@ fn pow(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
     let mut i: u32 = 0;
     while i != n {
         y = y.checked_mul(x)?;
-        i = i+1;
+        i = i + 1;
     }
-    return Some(y);
+    Some(y)
 }
 </pre>
 
@@ -358,7 +358,7 @@ fn pow(mut x: i32, mut n: u32) -&gt; i32 {
         n /= 2; x = x*x;
     }
     if n == 1 {y = y*x;}
-    return y;
+    y
 }
 </pre>
 
@@ -378,7 +378,7 @@ fn pow(x: i32, n: u32) -&gt; i32 {
         a = a*a;
     }
     if i == 1 {y = y*a;}
-    return y;
+    y
 }
 </pre>
 
@@ -484,7 +484,7 @@ fn pow(x: i32, n: u32) -&gt; i32 {
     // {y*a<sup>i</sup> == x<sup>n</sup> ∧ 0&le;i&le;1}
     if i == 1 {y = y*a;}
     // {y == x<sup>n</sup>}
-    return y;
+    y
 }
 </pre>
 
@@ -504,40 +504,40 @@ verbleibenden Fälle ohne Überlauf ausgeführt wird.
 <pre class="rust ibox">
 // Definition der Potenzfunktion
 fn pow_rec(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
-    if n==0 {Some(1)} else {x.checked_mul(pow_rec(x,n-1)?)}
+    if n==0 {Some(1)} else {x.checked_mul(pow_rec(x, n-1)?)}
 }
 
 // Partielle Funktion zu pow_rec
 fn pow(x: i32, n: u32) -&gt; i32 {
-    pow_rec(x,n).unwrap()
+    pow_rec(x, n).unwrap()
 }
 
 fn pow_iter(x: i32, n: u32) -&gt; i32 {
     let mut y = 1;
     let mut a = x;
     let mut i = n;
-    let p = pow(x,n);
-    assert!(y*pow(a,i) == p);
+    let p = pow(x, n);
+    assert!(y*pow(a, i) == p);
     while i&gt;1 {
-        assert!(y*pow(a,i) == p);
+        assert!(y*pow(a, i) == p);
         if i%2 == 1 {y = y*a;}
-        assert!(y*pow(a,i-i%2) == p);
+        assert!(y*pow(a, i-i%2) == p);
         i /= 2;
-        assert!(y*pow(a,2*i) == p);
+        assert!(y*pow(a, 2*i) == p);
         a = a*a;
-        assert!(y*pow(a,i) == p);
+        assert!(y*pow(a, i) == p);
     }
-    assert!(y*pow(a,i) == p &amp;&amp; i&lt;=1);
+    assert!(y*pow(a, i) == p &amp;&amp; i&lt;=1);
     if i == 1 {y = y*a;}
     assert!(y == p);
-    return y;
+    y
 }
 
 fn main() {
     for x in -65536..65536 {
         for n in 0..32 {
-            if let Some(y) = pow_rec(x,n) {
-                assert!(y == pow_iter(x,n));
+            if let Some(y) = pow_rec(x, n) {
+                assert!(y == pow_iter(x, n));
             }
         }
     }
@@ -546,19 +546,7 @@ fn main() {
 
 <p>Maßgeblich sind abschließend zudem die Beweise, dass im späteren
 Programm die Aufrufe von <code>pow_iter</code> niemals Zahlen bekommen,
-die zum Überlauf führen würden. In Wirklichkeit besitzt <code>pow_iter</code>
-daher die Signatur
-
-<pre class="rust ibox">
-fn pow_iter(x: i32, n: u32) -&gt; i32
-where pow_rec(x,n).is_some().
-</pre>
-
-<p>Das heißt, der Typ von <code>pow_iter</code> ist in Wirklichkeit
-ein sogenannter <i>Verfeinerungstyp</i>, engl. <i>refinement type</i>.
-Darunter versteht man einen Typ, bei dem die Menge der zulässigen
-Werte durch ein logisches Prädikat eingeschränkt ist.
+die zum Überlauf führen würden.
 
 </body>
 </html>
-
