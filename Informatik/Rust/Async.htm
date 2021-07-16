@@ -153,7 +153,7 @@ fn join_all(a: Vec&lt;Future&lt;()&gt;&gt;) -&gt; Future&lt;()&gt; {
 fn main() {
     let f1 = new_task(2);
     let f2 = new_task(2);
-    let s = join_all(vec![f1,f2]);
+    let s = join_all(vec![f1, f2]);
     block_on(s);
 }
 </pre>
@@ -163,7 +163,7 @@ dass sie auch die Werte der Futures zurückgeben kann.
 
 <pre class="rust ibox">
 fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec&lt;T&gt;&gt; {
-    enum Either&lt;X,Y&gt; {Left(X), Right(Y)}
+    enum Either&lt;X, Y&gt; {Left(X), Right(Y)}
     let mut a: Vec&lt;_&gt; = a.into_iter().map(Either::Left).collect();
     Box::new(move || {
         let mut empty = true;
@@ -219,7 +219,7 @@ async fn new_task(time: u64) {
 fn main() {
     let f1 = new_task(2);
     let f2 = new_task(2);
-    block_on(join_all(vec![f1,f2]));
+    block_on(join_all(vec![f1, f2]));
 }
 </pre>
 
@@ -231,7 +231,7 @@ Future.
 <pre class="rust ibox">
 use std::future::Future;
 
-fn new_task(time: u64) -> impl Future&lt;Output=()&gt; {
+fn new_task(time: u64) -> impl Future&lt;Output = ()&gt; {
     async move{task::sleep(Duration::from_secs(time)).await;}
 }
 </pre>
@@ -264,7 +264,7 @@ async fn task2(time: u64) -&gt; S2 {
 fn main() {
     let f1 = task1(2);
     let f2 = task2(2);
-    let (s1, s2) = block_on(join(f1,f2));
+    let (s1, s2) = block_on(join(f1, f2));
     println!("{}, {}", s1.value, s2.value);
 }
 </pre>
@@ -275,7 +275,7 @@ das auch mehr als fünf Futures verbinden kann.
 Beim Makro muss man
 
 <pre class="rust indent">
-block_on(async{join!(f1,f2)})
+block_on(async {join!(f1, f2)})
 </pre>
 
 <p>schreiben.

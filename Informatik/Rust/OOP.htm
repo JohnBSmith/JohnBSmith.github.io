@@ -32,7 +32,7 @@ impl Bird {
 }
 
 fn main() {
-    let bird = Bird{name: String::from("Donald")};
+    let bird = Bird {name: String::from("Donald")};
     bird.fly();
 }
 </pre>
@@ -57,7 +57,7 @@ struct Duck {
 }
 impl Duck {
     fn new(name: String) -&gt; Self {
-        Self{bird: Bird{name}}
+        Self{bird: Bird {name}}
     }
     fn dive(&amp;self) {
         println!("{} kann tauchen.", self.bird.name);
@@ -87,7 +87,7 @@ struct Bird {
 }
 impl Bird {
     fn new(name: &amp;str) -&gt; Self {
-        Self{name: name.into()}
+        Self {name: name.into()}
     }
 }
 impl BirdTrait for Bird {
@@ -103,7 +103,7 @@ struct Duck {
 }
 impl Duck {
     fn new(name: &amp;str) -&gt; Self {
-        Self{bird: Bird{name: name.into()}}
+        Self {bird: Bird {name: name.into()}}
     }
     fn dive(&amp;self) {
         println!("{} kann tauchen.", self.bird.name);
@@ -160,7 +160,7 @@ struct Env {
 }
 impl Env {
     fn new() -&gt; Rc&lt;Self&gt; {
-        Rc::new(Self{
+        Rc::new(Self {
             duck_class: Rc::new(RefCell::new(DuckClass {
                 name: Rc::from("Duck"),
                 quack: Rc::from("quacks")
@@ -181,7 +181,7 @@ struct Duck {
 }
 impl Duck {
     fn new(env: &amp;Env, name: &amp;str) -&gt; Self {
-        Self{name: name.into(), class: env.duck_class.clone()}
+        Self {name: name.into(), class: env.duck_class.clone()}
     }
     fn class_name(&amp;self) -&gt; Rc&lt;str&gt; {
         self.class.borrow().name.clone()

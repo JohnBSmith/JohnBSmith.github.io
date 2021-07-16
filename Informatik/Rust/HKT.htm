@@ -79,7 +79,7 @@ trait AppliedTo&lt;X&gt; {
     type Value;
 }
 
-type App&lt;F,X&gt; = &lt;F as AppliedTo&lt;X&gt;&gt;::Value;
+type App&lt;F, X&gt; = &lt;F as AppliedTo&lt;X&gt;&gt;::Value;
 </pre>
 
 <p>Die Stellvertreter für <code>Option</code>
@@ -105,21 +105,21 @@ und <code>Monad</code> auf allgemeine Weise implementieren.
 <p>Zunächst <code>Functor</code>:
 
 <pre class="rust ibox">
-trait Functor&lt;X,Y&gt;: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; {
-    fn map&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+trait Functor&lt;X, Y&gt;: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where F: Fn(X) -&gt; Y, F: Copy;
 }
 
-impl&lt;X,Y&gt; Functor&lt;X,Y&gt; for OptionType {
-    fn map&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+impl&lt;X, Y&gt; Functor&lt;X, Y&gt; for OptionType {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where F: Fn(X) -&gt; Y
     {
         x.map(f)
     }
 }
 
-impl&lt;X,Y&gt; Functor&lt;X,Y&gt; for VecType {
-    fn map&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+impl&lt;X, Y&gt; Functor&lt;X, Y&gt; for VecType {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where F: Fn(X) -&gt; Y
     {
         x.into_iter().map(f).collect()
@@ -139,7 +139,7 @@ fn main() {
 Typkonstruktoren zu parametrisieren:
 
 <pre class="rust ibox">
-fn add1&lt;F: Functor&lt;i32,i32&gt;&gt;(x: App&lt;F,i32&gt;) -&gt; App&lt;F,i32&gt; {
+fn add1&lt;F: Functor&lt;i32, i32&gt;&gt;(x: App&lt;F, i32&gt;) -&gt; App&lt;F, i32&gt; {
     F::map(x, |x| x + 1)
 }
 
@@ -160,33 +160,33 @@ für <code>unit</code> nicht braucht.
 
 <pre class="rust ibox">
 trait Unit&lt;X&gt; where Self: AppliedTo&lt;X&gt; {
-    fn unit(x: X) -&gt; App&lt;Self,X&gt;;
+    fn unit(x: X) -&gt; App&lt;Self, X&gt;;
 }
 
-trait Monad&lt;X,Y&gt; where Self: Unit&lt;X&gt; + Unit&lt;Y&gt; {
-    fn bind&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
-    where F: Fn(X) -&gt; App&lt;Self,Y&gt;, F: Copy;
+trait Monad&lt;X, Y&gt; where Self: Unit&lt;X&gt; + Unit&lt;Y&gt; {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;, F: Copy;
 }
 
 impl&lt;X&gt; Unit&lt;X&gt; for OptionType {
-    fn unit(x: X) -&gt; App&lt;Self,X&gt; {Some(x)}
+    fn unit(x: X) -&gt; App&lt;Self, X&gt; {Some(x)}
 }
 
-impl&lt;X,Y&gt; Monad&lt;X,Y&gt; for OptionType {
-    fn bind&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
-    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+impl&lt;X, Y&gt; Monad&lt;X, Y&gt; for OptionType {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
     {
         x.and_then(f)
     }
 }
 
 impl&lt;X&gt; Unit&lt;X&gt; for VecType {
-    fn unit(x: X) -&gt; App&lt;Self,X&gt; {vec![x]}
+    fn unit(x: X) -&gt; App&lt;Self, X&gt; {vec![x]}
 }
 
-impl&lt;X,Y&gt; Monad&lt;X,Y&gt; for VecType {
-    fn bind&lt;F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
-    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+impl&lt;X, Y&gt; Monad&lt;X, Y&gt; for VecType {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
     {
         x.into_iter().flat_map(f).collect()
     }
@@ -201,8 +201,8 @@ fn main() {
 <p>Die allgemeine Implementierung von <code>join</code>:
 
 <pre class="rust ibox">
-fn join&lt;M,X&gt;(mmx: App&lt;M,App&lt;M,X&gt;&gt;) -&gt; App&lt;M,X&gt;
-where M: Monad&lt;App&lt;M,X&gt;, X&gt;
+fn join&lt;M, X&gt;(mmx: App&lt;M, App&lt;M, X&gt;&gt;) -&gt; App&lt;M, X&gt;
+where M: Monad&lt;App&lt;M, X&gt;, X&gt;
 {
     M::bind(mmx, |mx| mx)
 }
@@ -216,12 +216,12 @@ fn main() {
 <p>bzw.
 
 <pre class="rust ibox">
-trait Join&lt;X&gt; where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;Self,X&gt;&gt; {
-    fn join(mmx: App&lt;Self,App&lt;Self,X&gt;&gt;) -&gt; App&lt;Self,X&gt;;
+trait Join&lt;X&gt; where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;Self, X&gt;&gt; {
+    fn join(mmx: App&lt;Self, App&lt;Self, X&gt;&gt;) -&gt; App&lt;Self, X&gt;;
 }
 
-impl&lt;M,X&gt; Join&lt;X&gt; for M where M: Monad&lt;App&lt;M,X&gt;, X&gt; {
-    fn join(mmx: App&lt;Self,App&lt;Self,X&gt;&gt;) -&gt; App&lt;Self,X&gt; {
+impl&lt;M, X&gt; Join&lt;X&gt; for M where M: Monad&lt;App&lt;M, X&gt;, X&gt; {
+    fn join(mmx: App&lt;Self, App&lt;Self, X&gt;&gt;) -&gt; App&lt;Self, X&gt; {
         M::bind(mmx, |mx| mx)
     }
 }
@@ -235,10 +235,10 @@ fn main() {
 <p>Kartesisches Produkt von Monaden:
 
 <pre class="rust ibox">
-fn prod&lt;M,X,Y&gt;(mx: App&lt;M,X&gt;, my: App&lt;M,Y&gt;) -&gt; App&lt;M,(X,Y)&gt;
+fn prod&lt;M, X, Y&gt;(mx: App&lt;M, X&gt;, my: App&lt;M, Y&gt;) -&gt; App&lt;M, (X, Y)&gt;
 where
-    M: Monad&lt;X,(X,Y)&gt; + Monad&lt;Y,(X,Y)&gt;,
-    X: Clone, App&lt;M,Y&gt;: Clone
+    M: Monad&lt;X, (X, Y)&gt; + Monad&lt;Y, (X, Y)&gt;,
+    X: Clone, App&lt;M, Y&gt;: Clone
 {
     M::bind(mx, |x: X|
         M::bind(my.clone(), |y| M::unit((x.clone(), y))))
@@ -247,22 +247,24 @@ where
 fn main() {
     let a = vec!["x", "y"];
     let b = vec![1, 2];
-    println!("{:?}", prod::&lt;VecType,_,_&gt;(a,b));
+    println!("{:?}", prod::&lt;VecType, _, _&gt;(a, b));
 }
 </pre>
 
 <p>bzw.
 
 <pre class="rust ibox">
-trait Prod&lt;X,Y&gt; {
-    fn prod(mx: App&lt;Self,X&gt;, my: App&lt;Self,Y&gt;) -&gt; App&lt;Self,(X,Y)&gt;
-    where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; + AppliedTo&lt;(X,Y)&gt;;
+trait Prod&lt;X, Y&gt; {
+    fn prod(mx: App&lt;Self, X&gt;, my: App&lt;Self, Y&gt;) -&gt; App&lt;Self, (X, Y)&gt;
+    where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; + AppliedTo&lt;(X, Y)&gt;;
 }
 
-impl&lt;M,X,Y&gt; Prod&lt;X,Y&gt; for M where M: Monad&lt;X,(X,Y)&gt; + Monad&lt;Y,(X,Y)&gt;,
-X: Clone, App&lt;M,Y&gt;: Clone
+impl&lt;M, X, Y&gt; Prod&lt;X, Y&gt; for M
+where
+    M: Monad&lt;X, (X, Y)&gt; + Monad&lt;Y, (X, Y)&gt;,
+    X: Clone, App&lt;M, Y&gt;: Clone
 {
-    fn prod(mx: App&lt;M,X&gt;, my: App&lt;M,Y&gt;) -&gt; App&lt;M,(X,Y)&gt;
+    fn prod(mx: App&lt;M, X&gt;, my: App&lt;M, Y&gt;) -&gt; App&lt;M, (X, Y)&gt;
     {
         M::bind(mx, |x: X|
             M::bind(my.clone(), |y| M::unit((x.clone(), y))))
@@ -272,7 +274,7 @@ X: Clone, App&lt;M,Y&gt;: Clone
 fn main() {
     let a = vec!["x", "y"];
     let b = vec![1, 2];
-    println!("{:?}", VecType::prod(a,b));
+    println!("{:?}", VecType::prod(a, b));
 }
 </pre>
 
@@ -282,14 +284,14 @@ mehr Klarheit geschaffen wird.
 
 <pre class="rust ibox">
 trait Functor {
-    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where
         F: Fn(X) -&gt; Y, F: Copy,
         Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
 }
 
 impl Functor for OptionType {
-    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where F: Fn(X) -&gt; Y
     {
         x.map(f)
@@ -297,7 +299,7 @@ impl Functor for OptionType {
 }
 
 impl Functor for VecType {
-    fn map&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where F: Fn(X) -&gt; Y
     {
         x.into_iter().map(f).collect()
@@ -305,26 +307,26 @@ impl Functor for VecType {
 }
 
 trait Monad {
-    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; where Self: AppliedTo&lt;X&gt;;
-    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; where Self: AppliedTo&lt;X&gt;;
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
     where
-        F: Fn(X) -&gt; App&lt;Self,Y&gt;, F: Copy,
+        F: Fn(X) -&gt; App&lt;Self, Y&gt;, F: Copy,
         Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
 }
 
 impl Monad for OptionType {
-    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; {Some(x)}
-    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
-    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; {Some(x)}
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
     {
         x.and_then(f)
     }
 }
 
 impl Monad for VecType {
-    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self,X&gt; {vec![x]}
-    fn bind&lt;X,Y,F&gt;(x: App&lt;Self,X&gt;, f: F) -&gt; App&lt;Self,Y&gt;
-    where F: Fn(X) -&gt; App&lt;Self,Y&gt;
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; {vec![x]}
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
     {
         x.into_iter().flat_map(f).collect()
     }
@@ -336,8 +338,8 @@ Typinferenz in <code>join</code>, weshalb der zweite
 Typparameter von <code>bind</code> manuell festgelegt werden muss:
 
 <pre class="rust ibox">
-fn join&lt;M,X&gt;(mmx: App&lt;M,App&lt;M,X&gt;&gt;) -&gt; App&lt;M,X&gt;
-where M: Monad + AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;M,X&gt;&gt;
+fn join&lt;M, X&gt;(mmx: App&lt;M,App&lt;M, X&gt;&gt;) -&gt; App&lt;M, X&gt;
+where M: Monad + AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;M, X&gt;&gt;
 {
     M::bind::&lt;_, X, _&gt;(mmx, |mx| mx)
 }

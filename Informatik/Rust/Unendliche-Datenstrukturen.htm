@@ -29,7 +29,7 @@ erst dann, wenn der Wert auch benötigt wird.
 heranziehen.
 <pre class="rust ibox">
 macro_rules! lazy {
-    ($x:expr) =&gt; {Lazy{value: Box::new(move || $x)}}
+    ($x:expr) =&gt; {Lazy {value: Box::new(move || $x)}}
 }
 
 struct Lazy&lt;T&gt; {
@@ -51,11 +51,11 @@ struct Tree{
 }
 
 fn tree(x: i32) -&gt; Tree {
-    return Tree{
+    Tree {
         value: x,
         left: lazy!{tree(x)},
-        right: lazy!{tree(x+1)}
-    };
+        right: lazy!{tree(x + 1)}
+    }
 }
 
 fn main() {
@@ -97,7 +97,7 @@ fn if_cond&lt;T&gt;(cond: bool, a: Lazy&lt;T&gt;, b: Lazy&lt;T&gt;) -&gt; T {
 }
 
 fn fac(n: u32) -&gt; u32 {
-    if_cond(n==0, lazy!{1}, lazy!{n*fac(n-1)})
+    if_cond(n == 0, lazy!{1}, lazy!{n*fac(n - 1)})
 }
 </pre>
 
@@ -105,15 +105,15 @@ fn fac(n: u32) -&gt; u32 {
 
 <p>Betrachten wir das folgende Programm:
 <pre class="rust ibox">
-fn log(x: i32) -&gt; i32 {
+fn log(value: i32) -&gt; i32 {
     println!("Auswertung");
-    return x;
+    value
 }
 
 fn main() {
     let x = lazy!{log(0)};
-    println!("{}",x.force());
-    println!("{}",x.force());
+    println!("{}", x.force());
+    println!("{}", x.force());
 }
 </pre>
 
@@ -126,13 +126,13 @@ so Rechnung tragen:
 use std::cell::RefCell;
 
 macro_rules! lazy {
-    ($x:expr) =&gt; {Lazy{cell: RefCell::new(
+    ($x:expr) =&gt; {Lazy {cell: RefCell::new(
         Thunk::Calc(Box::new(move || $x))
     )}}
 }
 
 enum Thunk&lt;T&gt; {
-    Calc(Box&lt;dyn Fn()-&gt;T&gt;),
+    Calc(Box&lt;dyn Fn() -&gt; T&gt;),
     Value(T)
 }
 

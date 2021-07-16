@@ -26,16 +26,16 @@
 <h3>Variadisch für Faktoren gleichen Datentyps</h3>
 <pre class="rust box">
 fn cartesian_product&lt;T: Clone&gt;(a: &amp;[Vec&lt;T&gt;]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
-    if a.len()==0 {
-        return vec![Vec::new()];
+    if a.is_empty() {
+        vec![Vec::new()]
     } else {
-        let mut v: Vec&lt;Vec&lt;T&gt;&gt; = Vec::new();
+        let mut acc: Vec&lt;Vec&lt;T&gt;&gt; = Vec::new();
         for x in &amp;a[0] {
             for t in cartesian_product(&amp;a[1..]) {
-                v.push([x.clone()].iter().cloned().chain(t).collect());
+                acc.push([x.clone()].iter().cloned().chain(t).collect());
             }
         }
-        return v;
+        acc
     }
 }
 
@@ -57,7 +57,7 @@ fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
     } else {
         for k in 0..m {
             a[i] = k;
-            pow_rec(a,m,i+1,callback);
+            pow_rec(a, m, i + 1, callback);
         }
     }
 }
@@ -65,10 +65,10 @@ fn pow_rec(a: &amp;mut [u32], m: u32, i: usize,
 fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
     let mut acc: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
     let a = &amp;mut vec![0; n as usize];
-    pow_rec(a,m,0, &amp;mut |a| {
+    pow_rec(a, m, 0, &amp;mut |a| {
         acc.push(Vec::from(a));
     });
-    return acc;
+    acc
 }
 </pre>
 
@@ -104,10 +104,10 @@ fn pow(a: &amp;mut [u32], m: u32,
 fn cartesian_power(m: u32, n: u32) -&gt; Vec&lt;Vec&lt;u32&gt;&gt; {
     let mut acc: Vec&lt;Vec&lt;u32&gt;&gt; = vec![];
     let a = &amp;mut vec![0; n as usize];
-    pow(a,m, &amp;mut |a| {
+    pow(a, m, &amp;mut |a| {
         acc.push(Vec::from(a));
     });
-    return acc;
+    acc
 }
 </pre>
 
@@ -124,16 +124,19 @@ fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Ve
             ps.push(s);
         }
     }
-    return ps;
+    ps
 }
 </pre>
 
 <h3>Funktional</h3>
+
 <pre class="rust box">
-fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item=T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
-    a.into_iter().fold(vec![vec![]],
-        |mut ps, x| {ps.extend(ps.clone().into_iter()
-            .map(|mut s| {s.push(x.clone()); s})); ps})
+fn power_set&lt;T: Clone&gt;(a: impl IntoIterator&lt;Item = T&gt;) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
+    a.into_iter().fold(vec![vec![]], |mut ps, x| {
+        let push_x = |mut s| {s.push(x.clone()); s};
+        ps.extend(ps.clone().into_iter().map(push_x));
+        ps
+    })
 }
 </pre>
 
@@ -148,14 +151,14 @@ fn perm&lt;T&gt;(a: &amp;mut [T], n: usize,
     if n == 1 {
         callback(a);
     } else {
-        perm(a,n-1,callback);
+        perm(a, n - 1, callback);
         for i in 0..n-1 {
             if n%2 == 0 {
-                a.swap(i,n-1);
+                a.swap(i, n - 1);
             } else {
-                a.swap(0,n-1);
+                a.swap(0, n - 1);
             }
-            perm(a,n-1,callback);
+            perm(a, n - 1, callback);
         }
     }
 }
@@ -164,8 +167,8 @@ fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
     let mut acc: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
     let n = a.len();
     let a = &amp;mut Vec::from(a);
-    perm(a,n, &amp;mut |a| {acc.push(Vec::from(a));});
-    return acc;
+    perm(a, n, &amp;mut |a| {acc.push(Vec::from(a));});
+    acc
 }
 
 fn main() {
@@ -179,16 +182,16 @@ fn main() {
 // Algorithmus von Heap in der iterativen Formulierung
 fn perm&lt;T&gt;(a: &amp;mut [T], callback: &amp;mut dyn FnMut(&amp;[T])) {
     let n = a.len();
-    let mut stack = vec![0;n];
+    let mut stack = vec![0; n];
     callback(a);
 
     let mut i = 0;
     while i&lt;n {
         if stack[i]&lt;i {
-            if i%2==0 {
-                a.swap(0,i);
+            if i%2 == 0 {
+                a.swap(0, i);
             } else {
-                a.swap(stack[i],i);
+                a.swap(stack[i], i);
             }
             callback(a);
             stack[i] += 1;
@@ -204,7 +207,7 @@ fn permutations&lt;T: Clone&gt;(a: &amp;[T]) -&gt; Vec&lt;Vec&lt;T&gt;&gt; {
     let mut acc: Vec&lt;Vec&lt;T&gt;&gt; = vec![];
     let a = &amp;mut Vec::from(a);
     perm(a, &amp;mut |a| {acc.push(Vec::from(a));});
-    return acc;
+    acc
 }
 
 fn main() {
@@ -219,12 +222,12 @@ fn main() {
 <pre class="rust box">
 fn choose(n: u64, mut k: u64) -&gt; u64 {
     if k &gt; n {return 0;}
-    if k &gt; n-k {k = n-k;}
-    let mut y = 1;
+    if k &gt; n - k {k = n - k;}
+    let mut acc = 1;
     for i in 0..k {
-        y = y*(n-i)/(i+1);
+        acc = acc*(n - i)/(i + 1);
     }
-    return y;
+    acc
 }
 
 fn tabluate(label: &amp;str, a0: u64, a1: u64, b0: u64, b1: u64,
@@ -232,16 +235,16 @@ fn tabluate(label: &amp;str, a0: u64, a1: u64, b0: u64, b1: u64,
 {
     print!("{:^5}|", label);
     for b in b0..=b1 {print!("{:&gt;1$}", b, shift);}
-    println!("\n{:\u{2500}&lt;1$}", "", 6 + shift*((b1-b0+1) as usize));
+    println!("\n{:\u{2500}&lt;1$}", "", 6 + shift*((b1 - b0 + 1) as usize));
     for a in a0..=a1 {
         print!("{:&gt;4} |", a);
-        for b in b0..=b1 {print!("{:&gt;1$}", f(a,b), shift);}
+        for b in b0..=b1 {print!("{:&gt;1$}", f(a, b), shift);}
         println!();
     }
 }
 
 fn main() {
-    tabluate("n\\k",0,10,0,10,4,&amp;choose);
+    tabluate("n\\k", 0, 10, 0, 10, 4, &amp;choose);
 }
 </pre>
 
