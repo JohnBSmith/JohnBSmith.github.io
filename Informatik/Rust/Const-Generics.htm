@@ -436,28 +436,37 @@ impl&lt;T: Copy + Default, const N: usize&gt; Stack&lt;T, N&gt; {
     fn new() -&gt; Self {
         Self {sp: 0, buff: [T::default(); N]}
     }
-    fn push(&amp;mut self, value: T) -&gt; Result&lt;(), ()&gt; {
+    fn try_push(&amp;mut self, value: T) -&gt; Result&lt;(), ()&gt; {
         match self.buff.get_mut(self.sp) {
             Some(p) =&gt; {*p = value; self.sp += 1; Ok(())},
             None =&gt; Err(())
         }
     }
-    fn pop(&amp;mut self) -&gt; Result&lt;T, ()&gt; {
+    fn push(&amp;mut self, value: T) {
+        self.try_push(value).unwrap()
+    }
+    fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
         match self.buff.get(self.sp - 1) {
-            Some(value) =&gt; {self.sp -= 1; Ok(*value)},
-            None =&gt; Err(())
+            Some(value) =&gt; {self.sp -= 1; Some(*value)},
+            None =&gt; None
         }
     }
 }
 
 fn main() {
     let mut stack = Stack::&lt;i32, 10&gt;::new();
-    let _ = stack.push(1);
-    let _ = stack.push(2);
+    stack.push(1);
+    stack.push(2);
     println!("{}", stack.pop().unwrap());
     println!("{}", stack.pop().unwrap());
 }
 </pre>
+
+<p>Der Typ <code>ArrayVec</code> aus dem Paket
+»<a href="https://crates.io/crates/arrayvec">arrayvec</a>«
+bietet eine vollständige Implementierung der benötigten
+Funktionalität. Im Wesentlichen handelt es sich hierbei um ein Analogon
+zu <code>Vec</code>.
 
 <h2 id="Restriktion">Einschränkung auf einzelne Konstanten</h2>
 

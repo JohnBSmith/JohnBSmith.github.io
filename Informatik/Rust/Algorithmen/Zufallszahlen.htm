@@ -42,12 +42,12 @@ extrahiert man für <code>rand_u32</code> besser die höherwertigen
 
 <pre class="rust ibox">
 pub struct RNG {
-    state: (u64,u64)
+    state: (u64, u64)
 }
 
 impl RNG {
     pub fn from_seed(seed: u64) -&gt; Self {
-        Self{state: (
+        Self {state: (
             seed ^ 0xa4f85664d25f3e1e,
             seed ^ 0xb1e50bc816c7ec1d
         )}
@@ -57,17 +57,17 @@ impl RNG {
         self.state.0 = y;
         x ^= x &lt;&lt; 23;
         self.state.1 = x ^ y ^ (x &gt;&gt; 17) ^ (y &gt;&gt; 26);
-        return self.state.1.wrapping_add(y);
+        self.state.1.wrapping_add(y)
     }
     pub fn rand_u32(&amp;mut self) -&gt; u32 {
-        (self.rand_u64()&gt;&gt;32) as u32
+        (self.rand_u64() &gt;&gt; 32) as u32
     }
 }
 
 fn main() {
     let mut rng = RNG::from_seed(0);
     for _ in 0..10 {
-        println!("{:016x}",rng.rand_u64());
+        println!("{:016x}", rng.rand_u64());
     }
 }
 </pre>
@@ -181,12 +181,12 @@ pub fn rand_bounded&lt;'a&gt;(&amp;'a mut self, m: u32)
 -&gt; impl 'a + FnMut()-&gt;u32
 {
     let mask = m.next_power_of_two() - 1;
-    return move || {
+    move || {
         loop {
             let x = mask &amp; self.rand_u32();
             if x &lt; m {return x;}
         }
-    };
+    }
 }
 </pre>
 
@@ -246,16 +246,16 @@ an die Zufallszahlen herankommen. Den Schwierigkeiten aus dem Weg
 geht die Berechnung mit dem Bisektionsverfahren.
 
 <pre class="rust ibox">
-// Bestimme y &isin; [a,b], so dass x = f(y).
+// Bestimme y &isin; [a, b], so dass x = f(y).
 fn bisection(f: impl Fn(f64)-&gt;f64,
     x: f64, mut a: f64, mut b: f64
 ) -&gt; f64
 {
     for _ in 0..80 {
-        let m = 0.5*(a+b);
-        if f(m)-x &lt; 0.0 {a = m;} else {b = m;}
+        let m = 0.5*(a + b);
+        if f(m) - x &lt; 0.0 {a = m;} else {b = m;}
     }
-    return a;
+    a
 }
 
 // Zufallszahlengenerator zu einer Verteilungsfunktion,
@@ -264,7 +264,7 @@ fn rng_from_cdf(mut rng: RNG,
     a: f64, b: f64, cdf: impl Fn(f64)-&gt;f64
 ) -&gt; impl FnMut()-&gt;f64
 {
-    move || bisection(&amp;cdf,rng.rand_float(),a,b)
+    move || bisection(&amp;cdf, rng.rand_float(), a, b)
 }
 </pre>
 
@@ -278,7 +278,7 @@ fn rng_from_exp(rng: RNG, lambda: f64) -&gt; impl FnMut()-&gt;f64 {
 
 fn main() {
     let rng = RNG::from_seed(0);
-    let mut rand = rng_from_exp(rng,1.0);
+    let mut rand = rng_from_exp(rng, 1.0);
     for _ in 0..10 {
         println!("{:.6}", rand());
     }
@@ -292,7 +292,7 @@ fn main() {
 
 <pre class="rust ibox">
 pub fn iter_u32&lt;'a&gt;(&amp;'a mut self)
--&gt; impl 'a + Iterator&lt;Item=u32&gt;
+-&gt; impl 'a + Iterator&lt;Item = u32&gt;
 {
     std::iter::from_fn(move || Some(self.rand_u32()))
 }
@@ -303,8 +303,8 @@ Benutzung eines Funktionenzeigers lässt eine Anpassung mit
 generischer Funktionalität zu.
 
 <pre class="rust ibox">
-pub fn iter&lt;'a, T: 'static&gt;(&amp;'a mut self, rand: fn(&amp;mut Self)-&gt;T)
--&gt; impl 'a + Iterator&lt;Item=T&gt;
+pub fn iter&lt;'a, T: 'static&gt;(&amp;'a mut self, rand: fn(&amp;mut Self) -&gt; T)
+-&gt; impl 'a + Iterator&lt;Item = T&gt;
 {
     std::iter::from_fn(move || Some(rand(self)))
 }
@@ -315,7 +315,7 @@ pub fn iter&lt;'a, T: 'static&gt;(&amp;'a mut self, rand: fn(&amp;mut Self)-&gt;
 fn main() {
     let mut rng = RNG::from_seed(0);
     for x in rng.iter(RNG::rand_u32).take(10) {
-        println!("{:08x}",x);
+        println!("{:08x}", x);
     }
 }
 </pre>

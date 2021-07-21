@@ -248,9 +248,9 @@ impl Iterator for ChaCha20Stream {
     }
 }
 
-fn encipher(key: &amp;[u8;32], iv: &amp;[u8;8], data: &amp;mut [u8]) {
-    let stream = ChaCha20Stream::new(key,iv);
-    for (x,y) in data.iter_mut().zip(stream) {
+fn encipher(key: &amp;[u8; 32], iv: &amp;[u8; 8], data: &amp;mut [u8]) {
+    let stream = ChaCha20Stream::new(key, iv);
+    for (x, y) in data.iter_mut().zip(stream) {
         *x ^= y;
     }
 }
@@ -258,4 +258,3 @@ fn encipher(key: &amp;[u8;32], iv: &amp;[u8;8], data: &amp;mut [u8]) {
 
 </body>
 </html>
-

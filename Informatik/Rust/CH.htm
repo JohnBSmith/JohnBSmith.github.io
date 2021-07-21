@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Typen als logische Formeln</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#CH">Die Curry-Howard-Korrespondenz</a>
+<li><a href="#Beispiel">Ein einfaches Beispiel</a>
+<li><a href="#Nat">Natürliches Schließen</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="CH">Die Curry-Howard-Korrespondenz</h2>
+
+<table class="bt">
+<tr><th>Bezeichnung<th>Formel<th>Typ<th>Bezeichnung
+<tr><td>Konjunktion<td><var>A</var> &and; <var>B</var>
+<td>A&nbsp;&times;&nbsp;B</code><td>Produkt
+<tr><td>Disjunktion<td><var>A</var> &or; <var>B</var>
+<td>A&nbsp;+&nbsp;B</code><td>Summe
+<tr><td>Implikation<td><var>A</var> &rarr; <var>B</var>
+<td>A&nbsp;&rarr;&nbsp;B<td>Funktionentyp
+<tr><td>Allquantifizierung<td>(∀<var>x</var>∈<var>U</var>)<var>P</var>(<var>x</var>)
+<td>∏<sub>x:&nbsp;U</sub>&nbsp;P(x)<td>abhängiges Produkt
+<tr><td>Existenzquantifizierung<td>(∃<var>x</var>∈<var>U</var>)<var>P</var>(<var>x</var>)
+<td>∑<sub>x:&nbsp;U</sub>&nbsp;P(x)<td>abhängige Summe
+</table>
+
+<h2 id="Beispiel">Ein einfaches Beispiel</h2>
+
+<p>Wir wollen beweisen, dass es sich bei
+
+<p class="math"><var>A</var> &and; <var>B</var> &rarr; <var>A</var>
+
+<p>um eine tautologische Formel handelt. Zunächst können wir sagen,
+dass die Formel genau dann tautologisch ist, wenn
+
+<p class="math">(∀<var>A</var>) (∀<var>B</var>) (<var>A</var> &and; <var>B</var> &rarr; <var>A</var>)
+
+<p>eine wahre Aussage ist. Das ist wiederum damit bedeutungsgleich, dass sich die Menge
+
+<p class="math">∏<sub><var>A</var> </sub>∏<sub><var>B</var></sub>
+(<var>A</var> × <var>B</var> &rarr; <var>A</var>)
+
+<p>von der leeren Menge unterscheidet. Dies können wir bestätigen, denn mit der
+Projektion
+
+<p class="math">proj<sub>0</sub> := <var>A</var> ↦ <var>B</var>
+↦ (<var>a</var>, <var>b</var>) ↦ <var>a</var>
+
+<p>oder äquivalent notiert
+
+<p class="math">proj<sub>0</sub>(<var>A</var>)(<var>B</var>)(<var>a</var>, <var>b</var>) := <var>a</var>
+
+<p>ist ein Element der Menge konstruiert. Über die
+Curry-Howard-Korrespondenz interpretiert man die Mengenkonstruktion
+nun als Typsignatur. Demzufolge ist der Typ durch den Zeugen
+
+<pre class="rust ibox">
+fn proj0&lt;A, B&gt;((a, _): (A, B)) -&gt; A {a}
+</pre>
+
+<p>bewohnt. Weil diese Funktion rein funktional und total ist,
+erbringt dies den Beweis, dass die ursprüngliche Formel tautologisch
+ist.
+
+<p>Nebenbei bemerkt ist
+
+<pre class="rust ibox">
+fn proj0&lt;A, B&gt;(a: A, _: B) -> A {a}
+</pre>
+
+<p>eine äquivalente Formulierung der Funktion, denn eine Funktion
+mit Tupel als Argument und die entsprechende Funktion in mehreren
+Argumenten bedeuten im Wesentlichen dasselbe.
+
+<h2 id="Nat">Natürliches Schließen</h2>
+
+<p>Konstruiert man auf die beschriebene Art immer mehr Beiweise,
+wird mit der Zeit immer klarer erkennbar, dass die Methodik
+einem vertrauten logischen Kalkül entspricht, das als
+<i>natürliches Schließen</i> geläufig ist.
+
+<p>Wir betrachten als Beispiel die tautologische Formel
+
+<p class="math">(<var>A</var> &or; <var>B</var>)
+&and; (<var>A</var> &rarr; <var>B</var>)
+&and; (<var>A</var> &rarr; <var>C</var>)
+&rarr; <var>C</var>.
+
+<p>Zunächst erfolgt ein syntaktischer Beweis durch natürliches
+Schließen.
+
+<table class="bt">
+<tr><th>Abh.<th>Nr.<th>Formel<th>Notiz
+<tr><td>1<td>1<td><var>A</var> &or; <var>B</var><td>Prämisse
+<tr><td>2<td>2<td><var>A</var> &rarr; <var>C</var><td>Prämisse
+<tr><td>3<td>3<td><var>B</var> &rarr; <var>C</var><td>Prämisse
+<tr><td>4<td>4<td><var>A</var><td>Annahme
+<tr><td>2, 4<td>5<td><var>C</var><td>Modus ponens, 2, 4
+<tr><td>6<td>6<td><var>B</var><td>Annahme
+<tr><td>3, 6<td>7<td><var>C</var><td>Modus ponens, 3, 6
+<tr><td>1, 2, 3<td>8<td><var>C</var><td>&or;Beseitigung, 1, 4&rarr;5, 6&rarr;7
+</table>
+
+<p>Schreibt am die in der Tabelle enthaltenen Schlussfolgerungen
+strukturiert auf, erkennt man, dass die Methodik äquivalent zum
+folgenden Programm ist. Die Tabelle schaut recht umständlich
+aus. Im Wesentlichen steckt da aber lediglich eine
+Fallunterscheidung drin (in Form der Disjunktions-Beseitigung),
+und in den beiden Fällen jeweils eine Funktionsapplikation
+(in Form des Modus ponens).
+
+<pre class="rust ibox">
+enum Sum&lt;A, B&gt; {Left(A), Right(B)}
+use Sum::{Left, Right};
+
+fn proof&lt;A, B, C&gt;(
+    s: Sum&lt;A, B&gt;,
+    fa: fn(A) -&gt; C,
+    fb: fn(B) -&gt; C
+) -&gt; C {
+    match s {
+        Left (a) =&gt; fa(a),
+        Right(b) =&gt; fb(b)
+    }
+}
+</pre>
+
+<p>Das Beispiel verdeutlicht, dass das natürliche Schließen und die
+Konstruktion von Zeugen unter Anwendung des Lambda-Kalküls
+im Wesentlichen dasselbe sind.
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Stefan Müller-Stach: »<a href="https://export.arxiv.org/abs/1805.05419"
+  >Äquivalenz und Wahrheit</a>«,
+  Kapitel 9: »Typentheorie und ihre Semantik«.
+<li>»<a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence"
+  >Curry–Howard correspondence</a>«. Englische Wikipedia.
+</ol>
+
+</body>
+</html>

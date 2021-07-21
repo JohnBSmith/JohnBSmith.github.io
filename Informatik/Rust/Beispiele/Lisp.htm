@@ -165,7 +165,7 @@ fn is_letter(c: u8) -&gt; bool {
     c == b'/' || c == b'%' || c == b'=' || c == b'&lt;' || c == b'&gt;'
 }
 
-fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;,Error&gt; {
+fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;, Error&gt; {
     let mut tokens: Vec&lt;Token&gt; = Vec::new();
     let mut i = 0;
     let mut line = 0;
@@ -255,7 +255,7 @@ struct ParserFrame&lt;'a&gt; {
     token: &amp;'a Token
 }
 
-fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;,Error&gt; {
+fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;, Error&gt; {
     let mut stack: Vec&lt;ParserFrame&gt; = Vec::with_capacity(10);
     let mut list: Vec&lt;Object&gt; = Vec::new();
     for t in tokens {
@@ -362,7 +362,7 @@ mod scope_table {
                 if env.get(key).is_some() {
                     let mut frame = self.frame.borrow_mut();
                     let index = frame.insert_context(key);
-                    frame.context.push(transform_symbol(env,key));
+                    frame.context.push(transform_symbol(env, key));
                     return Some(VarInfo::Context(index));
                 }
             }
@@ -372,7 +372,7 @@ mod scope_table {
 }
 
 fn insert_args(env: &amp;ScopeTable, list: &amp;Object)
--&gt; Result&lt;usize,Error&gt;
+-&gt; Result&lt;usize, Error&gt;
 {
     if let Object::App(app) = list {
         for id in app.list.iter() {
@@ -392,13 +392,13 @@ fn insert_args(env: &amp;ScopeTable, list: &amp;Object)
     }
 }
 
-fn let_syntax_error(app: &amp;App) -&gt; Result&lt;Object,Error&gt; {
+fn let_syntax_error(app: &amp;App) -&gt; Result&lt;Object, Error&gt; {
     Err(syntax_error(app.line, app.col, String::from(
         "in line {}, col {}: expected (let ((id value) ...) body)")))
 }
 
 fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
--&gt; Result&lt;Object,Error&gt;
+-&gt; Result&lt;Object, Error&gt;
 {
     if app.list.len() != 3 {
         return let_syntax_error(app);
@@ -456,7 +456,7 @@ fn transform_symbol(env: &amp;Rc&lt;ScopeTable&gt;, id: &amp;Rc&lt;str&gt;) -&gt
 }
 
 fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
--&gt; Result&lt;Object,Error&gt;
+-&gt; Result&lt;Object, Error&gt;
 {
     if app.list.is_empty() {
         return Ok(Object::App(app.clone()));
@@ -486,12 +486,12 @@ fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
         }
     }
     let list = app.list.iter().map(|x| transform(env,x))
-        .collect::&lt;Result&lt;Vec&lt;Object&gt;,_&gt;&gt;()?;
+        .collect::&lt;Result&lt;Vec&lt;Object&gt;, _&gt;&gt;()?;
     Ok(Object::App(Rc::new(App {line: app.line, col: app.col, list})))
 }
 
 fn transform(env: &amp;Rc&lt;ScopeTable&gt;, t: &amp;Object)
--&gt; Result&lt;Object,Error&gt;
+-&gt; Result&lt;Object, Error&gt;
 {
     Ok(match t {
         Object::None =&gt; Object::None,
@@ -753,7 +753,7 @@ fn define(env: &amp;mut Env, app: &amp;App) -&gt; Object {
     let id = expect!(&amp;app.list[1],Object::Symbol).clone();
     let value = eval(env, &amp;app.list[2]);
     if let Object::Err(_) = value {return value;}
-    env.map.insert(id,value);
+    env.map.insert(id, value);
     Object::None
 }
 
@@ -1000,7 +1000,7 @@ fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
     }
 }
 
-fn eval_string(env: &amp;mut Env, s: &amp;[u8]) -&gt; Result&lt;Object,Error&gt; {
+fn eval_string(env: &amp;mut Env, s: &amp;[u8]) -&gt; Result&lt;Object, Error&gt; {
     let tokens = scan(s)?;
     let a = parse(&amp;tokens)?;
     let mut value = Object::None;
@@ -1026,7 +1026,7 @@ fn input(prompt: &amp;str) -&gt; std::io::Result&lt;String&gt; {
     Ok(buffer)
 }
 
-fn print_result(env: &amp;mut Env, result: &amp;Result&lt;Object,Error&gt;) {
+fn print_result(env: &amp;mut Env, result: &amp;Result&lt;Object, Error&gt;) {
     match result {
         Ok(value) =&gt; {
             if !matches!(value, Object::None) {

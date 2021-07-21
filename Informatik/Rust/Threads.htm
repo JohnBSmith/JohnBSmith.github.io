@@ -19,7 +19,7 @@
 <li><a href="#Kanaele">Kanäle</a>
 <li><span class="modest">Atomare Operationen</span>
 <li><span class="modest">Wechselseitiger Ausschluss</span>
-<li><span class="modest">Thread-lokale Variablen</span>
+<li><span class="modest">Strang-lokale Variablen</span>
 <li><span class="modest">Multiprocessing</span>
 </ol>
 
@@ -55,6 +55,22 @@ Prozessoren nicht mit beliebig hoher Frequenz takten lassen.
 <p>Kooperative Unterbrechung hat den Vorteil, dass Race Conditions
 nicht implizit auftreten können, man daher keine erweiterten
 technischen Mittel zur Verhinderung dieser benötigt.
+
+<p>Naive Programmierung mit Strängen kann zur Konstruktion sogenannter
+<i>Wettlauf-Umstände</i> (<i>race conditions</i>) führen. Fehler
+dieser Art sind dafür berüchtigt, besonders schwierig aufspürbar zu
+sein. Aus diesem Grund gilt die uneingeschränkte nebenläufige
+Programmierung in Sprachen mit unzureichendem Typsystem als eines
+der anspruchvollsten Probleme, sie ist hochgradig tückisch.
+
+<p>Ein Wettlauf-Umstand ist wie folgt zu erklären. Ein Programm
+besitze zwei oder mehr nebenläufige Ausführungstränge, welche auf einen
+gemeinsamen Speicherbereich zugreifen. Solange nun ein Schreib-
+oder Lesevorgang in einem der Stränge nicht vollständig abgeschlossen
+ist, befindet sich das Laufzeitsystem bezüglich diesem Speicherbereich
+für alle anderen Stränge in einem ungültigen Zustand. Ein
+Wettlauf-Umstand besteht, wenn einer der anderen Stränge Zugriff auf
+den im ungültigen Zustand befindlichen Speicherbereich erhalten kann.
 
 <h2 id="Threads-starten">Threads starten</h2>
 

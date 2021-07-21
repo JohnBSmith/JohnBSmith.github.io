@@ -25,11 +25,11 @@ impl std::fmt::Display for Sudoku {
     fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
     -&gt; std::fmt::Result
     {
-        for (i,row) in self.data.iter().enumerate() {
+        for (i, row) in self.data.iter().enumerate() {
             if i != 0 &amp;&amp; i%3 == 0 {
                 writeln!(f, "------+-------+------")?;
             }
-            for (j,cell) in row.iter().enumerate() {
+            for (j, cell) in row.iter().enumerate() {
                 if j != 0 {
                     write!(f, "{}",
                         if j%3 == 0 {" | "} else {" "})?;
@@ -51,7 +51,7 @@ impl Sudoku {
             if let Some(digit) = c.to_digit(10) {
                 data[i][j] = digit;
                 j += 1;
-            } else if c=='.' {
+            } else if c == '.' {
                 data[i][j] = 0;
                 j += 1;
             }
@@ -80,9 +80,9 @@ fn solve(s: &amp;mut Sudoku, callback: &amp;mut dyn FnMut(&amp;Sudoku)) {
         for j in 0..9 {
             if s.data[i][j] == 0 {
                 for digit in 1..10 {
-                    if s.unique(digit,i,j) {
+                    if s.unique(digit, i, j) {
                         s.data[i][j] = digit;
-                        solve(s,callback);
+                        solve(s, callback);
                         s.data[i][j] = 0;
                     }
                 }
@@ -139,4 +139,3 @@ fn main() {
 
 </body>
 </html>
-
