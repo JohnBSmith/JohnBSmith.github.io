@@ -18,6 +18,7 @@
 <li><a href="#CH">Die Curry-Howard-Korrespondenz</a>
 <li><a href="#Beispiel">Ein einfaches Beispiel</a>
 <li><a href="#Nat">Natürliches Schließen</a>
+<li><a href="#Negation">Negation</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -141,6 +142,66 @@ fn proof&lt;A, B, C&gt;(
 <p>Das Beispiel verdeutlicht, dass das natürliche Schließen und die
 Konstruktion von Zeugen unter Anwendung des Lambda-Kalküls
 im Wesentlichen dasselbe sind.
+
+<h2 id="Negation">Negation</h2>
+
+<p>Im Unterschied zu den anderen logischen Verknüpfungen besitzt die
+Negation <span class="math">&not;<var>A</var></span> keine
+eigenständige Typkonstruktion. Stattdessen ist sie als
+<span class="math"><var>A</var>&nbsp;&rarr;&nbsp;⊥</span> kodiert,
+das ist die Signatur divergenter Funktionen.
+
+
+<p>Beispielsweise kann man die Kontraposition
+
+<p class="math">(<var>A</var> &rarr; <var>B</var>)
+&rarr; (&not;<var>B</var> &rarr; &not;<var>A</var>)
+
+<p>zeigen. Hat man nämlich eine Funktion <code>f</code> vom Typ
+<code>A&nbsp;&rarr;&nbsp;B</code> und eine Funktion <code>g</code>
+vom Typ <code>B&nbsp;&rarr;&nbsp;⊥</code>, kann man diese
+Verketten und erhält als Resultat eine Funktion vom Typ
+<code>A&nbsp;&rarr;&nbsp;⊥</code>. Wir finden demzufolge den Term
+
+<p class="math">A ↦ B ↦ (f: A &rarr; B) ↦ (g: B &rarr; ⊥) ↦ (a: A) ↦ g(f(a)),
+
+<p>zu dem das Programm
+
+<pre class="rust ibox">
+fn proof&lt;A, B&gt;(f: fn(A) -&gt; B, g: fn(B) -&gt; !, a: A) -&gt; ! {
+    g(f(a))
+}
+</pre>
+
+<p>gehört. Prinzipiell könnten wir diese Funktion auch schönfinkeln.
+Weil es sich mit Closures in Rust allerdings kompliziert verhält,
+lassen wir das lieber bleiben.
+
+<p>Für die Umkehrung
+
+<p class="math">(¬<var>B</var> &rarr; ¬<var>A</var>)
+→ (<var>A</var> &rarr; <var>B</var>)
+
+<p>gelingt es uns nicht, einen Term zu konstruieren, egal wir sehr
+wir uns darum bemühen. Das ist per se unmöglich, solange man sich auf
+die intuitionistische Logik beschränkt. Die Hinzunahme der zusätzlichen
+axiomatischen Regel ¬¬<var>A</var>&nbsp;&equiv;&nbsp;<var>A</var>
+führt zur schwächeren klassischen Aussagenlogik. Erst in dieser ist
+die Kontraposition eine äquivalente Umformung.
+
+<p>Den Zeugen kann man dann wie folgt konstruieren. Prämisse ist
+¬<var>B</var>&nbsp;→&nbsp;¬<var>A</var>. Daraus erhält man mit
+der bereits gezeigten Kontraposition die Formel
+¬¬<var>A</var>&nbsp;→&nbsp;¬¬<var>B</var>.
+Nach dem genannten Axiom existiert nun eine Abbildung des Typs zu
+<var>A&nbsp;→&nbsp;¬¬A</var> und eine Abbildung des Typs zu
+¬¬<var>B</var>&nbsp;→&nbsp;<var>B</var>. Verkettet man die drei
+aufgeführten Abbildungen, resultiert dies in der gewünschten Abbildung
+des Typs <var>A</var>&nbsp;→&nbsp;<var>B</var>.
+
+<p>Ich will das Programm dazu nicht weiter ausführen. An dieser
+Stelle ist es dann wohl günstig, auf ein System wie Coq oder Lean
+umzusteigen, wenn man weiter voranschreiten möchte.
 
 <h2 id="Literatur">Literatur</h2>
 
