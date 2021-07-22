@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Kommandos">Kommandos ausführen</a>
+<li><a href="#Pfade">Pfade</a>
 </ol>
 
 <h2 id="Kommandos">Kommandos ausführen</h2>
@@ -29,7 +30,7 @@ Betriebssystem aufrufen zu lassen. Ein großer Vorteil liegt hierbei
 darin, dass das andere Programm in einer beliebigen anderen
 Programmiersprache formuliert sein darf. Zudem ist das andere
 Programm abgekoppelt, womit man quasi dynamisches Laden bekommt.
-Nachteile sind ggf. weniger formal festgelegte Schnittstellen bishin
+Nachteile sind ggf. weniger formal festgelegte Schnittstellen bis hin
 zu Benutzerschnittstellen die eigentlich nicht für die Verarbeitung
 durch Maschinen gedacht sind.
 
@@ -112,18 +113,96 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
 </pre>
 
 <p>Der Nutzer erhält hiermit Zugriff auf alle möglichen Programme,
-womit das Benutzerkonto letztendlich kompromitierbar ist. Ein Angreifer
-könnte bspw. unbemerkt mit GET von irgendwoher ein Skript downloaden,
-welches bei jedem Login automatisch gestartet wird und für den
-Angreifer eine SSH-Verbindung aufbaut, womit dieser oder dessen
-Skripte in aller Ruhe unbemerkte Manipulationen vornehmen können.
-Eine solcher Angriff wird <i>Command injection</i> genannt
+womit das Benutzerkonto letztendlich kompromittierbar ist. Ein
+Angreifer könnte beispielsweise unbemerkt mit GET von irgendwoher ein
+Skript downloaden, welches bei jedem Login automatisch gestartet wird
+und für den Angreifer eine SSH-Verbindung aufbaut, womit dieser oder
+dessen Skripte in aller Ruhe unbemerkte Manipulationen vornehmen
+können. Eine solcher Angriff wird <i>Command injection</i> genannt
 und fällt unter den Obergriff <i>Code injection</i>.
 
 <p>Das Fazit lautet, dass <code>Command</code> so restriktiv wie
 möglich genutzt werden sollte und niemals unvalidierte
 Zeichenketten bekommen darf.
 
+<h2 id="Pfade">Pfade</h2>
+
+<h3>Konkatenation</h3>
+
+<p>Zur Verbindung von Pfadteilen zieht man <code>PathBuf</code>
+heran. Das geht so:
+
+<pre class="rust ibox">
+use std::path::PathBuf;
+
+fn main() {
+    let path = PathBuf::from_iter(["Pfad", "Texte", "Datei.txt"]);
+    assert_eq!("Pfad/Texte/Datei.txt", path.to_str().unwrap());
+}
+
+</pre>
+
+<p>Das Vorhandensein angefügter Schrägstriche macht
+dabei keinen Unterschied:
+
+<pre class="rust ibox">
+let path = PathBuf::from_iter(["Pfad/", "Texte/", "Datei.txt"]);
+assert_eq!("Pfad/Texte/Datei.txt", path.to_str().unwrap());
+</pre>
+
+<h3>Normalisierung</h3>
+
+<p>Ein angefügter Schrägstrich (<i>tailing slash</i>) macht bei
+Pfaden keinen semantischen Unterschied, wohl aber bei ihrer
+inneren Darstellung. So gilt folgendes:
+
+<pre class="rust ibox">
+use std::path::Path;
+
+fn main() {
+    let path1 = Path::new("Pfad");
+    let path2 = Path::new("Pfad/");
+    assert_eq!(path1, path2);
+    assert_ne!(path1.as_os_str(), path2.as_os_str());
+}
+</pre>
+
+<p>Die Gleichheit von Pfaden ist insofern eine neue Äquivalenzrelation,
+die sich von der Gleichheit ihrer inneren Darstellung unterscheidet.
+Man kann das je nach Sichtweise als kontraintuitiv empfinden oder
+nicht.
+
+<p>Wie geht diese Gleichheit vonstatten? Das geschieht durch die
+Funktion <code>components</code>, die einen Pfad in seine
+Bestandteile zerlegt und dabei eine Normalisierung vornimmt.
+Die Normalisierung tut folgendes:
+
+<ul>
+<li>Wiederholung des Separators wird ignoriert, so dass
+<code>a//b</code> wie <code>a/b</code> in die Bestandteile
+<code>a</code> und <code>b</code> zerlegt wird.
+<li>Vorkommen des Punktes <code>.</code> werden ignoriert, sofern
+sie nicht am Anfang des Pfades stehen. So haben auch
+<code>a/./b</code>, <code>a/b/</code>, <code>a/b/</code>
+jeweils die Komponenten <code>a</code> und <code>b</code>.
+<li>Angefügte Schrägstriche werden ignoriert, so dass
+<code>a</code> und <code>a/</code> äquivalent sind.
+</ul>
+
+<p>Übrigens greift neben der Implementierung für <code>PartielEq</code>
+auch die für <code>Hash</code> auf <code>components</code> zurück.
+So gilt folgendes:
+
+<pre class="rust ibox">
+use std::{collections::HashSet, path::Path};
+
+fn main() {
+    let mut s = HashSet::new();
+    s.insert(Path::new("Pfad"));
+    s.insert(Path::new("Pfad/"));
+    assert_eq!(s.len(), 1);
+}
+</pre>
 
 </body>
 </html>
