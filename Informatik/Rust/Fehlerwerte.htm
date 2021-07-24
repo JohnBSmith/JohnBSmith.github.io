@@ -285,12 +285,11 @@ fn log_err(file: &amp;str, line: u32, text: String) {
 }
 
 fn main() {
-    use std::convert::TryFrom;
-    const VERLUST: u8 = 0;
+    const DEFAULT: u8 = 0;
     let x: u32 = 1000;
     let y = u8::try_from(x).unwrap_or_else(|err| {
         log_err(file!(), line!(), err.to_string());
-        VERLUST
+        DEFAULT
     });
     println!("{}", y);
 }

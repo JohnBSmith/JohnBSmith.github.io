@@ -86,7 +86,7 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
     let mut a: Vec&lt;Token&gt; = Vec::new();
     let mut i = 0;
     let mut col = 0;
-    while i&lt;n {
+    while i &lt; n {
         let c = s[i];
         if let '+' | '-' | '*' | '/' | '^'
              | '(' | ')' | '[' | ']' | ',' | ';' = c
@@ -133,7 +133,7 @@ fn atom(a: &amp;[Token], i: usize) -&gt; SyntaxResult {
         Symbol::Identifier(ref x) =&gt; Ok((AST::Identifier(x.clone()), i+1)),
         Symbol::Symbol(c) =&gt; {
             if c == '(' {
-                let (x,i) = expression(a, i+1)?;
+                let (x, i) = expression(a, i+1)?;
                 if let Symbol::Symbol(')') = a[i].symbol {
                     Ok((x, i+1))
                 } else {
@@ -263,7 +263,7 @@ fn input(prompt: &amp;str) -&gt; String {
 fn main() {
     loop {
         let line = input("&gt; ");
-        if line == "" {continue;}
+        if line.is_empty() {continue;}
         let t = match ast(&amp;line) {
             Ok(x) =&gt; x,
             Err(e) =&gt; {

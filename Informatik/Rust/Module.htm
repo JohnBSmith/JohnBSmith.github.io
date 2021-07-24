@@ -15,8 +15,12 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Module">Module</a>
+<li><span class="modest">Reexport</span>
 <li><a href="#Bibliotheken">Bibliotheken</a>
 <li><a href="#Konstanten">Konstanten</a>
+<li><a href="#Daten">Binärdaten einbetten</a>
+<li><a href="#Zeichenketten">Zeichenketten einbetten</a>
+<li><a href="#Einbindung">Quelltext einbinden</a>
 </ol>
 
 <h2 id="Module">Module</h2>
@@ -76,7 +80,7 @@ schlechtem Stil geschrieben.
 <pre class="rust ibox">
 fn is_ascii_alphabetic(c: char) -&gt; bool {
     let x = u32::from(c);
-    65&lt;=x &amp;&amp; x&lt;=90 || 97&lt;=x &amp;&amp; x&lt;=122
+    65 &lt;= x &amp;&amp; x &lt;= 90 || 97 &lt;= x &amp;&amp; x &lt;= 122
 }
 
 fn main() {
@@ -111,7 +115,7 @@ mod charsets {
 
     pub fn is_ascii_alphabetic(c: char) -&gt; bool {
         let x = u32::from(c);
-        CAPA&lt;=x &amp;&amp; x&lt;=CAPZ || A&lt;=x &amp;&amp; x&lt;=Z
+        CAPA &lt;= x &amp;&amp; x &lt;= CAPZ || A &lt;= x &amp;&amp; x &lt;= Z
     }
 }
 
@@ -126,7 +130,7 @@ fn main() {
 
 <p>Unter normalen Umständen werden Konstanten in großen Buchstaben
 geschrieben, das wird auch vom Compiler überprüft. Empfindet man
-das in bestimmten Situation zu unschön, lässt es sich auch
+das in einer bestimmten Situation zu unschön, lässt es sich auch
 ausschalten. Man muss dafür die Zeile
 <pre class="rust ibox">
 #[allow(non_upper_case_globals)]
@@ -163,8 +167,104 @@ fn main() {
 darin begründet, dass veränderliche globale Variablen nicht
 Thread-sicher sind. Zwar arbeitet das Programm hier nicht
 nebenläufig, jedoch würde uns nichts davon abhalten, mehrere
-Threads zu starten. Man müsste die Variable dann Thread-lokal machen.
-Ich will darauf an dieser Stelle nicht weiter eingehen.
+Ausführungsstränge zu starten. Man müsste die Variable dann
+Strang-lokal machen. Ich will darauf an dieser Stelle nicht
+weiter eingehen, sondern verweise auf das Kapitel
+›<a href="Threads.htm">Nebenläufigkeit mit Strängen</a>‹.
+
+<h2 id="Daten">Binärdaten einbetten</h2>
+
+<p>Manchmal möchte man Binärdaten nicht zur Laufzeit aus einer
+Datei laden, sonern bereits zur Kompilierzeit in die ausführbare
+Datei einbetten. Handelt es sich lediglich um ein paar wenige
+Bytes, kann man die Daten wie in
+
+<pre class="rust ibox">
+static DATA: &amp;[u8] = &amp;[0x45, 0x75, 0x6c, 0x65];
+</pre>
+
+<p>direkt als Literal angeben. Für große Datenmengen steht
+stattdessen das Makro <code>include_bytes</code> zur Verfügung,
+das die Daten zur Kompilierzeit aus der angegebenen Datei lädt:
+
+<pre class="rust ibox">
+static DATA: &amp;[u8] = include_bytes!("data.bin");
+</pre>
+
+<h2 id="Zeichenketten">Zeichenketten einbetten</h2>
+
+<p>Weiterhin existiert auch ein Makro <code>inlude_str</code>
+zur Einbettung von UTF-8-kodierten Dateien als Zeichenketten.
+Man kann sich damit unter anderem ein Quine ermogeln. Unter einem Quine
+wird ein Programm verstanden, das seinen eigenen Quelltext repliziert.
+Mit <code>include_str</code> geht das ganz einfach:
+
+<pre class="rust ibox">
+static SELF: &amp;str = include_str!("main.rs");
+
+fn main() {
+    println!("{}", SELF);
+}
+</pre>
+
+<p>Eine sinnvollere Idee ist meiner Ansicht nach die nummerierte
+Ausgabe des eigenen Quelltextes, die man mit
+
+<pre class="rust ibox">
+for (i, line) in SELF.lines().enumerate() {
+    println!("{:02} {}", i + 1, line);
+}
+</pre>
+
+<p>bewerkstelligen kann.
+
+
+<h2 id="Einbindung">Quelltext einbinden</h2>
+
+<p>Das Makro <code>include</code> bietet die Möglichkeit, einen
+Quelltext-Abschnitt eines Moduls in eine andere Datei auszulagern.
+Wer dazu geneigt ist, ein übermäßig langes Modul zu schreiben, kann
+dieses damit trotzdem übersichtlich zu Dateien auftrennen. Es sei
+aber gesagt dass dieser Weg eigentlich nicht beschritten werden muss,
+da das Modulsystem ebenfalls die notwendigen Fähigkeiten dafür besitzt.
+Es ist ja mit dem qualifizierten Import ausgestattet und enthält mit dem
+öffentlichen Import einen Reexport.
+
+<p>In gewisser Hinsicht darf man
+
+<pre class="rust ibox">
+mod m;
+</pre>
+
+<p>als Kurzschreibweise für
+
+<pre class="rust ibox">
+mod m {include!("m.rs");}
+</pre>
+
+<p>betrachten. Allerdings besteht zwischen beidem in der näheren
+Betrachtung ein Unterschied. Das Modul <code>m</code> enthalte
+beispielsweise ein Untermodul <code>m0</code> und das Verzeichnis
+haben die folgende Struktur:
+
+<pre class="ibox">
+src/
+├─ main.rs
+├─ m/
+│  └─ m0.rs
+└─ m.rs
+</pre>
+
+<p>Einbindung vermittels <code>include</code> macht dann
+die explizite Pfadangabe erforderlich, weil die Umstellung
+auf das Unterverzeichnis nicht mehr automatisch stattfindet.
+
+<pre class="rust ibox">
+/* Datei m.rs */
+
+#[path = "m/m0.rs"]
+pub mod m0;
+</pre>
 
 </body>
 </html>

@@ -46,6 +46,7 @@
 <p>Es ist üblich, als erstes ein Programm zu schreiben, welches
 nichts weiter tut als »Hallo Welt!« auf dem Terminal auszugeben.
 Es folgt das obligatorische Hallo-Welt-Programm:
+
 <pre class="rust ibox">
 fn main() {
     println!("Hallo Welt!");
@@ -83,6 +84,7 @@ es erwartungsgemäß, wenn die Programmiersprache in bequemer Weise
 die Angabe einer Berechnung ermöglicht. Arithmetische Ausdrücke
 schreibt man wie gewohnt. Das Programm »Gib den Wert des Ausdrucks
 <code>1+2</code> aus« geht so:
+
 <pre class="rust ibox">
 fn main() {
     println!("{}", 1 + 2);
@@ -262,7 +264,8 @@ bekommt. In Rust ist dieser Typ als leeres Tupel <code>()</code>
 kodiert. Dieser Typ enthält einen einzigen informationslosen Wert,
 den leeren Tupelwert <code>()</code>.
 
-<p>Bspw. erzeugt das Programm
+<p>Beispielsweise erzeugt das Programm
+
 <pre class="rust ibox">
 fn main() {
     println!("{:?}", {
@@ -658,7 +661,7 @@ fn sqrt(a: f64) -&gt; f64 {
     for _ in 0..20 {
         x = 0.5*(x + a/x);
     }
-    return x;
+    x
 }
 
 fn main() {
@@ -681,7 +684,7 @@ fn sqrt(a: f64) -&gt; f64 {
         if (x*x - a).abs() &lt; 1E-14 {break;}
         x = 0.5*(x + a/x);
     }
-    return x;
+    x
 }
 </pre>
 
@@ -695,7 +698,7 @@ fn sqrt_count(a: f64) -&gt; (f64, u32) {
         if (x*x - a).abs() &lt; 1E-14 {return (x, k);}
         x = 0.5*(x + a/x);
     }
-    return (x, 1000);
+    (x, 1000)
 }
 
 fn main() {
@@ -908,7 +911,7 @@ fn main() {
 
 <p>Ein wichtiges Hilfsmittel in der Programmierung sind
 Stapelspeicher. Diese lassen sich mit Feldern modellieren.
-Als Anwendung wird ein Programm gezeigt, das herausfindet
+Als Anwendung will ich ein Programm zeigen, das herausfindet
 ob die Klammersetzung in einer Zeichenkette korrekt verschachtelt ist.
 
 <p>Das machen wir so: Die Zeichenkette wird von vorne bis hinten
