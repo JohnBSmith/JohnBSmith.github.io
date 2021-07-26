@@ -19,6 +19,7 @@
 <li><a href="#Vektoren">Beispiel: Zerklüftungsfreie Vektoren</a>
 <li><a href="#Einheiten">Beispiel: Einheiten</a>
 <li><a href="#Stapel">Beispiel: Beschränkter Stapelspeicher</a>
+<li><a href="#SubArray">Beispiel: Ausschnitte fester Länge</a>
 <li><a href="#Restriktion">Einschränkung auf einzelne Konstanten</a>
 </ol>
 
@@ -467,6 +468,71 @@ fn main() {
 bietet eine vollständige Implementierung der benötigten
 Funktionalität. Im Wesentlichen handelt es sich hierbei um ein Analogon
 zu <code>Vec</code>.
+
+<h2 id="SubArray">Beispiel: Ausschnitte fester Länge</h2>
+
+<p>Angenommen, es besteht die Situation wo ein Programm Bytes aus
+gegebenen Daten herauslesen soll. Das kann beispielsweise so
+aussehen:
+
+<pre class="rust ibox">
+let a: &amp;[u8] = &amp;data[i..i+8];
+let y1 = f(a[0], a[1], a[2], a[3]);
+let y2 = f(a[4], a[5], a[6], a[7]);
+</pre>
+
+<p>Wenn der Compiler smart genug ist, erzeugt er vor den Zugriffen
+einmal die Prüfung
+
+<pre class="rust ibox">
+assert!(a.len() == 8);
+</pre>
+
+<p>und erspart dem Programm infolge die Bounds checks. Wir können die
+Entfernung der Bounds checks erzwingen ohne uns auf den Compiler zu
+verlassen, indem der Ausschnitt als Array begriffen wird. Das ist
+deshalb möglich, weil der Ausschnitt von der festen Länge acht ist.
+Über die Länge parametrisiert ergibt sich dafür:
+
+<pre class="rust ibox">
+trait SubArray&lt;T&gt; {
+    fn slice&lt;const N: usize&gt;(&amp;self, i: usize) -&gt; &amp;[T; N];
+}
+
+impl&lt;T&gt; SubArray&lt;T&gt; for [T] {
+    fn slice&lt;const N: usize&gt;(&amp;self, i: usize) -&gt; &amp;[T; N] {
+        self[i..i+N].try_into().unwrap()
+    }
+}
+</pre>
+
+<p>Der Ausschnitt lässt sich nun durch
+
+<pre class="rust ibox">
+let a: &amp;[u8; 8] = data.slice::&lt;8&gt;(i);
+</pre>
+
+<p>ersetzen. Freilich sollte der Compiler überdies die Implementierung
+von <code>slice</code> optimieren, oder man kümmert sich selbst
+darum. Entscheidend ist aber, dass diese Implementierung
+vom Rest des Programms abgekapselt vorliegt.
+
+<p>Nebenbei bemerkt ist es wohl noch besser, die acht Bytes gleich
+in einer Operation in ein Register zu schieben, um aufwändige
+Speicherzugriffe zu sparen. Gehen wir davon aus, der Compiler ist
+smart genug und behandelt <code>[u8;8]</code> wie <code>u64</code>,
+dann dürfte es kein Nachteil sein, den Ausschnitt per
+
+<pre class="rust ibox">
+let a: [u8; 8] = *data.slice::&lt;8&gt;(i);
+</pre>
+
+<p>als Wert zu handhaben. Es mag wohl auch günstig sein, wenn
+man erzwingen kann dass die Adresse von <code>data</code> und
+der Index <code>i</code> ein ganzzahliges Vielfaches der Wortgröße
+sind. Dann fügt sich der Ausschnitt in die Speicherausrichtung ein und
+kann als ein oder zwei Worte gelesen werden. Ich will an dieser Stelle
+nicht näher darauf eingehen.
 
 <h2 id="Restriktion">Einschränkung auf einzelne Konstanten</h2>
 

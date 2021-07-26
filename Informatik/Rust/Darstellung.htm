@@ -10,19 +10,84 @@
 <body>
 
 <p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
-<h1>Speicherdarstellung</h1>
+
+<h1>Darstellung im Speicher</h1>
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Ausrichtung">Ausrichtung</a>
+<li><span class="modest">Padding</span>
 <li><span class="modest">Größe von Typen</span>
-<li><span class="modest">Ausrichtung und Padding</span>
 <li><span class="modest">Layout</span>
 <li><span class="modest">Das Attribut repr(C)</span>
 <li><span class="modest">Nischen</span>
 <li><span class="modest">Transmutation</span>
 </ol>
 
+<h2 id="Ausrichtung">Ausrichtung</h2>
 
+<p>Dieses Kapitel beschäftigt sich mit der Darstellung von Werten im
+Speicher. Der Wert eines Typs ist zunächst ein gedankliches Konzept,
+so wie das bei einem mathematischen Objekt ist. Ein mathematisches
+Objekt wie eine Zahl befindet sich in einem platonischen Universum, so
+nennt man den Raum aller erdenklichen Objekte. Erst die Darstellung der
+Zahl durch ein Zahlensystem ermöglicht ihre physische Erfassung. Wir
+schreiben ja immer nur die Ziffern einer Zahl auf, die Zahl selbst
+haben wir nie gesehen. Je nach Zahlensystem nimmt die Darstellung
+der Zahl dabei eine andere Gestalt an.
+
+<p>Auch zur physischen Speicherung eines Wertes bedarf es offensichtlich
+einer Darstellung. Werte werden in Computern als Binärzahlen
+abgelegt, soviel ist klar. Bei der Darstellung im Speicher
+gibt es allerdings noch ein wenig mehr zu beachten. Das fängt schon
+damit an, dass die Bits immer zu Gruppen aus acht, den Bytes
+zusammengefasst sind. Die Kenntnis der Darstellung zerbricht im
+Nebeneffekt die Abstraktion zum benutzten Computer.
+
+<p>Jedes im Arbeitsspeicher abgelegte Datum besitzt eine Adresse.
+Enthält ein Zeiger diese Adresse als Wert, bekommt das Programm
+durch Dereferenzierung des Zeigers den Zugriff auf das Datum.
+Eine Adresse ist die Anzahl an Bytes, um die der Zeiger vom Ursprung
+des Speichers aus verschoben wurde.
+
+<p>Es verhält sich nun für gewöhnlich aber so, dass ein Datum nicht
+jede mögliche Adresse besitzen kann. Computer arbeiten intern
+mit <i>Datenworten</i>, kurz <i>Worten</i>. Typische Wortgrößen
+moderner Architekturen sind 32&nbsp;Bit und 64&nbsp;Bit. Für den
+Computer sind die Elemente des Speichers nicht die Bytes, sondern die
+Worte, der Computer kann sie effizient laden und speichern. Infolge
+ist es günstig wenn ein Datum im Speicher so ausgerichtet ist dass
+es möglichst wenige Worte überspannt, denn andernfalls würde das
+Laden und Speichern eine erhöhte Anzahl an Operationen erfordern.
+
+<p>Betrachten wir eine Architektur mit der Wortgröße 32.
+Jede Zahl vom Typ <code>u32</code> ist in dieser Architektur gemäß des
+Gesagten so im Speicher ausgerichtet, dass ihre Adresse ein
+ganzzahliges Vielfaches von vier ist. Das heißt, die
+Zusicherung in
+
+<pre class="rust ibox">
+let x: u32 = 0;
+let address = &amp;x as *const u32 as usize;
+assert!(address % 4 == 0);
+</pre>
+
+<p>ist immer erfüllt, und für
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let address = &amp;a[0] as *const u32 as usize;
+assert!(address % 4 == 0);
+</pre>
+
+<p>gilt dasselbe. Schärfer setzt uns die Standardbibliothek
+unmissverständlich über
+
+<pre class="rust ibox">
+std::mem::align_of::&lt;u32&gt;() == 4
+</pre>
+
+<p>in Kenntnis.
 
 </body>
 </html>

@@ -237,6 +237,27 @@ let a: &amp;[u8] = b"Eule";
 let s: &amp;str = std::str::from_utf8(a).unwrap();
 </pre>
 
+<p>Nebenbei bemerkt handelt es sich bei <code>b"Eule"</code> eigentlich
+um eine Referenz auf ein Feld und nicht bloß um einen Auschnitt.
+So darf man
+
+<pre class="rust ibox">
+let a: [u8; 4] = *b"Eule";
+</pre>
+
+<p>schreiben, jedoch ist
+
+<pre class="rust ibox">
+let a: [u8; 4] = *"Eule".as_bytes();
+</pre>
+
+<p>kein gangbarer Weg. Man kann in diesem Fall stattdessen
+<code>try_into</code> heranziehen:
+
+<pre class="rust ibox">
+let a: [u8; 4] = "Eule".as_bytes().try_into().unwrap();
+</pre>
+
 <p>Manchmal ist die genaue Kodierung unbekannt. Weil die meisten
 Kodierungen auf ASCII aufbauen, ist es in diesem Fall ggf. pragmatisch,
 die Werte außerhalb ASCII zunächst durch eine Ersetzung darzustellen.
@@ -369,7 +390,7 @@ fn pair_to_string(x: i32, y: i32) -&gt; String {
 }
 
 fn main() {
-    println!("{}", pair_to_string(1,2));
+    println!("{}", pair_to_string(1, 2));
 }
 </pre>
 
