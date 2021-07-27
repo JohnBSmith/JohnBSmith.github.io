@@ -16,7 +16,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Ausrichtung">Ausrichtung</a>
-<li><span class="modest">Padding</span>
+<li><a href="#Padding">Padding</a>
 <li><span class="modest">Größe von Typen</span>
 <li><span class="modest">Layout</span>
 <li><span class="modest">Das Attribut repr(C)</span>
@@ -88,6 +88,74 @@ std::mem::align_of::&lt;u32&gt;() == 4
 </pre>
 
 <p>in Kenntnis.
+
+<h2 id="Padding">Padding</h2>
+
+<p>Die Ausrichtung betrifft im weiteren Fortgang gleichermaßen die
+Einträge von Tupeln und Strukturen. Betrachten wir dazu:
+
+<pre class="rust ibox">
+struct S {i: u32, b: u8}
+
+assert_eq!(4, std::mem::align_of::&lt;S&gt;());
+assert_eq!(8, std::mem::size_of::&lt;S&gt;());
+</pre>
+
+<p>Die Ausrichtung der Struktur ist gleich der des Eintrags
+<code>i</code>, das erscheint logisch, denn wäre dieser Betrag geringer,
+wäre sie dergestalt im Speicher verschiebbar dass der Eintrag
+<code>i</code> unausgerichtet sein würde.
+
+<p>Aber weshalb beträgt die Größe der Struktur acht Bytes und
+nicht fünf? Das liegt daran, dass zur Größe der Struktur Padding
+hinzukommt, so dass jedes Element einer direkten Abfolge dieser
+Strukturen im Speicher ausgerichtet ist.
+
+<p>Unter Padding versteht man das Auffüllen einer Datenstruktur
+mit ungenutztem Freiraum, so dass alle ihre Bestandteile im
+Speicher ausgerichtet sind. Beispielsweise erzeugt
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {b1: u8, i: u32, b2: u8}
+
+println!("{}/{}", align_of::&lt;S&gt;(), size_of::&lt;S&gt;());
+</pre>
+
+<p>die Ausgabe <code>4/12</code>. Die Größe der Struktur bläht
+sich von sechs auf zwölf auf, weil einmal für <code>b1</code>
+drei Bytes und ebenso für <code>b2</code> drei Bytes an Padding
+eingefügt werden.
+
+<p>Entfernen wir das Attribut <code>repr(C)</code>, dann ist es
+dem Compiler erlaubt, die Reihenfolge der Einträge umzuordnen,
+so dass die Struktur die Gestalt
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {b1: u8, b2: u8, i: u32}
+</pre>
+
+<p>oder
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {i: u32, b1: u8, b2: u8}
+</pre>
+
+<p>erhält und damit die Größe acht bekommt. Weil <code>b1</code>
+und <code>b2</code> nämlich keiner Ausrichtung bedürfen, dürfen
+sie direkt hintereinander abgelegt werden, womit zwei Bytes
+Padding genügen.
+
+<p>Es ist auch machbar, das Padding und infolge die Ausrichtung
+in Strukturen zu unterlassen. Man spricht dann von einer
+<i>gepackten</i> Struktur. In der Konsequenz sind Lese- und
+Schreibvorgänge allerdings, so wissen wir, ineffizient. Gepackte
+Strukturen würden deshalb am ehesten bei Schnittstellen und
+Dateiformaten zur Anwendung kommen. Solche Darstellungen werden vom
+Compiler <code>rustc</code> mit dem Attribut <code>repr(packed)</code>
+unterstützt, ihr Gebrauch ist allerdings nicht empfohlen.
 
 </body>
 </html>
