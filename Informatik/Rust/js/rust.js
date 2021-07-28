@@ -67,7 +67,8 @@ function rust_node_syntax(s){
             }
         }else if(c=='#'){
             st = "<span class='preprocessor'>";
-            while(i<s.length && s[i]!='\n'){st+=s[i]; i++;}
+            while(i<s.length && s[i]!=']'){st+=s[i]; i++;}
+            st+=s[i]; i++;
             st+="</span>";
             s2+=st;
         }else if(c=='/' && i+1<s.length && s[i+1]=='/'){

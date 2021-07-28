@@ -205,8 +205,6 @@ man das Verhalten dann gerne selbst festlegen. Dies erlaubt die Funktion
 abbilden möchte, dann lässt sich dies wie folgt bewerkstelligen:
 
 <pre class="rust ibox">
-use std::convert::TryFrom;
-
 const VERLUST: u8 = 0;
 
 fn main() {
@@ -244,8 +242,6 @@ handhaben lässt, ist der Ausweg das Weiterreichen des Fehlers
 nach oben an den Aufrufer.
 
 <pre class="rust ibox">
-use std::convert::TryFrom;
-
 fn main() -&gt; Result&lt;(), std::num::TryFromIntError&gt; {
     let x: u32 = 12;
     let y = match u8::try_from(x) {
@@ -341,7 +337,6 @@ fn usize_from_u32(x: u32) -> usize {
 
 #[cfg(target_pointer_width = "16")]
 fn usize_from_u32(x: u32) -> usize {
-    use std::convert::TryFrom;
     usize::try_from(x).unwrap()
 }
 </pre>

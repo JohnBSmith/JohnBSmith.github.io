@@ -64,8 +64,6 @@ let c = char::from(x);
 <p>Die Umwandlung einer u32-Zahl in ein Zeichen ist aber offenbar
 nicht immer möglich, was es zu berücksichtigen gilt:
 <pre class="rust ibox">
-use std::convert::TryFrom;
-
 let x: u32 = 97;
 let c = match char::try_from(x) {
     Ok(value) =&gt; value,
@@ -500,8 +498,6 @@ Startbyte und <var>n</var>&minus;1 Folgebytes.
 von Unicode-Zeichen dekodieren. Es wird auch niemals fehlschlagen,
 da <code>&amp;str</code> nur korrektes UTF-8 enthalten darf.
 <pre class="rust ibox">
-use std::convert::TryFrom;
-
 fn multibyte_count(byte: u8) -&gt; u32 {
     let mut count = 0;
     for k in (0..7).rev() {
