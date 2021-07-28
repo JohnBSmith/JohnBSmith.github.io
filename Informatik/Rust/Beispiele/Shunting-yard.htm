@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rekursiver Abstieg</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+
+<h1>Beispiele: Shunting-yard-Algorithmus</h1>
+
+<p>Der Shunting-yard-Algorithmus ist ein Verfahren zur Umwandlung eines
+mathematischen Ausdrucks in einen abstrakten Syntaxbaum.
+Geringfügige Modifizierungen des Verfahrens überspringen die
+Erstellung des Syntaxbaums und erzeugen sogleich einen Bytecode
+von der Gestalt umgekehrter polnischer Notation oder berechnen
+direkt das Ergebnis des Ausdrucks.
+
+<h2>Direkte Berechnung</h2>
+
+<pre class="rust ibox">
+fn precedence(op: u8) -&gt; Option&lt;u32&gt; {
+    Some(match op {
+        b'+' | b'-' =&gt; 0, b'*' | b'/' =&gt; 1, b'~' =&gt; 2,
+        _ =&gt; return None
+    })
+}
+
+fn operate(op: u8, buf: &amp;mut Vec&lt;i32&gt;) -&gt; Option&lt;()&gt; {
+    let y = buf.pop()?;
+    if op == b'~' {
+        buf.push(y.checked_neg()?);
+        return Some(());
+    }
+    let x = buf.pop()?;
+    buf.push(match op {
+        b'+' =&gt; x.checked_add(y),
+        b'-' =&gt; x.checked_sub(y),
+        b'*' =&gt; x.checked_mul(y),
+        b'/' =&gt; x.checked_div(y),
+        _ =&gt; None
+    }?);
+    Some(())
+}
+
+fn calc(expression: &amp;str) -&gt; Option&lt;i32&gt; {
+    let a = expression.as_bytes();
+    let len = a.len();
+    let mut buf: Vec&lt;i32&gt; = Vec::with_capacity(16);
+    let mut stack: Vec&lt;u8&gt; = Vec::with_capacity(16);
+    let mut prefix = true;
+    let mut i = 0;
+    while i &lt; len {
+        let mut c = a[i];
+        i += 1;
+        if c == b'-' &amp;&amp; prefix {c = b'~';}
+        if c.is_ascii_digit() {
+            let mut x: i32 =  i32::from(c - b'0');
+            while i &lt; len &amp;&amp; a[i].is_ascii_digit() {
+                let digit = i32::from(a[i] - b'0');
+                x = x.checked_mul(10)?.checked_add(digit)?;
+                i += 1;
+            }
+            buf.push(x);
+            prefix = false;
+        } else if let Some(prec) = precedence(c) {
+            while let Some(&amp;top) = stack.last() {
+                if let Some(top_prec) = precedence(top) {
+                    if prec &gt; top_prec {break;}
+                } else {
+                    break;
+                }
+                operate(top, &amp;mut buf);
+                stack.pop();
+            }
+            stack.push(c);
+        } else if c == b'(' {
+            stack.push(c);
+            prefix = true;
+        } else if c == b')' {
+            loop {
+                if let Some(top) = stack.pop() {
+                    if top == b'(' {break;}
+                    operate(top, &amp;mut buf);
+                } else {
+                    return None;
+                }
+            }
+        } else if !matches!(c, b' ' | b'\t' | b'\n') {
+            return None;
+        }
+    }
+    while let Some(top) = stack.pop() {
+        if top == b'(' {return None;}
+        operate(top, &amp;mut buf);
+    }
+    if buf.len() == 1 {Some(buf[0])} else {None}
+}
+
+fn test() {
+    assert_eq!(Some(3), calc("1 + 2"));
+    assert_eq!(Some(1), calc("2 - 1"));
+    assert_eq!(Some(9), calc("3*(1 + 2)"));
+    assert_eq!(Some(14), calc("1*2 + 3*4"));
+    assert_eq!(Some(21), calc("(1 + 2)*(3 + 4)"));
+    assert_eq!(Some(-1), calc("-1"));
+    assert_eq!(Some(1), calc("-1 + 2"));
+    assert_eq!(Some(1), calc("2 + (-1)"));
+    assert_eq!(None, calc("(1 + 2"));
+    assert_eq!(None, calc("1 + 2)"));
+    assert_eq!(None, calc("1 +"));
+}
+
+fn main() {
+    test();
+}
+
+</pre>
+
+</body>
+</html>
+
