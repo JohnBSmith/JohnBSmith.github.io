@@ -15,9 +15,86 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Memo">Memoisierung</a>
 <li><a href="#fix">Der Fixpunkt-Kombinator</a>
 <li><span class="modest">Memoisierender Fixpunkt-Kombiantor</span>
 </ol>
+
+<h2 id="Memo">Memoisierung</h2>
+
+<p>Die rekursive Definition der Fibonacci-Zahlen kann man ohne
+Umwege als naiven Algorithmus zu ihrer Berechnung nutzen.
+
+<pre class="rust ibox">
+fn fib(n: u32) -&gt; u32 {
+    if n &lt; 2 {n} else {fib(n - 1) + fib(n - 2)}
+}
+
+fn main() {
+    for n in 0..48 {
+        println!("{:3} | {:10}", n, fib(n));
+    }
+}
+</pre>
+
+<p>Dieses Programm braucht ziemlich lange bis es durchgelaufen ist.
+Würden wir <code>u32</code> gegen <code>u64</code> ersetzen, käme
+es nicht bei 48 zum Überlauf, sondern erst bei 94. Die Berechnung
+von <code>fib(93)</code> würde allerdings ewig dauern. Genauer gesagt
+wächst der Berechnungsaufwand mit steigendem Argument exponentiell, wie
+sich bei der komplexitätstheoretischen Analyse herausstellt.
+
+<p>Eine systematische Technik zur Reduktion des Aufwandes ist
+die <i>Memoisierung</i>. Hierbei werden bereits berechnete
+Funktionswerte gespeichert, so dass sie danach direkt anstelle
+der Berechnung abgerufen werden können, wenn die gleiche Zahl
+abermals als Argument des Funktionsaufrufs vorkommt.
+
+<p>Die folgende Umsetzung nutzt ein Feld zur Speicherung
+der Funktionswerte.
+
+<pre class="rust ibox">
+fn memoized_fib() -&gt; impl FnMut(u32) -&gt; u32 {
+    fn fib(n: u32, memo: &amp;mut [u32]) -&gt; u32 {
+        let index = n as usize;
+        if n != 0 &amp;&amp; memo[index] == 0 {
+            memo[index] = fib(n - 1, memo) + fib(n - 2, memo);
+        }
+        memo[index]
+    }
+    let mut memo = [0; 48];
+    memo[1] = 1;
+    move |n| fib(n, &amp;mut memo)
+}
+
+fn main() {
+    let mut fib = memoized_fib();
+    for n in 0..48 {
+        println!("{:3} | {:10}", n, fib(n));
+    }
+}
+</pre>
+
+<p>Alternativ kann man, im konkreten Fall mit Kanonen auf Spatzen
+geschossen, ein assoziatives Feld zur Speicherung
+einsetzen.
+
+<pre class="rust ibox">
+fn memoized_fib() -&gt; impl FnMut(u32) -&gt; u32 {
+    use std::collections::HashMap;
+    fn fib(n: u32, memo: &amp;mut HashMap&lt;u32, u32&gt;) -&gt; u32 {
+        if let Some(&amp;value) = memo.get(&amp;n) {
+            value
+        } else { 
+            let value = fib(n - 1, memo) + fib(n - 2, memo);
+            memo.insert(n, value);
+            value
+        }
+    }
+    let mut memo = HashMap::from_iter([(0, 0), (1, 1)]);
+    move |n| fib(n, &amp;mut memo)
+}
+</pre>
 
 <h2 id="fix">Der Fixpunkt-Kombinator</h2>
 
@@ -58,7 +135,7 @@ fac = fix(<b>lambda</b> f, n: 1 <b>if</b> n == 0 <b>else</b> n*f(f, n - 1))
 
 <p>Schließlich müssen wir noch das Typsystem befriedigen.
 Bei der näheren Betrachtung stellt sich heraus, dass
-<code>f</code> ein rekursiver Typ sein muss, denn <code>f</code>
+<code>f</code> einen rekursiven Typ haben muss, denn <code>f</code>
 bekommt sich selbst als Argument zugeführt. Das stellt aber kein
 wesentliches Problem dar, denn rekursive Typen sind mittels
 <code>struct</code> konstruierbar. Insgesamt findet man die
