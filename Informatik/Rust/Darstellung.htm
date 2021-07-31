@@ -21,7 +21,7 @@
 <li><span class="modest">Layout</span>
 <li><span class="modest">Das Attribut repr(C)</span>
 <li><span class="modest">Nischen</span>
-<li><span class="modest">Transmutation</span>
+<li><a href="Transmutation">Transmutation</a>
 </ol>
 
 <h2 id="Ausrichtung">Ausrichtung</h2>
@@ -156,6 +156,104 @@ Strukturen würden deshalb am ehesten bei Schnittstellen und
 Dateiformaten zur Anwendung kommen. Solche Darstellungen werden vom
 Compiler <code>rustc</code> mit dem Attribut <code>repr(packed)</code>
 unterstützt, ihr Gebrauch ist allerdings nicht empfohlen.
+
+<h2 id="Transmutation">Transmutation</h2>
+
+<p>Eigentlich müssen sämtliche Operationen den Regeln des Typsystems
+genügen. Jedes Argument einer Funktion bzw. Operation muss genau den
+Typ besitzen, der in ihrer Signatur vorgeschrieben wurde. Unter
+Anwendung unsicherer Hilfsmittel ist es allerdings machbar, einen Wert
+an dieser Typprüfung vorbeizumogeln.
+
+<p>Zur Schaffung von Klarheit müssen wir zwischen zwei Arten
+von Typumwandlung unterscheiden:
+
+<ul>
+<li>Eine Typumwandlung, die eine Konvertierung beinhaltet. Sie sind
+im Modul <code>std::convert</code> zu finden.
+<li>Eine Typumwandlung, die sich dergestalt verhält, dass
+der Wert im Speicher nicht berührt wird. Man bezeichnet sie als
+<i>Typcast</i> oder <i>Transmutation</i>.
+</ul>
+
+<p>Gegenstand dieses Abschnitts ist zweite Art der Typumwandlung.
+
+<p>Eine Methode des Typcasts ist der Zeigercast mit dem
+Operator <code>as</code>. Aufgabe sei die Interpretation eines
+Feldes von Ganzzahlen als ihre Darstellung im Speicher.
+Man tut das wie folgt:
+
+<pre class="rust ibox">
+let a: [i32; 2] = [1, 2];
+let p = &amp;a as *const [i32; 2] as *const[u8; 8];
+let data: &amp;[u8; 8] = &amp;unsafe {*p};
+println!("{:02x?}", data);
+</pre>
+
+<p>Das Programm erzeugt auf einem Little-Endian-System die Ausgabe:
+
+<pre class="ibox">
+[01, 00, 00, 00, 02, 00, 00, 00]
+</pre>
+
+<p>Eine Alternative bietet die Nutzung der Funktion
+<code>transmute</code>. Mir ihr lässt sich der Vorgang ein
+wenig kürzer in der Form
+
+<pre class="rust ibox">
+let a: [i32; 2] = [1, 2];
+let data: &amp;[u8; 8] = unsafe {std::mem::transmute(&amp;a)};
+</pre>
+
+<p>durchführen. Die Funktion <code>transmute</code> ist allerdings
+wesentlich vielseitiger als der Zeigercast. Wie
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let data: [u8; 8] = unsafe {std::mem::transmute(a)};
+</pre>
+
+<p>verdeutlicht, kann sie neben Zeigertypen auch andere Typen
+umwandeln. Die Typen müssen dafür mindestens Werte der gleichen
+Speichergröße beschreiben. Das Programmfragment
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let data: [u8; 7] = unsafe {std::mem::transmute(a)};
+</pre>
+
+<p>ist dagegen nicht kompilierbar.
+
+<p>Man könnte denken, dass die umgekehrte Umwandlung
+
+<pre class="rust ibox">
+let data: [u8; 8] = [1, 0, 0, 0, 2, 0, 0, 0];
+let a: &amp;[i32; 2] = unsafe {std::mem::transmute(&amp;data)};
+</pre>
+
+<p>ebenfalls durchführbar sein muss. Dem ist aber nicht so. Wir
+erinnern uns daran dass mit <code>u8</code> die Ausrichtung des
+Feldes eins ist, ein Feld von Elementen des Typs <code>i32</code>
+jedoch die Ausrichtung vier erfordert. Somit ist ein verbotenes
+Programm konstruiert. Den Compiler störte das im Jahr 2021
+nicht. Erst Miri monierte:
+
+<p class="indent mono">Undefined Behavior:
+type validation failed: encountered an unaligned reference (required
+4&nbsp;byte alignment but found&nbsp;1)
+
+<p>Und das heißt nicht einmal, Miri war immer imstande alle falschen
+Annahmen zur Ausrichtung zu detektieren. Selbst Miri ließ sich recht
+leicht austricksen. Der Zeiger besaß im konkreten Fall einen Rest
+modulo&nbsp;4. Verkürzte man das Ziel um ein Element und verschob den
+Zeiger um so viele Bytes dass der Rest null wurde, war Miri besänftigt.
+Das Problem wurde erst aufgespürt, sobald Miri mit der Option
+
+<pre class="indent">
+-Zmiri-symbolic-alignment-check
+</pre>
+
+<p>pedantischer gemacht wurde.
 
 </body>
 </html>
