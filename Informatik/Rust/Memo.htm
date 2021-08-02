@@ -187,6 +187,18 @@ fn main() {
 }
 </pre>
 
+<p>Wie das Muster
+
+<pre class="rust ibox">
+let even = fix(|e, n| {
+    let odd = fix(|_, n| if n == 0 {false} else {e.call(n - 1)});
+    if n == 0 {true} else {odd(n - 1)}
+});
+</pre>
+
+<p>zeigt, kann man mit <code>fix</code> fernerhin wechselseitige
+Rekursion basteln.
+
 <h2 id="fix-memo">Memoisierender Fixpunkt-Kombinator</h2>
 
 <p>Als Nächstes erfolgt der Einbau der Memoisierung

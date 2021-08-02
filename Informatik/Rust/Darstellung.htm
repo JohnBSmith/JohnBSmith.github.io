@@ -17,11 +17,10 @@
 <ol>
 <li><a href="#Ausrichtung">Ausrichtung</a>
 <li><a href="#Padding">Padding</a>
-<li><span class="modest">Größe von Typen</span>
-<li><span class="modest">Layout</span>
+<li><a href="#Groeße">Größe von Typen</span>
 <li><span class="modest">Das Attribut repr(C)</span>
 <li><span class="modest">Nischen</span>
-<li><a href="Transmutation">Transmutation</a>
+<li><a href="#Transmutation">Transmutation</a>
 </ol>
 
 <h2 id="Ausrichtung">Ausrichtung</h2>
@@ -156,6 +155,23 @@ Strukturen würden deshalb am ehesten bei Schnittstellen und
 Dateiformaten zur Anwendung kommen. Solche Darstellungen werden vom
 Compiler <code>rustc</code> mit dem Attribut <code>repr(packed)</code>
 unterstützt, ihr Gebrauch ist allerdings nicht empfohlen.
+
+<h2 id="Groeße">Größe von Typen</h2>
+
+<h3>Größe von Feldern</h3>
+
+<p>Wie gesagt schließt die Größe eines Typs Padding mit ein,
+womit ein Element ebenfalls ausgerichtet ist, wenn es direkt hinter
+ein ausgerichtetes Element gesetzt wird. Die Größe des Typs stimmt
+mit der Zahl überein, um die ein Bytezeiger verschoben werden muss,
+damit er auf das nächste Element zeigt. Für jeden Typ <code>T</code>
+und jede Länge <code>N</code> ist die Gleichung
+
+<pre class="indent">
+size_of::&lt;[T; N]&gt; == N*size_of::&lt;T&gt;()
+</pre>
+
+<p>erfüllt.
 
 <h2 id="Transmutation">Transmutation</h2>
 

@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Tupelwertige-Funktionen">Tupelwertige Funktionen</a>
 <li><a href="#Variadische-Funktionen">Variadische Funktionen</a>
+<li><a href="#Endrekursion">Endstämmige Rekursion</a>
 </ol>
 
 <h2 id="Tupelwertige-Funktionen">Tupelwertige Funktionen</h2>
@@ -184,6 +185,116 @@ fn display&lt;T: DisplayFn&gt;(x: T) {
 
 fn main() {
     display(list!["Eule", 24, true]);
+}
+</pre>
+
+<h2 id="Endrekursion">Endstämmige Rekursion</h2>
+
+<p>Problem bei jeder Rekursion ist die Allokation von Stapelspeicher.
+Bei einer bestimmten Rekursionstiefe ist der Aufrufstapel aufgebraucht,
+so dass es zum Programmabbruch kommt. Eine endstämmige Rekursion lässt
+sich dahingehend entwickeln, dass der wesentliche Bedarf an
+Stapelspeicher verschwindet.
+
+<p>Leider ist bisweilen kein Endrekursion erzwingendes Konzept
+verfügbar. Man kann sie allerdings emulieren. Eine klassischer Ansatz
+nutzt ein sogenanntes Trampolin. Anstelle des Funktionsaufrufs
+kehrt der Kontrollfluss bei dieser Konstruktion mit den Argumenten von
+der Funktion zurück in eine Schleife, bei welcher die Funktion im
+nächsten Schleifendurchlauf mit den neuen Argumenten abermals
+aufgerufen wird.
+
+<p>Zu beachten ist noch, dass die Rekursion irgendwann bei einem
+Basisfall enden können muss. Stellt man diese Unterscheidung
+durch eine Enumeration dar, gelangt man zur folgenden Implementierung.
+
+<pre class="rust ibox">
+enum Rec&lt;C, R&gt; {Continue(C), Return(R)}
+use Rec::{Continue, Return};
+
+fn tail_iter&lt;C, R, F&gt;(mut x: C, mut f: F) -&gt; R
+where F: FnMut(C) -&gt; Rec&lt;C, R&gt;
+{
+    loop {
+        match f(x) {
+            Continue(c) =&gt; x = c,
+            Return(r) =&gt; return r,
+        }
+    }
+}
+</pre>
+
+<p>In ihrer endstämmige Formulierung nimmt die Fakultätsfunktion
+
+<pre class="rust ibox">
+fn fac(n: u32) -&gt; u32 {
+    if n == 0 {1} else {n*fac(n - 1)}
+}
+</pre>
+
+<p>beispielsweise die Gestalt
+
+<pre class="rust ibox">
+fn fac(n: u32) -&gt; u32 {
+    fn fac_rec(n: u32, y: u32) -&gt; u32 {
+        if n == 0 {y} else {fac_rec(n - 1, n*y)}
+    }
+    fac_rec(n, 1)
+}
+</pre>
+
+<p>an. Wir trampolinieren sie und erhalten:
+
+<pre class="rust ibox">
+fn fac(n: u32) -&gt; u32 {
+    tail_iter((n, 1), |(n, y)| {
+        if n == 0 {Return(y)} else {Continue((n - 1, n*y))}
+    })
+}
+</pre>
+
+<p>Besteht Bedarf an wechselseitiger Rekursion, genügt die beschriebene
+Konstruktion nicht mehr. Wir bekommen sie trotzdem, indem wir die
+aufzurufende Funktion mit einer weiteren Enumeration unterscheiden.
+Betrachten wir
+
+<pre class="rust ibox">
+fn odd(n: u32) -&gt; bool {
+    if n == 0 {false} else {even(n - 1)}
+}
+
+fn even(n: u32) -&gt; bool {
+    if n == 0 {true} else {odd(n - 1)}
+}
+</pre>
+
+<p>mit der endstämmigen Rekursion:
+
+<pre class="rust ibox">
+fn even(n: u32) -&gt; bool {
+    fn even_rec(n: u32, y: bool) -&gt; bool {
+        if n == 0 {y} else {odd_rec(n - 1, y)}
+    }
+    fn odd_rec(n: u32, y: bool) -&gt; bool {
+        if n == 0 {!y} else {even_rec(n - 1, y)}
+    }
+    even_rec(n, true)
+}
+</pre>
+
+<p>Und nun das kleine Kunststück:
+
+<pre class="rust ibox">
+fn even(n: u32) -&gt; bool {
+    enum Call {Even(u32), Odd(u32)}
+    use Call::{Even, Odd};
+    use Rec::{Return as R, Continue as C};
+    tail_iter((Even(n), true), |(app, y)| {    
+        match app {
+            Even(n) =&gt; if n == 0 {R(y)} else {C((Odd(n - 1), y))},
+            Odd(n) =&gt; if n == 0 {R(!y)} else {C((Even(n - 1), y))}
+        }
+    })
 }
 </pre>
 
