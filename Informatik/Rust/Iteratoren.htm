@@ -22,6 +22,7 @@
   <li><a href="#Externe-Iteratoren">Externe Iteratoren</a>
   </ol>
 <li><a href="#for-Schleife">Die Mechanik der for-Schleife</a>
+<li><a href="#Fehlbare-Iteratoren">Fehlbare Iteratoren</a>
 </ol>
 
 <h2 id="Motivation">Motivation</h2>
@@ -96,6 +97,14 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
     Ok(())
 }
 </pre>
+
+<p>Ein verbleibendes Manko schlägt sich im Vorkommen von
+<code>unwrap</code> nieder. Aufgrund dieses Umstandes könnte man nun
+meinen, Iteratoren wären, weil sie keine Fehler berücksichtigen können,
+zur kurz gedacht und damit für die Praxis ungeeignet. Dem ist
+jedoch nicht so. Später zeige ich im Abschnitt
+›<a href="#Fehlbare-Iteratoren">Fehlbare Iteratoren</a>‹ auf, wie man
+Fehler in die Iteratoren einbeziehen kann.
 
 <h2 id="Arten">Arten von Iteratoren</h2>
 
@@ -258,6 +267,161 @@ Puffers zurückgeführt wird. Dieser Puffer-Ausschnitt ist vom Typ
 <tr><td><code>into_iter</code><td><code>Vec&lt;T&gt;</code><td><code>T</code>
 </table>
 
+<h2 id="Fehlbare-Iteratoren">Fehlbare Iteratoren</h2>
+
+<h3>Manuelle Modifizierung</h3>
+
+<p>Die Einführung von Iteratoren wurde anhand einer
+Mittelwert-Berechnung motiviert. Da tat sich sogleich die Problematik
+auf, dass Iteratoren Fehler berücksichtigen können müssen,
+damit man das Programm von Programmabbrüchen via <code>unwrap</code>
+oder ähnlich bereinigen kann.
+
+<p>Ein Weg zur Einbeziehung von Fehlern besteht in der
+Anpassung der Funktion <code>mean</code>. Das geht so:
+
+<pre class="rust ibox">
+fn mean&lt;E&gt;(a: impl Iterator&lt;Item = Result&lt;f64, E&gt;&gt;)
+-&gt; Result&lt;f64, E&gt;
+{
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x?; count += 1;
+    }
+    Ok(sum/(count as f64))
+}
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| Ok::&lt;f64, Error&gt;(s?.parse::&lt;f64&gt;()?));
+
+    println!("{}", mean(stream)?);
+    Ok(())
+}
+</pre>
+
+<p>Die neue Funktion kann man als eine Verallgemeinerung
+betrachten, denn die ursprüngliche lässt sich aus dieser
+zurückgewinnen:
+
+<pre class="rust ibox">
+fn mean_plain(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    enum Zero {}
+    match mean(a.map(Ok::&lt;f64, Zero&gt;)) {
+        Ok(value) =&gt; value,
+        Err(e) =&gt; match e {} // unreachable
+    }
+}
+</pre>
+
+<p>Das ist ein wenig umständlich. In Zukunft sollte man das ein wenig
+kürzer formulieren können:
+
+<pre class="rust ibox">
+fn mean_plain(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    let Ok(value) = mean(a.map(Ok::&lt;f64, !&gt;));
+    value
+}
+</pre>
+
+<h3>Iterator-Adapter</h3>
+
+<p>Die manuelle Berücksichtigung kommt recht umständlich daher,
+das ist ein berechtigter Einwand. Wir würden lieber eine Funktionalität
+haben, die zu einem Iterator automatisch eine fehlbare Verarbeitung
+erzeugt, so ähnlich wie <code>Result::map</code> das bei einer Funktion
+tut. Hier stellt sich die Schwierigkeit in den Weg, dass
+<code>mean</code> den Iterator konsumiert, woraufhin der Iterator von
+außen aus nicht mehr kontrollierbar ist.
+
+<p>Der einzige verbleibende Weg besteht darin, den Iterator von
+innen aus zu kontrollieren. Dazu wird der ursprüngliche fehlbare
+Iterator durch einen neuen unfehlbaren Iterator verhüllt. Kommt es
+im ursprünglichen Iterator zu einem Fehler, wird der Fehler in eine
+Hilfsvariable geschrieben und der unfehlbare Iterator beendet.
+Der Wert von <code>mean</code> wird verworfen und durch den Fehler
+ersetzt.
+
+<p>Weil der unfehlbare Iterator von <code>mean</code> konsumiert
+wird, muss die Hilfsvariable als Leihgabe gespeichert werden,
+denn andernfalls würde sie mit dem Iterator verschwinden.
+Das führt zu der folgenden Konstruktion.
+
+<pre class="rust ibox">
+struct ProcessResults&lt;'a, I, E&gt; {
+    error: &amp;'a mut Result&lt;(), E&gt;,
+    iter: I
+}
+
+impl&lt;I, T, E&gt; Iterator for ProcessResults&lt;'_, I, E&gt;
+where I: Iterator&lt;Item = Result&lt;T, E&gt;&gt;
+{
+    type Item = T;
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt; {
+        match self.iter.next() {
+            Some(Ok(x)) =&gt; Some(x),
+            Some(Err(e)) =&gt; {
+                *self.error = Err(e);
+                None
+            },
+            None =&gt; None
+        }
+    }
+}
+
+fn process_results&lt;I, F, T, E, R&gt;(i: I, cb: F) -&gt; Result&lt;R, E&gt;
+where
+    I: Iterator&lt;Item = Result&lt;T, E&gt;&gt;,
+    F: FnOnce(ProcessResults&lt;I, E&gt;) -&gt; R
+{
+    let mut error = Ok(());
+    let value = cb(Process {iter: i, error: &amp;mut error});
+    match error {Ok(()) =&gt; Ok(value), Err(e) =&gt; Err(e)}
+}
+</pre>
+
+<p>Diese Funktion <code>process_results</code> ist im Paket
+»<a href="https://crates.io/crates/itertools">itertools</a>«
+verfügbar. Damit wird man <code>unwrap</code> los, ohne
+<code>mean</code> modifizieren zu müssen:
+
+<pre class="rust ibox">
+fn mean(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x; count += 1;
+    }
+    sum/(count as f64)
+}
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| Ok::&lt;f64, Error&gt;(s?.parse::&lt;f64&gt;()?));
+
+    println!("{:?}", process_results(stream, |i| mean(i))?);
+    Ok(())
+}
+</pre>
+
+<p>Zu beachten ist dass <code>process_results</code> im Allgemeinen
+nicht die äquivalente Semantik liefert wie die manuelle Anpassung,
+da die Funktion nach dem Ende des Iterators nicht sofort verlassen
+wird. Sofern die Funktion wie <code>mean</code> frei von Seiteneffekten
+ist, spielt das aber keine beachtenswerte Rolle.
 
 </body>
 </html>
