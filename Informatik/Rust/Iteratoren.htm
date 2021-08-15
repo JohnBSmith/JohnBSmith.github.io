@@ -382,7 +382,7 @@ where
     F: FnOnce(ProcessResults&lt;I, E&gt;) -&gt; R
 {
     let mut error = Ok(());
-    let value = cb(Process {iter: i, error: &amp;mut error});
+    let value = cb(ProcessResults {iter: i, error: &amp;mut error});
     match error {Ok(()) =&gt; Ok(value), Err(e) =&gt; Err(e)}
 }
 </pre>

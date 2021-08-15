@@ -21,6 +21,7 @@
 <li><a href="#Stapel">Beispiel: Beschränkter Stapelspeicher</a>
 <li><a href="#SubArray">Beispiel: Ausschnitte fester Länge</a>
 <li><a href="#Restriktion">Einschränkung auf einzelne Konstanten</a>
+<li><a href="#Zusicherungen">Zusicherungen an Konstanten</a>
 </ol>
 
 <h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
@@ -542,29 +543,29 @@ für diese konkreten Konstanten ein Trait implementiert wird.
 Man stößt hierbei jedoch auf die Komplikation, dass Traits lediglich
 für reguläre Typen implementierbar sind, nicht aber für Konstanten.
 Dieses Problem lässt sich allerdings durch den folgenden Trick
-umgehen. Wir definieren einen Typkonstruktor <code>Const</code>,
-der eine Konstante <code>N</code> in einen gewöhnlichen Typ
-<code>Const&lt;N&gt;</code> umwandelt. Der Trait wird dann stattdessen
-für diesen Typ implementiert.
+umgehen. Wir definieren einen Typkonstruktor <code>U32</code>,
+der eine Konstante <code>N</code> des Typs <code>u32</code> in einen
+gewöhnlichen Typ <code>U32&lt;N&gt;</code> umwandelt. Der Trait wird
+dann stattdessen für diesen Typ implementiert.
 
 <p>Das folgende Beispiel verdeutlicht das Vorgehen anhand eines
 Linksshifts, der nur für solche Distanzen definiert
 sein soll, welche nichtnegative ganzzahlige Vielfache von acht sind.
 
 <pre class="rust ibox">
-struct Const&lt;const N: u32&gt;;
+struct U32&lt;const N: u32&gt;;
 
 macro_rules! implement {
-    ($t:ty, for [$($value:expr),*]) =&gt; {
-        $(impl $t for Const&lt;$value&gt; {})*
+    ($t:ty, for ($tc:ident) [$($value:expr),*]) =&gt; {
+        $(impl $t for $tc&lt;$value&gt; {})*
     }
 }
 
 trait ShiftAmount {}
-implement!(ShiftAmount, for [0, 8, 16, 24]);
+implement!(ShiftAmount, for (U32) [0, 8, 16, 24]);
 
 fn shift_left&lt;const N: u32&gt;(x: u32) -&gt; u32
-where Const&lt;N&gt;: ShiftAmount
+where U32&lt;N&gt;: ShiftAmount
 {
     x &lt;&lt; N
 }
@@ -572,6 +573,47 @@ where Const&lt;N&gt;: ShiftAmount
 fn main() {
     println!("{}", shift_left::&lt;8&gt;(1));
 }
+
+</pre>
+
+<h2 id="Zusicherungen">Zusicherungen an Konstanten</h2>
+
+<p>Die Umwandlung einer booleschen Konstante in einen gewöhnlichen
+Typ bemächtigt uns darüber hinaus, die bereits zur Kompilierzeit
+ausgeführte Zusicherung an eine Konstante konstruieren zu können.
+Es gibt zwar auch Tricks, wie man das ohne Konstanten als
+Typparameter erreichen kann, aber die sind nicht sonderlich
+ästhetisch.
+
+<p>Als Beispiel wird an ein Feld zugesichert, sortiert zu sein.
+Fügt man zusätzliche Elemente hinzu, können diese dann nicht
+versehentlich an der falschen Stelle eingefügt werden.
+Das ist beispielsweise wichtig, damit eine binäre Suche, die
+ein sortiertes Feld voraussetzt, korrekt abläuft. 
+
+<pre class="rust ibox">
+macro_rules! const_assert {
+    ($cond:expr) =&gt; {
+        #[allow(dead_code)]
+        const _: () = {
+            struct Bool&lt;const COND: bool&gt;;
+            const _: Bool&lt;true&gt; = Bool::&lt;{$cond}&gt;;
+        };
+    }
+}
+
+const fn is_sorted(a: &amp;[i32]) -&gt; bool {
+    let mut i = 1;
+    while i &lt; a.len() {
+        if a[i-1] &gt;= a[i] {return false;}
+        i += 1;
+    }
+    true
+}
+
+const A: [i32; 4] = [1, 2, 3, 4];
+
+const_assert!(is_sorted(&amp;A));
 </pre>
 
 </body>
