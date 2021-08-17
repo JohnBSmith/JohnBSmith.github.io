@@ -21,6 +21,7 @@
 <li><a href="#Daten">Binärdaten einbetten</a>
 <li><a href="#Zeichenketten">Zeichenketten einbetten</a>
 <li><a href="#Einbindung">Quelltext einbinden</a>
+<li><a href="#Zyklen">Zyklische Definitionen</a>
 </ol>
 
 <h2 id="Module">Module</h2>
@@ -336,6 +337,31 @@ auf das Unterverzeichnis nicht mehr automatisch stattfindet.
 #[path = "m/m0.rs"]
 pub mod m0;
 </pre>
+
+<h2 id="Zyklen">Zyklische Definitionen</h2>
+
+<p>Definitionen dürfen sich wechselseitig aufeinander beziehen.
+Darüber hinaus darf man solche Definitionen in Module aufteilen.
+So zieht sich die wechselseitig rekursive Definition
+
+<pre class="rust ibox">
+mod even {
+    use super::odd::odd;
+    pub fn even(x: u32) -&gt; bool {
+        if x == 0 {true} else {odd(x - 1)}
+    }
+}
+
+mod odd {
+    use super::even::even;
+    pub fn odd(x: u32) -&gt; bool {
+        if x == 0 {false} else {even(x - 1)}
+    }
+}
+</pre>
+
+<p>der beiden Funktionen <code>even</code> und <code>odd</code>
+durch zwei Module.
 
 </body>
 </html>

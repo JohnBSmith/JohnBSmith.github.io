@@ -21,6 +21,7 @@
 <li><a href="#Stapel">Beispiel: Beschränkter Stapelspeicher</a>
 <li><a href="#SubArray">Beispiel: Ausschnitte fester Länge</a>
 <li><a href="#Restriktion">Einschränkung auf einzelne Konstanten</a>
+<li><a href="#Praedikate">Einschränkung durch Prädikate</a>
 <li><a href="#Zusicherungen">Zusicherungen an Konstanten</a>
 </ol>
 
@@ -576,6 +577,34 @@ fn main() {
 
 </pre>
 
+<h2 id="Praedikate">Einschränkung durch Prädikate</h2>
+
+<p>Es tut sich die Frage auf, ob sich eine Parametrisierung allgemeiner
+durch logische Prädikate einschränken lässt. Eine Vorgehensweise
+dazu geht wie folgt. Der boolesche Wert des Prädikates ist ebenfalls
+eine Konstante, da das Prädikat auf eine Konstante angewendet wird.
+Analog wie zuvor muss ein Typkonstruktor <code>Bool</code> den
+booleschen Wert in einen gewöhnlichen Typ umwandeln. Um das Prädikat
+nun als erfüllt voraussetzen zu können, definiert man einen Trait
+<code>True</code>, der ausschließlich für den Wert <code>true</code>
+definiert ist.
+
+<pre class="rust ibox">
+struct Bool&lt;const B: bool&gt;;
+
+trait True {}
+impl True for Bool&lt;true&gt; {}
+
+fn shift_left&lt;const N: u32&gt;(x: u32) -&gt; u32
+where Bool&lt;{N%8 == 0}&gt;: True
+{
+    x &lt;&lt; N
+}
+</pre>
+
+<p>Zu bemerken ist, dass dafür Ausdrücke mit Parametern auswertbar
+sein müssen. Im Jahr 2021 war das noch experimentell gewesen.
+
 <h2 id="Zusicherungen">Zusicherungen an Konstanten</h2>
 
 <p>Die Umwandlung einer booleschen Konstante in einen gewöhnlichen
@@ -596,7 +625,7 @@ macro_rules! const_assert {
     ($cond:expr) =&gt; {
         #[allow(dead_code)]
         const _: () = {
-            struct Bool&lt;const COND: bool&gt;;
+            struct Bool&lt;const B: bool&gt;;
             const _: Bool&lt;true&gt; = Bool::&lt;{$cond}&gt;;
         };
     }
