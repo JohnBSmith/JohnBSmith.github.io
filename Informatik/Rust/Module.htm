@@ -15,7 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Module">Module</a>
-<li><span class="modest">Reexport</span>
+<li><a href="#Reexport">Reexport</a>
 <li><a href="#Bibliotheken">Bibliotheken</a>
 <li><a href="#Konstanten">Konstanten</a>
 <li><a href="#Daten">Binärdaten einbetten</a>
@@ -54,7 +54,7 @@ mod number_theory {
 use number_theory::is_prime;
 
 fn main() {
-    let a: Vec&lt;u64&gt; = (1..).filter(|n| is_prime(*n))
+    let a: Vec&lt;u64&gt; = (1..).filter(|&amp;n| is_prime(n))
         .take(10).collect();
     println!("{:?}", a);
 }
@@ -66,11 +66,82 @@ Es könnte ja mehrere Module mit einer so benannten Funktion geben.
 Zudem gibt die <code>use</code>-Anweisung darüber Aufschluss,
 welche Abhängigkeiten ein Modul besitzt.
 
-<h2 id="Bibliotheken">Bibliotheken</h2>
-<p>Auf der nächsthöheren Ebene kann man auch wieder zusammengehörige
-Module bündeln. Man spricht dann von einer Bibliothek, die in
-Rust kurz als Crate bezeichnet wird.
+<h2 id="Reexport">Reexport</h2>
 
+<p>Ein Modul kann seinerseits Untermodule enthalten. Mittels
+<code>pub&nbsp;use</code> lässt sich Funktionalität aus einem Untermodul
+als öffentliche Schnittstelle weitergeben. Das heißt, die
+Funktionalität erscheint von Außen betrachtet so, als wäre sie im Modul
+selbst definiert.
+
+<pre class="rust ibox">
+mod parity {
+    mod even {
+        pub fn even(x: i32) -&gt; bool {x%2 == 0}
+    }
+    mod odd {
+        pub fn odd(x: i32) -&gt; bool {x%2 == 1}
+    }
+    pub use {even::even, odd::odd};
+}
+</pre>
+
+<p>Über die Existenz der Untermodule ist von Außen betrachtet quasi
+nichts bekannt. Wollte man sie zugänglich machen, müsste man
+<code>pub&nbsp;mod</code> schreiben.
+
+<p>Woher die reexportierte Funktionalität entstammt, ist beliebig.
+Beispielsweise hindert einen nichts daran, die verschachtelte
+Struktur aufzulösen:
+
+<pre class="rust ibox">
+mod even {
+    pub fn even(x: i32) -&gt; bool {x%2 == 0}
+}
+mod odd {
+    pub fn odd(x: i32) -&gt; bool {x%2 == 1}
+}
+
+mod parity {
+    pub use crate::{even::even, odd::odd};
+}
+</pre>
+
+<h2 id="Bibliotheken">Bibliotheken</h2>
+
+<p>Auf der nächsthöheren Ebene kann man auch wieder zusammengehörige
+Module bündeln. Man spricht dann von einer <i>Bibliothek</i>, die in
+Rust kurz als <i>Crate</i> bezeichnet wird. Eine Bibliothek muss aber
+nicht unbedingt in Module aufgeteilt sein.
+
+<p>Die Datei <code>lib.rs</code> bildet die Wurzel einer
+Bibliothek. Alle ihre öffentlichen Schnittstellen werden wie bei einem
+Modul mit <code>pub</code> gekennzeichnet. Das gilt gleichermaßen
+für ihre öffentlichen Module, die also als <code>pub mod</code>
+erscheinen müssen.
+
+<p>Der Befehl
+
+<pre class="ibox">
+cargo new --lib lib0
+</pre>
+
+<p>erzeugt die neue Bibliothek <code>lib0</code> mit der
+Verzeichnisstruktur:
+
+<pre class="ibox">
+lib0/
+└─ src/
+   └─ lib.rs
+</pre>
+
+<p>Eigentlich umfasst der Begriff <i>Crate</i> auch ausführbare
+Programme. Ein ausführbares Programm unterscheidet sich von einer
+Bibliothek lediglich dadurch, dass die Wurzel durch die Datei
+<code>main.rs</code> anstelle von <code>lib.rs</code> gebildet wird.
+
+<p>Innerhalb einer Bibliothek darf es zyklische Definitionen geben.
+Zwischen Bibliotheken sind solchen Verwebungen nicht erlaubt.
 
 <h2 id="Konstanten">Konstanten</h2>
 
@@ -93,7 +164,7 @@ fn main() {
 <p>Im Programm tauchen »magische« Konstanten mit irgendeiner
 bestimmten Bedeutung auf, diese ist jedoch nicht
 klar erkennbar. Der Leser muss sich die Bedeutung der Konstanten
-erst erschließen. Hier mag das wohl einfach sein, bei komplizierten
+erst erschließen. Hier mag das wohl einfach sein. Bei komplizierten
 Programmen steht man da aber schnell im Regen. Ganz kritisch ist
 die Situation wo dieselbe Konstante mehrmals im Programm vorkommt.
 Würde jemand die Konstante an einer Stelle zur Anpassung verändern,

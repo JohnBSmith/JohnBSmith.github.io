@@ -47,21 +47,22 @@ fn main(){
 <h2 id="gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</h2>
 <pre class="rust box">
 fn take_even(a: &amp;[i32]) -> Vec&lt;i32&gt; {
-    let mut v: Vec&lt;i32&gt; = Vec::new();
     let n = a.len();
     let m = if n%2 == 0 {n/2} else {n/2 + 1};
+    let mut acc: Vec&lt;i32&gt; = Vec::with_capacity(m);
     for i in 0..m {
-        v.push(a[2*i]);
+        acc.push(a[2*i]);
     }
-    return v;
+    acc
 }
 
 fn take_odd(a: &amp;[i32]) -> Vec&lt;i32&gt; {
-    let mut v: Vec&lt;i32&gt; = Vec::new();
-    for i in 0..a.len()/2 {
-        v.push(a[2*i + 1]);
+    let m = a.len()/2;
+    let mut acc: Vec&lt;i32&gt; = Vec::with_capacity(m);
+    for i in 0..m {
+        acc.push(a[2*i + 1]);
     }
-    return v;
+    acc
 }
 
 fn main(){
