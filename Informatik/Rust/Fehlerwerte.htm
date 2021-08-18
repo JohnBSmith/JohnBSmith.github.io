@@ -19,6 +19,7 @@
 <li><a href="#Fragezeichen">Fehler weiterreichen</a>
 <li><a href="#Error">Universeller Fehlertyp</a>
 <li><a href="#Aufzeichnung">Fehler aufzeichnen</a>
+<li><a href="#individuell">Individuelle Fehlertypen</a>
 </ol>
 
 <h2 id="Option">Optionale Werte</h2>
@@ -292,6 +293,39 @@ fn main() {
         DEFAULT
     });
     println!("{}", y);
+}
+</pre>
+
+<h2 id="individuell">Individuelle Fehlertypen</h2>
+
+<p>In bestimmten Situation kann die Definition neuer individueller
+Fehlertypen pragmatisch sein. Soll ein individueller Fehlertyp in den
+universellen Fehlertyp umwandelbar sein, muss eine Implementierung
+des Traits <code>std::error::Error</code> vorliegen. Das bedeutet
+an sich lediglich, dass die Traits <code>Display</code> und
+<code>Debug</code> implementiert sind. Man bewerkstelligt das so:
+
+<pre class="rust ibox">
+use std::fmt::{self, Display};
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+#[derive(Debug)]
+struct CustomError {text: String}
+
+impl CustomError {
+    fn new(text: &amp;str) -&gt; Self {Self {text: text.to_string()}}
+}
+
+impl Display for CustomError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "{}", self.text)
+    }
+}
+
+impl std::error::Error for CustomError {}
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    Err(CustomError::new("Fehler").into())
 }
 </pre>
 
