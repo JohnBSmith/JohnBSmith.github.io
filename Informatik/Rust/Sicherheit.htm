@@ -279,10 +279,10 @@ pub mod fruit_crate {
     }
     impl FruitCrate {
         pub fn new() -&gt; Self {
-            Self{list: Vec::new(), total_mass: 0}
+            Self {list: Vec::new(), total_mass: 0}
         }
         pub fn push(&amp;mut self, kind: &amp;str, mass: u32) {
-            self.list.push(Fruit{kind: kind.to_string(), mass});
+            self.list.push(Fruit {kind: kind.to_string(), mass});
             self.total_mass += mass;
         }
         pub fn total_mass(&amp;self) -&gt; u32 {self.total_mass}
@@ -321,7 +321,7 @@ pub mod fruit_crate {
     }
     impl FruitCrate {
         pub fn new() -&gt; Self {
-            Self{list: Vec::new(), total_mass: 0, open: true}
+            Self {list: Vec::new(), total_mass: 0, open: true}
         }
         /* Der Rest wie zuvor */
     }
@@ -364,7 +364,7 @@ fn main() {
     let mut fc = FruitCrate::new();
     fc.push("Äpfel", 1000);
     fc.push("Birnen", 1000);
-    let (open,list) = fc.borrow_parts();
+    let (open, list) = fc.borrow_parts();
     *open = false;
     println!("{:?}", list);
 }
@@ -401,7 +401,7 @@ pub mod fruit_crate {
             }
         }
         pub fn push(&amp;mut self, kind: &amp;str, mass: u32) {
-            self.list.0.push(Fruit{kind: kind.to_string(), mass});
+            self.list.0.push(Fruit {kind: kind.to_string(), mass});
             self.total_mass.0 += mass;
         }
     }
@@ -556,7 +556,7 @@ pub mod unit {
     pub const mm: f64 = 0.001;
 }
 
-use unit::{cm,mm};
+use unit::{cm, mm};
 use std::f64::consts::PI;
 
 fn circumference(radius: f64) -&gt; f64 {
@@ -610,13 +610,13 @@ pub mod quantities {
     impl&lt;D: Dimension&gt; Mul&lt;Quantity&lt;D&gt;&gt; for f64 {
         type Output = Quantity&lt;D&gt;;
         fn mul(self, y: Quantity&lt;D&gt;) -&gt; Quantity&lt;D&gt; {
-            Quantity{value: self*y.value, dim: Ph}
+            Quantity {value: self*y.value, dim: Ph}
         }
     }
     impl&lt;D: Dimension&gt; Add&lt;Quantity&lt;D&gt;&gt; for Quantity&lt;D&gt; {
         type Output = Quantity&lt;D&gt;;
         fn add(self, y: Quantity&lt;D&gt;) -&gt; Quantity&lt;D&gt; {
-            Quantity{value: self.value + y.value, dim: Ph}
+            Quantity {value: self.value + y.value, dim: Ph}
         }
     }
     
@@ -678,17 +678,17 @@ pub mod quantities {
     impl&lt;U: Unit&gt; Mul&lt;Quantity&lt;U&gt;&gt; for f64 {
         type Output = Quantity&lt;U&gt;;
         fn mul(self, y: Quantity&lt;U&gt;) -&gt; Quantity&lt;U&gt; {
-            Quantity{value: self*y.value, unit: Ph}
+            Quantity {value: self*y.value, unit: Ph}
         }
     }
     impl&lt;U: Unit&gt; Add&lt;Quantity&lt;U&gt;&gt; for Quantity&lt;U&gt; {
         type Output = Quantity&lt;U&gt;;
         fn add(self, y: Quantity&lt;U&gt;) -&gt; Quantity&lt;U&gt; {
-            Quantity{value: self.value + y.value, unit: Ph}
+            Quantity {value: self.value + y.value, unit: Ph}
         }
     }
     impl&lt;U: Unit&gt; From&lt;f64&gt; for Quantity&lt;U&gt; {
-        fn from(x: f64) -&gt; Quantity&lt;U&gt; {Quantity{value: x, unit: Ph}}
+        fn from(x: f64) -&gt; Quantity&lt;U&gt; {Quantity {value: x, unit: Ph}}
     }
     impl&lt;U: Unit&gt; fmt::Display for Quantity&lt;U&gt; {
         fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
@@ -956,17 +956,17 @@ fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X, Y)&g
     let n = a.len();
     
     // Precondition
-    assert!(n == b.len(), "zip(a,b): a.len() == b.len()");
+    assert!(n == b.len(), "zip(a, b): a.len() == b.len()");
 
-    let mut v = Vec::with_capacity(n);
+    let mut acc = Vec::with_capacity(n);
     for k in 0..n {
-        v.push((a[k].clone(),b[k].clone()));
+        acc.push((a[k].clone(), b[k].clone()));
     }
 
     // Postcondition
     assert!(n == v.len());
 
-    return v;
+    acc
 }
 
 fn main() {
@@ -991,10 +991,10 @@ macro_rules! contract {
      postcondition($arg:ident) $post:tt)
     =&gt; {
         $pre;
-        let y = (|| $body)();
-        let $arg = &amp;y;
+        let value = (|| $body)();
+        let $arg = &amp;value;
         $post;
-        return y;
+        value
     }
 }
 
@@ -1002,15 +1002,15 @@ fn zip&lt;X: Clone, Y: Clone&gt;(a: &amp;[X], b: &amp;[Y]) -&gt; Vec&lt;(X, Y)&g
     let n = a.len();
     contract! {
         precondition {
-            assert!(n == b.len(), "zip(a,b): a.len() == b.len()");
+            assert!(n == b.len(), "zip(a, b): a.len() == b.len()");
         }{
-            let mut v = Vec::with_capacity(n);
+            let mut acc = Vec::with_capacity(n);
             for k in 0..n {
-                v.push((a[k].clone(),b[k].clone()));
+                acc.push((a[k].clone(), b[k].clone()));
             }
-            return v;
-        } postcondition(v) {
-            assert!(n == v.len());
+            acc
+        } postcondition(acc) {
+            assert!(n == acc.len());
         }
     }
 }

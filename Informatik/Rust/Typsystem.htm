@@ -19,7 +19,7 @@
 <li><a href="#Funktionen">Typisierung von Funktionen</a>
 <li><a href="#Polymorphe-Typen">Polymorphe Typen</a>
 <li><a href="#Existentielle-Typen">Existentielle Typen</a>
-<li><span class="modest">Rekursive Typen</span>
+<li><a href="#Rekursive-Typen">Rekursive Typen</a>
 </ol>
 
 <p>Dieses Kapitel erläutert Beziehungen zwischen dem Typsystem von
@@ -321,7 +321,7 @@ mod mx {
             format!("{}", &amp;self.a)
         }
     }
-    pub fn f(a: i32) -&gt; X {X{a}}
+    pub fn f(a: i32) -&gt; X {X {a}}
 }
 
 fn main() {
@@ -349,6 +349,70 @@ fn main() {
     println!("{}", to_string());
 }
 </pre>
+
+<h2 id="Rekursive-Typen">Rekursive Typen</h2>
+
+<p>Bei verketteten Listen und Bäumen enthalten die Knoten Einträge von
+der Form der Gesamtstruktur. Zur Typisierung solcher Strukturen
+sind rekursive Typen erforderlich.
+
+<p>Rekursive Typen lassen sich mit den bisherigen Mitteln nicht
+darstellen. Man führt für sie die Notation <code>&mu;T.Term</code>
+ein, wobei <code>T</code> eine Typvariable ist. Diese Typvariable
+kommt im Term <code>Term</code> vor, und steht obendrein für den
+Term selbst.
+
+<p>Das klassische Beispiel für einen rekursiven Typ ist die
+Darstellung der natürlichen Zahlen als
+<pre class="indent">
+Nat = &mu;T.enum {Zero, Succ(T)},
+</pre>
+
+<p>oder in abstrakter Form äquivalent als
+
+<pre class="indent">
+Nat = &mu;T.Either&lt;(), T&gt; = &mu;T.1+T.
+</pre>
+
+<p>In Rust sind rekursive Typen in der Gestalt nominaler Typen
+darstellbar, wobei die Notwendigkeit der speziellen Notation mit
+Typvariable entfällt. Die Entsprechung zu <code>Nat</code> kann man als
+
+<pre class="rust ibox">
+enum Nat {Zero, Succ(Rc&lt;Nat&gt;)}
+</pre>
+
+<p>oder
+
+<pre class="rust ibox">
+enum Either&lt;X, Y&gt; {Left(X), Right(Y)}
+struct Nat(Either&lt;(), Rc&lt;Nat&gt;&gt;);
+</pre>
+
+<p>gestalten. Ein ähnliches Beispiel bieten die bereits in
+der Form
+
+<pre class="rust ibox">
+enum List&lt;T&gt; {
+    Nil, Node {data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+
+<p>beschriebenen einfach verketteten Listen. Wir können
+<code>Nat</code> an und für sich sogar als äquivalent zu
+<code>List&lt;()&gt;</code> betrachten.
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Benjamin C. Pierce: »Types and Programming Languages«.
+The MIT Press, Cambridge, Massachusetts &amp; London, England.
+<li>Herbert Klaeren: »<a href="http://pu.inf.uni-tuebingen.de/users/klaeren/ko.pdf"
+  >Konzepte höherer Programmiersprachen</a>«.
+  Mathematisch-Naturwissenschaftliche Fakultät,
+  Eberhard Karls Universität Tübingen, 2013. Kapitel&nbsp;7:
+  »Typen und Typsysteme«.
+</ol>
 
 </body>
 </html>
