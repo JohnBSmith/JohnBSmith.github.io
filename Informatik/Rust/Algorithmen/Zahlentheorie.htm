@@ -26,27 +26,26 @@
 <pre class="rust box">
 // Klassischer euklidischer Algorithmus, rekursiv
 fn gcd(a: u32, b: u32) -&gt; u32 {
-    return if b == 0 {a}
-      else if a == 0 {b}
-      else if b &lt; a {gcd(a-b,b)}
-      else {gcd(a,b-a)};
+         if b == 0 {a}
+    else if a == 0 {b}
+    else if b &lt; a {gcd(a - b, b)}
+    else {gcd(a, b - a)}
 }
 
 // Klassischer euklidischer Algorithmus, iterativ
 fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
-    if a == 0 {
-        return b;
-    } else {
+    if a == 0 {b}
+    else {
         while b != 0 {
-            if b &lt; a {a = a-b;} else {b = b-a;}
+            if b &lt; a {a = a - b;} else {b = b - a;}
         }
-        return a;
+        a
     }
 }
 
 // Moderner euklidischer Algorithmus, rekursiv
 fn gcd(a: u32, b: u32) -&gt; u32 {
-    if b == 0 {a} else {gcd(b,a%b)}
+    if b == 0 {a} else {gcd(b, a%b)}
 }
 
 // Moderner euklidischer Algorithmus, iterativ
@@ -56,18 +55,18 @@ fn gcd(mut a: u32, mut b: u32) -&gt; u32 {
         let h = a%b;
         a = b; b = h;
     }
-    return a;
+    a
 }
 </pre>
 
 <h2 id="kgV">Kleinstes gemeinsames Vielfaches</h2>
 <pre class="rust box">
 fn lcm(a: u32, b: u32) -&gt; u32 {
-    a*b/gcd(a,b)
+    a*b/gcd(a, b)
 }
 
 fn lcm_slice(a: &amp;[u32]) -&gt; u32 {
-    a.iter().fold(1,|a,&amp;b| {a*b/gcd(a,b)})
+    a.iter().fold(1, |a, &amp;b| {a*b/gcd(a, b)})
 }
 </pre>
 
@@ -82,7 +81,7 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; u32 {
         n /= 2; x = (x*x)%m;
     }
     if n == 1 {y = (y*x)%m;}
-    return y;
+    y
 }
 </pre>
 
@@ -95,7 +94,7 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
         n /= 2; x = x.checked_mul(x)?%m;
     }
     if n == 1 {y = y.checked_mul(x)?%m;}
-    return Some(y);
+    Some(y)
 }
 </pre>
 
@@ -104,14 +103,14 @@ fn pow_mod(mut x: u32, mut n: u32, m: u32) -&gt; Option&lt;u32&gt; {
 <h3>Naiver Primzahltest</h3>
 <pre class="rust box">
 fn is_prime(n: u64) -&gt; bool {
-    (1..n+1).filter(|i| n%i==0).count() == 2
+    (1..n+1).filter(|i| n%i == 0).count() == 2
 }
 
 fn is_prime(n: u64) -&gt; bool {
     for i in 2..n {
         if n%i == 0 {return false;}
     }
-    return true;
+    true
 }
 </pre>
 
@@ -123,7 +122,7 @@ fn is_prime(n: u64) -&gt; bool {
         if n%i == 0 {return false;}
         i += 1;
     }
-    return true;
+    true
 }
 </pre>
 
@@ -137,9 +136,9 @@ fn is_prime_trial_div(n: u32) -&gt; bool {
     while i*i &lt;= n {
         if n%i == 0 {return false;}
         i += w;
-        w = 6-w;
+        w = 6 - w;
     }
-    return true;
+    true
 }
 
 fn pow_mod(a: u32, mut n: u32, m: u32) -&gt; u64 {
@@ -150,20 +149,20 @@ fn pow_mod(a: u32, mut n: u32, m: u32) -&gt; u64 {
         n &gt;&gt;= 1; a = (a*a)%u64::from(m);
     }
     if n == 1 {p = (p*a)%u64::from(m);}
-    return p;
+    p
 }
 
 fn witness(a: u32, d: u32, n: u32, mut r: u32) -&gt; bool {
-    let mut p = pow_mod(a,d,n);
+    let mut p = pow_mod(a, d, n);
     if p == 1 {
-        return true;
+        true
     } else {
         while r != 0 {
             if p == u64::from(n-1) {return true;}
             p = (p*p)%u64::from(n);
             r -= 1;
         }
-        return false;
+        false
     }
 }
 
@@ -174,28 +173,28 @@ pub fn is_prime(n: u32) -&gt; bool {
         return false;
     }
 
-    // let (2^r)*d = n-1;
+    // let (2^r)*d = n - 1;
     let mut r = 0;
-    let mut d = n-1;
+    let mut d = n - 1;
     while d&amp;1 == 0 {r += 1; d &gt;&gt;= 1;}
 
     // Miller-Rabin-Test
-    return [2,7,61].iter().all(|&amp;a| witness(a,d,n,r));
+    [2, 7, 61].iter().all(|&amp;a| witness(a, d, n, r))
 }
 </pre>
 
 <h3>Primfaktorzerlegung</h3>
 <pre class="rust box">
-fn factor(mut n: u64) -&gt; Vec&lt;(u64,u8)&gt; {
-    let mut v: Vec&lt;(u64,u8)&gt; = vec![];
+fn factor(mut n: u64) -&gt; Vec&lt;(u64, u8)&gt; {
+    let mut acc: Vec&lt;(u64, u8)&gt; = vec![];
     let mut p = 2;
     while p &lt;= n {
         let mut k = 0;
         while n%p == 0 {n = n/p; k += 1;}
-        if k != 0 {v.push((p,k));}
+        if k != 0 {acc.push((p, k));}
         p += 1;
     }
-    return v;
+    acc
 }
 </pre>
 
@@ -230,7 +229,7 @@ fn phi(mut n: u32) -&gt; u32 {
         if k != 0 {y *= p.pow(k-1)*(p-1);}
         p += 1;
     }
-    return y;
+    y
 }
 </pre>
 

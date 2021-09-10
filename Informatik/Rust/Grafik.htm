@@ -129,14 +129,14 @@ impl Canvas {
         buffer.append(&amp;mut format!("P6 {} {} 255\n",
             self.width, self.height).into_bytes());
         for color in self.data.iter() {
-            let (r,g,b) = color.to_rgb();
+            let (r, g, b) = color.to_rgb();
             buffer.push(r);
             buffer.push(g);
             buffer.push(b);
         }
         PPM {data: buffer}
     }
-    pub fn save(&amp;self, path: &amp;str) -&gt; Result&lt;(),std::io::Error&gt; {
+    pub fn save(&amp;self, path: &amp;str) -&gt; Result&lt;(), std::io::Error&gt; {
         use std::io::Write;
         let ppm = self.encode();
         let mut file = std::fs::File::create(path)?;
@@ -248,8 +248,8 @@ fn sigmoid(x: f64) -&gt; f64 {
 }
 
 fn choose_color(i: u32, gradient: f64) -&gt; Color {
-    let t = (255.0-255.0*sigmoid(gradient*f64::from(i))) as u8;
-    Color::rgb(t,t,t)
+    let t = (255.0 - 255.0*sigmoid(gradient*f64::from(i))) as u8;
+    Color::rgb(t, t, t)
 }
 
 struct System {
@@ -270,7 +270,7 @@ impl System {
         let h2 = 0.5*f64::from(h);
 
         let scale = self.scale/w2; 
-        let (x0,y0) = self.pos;
+        let (x0, y0) = self.pos;
 
         let max = self.max_iter;
         let gradient = self.gradient;
@@ -278,18 +278,18 @@ impl System {
 
         for py in 0..h {
             for px in 0..w {
-                let x = x0 + scale*(f64::from(px)-w2);
-                let y = y0 - scale*(f64::from(py)-h2);
+                let x = x0 + scale*(f64::from(px) - w2);
+                let y = y0 - scale*(f64::from(py) - h2);
                 let c = C64 {re: x, im: y};
                 let mut z = z0(c);
                 let mut count: u32 = 0;
                 while count &lt; max {
-                    z = f(z,c);
+                    z = f(z, c);
                     if z.abs_sq() &gt; 4.0 {break;}
                     count += 1;
                 }
                 if count &lt; max {
-                    canvas.pset(px,py,choose_color(count,gradient));
+                    canvas.pset(px, py, choose_color(count, gradient));
                 }
             }
         }
@@ -303,10 +303,10 @@ gerne hochzusammengesetzte Zahlen. Als Seitenverhältnis benutze ich oft
 Vielfachen, das kommt dem goldenen Schnitt einigermaßen nahe.
 
 <pre class="rust ibox">
-fn main() -&gt; Result&lt;(),std::io::Error&gt; {
-    let canvas = Canvas::new(720,480,Color::rgb(0,0,0));
-    let mut s = System::new(canvas,2.0,(-0.5,0.0));
-    s.fractal(&amp;|z,c| z*z+c, &amp;|_| C64 {re: 0.0, im: 0.0});
+fn main() -&gt; Result&lt;(), std::io::Error&gt; {
+    let canvas = Canvas::new(720, 480, Color::rgb(0, 0, 0));
+    let mut s = System::new(canvas, 2.0, (-0.5, 0.0));
+    s.fractal(&amp;|z, c| z*z + c, &amp;|_| C64 {re: 0.0, im: 0.0});
     s.canvas.save("Fraktal.ppm")?;
     Ok(())
 }
@@ -329,8 +329,5 @@ optipng Fraktal.png
 zopflipng -ym Fraktal.png Fraktal.png
 </pre>
 
-
-
 </body>
 </html>
-

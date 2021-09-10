@@ -90,7 +90,7 @@ Argumenten bedeuten im Wesentlichen dasselbe.
 
 <p>Konstruiert man auf die beschriebene Art immer mehr Beiweise,
 wird mit der Zeit immer klarer erkennbar, dass die Methodik
-einem vertrauten logischen Kalkül entspricht, das als
+einem vertrauten logischen Kalkül entspricht, der als
 <i>natürliches Schließen</i> geläufig ist.
 
 <p>Wir betrachten als Beispiel die tautologische Formel
@@ -112,7 +112,7 @@ Schließen.
 <tr><td>2, 4<td>5<td><var>C</var><td>Modus ponens, 2, 4
 <tr><td>6<td>6<td><var>B</var><td>Annahme
 <tr><td>3, 6<td>7<td><var>C</var><td>Modus ponens, 3, 6
-<tr><td>1, 2, 3<td>8<td><var>C</var><td>&or;Beseitigung, 1, 4&rarr;5, 6&rarr;7
+<tr><td>1, 2, 3<td>8<td><var>C</var><td>ODER-Beseitigung, 1, 4&rarr;5, 6&rarr;7
 </table>
 
 <p>Schreibt am die in der Tabelle enthaltenen Schlussfolgerungen
@@ -147,23 +147,29 @@ im Wesentlichen dasselbe sind.
 
 <p>Im Unterschied zu den anderen logischen Verknüpfungen besitzt die
 Negation <span class="math">&not;<var>A</var></span> keine
-eigenständige Typkonstruktion. Stattdessen ist sie als
-<span class="math"><var>A</var>&nbsp;&rarr;&nbsp;⊥</span> kodiert,
-das ist die Signatur divergenter Funktionen.
-
+eigenständige Typkonstruktion. Stattdessen betrachtet man die
+äquivalente Aussage <span class="math"><var>A</var>&nbsp;→&nbsp;⊥</span>,
+deren Entsprechung
+<span class="math"><var>A</var>&nbsp;&rarr;&nbsp;0</span> ist,
+das ist die Signatur divergenter Funktionen. Der Typ&nbsp;0 ist
+der leere Typ, ein Typ analog zur leeren Menge.
 
 <p>Beispielsweise kann man die Kontraposition
 
 <p class="math">(<var>A</var> &rarr; <var>B</var>)
 &rarr; (&not;<var>B</var> &rarr; &not;<var>A</var>)
 
-<p>zeigen. Hat man nämlich eine Funktion <code>f</code> vom Typ
-<code>A&nbsp;&rarr;&nbsp;B</code> und eine Funktion <code>g</code>
-vom Typ <code>B&nbsp;&rarr;&nbsp;⊥</code>, kann man diese
+<p>zeigen. Hat man nämlich eine Funktion <var>f</var> vom Typ
+<span class="math"><var>A</var>&nbsp;→&nbsp;<var>B</var></code> und
+eine Funktion <var>g</var> vom Typ
+<span class="math"><var>B</var>&nbsp;→&nbsp;0</span>, kann man diese
 Verketten und erhält als Resultat eine Funktion vom Typ
-<code>A&nbsp;&rarr;&nbsp;⊥</code>. Wir finden demzufolge den Term
+<span class="math"><var>A</var>&nbsp;→&nbsp;0</span>. Wir finden
+demzufolge den Term
 
-<p class="math">A ↦ B ↦ (f: A &rarr; B) ↦ (g: B &rarr; ⊥) ↦ (a: A) ↦ g(f(a)),
+<p class="math"><var>A</var> ↦ <var>B</var>
+↦ (<var>f</var>: <var>A</var> → <var>B</var>)
+↦ (<var>g</var>: <var>B</var> → 0) ↦ (<var>a</var>: <var>A</var>) ↦ <var>g</var>(<var>f</var>(<var>a</var>)),
 
 <p>zu dem das Programm
 
@@ -175,7 +181,7 @@ fn proof&lt;A, B&gt;(f: fn(A) -&gt; B, g: fn(B) -&gt; !, a: A) -&gt; ! {
 
 <p>gehört. Prinzipiell könnten wir diese Funktion auch schönfinkeln.
 Weil es sich mit Closures in Rust allerdings kompliziert verhält,
-lassen wir das lieber bleiben.
+lassen wir das an dieser Stelle lieber bleiben.
 
 <p>Für die Umkehrung
 

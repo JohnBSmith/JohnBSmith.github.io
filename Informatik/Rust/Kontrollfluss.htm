@@ -27,6 +27,7 @@
     <li><a href="#Enum-Muster">Enum-Muster</a>
     <li><a href="#Waechter">Wächter</a>
     </ol>
+<li><a href="#Tiefer-Ausbruch">Tiefer Ausbruch</a>
 </ol>
 
 <h2 id="Kurzschreibweisen">Kurzschreibweisen</h2>
@@ -274,6 +275,7 @@ enum Option&lt;T&gt; {None, Some(T)}.
 
 <p>Hiermit gestattet sich die Formulierung der
 Potenzfunktion mit Überlauf-Prüfung als:
+
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
     if n == 0 {Some(1)} else {
@@ -287,6 +289,7 @@ fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
 
 <p>Dieser spezielle Fall gewährt zudem die Abkürzung mit dem
 Fragezeichen-Operator:
+
 <pre class="rust ibox">
 fn pow(x: u32, n: u32) -&gt; Option&lt;u32&gt; {
     if n == 0 {Some(1)} else {x.checked_mul(pow(x, n-1)?)}
@@ -335,7 +338,7 @@ fn gcd(a: u32, b: u32) -&gt; u32 {
 </pre>
 
 <p>Pattern-Matching mit Wächtern ist so allgemein, dass sich beliebige
-Verzweigungen in diese Form umformulieren lassen. Bspw. ist die
+Verzweigungen in diese Form umformulieren lassen. Beispielsweise ist die
 Potenzfunktion auch als
 
 <pre class="rust ibox">
@@ -374,6 +377,74 @@ match () {
 </pre>
 
 <p>bringen.
+
+<h2 id="Tiefer-Ausbruch">Tiefer Ausbruch</h2>
+
+<p>Erwähnen möchte ich noch eine recht entbehrliche Funktionalität
+die nur in sehr speziellen Situationen von Nutzen ist.
+Betrachten wir die folgende Funktion, die zu einem Feld von
+Feldern von Zahlen die Stelle des ersten Vorkommens einer
+gegebenen Zahl findet.
+
+<pre class="rust ibox">
+fn position(a: &amp;[Vec&lt;i32&gt;], x: i32) -&gt; Option&lt;(usize, usize)&gt; {
+    for (i, b) in a.iter().enumerate() {
+        for (j, &amp;y) in b.iter().enumerate() {
+            if x == y {return Some((i, j));}
+        }
+    }
+    None
+}
+
+fn main() {
+    let a = vec![vec![1, 2], vec![3, 4, 5]];
+    assert_eq!(Some((1, 0)), position(&amp;a, 3));
+}
+</pre>
+
+<p>Möchte man das Programm nun funktional schreiben oder in
+Funktionen zerlegen, gelangt man zur Komplikation dass der Ausbruch
+mittels <code>return</code> oder <code>break</code> nur bei
+gewöhnlichen Schleifen möglich ist. Um das dennoch zu erreichen,
+steht als eine Art Verallgemeinerung der tiefe Ausbruch mit dem Typ
+<code>ControlFlow&lt;B,&nbsp;C&gt;</code> zur Verfügung, dabei
+handelt es sich wie bei <code>Result</code> um eine Enumeration
+von zwei Varianten. Sie ist als
+
+<pre class="rust ibox">
+enum ControlFlow&lt;B, C = ()&gt; {
+    Continue(C),
+    Break(B)
+}
+</pre>
+
+<p>definiert. Damit lässt sich das Programm in die folgende Gestalt
+bringen.
+
+<pre class="rust ibox">
+use std::ops::ControlFlow;
+use ControlFlow::{Break, Continue};
+
+fn position_at(i: usize, b: &amp;[i32], x: i32) -&gt; ControlFlow&lt;(usize, usize)&gt; {
+    b.iter().enumerate().try_for_each(|(j, &amp;y)| {
+        if x == y {Break((i, j))} else {Continue(())}
+    })
+}
+
+fn position(a: &amp;[Vec&lt;i32&gt;], x: i32) -&gt; Option&lt;(usize, usize)&gt; {
+    a.iter().enumerate()
+        .try_for_each(|(i, b)| position_at(i, b, x))
+        .break_value()
+}
+</pre>
+
+<p>Des Weiteren unterstützt <code>ControlFlow</code> den
+Fragezeichen-Operator, wobei der Aufstieg erwartungsgemäß zur Variante
+<code>Break</code> gehört.
+
+<p>Bemerkenswert ist, dass der tiefe Ausbruch gänzlich als
+Funktionalität einer Bibliothek formuliert werden kann
+ohne die Sprache erweitern zu müssen.
 
 </body>
 </html>

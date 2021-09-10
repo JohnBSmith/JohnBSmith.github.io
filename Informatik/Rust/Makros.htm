@@ -15,6 +15,7 @@
 <ol>
 <li><a href="#Konzept">Was sind Markos?</a>
 <li><a href="#Definition">Makrodefinition</a>
+<li><a href="#Alternative-Syntax">Alternative Syntax</a>
 <li><a href="#Literale">Literale</a>
 <li><a href="#Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</a>
 <li><a href="#Komprehensionen">Komprehensionen</a>
@@ -41,7 +42,7 @@ Musterabgleich in andere Syntax um.
 und Syntax-Erzeuger enthalten.
 </dl>
 
-<p>Dieses Kapitel beschäftigt sich nur mit den deklarativen
+<p>Dieses Kapitel beschäftigt sich lediglich mit den deklarativen
 Makros.
 
 <h2 id="Definition">Makrodefinition</h2>
@@ -172,6 +173,43 @@ Tabelle aufgelistet.
 <td><code>tt</code>
 <td>beliebig
 </table>
+
+<h2 id="Alternative-Syntax">Alternative Syntax</h2>
+
+<p>Als erstes möchte ich zeigen wie Makros allerhand syntaktische
+Spielereien ermöglichen. Das folgende Beispiel zeigt die Erstellung
+von klassischer mathematischer Notation für Fallunterscheidungen,
+bei der die Bedingung jeweils hinter dem Wert steht.
+
+<pre class="rust ibox">
+macro_rules! case {
+    ($($v:expr, if $cond:expr),* $(, else $other:expr)?) =&gt; {
+        $(if $cond {$v}) else*
+        $(else {$other})?
+    }
+}
+
+fn pow(x: i32, n: u32) -&gt; i32 {
+    case!{
+        1, if n == 0,
+        else x*pow(x, n - 1)
+    }
+}
+</pre>
+
+<p>Ähnlich wie bei Backus-Naur-Form und regulären Ausdrücken
+dürfen im Muster Wiederholungen und Optionen von Teilmustern vorkommen.
+Im Körper des Makros kommt die jeweilige Regel dann nochmals
+vor und dient dabei zur wiederholten bzw. optionalen Erzeugung
+von Syntax. Eine Wiederholung eines Musters ist als
+
+<p class="indent"><code>$(Muster)*</code> oder <code>$(Muster) Separator*</code>
+
+<p>notiert. Ein optionales Muster ist als
+
+<p class="indent"><code>$(Muster)?</code>
+
+<p>notiert.
 
 <h2 id="Literale">Literale</h2>
 <p>Makros können genutzt werden, um Datentypen mit Literalen

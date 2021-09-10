@@ -278,6 +278,8 @@ fn main() {
 }
 </pre>
 
+<h3>Traits ohne Parameter</h3>
+
 <p>Alternativ zum gezeigten Ansatz lassen sich die Typparameter der
 Traits auch zu den Funktionen hin verschieben, wodurch meines Erachtens
 mehr Klarheit geschaffen wird.
@@ -344,6 +346,32 @@ where M: Monad + AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;M, X&gt;&gt;
     M::bind::&lt;_, X, _&gt;(mmx, |mx| mx)
 }
 </pre>
+
+<h3>Mehrstellige Typkonstruktoren</h3>
+
+<p>Bei einem mehrstelligen Typkonstruktor wie
+<code>Result&lt;X,E&gt;</code> kann man den Stellvertreter
+über das nebensächliche Argument <code>E</code> parametrisieren.
+Dies entspricht der partiellen Applikation des Typkonstruktors.
+
+<pre class="rust ibox">
+use std::marker::PhantomData as Ph;
+
+struct ResultType&lt;E&gt; {ph: Ph&lt;E&gt;}
+
+impl&lt;X, E&gt; AppliedTo&lt;X&gt; for ResultType&lt;E&gt; {
+    type Value = Result&lt;X, E&gt;;
+}
+
+impl&lt;E&gt; Functor for ResultType&lt;E&gt; {
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.map(f)
+    }
+}
+</pre>
+
 
 <h2 id="Literatur">Literatur</h2>
 
