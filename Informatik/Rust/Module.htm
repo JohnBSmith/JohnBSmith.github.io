@@ -221,28 +221,6 @@ solche Konstanten gibt,
 static TEXT: &amp;str = "Ein Schiff taucht im Nebel auf.";
 </pre>
 
-<p>Anders als <code>const</code> erlaubt <code>static</code> auch
-globale Variablen. Man sollte diese so gut es geht vermeiden, das
-heißt aber nicht dass sie unmöglich sind:
-
-<pre class="rust ibox">
-static mut X: u32 = 0;
-
-fn main() {
-    println!("{}", unsafe {X});
-    unsafe {X = 1;}
-    println!("{}", unsafe {X});
-}
-</pre>
-
-<p>Der Grund für die Notwendigkeit von <code>unsafe</code> liegt
-darin begründet, dass veränderliche globale Variablen nicht
-Thread-sicher sind. Zwar arbeitet das Programm hier nicht
-nebenläufig, jedoch würde uns nichts davon abhalten, mehrere
-Ausführungsstränge zu starten. Man müsste die Variable dann
-Strang-lokal machen. Ich will darauf an dieser Stelle nicht
-weiter eingehen, sondern verweise auf das Kapitel
-›<a href="Threads.htm">Nebenläufigkeit mit Strängen</a>‹.
 
 <h2 id="Daten">Binärdaten einbetten</h2>
 
