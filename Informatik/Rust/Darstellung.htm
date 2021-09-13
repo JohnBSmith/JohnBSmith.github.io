@@ -17,8 +17,8 @@
 <ol>
 <li><a href="#Ausrichtung">Ausrichtung</a>
 <li><a href="#Padding">Padding</a>
-<li><a href="#Groeße">Größe von Typen</span>
-<li><span class="modest">Nischen</span>
+<li><a href="#Groeße">Größe von Typen</a>
+<li><a href="#Nischen">Nischen</a>
 <li><a href="#Transmutation">Transmutation</a>
 </ol>
 
@@ -172,6 +172,54 @@ size_of::&lt;[T; N]&gt; == N*size_of::&lt;T&gt;()
 
 <p>erfüllt.
 
+<h2 id="Nischen">Nischen</h2>
+
+<p>Bei vielen Typen belegt die Darstellung mehr Bits als zur
+Kodierung der Information notwendig wäre. Allgemeiner betrachtet
+erlauben die Bitfolgen einen größeren Wertebereich als notwendig.
+Dafür gibt es unterschiedliche Ursachen:
+
+<ul>
+<li>Der Wertebereich wurde aufgerundet, damit die Darstellung
+  eine ganze Zahl von Bytes belegt. Zudem ist die Anzahl der
+  Bytes in typischen Fällen eine Zweierpotenz.
+<li>Bestimmte Werte des Wertebereichs sind verboten.
+<li>Durch das Padding entstehen ungenutzte Bits.
+</ul>
+
+<p>Solche ungenutzten Werte oder Wertebereiche werden <i>Nischen</i>
+genannt. Man kann sie zur Kodierung weiterer Information ausnutzen,
+womit sich die Speichergröße zusammengesetzter Typen verringern lässt.
+
+<p>Betrachten wir als einfaches Beispiel den Typ
+<code>Option&lt;u32&gt;</code>, wobei für
+<code>Result&lt;u32,&nbsp;()&gt;</code> eine gleichartige Überlegung
+gilt. Vermindern wir den Wertebereich um eins, kann der Wert
+<code>u32::MAX</code> zur Darstellung von <code>None</code>
+genutzt werden. Das reduziert die Speichergröße von acht auf
+vier Bytes! Nicht schlecht.
+
+<p>Bei einigen Typen ist der Wert null verboten. Hier stellt die
+Standardbibliothek Typen wie <code>NonZeroU32</code> und
+<code>NonZeroU64</code> zur Verfügung. Bei
+<code>Option&lt;<code>NonZeroU32</code>&gt;</code>
+wird <code>None</code> als null dargestellt. Wieder reduziert
+sich die Speichergröße auf die Hälfte.
+
+<p>Bei Zeigertypen wie <code>&amp;T</code>, <code>&amp;mut&nbsp;T</code>,
+<code>Box&lt;T&gt;</code>, <code>Rc&lt;T&gt;</code> und
+<code>Arc&lt;T&gt;</code> ist null ein verbotener Wert.
+Bei jedem solchen Zeigertyp <code>P</code> ist für
+<code>Option&lt;P&gt;</code> der Wert <code>None</code> entsprechend
+als null kodiert; ein zuweilen unter der Bezeichnung
+<i>Nullzeigeroptimierung</i> geläufiger Vorgang.
+Somit stimmt die Speichergröße von
+<code>Option&lt;P&gt;</code> mit der von <code>P</code> überein.
+
+<p>Bei den Zeigertypen <code>*const&nbsp;T</code> und
+<code>*mut&nbsp;T</code> liegt der Wert null dagegen im
+erlaubten Wertebereich, man erhält ihn durch <code>std::ptr::null()</code>
+bzw. <code>std::ptr::null_mut()</code>.
 
 <h2 id="Transmutation">Transmutation</h2>
 
