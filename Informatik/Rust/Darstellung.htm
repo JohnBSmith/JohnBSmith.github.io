@@ -221,6 +221,59 @@ Somit stimmt die Speichergröße von
 erlaubten Wertebereich, man erhält ihn durch <code>std::ptr::null()</code>
 bzw. <code>std::ptr::null_mut()</code>.
 
+<p>Bei den Enumerationen entsteht eine Nische durch das Tag. Bei
+
+<pre class="rust ibox">
+enum E {A, B}
+</pre>
+
+<p>verarbeitet der Compiler <code>Option&lt;E&gt;</code> so als
+läge
+
+<pre class="rust ibox">
+enum OptionE {A, B, None}
+</pre>
+
+<p>vor. Nun ist <code>Option&lt;E&gt;</code> aber selbst wieder eine
+Enumeration. In der Konsequenz braucht
+<code>Option&lt;Option&lt;E&gt;&gt;</code>
+ebenfalls lediglich ein Byte Speicher.
+
+<p>Es gibt auch so einige Nischen die der Compiler bisweilen
+nicht ausnutzen kann. Betrachten wir dazu für eine
+Langzahlarithmetik den Typ:
+
+<pre class="rust ibox">
+enum Sign {Plus, Minus}
+struct LongInt {sign: Sign, digits: Vec&lt;u32&gt;}
+
+enum Int {I32(i32), Long(LongInt)}
+</pre>
+
+<p>Auf einem 64&nbsp;Bit-System hat <code>Int</code> eine Größe von
+40 Bytes. Nehmen wir nun an, die meisten Zahlen sind klein,
+dann ist das eine ziemliche Verschwendung von Speicher. Mit der
+Modifikation
+
+<pre class="rust ibox">
+enum Int {I32(i32), Long(Rc&lt;LongInt&gt;)}
+</pre>
+
+<p>verringert sich die Größe zunächst auf 16&nbsp;Byte. Nun kann man
+aber im Wertebereich des Zeigers Nischen finden. Mitnichten deckt
+der Adressenraum eines gewöhnlichen Computers den gesamten
+Zahlenraum der 64&nbsp;Bit ab, womit man das Tag in das höchstwertige
+Bit bringen kann, sofern das Laufzeitsystem dieses nicht bereits
+für irgendetwas anderes verwendet. Ein alternativer Ansatz besteht
+in der Ausnutzung dass die Ausrichtung des Zeigertyps
+<code>Rc&lt;LongInt&gt;</code> acht beträgt, womit sich in den
+Bereich der nicht durch acht teilbaren Werte weitere Informationen
+packen lässt. In beiden Ansätzen ist <code>i32</code> ohne Probleme
+unterzubringen. Somit kann man die Speichergröße von <code>Int</code>
+letztendlich auf 8&nbsp;Byte einschrumpfen lassen.  Allerdings muss man
+dies leider manuell unter Nutzung unsicherer Konzepte implementieren.
+
+
 <h2 id="Transmutation">Transmutation</h2>
 
 <p>Eigentlich müssen sämtliche Operationen den Regeln des Typsystems
@@ -249,7 +302,7 @@ Man tut das wie folgt:
 
 <pre class="rust ibox">
 let a: [i32; 2] = [1, 2];
-let p = &amp;a as *const [i32; 2] as *const[u8; 8];
+let p = &amp;a as *const [i32; 2] as *const [u8; 8];
 let data: &amp;[u8; 8] = &amp;unsafe {*p};
 println!("{:02x?}", data);
 </pre>
@@ -288,7 +341,7 @@ let data: [u8; 7] = unsafe {std::mem::transmute(a)};
 
 <p>ist dagegen nicht kompilierbar.
 
-<p>Man könnte denken, dass die umgekehrte Umwandlung
+<p>Man könnte denken dass die umgekehrte Umwandlung
 
 <pre class="rust ibox">
 let data: [u8; 8] = [1, 0, 0, 0, 2, 0, 0, 0];
