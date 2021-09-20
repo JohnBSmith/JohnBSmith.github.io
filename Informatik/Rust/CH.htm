@@ -24,6 +24,42 @@
 
 <h2 id="CH">Die Curry-Howard-Korrespondenz</h2>
 
+<p>Im Verlauf des 20. Jahrhunderts wurde ein tiefgreifender und
+allgemeiner Zusammenhang zwischen Typsystemen und der mathematischen
+Logik entdeckt. Es verhält sich so, dass jede logische Formel
+eine Entsprechung als Typ besitzt, wobei jeder der logischen
+Verknüpfungen eine entsprechende Typkonstruktion zugeordnet ist.
+
+<p>Darüber hinaus vertieft sich dieser Zusammenhang sogar noch,
+dergestalt dass dem Beweis einer logischen Formel ein Programm
+entspricht, das einen Wert des Typs konstruiert. Diesen Wert nennt
+man <i>Zeugen</i>. Wurde ein Zeuge gefunden, muss der Typ mindestens
+durch diesen <i>bewohnt</i> sein, so ähnlich wie in der Mengenlehre
+eine Menge nichtleer sein muss, wenn ein Element der Menge gefunden
+wurde.
+
+<p>Allerdings konstruiert nicht jedes Programm einen Zeugen auf
+korrekte Art und Weise. Für eine korrekte Konstruktion muss das
+Programm ein rein funktionales sein und für jedes Argument
+terminieren. Auf dieser Anforderung aufbauend wurden hinreichend
+strenge Typsysteme erarbeitet; man nennt sie <i>Typentheorien</i>.
+
+<p>Das Typsystem von Rust genügt diesen Anforderungen nicht. Zudem
+reicht es lediglich zur Kodierung von Formeln ohne Quantoren.
+Zur allgemeinen Kodierung von prädikatenlogischer Formeln benötigt man
+abhängige Typen. Ein Typsystem mit <i>abhängigen Typen</i> ist eine
+Verallgemeinerung der parametrischen Polymorphie, wo Typen nicht
+nur durch Typen parametrisiert werden können, sondern durch beliebige
+Terme.
+
+<p>Zum tieferen Verständnis des Typsystems möchte ich in diesem
+Kapitel aber trotzdem die Konstruktion von Beweisen durch
+Programme diskutieren.
+
+<p>Die enge Beziehung zwischen logischen Formeln und Typen
+nennt man <i>Curry-Howard-Korrespondenz</i>. Sie wird durch
+die folgende Tabelle vermittelt.
+
 <table class="bt">
 <tr><th>Bezeichnung<th>Formel<th>Typ<th>Bezeichnung
 <tr><td>Konjunktion<td><var>A</var> &and; <var>B</var>
@@ -36,6 +72,8 @@
 <td>∏<sub><var>x</var>:&nbsp;<var>U</var></sub>&nbsp;<var>P</var>(<var>x</var>)<td>abhängiges Produkt
 <tr><td>Existenzquantifizierung<td>(∃<var>x</var>∈<var>U</var>)<var>P</var>(<var>x</var>)
 <td>∑<sub><var>x</var>:&nbsp;<var>U</var></sub>&nbsp;<var>P</var>(<var>x</var>)<td>abhängige Summe
+<tr><td>Falsche Formel<td>falsch<td>0<td>leerer Typ
+<tr><td>Wahre Formel<td>wahr<td>1<td>Einheitstyp
 </table>
 
 <h2 id="Beispiel">Ein einfaches Beispiel</h2>
@@ -49,12 +87,13 @@ dass die Formel genau dann tautologisch ist, wenn
 
 <p class="math">(∀<var>A</var>) (∀<var>B</var>) (<var>A</var> &and; <var>B</var> &rarr; <var>A</var>)
 
-<p>eine wahre Aussage ist. Das ist wiederum damit bedeutungsgleich, dass sich die Menge
+<p>eine wahre Aussage ist. Das ist wiederum per Curry-Howard-Korrespondenz
+damit bedeutungsgleich, dass der Typ
 
 <p class="math">∏<sub><var>A</var> </sub>∏<sub><var>B</var></sub>
 (<var>A</var> × <var>B</var> &rarr; <var>A</var>)
 
-<p>von der leeren Menge unterscheidet. Dies können wir bestätigen, denn mit der
+<p>ein bewohnter ist. Dies können wir bestätigen, denn mit der
 Projektion
 
 <p class="math">proj<sub>0</sub> := <var>A</var> ↦ <var>B</var>
@@ -64,15 +103,14 @@ Projektion
 
 <p class="math">proj<sub>0</sub>(<var>A</var>)(<var>B</var>)(<var>a</var>, <var>b</var>) := <var>a</var>
 
-<p>ist ein Element der Menge konstruiert. Über die
-Curry-Howard-Korrespondenz interpretiert man die Mengenkonstruktion
-nun als Typsignatur. Demzufolge ist der Typ durch den Zeugen
+<p>ist ein Zeuge des Typs konstruiert. In Rust nimmt diese
+Projektion die Gestalt
 
 <pre class="rust ibox">
 fn proj0&lt;A, B&gt;((a, _): (A, B)) -&gt; A {a}
 </pre>
 
-<p>bewohnt. Weil diese Funktion rein funktional und total ist,
+<p>an. Weil diese Funktion rein funktional und total ist,
 erbringt dies den Beweis, dass die ursprüngliche Formel tautologisch
 ist.
 
@@ -148,7 +186,7 @@ im Wesentlichen dasselbe sind.
 <p>Im Unterschied zu den anderen logischen Verknüpfungen besitzt die
 Negation <span class="math">&not;<var>A</var></span> keine
 eigenständige Typkonstruktion. Stattdessen betrachtet man die
-äquivalente Aussage <span class="math"><var>A</var>&nbsp;→&nbsp;⊥</span>,
+äquivalente Aussage <span class="math"><var>A</var>&nbsp;→&nbsp;falsch</span>,
 deren Entsprechung
 <span class="math"><var>A</var>&nbsp;&rarr;&nbsp;0</span> ist,
 das ist die Signatur divergenter Funktionen. Der Typ&nbsp;0 ist
@@ -191,16 +229,18 @@ lassen wir das an dieser Stelle lieber bleiben.
 <p>gelingt es uns nicht, einen Term zu konstruieren, egal wir sehr
 wir uns darum bemühen. Das ist per se unmöglich, solange man sich auf
 die intuitionistische Logik beschränkt. Die Hinzunahme der zusätzlichen
-axiomatischen Regel ¬¬<var>A</var>&nbsp;&equiv;&nbsp;<var>A</var>
-führt zur schwächeren klassischen Aussagenlogik. Erst in dieser ist
+axiomatischen Regel ¬¬<var>A</var>&nbsp;→&nbsp;<var>A</var>
+führt zur schwächeren klassischen Aussagenlogik. Man bezeichnet sie
+als <i>Eliminierung der Doppelnegation</i>. Erst in dieser ist
 die Kontraposition eine äquivalente Umformung.
 
 <p>Den Zeugen kann man dann wie folgt konstruieren. Prämisse ist
 ¬<var>B</var>&nbsp;→&nbsp;¬<var>A</var>. Daraus erhält man mit
 der bereits gezeigten Kontraposition die Formel
 ¬¬<var>A</var>&nbsp;→&nbsp;¬¬<var>B</var>.
-Nach dem genannten Axiom existiert nun eine Abbildung des Typs zu
-<var>A&nbsp;→&nbsp;¬¬A</var> und eine Abbildung des Typs zu
+Es existiert immer eine Abbildung des Typs zu
+<var>A&nbsp;→&nbsp;¬¬A</var>. Nach dem genannten Axiom existiert
+nun eine Abbildung des Typs zu
 ¬¬<var>B</var>&nbsp;→&nbsp;<var>B</var>. Verkettet man die drei
 aufgeführten Abbildungen, resultiert dies in der gewünschten Abbildung
 des Typs <var>A</var>&nbsp;→&nbsp;<var>B</var>.
@@ -208,6 +248,16 @@ des Typs <var>A</var>&nbsp;→&nbsp;<var>B</var>.
 <p>Ich will das Programm dazu nicht weiter ausführen. An dieser
 Stelle ist es dann wohl günstig, auf ein System wie Coq oder Lean
 umzusteigen, wenn man weiter voranschreiten möchte.
+
+<p>Die Regel <var>A</var>&nbsp;→&nbsp;¬¬<var>A</var>, das ist die
+<i>Einführung der Doppelnegation</i>, braucht man nicht axiomatisch
+anzunehmen, denn sie gilt selbst in der intuitionistischen Logik, wie
+der Zeuge
+
+<p class="math">(<var>a</var>: <var>A</var>)
+↦ (<var>f</var>: <var>A</var> → 0) ↦ <var>f</var>(<var>a</var>)
+
+<p>zeigt.
 
 <h2 id="Literatur">Literatur</h2>
 
