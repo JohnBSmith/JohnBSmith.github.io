@@ -4,7 +4,7 @@
 \section{Grundbegriffe}
 
 \begin{Definition}[Kategorie]
-Eine Kategorie ist ein Tripel $C=(\mathrm{Ob},\mathrm{Hom},{\circ})$,
+Eine Kategorie ist ein Tripel $\category C = (\Ob,\Hom,{\circ})$,
 sofern die folgenden beiden Axiome erfüllt sind:
 \begin{enumerate}
 \item Für $f\colon A\to B$, $g\colon B\to C$, $h\colon C\to D$ gilt
@@ -14,15 +14,15 @@ so dass $f\circ\id_A = \id_B\circ f=f$ für alle Objekte $A,B$
 und $f\colon A\to B$.
 \end{enumerate}
 \end{Definition}
-Die Elemente der Klasse $\mathrm{Ob}$ nennt man Objekte. Die
-Elemente der Klasse $\mathrm{Hom}$ nennt man Morphismen. Die
+Die Elemente der Klasse $\Ob$ nennt man Objekte. Die
+Elemente der Klasse $\Hom$ nennt man Morphismen. Die
 Verknüpfung $g\circ f$, sprich $g$ nach $f$, nennt man Verkettung
 von $g$ und $f$.
 
 Die Schreibweise ist $f\colon X\to Y$ gleichbedeutend mit
-$f\in\operatorname{Hom}(X,Y)$, wobei $X,Y\in\mathrm{Ob}$.
-Mit $\operatorname{Hom}(X,Y)$ ist die Teilklasse von
-$\mathrm{Hom}$ gemeint, die alle Morphismen von $X$ nach $Y$
+$f\in\Hom(X,Y)$, wobei $X,Y\in\Ob$.
+Mit $\Hom(X,Y)$ ist die Teilklasse von
+$\Hom$ gemeint, die alle Morphismen von $X$ nach $Y$
 enthält. Man schreibt $\dom(f) = X$ und $\cod(f) = Y$.
 
 Nun gut, man macht hier zunächst zwei Beobachtungen. Erstens
@@ -35,17 +35,17 @@ von Abbildungen. Tatsächlich bilden die Abbildungen eine Kategorie.
 
 \begin{Satz}[Kategorie der Mengen]\mbox{}\\*
 Sei $\Omega$ das Mengenuniversum und für $A,B\in\Omega$ sei
-$\mathrm{Hom}(A,B):=\mathrm{Abb}(A,B)$. Sei $g\circ f$ die Verkettung
-von Abbildungen. Dann bildet $\strong{Set}:=(\Omega,\mathrm{Hom},\circ)$
+$\Hom(A,B):=\Abb(A,B)$. Sei $g\circ f$ die Verkettung
+von Abbildungen. Dann bildet $\strong{Set}:=(\Omega,\Hom,\circ)$
 eine Kategorie.
 \end{Satz}
 \strong{Beweis.} Trivial.\;\qedsymbol
 
 \begin{Satz}[Kategorie der Gruppen]\mbox{}\\*
 Sei $\Omega$ die Klasse aller Gruppen und für $G,H\in\Omega$ sei
-$\mathrm{Hom}(G,H)$ die Klasse der Homomorphismen von $G$ nach $H$.
+$\Hom(G,H)$ die Klasse der Homomorphismen von $G$ nach $H$.
 Sei $g\circ f$ die Verkettung von Homomorphismen.
-Dann bildet $\strong{Group}:=(\Omega,\mathrm{Hom},\circ)$
+Dann bildet $\strong{Group}:=(\Omega,\Hom,\circ)$
 eine Kategorie.
 \end{Satz}
 \strong{Beweis.} Homomorphismen sind Abbildungen, die Axiome
@@ -62,11 +62,12 @@ in der Kategorie der Mengen enthalten. Um das zu präzisieren,
 benötigen wir den Begriff des Vergissfunktors.
 
 \begin{Definition}[Kovarianter Funktor]\mbox{}\\*
-Sind $C,D$ Kategorien, dann nennt man $F\colon C\to D$ einen
-kovarianten Funktor, wenn jedem Objekt $X\in\mathrm{Ob}(C)$ ein Objekt
-$F(X)\in\mathrm{Ob}(D)$ zugeordnet wird und jedem Morphismus
-$f\in\mathrm{Hom}_C(X,Y)$ ein ein Morphismus
-$F(f)\in\mathrm{Hom}_D(F(X),F(Y))$ zugeordnet wird,
+Sind $\category C,\category D$ Kategorien, dann nennt man
+$F\colon\category C\to\category D$ einen
+kovarianten Funktor, wenn jedem Objekt $X\in\Ob(\category C)$ ein Objekt
+$F(X)\in\Ob(\category D)$ zugeordnet wird und jedem Morphismus
+$f\in\Hom_{\category C}(X,Y)$ ein ein Morphismus
+$F(f)\in\Hom_{\category D}(F(X),F(Y))$ zugeordnet wird,
 so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:%
 \begin{gather*}
 F(g\circ f) = F(g)\circ F(f),\\
@@ -78,9 +79,9 @@ Wie beim kovarianten Funktor, mit dem Unterschied
 $F(g\circ f) = F(f)\circ F(g)$.
 \end{Definition}
 Bemerkung: Die Notation ist überladen. Nämlich ist die Zuordnung
-$F\colon\mathrm{Ob}(C)\to\mathrm{Ob}(D)$ zu unterscheiden
+$F\colon\Ob(\category C)\to\Ob(\category D)$ zu unterscheiden
 von
-\[\tilde F\colon\mathrm{Hom}_C(X,Y)\to\mathrm{Hom}_D(F(X),F(Y)).\]
+\[\tilde F\colon\Hom_{\category C}(X,Y)\to\Hom_{\category D}(F(X),F(Y)).\]
 Das Paar $(F,\tilde F)$ kodiert dann eigentlich den Funktor
 $C\to D$.
 
@@ -138,11 +139,12 @@ D.\,h. es gilt $\eta(Y)\circ f = P(f)\circ\eta(X)$.
 Die Zuordnung $\eta$ ist eine sogenannte natürliche Transformation.
 
 \begin{Definition}[Natürliche Transformation]
-Seien $C,D$ Kategorien und $F,G\colon C\to D$ Funktoren.
+Seien $\category C, \category D$ Kategorien und
+$F,G\colon \category C\to \category D$ Funktoren.
 Dann schreibt man $\eta\colon F\to G$ und nennt $\eta$ natürliche
 Transformation, wenn die folgenden beiden Axiome erfüllt sind:
 \begin{enumerate}
-\item Jedes Objekt $X\in\mathrm{Ob}(C)$ bekommt einen Morphismus
+\item Jedes Objekt $X\in\Ob(\category C)$ bekommt einen Morphismus
 $\eta(X)\colon F(X)\to G(X)$.
 \item Für jeden Morphismus $f\colon X\to Y$ gilt
 $\eta(Y)\circ F(f)=G(f)\circ\eta(X)$.
@@ -296,14 +298,14 @@ und bei $\eta_p$ um eine natürliche Transformation handelt.
 \begin{Satz}[Kategorie mit Kompositionsoperatoren als Morphismen]\mbox{}\\*
 Sei $Y\ne\emptyset$. Sei $\Omega:=\{\Abb(X,Y)\mid X\;\text{ist beliebig}\}$.
 Sei%
-\[\mathrm{Hom}(\Abb(X,Y),\Abb(X',Y))
+\[\Hom(\Abb(X,Y),\Abb(X',Y))
 := \{\varphi\mid\exists f{\in}\Abb(X,Y), g{\in}\Abb(X',X)\colon
 \varphi = f\circ g\}.\]
 Sei $\psi\circ \varphi$ die gewöhnliche Verkettung. Dann bildet
-$\strong{Komp}:=(\Omega,\mathrm{Hom},\circ)$ eine Kategorie.
+$\strong{Komp}:=(\Omega,\Hom,\circ)$ eine Kategorie.
 \end{Satz}
 \strong{Beweis.}
-Zunächst müssen wir bestätigen, dass $\mathrm{Hom}$ bezüglich
+Zunächst müssen wir bestätigen, dass $\Hom$ bezüglich
 $\circ$ abgeschlossen ist. Sei $\varphi_1(f):=f\circ g_1$ und
 $\varphi_2(f):=f\circ g_2$ mit $\dom(\varphi_2)=\cod(\varphi_1)$, so
 dass man $\varphi:=\varphi_2\circ\varphi_1$ bilden kann.
@@ -341,3 +343,92 @@ eine natürliche Transformation.
 \strong{Beweis.} Wurde in \eqref{eq:eta-punktweise} bis
 \eqref{eq:Ende-eta-punktweise} schon gezeigt.\;\qedsymbol
 
+\section{Anfangsobjekte und Endobjekte}
+
+\begin{Definition}[Anfangsobjekt, Endobjekt, Nullobjekt]\mbox{}\\*
+Es sei $\category C$ eine Kategorie. Ein
+$A\in\Ob(\category C)$ heißt Anfangsobjekt, wenn
+es zu jedem Objekt $X\in\Ob(\category C)$ genau einen
+Morphismus $A\to X$ gibt.
+Ein $E\in\Ob(\category C)$ heißt Endobjekt, wenn
+es zu jedem Objekt $X\in\Ob(\category C)$ genau einen
+Morphismus $X\to E$ gibt. Ein Objekt heißt Nullobjekt, wenn
+es sowohl Anfangsobjekt als auch Endobjekt ist.
+\end{Definition}
+
+\noindent
+\strong{Mengen.}
+Wir untersuchen zunächst die Kategorie der Mengen. Anfangsobjekt
+bedeutet hier eine Menge $A$, bei der es zu jeder Menge $X$ genau
+eine Abbildung $A\to X$ gibt. Betrachten wir zunächst endliche
+Mengen, dann ergibt sich aufgrund von Gleichung \eqref{eq:Anzahl-Abb}
+ja die Bedingung $|X|^{|A|}=1$. Das geht nur, wenn $|A|=0$ ist,
+und das bedeutet $A=\emptyset$. Die einzige Abbildung in $\Abb(\emptyset,X)$
+ist die leere Abbildung, und dies bleibt auch dann richtig, wenn
+$X$ gänzlich beliebig ist. Somit haben wir die leere Menge als
+einziges Anfangsobjekt identifiziert.
+
+Endobjekt bedeutet eine Menge $E$, so dass es zu jeder Menge $X$
+genau eine Abbildung $X\to E$ gibt. Wieder beschränken wir uns
+zunächst auf endliche Mengen und nutzen $\eqref{eq:Anzahl-Abb}$.
+Wir erhalten die Bedingung $|E|^{|X|}=1$. Das geht nur, wenn
+$|E|=1$ ist. Jede Menge mit einem Element ist also Endobjekt,
+denn allgemein gibt es dann nur eine einzige Abbildung, nämlich
+die konstante Abbildung. Dies bleibt auch dann richtig, wenn
+$X$ gänzlich beliebig ist.
+
+Ein Nullobjekt existiert offenbar nicht.
+
+Benutzen wir doch $1:=\{\emptyset\}$ als kanonisches Endobjekt.
+Interessant ist, dass man zu einer Menge $X$ jedes Element
+$x\in X$ mit der Abbildung $x\colon 1\to X$ identifizieren kann,
+für die $x(\emptyset)=x$ gilt. Zu einer Abbildung $f\colon X\to Y$
+können wir die Zuordnung $f(x)=y$ bzw. $(x,y)\in f$ nun in der Form
+$f\circ x = y$ beschreiben.
+
+\section{Produkt und Koprodukt}
+
+Ein wichtiger Begriff der Theorie ist das Produkt von
+Objekten. Weil es sich dabei um eine Verallgemeinerung des
+kartesischen Produktes von Mengen handelt, möchte ich die
+Zusammenhänge zunächst am vertrauten Schauplatz der Mengen
+betrachten.
+
+Zu zwei Mengen $A_1, A_2$ können wir das Produkt
+$A_1\times A_2$ bilden. Man definiert die Projektionen
+auf die Komponenten als
+\begin{align*}
+&\pi_1\colon A_1\times A_2\to A_1,\quad\pi_1((x,y)) := x,\\
+&\pi_2\colon A_1\times A_2\to A_2,\quad\pi_2((x,y)) := y.
+\end{align*}
+Nun betrachten wir Abbildungen $f_1\colon X\to A_1$ und
+$f_2\colon X\to A_2$. Zunächst sei $X:=\{\emptyset\}$. Die jeweilige
+Abbildung pickt dann ein Element aus der jeweiligen Menge heraus,
+das sind $a_1:=f_1(\emptyset)$ und $a_2:=f_2(\emptyset)$. Nun
+ist eine Abbildung $f$ gesucht, sodass das Diagramm
+\[\xymatrix{
+& X\ar[dl]_{f_1}\ar[dr]^{f_2}\ar[d]^f & \\
+A_1 & A_1\times A_2 \ar[l]^{\pi_1}\ar[r]_{\pi_2} & A_2
+}\]
+kommutiert. Die Bedingungen an $f$ sind also
+$\pi_i\circ f = f_i$ für $i\in\{1,2\}$. Damit ist aber eindeutig
+festgelegt, dass $f(\emptyset)=(a_1,a_2)$ sein muss, denn ein
+Tupel ist durch die Komponenten festgelegt, und die sind
+$\pi_i(f(\emptyset)) = f_i(\emptyset) = a_i$ für $i\in\{1,2\}$.
+Somit ist $f$ eindeutig bestimmt.
+
+Die Betrachtung kann man genauso für eine allgemeine Menge $X$ führen,
+weil die Argumentation dann jeweils für jedes Element von $X$ gilt.
+Wieder ist $f$ eindeutig bestimmt.
+
+\newpage
+\section{Kartesisch geschlossene Kategorien}
+
+\begin{Definition}[Kartesisch geschlossen]\mbox{}\\*
+Eine Kategorie heißt kartesisch geschlossen, wenn
+\begin{enumerate}
+\item ein Endobjekt existiert,
+\item zu je zwei Objekten $X,Y$ das Produkt $X\times Y$ ein Objekt der Kategorie ist,
+\item zu je zwei Objekten $X,Y$ das Exponential $Y^X$  ein Objekt der Kategorie ist.
+\end{enumerate}
+\end{Definition}
