@@ -26,7 +26,7 @@
 
 <p>Die vorzeichenlosen Ganzzahl-Datentypen in Rust sind
 <code>u8</code>, <code>u16</code>, <code>u32</code> und <code>u64</code>.
-Das <code>u</code> steht hierbei für <i>unsigned</i> (engl. vorzeichenlos)
+Das <code>u</code> steht hierbei für <i>unsigned</i> (dt. vorzeichenlos)
 und die Zahl dahinter ist die Anzahl der Bits. Ein Bit ist eine
 binäre Ziffer. Eine Speicherzelle mit <var>n</var> Bits kann also die
 2<sup><var>n</var></sup> Zahlen von 0 bis 2<sup><var>n</var></sup>&minus;1
@@ -34,24 +34,24 @@ speichern.
 
 <p>Neben den vorzeichenlosen gibt es auch noch die vorzeichenbehafteten
 Typen <code>i8</code>, <code>i16</code>, <code>i32</code> und <code>i64</code>.
-Das <code>i</code> steht dabei für <i>integer</i>.
+Das <code>i</code> steht dabei für <i>integer</i> (dt. Ganzzahl).
 Das Vorzeichen wird hier nicht im ersten oder letzten Bit gespeichert.
 Stattdessen liegen die Zahlen in der Zweier-Komplement-Darstellung vor.
 Der Zahlenvorrat reicht hier von &minus;2<sup><var>n</var>&minus;1</sup>
 bis 2<sup><var>n</var>&minus;1</sup>&minus;1.
 
 <p>Außerdem gibt es noch die Typen <code>usize</code> und
-<code>isize</code>. Der Typ <code>usize</code> ist ein Typ der intern
+<code>isize</code>. Der Typ <code>usize</code> ist ein Typ, der intern
 die Gestalt von <code>u32</code> oder <code>u64</code> besitzt, je
 nachdem ob ein 32-Bit-Programm oder ein 64-Bit-Programm vorliegt.
 Ein 64-Bit-Programm hat u.&nbsp;a. den Vorteil, dass es mehr als
 4&nbsp;GB Arbeitsspeicher adressieren kann. Es gibt reine
-<var>n</var>-Bit-Architekturen auf denen nur <var>n</var>-Bit-Programme
+<var>n</var>-Bit-Architekturen, auf denen nur <var>n</var>-Bit-Programme
 ausgeführt werden können. Auf eingeschränkten Mikrocontrollern
 kann auch <var>n</var>=16 oder gar <var>n</var>=8 sein.
 Die Typen <code>usize</code> und <code>isize</code> sind dafür da,
-um mit Speicheradressen rechnen zu können, unabhängig davon ob eine
-32-Bit oder 64-Bit-Architektur vorliegt.
+um mit Längen und Speicheradressen rechnen zu können, unabhängig davon
+ob eine 32-Bit oder 64-Bit-Architektur vorliegt.
 
 <p>Wir wollen nun die Zahl 12 an den Bezeichner <code>x</code> binden.
 Das geschieht wie folgt:
@@ -113,16 +113,19 @@ let x: u32 = 0o14; // oktal
 </pre>
 
 <p>Der Unterstrich darf an beliebigen Stellen eingefügt werden
-und dient ausschließlich als Mittel um bessere Lesbarkeit
+und dient ausschließlich als Mittel, um bessere Lesbarkeit
 zu ermöglichen. Auch die Ausgabe in den unterschiedlichen
 Darstellungen ist möglich:
 
 <pre class="rust ibox">
 let x: u32 = 12;
 println!("{}, 0b{:b}, 0x{:x}, 0o{:o}", x, x, x, x);
+</pre>
 
-// Ausgabe:
-// 12, 0b1100, 0xc, 0o14
+<p>Ausgabe:
+
+<pre class="ibox">
+12, 0b1100, 0xc, 0o14
 </pre>
 
 <h2 id="Fliesskommazahlen">Fließkommazahlen</h2>
@@ -201,21 +204,22 @@ i64::from(x: i8), i64::from(x: i16), i64::from(x: i32)
 <p>Nun stellt sich noch die Frage, wie Umwandlungen mit möglichem
 Verlust gehandhabt werden sollen. Falls ein Verlust auftritt, würde
 man das Verhalten dann gerne selbst festlegen. Dies erlaubt die Funktion
-<code>try_from</code>. Wenn man bei Verlust auf den gleichen Wert
-abbilden möchte, dann lässt sich dies wie folgt bewerkstelligen:
+<code>try_from</code>. Bei Verlust auf den gleichen Wert
+abzubilden, lässt sich wie folgt bewerkstelligen:
 
 <pre class="rust ibox">
-const VERLUST: u8 = 0;
+const DEFAULT: u8 = 0;
 
 fn main() {
     let x: u32 = 12;
     let y: u8 = match u8::try_from(x) {
         Ok(value) =&gt; value,
-        _ =&gt; VERLUST
+        _ =&gt; DEFAULT
     };
     println!("{}", y);
 }
 </pre>
+
 <p>Wenn man aber von vornherein weiß, dass das Argument im Wertebereich
 von <code>u8</code> liegt, sollte man stattdessen dies schreiben:
 
@@ -229,7 +233,7 @@ let y: u8 = match u8::try_from(x) {
 <p>Für die Fallunterscheidung mit <code>match</code> gibt es auch
 Kurzschreibweisen:
 <pre class="rust ibox">
-let y = u8::try_from(x).unwrap_or(VERLUST);
+let y = u8::try_from(x).unwrap_or(DEFAULT);
 </pre>
 
 <p>bzw.
@@ -237,7 +241,7 @@ let y = u8::try_from(x).unwrap_or(VERLUST);
 let y = u8::try_from(x).unwrap_or_else(|_| unreachable!());
 </pre>
 
-<p>Besteht Unklarheit darüber wie sich ein Fehler am besten lokal
+<p>Besteht Unklarheit darüber, wie sich ein Fehler am besten lokal
 handhaben lässt, ist der Ausweg das Weiterreichen des Fehlers
 nach oben an den Aufrufer.
 
@@ -381,9 +385,9 @@ impl TransmuteFrom&lt;i32&gt; for u32 {
 
 
 <h2 id="Bitweise">Bitweise Operationen</h2>
-<p>Zahlen sind abstrakte Objekte die physisch auf irgendeine Art
+<p>Zahlen sind abstrakte Objekte, die physisch auf irgendeine Art
 dargestellt werden müssen. Eine praktische Methode dafür sind
-Stellenwertsysteme und im Computer sind Zahlen bekanntlich im
+Stellenwertsysteme, und im Computer sind Zahlen bekanntlich im
 Binärsystem dargestellt. Zugriff auf die einzelnen Bits einer
 Speicherzelle ist auch möglich &ndash; mittels Bitmasken und
 Verschiebungen.
@@ -433,7 +437,7 @@ a[7]*2<sup>0</sup> + a[6]*2<sup>1</sup> + a[5]*2<sup>2</sup> +<!--
 -->a[1]*2<sup>6</sup> + a[0]*2<sup>7</sup>
 </pre>
 
-<p>Die Zweierpotenzen kodiert man als Bitmasken, anstelle von 
+<p>Die Zweierpotenzen kodiert man als Bitmasken. Anstelle von 
 Addition benutzt man bitweises Oder:
 <pre class="rust ibox">
 fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
@@ -510,7 +514,7 @@ extrahieren wir diese zunächst durch UND-Verknüpfung mit der Bitmaske
 <code>0xf0</code> bzw. <code>0b11110000</code>. Diese Operation
 resultiert in einem Wert, bei dem die niedrigstwertigen vier Bits null
 sind. Vom Wert <code>value</code> sollen auf der anderen Seite nur die
-niedrigstwertigen vier Bits von Bedeutung sein. Die Sicherheit, dass
+niedrigstwertigen vier Bits von Bedeutung sein. Die Gewissheit, dass
 die höchstwertigen vier null sind, schafft die UND-Verknüpfung mit
 der Bitmaske <code>0x0f</code> bzw. <code>0b00001111</code>.
 Schließlich kombinieren wir die beiden Resultate durch eine
@@ -562,7 +566,7 @@ Diese führen bei Überlauf im Debug-Modus zum Programmabbruch via
 <code>panic</code>. Im Release-Modus liegt stattdessen
 Wrapping-Verhalten vor, das direkt effizientem Maschinencode
 entspricht. Man kann die Prüfungen natürlich auch im Release-Modus
-durchführen lassen, es gibt ein Compiler-Flag dafür.
+durchführen lassen, wofür es ein Compiler-Flag gibt.
 
 <p>Das Wrapping-Verhalten entspricht bei vorzeichenlosen Ganzzahlen
 der modularen Arithmetik. Die folgenden drei Beispiele sind im
@@ -599,7 +603,8 @@ Verhaltens beim Überlauf:
 <td><code>None</code> bei Überlauf, sonst <code>Some(x+y)</code>
 <tr>
 <td><code>x.overflowing_add(y)</code>
-<td><code>(x.wrapping_add(y),true)</code> bei Überlauf, sonst <code>(x+y,false)</code>
+<td><code>(x.wrapping_add(y), true)</code> bei Überlauf,
+  sonst <code>(x+y,&nbsp;false)</code>
 <tr>
 <td><code>x.saturating_add(y)</code>
 <td>Maximum des Zahlenraums bei Überlauf, sonst <code>x+y</code>

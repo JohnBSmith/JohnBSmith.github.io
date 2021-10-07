@@ -63,7 +63,7 @@ Ausgabe der Zeichenkette in den Anführungszeichen.
 <p>Das Schlüsselwort <code>fn</code> steht für <i>function</i> und
 leitet die Definition einer Funktion ein. In Rust versteht man unter
 einer Funktion jegliche Art von Prozedur (Unterprogramm), &ndash; das
-betrifft auch solche Prozeduren die keine Funktionen im mathematischen
+betrifft auch solche Prozeduren, die keine Funktionen im mathematischen
 Sinn darstellen. Der Bezeichner <code>main</code> deutet an, dass die
 Hauptprozedur des Programms definiert wird. Jedes ausführbare Programm
 muss diese Hauptprozedur enthalten. Das kürzeste ausführbare Programm
@@ -771,7 +771,7 @@ das einen erhöhten bis außerordentlichen Aufwand.
 Kompilierzeit, dass für Zeiger kritische Probleme wie
 <i>Use after free</i> niemals auftreten. Bei Verzicht auf
 Lebenszeiten ergibt sich ein einfacher Zeiger, dessen
-Dereferenzierung eine unsichere Operation darstellt. Bspw.
+Dereferenzierung eine unsichere Operation darstellt. Beispielsweise
 nimmt <code>sum</code> bei Benutzung eines einfachen Zeigers
 die Form
 
@@ -806,14 +806,15 @@ fn main() {
 }
 </pre>
 
-<p>Der Bereich <code>0..3</code> enthält die Indizes <code>0,1,2</code>.
+<p>Der Bereich <code>0..3</code> enthält die Indizes
+<code>0</code>,&nbsp;<code>1</code>,&nbsp;<code>2</code>.
 Daher beschreibt der Slice <code>&amp;a[0..3]</code> eine Referenz auf
-<code>[a[0],a[1],a[2]]</code>.
+<code>[a[0],&nbsp;a[1],&nbsp;a[2]]</code>.
 
 <h3 id="Dynamische-Felder">Dynamische Felder</h3>
 
-<p>Felder vom Typ <code>[T;&nbsp;N]</code> haben immer eine feste,
-schon zur Kompilierzeit bekannte Länge <code>N</code>. Da diese
+<p>Felder vom Typ <code>[T;&nbsp;N]</code> besitzen immer eine feste,
+bereits zur Kompilierzeit bekannte Länge <code>N</code>. Da diese
 Einschränkung für viele Problemstellungen zu hinderlich ist, gibt es
 noch den Datentyp <code>Vec&lt;T&gt;</code> zur Beschreibung von
 Feldern, die ihre Länge automatisch vergrößern. Dynamische Felder
@@ -849,7 +850,7 @@ fn main() {
 <h3 id="Alleinige-Referenzen">Alleinige Referenzen auf ein Feld</h3>
 
 <p>Zum Umdrehen eines Feldes muss man eigentlich kein neues erzeugen.
-Das Feld lässt sich auch selbst umdrehen, man nennt diese Vorgehensweise
+Das Feld lässt sich auch selbst umdrehen; man nennt diese Vorgehensweise
 <i>in place</i>. Der folgende Algorithmus vertauscht das erste
 Element mit dem letzten, das zweite mit dem vorletzten usw. bis
 das Verfahren in der Mitte des Feldes angekommen ist.
@@ -911,15 +912,15 @@ fn main() {
 
 <p>Ein wichtiges Hilfsmittel in der Programmierung sind
 Stapelspeicher. Diese lassen sich mit Feldern modellieren.
-Als Anwendung will ich ein Programm zeigen, das herausfindet
+Als Anwendung will ich ein Programm zeigen, das herausfindet,
 ob die Klammersetzung in einer Zeichenkette korrekt verschachtelt ist.
 
 <p>Das machen wir so: Die Zeichenkette wird von vorne bis hinten
 durchgegangen. Trifft das Programm auf eine öffnende Klammer, packet es
 diese auf einen Stapel. Trifft es auf eine schließende, nimmt es die
-oberste Klammer vom Stapel und schaut ob diese zur schließenden
+oberste Klammer vom Stapel und schaut, ob diese zur schließenden
 passt. Wir müssen außerdem bedenken: Ist der Stapel vorzeitig leer
-oder verbleiben am Ende noch Klammern auf dem Stapel, liegt auch
+oder verbleiben am Ende noch Klammern auf dem Stapel, liegt ebenfalls
 ein Mismatch vor.
 
 <p>Die erste Variante benutzt ein Feld <code>stack</code> von
@@ -1049,7 +1050,7 @@ fn main() {
 }
 </pre>
 
-<p>Die Datei muss in dem Verzeichnis liegen in welchem das Programm
+<p>Die Datei muss in dem Verzeichnis liegen, in welchem das Programm
 geöffnet wird. Der Dateipfad kann auch als Kommandozeilenargument
 gelesen werden:
 

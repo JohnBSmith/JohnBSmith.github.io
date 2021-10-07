@@ -6,25 +6,26 @@
   <style>
 body{
   margin-top: 2em;
-  margin-left: 10%;
   margin-bottom: 10em;
-  max-width: 46em;
+  max-width: 48em;
   font-family: "DejaVu Sans", "Verdana", sans-serif;
   color: #404030;
-}
-@media(max-width: 46em){
-  body{margin-left: 6%; margin-left: 4%;}
+  line-height: 1.5;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 @media(max-width: 26em){
-  body{margin-left: 2%; margin-right: 1%;}
   ol, ul{padding-left: 2em;}
 }
 h1,h2,h3,h4{color: #463c20;}
 a{color: #20506a; text-decoration: none;}
 a:hover{color: #102a40; text-decoration: underline;}
 pre, code{
-  font-family: "FreeMono", "Courier New", monospace;
+  font-family: "DejaVu Sans Mono", "Menlo", "Consolas", monospace;
   color: #403020;
+  font-size: 90%;
 }
 table.bt{border-collapse: collapse;}
 table.bt td, table.bt th{
@@ -35,6 +36,11 @@ table.bt td, table.bt th{
 }
 table.bt th{
   background-color: #e0e0c0;
+}
+.ibox {
+  background-color: #f4f4e6;
+  border-left: 6px solid #d2d2c8;
+  padding: 6px 12px;
 }
 .indent {
   margin-left: 2em;
@@ -204,7 +210,7 @@ window.onload = main;
 
 <p><b>Zusammenfassung:</b> Dieser Text handelt von Problemen der
 Programmiersprache JavaScript. Dabei werden sowohl Entwurfsfehler
-erläutert als auch solche welche eher konzeptueller Natur sind.
+erläutert als auch solche, welche eher konzeptueller Natur sind.
 Es wird jeweils darauf eingegangen, wie eine Lösung ausschauen kann
 oder hätte ausschauen können.
 
@@ -213,23 +219,26 @@ oder hätte ausschauen können.
 Zeichenkette auch genau so ausschauen wie das Literal.
 Aber in JavaScript fehlen die eckigen Klammern:
 
-<pre class="js indent">
-&gt; String([1,2])
+<pre class="js ibox">
+&gt; String([1, 2])
 "1,2"
 </pre>
 
 <p>Man kann sich denken: »Gut, die kann ich ja noch hinzufügen«.
 Aber bei verschachtelten Arrays wird es schlimmer:
 
-<pre class="js" indent>
-&gt; String([[1,2],[3,4]])
+<pre class="js ibox">
+&gt; String([[1, 2], [3, 4]])
 &gt; "1,2,3,4"
 </pre>
 
+<p>Außerdem kommt hinter einem Komma üblicherweise ein Leerzeichen.
+Python macht es richtig.
+
 <h2 id="Typisierung">Schwache Typisierung</h2>
 
-<pre class="js indent">
-&gt; [1,2]+3
+<pre class="js ibox">
+&gt; [1, 2] + 3
 "1,23"
 </pre>
 <p>Was passiert hier? Nun, das Array wird vor der Addition implizit
@@ -247,29 +256,29 @@ auch streng typisiert ist.
 <p>Einige Operationen sind in JavaScript nach Regeln definiert,
 welche keinen praktischen Sinn ergeben.
 
-<pre class="js indent">
-&gt; []==[]
+<pre class="js ibox">
+&gt; [] == []
 false
 
-&gt; [1,2]==[1,2]
+&gt; [1, 2] == [1, 2]
 false
 
-&gt; [1]==[1]
+&gt; [1] == [1]
 false
 </pre>
 <p>Was soll das?
 
-<pre class="js indent">
-&gt; [1]==1
+<pre class="js ibox">
+&gt; [1] == 1
 true
 </pre>
 <p>Ja. Logisch, oder?
 
-<pre class="js indent">
-&gt; []==0
+<pre class="js ibox">
+&gt; [] == 0
 true
 
-&gt; []==1
+&gt; [] == 1
 false
 </pre>
 <p>Ja.
@@ -280,16 +289,16 @@ false
 Felder haben offenbar eine tieferliegende Komplexität, gegen
 die der Programmierer ankämpfen muss.
 
-<pre class="js indent">
-&gt; [undefined, undefined, undefined, undefined].map(x=&gt;1)
+<pre class="js ibox">
+&gt; [undefined, undefined, undefined, undefined].map(x =&gt; 1)
 [1, 1, 1, 1]
 
-&gt; Array(4).map(x=&gt;1)
+&gt; Array(4).map(x =&gt; 1)
 Array(4) [undefined, undefined, undefined, undefined]
 
 &gt; a = Array(4);
 &gt; a[0] = undefined;
-&gt; a.map(x=&gt;1)
+&gt; a.map(x =&gt; 1)
 Array(4) [1, undefined, undefined, undefined]
 </pre>
 
@@ -300,7 +309,7 @@ Array(4) [1, undefined, undefined, undefined]
 auf der linken Seite einer Zuweisenung automatisch global ist.
 In der Funktion
 
-<pre class="js indent">
+<pre class="js ibox">
 function f(x){
     y = 2*x;
     return y;
@@ -312,7 +321,7 @@ function f(x){
 Ein solches Verhalten führt in einer Vielzahl von Fällen zu seltsamen
 Bugs. Ein explizite deklaration von globalen Variablen wäre sinnvoll:
 
-<pre class="js indent">
+<pre class="js ibox">
 function f(x){
     <span class='keyword'>global</span> y = 2*x;
     return y;
@@ -324,29 +333,29 @@ function f(x){
 es trivial zu implementieren wäre. Es kommt stattdessen folgends
 Verhalten zustande:
 
-<pre class="js indent">
+<pre class="js ibox">
 &gt; x = {}; y = {}
-&gt; x+y
+&gt; x + y
 "[object Object][object Object]"
 </pre>
 
 <p>Der Interpreter überprüft ja schon zur Laufzeit, welchen Datentyp
-die Variablen <code>x,y</code> besitzen. Falls der Datentyp kein
-einfacher ist, werden die Objekte in diesem Residualfall einfach
-implizit in Zeichenketten umgewandelt. Genau in diesem Residualfall
+die Variablen <code>x</code>,&nbsp;<code>y</code> besitzen. Falls der
+Datentyp kein einfacher ist, werden die Objekte in diesem Residualfall
+einfach implizit in Zeichenketten umgewandelt. Genau in diesem Residualfall
 wäre es aber möglich gewesen, eine zugehörige Methode <code>add</code>
 im Objekt <code>x</code> oder in dessen Prototypenkette aufzurufen:
 
-<pre class="js indent">
-x+y &equiv;&equiv; x.add(y)
+<pre class="js ibox">
+x + y &equiv;&equiv; x.add(y)
 </pre>
 
 <h2 id="this">Das this-Argument</h2>
 
 <p>In JavaScript lässt sich unter Zuhilfenahme von Closures der
 Kompositionsoperator formulieren:
-<pre class="js indent">
-function compose(g,f){
+<pre class="js ibox">
+function compose(g, f){
     return function(x){return g(f(x));};
 }
 </pre>
@@ -354,7 +363,7 @@ function compose(g,f){
 <p>Diesen Operator möchten wir nun als Methode einer Funktion
 haben. Man macht folgenden Ansatz:
 
-<pre class="js indent">
+<pre class="js ibox">
 Function.prototype.o = function(f){
     return function(x){return this(f(x));};
 }
@@ -364,7 +373,7 @@ Function.prototype.o = function(f){
 zur inneren Funktion gehört, und nicht zur äußeren.
 Stattdessen ist man gezwungen zu:
 
-<pre class="js indent">
+<pre class="js ibox">
 Function.prototype.o = function(f){
     var g = this;
     return function(x){return g(f(x));};
@@ -375,8 +384,8 @@ Function.prototype.o = function(f){
 würde, den Namen des <code>this</code>-Arguments individuell
 festzulegen, wie bei jeder anderen gewöhnlichen Variable auch. Z.B. so:
 
-<pre class="js indent">
-Function.prototype.o = function(g;f){
+<pre class="js ibox">
+Function.prototype.o = function(g; f){
     return function(x){return g(f(x));};
 }
 </pre>
@@ -389,7 +398,7 @@ Objekten. Die Syntax von Wörterbuch- bzw. Objekt-Literalen besitzt
 das Manko, dass zunächst keine Ausdrücke als Schlüssel möglich sind.
 Weil nämlich die Schreibweisen
 
-<pre class="js indent">
+<pre class="js ibox">
 t = {"a": 1, "b": 2};
 t = {a: 1, b: 2};
 </pre>
@@ -398,7 +407,7 @@ t = {a: 1, b: 2};
 Ausdrücke als Schlüssel auf der linken Seite zugelassen wären.
 Man hat diesen Umstand in ES6 durch die Notation
 
-<pre class="js indent">
+<pre class="js ibox">
 t = {["a"]: 1, ["b"]: 2};
 </pre>
 
@@ -406,8 +415,8 @@ t = {["a"]: 1, ["b"]: 2};
 dahingehend seltsam aus, dass die Schlüssel doch eigentlich auch
 Arrays sein könnten:
 
-<pre class="js indent">
-t = {[[1,2]]: 1, [[3,4]]: 2};
+<pre class="js ibox">
+t = {[[1, 2]]: 1, [[3, 4]]: 2};
 </pre>
 
 <p>Hier ergibt sich ein weiteres Problem: alle Schlüssel werden
@@ -417,17 +426,17 @@ wesentlich effizienter ist, als Zeichenketten neu zu erzeugen.
 Problematisch ist weiterhin, dass die eckigen Klammern bei der
 Umwandlung verloren gehen, die Schlüssel
 
-<pre class="js indent">
-[1,[2,3]] und [1,2,3]
+<pre class="js ibox">
+[1, [2, 3]] und [1, 2, 3]
 </pre>
 
 <p>somit gleich sind.
 
 <p>Meines erachtens wäre folgende Syntax sinnvoller gewesen:
 
-<pre class="js indent">
+<pre class="js ibox">
 t = {"x": 1, "y": 2};
-t = {x=1, y=2};
+t = {x = 1, y = 2};
 </pre>
 
 <p>Hiermit lassen sich auch recht angenehm benannte Argumente
@@ -439,7 +448,7 @@ so sollten dessen Funktionen in einem eigenen Namensraum stehen.
 Betrachten wir folgende Funtkionen die zunächst flach im
 Hauptnamensraum stehen:
 
-<pre class="js indent">
+<pre class="js ibox">
 function f(x){return 2*x;}
 function g(x){return 3*x;}
 </pre>
@@ -448,7 +457,7 @@ function g(x){return 3*x;}
 erste Idee ist, die Funktionen einfach als Slots eines Objektes
 <code>M</code> aufzufassen.
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = {
     f: function(x){return 2*x;},
     g: function(x){return 3*x;}
@@ -456,7 +465,7 @@ var M = {
 </pre>
 <p>Falls das Modul nun statische Variablen besitzt, kann auf diese
 über das this-Argument zugegriffen werden:
-<pre class="js indent">
+<pre class="js ibox">
 var M = {
     name: "M",
     f: function(){return this.name;}
@@ -464,17 +473,17 @@ var M = {
 </pre>
 <p>Hiermit ist es auch möglich, Funktionen aus dem Modul innerhalb
 des Moduls aufzurufen. Hier ein Beispiel mit Rekursion:
-<pre class="js indent">
+<pre class="js ibox">
 var M = {
-    f: function(x){return x==0? 1: 2*this.g(x-1);},
-    g: function(x){return x==0? 1: 3*this.f(x-1);}
+    f: function(x){return x == 0? 1 : 2*this.g(x-1);},
+    g: function(x){return x == 0? 1 : 3*this.f(x-1);}
 }
 </pre>
 
 <p>Leider kommen wir nun in einen Konflikt, wenn wir eine Funktion
 aus dem Modul als Argument an eine andere Funktion übergeben wollen.
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = {
     beta: 2,
     f: function(x){return this.beta*x;},
@@ -491,14 +500,14 @@ kann nicht mehr auf <code>beta</code> zugegriffen werden.
 this-Argumentes an <code>f</code>. Dies geschieht durch Hinzufügen
 von:
 
-<pre class="js indent">
+<pre class="js ibox">
 M.f = M.f.bind(M);
 </pre>
 
 <p>Man könnte anstelle des this-Argumentes auch direkt auf die
 Modulvariable zugreifen:
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = {
     beta: 2,
     f: function(x){return M.beta*x;},
@@ -510,7 +519,7 @@ var M = {
 <code>M</code> nicht mehr verändert werden darf. Folgendes
 ist also nicht möglich:
 
-<pre class="js indent">
+<pre class="js ibox">
 var M2 = M;
 M = undefined;
 </pre>
@@ -518,7 +527,7 @@ M = undefined;
 <p>Die Lösung besteht darin, eine lokale Variable für
 das Modul einzuführen.
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = (function(){
     var M = {
         beta: 2,
@@ -532,7 +541,7 @@ var M = (function(){
 <p>Man hätte auch alle Funktionen und Variablen direkt als lokale
 Variablen schreiben können.
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = (function(){
     var beta = 2;
     var f = function(x){return beta*x;};
@@ -548,7 +557,7 @@ möglich, z.&nbsp;B. wenn man das Modul mit <code>M.beta=4</code>
 konfigurieren möchte. Es ist aber möglich, konfigurierbare Eigenschaften
 des Moduls explizit zum Interface mit aufzunehmen.
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = (function(){
     var config = {beta: 2};
     var f = function(x){return config.beta*x;};
@@ -569,7 +578,7 @@ Alternativ kann das Prototypensystem hierfür verwendet werden.
 das Modul als Factory formuliert werden. Eine solche nimmt eine
 Konfiguration und erzeugt aus dieser ein konfiguriertes Modul:
 
-<pre class="js indent">
+<pre class="js ibox">
 var M = (function(config){
     var beta = config.beta;
     var f = function(x){return beta*x;};
@@ -606,7 +615,7 @@ beabsichtigt war.
 
 <p>Eine klare Lösung geben strenge funktionale Programmiersprachen
 vor. Dort gibt es eine Funktion <code>enumerate</code>, welche
-<code>a[i]</code> auf <code>[i,a[i]]</code> abbildet. Wenn das
+<code>a[i]</code> auf <code>[i,&nbsp;a[i]]</code> abbildet. Wenn das
 nicht effizient genug ist, kann man immer noch eine for-Schleife
 benutzen bzw. eine Funktion <code>map_with_index</code> schreiben.
 
