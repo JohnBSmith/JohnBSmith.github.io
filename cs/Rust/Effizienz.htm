@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Effiziente Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Box">Verzicht auf Box</a>
+<li><a href="#Komprimierung">Komprimierung von Datentypen</a>
+<li><a href="#Verkettung">Verkettung von Operatoren</a>
+<li><a href="#Verkettung2">Nochmals Verkettung</a>
+<li><a href="#Inline-Ersetzung">Inline-Ersetzung kontrollieren</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="Box">Verzicht auf Box</h2>
+
+<p>Man könnte denken, bei der Rückgabe einer großen <code>struct</code>
+müsse diese zwischen den Stack Frames kopiert werden. Tatsächlich
+erzeugt der Compiler eine große <code>struct</code> im Stack Frame
+des Aufrufers und einen Zeiger auf die <code>struct</code> als
+Referenzparameter. Das gleiche gilt für eine große <code>enum</code>.
+
+<p>Würde man die <code>struct</code> mit <code>Box</code> einhüllen,
+würde das Programm sogar weniger effizient sein, weil ständig
+Heap-Allokationen und -Freigaben vorgenommen würden.
+
+<p>Beispiel:
+<pre class="rust ibox">
+struct Chunck {
+    data: [u64; 10]
+}
+
+impl Chunck {
+    fn new() -&gt; Box&lt;Chunck&gt; {
+        Box::new(Chunck {data: [0; 10]})
+    }
+}
+
+fn main() {
+    let a = Chunck::new();
+    println!("{:?}", a.data);
+}
+</pre>
+
+<p>Es sollte besser auf <code>Box</code> verzichtet werden:
+<pre class="rust ibox">
+impl Chunck {
+    fn new() -&gt; Chunck {
+        Chunck {data: [0; 10]}
+    }
+}
+</pre>
+
+<h2 id="Komprimierung">Komprimierung von Datentypen</h2>
+
+<p>Betrachten wir nochmals den Typ <code>Ru32</code> aus dem
+Abschnitt ›<a href="Sicherheit.htm#Monaden">Monaden</a>‹ im Kapitel
+›Sichere Programmierung‹. Mit einem gewissen Unbehagen stellt man
+bei diesem fest, dass <code>std::mem::size_of::&lt;Ru32&gt;()</code>
+auf einer 32&nbsp;Bit-Architektur den Wert&nbsp;8 liefert.
+
+<p>Da ist nun wie in einem Hefezopf viel Luft im Typ enthalten.
+Benutzt man für die Fehlerinformation stattdessen Werte aus dem
+ursprünglichen Definitionsbereich, erlaubt dies die Kompression auf den
+ursprünglichen Speicherplatz von 32&nbsp;Bit. Den Fehlerwert kodieren
+wir einfach als <code>u32::MAX</code>. Unter geringfügigen semantischen
+Änderungen nimmt das Programm dann die folgende Form an:
+
+<pre class="rust ibox">
+mod ru32 {
+    #[derive(Clone, Copy)]
+    pub struct Ru32 (u32);
+    impl Ru32 {
+        pub fn err() -&gt; Self {Ru32(u32::MAX)}
+        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
+            match self.0 {
+                u32::MAX =&gt; Self::err(),
+                x =&gt; f(x)
+            }
+        }
+    }
+    impl std::fmt::Display for Ru32 {
+        fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
+        -&gt; std::fmt::Result
+        {
+            match self.0 {
+                u32::MAX =&gt; write!(f, "Ru32(Err)"),
+                x =&gt; write!(f, "Ru32({})", x)
+            }
+        }
+    }
+    impl From&lt;u32&gt; for Ru32 {
+        fn from(x: u32) -&gt; Self {Self(x)}
+    }
+    impl From&lt;char&gt; for Ru32 {
+        fn from(c: char) -&gt; Self {Self(u32::from(c))}
+    }
+    impl From&lt;Option&lt;u32&gt;&gt; for Ru32 {
+        fn from(x: Option&lt;u32&gt;) -&gt; Self {Self(x.unwrap_or(u32::MAX))}
+    }
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self::from(x.checked_add(y))))
+        }
+    }
+    impl std::ops::Mul&lt;Ru32&gt; for u32 {
+        type Output = Ru32;
+        fn mul(self, y: Ru32) -&gt; Ru32 {
+            y.bind(|y| Ru32::from(self.checked_mul(y)))
+        }
+    }
+}
+
+use ru32::Ru32;
+
+fn str_to_u32(s: &amp;str) -&gt; Ru32 {
+    let mut acc = Ru32::from(0);
+    for digit in s.chars() {
+        if !digit.is_digit(10) {return Ru32::err();}
+        acc = 10*acc + Ru32::from(u32::from(digit) - u32::from('0'));
+    }
+    acc
+}
+
+fn main() {
+    println!("size of Ru32: {}", std::mem::size_of::&lt;Ru32&gt;());
+    println!("{}", str_to_u32("1440"));
+    println!("{}", str_to_u32("10000000000"));
+}
+</pre>
+
+<h2 id="Verkettung">Verkettung von Operatoren</h2>
+
+<p>Rust erlaubt die abstrakte Verkettung von Operatoren, womit
+allokationsfreie Operationen ermöglicht werden. Man definiert dazu
+einen Trait <code>Flush</code>, dessen Methode das Endergebnis
+der Berechnung in einen zur Verfügung stehenden Puffer schreibt.
+
+<p>Im Wesentlichen erhält man so etwas hübschere Schreibweisen
+für Routinen als wie die in BLAS (Basic Linear Algebra Subprograms).
+Man muss das nicht sinnvoll finden, ich will es nur einmal gezeigt
+haben.
+
+<p>Es folgt eine Demonstration anhand von Linearkombinationen.
+
+<pre class="rust box">
+use std::ops::{Add, Mul};
+
+struct Vector {
+    data: Vec&lt;f64&gt;
+}
+
+impl Vector {
+    pub fn new(v: Vec&lt;f64&gt;) -&gt; Self {Vector {data: v}}
+}
+
+impl std::fmt::Display for Vector {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        write!(f, "{:?}", self.data)
+    }
+}
+
+trait Flush {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector;
+}
+
+struct Multiplication&lt;'a&gt; {
+    r: f64,
+    v: &amp;'a Vector
+}
+
+struct Addition&lt;'a&gt; {
+    v: &amp;'a Vector,
+    w: &amp;'a Vector
+}
+
+struct AddMul&lt;'a&gt; {
+    m: Multiplication&lt;'a&gt;,
+    v: &amp;'a Vector
+}
+
+struct AddMulMul&lt;'a&gt; {
+    ma: Multiplication&lt;'a&gt;,
+    mb: Multiplication&lt;'a&gt;
+}
+
+impl Mul&lt;f64&gt; for Vector {
+    type Output = Vector;
+    fn mul(mut self, r: f64) -&gt; Vector {
+        for x in &amp;mut self.data {*x *= r;}
+        self
+    }
+}
+
+impl Mul&lt;Vector&gt; for f64 {
+    type Output = Vector;
+    fn mul(self, mut rhs: Vector) -&gt; Vector {
+        for x in &amp;mut rhs.data {*x *= self;}
+        rhs
+    }
+}
+
+impl&lt;'a&gt; Mul&lt;&amp;'a Vector&gt; for f64 {
+    type Output = Multiplication&lt;'a&gt;;
+    fn mul(self, b: &amp;'a Vector) -&gt; Multiplication&lt;'a&gt; {
+        Multiplication {r: self, v: b}
+    }
+}
+
+impl&lt;'a&gt; Mul&lt;&amp;'a mut Vector&gt; for f64 {
+    type Output = Multiplication&lt;'a&gt;;
+    fn mul(self, b: &amp;'a mut Vector) -&gt; Multiplication&lt;'a&gt; {
+        Multiplication {r: self, v: b}
+    }
+}
+
+impl Add&lt;&amp;Vector&gt; for Vector {
+    type Output = Vector;
+    fn add(mut self, b: &amp;Vector) -&gt; Vector {
+        for (i, x) in self.data.iter_mut().enumerate() {
+            *x += b.data[i];
+        }
+        self
+    }
+}
+
+impl Add&lt;Vector&gt; for Vector {
+    type Output = Vector;
+    fn add(self, b: Vector) -&gt; Vector {self+&amp;b}
+}
+
+impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for &amp;'a Vector {
+    type Output = Addition&lt;'a&gt;;
+    fn add(self, b: &amp;'a Vector) -&gt; Addition&lt;'a&gt; {
+        Addition {v: self, w: b}
+    }
+}
+
+impl&lt;'a&gt; Add&lt;&amp;'a Vector&gt; for Multiplication&lt;'a&gt; {
+    type Output = AddMul&lt;'a&gt;;
+    fn add(self, b: &amp;'a Vector) -&gt; AddMul&lt;'a&gt; {
+        AddMul {m: self, v: b}
+    }
+}
+
+impl&lt;'a&gt; Add&lt;Multiplication&lt;'a&gt;&gt; for Multiplication&lt;'a&gt; {
+    type Output = AddMulMul&lt;'a&gt;;
+    fn add(self, b: Multiplication&lt;'a&gt;) -&gt; AddMulMul&lt;'a&gt; {
+        AddMulMul {ma: self, mb: b}
+    }
+}
+
+impl&lt;'a&gt; Flush for Multiplication&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        for (i,x) in data.iter_mut().enumerate() {
+            *x = self.r*self.v.data[i];
+        }
+        buffer
+    }
+}
+
+impl&lt;'a&gt; Flush for Addition&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = self.v.data[i] + self.w.data[i];
+        }
+        buffer
+    }
+}
+
+impl&lt;'a&gt; Flush for AddMul&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        let m = &amp;self.m;
+        let v = &amp;self.v;
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = m.r*m.v.data[i] + v.data[i];
+        }
+        buffer
+    }
+}
+
+impl&lt;'a&gt; Flush for AddMulMul&lt;'a&gt; {
+    fn flush(self, buffer: &amp;mut Vector) -&gt; &amp;mut Vector {
+        let data = &amp;mut buffer.data;
+        let ma = &amp;self.ma;
+        let mb = &amp;self.mb;
+        for (i, x) in data.iter_mut().enumerate() {
+            *x = ma.r*ma.v.data[i] + mb.r*mb.v.data[i];
+        }
+        buffer
+    }
+}
+
+#[allow(unused_macros)]
+macro_rules! calc {
+    ( $x:tt = $value:expr ) =&gt; {
+        let $x = $value.flush($x);
+    }
+}
+
+fn main() {
+    let e1 = &amp;Vector::new(vec![1.0, 0.0]);
+    let e2 = &amp;Vector::new(vec![0.0, 1.0]);
+    let a = &amp;mut Vector::new(vec![0.0, 0.0]);
+    let b = &amp;mut Vector::new(vec![0.0, 0.0]);
+
+    calc!{a = 2.0*e1 + 4.0*e2};
+    calc!{b = 2.0*(a as &amp;Vector) + 2.0*e2};
+    println!("{}", a);
+    println!("{}", b);
+}
+</pre>
+
+<h2 id="Verkettung2">Nochmals Verkettung</h2>
+
+<p>Beim vorangegangenen Ansatz ist die Form der Ausdrücke
+eingeschränkt. Diese Einschränkung kann man durch generische
+Implementationen auflösen, die rekursiv über die zugrunde
+liegende Struktur formuliert sind. Diese Struktur muss man
+dann nur noch ausrechnen lassen. Die Idee zur Vermeidung von
+Komplikationen ist dabei eine abstrakte Indizierungsoperation
+<code>get</code>, die Strukturen indizieren kann. Idealerweise
+sind die Strukturen zero cost, werden also vollständig
+wegoptimiert.
+
+<pre class="rust box">
+pub mod vector {
+    use std::ops::{Add, Sub, Mul};
+
+    pub struct Vector(pub Vec&lt;f64&gt;);
+    pub struct Addition&lt;A: Get, B: Get&gt;(A, B);
+    pub struct ScalarMul&lt;A: Get&gt;(f64, A);
+
+    impl Vector {
+        pub fn flush&lt;A: Get&gt;(&amp;mut self, a: A) {
+            for (i, v) in self.0.iter_mut().enumerate() {
+                *v = a.get(i);
+            }
+        }
+    }
+
+    impl std::fmt::Display for Vector {
+        fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter)
+        -&gt; std::fmt::Result
+        {
+            write!(f, "{:?}", self.0)
+        }
+    }
+
+    pub trait Get {
+        fn len(&amp;self) -&gt; usize;
+        fn get(&amp;self, i: usize) -&gt; f64;
+    }
+    impl Get for &amp;Vector {
+        fn len(&amp;self) -&gt; usize {self.0.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {self.0[i]}
+    }
+    impl&lt;A: Get, B: Get&gt; Get for Addition&lt;A, B&gt; {
+        fn len(&amp;self) -&gt; usize {self.0.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {
+            self.0.get(i) + self.1.get(i)
+        }
+    }
+    impl&lt;A: Get&gt; Get for ScalarMul&lt;A&gt; {
+        fn len(&amp;self) -&gt; usize {self.1.len()}
+        fn get(&amp;self, i: usize) -&gt; f64 {
+            self.0*self.1.get(i)
+        }
+    }
+    
+    impl&lt;'a, B: Get&gt; Add&lt;B&gt; for &amp;'a Vector {
+        type Output = Addition&lt;&amp;'a Vector, B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self, b)
+        }
+    }
+    impl&lt;'a, B: Get&gt; Sub&lt;B&gt; for &amp;'a Vector {
+        type Output = Addition&lt;&amp;'a Vector, ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self, ScalarMul(-1.0, b))
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Add&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self, b)
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Sub&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self, ScalarMul(-1.0, b))
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Add&lt;B&gt; for ScalarMul&lt;A&gt; {
+        type Output = Addition&lt;Self, B&gt;;
+        fn add(self, b: B) -&gt; Self::Output {
+            Addition(self, b)
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Sub&lt;B&gt; for ScalarMul&lt;A&gt; {
+        type Output = Addition&lt;Self, ScalarMul&lt;B&gt;&gt;;
+        fn sub(self, b: B) -&gt; Self::Output {
+            Addition(self, ScalarMul(-1.0, b))
+        }
+    }
+    impl&lt;'a&gt; Mul&lt;&amp;'a Vector&gt; for f64 {
+        type Output = ScalarMul&lt;&amp;'a Vector&gt;;
+        fn mul(self, a: &amp;'a Vector) -&gt; Self::Output {
+            ScalarMul(self, a)
+        }
+    }
+    impl&lt;A: Get, B: Get&gt; Mul&lt;Addition&lt;A, B&gt;&gt; for f64 {
+        type Output = ScalarMul&lt;Addition&lt;A, B&gt;&gt;;
+        fn mul(self, a: Addition&lt;A, B&gt;) -&gt; Self::Output {
+            ScalarMul(self, a)
+        }
+    }
+    impl&lt;B: Get&gt; Mul&lt;B&gt; for &amp;Vector {
+        type Output = f64;
+        fn mul(self, b: B) -&gt; f64 {
+            let a = &amp;self.0;
+            let mut acc = 0.0;
+            for i in 0..a.len() {
+                acc += a[i]*b.get(i);
+            }
+            acc
+        }
+    }
+    impl&lt;A0: Get, A1: Get, B: Get&gt; Mul&lt;B&gt; for Addition&lt;A0, A1&gt; {
+        type Output = f64;
+        fn mul(self, b: B) -&gt; f64 {
+            let mut acc = 0.0;
+            for i in 0..self.len() {
+                acc += self.get(i)*b.get(i);
+            }
+            acc
+        }
+    }
+    pub fn norm&lt;A: Get&gt;(v: A) -&gt; f64 {
+        let mut s = 0.0;
+        for i in 0..v.len() {
+            let a = v.get(i);
+            s += a*a;
+        }
+        s.sqrt()
+    }
+}
+
+use vector::Vector;
+
+fn main() {
+    let v = &amp;Vector(vec![1.0, 2.0]);
+    let w = &amp;Vector(vec![3.0, 4.0]);
+    let mut buf = Vector(vec![0.0, 0.0]);
+    buf.flush(2.0*v + 4.0*w + 5.0*(v - 2.0*w));
+    println!("{}", buf);
+    println!("{}", (v + w)*(v - w));
+    println!("{}", v*v - w*w);
+}
+</pre>
+
+<h2 id="Inline-Ersetzung">Inline-Ersetzung kontrollieren</h2>
+
+<p>Funktionsaufrufe kosten einen gewissen Verwaltungsaufwand, weil ein
+Teil des Maschinenzustands gespeichert werden muss, damit der
+Programmablauf beim Verlassen der Funktion wieder zurückfindet.
+Aus diesem Grund setzt der Compiler bei kurzen Funktionen die
+Berechnungen der Funktion anstelle des Aufrufs direkt ein, womit der
+Verwaltungsaufwand entfällt. Man spricht von einer
+<i>Inline-Ersetzung</i>. Dieses Verfahren ist einer Makro-Expansion
+recht ähnlich, &ndash; und als diese Art von Optimierung in der
+Frühzeit der Computer-Programmierung noch nicht zur Verfügung stand,
+hat man dafür tatsächlich Makros herangezogen.
+
+<p>Im Normalfall entscheidet der Compiler darüber, ob eine
+Inline-Ersetzung günstig ist. Zur manuellen Kontrolle kann man
+Funktionen aber auch mit einem Attribut versehen.
+
+<table class="bt">
+<tr><th>Attribut<th>Wirkung
+<tr><td><code>#[inline]</code><td>Inline-Ersetzung über die Crate-Grenze hinaus gewünscht
+<tr><td><code>#[inline(always)]</code><td>Inline-Ersetzung nachdrücklich gewünscht
+<tr><td><code>#[inline(never)]</code><td>Inline-Ersetzung nachdrücklich ungewünscht
+</table>
+
+<p>Nun kann es sein, dass man Inline-Ersetzung derselben Funktion
+lediglich an bestimmten Stellen geschehen lassen möchte. In Programmen
+sind nur bestimmte Ausführungspfade <i>heiß</i>. Viele <i>kalte</i>
+Pfade liegen dagegen außerhalb von berechnungsintensiven Schleifen.
+Durch übermäßige Inline-Ersetzung, die auch an kalten Pfaden
+vorgenommen wird, kann sich ein Programm mehr oder weniger aufblähen,
+sodass mit der erhöhten Programmgröße auch der Cache-Speicher höher
+belegt wird, was der Performanz im Extremfall paradoxerweise
+zuwiderlaufen kann.
+
+<p>Um die feinere Kontrolle über die Inline-Ersetzung einer
+Funktion <code>f</code> zu erhalten, schreibt man zunächst die
+Variante <code>f_inline</code> der Funktion, bei welcher die
+Inline-Ersetzung stattfinden soll. Zum Verhindern der Ersetzung
+schreibt man eine zweite Variante <code>f</code>, welche den
+Aufruf schlicht an <code>f_inline</code> weitergibt, woraufhin die
+Berechnung aus <code>f_inline</code> in den Körper
+von <code>f</code> inline-ersetzt wird. Weil <code>f</code>
+eine separate Funktion ist, darf <code>f</code> nun ein anderes
+Attribut als <code>f_inline</code> erhalten.
+
+<p>Kurzes Beispiel:
+<pre class="rust ibox">
+#[inline(always)]
+fn f_inline(x: i32) -&gt; i32 {x + 1}
+
+#[inline(never)]
+fn f(x: i32) -&gt; i32 {f_inline(x)}
+</pre>
+
+<p>Um in Erfahrung zu bringen ob die Inline-Ersetzung an einer
+bestimmten kritischen Stelle zielführend ist, sollte man sicherlich
+Messungen durchführen und das erzeugte Maschinenprogramm
+untersuchen.
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Nicholas Nethercote et al.:
+  »<a href="https://nnethercote.github.io/perf-book/"
+  >The Rust Performance Book</a>«.
+<li>Aleksey Kladov (matklad):
+  »<a href="https://matklad.github.io/2021/07/09/inline-in-rust.html"
+  >Inline In Rust</a>«, Juli 2021.
+</ol>
+
+</body>
+</html>
+

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Eingabe und Ausgabe</h1>
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#stdio">Die Standard-Ströme</a>
+  <ol>
+  <li><a href="#stdout">Standard-Ausgabe</a>
+  <li><a href="#stderr">Standard-Fehlerausgabe</a>
+  <li><a href="#stdin">Standard-Eingabe</a>
+  <li><a href="#Pipelines">Pipelines</a>
+  </ol>
+<li><a href="#Dateien">Dateien</a>
+  <ol>
+  <li><a href="#Dateien-lesen">Dateien lesen</a>
+  <li><a href="#Binaer-lesen">Binärdateien lesen</a>
+  <li><a href="#Exakte-Blockgroesse">In Blöcken exakter Größe lesen</a>
+  <li><a href="#Dateien-schreiben">Dateien schreiben</a>
+  <li><a href="#Stroeme">Datenströme</a>
+  </ol>
+</ol>
+
+<h2 id="stdio">Die Standard-Ströme</h2>
+
+<h3 id="stdout">Standard-Ausgabe</h3>
+
+<p>Die Standard-Ausgabe <code>stdout</code> lässt sich auf mehrere
+Arten ansprechen. Zunächst kann man einfach <code>println</code>
+benutzen.
+
+<pre class="rust ibox">
+fn main() {
+    println!("{}", "Ausgabe");
+}
+</pre>
+
+<p>Man kann die Standard-Ausgabe auf Linux aber auch manuell als
+Geräte-Datei öffnen:
+
+<pre class="rust ibox">
+use std::{io, io::Write, fs::File};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut stdout = File::create("/dev/stdout")?;
+    stdout.write_all("Ausgabe".as_bytes())?;
+    Ok(())
+}
+</pre>
+
+<p>Das ist aber nicht empfehlenswert, da das Verzeichnis
+<code>/dev/stdout</code> nur in Unix-artigen Betriebssystemen
+existiert, das Programm also weniger portabel wird. Aus diesem
+Grund steht die Funktion <code>io::stdout</code> zur Verfügung:
+
+<pre class="rust ibox">
+use std::{io, io::Write};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut stdout = io::stdout();
+    stdout.write_all("Ausgabe".as_bytes())?;
+    Ok(())
+}
+</pre>
+
+<p>Der Typ <code>io::Result&lt;()&gt;</code> ist lediglich ein Alias
+für <code>Result&lt;(),io::Error&gt;</code>.
+
+<h3 id="stderr">Standard-Fehlerausgabe</h3>
+
+<p>Bei manchen Programmen möchte man neben normalen Ausgaben
+gleichzeitig auch Fehlermeldungen produzieren. Nun müssen diesen beiden
+Ausgaben auf irgendeine Art getrennt sein wenn man keine Vermischung
+haben möchte. Eine einfache Herangehensweise daran ist die Einleitung
+der Fehlerausgabe in eine andere Datei bzw. in einen anderen
+Datenstrom.
+
+<p>Bereits zur Verfügung stehen dafür die Makros <code>eprint</code>
+und <code>eprintln</code>, die sich so verhalten wie <code>print</code>
+und <code>println</code>, mit dem Unterschied in die Fehlerausgabe
+<code>stderr</code> zu schreiben. Alternativ ist auch
+<code>io::stderr()</code> benutzbar, wie zuvor schon für
+<code>stdout</code> beschrieben.
+
+<p>Ruft man so ein Programm, nennen wir es <code>p0</code>, nun mit
+dem Shell-Befehl
+<pre class="indent">
+./p0 &gt; Datei.txt
+</pre>
+
+<p>auf, wird die normale Ausgabe in <code>Datei.txt</code> geleitet,
+die Fehlermeldungen verbleiben jedoch im Terminal. Umgekehrt geht
+auch
+<pre class="indent">
+./p0 2&gt; Fehler.txt
+</pre>
+<p>womit die Fehlermeldungen in eine Datei geleitet werden, die
+normale Ausgabe aber im Terminal verbleibt. Der Befehl
+<pre class="indent">
+./p0 &gt; Datei.txt 2&gt; Fehler.txt
+</pre>
+leitet <code>stdout</code> und <code>stderr</code> in jeweils
+eine Datei.
+
+<p>Möchte man die Fehlermeldungen nicht irgendwohin schreiben, sondern
+einfach nur verwerfen, steht dafür eine sonderbare Gerätedatei
+zur Verfügung, das sogenannte Nullgerät <code>/dev/null</code>.
+Daten die man in diese Datei leitet, verschwinden einfach. Der Befehl
+<pre class="indent">
+./p0 2&gt; /dev/null
+</pre>
+<p>führt also zur Unterdrückung der Fehlerausgabe.
+
+<h3 id="stdin">Standard-Eingabe</h3>
+
+<p>Das folgende Programm zeigt, wie zeilenweises Einlesen von
+Eingaben vonstattengeht.
+
+<pre class="rust ibox">
+// Programm p1
+
+use std::{io, io::stdin};
+
+fn chomp(buffer: &amp;mut String) {
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let buffer = &amp;mut String::new();
+    loop {
+        let n = stdin().read_line(buffer)?;
+        if n == 0 {break;}
+        chomp(buffer);
+        println!("[{}]", buffer);
+        buffer.clear();
+    }
+    Ok(())
+}
+</pre>
+
+<p>Die Schleife läuft solange weiter, bis ein EOF kommt.
+Unter unixoiden Systemen wie Linux kann man EOF durch die
+Tastenkombination <code>Strg+D</code> erzeugen.
+
+<p>Der Aufruf
+
+<pre class="indent">
+./p1 &lt; Datei.txt
+</pre>
+
+<p>bewirkt die Eingabe aus der angegebenen Datei, anstelle
+auf eine Terminaleingabe zu warten.
+
+<h3 id="Pipelines">Pipelines</h3>
+
+<p>Außerdem ist es möglich, die Ausgabe eines anderen Programms
+als Eingabe zu nutzen. Zur genauen Darlegung brauchen wir ein kurzes
+Programm, welches eine Ausgabe erzeugt:
+
+<pre class="rust ibox">
+// Programm p0
+
+fn main() {
+    for i in 0..4 {println!("{}", i);}
+}
+</pre>
+
+<p>Mit dem Pipe-Operator wird nun die Ausgabe von <code>p0</code>
+der Eingabe von <code>p1</code> zugeführt:
+
+<pre class="indent">
+./p0 | ./p1
+</pre>
+
+<p>Angegeben ist der Aufruf von im aktuellen Arbeitsverzeichnis
+befindlichen Programmen. Beide Programmdateien müssen sich
+dafür in diesem Verzeichnis befinden.
+
+<p>Die Programme in einer Pipeline dürfen auch aus unterschiedlichen
+Programmiersprachen entstammen. Anstelle des obigen
+Programms <code>p0</code> könnte man genauso gut das Python-Programm
+
+<pre class="ibox">
+# Programm p0
+
+for i in range(0, 4):
+    print(i)
+</pre>
+
+<p>benutzen. Der Aufruf:
+
+<pre class="indent">
+python ./p0 | ./p1
+</pre>
+
+<h2 id="Dateien">Dateien</h2>
+
+<h3 id="Dateien-lesen">Dateien lesen</h3>
+
+<p>Zum Lesen von Text-Dateien gibt es die Komfort-Funktion
+<code>read_to_string</code>, das macht die Sache besonders einfach.
+<pre class="rust ibox">
+use std::{fs, io};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let s = fs::read_to_string("Datei.txt")?;
+    println!("{}", s);
+    Ok(())
+}
+</pre>
+
+<p>Die Funktion vereinfacht die Benutzung von vielseitigeren
+Werkzeugen. Unter Verwendung dieser gestaltet sich die Funktion so:
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+
+fn read_to_string(path: &amp;str) -&gt; io::Result&lt;String&gt; {
+    let mut file = fs::File::open(path)?;
+    let mut buffer = String::new();
+    file.read_to_string(&amp;mut buffer)?;
+    Ok(buffer)
+}
+</pre>
+
+<p>Diese Formulierung der Funktion ist jedoch etwas ineffizient,
+weil der Puffer beim Lesen öfters realloziert werden muss. Besser,
+man initialisiert den Puffer gleich mit der benötigten Kapazität:
+
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+
+fn read_to_string(path: &amp;str) -&gt; io::Result&lt;String&gt; {
+    let mut file = fs::File::open(path)?;
+    let info = file.metadata()?;
+    let len = match usize::try_from(info.len()) {
+        Ok(value) =&gt; value, _ =&gt; 0
+    };
+    let mut buffer = String::with_capacity(len);
+    file.read_to_string(&amp;mut buffer)?;
+    Ok(buffer)
+}
+</pre>
+
+<p>Spitzfindige fragen sich jetzt natürlich, wie lang
+denn so eine Geräte-Datei wie <code>/dev/stdin</code> ist. Bei stdin
+handelt es sich ja um einen Datenstrom, der kann potenziell unendlich
+lang sein. Probieren wir das aus:
+
+<pre class="rust ibox">
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    println!("{}", std::fs::metadata("/dev/stdin")?.len());
+    Ok(())
+}
+</pre>
+
+<p>Bei mir kommt da null raus. Das muss natürlich nicht heißen, dass
+da immer null herauskommen müsse. Es wäre z.&nbsp;B. denkbar, dass der
+Rückgabewert die Länge der aktuellen Pufferbelegung ist. Um Gewissheit
+über das Verhalten zu haben, müsste man die Spezifikation der
+Betriebssystem-Schnittstelle konsultieren, wenn es diese denn gibt.
+Wir wollen uns mit diesen technischen Details jetzt nicht aufhalten,
+da diese eigentlich immer unerheblich sind.
+
+<h3 id="Binaer-lesen">Binärdateien lesen</h3>
+
+<p>Da eine Zeichenkette in Rust korrektes UTF-8 enthalten muss, wird
+die Funktion <code>read_to_string</code> zwangsläufig eine
+Validierung vornehmen. Möchte man auch eine Datei mit invalidem UTF-8
+verarbeiten können, sollte diese zunächst als Binärdatei
+eingelesen werden, hierfür steht die Funktion <code>fs::read</code>
+zur Verfügung. Mit den Binärdaten kann man dann machen was man will.
+
+<pre class="rust ibox">
+use std::{fs::read, error::Error};
+
+fn main() -&gt; Result&lt;(),Box&lt;dyn Error&gt;&gt; {
+    let data: Vec&lt;u8&gt; = read("Datei.txt")?;
+    let s = String::from_utf8(data)?;
+    println!("{}", s);
+    Ok(())
+}
+</pre>
+
+<p>Hier ist nun alternativ möglich:
+<pre class="rust ibox">
+let s = String::from_utf8_lossy(&amp;data);
+</pre>
+
+<p>Eine Binärdatei kann auch sehr groß sein, größer als dass
+sie vollständig in den Hauptspeicher geladen werden kann. Wir wollen
+den CRC32-Prüfwert von so einer Datei berechnen, siehe
+›<a href="Algorithmen/Fehlererkennung.htm#CRC"
+>Algorithmen: Fehlererkennung</a>‹.
+Der naive Ansatz ginge so:
+
+<pre class="rust ibox">
+use std::{env::args, fs::read, io};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let crc = crc::CRC32::new();
+    let argv: Vec&lt;String&gt; = args().collect();
+    let data: Vec&lt;u8&gt; = read(&amp;argv[1])?;
+    println!("{:08x}", crc.hash(&amp;data, 0));
+    Ok(())
+}
+</pre>
+
+<p>Die Berechnung des Prüfwertes lässt sich nun aufteilen auf
+Datenblöcke. Die Blöcke kommen jeweils zunächst von der Datei in
+einen Puffer der Blockgröße, günstig ist 64 Kibibyte. Dann wird vom
+Block der Prüfwert bestimmt, wobei der Prüfwert des vorangegangenen
+Blocks mit einfließt.
+
+<pre class="rust ibox">
+use std::{env::args, fs::File, io, io::Read};
+use crc::CRC32;
+
+fn hash(crc: &amp;CRC32, file: &amp;mut File) -&gt; io::Result&lt;u32&gt; {
+    let mut buffer = [0; 0x10000];
+    let mut hash = 0;
+    loop {
+        let n = file.read(&amp;mut buffer)?;
+        if n == 0 {break;}
+        hash = crc.hash(&amp;buffer[..n], hash);
+    }
+    Ok(hash)
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let crc = CRC32::new();
+    let argv: Vec&lt;String&gt; = args().collect();
+    let mut file = File::open(&amp;argv[1])?;
+    println!("{:08x}", hash(&amp;crc, &amp;mut file)?);
+    Ok(())
+}
+</pre>
+
+<p>Hiermit lässt sich nun der Prüfwert von 10&nbsp;GB großen
+Dateien ermitteln, auch wenn man nur wenige MB Arbeitsspeicher zur
+Verfügung hat. Faktisch ist der Arbeitsspeicherbedarf des
+Programms nun verschwindend gering.
+
+<p>Welches die günstigste Blockgröße ist, vermag ich nicht genau zu
+sagen. Ein Anhaltspunkt besteht in der Hypothese, dass die Benutzung
+eines ganzzahligen Vielfachen der Blockgröße oder Clustergröße des
+Dateisystems effizient ist. Die Blockgröße beträgt meistens
+512&nbsp;Byte oder ein ganzzahliges Vielfaches. Weil ein Cluster
+eine Zusammenfassung von Blöcken ist, muss die Clustergröße ein
+ganzzahliges Vielfaches der Blockgröße sein, ein typischer Wert ist
+4&nbsp;Kibibyte. Auf der anderen Seite müsste es am günstigen sein,
+einen möglichst kleinen Puffer zu benutzen, damit die Belegung des
+Cache-Speichers gering bleibt.
+
+
+<h3 id="Exakte-Blockgroesse">In Blöcken exakter Größe lesen</h3>
+
+<p>Ein wenig schwieriger ist das Lesen einer Datei in Blöcken,
+wenn diese mit Ausnahme des letzten eine exakte Blockgröße haben
+sollen. Eine naive Bewerkstelligung wäre die folgende, bei
+der ich zur Verdeutlichung zusätzlich eine Variable <code>last</code>
+und eine Zusicherung hinzugefügt habe. Das Problem ist nämlich, dass
+die Erfüllung dieser Zusicherung nicht garantiert ist. Beim Linux,
+auf dem ich gerade diesen Text schreibe, klappt das zwar, aber das
+muss ja nicht heißen, dass es überall gut geht.
+
+<pre class="rust ibox">
+use std::{io, io::Read, fs::File};
+const BLOCK_SIZE: usize = 0x10000;
+
+fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
+-&gt; io::Result&lt;()&gt;
+{
+    let mut buffer: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
+    let mut last = false;
+    loop {
+        let n = file.read(&amp;mut buffer)?;
+        if n == 0 {break;}
+        if n &lt; BLOCK_SIZE {
+            assert!(last == false);
+            last = true;
+        }
+        callback(&amp;buffer[..n]);
+    }
+    Ok(())
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    let mut file = File::open(&amp;argv[1])?;
+    process_file(&amp;mut file, |data| {
+        println!("{}", data.len());
+    })?;
+    Ok(())
+}
+</pre>
+
+<p>Nun ist in der Standardbibliothek die Funktion
+<code>read_exact</code> vorhanden. Diese gibt allerdings keine
+Information darüber, wie viele Bytes der letzte Block hat, wenn
+der Puffer nicht vollständig gefüllt werden konnte. Wir müssten das
+im Voraus wissen. Beschaffen wir uns vorher die Länge der Datei,
+können wir die Anzahl <code>count</code> der vollen Blöcke und
+den Rest <code>rem</code> ausrechnen.
+
+<pre class="rust ibox">
+fn process_file(file: &amp;mut File, mut callback: impl FnMut(&amp;[u8]))
+-&gt; io::Result&lt;()&gt;
+{
+    let len = file.metadata()?.len();
+    let count = len/(BLOCK_SIZE as u64);
+    let rem = (len%(BLOCK_SIZE as u64)) as usize;
+    let mut buffer: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
+    for _ in 0..count {
+        file.read_exact(&amp;mut buffer)?;
+        callback(&amp;buffer);
+    }
+    if rem != 0 {
+        file.read_exact(&amp;mut buffer[..rem])?;
+        callback(&amp;buffer[..rem]);
+    }
+    Ok(())
+}
+</pre>
+
+<p>Allerdings ist diese Variante nicht mehr streamingfähig, denn bei
+einem Datenstrom muss die Länge nicht unbedingt im Vorhinein bekannt
+sein. Man muss nun wissen, dass <code>read_exact</code> auch nur mittels
+<code>read</code> implementiert wird, nämlich wird <code>read</code>
+solange aufgerufen, bis der Puffer gefüllt ist. Da
+<code>read_exact</code> nicht besonders kompliziert ist, bietet sich
+die Formulierung einer eigenen angepassten Variante an.
+
+<pre class="rust ibox">
+fn read_exact(file: &amp;mut impl Read, mut buffer: &amp;mut [u8])
+-&gt; io::Result&lt;usize&gt;
+{
+    let mut sum = 0;
+    while !buffer.is_empty() {
+        let n = file.read(&amp;mut buffer)?;
+        if n == 0 {break;}
+        buffer = &amp;mut buffer[n..];
+        sum += n;
+    }
+    Ok(sum)
+}
+
+fn process_file(file: &amp;mut impl Read,
+    mut callback: impl FnMut(&amp;[u8])
+) -&gt; io::Result&lt;()&gt;
+{
+    let mut buffer = [0; BLOCK_SIZE];
+    loop {
+        let n = read_exact(file, &amp;mut buffer)?;
+        if n != 0 {callback(&amp;buffer[..n]);}
+        if n &lt; BLOCK_SIZE {break;}
+    }
+    Ok(())
+}
+</pre>
+
+<p>Den Typ <code>File</code> habe ich zusätzlich gegen Polymorphie
+über alle Typen mit Trait <code>Read</code> ersetzt. Das erlaubt auch,
+einfach mal so <code>BufReader</code> dazwischen zu klemmen. Die Aufrufe
+von <code>read</code> können unter Umständen einen gewissen Aufwand
+bedeuten. Falls <code>BLOCK_SIZE</code> recht klein ist, wäre es
+besser, man hätte noch einen größeren Puffer dazwischen, damit die
+Anzahl der Aufrufe von <code>read</code> gering bleibt. Das geht
+nun super einfach:
+
+<pre class="rust ibox">
+fn main() -&gt; io::Result&lt;()&gt; {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    let mut file = io::BufReader::new(File::open(&amp;argv[1])?);
+    process_file(&amp;mut file, |data| {
+        println!("{}", data.len());
+    })
+}
+</pre>
+
+<h3 id="Dateien-schreiben">Dateien schreiben</h3>
+
+<p>Daten in Dateien schreiben ist denkbar einfach. Man erzeugt
+einfach eine neue Datei und schreibt die Daten da rein.
+
+<pre class="rust ibox">
+use std::{io, io::Write, fs::File};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut file = File::create("Datei.txt")?;
+    file.write_all("Daten".as_bytes())?;
+    Ok(())
+}
+</pre>
+
+<p>Falls die Datei schon vorhanden war, wird sie überschrieben.
+Manchmal möchte man nicht, dass Dateien einfach so überschreibbar
+sind, das ist vor allem wichtig bei Programmen die mit Benutzern
+interagieren. Man kann vor dem Schreiben der Datei prüfen, ob der
+angegebene Pfad schon existiert. Dies lässt sich wie folgt
+bewerkstelligen:
+
+<pre class="rust ibox">
+use std::{io, io::Write, fs::File, path::Path};
+
+fn write(path: &amp;str, data: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+    if Path::new(path).exists() {
+        Err(io::Error::new(io::ErrorKind::AlreadyExists,
+            format!("Pfad '{}' existiert bereits", path)))
+    } else {
+        let mut file = File::create(path)?;
+        file.write_all(data)
+    }
+}
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    write("Datei.txt", "Daten".as_bytes())?;
+    Ok(())
+}
+</pre>
+
+<h3 id="Stroeme">Datenströme</h3>
+
+<p>Einen Datenstrom kann man als eine Datei verstehen, deren
+Ende nicht im Voraus bekannt ist. Damit verbieten sich per se
+alle Algorithmen, welche die Datei zur Verarbeitung zunächst
+gänzlich einlesen wollen. Das Einlesen der Daten muss stattdessen
+auf irgendeine Art häppchenweise vonstattengehen.
+
+<p>Betrachten wir beispielhaft <code>/dev/urandom</code>, den
+Zufallszahlengenerator des Betriebssystems. Diese Gerätedatei
+liefert einen endlosen Strom gleichverteilt zufälliger Bytes.
+Das folgende Programm zeigt, wie sich damit Zufallszahlen
+des Typs <code>u32</code> erzeugen lassen.
+
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+use std::{thread::sleep, time::Duration};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut buffer: [u8; 4] = [0; 4];
+    let mut file = fs::File::open("/dev/urandom")?;
+    loop {
+        file.read_exact(&amp;mut buffer)?;
+        let value = u32::from_ne_bytes(buffer);
+        println!("0x{:08x}", value);
+        sleep(Duration::from_millis(1000));
+    }
+}
+</pre>
+
+<p>Eine Alternative zum gezeigten Ansatz besteht in der Umwandlung
+der Datei in einen Iterator über ihre Bytes. Weil Iteratoren endlos
+sein dürfen, eignen sie sich auch zur Beschreibung von Datenströmen.
+
+<p>Das folgende Programm zeigt, wie der Zufallszahlengenerator
+des Betriebssystems zur Simulation eines Spielwürfels genutzt
+werden kann. Zur Berechnung der Ergebnisse kommt hierbei die
+Verwerfungsmethode zur Anwendung.
+
+<pre class="rust ibox">
+use std::{fs, io, io::Read};
+use std::{thread::sleep, time::Duration};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let file = fs::File::open("/dev/urandom")?;
+    for byte in file.bytes() {
+        let value = byte? &amp; 0b111;
+        if value &gt; 5 {continue;}
+        println!("{}", value + 1);
+        sleep(Duration::from_millis(1000));
+    }
+    Ok(())
+}
+</pre>
+
+</body>
+</html>
+

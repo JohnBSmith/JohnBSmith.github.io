@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Datenstrukturen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Stapel">Dynamische Stapel</a>
+<li><a href="#Listen">Einfach verkettete Listen</a>
+<li><a href="#Baeume">Bäume</a>
+</ol>
+
+<h2 id="Stapel">Dynamische Stapel</h2>
+
+<p>Es gibt unterschiedliche Möglichkeiten, einen Stapel zu
+implementieren. Man kann die Implementation auch verbergen und den
+Stapel damit zu einem abstrakten Datentyp machen. Im folgenden
+konstruieren wir einen Stapel als einfach verkettete Liste, weil das
+zunächst am einfachsten ist. Ein Knoten enthält dazu ein Datenfeld
+<code>data</code> und einen Zeiger auf den nächsten Knoten. Da der
+Zeiger am Grund des Stapels keinen Nachfolger besitzt, müssen wir
+den Zeiger zu einer Option machen.
+
+<p>Der Stapel ist dann ein Zeiger auf die Stapeloberseite. Die
+Liste verläuft von der Oberseite aus in Richtung Grund. Da
+der Stapel auch leer sein darf, muss der Zeiger eine Option sein.
+
+<p>Der Stapel besitzt zunächst zwei Methoden. Die Methode
+<code>push</code> legt ein Element auf den Stapel. Die
+Methode <code>pop</code> nimmt ein Element vom Stapel herunter und
+gibt es als Wert zurück.
+
+<pre class="rust ibox">
+struct Node&lt;T&gt; {
+    data: T,
+    next: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+pub struct Stack&lt;T&gt; {
+    top: Option&lt;Box&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    pub fn new() -&gt; Self {
+        Stack {top: None}
+    }
+    pub fn push(&amp;mut self, x: T) {
+        let node = self.top.take();
+        self.top = Some(Box::new(Node {data: x, next: node}));
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if let Some(node) = self.top.take() {
+            self.top = node.next;
+            Some(node.data)
+        } else {
+            None
+        }
+    }
+}
+
+fn main() {
+    let mut a: Stack&lt;i32&gt; = Stack::new();
+    a.push(1);
+    a.push(2);
+    println!("{:?}", a.pop());
+    println!("{:?}", a.pop());
+    println!("{:?}", a.pop());
+}
+</pre>
+
+<p>Für einfach verkettete Listen gibt es auch eine alternative
+Darstellung:
+<pre class="rust ibox">
+enum List&lt;T&gt; {
+    Nil, Node{data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+
+<p>Das führt zu einer leicht modifzierten, aber semantisch äquivalenten
+Implementation:
+
+<pre class="rust ibox">
+pub enum Stack&lt;T&gt; {
+    Nil, Node {data: T, next: Box&lt;Stack&lt;T&gt;&gt;}
+}
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    pub fn new() -&gt; Self {
+        Stack::Nil
+    }
+    pub fn push(&amp;mut self, x: T) {
+        let node = std::mem::replace(self, Stack::Nil);
+        *self = Stack::Node {data: x, next: Box::new(node)};
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        match std::mem::replace(self, Stack::Nil) {
+            Stack::Node {data, next} =&gt; {
+                *self = *next;
+                Some(data)
+            },
+            Stack::Nil =&gt; None
+        };
+    }
+}
+
+fn main() {
+    let mut a: Stack&lt;i32&gt; = Stack::new();
+    a.push(1);
+    a.push(2);
+    println!("{:?}", a.pop());
+    println!("{:?}", a.pop());
+    println!("{:?}", a.pop());
+}
+</pre>
+
+
+<h2 id="Listen">Einfach verkettete Listen</h2>
+
+<p>Die Liste soll aus Knoten bestehen. Jeder Knoten enthält ein
+Datenfeld <code>data</code> und einen Zeiger <code>next</code> auf den
+nächsten Knoten. Da der letzte Knoten keinen Nachfolger besitzt, müssen
+wir den Zeiger <code>next</code> zu einer Option machen.
+
+<p>Die Liste ließe sich nun als Zeiger <code>first</code> auf den
+ersten Knoten betrachten. Da die Liste aber leer sein darf, muss
+<code>first</code> eine Option sein, denn sobald ein Knoten vorhanden
+wäre, müsste auch das Datenfeld zu diesem Knoten vorhanden sein.
+
+<p>Die Liste soll außerdem eine Methode <code>push</code> besitzen,
+die ein Element an das Ende der Liste hinzufügt. Um dieses zu erreichen,
+müsste die Liste von vorne bis hinten iteriert werden, da es nur ein
+Zeiger auf den Anfang gibt. Da dies ineffizient ist, speichern wir
+zusätzlich auch einen Zeiger auf das Ende. Da es nun zwei Zeiger auf
+denselben Knoten geben kann, müssen wir <code>Rc</code> benutzen, denn
+<code>Box</code> erlaubt keinen gemeinsamen Besitz. Der Inhalt von
+<code>Rc</code> ist jedoch unveränderlich. Daher benötigen wir eine
+Zelle <code>RefCell</code>, die einen darin veränderlichen Inahlt
+ermöglicht. Somit bekommt die Typdefinition schließlich die
+folgende Gestalt:
+
+<pre class="rust ibox">
+type RcCell&lt;T&gt; = Rc&lt;RefCell&lt;T&gt;&gt;;
+
+struct Node&lt;T&gt; {
+    data: T,
+    next: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+struct List&lt;T&gt; {
+    first: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;,
+    last: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;
+}
+</pre>
+
+<p>Zustäzlich bräuchten wir einen Iterator, der durch die
+Liste iteriert, und darauf aufbauend eine Prozedur zur Ausgabe.
+Der Einfachheit halber führen wir den Iterator klonend aus.
+Die folgende Implementation enthält gleich alles
+in einem Rutsch.
+
+<pre class="rust ibox">
+use std::rc::Rc;
+use std::cell::RefCell;
+use std::fmt;
+
+type RcCell&lt;T&gt; = Rc&lt;RefCell&lt;T&gt;&gt;;
+
+struct Node&lt;T&gt; {
+    data: T,
+    next: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+struct List&lt;T&gt; {
+    first: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;,
+    last: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+impl&lt;T&gt; List&lt;T&gt; {
+    fn new() -&gt; Self {
+        List{first: None, last: None}
+    }
+    fn push(&amp;mut self, x: T) {
+        let node = Rc::new(RefCell::new(Node {data: x, next: None}));
+        if let Some(last) = &amp;self.last {
+            last.borrow_mut().next = Some(node.clone());
+            self.last = Some(node);
+        } else {
+            self.first = Some(node.clone());
+            self.last = Some(node);
+        }
+    }
+}
+
+impl&lt;T&gt; List&lt;T&gt; {
+    fn iter(&amp;self) -&gt; ListIterator&lt;T&gt; {
+        ListIterator{node: self.first.clone()}
+    }
+}
+
+struct ListIterator&lt;T&gt; {
+    node: Option&lt;RcCell&lt;Node&lt;T&gt;&gt;&gt;
+}
+
+impl&lt;T: Clone&gt; Iterator for ListIterator&lt;T&gt; {
+    type Item = T;
+    fn next(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if let Some(node) = self.node.take() {
+            let data = node.borrow().data.clone();
+            self.node = node.borrow().next.clone();
+            Some(data)
+        } else {
+            None
+        }
+    }
+}
+
+impl&lt;T: Clone + fmt::Display&gt; fmt::Display for List&lt;T&gt; {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "[")?;
+        let mut first = true;
+        for x in self.iter() {
+            if first {first = false;} else {write!(f, ", ")?;}
+            write!(f, "{}", x)?;
+        }
+        write!(f, "]")
+    }
+}
+
+macro_rules! list {
+    ( $( $x:expr ),* ) =&gt; {{
+        let mut _a_ = List::new();
+        $(_a_.push($x);)*
+        _a_
+    }}
+}
+
+fn main() {
+    let a: List&lt;i32&gt; = list![1, 2, 3, 4];
+    println!("{}", a);
+}
+</pre>
+
+
+<h2 id="Baeume">Bäume</h2>
+
+<p>Baumstrukturen lassen sich wie einfach verkettete Listen als
+Enumeration formulieren. Algorithmen für Bäume können hochkompliziert
+ausfallen, besonders wenn diese einer Balancierung unterworfen
+werden müssen um die Rekursionstiefe möglichst niedrig zu halten.
+
+<p>Formulieren wir dann doch zunächst eine Funktion <code>depth</code>
+zur Ermittlung der Tiefe eines Binärbaums. In puristischer Form
+fällt der Algorithmus selbst rekursiv aus, das ist typisch bei
+Algorithmen für Baumstrukturen.
+
+<pre class="rust ibox">
+enum Tree&lt;T&gt; {
+    Empty,
+    Leaf(T),
+    Node(Box&lt;Tree&lt;T&gt;&gt;, Box&lt;Tree&lt;T&gt;&gt;)
+}
+impl&lt;T&gt; Tree&lt;T&gt; {
+    fn node(x: Tree&lt;T&gt;, y: Tree&lt;T&gt;) -&gt; Self {
+        Tree::Node(Box::new(x), Box::new(y))
+    }
+}
+
+fn depth&lt;T&gt;(t: &amp;Tree&lt;T&gt;) -&gt; u32 {
+    match t {
+        Tree::Empty =&gt; 0,
+        Tree::Leaf(_) =&gt; 1,
+        Tree::Node(x, y) =&gt; 1 + depth(x).max(depth(y))
+    }
+}
+
+fn main() {
+    let t: Tree&lt;char&gt; = Tree::node(
+        Tree::node(Tree::Leaf('A'), Tree::Empty),
+        Tree::Leaf('B')
+    );
+    println!("{}", depth(&amp;t));
+}
+</pre>
+
+
+</body>
+</html>
+

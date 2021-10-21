@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Affine und regionale Typisierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Zeiger">Ungezügelte Zeiger</a>
+<li><a href="#Korrektheit">Korrektheit eines Typsystems</a>
+<li><a href="#Affin">Affine Typisierung</a>
+<li><a href="#Regional">Regionale Typisierung</a>
+</ol>
+
+<h2 id="Zeiger">Ungezügelte Zeiger</h2>
+
+<p>Bei der Programmierung tritt früher oder später der Bedarf nach
+dynamischer Speicherverwaltung auf. Die Idee dabei ist einfach:
+Man fragt einen Allokator nach freiem Haldenspeicher, arbeitet mit
+diesem und gibt den nicht benötigten Speicher später wieder frei.
+Zum Arbeiten mit dem Speicher benutzt man eine Referenz auf den
+Speicher, einen sogenannten Zeiger. Ein Zeiger ist dabei eigentlich
+nicht viel mehr als eine Variable, die die Speicheradresse des
+zugewiesenen Speichers enthält.
+
+<p>So einfach wie diese Überlegung auch erscheinen mag, sie öffnet
+die Büchse der Pandora, wie wir in Retrospektive sagen können.
+Wenn der Computer ein Programm ausführt, muss man sich das
+vorstellen wie eine Zustandsmaschine, ein System das Schrittweise
+von einem gültigen Zustand in den nächsten übergeht. Es kann nun
+Operationen geben die einen Übergang in einen ungültigen Zustand
+erlauben. Das korrekte Arbeiten des Systems mag aber empfindlich
+davon abhängen, sich immer in gültigen Zuständen zu bewegen.
+Dieses korrekte Arbeiten nennt man <i>Integrität</i> des Systems.
+Verlust der Integrität bedeutet im besten Fall, dass das System nach
+kurzer Zeit abstürzt. Problematischer ist es, wenn bis zum Absturz eine
+lange Zeit vergeht, was mit einer Verschleierung der Ursache des
+Problems einhergehen kann. Im schlimmsten Fall findet ein Angreifer
+oder eine Schadsoftware eine Sicherheitslücke, die zur
+Kompromittierung des Systems führt.
+
+<p>Bei der Ausführung von Programmen gibt es auf der untersten Ebene
+eine grundlegende Form von Integrität, die Gewährleistung dieser
+wird als <i>Speichersicherheit</i> (memory safety) bezeichnet.
+Beim Arbeiten mit Zeigern gibt es eine Reihe von
+unerlaubten Operationen, welche die Speichersicherheit
+unterminieren:
+
+<dl>
+<dt><b>Out of bounds access</b>
+<dd>Von der Adresse aus wird über ein Offset auf ein Datum zugegriffen,
+  das sich außerhalb des zugewiesenen Speichers befindet. Beim
+  schreibenden Zugriff spricht man auch einem Pufferüberlauf
+  (buffer overflow).
+
+<dt><b>Use after free</b>
+<dd>Man greift über einen Zeiger auf einen Speicherbereich zu,
+  der schon freigegeben wurde.
+
+<dt><b>Uninitialized variables</b>
+<dd>Zugriff auf Variablen, die noch nicht mit einem gültigen
+  Wert belegt sind.
+
+<dt><b>Aliasing</b>
+<dd>Die gleiche Region im Speicher wird von zwei Zeigern für
+unterschiedliche Zwecke benutzt. Dies ist eine Folge von
+Use after free.
+
+<dt><b>Double free</b>
+<dd>Es wird angewiesen, schon freigegebenen Speicher nochmals
+freizugeben. Dies ist auch eine Folge von Use after free.
+
+<dt><b>Invalid free</b>
+<dd>Es wird angewiesen, eine Speicheradresse freizugeben,
+die nicht zugewiesen wurde. Dies ist eine Folge von uninitialisierten
+Variablen.
+</dl>
+
+<p>Es ist nun so, dass die Situation schnell unübersichtlich werden
+kann. Im zugewiesenen Speicher lassen sich Strukturen oder Arrays
+von Strukturen speichern, die selbst wieder Zeiger auf weitere
+Strukturen enthalten können, diese können wieder Zeiger enthalten
+und so weiter. Es entstehen komplexe Datenstrukturen die man auch
+als gerichtete Graphen betrachten kann. Ein Zeiger ist dabei ein
+Pfeil von einem Knoten zu einem anderen. Diese Graphen können
+auch Zyklen enthalten, man spricht dann von zyklischen Datenstrukturen.
+
+<h2 id="Korrektheit">Korrektheit eines Typsystems</h2>
+
+<p>Es ist möglich das Typsystem so zu gestalten, dass es das sichere
+Arbeiten mit Zeigern erlaubt. Zur Einordnung klären wir zunächst
+ein paar allgemeine Grundbegriffe.
+
+<p>Ein Typsystem das in jedem Zustand nur solche Operationen
+zulässt, die die Integrität des Laufzeitsystems bewahren, heißt
+<i>korrekt</i> (sound) oder <i>typsicher</i> (type safe).
+Legt man das Verhalten eines Laufzeitsystems, das in einen ungültigen
+Zustand geraten ist, nicht weiter fest, spricht man von
+<i>undefiniertem Verhalten</i> (undefined behavior). Nämlich kann das
+genaue Verhalten ab einem ungültigen Zustand in der Implementation des
+Laufzeitsystems festgelegt sein. Dies ist dann ein technisches
+Detail des Laufzeitsystems, gehört bei diesem Ansatz also nicht
+mehr zur Spezifikation der Programmiersprache. Daher legt man das
+Verhalten als undefiniert fest, damit sich das Laufzeitsystem
+aussuchen kann, was dann zu tun ist.
+
+<p>Nur weil ein Typsystem korrekt ist, muss das nicht heißen,
+dass der Compiler dieses auch fehlerfrei umsetzt. Wie jede andere
+Software auch, kann ein Compiler alle möglichen Arten von Bugs
+enthalten. Ein Compiler der eine fehlerlose Typprüfung vornimmt
+und Maschinencode erzeugt, welcher der geforderten formalen
+Semantik entspricht, wird <i>zertifizierend</i> genannt.
+Die Programmierung eines zertifizierenden Compilers gilt als
+schwierig, man benötigt hierzu einen Theorembeweisassistent.
+Entsprechend wenige solcher Compiler sind verfügbar. Auch für Rust
+ist das Zukunftsmusik, denn der Rust-Compiler ist recht komplex,
+womit ein solches Unterfangen zur Mammut-Aufgabe wird. Man muss dabei
+beachten, dass ein entsprechender Beweis auch für das Compiler-Backend
+(den Code-Erzeuger) erbracht werden muss.
+
+<p>Übrigens erlauben auch Laufzeitprüfungen die Gewährleistung
+der Typsicherheit. Auf dieses Mittel greift man normalerweise dann
+zurück, wenn eine Prüfung zur Kompilierzeit zu schwierig wäre.
+
+<p>Out of bounds access verschwindet mit einer Laufzeitprüfung der
+Arraylänge. Hierzu wird ein aus Zeiger und Länge bestehendes Paar
+gespeichert, in Rust als <i>Slice</i> bezeichnet. Arrays fester Länge
+kennen ihre eigene Länge zur Kompilierzeit, haben also nur den Zeiger,
+was etwas effizienter ist. Auch in diesem Fall gibt es die
+Laufzeitprüfung der Arraylänge. Es gibt allerdings in vielen Fällen
+Formulierungen und Optimierungen mit denen man die Laufzeitprüfungen
+reduzieren kann oder ganz los wird.
+
+<h2 id="Affin">Affine Typisierung</h2>
+
+<p>Die Benutzung von Zeigern lässt sich so einschränken, dass die
+Speichersicherheit unverletzt bleibt. Out of bounds access wurde
+schon abgearbeitet. Es verbleiben noch uninitialisierte Variablen
+und Use after free bzw. Aliasing.
+
+<p>Uninitialisierte Variablen verschwinden mit der Festlegung,
+dass jede Variable vor dem Zugriff auf sie voll initialisiert
+sein muss indem der Variable ein Wert zugewiesen wird.
+Dies kann der Compiler durch Kontrollflussanalyse
+schon zur Kompilierzeit prüfen. 
+
+<p>Eine genaue Betrachtung von Use after free führt zu der folgenden
+Beobachtung. Es entsteht durch das Kopieren von Zeigern. Gäbe es
+immer nur einen gültigen Zeiger auf die Daten, würden die Daten also
+immer nur einen einzigen Besitzer haben, könnte man über diesen
+bedenkenlos auf die Daten zugreifen.
+
+<p>Unsere Überlegungen manifestieren sich im folgenden Formalismus:
+<ul>
+<li>Unique Ownership: Ein Wert hat zu jeder Zeit immer nur einen
+  einzigen Besitzer. Das heißt, auf die Daten zeigt immer nur
+  ein einziger Zeiger.
+<li>Move-Semantik: Variablenzuweisung <code>p&nbsp;=&nbsp;q</code>
+  führt dazu, dass <code>q</code> ungültig wird, sonst gäbe es zwei
+  Besitzer. Es handelt sich hierbei also anschaulich formuliert
+  um einen Wechsel des Besitzers. Ein ungültig gewordene Variable
+  ist gleichbedeutend mit einer uninitialisierten Variable.
+</ul>
+
+<p>Dieser Formalismus wird <i>affine Logik</i> genannt. Ein Typsystem,
+das diese umsetzt, nennt man <i>affin</i>.
+
+<h2 id="Regional">Regionale Typisierung</h2>
+
+<h3>Regionen</h3>
+
+<p>Die Beschränkung auf Move-Semantik ist ziemlich einschränkend.
+Viele Funktionen bleiben nicht Besitzer eines Wertes, sie borgen
+sich den Wert nur zum Lesen oder zur Manipulation aus.
+In einigen Fällen könnte man das zwar so formulieren, dass der Wert
+wieder als Rückgabewert auftaucht anstatt zu verschwinden, jedoch
+ist dies recht umständlich.
+
+<p>Stattdessen wollen wir das Ausborgen von Werten erlauben, indem
+ein Zeiger zum Wert an die Funktion übergeben wird. Wir sprechen
+von einer <i>Leihgabe</i>, engl. <i>borrow</i>.
+Dies wirft Probleme auf. Betrachten wir das folgende Programm.
+<pre class="rust ibox">
+fn main() {
+    let mut v: Vec&lt;u32&gt; = vec![0, 0, 0, 0];
+    let p: &amp;u32 = &amp;v[0];
+    v.push(0);
+    println!("{}", *p);
+}
+</pre>
+
+<p>Dieses Programm erzeugt als erstes ein dynamisches Feld
+<code>v</code>. Als nächstes lassen wir einen Zeiger <code>p</code>
+auf das erste Element des internen Puffers von <code>v</code> zeigen.
+Damit gibt es nun zwei Zeiger auf denselben Puffer, einmal den
+internen Zeiger von <code>v</code> und einmal <code>p</code>. Dies
+bezeichnet man als <i>Aliasing</i>. Die nächste Operation
+<code>v.push(0)</code> kann nun dazu führen, dass der interne Puffer
+realloziert wird. Gehen wir davon aus, dies geschieht.
+Hierdurch kommt es zu einer Zeiger-Invalidierung von <code>p</code>,
+womit <code>p</code> nunmehr ein hängender Zeiger ist. Die Benutzung
+<code>*p</code> in der nächsten Zeile ist dann undefiniertes
+Verhalten in Form von Use after free, weil der ursprüngliche
+Speicherbereich bereits an den Allokator freigegeben wurde. Dies stellt
+einen Bug dar, der im schlimmsten Fall eine Sicherheitslücke
+bedeuten kann.
+
+<p>Zwei kritische Beobachtungen:
+
+<ol>
+<li>Jede Besitzerschaft ist nur in einer bestimmten <i>Region</i>
+gültig. Für Rust sagt man, die Variable mit dieser Besitzererschaft
+besitzt eine begrenzte <i>Lebenszeit</i>. Damit es nicht zu Use after
+free kommt, muss jede Leihgabe innerhalb der Region liegen bzw. jede
+eine Leihgabe tragende Variable von begrenzterer Lebenszeit sein.
+
+<li>Eine geteilte Leihgabe an mehrere Variablen ist erlaubt, aber nur
+dann wenn die Variablen alle ausschließlich lesend auf den Wert
+zugreifen. Für eine Veränderung des Wertes bedarf es einer alleinigen
+Leihgabe.
+</ol>
+
+<h3>Lebenszeitverlängerung</h3>
+
+<p>Manchmal möchte man die Referenz auf einen Wert haben, welcher
+in einem bestimmten lexikalischen Bereich erzeugt wurde. Betrachten
+wir das folgende Programm.
+
+<pre class="rust ibox">
+enum Object {Int(i32), String(String)}
+
+fn print_object(x: &amp;Object) {
+    match x {
+        Object::Int(x) =&gt; println!("{}", x),
+        Object::String(x) =&gt; println!("{}", &amp;x)
+    }
+}
+
+fn main() {
+    print_object(&amp;Object::Int(12));
+    print_object(&amp;Object::String("Tee".to_string()));
+}
+</pre>
+
+<p>Angenommen, aus unerfindlichen Gründen ist nun eine Formulierung
+gesucht, bei welcher der Aufruf von <code>println</code> nur noch
+einmal vorkommt. Die naive Überlegung dazu ist:
+
+<pre class="rust ibox">
+fn print_object(x: &amp;Object) {
+    let s: &amp;str = match x {
+        Object::Int(x) =&gt; &amp;x.to_string(),
+        Object::String(x) =&gt; &amp;x
+    };
+    println!("{}", s);
+}
+</pre>
+
+<p>Das würgt der Compiler jedoch ab, weil die Lebenszeit der mit
+<code>x.to_string()</code> erzeugten Zeichenkette auf ihren
+lexikalischen Bereich beschränkt ist. Um ein wesentliches Problem
+handelt es sich hierbei aber nicht. Einführung einer zusätzlichen
+Variable sorgt für die gewünschte Verlängerung der Lebenszeit.
+
+<pre class="rust ibox">
+fn print_object(x: &amp;Object) {
+    let ts;
+    let s: &amp;str = match x {
+        Object::Int(x) =&gt; {ts = x.to_string(); &amp;ts},
+        Object::String(x) =&gt; &amp;x
+    };
+    println!("{}", s);
+}
+</pre>
+
+<p>Man würde nun auch gerne haben, dass die in <code>s</code>
+gespeicherte Referenz die Funktion verlassen kann. Hierzu kann der
+Smart-Pointer-Typ <code>Cow</code> herangezogen werden.
+
+<pre class="rust ibox">
+use std::borrow::Cow;
+
+enum Object {Int(i32), String(String)}
+
+impl Object {
+    fn as_str(&amp;self) -&gt; Cow&lt;str&gt; {
+        match self {
+            Object::Int(x) =&gt; Cow::Owned(x.to_string()),
+            Object::String(x) =&gt; Cow::Borrowed(&amp;x)
+        }
+    }
+}
+
+fn main() {
+    let x = Object::Int(12);
+    let y = Object::String("Tee".to_string());
+    println!("{}", x.as_str());
+    println!("{}", y.as_str());
+}
+</pre>
+
+<p>Explizit ausgeschrieben besitzt <code>as_str</code> die Signatur
+
+<pre class="rust ibox">
+fn as_str&lt;'a&gt;(&amp;'a self) -&gt; Cow&lt;'a, str&gt;.
+</pre>
+
+<p>Ein anderes Beispiel für die Notwendigkeit von Hilfsvariablen
+sind Trait-Objekte. Gerne schreiben würde man z.&nbsp;B. folgendes:
+
+<pre class="rust ibox">
+fn f1() -&gt; impl Fn(i32)-&gt;i32 {|x| x + 1}
+fn f2() -&gt; impl Fn(i32)-&gt;i32 {|x| 2*x}
+
+fn phi(n: i32) -&gt; i32 {
+    let f = if n == 1 {f1()} else {f2()};
+    f(10)
+}
+
+fn main() {
+    println!("{}, {}", phi(1), phi(2));
+}
+</pre>
+
+<p>Das soll bedeuten, in einer Fallunterscheidung wird eine
+der beiden (dynamisch erzeugten) Funktionen <code>f(x):=x+1</code> und
+<code>f(x):=2*x</code> gewählt. Nun verhält es sich so, dass die Typen
+von <code>f1()</code> und <code>f2()</code> unterschiedlich sind. Was
+die Typsignatur jetzt genau bedeutet, ist nicht so wichtig. Beide Typen
+implementieren aber denselben Trait. Um die beiden Typen gleich zu
+bekommen, müssen diese in Trait-Objekte umgewandelt werden. Man würde
+also gerne schreiben:
+<pre class="rust ibox">
+let f: &amp;dyn Fn(i32) -&gt; i32 = if n == 1 {&amp;f1()} else {&amp;f2()};
+</pre>
+
+<p>Das klappt wegen der Lebenszeitproblematik nicht. Wir könnten
+das durch Boxen umgehen, das ist möglich:
+
+<pre class="rust ibox">
+let f: Box&lt;dyn Fn(i32) -&gt; i32&gt; =
+    if n == 1 {Box::new(f1())} else {Box::new(f2())};
+</pre>
+
+<p>Allerdings führt das zu unnötigen Speicherallokationen.
+Die Lösung des Problems liegt wieder in der Benutzung von
+Hilfsvariablen:
+
+<pre class="rust ibox">
+let (tf1, tf2);
+let f: &amp;dyn Fn(i32) -&gt; i32 =
+    if n == 1 {tf1 = f1(); &amp;tf1} else {tf2 = f2(); &amp;tf2};
+</pre>
+
+</body>
+</html>
+

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Unendliche Datenstrukturen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Lazy-Evaluation">Lazy Evaluation</a>
+<li><a href="#Sharing">Sharing</a>
+</ol>
+
+<h2 id="Lazy-Evaluation">Lazy Evaluation</h2>
+
+<p>Bei <i>Lazy Evaluation</i>, auch <i>Bedarfsauswertung</i>
+genannt, wird ein Ausdruck nicht sofort ausgewertet, sondern
+erst dann, wenn der Wert auch benötigt wird.
+
+<p>Wir können Closures zur Implementation von Lazy Evaluation
+heranziehen.
+<pre class="rust ibox">
+macro_rules! lazy {
+    ($x:expr) =&gt; {Lazy {value: Box::new(move || $x)}}
+}
+
+struct Lazy&lt;T&gt; {
+    value: Box&lt;dyn Fn()-&gt;T&gt;
+}
+
+impl&lt;T&gt; Lazy&lt;T&gt; {
+    fn force(&amp;self) -&gt; T {(self.value)()}
+}
+</pre>
+
+<p>Als konkretes Beispiel soll ein unendlicher Baum
+formuliert werden.
+<pre class="rust ibox">
+struct Tree{
+    left: Lazy&lt;Tree&gt;,
+    right: Lazy&lt;Tree&gt;,
+    value: i32
+}
+
+fn tree(x: i32) -&gt; Tree {
+    Tree {
+        value: x,
+        left: lazy!{tree(x)},
+        right: lazy!{tree(x + 1)}
+    }
+}
+
+fn main() {
+    println!("{}",
+        tree(0).right.force().left.force().value
+    );
+}
+</pre>
+
+<p>Der Baum hat demnach die folgende Gestalt:
+<pre class="indent">
+                    0
+                   / \
+                  /   \
+                 /     \
+                /       \
+               /         \
+              /           \
+             /             \
+            /               \
+           /                 \
+          /                   \
+         0                     1
+        / \                   / \
+       /   \                 /   \
+      /     \               /     \
+     /       \             /       \
+    0         1           1         2
+   / \       / \         / \       / \
+  0   1     1   2       1   2     2   3
+ / \ / \   / \ / \     / \ / \   / \ / \
+.. ... .. .. ... ..   .. ... .. .. ... ..
+</pre>
+
+<p>Auch if-Ausdrücke lassen sich mit Lazy Evaluation darstellen:
+<pre class="rust ibox">
+fn if_cond&lt;T&gt;(cond: bool, a: Lazy&lt;T&gt;, b: Lazy&lt;T&gt;) -&gt; T {
+    (if cond {a} else {b}).force()
+}
+
+fn fac(n: u32) -&gt; u32 {
+    if_cond(n == 0, lazy!{1}, lazy!{n*fac(n - 1)})
+}
+</pre>
+
+<h2 id="Sharing">Sharing</h2>
+
+<p>Betrachten wir das folgende Programm:
+<pre class="rust ibox">
+fn log(value: i32) -&gt; i32 {
+    println!("Auswertung");
+    value
+}
+
+fn main() {
+    let x = lazy!{log(0)};
+    println!("{}", x.force());
+    println!("{}", x.force());
+}
+</pre>
+
+<p>Hier findet die Berechnung des Wertes <code>x</code> zweimal
+statt. Bei referentiell transparenten Funktionen ist die Wiederholung
+von Berechnungen eigentlich nicht notwendig. Diesem Umstand könnte man
+so Rechnung tragen:
+
+<pre class="rust ibox">
+use std::cell::RefCell;
+
+macro_rules! lazy {
+    ($x:expr) =&gt; {Lazy {cell: RefCell::new(
+        Thunk::Calc(Box::new(move || $x))
+    )}}
+}
+
+enum Thunk&lt;T&gt; {
+    Calc(Box&lt;dyn Fn() -&gt; T&gt;),
+    Value(T)
+}
+
+struct Lazy&lt;T&gt; {
+    cell: RefCell&lt;Thunk&lt;T&gt;&gt;
+}
+
+impl&lt;T: Clone&gt; Lazy&lt;T&gt; {
+    fn force(&amp;self) -&gt; T {
+        let mut cell = self.cell.borrow_mut();
+        match &amp;*cell {
+            Thunk::Calc(calc) =&gt; {
+                let value = calc();
+                *cell = Thunk::Value(value.clone());
+                value
+            },
+            Thunk::Value(value) =&gt; {
+                value.clone()
+            }
+        }
+        
+    }
+}
+</pre>
+
+<p>Es verbleiben noch zwei Probleme. Zum einen würde man <code>Fn</code>
+gerne durch <code>FnOnce</code> ersetzen. Zum anderen muss man
+<code>T: Clone</code> entferenen und stattdessen <code>x.force()</code>
+vom Typ <code>&amp;T</code> bzw. <code>&amp;mut T</code> haben.
+
+</body>
+</html>
+

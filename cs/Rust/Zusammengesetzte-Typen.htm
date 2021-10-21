@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Zusammengesetzte Typen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Strukturen">Strukturen</a>
+<li><a href="#Enumerationen">Enumerationen</a>
+<li><a href="#Nominal">Nominale Typisierung</a>
+<li><a href="#Methoden">Methoden</a>
+<li><a href="#Algebra">Algebraischer Aspekt</a>
+</ol>
+
+<h2 id="Strukturen">Strukturen</h2>
+<p>Wenn man sich einen Datentyp zunächst als Menge von zulässigen Werten
+vorstellt, dann ergibt auch das kartesische Produkt von zwei oder
+mehr Datentypen einen Sinn. Sind <code>A</code> und <code>B</code> zwei
+Datentypen, dann ist das kartesische Produkt die Menge
+
+<p class="math">A &times; B
+:= {(<var>a</var>,&nbsp;<var>b</var>) | <var>a</var>&in;A &and; <var>b</var>&in;B},
+
+<p>das ist die Menge aller geordneten Paare, bei denen die erste
+Komponente den Typ <code>A</code> und die zweite Komponente
+den Typ <code>B</code> besitzt. In Rust schreibt man diesen Typ
+als <code>(A,B)</code>. Zu beachten ist, dass die Indizierung
+nicht bei eins startet, sondern bei null. Ein Beispiel dazu:
+
+<pre class="rust ibox">
+fn main() {
+    let t: (u32, u32) = (360, 240);
+    println!("({}|{})", t.0, t.1);
+}
+</pre>
+
+<p>Aus ergonomischen Gründen ist es nun wünschenswert,
+die Komponenten der Tupel nicht unter ihrem Index anzusprechen,
+sondern über Bezeichner. Man schreibt in Rust dann z.&nbsp;B.
+<code>struct Name {a: A, b: B}</code>, wobei die erste Komponente unter
+dem Bezeichner <code>a</code> und die zweite unter <code>b</code>
+angesprochen wird. Ein Beispiel dazu:
+
+<pre class="rust ibox">
+struct Point {
+    a: u32, b: u32
+}
+
+fn main() {
+    let t: Point = Point {a: 360, b: 240};
+    println!("({}|{})", t.a, t.b);
+}
+</pre>
+
+<p>Ein als <code>struct</code> definierter zusammengesetzer Datentyp
+wird als <i>Struktur</i> bezeichnet. In der theoretischen Informatik
+spricht man vom <i>Produkt</i>. Bei Pascal und verwandten
+Sprachen kennt man die synonymen Begriffe <i>Record</i>
+und <i>Verbund</i>.
+
+
+<h2 id="Enumerationen">Enumerationen</h2>
+<p>Stellen wir uns einen Datentyp zunächst wieder als Menge von
+zulässigen Werten vor, dann ergibt auch die disjunkte Vereinigung
+von zwei oder mehr Datentypen einen Sinn. Sind <code>A</code>
+und <code>B</code> zwei Datentypen, dann ist disjunkte Vereinigung
+die Menge
+
+<p class="math">A + B
+:= {(0,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;A}
+&cup; {(1,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;B}.
+
+<p>Die disjunkte Vereinigung, auch <i>Summe</i> genannt,
+wird demnach als Zusammenfassung der Wertemengen betrachtet,
+wobei aber ein <i>Tag</i>, hier <code>0</code> oder <code>1</code>,
+eine strenge Unterscheidung der Wertemengen ermöglicht.
+
+<p>Aus ergonomischen Gründen ist es nun wieder wünschenswert,
+wenn Bezeichner anstelle von Indizes als Tags verwendet werden.
+Eine solche Konstruktion wird in Rust als <code>enum</code> bezeichnet.
+Ein Beispiel:
+
+<pre class="rust ibox">
+enum E {
+    Int(i32), Char(char)
+}
+
+fn print(x: E) {
+    match x {
+        E::Int(i) =&gt; {println!("Zahl: {}.", i);},
+        E::Char(c) =&gt; {println!("Zeichen: {}.", c);}
+    }
+}
+
+fn main() {
+    let x: E = E::Int(12);
+    let y: E = E::Char('y');
+    print(x);
+    print(y);
+}
+</pre>
+
+<p>Hier ist <code>E</code> eine disjunkte Vereinigung mit den
+Tags <code>E::Int</code> und <code>E::Char</code>.
+
+<p>Synonym zu <i>Enumeration</i> und <i>Summe</i> spricht man
+auch von einer <i>disjunkten Vereinigung</i>
+(engl. <i>disjoint union</i>), <i>diskriminierten Vereinigung</i>
+(engl. <i>tagged union</i>), oder einem <i>Koprodukt</i>.
+
+<h2 id="Nominal">Nominale Typisierung</h2>
+
+<p>Zu unterscheiden ist zwischen <i>struktureller</i> und
+<i>nominaler</i> Typisierung. Bei der strukturellen Typisierung &ndash;
+man spricht auch von anonymen Typen &ndash; stimmen zwei Typen genau
+dann überein, wenn sie von gleicher Gestalt sind. Bei der nominalen
+Typisierung stimmen zwei Typen genau dann überein, wenn sie denselben
+Namen haben, dessen Definition aber einmalig ist. Die nominale
+Typisierung behaftet so gesagt einen strukturellen Typ mit einem
+im gesamten Programm und der gesamten Welt einzigartigen Namen, welcher
+den resultierenden Typ unterschiedlich von allen anderen Typen macht.
+
+<p>Die folgende Tabelle gibt Aufschluss, wie nominale und
+strukturelle Typen in Rust erstellt werden:
+<table class="bt indent">
+<tr>
+<th>
+<th>Nominal
+<th>Strukturell
+<tr>
+<th>Struktur
+<td><code>struct Name{x:X,y:Y}</code>
+<td>nicht vorhanden
+<tr>
+<th>Tupel
+<td><code>struct Name(X,Y);</code>
+<td><code>(X,Y)</code>
+<tr>
+<th>Enumeration
+<td><code>enum Name{A(X),B(Y)}</code>
+<td>nicht vorhanden
+<tr>
+<th>Feld
+<td><code>struct Name([X;2]);</code>
+<td><code>[X;2]</code>
+</table>
+
+<p>Die strukturelle Typisierung erlaubt vor allem Ergonomie und
+Komfort. Die nominale Typisierung ist dagegen grundlegend für die
+Typsicherheit.
+
+<p>Man kann zu jedem beliebigen Typ <code>T</code> einen neuen
+nominalen erzeugen, indem man ihn als <code>struct Name(T)</code>
+einhüllt. Dieser neue Typ wird <i>Hülle</i>, engl. <i>wrapper</i>,
+genannt.
+
+<p>Die Konstruktion komplexer struktureller Typen führt nun zu langer
+Syntax, &ndash; da tut sich die Frage auf, ob sich das denn nicht abkürzen
+lässt. Dies geschieht mit dem Schlüsselwort <code>type</code>, welches
+einen <i>Typalias</i> einleitet. Schreibt man also
+<pre class="rust ibox">
+type Pair = (i32, i32);
+</pre>
+
+<p>dann ist <code>Pair</code> an jeder Stelle des Moduls
+synonym zu <code>(i32,i32)</code>.
+
+<h2 id="Methoden">Methoden</h2>
+
+<p>Jedem neu definierten nominalen Typ darf man angebundene
+Funktionen hinzufügen. Dies geschieht durch Platzierung der
+Funktionsdefinitionen in einen Block, eingeleitet mit dem Schlüsselwort
+<code>impl</code> und dem Typname.
+Bei den angebundenen Funktionen gibt es eine Unterscheidung
+zwischen Methoden und assoziierten Funktionen.
+Die <i>assoziierten Funktionen</i> sind ganz gewöhnliche Funktionen,
+während die <i>Methoden</i> das Argument <code>self</code>
+besitzen. Das Argument <code>self</code> ist zunächst ein gewöhnliches
+Argument, erlaubt aber beim Aufruf die Punkt-Schreibweise.
+
+<p>Das folgende Beispiel zeigt einen Typ für Koordinatenvektoren in
+der Ebene. Hinzugefügt ist eine assoziierte Funktion <code>new</code>
+zur Konstruktion und eine Methode <code>abs</code> zur Berechnung des
+Vektorbetrags.
+
+<pre class="rust ibox">
+struct Vector {x: f64, y: f64}
+
+impl Vector {
+    fn new(x: f64, y: f64) -&gt; Self {
+        Self {x, y}
+    }
+    fn abs(&amp;self) -&gt; f64 {
+        f64::sqrt(self.x*self.x + self.y*self.y)
+    }
+}
+
+fn main() {
+    let v = Vector::new(1.0, 1.0);
+    println!("{}", v.abs());
+}
+</pre>
+
+<p>Hier ist <code>Self</code> ein Typalias für <code>Vector</code>.
+Außerdem ist <code>&amp;self</code> eine Kurzschreibweise für
+<code>self:&nbsp;&amp;Self</code>. Die Punkt-Schreibweise
+<code>v.abs()</code> ist eine Kurzschreibweise für
+<code>Vector::abs(&amp;v)</code>. Somit ist die folgende Angabe
+äquivalent:
+
+<pre class="rust ibox">
+impl Vector {
+    fn new(x: f64, y: f64) -&gt; Vector {
+        Vector {x, y}
+    }
+    fn abs(self: &amp;Vector) -&gt; f64 {
+        f64::sqrt(self.x*self.x + self.y*self.y)
+    }
+}
+
+fn main() {
+    let v = Vector::new(1.0, 1.0);
+    println!("{}", Vector::abs(&amp;v));
+}
+</pre>
+
+<h2 id="Algebra">Algebraischer Aspekt</h2>
+
+<p>Als Zusammensetzung aus Enumerationen und Strukturen bzw. Tupeln
+konstruierte Typen bezeichnet man auch als <i>algebraische</i>
+Datentypen. Es verhält sich nämlich so, dass man mit Typen
+algebraisch rechnen kann.
+
+<p>Betrachten wir einmal diese Komposition:
+
+<pre class="rust ibox">
+enum List&lt;T&gt; {
+    Nil, Node {data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+<p>bzw.
+<pre class="rust ibox">
+enum List&lt;T&gt; {
+    Nil, Node(T, Box&lt;List&lt;T&gt;&gt;)
+}
+</pre>
+
+<p>Aus dieser rekursiven Definition entstehen einfach verkettete
+Listen:
+
+<div class="indent"><img src="img/List.png">
+</div>
+
+<p>Vergessen wir nun einmal all die nominale Typisierung und
+betrachten nur die Struktur. Die Indirektion über einen Zeiger
+(<code>Box</code>) ist in Rust notwendig, damit ein Knoten feste
+Speichergröße hat, kann aber für die weitere Betrachtung fortgelassen
+werden. Der Typparameter kann außerdem entfernt werden, wenn
+<code>T</code> ein fester Typ ist. Das ergibt dann:
+
+<pre class="rust indent">
+enum List {Nil, Node(T, List)}
+</pre>
+
+<p>Man schreibt nun <code>A*B</code> anstelle von <code>(A,B)</code>,
+und <code>A+B</code> anstelle <code>enum {A,B}</code>. 
+Außerdem ist <code>Nil</code> strukturell gesehen nichts anderes als
+der Typ <code>Unit</code>, oder <code>()</code> in Rust, der
+nur das leere Tupel <code>()</code> enthält. Algebraisch sind
+Typen durch die Anzahl ihrer Elemente charakterisiert, es gilt
+also <code>Unit&nbsp;=&nbsp;1</code>. Damit bekommt man 
+<pre class="indent">
+List := 1 + T*List.
+</pre>
+
+<p>Da steht nun so eine Fixpunktgleichung. Die erste Iteration
+und anschließendes Ausmultiplizieren führt zu
+<pre class="indent">
+List = 1 + T*(1 + T*List) = 1 + T + T*T*List.
+</pre>
+
+<p>Ingesamt ergibt sich die unendliche Enumeration
+<pre class="indent">
+List = 1 + T + T*T + T*T*T + T*T*T*T + ...
+</pre>
+
+<p>Und dies ist genau die Struktur dieses Datentyps. Die
+Enumeration zählt die Möglichkeiten der Liste auf, eine bestimmte
+Länge zu haben.
+
+</body>
+</html>
+

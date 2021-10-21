@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Darstellung im Speicher</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Ausrichtung">Ausrichtung</a>
+<li><a href="#Padding">Padding</a>
+<li><a href="#Groesse">Größe von Typen</a>
+<li><a href="#Nischen">Nischen</a>
+<li><a href="#Transmutation">Transmutation</a>
+</ol>
+
+<h2 id="Ausrichtung">Ausrichtung</h2>
+
+<p>Dieses Kapitel beschäftigt sich mit der Darstellung von Werten im
+Speicher. Der Wert eines Typs ist zunächst ein gedankliches Konzept,
+so wie das bei einem mathematischen Objekt ist. Ein mathematisches
+Objekt wie eine Zahl befindet sich in einem platonischen Universum, so
+nennt man den Raum aller erdenklichen Objekte. Erst die Darstellung der
+Zahl durch ein Zahlensystem ermöglicht ihre physische Erfassung. Wir
+schreiben ja immer nur die Ziffern einer Zahl auf, die Zahl selbst
+haben wir nie gesehen. Je nach Zahlensystem nimmt die Darstellung
+der Zahl dabei eine andere Gestalt an.
+
+<p>Auch zur physischen Speicherung eines Wertes bedarf es offensichtlich
+einer Darstellung. Werte werden in Computern als Binärzahlen
+abgelegt, soviel ist klar. Bei der Darstellung im Speicher
+gibt es allerdings noch ein wenig mehr zu beachten. Das fängt schon
+damit an, dass die Bits immer zu Gruppen aus acht, den Bytes
+zusammengefasst sind. Die Kenntnis der Darstellung zerbricht im
+Nebeneffekt die Abstraktion zum benutzten Computer.
+
+<p>Jedes im Arbeitsspeicher abgelegte Datum besitzt eine Adresse.
+Enthält ein Zeiger diese Adresse als Wert, bekommt das Programm
+durch Dereferenzierung des Zeigers den Zugriff auf das Datum.
+Eine Adresse ist die Anzahl an Bytes, um die der Zeiger vom Ursprung
+des Speichers aus verschoben wurde.
+
+<p>Es verhält sich nun für gewöhnlich aber so, dass ein Datum nicht
+jede mögliche Adresse besitzen kann. Computer arbeiten intern
+mit <i>Datenworten</i>, kurz <i>Worten</i>. Typische Wortgrößen
+moderner Architekturen sind 32&nbsp;Bit und 64&nbsp;Bit. Für den
+Computer sind die Elemente des Speichers nicht die Bytes, sondern die
+Worte, der Computer kann sie effizient laden und speichern. Infolge
+ist es günstig, wenn ein Datum im Speicher so ausgerichtet ist, dass
+es möglichst wenige Worte überspannt, denn andernfalls würde das
+Laden und Speichern eine erhöhte Anzahl an Operationen erfordern.
+
+<p>Betrachten wir eine Architektur mit der Wortgröße 32.
+Jede Zahl vom Typ <code>u32</code> ist in dieser Architektur gemäß des
+Gesagten so im Speicher ausgerichtet, dass ihre Adresse ein
+ganzzahliges Vielfaches von vier ist. Das heißt, die
+Zusicherung in
+
+<pre class="rust ibox">
+let x: u32 = 0;
+let address = &amp;x as *const u32 as usize;
+assert!(address % 4 == 0);
+</pre>
+
+<p>ist immer erfüllt, und für
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let address = &amp;a[0] as *const u32 as usize;
+assert!(address % 4 == 0);
+</pre>
+
+<p>gilt dasselbe. Schärfer setzt uns die Standardbibliothek
+unmissverständlich über
+
+<pre class="rust ibox">
+std::mem::align_of::&lt;u32&gt;() == 4
+</pre>
+
+<p>in Kenntnis.
+
+<h2 id="Padding">Padding</h2>
+
+<p>Die Ausrichtung betrifft im weiteren Fortgang gleichermaßen die
+Einträge von Tupeln und Strukturen. Betrachten wir dazu:
+
+<pre class="rust ibox">
+struct S {i: u32, b: u8}
+
+assert_eq!(4, std::mem::align_of::&lt;S&gt;());
+assert_eq!(8, std::mem::size_of::&lt;S&gt;());
+</pre>
+
+<p>Die Ausrichtung der Struktur ist gleich der des Eintrags
+<code>i</code>. Das erscheint logisch, denn wäre dieser Betrag geringer,
+wäre sie dergestalt im Speicher verschiebbar, dass der Eintrag
+<code>i</code> unausgerichtet sein würde.
+
+<p>Aber weshalb beträgt die Größe der Struktur acht Bytes und
+nicht fünf? Das liegt daran, dass zur Größe der Struktur Padding
+hinzukommt, so dass jedes Element einer direkten Abfolge dieser
+Strukturen im Speicher ausgerichtet ist.
+
+<p>Unter Padding versteht man das Auffüllen einer Datenstruktur
+mit ungenutztem Freiraum, so dass alle ihre Bestandteile im
+Speicher ausgerichtet sind. Beispielsweise erzeugt
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {b1: u8, i: u32, b2: u8}
+
+println!("{}/{}", align_of::&lt;S&gt;(), size_of::&lt;S&gt;());
+</pre>
+
+<p>die Ausgabe <code>4/12</code>. Die Größe der Struktur bläht
+sich von sechs auf zwölf auf, weil einmal für <code>b1</code>
+drei Bytes und ebenso für <code>b2</code> drei Bytes an Padding
+eingefügt werden.
+
+<p>Entfernen wir das Attribut <code>repr(C)</code>, dann ist es
+dem Compiler erlaubt, die Reihenfolge der Einträge umzuordnen,
+so dass die Struktur die Gestalt
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {b1: u8, b2: u8, i: u32}
+</pre>
+
+<p>oder
+
+<pre class="rust ibox">
+#[repr(C)]
+struct S {i: u32, b1: u8, b2: u8}
+</pre>
+
+<p>erhält und damit die Größe acht bekommt. Weil <code>b1</code>
+und <code>b2</code> nämlich keiner Ausrichtung bedürfen, dürfen
+sie direkt hintereinander abgelegt werden, womit zwei Bytes
+Padding genügen.
+
+<p>Es ist auch machbar, das Padding und infolge die Ausrichtung
+in Strukturen zu unterlassen. Man spricht dann von einer
+<i>gepackten</i> Struktur. In der Konsequenz sind Lese- und
+Schreibvorgänge allerdings, so wissen wir, ineffizient. Gepackte
+Strukturen würden deshalb am ehesten bei Schnittstellen und
+Dateiformaten zur Anwendung kommen. Solche Darstellungen werden vom
+Compiler <code>rustc</code> mit dem Attribut <code>repr(packed)</code>
+unterstützt, ihr Gebrauch ist allerdings nicht empfohlen.
+
+<h2 id="Groesse">Größe von Typen</h2>
+
+<h3>Größe von Feldern</h3>
+
+<p>Wie gesagt schließt die Größe eines Typs Padding mit ein,
+womit ein Element ebenfalls ausgerichtet ist, wenn es direkt hinter
+ein ausgerichtetes Element gesetzt wird. Die Größe des Typs stimmt
+mit der Zahl überein, um die ein Bytezeiger verschoben werden muss,
+damit er auf das nächste Element zeigt. Für jeden Typ <code>T</code>
+und jede Länge <code>N</code> ist die Gleichung
+
+<pre class="indent">
+size_of::&lt;[T; N]&gt; == N*size_of::&lt;T&gt;()
+</pre>
+
+<p>erfüllt.
+
+<h2 id="Nischen">Nischen</h2>
+
+<p>Bei vielen Typen belegt die Darstellung mehr Bits als zur
+Kodierung der Information notwendig wäre. Allgemeiner betrachtet
+erlauben die Bitfolgen einen größeren Wertebereich als notwendig.
+Dafür gibt es unterschiedliche Ursachen:
+
+<ul>
+<li>Der Wertebereich wurde aufgerundet, damit die Darstellung
+  eine ganze Zahl von Bytes belegt. Zudem ist die Anzahl der
+  Bytes in typischen Fällen eine Zweierpotenz.
+<li>Bestimmte Werte des Wertebereichs sind verboten.
+<li>Durch das Padding entstehen ungenutzte Bits.
+</ul>
+
+<p>Solche ungenutzten Werte oder Wertebereiche werden <i>Nischen</i>
+genannt. Man kann sie zur Kodierung weiterer Information ausnutzen,
+womit sich die Speichergröße zusammengesetzter Typen verringern lässt.
+
+<p>Betrachten wir als einfaches Beispiel den Typ
+<code>Option&lt;u32&gt;</code>, wobei für
+<code>Result&lt;u32,&nbsp;()&gt;</code> eine gleichartige Überlegung
+gilt. Vermindern wir den Wertebereich um eins, kann der Wert
+<code>u32::MAX</code> zur Darstellung von <code>None</code>
+genutzt werden. Das reduziert die Speichergröße von acht auf
+vier Bytes! Nicht schlecht.
+
+<p>Bei einigen Typen ist der Wert null verboten. Hier stellt die
+Standardbibliothek Typen wie <code>NonZeroU32</code> und
+<code>NonZeroU64</code> zur Verfügung. Bei
+<code>Option&lt;<code>NonZeroU32</code>&gt;</code>
+wird <code>None</code> als null dargestellt. Wieder reduziert
+sich die Speichergröße auf die Hälfte.
+
+<p>Bei Zeigertypen wie <code>&amp;T</code>, <code>&amp;mut&nbsp;T</code>,
+<code>Box&lt;T&gt;</code>, <code>Rc&lt;T&gt;</code> und
+<code>Arc&lt;T&gt;</code> ist null ein verbotener Wert.
+Bei jedem solchen Zeigertyp <code>P</code> ist für
+<code>Option&lt;P&gt;</code> der Wert <code>None</code> entsprechend
+als null kodiert; ein zuweilen unter der Bezeichnung
+<i>Nullzeigeroptimierung</i> geläufiger Vorgang.
+Somit stimmt die Speichergröße von
+<code>Option&lt;P&gt;</code> mit der von <code>P</code> überein.
+
+<p>Bei den Zeigertypen <code>*const&nbsp;T</code> und
+<code>*mut&nbsp;T</code> liegt der Wert null dagegen im
+erlaubten Wertebereich, man erhält ihn durch <code>std::ptr::null()</code>
+bzw. <code>std::ptr::null_mut()</code>.
+
+<p>Bei den Enumerationen entsteht eine Nische durch das Tag. Bei
+
+<pre class="rust ibox">
+enum E {A, B}
+</pre>
+
+<p>verarbeitet der Compiler <code>Option&lt;E&gt;</code> so als
+läge
+
+<pre class="rust ibox">
+enum OptionE {A, B, None}
+</pre>
+
+<p>vor. Nun ist <code>Option&lt;E&gt;</code> aber selbst wieder eine
+Enumeration. In der Konsequenz braucht
+<code>Option&lt;Option&lt;E&gt;&gt;</code>
+ebenfalls lediglich ein Byte Speicher.
+
+<p>Es gibt auch so einige Nischen die der Compiler bisweilen
+nicht ausnutzen kann. Betrachten wir dazu für eine
+Langzahlarithmetik den Typ:
+
+<pre class="rust ibox">
+enum Sign {Plus, Minus}
+struct LongInt {sign: Sign, digits: Vec&lt;u32&gt;}
+
+enum Int {I32(i32), Long(LongInt)}
+</pre>
+
+<p>Auf einem 64&nbsp;Bit-System hat <code>Int</code> eine Größe von
+40 Bytes. Nehmen wir nun an, die meisten Zahlen sind klein,
+dann ist das eine ziemliche Verschwendung von Speicher. Mit der
+Modifikation
+
+<pre class="rust ibox">
+enum Int {I32(i32), Long(Rc&lt;LongInt&gt;)}
+</pre>
+
+<p>verringert sich die Größe zunächst auf 16&nbsp;Byte. Nun kann man
+aber im Wertebereich des Zeigers Nischen finden. Mitnichten deckt
+der Adressenraum eines gewöhnlichen Computers den gesamten
+Zahlenraum der 64&nbsp;Bit ab, womit man das Tag in das höchstwertige
+Bit bringen kann, sofern das Laufzeitsystem dieses nicht bereits
+für irgendetwas anderes verwendet. Ein alternativer Ansatz besteht
+in der Ausnutzung, dass die Ausrichtung des Zeigertyps
+<code>Rc&lt;LongInt&gt;</code> acht beträgt, womit sich in den
+Bereich der nicht durch acht teilbaren Werte weitere Informationen
+packen lässt. In beiden Ansätzen ist <code>i32</code> ohne Probleme
+unterzubringen. Somit kann man die Speichergröße von <code>Int</code>
+letztendlich auf 8&nbsp;Byte einschrumpfen lassen.  Allerdings muss man
+dies leider manuell unter Nutzung unsicherer Konzepte implementieren.
+
+
+<h2 id="Transmutation">Transmutation</h2>
+
+<p>Eigentlich müssen sämtliche Operationen den Regeln des Typsystems
+genügen. Jedes Argument einer Funktion bzw. Operation muss genau den
+Typ besitzen, der in ihrer Signatur vorgeschrieben wurde. Unter
+Anwendung unsicherer Hilfsmittel ist es allerdings machbar, einen Wert
+an dieser Typprüfung vorbeizumogeln.
+
+<p>Zur Schaffung von Klarheit müssen wir zwischen zwei Arten
+von Typumwandlung unterscheiden:
+
+<ul>
+<li>Eine Typumwandlung, die eine Konvertierung beinhaltet. Sie sind
+im Modul <code>std::convert</code> zu finden.
+<li>Eine Typumwandlung, die sich dergestalt verhält, dass
+der Wert im Speicher nicht berührt wird. Man bezeichnet sie als
+<i>Typcast</i> oder <i>Transmutation</i>.
+</ul>
+
+<p>Gegenstand dieses Abschnitts ist zweite Art der Typumwandlung.
+
+<p>Eine Methode des Typcasts ist der Zeigercast mit dem
+Operator <code>as</code>. Aufgabe sei die Interpretation eines
+Feldes von Ganzzahlen als ihre Darstellung im Speicher.
+Man tut das wie folgt:
+
+<pre class="rust ibox">
+let a: [i32; 2] = [1, 2];
+let p = &amp;a as *const [i32; 2] as *const [u8; 8];
+let data: &amp;[u8; 8] = &amp;unsafe {*p};
+println!("{:02x?}", data);
+</pre>
+
+<p>Das Programm erzeugt auf einem Little-Endian-System die Ausgabe:
+
+<pre class="ibox">
+[01, 00, 00, 00, 02, 00, 00, 00]
+</pre>
+
+<p>Eine Alternative bietet die Nutzung der Funktion
+<code>transmute</code>. Mir ihr lässt sich der Vorgang ein
+wenig kürzer in der Form
+
+<pre class="rust ibox">
+let a: [i32; 2] = [1, 2];
+let data: &amp;[u8; 8] = unsafe {std::mem::transmute(&amp;a)};
+</pre>
+
+<p>durchführen. Die Funktion <code>transmute</code> ist allerdings
+wesentlich vielseitiger als der Zeigercast. Wie
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let data: [u8; 8] = unsafe {std::mem::transmute(a)};
+</pre>
+
+<p>verdeutlicht, kann sie neben Zeigertypen auch andere Typen
+umwandeln. Die Typen müssen dafür mindestens Werte der gleichen
+Speichergröße beschreiben. Das Programmfragment
+
+<pre class="rust ibox">
+let a: [u32; 2] = [1, 2];
+let data: [u8; 7] = unsafe {std::mem::transmute(a)};
+</pre>
+
+<p>ist dagegen nicht kompilierbar.
+
+<p>Man könnte denken, dass die umgekehrte Umwandlung
+
+<pre class="rust ibox">
+let data: [u8; 8] = [1, 0, 0, 0, 2, 0, 0, 0];
+let a: &amp;[i32; 2] = unsafe {std::mem::transmute(&amp;data)};
+</pre>
+
+<p>ebenfalls durchführbar sein muss. Dem ist aber nicht so. Wir
+erinnern uns daran, dass mit <code>u8</code> die Ausrichtung des
+Feldes eins ist, ein Feld von Elementen des Typs <code>i32</code>
+jedoch die Ausrichtung vier erfordert. Somit ist ein verbotenes
+Programm konstruiert. Den Compiler störte das im Jahr 2021
+nicht. Erst Miri monierte:
+
+<p class="indent mono">Undefined Behavior:
+type validation failed: encountered an unaligned reference (required
+4&nbsp;byte alignment but found&nbsp;1)
+
+<p>Und das heißt nicht einmal, Miri war immer imstande, alle falschen
+Annahmen zur Ausrichtung zu detektieren. Selbst Miri ließ sich recht
+leicht austricksen. Der Zeiger besaß im konkreten Fall einen Rest
+modulo&nbsp;4. Verkürzte man das Ziel um ein Element und verschob den
+Zeiger um so viele Bytes, dass der Rest null wurde, war Miri besänftigt.
+Das Problem wurde erst aufgespürt, sobald Miri mit der Option
+
+<pre class="indent">
+-Zmiri-symbolic-alignment-check
+</pre>
+
+<p>pedantischer gemacht wurde.
+
+</body>
+</html>

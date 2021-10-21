@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Traits und generische Programmierung</h1>
+
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Arithmetik">Arithmetik</a>
+<li><a href="#Monkey-patching">Monkey patching</a>
+</ol>
+
+<h2 id="Arithmetik">Arithmetik</h2>
+
+<p>Bei der Programmierung von generischen arithmetischen Funktionen
+ist zu beachten, dass jede Operation einen bestimmten Trait
+benötigt, welcher die Operation implementiert.
+
+<p>Als erstes Beispiel soll die Funktion <code>range(a,b)</code>
+dienen, die für einen beliebigen Ganzzahltyp das Feld
+[<var>a</var>,&nbsp;<var>a</var>+1,&nbsp;<var>a</var>+2,&nbsp;&hellip;,&nbsp;<var>b</var>]
+erzeugt.
+
+<pre class="rust ibox">
+use std::ops::Add;
+
+trait Cast {fn cast(n: i32) -> Self;}
+impl Cast for  i8 {fn cast(n: i32) -> Self {n as  i8}}
+impl Cast for i16 {fn cast(n: i32) -> Self {n as i16}}
+impl Cast for i32 {fn cast(n: i32) -> Self {n as i32}}
+impl Cast for i64 {fn cast(n: i32) -> Self {n as i64}}
+impl Cast for  u8 {fn cast(n: i32) -> Self {n as  u8}}
+impl Cast for u16 {fn cast(n: i32) -> Self {n as u16}}
+impl Cast for u32 {fn cast(n: i32) -> Self {n as u32}}
+impl Cast for u64 {fn cast(n: i32) -> Self {n as u64}}
+
+fn range&lt;T&gt;(a: T, b: T) -> Vec&lt;T&gt;
+    where T: Copy + Cast + Add&lt;Output=T&gt; + PartialOrd
+{
+    let mut v: Vec&lt;T&gt; = Vec::new();
+    let mut k = a;
+    let one = T::cast(1);
+    while k&lt;=b {
+        v.push(k);
+        k = k+one;
+    }
+    return v;
+}
+
+fn main() {
+    let v = range::&lt;i32&gt;(1,10);
+    println!("{:?}",v);
+}
+</pre>
+
+<p>Das hätten wir natürlich auch einfacher haben können:
+<pre class="rust ibox">
+fn main() {
+    let v: Vec&lt;i32&gt; = (1..11).collect();
+    println!("{:?}",v);
+}
+</pre>
+
+<p>Bei der Formulierung von <code>Cast</code> wurde dasselbe
+Muster immer wiederholt. Oft lassen sich solche Wiederholungen
+durch <code>where</code>-Klauseln faktorisieren. Fast dasselbe
+Verhalten bekommen wir, wenn <code>as</code> durch <code>from</code>
+ersetzt wird. Nur die potentiell verlustbehaftete Typumwandlung
+von <code>u8</code> nach <code>i8</code> ist nicht erlaubt.
+
+<pre class="rust ibox">
+trait Cast {fn cast(n: u8) -&gt; Self;}
+impl&lt;T&gt; Cast for T where T: From&lt;u8&gt; {
+    fn cast(n: u8) -&gt; T {T::from(n)}
+}
+</pre>
+
+<p>Man kann auch einfach <code>Cast</code> gegen
+<code>From&lt;u8&gt;</code> austauschen und <code>T::cast(1)</code>
+gegen <code>T::from(1)</code>.
+
+<p>Nun schaut es etwas ungeschickt aus wenn jede Funktion lange
+<code>where</code>-Klauseln bekommt. Um dies zu vermeiden, lässt
+sich ein Trait als Zusammenfassung der verwendeten Traits formulieren.
+Man spricht auch von einem Alias-Trait. Hierzu wird ein Trait mit
+Trait-Bounds beschränkt, wobei die Liste der Methoden aber leer bleiben
+kann. Wir führen nun den neuen Trait <code>Int</code> ein, der mehr oder
+weniger die ganzen Zahlen repräsentieren soll.
+
+<pre class="rust ibox">
+trait Int: Copy + From&lt;u8&gt; + Add&lt;Output=Self&gt; + PartialOrd {}
+
+impl&lt;T&gt; Int for T
+where T: Copy + From&lt;u8&gt; + Add&lt;Output=T&gt; + PartialOrd {}
+
+fn range&lt;T: Int&gt;(a: T, b: T) -&gt; Vec&lt;T&gt; {
+    let mut v: Vec&lt;T&gt; = Vec::new();
+    let mut k = a;
+    let one = T::from(1);
+    while k&lt;=b {
+        v.push(k);
+        k = k+one;
+    }
+    return v;
+}
+</pre>
+
+<p>Wie man sieht lassen sich auf diese Weise recht hübsch
+generische numerische Algorithmen schreiben. Für vordefinierte
+Traits und Datentypen für numerische Zwecke steht auch das Crate
+num<sup><a href="#ref-num">[1]</a></sup>
+zur Verfügung. Da Algorithmen aber durch unnötige Trait-Bounds
+eventuell zu stark beschränkt werden, ist es in manchen Fällen
+eleganter, zusätzliche Zwischen-Traits einzuführen, die nur einige
+der Trait-Bounds enthalten.
+
+<p>Verzichtet man auf den Trait-Bound <code>Copy</code> und führt ggf.
+die Trait-Bounds <code>Sized</code> und <code>'static</code> ein,
+lassen sich auch Algorithmen schreiben, die mit größeren
+Datenstrukturen umgehen können.
+
+<h2 id="Monkey-patching">Monkey patching</h2>
+<p>In manchen Programmiersprachen besteht die Möglichkeit,
+nachträglich weitere Methoden zu einem Datentyp hinzuzufügen.
+Man spricht hier von <i>Monkey patching</i> oder
+<i>Extension methods</i>. Diese Technik ist eigentlich verpönt,
+da sie zu Bezeichnerkonflikten führen kann. Implementieren zwei
+Module nämlich denselben Bezeichner, liegt Zweideutigkeit vor.
+
+<p>Aus didaktischen Gründen soll trotzdem einmal gezeigt werden, wie
+sich das Trait-System dafür »missbrauchen« lässt. Als Beispiel soll
+zum Typ <code>Vec</code> eine Methode <code>sq</code> hinzugefügt
+werden, die alle Elemente quadriert und das Ergebnis als neues
+Array zurückgibt.
+
+<pre class="rust ibox">
+use std::ops::Mul;
+use std::iter::FromIterator;
+
+trait Sq&lt;T&gt; {
+    fn sq(&amp;self) -&gt; Vec&lt;T&gt;;
+}
+
+impl&lt;T: Copy+Mul&gt; Sq&lt;T&gt; for Vec&lt;T&gt;
+    where Vec&lt;T&gt;: FromIterator&lt;&lt;T as Mul&gt;::Output&gt;
+{
+    fn sq(&amp;self) -&gt; Vec&lt;T&gt; {
+        self.iter().map(|&amp;x| x*x).collect()
+    }
+}
+
+fn main() {
+    println!("{:?}",vec![1,2,3,4].sq());
+}
+</pre>
+
+<p>Die Trait-Bounds <code>T: Copy+Mul</code> und in der
+<code>where</code>-Klausel können erst einmal ausgeblendet werden.
+Diese sind dafür da, dass sich ein Wert <code>x</code> vom Typ
+<code>T</code> auch multiplizieren und ein Iterator über die
+Ergebnisse auch zu einem neuen Array sammeln lässt.
+
+<p>Glücklicherweise meckert der Compiler bei Bezeichnerkonflikten
+sofort. Außerdem lassen sie sich auf zwei Arten verhindern:
+<ul>
+<li>Bevor man die Methode benutzen kann, muss der Trait auch explizit
+  mit <code>use</code> eingebunden werden.
+<li>Anstelle von <code>v.sq()</code> darf man
+  auch <code>Sq::sq(&amp;v)</code> schreiben, wobei der verwendete
+  Trait hier explizit angegeben wird.
+</ul>
+
+<p>Es kann später aber trotzdem zu ein paar Konflikten kommen,
+wenn zum Typ oder zum Trait neue Methoden hinzugefügt werden.
+Aus diesem Grund würde ich eher dazu neigen, solche
+Erweiterungsmethoden zu vermeiden.
+
+<h2>Links</h2>
+
+<ul>
+<li id="ref-num">[1] <a href="https://crates.io/crates/num">num</a> <code>(https://crates.io/crates/num)</code>.
+</ul>
+
+</body>
+</html>
+

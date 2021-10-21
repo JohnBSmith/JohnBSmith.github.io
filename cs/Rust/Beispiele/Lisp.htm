@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lisp</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: Lisp-Interpreter</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Uebersicht">Übersicht</a>
+<li><a href="#Interpreter">Interpreter</a>
+<li><a href="#Beispiele">Beispiele</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="Uebersicht">Übersicht</h2>
+
+<p>Der Interpreter implementiert einen minimalen Dialekt der Sprache
+Lisp. Die folgenden Funktionen stehen zur Verfügung.
+<table class="bt">
+<tr><th>Funktion<th>Erklärung
+<tr><td><code>(+ x y) (- x y)</code><td>Addition, Subtraktion
+<tr><td><code>(* x y) (/ x y) (% x y)</code><td>Multiplikation, Division, Rest
+<tr><td><code>(= x y) (&lt; x y) (&lt;= x y)</code><td>Relationen
+<tr><td><code>(not x) (and x y) (or x y)</code><td>Logische Operationen
+<tr><td><code>(if cond x y)</code><td>Verzweigung
+<tr><td><code>(fn (x y ...) body)</code><td>Lambda-Ausdruck
+<tr><td><code>(define x value)</code><td>Globale Variablenbindung
+<tr><td><code>(let ((x<sub>0</sub> v<sub>0</sub>) ...) body)</code><td>Lokale Variablenbindung
+<tr><td><code>(block e<sub>0</sub> e<sub>1</sub> ... e<sub>n</sub>)</code>
+<td>Verbundausduck mit Wert <code>e<sub>n</sub></code>
+<tr><td><code>(print x)</code><td>Terminal-Ausgabe
+<tr><td><code>()</code><td>Leere Liste
+<tr><td><code>(list a<sub>0</sub> a<sub>1</sub> a<sub>2</sub> ...)</code><td>Konstruiert eine Liste
+<tr><td><code>(cons x a)</code><td>Fügt <code>x</code> zur Liste <code>a</code> hinzu
+<tr><td><code>(first a)</code><td>Erstes Element der Liste
+<tr><td><code>(rest a)</code><td>Restliche Elemente der Liste
+<tr><td><code>(empty a)</code><td>Erfragt, ob die Liste leer ist
+<tr><td><code>(tail-call f x y ...)</code><td>Verzögert eine Endrekursion
+<tr><td><code>(tail-iter value)</code><td>Schleife der Endrekursion
+<tr><td><code>(load "Datei")</code><td>Lädt ein Lisp-Programm
+</table>
+
+<p>Zur Kompilierzeit ist die Sprache untypisiert.
+Zur Laufzeit kann der Interpreter zwischen den folgenden Typen
+unterscheiden.
+<table class="bt">
+<tr><th>Typ<th>Erklärung<th>Werte
+<tr><td><code>Zero</code><td>Typ ohne Elemente<td>keine
+<tr><td><code>Unit</code><td>Typ mit einem Element<td><code>()</code>
+<tr><td><code>Bool</code><td>Wahrheitswerte<td><code>false</code>, <code>true</code>
+<tr><td><code>Int</code><td>Ganze Zahlen<td><code>0</code>, <code>1</code>, <code>&minus;1</code>, <code>2</code>, ...
+<tr><td><code>List</code><td>Einfach verkettete Listen<td><code>()</code>, <code>(list 0 1)</code>
+<tr><td><code>String</code><td>Zeichenketten<td><code>"Text"</code>
+<tr><td><code>Function</code><td>Funktionen<td><code>(fn (x) (+ x 1))</code>
+</table>
+
+<p>Der Typ <code>Zero</code> entspricht in Rust dem Never-Typ,
+und bedeutet, dass das Programm divergiert, beispielsweise durch Werfen
+einer Ausnahme. Der Typ <code>Unit</code> entspricht <code>()</code>
+in Rust. Kodiert ist <code>Zero</code> als <code>Object::Err</code>
+und <code>Unit</code> als <code>Object::None</code>.
+
+<p>Die Arbeitsweise des Interpreters ist grob unterteilbar in
+die folgenden Phasen:
+<ol>
+<li>Lexikalische Analyse durch <code>scan</code>,
+<li>Syntaktische Analyse durch <code>parse</code> und <code>transform</code>,
+<li>Syntaktische Umwandlung durch <code>transform</code>,
+<li>Ausführung durch <code>eval</code>.
+</ol>
+
+<p>Die syntaktische Umwandlung ist relativ komplex, da sie auch
+Variablen aus dem lexikalischen Kontext verarbeitet und dabei zudem
+die Bindungen für lexikalische Closures erzeugt. Lokale
+Variablenbindungen werden auf unmittelbar ausgeführte Funktionen
+zurückgeführt, d.&nbsp;h. <code>(let ((x v)) body)</code>
+entspricht <code>((fn (x) body) v)</code>.
+
+<p>Die Ausführung geschieht durch rekursive Auswertung des
+ausführbaren Baums, welcher durch den Typ <code>Object</code>
+kodiert ist. Diese Rekursion koppelt leider den Aufrufstapel mit dem
+der Host-Umgebung, so dass die maximale Rekursionstiefe beschränkt
+bleibt, sofern man den Aufrufstapel der Host-Umgebung nicht vergrößert.
+
+<p>Zugriff auf die implementierte Laufzeitumgebung findet durch einen
+Zeiger <code>env</code> auf die Struktur des Typs <code>Env</code>
+statt. Jede Funktion besitzt intern diesen Zeiger als Argument, da
+hierüber unter anderem auch der Aufrufstapel angesprochen wird.
+
+<p>Die Umsetzung von Endrekursion ohne Wachstum des Aufrufstapels
+ist als Trampolin-System gestaltet, wobei <code>tail-call</code>
+den Aufruf verzögert und <code>tail-iter</code> die Aufrufe
+in einer Trampolin-Schleife ausführt.
+
+<h2 id="Interpreter">Interpreter</h2>
+
+<pre class="rust ibox">
+use std::rc::Rc;
+use std::collections::HashMap;
+use std::any::Any;
+use std::mem::replace;
+
+macro_rules! expect {
+    ($x:expr, $p:path) =&gt; {
+        match $x {$p(value) =&gt; value, _ =&gt; panic!()}
+    };
+    ($x:expr, $p:path, $otherwise:expr) =&gt; {
+        match $x {$p(value) =&gt; value, _ =&gt; $otherwise}
+    }
+}
+
+#[derive(Debug)]
+enum Symbol {
+    None, Int(i32), Identifier(String), String(String),
+    ParenLeft, ParenRight
+}
+
+#[derive(Debug)]
+struct Token {
+    value: Symbol,
+    line: usize,
+    col: usize
+}
+
+enum ErrorEnum {
+    Syntax {line: usize, col: usize, text: String},
+    Value {text: String}
+}
+impl std::fmt::Display for ErrorEnum {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        match self {
+            ErrorEnum::Syntax {text, line, col} =&gt; {
+                write!(f, "Syntax error (line {}, col {}): {}",
+                    line + 1, col + 1, text)
+            },
+            ErrorEnum::Value {text} =&gt; {
+                write!(f, "Error: {}", text)
+            }
+        }
+    }
+}
+
+
+type Error = Rc&lt;ErrorEnum&gt;;
+
+fn syntax_error(line: usize, col: usize, text: String) -&gt; Error {
+    Rc::new(ErrorEnum::Syntax {line, col, text})
+}
+
+fn mul10_add(value: i32, digit: u8) -&gt; Option&lt;i32&gt; {
+    value.checked_mul(10)?
+        .checked_add(i32::from(digit) - i32::from(b'0'))
+}
+
+fn is_letter(c: u8) -&gt; bool {
+    c.is_ascii_alphabetic() || c == b'+' || c == b'-' || c == b'*' ||
+    c == b'/' || c == b'%' || c == b'=' || c == b'&lt;' || c == b'&gt;'
+}
+
+fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;, Error&gt; {
+    let mut tokens: Vec&lt;Token&gt; = Vec::new();
+    let mut i = 0;
+    let mut line = 0;
+    let mut col = 0;
+    loop {
+        let c = *expect!(a.get(i), Some, break);
+        if c.is_ascii_digit() {
+            let col0 = col;
+            let mut value: i32 = i32::from(c) - i32::from(b'0');
+            i += 1; col += 1;
+            while let Some(&amp;c) = a.get(i) {
+                col += 1;
+                if c.is_ascii_digit() {
+                    match mul10_add(value,c) {
+                        Some(x) =&gt; value = x,
+                        None =&gt; return Err(syntax_error(line, col,
+                            "integer literal overflow.".into()))
+                    }
+                    i += 1; col += 1;
+                } else {
+                    break;
+                }
+            }
+            tokens.push(Token {value: Symbol::Int(value), line, col: col0});
+        } else if is_letter(c) {
+            let col0 = col;
+            let mut id = String::new();
+            id.push(char::from(c));
+            i += 1; col += 1;
+            while let Some(&amp;c) = a.get(i) {
+                if is_letter(c) || c.is_ascii_digit() {
+                    id.push(char::from(c));
+                    i += 1; col += 1;
+                } else {
+                    break;
+                }
+            }
+            tokens.push(Token {value: Symbol::Identifier(id), line, col: col0});
+        } else {
+            match c {
+                b'(' =&gt; {
+                    tokens.push(Token {value: Symbol::ParenLeft, line, col});
+                    i += 1; col += 1;
+                },
+                b')' =&gt; {
+                    tokens.push(Token {value: Symbol::ParenRight, line, col});
+                    i += 1; col += 1;
+                },
+                b' ' | b'\t' =&gt; {
+                    i += 1; col += 1;
+                },
+                b'\n' =&gt; {
+                    i += 1; col = 0; line += 1;
+                },
+                b'#' | b';' =&gt; {
+                    while let Some(&amp;c) = a.get(i) {
+                        i += 1;
+                        if c == b'\n' {break;}
+                    }
+                    col = 0; line += 1;
+                },
+                b'"' =&gt; {
+                    let col0 = col;
+                    let mut s = String::new();
+                    i += 1; col += 1;
+                    while let Some(&amp;c) = a.get(i) {
+                        i += 1; col += 1;
+                        if c == b'"' {break;}
+                        if c == b'\n' {col = 0; line += 1;}
+                        s.push(char::from(c));
+                    }
+                    tokens.push(Token {value: Symbol::String(s), line, col: col0});
+                }
+                c =&gt; {
+                    return Err(syntax_error(line, col,
+                        format!("unexpected character: '{}'.",char::from(c))));
+                }
+            }
+        }
+    }
+    tokens.push(Token {value: Symbol::None, line, col});
+    Ok(tokens)
+}
+
+struct ParserFrame&lt;'a&gt; {
+    list: Vec&lt;Object&gt;,
+    token: &amp;'a Token
+}
+
+fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;, Error&gt; {
+    let mut stack: Vec&lt;ParserFrame&gt; = Vec::with_capacity(10);
+    let mut list: Vec&lt;Object&gt; = Vec::new();
+    for t in tokens {
+        match t.value {
+            Symbol::Int(value) =&gt; {
+                list.push(Object::Int(value));
+            },
+            Symbol::Identifier(ref id) =&gt; {
+                list.push(Object::Symbol(Rc::from(&amp;**id)));
+            },
+            Symbol::String(ref id) =&gt; {
+                list.push(Object::Interface(
+                    Rc::from(StrObj(Rc::from(&amp;**id)))));
+            },
+            Symbol::ParenLeft =&gt; {
+                stack.push(ParserFrame {
+                    list: std::mem::take(&amp;mut list),
+                    token: t
+                });
+            },
+            Symbol::ParenRight =&gt; {
+                if let Some(frame) = stack.pop() {
+                    let app = replace(&amp;mut list, frame.list);
+                    if app.is_empty() {
+                        list.push(Object::None);
+                    } else {
+                        list.push(Object::App(Rc::new(App {
+                            list: app,
+                            line: frame.token.line,
+                            col: frame.token.col
+                        })));
+                    }
+                } else {
+                    return Err(syntax_error(t.line, t.col,
+                        "bracket mismatch.".into()))
+                }
+            },
+            Symbol::None =&gt; {
+                if !stack.is_empty() {
+                    return Err(syntax_error(t.line, t.col,
+                        "bracket mismatch.".into()));
+                }
+                break;
+            }
+        }
+    }
+    for x in &amp;mut list {
+        let tab = &amp;mut ScopeTable::new(None);
+        *x = transform(tab,x)?;
+    }
+    Ok(list)
+}
+
+mod scope_table {
+    use std::collections::HashMap;
+    use std::{rc::Rc, cell::RefCell};
+    use crate::{App, Object, transform_symbol, UNDEFINED};
+
+    #[derive(Clone,Copy)]
+    pub enum VarInfo {Argument(usize), Context(usize)}
+    pub struct Frame {
+        map: HashMap&lt;Rc&lt;str&gt;, VarInfo&gt;,
+        count_arg: usize,
+        count_context: usize,
+        context: Vec&lt;Object&gt;
+    }
+    impl Frame {
+        fn insert_context(&amp;mut self, key: &amp;Rc&lt;str&gt;) -&gt; usize {
+            let index = self.count_context;
+            self.map.insert(key.clone(), VarInfo::Context(index));
+            self.count_context += 1;
+            index
+        }
+        pub fn insert_arg(&amp;mut self, key: &amp;Rc&lt;str&gt;) {
+            let index = self.count_arg;
+            self.map.insert(key.clone(), VarInfo::Argument(index));
+            self.count_arg += 1;
+        }
+        pub(super) fn context(&amp;mut self) -&gt; Object {
+            if self.context.is_empty() {
+                Object::None
+            } else {
+                Object::App(Rc::new(App {
+                    line: UNDEFINED, col: UNDEFINED,
+                    list: std::mem::take(&amp;mut self.context)}))
+            }
+        }
+    }
+    pub struct ScopeTable {
+        env: Option&lt;Rc&lt;ScopeTable&gt;&gt;,
+        pub frame: RefCell&lt;Frame&gt;
+    }
+    impl ScopeTable {
+        pub fn new(env: Option&lt;Rc&lt;Self&gt;&gt;) -&gt; Rc&lt;Self&gt; {
+            Rc::new(Self {env,
+                frame: RefCell::new(Frame {map: HashMap::new(),
+                count_arg: 0, count_context: 0, context: vec![]})})
+        }
+        pub fn get(&amp;self, key: &amp;Rc&lt;str&gt;) -&gt; Option&lt;VarInfo&gt; {
+            if let Some(info) = self.frame.borrow().map.get(key) {
+                return Some(*info);
+            }
+            if let Some(env) = &amp;self.env {
+                if env.get(key).is_some() {
+                    let mut frame = self.frame.borrow_mut();
+                    let index = frame.insert_context(key);
+                    frame.context.push(transform_symbol(env, key));
+                    return Some(VarInfo::Context(index));
+                }
+            }
+            None
+        }
+    }
+}
+
+fn insert_args(env: &amp;ScopeTable, list: &amp;Object)
+-&gt; Result&lt;usize, Error&gt;
+{
+    if let Object::App(app) = list {
+        for id in app.list.iter() {
+            if let Object::Symbol(id) = id {
+                env.frame.borrow_mut().insert_arg(id);
+            } else {
+                return Err(value_error("in (fn args body): \
+                    args must consist of symbols.".into()))
+            }
+        }
+        Ok(app.list.len())
+    } else if let Object::None = list {
+        Ok(0)
+    } else {
+        Err(value_error(
+            "in (fn args body): args is not a list.".into()))
+    }
+}
+
+fn let_syntax_error(app: &amp;App) -&gt; Result&lt;Object, Error&gt; {
+    Err(syntax_error(app.line, app.col, String::from(
+        "in line {}, col {}: expected (let ((id value) ...) body)")))
+}
+
+fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
+-&gt; Result&lt;Object, Error&gt;
+{
+    if app.list.len() != 3 {
+        return let_syntax_error(app);
+    }
+    let list = match &amp;app.list[1] {
+        Object::App(t) =&gt; &amp;t.list,
+        _ =&gt; return let_syntax_error(app)
+    };
+    let mut args: Vec&lt;Object&gt; = vec![];
+    for object in list {
+        match object {
+            Object::App(t) =&gt; {
+                if t.list.len() != 2 {return let_syntax_error(app);}
+                args.push(t.list[0].clone())
+            },
+            _ =&gt; return let_syntax_error(app)
+        }
+    }
+    let f = Object::App(Rc::new(App {
+        line: app.line, col: app.col,
+        list: vec![
+            Object::Symbol(Rc::from("fn")),
+            Object::App(Rc::new(App {
+                line: app.line, col: app.col, list: args})),
+            app.list[2].clone()]}));
+    let mut a: Vec&lt;Object&gt; = vec![];
+    a.push(f);
+    for object in list {
+        match object {
+            Object::App(t) =&gt; a.push(t.list[1].clone()),
+            _ =&gt; return let_syntax_error(app)
+        }
+    }
+    transform_app(env,&amp;Rc::new(App {
+        line: app.line, col: app.col, list: a}))
+}
+
+use scope_table::{ScopeTable, VarInfo};
+
+fn transform_symbol(env: &amp;Rc&lt;ScopeTable&gt;, id: &amp;Rc&lt;str&gt;) -&gt; Object {
+    if let Some(info) = env.get(id) {
+        let (index, fp): (usize, LazyFp) = match info {
+            VarInfo::Argument(index) =&gt; (index, load_arg),
+            VarInfo::Context(index) =&gt; (index, load_context)
+        };
+        Object::App(Rc::new(App {
+            line: UNDEFINED, col: UNDEFINED,
+            list: vec![
+                Object::FnLazy(Rc::new(FnLazyObj {fp, id: "load",
+                    argc_min: 1, argc_max: 1})),
+                Object::Int(index as i32)]}))
+    } else {
+        Object::Symbol(id.clone())
+    }
+}
+
+fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
+-&gt; Result&lt;Object, Error&gt;
+{
+    if app.list.is_empty() {
+        return Ok(Object::App(app.clone()));
+    }
+    if let Object::Symbol(id) = &amp;app.list[0] {
+        if id.as_ref() == "fn" {
+            if app.list.len() != 3 {
+                return Err(value_error(
+                    "fn needs to have two arguments".into()));
+            }
+            let tab = ScopeTable::new(Some(env.clone()));
+            let argc = insert_args(&amp;tab, &amp;app.list[1])?;
+            let body = transform(&amp;tab, &amp;app.list[2])?;
+            let context = tab.frame.borrow_mut().context();
+            return Ok(Object::App(Rc::new(App {
+                line: app.line, col: app.col,
+                list: vec![
+                    Object::Symbol(id.clone()),
+                    Object::Interface(Rc::new(StrObj(
+                        Rc::from(format!("function ({}:{})",
+                            app.line + 1, app.col + 1))))),
+                    Object::Int(argc as i32),
+                    context,
+                    body]})));
+        } else if id.as_ref() == "let" {
+            return let_expression(env,&amp;app);
+        }
+    }
+    let list = app.list.iter().map(|x| transform(env,x))
+        .collect::&lt;Result&lt;Vec&lt;Object&gt;, _&gt;&gt;()?;
+    Ok(Object::App(Rc::new(App {line: app.line, col: app.col, list})))
+}
+
+fn transform(env: &amp;Rc&lt;ScopeTable&gt;, t: &amp;Object)
+-&gt; Result&lt;Object, Error&gt;
+{
+    Ok(match t {
+        Object::None =&gt; Object::None,
+        Object::Bool(value) =&gt; Object::Bool(*value),
+        Object::Int(value) =&gt; Object::Int(*value),
+        Object::Fn(f) =&gt; Object::Fn(f.clone()),
+        Object::FnLazy(f) =&gt; Object::FnLazy(f.clone()),
+        Object::Err(e) =&gt; Object::Err(e.clone()),
+        Object::Symbol(id) =&gt; transform_symbol(env,id),
+        Object::App(app) =&gt; return transform_app(env,app),
+        Object::Interface(x) =&gt; Object::Interface(x.clone())
+    })
+}
+
+struct FnObj&lt;F: ?Sized&gt; {
+    id: Rc&lt;str&gt;, argc_min: usize, argc_max: usize,
+    context: Vec&lt;Object&gt;, fp: F
+}
+
+struct FnLazyObj&lt;F: ?Sized&gt; {
+    id: &amp;'static str, argc_min: usize, argc_max: usize,
+    fp: F
+}
+
+type Function = FnObj&lt;dyn Fn(&amp;mut Env) -&gt; Object&gt;;
+type FunctionLazy = FnLazyObj&lt;dyn Fn(&amp;mut Env, &amp;App) -&gt; Object&gt;;
+
+const UNDEFINED: usize = usize::MAX - 1;
+
+struct App {
+    line: usize, col: usize, list: Vec&lt;Object&gt;
+}
+
+#[derive(Clone)]
+enum Object {
+    None,
+    Int(i32),
+    Bool(bool),
+    Symbol(Rc&lt;str&gt;),
+    App(Rc&lt;App&gt;),
+    Fn(Rc&lt;Function&gt;),
+    FnLazy(Rc&lt;FunctionLazy&gt;),
+    Interface(Rc&lt;dyn Interface&gt;),
+    Err(Error)
+}
+
+impl std::fmt::Display for Object {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        match self {
+            Object::None =&gt; write!(f, "()"),
+            Object::Bool(value) =&gt; write!(f, "{}", value),
+            Object::Int(value) =&gt; write!(f, "{}", value),
+            Object::Symbol(id) =&gt; write!(f, "{}", id),
+            Object::Fn(fobj) =&gt; write!(f, "{}", fobj.id),
+            Object::FnLazy(fobj) =&gt; write!(f, "{}", fobj.id),
+            Object::Interface(x) =&gt; write!(f, "{}", x),
+            Object::Err(e) =&gt; write!(f, "{}", e),
+            Object::App(app) =&gt; {
+                write!(f, "(")?;
+                let mut first = true;
+                for object in app.list.iter() {
+                    if first {first = false;} else {write!(f, " ")?;}
+                    write!(f, "{}", object)?;
+                }
+                write!(f, ")")
+            }
+        }
+    }
+}
+impl std::fmt::Debug for Object {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        write!(f, "{}", self)
+    }
+}
+
+trait Interface: std::fmt::Display {
+    fn as_any(&amp;self) -&gt; &amp;dyn Any;
+    fn as_any_mut(&amp;mut self) -&gt; &amp;mut dyn Any;
+}
+
+fn downcast&lt;T: 'static&gt;(x: &amp;Object) -&gt; Option&lt;&amp;T&gt; {
+    if let Object::Interface(x) = x {
+        x.as_any().downcast_ref::&lt;T&gt;()
+    } else {
+        None
+    }
+}
+
+struct StrObj(Rc&lt;str&gt;);
+
+impl Interface for StrObj {
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {self}
+    fn as_any_mut(&amp;mut self) -&gt; &amp;mut dyn Any {self}
+}
+impl std::fmt::Display for StrObj {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        write!(f, "\"{}\"", self.0)
+    }
+}
+
+struct Node {
+    first: Object,
+    rest: Object
+}
+
+impl Interface for Node {
+    fn as_any(&amp;self) -&gt; &amp;dyn Any {self}
+    fn as_any_mut(&amp;mut self) -&gt; &amp;mut dyn Any {self}
+}
+impl std::fmt::Display for Node {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter) -&gt; std::fmt::Result {
+        let mut node = self;
+        write!(f, "(list {}", node.first)?;
+        loop {
+            if let Object::None = node.rest {break;}
+            if let Some(rest) = downcast::&lt;Node&gt;(&amp;node.rest) {
+                write!(f, " {}", rest.first)?;
+                node = rest;
+            } else {
+                write!(f, " . {}", node.rest)?;
+                break;
+            }
+        }
+        write!(f, ")")
+    }
+}
+
+impl Drop for Node {
+    fn drop(&amp;mut self) {
+        let mut node = replace(&amp;mut self.rest, Object::None);
+        while  let Object::Interface(obj) = &amp;mut node {
+            if let Some(obj) = Rc::get_mut(obj) {
+                if let Some(list) = obj.as_any_mut().downcast_mut::&lt;Node&gt;() {
+                    node = replace(&amp;mut list.rest, Object::None);
+                } else {break}
+            } else {break}
+        }
+    }
+}
+
+fn op1_err(env: &amp;Env, op: &amp;str) -&gt; Object {
+    Object::Err(value_error(format!(
+        "cannot evaluate ({} {}).", op, env.arg(0))))
+}
+
+fn op2_err(env: &amp;Env, op: &amp;str) -&gt; Object {
+    Object::Err(value_error(format!(
+        "cannot evaluate ({} {} {}).", op, env.arg(0), env.arg(1))))
+}
+
+fn add(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"+"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"+"));
+    Object::Int(x+y)
+}
+
+fn sub(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"-"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"-"));
+    Object::Int(x-y)
+}
+
+fn mul(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"*"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"*"));
+    Object::Int(x*y)
+}
+
+fn div(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"/"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"/"));
+    Object::Int(x/y)
+}
+
+fn rem(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"%"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"%"));
+    Object::Int(x%y)
+}
+
+fn obj_eq(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"="));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"="));
+    Object::Bool(x == y)
+}
+
+fn obj_lt(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"&lt;"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"&lt;"));
+    Object::Bool(x &lt; y)
+}
+
+fn obj_le(env: &amp;mut Env) -&gt; Object {
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"&lt;="));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"&lt;="));
+    Object::Bool(x &lt;= y)
+}
+
+fn print(env: &amp;mut Env) -&gt; Object {
+    println!("{}", env.arg(0));
+    Object::None
+}
+
+fn block(env: &amp;mut Env) -&gt; Object {
+    env.arg(env.argc() - 1).clone()
+}
+
+fn log(env: &amp;mut Env) -&gt; Object {
+    let value = env.arg(0);
+    println!("log: {}", value);
+    value.clone()
+}
+
+fn cons(env: &amp;mut Env) -&gt; Object {
+    Object::Interface(Rc::new(Node {
+        first: env.arg(0).clone(),
+        rest: env.arg(1).clone()
+    }))
+}
+
+fn first(env: &amp;mut Env) -&gt; Object {
+    match downcast::&lt;Node&gt;(env.arg(0)) {
+        Some(list) =&gt; list.first.clone(),
+        None =&gt; op1_err(env, "first")
+    }
+}
+
+fn rest(env: &amp;mut Env) -&gt; Object {
+    match downcast::&lt;Node&gt;(env.arg(0)) {
+        Some(list) =&gt; list.rest.clone(),
+        None =&gt; op1_err(env, "rest")
+    }
+}
+
+fn empty(env: &amp;mut Env) -&gt; Object {
+    Object::Bool(matches!(env.arg(0), Object::None))
+}
+
+fn list_literal(env: &amp;mut Env) -&gt; Object {
+    let mut list = Object::None;
+    for arg in env.argv().iter().rev() {
+        list = Object::Interface(Rc::new(Node {
+            first: arg.clone(),
+            rest: list
+        }));
+    }
+    list
+}
+
+fn not(env: &amp;mut Env) -&gt; Object {
+    let value = env.arg(0);
+    if let Object::Err(e) = value {
+        return Object::Err(e.clone());
+    }
+    Object::Bool(match value {Object::Bool(x) =&gt; !x, _ =&gt; false})
+}
+
+fn define(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let id = expect!(&amp;app.list[1],Object::Symbol).clone();
+    let value = eval(env, &amp;app.list[2]);
+    if let Object::Err(_) = value {return value;}
+    env.map.insert(id, value);
+    Object::None
+}
+
+fn if_fn(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    let cond = eval(env, &amp;argv[0]);
+    if let Object::Bool(cond) = cond {
+        eval(env, &amp;argv[if cond {1} else {2}])
+    } else {
+        if let Object::Err(_) = cond {return cond;}
+        Object::Err(value_error(
+            format!("in (if cond x y): expected cond: Bool, got {}.",
+                cond)))
+    }
+}
+
+fn and(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    match eval(env, &amp;argv[0]) {
+        Object::Err(e) =&gt; Object::Err(e),
+        Object::Bool(cond) if !cond =&gt; Object::Bool(false),
+        _ =&gt; eval(env, &amp;argv[1])
+    }
+}
+
+fn or(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    match eval(env, &amp;argv[0]) {
+        Object::Err(e) =&gt; Object::Err(e),
+        Object::Bool(cond) if !cond =&gt; eval(env, &amp;argv[1]),
+        cond =&gt; cond
+    }
+}
+
+fn lambda(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    let id = downcast::&lt;StrObj&gt;(&amp;argv[0]).unwrap();
+    let argc = expect!(argv[1], Object::Int) as usize;
+    let context: Vec&lt;Object&gt; = match argv[2] {
+        Object::App(ref app) =&gt; {
+            app.list.iter().map(|x| eval(env,x)).collect()
+        },
+        _ =&gt; Vec::new()
+    };
+    let body = argv[3].clone();
+    let f: Rc&lt;Function&gt; = Rc::new(FnObj {
+        argc_min: argc, argc_max: argc,
+        id: id.0.clone(), context,
+        fp: move |env: &amp;mut Env| eval(env, &amp;body),
+    });
+    Object::Fn(f)
+}
+
+fn load_arg(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let index = expect!(&amp;app.list[1],Object::Int);
+    env.arg(*index as usize).clone()
+}
+
+fn load_context(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let index = expect!(&amp;app.list[1],Object::Int);
+    env.active_fn.context[*index as usize].clone()
+}
+
+fn tail_call(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let argv = &amp;app.list[1..];
+    let mut list = Vec::with_capacity(argv.len());
+    for x in argv {
+        let value = eval(env,x);
+        if let Object::Err(_) = value {return value;}
+        list.push(value);
+    }
+    Object::App(Rc::new(App {line: app.line, col: app.col, list}))
+}
+
+fn tail_iter(env: &amp;mut Env, app: &amp;App) -&gt; Object {
+    let mut value = eval(env,&amp;app.list[1]);
+    while let Object::App(_) = value {
+        value = eval(env,&amp;value);
+    }
+    value
+}
+
+fn load_file(env: &amp;mut Env) -&gt; Object {
+    let path = match downcast::&lt;StrObj&gt;(env.arg(0)) {
+        Some(s) =&gt; s.0.as_ref(),
+        _ =&gt; return op1_err(env,"load")
+    };
+    let file_input = expect!(std::fs::read(path), Ok,
+        return Object::Err(value_error(
+            format!("could not load file '{}'.",path))));
+    let result = eval_string(env, &amp;file_input);
+    print_result(env, &amp;result);
+    Object::None
+}
+
+const VARIADIC: usize = usize::MAX;
+
+type Fp = fn(&amp;mut Env) -&gt; Object;
+type LazyFp = fn(&amp;mut Env, &amp;App) -&gt; Object;
+
+static FN_TABLE: &amp;[(&amp;str, Fp, usize, usize)] = &amp;[
+    ("+", add, 2, 2), ("-", sub, 2, 2),
+    ("*", mul, 2, 2), ("/", div, 2, 2), ("%", rem, 2, 2),
+    ("=", obj_eq, 2, 2), ("&lt;", obj_lt, 2, 2), ("&lt;=", obj_le, 2, 2),
+    ("print", print, 1, 1), ("empty", empty, 1, 1), ("not", not, 1, 1),
+    ("cons", cons, 2, 2), ("first", first, 1, 1), ("rest", rest, 1, 1),
+    ("block", block, 1, VARIADIC), ("list", list_literal, 0, VARIADIC),
+    ("load", load_file, 1, 1), ("log", log, 1, 1)
+];
+
+static FN_LAZY_TABLE: &amp;[(&amp;str, LazyFp, usize, usize)] = &amp;[
+    ("define", define, 2, 2), ("fn", lambda, 4, 4),
+    ("if", if_fn, 3, 3), ("and", and, 2, 2), ("or", or, 2, 2),
+    ("tail-call", tail_call, 1, VARIADIC),
+    ("tail-iter", tail_iter, 1, 1)
+];
+
+struct Env {
+    map: HashMap&lt;Rc&lt;str&gt;, Object&gt;,
+    stack: Vec&lt;Object&gt;,
+    base_pointer: usize,
+    traceback: Vec&lt;(Rc&lt;str&gt;, usize, usize)&gt;,
+    active_fn: Rc&lt;Function&gt;
+}
+impl Env {
+    fn new() -&gt; Self {
+        let mut map = HashMap::new();
+        for (id, f, argc_min, argc_max) in FN_TABLE {
+            let id: Rc&lt;str&gt; = Rc::from(*id);
+            map.insert(id.clone(), Object::Fn(Rc::new(FnObj {
+                fp: f, id,
+                argc_min: *argc_min, argc_max: *argc_max,
+                context: Vec::new()
+            })));
+        }
+        for (id, fp, argc_min, argc_max) in FN_LAZY_TABLE {
+            map.insert(Rc::from(*id), Object::FnLazy(Rc::new(FnLazyObj {
+                fp, id, argc_min: *argc_min, argc_max: *argc_max})));
+        }
+        map.insert(Rc::from("true"), Object::Bool(true));
+        map.insert(Rc::from("false"), Object::Bool(false));
+        let main_fn = Rc::new(FnObj {
+            fp: |_: &amp;mut Env| Object::None, id: Rc::from("main"),
+            argc_min: 0, argc_max: 0, context: Vec::new()
+        });
+        Self {map, stack: Vec::new(), base_pointer: 0,
+            traceback: vec![], active_fn: main_fn}
+    }
+    fn arg(&amp;self, index: usize) -&gt; &amp;Object {
+        &amp;self.stack[self.base_pointer + index]
+    }
+    fn argc(&amp;self) -&gt; usize {
+        self.stack.len() - self.base_pointer
+    }
+    fn argv(&amp;self) -&gt; &amp;[Object] {
+        &amp;self.stack[self.base_pointer..]
+    }
+    fn traceback(&amp;mut self, id: &amp;Rc&lt;str&gt;, line: usize, col: usize) {
+        self.traceback.push((id.clone(),line,col));
+    }
+}
+
+fn value_error(text: String) -&gt; Error {
+    Rc::new(ErrorEnum::Value {text})
+}
+
+fn argc_error(env: &amp;mut Env, id: &amp;Rc&lt;str&gt;, argc: usize,
+    argc_min: usize, argc_max: usize, line: usize, col: usize
+) -&gt; Object
+{
+    let text = if argc_min == argc_max {
+        format!("expected argument count {}, got {}.",
+            argc_min, argc)
+    } else {
+        format!("expected argument count in [{}..{}], got {}.",
+            argc_min, argc_max, argc)
+    };
+    env.traceback(id, line, col);
+    Object::Err(value_error(text))
+}
+
+fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
+    match object {
+        Object::None =&gt; Object::None,
+        Object::Bool(value) =&gt; Object::Bool(*value),
+        Object::Int(value) =&gt; Object::Int(*value),
+        Object::Fn(f) =&gt; Object::Fn(f.clone()),
+        Object::FnLazy(f) =&gt; Object::FnLazy(f.clone()),
+        Object::Interface(x) =&gt; Object::Interface(x.clone()),
+        Object::Symbol(id) =&gt; {
+            match env.map.get(id) {
+                Some(value) =&gt; value.clone(),
+                _ =&gt; Object::Err(value_error(
+                    format!("undefined variable: {}.", id)))
+            }
+        },
+        Object::App(app) =&gt; {
+            let f = eval(env,&amp;app.list[0]);
+            if let Object::Err(e) = f {
+                Object::Err(e)
+            } else if let Object::Fn(f) = f {
+                let argc = app.list.len() - 1;
+                if argc &lt; f.argc_min || argc &gt; f.argc_max {
+                    return argc_error(env, &amp;f.id, argc,
+                        f.argc_min, f.argc_max, app.line, app.col);
+                }
+                let len = env.stack.len();
+                for x in &amp;app.list[1..] {
+                    let object = eval(env,x);
+                    if let Object::Err(e) = object {
+                        while len != env.stack.len() {
+                            env.stack.pop();
+                        }
+                        return Object::Err(e);
+                    }
+                    env.stack.push(object);
+                }
+                let bp = env.base_pointer;
+                env.base_pointer = len;
+                let fsuper = replace(&amp;mut env.active_fn, f.clone());
+                let value = (f.fp)(env);
+                env.active_fn = fsuper;
+                env.base_pointer = bp;
+                for _ in 0..argc {
+                    env.stack.pop();
+                }
+                if let Object::Err(_) = value {
+                    env.traceback(&amp;f.id,app.line,app.col);
+                }
+                value
+            } else if let Object::FnLazy(f) = f {
+                let argc = app.list.len() - 1;
+                if argc &lt; f.argc_min || argc &gt; f.argc_max {
+                    return argc_error(env, &amp;Rc::from(f.id), argc,
+                        f.argc_min, f.argc_max, app.line, app.col);
+                }
+                (f.fp)(env, &amp;app)
+            } else {
+                Object::Err(value_error(
+                    format!("Object {} is not callable.",f)))
+            }
+        },
+        Object::Err(e) =&gt; Object::Err(e.clone())
+    }
+}
+
+fn eval_string(env: &amp;mut Env, s: &amp;[u8]) -&gt; Result&lt;Object, Error&gt; {
+    let tokens = scan(s)?;
+    let a = parse(&amp;tokens)?;
+    let mut value = Object::None;
+    for t in &amp;a {
+        value = eval(env,t);
+        if let Object::Err(e) = value {
+            return Err(e);
+        }
+    }
+    Ok(value)
+}
+
+fn input(prompt: &amp;str) -&gt; std::io::Result&lt;String&gt; {
+    use std::{io,io::Write};
+    let mut buffer = String::new();
+    print!("{}",prompt);
+    io::stdout().flush()?;
+    io::stdin().read_line(&amp;mut buffer)?;
+    if buffer.ends_with('\n') {
+        buffer.pop();
+        if buffer.ends_with('\r') {buffer.pop();}
+    }
+    Ok(buffer)
+}
+
+fn print_result(env: &amp;mut Env, result: &amp;Result&lt;Object, Error&gt;) {
+    match result {
+        Ok(value) =&gt; {
+            if !matches!(value, Object::None) {
+                println!("{}", value);
+            }
+        },
+        Err(e) =&gt; {
+            println!("{}", e);
+            if !env.traceback.is_empty() {
+                println!("\nTraceback:");
+                for (id, line, col) in &amp;env.traceback {
+                    println!("in {}, entered at {}:{}",
+                        id, line + 1, col + 1);
+                }
+            }
+            println!();
+            env.traceback.clear();
+        }
+    }
+}
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+    let env = &amp;mut Env::new();
+    if argv.len() == 1 {
+        loop {
+            let s = input("&gt; ")?;
+            let result = eval_string(env, s.as_bytes());
+            print_result(env, &amp;result);
+        }
+    } else {
+        let file_input = std::fs::read(&amp;argv[1])?;
+        let result = eval_string(env, &amp;file_input);
+        print_result(env, &amp;result);
+    }
+    Ok(())
+}
+</pre>
+
+<h2 id="Beispiele">Beispiele</h2>
+<h3>Beispiel: Primzahlen</h3>
+
+<pre class="ibox">
+(define range-rec (fn (i j acc)
+    (if (&gt;= j i)
+        acc
+        (tail-call range-rec i (- j 1) (cons (- j 1) acc)))))
+
+(define range (fn (i j)
+    (tail-iter (range-rec i j ()))))
+
+(define rev-rec (fn (a acc)
+    (if (empty a)
+        acc
+        (tail-call rev-rec (rest a) (cons (first a) acc)))))
+
+(define rev (fn (a)
+    (tail-iter (rev-rec a ()))))
+
+(define filter-rec (fn (p a acc)
+    (if (empty a)
+        acc
+        (tail-call filter-rec p (rest a) (if (p (first a))
+            (cons (first a) acc)
+            acc)))))
+
+(define filter (fn (p a)
+    (rev (tail-iter (filter-rec p a ())))))
+
+(define count-rec (fn (p a acc)
+    (if (empty a)
+        acc
+        (tail-call count-rec p (rest a) (if (p (first a))
+            (+ acc 1)
+            acc)))))
+
+(define count (fn (p a)
+    (tail-iter (count-rec p a 0))))
+
+(define is-prime (fn (n)
+    (= 1 (count (fn (k) (= (% n k) 0)) (range 1 n)))))
+
+(print
+    (filter is-prime (range 0 100)))
+</pre>
+
+<h3>Beispiel: Fixpunkt-Kombinator</h3>
+
+<pre class="ibox">
+(define fix (fn (F)
+    ((fn (x) (x x)) (fn (x) (F (fn (n) ((x x) n)))))))
+
+(define fac (fix (fn (f) (fn (n)
+    (if (= n 0) 1 (* n (f (- n 1))))))))
+
+(print (fac 4))
+</pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Harold Abelson, Gerald Jay Sussman, Julie Sussman:
+  »Struktur und Interpretation von Computerprogrammen: Eine Informatik-Einführung«.
+  Springer, Berlin &amp; Heidelberg, 4. Auflage 2001.
+<li>R7RS Working Group 1: »<a href="https://small.r7rs.org/attachment/overview.pdf"
+  >Overview of the Revised7 Algorithmic Language Scheme</a>«.
+  April 2013.
+<li>R7RS Working Group 1: »<a href="https://small.r7rs.org/"
+  >Revised7 Report on the Algorithmic Language Scheme</a>«.
+  Juli 2013.
+</ol>
+
+</body>
+</html>
+

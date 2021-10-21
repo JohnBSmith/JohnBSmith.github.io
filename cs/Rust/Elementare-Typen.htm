@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Elementare Typen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Ganzzahlen">Ganzzahlen</a>
+<li><a href="#Fliesskommazahlen">Fließkommazahlen</a>
+<li><a href="#Typumwandlungen">Typumwandlungen</a>
+<li><a href="#Bitweise">Bitweise Operationen</a>
+<li><a href="#Bitmasken">Bitmasken</a>
+<li><a href="#Ueberlauf">Umgang mit Überlauf</a>
+</ol>
+
+<h2 id="Ganzzahlen">Ganzzahlen</h2>
+
+<p>Die vorzeichenlosen Ganzzahl-Datentypen in Rust sind
+<code>u8</code>, <code>u16</code>, <code>u32</code> und <code>u64</code>.
+Das <code>u</code> steht hierbei für <i>unsigned</i> (dt. vorzeichenlos)
+und die Zahl dahinter ist die Anzahl der Bits. Ein Bit ist eine
+binäre Ziffer. Eine Speicherzelle mit <var>n</var> Bits kann also die
+2<sup><var>n</var></sup> Zahlen von 0 bis 2<sup><var>n</var></sup>&minus;1
+speichern.
+
+<p>Neben den vorzeichenlosen gibt es auch noch die vorzeichenbehafteten
+Typen <code>i8</code>, <code>i16</code>, <code>i32</code> und <code>i64</code>.
+Das <code>i</code> steht dabei für <i>integer</i> (dt. Ganzzahl).
+Das Vorzeichen wird hier nicht im ersten oder letzten Bit gespeichert.
+Stattdessen liegen die Zahlen in der Zweier-Komplement-Darstellung vor.
+Der Zahlenvorrat reicht hier von &minus;2<sup><var>n</var>&minus;1</sup>
+bis 2<sup><var>n</var>&minus;1</sup>&minus;1.
+
+<p>Außerdem gibt es noch die Typen <code>usize</code> und
+<code>isize</code>. Der Typ <code>usize</code> ist ein Typ, der intern
+die Gestalt von <code>u32</code> oder <code>u64</code> besitzt, je
+nachdem ob ein 32-Bit-Programm oder ein 64-Bit-Programm vorliegt.
+Ein 64-Bit-Programm hat u.&nbsp;a. den Vorteil, dass es mehr als
+4&nbsp;GB Arbeitsspeicher adressieren kann. Es gibt reine
+<var>n</var>-Bit-Architekturen, auf denen nur <var>n</var>-Bit-Programme
+ausgeführt werden können. Auf eingeschränkten Mikrocontrollern
+kann auch <var>n</var>=16 oder gar <var>n</var>=8 sein.
+Die Typen <code>usize</code> und <code>isize</code> sind dafür da,
+um mit Längen und Speicheradressen rechnen zu können, unabhängig davon
+ob eine 32-Bit oder 64-Bit-Architektur vorliegt.
+
+<p>Wir wollen nun die Zahl 12 an den Bezeichner <code>x</code> binden.
+Das geschieht wie folgt:
+
+<pre class="rust ibox">
+let x: i32 = 12i32;
+</pre>
+
+<p>Hier muss man zunächst bemerken, dass der Rust-Compiler in der
+Lage ist, den Typ von <code>x</code> aus dem Ausdruck auf der
+rechten Seite vom Zuweisungszeichen »=« zu erkennen. Dieser Vorgang
+nennt sich <i>Typinferenz</i>. Man darf also kürzer schreiben:
+
+<pre class="rust ibox">
+let x = 12i32;
+</pre>
+
+<p>Da aber <code>i32</code> der Standard-Ganzzahl-Datentyp ist,
+wird dieser angenommen, falls kein Typ abgeleitet werden kann.
+Man kann hier also kurz schreiben:
+
+<pre class="rust ibox">
+let x = 12;
+</pre>
+
+<p>Angenommen wir benötigen nun einen Ganzzahltyp, der auf einem
+Computer <code>u16</code> und auf dem anderen Computer <code>u32</code>
+ist. Rust bietet diese Möglichkeit der Abstraktion, indem es uns einen
+Typ-Alias definieren lässt, welcher ähnlich wie <code>usize</code>
+verwendet wird:
+
+<pre class="rust ibox">
+type uint = u32;
+let x: uint = 12;
+</pre>
+
+<p>Hier ist <code>uint</code> ein Alias für <code>u32</code>.
+Durch Änderung einer einzigen Zeile kann ein komplexes Computerprogramm
+nun an eine andere Architektur angepasst werden. Auch die
+Automatisierung dieser Änderung ist möglich. Durch Änderung
+der Konfiguration in einer Datei ließe sich ein ganzes Softwaresystem
+anpassen. Ein solcher Extremfall wäre z.&nbsp;B. <code>usize</code>,
+wobei <code>usize</code> aber ein eigener abstrakter Datentyp ist.
+Noch strenger lässt sich die Abstraktion formulieren, wenn man
+wie bei <code>usize</code> einen dafür vorgesehen abstrakten
+Datentyp formuliert. Eine genaue Erläuterung dazu folgt in einem
+späteren Kapitel.
+
+<p>Rust erlaubt die binäre, oktale und hexadezimale
+Darstellung einer Zahl im Quelltext:
+
+<pre class="rust ibox">
+let x: u32 = 0b00000000_00000000_00000000_00001100; // binär
+let x: u32 = 0b1100; // binär, kurz
+let x: u32 = 0x00_00_00_0c; // hexadezimal
+let x: u32 = 0x0000000c; // hexadezimal ohne Trennzeichen
+let x: u32 = 0xc; // hexadezimal, kurz
+let x: u32 = 0o14; // oktal
+</pre>
+
+<p>Der Unterstrich darf an beliebigen Stellen eingefügt werden
+und dient ausschließlich als Mittel, um bessere Lesbarkeit
+zu ermöglichen. Auch die Ausgabe in den unterschiedlichen
+Darstellungen ist möglich:
+
+<pre class="rust ibox">
+let x: u32 = 12;
+println!("{}, 0b{:b}, 0x{:x}, 0o{:o}", x, x, x, x);
+</pre>
+
+<p>Ausgabe:
+
+<pre class="ibox">
+12, 0b1100, 0xc, 0o14
+</pre>
+
+<h2 id="Fliesskommazahlen">Fließkommazahlen</h2>
+
+<p>Die Datentypen <code>f32</code> und <code>f64</code> repräsentieren
+Fließkommazahlen, wobei 32 bzw. 64 wieder für die Zahl der Bits
+steht. Der Typ <code>f64</code> ist der Standarddatentyp für
+Fließkommazahlen. Der Typ <code>f32</code> sollte nur in extrem
+Laufzeit-kritischen Routinen verwendet werden, etwa in den
+Grafik-Kernen von Computerspielen, da dort jede Verzögerung
+schmerzlich ist.
+
+<p>Wird keine weitere Typ-Annotation angegeben, die Zahl aber
+mit einen Punkt dargestellt, dann wird <code>f64</code> angenommen:
+<pre class="rust ibox">
+let x = 1.0; //  let x: f64 = 1.0;
+</pre>
+
+<p>Die elementaren Funktionen sind ohne weitere Einbindungen
+verfügbar, müssen jedoch als Methodenaufruf geschrieben
+werden:
+
+<pre class="rust ibox">
+use std::f64::consts::PI;
+const GRAD: f64 = PI/180.0;
+
+let x = f64::sqrt(2.0);
+let y = f64::sin(90.0*GRAD);
+</pre>
+
+<p>Neue Funktionen lassen sich ganz einfach definieren:
+
+<pre class="rust ibox">
+fn f(x: f64) -&gt; f64 {
+    1.0/(x.abs() + 1.0)
+}
+
+fn main(){
+    println!("{}", f(1.0))
+}
+</pre>
+
+<h2 id="Typumwandlungen">Typumwandlungen</h2>
+
+<h3>Sichere Typumwandlungen</h3>
+
+<p>Für sichere Typumwandlungen steht die Funktion <code>from</code>
+zur Verfügung:
+
+<pre class="rust ibox">
+let x: u8 = 0;
+let y: i32 = i32::from(x);
+</pre>
+
+<p>Normalerweise ist eine solche Umwandlung eine
+umkehrbare Einbettung. Z.&nbsp;B. ist die Umwandlung von <code>u8</code>
+nach <code>i32</code> eine Einbettung, da <code>u8</code> als Teilmenge
+von <code>i32</code> betrachtet werden kann, und umkehrbar, da niemals
+zwei <code>u8</code>-Zahlen zur selben <code>i32</code>-Zahl werden.
+
+<p>In der Übersicht ergeben sich die folgenden Umwandlungen:
+<pre class="indent">
+u16::from(x: u8),
+u32::from(x: u8), u32::from(x: u16),
+u64::from(x: u8), u64::from(x: u16), u64::from(x: u32)
+
+i16::from(x: u8),
+i32::from(x: u8), i32::from(x: u16),
+i64::from(x: u8), i64::from(x: u16), i64::from(x: u32)
+
+i16::from(x: i8),
+i32::from(x: i8), i32::from(x: i16),
+i64::from(x: i8), i64::from(x: i16), i64::from(x: i32)
+</pre>
+
+<p>Nun stellt sich noch die Frage, wie Umwandlungen mit möglichem
+Verlust gehandhabt werden sollen. Falls ein Verlust auftritt, würde
+man das Verhalten dann gerne selbst festlegen. Dies erlaubt die Funktion
+<code>try_from</code>. Bei Verlust auf den gleichen Wert
+abzubilden, lässt sich wie folgt bewerkstelligen:
+
+<pre class="rust ibox">
+const DEFAULT: u8 = 0;
+
+fn main() {
+    let x: u32 = 12;
+    let y: u8 = match u8::try_from(x) {
+        Ok(value) =&gt; value,
+        _ =&gt; DEFAULT
+    };
+    println!("{}", y);
+}
+</pre>
+
+<p>Wenn man aber von vornherein weiß, dass das Argument im Wertebereich
+von <code>u8</code> liegt, sollte man stattdessen dies schreiben:
+
+<pre class="rust ibox">
+let y: u8 = match u8::try_from(x) {
+    Ok(value) =&gt; value,
+    _ =&gt; unreachable!()
+};
+</pre>
+
+<p>Für die Fallunterscheidung mit <code>match</code> gibt es auch
+Kurzschreibweisen:
+<pre class="rust ibox">
+let y = u8::try_from(x).unwrap_or(DEFAULT);
+</pre>
+
+<p>bzw.
+<pre class="rust ibox">
+let y = u8::try_from(x).unwrap_or_else(|_| unreachable!());
+</pre>
+
+<p>Besteht Unklarheit darüber, wie sich ein Fehler am besten lokal
+handhaben lässt, ist der Ausweg das Weiterreichen des Fehlers
+nach oben an den Aufrufer.
+
+<pre class="rust ibox">
+fn main() -&gt; Result&lt;(), std::num::TryFromIntError&gt; {
+    let x: u32 = 12;
+    let y = match u8::try_from(x) {
+        Ok(value) =&gt; value,
+        Err(e) =&gt; return Err(e)
+    };
+    println!("{}", y);
+    Ok(())
+}
+</pre>
+
+<p>Auch hier gibt es wieder eine Kurzschreibweise:
+<pre class="rust ibox">
+let y = u8::try_from(x)?;
+</pre>
+
+<h3>Verlustbehaftete Typumwandlungen</h3>
+
+<p>Neben den sicheren Typumwandlungen gibt es in Rust noch die
+nackten Typumwandlungen mit dem Schlüsselwort »<code>as</code>«.
+Zwar stellen diese Umwandlungen keinen unsicheren Code dar, jedoch
+erlauben sie stillschweigend Verlust und Transmutation, sind
+daher also mit Vorsicht zu genießen.
+
+<p>Man sollte solche nackten Typumwandlungen nur dann verwenden,
+wenn sie nicht mit <code>from</code> möglich sind, beispielsweise
+bei einer potentiell verlustbehafteten Umwandlung:
+
+<pre class="rust ibox">
+let x: u32 = 12;
+let y: u8 = x as u8;
+</pre>
+
+<p>Was passiert hierbei? Bei einer Umwandlung von <code>u32</code>
+nach <code>u8</code> werden ganz einfach die drei höherwertigen
+Nullbytes abgeschnitten:
+
+<pre class="indent">
+Vorher:  u32: 00000000 00000000 00000000 00001100
+Nachher:  u8: 00001100
+</pre>
+
+<p>Die Operation »<code>x as u8</code>« ist demnach äquivalent zu:
+
+<pre class="rust ibox">
+match u8::try_from(x &amp; 0xff) {
+    Ok(value) =&gt; value,
+    _ =&gt; unreachable!()
+}
+</pre>
+
+<p>Möchte man ganz pedantisch sein, sollte die Absicht klargestellt
+werden. Unmissverständlich wäre
+
+<pre class="rust ibox">
+fn u8_wrapping_from_u32(x: u32) -&gt; u8 {
+    x as u8
+}
+</pre>
+
+<p>oder kurz:
+
+<pre class="rust ibox">
+trait WFrom&lt;T&gt; {
+    fn wfrom(x: T) -&gt; Self;
+}
+
+impl WFrom&lt;u32&gt; for u8 {
+    fn wfrom(x: u32) -&gt; u8 {x as u8}
+}
+</pre>
+
+<p>Man kann dann <code>u8::wfrom(x)</code> schreiben. Was ein Trait
+ist, ist jetzt nicht so wichtig, das wird später ausführlich erklärt.
+
+<p>Einige Leser mögen sich fragen, warum es <code>usize::from(x)</code>
+nicht für <code>x: u32</code> gibt. Dies liegt daran,
+dass <code>usize</code> auf 16-Bit-Architekturen nur 16&nbsp;Bit
+groß ist. Per Definition ist <code>from</code> frei von Verlust
+und <code>panic</code>, was die Umwandlung von 32&nbsp;Bit zu
+16&nbsp;Bit aber nicht gestattet.
+
+<p>Zieht man Unterstützung für 16-Bit-Architekturen in Erwägung und
+will man auf weitergehende algorithmische Anpassung verzichten,
+ist die folgende Funktion etwas sicherer als die direkte Benutzung
+von <code>as usize</code>.
+
+<pre class="rust ibox">
+#[cfg(not(target_pointer_width = "16"))]
+fn usize_from_u32(x: u32) -> usize {
+    x as usize
+}
+
+#[cfg(target_pointer_width = "16")]
+fn usize_from_u32(x: u32) -> usize {
+    usize::try_from(x).unwrap()
+}
+</pre>
+
+
+<h3>Transmutierende Typumwandlungen</h3>
+
+<p>Bei transmutierenden Umwandlungen werden Daten einfach als
+von anderem Typ interpretiert, ohne eine semantische Umwandlung
+vorzunehmen. Aus einer puristischen Sichtweise heraus ist das
+grundsätzlich problematisch, da durch die Offenlegung der internen
+Repräsentation der Daten jegliche Abstraktion zerstört wird. Aus
+diesem Grund sind Transmutationen charakteristisch für sehr
+maschinennahe Programmierung.
+
+<p>Betrachten wir z.&nbsp;B. die Umwandlung von <code>i32</code>
+in <code>u32</code>:
+<pre class="rust ibox">
+fn main() {
+    let x: i32 = -1;
+    println!("{}", x as u32);
+}
+</pre>
+
+<p>Hierbei wird Zweierkomplement-Darstellung offengelegt, was
+dazu führt, dass <code>-1</code> als <code>std::u32::MAX</code>
+interpretiert wird. Wer noch nie von der Zweierkomplement-Darstellung
+gehört hat, wird über das riesig große Ergebnis verblüfft sein.
+
+<p>Wer pedantisch sein will, sollte auch hier die Absicht klarstellen,
+z.&nbsp;B. als <code>u32::transmute_from(x)</code>.
+
+<pre class="rust ibox">
+trait TransmuteFrom&lt;T&gt; {
+    fn transmute_from(x: T) -&gt; Self;
+}
+
+impl TransmuteFrom&lt;i32&gt; for u32 {
+    fn transmute_from(x: i32) -&gt; u32 {x as u32}
+}
+</pre>
+
+
+<h2 id="Bitweise">Bitweise Operationen</h2>
+<p>Zahlen sind abstrakte Objekte, die physisch auf irgendeine Art
+dargestellt werden müssen. Eine praktische Methode dafür sind
+Stellenwertsysteme, und im Computer sind Zahlen bekanntlich im
+Binärsystem dargestellt. Zugriff auf die einzelnen Bits einer
+Speicherzelle ist auch möglich &ndash; mittels Bitmasken und
+Verschiebungen.
+
+<p>Bitweise Operationen lassen sich in zwei Gruppen unterscheiden.
+Das sind zum einen bitweise Operationen der booleschen Algebra, das
+sind NOT, AND, OR, XOR. Zum anderen gibt es Verschiebe-Operationen
+einschließlich zyklischen Verschiebungen, auch Rotation genannt.
+In Rust haben diese Operationen folgende Syntax:
+
+<table class="bt indent">
+<tr>
+<th>Operation
+<th>Op.
+<th>Rust
+<tr><td>Negation<td>NOT<td><code>!a</code>
+<tr><td>Konjunktion<td>AND<td><code>a&amp;b</code>
+<tr><td>Disjunktion<td>OR<td><code>a|b</code>
+<tr><td>Kontravalenz<td>XOR<td><code>a^b</code>
+</table>
+
+<br>
+<table class="bt indent">
+<tr>
+<th>Operation
+<th>Op.
+<th>Rust
+<tr><td>Linksshift<td>SHL<td><code>a&lt;&lt;n</code>
+<tr><td>Rechtsshift<td>SHR<td><code>a&gt;&gt;n</code>
+<tr><td>Linksrotation<td>ROTL<td><code>a.rotate_left(n)</code>
+<tr><td>Rechtsrotation<td>ROTR<td><code>a.rotate_right(n)</code>
+</table>
+
+<p>Man kann auch ein ganzes Byte aus Bits zusammensetzen.
+Man geht von der Darstellung im Binärsystem aus:
+<pre class="indent">
+a[7]*2<sup>7</sup> + a[6]*2<sup>6</sup> + a[5]*2<sup>5</sup> +<!--
+-->a[4]*2<sup>4</sup> + a[3]*2<sup>3</sup> + a[2]*2<sup>2</sup> +<!--
+-->a[1]*2<sup>1</sup> + a[0]*2<sup>0</sup>
+</pre>
+
+<p>Wir wollen die Ziffern zum Komfort auch in Big-Endian schreiben
+und drehen die Reihenfolge deshalb um:
+<pre class="indent">
+a[7]*2<sup>0</sup> + a[6]*2<sup>1</sup> + a[5]*2<sup>2</sup> +<!--
+-->a[4]*2<sup>3</sup> + a[3]*2<sup>4</sup> + a[2]*2<sup>5</sup> +<!--
+-->a[1]*2<sup>6</sup> + a[0]*2<sup>7</sup>
+</pre>
+
+<p>Die Zweierpotenzen kodiert man als Bitmasken. Anstelle von 
+Addition benutzt man bitweises Oder:
+<pre class="rust ibox">
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    u8::from(a[7])*0b00000001 | u8::from(a[6])*0b00000010 |
+    u8::from(a[5])*0b00000100 | u8::from(a[4])*0b00001000 |
+    u8::from(a[3])*0b00010000 | u8::from(a[2])*0b00100000 |
+    u8::from(a[1])*0b01000000 | u8::from(a[0])*0b10000000
+}
+
+fn main() {
+    let bits = &amp;[false, false, false, false, true, false, true, false];
+    println!("0b{:08b}", u8_from_bits(bits));
+}
+</pre>
+
+<p>Man könnte das auch wie gewohnt schreiben:
+<pre class="rust ibox">
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
+    for k in 0..7 {
+        acc += u8::from(a[k as usize])*(2u8).pow(7-k);
+    }
+    acc
+}
+</pre>
+
+<p>Eigentlich nimmt man dafür aber Linksshift und bitweises Oder:
+<pre class="rust ibox">
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
+    for k in 0..7 {
+        acc |= u8::from(a[k])*(2&lt;&lt;(6-k));
+    }
+    acc
+}
+</pre>
+
+<p>Schließlich lässt sich die Multiplikation noch beseitigen:
+<pre class="rust ibox">
+fn u8_from_bits(a: &amp;[bool; 8]) -&gt; u8 {
+    let mut acc = 0;
+    for k in 0..7 {
+        acc |= u8::from(a[k])&lt;&lt;(7-k);
+    }
+    acc
+}
+</pre>
+
+<p>Entsprechend gestaltet sich die Formulierung der umgekehrten Funktion:
+<pre class="rust ibox">
+fn bits_from_u8(x: u8) -&gt; [bool; 8] {
+    let mut bits: [bool; 8] = [false; 8];
+    for k in 0..7 {
+        if (x&gt;&gt;(7-k)) &amp; 0b00000001 == 1 {bits[k] = true;}
+    }
+    bits
+}
+</pre>
+
+<p>Effizienter ist es jedoch, den Zugriff auf sämtliche Bits einer
+Speicherzelle zu vermeiden. Man liest bzw. schreibt nur die Bits,
+welche für den jeweiligen Zweck von Interesse sind.
+
+<h2 id="Bitmasken">Bitmasken</h2>
+
+<p>Manchmal möchte man nicht eine ganze Speicherzelle auf einen
+bestimmten Wert setzen, sondern lediglich eine in ihr enthaltene
+Bitgruppe. Zur Bewerkstelligung sind Bitmasken hilfreich.
+
+<p>Aufgabe sei es, die niedrigstwertigen vier Bits eines Bytes
+<code>byte</code> auf einen bestimmten Wert <code>value</code> zu
+setzen. Da die höchstwertigen vier Bits erhalten bleiben sollen,
+extrahieren wir diese zunächst durch UND-Verknüpfung mit der Bitmaske
+<code>0xf0</code> bzw. <code>0b11110000</code>. Diese Operation
+resultiert in einem Wert, bei dem die niedrigstwertigen vier Bits null
+sind. Vom Wert <code>value</code> sollen auf der anderen Seite nur die
+niedrigstwertigen vier Bits von Bedeutung sein. Die Gewissheit, dass
+die höchstwertigen vier null sind, schafft die UND-Verknüpfung mit
+der Bitmaske <code>0x0f</code> bzw. <code>0b00001111</code>.
+Schließlich kombinieren wir die beiden Resultate durch eine
+ODER-Verknüpfung. Die Gesamtoperation ist:
+
+<pre class="rust ibox">
+// Set least significant 4 bits
+fn set_ls4(byte: &amp;mut u8, value: u8) {
+    *byte = (0xf0 &amp; *byte) | (0x0f &amp; value);
+}
+</pre>
+
+<p>Arbeitet man stattdessen mit Speicherzellen vom Typ <code>u32</code>,
+nimmt die Operation die Form
+
+<pre class="rust ibox">
+fn set_ls4(cell: &amp;mut u32, value: u32) {
+    *cell = (0xfff0 &amp; *cell) | (0xf &amp; value);
+}
+</pre>
+
+<p>an. Befinden sich die Bitgruppen von Speicherzelle und Wert an
+verschiedenwertigen Stellen, muss man entsprechend Bitverschiebungen
+hinzufügen.
+
+<h2 id="Ueberlauf">Umgang mit Überlauf</h2>
+
+<p>Der Wertebereich der elementaren Typen ist ja beschränkt, was
+die Frage aufwirft, wie mit arithmetischem Überlauf umzugehen ist.
+Überlauf bedeutet, dass das Ergebnis einer Operation den erlaubten
+Wertebereich verlässt. Wie ein überlaufendes Becken darf man
+arithmetischen Überlauf nicht einfach ignorieren, denn die
+Programmlogik kann in empfindlicher Weise davon abhängig sein,
+was im schlimmsten Fall zu einer Sicherheitslücke führen kann.
+
+<p>Problematisch sind allgemein solche Fehler, die längere Zeit
+unentdeckt bleiben, oder deren Ursache verschleiert bleibt. Diesen
+widerspenstigen Fehlern wirkt man zunächst am besten mit einer
+Fail-Fast-Strategie entgegen. Manifestieren tut sich dies meistens
+in Form von zusätzlichen Laufzeit-Prüfungen. Als Kompromisslösung
+lässt man diese zusätzlichen Prüfungen nur im Debug-Modus und
+während automatisierten Tests vorkommen, während sie im Release-Modus
+entfernt werden. Man kann solche Prüfungen auf Wunsch auch manuell mit
+den Makros <code>assert</code> und <code>debug_assert</code>
+einfügen.
+
+<p>Entsprechend ist dies bei den arithmetischen Operationen gehandhabt.
+Diese führen bei Überlauf im Debug-Modus zum Programmabbruch via
+<code>panic</code>. Im Release-Modus liegt stattdessen
+Wrapping-Verhalten vor, das direkt effizientem Maschinencode
+entspricht. Man kann die Prüfungen natürlich auch im Release-Modus
+durchführen lassen, wofür es ein Compiler-Flag gibt.
+
+<p>Das Wrapping-Verhalten entspricht bei vorzeichenlosen Ganzzahlen
+der modularen Arithmetik. Die folgenden drei Beispiele sind im
+Release-Modus äquivalent: 
+<pre class="rust ibox">
+fn main() {
+    let x: u8 = 100;
+    let y: u8 = 200;
+    println!("{}", x + y);
+}
+
+fn main() {
+    let x: u8 = 200;
+    let y: u8 = 100;
+    println!("{}", x.wrapping_add(y));
+}
+
+fn main() {
+    let x: u32 = 200;
+    let y: u32 = 100;
+    println!("{}", (x + y)%256);
+}
+</pre>
+
+<p>Es gibt zusätzlich spezielle Operationen zur genauen Kontrolle des
+Verhaltens beim Überlauf:
+
+<table class="bt">
+<tr>
+<th>Operation
+<th>Verhalten
+<tr>
+<td><code>x.checked_add(y)</code>
+<td><code>None</code> bei Überlauf, sonst <code>Some(x+y)</code>
+<tr>
+<td><code>x.overflowing_add(y)</code>
+<td><code>(x.wrapping_add(y), true)</code> bei Überlauf,
+  sonst <code>(x+y,&nbsp;false)</code>
+<tr>
+<td><code>x.saturating_add(y)</code>
+<td>Maximum des Zahlenraums bei Überlauf, sonst <code>x+y</code>
+<tr>
+<td><code>x.wrapping_add(y)</code>
+<td><code>x+y</code> modulo Zahlenraumgröße bei Überlauf,
+sonst <code>x+y</code>
+</table>
+
+<p>Entsprechende Varianten gibt es für die anderen arithmetischen
+Operationen.
+
+
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Iteratoren</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Motivation">Motivation</a>
+<li><a href="#Arten">Arten von Iteratoren</a>
+  <ol>
+  <li><a href="#Interne-Iteratoren">Interne Iteratoren</a>
+  <li><a href="#Externe-Iteratoren">Externe Iteratoren</a>
+  </ol>
+<li><a href="#for-Schleife">Die Mechanik der for-Schleife</a>
+<li><a href="#Fehlbare-Iteratoren">Fehlbare Iteratoren</a>
+</ol>
+
+<h2 id="Motivation">Motivation</h2>
+
+<p>Was sind Iteratoren und wozu sind sie wichtig? Diese Fragen sollen
+anhand eines motivierenden Beispiels beantwortet werden.
+Vorzulegen sei ein Programm, das von einer Reihe von Werten
+den Mittelwert berechnet. Die klassische Formulierung für die
+Berechnung des Mittelwerts sieht wie folgt aus.
+
+<pre class="rust ibox">
+fn mean(a: &amp;[f64]) -&gt; f64 {
+    let mut sum = 0.0;
+    for i in 0..a.len() {
+        sum += a[i];
+    }
+    sum/(a.len() as f64)
+}
+</pre>
+
+<p>Angenommen, die Werte kommen nun aus einer Datei. Man müsste nun
+zunächst die Werte aus der Datei extrahieren und in einem Array
+zwischenspeichern. Ist die Zahl der Werte allerdings sehr groß, kann
+das Array eine immense Menge an Hauptspeicher belegen. Zur Umgehung
+dieses Problems formuliert man dann eine Anpassung die auf das
+Zwischenspeichern verzichtet. Infolge liegen nun aber zwei
+unterschiedliche Varianten vom gleichen Algorithmus vor, was man als
+unelegant und umständlich betrachten kann.
+
+<p>Was wir bräuchten wäre eine Funktion die nicht von der Form der
+zu verarbeitenden Datenstruktur abhängig ist. Die obige Funktion
+erlaubt nur Arrays, Slices und dynamische Arrays, jedoch z.&nbsp;B.
+keine verketteten Listen. Das zentrale Problem dabei ist, dass die
+Schnittstelle der Funktion die interne Struktur der Datenstruktur
+offenlegt. Wir benötigen stattdessen eine abstrakte Schnittstelle.
+
+<p>An dieser Stelle kommen Iteratoren ins Spiel. Ein Iterator kann als
+Schnittstelle zum Zugriff auf die Elemente einer Datenstruktur
+betrachtet werden. Die über alle iterierbaren Typen polymorphe
+Formulierung der Berechnung des Mittelwertes gestaltet sich so:
+
+<pre class="rust ibox">
+fn mean(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x; count += 1;
+    }
+    sum/(count as f64)
+}
+</pre>
+
+<p>Diese Funktion erlaubt sowohl Arrays:
+<pre class="rust ibox">
+fn main() {
+    let a = &amp;[1.0, 2.0, 3.0, 4.0];
+    println!("{}", mean(a.iter().cloned()));
+}
+</pre>
+
+<p>als auch Datenströme aus Dateien:
+<pre class="rust ibox">
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| s.unwrap().parse::&lt;f64&gt;().unwrap());
+
+    println!("{}", mean(stream));
+    Ok(())
+}
+</pre>
+
+<p>Ein verbleibendes Manko schlägt sich im Vorkommen von
+<code>unwrap</code> nieder. Aufgrund dieses Umstandes könnte man nun
+meinen, Iteratoren wären, weil sie keine Fehler berücksichtigen können,
+zur kurz gedacht und damit für die Praxis ungeeignet. Dem ist
+jedoch nicht so. Später zeige ich im Abschnitt
+›<a href="#Fehlbare-Iteratoren">Fehlbare Iteratoren</a>‹ auf, wie man
+Fehler in die Iteratoren einbeziehen kann.
+
+<h2 id="Arten">Arten von Iteratoren</h2>
+
+<h3 id="Interne-Iteratoren">Interne Iteratoren</h3>
+
+<p>Ein interner Iterator manifestiert sich im Aufruf einer Funktion
+höherer Ordnung, die kontrolliert welche Argumente an einen
+Funktionenzeiger übergeben werden. Die Argumente sind die Werte des
+Iterators. Betrachten wir als Beispiel die Methode
+<code>for_each</code>, die jedes Element mit dem Funktionenzeiger
+<code>cb</code> (callback) aufruft. Nur <code>for_each</code> besitzt
+die Kontrolle darüber, mit welchen Elementen <code>cb</code> aufgerufen
+wird.
+
+<pre class="rust ibox">
+trait ForEach&lt;T&gt; {
+    fn for_each(self, cb: impl Fn(&amp;T));
+}
+
+impl&lt;T&gt; ForEach&lt;T&gt; for &amp;[T] {
+    fn for_each(self, cb: impl Fn(&amp;T)) {
+        for i in 0..self.len() {
+            cb(&amp;self[i]);
+        }
+    }
+}
+
+fn main() {
+    let a = ["Eiche", "Buche", "Ahorn", "Birke"];
+    a.for_each(|x| {
+        println!("{}", x);
+    });
+}
+</pre>
+
+<p>Hier ist <code>x</code> der Wert des zu <code>for_each</code>
+gehörenden verborgenen Iterators.
+
+<h3 id="Externe-Iteratoren">Externe Iteratoren</h3>
+
+<p>Ein externer Iterator ist ein Objekt, welches den Trait
+<code>Iterator</code> implmentiert, d.&nbsp;h. eine Methode
+<code>next</code> besitzt, die den nächsten Wert der Iteration
+liefert.
+
+<pre class="rust ibox">
+struct SliceIterator&lt;'a,T&gt; {
+    a: &amp;'a [T],
+    i: usize
+}
+
+impl&lt;'a,T&gt; Iterator for SliceIterator&lt;'a,T&gt; {
+    type Item = &amp;'a T;
+    fn next(&amp;mut self) -&gt; Option&lt;&amp;'a T&gt; {
+        match self.i &lt; self.a.len() {
+            false =&gt; None,
+            _ =&gt; {self.i += 1; Some(&amp;self.a[self.i-1])}
+        }
+    }
+}
+
+fn iter&lt;T&gt;(a: &amp;[T]) -&gt; SliceIterator&lt;T&gt; {
+    SliceIterator {a, i: 0}
+}
+
+fn main() {
+    let a = ["Eiche", "Buche", "Ahorn", "Birke"];
+    for x in iter(&amp;a) {
+        println!("{}", x);
+    }
+}
+</pre>
+
+<h2 id="for-Schleife">Die Mechanik der for-Schleife</h2>
+
+<p>In Rust besteht zwischen Iteratoren und der for-Schleife ein
+enger Zusammenhang. Und zwar ist die for-Schleife eine Kurzschreibweise
+für die Erzeugung eines Iterators durch den Aufruf von
+<code>into_iter</code> und dessen Abarbeitung durch den Aufruf von
+<code>next</code>. Der erzeugte Iterator ist hierbei nur implizit
+vorhanden, &ndash; damit meine ich, er kommt aus äußerer Sicht
+nicht vor.
+
+<p>Zur näheren Erläuterung ein Beispiel. Das Programm
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+for x in v {
+    println!("{}", x);
+}
+</pre>
+
+<p>ist äquivalent zu
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+let mut i = v.into_iter();
+while let Some(x) = i.next() {
+    println!("{}", x);
+}
+</pre>
+
+<p>bzw.
+
+<pre class="rust ibox">
+let v = vec![1, 2, 3, 4];
+let mut i = v.into_iter();
+loop {
+    let x = match i.next() {
+        Some(value) =&gt; value,
+        None =&gt; break
+    };
+    println!("{}", x);
+}
+</pre>
+
+<p>Von Belang ist für uns, dass die Methode <code>into_iter</code>
+ihr Argument konsumiert, wie man an ihrer Signatur
+<pre class="rust ibox">
+fn into_iter(self) -&gt; Self::IntoIter
+</pre>
+
+<p>ablesen kann. In vielen Fällen ist allerdings eine Leihgabe anstelle
+einer Besitzübertragung gewünscht. Erreicht wird dies meistens
+einfach, indem man zuvor eine Leihgabe bildet. Nämlich ist
+<code>into_iter</code>
+die Methode des Traits <code>IntoIterator</code>, welcher für viele
+unterschiedliche Typen implementiert ist. Die Idee dabei: Zwar
+konsumiert <code>into_iter</code> immer ihr Argument. Aber falls
+dieses Argument eine Leihgabe ist, wird ja lediglich diese Leihgabe
+konsumiert.
+
+<p>Alternativ schaltet man den Aufruf einer der Methoden
+<code>iter</code> oder <code>iter_mut</code> vor, welche
+auch für viele Typen implementiert sind, &ndash; allerdings nicht
+in Form von Trait-Methoden. Diese Methoden erzeugen einen Iterator
+aus Leihgaben, welcher daraufhin durch <code>into_iter</code>
+konsumiert wird. Es ist nämlich so, dass <code>into_iter</code>
+für jeden Iterator generisch als identische Abbildung implementiert
+ist. Das heißt, falls bereits ein Iterator vorliegt, ist
+<code>into_iter</code> schlicht wirkungslos.
+
+<p>Zu beachten ist noch, dass die Bildung von Leihgaben mit der
+Leihgabe der Iteratorwerte einhergeht. Das muss auch so sein.
+Wurde der Iterator lediglich aus einer Leihgabe heraus erzeugt, darf
+dieser keinesfalls die Elemente konsumieren, da diese Elemente nicht im
+Besitz des Iterators liegen.
+
+<p>Der Typ <code>Vec&lt;T&gt;</code> ist zudem mit der Besonderheit
+behaftet, die Methoden <code>iter</code> und <code>iter_mut</code>
+nicht extra implementieren zu müssen, weil die Leihgabe bei diesem
+über den Deref-Mechanismus auf die Leihgabe der Belegung des internen
+Puffers zurückgeführt wird. Dieser Puffer-Ausschnitt ist vom Typ
+<code>[T]</code>, welcher bereits die entsprechenden Methoden besitzt.
+
+<table class="bt">
+<tr><th>Methode<th>Typ des Arguments<th>Typ des Iteratorwertes
+<tr><td><code>iter</code><td><code>&amp;[T]</code><td><code>&amp;T</code>
+<tr><td><code>iter_mut</code><td><code>&amp;mut [T]</code><td><code>&amp;mut T</code>
+<tr><td><code>into_iter</code><td><code>Vec&lt;T&gt;</code><td><code>T</code>
+</table>
+
+<h2 id="Fehlbare-Iteratoren">Fehlbare Iteratoren</h2>
+
+<h3>Manuelle Modifizierung</h3>
+
+<p>Die Einführung von Iteratoren wurde anhand einer
+Mittelwert-Berechnung motiviert. Da tat sich sogleich die Problematik
+auf, dass Iteratoren Fehler berücksichtigen können müssen,
+damit man das Programm von Programmabbrüchen via <code>unwrap</code>
+oder ähnlich bereinigen kann.
+
+<p>Ein Weg zur Einbeziehung von Fehlern besteht in der
+Anpassung der Funktion <code>mean</code>. Das geht so:
+
+<pre class="rust ibox">
+fn mean&lt;E&gt;(a: impl Iterator&lt;Item = Result&lt;f64, E&gt;&gt;)
+-&gt; Result&lt;f64, E&gt;
+{
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x?; count += 1;
+    }
+    Ok(sum/(count as f64))
+}
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| Ok::&lt;f64, Error&gt;(s?.parse::&lt;f64&gt;()?));
+
+    println!("{}", mean(stream)?);
+    Ok(())
+}
+</pre>
+
+<p>Die neue Funktion kann man als eine Verallgemeinerung
+betrachten, denn die ursprüngliche lässt sich aus dieser
+zurückgewinnen:
+
+<pre class="rust ibox">
+fn mean_plain(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    enum Zero {}
+    match mean(a.map(Ok::&lt;f64, Zero&gt;)) {
+        Ok(value) =&gt; value,
+        Err(e) =&gt; match e {} // unreachable
+    }
+}
+</pre>
+
+<p>Das ist ein wenig umständlich. In Zukunft sollte man das ein wenig
+kürzer formulieren können:
+
+<pre class="rust ibox">
+fn mean_plain(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    let Ok(value) = mean(a.map(Ok::&lt;f64, !&gt;));
+    value
+}
+</pre>
+
+<h3>Iterator-Adapter</h3>
+
+<p>Die manuelle Berücksichtigung kommt recht umständlich daher,
+das ist ein berechtigter Einwand. Wir würden lieber eine Funktionalität
+haben, die zu einem Iterator automatisch eine fehlbare Verarbeitung
+erzeugt, so ähnlich wie <code>Result::map</code> das bei einer Funktion
+tut. Hier stellt sich die Schwierigkeit in den Weg, dass
+<code>mean</code> den Iterator konsumiert, woraufhin der Iterator von
+außen aus nicht mehr kontrollierbar ist.
+
+<p>Der einzige verbleibende Weg besteht darin, den Iterator von
+innen aus zu kontrollieren. Dazu wird der ursprüngliche fehlbare
+Iterator durch einen neuen unfehlbaren Iterator verhüllt. Kommt es
+im ursprünglichen Iterator zu einem Fehler, wird der Fehler in eine
+Hilfsvariable geschrieben und der unfehlbare Iterator beendet.
+Der Wert von <code>mean</code> wird verworfen und durch den Fehler
+ersetzt.
+
+<p>Weil der unfehlbare Iterator von <code>mean</code> konsumiert
+wird, muss die Hilfsvariable als Leihgabe gespeichert werden,
+denn andernfalls würde sie mit dem Iterator verschwinden.
+Das führt zu der folgenden Konstruktion.
+
+<pre class="rust ibox">
+struct ProcessResults&lt;'a, I, E&gt; {
+    error: &amp;'a mut Result&lt;(), E&gt;,
+    iter: I
+}
+
+impl&lt;I, T, E&gt; Iterator for ProcessResults&lt;'_, I, E&gt;
+where I: Iterator&lt;Item = Result&lt;T, E&gt;&gt;
+{
+    type Item = T;
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt; {
+        match self.iter.next() {
+            Some(Ok(x)) =&gt; Some(x),
+            Some(Err(e)) =&gt; {
+                *self.error = Err(e);
+                None
+            },
+            None =&gt; None
+        }
+    }
+}
+
+fn process_results&lt;I, F, T, E, R&gt;(i: I, cb: F) -&gt; Result&lt;R, E&gt;
+where
+    I: Iterator&lt;Item = Result&lt;T, E&gt;&gt;,
+    F: FnOnce(ProcessResults&lt;I, E&gt;) -&gt; R
+{
+    let mut error = Ok(());
+    let value = cb(ProcessResults {iter: i, error: &amp;mut error});
+    match error {Ok(()) =&gt; Ok(value), Err(e) =&gt; Err(e)}
+}
+</pre>
+
+<p>Diese Funktion <code>process_results</code> ist im Paket
+»<a href="https://crates.io/crates/itertools">itertools</a>«
+verfügbar. Damit wird man <code>unwrap</code> los, ohne
+<code>mean</code> modifizieren zu müssen:
+
+<pre class="rust ibox">
+fn mean(a: impl Iterator&lt;Item = f64&gt;) -&gt; f64 {
+    let mut count: u64 = 0;
+    let mut sum = 0.0;
+    for x in a {
+        sum += x; count += 1;
+    }
+    sum/(count as f64)
+}
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    use std::{fs::File, io::BufReader, io::BufRead};
+    let argv: Vec&lt;String&gt; = std::env::args().collect();
+
+    let file = BufReader::new(File::open(&amp;argv[1])?);
+    let stream = file.lines()
+        .map(|s| Ok::&lt;f64, Error&gt;(s?.parse::&lt;f64&gt;()?));
+
+    println!("{:?}", process_results(stream, |i| mean(i))?);
+    Ok(())
+}
+</pre>
+
+<p>Zu beachten ist, dass <code>process_results</code> im Allgemeinen
+nicht die äquivalente Semantik liefert wie die manuelle Anpassung,
+da die Funktion nach dem Ende des Iterators nicht sofort verlassen
+wird. Sofern die Funktion wie <code>mean</code> frei von Seiteneffekten
+ist, spielt das aber keine beachtenswerte Rolle.
+
+</body>
+</html>
+

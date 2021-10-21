@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Arrays</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Beispiele: Arrays</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Umdrehen">Array umdrehen</a>
+<li><a href="#gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</a>
+<li><a href="#Unique">Duplikate entfernen</a>
+</ol>
+
+<h2 id="Umdrehen">Array umdrehen</h2>
+<pre class="rust box">
+fn reverse(a: &amp;mut [i32]) {
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i, n-1-i);
+    }
+}
+
+// Typ-generisch:
+fn reverse&lt;T&gt;(a: &amp;mut [T]) {
+    let n = a.len();
+    for i in 0..n/2 {
+        a.swap(i, n-1-i);
+    }
+}
+
+fn main(){
+    let mut a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
+    reverse(&amp;mut a);
+    println!("{:?}", a);
+}
+</pre>
+
+<h2 id="gerade-ungerade-Indizes">Teilarrays für gerade und ungerade Indizes</h2>
+<pre class="rust box">
+fn take_even(a: &amp;[i32]) -> Vec&lt;i32&gt; {
+    let n = a.len();
+    let m = if n%2 == 0 {n/2} else {n/2 + 1};
+    let mut acc: Vec&lt;i32&gt; = Vec::with_capacity(m);
+    for i in 0..m {
+        acc.push(a[2*i]);
+    }
+    acc
+}
+
+fn take_odd(a: &amp;[i32]) -> Vec&lt;i32&gt; {
+    let m = a.len()/2;
+    let mut acc: Vec&lt;i32&gt; = Vec::with_capacity(m);
+    for i in 0..m {
+        acc.push(a[2*i + 1]);
+    }
+    acc
+}
+
+fn main(){
+    let a: Vec&lt;i32&gt; = vec![1, 2, 3, 4];
+    let v = take_even(&amp;a);
+    let w = take_odd(&amp;a);
+    println!("{:?}, {:?}", v, w);
+}
+</pre>
+
+<h2 id="Unique">Duplikate entfernen</h2>
+
+<h3>Ergebnis hat beliebige Reihenfolge</h3>
+<pre class="rust box">
+use std::iter::FromIterator;
+use std::collections::HashSet;
+use std::hash::Hash;
+
+fn unique&lt;T: Eq + Hash&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+    HashSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
+}
+
+fn main() {
+    let v: Vec&lt;i32&gt; = vec![1, 4, 5, 2, 3, 1, 4];
+    println!("{:?}", unique(v));
+}
+</pre>
+
+<h3>Sortiert der Ordnung nach</h3>
+<pre class="rust box">
+use std::iter::FromIterator;
+use std::collections::BTreeSet;
+
+fn unique&lt;T: Eq + Ord&gt;(v: Vec&lt;T&gt;) -&gt; Vec&lt;T&gt; {
+    BTreeSet::&lt;T&gt;::from_iter(v.into_iter()).into_iter().collect()
+}
+
+fn main() {
+    let v: Vec&lt;i32&gt; = vec![1, 4, 5, 2, 3, 1, 4];
+    println!("{:?}", unique(v));
+}
+</pre>
+
+</body>
+</html>
+

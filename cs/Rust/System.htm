@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Schnittstellen zum Betriebssystem</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Kommandos">Kommandos ausführen</a>
+<li><a href="#Pfade">Pfade</a>
+</ol>
+
+<h2 id="Kommandos">Kommandos ausführen</h2>
+
+<p>Manchmal benötigt ein Programm zur Erledigung einer Aufgabe die
+Hilfe eines anderen Programms. In der modernen Programmierung
+sollte dieses andere Programm als Bibliothek vorliegen und eine
+streng typisierte öffentliche Schnittstelle anbieten, &ndash; das ist
+am effizientesten und sichersten. Bisweilen kommt aber auch der
+Weg zum Einsatz, das andere Programm als Kindprozess über das
+Betriebssystem aufrufen zu lassen. Ein großer Vorteil liegt hierbei
+darin, dass das andere Programm in einer beliebigen anderen
+Programmiersprache formuliert sein darf. Zudem ist das andere
+Programm abgekoppelt, womit man quasi dynamisches Laden bekommt.
+Nachteile sind ggf. weniger formal festgelegte Schnittstellen bis hin
+zu Benutzerschnittstellen die eigentlich nicht für die Verarbeitung
+durch Maschinen gedacht sind.
+
+<p>Die Standardbibliothek stellt im Modul <code>std::process</code>
+einen Mechanismus zum Aufruf anderer Programme zur Verfügung.
+Zur Erläuterung ein Beispiel.
+Unter Linux gibt es so ein Programm <code>date</code>.
+Führt man dieses im Terminal aus, schreibt es das aktuelle
+Datum und die aktuelle Uhrzeit in die Ausgabe.
+Ein Aufruf als Kindprozess gestaltet sich folgendermaßen:
+
+<pre class="rust ibox">
+use std::process::Command;
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    let mut child = Command::new("date").spawn()?;
+    let _status = child.wait()?;
+    Ok(())
+}
+</pre>
+
+<p>Die Methode <code>status</code> fasst <code>spawn</code>
+und <code>wait</code> zusammen:
+<pre class="rust ibox">
+let _status = Command::new("date").status()?;
+</pre>
+
+<p>Die Methode <code>output</code> fängt <code>stdout</code> und
+<code>stderr</code> auf und macht diese als Rückgabewert verfügbar.
+<pre class="rust ibox">
+let output = Command::new("date").output()?;
+let date = std::str::from_utf8(&amp;output.stdout).unwrap();
+println!("[{}]", date.trim());
+</pre>
+
+<p>Die Methode <code>arg</code> legt ein Kommandozeilenargument
+fest. Gibt es mehrere Argumente, ist ein Aufruf von <code>arg</code>
+je Argument notwendig. Bspw. entspricht das Kommando
+<pre class="ibox">
+Werkzeug -x -y Datei.txt
+</pre>
+
+<p>dieser Verkettung:
+<pre class="rust ibox">
+Command::new("Werkzeug").arg("-x").arg("-y").arg("Datei.txt")
+</pre>
+
+<p>Alternativ steht dafür die Methode <code>args</code> zur
+Verfügung:
+
+<pre class="rust ibox">
+Command::new("Werkzeug").args(&amp;["-x", "-y", "Datei.txt"])
+</pre>
+
+<p>Das Datum im Format <code>Jahr-Monat-Tag</code> bekommt
+man unter Linux bspw. so:
+<pre class="rust ibox">
+let output = Command::new("date").arg("+%Y-%m-%d").output()?;
+let s = std::str::from_utf8(&amp;output.stdout).unwrap();
+let date: Vec&lt;&amp;str&gt; = s.trim().split("-").collect();
+println!("{:?}", date);
+</pre>
+
+<p>Basteleien wie die folgende sind höchst fragwürdig:
+<pre class="rust ibox">
+use std::process::Command;
+use std::io::Write;
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    loop {
+        let mut s = String::new();
+        std::io::stdin().read_line(&amp;mut s)?;
+        let mut iter = s.trim().split_ascii_whitespace();
+        if let Some(cmd) = iter.next() {
+            let output = Command::new(cmd).args(iter).output()?;
+            std::io::stdout().write(&amp;output.stdout)?;
+        }
+    }
+}
+</pre>
+
+<p>Der Nutzer erhält hiermit Zugriff auf alle möglichen Programme,
+womit das Benutzerkonto letztendlich kompromittierbar ist. Ein
+Angreifer könnte beispielsweise unbemerkt mit GET von irgendwoher ein
+Skript downloaden, welches bei jedem Login automatisch gestartet wird
+und für den Angreifer eine SSH-Verbindung aufbaut, womit dieser oder
+dessen Skripte in aller Ruhe unbemerkte Manipulationen vornehmen
+können. Eine solcher Angriff wird <i>Command injection</i> genannt
+und fällt unter den Obergriff <i>Code injection</i>.
+
+<p>Das Fazit lautet, dass <code>Command</code> so restriktiv wie
+möglich genutzt werden sollte und niemals unvalidierte
+Zeichenketten bekommen darf.
+
+<h2 id="Pfade">Pfade</h2>
+
+<h3>Konkatenation</h3>
+
+<p>Zur Verbindung von Pfadteilen zieht man <code>PathBuf</code>
+heran. Das geht so:
+
+<pre class="rust ibox">
+use std::path::PathBuf;
+
+fn main() {
+    let path = PathBuf::from_iter(["Pfad", "Texte", "Datei.txt"]);
+    assert_eq!("Pfad/Texte/Datei.txt", path.to_str().unwrap());
+}
+
+</pre>
+
+<p>Das Vorhandensein angefügter Schrägstriche macht
+dabei keinen Unterschied:
+
+<pre class="rust ibox">
+let path = PathBuf::from_iter(["Pfad/", "Texte/", "Datei.txt"]);
+assert_eq!("Pfad/Texte/Datei.txt", path.to_str().unwrap());
+</pre>
+
+<h3>Normalisierung</h3>
+
+<p>Ein angefügter Schrägstrich (<i>tailing slash</i>) macht bei
+Pfaden keinen semantischen Unterschied, wohl aber bei ihrer
+inneren Darstellung. So gilt folgendes:
+
+<pre class="rust ibox">
+use std::path::Path;
+
+fn main() {
+    let path1 = Path::new("Pfad");
+    let path2 = Path::new("Pfad/");
+    assert_eq!(path1, path2);
+    assert_ne!(path1.as_os_str(), path2.as_os_str());
+}
+</pre>
+
+<p>Die Gleichheit von Pfaden ist insofern eine neue Äquivalenzrelation,
+die sich von der Gleichheit ihrer inneren Darstellung unterscheidet.
+Man kann das je nach Sichtweise als kontraintuitiv empfinden oder
+nicht.
+
+<p>Wie geht diese Gleichheit vonstatten? Das geschieht durch die
+Funktion <code>components</code>, die einen Pfad in seine
+Bestandteile zerlegt und dabei eine Normalisierung vornimmt.
+Die Normalisierung tut folgendes:
+
+<ul>
+<li>Wiederholung des Separators wird ignoriert, so dass
+<code>a//b</code> wie <code>a/b</code> in die Bestandteile
+<code>a</code> und <code>b</code> zerlegt wird.
+<li>Vorkommen des Punktes <code>.</code> werden ignoriert, sofern
+sie nicht am Anfang des Pfades stehen. So bekommen auch
+<code>a/./b</code> und <code>a/b/.</code>
+jeweils die Komponenten <code>a</code> und <code>b</code> zugeordnet.
+<li>Angefügte Schrägstriche werden ignoriert, so dass
+<code>a</code> und <code>a/</code> äquivalent sind.
+</ul>
+
+<p>Übrigens greift neben der Implementierung für <code>PartielEq</code>
+auch die für <code>Hash</code> auf <code>components</code> zurück.
+So gilt folgendes:
+
+<pre class="rust ibox">
+use std::{collections::HashSet, path::Path};
+
+fn main() {
+    let mut s = HashSet::new();
+    s.insert(Path::new("Pfad"));
+    s.insert(Path::new("Pfad/"));
+    assert_eq!(s.len(), 1);
+}
+</pre>
+
+</body>
+</html>

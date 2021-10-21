@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Module</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Module">Module</a>
+<li><a href="#Reexport">Reexport</a>
+<li><a href="#Bibliotheken">Bibliotheken</a>
+<li><a href="#Konstanten">Konstanten</a>
+<li><a href="#Daten">Binärdaten einbetten</a>
+<li><a href="#Zeichenketten">Zeichenketten einbetten</a>
+<li><a href="#Einbindung">Quelltext einbinden</a>
+<li><a href="#Zyklen">Zyklische Definitionen</a>
+</ol>
+
+<h2 id="Module">Module</h2>
+
+<p>Größere Programme werden durch Strukturierung leichter verständlich.
+Auf der untersten Ebene benutzt man dazu Kontrollstrukturen anstelle
+von Sprunganweisungen. Dann kommen Funktionen, die Vorgänge
+abstrahieren und über ihre Argumente und Rückgabewerte
+Schnittstellen liefern. Auf der nächsten Ebene bündelt man
+zusammengehörige Funktionen und Datentypen in Module. Schnittstellen
+entstehen hierbei, indem man bestimmte Funktionen und Datentypen als
+öffentlich kennzeichnet.
+
+<p>Ein Modul wird mit dem Schlüsselwort <code>mod</code> eingeleitet.
+Der Inhalt des Moduls befindet sich entweder in geschweiften Klammern,
+oder bei längeren Modulen in einer extra Datei. Funktionen, Datentypen,
+Konstanten und Variablen sind nur dann öffentlich, wenn sie mit
+dem Schlüsselwort <code>pub</code> markiert wurden.
+
+<p>Die Grundstruktur von Modulen sei hier am Primzahltest verdeutlicht:
+<pre class="rust ibox">
+mod number_theory {
+    pub fn is_prime(n: u64) -&gt; bool {
+        for k in 2..n {
+            if n%k == 0 {return false;}
+        }
+        true
+    }
+}
+
+use number_theory::is_prime;
+
+fn main() {
+    let a: Vec&lt;u64&gt; = (1..).filter(|&amp;n| is_prime(n))
+        .take(10).collect();
+    println!("{:?}", a);
+}
+</pre>
+
+<p>Die <code>use</code>-Anweisung macht lediglich deutlich,
+welchem Modul die Funktion <code>is_prime</code> entstammen soll.
+Es könnte ja mehrere Module mit einer so benannten Funktion geben.
+Zudem gibt die <code>use</code>-Anweisung darüber Aufschluss,
+welche Abhängigkeiten ein Modul besitzt.
+
+<h2 id="Reexport">Reexport</h2>
+
+<p>Ein Modul kann seinerseits Untermodule enthalten. Mittels
+<code>pub&nbsp;use</code> lässt sich Funktionalität aus einem Untermodul
+als öffentliche Schnittstelle weitergeben. Das heißt, die
+Funktionalität erscheint von Außen betrachtet so, als wäre sie im Modul
+selbst definiert.
+
+<pre class="rust ibox">
+mod parity {
+    mod even {
+        pub fn even(x: i32) -&gt; bool {x%2 == 0}
+    }
+    mod odd {
+        pub fn odd(x: i32) -&gt; bool {x%2 == 1}
+    }
+    pub use {even::even, odd::odd};
+}
+</pre>
+
+<p>Über die Existenz der Untermodule ist von Außen betrachtet quasi
+nichts bekannt. Wollte man sie zugänglich machen, müsste man
+<code>pub&nbsp;mod</code> schreiben.
+
+<p>Woher die reexportierte Funktionalität entstammt, ist beliebig.
+Beispielsweise hindert einen nichts daran, die verschachtelte
+Struktur aufzulösen:
+
+<pre class="rust ibox">
+mod even {
+    pub fn even(x: i32) -&gt; bool {x%2 == 0}
+}
+mod odd {
+    pub fn odd(x: i32) -&gt; bool {x%2 == 1}
+}
+
+mod parity {
+    pub use crate::{even::even, odd::odd};
+}
+</pre>
+
+<h2 id="Bibliotheken">Bibliotheken</h2>
+
+<p>Auf der nächsthöheren Ebene kann man auch wieder zusammengehörige
+Module bündeln. Man spricht dann von einer <i>Bibliothek</i>, die in
+Rust kurz als <i>Crate</i> bezeichnet wird. Eine Bibliothek muss aber
+nicht unbedingt in Module aufgeteilt sein.
+
+<p>Die Datei <code>lib.rs</code> bildet die Wurzel einer
+Bibliothek. Alle ihre öffentlichen Schnittstellen werden wie bei einem
+Modul mit <code>pub</code> gekennzeichnet. Das gilt gleichermaßen
+für ihre öffentlichen Module, die also als <code>pub mod</code>
+erscheinen müssen.
+
+<p>Der Befehl
+
+<pre class="ibox">
+cargo new --lib lib0
+</pre>
+
+<p>erzeugt die neue Bibliothek <code>lib0</code> mit der
+Verzeichnisstruktur:
+
+<pre class="ibox">
+lib0/
+└─ src/
+   └─ lib.rs
+</pre>
+
+<p>Eigentlich umfasst der Begriff <i>Crate</i> auch ausführbare
+Programme. Ein ausführbares Programm unterscheidet sich von einer
+Bibliothek lediglich dadurch, dass die Wurzel durch die Datei
+<code>main.rs</code> anstelle von <code>lib.rs</code> gebildet wird.
+
+<p>Innerhalb einer Bibliothek darf es zyklische Definitionen geben.
+Zwischen Bibliotheken sind solchen Verwebungen nicht erlaubt.
+
+<h2 id="Konstanten">Konstanten</h2>
+
+<p>Das folgende Programm arbeitet zwar korrekt, ist jedoch in
+schlechtem Stil geschrieben. 
+
+<pre class="rust ibox">
+fn is_ascii_alphabetic(c: char) -&gt; bool {
+    let x = u32::from(c);
+    65 &lt;= x &amp;&amp; x &lt;= 90 || 97 &lt;= x &amp;&amp; x &lt;= 122
+}
+
+fn main() {
+    let a: Vec&lt;&amp;str&gt; = "Ein Schiff taucht im Nebel auf."
+        .split(|x| !is_ascii_alphabetic(x)).collect();
+    println!("{:?}", a);
+}
+</pre>
+
+<p>Im Programm tauchen »magische« Konstanten mit irgendeiner
+bestimmten Bedeutung auf, diese ist jedoch nicht
+klar erkennbar. Der Leser muss sich die Bedeutung der Konstanten
+erst erschließen. Hier mag das wohl einfach sein. Bei komplizierten
+Programmen steht man da aber schnell im Regen. Ganz kritisch ist
+die Situation wo dieselbe Konstante mehrmals im Programm vorkommt.
+Würde jemand die Konstante an einer Stelle zur Anpassung verändern,
+blieben die anderen Stellen wahrscheinlich übersehen, es kommt zu
+einem logischen Fehler.
+
+<p>Für besseres Verständnis, Abstraktion und Faktorisierung lassen
+sich globale oder auch lokale Konstanten mit dem Schlüsselwort
+<code>const</code> definieren. Konstanten in einem Modul sind privat.
+Öffentlich sind sie nur dann, wenn sie mit <code>pub</code> markiert
+wurden. Das verbesserte Programm ist hoffentlich angenehmer zu lesen:
+
+<pre class="rust ibox">
+mod charsets {
+    const A: u32 = 'a' as u32;
+    const Z: u32 = 'z' as u32;
+    const CAPA: u32 = 'A' as u32;
+    const CAPZ: u32 = 'Z' as u32;
+
+    pub fn is_ascii_alphabetic(c: char) -&gt; bool {
+        let x = u32::from(c);
+        CAPA &lt;= x &amp;&amp; x &lt;= CAPZ || A &lt;= x &amp;&amp; x &lt;= Z
+    }
+}
+
+use charsets::is_ascii_alphabetic;
+
+fn main() {
+    let a: Vec&lt;&amp;str&gt; = "Ein Schiff taucht im Nebel auf."
+        .split(|x| !is_ascii_alphabetic(x)).collect();
+    println!("{:?}", a);
+}
+</pre>
+
+<p>Unter normalen Umständen werden Konstanten in großen Buchstaben
+geschrieben, das wird auch vom Compiler überprüft. Empfindet man
+das in einer bestimmten Situation zu unschön, lässt es sich auch
+ausschalten. Man muss dafür die Zeile
+<pre class="rust ibox">
+#[allow(non_upper_case_globals)]
+</pre>
+<p>vor die Definition der Konstante schreiben, oder wenn es dutzende
+solche Konstanten gibt,
+<pre class="rust ibox">
+#![allow(non_upper_case_globals)]
+</pre>
+<p>am Anfang des Moduls.
+
+<p>Konstante Zeichenketten werden normalerweise mit dem Schlüsselwort
+<code>static</code> definiert, nicht mit <code>const</code>:
+
+<pre class="rust ibox">
+static TEXT: &amp;str = "Ein Schiff taucht im Nebel auf.";
+</pre>
+
+
+<h2 id="Daten">Binärdaten einbetten</h2>
+
+<p>Manchmal möchte man Binärdaten nicht zur Laufzeit aus einer
+Datei laden, sonern bereits zur Kompilierzeit in die ausführbare
+Datei einbetten. Handelt es sich lediglich um ein paar wenige
+Bytes, kann man die Daten wie in
+
+<pre class="rust ibox">
+static DATA: &amp;[u8] = &amp;[0x45, 0x75, 0x6c, 0x65];
+</pre>
+
+<p>direkt als Literal angeben. Für große Datenmengen steht
+stattdessen das Makro <code>include_bytes</code> zur Verfügung,
+das die Daten zur Kompilierzeit aus der angegebenen Datei lädt:
+
+<pre class="rust ibox">
+static DATA: &amp;[u8] = include_bytes!("data.bin");
+</pre>
+
+<h2 id="Zeichenketten">Zeichenketten einbetten</h2>
+
+<p>Weiterhin existiert auch ein Makro <code>inlude_str</code>
+zur Einbettung von UTF-8-kodierten Dateien als Zeichenketten.
+Man kann sich damit unter anderem ein Quine ermogeln. Unter einem Quine
+wird ein Programm verstanden, das seinen eigenen Quelltext repliziert.
+Mit <code>include_str</code> geht das ganz einfach:
+
+<pre class="rust ibox">
+static SELF: &amp;str = include_str!("main.rs");
+
+fn main() {
+    println!("{}", SELF);
+}
+</pre>
+
+<p>Eine sinnvollere Idee ist meiner Ansicht nach die nummerierte
+Ausgabe des eigenen Quelltextes, die man mit
+
+<pre class="rust ibox">
+for (i, line) in SELF.lines().enumerate() {
+    println!("{:02} {}", i + 1, line);
+}
+</pre>
+
+<p>bewerkstelligen kann.
+
+
+<h2 id="Einbindung">Quelltext einbinden</h2>
+
+<p>Das Makro <code>include</code> bietet die Möglichkeit, einen
+Quelltext-Abschnitt eines Moduls in eine andere Datei auszulagern.
+Wer dazu geneigt ist, ein übermäßig langes Modul zu schreiben, kann
+dieses damit trotzdem übersichtlich zu Dateien auftrennen. Es sei
+aber gesagt, dass dieser Weg eigentlich nicht beschritten werden muss,
+da das Modulsystem ebenfalls die notwendigen Fähigkeiten dafür besitzt.
+Es ist ja mit dem qualifizierten Import ausgestattet und enthält mit dem
+öffentlichen Import einen Reexport.
+
+<p>In gewisser Hinsicht darf man
+
+<pre class="rust ibox">
+mod m;
+</pre>
+
+<p>als Kurzschreibweise für
+
+<pre class="rust ibox">
+mod m {include!("m.rs");}
+</pre>
+
+<p>betrachten. Allerdings besteht zwischen beidem in der näheren
+Betrachtung ein Unterschied. Das Modul <code>m</code> enthalte
+beispielsweise ein Untermodul <code>m0</code> und das Verzeichnis
+haben die folgende Struktur:
+
+<pre class="ibox">
+src/
+├─ main.rs
+├─ m/
+│  └─ m0.rs
+└─ m.rs
+</pre>
+
+<p>Einbindung vermittels <code>include</code> macht dann
+die explizite Pfadangabe erforderlich, weil die Umstellung
+auf das Unterverzeichnis nicht mehr automatisch stattfindet.
+
+<pre class="rust ibox">
+/* Datei m.rs */
+
+#[path = "m/m0.rs"]
+pub mod m0;
+</pre>
+
+<h2 id="Zyklen">Zyklische Definitionen</h2>
+
+<p>Definitionen dürfen sich wechselseitig aufeinander beziehen.
+Darüber hinaus darf man solche Definitionen in Module aufteilen.
+So zieht sich die wechselseitig rekursive Definition
+
+<pre class="rust ibox">
+mod even {
+    use super::odd::odd;
+    pub fn even(x: u32) -&gt; bool {
+        if x == 0 {true} else {odd(x - 1)}
+    }
+}
+
+mod odd {
+    use super::even::even;
+    pub fn odd(x: u32) -&gt; bool {
+        if x == 0 {false} else {even(x - 1)}
+    }
+}
+</pre>
+
+<p>der beiden Funktionen <code>even</code> und <code>odd</code>
+durch zwei Module.
+
+</body>
+</html>

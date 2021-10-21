@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+
+<h1>Memoisierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Memo">Memoisierung</a>
+<li><a href="#fix">Der Fixpunkt-Kombinator</a>
+<li><a href="#fix-memo">Memoisierender Fixpunkt-Kombiantor</a>
+</ol>
+
+<h2 id="Memo">Memoisierung</h2>
+
+<p>Die rekursive Definition der Fibonacci-Zahlen kann man ohne
+Umwege als naiven Algorithmus zu ihrer Berechnung nutzen.
+
+<pre class="rust ibox">
+fn fib(n: u32) -&gt; u32 {
+    if n &lt; 2 {n} else {fib(n - 1) + fib(n - 2)}
+}
+
+fn main() {
+    for n in 0..48 {
+        println!("{:3} | {:10}", n, fib(n));
+    }
+}
+</pre>
+
+<p>Dieses Programm braucht ziemlich lange bis es durchgelaufen ist.
+Würden wir <code>u32</code> gegen <code>u64</code> ersetzen, käme
+es nicht bei 48 zum Überlauf, sondern erst bei 94. Die Berechnung
+von <code>fib(93)</code> würde allerdings ewig dauern. Genauer gesagt
+wächst der Berechnungsaufwand mit steigendem Argument exponentiell, wie
+sich bei der komplexitätstheoretischen Analyse herausstellt.
+
+<p>Eine systematische Technik zur Reduktion des Aufwandes ist
+die <i>Memoisierung</i>. Hierbei werden bereits berechnete
+Funktionswerte gespeichert, so dass sie danach direkt anstelle
+der Berechnung abgerufen werden können, wenn die gleiche Zahl
+abermals als Argument des Funktionsaufrufs vorkommt.
+
+<p>Die folgende Umsetzung nutzt ein Feld zur Speicherung
+der Funktionswerte.
+
+<pre class="rust ibox">
+fn memoized_fib() -&gt; impl FnMut(u32) -&gt; u32 {
+    fn fib(n: u32, memo: &amp;mut [u32]) -&gt; u32 {
+        let index = n as usize;
+        if n != 0 &amp;&amp; memo[index] == 0 {
+            memo[index] = fib(n - 1, memo) + fib(n - 2, memo);
+        }
+        memo[index]
+    }
+    let mut memo = [0; 48];
+    memo[1] = 1;
+    move |n| fib(n, &amp;mut memo)
+}
+
+fn main() {
+    let mut fib = memoized_fib();
+    for n in 0..48 {
+        println!("{:3} | {:10}", n, fib(n));
+    }
+}
+</pre>
+
+<p>Alternativ kann man, im konkreten Fall mit Kanonen auf Spatzen
+geschossen, ein assoziatives Feld zur Speicherung
+einsetzen.
+
+<pre class="rust ibox">
+fn memoized_fib() -&gt; impl FnMut(u32) -&gt; u32 {
+    use std::collections::HashMap;
+    fn fib(n: u32, memo: &amp;mut HashMap&lt;u32, u32&gt;) -&gt; u32 {
+        if let Some(&amp;value) = memo.get(&amp;n) {
+            value
+        } else { 
+            let value = fib(n - 1, memo) + fib(n - 2, memo);
+            memo.insert(n, value);
+            value
+        }
+    }
+    let mut memo = HashMap::from_iter([(0, 0), (1, 1)]);
+    move |n| fib(n, &amp;mut memo)
+}
+</pre>
+
+<h2 id="fix">Der Fixpunkt-Kombinator</h2>
+
+<p>Worauf ich abziele, will ich zur Vereinfachung zunächst in Python
+darstellen. Ziel ist die Implementierung eines rekursiven
+Algorithmus. Beispielsweise berechnet die Funktion
+
+<pre class="ibox">
+<b>def</b> fac(n):
+    <b>return</b> 1 <b>if</b> n == 0 <b>else</b> n*fac(n - 1)
+</pre>
+
+<p>bekanntlich die Fakultät einer Zahl. Nun kann man Rekursion
+alternativ mit einem Hilfsmittel herstellen, dem sogenannten
+Fixpunkt-Kombinator. Das geht so:
+
+<pre class="ibox">
+<b>def</b> fix(cb):
+    <b>def</b> f(x): <b>return</b> cb(f, x)
+    <b>return</b> f
+
+fac = fix(<b>lambda</b> f, n: 1 <b>if</b> n == 0 <b>else</b> n*f(n - 1))
+</pre>
+
+<p>Wir machen es uns nun zur Aufgabe, <code>fix</code> in Rust
+zu formulieren. Dabei stellt sich das Problem in den Weg,
+dass man aufgrund der eingefangenen Variable <code>cb</code>
+(callback) ein Closure benötigt, Rust jedoch keine benannten Closures
+kennt. Benannte Closures sind allerdings entbehrlich. Mit der folgenden
+Trickserei kommen wir da raus:
+
+<pre class="ibox">
+<b>def</b> fix(cb):
+    <b>return</b> <b>lambda</b> x: cb(cb, x)
+
+fac = fix(<b>lambda</b> f, n: 1 <b>if</b> n == 0 <b>else</b> n*f(f, n - 1))
+</pre>
+
+<p>Schließlich müssen wir noch das Typsystem befriedigen.
+Bei der näheren Betrachtung stellt sich heraus, dass
+<code>f</code> einen rekursiven Typ haben muss, denn <code>f</code>
+bekommt sich selbst als Argument zugeführt. Das stellt aber kein
+wesentliches Problem dar, denn rekursive Typen sind mittels
+<code>struct</code> konstruierbar. Insgesamt findet man die
+folgende Konstruktion.
+
+<pre class="rust ibox">
+struct Rec&lt;'a&gt;(&amp;'a dyn Fn(&amp;Rec, u32) -&gt; u32);
+
+impl Rec&lt;'_&gt; {
+    fn call(&amp;self, x: u32) -&gt; u32 {(self.0)(&amp;self, x)}
+}
+
+fn fix(cb: impl Fn(&amp;Rec, u32) -&gt; u32) -&gt; impl Fn(u32) -&gt; u32 {
+    move |x| cb(&amp;Rec(&amp;cb), x)
+}
+
+fn main() {
+    let fac = fix(|f, n| if n == 0 {1} else {n*f.call(n - 1)});
+    println!("{}", fac(4));
+}
+</pre>
+
+<p>Einer generischen Formulierung steht keine Beschwerlichkeit
+im Wege. Wir gelangen zu:
+
+<pre class="rust ibox">
+struct Rec&lt;'a, X, Y&gt;(&amp;'a dyn Fn(&amp;Rec&lt;X, Y&gt;, X) -&gt; Y);
+
+impl&lt;X, Y&gt; Rec&lt;'_, X, Y&gt; {
+    fn call(&amp;self, x: X) -&gt; Y {(self.0)(&amp;self, x)}
+}
+
+fn fix&lt;X, Y&gt;(cb: impl Fn(&amp;Rec&lt;X, Y&gt;, X) -&gt; Y) -&gt; impl Fn(X) -&gt; Y {
+    move |x| cb(&amp;Rec(&amp;cb), x)
+}
+</pre>
+
+<p>Damit haben wir nun einen allgemeinen Fixpunkt-Kombinator.
+Mehr noch, es sind sogar mehrstellige Funktionen realisierbar.
+Darf man nämlich für <code>X</code> alle möglichen Typen einsetzen,
+dann darf es auch ein Tupeltyp sein. Beispielsweise kann man die
+Potenzfunktion folgendermaßen schreiben:
+
+<pre class="rust ibox">
+fn main() {
+    let pow = fix(|f, (x, n)|
+        if n == 0 {1} else {x*f.call((x, n - 1))});
+    println!("{}", pow((2, 10)));
+}
+</pre>
+
+<p>Wie das Muster
+
+<pre class="rust ibox">
+let even = fix(|e, n| {
+    let odd = fix(|_, n| if n == 0 {false} else {e.call(n - 1)});
+    if n == 0 {true} else {odd(n - 1)}
+});
+</pre>
+
+<p>zeigt, kann man mit <code>fix</code> fernerhin wechselseitige
+Rekursion basteln.
+
+<h2 id="fix-memo">Memoisierender Fixpunkt-Kombinator</h2>
+
+<p>Als Nächstes erfolgt der Einbau der Memoisierung
+in den Fixpunkt-Kombinator. Zuvor gebe ich wieder eine kurze
+Verdeutlichung in Python, worin das Ziel besteht.
+
+<pre class="ibox">
+<b>def</b> fix(cb):
+    memo = {}
+    <b>def</b> f(x):
+        <b>if</b> x <b>not</b> <b>in</b> memo: memo[x] = cb(f, x)
+        <b>return</b> memo[x]
+    <b>return</b> f
+
+fib = fix(<b>lambda</b> f, n: n <b>if</b> n &lt; 2 <b>else</b> f(n - 1) + f(n - 2))
+</pre>
+
+<p>Die Memoisierung muss in der Operation <code>call</code> erfolgen,
+weil gerade dieser Aufruf bei der Rekursion wieder und wieder
+durchlaufen wird. Als Speicher diene ebenfalls ein assoziatives
+Feld, denn auf diese Weise verbleibt die Funktionalität
+recht allgemein.
+
+<pre class="rust ibox">
+use std::{hash::Hash, collections::HashMap};
+
+struct Rec&lt;'a, X, Y&gt; {
+    cb: &amp;'a dyn Fn(&amp;mut Rec&lt;X, Y&gt;, X) -&gt; Y,
+    memo: &amp;'a mut HashMap&lt;X, Y&gt;
+}
+
+impl&lt;X, Y&gt; Rec&lt;'_, X, Y&gt; where X: Eq + Hash + Clone, Y: Clone {
+    fn call(&amp;mut self, x: X) -&gt; Y {
+        if let Some(value) = self.memo.get(&amp;x) {
+            value.clone()
+        } else {
+            let value = (self.cb)(self, x.clone());
+            self.memo.insert(x, value.clone());
+            value
+        }
+    }
+}
+
+fn fix&lt;X, Y&gt;(cb: impl Fn(&amp;mut Rec&lt;X, Y&gt;, X) -&gt; Y)
+-&gt; impl FnMut(X) -&gt; Y
+where X: Eq + Hash + Clone, Y: Clone
+{
+    let mut memo = HashMap::new();
+    move |x| cb(&amp;mut Rec {cb: &amp;cb, memo: &amp;mut memo}, x)
+}
+
+fn main() {
+    let mut fib = fix(|f, n: u32|
+        if n &lt; 2 {n} else {f.call(n - 1) + f.call(n - 2)});
+
+    for n in 0..48 {
+        println!("{:3} | {:10}", n, fib(n));
+    }
+}
+</pre>
+
+</body>
+</html>
+

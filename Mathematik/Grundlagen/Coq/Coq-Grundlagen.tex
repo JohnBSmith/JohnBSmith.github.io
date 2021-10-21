@@ -4,19 +4,21 @@
 \usepackage[ngerman]{babel}
 \usepackage{microtype}
 
-% \usepackage{mathptmx}
-\usepackage{libertine}
-\usepackage[libertine,smallerops]{newtxmath}
-% \addtokomafont{disposition}{\rmfamily}
-% \renewcommand\ttdefault{lmtt}
-\usepackage[scaled=0.84]{DejaVuSans}
-\usepackage[scaled=0.84]{DejaVuSansMono}
+% Bugfix. Siehe https://komascript.de/node/2295
+\unsettoc{toc}{onecolumn}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\small,commentstyle=\ttfamily}
+
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+% \addtokomafont{disposition}{\rmfamily}
+% \renewcommand\ttdefault{lmtt}
+\usepackage[scaled=0.84]{DejaVuSans}
+\usepackage[scaled=0.84]{DejaVuSansMono}
 
 \usepackage{graphicx}
 \usepackage{color}
@@ -51,7 +53,7 @@ urlcolor=black]{hyperref}
 \section*{\huge Grundlagen von Coq}
 
 \vspace{1em}\noindent
-{\large April 2021}
+{\large Oktober 2021}
 
 \tableofcontents
 
@@ -121,35 +123,35 @@ sich hier um eine Berührregion zwischen Mathematik und Informatik.
 
 Wir wollen den Modus ponens%
 \begin{equation}
-P\land (P\rightarrow Q)\rightarrow Q
+A\land (A\rightarrow B)\rightarrow B
 \end{equation}
 beweisen. Der Typ zu dieser Aussage ist%
 \begin{equation}
-P\times (P\rightarrow Q)\rightarrow Q.
+A\times (A\rightarrow B)\rightarrow B.
 \end{equation}
 Die Aussage ist wahr, wenn dieser Typ mindestens einen Wert enhält.
-Gesucht ist also eine Funktion, die einen Wert vom Typ $P$ und
-eine Funktion vom Typ $P\rightarrow Q$ nimmt und einen Wert vom
-Typ $Q$ liefert. Die kann man direkt angeben:%
+Gesucht ist also eine Funktion, die einen Wert vom Typ $A$ und
+eine Funktion vom Typ $A\rightarrow B$ nimmt und einen Wert vom
+Typ $B$ liefert. Die kann man direkt angeben:%
 \begin{equation}
-(p, f)\mapsto f(p).
+(a, f)\mapsto f(a).
 \end{equation}
 Die freien Variablen müssen wir noch allquantifizieren, damit später
 im Programm keine ungebundenen Variablen mehr auftauchen. Das macht%
 \begin{equation}
-\forall_{P, Q}(P\times (P\to Q)\to Q).
+\forall_{A, B}(A\times (A\to B)\to B).
 \end{equation}
 Ein Wert dieses Typs ist entsprechend%
 \begin{equation}
-(P, Q) \mapsto (p, f)\colon P\times (P\to Q)\mapsto f(p).
+(A, B) \mapsto (a, f)\colon A\times (A\to B)\mapsto f(a).
 \end{equation}
 In Coq geschrieben lautet der Term:%
 \begin{lstlisting}[language=Coq]
 Definition modus_ponens:
-forall (P Q: Type), P*(P -> Q) -> Q :=
-  fun (P Q: Type) =>
-    fun (t: P*(P -> Q)) =>
-      match t with (p, f) => f p end.
+forall A B: Type, A*(A -> B) -> B :=
+  fun (A B: Type) =>
+    fun (t: A*(A -> B)) =>
+      match t with (a, f) => f a end.
 \end{lstlisting}
 Allgemein gilt die äquivalente Umformung%
 \begin{equation}
@@ -163,107 +165,138 @@ Allgemein gilt die äquivalente Umformung%
 Dies entspricht dem Schönfinkeln der Funktion. Demnach kodiert
 der Typ%
 \begin{equation}
-P\to (P\to Q)\to Q.
+A\to (A\to B)\to B.
 \end{equation}
 ebenfalls den Modus ponens. In Coq sind geschönfinkelte Formulierungen
 natürlicher. Das sieht man hier am Entfallen des match"=Operators:%
 \begin{lstlisting}[language=Coq]
 Definition modus_ponens:
-forall (P Q: Type), P -> (P -> Q) -> Q :=
-  fun (P Q: Type) =>
-    fun (p: P) =>
-      fun (f: P -> Q) => f p.
+forall A B: Type, A -> (A -> B) -> B :=
+  fun (A B: Type) =>
+    fun (a: A) =>
+      fun (f: A -> B) => f a.
 \end{lstlisting}
 Nun sind in Coq Kurzschreibweisen erlaubt, die das Schönfinkeln
 syntaktisch rückgängig machen:%
 \begin{lstlisting}[language=Coq]
 Definition modus_ponens:
-forall (P Q: Type), P -> (P -> Q) -> Q :=
-  fun (P Q: Type) (p: P) (f: P -> Q) => f p.
+forall A B: Type, A -> (A -> B) -> B :=
+  fun (A B: Type) (a: A) (f: A -> B) => f a.
 \end{lstlisting}
 
 \subsection{Formeln der Aussagenlogik}
 
-Betrachten wir $P\land Q\to P$, der Typ dazu ist
-\[P\times Q\to P.\]
+Betrachten wir $A\land B\to A$, der Typ dazu ist
+\[A\times B\to B.\]
 Ein Wert dieses Typs ist ja einfach die Projektion auf das linke
 Element, also
-\[(p, q)\mapsto p.\]
+\[(a, b)\mapsto a.\]
 Das Programm:
 \begin{lstlisting}[language=Coq]
-Definition left: forall(P Q: Type), P*Q -> P :=
-  fun (P Q: Type) (t: P*Q) =>
-    match t with (p, q) => p end.
+Definition left: forall A B: Type, A*B -> B :=
+  fun (A B: Type) (t: A*B) =>
+    match t with (a, b) => a end.
 \end{lstlisting}
-Zum Kommutativgesetz $P\land Q\to Q\land P$ gehört der Typ
+Zum Kommutativgesetz $A\land B\to B\land A$ gehört der Typ
 \begin{equation}
-P\times Q\to Q\times P.
+A\times B\to B\times A.
 \end{equation}
 Ein Wert dieses Typs ist die Funktion, welches linkes und rechtes
 Element vertauscht, das ist
-\[(p, q)\mapsto (q, p).\]
+\[(a, b)\mapsto (b, a).\]
 Das Programm ist entsprechend:
 \begin{lstlisting}[language=Coq]
 Definition conjunction_commutativity:
-forall(P Q: Type), P*Q -> Q*P :=
-  fun (P Q: Type) (t: P*Q) =>
-    match t with (p, q) => (q, p) end.
+forall A B: Type, A*B -> B*A :=
+  fun (A B: Type) (t: A*B) =>
+    match t with (a, b) => (b, a) end.
 \end{lstlisting}
-Zum Kommutativgesetz $P\lor Q\to Q\lor P$ gehört der Typ
+Zum Kommutativgesetz $A\lor B\to B\lor A$ gehört der Typ
 \begin{equation}
-P+Q\to Q+P.
+A+B\to B+A.
 \end{equation}
 Eine Funktion dieses Typs ergibt sich durch Fallunterscheidung.
 Wir finden
 \begin{equation}
 \begin{cases}
-  (\mathrm{left},p)  \mapsto (\mathrm{right},p),\\
-  (\operatorname{right},q) \mapsto (\operatorname{left},q).\end{cases}
+  (\mathrm{left},a)  \mapsto (\mathrm{right},a),\\
+  (\operatorname{right},b) \mapsto (\operatorname{left},b).\end{cases}
 \end{equation}
 Das Programm:
 \begin{lstlisting}[language=Coq]
 Definition disjunction_commutativity:
-forall(P Q: Type), P + Q -> Q + P :=
-  fun (P Q: Type) (s: P + Q) =>
+forall A B: Type, A + B -> B + A :=
+  fun (A B: Type) (s: A + B) =>
     match s with
-      | inl p => inr p
-      | inr q => inl q 
+      | inl a => inr a
+      | inr b => inl b
     end.
 \end{lstlisting}
-Betrachten wir noch $P\to P\lor Q$ bzw. $P\to P+Q$. Eine Funktion
+Betrachten wir noch $A\to A\lor B$ bzw. $A\to A+B$. Eine Funktion
 dieses Typs ist offenbar die Injektion mit Bild im linken Summand,
 das ist
 \begin{equation}
-p\mapsto (\mathrm{left},p).
+a\mapsto (\mathrm{left},a).
 \end{equation}
 Das Programm:
 \begin{lstlisting}[language=Coq]
 Definition injection_left:
-forall(P Q: Type), P -> P + Q :=
-  fun (P Q: Type) (p: P) => inl p.
+forall A B: Type, A -> A + B :=
+  fun (A B: Type) (a: A) => inl a.
 \end{lstlisting}
 Zeigen wir nun noch das Assoziativgesetz
 \begin{equation}
-P\land (Q\land R) \leftrightarrow (P\land Q)\land R.
+A\land (B\land C) \leftrightarrow (A\land B)\land C.
 \end{equation}
 Wir betrachten lediglich
 \begin{equation}
-P\times (Q\times R) \to (P\times Q)\times R,
+A\times (B\times C) \to (A\times B)\times C,
 \end{equation}
 denn die Gegenimplikation geht analog.
 Eine Funktion von diesem Typ ist
 \begin{equation}
-(p, (q, r))\mapsto ((p, q), r).
+(a, (b, c))\mapsto ((a, b), c).
 \end{equation}
 Das Programm:
 \begin{lstlisting}[language=Coq]
 Definition conjunction_assoc1:
-forall(P Q R: Type), P*(Q*R) -> (P*Q)*R :=
-  fun (P Q R: Type) (t: P*(Q*R)) =>
-    match t with (p, (q, r)) => ((p, q), r) end.
+forall A B C: Type, A*(B*C) -> (A*B)*C :=
+  fun (A B C: Type) (t: A*(B*C)) =>
+    match t with (a, (b, c)) => ((a, b), c) end.
 \end{lstlisting}
 
 \subsection{Umstieg auf Prop}
+
+Nun ersetzen wir \texttt{Type} durch \texttt{Prop}.
+Hierfür sind einige kleine Änderungen notwendig.
+
+Betrachten wir nochmals $A\land B\to P$. Wir müssen $A\times B$
+durch $A\land B$ ersetzen. Die Tupelkonstruktion
+$(a,b)$ wird ersetzt durch $\operatorname{conj} a\, b$.
+Insgesamt bekommt das Programm damit die Form:
+
+\begin{lstlisting}[language=Coq]
+Definition left: forall A B: Prop, A /\ B -> A :=
+  fun (A B: Prop) (t: A /\ B) =>
+    match t with conj a b => a end.
+\end{lstlisting}
+
+\noindent
+Und nun betrachten wir nochmals $A\lor B\to B\lor A$.
+Hier ersetzen wir $A+B$ durch $A\lor B$.
+Der Konstruktor \texttt{inl} wird ersetzt durch
+\texttt{or\_introl} und \texttt{inr} entsprechend durch
+\texttt{or\_intror}. Das Programm ist nun von der Gestalt:
+
+\begin{lstlisting}[language=Coq]
+Definition disjunction_commutativity:
+forall A B: Prop, A \/ B -> B \/ A :=
+  fun (A B: Prop) (s: A \/ B) =>
+    match s with
+      | or_introl a => or_intror a
+      | or_intror b => or_introl b
+    end.
+\end{lstlisting}
 
 \newpage
 \begin{thebibliography}{00}

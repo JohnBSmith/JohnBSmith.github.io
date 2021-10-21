@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Höher geartete Typen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+
+<ol>
+<li><a href="#Arten">Arten von Typen</a>
+<li><a href="#Emulation">Emulation von HKT</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="Arten">Arten von Typen</h2>
+
+<p>Im Zusammenhang mit dem Typsystem tauchen die Begriffe
+<i>Typ</i>, <i>Lebenszeit</i> und <i>Typkonstruktor</i> auf.
+Um diese Begriffe in vereinheitlichter Weise systematisch erfassen
+zu können, führt man das Konzept der <i>Arten</i>,
+engl. <i>kinds</i>, ein.
+
+<p>Die gewöhnliche Art von Typen nennen wir <code>Type</code>.
+Darin enthalten sind alle Typen wie <code>bool</code>,
+<code>i32</code> und Werte von Typkonstruktoren wie
+<code>Option&lt;i32&gt;</code> und <code>Vec&lt;i32&gt;</code>.
+Auch <code>&amp;'a [i32]</code> ist für eine konkrete Lebenszeit
+<code>'a</code> der Wert eines Typkonstruktors, und damit ebenfalls in
+dieser Art enthalten.
+
+<p>Daneben gibt es die Art der Lebenszeiten, nennen wir sie
+<code>Region</code>. Darin enthalten sind alle Lebenszeiten,
+von denen <code>'static</code> eine benennbare ist.
+
+<p>Die Typen der beiden Arten <code>Type</code> und <code>Region</code>
+kann man als nullstellige, d.h. argumentlose Typkonstruktoren
+betrachten.
+
+<p>Die Art <code>Type -&gt; Type</code> umfasst alle einstelligen
+Typkonstruktoren. Darin enthalten sind bspw. <code>Option</code>,
+<code>Vec</code> und der Array-Konstruktor zur Länge <code>N</code>,
+der jedem Typ <code>T</code> den Array-Typ <code>[T;N]</code>
+zuordnet. Außerdem enthalten sind aus partieller Applikation
+mehrstelliger Typkonstruktoren entstandene einstellige
+Typkonstruktoren wie <code>io::Result</code>.
+
+<h2 id="Emulation">Emulation von HKT</h2>
+
+<p>Rust unterstützt keine HKT. Allerdings
+ist es möglich, HKT unter Ausnutzung des Trait-Systems
+zu emulieren[<a href="#1">1</a>][<a href="#2">2</a>], und dies sogar
+ohne Bemühung generischer assoziierter Typen[<a href="#3">3</a>].
+
+<p>Zwei Dinge sind hier zu beachten:
+<ol>
+<li>Ein Typkonstruktor lässt sich nicht direkt als Typ ansprechen.
+  Daher müssen wir jedem Typkonstruktor einen leeren Typ als
+  Stellvertreter zuordnen.
+<li>Ein Stellvertreter <code>F</code> ist kein Konstruktor,
+  womit das Vorhandensein der Applikation <code>F&lt;X&gt;</code>
+  entfällt. Aus diesem Grund müssen wir eine
+  <i>Typ-Defunktionalisierung</i> vornehmen, bei der
+  <code>F&lt;X&gt;</code> gegen <code>App&lt;F,X&gt;</code> 
+  ersetzt wird.
+</ol>
+
+<p>Die Applikation kodieren wir so:
+
+<pre class="rust ibox">
+trait AppliedTo&lt;X&gt; {
+    type Value;
+}
+
+type App&lt;F, X&gt; = &lt;F as AppliedTo&lt;X&gt;&gt;::Value;
+</pre>
+
+<p>Die Stellvertreter für <code>Option</code>
+und <code>Vec</code>:
+
+<pre class="rust ibox">
+struct OptionType;
+
+impl&lt;X&gt; AppliedTo&lt;X&gt; for OptionType {
+    type Value = Option&lt;X&gt;;
+}
+
+struct VecType;
+
+impl&lt;X&gt; AppliedTo&lt;X&gt; for VecType {
+    type Value = Vec&lt;X&gt;;
+}
+</pre>
+
+<p>Nun können wir die klassischen Beispiele <code>Functor</code>
+und <code>Monad</code> auf allgemeine Weise implementieren.
+
+<p>Zunächst <code>Functor</code>:
+
+<pre class="rust ibox">
+trait Functor&lt;X, Y&gt;: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y, F: Copy;
+}
+
+impl&lt;X, Y&gt; Functor&lt;X, Y&gt; for OptionType {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.map(f)
+    }
+}
+
+impl&lt;X, Y&gt; Functor&lt;X, Y&gt; for VecType {
+    fn map&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.into_iter().map(f).collect()
+    }
+}
+
+fn main() {
+    let x = Some(0);
+    println!("{:?}", OptionType::map(x, |x| x + 1));
+
+    let x = vec![1, 2, 3, 4];
+    println!("{:?}", VecType::map(x, |x| x + 1));
+}
+</pre>
+
+<p>Damit ist es nun machbar, Funktionen über
+Typkonstruktoren zu parametrisieren:
+
+<pre class="rust ibox">
+fn add1&lt;F: Functor&lt;i32, i32&gt;&gt;(x: App&lt;F, i32&gt;) -&gt; App&lt;F, i32&gt; {
+    F::map(x, |x| x + 1)
+}
+
+fn main() {
+    let x = Some(0);
+    println!("{:?}", add1::&lt;OptionType&gt;(x));
+
+    let x = vec![1, 2, 3, 4];
+    println!("{:?}", add1::&lt;VecType&gt;(x));
+}
+</pre>
+
+<p>Es folgt <code>Monad</code>. Die Funktion
+<code>unit</code> zieht man am besten aus <code>Monad</code>
+heraus in einen separaten Trait, weil <code>Monad</code>
+die Typparameter von <code>bind</code> enthält, die man
+für <code>unit</code> nicht braucht.
+
+<pre class="rust ibox">
+trait Unit&lt;X&gt; where Self: AppliedTo&lt;X&gt; {
+    fn unit(x: X) -&gt; App&lt;Self, X&gt;;
+}
+
+trait Monad&lt;X, Y&gt; where Self: Unit&lt;X&gt; + Unit&lt;Y&gt; {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;, F: Copy;
+}
+
+impl&lt;X&gt; Unit&lt;X&gt; for OptionType {
+    fn unit(x: X) -&gt; App&lt;Self, X&gt; {Some(x)}
+}
+
+impl&lt;X, Y&gt; Monad&lt;X, Y&gt; for OptionType {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
+    {
+        x.and_then(f)
+    }
+}
+
+impl&lt;X&gt; Unit&lt;X&gt; for VecType {
+    fn unit(x: X) -&gt; App&lt;Self, X&gt; {vec![x]}
+}
+
+impl&lt;X, Y&gt; Monad&lt;X, Y&gt; for VecType {
+    fn bind&lt;F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
+    {
+        x.into_iter().flat_map(f).collect()
+    }
+}
+
+fn main() {
+    let x = OptionType::unit(0);
+    println!("{:?}", OptionType::bind(x, |x| Some(x + 1)));
+}
+</pre>
+
+<p>Die allgemeine Implementierung von <code>join</code>:
+
+<pre class="rust ibox">
+fn join&lt;M, X&gt;(mmx: App&lt;M, App&lt;M, X&gt;&gt;) -&gt; App&lt;M, X&gt;
+where M: Monad&lt;App&lt;M, X&gt;, X&gt;
+{
+    M::bind(mmx, |mx| mx)
+}
+
+fn main() {
+    let x = Some(Some(0));
+    println!("{:?}", join::&lt;OptionType,_&gt;(x));
+}
+</pre>
+
+<p>bzw.
+
+<pre class="rust ibox">
+trait Join&lt;X&gt; where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;Self, X&gt;&gt; {
+    fn join(mmx: App&lt;Self, App&lt;Self, X&gt;&gt;) -&gt; App&lt;Self, X&gt;;
+}
+
+impl&lt;M, X&gt; Join&lt;X&gt; for M where M: Monad&lt;App&lt;M, X&gt;, X&gt; {
+    fn join(mmx: App&lt;Self, App&lt;Self, X&gt;&gt;) -&gt; App&lt;Self, X&gt; {
+        M::bind(mmx, |mx| mx)
+    }
+}
+
+fn main() {
+    let x: Some(Some(0));
+    println!("{:?}", OptionType::join(x));
+}
+</pre>
+
+<p>Kartesisches Produkt von Monaden:
+
+<pre class="rust ibox">
+fn prod&lt;M, X, Y&gt;(mx: App&lt;M, X&gt;, my: App&lt;M, Y&gt;) -&gt; App&lt;M, (X, Y)&gt;
+where
+    M: Monad&lt;X, (X, Y)&gt; + Monad&lt;Y, (X, Y)&gt;,
+    X: Clone, App&lt;M, Y&gt;: Clone
+{
+    M::bind(mx, |x: X|
+        M::bind(my.clone(), |y| M::unit((x.clone(), y))))
+}
+
+fn main() {
+    let a = vec!["x", "y"];
+    let b = vec![1, 2];
+    println!("{:?}", prod::&lt;VecType, _, _&gt;(a, b));
+}
+</pre>
+
+<p>bzw.
+
+<pre class="rust ibox">
+trait Prod&lt;X, Y&gt; {
+    fn prod(mx: App&lt;Self, X&gt;, my: App&lt;Self, Y&gt;) -&gt; App&lt;Self, (X, Y)&gt;
+    where Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt; + AppliedTo&lt;(X, Y)&gt;;
+}
+
+impl&lt;M, X, Y&gt; Prod&lt;X, Y&gt; for M
+where
+    M: Monad&lt;X, (X, Y)&gt; + Monad&lt;Y, (X, Y)&gt;,
+    X: Clone, App&lt;M, Y&gt;: Clone
+{
+    fn prod(mx: App&lt;M, X&gt;, my: App&lt;M, Y&gt;) -&gt; App&lt;M, (X, Y)&gt;
+    {
+        M::bind(mx, |x: X|
+            M::bind(my.clone(), |y| M::unit((x.clone(), y))))
+    }
+}
+
+fn main() {
+    let a = vec!["x", "y"];
+    let b = vec![1, 2];
+    println!("{:?}", VecType::prod(a, b));
+}
+</pre>
+
+<h3>Traits ohne Parameter</h3>
+
+<p>Alternativ zum gezeigten Ansatz lassen sich die Typparameter der
+Traits auch zu den Funktionen hin verschieben, wodurch meines Erachtens
+mehr Klarheit geschaffen wird.
+
+<pre class="rust ibox">
+trait Functor {
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where
+        F: Fn(X) -&gt; Y, F: Copy,
+        Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
+}
+
+impl Functor for OptionType {
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.map(f)
+    }
+}
+
+impl Functor for VecType {
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.into_iter().map(f).collect()
+    }
+}
+
+trait Monad {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; where Self: AppliedTo&lt;X&gt;;
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where
+        F: Fn(X) -&gt; App&lt;Self, Y&gt;, F: Copy,
+        Self: AppliedTo&lt;X&gt; + AppliedTo&lt;Y&gt;;
+}
+
+impl Monad for OptionType {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; {Some(x)}
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
+    {
+        x.and_then(f)
+    }
+}
+
+impl Monad for VecType {
+    fn unit&lt;X&gt;(x: X) -&gt; App&lt;Self, X&gt; {vec![x]}
+    fn bind&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; App&lt;Self, Y&gt;
+    {
+        x.into_iter().flat_map(f).collect()
+    }
+}
+</pre>
+
+<p>Der Compiler bekommt jetzt allerdings irgendwie Probleme mit der
+Typinferenz in <code>join</code>, weshalb der zweite
+Typparameter von <code>bind</code> manuell festgelegt werden muss:
+
+<pre class="rust ibox">
+fn join&lt;M, X&gt;(mmx: App&lt;M,App&lt;M, X&gt;&gt;) -&gt; App&lt;M, X&gt;
+where M: Monad + AppliedTo&lt;X&gt; + AppliedTo&lt;App&lt;M, X&gt;&gt;
+{
+    M::bind::&lt;_, X, _&gt;(mmx, |mx| mx)
+}
+</pre>
+
+<h3>Mehrstellige Typkonstruktoren</h3>
+
+<p>Bei einem mehrstelligen Typkonstruktor wie
+<code>Result&lt;X,E&gt;</code> kann man den Stellvertreter
+über das nebensächliche Argument <code>E</code> parametrisieren.
+Dies entspricht der partiellen Applikation des Typkonstruktors.
+
+<pre class="rust ibox">
+use std::marker::PhantomData as Ph;
+
+struct ResultType&lt;E&gt; {ph: Ph&lt;E&gt;}
+
+impl&lt;X, E&gt; AppliedTo&lt;X&gt; for ResultType&lt;E&gt; {
+    type Value = Result&lt;X, E&gt;;
+}
+
+impl&lt;E&gt; Functor for ResultType&lt;E&gt; {
+    fn map&lt;X, Y, F&gt;(x: App&lt;Self, X&gt;, f: F) -&gt; App&lt;Self, Y&gt;
+    where F: Fn(X) -&gt; Y
+    {
+        x.map(f)
+    }
+}
+</pre>
+
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li id="1">Jeremy Yallop, Leo White: »<a href="https://doi.org/10.1007/978-3-319-07151-0_8"
+  >Lightweight higher-kinded polymorphism</a>«.
+  In: »Functional and Logic Programming«, FLOPS 2014 conference proceedings.
+  In: »Lecture Notes in Computer Science«, Band 8475.
+<li id="2">Nicholas Matsakis: »<a href="http://smallcultfollowing.com/babysteps/blog/2016/11/03/associated-type-constructors-part-2-family-traits/"
+  >Associated type constructors, part 2: family traits</a>«.
+  Blog »Baby Steps«, 3. Nov. 2016.
+<li id="3">Rusty Yato: »<a href="https://rustyyato.github.io/type/system,type/families/2021/02/15/Type-Families-1.html"
+  >Generalizing over Generics in Rust (Part 1)
+  - AKA Higher Kinded Types in Rust</a>«. Blog, 15. Feb. 2021.
+</ol>
+
+</body>
+</html>
+

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Asynchrone Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Grundlagen">Grundlagen</a>
+  <ol>
+  <li><a href="#Futures">Futures</a>
+  <li><a href="#AsyncFn">Asynchrone Funktionen</a>
+  </ol>
+<li><a href="#Umsetzung">Technische Umsetzung</a>
+  <ol>
+  <li><span class="modest">Koroutinen</span>
+  <li><a href="#Anheftung">Selbstreferenzen und Anheftung</a>
+  <li><a href="#Exekutoren">Exekutoren</a>
+  <li><span class="modest">Waker</span>
+  </ol>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="Grundlagen">Grundlagen</h2>
+
+<h3 id="Futures">Futures</h3>
+
+<p>Einige Anwendungen erfordern den Umgang mit Prozeduren, die erst
+nach einer gewissen Zeit abgearbeitet sind. Das kann bspw. sein
+
+<ul>
+<li>das Warten auf eine Nutzereingabe,
+<li>das Warten auf die Antwort eines Clients oder Servers,
+<li>eine langwierige Berechnung.
+</ul>
+
+<p>Ein recht interessantes Beispiel ist für mich
+ein Funktionenplotter. Erfordert eine Funktion einen hohen
+Rechenaufwand, dauert es ein wenig bis der Graph vollständig
+gezeichnet ist. Würde das Programm solange warten, würde es
+um so schlimmer ruckeln, je höher die Rechenzeit ist. Die Idee ist
+nun, die Prozedur zu pausieren und nach neuer Abfrage von
+Nutzereingabe zu entscheiden ob die Prozedur abgebrochen oder
+weitergeführt werden soll.
+
+<p>Weil diese Beispiele alle recht komplizierte Technik enthalten
+können, simulieren wir so einen Ablauf zunächst am besten möglichst
+einfach mit einer Prozedur, die intern nichts anderes tut als eine
+bestimmte Zeit warten.
+
+<p>Wie modelliert man solche Prozeduren nun? Eine Möglichkeit wären
+Threads, die sich vor allem auch bei langwierigen Berechnungen
+wie dem Funktionenplotter anbieten würden. Der Grund dafür liegt
+darin, dass übermäßig lange Rechenzeit in einem Thread nicht
+dazu führt, dass der Hauptthread blockiert wird.
+
+<p>Um Threads geht es nun aber schon in einem
+anderen Kapitel.
+
+<p>Die Prozedur muss pausieren können. Demzufolge muss man die
+Prozedur so oft aufrufen können, bis sie fertig ist. Den
+Rückgabewert der Prozedur formulieren wir daher als eine
+Enumeration <code>Poll</code> in den Varianten <code>Ready</code>
+und <code>Pending</code>. Ist die Prozedur fertig, hat sie
+den Wert <code>Ready</code>, andernfalls <code>Pending</code>.
+Eine solche Prozedur bezeichnet man als <i>Future</i>.
+
+<p>Nun bedarf es auch noch einer Hilfsfunktion <code>block_on</code>,
+die die Prozedur solange in einer Schleife aufruft, bis sie
+abgearbeitet ist. Damit der Prozessor dabei nicht heiß läuft,
+fügen wir noch einen Aufruf <code>sleep</code> ein, der das
+Hauptprogramm für einen Sekundenbruchteil schlafen legt.
+
+<p>Die folgende Umsetzung gestaltet nun die bisherigen Überlegungen aus.
+
+<pre class="rust ibox">
+use std::time::{Duration, Instant};
+use std::thread::sleep;
+
+enum Poll&lt;T&gt; {Ready(T), Pending}
+
+type Future&lt;T&gt; = Box&lt;dyn FnMut() -&gt; Poll&lt;T&gt;&gt;;
+
+fn block_on&lt;T&gt;(mut f: Future&lt;T&gt;) -&gt; T {
+    loop {
+        match f() {
+            Poll::Ready(x) =&gt; return x,
+            Poll::Pending =&gt; {}
+        }
+        sleep(Duration::from_millis(100));
+    }
+}
+
+fn new_task(time: u64) -&gt; Future&lt;()&gt; {
+    let clock = Instant::now();
+    Box::new(move || {
+        if clock.elapsed().as_secs() &lt; time {
+            Poll::Pending
+        } else {
+            Poll::Ready(())
+        }
+    })
+}
+
+fn main() {
+    let f1 = new_task(2);
+    block_on(f1);
+}
+</pre>
+
+<p>Gibt es nun zwei Aufgaben zu bewältigen, die jeweils zwei Sekunden
+dauern, braucht das Programm bei sequentieller Ausführung schon
+vier Sekunden.
+<pre class="rust ibox">
+fn main() {
+    let f1 = new_task(2);
+    block_on(f1);
+    let f2 = new_task(2);
+    block_on(f2);
+}
+</pre>
+
+<p>Um die beiden Aufgaben parallel ausführen zu können, schreiben
+wir eine Funktion <code>join_all</code>, die eine Liste von Aufgaben
+entgegennimmt und einen Scheduler zurückgibt. Der Scheduler kümmert
+sich solange um die Ausführung der Aufgaben, bis alle Aufgaben erledigt
+sind. Wir formulieren auch den Scheduler als Future, denn dann können
+wir <code>block_on</code> wiederbenutzen.
+
+<pre class="rust ibox">
+fn join_all(a: Vec&lt;Future&lt;()&gt;&gt;) -&gt; Future&lt;()&gt; {
+    let mut a: Vec&lt;_&gt; = a.into_iter().map(Some).collect();
+    Box::new(move || {
+        let mut empty = true;
+        for x in &amp;mut a {
+            if let Some(f) = x {
+                empty = false;
+                if let Poll::Ready(()) =  f() {*x = None;}
+            }
+        }
+        if empty {Poll::Ready(())} else {Poll::Pending}
+    })
+}
+
+fn main() {
+    let f1 = new_task(2);
+    let f2 = new_task(2);
+    let s = join_all(vec![f1, f2]);
+    block_on(s);
+}
+</pre>
+
+<p>Die Funktion <code>join_all</code> ist so verallgemeinerbar,
+dass sie auch die Werte der Futures zurückgeben kann.
+
+<pre class="rust ibox">
+fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec&lt;T&gt;&gt; {
+    enum Either&lt;X, Y&gt; {Left(X), Right(Y)}
+    let mut a: Vec&lt;_&gt; = a.into_iter().map(Either::Left).collect();
+    Box::new(move || {
+        let mut empty = true;
+        for x in &amp;mut a {
+            if let Either::Left(f) = x {
+                empty = false;
+                if let Poll::Ready(value) = f() {
+                    *x = Either::Right(value);
+                }
+            }
+        }
+        match empty {
+            false =&gt; Poll::Pending,
+            true =&gt; Poll::Ready(std::mem::take(&amp;mut a)
+                .into_iter().map(|x| match x {
+                    Either::Right(value) =&gt; value,
+                    _ =&gt; unreachable!()
+                }).collect()),
+        }
+    })
+}
+</pre>
+
+<h3 id="AsyncFn">Asynchrone Funktionen</h3>
+
+<p>Wurde bisher eine gewöhnliche Funktion zur <i>äußerlichen</i>
+Darstellung des Pausierens genutzt, wollen wir das nun
+eigentlich <i>innerhalb</i> der Prozedur durchführen. Dafür bedarf es
+allerdings der Semantik einer Koroutine, die man nicht über gewöhnliche
+Funktionen ausdrücken kann. Eine Koroutine ist eine Prozedur, die
+mit <code>yield</code> an einer Stelle im Ablauf unterbrochen wird
+und sich später an dieser Stelle fortführen lässt.
+
+<p>Asynchrone Funktionen bieten eine Abwandlung des Konzeptes einer
+Koroutine. Anstelle von <code>yield</code> gibt es bei einer
+asynchronen Funktion eine Anweisung <code>await</code>, die die
+Fortführung des Programmablaufs der Funktion solange unterbricht, bis
+vom Argument von <code>await</code> ein Wert erhalten wurde.
+
+<p>Ab nun erforderlich ist die Einbindung der Bibliotheken
+›<a href="https://crates.io/crates/futures">futures</a>‹ und
+›<a href="https://crates.io/crates/async-std">async-std</a>‹.
+
+<pre class="rust ibox">
+use std::time::Duration;
+use async_std::task;
+use futures::{future::join_all, executor::block_on};
+
+async fn new_task(time: u64) {
+    task::sleep(Duration::from_secs(time)).await;
+}
+
+fn main() {
+    let f1 = new_task(2);
+    let f2 = new_task(2);
+    block_on(join_all(vec![f1, f2]));
+}
+</pre>
+
+<p>Eine asynchrone Funktion ist äquivalent zu einer gewöhnlichen
+Funktion, die ein Future als asynchronen Closure-Block zurückgibt.
+Außerdem ist das Argument von <code>await</code> selbst ein
+Future.
+
+<pre class="rust ibox">
+use std::future::Future;
+
+fn new_task(time: u64) -> impl Future&lt;Output = ()&gt; {
+    async move{task::sleep(Duration::from_secs(time)).await;}
+}
+</pre>
+
+<p>Die Funktion <code>join_all</code> ist leider mit zwei Problemen
+behaftet. Zum einen kommt dort mit der Erzeugung von
+<code>vec![f1,f2]</code> offenbar eine unnötige Heap-Allokation vor.
+Zum anderen müssen die Rückgabewerte von <code>f1</code> und
+<code>f2</code> den gleichen Datentyp besitzen. Aus diesen Gründen gibt
+es noch die Funktion <code>join</code>.
+
+<pre class="rust ibox">
+use std::time::Duration;
+use async_std::task;
+use futures::{future::join, executor::block_on};
+
+struct S1 {value: &amp;'static str}
+struct S2 {value: &amp;'static str}
+
+async fn task1(time: u64) -&gt; S1 {
+    task::sleep(Duration::from_secs(time)).await;
+    S1 {value: "Wert 1"}
+}
+
+async fn task2(time: u64) -&gt; S2 {
+    task::sleep(Duration::from_secs(time)).await;
+    S2 {value: "Wert 2"}
+}
+
+fn main() {
+    let f1 = task1(2);
+    let f2 = task2(2);
+    let (s1, s2) = block_on(join(f1, f2));
+    println!("{}, {}", s1.value, s2.value);
+}
+</pre>
+
+<p>Analog gibt es <code>join3</code>, <code>join4</code>,
+<code>join5</code> und das variadische Makro <code>join</code>,
+das auch mehr als fünf Futures verbinden kann.
+Beim Makro muss man
+
+<pre class="rust indent">
+block_on(async {join!(f1, f2)})
+</pre>
+
+<p>schreiben.
+
+<h2 id="Umsetzung">Technische Umsetzung</h2>
+
+<h3 id="Anheftung">Selbstreferenzen und Anheftung</h3>
+
+<p>Anders als eine gewöhnliche Funktion muss eine Koroutine ihre
+Variablenzustände auch während Unterbrechungen speichern. Eine
+gewöhnliche Funktion besitzt das Konzept der Unterbrechung nicht,
+&ndash; sie wird aufgerufen, für die Variablenzustände und für
+Verwaltungsinformation wird hierbei ein neuer Aktivierungsrecord als
+Stack frame im Aufrufstapel alloziert, und beim Verlassen der Funktion
+wird das Stack frame wieder freigegeben. Bei der Koroutine muss der
+Speicherbereich für die Variablenzustände solange zur Verfügung stehen,
+wie die Instanz der Koroutine existiert. Dieser Speicherbereich kann
+auf dem Aufrufstapel oder auf dem Haldenspeicher liegen.
+
+<p>Wie wir wissen besitzt Rust Zeigervariablen bzw. Referenzvariablen
+als Sprachmittel. Im Zusammenhang mit dem Speicherbereich der
+Variablenzustände tut sich nun ein Problem auf. Nämlich kann es ja sein,
+dass der Wert einer lokalen Variablen ein Zeiger auf eine andere lokale
+Variable in diesem Speicherbereich ist. Wir haben es in einem solchen
+Fall mit einer <i>Selbstreferenz</i> zu tun. Diese Situation kann man
+sich vorstellen als eine Struktur, die einen Zeiger
+enthält der gerade auf eine andere Variable der Struktur oder
+die Struktur selbst zeigt.
+
+<p>Würden wir die Struktur im Speicher verschieben, würde der
+Zeiger ungültig werden, &ndash; eine allgemeine Problematik bei
+Zeigern, bekannt als <i>hängender Zeiger</i>. Infolge dürften wir
+keinen Besitz über eine solche selbstreferenzielle Struktur bekommen,
+denn sonst wären wie bei jedem Wert Verschiebungen erlaubt. Bei
+gewöhnlichen Strukturen ist ja die Situation herstellbar, dass
+keine Zeiger auf die Struktur mehr vorliegen. Bei einer
+selbstreferenziellen Struktur ist dies ausgeschlossen, weil mit dem
+Besitz der Struktur der Zugriff auf die Zeigervariable einhergeht.
+
+<p>Es gibt mehrere technische Möglichkeiten, wie man dieser Misere
+entgehen kann:
+<ol>
+<li>Anstelle einer Speicheradresse speichert der Zeiger nur ein
+Offset. Diese Technik ist analog zum <i>Position independent code</i>.
+<li>Das Verschieben wird mit Mitteln des Typsystems verboten,
+&ndash; die Struktur besitzt damit eine feste <i>Anheftung</i> im
+Speicher.
+</ol>
+
+<p>Man hat sich für das Konzept der Anheftung entschieden, für die
+der Typ <code>Pin</code> geschaffen wurde.
+
+<h3 id="Exekutoren">Exekutoren</h3>
+
+<p>Zur Untersuchung, wie die Ausführung asynchroner Funktionen
+tatsächlich abläuft, gehen wir am besten schrittweise vor und
+passen die zuvor dargestellte Konstruktion von <code>block_on</code>
+zunächst an die echten Schnittstellen an. Diese Schnittstellen
+sind technisch ein wenig komplizierter ausgestaltet, da sie
+zusätzlich die Programmierung eines Aufweck-Systems erlauben.
+
+<p>Das Aufweck-System können wir erst einmal außen vor lassen.
+Erwirkt wird dies durch die Festlegung eines Dummy-Wakers, dessen
+Aufweck-Operation wirkungslos bleibt.
+
+<pre class="rust ibox">
+use std::future::Future;
+use std::pin::Pin;
+use std::sync::Arc;
+use std::task::{Poll, Context, Wake, Waker};
+use std::time::{Duration, Instant};
+use std::thread::sleep;
+
+struct DummyWaker;
+
+impl Wake for DummyWaker {
+    fn wake(self: Arc&lt;Self&gt;) {}
+}
+
+fn block_on&lt;T&gt;(f: impl Future&lt;Output = T&gt;) -&gt; T {
+    let mut f = Box::pin(f);
+    let waker = Waker::from(Arc::new(DummyWaker));
+    let context = &amp;mut Context::from_waker(&amp;waker);
+    loop {
+        match f.as_mut().poll(context) {
+            Poll::Ready(x) =&gt; return x,
+            Poll::Pending =&gt; {}
+        }
+        sleep(Duration::from_millis(100));
+        println!("\t(tick)");
+    }
+}
+
+struct Sleep {clock: Instant, time: u64}
+
+impl Sleep {
+    fn new_task(time: u64) -&gt; Self {
+        Self {clock: Instant::now(), time}
+    }
+}
+
+impl Future for Sleep {
+    type Output = ();
+    fn poll(self: Pin&lt;&amp;mut Self&gt;, _: &amp;mut Context&lt;'_&gt;)
+    -&gt; Poll&lt;Self::Output&gt;
+    {
+        if self.clock.elapsed().as_secs() &lt; self.time {
+            Poll::Pending
+        } else {
+            Poll::Ready(())
+        }
+    }
+}
+
+fn main() {
+    let f1 = Sleep::new_task(2);
+    block_on(f1);
+}
+</pre>
+
+<p>Die Mechanismen sind bis auf die Schnittstellen bisher
+im Wesentlichen gleich geblieben. Gleichwohl liegt nun ein
+echtes, zur Ausführung asynchroner Funktionen befähigtes
+<code>block_on</code> vor:
+
+<pre class="rust ibox">
+async fn task1() {
+    println!("Anfang");
+    Sleep::new_task(2).await;
+    println!("Fortsetzung");
+    Sleep::new_task(2).await;
+    println!("Ende");
+}
+
+fn main() {
+    let f1 = task1();
+    block_on(f1);
+}
+</pre>
+
+<p>Als nächstes portieren wir die Konstruktion von
+<code>join_all</code>.
+
+<pre class="rust ibox">
+struct JoinAll&lt;F: Future&gt;(Vec&lt;Option&lt;Pin&lt;Box&lt;F&gt;&gt;&gt;&gt;);
+
+fn join_all&lt;I&gt;(i: I) -&gt; impl Future&lt;Output = ()&gt;
+where I: IntoIterator, I::Item: Future&lt;Output = ()&gt;
+{
+    JoinAll(i.into_iter().map(|x| Some(Box::pin(x))).collect())
+}
+
+impl&lt;F: Future&lt;Output = ()&gt;&gt; Future for JoinAll&lt;F&gt; {
+    type Output = ();
+    fn poll(mut self: Pin&lt;&amp;mut Self&gt;, context: &amp;mut Context&lt;'_&gt;)
+    -&gt; Poll&lt;Self::Output&gt;
+    {
+        let mut empty = true;
+        for x in &amp;mut self.0 {
+            if let Some(f) = x {
+                empty = false;
+                match f.as_mut().poll(context) {
+                    Poll::Ready(()) =&gt; {*x = None;},
+                    Poll::Pending =&gt; {}
+                }
+            }
+        }
+        if empty {Poll::Ready(())} else {Poll::Pending}
+    }
+}
+
+async fn task(index: u32) {
+    println!("Anfang ({})", index);
+    Sleep::new_task(2).await;
+    println!("Fortsetzung ({})", index);
+    Sleep::new_task(2).await;
+    println!("Ende ({})", index);
+}
+
+fn main() {
+    let f1 = task(1);
+    let f2 = task(2);
+    block_on(join_all(vec![f1, f2]));
+}
+</pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Amos: »<a href="https://fasterthanli.me/articles/pin-and-suffering"
+  >Pin and suffering</a>«. (28. März 2021).
+<li>Philipp Oppermann:
+  »<a href="https://os.phil-opp.com/async-await/"
+  >Async/Await</a>«. In: »Writing an OS in Rust«. (27. März 2020).
+<li>Taylor Cramer, Aaron Turon, Lee Bernick et al.:
+»<a href="https://rust-lang.github.io/async-book/"
+  >Asynchronous Programming in Rust</a>«.
+<li>Stjepan Glavina, Florian Gilcher, Yoshua Wuyts et al.:
+  »<a href="https://book.async.rs/"
+  >Async programming in Rust with async-std</a>«.
+</ol>
+
+</body>
+</html>
+

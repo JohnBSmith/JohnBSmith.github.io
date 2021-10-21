@@ -10,14 +10,82 @@ A\land (B\lor C) &\iff A\land B\lor A\land C,\\
 A\lor (B\land C) &\iff (A\lor B)\land (A\lor C).
 \end{align}
 \end{Satz}
+\strong{Beweis (Natürliches Schließen).}\\
+Zu $A\land (B\lor C) \vdash A\land B\lor A\land C$.
+Programmterm:
+\[A\times (B+C) \to A\times B + A\times C,\; (a, s)\mapsto \match s \begin{cases}
+\operatorname{inl}(b)\mapsto \operatorname{inl}((a,b)),\\
+\operatorname{inr}(c)\mapsto \operatorname{inr}((a,c)).
+\end{cases}\]
+Zu $A\land B\lor A\land C\vdash A\land (B\lor C)$.
+Programmterm:
+\[A\times B + A\times C\to A\times (B + C),\;
+s\mapsto\match s\begin{cases}
+\operatorname{inl}((a,b))\mapsto (a, \operatorname{inl}(b)),\\
+\operatorname{inr}((a,c))\mapsto (a, \operatorname{inr}(c)).
+\end{cases}
+\]
+Zu $A\lor (B\land C) \vdash (A\lor B)\land (A\lor C)$. Programmterm:
+\[A+B\times C\to (A+B)\times (A+C),\;
+s\mapsto\match s\begin{cases}
+\inl(a)\mapsto (\inl(a),\inl(a)),\\
+\inr((b,c))\mapsto (\inr(b),\inr(c)).
+\end{cases} 
+\]
+Zu $(A\lor B)\land (A\lor C)\vdash A\lor (B\land C)$. Programmterm:
+\[
+(A+B)\times (A+C)\to A + B\times C,\;
+t\mapsto\match t\begin{cases}
+(\inl(a), s) \mapsto\inl(a),\\
+(\inr(b), \inl(a)) \mapsto\inl(a),\\
+(\inr(b), \inr(c)) \mapsto\inr((b, c)).
+\end{cases}
+\]
+Sämtliche Teilaussagen sind bewiesen.\;\qedsymbol
+
+\begin{Axiom}[PE: Principle of explosion]\label{PE}
+Eine falsche Aussage impliziert jede beliebige Aussage, kurz
+\[\vdash (0\implies A).\]
+\end{Axiom}
+Bemerkung: Dieses Prinzip erlaubt Programmterme mit leerem
+Pattern matching, so dass ein Zeuge für $0\to A$ konstruiert
+werden kann.
+
+\begin{Axiom}[LEM: Satz vom ausgeschlossenen Dritten]\label{LEM}\mbox{}\\*
+Entweder gilt eine Aussage, oder ihre Negation gilt, kurz
+\[\vdash A\lor\neg A.\]
+\end{Axiom}
+Bemerkung: Zur Schaffung von Klarheit wird ein Beweis mit LEM
+markiert, wenn transitive Abhängigkeit zu diesem Axiom bestehen.
+Verzichtet keiner der Beweise eines Satzes auf LEM, wird der Satz
+ebenfalls mit LEM markiert.
+
+\begin{Axiom}[Beseitigung der Doppelnegation]\label{DNE}\mbox{}\\*
+Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
+\[\vdash (\neg\neg A\implies A).\]
+\end{Axiom}
+
+\begin{Satz} Das Axiom \ref{LEM} (LEM) zieht \ref{DNE} nach sich.
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Zu $\neg A \lor A\vdash (\neg\neg A \Rightarrow A)$.
+Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{ex}(A)$
+für $0\to A$. Damit lässt sich der Programmterm
+\[(A\to 0) + A \to (((A\to 0)\to 0)\to A),\;
+s\mapsto\match s\begin{cases}
+\inl f\mapsto g\mapsto \operatorname{ex}(A)(g(f)),\\
+\inr a\mapsto g\mapsto a.
+\end{cases}\]
+konstruieren.\;\qedsymbol
+\end{Beweis}
 
 \section{Prädikatenlogik}\index{Praedikatenlogik@Prädikatenlogik}
 
 \begin{Definition}[bounded: beschränkte Quantifizierung]%
 \label{def:bounded}
 \begin{align}
-\forall x{\in}M\;(P(x)) &\defiff \forall x(x\in M\implies P(x)),\\
-\exists x{\in}M\;(P(x)) &\defiff \exists x(x\in M\land P(x)).
+(\forall x{\in}M\colon P(x)) &\defiff \forall x\colon (x\in M\implies P(x)),\\
+(\exists x{\in}M\colon P(x)) &\defiff \exists x\colon (x\in M\land P(x)).
 \end{align}
 \end{Definition}
 
@@ -25,42 +93,43 @@ A\lor (B\land C) &\iff (A\lor B)\land (A\lor C).
 \label{general-dl}
 Es gilt:
 \begin{align}
-A\land \exists x(P(x)) &\iff \exists x(A\land P(x)),\\
-A\lor \forall x(P(x)) &\iff \forall x(A\lor P(x)).
+A\land (\exists x\colon P(x)) &\iff \exists x\colon (A\land P(x)),\\
+A\lor (\forall x\colon P(x)) &\iff \forall x\colon (A\lor P(x)).
 \end{align}
 \end{Satz}
 
 \begin{Satz}[exists-dl: Distributivgesetz]\label{exists-dl}
 Es gilt:
-\[\exists x(P(x)\lor Q(x)) \iff \exists x(P(x))\lor\exists x(Q(x)).\]
+\[(\exists x\colon P(x)\lor Q(x)) \iff
+(\exists x\colon P(x))\lor(\exists x\colon Q(x)).\]
 \end{Satz}
 
 \begin{Satz}[exists-asym-dl: asymmetrisches Distributivgesetz]\label{exists-asym-dl}
 Es gilt:
-\[\exists x(P(x)\land Q(x)) \implies \exists x(P(x))\land\exists x(Q(x)).\]
+\[(\exists x\colon P(x)\land Q(x)) \implies (\exists x\colon P(x))\land (\exists x\colon Q(x)).\]
 \end{Satz}
 
 \begin{Satz}\label{exists-implies-const}
 Es gilt:
-\[\forall x(P(x)\implies A) \iff \exists x(P(x))\implies A.\]
+\[(\forall x\colon (P(x)\implies A)) \iff ((\exists x\colon P(x))\implies A).\]
 \end{Satz}
 
 \begin{Satz}[exists-cl: Kommutativgesetz]\label{exists-cl}
 Es gilt:
-\[\exists x\exists y(P(x,y)) \iff \exists y\exists x(P(x,y)).\]
+\[(\exists x\colon\exists y\colon P(x,y)) \iff (\exists y\colon\exists x\colon P(x,y)).\]
 \end{Satz}
 
 \begin{Satz}[all-cl: Kommutativgesetz]\label{all-cl}
 Es gilt:
-\[\forall x\forall y(P(x,y)) \iff \forall y\forall x(P(x,y)).\]
+\[(\forall x\colon\forall y\colon P(x,y)) \iff (\forall y\colon\forall x\colon P(x,y)).\]
 \end{Satz}
 
 \begin{Satz}[bounded-general-dl: allgemeine Distributivgesetze]%
 \label{bounded-general-dl}
 Es gilt:
 \begin{align}
-A\land \exists x{\in}M\,(P(x)) &\iff \exists x{\in}M\,(A\land P(x)),\\
-A\lor \forall x{\in}M\,(P(x)) &\iff \forall x{\in}M\,(A\lor P(x)).
+A\land (\exists x{\in}M\colon P(x)) &\iff (\exists x{\in}M\colon A\land P(x)),\\
+A\lor (\forall x{\in}M\colon P(x)) &\iff (\forall x{\in}M\colon A\lor P(x)).
 \end{align}
 \end{Satz}
 
@@ -386,8 +455,46 @@ x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
+\section{Relationen}\index{Relation}
+\begin{Definition}[rel: Relation]\mbox{}\\*
+Zu zwei Mengen $X,Y$ bezeichnet man
+jede Menge $R\subseteq X\times Y$ als Relation.
+\end{Definition}
+\begin{Definition}[img: Bildmenge]\label{def:relation-img}
+Zu einer Relation $R$ wird die Menge
+\[R(M) := \{y\mid\exists x\in M\colon (x,y)\in R\}\]
+als Bildmenge von $M$ unter $R$ bezeichnet.
+\end{Definition}
+
+\begin{Korollar}
+Sei $R$ eine Relation und seien $A,B$ beliebige Mengen.\\
+Es gilt $R(A\cup B) = R(A)\cup R(B)$.
+\end{Korollar}
+\begin{Beweis}
+Expansion mit Def. \ref{def:relation-img} (img) führt zur Behauptung
+\[(\exists x\in A\cup B\colon (x,y)\in R) \iff (\exists x\in A\colon (x,y)\in R)
+\lor (\exists x\in B\colon (x,y)\in R).\]
+Die linke Seite lässt sich gemäß Def. \ref{def:bounded} (bounded),
+Def. \ref{def:cup} (cup) und Satz \ref{exists-dl} (exists-dl)
+äquivalent in die rechte umformen.\;\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Sei $R$ eine Relation und seien $A,B$ beliebige Mengen.\\
+Es gilt $R(A)\setminus R(B)\subseteq R(A\setminus B)$.
+\end{Korollar}
+\begin{Beweis}
+Expansion mit Def. \ref{def:relation-img} (img) führt zur Behauptung
+\[(\exists x\in A\colon (x,y)\in R)\land (\forall x\in B\colon (x,y)\notin R)
+\implies \exists x\in A\setminus B\colon (x,y)\in R.\]
+Laut der ersten Prämisse existiert ein $x\in A$ mit $(x,y)\in R$. Die
+zweite Prämisse ist äquivalent zur Kontraposition $(x,y)\in R\Rightarrow x\notin B$.
+Infolge ist $x\in A\setminus B$. Somit bezeugt $x$ die
+Existenzaussage auf der rechten Seite.\,\qedsymbol
+\end{Beweis}
+
 \newpage
-\section{Abbildungen}\index{Abbildungen}
+\section{Abbildungen}\index{Abbildung}
 \subsection{Definitionen}
 
 \begin{Definition}[app: Applikation]\label{def:app}
@@ -399,23 +506,23 @@ Für eine Abbildung $f$ ist
 \label{def:img}\index{Bildmenge}\mbox{}\\
 Für eine Abbildung $f\colon A\to B$ und $M\subseteq A$
 wird die Menge
-\[f(M) := \{y\mid \exists x{\in}M\;(y=f(x))\}
-= \{y\mid \exists x(x\in M\land y=f(x))\}\]
+\[f(M) := \{y\mid \exists x\in M\colon y=f(x)\}
+= \{y\mid \exists x\colon (x\in M\land y=f(x))\}\]
 als Bildmenge von $M$ unter $f$ bezeichnet.
 \end{Definition}
 
 \begin{Definition}[preimg: Urbildmenge]\label{def:preimg}\index{Urbildmenge}
 Für eine Abbildung $f\colon A\to B$ wird
-\[f^{-1}(M) := \{x\mid f(x)\in M\}\]
+\[f^{-1}(M) := \{x\mid f(x)\in M\} = \{x\mid \exists y\in M\colon y=f(x)\}\]
 als Urbildmenge von $M$ unter $f$ bezeichnet.
 \end{Definition}
 
 \begin{Definition}[inj: Injektion]%
 \label{def:inj}\index{Injektion}\mbox{}\\
 Eine Abbildung $f\colon A\to B$ heißt genau dann injektiv, wenn gilt:
-\[\forall x_1\forall x_2(f(x_1)=f(x_2)\implies x_1=x_2)\]
-bzw. äquivalent
-\[\forall x_1\forall x_2(x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
+\[\forall x_1\colon \forall x_2\colon (f(x_1)=f(x_2)\implies x_1=x_2)\]
+bzw. äquivalent (Kontraposition)
+\[\forall x_1\colon \forall x_2\colon (x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
 \end{Definition}
 
 \begin{Definition}[sur: Surjektion]%
@@ -436,19 +543,19 @@ Verkettung von $f$ und $g$.
 \label{feq}\index{Gleichheit!von Abbildungen}
 Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
 dann gleich, kurz $f=g$, wenn $A=C$ und $B=D$ und
-\[\forall x(f(x)=g(x)).\]
+\[\forall x\colon f(x)=g(x).\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Definition gilt $f=g$ genau dann, wenn $(G_f,A,B)=(G_g,C,D)$,
 was äquivalent zu $G_f=G_g\land A=C\land B=D$ ist. Nach Def.
 \ref{def:seteq} (seteq) gilt
-\[G_f=G_g\iff \forall t(t\in G_f\iff t\in G_g).\]
+\[G_f=G_g\iff \forall t\colon (t\in G_f\Leftrightarrow t\in G_g).\]
 Nach Satz \ref{eq-iff-all-iff} und Def. \ref{def:app} (app) gilt
 \begin{align*}
-&\forall x[f(x)=g(x)] \iff \forall x\forall y[y=f(x)\iff y=g(x)]\\
-&\iff \forall x\forall y[(x,y)\in G_f\iff (x,y)\in G_g]
-\iff \forall t(t\in G_f\iff t\in G_g).
+&(\forall x\colon f(x)=g(x)) \iff (\forall x\colon\forall y\colon (y=f(x)\Leftrightarrow y=g(x)))\\
+&\iff (\forall x\colon\forall y\colon((x,y)\in G_f\Leftrightarrow (x,y)\in G_g))
+\iff \forall t\colon (t\in G_f\Leftrightarrow t\in G_g).
 \end{align*}
 Da die Quantifizerung auf $x\in A$, $y\in B$ und $t\in A\times B$
 beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
@@ -468,7 +575,7 @@ f^{-1}(\bigcup_{i\in I} M_i) &= \bigcup_{i\in I} f^{-1}(M_i).
 
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall x[x\in f^{-1}(M_1\cap M_2)\iff x\in f^{-1}(M_1)\cap f^{-1}(M_2)].\]
+\[\forall x\colon [x\in f^{-1}(M_1\cap M_2)\iff x\in f^{-1}(M_1)\cap f^{-1}(M_2)].\]
 Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:cap} (cap)
 zusammen mit Def. \ref{def:filter} (filter) gilt:
 \begin{align*}
@@ -481,7 +588,7 @@ Für die Vereinigung ist das analog.
 
 Schnitt von beliebig vielen Mengen.
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall x[x\in f^{-1}(\bigcap_{i\in I}M_i)
+\[\forall x\colon [x\in f^{-1}(\bigcap_{i\in I}M_i)
 \iff x\in \bigcap_{i\in I} f^{-1}(M_i)].\]
 Nach Def. \ref{def:preimg} (preimg) und Def. \ref{def:intersection}
 (intersection) zusammen mit Def. \ref{def:filter} (filter) gilt:
@@ -503,7 +610,7 @@ f(\bigcup_{i\in I} M_i) &= \bigcup_{i\in I} f(M_i).
 \end{Satz}
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall y(y\in f(M_1\cup M_2)\iff y\in f(M_1)\cup f(M_2)).\]
+\[\forall y\colon (y\in f(M_1\cup M_2)\iff y\in f(M_1)\cup f(M_2)).\]
 Nach Def. \ref{def:img} (img), Def. \ref{def:cup} (cup),
 Satz \ref{bool-dl} (bool-dl) und Satz \ref{exists-dl} (exists-dl) gilt:
 \begin{align*}

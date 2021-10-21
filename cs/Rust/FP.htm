@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Funktionale Programmierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Funktionenzeiger">Funktionenzeiger</a>
+<li><a href="#Closures">Closures</a>
+<li><a href="#Opake-Typen">Opake Typen</a>
+<li><a href="#Higher-order">Funktionen höherer Ordnung</a>
+<li><a href="#Monaden">Monaden</a>
+<li><a href="#Currying">Currying</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<h2 id="Funktionenzeiger">Funktionenzeiger</h2>
+
+<p>Der klassische Kontrollfluss in der prozeduralen Programmierung
+verläuft so: Ein Unterprogramm ruft ggf. ein weiteres Unterprogramm
+auf, und dieses dann ggf. noch ein weiteres Unterprogramm
+usw. Der Kontrollfluss besteht aus Verzweigungen, Schleifen und
+Unterprogrammen.
+
+<p>Den Unterprogrammen kommt hierbei eine besondere Bedeutung zu.
+Diese modularisieren das Programm, indem sie wiederkehrende
+Funktionalität zusammenfassen, die internen Details verbergen und über
+ihre Signatur eine Schnittstelle zum Rest des Programms herstellen.
+
+<p>Nun kann man sich eine Situation überlegen, in der es eine
+Fallunterscheidung zwischen sehr vielen Unterprogrammen gibt.
+Da dies noch handhabbar erscheint, will ich diese Überlegung
+sogleich verschärfen. Was tut man denn, wenn das gewählte
+Unterprogramm nicht im Vorhinein bekannt ist?
+
+<p>Da ich mathematisch-technisch belastet bin, fallen mir dazu keine
+besseren Beispiele als numerische Verfahren ein. Betrachten wir
+das Newton-Verfahren zur Ermittlung von Nullstellen einer Funktion.
+Man kann dieses Verfahren nun für eine bestimmte reelle Funktion
+programmieren. Der Algorithmus setzt aber eigentlich keine spezielle
+Funktion voraus. Für eine allgemeine Formulierung muss die Funktion
+ein Argument des Verfahrens sein. Ermöglicht wird dies durch das
+Speichern einer Referenz auf die Funktion in einer Variable, man
+spricht auch von einem Funktionenzeiger.
+
+<p>Das Newton-Verfahren benötigt die erste Ableitung der Funktion.
+Diese lässt sich ebenfalls mit einem numerischen Verfahren
+approximieren. Als Beispiel sei die Funktion <var>f</var>(<var>x</var>)
+= <var>x</var><sup>2</sup>&nbsp;&minus;&nbsp;2 gewählt.
+Die positive Nullstelle ist die Wurzel von zwei.
+
+<pre class="rust ibox">
+fn diff(f: fn(f64)-&gt;f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    (f(x+h) - f(x-h))/(2.0*h)
+}
+
+fn newton(f: fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x - f(x)/diff(f, x);
+    }
+    x
+}
+
+fn main() {
+    fn f(x: f64) -&gt; f64 {x*x - 2.0}
+    println!("{}", newton(f, 1.0));
+}
+</pre>
+
+<p>Der wesentliche Vorteil herbei ist, dass wir numerische Verfahren
+nun in allgemeiner Form in Bibliotheken aufbewahren können. Das geht
+nur, wenn das Verfahren nicht an eine feste Funktion gekoppelt ist.
+
+<h2 id="Closures">Closures</h2>
+
+<h3>Aufhebung einer Beschränkung</h3>
+
+<p>Funktionenzeiger sind einer Beschränkung unterworfen, die ihre
+Brauchbarkeit stark reduziert. Zentral für die funktionale
+Programmierung ist, dass sich Funktionen aus Daten erzeugen lassen.
+Dies wird erreicht durch Bindung der Werte von Variablen aus der
+Umgebung der Funktion, man spricht von einem <i>Closure</i>. Die
+Umgebung wird auch <i>Erstellungskontext</i> genannt.
+
+<p>Angenommen wir wollten mit dem Newton-Verfahren nun die
+Quadratwurzel-Funktion <code>sqrt</code> implementieren. Die
+Funktion ergäbe sich offenbar so:
+<pre class="rust ibox">
+fn sqrt(a: f64) -&gt; f64 {
+    fn f(x: f64) -&gt; f64 {x*x - a}
+    newton(f, 1.0)
+}
+</pre>
+
+<p>Diese Funktion würgt der Compiler jedoch ab, denn die innere
+Funktion <code>f</code> vermag es nicht, den Wert der Variablen
+<code>a</code> zu speichern. Diese Variable entstammt ja aus der
+Umgebung der inneren Funktion.
+
+<p>Allerdings gestattet leichte Modifikation des Programms die
+explizite Benutzung von Closures und Closurezeigern. In abstrakteren
+Programmiersprachen sind Funktionen und Closures vereinheitlicht.
+In Rust ist das etwas komplizierter, weil Closures zur effizienten
+Programmierung mit den Eigenschaften des Typsystems verwoben sind.
+
+<p>Die verallgemeinerten Schnittstellen bezüglich Closurezeigern
+gestatten sowohl Funktionen als auch Closures als Argumente. Zwischen
+Funktionen und Closures  besteht einen kleiner Unterschied in der
+Syntax. Anstelle von
+<pre class="rust ibox">
+fn f(x: f64) -&gt; f64 {x*x - 2.0}
+</pre>
+
+<p>schreibt man:
+<pre class="rust ibox">
+let f = |x: f64| -&gt; f64 {x*x - 2.0};
+</pre>
+
+<p>oder mittels Typinferenz kurz:
+<pre class="rust ibox">
+let f = |x| x*x - 2.0;
+</pre>
+
+<p>Das gewünschte Programm:
+<pre class="rust ibox">
+fn diff(f: &amp;dyn Fn(f64)-&gt;f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    (f(x+h) - f(x-h))/(2.0*h)
+}
+
+fn newton(f: &amp;dyn Fn(f64)-&gt;f64, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x - f(x)/diff(f, x);
+    }
+    x
+}
+
+fn sqrt(a: f64) -&gt; f64 {
+    let f = |x| x*x - a;
+    newton(&amp;f, 1.0)
+}
+
+fn main() {
+    println!("{}", sqrt(2.0));
+}
+</pre>
+
+
+<h3>Closures als Objekte</h3>
+
+<p>Nun stellen sich Fragen. Was hat es mit der Typsignatur
+<code>&amp;dyn Fn(X)-&gt;Y</code> auf sich? Das ist doch eine
+Referenz auf ein Trait-Objekt, oder nicht? Muss man sich ohne
+Closures geschlagen geben?
+
+<p>Man muss sich nicht geschlagen geben, ein Verzicht auf Closures
+ist möglich, denn diese lassen sich als Objekte mit einer einzigen
+Methode modellieren. Auf diese Art sind Closures hinter den
+Kulissen auch in Rust umgesetzt.
+
+<p>Nämlich kann man den Funktionenzeiger und die Variable
+<code>a</code> zu einem Objekt zusammenfassen. Dem
+Funktionenzeiger gibt man nun zusätzlich ein Argument zum Zugriff
+auf das eigene Objekt und damit <code>a</code>. Das ist nichts
+anderes als das self-Argument, die Funktion wird damit zu einer
+Methode. Schließlich ist der letzte wesentliche Schritt noch die
+Abstraktion des Aufrufs &ndash; dieser sei <code>call</code> genannt
+&ndash; über einen Trait <code>Fun&lt;X,Y&gt;</code>,
+die Funktionalität ist damit generisch. Ein expliziter
+Funktionenzeiger wird dabei nicht mehr benötigt, da dieser in Form
+des Aufrufs <code>call</code> schon über die Dispatch-Tabelle des
+Trait-Objekts erzeugt wird.
+
+<p>Die Formulierung ist nun lediglich ein klein wenig umständlicher:
+<pre class="rust ibox">
+trait Fun&lt;X, Y&gt; {
+    fn call(&amp;self, x: X) -&gt; Y;
+}
+
+fn diff(f: &amp;dyn Fun&lt;f64, f64&gt;, x: f64) -&gt; f64 {
+    let h = 0.001;
+    (f.call(x+h) - f.call(x-h))/(2.0*h)
+}
+
+fn newton(f: &amp;dyn Fun&lt;f64, f64&gt;, x0: f64) -&gt; f64 {
+    let mut x = x0;
+    for _ in 0..20 {
+        x = x - f.call(x)/diff(f, x);
+    }
+    x
+}
+
+fn sqrt(a: f64) -&gt; f64 {
+    struct F {a: f64}
+    impl Fun&lt;f64,f64&gt; for F {
+        fn call(&amp;self, x: f64) -&gt; f64 {x*x - self.a}
+    }
+    newton(&amp;F {a}, 1.0)
+}
+
+fn main() {
+    println!("{}", sqrt(2.0));
+}
+</pre>
+
+<p>Warum es ein Trait-Objekt sein muss, wird nun klar: Jedes Closure
+ergibt ein Objekt von einem jeweils neuen Datentyp, da nicht im
+Vorhinein bekannt ist, welche und wie viele Werte der Umgebung
+gebunden werden. Daher muss man von allen diesen Datentypen über eine
+gemeinsame Schnittstelle abstrahieren. Die Schnittstelle ist hierbei
+der Funktionsaufruf.
+
+<h2 id="Opake-Typen">Opake Typen</h2>
+
+<p>Die Komposition (Verkettung) zweier reeller Funktionen
+<var>g</var>,&nbsp;<var>f</var> an der Stelle <var>x</var>,
+das ist
+<pre class="ibox">
+compose(g, f, x) := g(f(x)),
+</pre>
+<p>ist implementierbar als:
+<pre class="rust ibox">
+fn compose&lt;G, F&gt;(g: G, f: F, x: f64) -&gt; f64
+where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
+{
+    g(f(x))
+}
+</pre>
+
+<p>Die Funktion <code>compose</code> muss parametrisch polymorph über
+alle Typen <code>G</code>,&nbsp;<code>F</code> sein, weil der konkrete
+Typ wie gesagt bei jedem Closure unterschiedlich ist.
+
+<p>Nun wollen wir <code>compose</code> abändern zu
+<pre class="ibox">
+compose(g, f) := |x| g(f(x)).
+</pre>
+
+<p>Die Frage stellt sich, wie das zu typisieren ist, da nun
+der Rückgabewert ein Closure darstellt. Man könnte denken,
+der Rückgabetyp sei ebenfalls einfach durch eine Typvariable
+zu ersetzen. Denken wir genauer darüber nach, stellen wir jedoch fest,
+dass dies nicht richtig sein kann. Parametrische Polymorphie bedeutet,
+dass die Typvariablen durch die konkreten Typen ersetzt werden
+dürfen, die bei der Applikation der Funktion vorgefunden werden.
+Zum Rückgabewert <i>entsteht</i> jedoch bei der Applikation ein
+neuer Typ. Über diesen Typ wissen wir lediglich, dass dieser den
+Trait <code>Fn(f64)-&gt;f64</code> besitzt. Was wir hier vorliegen
+haben, ist ein <i>opaker Typ</i>, und der erfüllte Trait ist dessen
+Schnittstelle zur Außenwelt.
+
+<p>Das Typsystem von Rust unterstützt solche opaken Typen. Der
+opake Typ mit Trait <code>A</code> als Schnittstelle wird
+<code>impl A</code> geschrieben &ndash; man kann das lesen
+als »<i>opaker Typ, der A implementiert</i>«. Die gewünschte Funktion
+wird damit formulierbar:
+
+<pre class="rust ibox">
+fn compose&lt;G, F&gt;(g: G, f: F) -&gt; impl Fn(f64) -&gt; f64
+where G: Fn(f64) -&gt; f64, F: Fn(f64) -&gt; f64
+{
+    move |x| g(f(x))
+}
+</pre>
+
+<p>Man kann auch die Typen der Argumente als solche opaken Typen
+schreiben, was zunächst etwas verwirrend sein dürfte:
+
+<pre class="rust ibox">
+fn compose(g: impl Fn(f64) - &gt;f64, f: impl Fn(f64) - &gt;f64)
+-&gt; impl Fn(f64) -&gt; f64
+{
+    move |x| g(f(x))
+}
+</pre>
+
+<p>Was hat es damit auf sich? Obwohl die beiden Typsignaturen nicht
+identisch sind, verhalten sie sich äquivalent.
+Die Idee dabei ist, dass die parametrische Polymorphie aus Sicht
+außerhalb der Funktion einer opaken Typisierung aus Sicht innerhalb
+der Funktion entspricht. Was wissen wir denn innerhalb der Funktion
+über die Typen von <code>g</code>,&nbsp;<code>f</code>? Wir wissen
+nichts über sie, außer dass sie die Schnittstelle
+<code>Fn(f64)-&gt;f64</code> zu erfüllen haben.
+
+<p>Für die allgemeine Signatur der Komposition, wie sie in der
+Mathematik definiert ist, ersetzen wir ferner die Typen zu Argumenten
+und Rückgabewerten von <code>g</code>,&nbsp;<code>f</code>
+durch Typvariablen und gelangen schließlich zu:
+
+<pre class="rust ibox">
+fn compose&lt;X, Y, Z&gt;(g: impl Fn(Y) -&gt; Z, f: impl Fn(X) -&gt; Y)
+-&gt; impl Fn(X) -&gt; Z
+{
+    move |x| g(f(x))
+}
+</pre>
+
+<p>Wie gesagt ist parametrische Polymorphie nicht identisch mit
+opak typisierten Argumenten. So darf man bei
+
+<pre class="rust ibox">
+fn print&lt;T: std::fmt::Display&gt;(x: T) {
+    println!("{}", x);
+}
+</pre>
+
+<p>den Typparameter explizit belegen, also bspw.
+<code>print::&lt;i32&gt;</code> schreiben. Bei
+
+<pre class="rust ibox">
+fn print(x: impl std::fmt::Display) {
+    println!("{}", x);
+}
+</pre>
+
+<p>ist das allerdings nicht erlaubt. Mit diesen Wissen sieht man,
+dass die vollständig explizite Angabe der Typparameter bei
+<code>compose</code> nur in beschränkter Weise sinnfällig ist,
+da Closure-Typen per se nicht benennbar sind.
+
+<h2 id="Higher-order">Funktionen höherer Ordnung</h2>
+
+<h3 id="map">Map</h3>
+
+<p>Die Funktion <code>map</code> wendet eine Funktion auf jedes
+Element eines Arrays an.
+
+<pre class="rust ibox">
+fn map&lt;X, Y&gt;(a: &amp;[X], f: &amp;dyn Fn(&amp;X) -&gt; Y) -&gt; Vec&lt;Y&gt; {
+    let mut acc = Vec::with_capacity(a.len());
+    for x in a {
+        acc.push(f(x));
+    }
+    acc
+}
+
+fn main() {
+    let a = vec![1, 2, 3 ,4];
+    let b = map(&amp;a, &amp;|x| x.to_string());
+    println!("{:?}", b);
+}
+</pre>
+
+<p>Alternativ ist hier auch die Signatur
+<pre class="rust ibox">
+f: impl Fn(&amp;X)->Y
+</pre>
+<p>erlaubt, bzw. äquivalent:
+<pre class="rust ibox">
+fn map&lt;X, Y, F&gt;(a: &amp;[X], f: F) -&gt; Vec&lt;Y&gt;
+where F: Fn(&amp;X) -&gt; Y
+</pre>
+<p>Dies kann zu besser optimiertem Code führen, da die
+Monomorphisierung mehr Inlining ermöglicht.
+
+<p>Weitere Abstraktion erlaubt die Anwendung der Funktion auf
+beliebige iterierbare Objekte:
+<pre class="rust ibox">
+fn map&lt;X, Y, A, F&gt;(a: A, f: F) -&gt; Vec&lt;Y&gt;
+where A: IntoIterator&lt;Item = X&gt;, F: Fn(&amp;X) -&gt; Y
+{
+    let it = a.into_iter();
+    let mut acc = Vec::with_capacity(it.size_hint().0);
+    for x in it {
+        acc.push(f(&amp;x));
+    }
+    acc
+}
+
+fn main() {
+    let b = map(1..=4, |x| x.to_string());
+    println!("{:?}", b);
+}
+</pre>
+
+<p>Die Funktion <code>map</code> der Standardbibliothek ist
+nochmals vielseitiger. Diese arbeitet auf ausgeklügelte Weise
+mit Iteratoren und abstrahiert so von den iterierbaren
+Datenstrukturen. Man benutzt sie so:
+
+<pre class="rust ibox">
+fn main() {
+    let a = [1, 2, 3, 4];
+    let b: Vec&lt;_&gt; = a.iter().map(|x| x.to_string()).collect();
+    assert_eq!(b, ["1", "2", "3", "4"]);
+}
+</pre>
+
+<p>Führt man <code>map</code> eine fehlbare Operation zu,
+ist das Ergebnis wie erwartet ein Array von Resultaten. Bspw.
+macht das Programm
+
+<pre class="rust ibox">
+fn main() {
+    let a = ["1", "2", "3", "4"];
+    let b: Vec&lt;_&gt; = a.iter().map(|x| x.parse::&lt;i32&gt;()).collect();
+    println!("{:?}", b);
+}
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+[Ok(1), Ok(2), Ok(3), Ok(4)]
+</pre>
+
+<p>Man kann <code>collect</code> aber auch zu verstehen geben, dass
+beim ersten auftretenden Fehler abgebrochen werden soll. So liefert
+
+<pre class="rust ibox">
+fn main() {
+    let a = ["1", "2", "3", "4"];
+    let b: Result&lt;Vec&lt;_&gt;, _&gt; = a.iter()
+        .map(|x| x.parse::&lt;i32&gt;()).collect();
+    println!("{:?}", b);
+}
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+Ok([1, 2, 3, 4])
+</pre>
+
+<p>So wie <code>parse</code> ist <code>collect</code> eine
+generische Funktion, dessen Typparameter durch Typinferenz
+bestimmt werden kann, wofür der Kontext allerdings genügend
+Information über die Typstruktur enthalten muss. Die Notation
+
+<pre class="rust ibox">
+let b: Typ = it.collect();
+</pre>
+
+<p>ist demnach mit
+
+<pre class="rust ibox">
+let b = it.collect::&lt;Typ&gt;();
+</pre>
+
+<p>gleichbedeutend.
+
+<h3 id="filter">Filter</h3>
+
+<p>Die Funktion <code>filter</code> trennt von einem Array alle
+Elemente ab, welche ein mitgegebenes Prädikat erfüllen. Dem Prädikat
+widersprechende Elemente werden verworfen.
+
+<p>Das folgende Programm zeigt die Implementierung speziell für
+<code>Vec</code>. Die Funktion greift aus dem Array <code>a</code>
+Elemente ab, welche das Prädikat <code>p</code> erfüllen.
+
+<pre class="rust ibox">
+fn filter&lt;T&gt;(a: Vec&lt;T&gt;, p: impl Fn(&amp;T) -&gt; bool) -&gt; Vec&lt;T&gt; {
+    let mut acc = Vec::new();
+    for x in a {
+        if p(&amp;x) {acc.push(x);}
+    }
+    acc
+}
+
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    let a: Vec&lt;u32&gt; = (1..=n).collect();
+    filter(a, |&amp;k| n%k == 0)
+}
+
+fn main() {
+    println!("{:?}", divisors(12));
+}
+</pre>
+
+<p>Zur Anwendung kam <code>filter</code> in diesem Programm zur
+Berechnung der Teilerliste einer Zahl. Die Erzeugung eines Arrays
+als Zwischenwert war dabei jedoch unnötig. Ersetzung von
+<code>Vec</code> gegen eine Typvariable <code>I</code> vom
+Trait <code>IntoIterator</code> verallgemeinert <code>filter</code>
+dergestalt dass man die Erzeugung des Zwischenwertes entfallen
+lassen kann.
+
+<pre class="rust ibox">
+fn filter&lt;T, I, P&gt;(a: I, p: P) -&gt; Vec&lt;T&gt;
+where I: IntoIterator&lt;Item = T&gt;, P: Fn(&amp;T) -&gt; bool
+{
+    let mut acc = Vec::new();
+    for x in a {
+        if p(&amp;x) {acc.push(x);}
+    }
+    acc
+}
+
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    filter(1..=n, |&amp;k| n%k == 0)
+}
+</pre>
+
+<p>Die Funktion <code>filter</code> der Standardbibliothek ist nochmals
+vielseitiger. So wie <code>map</code> arbeitet diese auf ausgeklügelte
+Weise mit Iteratoren und abstrahiert so von den iterierbaren
+Datenstrukturen. Man benutzt sie wie folgt zur Berechnung der
+Teilerliste:
+
+<pre class="rust ibox">
+fn divisors(n: u32) -&gt; Vec&lt;u32&gt; {
+    (1..=n).filter(|&amp;k| n%k == 0).collect()
+}
+</pre>
+
+<h3 id="fold">Fold</h3>
+
+<p>Wer das erste Mal die Definition der Funktion <code>fold</code>
+einschließlich ihrer Typsignatur zu Gesicht bekommt, dem mag
+diese Funktion ein wenig verworren erscheinen. Das hat wohl damit
+zu tun, dass im Gegensatz zu konkreten Algorithmen aufgrund der
+Abstraktion nicht unmittelbar klar wird, was diese Funktion denn
+bewerkstelligen soll.
+
+<p>Daher möchte ich <code>fold</code> ausgehend von konkreten
+Funktionen verdeutlichen. Betrachten wir die Algorithmen zur Berechnung
+der Summe und des Produktes der Elemente eines Arrays.
+
+<pre class="rust ibox">
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    let mut acc = 0.0;
+    for &amp;x in a {acc = acc + x;}
+    acc
+}
+
+fn prod(a: &amp;[f64]) -&gt; f64 {
+    let mut acc = 1.0;
+    for &amp;x in a {acc = acc*x;}
+    acc
+}
+</pre>
+
+<p>Beide Funktionen sind irgendwie von der gleichen Gestalt.
+Betrachtet man das genauer, kommt man zur folgenden Präzisierung:
+Eigentlich unterscheidet sich lediglich der Anfangswert und die
+Operation. Eine Abstraktion entsteht demnach, wenn diese als Argumente
+an den Algorithmus übergeben werden. Wir gelangen zu:
+
+<pre class="rust ibox">
+fn fold(a: &amp;[f64], init: f64, op: impl Fn(f64, f64) -&gt; f64) -&gt; f64 {
+    let mut acc = init;
+    for &amp;x in a {acc = op(acc, x);}
+    acc
+}
+
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 0.0, |acc, x| acc + x)
+}
+
+fn prod(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 1.0, |acc, x| acc*x)
+}
+</pre>
+
+<p>Ist das Prinzip klar geworden, möchte man <code>fold</code>
+im Weiteren über den Element-Typ parametrisieren. Eine nochmals
+weitergehende Verallgemeinerung entsteht dadurch, dass man
+für linkes und rechtes Argument der Operation einen unterschiedlichen
+Typ zulässt, womit <code>fold</code> einen zweiten Typparameter erhält.
+
+<p>Außerdem verschiebt man die Dereferenzierung der Laufvariable
+<code>x</code> am besten in die Operation <code>op</code>, sodass
+der Element-Typ nicht geklont werden braucht.
+
+<pre class="rust ibox">
+fn fold&lt;X, Y&gt;(a: &amp;[X], init: Y, op: impl Fn(Y, &amp;X) -&gt; Y) -&gt; Y {
+    let mut acc = init;
+    for x in a {acc = op(acc, x);}
+    acc
+}
+
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    fold(a, 0.0, |acc, &amp;x| acc + x)
+}
+</pre>
+
+<p>Auch <code>fold</code> ist ohne besondere Schwierigkeiten
+über beliebige iterierbare Typen parametrisierbar. Wir gelangen
+schließlich zu:
+
+<pre class="rust ibox">
+fn fold&lt;X, Y, I, F&gt;(a: I, init: Y, f: F) -&gt; Y
+where I: IntoIterator&lt;Item = X&gt;, F: Fn(Y, X) -&gt; Y
+{
+    let mut acc = init;
+    for x in a {acc = f(acc, x);}
+    acc
+}
+</pre>
+
+<p>Die Standardbibliothek implementiert <code>fold</code>
+nicht für <code>IntoIterator</code>, sondern für
+<code>Iterator</code>. Das heißt, falls nicht bereits ein Iterator
+vorliegt, muss man vorher erst einen bilden. Bei <code>sum</code>
+geht das mit <code>iter</code>:
+
+<pre class="rust ibox">
+fn sum(a: &amp;[f64]) -&gt; f64 {
+    a.iter().fold(0.0, |acc, &amp;x| acc + x)
+}
+</pre>
+
+<h2 id="Monaden">Monaden</h2>
+
+<p>Die arithmetischen Operationen der gewöhnlichen primitiven
+Datentypen sind eigentlich nicht fehlerfrei zu verwenden, dergestalt
+dass es während der Laufzeit aufgrund von Überlauf und Division durch
+null zum Programmabbruch kommen kann. Mathematisch gesehen spricht
+man von einer partiellen Funktion. Damit ist gemeint, dass die
+Operation bzw. Funktion für bestimmte Werte des Definitionsbereichs
+nicht definiert ist. Wir nehmen jetzt einfach mal
+den Standpunkt ein, uns genüge das nicht und wir wollten, dass
+arithmetische Berechnungen immer terminieren.
+
+<p>Eine naheliegende Überlegung ist die Einschränkung des
+Definitionsbereichs, die allerdings zu kurz gedacht ist.
+Nämlich haben die arithmetischen Operationen ja die Signaturen
+<var>M</var>&nbsp;&rarr;&nbsp;<var>M</var> und
+<var>M</var>&times;<var>M</var>&nbsp;&rarr;&nbsp;<var>M</var>.
+Aufgrund der Übereinstimmung von Definitionsbereich und Zielmenge
+ist die Einschränkung widersprüchlich.
+
+<p>Stattdessen definieren wir einen neuen Typ <code>Ru32</code>,
+ein Resultat-Typ zu <code>u32</code>, der zusätzlich den
+Fehlerwert <i>undefiniert</i> enthält, im Folgenden intern kodiert
+als <code>Ru32(None)</code>. Mit diesem Winkelzug erreicht man nämlich
+wieder totale Funktionen, d.&nbsp;h. solche die für alle Werte des
+Definitionsbereichs definiert sind und daher Funktionen im
+mathematischen Sinn darstellen.
+
+<pre class="rust ibox">
+mod ru32 {
+    #[derive(Debug, Clone, Copy)]
+    pub struct Ru32(Option&lt;u32&gt;);
+    
+    impl Ru32 {
+        pub fn new(x: u32) -&gt; Self {Self(Some(x))}
+    }
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            match self.0 {
+                Some(x) =&gt; match y.0 {
+                    Some(y) =&gt; Self(x.checked_add(y)),
+                    None =&gt; Self(None)
+                },
+                None =&gt; Self(None)
+            }
+        }
+    }
+}
+
+use ru32::Ru32;
+
+fn main() {
+    let x = Ru32::new(1);
+    println!("{:?}", x + x);
+}
+</pre>
+
+<p>Auffällig sind die umständlichen Fallunterscheidungen die für
+jede arithmetische Operation zu implementieren sind. Nun kommt man
+aber auch zu der Einsicht, dass es sich bei diesen Fallunterscheidungen
+immer um das gleiche Muster handelt, was die Vermutung nahe legt,
+das Muster lässt sich aus der Implementation herausfaktorisieren.
+
+<p>Im Zusammenhang damit steht die Eigenschaft von <code>Ru32</code>,
+ein monadischer Typ zu sein. Damit ist gemeint, dass sich für
+<code>Ru32</code> mehr oder weniger praktisch die Funktionen
+<code>unit</code> und <code>bind</code> so formulieren lassen, dass
+sie die Axiome für Monaden erfüllen. Zum Verständnis dieser Funktionen
+betrachten wir die folgende Umformulierung, wobei zunächst nur
+<code>bind</code> für uns wesentlich ist.
+
+<pre class="rust ibox">
+mod ru32 {
+    trait Monad&lt;T&gt; where Self: Sized {
+        fn unit(x: T) -&gt; Self;
+        fn bind(self, f: impl Fn(T)-&gt;Self) -&gt; Self;
+    }
+
+    #[derive(Debug, Clone, Copy)]
+    pub struct Ru32 (Option&lt;u32&gt;);
+    
+    impl Ru32 {
+        pub fn new(x: u32) -&gt; Self {Self(Some(x))}
+    }
+    impl Monad&lt;u32&gt; for Ru32 {
+        fn unit(x: u32) -&gt; Self {Self::new(x)}
+        fn bind(self, f: impl Fn(u32)-&gt;Self) -&gt; Self {
+            match self.0 {
+                Some(x) =&gt; f(x), None =&gt; Self(None)
+            }
+        }
+    }
+    
+    impl std::ops::Add&lt;Self&gt; for Ru32 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            self.bind(|x| y.bind(|y| Self(x.checked_add(y))))
+        }
+    }
+}
+</pre>
+
+<p>Bevor es mit Monaden weitergeht, ein kurzer Zusatz. Das
+ursprüngliche Ziel ist schließlich mit einer weiteren Hilfsfunktion
+<code>bind_binary</code> erreichbar:
+<pre class="rust ibox">
+fn bind_binary(x: Ru32, y: Ru32,
+    f: impl Fn(u32,u32)-&gt;Option&lt;u32&gt;
+) -&gt; Ru32 {
+    x.bind(|x| y.bind(|y| Ru32(f(x,y))))
+}
+
+impl std::ops::Add&lt;Self&gt; for Ru32 {
+    type Output = Self;
+    fn add(self, y: Self) -&gt; Self {
+        bind_binary(self, y, u32::checked_add)
+    }
+}
+</pre>
+
+<h2 id="Currying">Currying</h2>
+
+<p>Currying ist die Umformung einer mehrstelligen Funktion in eine
+äquivalente Funktion höherer Ordnung, bei der die Argumente
+nacheinander einstellig aufgerufen werden. Betrachten wir bspw.
+die Funktion
+
+<p class="indent"><var>f</var>: <b>Z</b>×<b>Z</b>×<b>Z</b>
+&rarr; <b>Z</b>,&emsp;(<var>x</var>, <var>y</var>, <var>z</var>)
+&mapsto; <var>x</var> + <var>y</var> + <var>z</var>,
+
+<p>die in der Form
+<var>f</var>(<var>x</var>,&nbsp;<var>y</var>,&nbsp;<var>z</var>)
+aufgerufen wird. Currying führt zu der Funktion
+<p class="indent"><var>f</var>: <b>Z</b> &rarr; <b>Z</b> &rarr;
+<b>Z</b> &rarr; <b>Z</b>,&emsp;<var>x</var>
+&mapsto; <var>y</var> &mapsto; <var>z</var>
+&mapsto; <var>x</var> + <var>y</var> + <var>z</var>,
+
+<p>die in der Form
+<var>f</var>(<var>x</var>)(<var>y</var>)(<var>z</var>)
+aufgerufen wird.
+
+<p>Weil Rust Closures bietet, erlaubt es auch Currying.
+Allerdings ergibt sich dabei eine kleinere Komplikation, die
+damit zusammenhängt, dass <code>impl Trait</code> nicht
+an jeder Stelle verwendbar ist. Betrachten wir
+die Entsprechung von <var>f</var> in Rust.
+
+<pre class="rust ibox">
+fn f(x: i32, y: i32, z: i32) -&gt; i32 {
+    x + y + z
+}
+</pre>
+
+<p>Currying des ersten Arguments stellt kein Problem dar:
+<pre class="rust ibox">
+fn f(x: i32) -&gt; impl Fn(i32, i32) -&gt; i32 {
+    move |y, z| x + y + z
+}
+</pre>
+
+<p>Vollständiges Currying wäre nun:
+<pre class="rust ibox">
+fn f(x: i32) -> impl Fn(i32) -> impl Fn(i32) -> i32 {
+    move |y| move |z| x + y + z
+}
+</pre>
+
+<p>Leider ist das nicht erlaubt. Es würde sich durch Boxen
+umgehen lassen:
+<pre class="rust ibox">
+fn f(x: i32) -&gt; Box&lt;dyn Fn(i32) -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt;&gt; {
+    Box::new(move |y| Box::new(move |z| x + y + z))
+}
+</pre>
+
+<p>bzw.
+<pre class="rust ibox">
+fn f(x: i32) -&gt; impl Fn(i32) -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt; {
+    move |y| Box::new(move |z| x + y + z)
+}
+</pre>
+
+<p>Allerdings führt das nun zu unnötigen Speicherallokationen.
+Ein gängiges Mittel zur Lösung dieser Art von Problemen ist die
+Einführung einer Helfer-Struktur.
+
+<pre class="rust ibox">
+struct FunFromf {x: i32, y: i32}
+
+impl FunFromf {
+    fn call(self, z: i32) -&gt; i32 {self.x + self.y + z}
+}
+
+fn f(x: i32) -&gt; impl Fn(i32) -&gt; FunFromf {
+    move |y| FunFromf {x, y}
+}
+</pre>
+
+<p>Oder alternativ:
+
+<pre class="rust ibox">
+struct FunFromf {x: i32}
+
+impl FunFromf {
+    fn call(self, y: i32) -&gt; impl Fn(i32)-&gt;i32 {
+        move |z| self.x + y + z
+    }
+}
+
+fn f(x: i32) -&gt; FunFromf {
+    FunFromf {x}
+}
+</pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Rusty Yato:
+  »<a href="https://rustyyato.github.io/rust/syntactic/sugar/2019/01/17/Closures-Magic-Functions.html"
+  >Closures: Magic Functions</a>«.
+</ol>
+
+</body>
+</html>
+

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Programmverifikation</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Zusicherungen">Zusicherungen</a>
+<li><a href="#Korrektheit">Korrektheit</a>
+<li><a href="#Schlussregeln">Schlussregeln</a>
+<li><a href="#Beispiel-1">Beispiel 1</a>
+<li><a href="#Beispiel-2">Beispiel 2</a>
+<li><a href="#Probe">Probe</a>
+</ol>
+
+<h2 id="Zusicherungen">Zusicherungen</h2>
+
+<p>Dieses Kapitel beschäftigt sich damit, wie man die Korrektheit von
+Programmen beweist. Das grundlegende Hilfsmittel hierfür ist
+der Hoare-Kalkül, der es erlaubt, Beweise systematisch aus
+schrittweisen Deduktionen zu konstruieren.
+
+<p>Der Hoare-Kalkül ist ein Beweisverfahren, bei dem Algorithmen
+<i>Zusicherungen</i>, engl. <i>assertions</i>, bekommen. Das sind
+logische Aussagen, welche das Programm nicht verändern, aber beim
+Ablauf des Programms an der jeweiligen Stelle erfüllt sein müssen.
+Es läge nahe, diese Zusicherungen einfach in das Programm einzufügen
+und zu schauen wie es sich beim Durchlaufen verhält.
+Der springende Punkt liegt allerdings nicht in der Erfüllung der
+Zusicherung für eine bestimmte Belegung der Argumente, sondern darin,
+dass die Zusicherung für alle möglichen erlaubten Belegungen
+erfüllt ist.
+
+<p>Zusicherungen befinden sich vor und hinter jeder Anweisung, infolge
+auch vor und hinter jeder Sequenz von Anweisungen. Darin eingeschlossen
+sind Kontrollanweisungen.
+Man betrachtet nun eine Sequenz <code>S</code> für sich allein.
+Diese kann auch aus einer einzigen Anweisung bestehen. Der
+wesentliche Gegenstand des Kalküls ist das <i>Hoare-Tripel</i>
+
+<pre class="indent">
+{P} S {Q}.
+</pre>
+
+<p>Hierbei sind <code>P</code> und <code>Q</code> Zusicherungen.
+Die Zusicherung <code>P</code> ist die <i>Vorbedingung</i>,
+engl. <i>precondition</i>, und <code>Q</code> ist die
+<i>Nachbedingung</i>, engl. <i>postcondition</i>.
+Es handelt sich um die logische Aussage, dass nach Ausführung der
+Sequenz die Nachbedingung erfüllt ist, sofern vor der Ausführung die
+Vorbedingung galt.
+
+<p>Eine Vorbedingung muss nicht in jedem Fall vorhanden sein.
+Entfällt die Vorbedingung <code>P</code>,  schreibt man
+<code>P&nbsp;=&nbsp;true</code>. Für eine Ganzzahl <code>x</code>
+gilt bspw.
+
+<pre class="indent">
+{true} y := x*x; {y &ge; 0}.
+</pre>
+
+<h2 id="Korrektheit">Korrektheit</h2>
+
+<p>Beweisen will man, dass eine Funktion das Ergebnis liefert,
+was man haben möchte. Man sagt, die <i>Korrektheit</i> des
+Programms ist zu verifizieren. Zunächst muss erst einmal notiert
+werden, was gewünscht ist. Hierfür wird der Signatur einer Funktion
+eine Nachbedingung und ggf. eine Vorbedingung hinzugefügt. Man spricht
+von einer <i>Spezifikation</i> der Funktion.
+
+<p>Man unterscheidet zwischen zwei unterschiedlich strengen Formen
+der Korrektheit:
+
+<dl class="indent">
+<dt><b>Partielle Korrektheit</b>
+<dd>Ein partiell korrektes Programm liefert das gewünschte Ergebnis,
+falls es terminiert.
+
+<dt><b>Totale Korrektheit</b>
+<dd>Ein total korrektes Programm ist ein partiell korrektes, welches
+immer terminiert.
+</dl>
+
+<p>Ein Programm terminiert, wenn es sich nicht in einer
+Endlosschleife verfängt und keine divergierenden Befehle wie
+<code>panic!()</code> aufgerufen werden.
+
+<p>Im Hoare-Kalkül beweist man zunächst die partielle Korrektheit.
+Die totale Korrektheit muss gesondert gezeigt werden. Es gibt aber
+auch eine Adaption des Kalküls, bei der zusätzlich die Terminierung
+von Schleifen bewiesen wird.
+
+<h2 id="Schlussregeln">Schlussregeln</h2>
+
+<p>Zum Beweis der Gültigkeit der Zusicherungen muss man deduktive
+Schlussfolgerungen machen. Diese Schlussfolgerungen wurden in Form
+von Schlussregeln formalisiert. Eine Schlussregel beschreibt,
+welche Schlussfolgerung (Konklusion) aus einer bestimmte Gestalt von
+Voraussetzung (Prämisse) abgeleitet werden darf. Notiert sind
+Schlussregeln üblicherweise in dieser Form:
+
+<pre class="indent">
+ Prämisse
+──────────
+Konklusion
+</pre>
+
+<p>Bedarf es für die Konklusion mehrerer Prämissen, schreibt
+man diese untereinander oder getrennt nebeneinander:
+<table class="indent">
+<tr><td>
+<pre style="margin: 0; padding-right: 2em">
+Prämisse1
+Prämisse2
+──────────
+Konklusion
+</pre>
+<td>
+<pre style="margin: 0; padding-left: 2em">
+Prämisse1, Prämisse2
+────────────────────
+     Konklusion
+</pre>
+</table>
+
+<h3>Zuweisungsaxiom</h3>
+
+<p>Mit der Notation <code>P[v := e]</code> drücken wir aus, dass in der
+Formel <code>P</code> jedes Vorkommen der Variable <code>v</code>
+durch den Ausdruck <code>e</code> ersetzt wird.
+Gemäß dem Zuweisungsaxiom ist die Zusicherung <code>P</code>
+nach einer Zuweisung <code>v := e;</code> gültig, sofern
+<code>P[v := e]</code> vor der Zuweisung erfüllt war. Diese
+Konklusion benötigt keine Prämissen:
+
+<pre class="indent">
+─────────────────────────
+ {P[v := e]} v := e; {P}
+</pre>
+
+<h3>Verzweigungsregel</h3>
+
+<p>Kann man für beide Zweige einer Verzweigung zeigen,
+dass die Zusicherung <code>Q</code> hinter dem jeweiligen Zweig
+erfüllt ist, falls <code>P</code> davor galt, so muss
+<code>Q</code> auch nach dem Ende der Verzweigung erfüllt sein, 
+falls <code>P</code> vor der Verzweigung galt.
+
+<pre class="indent">
+         {P ∧  B} S1 {Q}
+         {P ∧ ¬B} S2 {Q}
+──────────────────────────────────
+ {P} <b>if</b> B <b>then</b> S1 <b>else</b> S2 <b>end</b> {Q}
+</pre>
+
+<h3>Kompositionsregel</h3>
+
+<p>Die Kompositionsregel besagt wie bei Sequenzen von Anweisungen
+schrittweise geschlussfolgert werden darf. Ohne diese Regel ergäbe
+das Unterfangen keinen Sinn.
+
+<p>Ein Programm bestehe aus zwei Teilsequenzen <code>S1</code>
+und <code>S2</code>. Die Sequnez <code>S1</code> ziehe die Zusicherung
+<code>Q</code> nach sich, falls <code>P</code> galt. Die
+Sequenz <code>S2</code> ziehe <code>R</code> nach sich, falls
+<code>Q</code> galt. Dann muss die Gesamtsequenz
+<code>S1; S2</code> die Zusicherung <code>R</code> nach sich ziehen,
+falls <code>P</code> galt.
+
+<pre class="indent">
+   {P} S1 {Q}
+   {Q} S2 {R} 
+────────────────
+ {P} S1; S2 {R}
+</pre>
+
+
+<h3>While-Regel</h3>
+
+<p>Sei <code>B</code> die Schleifenbedingung und <code>S</code>
+der Schleifenrumpf. Prämisse: Man kann die Gültigkeit einer
+Zusicherung <code>I</code> hinter dem Schleifenrumpf folgern, sofern
+<code>I</code> und <code>B</code> vor dem Schleifenrumpf gültig
+sind. Konklusion: Ist <code>I</code> vor der Schleife gültig,
+muss hinter der Schleife <code>I</code> und <code>¬B</code> gelten.
+Man bezeichnet <code>I</code> in diesem Zusammenhang als
+<i>Schleifeninvariante</i>, kurz <i>Invariante</i>.
+
+<pre class="indent">
+        {I ∧ B} S {I}
+───────────────────────────────
+ {I} <b>while</b> B <b>do</b> S <b>end</b> {I ∧ ¬B}
+</pre>
+
+<p>Die Auffindung einer Schleifeninvariante ist nicht immer einfach.
+
+<h2 id="Beispiel-1">Beispiel 1</h2>
+
+<p>Betrachten wir nochmals die rekursive Definition der
+Potenzierung. Für eine ganze Zahl <var>x</var> und eine
+nichtnegative Zahl <var>n</var> ist die Potenz
+<var>x</var><sup><var>n</var></sup> definiert gemäß
+
+<p class="indent">
+<var>x</var><sup>0</sup> := 1,<br>
+<var>x</var><sup><var>n</var></sup>
+:= <var>x</var>&sdot;<var>x</var><sup><var>n</var>&minus;1</sup>.
+
+<p>Es wird nun gezeigt, wie man mit dem Hoare-Kalkül die partielle
+Korrektheit des iterativen Berechnungsverfahrens
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    for _ in 0..n {y *= x;}
+    y
+}
+</pre>
+
+<p>zeigt. Zunächst müssen wir die for-Schleife in eine äquivalente
+while-Schleife transformieren. Dies resultiert in:
+
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut i = 0;
+    while i != n {
+        y = x*y;
+        i = i + 1;
+    }
+    y
+}
+</pre>
+
+<p>Das Ende der Berechnung liegt direkt hinter der Schleife, womit
+dort <code>i==n</code> ist. Außerdem soll dort <code>y</code> das
+Ergebnis der Berechnung sein, d.&nbsp;h. <code>y==x<sup>n</sup></code>.
+Demnach gilt dort <code>y==x<sup>i</sup></code>. Weil sich in der
+Schleife sowohl <code>i</code> als auch <code>y</code> verändern,
+können wir vermuten, dass es sich bei der letzten Gleichung um
+eine Schleifeninvariante handelt. Wie sich herausstellt, ist diese
+Vermutung richtig und zielführend.
+
+<p>Nun werden zum Algorithmus die Zusicherungen annotiert.
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut i = 0;
+    // {y == 1 und i == 0}
+    // {y == x<sup>i</sup>}
+    while i != n {
+        // {y == x<sup>i</sup>}
+        y = x*y;
+        // {y == x<sup>i+1</sup>}
+        i = i + 1;
+        // {y == x<sup>i</sup>}
+    }
+    // {y == x<sup>i</sup> und nicht i != n}
+    // {y == x<sup>n</sup>}
+    y
+}
+</pre>
+
+<p>Rechnen wir das durch. Die Invariante ist vor der Schleife
+erfüllt, denn laut der vorherigen Zusicherung darf <code>y==1</code>
+und <code>i==0</code> in die Gleichung eingesetzt werden.
+Das macht <code>1==x<sup>0</sup></code>, und laut Definition der
+Potenzierung stimmt dies.
+
+<p>Nun nehmen wir an, die Invariante sei innerhalb der Schleife
+vor dem Schleifenrumpf erfüllt. Nach der Zuweisung
+<code>y := x*y;</code> gilt dann <code>y==x*x<sup>i</sup></code>,
+und laut Definition der Potenzierung ist <code>x*x<sup>i</sup></code>
+das Gleiche wie <code>x<sup>i+1</code>. Die Inkrementation
+<code>i := i+1;</code> bewirkt, dass <code>i</code> in der
+Zusicherung dekrementiert werden muss. Formal ausgedrückt gilt
+
+<pre class="indent">
+{y == x<sup>i</sup>}[i := i+1] i := i+1; {y == x<sup>i</sup>}
+</pre>
+
+laut Zuweisungsaxiom, was nach Vereinfachung die gewünschte Form
+
+<pre class="indent">
+{y == x<sup>i+1</sup>} i := i+1; {y == x<sup>i</sup>}
+</pre>
+
+<p>annimmt. Daher ist die Invariante auch hinter dem Schleifenrumpf
+erfüllt. Laut der while-Regel gilt hinter der Schleife folglich
+die Invariante und die Negation der Bedingung <code>i!=n</code>.
+Die Negation von <code>i!=n</code> ist <code>i==n</code>.
+Am Ende gilt hiermit schließlich
+<code>y==x<sup>n</sup></code>, was zu beweisen war.
+
+<p>Diese Technik ist bedeutungsschwer, &ndash; vergleichbar wichtig
+wie das Verfahren der vollständigen Induktion. Wir können nun der
+Reihe nach unsere Algorithmen beweisen. Zumindest erst einmal die,
+deren Komplexität nicht zu hoch ist. Letztendlich hilft uns die
+Verifikation im Hoare-Kalkül, einen Algorithmus besser zu verstehen.
+
+<p>Wohlgemerkt wurde nur die partielle Korrektheit gezeigt.
+Die totale Korrektheit gilt ohnehin nicht, denn für zu große Argumente
+kommt es zum Ganzzahl-Überlauf. Der Algorithmus divergiert hierbei
+nicht deshalb, weil sich die Berechnung in einer Endlosschleife
+verfängt, sondern weil eine der arithmetischen Operationen zu
+<code>panic</code> führt. Dies gilt für die arithmetischen Operationen
+zumindest im in dieser Hinsicht puristischen Debug-Modus. Das ist auch
+dringend notwendig, denn andernfalls wäre nicht einmal die partielle
+Korrektheit sicher.
+
+<p>Die partielle Korrektheit genügt uns natürlich nicht. Jede partiell
+korrekte Funktion, die sich nicht in einer Endlosschleife verfangen
+kann, können wir zu einer total korrekten machen, indem die Funktion
+und all ihre fehlbaren Teiloperationen monadisch verhüllt werden.
+Wie das gemacht wird, wurde im Abschnitt
+›<a href="Sicherheit.htm#Monaden">Sichere Programmierung: Monaden</a>‹
+bereits beschrieben. Wir gelangen zum strikten Algorithmus:
+
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
+    let mut y: i32 = 1;
+    let mut i: u32 = 0;
+    while i != n {
+        y = y.checked_mul(x)?;
+        i = i + 1;
+    }
+    Some(y)
+}
+</pre>
+
+<p>Wie man sieht, bedarf es nur der Verhüllung der Ergebnisse.
+Die Argumente dürfen nackt bleiben.
+
+<p>Der Beweis zur Terminierung der Schleife ist recht evident.
+Weil vor der Schleife <code>i&nbsp;&le;&nbsp;n</code> ist und
+<code>i</code> in jedem Durchlauf inkrementiert wird, muss irgendwann
+<code>i==n</code> gelten. Aus diesem Grund kommt es ferner nicht zum
+Überlauf in der Operation <code>i+1</code>.
+
+<h2 id="Beispiel-2">Beispiel 2</h2>
+
+<p>Ein weiterer Algorithmus zur Berechnung von Potenzen ist die
+schnelle Potenzierung.
+
+<pre class="rust ibox">
+fn pow(mut x: i32, mut n: u32) -&gt; i32 {
+    let mut y = 1;
+    while n&gt;1 {
+        if n%2 == 1 {y = y*x;}
+        n /= 2; x = x*x;
+    }
+    if n == 1 {y = y*x;}
+    y
+}
+</pre>
+
+<p>Einführung von Hilfsvariablen sorgt dafür, dass die ursprünglichen
+Argumente konstant bleiben. Das ist notwendig, weil diese in die
+Überlegung einbezogen werden müssen. Der Algorithmus wird damit
+transformiert zu:
+
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut a = x;
+    let mut i = n;
+    while i&gt;1 {
+        if i%2 == 1 {y = y*a;}
+        i /= 2;
+        a = a*a;
+    }
+    if i == 1 {y = y*a;}
+    y
+}
+</pre>
+
+<p>Der Ansatz ist wieder eine Rückwärtsbetrachtung des Programmablaufs.
+Der Rückgabewert am Ende muss <code>y==x<sup>n</sup></code> sein,
+so wie das auch im einfachen Algorithmus war. Zunächst findet
+man:
+
+<pre class="rust ibox">
+// {y == x<sup>n</sup> ∧ i == 0 ∨ y*a == x<sup>n</sup> ∧ i == 1}
+if i == 1 {y = y*a;}
+// {y == x<sup>n</sup>}
+</pre>
+
+<p>Im Fall <code>i==1</code> reduziert sich die Vorbedingung nämlich
+zu <code>y*a==x<sup>n</sup></code>, die bedingte Anweisung wird
+ausgeführt und das Resultat ist <code>y==x<sup>n</sup></code>
+laut Zuweisungsaxiom. Im Fall <code>i!=1</code> muss <code>i==0</code>
+sein, denn hinter der Schleife gilt <code>0&le;i&le;1</code>.
+In diesem Fall reduziert sich die Vorbedingung zu
+<code>y==x<sup>n</sup></code>, die bedingte Anweisung wird nicht
+ausgeführt und das Resultat ist ebenfalls <code>y==x<sup>n</sup></code>.
+
+<p>Nun kommt ein kritischer Schritt, dessen Auffindung ohne Übung
+schwierig sein mag. Vor der Schleife gilt
+<code>a<sup>i</sup>==x<sup>n</sup></code>, was etwas mit der
+Schleifeninvariante zu tun haben könnte. Betrachten wir nun die
+Vorbedingung
+
+<pre class="indent">
+{y == x<sup>n</sup> ∧ i == 0 ∨ y*a == x<sup>n</sup> ∧ i == 1}.
+</pre>
+
+<p>Ist <code>a<sup>i</sup>==x<sup>n</sup></code> so modifizierbar,
+dass diese gilt? Ja, nämlich zu
+<code>y*a<sup>i</sup>==x<sup>n</sup></code>, weil 
+
+<pre class="indent">
+Fall i == 0: y*a<sup>i</sup> == y*a<sup>0</sup> == y,
+Fall i == 1: y*a<sup>i</sup> == y*a<sup>1</sup> == y*a.
+</pre>
+
+<p>Die Gleichung <code>y*a<sup>i</sup>==x<sup>n</sup></code> gilt auch
+vor der Schleife, denn dort ist <code>y==1</code>. Zudem
+kommen in der Gleichung alle drei Variablen vor, die sich
+in der Schleife verändern. Tatsächlich ist die Gleichung eine
+günstige Schleifeninvariante.
+
+<p>Nun zum Schleifenrumpf. Das Tripel zur ersten Anweisung ist:
+
+<pre class="rust ibox">
+// {y*a<sup>i</sup> == x<sup>n</sup>}
+if i%2 == 1 {y = y*a;}
+// {y*a<sup>i-1</sup> == x<sup>n</sup> ∧ i%2 == 1 ∨ y*a<sup>i</sup> == x<sup>n</sup> ∧ i%2 == 0}
+</pre>
+
+<p>Die lange Nachbedingung kann man kompakter schreiben als
+
+<pre class="indent">
+{y*a<sup>i-i%2</sup> == x<sup>n</sup>}.
+</pre>
+
+<p>Außerdem gilt
+
+<pre class="indent">
+i-i%2 == 2*(i/2).
+</pre>
+
+<p>Mit dieser Vorbereitung ist der Rest ein Kinderspiel.
+Gemäß Zuweisungsaxiom sind die Tripel
+<pre class="rust ibox">
+// {y*a<sup>2*(i/2)</sup> == x<sup>n</sup>}
+i /= 2;
+// {y*a<sup>2i</sup> == x<sup>n</sup>}
+</pre>
+
+<p>und
+<pre class="rust ibox">
+// {y*a<sup>2i</sup> == x<sup>n</sup>}
+a = a*a;
+// {y*a<sup>i</sup> == x<sup>n</sup>}
+</pre>
+
+<p>erfüllt. Damit ist die Invariante bewiesen. Weil nichts weiter
+zu beweisen verbleibt, ist auch der Algorithmus bewiesen.
+Der Algorithmus mit sämtlichen Zusicherungen:
+
+<pre class="rust ibox">
+fn pow(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut a = x;
+    let mut i = n;
+    // {y*a<sup>i</sup> == x<sup>n</sup>}
+    while i&gt;1 {
+        // {y*a<sup>i</sup> == x<sup>n</sup>}
+        if i%2 == 1 {y = y*a;}
+        // {y*a<sup>i-i%2</sup> == y*a<sup>2*(i/2)</sup> == x<sup>n</sup>}
+        i /= 2;
+        // {y*a<sup>2i</sup> == x<sup>n</sup>}
+        a = a*a;
+        // {y*a<sup>i</sup> == x<sup>n</sup>}
+    }
+    // {y*a<sup>i</sup> == x<sup>n</sup> ∧ 0&le;i&le;1}
+    if i == 1 {y = y*a;}
+    // {y == x<sup>n</sup>}
+    y
+}
+</pre>
+
+<h2 id="#Probe">Probe</h2>
+
+<p>So schön die Beweise anmuten, können auch diese von Fehlern
+unterlaufen sein. Ein naheliegender Weg zur Vermeidung sind Proben
+zur Laufzeit, denn die Zusicherungen lassen sich ja für konkrete
+Variablenbelegungen zur Laufzeit ausführen.
+
+<p>Im Algorithmus zur Potenzierung sollte es nirgends zum
+Überlauf kommen, sofern die ursprüngliche Definition keinen
+Überlauf berechnet. Eine Schleife grast nun im Folgenden den
+Definitionsbereich ab, wobei der Algorithmus lediglich für die
+verbleibenden Fälle ohne Überlauf ausgeführt wird.
+
+<pre class="rust ibox">
+// Definition der Potenzfunktion
+fn pow_rec(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
+    if n==0 {Some(1)} else {x.checked_mul(pow_rec(x, n-1)?)}
+}
+
+// Partielle Funktion zu pow_rec
+fn pow(x: i32, n: u32) -&gt; i32 {
+    pow_rec(x, n).unwrap()
+}
+
+fn pow_iter(x: i32, n: u32) -&gt; i32 {
+    let mut y = 1;
+    let mut a = x;
+    let mut i = n;
+    let p = pow(x, n);
+    assert!(y*pow(a, i) == p);
+    while i&gt;1 {
+        assert!(y*pow(a, i) == p);
+        if i%2 == 1 {y = y*a;}
+        assert!(y*pow(a, i-i%2) == p);
+        i /= 2;
+        assert!(y*pow(a, 2*i) == p);
+        a = a*a;
+        assert!(y*pow(a, i) == p);
+    }
+    assert!(y*pow(a, i) == p &amp;&amp; i&lt;=1);
+    if i == 1 {y = y*a;}
+    assert!(y == p);
+    y
+}
+
+fn main() {
+    for x in -65536..65536 {
+        for n in 0..32 {
+            if let Some(y) = pow_rec(x, n) {
+                assert!(y == pow_iter(x, n));
+            }
+        }
+    }
+}
+</pre>
+
+<p>Maßgeblich sind abschließend zudem die Beweise, dass im späteren
+Programm die Aufrufe von <code>pow_iter</code> niemals Zahlen bekommen,
+die zum Überlauf führen würden.
+
+</body>
+</html>

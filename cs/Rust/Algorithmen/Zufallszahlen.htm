@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zufallszahlen</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Zufallszahlen</h1>
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Xorshift-plus">Xorshift+</a>
+<li><a href="#Bereich">Zufallszahlen aus einem Bereich</a>
+<li><a href="#Stetig">Stetig verteilte Zufallszahlen</a>
+<li><a href="#Verteilung">Zufallszahlen mit Verteilung</a>
+<li><a href="#Iteratoren">Iteratoren</a>
+</ol>
+
+<h2 id="Xorshift-plus">Xorshift+</h2>
+
+<p>Xorshift128+ ist ein moderner Algorithmus zur schnellen Erzeugung
+von Zufallszahlen relativ hoher Güte, der die wichtigsten statistischen
+Tests besteht. Der Generator soll eine Periodenlänge von
+2<sup>128</sup>&minus;1 besitzen und »BigCrush« aus der Test-Suite
+»TestU01« bestehen. Zu beachten ist, dass es sich keinesfalls um einen
+kryptografischen Generator handelt. Die folgende Implementation
+ist wie in [Vigna] beschrieben, mit der dort als günstig beschriebenen
+Belegung <code>a=23</code>, <code>b=17</code>, <code>c=26</code> und
+wird so auch im Firefox-Quellcode&nbsp;[1] und in Wikipedia&nbsp;[2][3]
+aufgeführt. Der interne Zustand <code>state</code> darf beliebig sein,
+jedoch nicht <code>(0,0)</code>.
+
+<p>Da die niederwertigen 32&nbsp;Bit eines Zufallswertes von
+Xorshift128+ einige statistische Tests nicht bestehen sollen,
+extrahiert man für <code>rand_u32</code> besser die höherwertigen
+32&nbsp;Bit.
+
+<pre class="rust ibox">
+pub struct RNG {
+    state: (u64, u64)
+}
+
+impl RNG {
+    pub fn from_seed(seed: u64) -&gt; Self {
+        Self {state: (
+            seed ^ 0xa4f85664d25f3e1e,
+            seed ^ 0xb1e50bc816c7ec1d
+        )}
+    }
+    pub fn rand_u64(&amp;mut self) -&gt; u64 {
+        let (mut x, y) = self.state;
+        self.state.0 = y;
+        x ^= x &lt;&lt; 23;
+        self.state.1 = x ^ y ^ (x &gt;&gt; 17) ^ (y &gt;&gt; 26);
+        self.state.1.wrapping_add(y)
+    }
+    pub fn rand_u32(&amp;mut self) -&gt; u32 {
+        (self.rand_u64() &gt;&gt; 32) as u32
+    }
+}
+
+fn main() {
+    let mut rng = RNG::from_seed(0);
+    for _ in 0..10 {
+        println!("{:016x}", rng.rand_u64());
+    }
+}
+</pre>
+
+<p>Auch das Zeroland von Xorshift128+ ist verschwindend klein. Als
+Zeroland bezeichnet man Bereiche der Zustandstrajektorie, die
+schlechte Zufallszahlen liefern. Bei vielen Generatoren ist das
+damit verbunden, dass viele Bits null sind, daher die Bezeichnung
+Zeroland. Der Mersenne-Twister soll z.&nbsp;B. im schlechtesten
+Fall, bei dem nur ein einziges Bit gesetzt ist, eine Aufwärmphase
+von über 700&nbsp;000 Iterationen benötigen. Das kann man als
+problematisch sehen, denn der Generator könnte das Zeroland, wenn
+auch mit einer geringen Wahrscheinlichkeit, je nach Saat zufällig
+durchqueren.
+
+<p>[Vigna] Sebastiano Vigna: »<a href="https://arxiv.org/abs/1404.0390"
+  >Further scramblings of Marsaglia's xorshift generators</a>«.
+  Journal of Computational and Applied Mathematics (Mai 2017).
+  arXiv:1404.0390. doi:10.1016/j.cam.2016.11.006.
+
+<p>[1] <a href="https://github.com/mozilla/gecko-dev/blob/master/mfbt/XorShift128PlusRNG.h"
+  >mfbt/XorShift128PlusRNG.h</a> in gecko-dev, abgerufen am 8. Feb. 2020.
+  Gecko ist die aktuelle Engine von Firefox.
+
+<p>[2] »<a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>«.
+  Englische Wikipedia, abgerufen am 8. Feb. 2020.
+
+<p>[3] »<a href="https://de.wikipedia.org/wiki/Xorshift">Xorshift</a>«.
+  Deutsche Wikipedia, abgerufen am 8. Feb. 2020.
+
+<h2 id="Bereich">Zufallszahlen aus einem Bereich</h2>
+
+<p>Zur Erzeugung von gleichverteilten Zufallszahlen
+<code>x&nbsp;&in;&nbsp;[i..j)</code> genügt es, Zahlen
+<code>u&nbsp;&in;&nbsp;[0..m)</code> zu erzeugen. Man kann nämlich
+<code>m&nbsp;:=&nbsp;j-i</code>
+setzen und dann <code>i</code> zur erzeugten Zahl <code>u</code>
+addieren. Ausgehend von
+
+<p class="indent"><code>0 &le; u &lt; j-i,</code>
+
+<p>bringt Addition von <code>i</code> auf beiden Seiten der jeweiligen
+Ungleichung die äquivalenten Ungleichungen
+
+<p class="indent"><code>i &le; u+i &lt; j-i+i.</code>
+
+<p>Mit <code>x&nbsp;:=&nbsp;u+i</code> ergibt sich
+
+<p class="indent"><code>i &le; x &lt; j.</code>
+
+<p>Naive Methode für Zufallszahlen aus <code>[0..m)</code>:
+<pre class="rust ibox">
+pub fn rand_bounded(&amp;mut self, m: u32) -&gt; u32 {
+    self.rand_u32() % m
+}
+</pre>
+
+<p>Die mit dieser Methode erzeugten Zahlen sind jedoch nicht
+gleichverteilt. Dazu müssten alle Restklassen modulo <code>m</code>
+gleich groß sein, dies ist jedoch nicht der Fall. Die mit dieser
+Methode erzeugte Zahl <code>u</code> ist kleinster Repräsentant seiner
+Restklasse. Die Restklasse von <code>u</code> ist das Urbild von
+<code>u</code> bezüglich der Operation <code>f(r)&nbsp;:=&nbsp;r%m</code>.
+Man nennt das Urbild auch Faser, weil der Definitionsbereich
+<code>[0..2<sup>32</sup>)</code> in disjunkte Urbilder zerlegt wird.
+
+<p>Wie bekommen wir nun auf <code>[0..m)</code> gleichverteilte
+Zufallszahlen? Eine wichtiges Grundverfahren ist die
+Verwerfungsmethode. Das geht so: Erzeugen wir zunächst gleichverteilte
+Zufallszahlen aus einem größeren Bereich und verwerfen davon alle
+außerhalb <code>[0..m)</code>, verbleiben die restlichen Zufallszahlen
+gleichverteilt.
+
+<p>Da die Zufallzahlen jedoch aus <code>[0..2<sup>32</sup>)</code>
+entstammen, enstehen bei der Methode für ein kleines <code>m</code> 
+viel zu viele Verwerfungen, was zu einem enormen Rechenaufwand
+führt. Die Idee: Schneiden wir Bits vom Ergebnis von
+<code>rand_u32()</code> ab, verbleiben die übrigen Bits
+gleichverteilt. Somit sind wir im Besitz von gleichverteilten
+Zufallszahlen aus <code>[0..2<sup>k</sup>)</code>
+zu jeder Zweierpotenz <code>2<sup>k</sup></code>. Zu <code>m</code>
+suchen wir die nächste Zweiterpotenz
+<code>2<sup>k</sup>&nbsp;&ge;&nbsp;m</code>.
+Infolge sinkt der Rechenaufwand bei der Verwerfungsmethode
+drastisch ab. Die Standardbibliothek besitzt sogar die Funktion
+<code>next_power_of_two</code>.
+
+<pre class="rust ibox">
+pub fn rand_bounded(&amp;mut self, m: u32) -&gt; u32 {
+    let mask = m.next_power_of_two() - 1;
+    loop {
+        let x = mask &amp; self.rand_u32();
+        if x &lt; m {return x;}
+    }
+}
+</pre>
+
+<p>Für <code>m&nbsp;&gt;&nbsp;2<sup>31</sup></code> kommt es
+bei der Berechnung der nächsten Zweiterpotenz zu einem Überlauf.
+Korrektes Verhalten für diesen Fall wird so berücksichtigt:
+<pre class="rust ibox">
+let mask = m.wrapping_next_power_of_two().wrapping_sub(1);
+</pre>
+
+<p>Außerdem ist die wiederholte Berechnung der Bitmaske
+bei festem <code>m</code> eigentlich nicht notwendig.
+Partielle Applikation gestattet die Abtrennung dieser Berechnung.
+
+<pre class="rust ibox">
+pub fn rand_bounded&lt;'a&gt;(&amp;'a mut self, m: u32)
+-&gt; impl 'a + FnMut()-&gt;u32
+{
+    let mask = m.next_power_of_two() - 1;
+    move || {
+        loop {
+            let x = mask &amp; self.rand_u32();
+            if x &lt; m {return x;}
+        }
+    }
+}
+</pre>
+
+<h2 id="Stetig">Stetig verteilte Zufallszahlen</h2>
+
+<p>Dividiert man gleichverteilte Zufallszahlen aus
+<code>[0..2<sup>32</sup>)</code> durch <code>2<sup>32</sup></code>,
+resultiert dies näherungsweise in gleichverteilten
+Zufallszahlen aus <code>[0,1)</code>.
+
+<pre class="rust ibox">
+pub fn rand_float(&amp;mut self) -&gt; f64 {
+    f64::from(self.rand_u32())*2.3283064365386963E-10
+}
+</pre>
+
+<p>Dies liefert 32 Bit Genauigkeit, &ndash; umgerechnet sind das
+ca. neun dezimale Nachkommastellen. Warum nicht eine Zahl
+aus <code>[0..2<sup>64</sup>)</code> durch <code>2<sup>64</sup></code>
+teilen? Dazu muss man bedenken, dass bei <code>f64</code>
+die Mantisse 53&nbsp;Bit lang ist. Die Mantisse kann die erzeugten
+64&nbsp;Bit folglich nicht aufnehmen. Dies könnte zu einer
+Verzerrung der Verteilung führen.
+
+<p>Bei <code>u32</code> haben wir den großen Vorteil, eine Berechnung
+über den gesamten Definitionsbereich laufen lassen zu können.
+Bei <code>u64</code> geht dies aufgrund der schieren Größe nicht
+mehr. Erhält die Zuordnung
+<pre class="rust ibox">
+fn float(x: u32) -> f64 {
+    f64::from(x)*2.3283064365386963E-10
+}
+</pre>
+wirklich die Gleichverteilung, müssen zwei
+gleich lange Teilintervalle von <code>[0,1)</code> beim Durchlaufen
+aller Werte aus <code>[0..2<sup>32</sup>)</code> gleich häufig getroffen
+werden. Oder anders ausgedrückt, die Urbilder von gleich langen
+Teilintervallen müssen gleich groß sein. Diese Experimente können
+wir machen, ohne die genaue Implementation von <code>f64::from</code>
+zu kennen.
+
+<h2 id="Verteilung">Zufallszahlen mit Verteilung</h2>
+
+<h3>Inversionsmethode</h3>
+
+<p>Gegeben sei eine Verteilungsfunktion <code>F</code>. Ist
+<code>u</code> eine Zufallszahl bezüglich Gleichverteilung auf
+<code>[0,1]</code>, so ist <code>F<sup>&minus;1</sup>(u)</code>
+eine Zufallszahl bezüglich Verteilungsfunktion <code>F</code>.
+Hierbei ist <code>F<sup>&minus;1</sup></code> die Umkehrfunktion
+von <code>F</code>. Dieses Verfahren zur Erzeugung von Zufallszahlen
+einer bestimmten Verteilung nennt sich <i>Inversionsmethode</i>.
+
+<p>Nun ist die Umkehrfunktion nicht bei jeder Verteilungsfunktion
+einfach bestimmbar. Wir sind aber gierig und wollen doch irgendwie
+an die Zufallszahlen herankommen. Den Schwierigkeiten aus dem Weg
+geht die Berechnung mit dem Bisektionsverfahren.
+
+<pre class="rust ibox">
+// Bestimme y &isin; [a, b], so dass x = f(y).
+fn bisection(f: impl Fn(f64)-&gt;f64,
+    x: f64, mut a: f64, mut b: f64
+) -&gt; f64
+{
+    for _ in 0..80 {
+        let m = 0.5*(a + b);
+        if f(m) - x &lt; 0.0 {a = m;} else {b = m;}
+    }
+    a
+}
+
+// Zufallszahlengenerator zu einer Verteilungsfunktion,
+// engl. cumulative distribution function.
+fn rng_from_cdf(mut rng: RNG,
+    a: f64, b: f64, cdf: impl Fn(f64)-&gt;f64
+) -&gt; impl FnMut()-&gt;f64
+{
+    move || bisection(&amp;cdf, rng.rand_float(), a, b)
+}
+</pre>
+
+<p>Als Beispiel diene die Exponentialverteilung mit Erwartungswert
+<code>1/&lambda;</code>.
+<pre class="rust ibox">
+fn rng_from_exp(rng: RNG, lambda: f64) -&gt; impl FnMut()-&gt;f64 {
+    rng_from_cdf(rng, 0.0, 100.0/lambda, move |x|
+        if x &lt;= 0.0 {0.0} else {1.0 - f64::exp(-lambda*x)})
+}
+
+fn main() {
+    let rng = RNG::from_seed(0);
+    let mut rand = rng_from_exp(rng, 1.0);
+    for _ in 0..10 {
+        println!("{:.6}", rand());
+    }
+}
+</pre>
+
+<h2 id="Iteratoren">Iteratoren</h2>
+
+<p>Oft möchte man Zufallszahlen in Form eines Iterators haben, wofür
+<code>from_fn</code> nützlich ist.
+
+<pre class="rust ibox">
+pub fn iter_u32&lt;'a&gt;(&amp;'a mut self)
+-&gt; impl 'a + Iterator&lt;Item = u32&gt;
+{
+    std::iter::from_fn(move || Some(self.rand_u32()))
+}
+</pre>
+
+<p>Wir können Methoden auch als gewöhnliche Funktionen aufrufen.
+Benutzung eines Funktionenzeigers lässt eine Anpassung mit
+generischer Funktionalität zu.
+
+<pre class="rust ibox">
+pub fn iter&lt;'a, T: 'static&gt;(&amp;'a mut self, rand: fn(&amp;mut Self) -&gt; T)
+-&gt; impl 'a + Iterator&lt;Item = T&gt;
+{
+    std::iter::from_fn(move || Some(rand(self)))
+}
+</pre>
+
+<p>Die Benutzung schaut so aus:
+<pre class="rust ibox">
+fn main() {
+    let mut rng = RNG::from_seed(0);
+    for x in rng.iter(RNG::rand_u32).take(10) {
+        println!("{:08x}", x);
+    }
+}
+</pre>
+
+
+</body>
+</html>

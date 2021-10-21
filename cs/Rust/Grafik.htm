@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Computergrafik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Einstieg">Eine Aufgabe zum Einstieg</a>
+<li><a href="#Farben">Darstellung von Farben</a>
+<li><a href="#Canvas">Der Grafikpuffer</a>
+<li><a href="#Speichern">Grafiken speichern</a>
+<li><a href="#Koordinatensystem">Koordinatensystem</a>
+<li><a href="#Berechnung">Die Berechnung</a>
+</ol>
+
+<h2 id="Einstieg">Eine Aufgabe zum Einstieg</h2>
+
+<p>Die Technik der Computergrafik ist komplex. Zum Einstieg in die
+Thematik verzichten wir zunächst auf die Ansteuerung von Grafiksystemen
+und ihrer Hardwarebeschleunigung bis wir Grundwissen darüber erlangt
+haben, wie Computer Grafiken erzeugen und verarbeiten.
+
+<p>Das einfachst mögliche Grafiksystem ist ein eigens definierter
+Grafikpuffer. Zur Betrachtung schreiben wir diesen in eine
+Bilddatei im PPM-Format, die dann mit externen Programmen in ein
+komprimiertes Bildformat umgewandelt werden kann.
+
+<p>Eine typische geeignete Aufgabe ist die Erzeugung so eines Bildes
+der Mandelbrotmenge. Der Programmieraufwand dafür ist recht gering.
+
+<h2 id="Farben">Darstellung von Farben</h2>
+
+<p>Zunächst steht die Überlegung an, wie die Darstellung von Farben
+erfolgen soll. Üblicherweise geschieht dies mit dem RGB-Farbraum, wo
+jede Farbe ein Tripel aus Rot-, Grün- und Blau-Anteil ist, die jeweils
+Werte von 0 bis 255 annehmen. Alle Farben sind additiv aus diesen drei
+Anteilen zusammengesetzt. Die Farbe Schwarz ist (0,&nbsp;0,&nbsp;0)
+und Weiß ist (255,&nbsp;255,&nbsp;255). Man kann sich jetzt darüber
+streiten, ob Schwarz, Weiß und die Grautöne dazwischen zu den Farben zu
+zählen sind. Da diese aber auch im Farbraum liegen, liegt mir das nahe.
+
+<p>Weil Lese- und Schreiboperationen in den Speicher langsam sind,
+reduziert man deren Anzahl am besten durch Zusammenfassung der
+Bytes zu einer u32-Zahl. Hierbei bleibt ein Byte unbesetzt, das
+später für den Alpha-Wert benutzt wird. Die Definition eines
+neuen abstrakten Datentyps <code>Color</code> sorgt dafür, dass wir
+uns um die interne Bit-Arithmetik keine Gedanken mehr machen müssen.
+Die interne Reihenfolge kann man dann später ggf. leicht an die
+genutzte Binärschnittstelle eines weiteren Grafiksystems adaptieren.
+
+<pre class="rust ibox">
+#[derive(Clone,Copy)]
+struct Color(u32);
+
+impl Color {
+    pub fn rgb(r: u8, g: u8, b: u8) -&gt; Self {
+        Color(u32::from(b)&lt;&lt;16 | u32::from(g)&lt;&lt;8 | u32::from(r))
+    }
+    pub fn to_rgb(self) -&gt; (u8, u8, u8) {
+        (self.0 as u8, (self.0&gt;&gt;8) as u8, (self.0&gt;&gt;16) as u8)
+    }
+}
+</pre>
+
+<h2 id="Canvas">Der Grafikpuffer</h2>
+
+<p>Zum Setzen von Pixeln wird eine Funktion <code>pset(x,y)</code>
+dienen, wobei <code>x,y</code> die nichtnegativen ganzzahligen
+Koordinaten sind. Es ist üblich, dass man in der linken oberen
+Ecke des Bildes startet, <code>x</code> nach rechts zählt und
+<code>y</code> nach unten. Hat das Bild eine Größe von
+<code>width*height</code> Pixeln, ist
+<code>0&nbsp;&le;&nbsp;x&nbsp;&lt;&nbsp;width</code>
+und <code>0&nbsp;&le;&nbsp;y&nbsp;&lt;&nbsp;height</code>.
+
+<p>Da der Computer die Pixel sequenziell im Speicher anordnet
+und nichts von der zweidimensionalen Struktur weiß, bedarf es
+einer <i>Speicherabbildungsfunktion</i> <code>index(x,y)</code>, die
+die beiden Koordinaten in einen Index eines eindimensionalen Feldes
+<code>data</code> überführt. Das ist
+
+<pre class="indent">
+index(x,y) = width*y + x.
+</pre>
+
+<p>Ein neuer abstrakter Datentyp <code>Canvas</code> (Leinwand)
+schafft wieder eine Abstraktion von den internen Details.
+
+<pre class="rust ibox">
+struct Canvas {
+    width: u32, height: u32,
+    data: Box&lt;[Color]&gt;
+}
+impl Canvas {
+    pub fn new(width: u32, height: u32, color: Color) -&gt; Self {
+        let data = Box::from(vec![color; (width*height) as usize]);
+        Self {width, height, data}
+    }
+    pub fn pset(&amp;mut self, x: u32, y: u32, color: Color) {
+        self.data[(self.width*y + x) as usize] = color;
+    }
+    pub fn width(&amp;self) -&gt; u32 {self.width}
+    pub fn height(&amp;self) -&gt; u32 {self.height}
+}
+</pre>
+
+<h2 id="Speichern">Grafiken speichern</h2>
+
+<p>Schließlich braucht es noch Funktionalität zur Umwandlung des
+Puffers in eine PPM-Datei und eine Funktion zum Speichern der
+Datei.
+
+<pre class="rust ibox">
+struct PPM {data: Vec&lt;u8&gt;}
+
+impl Canvas {
+    fn encode(&amp;self) -&gt; PPM {
+        let cap = 3*self.data.len() + 20;
+        let mut buffer: Vec&lt;u8&gt; = Vec::with_capacity(cap);
+        buffer.append(&amp;mut format!("P6 {} {} 255\n",
+            self.width, self.height).into_bytes());
+        for color in self.data.iter() {
+            let (r, g, b) = color.to_rgb();
+            buffer.push(r);
+            buffer.push(g);
+            buffer.push(b);
+        }
+        PPM {data: buffer}
+    }
+    pub fn save(&amp;self, path: &amp;str) -&gt; Result&lt;(), std::io::Error&gt; {
+        use std::io::Write;
+        let ppm = self.encode();
+        let mut file = std::fs::File::create(path)?;
+        file.write_all(&amp;ppm.data)
+    }
+}
+</pre>
+
+<h2 id="Koordinatensystem">Koordinatensystem</h2>
+
+<p>Benötigt ist nun ein Übergang von Pixelkoordinaten zu einer
+vektoriellen Beschreibung. Hierfür definieren wir ein
+Koordinatensystem <code>System</code>, das auch gleich die Information
+über die Position und Skalierung in der komplexen Zahlenebene
+enthält. Jedem Pixel wird damit eine komplexe Zahl zugeordnet.
+
+<p>Die Pixelkoordinaten seien <code>(px,py)</code>. Wir wollen jetzt
+haben, dass der Koordinatenursprung in der Bildmitte liegt. Das wird
+Erreicht durch Subtraktion der halben Breite bzw. Höhe:
+<pre class="indent">
+px' = px - 0.5*width,
+py' = py - 0.5*height.
+</pre>
+
+<p>Bei Einheitsskalierung soll bei x&nbsp;=&nbsp;1 die rechte
+Bildkante erreicht werden. Wir wollen haben:
+<pre class="indent">
+x = 1 =&gt; px = width.
+</pre>
+
+<p>Keine komplizierte Mathematik, nur ein paar proportionale
+und lineare Gleichungen. Das macht
+<pre class="indent">
+x = 1/(0.5*width)*(px - 0.5*width),
+y = 1/(0.5*width)*(py - 0.5*height).
+</pre>
+
+<p>Zu beachten ist nun noch, dass <code>y</code> in spiegelverkehrte
+Richtung läuft, was durch die Substitution
+<code>y&nbsp;:=&nbsp;-y</code> beseitigt wird.
+Hinzufügen von Skalierung <code>scale</code> und Position
+<code>(x0,y0)</code> bringt schließlich
+<pre class="indent">
+x = x0 + scale/(0.5*width)*(px - 0.5*width),
+y = y0 - scale/(0.5*width)*(py - 0.5*height).
+</pre>
+
+<h2 id="Berechnung">Die Berechnung</h2>
+
+<p>Definieren wir kurz die Arithmetik von komplexen Zahlen.
+
+<pre class="rust ibox">
+mod complex {
+    #[derive(Clone,Copy)]
+    pub struct C64 {pub re: f64, pub im: f64}
+    impl C64 {
+        pub fn abs_sq(self) -&gt; f64 {
+            self.re*self.re + self.im*self.im
+        }
+    }
+    impl std::ops::Add&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn add(self, y: Self) -&gt; Self {
+            Self {re: self.re + y.re, im: self.im + y.im}
+        }
+    }
+    impl std::ops::Sub&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn sub(self, y: Self) -&gt; Self {
+            Self {re: self.re - y.re, im: self.im - y.im}
+        }
+    }
+    impl std::ops::Mul&lt;C64&gt; for C64 {
+        type Output = Self;
+        fn mul(self, y: Self) -&gt; Self {
+            Self {
+                re: self.re*y.re - self.im*y.im,
+                im: self.re*y.im + self.im*y.re
+            }
+        }
+    }
+}
+</pre>
+
+<p>Für die Funktion
+
+<p class="indent"><var>f</var><sub><var>c</var></sub>(<var>z</var>)
+= <var>z</var><sup>2</sup>&nbsp;+&nbsp;<var>c</var>
+
+<p>mit festem
+<var>c</var>&nbsp;=&nbsp;<var>x</var>&nbsp;+&nbsp;<var>y</var>i 
+nimmt man nun eine Iteration
+
+<p class="indent"><var>z</var><sub><var>n</var>+1</sub>
+= <var>f</var><sub><var>c</var></sub>(<var>z</var><sub><var>n</var></sub>)
+
+<p>mit Startwert <var>z</var><sub>0</sub>&nbsp;=&nbsp;0 vor.
+Den Startwert machen wir am besten gleich zu einer Funktion
+von <var>c</var>, damit man mit dem Programm auch Julia-Mengen
+zeichnen lassen kann. Die Iteration geht solange wie
+|<var>z</var><sub><var>n</var></sub>|<sup>2</sup>&nbsp;&lt;&nbsp;4
+ist.
+
+<pre class="rust ibox">
+use complex::C64;
+
+fn sigmoid(x: f64) -&gt; f64 {
+    x/(x + 1.0)
+}
+
+fn choose_color(i: u32, gradient: f64) -&gt; Color {
+    let t = (255.0 - 255.0*sigmoid(gradient*f64::from(i))) as u8;
+    Color::rgb(t, t, t)
+}
+
+struct System {
+    canvas: Canvas, scale: f64, pos: (f64,f64),
+    gradient: f64, max_iter: u32
+}
+impl System {
+    fn new(canvas: Canvas, scale: f64, pos: (f64,f64)) -&gt; Self {
+        Self {canvas, scale, pos, gradient: 0.04, max_iter: 1000}
+    }
+    fn fractal(&amp;mut self,
+        f: &amp;dyn Fn(C64,C64) -&gt; C64,
+        z0: &amp;dyn Fn(C64) -&gt; C64
+    ) {
+        let w = self.canvas.width();
+        let h = self.canvas.height();
+        let w2 = 0.5*f64::from(w);
+        let h2 = 0.5*f64::from(h);
+
+        let scale = self.scale/w2; 
+        let (x0, y0) = self.pos;
+
+        let max = self.max_iter;
+        let gradient = self.gradient;
+        let canvas = &amp;mut self.canvas;
+
+        for py in 0..h {
+            for px in 0..w {
+                let x = x0 + scale*(f64::from(px) - w2);
+                let y = y0 - scale*(f64::from(py) - h2);
+                let c = C64 {re: x, im: y};
+                let mut z = z0(c);
+                let mut count: u32 = 0;
+                while count &lt; max {
+                    z = f(z, c);
+                    if z.abs_sq() &gt; 4.0 {break;}
+                    count += 1;
+                }
+                if count &lt; max {
+                    canvas.pset(px, py, choose_color(count, gradient));
+                }
+            }
+        }
+    }
+}
+</pre>
+
+<p>Nun endlich die Berechnung. Für die Bildmaße benutze ich
+gerne hochzusammengesetzte Zahlen. Als Seitenverhältnis benutze ich oft
+3/2 in Form von 360/240 und Vielfachen oder 8/5 in Form von 480/300 und
+Vielfachen, das kommt dem goldenen Schnitt einigermaßen nahe.
+
+<pre class="rust ibox">
+fn main() -&gt; Result&lt;(), std::io::Error&gt; {
+    let canvas = Canvas::new(720, 480, Color::rgb(0, 0, 0));
+    let mut s = System::new(canvas, 2.0, (-0.5, 0.0));
+    s.fractal(&amp;|z, c| z*z + c, &amp;|_| C64 {re: 0.0, im: 0.0});
+    s.canvas.save("Fraktal.ppm")?;
+    Ok(())
+}
+</pre>
+
+<p>Das Resultat:
+
+<div>
+<img src="img/Fraktal.png" style="border: 2px solid #d0d0d0">
+</div>
+
+<p>Die Datei ist etwas über 1&nbsp;MB groß. Mit <code>pnmtopng</code>
+aus Netpbm kann man die in eine schon stark komprimierte PNG-Datei
+umwandeln. Mit <code>optipng</code> und <code>zopflipng</code> lässt
+sich diese anschließend auf ca. 20&nbsp;KB komprimieren.
+
+<pre class="ibox">
+pnmtopng Fraktal.ppm > Fraktal.png
+optipng Fraktal.png
+zopflipng -ym Fraktal.png Fraktal.png
+</pre>
+
+</body>
+</html>

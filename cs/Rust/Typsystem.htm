@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Typsystem und Typentheorie</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Produkte">Produkte von Typen</a>
+<li><a href="#Summen">Summen von Typen</a>
+<li><a href="#Funktionen">Typisierung von Funktionen</a>
+<li><a href="#Polymorphe-Typen">Polymorphe Typen</a>
+<li><a href="#Existentielle-Typen">Existentielle Typen</a>
+<li><a href="#Rekursive-Typen">Rekursive Typen</a>
+<li><a href="#Literatur">Literatur</a>
+</ol>
+
+<p>Dieses Kapitel erläutert Beziehungen zwischen dem Typsystem von
+Rust und der Typentheorie. Das soll der tiefergehenden Einordnung
+dienen, ist aber für das Verständnis der Programmiersprache und
+der nachfolgenden Kapitel nicht essentiell.
+
+<h2 id="Produkte">Produkte von Typen</h2>
+
+<h3>Typen von Tupeln</h3>
+
+<p>Zu zwei Typen <code>X</code>,&nbsp;<code>Y</code> lässt sich
+der Typ <code>X&times;Y</code> bilden, auch <code>(X,Y)</code>
+geschrieben. Dies ist der Datentyp der Paare <code>(x,y)</code> mit
+<code>x:&nbsp;X</code> und <code>y:&nbsp;Y</code>.
+
+<p>Die Schlussregel zur Einführung von Paaren ist
+eigentlich straightforward:
+<pre class="indent">
+&Gamma; |- x: X,  &Gamma; |- y: Y
+───────────────────── (Prod.)
+  &Gamma; |- (x,y): (X,Y)
+</pre>
+
+<p>Hinzu kommen Regeln zur Projektion:
+<table class="indent" style="border-collapse: collapse">
+<tr><td style="padding-right: 1.5em">
+<pre style="margin: 0">
+&Gamma; |- t: (X,Y)
+───────────── (Proj. 0)
+ &Gamma; |- t.0: X
+</pre>
+
+<td style="padding-left: 1.5em">
+<pre style="margin: 0">
+&Gamma; |- t: (X,Y)
+───────────── (Proj. 1)
+ &Gamma; |- t.1: Y
+</pre>
+</table>
+
+<p>Die Regeln für Produkte von mehr als zwei Faktoren sind
+analog. Zu beachten ist, dass es einen Unterschied zwischen
+<code>(X,Y,Z)</code> und <code>(X,(Y,Z))</code> gibt.
+
+<h3>Typen von Strukturen</h3>
+
+<p>Strukturen, auch Records genannt, sind Tupel mit frei wählbaren
+Bezeichnern zur Indizierung. Die Regel zur Einführung einer Struktur
+mit zwei Einträgen lautet:
+
+<pre class="indent">
+    &Gamma; |- x: X,    &Gamma; |- y: Y
+───────────────────────────────
+&Gamma; |- {a: x, b: y}: {a: X, b: Y}
+</pre>
+
+<p>Entsprechend gibt es wieder Regeln zur Projektion:
+<pre class="indent">
+&Gamma; |- s: {a: X, b: Y}
+────────────────────
+    &Gamma; |- s.a: X
+</pre>
+
+<p>Die Bezeichner <code>a</code>,&nbsp;<code>b</code> gehören zum
+Typ dazu. Infolge bedeuten andere Bezeichner einen anderen Typ.
+
+<p>Die Regeln für Strukturen mit mehr als zwei Einträgen sind analog
+zu den genannten.
+
+<h2 id="Summen">Summen von Typen</h2>
+
+<p>Für eine Enumeration
+<p class="indent"><code>enum E{V(T), ...}</code>
+
+<p>gibt es zur jeweiligen Variante <code>E::V</code> die Regel:
+<pre class="indent">
+   &Gamma; |- x: T
+───────────────
+&Gamma; |- E::V(x): E
+</pre>
+
+<p>Zur Zerlegung von Enumerationen bedarf es einer weiteren Regel:
+<pre class="indent">
+             &Gamma; |- t: E
+  &Gamma; &cup; {xi: Ti} |- ti: T für jedes i
+──────────────────────────────────────
+&Gamma; |- match t {E::V0(x0) =&gt; t0, ...}: T
+</pre>
+
+<p>In Worten: Der Term <code>t</code> sei vom Typ <code>E</code>.
+Außerdem sei angenommen, dass wenn jeweils die Variable <code>xi</code>
+vom Typ <code>Ti</code> ist, dann der zugehörige Term <code>ti</code>
+vom Typ <code>T</code>. Weil daher jeder der Terme vom gleichen
+Typ <code>T</code> ist, ist auch der Musterabgleich von diesem
+Typ.
+
+<h2 id="Funktionen">Typisierung von Funktionen</h2>
+
+<p>Zu zwei Typen <code>X</code>,&nbsp;<code>Y</code> gibt es den
+Typ <code>X&nbsp;&rarr;&nbsp;Y</code>, der alle Funktionen mit
+Argument vom Typ <code>X</code> und Wert vom Typ <code>Y</code>
+beschreibt. Z.&nbsp;B. besitzt die Funktion
+<pre class="rust ibox">
+fn f(x: u32) -> bool {x%2 == 0}
+</pre>
+
+<p>die Typisierung
+<p class="indent"><code>f: u32 &rarr; bool</code>.
+
+
+<p>Für Funktionen gilt die folgende Schlussregel:
+<pre class="indent">
+&Gamma; |- f: X &rarr; Y,  &Gamma; |- x: X
+───────────────────────── (App.)
+      &Gamma; |- f(x): Y
+</pre>
+
+<p>Diese Schlussregel nennt man die Regel der Applikation, kurz
+App. geschrieben. Für den Kontext
+<p class="indent"><code>&Gamma;&nbsp;:=&nbsp;{n: u32, f: u32 &rarr; bool}</code>
+
+<p>gilt z.&nbsp;B. die Schlussfolgerung:
+<pre class="indent">
+1. &Gamma; |- f: u32 &rarr; bool
+2. &Gamma; |- n: u32
+3. &Gamma; |- f(n): bool  (App. 1., 2.)
+</pre>
+
+<h2 id="Polymorphe-Typen">Polymorphe Typen</h2>
+
+<p>Polymorphe Typisierung erkennt man an Typvariablen. Polymorphe
+Typen sind solche, die über Typvariablen allquantifiziert sind.
+
+<p>Hat ein Term den Typ <code>&forall;T.A</code>,
+bedeutet dies, der Term ist vom Typ <code>A[T:=U]</code> für jeden
+beliebigen Typ <code>U</code>. Das heißt, der Term hat nicht nur
+einen Typ, sondern unendliche viele, die durch die Substitution
+der Typvariable <code>T</code> durch beliebige Typen entstehen.
+Diese Substitution bezeichnet man als <i>Spezialisierung</i>.
+
+<p>In Rust stehen die Typvariablen in spitzen Klammern. Betrachten wir
+dazu einmal die identische Funktion, das ist:
+<pre class="rust ibox">
+fn id&lt;T&gt;(x: T) -&gt; T {x}
+</pre>
+
+<p>Diese Funktion hat die Typisierung
+<p class="indent"><code>id: &forall;T. T &rarr; T</code>.
+
+<p>Sagen wir mal, wir haben den Kontext
+
+<p class="indent"><code>&Gamma;&nbsp;:=&nbsp;{n: u32, id: &forall;T. T &rarr; T}</code>.
+
+<p>Dann kann man schlussfolgern:
+
+<pre class="indent">
+1. &Gamma; |- id: &forall;T. T &rarr; T
+2. &Gamma; |- id: u32 &rarr; u32  (1. [T:=u32])
+3. &Gamma; |- n: u32          
+4. &Gamma; |- id(n): u32  (App. 2., 3.)
+</pre>
+
+<p>Bei Vorhandensein von Trait-Bounds wird das nun ein wenig
+komplizierter. Betrachten wir dazu:
+<pre class="rust ibox">
+fn dup&lt;T: Clone&gt;(x: T) -&gt; (T,T) {(x.clone(),x)}
+</pre>
+
+<p>Diese Funktion hat die Typisierung
+
+<p class="indent"><code>dup: &forall;T&in;Clone. T &rarr; (T,T)</code>.
+
+<p>Eine Substitution <code>T:=U</code> ist nur noch dann
+durchführbar, wenn <code>U</code> in <code>Clone</code> liegt, das
+heißt wenn <code>Clone</code> für <code>U</code> implementiert wurde.
+
+<h2 id="Existentielle-Typen">Existentielle Typen</h2>
+
+<p>Existentielle Typisierung erlaubt es, Wissen über die genaue
+Struktur eines Wertes zu Vergessen, womit sich abstrakte Schnittstellen
+erstellen lassen. Dies bildet die theoretische Grundlage für
+Module und abstrakte Datentypen.
+
+<p>Regel zur Einführung existentiell quantifizierter Typen:
+<pre class="indent">
+&Gamma; |- t: X[T:=U]
+──────────────── (Pack)
+&Gamma; |- (U,t): &exist;T.X
+</pre>
+
+<p>In Worten: Vorausgesetzt sei, der Term <code>t</code> ist vom Typ
+<code>X</code> nachdem in <code>X</code> jedes Vorkommen der
+Typvariable <code>T</code> gegen den Typ <code>U</code> ersetzt wurde.
+Dann ist das Paar <code>(U,t)</code> vom
+existentiellen Typ <code>&exist;T.X</code>.
+
+<p>Zu bemerken ist dazu noch, dass der Term <code>(U,t)</code> mehrere
+unterschiedliche existentielle Typen haben kann. Zur eindeutigen
+Zuordnung schreibt man explizit <code>(U,t) as &exist;T.X</code>.
+
+<p>Nun muss man Terme mit existentiell typisierten Variablen auch
+auswerten können, wofür es an weiteren Regeln bedarf. Wir definieren
+
+<p class="indent"><code>unpack (T,x) = (U,t) in s</code>
+
+<p>als <code>s[x:=t][T:=U]</code>. In Worten: Enthält der Term
+<code>s</code> eine Variable <code>x</code> und ist ein Wert
+<code>(U,t)</code> gegeben, und möchte man <code>x=t</code> haben,
+kann man <code>s</code> auswerten, indem jedes Vorkommen von
+<code>x</code> in <code>s</code> durch <code>t</code> ersetzt wird.
+
+<p>Damit das einen Sinn ergibt, darf für <code>x</code> natürlich
+kein beliebiger Term ersetzt werden. Zusätzliche Forderung ist
+<code>x: X</code>. Das führt zu der folgenden Schlussregel:
+
+<pre class="indent">
+&Gamma; |- e: &exist;T.X,  &Gamma;&cup;{x: X} |- s: Y,  T &notin; FV(Y)
+─────────────────────────────────────────── (Unpack)
+      &Gamma; |- (unpack (T,x) = e in s): Y
+</pre>
+
+<p>Der Typ <code>X</code> kodiert die abstrakte Schnittstelle und
+<code>x: X</code> sagt aus, dass man auf <code>x</code> lediglich
+Operationen dieser Schnittstelle anwenden darf.
+
+<p>Betrachten wir als Beispiel den Struktur-Typ
+<pre class="indent">
+X := {a: T; to_string: T &rarr; String}.
+</pre>
+
+<p>Ohne die Forderung, dass <code>T</code> nicht in den freien
+Variablen <code>FV(Y)</code> vorkommen darf, würde die
+Abstraktion kaputt brechen, womit interne Struktur von <code>x</code>
+in den Wert von <code>s</code> entweichen würde. Z.&nbsp;B. kann man
+nicht einfach <code>s:=x.a</code> setzen. Dann wäre ja <code>s: T</code>,
+also <code>Y=T</code> und daher <code>T&nbsp;&in;&nbsp;FV(Y)</code>.
+
+<p>In Rust ist <code>&exist;X.T</code> für die genannte Struktur
+<code>X</code> als opaker Typ <code>impl ToString</code> modellierbar.
+Wir betrachten die bereits in der Standardbibliothek definierte
+Schnittstelle:
+<pre class="rust ibox">
+trait ToString {
+    fn to_string(&amp;self) -> String;
+}
+</pre>
+
+<p>Man braucht nun lediglich <code>self := a</code> zu setzen.
+Beispielprogramm:
+
+<pre class="rust ibox">
+fn f(a: i32) -&gt; impl ToString {a}
+
+fn main() {
+    let x = f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Die Formulierung ist äquivalent zu der existenziell quantifizierten
+Struktur, weil man erstens an den Typ von <code>a</code> nicht mehr
+herankommt, und zweitens die Funktion <code>to_string</code>
+trotzdem auf <code>a</code> anwendbar bleibt. Darin besteht genau der
+springende Punkt, den wir haben wollen.
+
+<p>Man darf sich das so vorstellen, als würde die Struktur während der
+Optimierung durch den Compiler entfernt, weil kein Bedarf am
+dynamischen Dispatch besteht. Nämlich kann der Compiler schon zur
+Kompilierzeit in Erfahrung bringen, dass <code>to_string</code> auf
+einen Wert des Typs <code>i32</code> angewendet wird.
+
+<p>Im Gegensatz zu <code>impl Trait</code> ist beim opaken Typ
+<code>Box&lt;dyn Trait&gt;</code> auch dynamischer Dispatch zulässig.
+Dieser Typ entspricht dem Zeigerpaar
+<pre class="indent">
+&exist;T.(Box&lt;T&gt;, &amp;{to_string: &amp;T &rarr; String}).
+</pre>
+
+<p>Das äquivalente Beispielprogramm:
+<pre class="rust ibox">
+fn f(a: i32) -> Box&lt;dyn ToString&gt; {Box::new(a)}
+
+fn main() {
+    let x = f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Eine andere Modellierung von existentiell quantifizierten Typen
+sind Module mit privaten Variablen und Funktionen.
+Das äquivalente Beispielprogramm:
+
+<pre class="rust ibox">
+mod mx {
+    pub struct X {a: i32}
+    impl X {
+        pub fn to_string(&amp;self) -&gt; String {
+            format!("{}", &amp;self.a)
+        }
+    }
+    pub fn f(a: i32) -&gt; X {X {a}}
+}
+
+fn main() {
+    let x = mx::f(0);
+    println!("{}", x.to_string());
+}
+</pre>
+
+<p>Wieder ist erreicht, dass man an <code>a</code> nicht mehr
+herankommt, die Funktion <code>to_string</code> aber auf
+<code>a</code> anwendbar bleibt.
+
+<p>Auch Closures bieten die Möglichkeit zur Auftrennung zwischen
+Schnittstellen und privaten Daten. Das ist ein Grund dafür,
+warum Closures opake Typen haben müssen.
+Nochmals das äquivalente Beispielprogramm:
+
+<pre class="rust ibox">
+fn f(a: i32) -&gt; impl Fn() -&gt; String {
+    move || format!("{}", a)
+}
+
+fn main() {
+    let to_string = f(0);
+    println!("{}", to_string());
+}
+</pre>
+
+<h2 id="Rekursive-Typen">Rekursive Typen</h2>
+
+<p>Bei verketteten Listen und Bäumen enthalten die Knoten Einträge von
+der Form der Gesamtstruktur. Zur Typisierung solcher Strukturen
+sind rekursive Typen erforderlich.
+
+<p>Rekursive Typen lassen sich mit den bisherigen Mitteln nicht
+darstellen. Man führt für sie die Notation <code>&mu;T.Term</code>
+ein, wobei <code>T</code> eine Typvariable ist. Diese Typvariable
+kommt im Term <code>Term</code> vor, und steht obendrein für den
+Term selbst.
+
+<p>Das klassische Beispiel für einen rekursiven Typ ist die
+Darstellung der natürlichen Zahlen als
+<pre class="indent">
+Nat = &mu;T.enum {Zero, Succ(T)},
+</pre>
+
+<p>oder in abstrakter Form äquivalent als
+
+<pre class="indent">
+Nat = &mu;T.Either&lt;(), T&gt; = &mu;T.1+T.
+</pre>
+
+<p>In Rust sind rekursive Typen in der Gestalt nominaler Typen
+darstellbar, wobei die Notwendigkeit der speziellen Notation mit
+Typvariable entfällt. Die Entsprechung zu <code>Nat</code> kann man als
+
+<pre class="rust ibox">
+enum Nat {Zero, Succ(Rc&lt;Nat&gt;)}
+</pre>
+
+<p>oder
+
+<pre class="rust ibox">
+enum Either&lt;X, Y&gt; {Left(X), Right(Y)}
+struct Nat(Either&lt;(), Rc&lt;Nat&gt;&gt;);
+</pre>
+
+<p>gestalten. Ein ähnliches Beispiel bieten die bereits in
+der Form
+
+<pre class="rust ibox">
+enum List&lt;T&gt; {
+    Nil, Node {data: T, next: Box&lt;List&lt;T&gt;&gt;}
+}
+</pre>
+
+<p>beschriebenen einfach verketteten Listen. Wir können
+<code>Nat</code> an und für sich sogar als äquivalent zu
+<code>List&lt;()&gt;</code> betrachten.
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Benjamin C. Pierce: »Types and Programming Languages«.
+The MIT Press, Cambridge, Massachusetts &amp; London, England.
+<li>Herbert Klaeren: »<a href="http://pu.inf.uni-tuebingen.de/users/klaeren/ko.pdf"
+  >Konzepte höherer Programmiersprachen</a>«.
+  Mathematisch-Naturwissenschaftliche Fakultät,
+  Eberhard Karls Universität Tübingen, 2013. Kapitel&nbsp;7:
+  »Typen und Typsysteme«.
+</ol>
+
+</body>
+</html>
+

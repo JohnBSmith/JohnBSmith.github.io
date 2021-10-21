@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Fehlerwerte</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Option">Optionale Werte</a>
+<li><a href="#Result">Resultate</a>
+<li><a href="#Fragezeichen">Fehler weiterreichen</a>
+<li><a href="#Error">Universeller Fehlertyp</a>
+<li><a href="#Aufzeichnung">Fehler aufzeichnen</a>
+<li><a href="#individuell">Individuelle Fehlertypen</a>
+</ol>
+
+<h2 id="Option">Optionale Werte</h2>
+
+<p>Wir wollen eine Funktion programmieren die ein Array nach einem
+Wert durchsucht und den ersten Index zurückgibt wo dieser Wert gefunden
+wurde. Es kann natürlich aber auch sein, dass dieser Wert nicht im Array
+vorkommt. Man könnte in diesem Fall z.&nbsp;B. den negativen
+Index <code>-1</code> zurückgeben. Jedoch geben Enumerationen unsere
+Absicht besser wieder.
+
+<p>Für solche optionalen Werte gibt es schon einen vordefinierten
+Datentyp:
+
+<pre class="rust ibox">
+enum Option&lt;T&gt; {
+    Some(T),
+    None
+}
+</pre>
+
+<p>Hierbei ist <code>T</code> eine Typvariable für die ein
+beliebiger aber fester Datentyp eingesetzt wird. In der Variante
+<code>None</code> trägt der Wert keine Daten. In der Variante
+<code>Some(T)</code> trägt der Wert genau einen Wert vom Typ
+<code>T</code>. Das Suchprogramm lässt sich damit so formulieren:
+
+<pre class="rust ibox">
+fn find(a: &amp;[&amp;str], s: &amp;str) -&gt; Option&lt;usize&gt; {
+    for index in 0..a.len() {
+        if a[index] == s {return Some(index);}
+    }
+    None
+}
+
+fn print_index(a: &amp;[&amp;str], s: &amp;str) {
+    match find(a,s) {
+        Some(index) =&gt; println!("Der Index zu '{}' ist {}.", s, index),
+        None =&gt; println!("Konnte '{}' nicht finden.", s)
+    }
+}
+
+fn main() {
+    let a = vec!["Kaffee", "Tee", "Mate"];
+    print_index(&amp;a, "Tee");
+    print_index(&amp;a, "Pfefferminztee");
+}
+</pre>
+
+<h2 id="Result">Resultate</h2>
+
+<p>Blieb der Erfolg bei der Ausführung einer Funktion aus, würde man
+gerne mehr darüber erfahren wie es dazu kam. Die Funktion muss dafür
+Information über den Fehler zurückgeben. Man könnte diese Information
+in einer zusätzlichen Variablen speichern, was jedoch mit dem
+Schönheitsfehler behaftet ist, dass diese Variable dann auch
+vernachlässigt werden könnte. Wir würden lieber korrektes Benutzen
+des Rückgabewertes erzwingen, was sich mittels Enumerationen
+bewerkstelligen lässt.
+
+<p>Für Resultate gibt es auch einen vordefinierten Datentyp:
+<pre class="rust ibox">
+enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E)
+}
+</pre>
+
+<p>In der Variante <code>Ok(T)</code> trägt der Wert einen normalen
+Wert vom Typ <code>T</code>, in der Variante <code>Err(E)</code>
+einen Fehlerwert vom Typ <code>E</code>.
+
+<p>Als Beispiel wollen wir ein Programm zur Umwandlung von
+Zeichenketten in Zahlen schreiben. Kommen in der Zeichenkette aber
+Zeichen vor die keine Ziffern sind, wird ein darüber Aufschluss
+gebender Fehlerwert zurückgegeben. Einen entsprechenden Fehlerwert
+soll es geben falls die Zahl größer ausfällt als <code>u32</code>
+halten kann.
+
+<p>Zunächst die Funktion ohne Fehlerbehandlung:
+<pre class="rust ibox">
+fn int(s: &amp;str) -&gt; u32 {
+    let mut value: u32 = 0;
+    for c in s.chars() {
+        let digit = u32::from(c) - u32::from('0');
+        value = 10*value + digit;
+    }
+    value
+}
+</pre>
+
+<p>Und nun mit Fehlerbehandlung:
+<pre class="rust ibox">
+enum ParseError {InvalidDigit, Overflow}
+
+fn int(s: &amp;str) -&gt; Result&lt;u32, ParseError&gt; {
+    let mut value: u64 = 0;
+    for c in s.chars() {
+        if !c.is_ascii_digit() {
+            return Err(ParseError::InvalidDigit);
+        }
+        let digit = u32::from(c) - u32::from('0');
+        value = 10*value + u64::from(digit);
+        if value&gt;u64::from(std::u32::MAX) {
+            return Err(ParseError::Overflow);
+        }
+    }
+    Ok(value as u32)
+}
+
+fn print_number(s: &amp;str) {
+    match int(s) {
+        Ok(value) =&gt; println!("Zahl: {}", value),
+        Err(ParseError::InvalidDigit) =&gt; println!("Keine Zahl."),
+        Err(ParseError::Overflow) =&gt; println!("Zahl zu groß.")
+    }
+}
+
+fn main() {
+    print_number("12");
+    print_number("Firlefanz");
+    print_number("10000000000")
+}
+</pre>
+
+<h2 id="Fragezeichen">Fehler weiterreichen</h2>
+<p>Bei Verzicht auf detailierte Fehlerinformation erlaubt sich
+auch diese Ausgestaltung:
+
+<pre class="rust ibox">
+fn int(s: &amp;str) -&gt; Option&lt;u32&gt; {
+    let mut value: u32 = 0;
+    for c in s.chars() {
+        if !c.is_ascii_digit() {return None;}
+        let digit = u32::from(c) - u32::from('0');
+        value = value.checked_mul(10)?.checked_add(digit)?;
+    }
+    Some(value)
+}
+</pre>
+
+<p>Die Operationen <code>checked_mul</code> und <code>checked_add</code>
+überprüfen, ob es bei der Multiplikation zu einem Überlauf kommt, der
+Rückgabewert hat den Typ <code>Option&lt;u32&gt;</code>. Die
+Operation <code>x?</code> ist eine Kurzschreibweise für:
+
+<pre class="rust ibox">
+match x {
+    Some(value) =&gt; value,
+    None =&gt; return None
+}
+</pre>
+
+<p>Das ist ein sogenannter Wächter-Ausdruck. Falls <code>x</code>
+den Wert <code>None</code> haben sollte, wird die Ausführung
+der Funktion abgebrochen und <code>None</code> zurückgeben. Da
+im weiteren Verlauf also <code>None</code> ausgeschlossen ist,
+kann <code>value</code> einfach aus <code>Some(value)</code>
+herausgeholt werden.
+
+<p>Den Fragezeichen-Operator gibt es auch für Resultate:
+<pre class="rust ibox">
+match x {
+    Ok(value) => value,
+    error => return error
+}
+</pre>
+
+<p>Die vollständige Definition des Operators kann zudem
+eine Konvertierung zwischen Fehlerarten vornehmen:
+<pre class="rust ibox">
+match x {
+    Ok(value) => value,
+    Err(error) => return Err(From::from(error))
+}
+</pre>
+
+<h2 id="Error">Universeller Fehlertyp</h2>
+
+<p>Nicht immer ist die lokale Verarbeitung von Fehlern zielführend.
+Wie schon dargelegt, besteht die Vorgehensweise dann im Weiterreichen
+des Fehlers nach oben an den Aufrufer. Dabei tut sich nun recht
+schnell die Unbequemlichkeit auf, dass eine Funktion zwei oder
+mehr unterschiedliche Fehlertypen zurückgeben können muss.
+
+<p>Natürlich ließen sich die Fehlertypen mittels Enumeration zu einem
+gemeinsamen Typ zusammenfassen. Bei fortwährendem Weiterreichen kann
+dies allerdings zum umständlichen Verschachteln oder Neugruppieren von
+Enumerationen führen.
+
+<p>Was wir bräuchten wäre so eine Art Enumeration aus unendlich
+vielen Typen. Solche Datentypen gibt es in Rust tatsächlich, sie
+heißen <i>Trait-Objekt-Typen</i> und werden mit dem Schlüsselwort
+<code>dyn</code> eingeleitet. Hinter dem Schlüsselwort befindet
+sich der Name einer Traitsignatur, in welcher die abstrakte
+Schnittstelle des Typen kodiert ist. Konzeptuell kommt weiter hinzu,
+dass <code>dyn</code> eine Zusammenfassung von Typen
+aller möglichen Speichergrößen ist. Aus diesem Grund kann
+<code>dyn Trait</code> keine feste Speichergröße besitzen &ndash; man
+spricht von einem <i>Typ dynamischer Größe</i>. Um überhaupt
+damit arbeiten zu können, darf ein solcher Typ nur eingehüllt durch
+einen Zeiger vorkommen &ndash; bspw. als Referenz
+<code>&amp;dyn Trait</code> oder mittels Smart-Pointer-Typ
+<code>Box</code> als <code>Box&lt;dyn Trait&gt;</code>.
+
+<p>Die Standardbibliothek enthält so einen Trait
+<code>std::error::Error</code>. Damit lässt sich ein Kontrollfluss
+formulieren, welcher dem aus anderen Programmiersprachen
+bekannten Werfen und Abfangen von Ausnahmen nahe kommt.
+
+<pre class="rust ibox">
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn get_path() -&gt; Result&lt;String, String&gt; {
+    match std::env::args().nth(1) {
+        Some(path) =&gt; Ok(path),
+        None =&gt; Err(String::from(
+            "Kommandozeilenargument erwartet"))
+    }
+}
+
+fn load() -&gt; Result&lt;String, Error&gt; {
+    let path = get_path()?;
+    let text = std::fs::read_to_string(path)?;
+    Ok(text)
+}
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    let text = load()?;
+    println!("{}", text);
+    Ok(())
+}
+</pre>
+
+<p>Das Programm verhält sich so als würde im Fehlerfall
+<code>panic</code> geworfen. Was haben wir demgegenüber nun gewonnen?
+Nun, Fehler lassen sich jetzt an jeder Stelle nach Wunsch abfangen,
+umformen und verarbeiten.
+
+<p>Zum Schluss noch eine Warnung. Ein Wert vom universellen Fehlertyp
+<code>Box&lt;dyn std::error::Error&gt;</code> ist &ndash;
+gerade weil er alle möglichen Fehler enthalten kann &ndash;
+<i>untypisiert</i>. Man sollte Programme immer so stark wie
+möglich typisieren und solche universellen Typen nur als letzten
+Ausweg benutzen. Andernfalls kann es leichter dazu kommen, dass
+ein bestimmtes Programmverhalten übersehen bzw. falsch verarbeitet
+wird.
+
+<h2 id="Aufzeichnung">Fehler aufzeichnen</h2>
+
+<p>Beim Ablauf eines Programms kann es zu unkritischen Fehlern kommen,
+die zwar bedeuten, dass eine bestimmte Funktionalität nicht richtig
+arbeitet, allerdings nicht sofort zum Programmabbruch führen müssen.
+Nur weil beim einem Flugzeug beispielsweise ein Instrument oder
+Navigationsgerät ausfällt, muss das nicht gleich heißen, dass die
+gesamte Avionik den Geist aufgibt. Damit solche Fehler nicht übersehen
+werden, sollten diese zumindest in einen Fehler-Log einfließen.
+Das kann man z.&nbsp;B. so bewerkstelligen:
+
+<pre class="rust ibox">
+fn log_err(file: &amp;str, line: u32, text: String) {
+    eprintln!("Huch, da ist ein Fehler in Datei {}, \
+        Zeile {} aufgetreten:\n{}", file, line, text);
+}
+
+fn main() {
+    const DEFAULT: u8 = 0;
+    let x: u32 = 1000;
+    let y = u8::try_from(x).unwrap_or_else(|err| {
+        log_err(file!(), line!(), err.to_string());
+        DEFAULT
+    });
+    println!("{}", y);
+}
+</pre>
+
+<h2 id="individuell">Individuelle Fehlertypen</h2>
+
+<p>In bestimmten Situation kann die Definition neuer individueller
+Fehlertypen pragmatisch sein. Soll ein individueller Fehlertyp in den
+universellen Fehlertyp umwandelbar sein, muss eine Implementierung
+des Traits <code>std::error::Error</code> vorliegen. Das bedeutet
+an sich lediglich, dass die Traits <code>Display</code> und
+<code>Debug</code> implementiert sind. Man bewerkstelligt das so:
+
+<pre class="rust ibox">
+use std::fmt::{self, Display};
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+#[derive(Debug)]
+struct CustomError {text: String}
+
+impl CustomError {
+    fn new(text: &amp;str) -&gt; Self {Self {text: text.to_string()}}
+}
+
+impl Display for CustomError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "{}", self.text)
+    }
+}
+
+impl std::error::Error for CustomError {}
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    Err(CustomError::new("Fehler").into())
+}
+</pre>
+
+</body>
+</html>

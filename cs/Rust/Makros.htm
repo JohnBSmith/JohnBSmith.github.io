@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Makros</h1>
+<h2 id="toc">Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Konzept">Was sind Markos?</a>
+<li><a href="#Definition">Makrodefinition</a>
+<li><a href="#Alternative-Syntax">Alternative Syntax</a>
+<li><a href="#Literale">Literale</a>
+<li><a href="#Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</a>
+<li><a href="#Komprehensionen">Komprehensionen</a>
+<li><a href="#TT-muncher">TT muncher</a>
+</ol>
+
+
+<h2 id="Konzept">Was sind Makros?</h2>
+
+<p>Makros sind zur Kompilierzeit ausgeführte »Funktionen« zur
+Umformung von Syntax. Sie dienen dort als Hilfsmittel zur
+Faktorisierung wiederkehrender Muster, wo gewöhnliche Funktionen
+dafür nicht genügen. Charakteristisch für Makros ist, dass sie in
+der Programmiersprache an Oberfläche agieren, &ndash; eine tiefere
+Interaktion mit dem Typsystem findet nicht statt.
+
+<p>In Rust gibt es zwei Arten von Makros:
+<dl class="indent">
+<dt><b>1. Deklarative Makros</b>
+<dd>Diese wandeln Syntax über einen
+Musterabgleich in andere Syntax um.
+<dt><b>2. Prozedurale Makros</b>
+<dd>Diese dürfen eigene Parser
+und Syntax-Erzeuger enthalten.
+</dl>
+
+<p>Dieses Kapitel beschäftigt sich lediglich mit den deklarativen
+Makros.
+
+<h2 id="Definition">Makrodefinition</h2>
+
+<p>Die Definition eines deklarativen Makros hat eine ähnliche
+Gestalt wie das Pattern-Matching. Beim Aufruf des Makros wird zu der
+Liste von Syntaxmustern die Umformung zum ersten passenden Muster
+gewählt.
+
+<pre class="ibox">
+macro_rules! Name {
+    (Muster) =&gt; {Umformung};
+    (Muster) =&gt; {Umformung};
+    ...
+    (Muster) =&gt; {Umformung}
+}
+</pre>
+
+<p>Im Muster dürfen durch ein Dollar-Zeichen eingeleitete
+Syntaxvariablen auftreten. Die Syntaxvariable nimmt eine
+bestimmte Art von Syntaxfragment auf. Im Muster bekommt jede
+Syntaxvariable hinter einem Doppelpunkt einen Spezifikator
+nachgestellt, der zur Angabe der Art von Fragment dient.
+Die vorhandenen Spezifikatoren sind in der folgenden
+Tabelle aufgelistet.
+
+<table class="bt">
+<tr>
+<th>Spez.
+<th>Erklärung
+<th>Beispiele
+<tr>
+<td><code>ident</code>
+<td>ein Bezeichner
+<td><code>x</code>, <code>bool</code>, <code>self</code>
+<tr>
+<td><code>lifetime</code>
+<td>eine Lebenszeit
+<td><code>'x</code>, <code>'static</code>
+<tr>
+<td><code>literal</code>
+<td>ein Literal
+<td><code>24</code>, <code>'a'</code>, <code>"Tee"</code>
+<tr>
+<td><code>ty</code>
+<td>ein Typ
+<td><code>i32</code>, <code>Result&lt;i32&gt;</code>
+<tr>
+<td><code>path</code>
+<td>ein Pfad
+<td><code>x::y::z</code>, <code>E::X</code>
+<tr>
+<td><code>expr</code>
+<td>ein Ausdruck
+<td><code>a*x + b</code>
+<tr>
+<td><code>stmt</code>
+<td>eine Anweisung
+<td><code>x = f(u)</code>, <code>let x = f(u)</code>
+<tr>
+<td><code>pat</code>
+<td>ein Muster
+<td><code>Ok(x)</code>, <code>(x,y)</code>
+<tr>
+<td><code>block</code>
+<td>ein Blockausdruck
+<td><code>{let x = f(u); a*x + b}</code>
+<tr>
+<td><code>meta</code>
+<td>ein Attribut
+<td><code>attr</code>, <code>attr(x)</code>
+<tr>
+<td><code>vis</code>
+<td>eine Sichtbarkeit
+<td><code>pub</code>, <code>pub(crate)</code>
+<tr>
+<td><code>item</code>
+<td>ein Programmteil
+<td><code>fn f() {}</code>, <code>struct S {}</code>, <code>type&nbsp;X&nbsp;=&nbsp;Y;</code>
+<tr>
+<td><code>tt</code>
+<td>ein Token
+<td><code>x</code>, <code>(x + y)</code>, <code>[1, 2]</code>, <code>{f(); g()}</code>
+</table>
+
+<br>
+<table class="bt">
+<tr>
+<th>Spez.
+<th>erlaubte Nachfolgetoken
+<tr>
+<td><code>ident</code>
+<td>beliebig
+<tr>
+<td><code>lifetime</code>
+<td>beliebig
+<tr>
+<td><code>literal</code>
+<td>beliebig
+<tr>
+<td><code>ty</code>
+<td><code>{ [ =&gt; , &gt; = : ; | as where</code>
+<tr>
+<td><code>path</code>
+<td><code>{ [ =&gt; , &gt; = : ; | as where</code>
+<tr>
+<td><code>expr</code>
+<td><code>=&gt; , ;</code>
+<tr>
+<td><code>stmt</code>
+<td><code>=&gt; , ;</code>
+<tr>
+<td><code>pat</code>
+<td><code>=&gt; , = | if in</code>
+<tr>
+<td><code>block</code>
+<td>beliebig
+<tr>
+<td><code>meta</code>
+<td>beliebig
+<tr>
+<td><code>vis</code>
+<td><code>,</code> Typ Bezeichner 
+<tr>
+<td><code>item</code>
+<td>beliebig
+<tr>
+<td><code>tt</code>
+<td>beliebig
+</table>
+
+<h2 id="Alternative-Syntax">Alternative Syntax</h2>
+
+<p>Als erstes möchte ich zeigen wie Makros allerhand syntaktische
+Spielereien ermöglichen. Das folgende Beispiel zeigt die Erstellung
+von klassischer mathematischer Notation für Fallunterscheidungen,
+bei der die Bedingung jeweils hinter dem Wert steht.
+
+<pre class="rust ibox">
+macro_rules! case {
+    ($($v:expr, if $cond:expr),* $(, else $other:expr)?) =&gt; {
+        $(if $cond {$v}) else*
+        $(else {$other})?
+    }
+}
+
+fn pow(x: i32, n: u32) -&gt; i32 {
+    case!{
+        1, if n == 0,
+        else x*pow(x, n - 1)
+    }
+}
+</pre>
+
+<p>Ähnlich wie bei Backus-Naur-Form und regulären Ausdrücken
+dürfen im Muster Wiederholungen und Optionen von Teilmustern vorkommen.
+Im Körper des Makros kommt die jeweilige Regel dann nochmals
+vor und dient dabei zur wiederholten bzw. optionalen Erzeugung
+von Syntax. Eine Wiederholung eines Musters ist als
+
+<p class="indent"><code>$(Muster)*</code> oder <code>$(Muster) Separator*</code>
+
+<p>notiert. Ein optionales Muster ist als
+
+<p class="indent"><code>$(Muster)?</code>
+
+<p>notiert.
+
+<h2 id="Literale">Literale</h2>
+<p>Makros können genutzt werden, um Datentypen mit Literalen
+auszustatten, welche zur Initialisierung der Datenstrukturen
+genutzt werden.
+
+<p>Die Standardbibliothek enthält zwar schon ein Makro für
+dynamische Felder, jedoch kann dies etwas umständlich sein:
+<pre class="rust ibox">
+let v: Vec&lt;String&gt; = vec![
+    "Ahorn".to_string(),
+    "Eiche".to_string(),
+    "Erle" .to_string(),
+    "Esche".to_string()
+];
+</pre>
+
+<p>Ein Literal für ein dynamisches Feld von Zeichenketten
+erlaubt die gewünschte Verkürzung:
+<pre class="rust ibox">
+macro_rules! vec_string {
+    ( $( $x:expr ),* ) =&gt; {{
+        let mut _temp_vec = Vec::new();
+        $(_temp_vec.push($x.to_string());)*
+        _temp_vec
+    }}
+}
+
+fn main() {
+    let v: Vec&lt;String&gt; = vec_string![
+        "Ahorn", "Eiche", "Erle", "Esche"
+    ];
+    println!("{:?}", v);
+}
+</pre>
+
+<p>Der Unterstrich vor <code>temp_vec</code> unterdrückt beim
+leeren Array <code>vec_string![]</code> die Meldung, dass
+die Veränderbarkeit von <code>temp_vec</code> überflüssig ist.
+
+<p>Mit den Verbesserungen geht es aber noch weiter voran. Der Ausdruck
+<code>s.to_string()</code> lässt sich auch ersetzen gegen
+<code>s.into()</code>, mit dem Vorteil typgenerisch zu sein.
+Außerdem kann man das Literal auch auf <code>vec![]</code> zurückführen,
+welches effizienter implementiert ist. Beides kombiniert ergibt
+folgendes Makro:
+
+<pre class="rust ibox">
+macro_rules! vec_from {
+    ($($item:expr),* $(,)?) =&gt; {vec![$($item.into(),)*]}
+}
+</pre>
+
+<p>Literal für ein assoziatives Feld:
+<pre class="rust ibox">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( [$key:expr]: $value:expr ),* ) =&gt; {{
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.to_string(), $value.to_string());)*
+        _temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String, String&gt; = map!{
+        ["Ahorn"]: "Acer",
+        ["Eiche"]: "Quercus",
+        ["Erle" ]: "Alnus",
+        ["Esche"]: "Fraxinus excelsior"
+    };
+    println!("{:?}", m);
+}
+</pre>
+
+<p>Die eckigen Klammern um die Schlüssel sind etwas umständlich.
+Sie sind vorhanden weil nach <code>$key:expr</code> kein Doppelpunkt
+folgen darf, die erlaubten Zeichen sind "<code>=&gt; , ;</code>"
+und schließende Klammern. Das <code>expr</code> zeigt uns
+hier, dass es sich um einen Ausdruck handelt. Tatsächlich können
+wir aber mit <code>tt</code> (single token tree) sagen, dass es
+sich um ein Atom handeln soll, wobei auch ein geklammerter Ausdruck
+als Atom zugelassen ist. Nach leichter Modifikation ergibt sich
+also:
+
+<pre class="rust ibox">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( $key:tt: $value:expr ),* ) =&gt; {{
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.to_string(), $value.to_string());)*
+        _temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String, String&gt; = map!{
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
+    };
+    println!("{:?}", m);
+}
+</pre>
+
+<p>Das Makro ist bis jetzt auf den Typ
+<code>HashMap&lt;String,String&gt;</code> begrenzt.
+Mit der Trait-Methode <code>into</code> lässt es sich
+aber auf andere Typen verallgemeinern:
+
+<pre class="rust ibox">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $( $key:tt: $value:expr ),* ) =&gt; {{
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($key.into(), $value.into());)*
+        _temp_map
+    }}
+}
+
+fn main() {
+    let m: HashMap&lt;String, String&gt; = map!{
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
+    };
+    println!("{:?}", m);
+}
+</pre>
+
+<p>Etwas allgemeiner lassen sich beliebige Transformationen
+<code>tk</code> und <code>tv</code> anwenden:
+
+<pre class="rust ibox">
+use std::collections::HashMap;
+
+macro_rules! map {
+    ( $tk:expr, $tv:expr; $( $key:tt: $value:expr ),*) =&gt; {{
+        let mut _temp_map = HashMap::new();
+        $(_temp_map.insert($tk($key), $tv($value));)*
+        _temp_map
+    }}
+}
+
+fn main() {
+    let m = map!{String::from, String::from;
+        "Ahorn": "Acer",
+        "Eiche": "Quercus",
+        "Erle" : "Alnus",
+        "Esche": "Fraxinus excelsior"
+    };
+    println!("{:?}", m);
+}
+</pre>
+
+<h2 id="Kontrollfluss-Operatoren">Kontrollfluss-Operatoren</h2>
+
+<p>Gewöhnliche Funktionen sind mit dem Hindernis behaftet, nicht
+mit Kontrollfluss zu harmonisieren. Zunächst ist die Auswertung
+von Argumenten in Rust immer eifrig, engl. <i>eager evaluation</i>.
+D.&nbsp;h. die Auswertung von Argumenten findet immer statt, egal ob
+sie benötigt werden oder nicht. Die Nachstellung der Fallunterscheidung
+als Funktion
+
+<pre class="rust ibox">
+fn cond&lt;T&gt;(c: bool, x: T, y: T) -&gt; T {
+    if c {x} else {y}
+}
+</pre>
+
+<p>ist bspw. nicht zielführend. Hier möchte man eine Bedarfsauswertung,
+engl. <i>lazy evaluation</i>, haben. Diese ist darstellbar durch
+Verhüllung der Argumente durch Funktionen:
+
+<pre class="rust ibox">
+fn cond&lt;Fx, Fy, T&gt;(c: bool, x: Fx, y: Fy) -&gt; T
+where Fx: FnOnce() -&gt; T, Fy: FnOnce() -&gt; T
+{
+    if c {x()} else {y()}
+}
+</pre>
+
+<p>Eine Funktion der Standardbibliothek, wo von dieser Methodik
+Gebrauch gemacht wird, ist <code>unwrap_or_else</code>. Leider
+verträgt sich die Konstruktion nicht mit den Sprunganweisungen
+<code>break</code>, <code>continue</code>, <code>return</code>
+und dem Fragezeichen-Operator. Die Formulierung als Makro
+befreit uns schließlich von diesen Beschränkungen.
+
+<pre class="rust ibox">
+macro_rules! cond {
+    ($c:expr, $x:expr) =&gt; {if $c {$x}};
+    ($c:expr, $x:expr, $y:expr) =&gt; {if $c {$x} else {$y}}
+}
+</pre>
+
+<p>Ein nützliches Beispiel ist der folgende allgemeine
+Erwartungsoperator zum Entpacken von Enum-Varianten.
+
+<pre class="rust ibox">
+macro_rules! expect {
+    ($e:expr, $variant:path) =&gt; {
+        match $e {$variant(value) =&gt; value, _ =&gt; panic!()}
+    };
+    ($e:expr, $variant:path, $otherwise:expr) =&gt; {
+        match $e {$variant(value) =&gt; value, _ =&gt; $otherwise}
+    }
+}
+</pre>
+
+<p>Gegenüber den Methoden <code>unwrap</code>, <code>unwrap_or</code>
+und <code>unwrap_or_else</code> hat <code>expect</code> drei Vorteile:
+<ol>
+<li>Es funktioniert bezüglich beliebigen Enum-Varianten.
+Als Funktion lässt sich dies nicht ausdrücken, da im Pattern-Matching
+keine Varianten-Variablen gestattet sind.
+
+<li>Natürliche Bedarfsauswertung von <code>otherwise</code>.
+Eine extra Methode ist nicht notwendig.
+
+<li>Harmonie mit Sprunganweisungen und dem Fragezeichen-Operator.
+</ol>
+
+<h2 id="Komprehensionen">Komprehensionen</h2>
+
+<p>For-Audrücke, auch Listen-Komprehension oder Iterator-Komprehension
+genannt, gibt es in Rust nicht. Da Rust aber Ausdruck-orientiert ist,
+lassen sich diese mithilfe von Makros selbst programmieren.
+
+<pre class="rust ibox">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let mut _a = Vec::new();
+        for $x in $range {_a.push($expr);}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![2*x; for x in 0..10];
+    println!("{:?}", a);
+}
+</pre>
+
+<p>Die Anzahl der notwendigen Reallokationen lässt sich durch
+Ausnutzen von <code>size_hint</code> erheblich reduzieren:
+
+<pre class="rust ibox">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let _r = $range;
+        let mut _a = Vec::with_capacity(_r.size_hint().0);
+        for $x in _r {_a.push($expr);}
+        _a
+    }};
+}
+</pre>
+
+<p>Mit mehrstufigen for-Ausdrücken bekommt man kartesische
+Produkte als Definitionsbereich. Diese for-Ausdrücke kann man jeweils
+separat bis zu einer maximalen Anzahl implementieren:
+
+<pre class="rust ibox">
+macro_rules! list {
+    ($expr:expr; for $x:tt in $range:expr) =&gt; {{
+        let mut _a = Vec::new();
+        for $x in $range {_a.push($expr);}
+        _a
+    }};
+    ($expr:expr; for $x:tt in $xrange:expr;
+        for $y:tt in $yrange:expr
+    ) => {{
+        let mut _a = Vec::new();
+        for $x in $xrange {
+            for $y in $yrange {_a.push($expr);}
+        }
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![x*y; for x in 0..2; for y in 0..2];
+    println!("{:?}", a);
+}
+</pre>
+
+
+<h2 id="TT-muncher">TT muncher</h2>
+
+<p>Das Makro für die for-Ausdrücke lässt sich aber auch variadisch
+programmieren. Zur Umsetzung ist ein Verfahren gewinnbringend,
+das sich »TT muncher« nennt. Hierbei wird das zu parsende Muster
+in einen Anfang und einen Rest <code>$tail</code> zerlegt.
+Mit einem weiteren Makro-Aufruf geschieht dann das Parsen von
+<code>$tail</code>, was sich auch rekursiv formulieren lässt.
+
+<pre class="rust ibox">
+macro_rules! expand_tail {
+    ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
+        for $x in $range {$v.push($expr);}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; $($tail:tt)*) =&gt; {
+        for $x in $range {expand_tail!($expr; $v; $($tail)*)}
+    };
+}
+
+macro_rules! list {
+    ($expr:expr; $($tail:tt)*) =&gt; {{
+        let mut _a = Vec::new();
+        expand_tail!{$expr; _a; $($tail)*}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![[x, y, z];
+        for x in 0..2; for y in 0..2; for z in 0..2];
+    println!("{:?}", a);
+}
+</pre>
+
+<p>Bei for-Ausdrücken sind auch Bedingungen erlaubt, mit denen
+sich Elemente ausfiltern lassen. Diese können wir nun auch
+noch einbauen. Als einfaches Beispiel ist die Auflistung
+von pythagoräischen Tripeln angegeben.
+
+<pre class="rust ibox">
+macro_rules! expand_tail {
+    ($expr:tt; $v:tt; for $x:tt in $range:expr) =&gt; {
+        for $x in $range {$v.push($expr);}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; if $cond:expr) =&gt; {
+        for $x in $range {if $cond {$v.push($expr);}}
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr;
+        if $cond:expr; $($tail:tt)*
+    ) =&gt; {
+        for $x in $range {
+            if $cond {expand_tail!($expr; $v; $($tail)*)}
+        }
+    };
+    ($expr:tt; $v:tt; for $x:tt in $range:expr; $($tail:tt)*) =&gt; {
+        for $x in $range {expand_tail!($expr; $v; $($tail)*)}
+    };
+}
+
+macro_rules! list {
+    ($expr:expr; $($tail:tt)*) =&gt; {{
+        let mut _a = Vec::new();
+        expand_tail!{$expr; _a; $($tail)*}
+        _a
+    }};
+}
+
+fn main() {
+    let a = list![[x,y,z];
+        for x in 1..100; for y in 1..100; for z in 1..100;
+        if x&lt;y &amp;&amp; x*x + y*y == z*z];
+    println!("{:?}", a);
+}
+</pre>
+
+</body>
+</html>
+

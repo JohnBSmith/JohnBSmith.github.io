@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Numerik</title>
+  <link href="../css/main.css" rel="stylesheet">
+  <script>var root_path = "../";</script>
+  <script src="../js/main.js"></script>
+  <script src="../js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="../Rust.htm">Programmieren in Rust</a>
+<h1>Algorithmen: Numerik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Differentiation">Numerische Differentiation</a>
+<li><a href="#Integration">Numerische Integration</a>
+<li><a href="#Interpolation">Interpolation</a>
+</ol>
+<br>
+
+<h2 id="Differentiation">Numerische Differentiation</h2>
+
+<h3>Erste Ableitung</h3>
+<pre class="rust box">
+fn diff(f: &amp;dyn Fn(f64) -&gt; f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    (f(x+h) - f(x-h))/(2.0*h)
+}
+</pre>
+
+<br>
+<h3>Zweite Ableitung</h3>
+<pre class="rust box">
+fn diff2(f: &amp;dyn Fn(f64) -&gt; f64, x: f64) -&gt; f64 {
+    let h = 0.001;
+    (f(x+h) - 2.0*f(x) + f(x-h))/(h*h)
+}
+</pre>
+
+<br>
+<h3>Dritte Ableitung</h3>
+<pre class="rust box">
+fn diff3(f: &amp;dyn Fn(f64) -&gt; f64, x: f64) -&gt; f64 {
+    let h = 0.004;
+    (0.5*f(x+2.0*h) - f(x+h) + f(x-h) - 0.5*f(x-2.0*h))/(h*h*h)
+}
+</pre>
+<br>
+
+<h2 id="Integration">Numerische Integration</h2>
+<h3>Simpsonregel</h3>
+<pre class="rust box">
+fn simpson(f: &amp;dyn Fn(f64) -&gt; f64, a: f64, b: f64, n: u32) -&gt; f64 {
+    let h = (b - a)/(n as f64);
+    let mut s = 0.0;
+    for i in 0..n {
+        let x = a + h*(i as f64);
+        s += f(x) + 4.0*f(x+0.5*h) + f(x+h);
+    }
+    s*h/6.0
+}
+</pre>
+<br>
+
+<h3>Gauß-Legendre-Quadratur</h3>
+<pre class="rust box">
+static GL32: [[f64; 2]; 32] = [
+    [-0.9972638618494816, 0.007018610009470141],
+    [-0.9856115115452684, 0.01627439473090563],
+    [-0.9647622555875064, 0.02539206530926208],
+    [-0.9349060759377397, 0.03427386291302148],
+    [-0.8963211557660522, 0.04283589802222668],
+    [-0.8493676137325699, 0.05099805926237622],
+    [-0.7944837959679425, 0.05868409347853551],
+    [-0.7321821187402897, 0.06582222277636184],
+    [-0.6630442669302152, 0.07234579410884850],
+    [-0.5877157572407623, 0.07819389578707028],
+    [-0.5068999089322295, 0.08331192422694673],
+    [-0.4213512761306354, 0.08765209300440380],
+    [-0.3318686022821277, 0.09117387869576390],
+    [-0.2392873622521371, 0.09384439908080457],
+    [-0.1444719615827965, 0.09563872007927489],
+    [-0.04830766568773831,0.09654008851472778],
+    [ 0.04830766568773831,0.09654008851472778],
+    [ 0.1444719615827965, 0.09563872007927489],
+    [ 0.2392873622521371, 0.09384439908080457],
+    [ 0.3318686022821277, 0.09117387869576390],
+    [ 0.4213512761306354, 0.08765209300440380],
+    [ 0.5068999089322295, 0.08331192422694673],
+    [ 0.5877157572407623, 0.07819389578707028],
+    [ 0.6630442669302152, 0.07234579410884850],
+    [ 0.7321821187402897, 0.06582222277636184],
+    [ 0.7944837959679425, 0.05868409347853551],
+    [ 0.8493676137325699, 0.05099805926237622],
+    [ 0.8963211557660522, 0.04283589802222668],
+    [ 0.9349060759377397, 0.03427386291302148],
+    [ 0.9647622555875064, 0.02539206530926208],
+    [ 0.9856115115452684, 0.01627439473090563],
+    [ 0.9972638618494816, 0.007018610009470141]
+];
+
+fn gauss(f: &amp;dyn Fn(f64) -&gt; f64, a: f64, b: f64, n: u32) -&gt; f64 {
+    let h = (b - a)/(n as f64);
+    let p = 0.5*h;
+    let mut s = 0.0;
+    for j in 0..n {
+        let q = p + a + (j as f64)*h;
+        let mut sj = 0.0;
+        for t in &amp;GL32 {
+            sj += t[1]*f(p*t[0] + q);
+        }
+        s += sj;
+    }
+    p*s
+}
+</pre>
+
+<br>
+<h2 id="Interpolation">Interpolation</h2>
+
+<h3>Stückweise lineare interpolation</h3>
+
+<pre class="rust ibox">
+// Für äquidistante Stützstellen [x0 + k*d, y[k]].
+
+fn pli(x0: f64, d: f64, y: Vec&lt;f64&gt;) -&gt; impl Fn(f64) -&gt; f64 {
+    let n = y.len() as isize;
+    move |x| {
+        let k = f64::floor((x-x0)/d) as isize;
+        if k &lt; 0 || k+1 &gt;= n {f64::NAN}
+        else {
+            let k = k as usize;
+            y[k] + (y[k+1] - y[k])/d*(x - x0 - (k as f64)*d)
+        }
+    }
+}
+</pre>
+
+</body>
+</html>
+
