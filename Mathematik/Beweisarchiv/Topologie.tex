@@ -24,7 +24,7 @@ nennt man abgeschlossen, wenn das Komplement $X\setminus M$ offen ist.
 \label{def:nh-filter}\index{Umgebungsfilter}
 Zu einem Punkt $x\in X$ ist
 \[\underline U(x) := \{U{\subseteq}X\mid
-\exists O(O\in T\land x\in O\land O\subseteq U)\}\]
+\exists O\colon O\in T\land x\in O\land O\subseteq U\}\]
 der Umgebungsfilter. Eine Menge $U\in\underline U(x)$ heißt
 Umgebung von $x$.
 \end{Definition}
@@ -83,7 +83,7 @@ von $M$, kurz%
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) und Def. \ref{def:int} (int)
 expandieren:%
-\[\forall x[x\in M\land M\in\underline U(x)
+\[\forall x\colon [x\in M\land M\in\underline U(x)
 \iff x\in\bigcup_{O\in 2^M\cap T} O].\]
 Den äußeren Allquantor brauchen wir nicht weiter mitschreiben, da alle
 freien Variablen automatisch allquantifiziert werden.
@@ -91,11 +91,11 @@ Nach Def. \ref{def:nh-filter} (nh-filter) weiter expandieren, wobei die
 Bedingung $U\subseteq X$ als tautologisch entfallen kann,
 weil $X$ die Grundmenge ist. Auf der rechten Seite wird nach Def.
 \ref{def:union} (union) expandiert. Es ergibt sich:
-\[x\in M\land \exists O(O\in T\land x\in O\land O\subseteq M)
-\iff \exists O(O\subseteq M\land O\in T\land x\in O).\]
-Wegen $A\land\exists x(P(x))\iff \exists x(A\land P(x))$ ergibt
+\[x\in M\land (\exists O\colon O\in T\land x\in O\land O\subseteq M)
+\iff (\exists O\colon O\subseteq M\land O\in T\land x\in O).\]
+Wegen $A\land(\exists x\colon P(x))\iff (\exists x\colon A\land P(x))$ ergibt
 sich auf der linken Seite:
-\[\exists O(x\in M\land O\in T\land x\in O\land O\subseteq M).\]
+\[\exists O\colon x\in M\land O\in T\land x\in O\land O\subseteq M.\]
 Wenn aber $O\subseteq M$ erfüllt sein muss, gilt
 $x\in O\implies x\in M$. Demnach kann $x\in M$ entfallen.
 Auf beiden Seiten steht dann die gleiche Bedingung.\,\qedsymbol
@@ -225,7 +225,7 @@ nach $q$ den Rand von $M$.
 \begin{Beweis}[Beweis 1]
 Sei $\gamma\colon [0,1]\to\R^n$ so ein Weg mit
 $\gamma(0)=p$ und $\gamma(1)=q$. Angenommen, das Bild schneidet
-den Rand nicht. Das heißt $\gamma([0,1])\cap\partial M = \emptyset$,
+den Rand nicht. Das heißt, $\gamma([0,1])\cap\partial M = \emptyset$,
 oder äquivalent $\gamma^{-1}(\partial M)=\emptyset$.
 Allgemein ist
 \[\R^n = \operatorname{int}(M) \cup \partial M \cup \operatorname{ext}(M)\]
@@ -248,7 +248,7 @@ zusammenhängend sind.\,\qedsymbol
 \begin{Beweis}[Beweis 2]
 Sei $\gamma\colon [0,1]\to\R^n$ ein solcher Weg mit $\gamma(0)=p$ und
 $\gamma(1)=q$. Wir nehmen nun eine Bisektion vor. Sei $a_0:=0$ und
-$b_0:=1$. Sei $m:=\tfrac{1}{2}(a_{k}+b_{k})$ der Mittelwert. Liegt
+$b_0:=1$. Sei $m:=\tfrac{1}{2}(a_{k}+b_{k})$, also der Mittelwert. Liegt
 $\gamma(m)$ im Inneren, dann ist $[a_{k+1},b_{k+1}]=[m,b_k]$ das nächste
 Intervall. Liegt $\gamma(m)$ im Äußeren, dann $[a_{k+1},b_{k+1}]=[a_k,m]$.
 Liegt $\gamma(m)$ auf dem Rand, ist ein Schnittpunkt gefunden und

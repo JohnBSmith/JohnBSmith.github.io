@@ -2,6 +2,57 @@
 \chapter{Grundlagen}
 \section{Aussagenlogik}\index{Aussagenlogik}
 
+\begin{Satz}[mp: Modus ponens]
+Es gilt $(A\Rightarrow B)\land A \implies B$.
+\end{Satz}
+\begin{Beweis}[Beweis 1 (Natürliches Schließen)]\\
+Zu $\{A\Rightarrow B, A\}\vdash B$. Trivial, da eine Inferenzregel des Kalküls. Schematisch:
+\[\infer{B}{A\Rightarrow B & A}\]
+Programmterm:
+\[(A\to B)\times A\to B,\; (f, a)\mapsto f(a).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2 (LEM, boolesche Algebra)]
+Man darf rechnen
+\begin{align*}
+(A\Rightarrow B)\land A \Rightarrow B &\equiv
+\neg ((\neg A\lor B)\land A) \lor B
+\equiv\neg (\neg A\lor B) \lor \neg A \lor B\\
+&\equiv \neg\varphi\lor\varphi\equiv 1,
+\end{align*}
+wobei $\varphi :\equiv \neg A\lor B$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[bool-cl: Kommutativgesetze]%
+\label{bool-cl}\index{Kommutativgesetz!boolesche Algebra}
+Es gilt
+\begin{gather}
+A\land B \iff B\land A,\\
+A\lor B \iff B\lor A.
+\end{gather}
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]\\
+Zu $A\land B\vdash B\land A$. Schematisch:
+\[\infer{B\land A}{
+   \infer{A}{A\land B}
+   & \infer{B}{A\land B}
+}\]
+Programmterm:
+\[A\times B\to B\times A,\; (a,b)\mapsto (b,a).\]
+Zu $A\lor B\vdash B\lor A$. Schematisch:
+\[\infer[\infernote{1}]{B\lor A}{
+  A\lor B
+  & \infer{B\lor A}{\infer[\infernote{1}]{A}{}}
+  & \infer{B\lor A}{\infer[\infernote{1}]{B}{}}
+}\]
+Programmterm:
+\[A+B\to B+A,\; s\mapsto\match s\begin{cases}
+\inl(a)\mapsto \inr(a),\\
+\inr(b)\mapsto \inl(b).
+\end{cases}\]
+Vertauschen von $A,B$ erbringt jeweils die umgekehrte Implikation.\;\qedsymbol
+\end{Beweis}
+
 \begin{Satz}[bool-dl: Distributivgesetze]%
 \label{bool-dl}\index{Distributivgesetz!boolesche Algebra}
 Es gilt:
@@ -55,10 +106,10 @@ werden kann.
 Entweder gilt eine Aussage, oder ihre Negation gilt, kurz
 \[\vdash A\lor\neg A.\]
 \end{Axiom}
-Bemerkung: Zur Schaffung von Klarheit wird ein Beweis mit LEM
-markiert, wenn transitive Abhängigkeit zu diesem Axiom bestehen.
-Verzichtet keiner der Beweise eines Satzes auf LEM, wird der Satz
-ebenfalls mit LEM markiert.
+Bemerkung: Zur Schaffung von Klarheit sollte ein Beweis die Markierung
+LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom bestehen.
+Verzichtet keiner der Beweise eines Satzes auf LEM, sollte der Satz
+ebenfalls mit LEM markiert werden.
 
 \begin{Axiom}[Beseitigung der Doppelnegation]\label{DNE}\mbox{}\\*
 Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
@@ -230,12 +281,12 @@ Nach Def. \ref{def:bounded} (bounded) und Satz
 
 \begin{Definition}[seteq: Gleichheit von Mengen]
 \label{def:seteq}\index{Gleichheit!von Mengen}
-\[A=B \defiff \forall x(x\in A\iff x\in B).\]
+\[A=B \defiff \forall x\colon (x\in A\iff x\in B).\]
 \end{Definition}
 
 \begin{Definition}[subseteq: Teilmenge]%
 \label{def:subseteq}\index{Teilmenge}
-\[A\subseteq B \defiff \forall x(x\in A\implies x\in B).\]
+\[A\subseteq B \defiff \forall x\colon (x\in A\implies x\in B).\]
 \end{Definition}
 
 \begin{Definition}[filter: beschreibende Angabe]\label{def:filter}
@@ -253,19 +304,19 @@ Nach Def. \ref{def:bounded} (bounded) und Satz
 \end{Definition}
 
 \begin{Definition}[intersection: Schnitt]\label{def:intersection}
-\[\bigcap_{i\in I} A_i := \{x\mid \forall i{\in}I\,(x\in A_i)\}
-= \{x\mid \forall i\,(i\in I\implies x\in A_i)\}.\]
+\[\bigcap_{i\in I} A_i := \{x\mid \forall i{\in}I\colon x\in A_i\}
+= \{x\mid \forall i\colon (i\in I\implies x\in A_i)\}.\]
 \end{Definition}
 
 \begin{Definition}[union: Vereinigung]\label{def:union}
-\[\bigcup_{i\in I} A_i := \{x\mid \exists i{\in}I\,(x\in A_i)\}
-= \{x\mid \exists i\,(i\in I\land x\in A_i)\}.\]
+\[\bigcup_{i\in I} A_i := \{x\mid \exists i{\in}I\colon x\in A_i\}
+= \{x\mid \exists i\colon (i\in I\land x\in A_i)\}.\]
 \end{Definition}
 
 \begin{Definition}[cart: kartesisches Produkt]%
 \label{def:cart}\index{kartesisches Produkt}
 \[A\times B := \{(a,b)\mid a\in A\land b\in B\}
-= \{t\mid\exists a\exists b(t=(a,b)\land a\in A\land b\in B)\}.\]
+= \{t\mid\exists a\colon\exists b\colon (t=(a,b)\land a\in A\land b\in B)\}.\]
 \end{Definition}
 
 \subsection{Rechenregeln}
@@ -276,7 +327,7 @@ Es gilt $A\cap B = B\cap A$ und $A\cup B = B\cup A$.
 
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall x(x\in A\cap B \iff x\in B\cap A).\]
+\[\forall x\colon (x\in A\cap B \iff x\in B\cap A).\]
 Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
 \[x\in A\cap B \iff x\in A\land x\in B \iff x\in B\land x\in A
 \iff x\in B\cap A.\]
@@ -291,7 +342,7 @@ und $A\cup (B\cup C) = (A\cup B)\cup C$.
 
 \begin{Beweis}
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall x[x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C].\]
+\[\forall x\colon [x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C].\]
 Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
 \begin{align*}
 &x\in A\cap (B\cap C) \iff x\in A\land x\in B\cap C
@@ -333,16 +384,16 @@ Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{eq-iff-all-iff}
-Es gilt $a=b\iff \forall x(x=a\iff x=b)$.
+Es gilt $a=b\iff \forall x\colon (x=a\iff x=b)$.
 \end{Satz}
 
 \begin{Beweis}
-Die Implikation $a=b\implies\forall x(x=a\iff x=b)$.
+Die Implikation $a=b\implies\forall x\colon (x=a\iff x=b)$.
 Wenn wir $a=b$ voraussetzen, kann $b$ gegen $a$ ersetzt werden
 und es ergibt sich
-\[\forall x(x=a\iff x=a)\iff\forall x(1)\iff 1.\]
+\[(\forall x\colon (x=a\iff x=a))\iff (\forall x\colon 1)\iff 1.\]
 Die andere Implikation bringen wir zunächst in ihre Kontraposition:
-\[a\ne b\implies \exists x((x=a)\oplus (x=b)).\]
+\[a\ne b\implies \exists x\colon ((x=a)\oplus (x=b)).\]
 Auf einer leeren Grundmenge wird der Allquantifizierung
 über $a,b$ immer genügt. Besitzt die Grundmenge nur ein Element,
 dann muss $a=b$ sein, womit $a\ne b$ falsch ist und die Implikation
@@ -356,65 +407,65 @@ Es gilt $a=b\iff\{a\}=\{b\}$.
 
 \begin{Beweis}
 Es gilt:
-\[\{a\}=\{b\}\iff \{x\mid x=a\}=\{x\mid x=b\}\iff \forall x(x=a\iff x=b).\]
+\[\{a\}=\{b\}\iff \{x\mid x=a\}=\{x\mid x=b\}\iff \forall x\colon (x=a\iff x=b).\]
 Nach Satz \ref{eq-iff-all-iff} ist das aber äquivalent zu $a=b$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{eq-substitution}
 Es gilt:
-\[\forall x\forall y(x=y\land P(x)\iff P(y))\]
+\[\forall x\colon\forall y\colon (x=y\land P(x)\iff P(y))\]
 \end{Satz}
 
 \begin{Satz}\label{all-cart}
 Es gilt:
-\[\forall t{\in}A{\times}B\;(P(t)) \iff \forall a{\in}A\;\forall b{\in}B\;(P(a,b)).\]
+\[(\forall t \in A{\times}B\colon P(t)) \iff \forall a{\in}A\colon\forall b{\in}B\colon P(a,b).\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Def. \ref{def:cart} (cart) gilt:
 \begin{align*}
-&\forall t{\in}A{\times}B\;(P(t))\iff \forall t(t\in A\times B\implies P(t))\\
-&\iff \forall t(\exists a\exists b[t=(a,b)\land a\in A\land b\in B]\implies P(t))
+&(\forall t \in A{\times}B\colon P(t))\iff (\forall t\colon t\in A\times B\implies P(t))\\
+&\iff (\forall t\colon (\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\implies P(t)).
 \end{align*}
 Unter doppelter Anwendung von Satz \ref{exists-implies-const} gilt weiter:
-\[\iff \forall t\forall a\forall b[t=(a,b)\land a\in A\land b\in B\implies P(t)]\]
+\[\iff \forall t\colon\forall a\colon\forall b\colon [t=(a,b)\land a\in A\land b\in B\implies P(t)].\]
 Substituiert man $t:=(a,b)$, dann ergibt sich:
-\[\implies \forall a\forall b[a\in A\land B\in B\implies P(a,b)]
-\iff \forall a{\in}a\;\forall b{\in}B\;(P(a,b)),\]
+\[\implies (\forall a\colon\forall b\colon a\in A\land B\in B\implies P(a,b))
+\iff \forall a{\in}a\colon\forall b{\in}B\colon P(a,b),\]
 wobei $P(a,b)$ eine Kurzschreibweise für $P((a,b))$ ist.
 Von der Gegenrichtung bilden wir die Kontraposition:
-\[\exists t\exists a\exists b[t=(a,b)\land a\in A\land b\in B\land \overline{P(t)}]
-\implies \exists a\exists b(a\in a\land b\in B\land \overline{P(a,b)}).\]
+\[(\exists t\colon\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B\land \overline{P(t)})
+\implies \exists a\colon\exists b\colon a\in a\land b\in B\land \overline{P(a,b)}.\]
 Dem $\exists t$ wird aber immer durch $t:=(a,b)$ genügt, so dass sich die
 äquivalente Formel
-\[\exists a\exists b[a\in A\land b\in B\land \overline{P(a,b)}]
-\implies \exists a\exists b(a\in A\land b\in B\land \overline{P(a,b)}).\]
+\[(\exists a\colon\exists b\colon a\in A\land b\in B\land \overline{P(a,b)})
+\implies \exists a\colon \exists b\colon a\in A\land b\in B\land \overline{P(a,b)}.\]
 ergibt.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{exists-cart}
 Es gilt:
-\[\exists t{\in}A{\times}B\;(P(t))
-\iff \exists a{\in}A\;\exists b{\in}B\;(P(a,b)).\]
+\[(\exists t\in A{\times}B\colon P(t))
+\iff (\exists a{\in}A\colon \exists b{\in}B\colon P(a,b)).\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Def. \ref{def:cart} (cart) gilt:
 \begin{gather*}
-\exists t{\in}A{\times}B\;(P(t))
-\iff \exists t(t\in A\times B\land P(t))\\
-\iff \exists t(\exists a\exists b[t=(a,b)\land a\in A\land b\in B]\land P(t))\\
-\iff \exists t\exists a\exists b[a\in A\land b\in B\land t=(a,b)\land P(t)]\\
-\iff \exists a{\in}A\;\exists b{\in}B\;\exists t[t=(a,b)\land P(t)].
+(\exists t{\in}A{\times}B\colon P(t))
+\iff (\exists t\colon P(t)\land t\in A\times B)\\
+\iff (\exists t\colon P(t)\land \exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\\
+\iff (\exists t\colon \exists a\colon \exists b\colon P(t)\land a\in A\land b\in B\land t=(a,b))\\
+\iff \exists a{\in}A\colon \exists b{\in}B\colon \exists t\colon P(t)\land t=(a,b).
 \end{gather*}
 Nun gilt aber ganz offensichtlich
-\[\exists t[t=(a,b)\land P(t)]\iff P(a,b).\]
-Nimmt man $P(a,b)$ an, dann lässt sich $\exists t[t=(a,b)\land P(t)]$
+\[(\exists t\colon P(t)\land t=(a,b))\iff P(a,b).\]
+Nimmt man $P(a,b)$ an, dann lässt sich $\exists t\colon P(t)\land t=(a,b)$
 durch Wahl von $t:=(a,b)$ bestätigen. Nimmt man umgekehrt
-$\exists t[t=(a,b)\land P(t)]$ an, lässt sich $P(a,b)$ daraus
+$\exists t\colon P(t)\land t=(a,b)$ an, lässt sich $P(a,b)$ daraus
 unter Anwendung von Satz \ref{eq-substitution} ableiten.
-Da $\exists t[t=(a,b)\land P(t)]$ gegen $P(a,b)$ ersetzt werden
-darf, folgt die Behauptung.\,\qedsymbol
+Da $\exists t\colon P(t)\land t=(a,b)$ gegen $P(a,b)$ ersetzt
+werden darf, folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
 \newpage
@@ -428,9 +479,9 @@ Es gilt:
 Nach Def. \ref{def:union} (union) und Satz \ref{exists-cart} gilt:
 \begin{gather*}
 x\in \bigcup_{t\in I\times J} A_t
-\iff \exists t{\in}I{\times J}\;(x\in A_t)
-\iff \exists i{\in}I\;\exists j{\in}J\;(x\in A_{ij})\\
-\iff \exists i{\in}I\; (x\in \bigcup_{j\in J} A_{ij})
+\iff (\exists t\in I{\times J}\colon x\in A_t)
+\iff (\exists i{\in}I\colon\exists j{\in}J\colon x\in A_{ij})\\
+\iff (\exists i{\in}I\colon x\in \bigcup_{j\in J} A_{ij})
 \iff x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}.
 \end{gather*}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
@@ -446,10 +497,10 @@ Es gilt:
 Nach Def. \ref{def:union} (union) und Satz \ref{bounded-exists-cl} gilt:
 \begin{gather*}
 x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
-\iff \exists i{\in}I\;(x\in\bigcup_{j\in J} A_{ij})
-\iff \exists i{\in}I\;\exists j{\in}J\;(x\in A_{ij})\\
-\iff \exists j{\in}J\;\exists i{\in}I\;(x\in A_{ij})
-\iff \exists j{\in}J\;(x\in \bigcup_{i\in I}A_{ij})
+\iff (\exists i{\in}I\colon x\in\bigcup_{j\in J} A_{ij})
+\iff (\exists i{\in}I\colon\exists j{\in}J\colon x\in A_{ij})\\
+\iff (\exists j{\in}J\colon\exists i{\in}I\colon x\in A_{ij})
+\iff (\exists j{\in}J\colon x\in \bigcup_{i\in I}A_{ij})
 \iff x\in\bigcup_{j\in J}\bigcup_{i\in I} A_{ij}.
 \end{gather*}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
@@ -902,12 +953,13 @@ Laut Satz \ref{feq} (feq) ist daher $g=h$.\;\qedsymbol
 
 \newpage
 \subsection{Kardinalzahlen}
-\begin{Satz}[acc: abzählbares Auswahlaxiom]\label{acc}%
+
+\begin{Axiom}[acc: abzählbares Auswahlaxiom]\label{acc}%
 \index{abzählbares Auswahlaxiom}\index{Auswahlaxiom!abzählbares}
 Sei $(A_n)_{n\in\N}$ eine Folge nichtleerer Mengen.
 Dann existiert eine Funktion $f\colon\N\to\bigcup_{n\in\N} A_n$
 mit $f(n)\in A_n$.
-\end{Satz}
+\end{Axiom}
 
 \begin{Definition}[equipotent: Gleichmächtigkeit]%
 \label{def:equipotent}\index{gleichmaechtig@gleichmächtig}
@@ -1126,3 +1178,28 @@ Wendet man beide Seiten auf $f_1$ an, ergibt sich
 $f=f_2^{-1}\circ f'\circ f_1$.\;\qedsymbol
 \end{Beweis}
 
+\begin{Definition}[Weniger mächtig]\mbox{}\\*
+Eine Menge $A$ heißt weniger mächtig als eine Menge $B$, kurz
+$|A|<|B|$, wenn es eine Injektion $A\to B$ gibt, aber keine
+Bijektion $A\to B$.
+\end{Definition}
+
+\begin{Satz}[Satz von Cantor]\mbox{}\\*
+Eine Menge ist stets weniger mächtig als ihre Potenzmenge. Kurz $|A|<|2^A|$. 
+\end{Satz}
+
+\begin{Beweis}
+Eine Injektion $A\to 2^A$ können wir mit $x\mapsto\{x\}$ trivial angeben.
+Nun wird die Annahme, es gäbe eine Surjektion $f\colon A\to 2^A$
+zum Widerspruch geführt, womit es erst recht keine Bijektion gibt.
+Dazu definiert man die Menge
+\[D := \{x\in A\mid x\notin f(x)\}.\]
+Weil $D\subseteq A$ ist, hat man $D\in 2^A$. Weil $f$ surjektiv sein
+soll, muss es ein $x\in A$ geben, so dass $f(x) = D$. Gemäß Def.
+\ref{def:seteq} (seteq) und Definition von $D$ muss also
+\[\exists x\in A\colon \forall u\colon (u\in f(x) \iff u\in A\land u\notin f(u))\]
+gelten. Die allquantifizierte Aussage ist allerdings für $u:=x$ nicht erfüllt,
+denn unter Berücksichtigung $x\in A$ gelangt man zur widersprüchlichen
+Aussage
+\[x\in f(x) \iff x\notin f(x).\,\qedsymbol\]
+\end{Beweis}
