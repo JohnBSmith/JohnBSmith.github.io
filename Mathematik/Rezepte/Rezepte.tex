@@ -1,0 +1,240 @@
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,dvipdfmx]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{microtype}
+
+% Bugfix. Siehe https://komascript.de/node/2295
+\unsettoc{toc}{onecolumn}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{mdframed}
+
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+\usepackage[scaled=0.8]{DejaVuSans}
+
+\usepackage[automark]{scrlayer-scrpage}
+\ohead{\pagemark}
+\ihead{\headmark}
+\chead{}
+\cfoot{}
+\ofoot{}
+
+\usepackage{color}
+\definecolor{c1}{RGB}{00,00,00}
+\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+
+\usepackage{geometry}
+\geometry{a4paper,left=24mm,right=14mm,top=23mm,bottom=27mm}
+\setlength{\columnsep}{5mm}
+% \addtokomafont{disposition}{\rmfamily}
+
+\newtheoremstyle{rmbox}%
+  {0pt}% space above
+  {0pt}% space below
+  {}% bodyfont
+  {}% indent
+  {\sffamily\bfseries}% head font
+  {\;}% punctuation between head and body
+  {0pt}% space after theorem head
+  {\thmname{#1}\thmnote{\;(#3)}.}
+
+\theoremstyle{rmbox}
+\newtheorem{Rezept}{Rezept}[section]
+
+\definecolor{boxmargin}{rgb}{0.4,0.2,0.1}
+\definecolor{boxbg}{rgb}{0.95,0.9,0.7}
+
+\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
+  linecolor=boxmargin, backgroundcolor=boxbg,
+  linewidth=3.5pt, innerleftmargin=4pt,%
+  innertopmargin=3pt, innerbottommargin=4pt,%
+  innerrightmargin=6pt%
+]{Rezept}
+
+\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\ui}{\mathrm{i}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+
+\begin{document}
+
+\section*{\LARGE Rezepte zur Mathematik}
+
+\tableofcontents
+
+\section{Analysis}
+
+\subsection{Ableitungen verifizieren}
+
+Die Ableitung einer reellen Funktion $f$ ist definiert als%
+\[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
+Möchte man erfahren, ob sie unter Anwendung
+der Ableitungsregeln richtig ermittelt wurde, kann man die Probe
+machen, indem der Differenzenquotient%
+\[D_h f(x) = \frac{f(x+h)-f(x)}{h}\]
+an einer konkreten Stelle $x$ für ein kleines $h$ numerisch
+berechnet und mit $f'(x)$ verglichen wird.
+
+Da dies recht umständlich ist, ist es sinnvoll, diese Aufgabe einem
+Funktionenplotter zu überlassen. Numerisch günstiger ist es, den
+Differenzenquotient nicht naiv gemäß der Definition zu berechnen,
+sondern als%
+\[D_h f(x) = \frac{f(x+h)-f(x-h)}{2h}.\]
+Mit dem Plotter kann man schließlich
+\[10^n (D_h f(x) - f'(x)) \approx 0\]
+für $n\in\{0,1,2,\ldots\}$ prüfen.
+
+\begin{Rezept}
+Es ist zuträglich, nach dem Bestimmen der Ableitung im Anschluss
+mit einem Plotter oder einem CAS die Probe durchzuführen.
+\end{Rezept}
+
+\subsection{Fixpunktiteration}
+
+Man kann sich die Frage stellen, welchen Wert der endlose
+Kettenbruch
+\[a+\frac{b}{a+\frac{b}{a+\frac{b}{a+\ldots}}}\]
+für feste Zahlen $a,b$ besitzt. Zunächst muss geklärt sein, was
+damit gemeint sein soll. Man beginnt bei einem Startwert $x_0$
+und betrachtet die Rekurrenz
+\[x_{n+1} = a+\frac{b}{x_n}.\]
+Wir abstrahieren durch Einführung der Funktion $\varphi$, so dass
+\[x_{n+1} = \varphi(x_n)\]
+gilt. Wie man mühelos bestätigen kann, handelt es sich bei $\varphi$
+für $a>0$ und $b>0$ um eine stetige Selbstabbildung auf $\R_{>0}$.
+Nehmen wir nun an, die Folge $(x_n)$ konvergiert gegen eine Zahl $x$.
+Dann muss gelten
+\begin{align*}
+x &= \lim_{n\to\infty} x_{n} = \lim_{n\to\infty} x_{n+1}
+= \lim_{n\to\infty}\varphi(x_n)\\
+&= \varphi(\lim_{n\to\infty} x_n) = \varphi(x),
+\end{align*}
+wobei $\varphi$ aufgrund der Stetigkeit aus der Grenzwertbildung
+herausgezogen werden durfte. Die Gleichung
+\[x = \varphi(x)\]
+bezeichnet man als \emph{Fixpunktgleichung}. Ihre Lösungen
+bezeichnet man als \emph{Fixpunkte} von $\varphi$. Speziell für den
+Kettenbruch ergibt sich die quadratische Gleichung
+\[x^2 - ax - b = 0.\]
+So erhält man $1+\sqrt{2}$ für $a=2$ und $b=1$.
+Für $a=1$ und $b=1$ erhält man den goldenen Schnitt.
+
+\begin{Rezept}
+Wann immer eine Rekurrenz der Form $x_{n+1} = \varphi(x_n)$
+auftritt, betrachte man die Fixpunktgleichung $x = \varphi(x)$. Ob
+$x_n$ gegen den Fixpunkt $x$ konvergiert, hängt allerdings von den
+Eigenschaften von $\varphi$ ab.
+\end{Rezept}
+
+
+\subsection{Konformität als Holomorphie}
+
+Jeder komplexen Zahl ist gemäß
+\[\Phi(a+b\ui) = \begin{pmatrix}a & -b\\ b & a\end{pmatrix}\]
+oder äquivalent
+\[\Phi(r\ee^{\ui\varphi}) = r\begin{pmatrix}
+\cos\varphi & -\sin\varphi\\
+\sin\varphi & \cos\varphi
+\end{pmatrix}\]
+genau eine Matrix zugeordnet. Die Abbildung $\Phi$ ist ein
+Isomorphismus vom Körper der komplexen Zahlen in einen Körper,
+der eine Unterstruktur des Matrizenrings darstellt.
+
+Diese Beziehung schafft eine Verbindung zwischen dem
+Rechnen mit komplexen Zahlen und Konzepten der linearen Algebra.
+Sie sagt aus, dass eine komplexe Zahl als eine als \emph{Drehskalierung}
+bezeichnete lineare Abbildung betrachtet werden kann. Die Multiplikation
+von komplexen Zahlen entspricht der Verkettung der ihnen entsprechenden
+Abbildungen.
+
+Man nennt $f\colon\R^2\to\R^2$ eine \emph{konforme} Abbildung, wenn sie
+differenzierbar ist und ihre Ableitung $Df$ an jeder Stelle
+eine nichtverschwindende Drehskalierung ist. Nun ist die
+Ableitung von $f(x,y)=(u(x,y),v(x,y))$ ja genau dann eine
+Drehskalierung, wenn
+\[Df = \begin{pmatrix}
+\partial_x u & \partial_y u\\
+\partial_x v & \partial_y v
+\end{pmatrix} = \begin{pmatrix}
+\partial_x u & -\partial_x v\\
+\partial_x v & \partial_x u
+\end{pmatrix}.\]
+Diese Gleichung zwischen Matrizen beschreibt aber nichts anderes als
+die Cauchy"=Rieman"=Gleichungen. Wir setzen daher $z:=x+y\ui$ und
+$f(z):=u+v\ui$. Das heißt, $f$ ist genau dann eine konforme
+Abbidlung, wenn $f$ holomorph ist und ihre Ableitung keine
+Nullstellen besitzt.
+
+\begin{Rezept}
+Zur Konstruktion konformer Abbildungen der Ebene
+nutze man holomorphe Funktionen.
+\end{Rezept}
+
+\section{Wahrscheinlichkeitsrechnung}
+
+\subsection{Zufallsgrößen}
+
+Eine Zufallsgröße, was ist das? Eine Zufallsgröße kann man sich
+zunächst einfach als eine Abbildung $X\colon\Omega\to\Omega'$ zwischen
+Ergebnismengen vorstellen. Sei bspw.
+\[\Omega := \{(w_1,w_2)\mid w_1,w_2\in\{1,\ldots,6\}\}\]
+die Menge der Ergebnisse des Wurfs zweier gewöhnlicher
+Würfel. Das heißt, wurde mit dem ersten Würfel eine Drei
+gewürfelt, und mit dem zweiten eine Fünf, ist das Ergebnis $(3, 5)$.
+Jedes elementare Ereignis $\{(w_1,w_2)\}$ besitzt offenbar
+die gleiche Wahrscheinlichkeit%
+\[P(\{(w_1,w_2)\}) = \frac{1}{|\Omega|} = \frac{1}{36}.\]
+Für ein beliebiges Ereignis $A$ gilt daher%
+\[P(A) = \frac{|A|}{|\Omega|}.\]
+Ein gutes Beispiel für eine Zufallsgröße ist die Summe der
+Augenzahlen, also%
+\[X((w_1,w_2)) := w_1 + w_2.\]
+Des Pudels Kern liegt nun in der Beantwortung der Frage, wie
+wahrscheinlich ein aus Funktionswerten von $X$ bestehendes
+Ereignis ist.
+
+Ein elementares Ereignis $\{x\}$ tritt doch genau dann ein,
+wenn $x$ der Funktionswert $x=X(\omega)$ zum Ergebnis
+$\omega$ ist. Wurde bspw. das Ergebnis $\omega=(3, 5)$
+gewürfelt, ist das elementare Ereignis%
+\[\{X(\omega)\} = \{3 + 5\} = \{8\}\]
+eingetreten.
+Ein elementares Ereignis $\{x\}$ tritt also genau dann ein, wenn das
+Ergebnis $\omega$ im Urbild $X^{-1}(x)$ liegt, für das sich die
+Schreibweise%
+\[X^{-1}(x)=\{X=x\}\]
+eingebürgert hat. Demnach stimmt die Wahrscheinlichkeit von $\{x\}$
+mit der des Urbildereignisses $\{X=x\}$ überein. Das heißt, es gilt%
+\[P_X(\{x\}) = P(X^{-1}(x)) = P(\{X=x\}) = P(X=x).\]
+Beispielsweise ist
+\[\{X=8\} = \{(2,6), (6,2), (3,5), (5,3), (4,4)\}.\]
+Damit ergibt sich
+\[P(X=8) = \frac{|\{X=8\}|}{|\Omega|} = \frac{5}{36}\]
+als Wahrscheinlichkeit der Augensumme acht.
+
+\begin{Rezept}
+Eine Zufallsgröße $X\colon\Omega\to\Omega'$ schafft eine kausale
+Verbindung, dergestalt dass ein Ergbnis $\omega\in\Omega$ zum
+Ergebnis $X(\omega)$ wird. Ein Ereignis $A'\subseteq\Omega'$
+tritt daher genau dann ein, wenn das Urbild $X^{-1}(A')$ eintritt.
+Dieser Umstand induziert die Definition
+\[P_X(A') := P(X^{-1}(A')) = P(X\in A').\]
+\end{Rezept}
+
+\vfill\noindent
+Dieses Heft steht unter der Lizenz\\
+Creative Commons CC0 1.0.
+
+\end{document}
+

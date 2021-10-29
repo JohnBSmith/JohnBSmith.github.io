@@ -5,14 +5,17 @@
 \usepackage{microtype}
 \usepackage{amsthm}
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Bugfix. Siehe https://komascript.de/node/2295
+\unsettoc{toc}{onecolumn}
+
 \usepackage{libertine}
 \usepackage[libertine]{newtxmath} 
 \usepackage[scaled=0.80]{DejaVuSans}
 \usepackage[scaled=0.78]{DejaVuSansMono}
 % \renewcommand\ttdefault{lmvtt}
-
-\usepackage{amsmath}
-\usepackage{amssymb}
 
 \usepackage{mdframed}
 \usepackage{color}
@@ -776,6 +779,27 @@ Das führt nun zu:
 \frac{1}{h^n} \sum_{k=0}^\infty \binom{n}{k} (-1)^k f(x+(n-k)h).
 \end{equation}
 \end{definition}
+
+\subsection{Eine Reihe von Kehrwerten}
+
+Im Folgenden wird eine Herleitung für die Formel
+\begin{equation}
+\sum_{n=1}^\infty \frac{1}{4n^2-2n} = \ln 2
+\end{equation}
+beschrieben. Man spürt zunächst das Muster
+\[\sum_{n=1}^\infty \frac{1}{4n^2-2n} =
+\sum_{n=1}^\infty \frac{1}{2n(2n-1)} = \sum_{n=1}^\infty \frac{1}{(2n)^{\underline 2}}\]
+auf. Man gelangt zu
+\[\frac{1}{(2n)^{\underline 2}} = \frac{(2n-2)!}{(2n)!}
+= \frac{\Gamma(2n-1)}{\Gamma(2n+1)} = \mathrm B(2,2n-1),\]
+wobei $\mathrm B$ die Betafunktion ist. Vermittels ihrer Definition
+als Parameterintegral findet man
+\begin{gather*}
+\sum_{n=1}^\infty \frac{1}{(2n)^{\underline 2}}
+= \sum_{n=1}^\infty\int_0^1 (1-t)(t^2)^{n-1}\,\mathrm dt\\
+= \int_0^1 (1-t)\sum_{k=0}^\infty (t^2)^k\,\mathrm dt
+= \int_0^1 \frac{1-t}{1-t^2}\,\mathrm dt = \ln 2.
+\end{gather*}
 
 % \newpage
 \section{Lineare Algebra}

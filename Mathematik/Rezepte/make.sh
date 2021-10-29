@@ -1,5 +1,5 @@
 
-name=Tipps
+name=Rezepte
 path=/tmp/$name-71d4
 
 mkdir -p $path
