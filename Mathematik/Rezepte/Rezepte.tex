@@ -57,7 +57,7 @@
 ]{Rezept}
 
 \newcommand{\strong}[1]{\textbf{#1}}
-\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
 \newcommand{\ee}{\mathrm{e}}
 \newcommand{\ui}{\mathrm{i}}
 \newcommand{\id}{\operatorname{id}}
@@ -66,6 +66,7 @@
 \newcommand{\Q}{\mathbb Q}
 \newcommand{\R}{\mathbb R}
 \newcommand{\C}{\mathbb C}
+\newcommand{\sgn}{\operatorname{sgn}}
 
 \begin{document}
 
@@ -73,10 +74,80 @@
 
 \tableofcontents
 
+\section{Lineare Algebra}
+
+\subsection{Basiswechsel}
+
+\begin{Rezept}
+Umständliche Rechnungen zum Basiswechsel kann man mit der
+Gleichung $B\bv v_B = A\bv v_A$ zu einer kurzen Matrizenrechnung
+reduzieren.
+\end{Rezept}
+
+\noindent
+Sei $K$ ein Körper und $V$ ein Vektorraum über $K$.
+Eine Basis $B=(\bv b_1,\ldots, \bv b_n)$ von $V$ induziert die
+bijektive lineare Abbildung
+\[\Phi_B\colon K^n\to V,\quad \Phi_B(\bv e_k) := \bv b_k,\]
+die ihrerseits die Basis eindeutig charakterisiert. Mit
+$E=(\bv e_1,\ldots,\bv e_n)$ ist hierbei die Standardbasis gemeint.
+Man bezeichnet $\Phi_B$ als das durch $B$ induzierte Koordinatensystem.
+Es ordnet jedem Koordinatenvektor $\bv v_B$ eins"=zu"=eins einen Vektor
+$\bv v = \Phi_B(\bv v_B)$ zu.
+
+Für $V=K^n$ kann man $\Phi_B=B$ setzen, indem $B$ als die Matrix
+betrachtet wird, deren Spalten die Basisvektoren $\bv b_k$ sind,
+und zwar genau auf die Weise, wie $B$ als geordnete Basis angegeben
+wurde.
+
+Seien nun zwei Basen $A,B$ des $K^n$ gegeben. Aufgabe ist es, den
+Koordinatenvektor $\bv v_A$ bezüglich Basis $B$ darzustellen.
+Man erhält die Lösung gemäß
+\[\bv v = \Phi_B(\bv v_B) = \Phi_A(\bv v_A) \iff
+\bv v_B = \Phi_B^{-1}(\Phi_A(\bv v_A)),\]
+bzw. als Matrizenrechnung
+\[\bv v = B\bv v_B = A\bv v_A\iff
+\bv v_B = B^{-1}A\bv v_A.\]
+Die Verkettung $T_B^A := B^{-1}A = \Phi_B^{-1}\circ\Phi_A$
+ist immer eine lineare Abbildung zwischen
+Koordinatenräumen, und somit unter allen Umständen als Matrix
+darstellbar. Man bezeichnet sie als \emph{Transformationsmatrix}.
+
+Mit diesen Überlegungen ist eigentlich auch bereits fast alles
+Wichtige gesagt, um Darstellungsmatrizen und ihre Transformation
+bei Basiswechsel verstehen zu können.
+
+\newpage
 \section{Analysis}
+
+\subsection{Polarkoordinaten}
+
+\begin{Rezept}
+Bei der Umrechnung in Polarkoordinaten wird das Auftreten
+umständlicher Fallunterscheidungen verhindert,
+indem man $x=r\cos\varphi$ nach $\varphi$ umstellt
+und das Vorzeichen $s(y)$ hinzufügt.
+\end{Rezept}
+
+\noindent
+Die Umrechnung von Polarkoordinaten in kartesische Koordinaten
+ist mit
+\[\begin{pmatrix}x\\ y\end{pmatrix}
+= \begin{pmatrix}r\cos\varphi\\ r\sin\varphi\end{pmatrix}\]
+mühelos durchführbar. Zur händischen Umrechnung von kartesischen
+Koordinaten in Polarkoordinaten nutzt man am besten die Formel
+\[\varphi = s(y)\arccos\Big(\frac{x}{r}\Big),\quad r=\sqrt{x^2+y^2},\]
+wobei $s(0)=1$ ist und sonst $s(y)=\sgn(y)$ gilt. Auf diese
+Weise entgeht man komplizierten Fallunterscheidungen.
 
 \subsection{Ableitungen verifizieren}
 
+\begin{Rezept}
+Es ist zuträglich, nach dem Bestimmen der Ableitung im Anschluss
+mit einem Plotter oder einem CAS die Probe durchzuführen.
+\end{Rezept}
+
+\noindent
 Die Ableitung einer reellen Funktion $f$ ist definiert als%
 \[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
 Möchte man erfahren, ob sie unter Anwendung
@@ -95,13 +166,17 @@ Mit dem Plotter kann man schließlich
 \[10^n (D_h f(x) - f'(x)) \approx 0\]
 für $n\in\{0,1,2,\ldots\}$ prüfen.
 
-\begin{Rezept}
-Es ist zuträglich, nach dem Bestimmen der Ableitung im Anschluss
-mit einem Plotter oder einem CAS die Probe durchzuführen.
-\end{Rezept}
-
+\newpage
 \subsection{Fixpunktiteration}
 
+\begin{Rezept}
+Wann immer eine Rekurrenz der Form $x_{n+1} = \varphi(x_n)$
+auftritt, betrachte man die Fixpunktgleichung $x = \varphi(x)$. Ob
+$x_n$ gegen den Fixpunkt $x$ konvergiert, hängt allerdings von den
+Eigenschaften von $\varphi$ ab.
+\end{Rezept}
+
+\noindent
 Man kann sich die Frage stellen, welchen Wert der endlose
 Kettenbruch
 \[a+\frac{b}{a+\frac{b}{a+\frac{b}{a+\ldots}}}\]
@@ -130,16 +205,15 @@ Kettenbruch ergibt sich die quadratische Gleichung
 So erhält man $1+\sqrt{2}$ für $a=2$ und $b=1$.
 Für $a=1$ und $b=1$ erhält man den goldenen Schnitt.
 
-\begin{Rezept}
-Wann immer eine Rekurrenz der Form $x_{n+1} = \varphi(x_n)$
-auftritt, betrachte man die Fixpunktgleichung $x = \varphi(x)$. Ob
-$x_n$ gegen den Fixpunkt $x$ konvergiert, hängt allerdings von den
-Eigenschaften von $\varphi$ ab.
-\end{Rezept}
-
 
 \subsection{Konformität als Holomorphie}
 
+\begin{Rezept}
+Zur Konstruktion konformer Abbildungen der Ebene
+nutze man holomorphe Funktionen.
+\end{Rezept}
+
+\noindent
 Jeder komplexen Zahl ist gemäß
 \[\Phi(a+b\ui) = \begin{pmatrix}a & -b\\ b & a\end{pmatrix}\]
 oder äquivalent
@@ -176,15 +250,21 @@ $f(z):=u+v\ui$. Das heißt, $f$ ist genau dann eine konforme
 Abbidlung, wenn $f$ holomorph ist und ihre Ableitung keine
 Nullstellen besitzt.
 
-\begin{Rezept}
-Zur Konstruktion konformer Abbildungen der Ebene
-nutze man holomorphe Funktionen.
-\end{Rezept}
 
 \section{Wahrscheinlichkeitsrechnung}
 
 \subsection{Zufallsgrößen}
 
+\begin{Rezept}
+Eine Zufallsgröße $X\colon\Omega\to\Omega'$ schafft eine kausale
+Verbindung, dergestalt dass ein Ergbnis $\omega\in\Omega$ zum
+Ergebnis $X(\omega)$ wird. Ein Ereignis $A'\subseteq\Omega'$
+tritt daher genau dann ein, wenn das Urbild $X^{-1}(A')$ eintritt.
+Dieser Umstand induziert die Definition
+\[P_X(A') := P(X^{-1}(A')) = P(X\in A').\]
+\end{Rezept}
+
+\noindent
 Eine Zufallsgröße, was ist das? Eine Zufallsgröße kann man sich
 zunächst einfach als eine Abbildung $X\colon\Omega\to\Omega'$ zwischen
 Ergebnismengen vorstellen. Sei bspw.
@@ -223,14 +303,6 @@ Damit ergibt sich
 \[P(X=8) = \frac{|\{X=8\}|}{|\Omega|} = \frac{5}{36}\]
 als Wahrscheinlichkeit der Augensumme acht.
 
-\begin{Rezept}
-Eine Zufallsgröße $X\colon\Omega\to\Omega'$ schafft eine kausale
-Verbindung, dergestalt dass ein Ergbnis $\omega\in\Omega$ zum
-Ergebnis $X(\omega)$ wird. Ein Ereignis $A'\subseteq\Omega'$
-tritt daher genau dann ein, wenn das Urbild $X^{-1}(A')$ eintritt.
-Dieser Umstand induziert die Definition
-\[P_X(A') := P(X^{-1}(A')) = P(X\in A').\]
-\end{Rezept}
 
 \vfill\noindent
 Dieses Heft steht unter der Lizenz\\
