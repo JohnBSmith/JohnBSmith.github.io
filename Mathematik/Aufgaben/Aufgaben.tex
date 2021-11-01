@@ -27,6 +27,7 @@
 \numberwithin{equation}{section}
 
 \newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
 \newcommand{\C}{\mathbb C}
@@ -46,7 +47,7 @@
   {\bfseries}% head font
   {\;}% punctuation between head and body
   {0pt}% space after theorem head
-  {\thmname{#1}\;\thmnumber{#2}.\thmnote{\;(#3).}}
+  {\thmname{#1}\;\thmnumber{#2}\thmnote{\;(#3)}.}
 
 \theoremstyle{Aufgabe}
 \newtheorem{Aufgabe}{\sffamily Aufgabe}[section]
@@ -586,8 +587,22 @@ Man erhält%
 Schließlich ergibt sich
 \begin{equation}
 V = \int_a^b \pi\cdot r(z)^2\,\mathrm dz
-= \pi\int_a^b r(z)^2\,\mathrm dz.\;\Box
+= \pi\int_a^b r(z)^2\,\mathrm dz.\;\qedsymbol
 \end{equation}
+
+\begin{Aufgabe}
+Sei $a_n:=\int_0^1 x^n \sin(\pi x)\,\mathrm dx$. Man zeige
+$0\le a_n\le \frac{1}{n+1}$ für alle $n\in\N_0$.
+\end{Aufgabe}
+
+\noindent
+\strong{Lösung.} Weil $x^n$ und $\sin(\pi x)$ auf $x\in [0,1]$
+nichtnegativ sind, ist das Integral ebenfalls nichtnegativ. Man
+betrachte nun die Beschränkung $\sin(\pi x)\le 1$. Man multipliziert
+beide Seiten der Ungleichung mit $x^n$ und erhält
+$x^n\sin(\pi x)\le x^n$. Demzufolge gilt
+\[\int_0^1 x^n\sin(\pi x)\,\mathrm dx \le \int_0^1 x^n\,\mathrm dx
+= \bigg[\frac{x^{n+1}}{n+1}\bigg]_0^1 = \frac{1}{n+1}.\,\qedsymbol\]
 
 \subsection{Konvergenz}
 \begin{Aufgabe}
@@ -1163,6 +1178,25 @@ $\langle N\times L,N\rangle=0$. Schließlich hat man noch
 |N\times L| = |N|\cdot|L|\cdot\sin \varphi,\quad \varphi=\angle(N,L)=90^\circ\implies |N\times L|=1.
 \end{equation}
 Somit ist die Gleichung erfüllt.\;\qedsymbol
+
+\newpage
+\section{Algebra}
+\subsection{Körper}
+
+\begin{Aufgabe}
+Man zeige, dass die Gleichung $a^2=b^2$
+äquivalent zu $a=b\lor a=-b$ ist, wenn $a,b$ einem Körper
+entstammen.
+\end{Aufgabe}
+
+\noindent\strong{Lösung.}
+In jedem Körper gelten aufgrund der Kommutativität die binomischen
+Formeln, darin einbegriffen die dritte binomische Formel. Daher gilt
+\begin{align*}
+a^2 = b^2&\iff a^2 - b^2 = 0\iff (a+b)(a-b)=0\\
+&\iff a-b=0\lor a+b=0\iff a=b\lor a=-b
+\end{align*}
+gemäß der Nullteilerfreiheit.\,\qedsymbol
 
 \newpage
 \section{Kombinatorik}
