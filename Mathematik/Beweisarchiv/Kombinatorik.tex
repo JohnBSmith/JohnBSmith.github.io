@@ -1,0 +1,61 @@
+
+\chapter{Kombinatorik}
+
+\section{Endliche Mengen}
+
+\subsection{Indiktatorfunktion}
+
+\begin{Definition}[Iverson-Klammer]\mbox{}\\
+Für eine Aussage $A$ der klassischen Aussagenlogik definiert man
+\[[A] := \begin{cases}
+1 &\text{wenn}\;A,\\
+0 &\text{sonst}.
+\end{cases}\]
+\end{Definition}
+
+\begin{Korollar}\label{iverson-basic-rules}
+Es gilt
+\begin{gather*}
+[A\land B] = [A][B],\\
+[A\lor B] = [A]+[B]-[A][B],\\
+[\neg A] = 1-[A],\\
+[A\to B] = 1-[A](1-[B]).
+\end{gather*}
+\end{Korollar}
+\begin{Beweis} Trivial mittels Wertetabelle.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{indicator-set-op}
+Für die Indikatorfunktion $1_M(x):=[x\in M]$ gilt
+\begin{gather*}
+1_{A\cap B} = 1_A 1_B,\\
+1_{A\cup B} = 1_A + 1_B - 1_{A\cap B}.
+\end{gather*}
+\end{Korollar}
+\begin{Beweis}
+Gemäß Korollar \ref{iverson-basic-rules} darf gelten die
+Rechnungen
+\begin{align*}
+1_{A\cap B}(x) = [x\in A\cap B]
+= [x\in A\land x\in B] = [x\in A][x\in B] = 1_A(x)1_B(x)
+\end{align*}
+und
+\begin{align*}
+1_{A\cup B}(x) &= [x\in A\cup B] = [x\in A\lor x\in B]
+= [x\in A] + [x\in B] - [x\in A][x\in B]\\
+&= 1_A(x) + 1_B(x) - 1_{A\cap B}(x).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}
+Für endliche Mengen $A,B$ gilt $|A\cup B| = |A|+|B|-|A\cap B|$.
+\end{Satz}
+\begin{Beweis}
+Gemäß Korollar \ref{indicator-set-op} darf man rechnen
+\begin{align*}
+|A\cup B| &= \sum_{x\in G} 1_{A\cup B}(x)
+= \sum_{x\in G} (1_A(x) + 1_B(x) - 1_{A\cap B}(x))\\
+&= \sum_{x\in G} 1_A(x) + \sum_{x\in G} 1_B(x) - \sum_{x\in G} 1_{A\cap B}(x)
+= |A| + |B| - |A\cap B|.\,\qedsymbol
+\end{align*}
+\end{Beweis}

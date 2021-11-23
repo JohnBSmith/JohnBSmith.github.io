@@ -39,8 +39,8 @@ unterschiedlichen inversen Elemente zu $g$ geben.
 \begin{Beweis}
 Seien $a,b$ zwei inverse Elemente zu $g$. Nach Axiom (G3), Axiom (G2)
 und Axiom (G4) gilt
-\[a \stackrel{(G3)}= ae \stackrel{(G4)} = a(gb) \stackrel{(G2)}
-= (ag)b \stackrel{(G4)}= eb \stackrel{(G3)}= b.\]
+\[a \stackrelrm{(G3)}= ae \stackrelrm{(G4)} = a(gb) \stackrelrm{(G2)}
+= (ag)b \stackrelrm{(G4)}= eb \stackrelrm{(G3)}= b.\]
 Daher ist $a=b$.\;\qedsymbol
 \end{Beweis}
 
@@ -119,6 +119,48 @@ Beachtung von $-(-x)=x$ nach zweifacher Anwendung von
 Korollar \ref{Minus-vorziehen} bringt
 \[(-a)(-b) = -((-a)b) = -(-(ab)) = ab.\;\qedsymbol\]
 
+\begin{Definition}
+Sei $(M,+,0)$ ein Monoid. Für $n\in\Z_{\ge 0}$ und $a\in M$ definiert
+man $na$ rekursiv als
+\[0a := 0,\quad (n+1)a := na + a.\]
+\end{Definition}
+
+\begin{Korollar}
+Sei $(M,+,0)$ ein Monoid. Für $m,n\in\Z_{\ge 0}$ und $a\in M$ gilt
+\begin{gather}
+(m+n)a = ma + na,\\
+(mn)a = m(na).
+\end{gather}
+\end{Korollar}
+\begin{Beweis}
+Induktionsanfang ist $(m+0)a = ma = ma+0 = ma + 0a$. Der Schritt ist%
+\[(m+n+1)a \stackrelrm{(Def)}= (m+n)a + a
+\stackrelrm{(IV)}= ma+na + a
+\stackrelrm{(Def)}= ma + (n+1)a.\]
+Induktionsanfang ist $(m\cdot 0)a = 0a = 0 = m\cdot 0 = m(0a)$.
+Der Schritt ist
+\begin{align*}
+(m(n+1))a &= (mn+m)a = (mn)a+ma \stackrelrm{(IV)}= m(na)+ma\\
+&= m((na)+a) \stackrelrm{(Def)}=
+m((n+1)a).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar}
+Sei $R$ ein Ring mit Eins $e$. Für $n\in\Z$ und
+$a\in R$ gilt $(ne)a = na$.
+\end{Korollar}
+\begin{Beweis}
+Der Induktionsanfang ist $(0e)a = 0_R a = 0_R = 0a$.
+Der Schritt ist
+\[((n+1)e) a \stackrelrm{(Def)}= (ne+e)a = nea + ea \stackrelrm{(IV)}=
+na+a \stackrelrm{(Def)}= (n+1)a.\]
+Für $n>0$ gilt zudem
+\[((-n)e)a \stackrelrm{(Def)}= (-(ne))a
+= -((ne)a) = -(na) \stackrelrm{(Def)}= (-n)a.\,\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \subsection{Ringhomomorphismen}
 
 \begin{Definition}[Ringhomomorphismus]
@@ -173,4 +215,96 @@ sein. Es gilt $D^k x^k = k!$, und daher
 Demnach ergibt sich dann aber auch
 \[D^{n-1}\sum_{k=0}^n c_k x^k = (n-1)!\cdot c_{n-1} = 0\implies c_{n-1}=0\]
 usw. Man erhält $c_k=0$ für alle $k$.\;\qedsymbol
+\end{Beweis}
+
+\section{Körper}
+
+\subsection{Geordnete Körper}
+
+\begin{Definition}[Geordneter Körper]\label{def:of}
+Eine Körper $K$ heißt geordnet bezülich einer strengen Totalordnung,
+wenn die beiden Axiome
+\begin{gather*}
+a<b \implies a+c<b+c,\\
+a>0\land b>0\implies ab>0
+\end{gather*}
+für alle $a,b,c\in K$ erfüllt sind.
+\end{Definition}
+
+\begin{Korollar}\label{of-negate}
+Sei $K$ ein geordneter Körper und $a\in K$. Es gilt $a>0\iff -a<0$. 
+\end{Korollar}
+\begin{Beweis}
+Gemäß Def. \ref{def:of} Axiom~1 gilt%
+\[0<a \iff -a < a-a = 0.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}\label{of-sq-positive}
+Sei $K$ ein geordneter Körper. Für jedes $a\in K$ mit $a\ne 0$ gilt
+$a^2>0$.
+\end{Korollar}
+\begin{Beweis}
+Im Fall $a>0$ ist $a^2>0$ aufgrund von Def. \ref{def:of} Axiom~2, setze
+$b:=a$.
+Übrig bleibt der Fall $a<0$. Gemäß Korollar \ref{of-negate} ist
+$-a>0$. Laut Axiom~2 gilt andererseits%
+\[-a > 0 \implies 0 < (-a)^2 = a^2.\]
+Somit ist auch in diesem Fall $a^2>0$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{of-1-positive}
+Sei $K$ ein geordneter Körper. Für $1_K$ gilt $1_K>0$.
+\end{Korollar}
+
+\begin{Beweis}
+Wegen $1_K = 1_K 1_K$ ist $1_K$ ein Quadrat. Weil zudem $1_K\ne 0$ ist,
+erhält man $1_K>0$ gemäß Korollar \ref{of-sq-positive}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Sei $K$ ein geordneter Körper. Für $n\in\Z_{>0}$ gilt $n1_K>0$.
+\end{Korollar}
+
+\begin{Beweis}
+Der Induktionsanfang ist $1\cdot 1_K = 1_K > 0$, wobei $1_K>0$ gemäß
+Korollar \ref{of-1-positive} gilt. Der Induktionsschritt ist
+\[(n+1)1_K \stackrelrm{(Def)}= n1_K + 1_K > 1_K > 0,\]
+denn die Induktionsvoraussetzung $n1_K>0$ impliziert
+$n1_K+1_K>1_K$ gemäß Def. \ref{def:of} Axiom 1.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{of-ineq-mul}
+Sei $K$ ein geordneter Körper. Für $a,b,c\in K$ gilt
+\begin{gather*}
+a<b\land c>0\implies ca<cb,\\
+a\le b\land c\ge 0\implies ca\le cb.
+\end{gather*}
+\end{Korollar}
+\begin{Beweis}
+Gemäß Def. \ref{def:of} Axiom~1 und Axiom~2 gilt
+\[a<b\iff 0<b-a \implies 0<c(b-a) = cb-ca\iff ca<cb.\]
+Im Fall $c=0$ ist $ca\le cb$ klar. Für $c>0$ gilt
+\[a\le b\iff a<b\lor a=b\implies ca<cb\lor ca=cb\iff ca\le cb.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}\label{of-nn-int-mul}
+Sei $K$ ein geordneter Körper und $n\in\Z_{\ge 0}$. Für $a\ge 0$ gilt
+$na\ge 0$.
+\end{Korollar}
+\begin{Beweis} Der Induktionsanfang $n=0$ ist trivial. Der Schritt ist
+\[(n+1)a \stackrelrm{(Def)}= na+a \ge na \ge 0,\]
+denn gemäß Induktionsvoraussetzung ist $na\ge 0$. Die Ungleichung
+$na+a\ge na$ erhält man, indem auf beiden Seiten von
+$a\ge 0$ der Wert $an$ addiert wird.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Sei $K$ ein geordneter Körper. Sei $a\in K$ und $m,n\in\Z$.
+Es gilt
+\[m\le n\land a\ge 0\implies ma\le na.\]
+\end{Korollar}
+\begin{Beweis}
+Wegen $m\le n$ ist $n-m\ge 0$. Laut Korollar \ref{of-nn-int-mul}
+gilt somit
+\[0\le a \implies 0\le (n-m)a = na-ma\iff ma\le na.\,\qedsymbol\]
 \end{Beweis}

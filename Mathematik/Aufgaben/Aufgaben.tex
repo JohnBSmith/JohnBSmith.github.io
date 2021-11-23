@@ -29,6 +29,7 @@
 \newcommand{\sgn}{\operatorname{sgn}}
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
 \newcommand{\R}{\mathbb R}
 \newcommand{\C}{\mathbb C}
 \newcommand{\ui}{\mathrm i}
@@ -1054,6 +1055,36 @@ konstant sein. Anmerkung: Bei $H$ handelt sich sich um die
 Hamilton"=Funktion, bei $\tfrac{1}{2}y^2$ um die kinetische Energie
 und bei $\cos(x)$ um die potentielle.\;\qedsymbol
 
+\begin{Aufgabe}
+Sei $f$ eine hinreichend gutartige Funktion. Zu ermitteln ist
+der Wert der Reihe
+\[R(x) = f(x) + \int_0^x f(x)\,\mathrm dx+
+\int_0^x\int_0^x f(x)\,\mathrm dx\,\mathrm dx+
+\int_0^x\int_0^x\int_0^x f(x)\,\mathrm dx\,\mathrm dx\,\mathrm dx+\ldots\]
+\end{Aufgabe}
+\strong{Lösung 1.} Man differenziert die Reihe auf beiden Seiten
+und erkennt daraufhin die lineare Differentialgleichung
+\[R'(x) = f'(x) + R(x),\quad R(0)=f(0).\]
+Die homogene Lösung ist $R_h(x)=c\mathrm \ee^x$. Gemäß Variation
+der Konstanten ist
+\[R_s(x) = \ee^x\int_0^x f'(t)\ee^{-t}\,\mathrm dt
+= f(x)-f(0)\ee^x+\ee^x\int_0^x f(t)\ee^{-t}\,\mathrm dt\]
+eine spezielle Lösung. Es gilt $R(0)=R_h(0)+R_s(0) = c+f(0)-f(0)=c$,
+womit $c=f(0)$ sein muss. Wir erhalten die allgemeine Lösung
+\[R(x) = R_h(x)+R_s(x) = f(x) + \ee^x\int_0^x f(t)\ee^{-t}\,\mathrm dt.\,\qedsymbol\]
+\strong{Lösung 2.} Wir definieren den Operator
+$If(x):=\int_0^x f(t)\,\mathrm dt$ zur Abkürzung. Unter Nutzung der
+Cauchy-Formel für mehrfache Integration findet man
+\begin{align*}
+R(x) &= f(x) + \sum_{k=1}^\infty I^k f(x)
+= f(x) + \sum_{k=1}^\infty \frac{1}{(k-1)!}\int_0^x (x-t)^{k-1}f(t)\,\mathrm dt\\
+&= f(x) + \int_0^x f(t)\sum_{k=1}^\infty \frac{(x-t)^{k-1}}{(k-1)!}\,\mathrm dt
+= f(x) + \int_0^x f(t)\sum_{k=0}^\infty \frac{(x-t)^k}{k!}\,\mathrm dt\\
+&= f(x) + \int_0^x f(t)\ee^{x-t}\,\mathrm dt
+= f(x) + \ee^x\int_0^x f(t)\ee^{-t}\,\mathrm dt.\,\qedsymbol
+\end{align*}
+
+
 \newpage
 \section{Lineare Algebra}
 \subsection{Matrizenrechnung}
@@ -1197,6 +1228,33 @@ a^2 = b^2&\iff a^2 - b^2 = 0\iff (a+b)(a-b)=0\\
 &\iff a-b=0\lor a+b=0\iff a=b\lor a=-b
 \end{align*}
 gemäß der Nullteilerfreiheit.\,\qedsymbol
+
+\subsection{Geordnete Körper}
+
+\begin{Aufgabe}
+Sei $f\colon\Q\to K$ mit $f(\tfrac{m}{n}) := \tfrac{m1_K}{n1_K}$.
+Man zeige
+\begin{gather*}
+f(1) = 1_K,\quad f(pq) = f(p)f(q),\quad f(p^{-1}) = f(p)^{-1},\\
+p\le q\implies f(p)\le f(q).
+\end{gather*}
+\end{Aufgabe}
+\strong{Lösung.} Kenntnis der Rechenregeln in Körpern sei vorausgesetzt.
+Man darf rechnen
+\[f(1) = f\left(\frac{1}{1}\right) = \frac{1\cdot 1_K}{1\cdot 1_K} = \frac{1_K}{1_K} = 1_K.\]
+Man darf rechnen
+\[f(pq) = f\left(\frac{m}{n}\cdot\frac{m'}{n'}\right)
+= \frac{(mm')1_K}{(nn')1_K} = \frac{mm'1_K}{nn'1_K}
+= \frac{m1_Km'1_K}{n1_Kn'1_K} = \frac{m1_K}{n1_K}\cdot\frac{m'1_K}{n'1_K} = f(p)f(q).\]
+Man darf rechnen
+\[f(p^{-1}) = f\left(\frac{n}{m}\right) = \frac{n1_K}{m1_K} = \left(\frac{m1_K}{n1_K}\right)^{-1} = f(p)^{-1}.\]
+Wegen $1_K>0$ ist $n1_K>0$ für $n>0$ und daher $(n1_K)^{-1}>0$.
+Daher gilt
+\begin{gather*}
+\frac{m}{n} \le \frac{m'}{n'} \iff mn' \le m'n\\
+\implies mn'1_K \le m'n1_K \iff m1_Kn'1_K\le m'1_Kn1_K
+\iff \frac{m1_K}{n1_K}\le\frac{m'1_K}{n'1_K}.\,\qedsymbol
+\end{gather*}
 
 \newpage
 \section{Kombinatorik}

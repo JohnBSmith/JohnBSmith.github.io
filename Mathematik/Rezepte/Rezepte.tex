@@ -56,7 +56,7 @@
   innerrightmargin=6pt%
 ]{Rezept}
 
-\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\bv}[1]{\mathbf{#1}}
 \newcommand{\ee}{\mathrm{e}}
 \newcommand{\ui}{\mathrm{i}}
@@ -67,12 +67,36 @@
 \newcommand{\R}{\mathbb R}
 \newcommand{\C}{\mathbb C}
 \newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\defiff}{\;:\Longleftrightarrow\;}
 
 \begin{document}
 
 \section*{\LARGE Rezepte zur Mathematik}
 
 \tableofcontents
+
+\clearpage
+\section{Grundlagen}
+
+\subsection{Natürliches Schließen}
+
+\begin{Rezept}
+Natürliche Schließen systematisiert gewohnte Beweisführung.
+\end{Rezept}
+\strong{Beispiel 1.}
+Wir wollen zeigen, dass das Quadrat einer geraden Zahl ebenfalls
+gerade ist. Die Definition
+\[2\mid a \defiff \exists n\in\Z\colon a = 2n.\]
+bringt die Behauptung zunächst in die Form
+\[(\exists n\in\Z\colon a = 2n) \implies (\exists n'\in\Z\colon a^2 = 2n').\]
+Nun führen wir den Beweis mittels natürlichem Schließen. Aufgrund
+der Prämisse haben wir einen Zeugen $n\in\Z$, über den nichts
+weiter bekannt ist, außer dass $a=2n$. Sei $n':=2n^2$. Wir dürfen
+rechnen
+\[a^2 = (2n)^2 = 4n^2 = 2n'.\]
+Mit $n'$ wurde ein Zeuge für die rechte Existenzaussage konstruiert.
+Somit wurde die Konklusion aus der Prämsse abgeleitet. Der Beweis
+ist erbracht.
 
 \section{Lineare Algebra}
 
@@ -116,6 +140,51 @@ darstellbar. Man bezeichnet sie als \emph{Transformationsmatrix}.
 Mit diesen Überlegungen ist eigentlich auch bereits fast alles
 Wichtige gesagt, um Darstellungsmatrizen und ihre Transformation
 bei Basiswechsel verstehen zu können.
+
+\newpage
+\subsection{Darstellungsmatrizen}
+\begin{Rezept}
+Beim Basiswechsel ist die Darstellungsmatrix zu transformieren,
+was man mittels Matrizenrechnung kurzfassen kann.
+\end{Rezept}
+
+\noindent
+Gegeben seien Basen $A,B$ von $V$ und $C,D$ von $W$. Es gilt%
+\begin{gather*}
+\bv v = A\bv v_A = B\bv v_B,\\
+\bv w = C\bv w_C = D\bv w_D.
+\end{gather*}
+Für eine lineare Abbildung $f\colon V\to W$ gilt%
+\begin{align*}
+\bv w = f(\bv v)&\iff C\bv w_C = f(A\bv v_A)\\
+&\iff \bv w_C = (C^{-1}\circ f\circ A)\bv v_A.
+\end{align*}
+Die Darstellungsmatrix definiert man daher als%
+\[M_C^A(f) := C^{-1}\circ f\circ A.\]
+Man betrachte nun die Kette%
+\[\bv v_B\stackrel{A^{-1}B}\longmapsto \bv v_A
+\stackrel{M_C^A(f)}\longmapsto \bv w_C
+\stackrel{D^{-1}C}\longmapsto \bv w_D.\]
+Demzufolge gilt
+\[M_D^B(f) = D^{-1}C\,M_C^A(f)A^{-1}B = T_D^C M_C^A(f) T_A^B.\]
+
+\subsection{Lineare Unabhängigkeit}
+\begin{Rezept}
+Zum Vektorraum $K^n$ ist $B=(\bv b_1,\ldots,\bv b_n)$ genau dann eine
+Basis, wenn $\det(B)\ne 0$ gilt.
+\end{Rezept}
+Das System $B=(\bv b_1,\ldots,\bv b_n)$ ist gemäß Definition genau
+dann linear unabhängig, wenn
+\[x_1 \bv b_1+\ldots + x_n\bv b_n = 0\implies \forall k\colon x_k = 0.\]
+Kompakt geschrieben lautet diese Aussage
+\[B\bv x = 0\implies \bv x=0\]
+mit $\bv x = (x_1,\ldots,x_n)$. Äquivalent zu ihr ist
+\[\operatorname{Kern}(B) = \{0\}.\]
+Wir haben andererseits
+\[\operatorname{Kern}(B) = \{0\}\iff B\;\text{bijektiv}\iff \det(B)\ne 0.\]
+Der Test auf lineare Unabhängigkeit ist damit auf die Berechnung
+einer Determinante zurückgeführt, was für ein konkretes $B$
+automatisch durchgeführt werden kann.
 
 \newpage
 \section{Analysis}
@@ -250,7 +319,122 @@ $f(z):=u+v\ui$. Das heißt, $f$ ist genau dann eine konforme
 Abbidlung, wenn $f$ holomorph ist und ihre Ableitung keine
 Nullstellen besitzt.
 
+\subsection{Vollständige Induktion}
 
+\begin{Rezept}
+Eine Aussage $A(n)$ für $n\in\Z, n\ge n_0$ sei offensiv
+hergeleitet worden unter Nutzung von höheren oder
+heuristischen Methoden, deren Gültigkeit nicht zweifelsfrei
+klar ist. Gelingt anschließend ein Beweis durch vollständige
+Induktion, braucht man sich darum nicht weiter kümmern
+und kann voranschreiten.
+\end{Rezept}
+Das Verfahren der vollständigen Induktion verläuft folgendermaßen.
+Im \emph{Induktionsschritt} schlussfolgert man, dass die
+\emph{Induktionsvoraussetzung} $A(n)$ die Aussage $A(n+1)$ nach sich
+zieht. Kann man zudem einen \emph{Induktionsanfang}
+$A(n_0)$ bestätigen, was oft trivial ist, gilt die Aussage $A(n)$
+für alle $n\ge n_0$ als bewiesen.
+
+\strong{Beispiel 1.} Die Summation kann man definieren durch%
+\[\sum_{k=0}^0 a_k := a_0,\quad
+\sum_{k=0}^{n+1} a_k := a_{n+1}+\sum_{k=0}^n a_n.
+\]
+Zu beweisen sei die Aussage $\sum_{k=0}^n ca_k = c\sum_{k=0}^n a_k$
+für alle $n\ge 0$, wobei
+$c$ eine Konstante ist. Der Induktionsanfang ist mit
+$\sum_{k=0}^0 ca_k = ca_0 = c\sum_{k=0}^0 a_k$
+trivial erbracht. Im Schritt rechnet man%
+\begin{gather*}
+\sum_{k=0}^{n+1} ca_k = ca_{n+1}+\sum_{k=0}^n ca_k
+\!\!\stackrel{\text{(IV)}}=\! c(a_n + \sum_{k=0}^n a_k)
+= c\!\sum_{k=0}^n a_k,
+\end{gather*}
+wobei (IV) gemäß Induktionsvoraussetzung gilt.
+
+\strong{Beispiel 2.} Zu beweisen sei $\sum_{k=0}^n k = \tfrac{n}{2}(n+1)$.
+Der Anfang ist trivial. Im Schritt rechnet man
+\begin{gather*}
+\sum_{k=0}^{n+1} k = n+1+\sum_{k=0}^n k
+\stackrel{\text{(IV)}} = n+1+\tfrac{n}{2}(n+1)\\
+= (n+1)(1+\tfrac{n}{2})
+= \tfrac{n+1}{2}(n+2).
+\end{gather*}
+Zur Auffindung von Formeln kann man alle erdenklichen Methoden
+zum Einsatz bringen, obgleich diese unzuverlässig oder heuristisch
+sind. Man darf Umformungen benutzen, bei denen nicht klar ist,
+unter welchen Prämissen diese gültig sind. Sogar vage und skizzenhafte
+Argumentationen sind nicht unbedingt tabu.
+
+\subsection{Lineare Rekurrenzen}
+
+\begin{Rezept}
+Jede lineare Rekurrenz lässt sich durch Hilfsvariablen und homogene
+Koordinaten in die Form eines homogenen linearen Systems erster Ordnung
+bringen, das in vektorieller Form als $\mathbf v_{n+1}=A\mathbf v_n$
+ausgedrückt werden kann. Die Lösung ist daher
+$\mathbf v_n = A^n\mathbf v_0$, wobei die Matrixpotenz $A^n$ mittels
+Eigenwerttheorie bzw. Theorie der Matrixfunktionen bestimmt werden
+kann.
+\end{Rezept}
+
+\noindent
+Die lineare Rekurrenz $x_{n+1}=ax_n+b$ wird 
+mittels homogener Koordinaten zum System%
+\[\begin{pmatrix}
+x_{n+1}\\ 1
+\end{pmatrix}
+= \begin{pmatrix}a & b\\ 0 & 1\end{pmatrix}
+\begin{pmatrix}
+x_n\\ 1
+\end{pmatrix}.\]
+Bei der linearen Rekurrenz $x_{n+1}=ax_n+bx_{n-1}+c$ setzen wir
+$y_n = x_{n-1}$ und erhalten somit das System
+\[\begin{pmatrix}
+x_{n+1}\\ y_{n+1}
+\end{pmatrix} = \begin{pmatrix}
+a & b\\ 1 & 0
+\end{pmatrix}\begin{pmatrix}
+x_n\\ y_n
+\end{pmatrix}+\begin{pmatrix}
+c\\ 0
+\end{pmatrix}.\]
+Mittels homogener Koordinaten wird dieses zu
+\[\begin{pmatrix}
+x_{n+1}\\ y_{n+1}\\ 1
+\end{pmatrix} = \begin{pmatrix}
+a & b & c\\
+1 & 0 & 0\\
+0 & 0 & 1
+\end{pmatrix}\begin{pmatrix}
+x_n\\ y_n\\ 1
+\end{pmatrix}.\]
+
+\subsection{Majorantenkriterium}
+
+\begin{Rezept}
+Kann man zu einer Reihe von Elementen eines Banachraums eine
+konvergente Majorante finden, dann muss die Reihe absolut konvergent
+sein. 
+\end{Rezept}
+
+\noindent
+Sei $(a_k)$ eine Folge von Elementen eines Banachraums.
+Eine Reihe $\sum_{k=0}^n b_k$ reeller Zahlen $b_k\ge 0$ mit
+$\|a_k\|\le b_k$ für alle $k\ge k_0$ nennt man eine \emph{Majorante}
+der Reihe $\sum_{k=0}^n a_k$.
+
+\strong{Beispiel.} Die absolute Konvergenz der Reihe
+\[\sum_{k=1}^n\frac{1}{4k^2-2k}\]
+bestätigt die Majorante mit $b_k=1/k^2$, denn
+\begin{gather*}
+\Big|\frac{1}{4k^2-2k}\Big| \le \frac{1}{k^2}\iff k^2\le |4k^2-2k|\\
+\iff k\le |4k-2| \iff k^2 \le (4k-2)^2\\
+\iff 0\le 15k^2-16k+4.
+\end{gather*}
+Diese Ungleichung ist für $k\ge 1$ erfüllt.
+
+\newpage
 \section{Wahrscheinlichkeitsrechnung}
 
 \subsection{Zufallsgrößen}

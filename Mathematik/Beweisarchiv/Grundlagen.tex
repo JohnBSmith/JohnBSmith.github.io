@@ -555,22 +555,22 @@ Für eine Abbildung $f$ ist
 
 \begin{Definition}[img: Bildmenge]%
 \label{def:img}\index{Bildmenge}\mbox{}\\
-Für eine Abbildung $f\colon A\to B$ und $M\subseteq A$
+Für eine Abbildung $f\colon X\to Y$ und $A\subseteq X$
 wird die Menge
-\[f(M) := \{y\mid \exists x\in M\colon y=f(x)\}
-= \{y\mid \exists x\colon (x\in M\land y=f(x))\}\]
-als Bildmenge von $M$ unter $f$ bezeichnet.
+\[f(A) := \{y\mid \exists x\in A\colon y=f(x)\}
+= \{y\mid \exists x\colon (x\in A\land y=f(x))\}\]
+als Bildmenge von $A$ unter $f$ bezeichnet.
 \end{Definition}
 
 \begin{Definition}[preimg: Urbildmenge]\label{def:preimg}\index{Urbildmenge}
-Für eine Abbildung $f\colon A\to B$ wird
-\[f^{-1}(M) := \{x\mid f(x)\in M\} = \{x\mid \exists y\in M\colon y=f(x)\}\]
-als Urbildmenge von $M$ unter $f$ bezeichnet.
+Für eine Abbildung $f\colon X\to Y$ wird
+\[f^{-1}(B) := \{x\mid f(x)\in B\} = \{x\mid \exists y\in B\colon y=f(x)\}\]
+als Urbildmenge von $B$ unter $f$ bezeichnet.
 \end{Definition}
 
 \begin{Definition}[inj: Injektion]%
 \label{def:inj}\index{Injektion}\mbox{}\\
-Eine Abbildung $f\colon A\to B$ heißt genau dann injektiv, wenn gilt:
+Eine Abbildung $f\colon X\to Y$ heißt genau dann injektiv, wenn gilt:
 \[\forall x_1\colon \forall x_2\colon (f(x_1)=f(x_2)\implies x_1=x_2)\]
 bzw. äquivalent (Kontraposition)
 \[\forall x_1\colon \forall x_2\colon (x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
@@ -578,28 +578,28 @@ bzw. äquivalent (Kontraposition)
 
 \begin{Definition}[sur: Surjektion]%
 \label{def:sur}\index{Surjektion}\mbox{}\\
-Eine Abbildung $f\colon A\to B$ heißt genau dann surjektiv, wenn gilt:
-\[B\subseteq f(A).\]
+Eine Abbildung $f\colon X\to Y$ heißt genau dann surjektiv, wenn gilt:
+\[Y\subseteq f(X).\]
 \end{Definition}
 
 \begin{Definition}[composition: Verkettung]\label{def:composition}%
 \index{Komposition}\index{Verkettung}\mbox{}\\
-Für Abbildungen $f\colon A\to B$ und $g\colon B\to C$ heißt
-\[(g\circ f)\colon A\to C,\quad (g\circ f)(x):=g(f(x))\]
-Verkettung von $f$ und $g$.
+Für Abbildungen $f\colon X\to Y$ und $g\colon Y\to Z$ heißt
+\[(g\circ f)\colon X\to Z,\quad (g\circ f)(x):=g(f(x))\]
+Verkettung von $f$ und $g$, sprich »$g$ nach $f$«.
 \end{Definition}
 
 \subsection{Grundlagen}
 \begin{Satz}[feq: Gleichheit von Abbildungen]%
 \label{feq}\index{Gleichheit!von Abbildungen}
-Zwei Abbildungen $f\colon A\to B$ und $g\colon C\to D$ sind genau
-dann gleich, kurz $f=g$, wenn $A=C$ und $B=D$ und
+Zwei Abbildungen $f\colon X\to Y$ und $g\colon X'\to Y'$ sind genau
+dann gleich, kurz $f=g$, wenn $X=X'$ und $Y=Y'$ und
 \[\forall x\colon f(x)=g(x).\]
 \end{Satz}
 
 \begin{Beweis}
-Nach Definition gilt $f=g$ genau dann, wenn $(G_f,A,B)=(G_g,C,D)$,
-was äquivalent zu $G_f=G_g\land A=C\land B=D$ ist. Nach Def.
+Nach Definition gilt $f=g$ genau dann, wenn $(G_f,X,Y)=(G_g,X',Y')$,
+was äquivalent zu $G_f=G_g\land X=X'\land Y=Y'$ ist. Nach Def.
 \ref{def:seteq} (seteq) gilt
 \[G_f=G_g\iff \forall t\colon (t\in G_f\Leftrightarrow t\in G_g).\]
 Nach Satz \ref{eq-iff-all-iff} und Def. \ref{def:app} (app) gilt
@@ -608,14 +608,14 @@ Nach Satz \ref{eq-iff-all-iff} und Def. \ref{def:app} (app) gilt
 &\iff (\forall x\colon\forall y\colon((x,y)\in G_f\Leftrightarrow (x,y)\in G_g))
 \iff \forall t\colon (t\in G_f\Leftrightarrow t\in G_g).
 \end{align*}
-Da die Quantifizerung auf $x\in A$, $y\in B$ und $t\in A\times B$
+Da die Quantifizerung auf $x\in X$, $y\in Y$ und $t\in X\times Y$
 beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
 angewendet werden.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[preimg-dl: Distributivität der Urbildoperation]%
 \label{preimg-dl}\index{Distributivgesetz!Urbildoperation}\mbox{}\\
-Für $f\colon A\to B$ und beliebige Mengen $M_i$ gilt:
+Für $f\colon X\to Y$ und beliebige Mengen $M_i$ gilt:
 \begin{align}
 f^{-1}(M_1\cap M_2) &= f^{-1}(M_1)\cap f^{-1}(M_2),\\
 f^{-1}(M_1\cup M_2) &= f^{-1}(M_1)\cup f^{-1}(M_2),\\
@@ -653,7 +653,7 @@ Für die Vereinigung ist das analog.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[img-cup-dl: Distributivität der Bildoperation über die Vereinigung]
-Für $f\colon A\to B$ und Mengen $M_i\subseteq A$ gilt:
+Für $f\colon X\to Y$ und Mengen $M_i\subseteq X$ gilt:
 \begin{align}
 f(M_1\cup M_2) &= f(M_1)\cup f(M_2),\\
 f(\bigcup_{i\in I} M_i) &= \bigcup_{i\in I} f(M_i).
@@ -809,7 +809,7 @@ ergibt sich%
 \iff \exists y\exists x(x\in M\land y=f(x)\land z=g(y))\\
 \iff \exists x(x\in M\land\exists y(y=f(x)\land z=g(y)))\\
 \iff \exists x(x\in M\land z=g(f(x)))\\
-\iff \exists x(x\in M\land z=(g\circ f)(x)).\;\qedsymbol
+\iff \exists x(x\in M\land z=(g\circ f)(x)).\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
@@ -837,19 +837,43 @@ und
 \iff \id(a)=\id(b)
 \iff a=b.\]
 Es ergibt sich
-\[f(a)=f(b)\implies a=b.\;\qedsymbol\]
+\[f(a)=f(b)\implies a=b.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}\label{preimg-compl}
+Es gilt $f^{-1}(A^\comp)=f^{-1}(A)^\comp$ bzw.
+$f(x)\in A^\comp\Leftrightarrow \neg f(x)\in A$.
+\end{Korollar}
+\begin{Beweis} Zufolge der Expansion von Def. \ref{def:preimg} (preimg) ist
+\[(\exists y\in A^\comp\colon y=f(x))\iff \neg (\exists y\in A\colon y=f(x))
+\iff (\forall y\in A\colon y\ne f(x))\]
+zu zeigen. Weil $x$ ein Element des Definitionsbereichs ist, muss
+der Funktionswert $f(x)$ in irgendeiner Menge liegen. Die Implikation
+von rechts nach links. Weil $f(x)$ nicht in $A$ liegt, muss $f(x)$
+in $A^\comp$ liegen. Die Implikaton von links nach rechts.
+Gemäß Prämisse liegt $f(x)$ in $A^\comp$. Weil $x$ nur einen
+Funktionswert besitzt, kann $f(x)$ nicht in $A$ liegen.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{preimg-setminus}
 Für jede Abbildung $f$ gilt
 $f^{-1}(A\setminus B) = f^{-1}(A)\setminus f^{-1}(B)$.
 \end{Satz}
-\begin{Beweis} Ergibt sich sofort gemäß Definition:
+\begin{Beweis}[Beweis 1] Ergibt sich sofort gemäß Definition:
 \begin{gather*}
 f^{-1}(A)\setminus f^{-1}(B) = \{x\mid x\in f^{-1}(A)\land \neg x\in f^{-1}(B)\}\\
 = \{x\mid f(x)\in A\land f(x)\notin B\}
 = \{x\mid f(x)\in A\setminus B\}
-= f^{-1}(A\setminus B).
+= f^{-1}(A\setminus B).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+\begin{Beweis}[Beweis 2] Gemäß Korollar \ref{preimg-compl} und Satz
+\ref{preimg-dl} (preimg-dl) ist
+\begin{gather*}
+f^{-1}(A)\setminus f^{-1}(B) = \{x\mid x\in f^{-1}(A)\land \neg x\in f^{-1}(B)\}\\
+= \{x\mid x\in f^{-1}(A)\land x\in f^{-1}(B^\comp)\}
+= f^{-1}(A)\cap f^{-1}(B^\comp)\\
+= f^{-1}(A\cap B^\comp) = f^{-1}(A\setminus B).\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
@@ -860,12 +884,12 @@ Für jede Abbildung $f$ gilt $f(f^{-1}(N)\subseteq N$.
 Gemäß Definition bekommt man
 \begin{gather*}
 y\in f(f^{-1}(N))
-\iff \exists x(x\in f^{-1}(N)\land y=f(x))
-\iff\exists x(f(x)\in N\land y=f(x)).
+\iff (\exists x\colon x\in f^{-1}(N)\land y=f(x))
+\iff (\exists x\colon f(x)\in N\land y=f(x)).
 \end{gather*}
 Leicht ersichtlich ist nun, dass
 \begin{gather*}
-\exists x(f(x)\in N\land y=f(x)) \implies y\in N.\;\qedsymbol
+(\exists x\colon f(x)\in N\land y=f(x)) \implies y\in N.\;\qedsymbol
 \end{gather*}
 \end{Beweis}
 
@@ -876,13 +900,13 @@ sofern $N\subseteq f(A)$ ist.
 \begin{Beweis}
 Laut Satz \ref{img-preimg} bleibt zu zeigen
 \begin{gather*}
-y\in N\implies\exists_{x\in A}(f(x)\in N\land y=f(x)).
+y\in N\implies (\exists x\in A\colon f(x)\in N\land y=f(x)).
 \end{gather*}
 Setzt man nun $N\subseteq f(A)$ voraus, dann ist $f(x)\in N$
 allgemeingültig. Man bekommt
 \begin{gather*}
-\exists_{x\in A}(f(x)\in N\land y=f(x))
-\iff \exists_{x\in A}(y=f(x))\iff y\in f(A).
+(\exists x\in A\colon f(x)\in N\land y=f(x))
+\iff (\exists x\in A\colon y=f(x))\iff y\in f(A).
 \end{gather*}
 Die Implikation $y\in N\implies y\in f(A)$ ist nun
 wiederum definitionsgemäß äquivalent zu $N\subseteq f(A)$,
@@ -927,10 +951,10 @@ geschrieben -- überein.
 \end{Satz}
 \begin{Beweis}
 Expansion der Gleichung $f^{-1}(N)=(f^{-1})(N)$ führt zur Bedingung
-\[f(x)\in N\iff \exists y(y\in N\land x=f^{-1}(y)).\]
+\[f(x)\in N\iff (\exists y\colon y\in N\land x=f^{-1}(y)).\]
 Da $f$ bijektiv ist, gilt $x=f^{-1}(y)\iff f(x)=f(f^{-1}(y))=y$.
 Demnach ist
-\[\exists y(y\in N\land x=f^{-1}(y))\iff \exists y(f(x)\in N)\iff f(x)\in N.\]
+\[(\exists y\colon y\in N\land x=f^{-1}(y))\iff (\exists y\colon f(x)\in N)\iff f(x)\in N.\]
 Die Bedingung ist daher immer erfüllt.\;\qedsymbol
 \end{Beweis}
 Es genügt nicht, wenn $f$ injektiv ist. Als Gegenbeispiel setze

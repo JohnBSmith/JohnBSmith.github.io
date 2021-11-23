@@ -22,7 +22,7 @@
 \definecolor{c1}{RGB}{00,40,80}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=10mm,top=24mm,bottom=26mm}
+\geometry{a4paper,left=23mm,right=12mm,top=24mm,bottom=26mm}
 \setlength{\columnsep}{4mm}
 \numberwithin{equation}{section}
 \setcounter{tocdepth}{2}
@@ -1087,6 +1087,77 @@ gültig. Im Übergang $n\to\infty$ ist
 P(A) = \int_a^b P(A\mid X=x)f(x)\,\mathrm dx.
 \end{equation}
 Diese Formel ist die kontinuierliche Form des Gesetzes.
+
+\subsection{Radioaktiver Zerfall}
+
+Für einen Markow"=Prozess ist
+\[p_{ij}(h) = P(X(t+h) = j\mid X(t) = i)\]
+die \emph{Übergangswahrscheinlichkeit} vom Zustand $i$ in den
+Zustand $j$. Zum radioaktiven Zerfall sei $i$ die Anzahl der Atome
+und $\lambda$ die Zerfallskonstante. Für diesen Prozess gilt%
+\[p_{ij}(h) = o(h) + \begin{cases}
+\lambda ih, & j = i-1,\\
+1-\lambda ih, & j = i,\\
+0, & \text{sonst}.
+\end{cases}\]
+Wir wollen dies als
+\[p_{ij}(h) = \delta_{ij} + q_{ij}h+ o(h)\]
+mit \emph{Intensitätsmatrix} $Q=(q_{ij})$ darstellen, wobei mit
+$\delta_{ij}$ das Kronecker"=Delta gemeint ist. Demzufolge ist%
+\[q_{ij} = \lambda i\delta_{i-1,j}-\lambda i\delta_{ij}.\]
+Der Wert $p_{ij}(t)$ ist die Wahrscheinlichkeit, dass der Zustand
+$j$ zum Zeitpunkt $t$ eingetreten ist, wenn der ursprüngliche Zustand
+$i$ zum Zeitpunkt $0$ vorgelegen hat. Es gilt die
+Kolmogorow"=Vorwärtsgleichung%
+\[\frac{\mathrm d}{\mathrm dt}p_{ij}(t) = \sum_{k} p_{ik}(t)q_{kj}(t),
+\quad\text{kurz}\;P' = PQ.\]
+Wir bemerken, dass die Gleichung in der Form%
+\[\frac{\partial}{\partial t}p_{ij}(s,t) = \sum_{k} p_{ik}(s,t)q_{kj}(t)\]
+geschrieben werden kann, wenn der Zustand $i$ nicht zum Zeitpunkt
+null, sondern zum Zeitpunkt $s$ vorliegen soll.
+
+Beim Zerfallsprozess bekommt man
+\[p_{ij}' = p_{i,j+1}\lambda(j+1) - p_{ij}\lambda j.\]
+Bildet man nun auf beiden Seiten der Gleichung den Erwartungswert,
+ergibt sich%
+\[\sum_{j=-\infty}^\infty j\frac{\mathrm d}{\mathrm dt}p_{ij} = \lambda\sum_{j=-\infty}^\infty (j+1)jp_{i,j+1}
+- \lambda\sum_{j=-\infty}^\infty j^2 p_{ij}.\]
+Das kann man umformen zu
+\[\frac{\mathrm d}{\mathrm dt}\sum_{j=-\infty}^\infty jp_{ij} =
+\lambda\sum_{j=-\infty}^\infty j(j-1)p_{ij}
+- \lambda\sum_{j=-\infty}^\infty j^2 p_{ij},\]
+was sich zu
+\[\frac{\mathrm d}{\mathrm dt}E(X(t)) = -\lambda E(X(t))\]
+vereinfacht. Wir kürzen $N(t):=E(X(t))$ ab und erhalten die
+elementare Differentialgleichung $N'=-\lambda N$ mit Lösung%
+\[N(t) = N_0\ee^{-\lambda t}.\]
+
+\subsection{Poisson-Prozess}
+
+Bei Poisson-Prozess springt der Zustand mit konstaner
+Übergangsrate $\lambda$ um eins nach oben. Die
+Übergangswahrscheinlichkeiten des Poisson-Prozesses sind demzufolge
+\[p_{ij}(h) = o(h) + \begin{cases}
+\lambda h, & j=i+1,\\
+1-\lambda h, & j=i,\\
+0, & \text{sonst}.
+\end{cases}\]
+Die Intensitätsmatrix ist entsprechend
+\[q_{ij} = \lambda\delta_{i+1,j} - \lambda\delta_{ij}.\]
+Man bekommt die Vorwärtsgleichung
+\[p_{ij}' = \lambda p_{i,j-1} - \lambda p_{ij}.\]
+Bildet man auf beiden Seiten der Gleichung den Erwartungswert,
+erhält man%
+\begin{gather*}
+\frac{\mathrm d}{\mathrm dt}E(X(t))
+= \lambda\sum_{j=-\infty}^\infty jp_{i,j-1}
+- \lambda\sum_{j=-\infty}^\infty jp_{ij}\\
+= \lambda\sum_{j=-\infty}^\infty (j+1)p_{ij}
+- \lambda\sum_{j=-\infty}^\infty jp_{ij}
+= \lambda\sum_{j=-\infty}^\infty p_{ij} = \lambda.
+\end{gather*}
+Die Lösung dieser elementaren Differentialgleichung ist%
+\[E(X(t)) = E(X(0)) + \lambda t = X(0) + \lambda t.\]
 
 \begin{thebibliography}{x}
 \bibitem{} Joakim Munkhammar: »Riemann"=Liouville Fractional Derivatives
