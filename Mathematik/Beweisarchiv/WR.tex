@@ -3,26 +3,155 @@
 
 \section{Diskrete Wahrscheinlichkeitsräume}
 
-\begin{Definition}[Diskreter Wahrscheinlichkeitsraum]\mbox{}\\*
+\begin{Definition}[Diskreter Wahrscheinlichkeitsraum]%
+\label{def:discrete-prob-space}\mbox{}\\*
 Sei $\Omega$ eine höchstens abzählbare Menge. Das
 Paar $(\Omega,P)$ nennt man diskreten Wahrscheinlichkeitsraum,
 wenn
 \[P\colon 2^\Omega\to [0,1],\quad P(A):=\sum_{\omega\in A} P(\{\omega\})\]
-die Eigenschaft $\sum_{\omega\in\Omega} P(\{\omega\}) = 1$ besitzt.
+die Eigenschaft $P(\Omega) = 1$ besitzt.
 \end{Definition}
 Bemerkung: Man schreibt auch $P(\omega):=P(\{\omega\})$.
 
-\begin{Definition}[Reelle Zufallsgröße]\mbox{}\\*
+\begin{Definition}[Reelle Zufallsgröße]%
+\index{Zufallsgröße}\mbox{}\\*
 Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum.
 Eine Funktion $X\colon\Omega\to\R$ nennt man Zufallsgröße.
 Die Verteilung von $X$ ist definiert gemäß $P_X(A):=P(X^{-1}(A))$.
 \end{Definition}
 
+\begin{Definition}[Bedingte Wahrscheinlichkeit]%
+\index{bedingte Wahrscheinlichkeit}\mbox{}\\*
+Seien $A,B\subseteq\Omega$ und sei $B\ne\emptyset$. Dann nennt man
+\[P(A\mid B) := \frac{P(A\cap B)}{P(B)}\]
+die bedingte Wahrscheinlichkeit von $A$, gegeben $B$.
+\end{Definition}
+
+\begin{Lemma}\label{indicator-disjoint}
+Seien $A,B$ disjunkt. Seien die $A_i$ disjunkt. Dann gilt
+\begin{gather*}
+1_{A\cup B} = 1_A + 1_B,\\
+1\{\bigcup_{i\in I} A_i\} = \sum_{i\in I} 1\{A_i\}.
+\end{gather*}
+\end{Lemma}
+\begin{Beweis}
+Es gilt
+\begin{align*}
+1_{A\cup B}(\omega) &= [\omega\in A\cup B]
+= [\omega\in A\lor\omega\in B]
+\stackrel{\text{(P)}}= [\omega\in A\oplus\omega\in B]\\
+&= [\omega\in A] + [\omega\in B] = 1_A(\omega) + 1_B(\omega).
+\end{align*}
+Die allgemeine Rechnung ist
+\[1\{\bigcup_{i\in I} A_i\}(\omega) = [\omega\in\bigcup_{i\in I} A_i]
+= [\exists i\in I\colon \omega\in A_i]
+\stackrel{\text{(P)}}= \sum_{i\in I} [\omega\in A_i]
+= \sum_{i\in I} 1\{A_i\}(\omega).\]
+Gleichung (P) gilt hierbei laut Prämisse.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Korollar}[Additivität des Wahrscheinlichkeitsmaßes]%
+\label{prob-additivity}\mbox{}\\*
+Seien die $A_i$ paarweise disjunkte Mengen. Dann gilt
+\[P(\bigcup_{i\in I} A_i) = \sum_{i\in I} P(A_i).\]
+Für zwei disjunkte Menge $A,B$ gilt speziell
+\[P(A\cup B) = P(A) + P(B).\]
+\end{Korollar}
+
+\begin{Beweis}[Beweis 1]
+Weil $A\cap B=\emptyset$ gilt, ist $[\omega\in A\cup B]
+= [\omega\in A]+[\omega\in B]$. Deshalb gilt
+\begin{gather*}
+P(A\cup B) = \sum_{\omega\in A\cup B} P(\{\omega\})
+= \sum_{\omega\in\Omega} [\omega\in A\cup B] P(\{\omega\})\\
+= \sum_{\omega\in\Omega} ([\omega\in A]+[\omega\in B]) P(\{\omega\})
+= \sum_{\omega\in\Omega} [\omega\in A]P(\{\omega\})
++ \sum_{\omega\in\Omega} [\omega\in B]P(\{\omega\})\\
+= \sum_{\omega\in A} P(\{\omega\}) + \sum_{\omega\in B} P(\{\omega\})
+= P(A)+B(B).
+\end{gather*}
+Nun allgemein. Weil die $A_i$ disjunkt sind, gilt
+$[\omega\in\bigcup_{i\in I} A_i] = \sum_{i\in I} [\omega\in A_i]$. Deshalb gilt
+\begin{gather*}
+P(\bigcup_{i\in I} A_i)
+= \sum_{\omega\in\Omega}[\omega\in\bigcup_{i\in I} A_i]P(\{\omega\})
+= \sum_{\omega\in\Omega}\sum_{i\in I}[\omega\in A_i]P(\{\omega\})\\
+= \sum_{i\in I}\sum_{\omega\in\Omega}[\omega\in A_i]P(\{\omega\})
+= \sum_{i\in I}\sum_{\omega\in A_i}P(\{\omega\})
+= \sum_{i\in I}P(A_i).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Laut Korollar \ref{prob-as-expected-value},
+Lemma \ref{indicator-disjoint}
+und Korollar \ref{expected-value-op-linear} gilt
+\[P(A\cup B) = E(1_{A\cup B}) = E(1_A+1_B) = E(1_A) + E(1_B)
+= P(A) + P(B).\]
+Die allgemeine Rechnung ist
+\[P(\bigcup_{i\in I} A_i) = E(1\{\bigcup_{i\in I} A_i\})
+= E(\sum_{i\in I} 1\{A_i\})
+= \sum_{i\in I} E(1\{A_i\}) = \sum_{i\in I} P(A_i).\]
+\end{Beweis}
+
+\begin{Korollar}
+Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum in Form von Def.
+\ref{def:discrete-prob-space}. Der Raum ist in Form des Tripels
+$(\Omega,2^\Omega,P)$ ein Wahrscheinlichkeitsraum, denn das Maß
+$P$ erfüllt die drei kolmogorowschen Axiome.
+\end{Korollar}
+\begin{Beweis}
+Die ersten beiden Axiome, $(\forall A\colon P(A)\ge 0)$ und
+$P(\Omega)=1$, gelten per Definition. Das dritte Axiom, die Additivität,
+gilt laut Korollar \ref{prob-additivity}. Dass es sich bei $2^\Omega$
+um eine sigma-Algebra handelt, ist kaum einer ausdrücklichen
+Erwähnung wert.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Gesetz der totalen Wahrscheinlichkeit]%
+\index{Gesetz der totalen Wahrsch.}
+Sei $Z$ eine Zerlegung der Ergebnismenge
+$\Omega$ in paarweise disjunkte nichtleere Mengen $B\in Z$. Dann gilt
+\[P(A) = \sum_{B\in Z} P(A\mid B)P(B).\]
+\end{Satz}
+
+\begin{Beweis}
+Es gilt
+\begin{align*}
+P(A) &= P(A\cap\Omega) = P(A\cap\bigcup_{B\in Z} B)
+= P(\bigcup_{B\in Z} (A\cap B))\\
+&= \sum_{B\in Z} P(A\cap B)
+= \sum_{B\in Z} P(A\mid B)P(B).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar}[Gesetz der totalen Wahrscheinlichkeit für Zufallsgrößen]\mbox{}\\*
+Seien $X,Y\colon\Omega\to\Omega'$ Zufallsgrößen. Dann gilt%
+\[P(Y\in A) = \sum_{x\in X(\Omega)} P(Y\in A\mid X=x)P(X=x),\]
+speziell
+\[P(Y=y) = \sum_{x\in X(\Omega)} P(Y=y\mid X=x)P(X=x).\]
+\end{Korollar}
+
+\begin{Beweis}
+Sei $Z=X(\Omega)$. Zunächst ist
+\[\Omega = X^{-1}(Z) = X^{-1}(\bigcup_{x\in Z} \{x\})
+= \bigcup_{x\in Z} X^{-1}(x)\]
+gemäß Satz \ref{preimg-dl} (preimg-dl) und Korollar
+\ref{disjoint-preimg} eine Vereinigung nichtleerer
+paarweise disjunkter Mengen. Laut dem Gesetz der totalen
+Wahrscheinlichkeit gilt daher%
+\begin{align*}
+P(Y\in A) &= P(Y^{-1}(A)) = P(Y^{-1}(A)\cap\Omega)
+= \sum_{x\in Z} P(Y^{-1}(A)\mid X^{-1}(x))P(X^{-1}(x))\\
+&= \sum_{x\in Z} P(Y\in A\mid X=x)P(X=x).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
 \begin{Definition}[Erwartungswert]%
-\label{def:expected-value}\mbox{}\\*
+\index{Erwartungswert}\label{def:expected-value}\mbox{}\\*
 Sei $(\omega_k)$ eine beliebige Abzählung von $\Omega$.
 Ist die Reihe $\sum_{k=0}^{|\Omega|} X(\omega_k)P(\{\omega_k\})$
-absolut konvergent, dann nennt man
+absolut konvergent, dann nennt man%
 \[E(X) := \sum_{\omega\in\Omega} X(\omega)P(\{\omega\})\]
 den Erwartungswert von $X$.
 \end{Definition}
@@ -49,7 +178,8 @@ E(X) = \sum_{\omega\in\Omega}X(\omega)P(\omega)
 \end{gather*}
 
 \newpage
-\begin{Korollar} Der Erwartungswertoperator ist ein lineares Funktional,
+\begin{Korollar}\label{expected-value-op-linear}
+Der Erwartungswertoperator ist ein lineares Funktional,
 das heißt, es gilt $E(aX)=aE(X)$ und $E(X+Y)=E(X)+E(Y)$. 
 \end{Korollar}
 \strong{Beweis.} Aufgrund der Konvergenz der Reihen gilt
@@ -79,11 +209,13 @@ und gemäß Linearität daher
 X\le Y\implies 0\le E(Y-X) = E(Y)-E(X) \iff E(X)\le E(Y).\;\qedsymbol
 \end{gather*}
 
-\begin{Definition}[Unabhängige Ereignisse]\mbox{}\\*
+\begin{Definition}[Unabhängige Ereignisse]%
+\index{unabhängige Ereignisse}\mbox{}\\*
 Zwei Ereignisse $A,B$ heißen unabhängig, falls $P(A\cap B)=P(A)P(B)$.
 \end{Definition}
 
-\begin{Definition}[Unabhängige Zufallsgrößen]\mbox{}\\*
+\begin{Definition}[Unabhängige Zufallsgrößen]%
+\index{unabhängige Zufallsgrößen}\mbox{}\\*
 Zwei Zufallsgrößen $X,Y\colon\Omega\to\R$ heißen unabhängig, wenn
 die Ereignisse $\{X\in A\}$ und $\{X\in B\}$
 für alle Mengen $A,B\subseteq\R$ unabhängig sind.
@@ -113,6 +245,7 @@ P(\{X\in A\}\cap\{Y\in B\})
 \end{gather*}
 
 \begin{Definition}[Bedingter Erwartungswert]%
+\index{bedingter Erwartungswert}\index{Erwartungswert!bedingter}%
 \label{def:cond-expected-value}\mbox{}\\*
 \[E(X\mid A) = \frac{E(1_A X)}{P(A)} = \frac{1}{P(A)}\sum_{\omega\in A} X(\omega)P(\{\omega\}).\]
 \end{Definition}
@@ -184,4 +317,53 @@ E(g(X)) &= E(Y) = \int_{-\infty}^\infty yf_Y(y)\,\mathrm dy
 &= \sgn(g')\int_{-\sgn(g')\infty}^{\sgn(g')\infty}g(x) f_X(x)\mathrm dx
 = \int_{-\infty}^\infty g(x) f_X(x)\mathrm dx.\;\qedsymbol
 \end{align*}
+
+\section{Stochastische Prozesse}%
+\index{stochastischer Prozess}
+
+\subsection{Markow-Prozesse mit endlichem Zustandsraum}
+
+\begin{Definition}[Markow-Prozess]\index{Markow-Prozess}
+Sei $X(t)$ ein stochastischer Prozess mit $t\ge 0$ und $X(t)\in S$,
+wobei $S$ ein endlicher Zustandsraum ist. Der Prozess heißt
+Markow"=Prozess, wenn die Markow"=Eigenschaft
+\[P(X(s+t)=j\mid \{X(s)=i\}\cap\bigcap_{0\le u<s}\{X(u)=x_u\}) = P(X(s+t)=j\mid X(s)=i)\]
+erfüllt ist. Das heißt, für die bedingte Wahrscheinlichkeit, dass
+$X$ in der Zukunft den Zustand $j$ einnimmt, spielt nur der aktuelle
+Zustand $i$ eine Rolle, nicht aber Zustände der Vergangenheit.
+\end{Definition}
+
+\noindent
+\strong{Bemerkung.} Eine geläufige Notation
+ist $P(A\mid B,C):=P(A\mid B\cap C).$ Es gilt
+\[P(A\mid B\cap C) = P_B(A\mid C) = P_C(A\mid B),\]
+wobei $P_B(M):=P(M\mid B)$ und $P_C(M):=P(M\mid C)$.
+
+\begin{Definition}[Homogener Markow-Prozess]%
+\index{homogener Markow-Prozess}
+Ein Markow-Prozess $X(t)$ heißt homogen, wenn die Gleichung
+\[p_{ij}(t) := P(X(s+t)=j\mid X(s)=i) = P(X(t)=j\mid X(0)=i)\]
+für jedes $s$ erfüllt ist. Man nennt $P=(P_{ij})$ die Übergangsmatrix.
+\end{Definition}
+
+\begin{Satz}[Kolmogorow-Chapman-Gleichung]%
+\index{Kolmogorow-Chapman-Gleichung}\mbox{}\\*
+Für die Übergangsmatrix eines homogenen Markow"=Prozesses gilt
+\[P(s+t) = P(s)P(t).\]
+\end{Satz}
+
+\begin{Beweis}
+Wir schreiben kurz $P_i(X(t)=j):=P(X(t)=j\mid X(0)=i)$. Gemäß dem
+Gesetz der totalen Wahrscheinlichkeit gilt
+\[p_{ij}(s+t) = P_i(X(s+t)=j)
+= \sum_{k\in S} P_i(X(s)=k) P_i(X(s+t)=j\mid X(s)=k).\]
+Aufgrund der Markow-Eigenschaft und der Homogenität gilt nun
+\begin{gather*}
+P_i(X(s+t)=j\mid X(s)=k) = P(X(s+t)=j\mid X(s)=k, X(0)=i)\\
+= P(X(s+t)=j\mid X(s)=k) = P(X(t)=j\mid X(0)=k) = P_k(X(t)=j) = p_{kj}(t).
+\end{gather*}
+Man erhält die Matrizenmultiplikation
+\[p_{ij}(s+t) = \sum_{k\in S} p_{ik}(s) p_{kj}(t),\;\,
+\text{kurz}\;\; P(s+t)=P(s)P(t).\,\qedsymbol\]
+\end{Beweis}
 

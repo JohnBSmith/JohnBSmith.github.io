@@ -435,6 +435,60 @@ bestätigt die Majorante mit $b_k=1/k^2$, denn
 Diese Ungleichung ist für $k\ge 1$ erfüllt.
 
 \newpage
+\subsection{Bisektion}
+
+\begin{Rezept}
+Bisektion ist ein allgemeines und automatisierbares
+Verfahren zur Ermittlung von Nullstellen.
+\end{Rezept}
+
+\noindent
+Gegeben ist eine Bestimmungsgleichung $T_1(x)=T_2(x)$ in der
+Variable $x$, deren Lösungen zu ermitteln sind. Die Problemstellung
+ist gleichbedeutend damit, die Nullstellen der reellen Funktion
+$f(x)=T_2(x)-T_1(x)$ zu ermitteln. Angenommen, $f$ ist stetig
+und für $a<b$ ist $f(a)f(b)<0$, das heißt, $f(a)$ und $f(b)$ haben
+unterschiedliches Vorzeichen. Dann muss $f$ gemäß dem Zwischenwertsatz
+mindestens eine Nullstelle im Intervall $[a,b]$ besitzen.
+
+Wir betrachten nun den folgenden Vorgang. Der Mittelwert $c := (a+b)/2$
+wird berechnet. Ist $f(a)f(c)<0$, muss eine Nullstelle in $[a,c]$
+liegen und es wird $c:=b$ gesetzt, andernfalls in $[c,b]$ und es
+wird $c:=a$ gesetzt. Auf das neue Intervall $[a,b]$ wird der Vorgang
+abermals angewendet, solange bis der Abstand $b-a$ hinreichend klein
+geworden ist. Nun ist $c\approx a\approx b$ eine Näherung für die
+Nullstelle.
+
+Was ist nun, wenn die Funktion mehrere Nullstellen besitzt?
+Dann betrachtet man eine hinreichend feine Aufteilung von $[a,b]$ in
+die $n$ Teilintervalle $[a_k,b_k]$ mit $a_k=a+hk$ und $b_k=a_k+h$, wobei
+$h=(b-a)/n$. Ist $f(a_k)f(b_k)<0$, kommt Bisektion zur
+Anwendung.
+
+Bisher erfuhren solcherlei Funktionen keine Beachtung, die eine
+Nullstelle besitzen, obwohl kein Vorzeichenwechsel vorliegt.
+Setzen wir dafür voraus, dass $f$ einmal differenzierbar ist und
+eine stetige Ableitung besitzt. Wenn kein Vorzeichenwechsel
+vorhanden ist, schneidet $f$ die waagerechte Achse nicht,
+sondern berührt sie nur, womit $f$ bei der Nullstelle einen
+Extrempunkt besitzt. An einem solchen muss aber zwingend $f'(x)=0$
+gelten, und zwar mit Vorzeichenwechsel. Ergo kann man wie folgt
+vorgehen. Man ermittelt zusätzlich die Nullstellen der Ableitung $f'$
+mittels Bisektion und schöpft davon alle die ab, die ebenfalls
+Nullstellen von $f$ sind.
+
+Wir beuten das Verfahren nun aus, indem wir es zum Zeichnen einer
+durch $f(x,y)=0$ beschriebenen Kurve nutzen. Dazu wird die
+$y$-Achse durch die $y_k=y_0+kd$ fein abgetastet. Zu jedem $y_k$
+bestimmt man Lösungen $x$ der Gleichung $f(x,y_k)=0$ wie beschrieben
+mittels Bisektion. Zur Verbesserung überlagert man die Zeichnung mit
+der analogen Zeichnung bezüglich Abtastung der $x$-Achse mit jeweils
+Lösungen $y$ der Gleichung $f(x_k,y)=0$.
+
+
+
+
+\newpage
 \section{Wahrscheinlichkeitsrechnung}
 
 \subsection{Zufallsgrößen}
