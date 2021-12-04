@@ -125,7 +125,8 @@ P(A) &= P(A\cap\Omega) = P(A\cap\bigcup_{B\in Z} B)
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}[Gesetz der totalen Wahrscheinlichkeit für Zufallsgrößen]\mbox{}\\*
+\begin{Korollar}[Gesetz der totalen Wahrscheinlichkeit für Zufallsgrößen]%
+\label{total-prob-rv}\mbox{}\\*
 Seien $X,Y\colon\Omega\to\Omega'$ Zufallsgrößen. Dann gilt%
 \[P(Y\in A) = \sum_{x\in X(\Omega)} P(Y\in A\mid X=x)P(X=x),\]
 speziell
@@ -133,11 +134,11 @@ speziell
 \end{Korollar}
 
 \begin{Beweis}
-Sei $Z=X(\Omega)$. Zunächst ist
+Sei $Z=X(\Omega)$. Zunächst gilt
 \[\Omega = X^{-1}(Z) = X^{-1}(\bigcup_{x\in Z} \{x\})
 = \bigcup_{x\in Z} X^{-1}(x)\]
-gemäß Satz \ref{preimg-dl} (preimg-dl) und Korollar
-\ref{disjoint-preimg} eine Vereinigung nichtleerer
+gemäß Satz \ref{preimg-dl} (preimg-dl), und gemäß Korollar
+\ref{disjoint-preimg} ist das eine Vereinigung nichtleerer
 paarweise disjunkter Mengen. Laut dem Gesetz der totalen
 Wahrscheinlichkeit gilt daher%
 \begin{align*}
@@ -354,7 +355,7 @@ Für die Übergangsmatrix eines homogenen Markow"=Prozesses gilt
 
 \begin{Beweis}
 Wir schreiben kurz $P_i(X(t)=j):=P(X(t)=j\mid X(0)=i)$. Gemäß dem
-Gesetz der totalen Wahrscheinlichkeit gilt
+Gesetz der totalen Wahrscheinlichkeit \ref{total-prob-rv} gilt
 \[p_{ij}(s+t) = P_i(X(s+t)=j)
 = \sum_{k\in S} P_i(X(s)=k) P_i(X(s+t)=j\mid X(s)=k).\]
 Aufgrund der Markow-Eigenschaft und der Homogenität gilt nun
@@ -366,4 +367,99 @@ Man erhält die Matrizenmultiplikation
 \[p_{ij}(s+t) = \sum_{k\in S} p_{ik}(s) p_{kj}(t),\;\,
 \text{kurz}\;\; P(s+t)=P(s)P(t).\,\qedsymbol\]
 \end{Beweis}
+
+\begin{Definition}[Intensitätsmatrix]\label{def:intensity-matrix}\mbox{}\\*
+Ist $P(t)$ die Übergangsmatrix eines homogenen Markow"=Prozesses, nennt man
+\[Q := P'(0) = \lim_{h\to 0}\frac{P(h)-E}{h}\]
+die Intensitätsmatrix, wobei mit $E$ die Einheitsmatrix gemeint ist.
+\end{Definition}
+\strong{Bemerkung.} Weil $P(t)$ für $t\ge 0$ definiert ist, stimmt der
+gewöhnliche Grenzwert für $h\to 0$ mit dem rechtsseitigen Grenzwert
+für $h\searrow 0$ überein.
+
+\begin{Satz}\label{intensity-matrix-exists}
+Der Grenzwert in Def. \ref{def:intensity-matrix} existiert.
+\end{Satz}
+
+\begin{Korollar}
+Für die Übergangsmatrix gilt
+\[P(h) = E + hQ + o(h),\,\text{bzw.}\; p_{ij}(h) = \delta_{ij} + hq_{ij} + o(h).\]
+\end{Korollar}
+\begin{Beweis}
+Weil $P$ laut Satz \ref{intensity-matrix-exists} an der Stelle $0$
+differenzierbar ist, besteht die Linearisierung
+\[P(h) = P(0) + hP'(0) + o(h) = E + hQ + o(h).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Kolmogorowsche Vorwärtsgleichung]\mbox{}\\*
+Die Übergangsmatrix erfüllt das Anfangswertproblem
+\[P'(t)=P(t)Q,\quad P(0)=E.\]
+\end{Satz}
+\begin{Beweis}
+Laut der Chapman"=Kolmogorow"=Gleichung ist
+\[P(t) = P(0+t) = P(0)P(t).\]
+Ergo muss $P(0)=E$ sein. Laut der Chapman"=Kolmogorow"=Gleichung,
+Def. \ref{def:intensity-matrix} und Satz \ref{intensity-matrix-exists}
+gilt zudem
+\[P'(t) = \lim_{h\to 0}\frac{P(t+h)-P(t)}{h}
+= \lim_{h\to 0}\frac{P(t)P(h)-P(t)}{h}
+= P(t)\lim_{h\to 0}\frac{P(h)-E}{h} = P(t)Q.\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Die kolmogorowsche Vorwärtsgleichung besitzt die eindeutige Lösung
+$P(t)=\ee^{tQ}$, wobei mit $\ee^A=\exp(A)$ das Matrixexponential
+gemeint ist. 
+\end{Satz}
+\begin{Beweis}
+Analog zur gewöhnlichen Exponentialfunktion gilt
+\begin{gather*}
+\frac{\mathrm d}{\mathrm dt}\ee^{tQ}
+= \frac{\mathrm d}{\mathrm dt}\sum_{k=0}^\infty \frac{(tQ)^k}{k!}
+= \sum_{k=1}^\infty \frac{\mathrm d}{\mathrm dt}\bigg(\frac{t^k Q^k}{k!}\bigg)
+= \sum_{k=1}^\infty k\frac{t^{k-1} Q^k}{k!}\\
+= \sum_{k=0}^\infty (k+1)\frac{t^k Q^{k+1}}{(k+1)!}
+= \sum_{k=0}^\infty \frac{t^k Q^{k+1}}{k!} = \ee^{tQ}Q = Q\ee^{tQ}.
+\end{gather*}
+Daher ist $\ee^{tQ}$ eine Lösung der Differentialgleichung und
+wegen $\exp(0)=E$ des Anfangswertproblems. Angenommen, es gibt eine
+weitere Lösung $P$, dann kann man $P(t) = R(t)\ee^{tQ}$
+schreiben mit $R(t):=P(t)\ee^{-tQ}$. Da $P$ die
+Differentialgleichung erfüllen soll, muss gelten
+\[0 = P'(t) - P(t)Q = R'(t)\ee^{tQ} + R(t)\ee^{tQ}Q - R(t)\ee^{tQ}Q = R'(t)\ee^{tQ}.\]
+Multipliziert man beide Seiten der Gleichung mit $\ee^{-tQ}$, ergibt sich
+$R'(t)=0$. Damit ist $R$ konstant mit $R(t)=R(0)=E$ laut Anfangsbedingung.
+Es gibt also keine weitere Lösung außer $P(t)=\ee^{tQ}$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{intensity-matrix-row-sum}
+Für die Intensitätsmatrix gilt $\sum_{j\in S} q_{ij} = 0$.
+\end{Korollar}
+\begin{Beweis}
+Weil $p_{ij}(t)$ eine Wahrscheinlichkeitsfunktion in $j$ ist, muss
+$\sum_{j\in S}p_{ij}(t)=1$ gelten. Demzufolge ist
+\[0  = \tfrac{\mathrm d}{\mathrm dt} 1 = \sum_{j\in S} p_{ij}'(t)
+= \sum_{j\in S} q_{ij}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}[Mastergleichung]\mbox{}\\*
+Die Übergangsmatrix erfüllt die Mastergleichung
+\[p_{ij}'(t) = \sum_{k\ne j} (p_{ik}(t)q_{kj} - p_{ij}(t)q_{jk}).\]
+\end{Korollar}
+\begin{Beweis}
+Da die Zeilensummen laut Korollar \ref{intensity-matrix-row-sum}
+verschwinden, gilt $q_{jj} = -\sum_{k\ne j} q_{jk}$.
+Damit erhält man die Umformung
+\begin{align*}
+p_{ij}'(t) &= \sum_k p_{ik}(t)q_{kj}
+= \sum_{k\ne j} p_{ik}(t)q_{kj} + p_{ij}(t)q_{jj}
+= \sum_{k\ne j} p_{ik}(t)q_{kj} - \sum_{k\ne j} p_{ij}(t)q_{jk}\\
+&= \sum_{k\ne j} (p_{ik}(t)q_{kj} - p_{ij}(t)q_{jk}).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+\strong{Bemerkung.} Man kann die Mastergleichung alternativ in der Form
+\[p_j'(t) = \sum_{k\ne j} (w_{jk}p_k(t) - w_{kj}p_j(t))\]
+schreiben, wobei $p_j(t):=p_{ij}(t)$ und $w_{ij}:=q_{ji}$ ist.
+Zudem kann man $w_{kk}:=0$ für jedes $k$ setzen, weil die Hauptdiagonale
+nicht in die Gleichung eingeht und redundante Information enthält.
 

@@ -29,12 +29,8 @@ $\Omega$ eine abzählbare Ergebnismenge ist und%
 \begin{equation}
 P(A):=\sum_{\omega\in A} P(\{\omega\}),\quad P\colon 2^\Omega\to [0,1]
 \end{equation}
-die Eigenschaft
-\begin{equation}
-\sum_{\omega\in\Omega} P(\{\omega\})=1
-\end{equation}
-besitzt. Die Abbildung $P$ heißt (das von den
-Einzelwahrscheinlichkeiten induzierte) \emdef{Wahrscheinlichkeitsmaß}.
+die Eigenschaft $P(\Omega)=1$ besitzt. Die Abbildung $P$ heißt (das von
+den Einzelwahrscheinlichkeiten induzierte) \emdef{Wahrscheinlichkeitsmaß}.
 Man spricht auch von einer \emdef{Verteilung} auf $\Omega$.
 \end{definition}
 
@@ -78,7 +74,8 @@ A\cup A^\comp = \Omega,\\
 A\cap A^\comp = \emptyset,\\
 P(A\cup A^\comp) = P(A)+P(A^\comp) = 1.
 \end{gather}
-\strong{Mehrstufige Experimente.}
+
+\minisection\strong{Mehrstufige Experimente.}
 Ein zweistufiges Zufallsexperiment mit einem ersten Ergebnis aus
 $\Omega_1$ und einem zweiten aus $\Omega_2$ lässt sich als
 Zufallsexperiment modellieren, bei dem die Ergebnismenge das
@@ -88,7 +85,7 @@ $n$-stufigen Experiment gilt
 \Omega = \Omega_1\times\ldots\times\Omega_n.
 \end{equation}
 
-\strong{Erste Pfadregel.}
+\minisection\strong{Erste Pfadregel.}
 Sei $a\in\Omega_1$, $b\in\Omega_2$, $A=\{a\}\times\Omega_2$
 und $B=\Omega_1\times\{b\}$. Es gilt%
 \begin{equation}
@@ -99,7 +96,7 @@ der Pfad $A$ eingetreten ist, und dann auch der Pfad $B$.
 Die Wahrscheinlichkeit ist das Produkt der Pfadwahrscheinlichkeiten
 $P(A)$ und $P(B\mid A)$.
 
-\strong{Zweite Pfadregel.}
+\minisection\strong{Zweite Pfadregel.}
 Sind $a,b\in\Omega$ zwei unterschiedliche
 Ergebnisse, dann gilt%
 \begin{equation}
@@ -142,12 +139,14 @@ P'(A) := P(A\mid B),\quad P'\colon 2^B\to [0,1]
 \end{equation}
 handelt es sich wieder um ein Wahrscheinlichkeitsmaß.
 
-\strong{Satz von Bayes.} Für $P(A)>0$ und $P(B)>0$ gilt%
+\minisection\strong{Satz von Bayes.}
+Für $P(A)>0$ und $P(B)>0$ gilt%
 \begin{equation}
 P(A\mid B) = \frac{P(B\mid A)\, P(A)}{P(B)}.
 \end{equation}
 
-\strong{Gesetz der totalen Wahrscheinlichkeit.} Bilden die $B_i$
+\minisection\strong{Gesetz der totalen Wahrscheinlichkeit.}
+Bilden die $B_i$
 eine Zerlegung des Wahrscheinlichkeitsraums, dann gilt%
 \begin{equation}
 P(A) = \sum_{i\in I} P(A\mid B_i)P(B_i).
@@ -184,18 +183,18 @@ Für eine Gleichverteilung gilt
 P(A) = \frac{|A|}{|\Omega|}.
 \end{equation}
 
-\subsection{Zufallsvariablen}
-\begin{definition}[Zufallsvariable]\mbox{}\newline
+\subsection{Zufallsgrößen}
+\begin{definition}[Zufallsgröße]\mbox{}\newline
 Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum. Jede Funktion%
 \begin{equation}
 X\colon\Omega\to\R
 \end{equation}
-heißt \emdef{Zufallsvariable}. Die Funktionswerte $x=X(\omega)$ heißen
-\emdef{Realisationen} der Zufallsvariable.
+heißt \emdef{Zufallsgröße}. Die Funktionswerte $x=X(\omega)$ heißen
+\emdef{Realisationen} der Zufallsgröße.
 \end{definition}
 
 \noindent
-Eine Zufallsvariable $X$ ordent dem Raum $(\Omega,P)$
+Eine Zufallsgröße $X$ ordent dem Raum $(\Omega,P)$
 einen neuen Wahrscheinlichkeitsraum $(\R,P_X)$ zu, wobei%
 \begin{equation}
 P_X\colon 2^{X(\Omega)}\to [0,1],\; P_X(A):=P(X^{-1}(A))
@@ -214,7 +213,7 @@ P(X\le x) &:= P(\{\omega\mid (X\omega)\le x\}).
 \end{align}
 
 \begin{definition}[Verteilungsfunktion]\mbox{}\newline
-Für eine Zufallsvariable $X$ wird
+Für eine Zufallsgröße $X$ wird
 \begin{equation}
 F(x):=P(X\le x),\quad F\colon\R\to [0,1]
 \end{equation}
@@ -232,6 +231,7 @@ Für eine Verteilungsfunktion $F$ gilt:
 \bulletbs P(a<X\le b) = F(b)-F(a).
 \end{gather}
 
+\newpage
 \subsection{Erwartungswert}
 
 \begin{definition}[Erwartungswert]\mbox{}\\*
@@ -297,7 +297,9 @@ ist $F^{-1}$ die Umkehrfunktion von $F$, andernfalls setzt man
 F^{-1}(u) := \inf\{x\in\R\mid F(x)\ge u\}.
 \end{equation}
 
-\minisection\strong{Gesetz der totalen Wahrscheinlichkeit.}
+\section{Allgemeine Verteilungen}
+
+\noindent\strong{Gesetz der totalen Wahrscheinlichkeit.}
 Für eine Zufallsgröße $X$ mit Verteilungsfunktion $F$ gilt
 \begin{equation}
 P(A) = \int_{-\infty}^\infty P(A\mid X=x)\,\mathrm dF(x).
