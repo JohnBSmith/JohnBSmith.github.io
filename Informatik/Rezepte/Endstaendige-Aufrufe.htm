@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Endständige Aufrufe</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Endständige Aufrufe</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Endrekursion">Endrekursion</a>
+<li><a href="#CPS">Continuation-Passing-Style</a>
+</ol>
+
+<h2 id="Endrekursion">Endrekursion</h2>
+
+<p>Mit der Rekursion verhält es sich in Python leider nicht ohne
+Komplikationen. Allerdings bietet Python als dynamische Sprache die
+nötigen Mittel zur Konstruktion fortentwickelter Rekursion. Das kurze
+Beispiel
+
+<pre class="python ibox">
+def add(x, y):
+    return y if x == 0 else add(x - 1, y + 1)
+</pre>
+
+<p>soll hierbei den Ausgangspunkt der nachfolgenden Betrachtungen
+darstellen. Ruft man nun auf
+
+<pre class="python ibox">
+print(add(10000, 0))
+</pre>
+
+<p>stellt man fest:
+
+<pre class="ibox">
+RecursionError: maximum recursion depth exceeded in comparison
+</pre>
+
+<p>Wie? Die Rekursionstiefe ist so eng beschränkt? Nun gut, man kann an
+der Laufzeitumgebung herumbasteln, damit sie eine größere Tiefe zulässt,
+besonders elegant ist das aber alles nicht.
+
+<p>Bei dieser Funktion findet sich jedoch ein Weg aus Problematik
+heraus, da es sich um eine Endrekursion handelt, die sich immer in
+eine Iteration umwandeln lässt. Um dies automatisieren zu können,
+müssen wir zunächst expliziten Eingriff in die Rekursion bekommen.
+Dazu definiert man den Fixpunkt-Kombinator:
+
+<pre class="python ibox">
+def fix(cb):
+    def rec(x): return cb(rec, x)
+    return rec
+</pre>
+
+<p>Hier steht <code>cb</code> für <i>callback</i>, eine allgemeine
+Bezeichnung für eine Referenz auf eine Funktion. Weil <code>rec</code>
+nur ein Argument nimmt, müsste man bei einer Funktion von mehr als
+einem Argument die Argumente zu einem Tupel zusammenfassen. Man kann
+<code>rec</code> aber so verallgemeinern, dass die Anzahl der Argumente
+beliebig sein darf:
+
+<pre class="python ibox">
+def fix(cb):
+    def rec(*t): return cb(rec, *t)
+    return rec
+</pre>
+
+<p>Nun ist die Rekursion wie folgt zu formulieren:
+
+<pre class="python ibox">
+add = fix(lambda rec, x, y: y if x == 0 else rec(x - 1, y + 1))
+</pre>
+
+<p>Pythons Dekorateur-Syntax ermöglicht hierbei eine kleine
+Aufhübschung der Notation:
+
+<pre class="python ibox">
+@fix
+def add(rec, x, y):
+    return y if x == 0 else rec(x - 1, y + 1)
+</pre>
+
+<p>Ein klassischer Ansatz zur der Umwandlung der Endrekursion in eine
+Iteration ist das Trampolin. Dabei wird der Aufruf von <code>rec</code>
+verzögert, bis die Funktion verlassen wurde. Eine Schleife führt diese
+Aufrufe solange aus, bis der Wert feststeht. Die Verzögerung ist
+Konzeptuell eine explizite Bedarfsauswertung, englisch <i>lazy
+evaluation</i>. Man könnte einfach die zu applizierende Funktion und
+ihre Argumente in einem Objekt speichern. Ich möchte dafür stattdessen
+ein Closure ohne Argumente nutzen; das macht am wenigsten Aufwand und
+genügt für die nachfolgende Diskussion. Es findet sich der modifizierte
+Fixpunkt-Kombinator:
+
+<pre class="python ibox">
+def fix(cb):
+    def rec(*n):
+        rec_lazy = lambda *n: lambda: rec(*n)
+        return cb(rec_lazy, *n)
+    def rec_iter(*n):
+        y = rec(*n)
+        while callable(y): y = y()
+        return y
+    return rec_iter
+</pre>
+
+<p>Überdies ist die Rekursionstiefe nun nicht einmal mehr durch den
+Arbeitsspeicher beschränkt, weshalb man ein Konstrukt wie
+
+<pre class="python ibox">
+@fix
+def loop(rec, n):
+    print("Schleifendurchlauf {}".format(n))
+    return rec(n + 1)
+ 
+loop(0)
+</pre>
+
+<p>endlos lange laufen lassen kann.
+
+<p>Bei Funktionen wie der rekursiv definierten Fakultät
+
+<pre class="python ibox">
+def fac(n):
+    return 1 if n == 0 else n*fac(n - 1)
+</pre>
+
+<p>liegt nicht direkt eine Endrekursion vor. Die Herstellung einer
+Endrekursion erfordert hier die Hinzuziehung eines Akkumulators als
+Hilfsvariable:
+
+<pre class="python ibox">
+@fix
+def fac(rec, n, acc = 1):
+    return acc if n == 0 else rec(n - 1, n*acc)
+ 
+print([fac(n) for n in range(10)])
+</pre>
+
+<p>Bei wechselseitiger Rekursion, beispielsweise
+
+<pre class="python ibox">
+def even(n):
+    return True if n == 0 else odd(n - 1)
+ 
+def odd(n):
+    return False if n == 0 else even(n - 1)
+</pre>
+
+<p>ist es erforderlich, eine der Funktionen in die andere zu schieben:
+
+<pre class="python ibox">
+@fix
+def even(rec, n):
+    def odd(n):
+        return False if n == 0 else rec(n - 1)
+    return True if n == 0 else odd(n - 1)
+</pre>
+
+<h2 id="CPS">Continuation-Passing-Style</h2>
+
+<p>Die bisher beschriebene Methodik ist mehr oder weniger speziell.
+Wir würden nun gerne Continuation-Passing-Style (CPS) schreiben. Damit
+kann das eigentliche Hexenwerk beginnen, denn diese allgemeine Methodik
+umfasst das Konzept von Goto-Anweisungen.
+
+Zunächst wollen wir haben, dass jeder endständige Aufruf verzögert ist.
+Dazu bauen wir die Verzögerung aus dem Fixpunkt-Kombinator aus,
+definieren stattdessen den Operator <code>call</code> zur Verzögerung
+und <code>call_ev</code> zur Auswertung:
+
+<pre class="python ibox">
+def call(f, *t):
+    return lambda: f(*t)
+ 
+def call_ev(f, *t):
+    y = f(*t)
+    while callable(y): y = y()
+    return y
+ 
+def even(n):
+    return True if n == 0 else call(odd, n - 1)
+ 
+def odd(n):
+    return False if n == 0 else call(even, n - 1)
+ 
+print(call_ev(even, 10000))
+</pre>
+
+<p>Nun transformieren wir das Programm in CPS:
+
+<pre class="python ibox">
+def even(cont, n):
+    return cont(True) if n == 0 else call(odd, cont, n - 1)
+ 
+def odd(cont, n):
+    return cont(False) if n == 0 else call(even, cont, n - 1)
+ 
+def main():
+    return call(even, print, 10000)
+ 
+call_ev(main)
+</pre>
+
+<p>Eine endliche Schleife im CPS:
+
+<pre class="python ibox">
+def loop(cont, n):
+    print("Schleifendurchlauf {}".format(n))
+    return cont() if n == 4 else call(loop, cont, n + 1)
+ 
+def final_message():
+    print("Programmende")
+ 
+def main():
+    return call(loop, final_message, 1)
+ 
+call_ev(main)
+</pre>
+
+<p>Außerdem lassen sich Koroutinen emulieren. Klassisches Beispiel:
+
+<pre class="python ibox">
+def produce():
+    for i in range(0, 4):
+        print("Wert {} produziert".format(i))
+        yield i
+        print("Es geht weiter")
+ 
+def consume():
+    while True:
+        i = yield
+        print("Wert {} konsumiert".format(i))
+ 
+c = consume()
+next(c)
+for i in produce():
+    c.send(i)
+print("Programmende)
+</pre>
+
+<p>Im CPS nimmt dieses Programm etwa die folgende Gestalt an:
+
+<pre class="python ibox">
+def final_message():
+    print("Programmende")
+ 
+def produce(cont, context):
+    try:
+        i = next(context["it"])
+    except StopIteration:
+        return call(cont)
+    print("Wert {} produziert".format(i))
+    return call(consume, cont, context, i)
+ 
+def produce_cont(cont, context):
+    print("Es geht weiter")
+    return call(produce, cont, context)
+ 
+def consume(cont, context, i):
+    print("Wert {} konsumiert".format(i))
+    return call(produce_cont, cont, context)
+ 
+context = {"it": iter(range(0, 4))}
+call_ev(produce, final_message, context)
+</pre>
+
+<p>Zum Abschluss will ich eine Emulation von Gotos aufzeigen:
+
+<pre class="python ibox">
+def goto(f):
+    return lambda: f()
+ 
+counter = 0
+ 
+def label_a():
+    global counter
+    if counter == 4: return goto(label_d)
+    counter += 1
+    print("a")
+    return goto(label_b)
+ 
+def label_b():
+    print("b")
+    return goto(label_c)
+ 
+def label_c():
+    print("c")
+    return goto(label_a)
+ 
+def label_d():
+    print("Programmende")
+ 
+call_ev(label_a)
+</pre>
+
+</body>
+</html>

@@ -23,6 +23,7 @@
 <li><a href="#Restriktion">Einschränkung auf einzelne Konstanten</a>
 <li><a href="#Praedikate">Einschränkung durch Prädikate</a>
 <li><a href="#Zusicherungen">Zusicherungen an Konstanten</a>
+<li><a href="#Schnittstelle">Konstanten zur Schnittstelle hinzufügen</a>
 </ol>
 
 <h2 id="Restklassen">Beispiel: Der Typ einer Restklasse</h2>
@@ -643,6 +644,36 @@ const fn is_sorted(a: &amp;[i32]) -&gt; bool {
 const A: [i32; 4] = [1, 2, 3, 4];
 
 const_assert!(is_sorted(&amp;A));
+</pre>
+
+<p>Alternativ ginge es auch so:
+
+<pre class="rust ibox">
+macro_rules! const_assert {
+    ($cond:expr) =&gt; {
+        #[allow(dead_code)]
+        const _: () = {
+            if !$cond {panic!("Compile time assertion failed");}
+        };
+    }
+}
+</pre>
+
+
+<h2 id="Schnittstelle">Konstanten zur Schnittstelle hinzufügen</h2>
+
+<p>Manchmal möchte man konstante Parameter oder aus ihnen berechnete
+Konstanten in der öffentlichen Schnittstelle verfügbar machen.
+Obzwar diese Funktionalität entbehrlich erscheint, bietet sie unter
+Umständen ein wenig Komfort. Erreichbar ist dies, indem die gewünschten
+Konstanten als assoziierte Konstanten definiert werden.
+
+<pre class="rust ibox">
+pub struct Array&lt;const L: usize&gt;([u32; L]);
+
+impl&lt;const L: usize&gt; Array&lt;L&gt; {
+    pub const LEN: usize = L;
+}
 </pre>
 
 </body>

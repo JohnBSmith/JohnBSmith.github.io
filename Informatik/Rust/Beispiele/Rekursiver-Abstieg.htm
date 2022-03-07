@@ -83,7 +83,7 @@ fn print_syntax_error(e: &amp;SyntaxError, s: &amp;str) {
 fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
     let s: Vec&lt;char&gt; = s.chars().collect();
     let n = s.len();
-    let mut a: Vec&lt;Token&gt; = Vec::new();
+    let mut acc: Vec&lt;Token&gt; = Vec::new();
     let mut i = 0;
     let mut col = 0;
     while i &lt; n {
@@ -91,7 +91,7 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
         if let '+' | '-' | '*' | '/' | '^'
              | '(' | ')' | '[' | ']' | ',' | ';' = c
         {
-            a.push(Token {col, symbol: Symbol::Symbol(c)});
+            acc.push(Token {col, symbol: Symbol::Symbol(c)});
             i += 1; col += 1;
         } else if c.is_alphabetic() {
             let j = i;
@@ -99,7 +99,7 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
                 i += 1; col += 1;
             }
             let id: String = s[j..i].iter().collect();
-            a.push(Token {col, symbol: Symbol::Identifier(id)});
+            acc.push(Token {col, symbol: Symbol::Identifier(id)});
         } else if c.is_digit(10) {
             let j = i;
             while i &lt; n &amp;&amp; (s[i]=='.' || s[i].is_digit(10)) {
@@ -112,7 +112,7 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
                     return Err(syntax_error(col,"invalide Zahl"));
                 }
             };
-            a.push(Token {col, symbol: Symbol::Number(x)});
+            acc.push(Token {col, symbol: Symbol::Number(x)});
         } else if let ' ' | '\t' | '\n' = c {
             i += 1;
             if c == '\n' {col = 0} else {col += 1;}
@@ -121,8 +121,8 @@ fn scan(s: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, SyntaxError&gt; {
                 &amp;format!("unerwartetes Zeichen: '{}'", c)));
         }
     }
-    a.push(Token {col, symbol: Symbol::None});
-    Ok(a)
+    acc.push(Token {col, symbol: Symbol::None});
+    Ok(acc)
 }
 
 type SyntaxResult = Result&lt;(AST, usize), SyntaxError&gt;;

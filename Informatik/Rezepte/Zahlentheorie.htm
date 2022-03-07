@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Zahlentheorie</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+
+<h1>Elementare Zahlentheorie</h1>
+
+<p>Dieses Kapitel stellt keine eigenständige Einführung in die
+elementare Zahlentheorie dar, sondern eine computermathematische
+Begleitung. Die Vorgehensweise wird meist sein, Definitionen
+algorithmisch direkt umzusetzen. Sind die Algorithmen ineffizient,
+weil sie beispielsweise eine törichte erschöpfende Suche beinhalten,
+werden daraufhin effizientere Algorithmen entwickelt.
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Teilbarkeit">Teilbarkeit</a>
+  <ol>
+  <li><a href="#Euklidische-Division">Euklidische Division</a>
+  <li><a href="#Teilerrelation">Teilerrelation</a>
+  <li><a href="#Teilerliste">Teilerliste</a>
+  <li><a href="#Teilerfunktion">Teilerfunktion</a>
+  <li><a href="#ggT">Größter gemeinsamer Teiler</a>
+  <li><a href="#kgV">Kleinstes gemeinsames Vielfaches</a>
+  </ol>
+<li><a href="#Primzahlen">Primzahlen</a>
+  <ol>
+  <li><a href="#Probedivision">Probedivision</a>
+  <li><a href="#Probedivision-verbessert">Verbesserte Probedivision</a>
+  </ol>
+<li><a href="#PFZ">Primfaktorzerlegung</a>
+  <ol>
+  <a href="#PFZ-Probedivision">Probedivision</a>
+  </ol>
+<li><a href="#Funktionen">Zahlentheoretische Funktionen</a>
+  <ol>
+  <li><a href="#phi">Eulersche phi-Funktion</a>
+  <li><a href="#Carmichael-Funktion">Carmichael-Funktion</a>
+  <li><a href="#Moebiusfunktion">Möbiusfunktion</a>
+  </ol>
+<li><a href="#Restklassen">Restklassen</a>
+  <ol>
+  <li><a href="#Kongruenz">Kongruenzrelation</a>
+  <li><a href="#Kongruenzsysteme">Kongruenzsysteme</a>
+  <li><a href="#Einheiten">Einheitengruppe</a>
+  <li><a href="#Primitivwurzeln">Primitivwurzeln</a>
+  </ol>
+</ol>
+
+<h2 id="Teilbarkeit">Teilbarkeit</h2>
+
+<h3 id="Euklidische-Division">Euklidische Division</h3>
+
+<p>In Python ist die Ganzzahldivision als floor-Division
+implementiert. Sie unterscheidet sich streng genommen von der
+Ganzzahldivision in der Zahlentheorie, die als euklidische Division
+definiert ist. Man kann sie mithilfe der floor-Division wie folgt
+erhalten:
+
+<pre class="python ibox">
+def sgn(x):
+    return 0 if x == 0 else -1 if x &lt; 0 else 1
+
+def div_euc(x, y):
+    return sgn(y)*(x//abs(y))
+
+def mod_euc(x, y):
+    return x%abs(y)
+</pre>
+
+<p>Wie man sieht, unterscheiden sich floor-Division und
+euklidische Division bei einem negativen Divisor. Solange keine
+negativen Divisoren auftreten, wollen wir auf die Benutzung der
+euklidischen Division verzichten.
+
+<h3 id="Teilerrelation">Teilerrelation</h3>
+
+<p>Die Teilerrelation »<var>x</var> teilt <var>n</var>«
+ist genau dann erfüllt, wenn die Ganzzahldivision
+<code>n//x</code> keinen Rest lässt. Man definiert demnach:
+
+<pre class="python ibox">
+def divides(x, n):
+    return n%x == 0
+</pre>
+
+<p>Man kann die Korrektheit dieser Berechnung anhand der Definition
+
+<p class="indent"><var>x</var>|<var>n</var> :⇔ ∃<var>k</var> ∈ ℤ:
+<var>n</var> = <var>k</var><var>x</var>
+
+<p>prüfen. Beschränken wir uns zunächst auf positive Zahlen.
+Eine Quantifizierung über unendlich viele ganze Zahlen ist nicht
+machbar. Allerdings ist die Existenzquantifizierung
+für <var>k</var>&nbsp;&gt;&nbsp;<var>n</var> per se nicht erfüllt.
+
+<pre class="python ibox">
+def divides(x, n):
+    return any(n == k*x for k in range(0, n + 1))
+</pre>
+
+<p>Eine geringfügige Modifikation erlaubt negative Zahlen:
+
+<pre class="python ibox">
+def divides(x, n):
+    return any(n == k*x for k in range(-abs(n), abs(n) + 1))
+</pre>
+
+<h3 id="Teilerliste">Teilerliste</h3>
+
+<p>Zur Ermittlung der Teilerliste von <var>n</var> filtert man einfach
+alle Teiler aus dem Bereich von 1 bis einschließlich <var>n</var>
+aus:
+
+<pre class="python ibox">
+def divisors(n):
+    return [x for x in range(1, abs(n) + 1) if n%x == 0]
+</pre>
+
+<h3 id="Teilerfunktion">Teilerfunktion</h3>
+
+<p>Der Wert der Teileranzahlfunktion ist schlicht die Länge
+der Teilerliste:
+
+<pre class="python ibox">
+def divisor_count(n):
+    return len(divisors(n))
+</pre>
+
+<p>Entsprechend erhält man die Teilersumme als Summe der Elemente:
+
+<pre class="python ibox">
+def divisor_sum(n):
+    return sum(divisors(n))
+</pre>
+
+<p>Die beiden Funktionen sind Spezialfälle der Teilerfunktion:
+
+<pre class="python ibox">
+def sigma(k, n):
+    return sum(d**k for d in divisors(n))
+</pre>
+
+<p>Mit der Teileranzahlfunktion lassen sich
+die hochzusammengesetzten Zahlen erzeugen.
+
+<pre class="python ibox">
+def highly_composite_numbers(order_max):
+    order = 1; n = 1; count = 0
+    while order &lt;= order_max:
+        c = divisor_count(n)
+        if c &gt; count:
+            yield (order, n, c)
+            count = c; order += 1
+        n += 1
+
+for (order, n, count) in highly_composite_numbers(10):
+    print("{:2} {:4} {:4}".format(order, n, count))
+</pre>
+
+<h3 id="ggT">Größter gemeinsamer Teiler</h3>
+
+<p>Wird zur Berechnung des ggT in direkter Weise dessen
+Definition herangezogen, ermöglichen Mengenoperationen eine
+sehr knappe Formulierung. Die Teilerlisten werden dabei als
+Teilermengen betrachtet, deren Schnittmenge gebildet wird, von
+der das Maximum zu ermitteln ist.
+
+<pre class="python ibox">
+def gcd(a, b):
+    return max(set(divisors(a)) &amp; set(divisors(b)))
+</pre>
+
+<p>Klassischer euklidischer Algorithmus:
+
+<pre class="python ibox">
+def gcd(a, b):
+    if b == 0:
+        return a
+    elif a == 0:
+        return b
+    elif b &lt; a:
+        return gcd(a - b, b)
+    else:
+        return gcd(a, b - a)
+</pre>
+
+<p>Weil die Funktion endrekursiv ist, kann sie direkt zu einem
+iterativen Algorithmus transformiert werden:
+
+<pre class="python ibox">
+def gcd(a, b):
+    if a == 0:
+        return b
+    else:
+        while b != 0:
+            if b &lt; a:
+                a = a - b
+            else:
+                b = b - a
+        return a
+</pre>
+
+<p>Moderner euklidischer Algorithmus:
+
+<pre class="python ibox">
+def gcd(a, b):
+    return a if b == 0 else gcd(b, a%b)
+</pre>
+
+<p>Diese Funktion ist ebenfalls endrekursiv. Durch Transformation
+zu einem iterativen Algorithmus findet sich:
+
+<pre class="python ibox">
+def gcd(a, b):
+    while b != 0:
+        h = a%b; a = b; b = h;
+    return a
+</pre>
+
+<p>Die Hilfsvariable <code>h</code> kann man in Python entfallen
+lassen, indem die betreffende Zeile gegen
+
+<pre class="python ibox">
+a, b = b, a%b
+</pre>
+
+<p>ersetzt wird.
+
+<p>In Pythons Standardbibliothek ist <code>gcd</code> im
+Modul <code>math</code> zu finden.
+
+<h3 id="kgV">Kleinstes gemeinsames Vielfaches</h3>
+
+<p>Das kgV zweier Zahlen wird mittels der Formel
+
+<p class="indent">ggT(<var>a</var>, <var>b</var>) kgV(<var>a</var>, <var>b</var>)
+= |<var>a</var><var>b</var>|
+
+<p>berechnet.
+
+<pre class="python ibox">
+def lcm(a, b):
+    return abs(a*b)//gcd(a, b)
+</pre>
+
+<p>Das kgV von mehr als zwei Zahlen ist gemäß
+
+<pre class="python ibox">
+from functools import reduce
+
+def lcm(*t):
+    return reduce(lambda a, b: abs(a*b)//gcd(a, b), t)
+</pre>
+
+<p>zu berechnen.
+
+<p>In Pythons Standardbibliothek ist <code>lcm</code> im
+Modul <code>math</code> zu finden.
+
+<h2 id="Primzahlen">Primzahlen</h2>
+
+<h3 id="Probedivision">Probedivision</h3>
+
+<p>Eine Zahl ist eine Primzahl, wenn sie genau zwei Teiler
+besitzt. Demzufolge lässt sich der Primzahltest bereits mittels
+der Teileranzahlfunktion definieren:
+
+<pre class="python ibox">
+def is_prime(n):
+    return divisor_count(n) == 2
+
+print([n for n in range(0, 20) if is_prime(n)])
+</pre>
+
+<p>Die Ausgabe:
+
+<pre class="ibox">
+[2, 3, 5, 7, 11, 13, 17, 19]
+</pre>
+
+<p>Zur Ermittlung der ersten <var>m</var> Primzahlen kann man
+Werkzeuge aus dem Modul <code>itertools</code> einsetzen:
+
+<pre class="python ibox">
+from itertools import count, islice
+
+def primes(m):
+    return list(islice(filter(is_prime, count(0)), m))
+</pre>
+
+<h3 id="Probedivision-verbessert">Verbesserte Probedivision</h3>
+
+<p>Keine Zahl <var>n</var> besitzt einen echten Teiler <var>k</var>,
+bei dem <var>k</var><sup>2</sup> größer als <var>n</var> ist. Nutzt
+man diesen Umstand aus, erhält man eine wesentliche Verbesserung
+des Primzahltests:
+
+<pre class="python ibox">
+def is_prime(n):
+    if n &lt; 2: return False
+    k = 2
+    while k*k &lt;= n:
+        if n%k == 0: return False
+        k += 1
+    return True
+</pre>
+
+<p>Eine weitere Verbesserung des Verfahrens erhält man wie folgt.
+Ist die Zahl <var>n</var> ungerade, kommt keine gerade Zahl
+<var>k</var> mehr als Teiler infrage, weil <var>n</var>
+sonst erst recht gerade wäre. Somit darf ab <var>k</var>=3
+um&nbsp;2 inkrementiert werden.
+
+<p>Ist die Zahl <var>n</var> weder durch zwei noch durch drei
+teilbar, kommt keine durch zwei oder drei teilbare Zahl <var>k</var>
+mehr als Teiler infrage, weil <var>n</var> sonst erst recht
+durch zwei oder drei teilbar wäre. In den Restklassen modulo 6
+verbleiben damit nur noch 1 und 5. Somit darf ab <var>k</var>=5
+wechselweise um 2 und 4 inkrementiert werden. Dieser Wechsel lässt
+sich elegant dadurch erzeugen, dass das Inkrement von 6 subtrahiert
+wird.
+
+<pre class="python ibox">
+def is_prime(n):
+    if n &lt; 4: return n &gt; 1
+    if n%2 == 0 or n%3 == 0: return False
+    k = 5; i = 2
+    while k*k &lt;= n:
+        if n%k == 0: return False
+        k += i;
+        i = 6 - i
+    return True
+</pre>
+
+<h2 id="PFZ">Primfaktorzerlegung</h2>
+
+<h3 id="PFZ-Probedivision">Probedivision</h3>
+
+<pre class="python ibox">
+def factor(n):
+    assert n != 0
+    acc = []
+    if n &lt; 0: n = -n; acc.append((-1, 1))
+    p = 2
+    while n != 1:
+        e = 0
+        while n%p == 0:
+            n = n//p; e += 1
+        if e != 0: acc.append((p, e))
+        p += 1
+    return acc
+</pre>
+
+<p>Analog zum Primzahltest erhält man eine erhebliche Verbesserung,
+wenn man die Bedingung <code>n&nbsp;!=&nbsp;1</code> bzw.
+<code>p&nbsp;&lt;=&nbsp;n</code> gegen <code>p*p&nbsp;&lt;=&nbsp;n</code>
+ersetzt. Ist diese Bedingung nicht erfüllt, muss es sich bei
+<var>n</var> im Fall <var>n</var>&ne;1 um einen
+Primfaktor handeln.
+
+<pre class="python ibox">
+def factor(n):
+    assert n != 0
+    acc = []
+    if n &lt; 0: n = -n; acc.append((-1, 1))
+    p = 2
+    while p*p &lt;= n:
+        e = 0
+        while n%p == 0: n = n//p; e += 1
+        if e != 0: acc.append((p, e))
+        p += 1
+    if n != 1: acc.append((n, 1))
+    return acc
+</pre>
+
+<h2 id="Funktionen">Zahlentheoretische Funktionen</h2>
+
+<h3 id="phi">Eulersche phi-Funktion</h3>
+
+<p>Der Wert &phi;(<var>n</var>) ist definiert als
+die Ordnung der Einheitengruppe des Restklassenrings ℤ/<var>n</var>ℤ.
+Mit anderen Worten handelt es sich um die Anzahl multiplikativ
+invertierbaren Restklassen modulo <var>n</var>. Demzufolge ist der
+Wert wie folgt zu ermitteln:
+
+<pre class="python ibox">
+def is_invertible(x, n):
+    e = 1 if n != 1 else 0
+    return any((x*y)%n == e for y in range(0, n))
+
+def units(n):
+    return [k for k in range(0, n) if is_invertible(k, n)]
+
+def phi(n):
+    return len(units(n))
+</pre>
+
+<p>Bei <var>n</var>&nbsp;=&nbsp;1 handelt es sich um einen Sonderfall,
+bei dem das additiv neutrale Element mit dem multiplikativ neutralen
+Element zusammenfällt.
+
+<p>Eine elementare Gesetzmäßigkeit ist, dass eine Zahl <var>k</var>
+genau dann multiplikativ invertierbar modulo <var>n</var> ist,
+wenn <var>k</var> koprim zu <var>n</var> ist, wenn also
+ggT(<var>k</var>,&nbsp;<var>n</var>)&nbsp;=&nbsp;1 gilt. Daher gilt:
+
+<pre class="python ibox">
+def phi(n):
+    return len([k for k in range(0, n) if gcd(n, k) == 1])
+</pre>
+
+<p>Der Wert lässt sich mit der Primfaktorzerlegung auch über
+eine Produktformel ermitteln:
+
+<pre class="python ibox">
+from math import prod
+
+def phi(n):
+    return prod(p**(e-1)*(p - 1) for (p, e) in factor(n))
+</pre>
+
+<p>Setzt man die Probedivision zur Primfaktorzerlegung
+ein, findet sich:
+
+<pre class="python ibox">
+def phi(n):
+    assert n > 0
+    y = 1; p = 2
+    while p*p &lt;= n:
+        e = 0
+        while n%p == 0: n = n//p; e += 1
+        if e != 0: y *= p**(e-1)*(p - 1)
+        p += 1
+    if n != 1: y *= n - 1
+    return y
+</pre>
+
+<h3 id="Carmichael-Funktion">Carmichael-Funktion</h3>
+
+<p>Der Wert &lambda;(<var>n</var>) ist definiert als der
+Gruppenexponent der Einheitengruppe des Restklassenrings
+ℤ/<var>n</var>ℤ. Die algorithmische Umsetzung dieser
+Definition:
+
+<pre class="python ibox">
+def units(n):
+    return [x for x in range(0, n) if gcd(n, x) == 1]
+
+def carm(n):
+    e = 1 if n != 1 else 0
+    m = 1; G = units(n)
+    while True:
+        if all(pow(g, m, n) == e for g in G): return m
+        m += 1
+</pre>
+
+<p>Die Carmichal-Funktion wurde <code>carm</code> anstelle
+<code>lambda</code> genannt, weil <code>lambda</code> in Python
+ein Schlüssel ist.
+
+<h3 id="Moebiusfunktion">Möbiusfunktion</h3>
+
+<p>Der Wert der Möbiusfunktion ist gemäß ihrer Definition
+folgendermaßen zu ermitteln:
+
+<pre class="python ibox">
+def mu(n):
+    assert n > 0
+    a = factor(n)
+    if any(e != 1 for (p, e) in a):
+        return 0
+    elif len(a)%2 == 0:
+        return 1
+    else:
+        return -1
+</pre>
+
+<h2 id="Restklassen">Restklassen</h2>
+
+<h3 id="Kongruenz">Kongruenzrelation</h3>
+
+<p>Zwei Zahlen <var>a</var>,&nbsp;<var>b</var> heißen kongruent
+modulo <var>m</var>, kurz
+<var>a</var>&nbsp;≡&nbsp;<var>b</var>&nbsp;(mod&nbsp;<var>m</var>),
+wenn die Division durch <var>m</var> bei beiden Zahlen den gleichen
+Rest lässt. Weil dieser Rest das Ergebnis der Modulo-Operation
+ist, kann die Kongruenzrelation als
+
+<pre class="python ibox">
+def is_cong(a, b, m):
+    return a%m == b%m
+</pre>
+
+<p>implementiert werden. Zwei Zahlen sind genau dann kongruent
+modulo <var>m</var>, wenn ihre Differenz durch <var>m</var>
+teilbar ist, womit man die Kongruenzrelation alternativ als
+
+<pre class="python ibox">
+def is_cong(a, b, m):
+    return (a - b)%m == 0
+</pre>
+
+<p>implementieren kann. Diese Variante besitzt den Vorteil, eine Division
+weniger ausführen zu müssen, deren Berechnungen aufwendig sind.
+
+<h3 id="Kongruenzsysteme">Kongruenzsysteme</h3>
+
+<p>Aufgabe sei es zunächst, sämtliche Lösungen der Kongruenz
+
+<p class="indent"><var>x</var> ≡ <var>a</var> (mod <var>m</var>)
+
+<p>zu bestimmen. Erfreulich ist hierbei der Umstand, dass der
+Restklassenring ℤ/<var>m</var>ℤ nur endlich viele Elemente besitzt,
+deren kanonische Repräsentanten den Bereich
+<code>range(0,&nbsp;m)</code> bilden. Ist <var>m</var> hinreichend
+klein, kann die Lösungsmenge also durch erschöpfende Suche ermittelt
+werden. Ohne Frage ist das töricht, weil die eindeutige Lösung
+sinnfällig direkt als <code>a%m</code> vorliegt.
+
+<p>Nun betrachten wir aber die Aufgabe, dass die beiden Kongruenzen
+
+<p class="indent"><var>x</var> ≡ <var>a</var> (mod <var>m</var>),<br>
+<var>x</var> ≡ <var>b</var> (mod <var>n</var>)
+
+<p>gleichzeitig erfüllt sein sollen. Ein solches Problem bezeichnet
+man als <i>System von Kongruenzen</i> oder als
+<i>simultane Kongruenz</i>. Ähnlich wie bei einem Gleichungssystem
+handelt es sich schlicht um eine logische UND-Verknüpfung von
+Kongruenzen. Man kann es sogar als Gleichungssystem
+
+<p class="indent">[<var>x</var>]<sub><var>m</var></sub> = [<var>a</var>]<sub><var>m</var></sub>,<br>
+[<var>x</var>]<sub><var>n</var></sub> = [<var>b</var>]<sub><var>n</var></sub>
+
+<p>betrachten. Die kanonische Projektion
+[<var>x</var>]<sub><var>m</var></sub> wird als <code>x%m</code> kodiert.
+Es ist nun so, dass diese Projektion periodisch mit Periodenlänge
+<var>m</var> ist. Infolge ist die Abbildung
+
+<p class="indent">x ↦ ([<var>x</var>]<sub><var>m</var></sub>, [<var>x</var>]<sub><var>n</var></sub>)
+
+<p>periodisch mit Periodenlänge kgV(<var>m</var>,&nbsp;<var>n</var>).
+Die erschöpfende Suche darf also als
+
+<pre class="python ibox">
+def solve(a, m, b, n):
+    return [x for x in range(0, lcm(m, n))
+        if is_cong(x, a, m) and is_cong(x, b, n)]
+</pre>
+
+<p>implementiert werden. Die allgemeine Formulierung
+
+<pre class="python ibox">
+def solve(s):
+    M = lcm(*(m for a, m in s))
+    return [x for x in range(0, M)
+        if all(is_cong(x, a, m) for a, m in s)]
+</pre>
+
+<p>löst ein System von beliebig vielen Kongruenzen.
+
+<h3 id="Einheiten">Einheitengruppe</h3>
+
+<p>Wie bereits im Abschnitt zur phi-Funktion ausgeführt,
+sind die Einheiten genau die zum Modul koprimen Repräsentanten.
+Die Berechnung der Einheitengruppe des Restklassenrings
+ℤ/<var>n</var>ℤ kann somit als
+
+<pre class="python ibox">
+def units(n):
+    return [x for x in range(0, n) if gcd(n, x) == 1]
+</pre>
+
+<p>erfolgen. Die Inverse eines Repräsentanten wird durch
+
+<pre class="python ibox">
+def inv(x, n):
+    e = 1 if n != 1 else 0
+    for y in range(0, n):
+        if (x*y)%n == e: return y
+</pre>
+
+<p>berechnet. Das folgende Programm erstellt die Gruppentafel der
+Einheitengruppe:
+
+<pre class="python ibox">
+def print_group_table(n, space = 2):
+    G = units(n)
+    fmt = lambda x: "{:>{}}".format(x, space)
+    print(fmt("*") + " | " + " ".join(fmt(y) for y in G))
+    print("─"*(space + 2 + (space + 1)*len(G)))
+    for x in G:
+        print(fmt(x) + " | " + " ".join(fmt((x*y)%n) for y in G))
+</pre>
+
+<h3 id="Primitivwurzeln">Primitivwurzeln</h3>
+
+<p>Für manche <var>n</vaR> ist die Einheitengruppe von ℤ/<var>n</var>ℤ
+eine zyklische Gruppe. Das Erzeugnis ⟨<var>g</var>⟩ wird durch
+
+<pre class="python ibox">
+def generate(g, n):
+    acc = set()
+    x = 1 if n != 1 else 0
+    while not x in acc:
+        acc.add(x)
+        x = (x*g)%n
+    return acc
+</pre>
+
+<p>berechnet. Existiert ein Erzeuger, das heißt, ein <var>g</var> mit
+⟨<var>g</var>⟩&nbsp;=&nbsp;<var>G</var>, dann
+ist <var>G</var> zyklisch:
+
+<pre class="python ibox">
+def is_cyclic(n):
+    G = units(n); setG = set(G)
+    return any(generate(g, n) == setG for g in G)
+</pre>
+
+<p>Die Erzeuger einer zyklischen Einheitengruppe
+bezeichnet man als <i>Primitivwurzeln</i>. Wir können sie mit
+
+<pre class="python ibox">
+def generators(n):
+    G = units(n); setG = set(G)
+    return [g for g in G if generate(g, n) == setG]
+</pre>
+
+<p>berechnen.
+
+</body>
+</html>

@@ -41,31 +41,58 @@ oder bei längeren Modulen in einer extra Datei. Funktionen, Datentypen,
 Konstanten und Variablen sind nur dann öffentlich, wenn sie mit
 dem Schlüsselwort <code>pub</code> markiert wurden.
 
-<p>Die Grundstruktur von Modulen sei hier am Primzahltest verdeutlicht:
+<p>Die Grundstruktur von Modulen sei hier an der Bestimmung der
+Parität verdeutlicht:
 <pre class="rust ibox">
-mod number_theory {
-    pub fn is_prime(n: u64) -&gt; bool {
-        for k in 2..n {
-            if n%k == 0 {return false;}
-        }
-        true
-    }
+mod parity {
+    pub fn even(x: i32) -&gt; bool {x%2 == 0}
 }
 
-use number_theory::is_prime;
+use parity::even;
 
 fn main() {
-    let a: Vec&lt;u64&gt; = (1..).filter(|&amp;n| is_prime(n))
-        .take(10).collect();
-    println!("{:?}", a);
+    println!("{}", even(0));
 }
 </pre>
 
 <p>Die <code>use</code>-Anweisung macht lediglich deutlich,
-welchem Modul die Funktion <code>is_prime</code> entstammen soll.
+welchem Modul die Funktion <code>even</code> entstammen soll.
 Es könnte ja mehrere Module mit einer so benannten Funktion geben.
 Zudem gibt die <code>use</code>-Anweisung darüber Aufschluss,
 welche Abhängigkeiten ein Modul besitzt.
+
+<p>Möchte man sich unmissverständlich ausdrücken, kann zudem
+klargestellt werden, aus welchem Crate das Modul entstammen soll.
+Mit dem Schlüsselwort <code>crate</code> bezieht man sich hierbei
+auf das gegenwärtige Crate. So kann
+
+<pre class="rust ibox">
+use parity::even;
+</pre>
+
+<p>als Kurzform von
+
+<pre class="rust ibox">
+use crate::parity::even;
+</pre>
+
+<p>gelesen werden.
+
+<p>Alternativ zur <code>use</code>-Anweisung lässt sich der Aufruf als
+<code>parity::even(0)</code> oder in aller Ausführlichkeit als
+<code>crate::parity::even(0)</code> qualifizieren.
+
+<p>Das Crate <code>std</code> bezeichnet die Standardbibliothek.
+Mit <code>std::collections::Vec</code> ist also der Typ
+<code>Vec</code> aus dem in der Standardbibliothek befindlichen
+Modul <code>collections</code> gemeint. Ich möchte anmerken, dass
+die Standardbibliothek nicht fest mit Rust verdrahtet ist, dass man
+sie also gegen eine alternative Standardbibliothek austauschen könnte,
+was für eine Systemprogrammiersprache unter manchen Umständen
+vorteilhaft sein kann. Des Weiteren ist die Standardbibliothek kein
+monolitischer Block, sondern baut selbst auf den Crates <code>core</code>
+und <code>alloc</code> auf.
+
 
 <h2 id="Reexport">Reexport</h2>
 

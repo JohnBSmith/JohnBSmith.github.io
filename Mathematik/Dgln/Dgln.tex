@@ -1,18 +1,19 @@
-\documentclass[a4paper,11pt,fleqn,twocolumn,twoside,%
+\documentclass[a4paper,10pt,fleqn,twocolumn,twoside,%
 openany,dvipdfmx]{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-\usepackage{amsthm}
-\usepackage{libertine}
-\usepackage[libertine]{newtxmath}
-\usepackage[scaled=0.80]{DejaVuSans}
-\usepackage[scaled=0.80]{DejaVuSansMono}
 
+\usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{textcomp}
 \usepackage{microtype}
+
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage[scaled=0.80]{DejaVuSans}
+\usepackage[scaled=0.80]{DejaVuSansMono}
 
 \usepackage[automark]{scrlayer-scrpage}
 \ohead{\pagemark}
@@ -27,7 +28,7 @@ openany,dvipdfmx]{scrartcl}
 \definecolor{c3}{RGB}{80,120,180}
 \usepackage[colorlinks=true,linkcolor=c1]{hyperref}
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=10mm,top=22mm,bottom=32mm}
+\geometry{a4paper,left=24mm,right=14mm,top=22mm,bottom=32mm}
 \setlength{\columnsep}{4mm}
 \usepackage{lipsum}
 \usepackage{multicol}
@@ -84,28 +85,22 @@ openany,dvipdfmx]{scrartcl}
 \numberwithin{Definition}{section}
 
 \begin{document}
-\setlength{\abovedisplayskip}{6pt}
-\setlength{\belowdisplayskip}{6pt}
-\setlength{\abovedisplayshortskip}{6pt}
-\setlength{\belowdisplayshortskip}{6pt}
+%\setlength{\abovedisplayskip}{6pt}
+%\setlength{\belowdisplayskip}{6pt}
+%\setlength{\abovedisplayshortskip}{6pt}
+%\setlength{\belowdisplayshortskip}{6pt}
 
-\begin{titlepage}
-\centering
-\phantom{x}
 
-\vspace{20em}
-{\noindent\Huge\sffamily\textbf{Differentialgleichungen}}
+\section*{{\huge Differentialgleichungen}}
 
-\vspace{2em}
-{\Large Dezember 2016}\\
-\end{titlepage}
-
-\thispagestyle{empty}
+{\large Dezember 2016}
 
 \renewcommand{\contentsname}{
 \normalfont\sffamily\bfseries\LARGE
 Inhaltsverzeichnis}
 \tableofcontents
+
+\clearpage
 
 \section{Vorbereitungen}
 \subsection{Notation}
@@ -248,6 +243,33 @@ ist eine Gleichung der Form%
 \end{equation}
 mit $y_k:=(D^k f)(x)$. $\Box$
 \end{Definition}
+
+\subsection{Anfangswertprobleme}
+
+Für gewöhnlich besitzt eine Differentialgleichung mehr als eine
+Lösung. So ist die Funktion $f(x)=c\ee^x$ für jede Konstante $c$ eine
+Lösung der Differentialgleichung $f'(x) = f(x)$. Man kann überdies
+zeigen, dass jede Lösung von dieser Form sein muss.
+
+Bei einer Problemstellung mit einer eindeutigen Lösung kommt daher
+in aller Regel eine Zusatzforderung an die Funktion hinzu, die
+unterschiedlicher Art sein kann. Häufig trifft man bei einer
+gewöhnlichen Dgl. auf ein
+\emph{Anfangswertproblem}, manchmal aber auch auf ein
+\emph{Randwertproblem}.
+
+Fordert man zusätzlich, dass $f(x)$ an einer bestimmmten Stelle einen
+bestimmten Anfangswert annehmen soll, kurz $f(x_0)=y_0$, bekommt man
+für die genannte Gleichung eine eindeutige Lösung, und zwar muss die
+Konstante den Wert $c=y_0\ee^{-x_0}$ annehmen.
+
+Bei einer Dgl. höherer Ordnung umfasst das Anfangswertproblem
+zusätzlich, welche Werte die Ableitungen der Lösung
+an der Stelle annehmen sollen. Beispielsweise ist die Sinusfunktion
+$f(x)=\sin(x)$ die eindeutige Lösung des Anfangswertproblems%
+\[f''(x) = -f(x),\quad f(0)=0,\quad f'(0)=1.\]
+Der Leser möge als kurze Übung beantworten, wie das Anfangswertproblem
+für die Kosinusfunktion lautet.
 
 \section{Lösungsmethoden}
 Man betrachte das Anfangswertproblem

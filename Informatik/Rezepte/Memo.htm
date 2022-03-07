@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Memoisierung</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Memoisierung</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Problematik">Problematik</a>
+<li><a href="#Memoisierung">Memoisierung</a>
+<li><a href="#Anfangswerte">Anfangswerte</a>
+<li><a href="#Fixpunkt-Kombinator">Fixpunkt-Kombinator</a>
+</ol>
+
+<h2 id="Problematik">Problematik</h2>
+
+<p>Rekursive Definition der Fibonacci-Folge:
+
+<pre class="python ibox">
+def fib(n):
+    return 1 if n &lt; 3 else fib(n - 1) + fib(n - 2)
+</pre>
+
+<p>Lässt man die Werte nun per
+
+<pre class="python ibox">
+for n in range(1, 100):
+    print("{} | {}".format(n, fib(n)))
+</pre>
+
+<p>ausgeben, stellt man fest, dass der Zeitbedarf der Berechnung ab
+etwa <code>n==30</code> in die Größenordnung von Sekunden ansteigt und
+ab etwa <code>n==40</code> Minuten beträgt. Die genauen Werte sind
+natürlich davon abhängig, wie schnell der Computer rechnen kann und wie
+der Interpreter implementiert ist.
+
+<p>Man kann zeigen, dass der Berechnungsaufwand exponentiell steigt.
+Trägt man also die logarithmierte Zeitdauer in Abhängigkeit von
+<code>n</code> auf, müsste sich eine Gerade ergeben. Bei der Messung
+sollte man die Zeitdauer über möglichst viele Berechnungen mitteln,
+um solche statistischen Effekte herauszurechnen, die durch das
+Betriebssystem und Vorgänge im Prozessor entstehen. Außerdem sollte
+man dafür sorgen, dass die Startzeit des Interpreters bzw. die
+Ladezeit des Programms nicht mit in die Messung eingeht.
+
+<h2 id="Memoisierung">Memoisierung</h2>
+
+<p>Zur Reduktion des Berechnungsaufwands kommt nun Memoisierung
+zur Anwendung. Hierbei werden bereits berechnete Werte in einem
+<i>Memo</i> oder <i>Cache</i> gespeichert, um sie nicht ständig
+erneut ermitteln zu müssen. Als Speicher diene zunächst ein Array.
+
+<pre class="python ibox">
+fib_memo = 1000*[None]
+
+def fib(n):
+    if n &lt; 3:
+        return 1
+    else:
+        if fib_memo[n] is None:
+            fib_memo[n] = fib(n - 1) + fib(n - 2)
+        return fib_memo[n]
+</pre>
+
+<p>Eleganter als die Festsetzung einer festen Arraygröße ist
+jedoch die Nutzung eines dynamischen Arrays oder eines Wörterbuchs.
+Ersetzt man das Array durch ein Wörterbuch, nimmt das Programm
+die folgende Gestalt an:
+
+<pre class="python ibox">
+fib_memo = {}
+
+def fib(n):
+    if n &lt; 3:
+        return 1
+    else:
+        if not n in fib_memo:
+            fib_memo[n] = fib(n - 1) + fib(n - 2)
+        return fib_memo[n]
+</pre>
+
+<p>Bei der bisher beschriebenen Vorgehensweise verbleibt noch das
+Manko, dass die Memoisierung umständlich in jeden neuen Algorithmus
+eingefügt werden muss. Für den Leser wird der eigentliche Algorithmus
+dabei quasi mit technischem Balast verschleiert.
+
+<p>Wir beseitigen dieses Manko nun durch Abtrennung der Memoisierung
+vom Algorithmus. Eine Funktion <code>memoize</code> erzeugt hierbei
+eine neue Funktion, die die urspüngliche in eine Memoisierung
+einhüllt. Dies gelingt folgendermaßen:
+
+<pre class="python ibox">
+def memoize(f):
+    memo = {}
+    def f_memo(n):
+        if not n in memo: memo[n] = f(n)
+        return memo[n]
+    return f_memo
+
+def fib(n):
+    return 1 if n &lt; 3 else fib(n - 1) + fib(n - 2)
+
+fib = memoize(fib)
+</pre>
+
+<p>Bequemerweise bietet die Sprache Python mit ihrer Dekorateur-Syntax
+abschließend noch einen syntaktischen Zucker mit dem sich die
+Memoisierung ideal notieren lässt:
+
+<pre class="python ibox">
+@memoize
+def fib(n):
+    return 1 if n &lt; 3 else fib(n - 1) + fib(n - 2)
+</pre>
+
+<p>Es sei erwähnt, dass die Formulierung von <code>memoize</code>
+mehrstellige Funktionen einbezieht, wenn man die Argumente der
+jeweiligen Funktion zu einem Tupel zusammenfasst. Man betrachte zur
+Demonstration die rekursive Berechnung der Binomialkoeffizienten:
+
+<pre class="python ibox">
+@memoize
+def bc(t):
+    (n, k) = t
+    if k == 0 or k == n:
+        return 1
+    else:
+        return bc((n - 1, k - 1)) + bc((n - 1, k))
+
+# Pascalsches Dreieck
+for n in range(0, 10):
+    print([bc((n, k)) for k in range(0, n + 1)])
+</pre>
+
+<p>Mithilfe von Pythons Asterisk-Operator lässt sich
+<code>memoize</code> überdies so verallgemeinern, dass mehrstellige
+Funktion explizit einbezogen sind.
+
+<pre class="python ibox">
+def memoize(f):
+    memo = {}
+    def f_memo(*t):
+        if not t in memo: memo[t] = f(*t)
+        return memo[t]
+    return f_memo
+
+@memoize
+def bc(n, k):
+    return 1 if k == 0 or k == n else bc(n - 1, k - 1) + bc(n - 1, k)
+
+# Pascalsches Dreieck
+for n in range(0, 10):
+    print([bc(n, k) for k in range(0, n + 1)])
+</pre>
+
+<p>Man kann nun noch diskutieren, inwieweit sich benannte
+Argumente berücksichtigen lassen. Dies ist jedoch nur noch eine
+technische Diskussion und keine konzeptuelle mehr.
+
+<p>In Pythons Standardbibliothek ist Memoisierung unter der
+Bezeichnung <code>cache</code> im Modul <code>functools</code>
+zu finden.
+
+<h2 id="Anfangswerte">Anfangswerte</h2>
+
+<p>Besonders elgant wird die Formulierung, wenn die Anfangswerte
+an <code>memoize</code> übergeben werden, womit die Fallunterscheidung
+im jeweiligen Algorithmus entfallen darf. Das geht so:
+
+<pre class="python ibox">
+def memoize(memo):
+    def cb(f):
+        def f_memo(n):
+            if not n in memo: memo[n] = f(n)
+            return memo[n]
+        return f_memo
+    return cb
+
+@memoize({1: 1, 2: 1})
+def fib(n):
+    return fib(n - 1) + fib(n - 2)
+</pre>
+
+<h2 id="Fixpunkt-Kombinator">Fixpunkt-Kombinator</h2>
+
+<p>Zu erwähnen ist, dass auch der Aufruf der eigenen Funktion innerhalb
+der Rekursion gegen die memoisierte Variante ersetzt werden muss.
+Das war möglich, weil die Funktion auch innerhalb der Rekursion
+über eine globale Variable angesprochen wird. Ist dies nicht gegeben,
+kann man die Memoisierung alternativ in den Fixpunkt-Kombinator einbauen.
+
+<p>Zunächst der reine Fixpunkt-Kombinator:
+
+<pre class="python ibox">
+def fix(cb):
+    def rec(n): return cb(rec, n)
+    return rec
+
+@fix
+def fib(rec, n):
+    return 1 if n &lt; 3 else rec(n - 1) + rec(n - 2)
+</pre>
+
+<p>Nun bringen wir die Memoisierung ein und berücksichtigen
+mehrstellige Funktionen wieder mit der Asterisk-Syntax:
+
+<pre class="python ibox">
+def fix(cb):
+    memo = {}
+    def rec(*t):
+        if not t in memo: memo[t] = cb(rec, *t)
+        return memo[t]
+    return rec
+
+@fix
+def fib(rec, n):
+    return 1 if n &lt; 3 else rec(n - 1) + rec(n - 2)
+</pre>
+
+
+</body>
+</html>

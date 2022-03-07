@@ -4,12 +4,8 @@
 \usepackage[ngerman]{babel}
 \usepackage{microtype}
 
-% \usepackage{mathptmx}
-\usepackage{libertine}
-\usepackage[libertine,smallerops]{newtxmath}
-\addtokomafont{disposition}{\rmfamily}
-% \renewcommand\ttdefault{lmtt}
-\usepackage[scaled=0.84]{DejaVuSansMono}
+% Bugfix. Siehe https://komascript.de/node/2295
+\unsettoc{toc}{onecolumn}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -17,13 +13,20 @@
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily\small,commentstyle=\ttfamily}
 
+% \usepackage{mathptmx}
+\usepackage{libertine}
+\usepackage[libertine,smallerops]{newtxmath}
+\addtokomafont{disposition}{\rmfamily}
+% \renewcommand\ttdefault{lmtt}
+\usepackage[scaled=0.84]{DejaVuSansMono}
+
 \usepackage{graphicx}
 \usepackage{color}
 \definecolor{c1}{RGB}{60,0,40}
 
 \usepackage{geometry}
-\geometry{a4paper,left=25mm,right=12mm,top=20mm,bottom=28mm}
-\setlength{\columnsep}{6mm}
+\geometry{a4paper,left=23mm,right=12mm,top=20mm,bottom=28mm}
+\setlength{\columnsep}{5mm}
 
 \numberwithin{equation}{section}
 
@@ -666,7 +669,123 @@ absoluten Zahlen verraten. Man bekommt
 R_0 = \frac{\beta}{\gamma+\mu}.
 \end{equation}
 
-\newpage
+% \newpage
+\section{Infektionsalter-Modell}
+
+\subsection{Modelldefinition}
+
+Eine Eigenart des klassischen SIR"=Modells ist die
+Exponentialverteilung der infektiösen Zeit. Arbeitet man die Beschränkung
+auf eine feste Verteilung aus dem Modell heraus, entsteht das
+allgemeine Modell
+\begin{equation}\label{eq:infection-age-model}
+s'(t) = s(t)\int_0^\infty n(a)s'(t-a)\,\mathrm da.
+\end{equation}
+Hierbei ist $n(a)$ die Infektionsrate im Infektionsalter $a$. Mit
+dem Infektionsalter ist nicht das Alter des Individuums gemeint,
+sondern die seit der Infektion vergangene Zeit.
+
+Der Gleichung kommt die folgende Interpretation zu. Die Neuinzidenz $-s'(t)$
+entsteht durch Infektiöse, die in der Vergangenheit infiziert wurden.
+Die, die zum Zeitpunkt $t-a$ infiziert wurden, umfassen $-s'(t-a)$,
+befinden sich nun im Infektionsalter $a$ und tragen somit zu
+$-n(a)s'(t-a)$ bei. Das Integral summiert bezüglich Substitution
+$t-a=\tau$ die gesamte Vergangenheit auf. Weil zum aktuellen Zeitpunkt
+allerdings nur noch der Anteil $s(t)$ anfällig ist, ist das Integral
+mit $s(t)$ zu multiplizieren.
+
+
+\subsection{Spezialfälle}
+
+Im Folgenden wird gezeigt, dass es sich sowohl beim SIR- als auch beim
+SEIR"=Modell um einen Spezialfall des Infektionsalter"=Modells handelt.
+
+Dazu zerlegen wir die Infektionsrate zu einem Produkt
+$n(a)=\beta(a)p(a)$, wobei $\beta(a)$ die Transmissionsrate ist
+und $p(a)$ die Wahrscheinlichkeit, im Infektionsalter $a$
+infektiös zu sein. Zum besseren Verständnis betrachtet man nicht
+ein einziges Individium, sondern eine Schar, alle zum exakt gleichen
+Zeitpunkt infiziert. Von ihr ist im Alter $a$ der relative Anteil
+$p(a)$ infektiös, was zu $\beta(a)p(a)$ Übertragungen pro Zeiteinheit
+führt.
+
+Sei nun $\beta$ konstant und $p(a)=\ee^{-\gamma a}$, damit
+$F(a)=1-p(a)$ die Verteilungsfunktion der Exponentialverteilung ist.
+Zur Unifizierung mit der Gleichung $s' = -\beta si$ muss man
+\[i(t) := -\frac{s'(t)}{\beta s(t)}
+= -\int_0^\infty\ee^{-\gamma a} s'(t-a)\,\mathrm da\]
+definieren. Partielle Integration führt zu
+\[i(t) = -s(t) + \gamma\int_0^\infty \ee^{-\gamma a}s(t-a)\,\mathrm da.\]
+Leitet man diese auf beiden Seiten ab, erhält man
+\begin{align*}
+i'(t) &= -s'(t) +\gamma\int_0^\infty \ee^{-\gamma a}s'(t-a)\,\mathrm da\\
+&= -s'(t) - \gamma i(t) = \beta s(t)i(t) - \gamma i(t).
+\end{align*}
+Die Gleichung \eqref{eq:infection-age-model} ist somit zu den 
+Differentialgleichungen des SIR"=Modells reduziert.
+
+\subsection{Basisreproduktionszahl}
+
+Aufgrund der Definition von $n(a)$ gilt
+\[R_0 = \int_0^\infty n(a)\,\mathrm da.\]
+Die normierte Funktion
+\[g(a) := \frac{n(a)}{R_0}\]
+ist eine Wahrscheinlichkeitsdichte, die Dichte der zeitlichen Verteilung
+der Infektiosität. Die Verteilung ist auch unter der Bezeichnung
+\emph{Verteilung des seriellen Intervalls} geläufig, englisch
+\emph{serial interval distribution}.
+
+Weil die Neuinzidenz am Anfang der Epidemie exponentiell wächst,
+darf man den Ansatz $s'(t)=-c_0\ee^{\lambda t}$ machen. Bei einer
+vollständig anfälligen Bevölkerung gilt in dieser Phase zudem
+$s(t)\approx 1$ in guter Näherung. Setzt man dies in
+\eqref{eq:infection-age-model} ein und kürzt, findet man
+\[1 = R_0\int_0^\infty \ee^{-\lambda a}g(a)\,\mathrm da,\]
+die \emph{epidemiologische Euler"=Lotka-Gleichung}. Zur Ermittlung
+der Basisreproduktionszahl genügt laut ihr die Kenntnis der
+Wachstumskonstante $\lambda$ und der Dichte $g(a)$.
+
+\subsection{Ausmaß der Epidemie}
+
+Wir stellen im allgemeinen Modell nochmals die Frage, welches
+Ausmaß die Epidemie angenommen haben wird, nachdem sie vollständig
+abgeklungen ist. Die Frage, welcher Anteil der Bevölkerung
+infiziert wurde.
+
+Mit der bereits in \cite{Kermack} beschriebenen Methodik wird nun gezeigt,
+dass die Final size equation gültig bleibt. Zunächst substituiert man
+$\tau=t-a$ in \eqref{eq:infection-age-model} und erhält
+\[\frac{s'(t)}{s(t)} = \int_{-\infty}^t n(t-\tau)s'(\tau)\,\mathrm d\tau
+= \int_{-\infty}^\infty n(t-\tau)s'(\tau)\,\mathrm d\tau,\]
+wobei die letzte Gleichung ja wegen $n(a)=0$ für $a<0$ gilt.
+Man findet die Umformung%
+\begin{gather*}
+\int_0^\infty \frac{s'(t)}{s(t)}\,\mathrm dt
+= \int_0^\infty\!\!\int_{-\infty}^\infty n(t-\tau)s'(\tau)\,\mathrm d\tau\,\mathrm dt\\
+= \int_{-\infty}^\infty\!\! s'(\tau)\!\int_0^\infty \!\!\! n(t-\tau)\,\mathrm dt\,\mathrm d\tau
+= \int_{-\infty}^\infty\!\! s'(\tau)\!\int_0^\infty \!\!\! n(t)\,\mathrm dt\,\mathrm d\tau\\
+= R_0 \int_{-\infty}^\infty s'(t)\,\mathrm dt = R_0(s_\infty - 1).
+\end{gather*}
+Für das Vertauschen der Integrationsreihenfolge muss man sich hier
+allerdings Gedanken um die mathematische Strenge machen, da es sich
+um uneigentliche Integrale handelt. Wer sich eine strenge
+Beweisführung ersparen möchte, kann so argumentieren, dass
+die Dichte zügig auf null abfällt, so dass das uneigentliche Integral
+gegen ein gewöhnliches mit hinreichend großen Grenzen ersetzt werden
+darf. Daraufhin darf der Satz von Fubini bedenkenlos angewendet werden.
+
+Man erhält die Final size equation
+\begin{equation}
+\ln s_\infty - \ln s_0 = R_0(s_\infty - 1).
+\end{equation}
+Substituiert man $s_\infty = 1 - r$, nimmt sie die Form
+\[1 - r = s_0\ee^{-R_0 r}\]
+an. Die Gleichung ist demzufolge unabhängig von der zeitlichen
+Verteilung der Infektiosität, womit sie für eine große Klasse von
+Modellen ihre Gültigkeit bewahrt.
+
+
+\clearpage
 \section{Allgemeines SIR-Modell}
 
 \subsection{Modelldefinition}
@@ -752,6 +871,84 @@ Gleichung
 Somit ist die Final size quation \eqref{eq:final-size}
 wiedergefunden.
 
+\section{Multistadien-Modelle}
+
+\subsection{Gamma-Verteilung}
+
+Bessere Anpassung an den realen Verlauf der Infektiosität erlaubt die
+Gamma-Verteilung.
+
+Die Gamma-Verteilung besitzt die Dichte
+\[f_n(a) = \frac{\gamma^n}{\Gamma(n)}a^{n-1}\ee^{-\gamma a}\]
+für $a>0$ und $f_n(a)=0$ für $a\le 0$. Der Erwartungswert ist
+$\mu = n/\gamma$ und die Varianz ist $\sigma^2 = n/\gamma^2$.
+Umgekehrt ist $n=\mu^2/\sigma^2$ und $\gamma=\mu/\sigma^2$.
+Ist $n$ eine natürliche
+Zahl, lässt sich \eqref{eq:infection-age-model} zu einen System
+von Differentialgleichungen vereinfachen, wobei $n=1$ dem gewöhnlichen
+SIR"=Modell entspricht, wie bereits gezeigt wurde.
+
+Für die Dichte gilt
+\[f_n'(a) = \gamma f_{n-1}(a)-\gamma f_n(a).\]
+Definiert man
+\[x_k(t) := -\int_0^\infty f_k(a)s'(t-a)\,\mathrm da,\]
+dann gilt für $k\ge 2$ die partielle Integration
+\begin{gather*}
+x_k(t) = -\int_0^\infty f_k'(a)s(t-a)\,\mathrm da\\
+= -\gamma\!\int_0^\infty \!\!\!\! f_{k-1}(a)s(t-a)\,\mathrm da
++ \gamma\!\int_0^\infty \!\!\!\! f_k(a)s(t-a)\,\mathrm da.
+\end{gather*}
+Man erhält
+\[x_k'(t) = \gamma x_{k-1}(t) - \gamma x_k(t).\]
+Im Fall $k=1$ liegt die Exponentialverteilung vor, womit gilt
+\begin{gather*}
+x_1(t) = -\gamma s(t) + \gamma\int_0^\infty f_1(a)s(t-a)\,\mathrm da.
+\end{gather*}
+Leitet man auf beiden Seiten ab der Gleichung ab, findet sich%
+\[x_1'(t) = -\gamma s'(t) - \gamma x_1(t) = R_0\gamma s(t)x_n(t) - \gamma x_1(t),\]
+wobei die $s'(t) = -R_0 s(t)x_n(t)$ aufgrund
+\eqref{eq:infection-age-model} gilt.
+Es manifestiert sich das System
+\begin{gather*}
+s' = -R_0 sx_n,\\
+x_1' = R_0\gamma sx_n - \gamma x_1,\\
+x_k' = \gamma x_{k-1}-\gamma x_k.
+\end{gather*}
+Hier bestehen $n$ Stadien. Setzt man $\beta:=R_0\gamma$ und
+substituiert $x_k=\gamma i_k$, nimmt es die Form
+\begin{gather*}
+s' = -\beta s i_n,\\
+i_1' = \beta s i_n - \gamma i_1,\\
+i_k' = \gamma i_{k-1}-\gamma i_k
+\end{gather*}
+an.
+
+\subsection{Erlang-Verteilung je Stadium}
+
+Definiert man
+\[x_k(t) := -\int_0^\infty f_k(na)s'(t-a)\,\mathrm da,\]
+und rechnet analog zu den zuvor beschriebenen Herleitungen,
+findet sich
+\begin{gather*}
+x_k' = n\gamma x_{k-1}-n\gamma x_k,\quad (k\ge 2)\\
+x_1' = -\gamma s' - n\gamma x_1.
+\end{gather*}
+Definiert man $x:=\sum_{k=1}^n x_k$, dann gilt
+\begin{align*}
+x(t) &= -\sum_{k=1}^n \int_0^\infty f_k(na)s'(t-a)\,\mathrm da\\
+&= -\int_0^\infty \sum_{k=1}^n f_k(na)s'(t-a)\,\mathrm da.
+\end{align*}
+Für $f(a) = \sum_{k=1}^n f_k(na)$ vermittelt
+\eqref{eq:infection-age-model} daher die Gleichung $s' = -R_0 sx$.
+Substituiert man $x_k = \gamma i_k$ sowie $x=\gamma i$ und
+setzt $\beta := R_0\gamma$, manifestiert sich das System
+\begin{gather*}
+s' = -\beta si,\\
+i_1' = \beta si - n\gamma i_1,\\
+i_k' = n\gamma i_{k-1}-n\gamma i_k.\\
+\end{gather*}
+
+
 \newpage
 \section{Berechnung}
 
@@ -809,33 +1006,41 @@ diagram(simulation1)
 
 \newpage
 \begin{thebibliography}{00}
+\bibitem{MathEp} Fred Brauer, Pauline van den Driessche,
+Jianhong Wu (eds.): \emph{Mathematical Epidemiology}. Springer, 2008.
+
 \bibitem{Keeling} Matt J. Keeling, Pejman Rohani:
-»\emph{Modeling Infectious Diseases in Humans and Animals}«.
+\emph{Modeling Infectious Diseases in Humans and Animals}.
 Princeton University Press, 2008.
 
-\bibitem{Heuser} Harro Heuser: »\emph{Gewöhnliche Differentialgleichungen}«.
+\bibitem{Heuser} Harro Heuser: \emph{Gewöhnliche Differentialgleichungen}.\\
 Teubner, 1989, 4. Auflage 2004. In Abschnitt 69 (S.\,559):
-»\emph{Ausbreitungsdynamik ansteckender Krankheiten}«.
+\emph{Ausbreitungsdynamik ansteckender Krankheiten}.
 
-\bibitem{Ma} Junling Ma: »\emph{Estimating epidemic exponential growth
-rate and basic reproduction number}«. In: Infectious Disease Modelling 5
-(2020), S. 129--141.\\
+\bibitem{Ploetzke} Lena Plötzke: \emph{Modellierung epidemischer
+Infektions-\\ krankheiten auf der Basis von gewöhnlichen und
+Integro"=Differentialgleichungen}. Bachelorarbeit, Universität zu Köln,
+27. Mai 2021.
+
+\bibitem{Ma} Junling Ma: \emph{Estimating epidemic exponential growth
+rate and basic reproduction number}. In: \emph{Infectious Disease Modelling},
+Band 5, 2020, S. 129--141.\\
 \href{https://doi.org/10.1016/j.idm.2019.12.009}%
 {doi:10.1016/j.idm.2019.12.009}
 
 \bibitem{Hethcote} Herbert W. Hethcote, David W. Tudor:
-»\emph{Integral Equation Models for Endemic Infectious Diseases}«.
-Journal of Mathematical Biology 9 (1980), S. 37--47.
+\emph{Integral Equation Models for Endemic Infectious Diseases}.
+Journal of Mathematical Biology, Band 9, 1980, S. 37--47.
 
 \bibitem{Wallinga} Jacco Wallinga, Marc Lipsitch:
-»\emph{How generation intervals shape the relationship
-between growth rates and reproductive numbers}«.
-In: Proceedings of the Royal Society B 274 (2007), S. 599--604.\\
+\emph{How generation intervals shape the relationship
+between growth rates and reproductive numbers}.
+In: \emph{Proceedings of the Royal Society B}, Band 274, 2007, S. 599--604.\\
 \href{https://doi.org/10.1098/rspb.2006.3754}{doi:10.1098/rspb.2006.3754}
 
 \bibitem{Kermack} W. O. Kermack, A. G. McKendrick:
-»\emph{A Contribution to the Mathematical Theory of Epidemics}«.
-In: Proceedings of the Royal Society A 115 (1927), S. 700--721.
+\emph{A Contribution to the Mathematical Theory of Epidemics}.
+In: \emph{Proceedings of the Royal Society A}, Band 115, 1927, S. 700--721.
 \end{thebibliography}
 \vfill
 

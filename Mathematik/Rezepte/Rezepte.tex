@@ -26,7 +26,7 @@
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,00,00}
-\usepackage[colorlinks=true,linkcolor=c1]{hyperref}
+\usepackage[colorlinks=true,linkcolor=c1,citecolor=c1]{hyperref}
 
 \usepackage{geometry}
 \geometry{a4paper,left=24mm,right=14mm,top=23mm,bottom=27mm}
@@ -70,6 +70,7 @@
 \newcommand{\defiff}{\;:\Longleftrightarrow\;}
 
 \begin{document}
+\thispagestyle{empty}
 
 \section*{\LARGE Rezepte zur Mathematik}
 
@@ -452,11 +453,12 @@ unterschiedliches Vorzeichen. Dann muss $f$ gemäß dem Zwischenwertsatz
 mindestens eine Nullstelle im Intervall $[a,b]$ besitzen.
 
 Wir betrachten nun den folgenden Vorgang. Der Mittelwert $c := (a+b)/2$
-wird berechnet. Ist $f(a)f(c)<0$, muss eine Nullstelle in $[a,c]$
-liegen und es wird $c:=b$ gesetzt, andernfalls in $[c,b]$ und es
-wird $c:=a$ gesetzt. Auf das neue Intervall $[a,b]$ wird der Vorgang
+wird berechnet. Sollte $f(c)=0$ sein, endet der Vorgang mit der
+gefundenen Nullstelle $c$. Ist $f(a)f(c)<0$, muss eine Nullstelle
+in $[a,c]$ liegen und es wird $b:=c$ gesetzt, andernfalls in $[c,b]$
+und es wird $a:=c$ gesetzt. Auf das neue Intervall $[a,b]$ wird der Vorgang
 abermals angewendet, solange bis der Abstand $b-a$ hinreichend klein
-geworden ist. Nun ist $c\approx a\approx b$ eine Näherung für die
+geworden ist. Nun ist $a\approx b$ eine Näherung für die
 Nullstelle.
 
 Was ist nun, wenn die Funktion mehrere Nullstellen besitzt?
@@ -486,7 +488,55 @@ der analogen Zeichnung bezüglich Abtastung der $x$-Achse mit jeweils
 Lösungen $y$ der Gleichung $f(x_k,y)=0$.
 
 
+\subsection{Abschätzung der Lage von Lösungen}
 
+\begin{Rezept}
+Auch wenn bei einer Gleichung kein Lösungsansatz zu finden ist,
+lassen sich oft Abschätzungen angeben, wo die Lösungen
+befindlich sein müssen.
+\end{Rezept}
+
+\noindent
+Zum Beispiel wollen wir uns Klarheit über die reellen Lösungen des
+Gleichungssystems
+\begin{gather*}
+x^2 + 1 = y,\\
+xy^3 = 1
+\end{gather*}
+verschaffen. Wir eliminieren $y$ in der zweiten Gleichung
+mittels der ersten Gleichung und erhalten
+\[0 = P(x) := x(x^2+1)^3 - 1 = x^7+3x^5+3x^3+x-1.\]
+Die Koeffizientenfolge des Polynoms $P(x)$ besitzt nur einen
+Vorzeichenwechsel, womit laut der descartesschen
+Regel \cite{DR1}\cite{DR2} genau eine
+positive Lösung existieren muss. Die Koeffizientenfolge des Polynoms
+$P(-x)$ besitzt überhaupt keinen Vorzeichenwechsel, womit es
+keine negativen Lösungen geben kann.
+
+Betrachten wir nun $x>1$. Dann ist $x^2>1$ und damit $y=x^2+1>2$.
+Somit ist $1/x=y^3>8$. Man erhält $x<1/8$ im Widerspruch zu $x>1$,
+womit die Lösung im Intervall $[0,1]$ liegen muss.
+
+Man könnte sich nun um bessere Abschätzungen bemühen, erhält eine
+Folge von Abschätzungen jedoch blitzartig mit dem Bisektionsverfahren,
+weil $P(0)=-1$ negativ und $P(1)=7$ positiv ist.
+
+\subsection{Folgen als Reihen}
+
+\begin{Rezept}
+Jede Folge kann durch Bildung der Differenzenfolge als Reihe
+aufgefasst werden, womit sämtliche Konvergenzkriterien für Reihen
+zur Verfügung stehen.
+\end{Rezept}
+
+\noindent
+Zu jeder Folge $(a_n)$ kann man die durch
+\[(\Delta a)_k := a_{k+1} - a_k\]
+definierte Differenzenfolge bilden. Umgekehrt lässt sich $a_n$ über
+die Teleskopsumme
+\[a_n-a_0 = \sum_{k=0}^{n-1} (\Delta a)_k\]
+zurückgewinnen. Hiermit ist $(a_n)$ als eine Folge von
+Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
 
 \newpage
 \section{Wahrscheinlichkeitsrechnung}
@@ -540,6 +590,13 @@ Beispielsweise ist
 Damit ergibt sich
 \[P(X=8) = \frac{|\{X=8\}|}{|\Omega|} = \frac{5}{36}\]
 als Wahrscheinlichkeit der Augensumme acht.
+
+\begin{thebibliography}{00}
+\bibitem{DR1} »Vorzeichenregel von Descartes«. In: Wikipedia.
+\bibitem{DR2} Ilja Bronstein u.\,a.: »Taschenbuch der Mathematik«.
+Harri Deutsch, 7. Auflage. Abschnitt 1.6.3.2, S. 44--45, »Gleichungen mit
+reellen Koeffizienten«.
+\end{thebibliography}
 
 
 \vfill\noindent

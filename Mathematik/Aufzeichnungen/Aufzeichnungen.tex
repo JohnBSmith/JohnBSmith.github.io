@@ -780,6 +780,32 @@ Das führt nun zu:
 \end{equation}
 \end{definition}
 
+\subsection{Riemann-Liouville-Integral}
+
+Für eine Funktion $f\colon\R\to\R$ gilt
+\[f(x) = (f*\delta)(x) = \int_\R f(u)\delta(x-u)\,\mathrm du,\]
+wobei $\delta$ die Delta"=Distribution ist. Infolgedessen erhält man%
+\begin{gather*}
+If(x) = \int_0^x f(t)\,\mathrm dt =
+\int_0^x \int_\R f(u)\delta(t-u)\,\mathrm du\,\mathrm dt\\
+= \int_\R f(u)\int_0^x \delta(t-u)\,\mathrm dt\,\mathrm du
+= \int_\R f(u)\Theta(x-u)\,\mathrm du,
+\end{gather*}
+wobei $\Theta$ die Heaviside"=Funktion ist. Daraufhin erhält man%
+\begin{align*}
+I^2 f(x) &= \int_0^x \int_\R f(u)\Theta(t-u)\,\mathrm du\,\mathrm dt\\
+&= \int_\R f(u)\int_0^x\Theta(t-u)\,\mathrm dt\,\mathrm du\\
+&= \int_\R f(u)(x-u)\Theta(x-u)\,\mathrm du,
+\end{align*}
+und allgemein
+\[I^n f(x) = \int_\R f(u)\frac{(x-u)^{n-1}}{\Gamma(n)}\Theta(x-u)\,\mathrm du.\]
+Gilt $f(x)=0$ für $x<0$, findet sich, wenn $n$ nicht"=ganzzahlig sein darf,
+das Riemann"=Liouville"=Integral%
+\[I^n f(x) = \frac{1}{\Gamma(n)}\int_0^x (x-u)^{n-1}f(u)\,\mathrm du.\]
+Ist $f(x)\ne 0$ für $x<0$, findet sich, wenn $n$ nicht"=ganzzahlig sein
+darf, stattdessen das fraktionale Weylintegral%
+\[I^n f(x) = \frac{1}{\Gamma(n)}\int_{-\infty}^x (x-u)^{n-1}f(u)\,\mathrm du.\]
+
 \subsection{Eine Reihe von Kehrwerten}
 
 Im Folgenden wird eine Herleitung für die Formel

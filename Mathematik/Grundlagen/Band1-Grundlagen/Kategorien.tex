@@ -54,7 +54,8 @@ zweier Homomorphismen ist ja auch ein Homomorphismus.\;\qedsymbol
 
 Entsprechend bilden Ringe mit Ringhomomorphismen, Körper mit
 Körperhomomorphismen, Vektorräume mit Vektorraumhomomorphismen
-usw. Kategorien.
+usw. Kategorien. Des Weiteren bilden die endlichen Mengen, Gruppen,
+Ringe jeweils eine Kategorie.
 
 Nun ist es so, dass Gruppen auch Mengen und Homomorphismen
 auch Abbildungen sind. Die Kategorie der Gruppen ist gewissermaßen
@@ -343,6 +344,32 @@ eine natürliche Transformation.
 \strong{Beweis.} Wurde in \eqref{eq:eta-punktweise} bis
 \eqref{eq:Ende-eta-punktweise} schon gezeigt.\;\qedsymbol
 
+Jetzt haben wir so viele Funktoren kennengelernt, dass allgemeine
+Regeln betreffend Funktoren gut motiviert sind. Der folgende Korollar
+durchleuchtet die Funktoren ein wenig.
+\begin{Korollar}
+Wird ein Funktor auf einen Isomorphismus angewendet, ist das Resultat
+wieder ein Isomorphismus.
+\end{Korollar}
+\strong{Beweis.} Dieser ist direkt aus den Definitionen zu erhalten.
+Wir betrachten nur einen kovarianten Funktor $F$, weil der Beweis für
+einen kontravarianten Funktor analog verläuft.
+
+Sei $f\colon X\to Y$ ein beliebiger Isomorphismus im Definitionsbereich
+des Funktors. Laut Definition existert eine Inverse, das heißt, ein
+$g\colon Y\to X$ mit $g\circ f = \id_X$ und $f\circ g = \id_Y$. Gemäß
+der definierenden Eigenschaft eines Funktors darf man rechnen
+\begin{gather*}
+\id_{F(X)} = F(\id_X) = F(g\circ f) = F(g)\circ F(f),\\
+\id_{F(Y)} = F(\id_Y) = F(f\circ g) = F(f)\circ F(g).
+\end{gather*}
+Somit ist $F(f)$ ein Isomorphismus mit Inverse $F(g)$.\,\qedsymbol
+
+Wird beispielsweise der Vergissfunktor von Gruppen zu Mengen auf
+einen Gruppenisomorphismus angewendet, ist das Resultat zwingend
+eine Bijektion, da die Bijektionen die Isomorphismen in der Kategorie
+der Mengen sind.
+
 \section{Anfangsobjekte und Endobjekte}
 
 \begin{Definition}[Anfangsobjekt, Endobjekt, Nullobjekt]\mbox{}\\*
@@ -421,7 +448,70 @@ Die Betrachtung kann man genauso für eine allgemeine Menge $X$ führen,
 weil die Argumentation dann jeweils für jedes Element von $X$ gilt.
 Wieder ist $f$ eindeutig bestimmt.
 
-\newpage
+Gelegentlich wird $f$ als $f=f_1\times f_2$ notiert.
+
+\section{Exponential}
+
+Die Notation $B^A$ stehe für die Menge der Abbildungen $A\to B$.
+Es soll nun die Applikation einer Abbildung auf ein Argument
+als eigenständige Operation
+\[\varepsilon\colon B^A\times A \to B,\quad
+\varepsilon(f,a) := f(a)\]
+gedacht werden. Einer zweistelligen Abbildung
+$g\colon X\times A\to B$ lässt sich die Abbildung
+\[\lambda g\colon X\to B^A,\quad \lambda g(x)(a) := g(x,a).\]
+zuordnen. Diesen Vorgang nennen wir Currying. Man findet nun
+\[g(x,a) = \lambda g(x)(a) = \varepsilon(\lambda g(x),a)
+= (\varepsilon\circ (\lambda g\times\id))(x,a).\]
+Für eine jede Abbildung $g$ ist also die Gleichung
+$g = \varepsilon\circ(\lambda g\times\id)$
+erfüllt, was bedeutet, dass das Diagramm
+\[\xymatrix{
+X\times A\ar[dr]^g\ar[d]_{\lambda g\times\id} & \\
+B^A\times A \ar[r]_{\varepsilon} & B
+}\]
+kommutiert.
+
+\begin{Definition}[Exponentialobjekt]\mbox{}\\*
+Sei $C$ eine Kagegorie mit binären Produkten. Zu zwei Objekten
+$A,B\in C$ heißt $B^A\in C$ zusammen mit einem Morphismus
+$\varepsilon\colon B^A\times A\to B$
+Exponentialobjekt, wenn es zu jedem Objekt $X\in C$ und Morphismus
+$g\colon X\times A\to B$
+genau einen Morphismus $\lambda g\colon X\to B^A$ gibt, so dass
+$\varepsilon\circ (\lambda g\times\id) = g$ gilt.
+\end{Definition}
+
+\begin{Korollar}\label{Exp-Isomorphie}
+Es besteht die Isomorphie $\Hom_C(X\times A, B)\cong\Hom_C(X,B^A)$,
+die durch den Isomorphismus $\lambda$ vermittelt wird.
+\end{Korollar}
+
+\noindent\strong{Beweis.} Zu zeigen ist, dass es sich bei $\lambda$
+um einen Isomorphismus handelt. Für ein $h\colon X\to B^A$ sei dazu
+\[\lambda^{-1}h := \varepsilon\circ (h\times\id)\colon X\times A\to B.\]
+Die Definition des Exponentialobjekts besagt nun direkt, dass
+$\lambda^{-1}(\lambda g) = g$ gelten muss.
+
+[Todo: $\lambda(\lambda h^{-1})=h$ zeigen.]\,\qedsymbol
+
+\begin{Korollar}
+In der Kategorie der Mengen ist das Exponential $B^A$ die Menge
+der Abbildungen $A\to B$.
+\end{Korollar}
+
+\noindent\strong{Beweis.} Wird $X=\{\emptyset\}$ in die durch Korollar
+\ref{Exp-Isomorphie} beschriebene Isomorphie eingesetzt, findet
+man die kanonische Isomorphie
+\[B^A\cong\Abb(\{\emptyset\},B^A)\cong\Abb(\{\emptyset\}\times A, B)
+\cong\Abb(A, B).\,\qedsymbol\]
+Das heißt, vermittels $\lambda^{-1}$ ordnet $f\in B^A$ jedem $a\in A$
+gemäß
+\[f(a) := (\lambda^{-1}(\emptyset\mapsto f))(\emptyset,a)
+= (\varepsilon\circ ((\emptyset\mapsto f)\times\id))(\emptyset,a)
+= \varepsilon(f,a) = b\]
+genau ein $b\in B$ zu.
+
 \section{Kartesisch geschlossene Kategorien}
 
 \begin{Definition}[Kartesisch geschlossen]\mbox{}\\*

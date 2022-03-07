@@ -2,14 +2,14 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Rust-Buch</title>
+  <title>Programmverfikation</title>
   <link href="css/main.css" rel="stylesheet">
   <script src="js/main.js"></script>
-  <script src="js/rust.js"></script>
+  <script src="js/py.js"></script>
 </head>
 <body>
 
-<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<p>&uparrow;<a href="home.htm">Rezepte</a>
 <h1>Programmverifikation</h1>
 
 <h2>Inhaltsverzeichnis</h2>
@@ -18,8 +18,9 @@
 <li><a href="#Korrektheit">Korrektheit</a>
 <li><a href="#Schlussregeln">Schlussregeln</a>
 <li><a href="#Beispiel-1">Beispiel 1</a>
+<li><a href="#Probe-1">Probe zu Beispiel 1</a>
 <li><a href="#Beispiel-2">Beispiel 2</a>
-<li><a href="#Probe">Probe</a>
+<li><a href="#Probe-2">Probe zu Beispiel 2</a>
 </ol>
 
 <h2 id="Zusicherungen">Zusicherungen</h2>
@@ -205,7 +206,7 @@ Man bezeichnet <code>I</code> in diesem Zusammenhang als
 
 <h2 id="Beispiel-1">Beispiel 1</h2>
 
-<p>Betrachten wir nochmals die rekursive Definition der
+<p>Betrachten wir die rekursive Definition der
 Potenzierung. Für eine ganze Zahl <var>x</var> und eine
 nichtnegative Zahl <var>n</var> ist die Potenz
 <var>x</var><sup><var>n</var></sup> definiert gemäß
@@ -215,34 +216,39 @@ nichtnegative Zahl <var>n</var> ist die Potenz
 <var>x</var><sup><var>n</var></sup>
 := <var>x</var>&sdot;<var>x</var><sup><var>n</var>&minus;1</sup>.
 
-<p>Es wird nun gezeigt, wie man mit dem Hoare-Kalkül die partielle
-Korrektheit des iterativen Berechnungsverfahrens
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    for _ in 0..n {y *= x;}
-    y
-}
+<p>Per Definition berechnet das Programm
+<pre class="python ibox">
+def pow_rec(x, n):
+    return 1 if n == 0 else x*pow_rec(x, n - 1)
+</pre>
+
+<p>die Potenz also in korrekter Weise.
+
+<p>Es wird nun gezeigt, wie man mithilfe des Hoare-Kalküls die
+partielle Korrektheit des iterativen Berechnungsverfahrens
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    for i in range(0, n): y *= x
+    return y
 </pre>
 
 <p>zeigt. Zunächst müssen wir die for-Schleife in eine äquivalente
 while-Schleife transformieren. Dies resultiert in:
 
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    let mut i = 0;
-    while i != n {
-        y = x*y;
-        i = i + 1;
-    }
-    y
-}
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    i = 0
+    while i != n:
+        y = x*y
+        i = i + 1
+    return y
 </pre>
 
 <p>Das Ende der Berechnung liegt direkt hinter der Schleife, womit
 dort <code>i==n</code> ist. Außerdem soll dort <code>y</code> das
-Ergebnis der Berechnung sein, d.&nbsp;h. <code>y==x<sup>n</sup></code>.
+Ergebnis der Berechnung sein, das heißt <code>y==x<sup>n</sup></code>.
 Demnach gilt dort <code>y==x<sup>i</sup></code>. Weil sich in der
 Schleife sowohl <code>i</code> als auch <code>y</code> verändern,
 können wir vermuten, dass es sich bei der letzten Gleichung um
@@ -250,23 +256,21 @@ eine Schleifeninvariante handelt. Wie sich herausstellt, ist diese
 Vermutung richtig und zielführend.
 
 <p>Nun werden zum Algorithmus die Zusicherungen annotiert.
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    let mut i = 0;
-    // {y == 1 und i == 0}
-    // {y == x<sup>i</sup>}
-    while i != n {
-        // {y == x<sup>i</sup>}
-        y = x*y;
-        // {y == x<sup>i+1</sup>}
-        i = i + 1;
-        // {y == x<sup>i</sup>}
-    }
-    // {y == x<sup>i</sup> und nicht i != n}
-    // {y == x<sup>n</sup>}
-    y
-}
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    i = 0
+    # {y == 1 and i == 0}
+    # {y == x<sup>i</sup>}
+    while i != n:
+        # {y == x<sup>i</sup>}
+        y = x*y
+        # {y == x<sup>i+1</sup>}
+        i = i + 1
+        # {y == x<sup>i</sup>}
+    # {y == x<sup>i</sup> and not i != n}
+    # {y == x<sup>n</sup>}
+    return y
 </pre>
 
 <p>Rechnen wir das durch. Die Invariante ist vor der Schleife
@@ -277,10 +281,10 @@ Potenzierung stimmt dies.
 
 <p>Nun nehmen wir an, die Invariante sei innerhalb der Schleife
 vor dem Schleifenrumpf erfüllt. Nach der Zuweisung
-<code>y := x*y;</code> gilt dann <code>y==x*x<sup>i</sup></code>,
+<code>y := x*y</code> gilt dann <code>y==x*x<sup>i</sup></code>,
 und laut Definition der Potenzierung ist <code>x*x<sup>i</sup></code>
 das Gleiche wie <code>x<sup>i+1</code>. Die Inkrementation
-<code>i := i+1;</code> bewirkt, dass <code>i</code> in der
+<code>i := i+1</code> bewirkt, dass <code>i</code> in der
 Zusicherung dekrementiert werden muss. Formal ausgedrückt gilt
 
 <pre class="indent">
@@ -306,60 +310,62 @@ Reihe nach unsere Algorithmen beweisen. Zumindest erst einmal die,
 deren Komplexität nicht zu hoch ist. Letztendlich hilft uns die
 Verifikation im Hoare-Kalkül, einen Algorithmus besser zu verstehen.
 
-<p>Wohlgemerkt wurde nur die partielle Korrektheit gezeigt.
-Die totale Korrektheit gilt ohnehin nicht, denn für zu große Argumente
-kommt es zum Ganzzahl-Überlauf. Der Algorithmus divergiert hierbei
-nicht deshalb, weil sich die Berechnung in einer Endlosschleife
-verfängt, sondern weil eine der arithmetischen Operationen zu
-<code>panic</code> führt. Dies gilt für die arithmetischen Operationen
-zumindest im in dieser Hinsicht puristischen Debug-Modus. Das ist auch
-dringend notwendig, denn andernfalls wäre nicht einmal die partielle
-Korrektheit sicher.
+<p>Wohlgemerkt wurde lediglich die partielle Korrektheit gezeigt.
+Die totale Korrektheit gilt eigentlich ohnehin nicht, denn für zu große
+Argumente würde das Programm mehr Speicher benötigen als im Computer
+zur Verfügung steht.
 
-<p>Die partielle Korrektheit genügt uns natürlich nicht. Jede partiell
-korrekte Funktion, die sich nicht in einer Endlosschleife verfangen
-kann, können wir zu einer total korrekten machen, indem die Funktion
-und all ihre fehlbaren Teiloperationen monadisch verhüllt werden.
-Wie das gemacht wird, wurde im Abschnitt
-›<a href="Sicherheit.htm#Monaden">Sichere Programmierung: Monaden</a>‹
-bereits beschrieben. Wir gelangen zum strikten Algorithmus:
-
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
-    let mut y: i32 = 1;
-    let mut i: u32 = 0;
-    while i != n {
-        y = y.checked_mul(x)?;
-        i = i + 1;
-    }
-    Some(y)
-}
-</pre>
-
-<p>Wie man sieht, bedarf es nur der Verhüllung der Ergebnisse.
-Die Argumente dürfen nackt bleiben.
-
-<p>Der Beweis zur Terminierung der Schleife ist recht evident.
+<p>Aber angenommen, dieser Speicher stünde immer zur Verfügung. Der
+Beweis zur Terminierung der Schleife ist dann recht evident.
 Weil vor der Schleife <code>i&nbsp;&le;&nbsp;n</code> ist und
 <code>i</code> in jedem Durchlauf inkrementiert wird, muss irgendwann
-<code>i==n</code> gelten. Aus diesem Grund kommt es ferner nicht zum
-Überlauf in der Operation <code>i+1</code>.
+<code>i==n</code> gelten.
+
+<h2 id="Probe-1">Probe zu Beispiel 1</h2>
+
+<p>Nun kann es vorkommen, dass der Beweis selbst mit Fehlern behaftet
+ist. Mithilfe der Anweisung <code>assert</code> können wir die
+Zusicherungen für konkrete Belegungen der Parameter <code>x</code>
+und <code>n</code> zur Laufzeit prüfen lassen. Zwar liefert das
+keine Garantie für die Korrektheit des Beweises, jedoch sind solche
+Tests nützlich, um Fehler aufzuspüren.
+
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    i = 0
+    assert y == 1 and i == 0
+    assert y == pow_rec(x, i)
+    while i != n:
+        assert y == pow_rec(x, i)
+        y = x*y
+        assert y == pow_rec(x, i + 1)
+        i = i + 1
+        assert y == pow_rec(x, i)
+    assert y == pow_rec(x, i) and not i != n
+    assert y == pow_rec(x, n)
+    return y
+
+def test():
+    for x in range(-9, 10):
+        for n in range(0, 10): pow(x, n)
+
+test()
+</pre>
 
 <h2 id="Beispiel-2">Beispiel 2</h2>
 
 <p>Ein weiterer Algorithmus zur Berechnung von Potenzen ist die
 schnelle Potenzierung.
 
-<pre class="rust ibox">
-fn pow(mut x: i32, mut n: u32) -&gt; i32 {
-    let mut y = 1;
-    while n&gt;1 {
-        if n%2 == 1 {y = y*x;}
-        n /= 2; x = x*x;
-    }
-    if n == 1 {y = y*x;}
-    y
-}
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    while n &gt; 1:
+        if n%2 == 1: y = y*x
+        n //= 2; x = x*x
+    if n == 1: y = y*x
+    return y
 </pre>
 
 <p>Einführung von Hilfsvariablen sorgt dafür, dass die ursprünglichen
@@ -367,19 +373,17 @@ Argumente konstant bleiben. Das ist notwendig, weil diese in die
 Überlegung einbezogen werden müssen. Der Algorithmus wird damit
 transformiert zu:
 
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    let mut a = x;
-    let mut i = n;
-    while i&gt;1 {
-        if i%2 == 1 {y = y*a;}
-        i /= 2;
-        a = a*a;
-    }
-    if i == 1 {y = y*a;}
-    y
-}
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    a = x
+    i = n
+    while i &gt; 1:
+        if i%2 == 1: y = y*a
+        i //= 2
+        a = a*a
+    if i == 1: y = y*a
+    return y
 </pre>
 
 <p>Der Ansatz ist wieder eine Rückwärtsbetrachtung des Programmablaufs.
@@ -387,10 +391,10 @@ Der Rückgabewert am Ende muss <code>y==x<sup>n</sup></code> sein,
 so wie das auch im einfachen Algorithmus war. Zunächst findet
 man:
 
-<pre class="rust ibox">
-// {y == x<sup>n</sup> ∧ i == 0 ∨ y*a == x<sup>n</sup> ∧ i == 1}
-if i == 1 {y = y*a;}
-// {y == x<sup>n</sup>}
+<pre class="python ibox">
+# {y == x<sup>n</sup> ∧ i == 0 ∨ y*a == x<sup>n</sup> ∧ i == 1}
+if i == 1: y = y*a
+# {y == x<sup>n</sup>}
 </pre>
 
 <p>Im Fall <code>i==1</code> reduziert sich die Vorbedingung nämlich
@@ -429,10 +433,10 @@ günstige Schleifeninvariante.
 
 <p>Nun zum Schleifenrumpf. Das Tripel zur ersten Anweisung ist:
 
-<pre class="rust ibox">
-// {y*a<sup>i</sup> == x<sup>n</sup>}
-if i%2 == 1 {y = y*a;}
-// {y*a<sup>i-1</sup> == x<sup>n</sup> ∧ i%2 == 1 ∨ y*a<sup>i</sup> == x<sup>n</sup> ∧ i%2 == 0}
+<pre class="python ibox">
+# {y*a<sup>i</sup> == x<sup>n</sup>}
+if i%2 == 1: y = y*a
+# {y*a<sup>i-1</sup> == x<sup>n</sup> ∧ i%2 == 1 ∨ y*a<sup>i</sup> == x<sup>n</sup> ∧ i%2 == 0}
 </pre>
 
 <p>Die lange Nachbedingung kann man kompakter schreiben als
@@ -444,109 +448,73 @@ if i%2 == 1 {y = y*a;}
 <p>Außerdem gilt
 
 <pre class="indent">
-i-i%2 == 2*(i/2).
+i - i%2 == 2*(i//2).
 </pre>
 
 <p>Mit dieser Vorbereitung ist der Rest ein Kinderspiel.
 Gemäß Zuweisungsaxiom sind die Tripel
-<pre class="rust ibox">
-// {y*a<sup>2*(i/2)</sup> == x<sup>n</sup>}
-i /= 2;
-// {y*a<sup>2i</sup> == x<sup>n</sup>}
+<pre class="python ibox">
+# {y*a<sup>2*(i//2)</sup> == x<sup>n</sup>}
+i //= 2;
+# {y*a<sup>2i</sup> == x<sup>n</sup>}
 </pre>
 
 <p>und
-<pre class="rust ibox">
-// {y*a<sup>2i</sup> == x<sup>n</sup>}
+<pre class="python ibox">
+# {y*a<sup>2i</sup> == x<sup>n</sup>}
 a = a*a;
-// {y*a<sup>i</sup> == x<sup>n</sup>}
+# {y*a<sup>i</sup> == x<sup>n</sup>}
 </pre>
 
 <p>erfüllt. Damit ist die Invariante bewiesen. Weil nichts weiter
 zu beweisen verbleibt, ist auch der Algorithmus bewiesen.
 Der Algorithmus mit sämtlichen Zusicherungen:
 
-<pre class="rust ibox">
-fn pow(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    let mut a = x;
-    let mut i = n;
-    // {y*a<sup>i</sup> == x<sup>n</sup>}
-    while i&gt;1 {
-        // {y*a<sup>i</sup> == x<sup>n</sup>}
-        if i%2 == 1 {y = y*a;}
-        // {y*a<sup>i-i%2</sup> == y*a<sup>2*(i/2)</sup> == x<sup>n</sup>}
-        i /= 2;
-        // {y*a<sup>2i</sup> == x<sup>n</sup>}
-        a = a*a;
-        // {y*a<sup>i</sup> == x<sup>n</sup>}
-    }
-    // {y*a<sup>i</sup> == x<sup>n</sup> ∧ 0&le;i&le;1}
-    if i == 1 {y = y*a;}
-    // {y == x<sup>n</sup>}
-    y
-}
+<pre class="python ibox">
+def pow(x, n):
+    y = 1
+    a = x
+    i = n
+    # {y*a<sup>i</sup> == x<sup>n</sup>}
+    while i &gt; 1:
+        # {y*a<sup>i</sup> == x<sup>n</sup>}
+        if i%2 == 1: y = y*a
+        # {y*a<sup>i-i%2</sup> == y*a<sup>2*(i//2)</sup> == x<sup>n</sup>}
+        i //= 2
+        # {y*a<sup>2i</sup> == x<sup>n</sup>}
+        a = a*a
+        # {y*a<sup>i</sup> == x<sup>n</sup>}
+    # {y*a<sup>i</sup> == x<sup>n</sup> ∧ 0&le;i&le;1}
+    if i == 1: y = y*a
+    # {y == x<sup>n</sup>}
+    return y
 </pre>
 
-<h2 id="Probe">Probe</h2>
+<h2 id="Probe-2">Probe zu Beispiel 2</h2>
 
 <p>So schön die Beweise anmuten, können auch diese von Fehlern
 unterlaufen sein. Ein naheliegender Weg zur Vermeidung sind Proben
 zur Laufzeit, denn die Zusicherungen lassen sich ja für konkrete
 Variablenbelegungen zur Laufzeit ausführen.
 
-<p>Im Algorithmus zur Potenzierung sollte es nirgends zum
-Überlauf kommen, sofern die ursprüngliche Definition keinen
-Überlauf berechnet. Eine Schleife grast nun im Folgenden den
-Definitionsbereich ab, wobei der Algorithmus lediglich für die
-verbleibenden Fälle ohne Überlauf ausgeführt wird.
-
-<pre class="rust ibox">
-// Definition der Potenzfunktion
-fn pow_rec(x: i32, n: u32) -&gt; Option&lt;i32&gt; {
-    if n==0 {Some(1)} else {x.checked_mul(pow_rec(x, n-1)?)}
-}
-
-// Partielle Funktion zu pow_rec
-fn pow(x: i32, n: u32) -&gt; i32 {
-    pow_rec(x, n).unwrap()
-}
-
-fn pow_iter(x: i32, n: u32) -&gt; i32 {
-    let mut y = 1;
-    let mut a = x;
-    let mut i = n;
-    let p = pow(x, n);
-    assert!(y*pow(a, i) == p);
-    while i&gt;1 {
-        assert!(y*pow(a, i) == p);
-        if i%2 == 1 {y = y*a;}
-        assert!(y*pow(a, i-i%2) == p);
-        i /= 2;
-        assert!(y*pow(a, 2*i) == p);
-        a = a*a;
-        assert!(y*pow(a, i) == p);
-    }
-    assert!(y*pow(a, i) == p &amp;&amp; i&lt;=1);
-    if i == 1 {y = y*a;}
-    assert!(y == p);
-    y
-}
-
-fn main() {
-    for x in -65536..65536 {
-        for n in 0..32 {
-            if let Some(y) = pow_rec(x, n) {
-                assert!(y == pow_iter(x, n));
-            }
-        }
-    }
-}
+<pre class="python ibox">
+def pow_iter(x, n):
+    y = 1; a = x; i = n
+    p = pow_rec(x, n)
+    assert y*pow_rec(a, i) == p
+    while i &gt; 1:
+        assert y*pow_rec(a, i) == p
+        if i%2 == 1: y = y*a
+        assert y*pow_rec(a, i-i%2) == p
+        i //= 2
+        assert y*pow_rec(a, 2*i) == p
+        a = a*a
+        assert y*pow_rec(a, i) == p
+    assert y*pow_rec(a, i) == p and i&lt;=1
+    if i == 1: y = y*a
+    assert y == p
+    return y
 </pre>
-
-<p>Maßgeblich sind abschließend zudem die Beweise, dass im späteren
-Programm die Aufrufe von <code>pow_iter</code> niemals Zahlen bekommen,
-die zum Überlauf führen würden.
 
 </body>
 </html>

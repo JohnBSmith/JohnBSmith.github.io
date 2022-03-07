@@ -7,18 +7,17 @@ function isdigit(s){
     return /^\d+$/.test(s);
 }
 
-var rust_keyword = {
-    "as": 0, "async": 0, "await": 0, "break": 0,
-    "const": 0, "continue": 0, "dyn": 0,
-    "else": 0, "enum": 0, "false": 0, "fn": 0, "for": 0,
-    "if": 0, "impl": 0, "in": 0, "let": 0, "loop": 0,
-    "match": 0, "mod": 0, "move": 0, "mut": 0, "pub": 0,
-    "return": 0, "self": 0, "Self": 0, "static": 0, "struct": 0,
-    "trait": 0, "true": 0, "type": 0, "use": 0, "unsafe": 0,
-    "where": 0, "while": 0, "crate": 0
+var python_keyword = {
+   "False":0, "None":0, "True":0,
+   "and":0, "as":0, "assert":0, "async":0, "await":0, "break":0,
+   "class":0, "continue":0, "def":0, "del":0, "elif":0, "else":0,
+   "except":0, "finally":0, "for":0, "from":0, "global":0, "if":0,
+   "import":0, "in":0, "is":0, "lambda":0, "nonlocal":0, "not":0,
+   "or":0, "pass":0, "raise":0, "return":0, "try":0, "while":0,
+   "with":0, "yield":0
 };
 
-function rust_node_syntax(s){
+function node_syntax(s){
     var id,s2,st,c;
     s2 = "";
     var i = 0;
@@ -30,8 +29,8 @@ function rust_node_syntax(s){
                 id+=s[i];
                 i++;
             }
-            if(rust_keyword.hasOwnProperty(id)){
-                if(rust_keyword[id]==0){
+            if(python_keyword.hasOwnProperty(id)){
+                if(python_keyword[id]==0){
                     s2+="<span class='keyword'>"+id+"</span>";
                 }else{
                     s2+="<span class='special'>"+id+"</span>";
@@ -66,12 +65,6 @@ function rust_node_syntax(s){
                 i++;
             }
         }else if(c=='#'){
-            st = "<span class='preprocessor'>";
-            while(i<s.length && s[i]!=']'){st+=s[i]; i++;}
-            st+=s[i]; i++;
-            st+="</span>";
-            s2+=st;
-        }else if(c=='/' && i+1<s.length && s[i+1]=='/'){
             st = "<span class='comment'>";
             while(i<s.length && s[i]!='\n'){st+=s[i]; i++;}
             st+="</span>";
@@ -107,12 +100,12 @@ function rust_node_syntax(s){
     return s2;
 }
 
-function rust_syntax(){
-    var a = document.getElementsByClassName("rust");
+function py_syntax(){
+    var a = document.getElementsByClassName("python");
     for(var i=0; i<a.length; i++){
-        a[i].innerHTML = rust_node_syntax(a[i].innerHTML);
+        a[i].innerHTML = node_syntax(a[i].innerHTML);
     }
 }
 
-window.addEventListener("load",rust_syntax);
+window.addEventListener("load",py_syntax);
 
