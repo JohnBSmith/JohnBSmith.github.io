@@ -15,38 +15,48 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Sockets">Sockets</a>
+  <ol>
+  <li><a href="#Client">Ein minimaler Client</a>
+  <li><a href="#Server">Ein minimaler Server</a>
+  </ol>
 <li><a href="#IP-Adressen">IP-Adressen</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <h2 id="Sockets">Sockets</h2>
+
+<h3 id="Client">Ein minimaler Client</h3>
 
 <p>Als erstes Beispiel soll ein Client-Programm geschrieben
 werden, welches sich mit dem Server der Domain <code>www.example.com</code>
 verbindet und über das HTTP-Protokoll die HTML-Seite
 <code>http://www.example.com/</code> erfragt.
 
-<p>Es gibt natürlich Bibliotheken dafür, auch welche mit denen man
-gleich verschlüsselt über HTTPS kommunizieren kann. Diese Bibliotheken
-sollte man auch benutzen. Aus didaktischen Gründen wollen wir das
-hier aber zunächst einmal manuell machen.
+<p>Es gibt natürlich Bibliotheken dafür, auch welche mit denen sich
+sogleich eine verschlüsselte Kommunikation über HTTPS erstellen lässt.
+Diese Bibliotheken sollte man auch benutzen. Aus didaktischen Gründen
+wollen wir das hier aber zunächst einmal händisch machen.
 
 <p>Zunächst wird die IP-Adresse der Domain benötigt. Um an diese
 zu gelangen, müsste man sich zunächst mit einem DNS-Server verbinden,
-und dieser besitzt auch wieder eine IP-Adresse. Wir lassen das zur
+der wiederum eine IP-Adresse besitzt. Wir lassen das zur
 Vereinfachung bleiben und tragen die Adresse manuell ein.
 IP-Adressen können sich von Zeit zu Zeit ändern. Am 23. Dez. 2019
 bekam ich <code>93.184.216.34</code>. Das Format ist noch das
 alte IPv4, man kann aber genauso gut IPv6 eintragen. Zusätzlich
-muss man noch eine Portnummer angeben, bei HTTP ist das normalerweise 80.
+muss man noch eine Portnummer angeben. Bei HTTP ist dies normalerweise Port 80.
 
 <p>Zum Aufbau einer Verbindung mit dem Server muss man ein Socket eröffnen,
 über das man über das Protokoll TCP/IP mit dem Server kommunizieren
 kann. Zum Erfragen der HTML-Seite wird eine HTTP-GET-Nachricht
 abgeschickt. Das ist eine Zeichenkette, deren Format im HTTP-Protokoll
 festgelegt ist. Danach wird auf eine Rückmeldung vom Server
-gewartet, die ebenfalls im HTTP-Protokoll ankommt. HTTP-Nachrichten
+gewartet, die ebenfalls im HTTP-Format ankommt. HTTP-Nachrichten
 bestehen aus einem Header und einem Body, welche durch eine
-leere Zeile getrennt sind. Bei HTTP-GET ist der Body leer. Die
+leere Zeile getrennt sind. Die leere Zeile ist kodiert als Sequenz
+zweier Zeilenumbrüche, die jeweils als CR&nbsp;LF
+kodiert sein sollen, das heißt, die leere Zeile ist die Sequenz
+<code>b"\r\n\r\n"</code>. Bei HTTP-GET ist der Body leer. Die
 Rückmeldung sollte aber einen Body mit dem eigentlichen HTML-Text
 enthalten.
 
@@ -55,7 +65,7 @@ enthalten.
 use std::net::TcpStream;
 use std::io::{Write, Read};
 
-fn main() -&gt; Result&lt;(),std::io::Error&gt; {
+fn main() -&gt; Result&lt;(), std::io::Error&gt; {
     let host = "www.example.com";
     let path = "/";
     let mut stream = TcpStream::connect("93.184.216.34:80")?;
@@ -112,16 +122,93 @@ Connection: close
 &lt;/html&gt;
 </pre>
 
-<p>Es gibt mit dem Programm aber noch gewisse Probleme. Sollte
+<p>Obwohl das Programm funktionsfähig ist, ist der dargestellte
+Ansatz allerdings noch mit gewissen Problemen behaftet. Sollte
 der Server nicht sofort auf die Nachricht antworten, hängt das
 Programm. Man kann sich dafür verschiedene Lösungsansätze überlegen.
-Zum einen wäre es möglich, die Anfrage in einem extra Thread
-durchzuführen. Zum anderen lässt sich für die Anfrage ein
-Timeout festlegen &ndash; falls dieses nicht eingehalten wird,
-fragt man später nochmals nach. Im Endeffekt läuft es darauf hinaus,
-Server und Clients nebenläufig zu programmieren.
+Zum einen ist es zielführend, die Anfrage in einer asynchronen Funktion
+oder einem extra Thread durchzuführen. Zum anderen lässt sich für die
+Anfrage ein Timeout festlegen &ndash; falls dieses nicht eingehalten
+wird, fragt man später nochmals nach. Im Endeffekt läuft es darauf
+hinaus, Server und Clients nebenläufig zu programmieren.
 Netzwerk-Programmierung ist ein typischer Anwendungsfall für
 Nebenläufigkeit.
+
+<h3 id="Server">Ein minimaler Server</h3>
+
+<p>Im nächsten Schritt wollen wir uns mit der Konstruktion
+eines lokalen Netzwerks befassen. Neben dem Client erfordert es einen
+Server, mit dem der Client kommunizieren kann. Gezeigt wird,
+wie man einen minimalen lokalen HTTP-Server erstellt. Wir verzichten
+dabei erst einmal wieder auf die Nutzung einer HTTP-Bibliothek,
+indem abermals die auf der tieferliegenden Ebene befindliche
+TCP-Schnittstelle direkt angesprochen wird.
+
+<p>Die Übergabe der speziellen IP-Adresse <code>0.0.0.0</code> an
+<code>bind</code> bewirkt, dass das Socket auf sämtlichen lokalen
+IP-Adressen Verbindungsanfragen abhorcht. Weil die Ports von 0
+bis einschließlich 1023 lediglich mit Administrator-Rechten errichtet
+werden dürfen, muss man einen Port außerhalb dieses Bereichs wählen.
+Üblicherweise nimmt man dafür Port 8000 oder 8080 in Anlehnung an
+Port 80.
+
+<pre class="rust ibox">
+use std::net::{TcpListener, TcpStream};
+use std::io::{Read, Write};
+
+type Error = Box&lt;dyn std::error::Error&gt;;
+
+fn read_request(stream: &amp;mut TcpStream) -&gt; Result&lt;Vec&lt;u8&gt;, Error&gt; {
+    let mut acc = vec![];
+    let mut buf = [0u8; 8192];
+    loop {
+        let count = stream.read(&amp;mut buf)?;
+        acc.extend_from_slice(&amp;buf[..count]);
+        if acc.ends_with(b"\r\n\r\n") {break;}
+    }
+    Ok(acc)
+}
+
+fn main() -&gt; Result&lt;(), Error&gt; {
+    let listener = TcpListener::bind("0.0.0.0:8000")?;
+    loop {
+        let (mut stream, addr) = listener.accept()?;
+        println!("Verbindung mit {} wurde akzeptiert.", addr);
+
+        let data = read_request(&amp;mut stream)?;
+        let request = std::str::from_utf8(&amp;data)?;
+        println!("== HTTP-Anfrage bekommen ==\n{}", request);
+
+        stream.write_all(b"HTTP/1.1 200 OK\r\n\r\n")?;
+        stream.write_all(b"Hallo, Welt!\n")?;
+        println!("Verbindung mit {} wurde beendet.\n", addr);
+    }
+}
+</pre>
+
+<p>Läuft der Server, erhält ein Client die formulierte Antwort
+auf eine GET-Anfrage. Man kann dies kurzum mit einem der
+Befehle
+
+<pre class="ibox">
+curl localhost:8000
+</pre>
+<pre class="ibox">
+curl http://localhost:8000
+</pre>
+<pre class="ibox">
+curl 127.0.0.1:8000
+</pre>
+<pre class="ibox">
+GET http://localhost:8000
+</pre>
+<pre class="ibox">
+GET 127.0.0.1:8000
+</pre>
+
+<p>testen, oder, indem <code>localhost:8000</code> in die Adress-Zeile
+eines Webbrowsers eingegeben wird. Erwartungsgemäß kann dafür ebenso
+eine Anpassung des zuvor formulierten Client-Programms genutzt werden.
 
 <h2 id="IP-Adressen">IP-Adressen</h2>
 
@@ -176,6 +263,19 @@ let socket = SocketAddrV6::new(Ipv6Addr::from(ip), 80, 0, 0);
 let ip = "::ffff:5db8:d822".parse::&lt;Ipv6Addr&gt;().unwrap();
 let socket = SocketAddrV6::new(ip, 80, 0, 0);
 </pre>
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>»<a href="https://hyper.rs/">hyper.rs</a>«.
+Dokumentation zur HTTP-Bibliothek <i>hyper</i>.
+<li>Amos Wenger: »<a href="https://fasterthanli.me/articles/request-coalescing-in-async-rust"
+  >Request coalescing in async Rust</a>. Blog, 6. März 2022.
+<li>»<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol"
+  >Hypertext Transfer Protocol</a>«. Englische Wikipedia.
+<li>»<a href="https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers"
+  >List of TCP and UDP port numbers</a>«. Englische Wikipedia.
+</ol>
 
 </body>
 </html>
