@@ -17,6 +17,7 @@
 <ol>
 <li><a href="#Stapel">Dynamische Stapel</a>
 <li><a href="#Listen">Einfach verkettete Listen</a>
+<li><a href="#Warteschlangen">Warteschlangen</a>
 <li><a href="#Baeume">Bäume</a>
 </ol>
 
@@ -249,6 +250,68 @@ fn main() {
     println!("{}", a);
 }
 </pre>
+
+<h2 id="Warteschlangen">Warteschlangen</h2>
+
+<h3>Mittels zweier Stapel</h3>
+
+<p>Eine Warteschlange ist, wie der Name bereits nahelegt, eine
+Datenstruktur, bei der Elemente effizient in derselben Reihenfolge
+entnommen werden können, in der sie in die Datenstruktur
+hineingebracht wurden. Die Programmierung einer solchen vermittels
+zweier Stapel tritt als verhältnismäßig leichte Übung hervor.
+
+<p>Der Ansatz beruht auf der folgenden Idee. Bei der Entnahme
+der Elemente von einem Stapel dreht sich, wie man weiß, die Reihenfolge
+um, in welcher die Elemente auf den Stapel gelegt wurden. Durchläuft
+eine Reihe von Elementen diese Prozedur also zweimal aufeinanderfolgend,
+liegt danach wieder die ursprüngliche Reihenfolge vor.
+
+<p>Den ersten Stapel benennen wir <code>istack</code> für
+<i>input stack</i>, dt. <i>Eingangsstapel</i> und den zweiten
+<code>ostack</code> für <i>output stack</i>, dt. <i>Ausgangsstapel</i>.
+Die Operation <code>enqueue</code> soll ein Element zur Schlange
+hinzufügen, die Operation <code>dequeue</code> eines entnehmen.
+Bei <code>enqueue</code> wird das Element schlicht auf den
+Eingangsstapel gepackt. Dagegen verhält sich <code>dequeue</code> ein
+wenig komplizierter. Ist der Ausgangsstapel nichtleer, wird eines
+abgehoben. Ist der Ausgangsstapel dagegen leer, wird solange ein
+Element des Eingangsstapels entnommen und auf den Ausgangsstapel
+gelegt, bis der Eingangsstapel geleert wurde. Erst danach wird ein
+Element vom Ausgangsstapel abgehoben.
+
+<p>Zu beachten gilt, dass die Leerung des Eingangsstapels vollständig
+sein muss und nur dann erfolgen darf, wenn ein leerer Ausgangsstapel
+vorliegt. Andernfalls käme es zu einem logischen Fehler, das heißt,
+einer falschen Reihenfolge bei der Entnahme.
+
+<pre class="rust ibox">
+pub struct Queue&lt;T&gt; {
+    istack: Vec&lt;T&gt;,
+    ostack: Vec&lt;T&gt;
+}
+
+impl&lt;T&gt; Queue&lt;T&gt; {
+    pub fn new() -&gt; Self {
+        Self {istack: Vec::new(), ostack: Vec::new()}
+    }
+    pub fn enqueue(&amp;mut self, x: T) {
+        self.istack.push(x)
+    }
+    pub fn dequeue(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if self.ostack.is_empty() {
+            while let Some(x) = self.istack.pop() {
+                self.ostack.push(x)
+            }
+        }
+        self.ostack.pop()
+    }
+}
+</pre>
+
+<p>Obwohl es effizientere Ansätze als den dargelegten gibt,
+ist dieser zugestanden recht kompakt und nicht sonderlich
+ineffizient.
 
 
 <h2 id="Baeume">Bäume</h2>
