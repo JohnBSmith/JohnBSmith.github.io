@@ -16,12 +16,21 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Stapel">Dynamische Stapel</a>
+  <ol>
+  <li><a href="#Stapel-mittels-Liste">Mittels einer verketteten Liste</a>
+  <li><a href="#Stapel-mittels-Puffer">Mittels eines Puffers</a>
+  </ol>
 <li><a href="#Listen">Einfach verkettete Listen</a>
 <li><a href="#Warteschlangen">Warteschlangen</a>
+  <ol>
+  <li><a href="#Zwei-Stapel">Mittels zweier Stapel</a>
+  </ol>
 <li><a href="#Baeume">Bäume</a>
 </ol>
 
 <h2 id="Stapel">Dynamische Stapel</h2>
+
+<h3 id="Stapel-mittels-Liste">Mittels einer verketteten Liste</h3>
 
 <p>Es gibt unterschiedliche Möglichkeiten, einen Stapel zu
 implementieren. Man kann die Implementation auch verbergen und den
@@ -124,6 +133,61 @@ fn main() {
 }
 </pre>
 
+<h3 id="Stapel-mittels-Puffer">Mittels eines Puffers</h3>
+
+<p>Eine alternative Implementierung nutzt zur Ablage der Daten einen
+Puffer. Kommt zum vollständig belegten Puffer ein weiteres Element
+hinzu, wird dieser zuvor mittels einer Operation
+<code>reallocate</code> durch einen neuen Puffer doppelter Größe
+ersetzt, wobei die bereits gespeicherten Elemente logischerweise in den
+neuen Puffer zu überführen sind.
+
+<p>Unbelegte Speicherzellen des Puffers kodieren wir als
+<code>None</code>, um nicht mit uninitialisiertem Speicher respektive
+ungültigen Werten arbeiten zu müssen.
+
+<pre class="rust ibox">
+pub struct Stack&lt;T&gt; {
+    buf: Box&lt;[Option&lt;T&gt;]&gt;,
+    len: usize
+}
+
+impl&lt;T&gt; Stack&lt;T&gt; {
+    pub fn new() -&gt; Self {
+        Self {len: 0, buf: Box::new([None])}
+    }
+    fn reallocate(&amp;mut self, size: usize) {
+        let mut buf = Box::from_iter((0..size).map(|_| None));
+        for i in 0..self.buf.len() {
+            buf[i] = self.buf[i].take();
+        }
+        self.buf = buf;
+    }
+    pub fn push(&amp;mut self, x: T) {
+        if self.len == self.buf.len() {
+            self.reallocate(self.buf.len()*2);
+        }
+        self.buf[self.len] = Some(x);
+        self.len += 1;
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if self.len != 0 {
+            self.len -= 1;
+            self.buf[self.len].take()
+        } else {
+            None
+        }
+    }
+}
+</pre>
+
+<p>Diese Konstruktion entspricht konzeptuell der von <code>Vec</code>
+aus der Standardbibliothek. Allerdings entfallen bei <code>Vec</code>
+die eigentlich redundanten Optionen im Puffer, womit bei
+<code>Vec</code> das Ausborgen von
+Teilen des belegten Puffers als Slice durchführbar ist. Dagegen ist
+bei <code>Stack</code> eine abstraktere Schnittstelle zu nutzen,
+zum Beispiel ein Iterator.
 
 <h2 id="Listen">Einfach verkettete Listen</h2>
 
@@ -163,7 +227,7 @@ struct List&lt;T&gt; {
 }
 </pre>
 
-<p>Zustäzlich bräuchten wir einen Iterator, der durch die
+<p>Zusätzlich bräuchten wir einen Iterator, der durch die
 Liste iteriert, und darauf aufbauend eine Prozedur zur Ausgabe.
 Der Einfachheit halber führen wir den Iterator klonend aus.
 Die folgende Implementation enthält gleich alles
@@ -237,23 +301,21 @@ impl&lt;T: Clone + fmt::Display&gt; fmt::Display for List&lt;T&gt; {
     }
 }
 
-macro_rules! list {
-    ( $( $x:expr ),* ) =&gt; {{
-        let mut _a_ = List::new();
-        $(_a_.push($x);)*
-        _a_
-    }}
+fn list&lt;T, const N: usize&gt;(a: [T; N]) -> List&lt;T&gt; {
+    let mut acc = List::new();
+    for x in a {acc.push(x);}
+    acc
 }
 
 fn main() {
-    let a: List&lt;i32&gt; = list![1, 2, 3, 4];
+    let a: List&lt;i32&gt; = list([1, 2, 3, 4]);
     println!("{}", a);
 }
 </pre>
 
 <h2 id="Warteschlangen">Warteschlangen</h2>
 
-<h3>Mittels zweier Stapel</h3>
+<h3 id="Zwei-Stapel">Mittels zweier Stapel</h3>
 
 <p>Eine Warteschlange ist, wie der Name bereits nahelegt, eine
 Datenstruktur, bei der Elemente effizient in derselben Reihenfolge
