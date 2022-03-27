@@ -18,6 +18,7 @@
 <li><a href="#Memoisierung">Memoisierung</a>
 <li><a href="#Anfangswerte">Anfangswerte</a>
 <li><a href="#Fixpunkt-Kombinator">Fixpunkt-Kombinator</a>
+<li><a href="#Wechsel">Wechselseitige Rekursion</a>
 </ol>
 
 <h2 id="Problematik">Problematik</h2>
@@ -225,6 +226,51 @@ def fib(rec, n):
     return 1 if n &lt; 3 else rec(n - 1) + rec(n - 2)
 </pre>
 
+<h2 id="Wechsel">Wechselseitige Rekursion</h2>
+
+<p>Zur Konstruktion wechselseitiger Rekursion ist ein spezieller
+Fixpunkt-Kombinator zweckdienlich. Die Funktionen sind hierfür zu einer
+Struktur zusammenzufassen, die wir durch ein Wörterbuch darstellen.
+
+<pre class="python ibox">
+def fix(cb):
+    rec = {}
+    rec.update(cb(rec))
+    return rec
+
+s = fix(lambda rec: {
+    "even": lambda n: True if n == 0 else rec["odd"](n - 1),
+    "odd": lambda n: False if n == 0 else rec["even"](n - 1)
+})
+
+even = s["even"]
+odd = s["odd"]
+</pre>
+
+<p>Die Memoisierung verläuft nun folgendermaßen:
+
+<pre class="python ibox">
+def memo_fn(f):
+    memo = {}
+    def mf(*t):
+        if not t in memo: memo[t] = f(*t)
+        return memo[t]
+    return mf
+
+def fix(cb):
+    rec = {}
+    for key, value in cb(rec).items():
+        rec[key] = memo_fn(value)
+    return rec
+
+s = fix(lambda rec: {
+    "even": lambda n: True if n == 0 else rec["odd"](n - 1),
+    "odd": lambda n: False if n == 0 else rec["even"](n - 1)
+})
+
+even = s["even"]
+odd = s["odd"]
+</pre>
 
 </body>
 </html>

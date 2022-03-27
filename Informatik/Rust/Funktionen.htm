@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Tupelwertige-Funktionen">Tupelwertige Funktionen</a>
+<li><a href="#Referenzparameter">Referenzparameter</a>
 <li><a href="#Variadische-Funktionen">Variadische Funktionen</a>
 <li><a href="#Endrekursion">Endrekursion</a>
 </ol>
@@ -47,14 +48,71 @@ fn main() {
 }
 </pre>
 
+<h2 id="Referenzparameter">Referenzparameter</h2>
+
+<p>Eingehen möchte ich außerdem noch auf unterschiedliche Arten der
+Parameterübergabe. Unter anderem tut sich die Frage auf, ob sich eine
+Variable durch eine Prozedur modifizieren lassen kann. Ein unbedarfter
+Einsteiger könnte auf den Gedanken kommen, die Inkrementierung einer
+Variablen ließe sich durch
+
+<pre class="rust ibox">
+fn inc(mut x: i32) {
+    x = x + 1;
+}
+</pre>
+
+<p>beschreiben. Jedoch schlägt das Testprogramm
+
+<pre class="rust ibox">
+fn main() {
+    let mut i = 1;
+    inc(i);
+    assert_eq!(i, 2);
+}
+</pre>
+
+<p>fehl. Zudem beschwert sich der Compiler, dass der Wert, der in
+<code>x</code> geschrieben wurde, nie gelesen wird, und dass
+<code>i</code> nicht veränderlich sein braucht. Der Grund dafür ist
+die Parameterübergabe, die stets per Kopie oder per Move vonstattengeht,
+man spricht von <i>Wertparametern</i>, engl. <i>call by value</i>.
+Weil also lediglich eine Kopie der ursprünglichen Variable <code>i</code>
+überschrieben wird, und nicht die Variable selbst, bewirkt der
+Aufruf von <code>inc</code> keine Veränderung von <code>i</code>.
+
+<p>Zur Herbeiführung der gewünschten Veränderung bedarf es
+<i>Referenzparametern</i>, engl. <i>call by reference</i>. Das will
+heißen, dass bei der Parameterübergabe eine Referenz von der
+ursprüngliche Variable erstellt wird.
+
+<p>Obwohl Referenzparameter in Rust nicht als eigenständiges
+Konzept vorhanden sind, lassen sie sich hinreichend bequem
+mit Zeigern nachbilden. Möchte man also eine Variable ändern
+lassen, muss die Funktion eine alleinige Referenz auf
+die Variable als Parameter bekommen. Insofern ist das gewünschte
+Programm formulierbar als:
+
+<pre class="rust ibox">
+fn inc(x: &amp;mut i32) {
+    *x = *x + 1;
+}
+
+fn main() {
+    let mut i = 1;
+    inc(&amp;mut i);
+    assert_eq!(i, 2);
+}
+</pre>
+
 <h2 id="Variadische-Funktionen">Variadische Funktionen</h2>
 
 <h3>Homogene Argumente</h3>
 
 <p>Als <i>variadisch</i> bezeichnet man Funktionen, die keine
-feste Arität haben, d.h. keine feste Anzahl an Argumenten. Zwar sind
-solche Funktionen in Rust nicht direkt formulierbar, allerdings
-lassen sie sich ausreichend ergonomisch nachstellen, indem der
+feste Arität haben, das heißt, keine feste Anzahl an Argumenten. Obwohl
+solche Funktionen in Rust nicht direkt formulierbar sind, lassen sie
+sich ausreichend ergonomisch nachstellen, indem der
 variadische Teil in ein Slice verpackt wird.
 
 <p>Für die Funktion <code>mean</code>, welche den Mittelwert der
@@ -80,7 +138,7 @@ Trait <code>Any</code> sein. Dafür muss von den Argumenten jeweils
 ein Borrow gebildet werden. Wir definieren für die Borrows ein Makro
 <code>argv</code>, das sorgt für hübsche Syntax.
 
-<p>Das Beispiel zeigt eine variadische Funktion die Argumente
+<p>Das Beispiel zeigt eine variadische Funktion, die Argumente
 unterschiedlichen Typs verträgt, solange diese nur den
 Trait <code>Display</code> implementieren.
 

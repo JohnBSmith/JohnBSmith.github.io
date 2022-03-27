@@ -15,7 +15,8 @@
 
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="Subtypen-Regionen">Subtyp-Beziehungen von Regionen</a>
+<li><a href="#Subtypen-Regionen">Subtyp-Beziehungen von Regionen</a>
+<li><a href="#Varianz">Varianz</a>
 </ol>
 
 <h2 id="Subtypen-Regionen">Subtyp-Beziehungen von Regionen</h2>
@@ -98,6 +99,117 @@ type Ref&lt;'a, T&gt; = &amp;'a T;
 
 <p>definierte Typkonstruktor <code>Ref</code> kovariant bezüglich
 des Lebenszeit-Parameters ist.
+
+<h2 id="Varianz">Varianz</h2>
+
+<p>Ein Typkonstruktor kann sich bezüglich einer Subtyp-Relation
+unterschiedlich verhalten. Man muss hier drei Fälle unterscheiden:
+
+<ol>
+<li>Bleibt die Subtyp-Relation bei der beidseitigen Anwendung des
+Typkonstruktors&nbsp;<var>F</var> erhalten, will heißen,
+<var>S</var>&nbsp;≤:&nbsp;<var>T</var> impliziert
+<var>F</var>⟨<var>S</var>⟩&nbsp;≤:&nbsp;<var>F</var>⟨<var>T</var>⟩,
+bezeichnet man diesen als <i>kovariant</i>.
+<li>Dreht sich die Subtyp-Relation bei der beidseitigen Anwendung des
+Typkonstruktors&nbsp;<var>F</var> um, will heißen,
+<var>S</var>&nbsp;≤:&nbsp;<var>T</var> impliziert
+<var>F</var>⟨<var>T</var>⟩&nbsp;≤:&nbsp;<var>F</var>⟨<var>S</var>⟩,
+bezeichnet man diesen als <i>kontravariant</i>.
+<li>Geht die Subtyp-Relation bei der beidseitigen Anwendung des
+Typkonstruktors verloren, bezeichnet man diesen als <i>invariant</i>
+oder <i>nonvariant</i>.
+</ol>
+
+<p>Besitzt der Typkonstruktor mehr als ein Argument, kann die Varianz
+je Argument unterschiedlich ausfallen.
+
+<p>Eine Erklärung, warum Varianz wichtig ist, liefert die folgende
+Diskussion. Zunächst einmal seien die beiden Enumerationen
+
+<pre class="rust ibox">
+enum E {V0, V1, V2}
+enum S {V0, V1}
+</pre>
+
+<p>definiert. Wir erweitern das Typsystem nun dergestalt, dass
+<code>S</code> ein Subtyp von <code>E</code> wird, wobei
+<code>E::V0 == S::V0</code> und <code>E::V1 == S::V1</code> gelten soll.
+
+<p>Man darf einen Wert vom Typ <code>S</code> nun überall dort
+einsetzen, wo ein Wert vom Typ&nbsp;<code>E</code> erwartet wird.
+Liegt beispielsweise eine Funktion <code>fn f(x: E) {}</code> vor,
+ist der Aufruf <code>f(S::V0)</code> ein gültiger Term. 
+
+<p>Man kann außerdem sagen, dass bezüglich
+<code>fn f(x: &amp;E) {}</code> der Aufruf <code>f(&amp;S::V0)</code>
+ein gültiger Term ist. Dass man mit solchen Aussagen aber vorsichtig
+sein muss, zeigt das folgende pathologische Beispiel.
+
+<pre class="rust ibox">
+fn f(x: &amp;mut E) {
+    *x = E::V2;
+}
+
+let mut s: S = S::V0;
+f(&amp;mut s);
+</pre>
+
+<p>Dieses Programm schreibt den Wert <code>E::V2</code> in eine Variable
+des Typs&nbsp;<code>S</code>, was für diesen Typ jedoch ein ungültiger
+Wert ist. Um dieses Missverhältnis auszuschließen, muss der als
+
+<pre class="rust ibox">
+type RefMut&lt;'a, T&gt; = &amp;mut 'a T;
+</pre>
+
+<p>definierte Typkonstruktor <code>RefMut</code> im zweiten Argument
+invariant sein.
+
+<p>Des Weiteren verhalten sich Funktionentypen in bestimmter Weise
+bezüglich Subtypen. Betrachen wir dazu:
+
+<pre class="rust ibox">
+fn f(cb: fn(S)) {cb(S::V0)}
+
+fn cb0(x: E) {}
+
+f(cb0)
+</pre>
+
+<p>Dieses Programm darf man als gültig befinden, denn es stellt kein
+Problem dar, wenn <code>cb0</code> ein Argument vom
+Typ&nbsp;<code>S</code> bekommt. Indes besitzt <code>cb0</code> den
+Typ <code>fn(E)</code>. Wie es scheint, führt
+<code>S</code>&nbsp;≤:&nbsp;<code>E</code> zu
+<code>fn(E)</code>&nbsp;≤:&nbsp;<code>fn(S)</code>.
+Andererseits darf man das Programm
+
+<pre class="rust ibox">
+fn f(cb: fn() -&gt; E) -&gt; E {cb()}
+
+fn cb0() -&gt; S {S::V0}
+
+f(cb0)
+</pre>
+
+<p>als gültig befinden. Demzufolge sollte
+<code>S</code>&nbsp;≤:&nbsp;<code>E</code> zu
+<code>fn()-&gt;S</code>&nbsp;≤:&nbsp;<code>fn()-&gt;E</code>
+führen. Wir kommen insgesamt zum Schluss, dass der gemäß
+
+<pre class="rust ibox">
+type Fun&lt;X, Y&gt; = fn(X) -&gt; Y;
+</pre>
+
+<p>definierte Typkonstruktor <code>Fun</code> kontravariant im ersten
+Argument und kovariant im zweiten Argument ist. Oder sein darf.
+
+<p>Die bisweilen einzige uns bekannte Subtyp-Relation betrifft die
+Lebenszeiten. Das bedeutet allerdings mitnichten, dass die gemachten
+Erwägungen lediglich auf Lebenszeit-Parameter zutreffen würden.
+Der Wert eines Typkonstruktors ist nämlich ein gewöhnlicher Typ,
+wodurch sich die Subtyp-Relation auf gewöhnliche Typen fortsetzt.
 
 </body>
 </html>
