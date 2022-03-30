@@ -15,11 +15,12 @@
 
 <h2 id="toc">Inhaltsverzeichnis</h2>
 <ol>
-<li><a href="#Subtypen-Regionen">Subtyp-Beziehungen von Regionen</a>
+<li><a href="#Subtypen-Regionen">Subtyp-Beziehung zwischen Regionen</a>
 <li><a href="#Varianz">Varianz</a>
+<li><a href="#Varianz-Untersuchungen">Untersuchungen zur Varianz</a>
 </ol>
 
-<h2 id="Subtypen-Regionen">Subtyp-Beziehungen von Regionen</h2>
+<h2 id="Subtypen-Regionen">Subtyp-Beziehung zwischen Regionen</h2>
 
 <p>Betrachten wir einmal das folgende Programm.
 
@@ -70,7 +71,7 @@ let s1: &amp;'1 str = s0;
 zwischen diesen Typen ist eine Subtyp-Beziehung
 
 <pre class="rust indent">
-&amp;'0 str &lt;: &amp;'1 str.
+&amp;'0 str ≤: &amp;'1 str.
 </pre>
 
 <p>Es stellt sich nämlich heraus, dass ein Typ mit langer
@@ -79,8 +80,11 @@ Typ kurzer Lebenszeit erwartet wird, womit das
 Liskov-Prinzip erfüllt ist.
 
 <p>Im nächsten Schritt werden die Lebenszeiten ebenfalls als Typen
-aufgefasst. Wir schreiben nun <code>'b&nbsp;&le;:&nbsp;'a</code>
-anstelle von <code>'b:&nbsp;'a</code>. Das heißt, wir betrachten
+aufgefasst. Allerdings handelt es sich dabei um eine andere Art
+von Typ, weil eine Lebenszeit keinesfalls an einer Stelle eingesetzt
+werden darf, die einen gewöhnlichen Typ verlangt. Wir schreiben nun
+<code>'b&nbsp;&le;:&nbsp;'a</code> anstelle von
+<code>'b:&nbsp;'a</code>. Das heißt, wir betrachten
 eine längere Lebenszeit als Subtyp einer kürzeren. Unter dieser
 Sichtweise findet man,
 
@@ -90,7 +94,7 @@ Sichtweise findet man,
 
 <p>für jeden Typ <code>T</code>. Demnach ist <code>&amp;'a T</code>
 kovariant bezüglich <code>'a</code>. Genau genommen ist Kovarianz
-eine Eigenschaft eines Typkonstruktors. Gemeint ist also, dass der
+eine Eigenschaft eines Typkonstruktors. Gemeint ist also, dass sich der
 durch
 
 <pre class="rust ibox">
@@ -98,7 +102,7 @@ type Ref&lt;'a, T&gt; = &amp;'a T;
 </pre>
 
 <p>definierte Typkonstruktor <code>Ref</code> kovariant bezüglich
-des Lebenszeit-Parameters ist.
+des Lebenszeit-Parameters verhält.
 
 <h2 id="Varianz">Varianz</h2>
 
@@ -160,7 +164,7 @@ des Typs&nbsp;<code>S</code>, was für diesen Typ jedoch ein ungültiger
 Wert ist. Um dieses Missverhältnis auszuschließen, muss der als
 
 <pre class="rust ibox">
-type RefMut&lt;'a, T&gt; = &amp;mut 'a T;
+type RefMut&lt;'a, T&gt; = &amp;'a mut T;
 </pre>
 
 <p>definierte Typkonstruktor <code>RefMut</code> im zweiten Argument
@@ -210,6 +214,89 @@ Lebenszeiten. Das bedeutet allerdings mitnichten, dass die gemachten
 Erwägungen lediglich auf Lebenszeit-Parameter zutreffen würden.
 Der Wert eines Typkonstruktors ist nämlich ein gewöhnlicher Typ,
 wodurch sich die Subtyp-Relation auf gewöhnliche Typen fortsetzt.
+
+<h2 id="Varianz-Untersuchungen">Untersuchungen zur Varianz</h2>
+
+<p>Ein Typkonstruktor, der Lebenszeiten auf gewöhnliche Typen
+abbildet, wird als Hilfsmittel dienen:
+
+<pre class="rust ibox">
+struct P&lt;'a&gt;(&amp;'a u8);
+</pre>
+
+<p>Es ist nun ein Kontext herzustellen, wo zwei Variablen
+unterschiedliche Lebenszeiten aufweisen. Dies wäre durch Bildung
+eines kürzeren Scopes erreichbar. Es geht aber auch
+explizit mit einer wobei-Klausel. Dem Programm darf
+<code>#![allow(unused)]</code> vorangestellt werden, um 
+pedantische Warnungen abzustellen, die für die nachfolgenden
+Betrachtungen nebensächlich sind.
+
+<pre class="rust ibox">
+fn context&lt;'a, 'b&gt;(mut a: P&lt;'a&gt;, mut b: P&lt;'b&gt;)
+where 'b: 'a
+{
+    a = b;
+}
+</pre>
+
+<p>Das dargelegte Programm ist kompilierbar, obwohl <code>a</code>
+und <code>b</code> unterschiedlichen Typ besitzen. Die Zuweisung
+<code>a = b</code> ist generell nur dann formulierbar, wenn der Typ von
+<code>b</code> ein Subtyp des Typs von <code>a</code> ist.
+Der Compiler ist sich also über die Subtyp-Relation und die Kovarianz
+von <code>P</code> bewusst. Ebenso ist
+
+<pre class="rust ibox">
+fn context&lt;'a, 'b, 'c&gt;(mut a: &amp;'c P&lt;'a&gt;, mut b: &amp;'c P&lt;'b&gt;)
+where 'b: 'a
+{
+    a = b;
+}
+</pre>
+
+<p>kompilierbar, weil <code>&amp;'c&nbsp;T</code> bezüglich
+<code>T</code> kovariant ist. Das Programm
+
+<pre class="rust ibox">
+fn context&lt;'a, 'b, 'c&gt;(mut a: &amp;'c mut P&lt;'a&gt;, mut b: &amp;'c mut P&lt;'b&gt;)
+where 'b: 'a
+{
+    a = b;
+}
+</pre>
+
+<p>stellt hingegen kein kompilierbares dar, denn
+<code>&amp;'c&nbsp;mut&nbsp;T</code>
+ist invariant bezüglich <code>T</code>.
+
+<p>Aufgrund der besagten Kontravarianz schlägt zudem die
+Kompilierung von
+
+<pre class="rust ibox">
+fn context&lt;'a, 'b&gt;(mut a: fn(P&lt;'a&gt;), mut b: fn(P&lt;'b&gt;))
+where 'b: 'a
+{
+    a = b;
+}
+</pre>
+
+<p>fehl. In der umgedrehten Reihenfolge, also <code>b&nbsp;=&nbsp;a</code>,
+ist der Compiler aber wie erwartet zufrieden. Im Übrigen ist der
+Compiler mit
+
+<pre class="rust ibox">
+fn context&lt;'a, 'b&gt;(mut a: fn() -&gt; P&lt;'a&gt;, mut b: fn() -&gt; P&lt;'b&gt;)
+where 'b: 'a
+{
+    a = b;
+}
+</pre>
+
+<p>zufrieden.
+
+<p>Wir sehen also, dass die gemachten theoretischen Erwägungen allesamt
+zutreffen.
 
 </body>
 </html>
