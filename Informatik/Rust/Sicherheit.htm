@@ -160,18 +160,17 @@ unterstützt.
 
 <pre class="rust ibox">
 mod stack {
-    pub struct Stack&lt;T&gt; {
-        v: Vec&lt;T&gt;
-    }
+    pub struct Stack&lt;T&gt;(Vec&lt;T&gt;);
+
     impl&lt;T&gt; Stack&lt;T&gt; {
         pub fn new() -&gt; Self {
-            Stack {v: Vec::new()}
+            Stack(Vec::new())
         }
         pub fn push(&amp;mut self, x: T) {
-            self.v.push(x);
+            self.0.push(x);
         }
         pub fn pop(&amp;mut self) -&gt; T {
-            match self.v.pop() {Some(x) =&gt; x, None =&gt; panic!()}
+            match self.0.pop() {Some(x) =&gt; x, None =&gt; panic!()}
         }
     }
 }
@@ -208,23 +207,22 @@ mod stack {
         fn pop(&amp;mut self) -&gt; T;
     }
 
-    pub struct VecStack&lt;T&gt; {
-        v: Vec&lt;T&gt;
-    }
+    pub struct VecStack&lt;T&gt;(Vec&lt;T&gt;);
+
     impl&lt;T&gt; Stack&lt;T&gt; for VecStack&lt;T&gt; {
         fn new() -&gt; Self {
-            VecStack {v: Vec::new()}
+            VecStack(Vec::new())
         }
         fn push(&amp;mut self, x: T) {
-            self.v.push(x);
+            self.0.push(x);
         }
         fn pop(&amp;mut self) -&gt; T {
-            match self.v.pop() {Some(x) =&gt; x, None =&gt; panic!()}
+            match self.0.pop() {Some(x) =&gt; x, None =&gt; panic!()}
         }
     }
 }
 
-use stack::{Stack,VecStack};
+use stack::{Stack, VecStack};
 
 fn routine&lt;S: Stack&lt;i32&gt;&gt;() {
     let mut a: S = S::new();

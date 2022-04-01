@@ -17,6 +17,7 @@
 <ol>
 <li><a href="#Arten">Arten von Typen</a>
 <li><a href="#Emulation">Emulation von HKT</a>
+<li><a href="#Alternative">Eine Alternative</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -54,7 +55,8 @@ Typkonstruktoren wie <code>io::Result</code>.
 
 <h2 id="Emulation">Emulation von HKT</h2>
 
-<p>Rust unterstützt keine HKT. Allerdings
+<p>Rust unterstützt keine höher gearteten Typen, engl.
+<i>higher kinded types</i>, kurz HKT. Allerdings
 ist es möglich, HKT unter Ausnutzung des Trait-Systems
 zu emulieren[<a href="#1">1</a>][<a href="#2">2</a>], und dies sogar
 ohne Bemühung generischer assoziierter Typen[<a href="#3">3</a>].
@@ -369,6 +371,180 @@ impl&lt;E&gt; Functor for ResultType&lt;E&gt; {
     {
         x.map(f)
     }
+}
+</pre>
+
+<h2 id="Alternative">Eine Alternative</h2>
+
+<h3>Aufgabe: Abstrakte Implementierung einer Warteschlange</h3>
+
+<p>Bei der Implementierung einer Warteschlange mittels zweier Stapel
+soll von der genutzten Implementierung des Stapels abstrahiert werden,
+dergestalt dass sich der Typ des Stapels gegen einen anderen
+austauschen lässt, ohne die Implementierung der Warteschlange
+modifizieren zu müssen.
+
+<p>Das Modulsystem der Sprache Standard ML wurde extra dafür entworfen,
+solcherlei Abstraktionen durchführen zu können. Die Schnittstelle einer
+Funktionalität ist dabei durch eine sogenannte Signatur gegeben. Rust
+bietet mit den Traits ein ähnliches Sprachmittel zur Beschreibung von
+Schnittstellen.
+
+<h3>Typkonstruktor als Parameter</h3>
+
+<p>Zunächst erfolgt eine Formulierung mit HKT, um den Typkonstruktor des
+Stapels als Typparameter nutzen zu können.
+
+<pre class="rust ibox">
+pub trait AppliedTo&lt;X&gt; {
+    type Value;
+}
+
+type App&lt;F, X&gt; = &lt;F as AppliedTo&lt;X&gt;&gt;::Value;
+
+mod stack {
+    use super::{App, AppliedTo};
+
+    pub trait Stack&lt;T&gt;: AppliedTo&lt;T&gt; {
+        fn new() -&gt; App&lt;Self, T&gt;;
+        fn push(pself: &amp;mut App&lt;Self, T&gt;, x: T);
+        fn pop(pself: &amp;mut App&lt;Self, T&gt;) -&gt; Option&lt;T&gt;;
+        fn is_empty(pself: &amp;App&lt;Self, T&gt;) -&gt; bool;
+    }
+    
+    pub struct VecStack&lt;T&gt;(Vec&lt;T&gt;);
+    pub struct VecStackType;
+    
+    impl&lt;X&gt; AppliedTo&lt;X&gt; for VecStackType {
+        type Value = VecStack&lt;X&gt;;
+    }
+    
+    impl&lt;T&gt; Stack&lt;T&gt; for VecStackType {
+        fn new() -&gt; VecStack&lt;T&gt; {
+            VecStack(Vec::new())
+        }
+        fn push(pself: &amp;mut VecStack&lt;T&gt;, x: T) {
+            pself.0.push(x);
+        }
+        fn pop(pself: &amp;mut VecStack&lt;T&gt;) -&gt; Option&lt;T&gt; {
+            pself.0.pop()
+        }
+        fn is_empty(pself: &amp;VecStack&lt;T&gt;) -&gt; bool {
+            pself.0.is_empty()
+        }
+    }
+}
+
+mod queue {
+    use super::stack::Stack;
+    use super::App;
+
+    pub struct Queue&lt;T, S: Stack&lt;T&gt;&gt; {
+        istack: App&lt;S, T&gt;,
+        ostack: App&lt;S, T&gt;
+    }
+    
+    impl&lt;T, S: Stack&lt;T&gt;&gt; Queue&lt;T, S&gt; {
+        pub fn new() -&gt; Self {
+            Self {istack: S::new(), ostack: S::new()}
+        }
+        pub fn enqueue(&amp;mut self, x: T) {
+            S::push(&amp;mut self.istack, x)
+        }
+        pub fn dequeue(&amp;mut self) -&gt; Option&lt;T&gt; {
+            if S::is_empty(&amp;self.ostack) {
+                while let Some(x) = S::pop(&amp;mut self.istack) {
+                    S::push(&amp;mut self.ostack, x)
+                }
+            }
+            S::pop(&amp;mut self.ostack)
+        }
+    }
+}
+
+type Queue&lt;T&gt; = queue::Queue&lt;T, stack::VecStackType&gt;;
+
+fn main() {
+    let mut q: Queue&lt;i32&gt; = Queue::new();
+    q.enqueue(1);
+    q.enqueue(2);
+    println!("{:?}", q.dequeue());
+    println!("{:?}", q.dequeue());
+}
+</pre>
+
+<h3>Konstruierter Typ als Parameter</h3>
+
+<p>Dass die Nutzung höher gearteter Typen in diesem Fall entbehrlich
+ist, zeigt die nächste ergonomischere Formulierung, die die
+Warteschlange nicht durch den Typkonstruktor parametrisiert, sondern
+durch dessen Wert. Zur Aufhübschung der Notation wird der Elementtyp
+dabei nicht als Typparameter der Warteschlange notiert, sondern
+als assoziierter Typ der Schnittstelle zum Stapel.
+
+<pre class="rust ibox">
+mod stack {
+    pub trait Stack {
+        type Item;
+        fn new() -&gt; Self;
+        fn push(&amp;mut self, x: Self::Item);
+        fn pop(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
+        fn is_empty(&amp;self) -&gt; bool;
+    }
+
+    pub struct VecStack&lt;T&gt;(Vec&lt;T&gt;);
+
+    impl&lt;T&gt; Stack for VecStack&lt;T&gt; {
+        type Item = T;
+        fn new() -&gt; Self {
+            VecStack(Vec::new())
+        }
+        fn push(&amp;mut self, x: T) {
+            self.0.push(x);
+        }
+        fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+            self.0.pop()
+        }
+        fn is_empty(&amp;self) -&gt; bool {
+            self.0.is_empty()
+        }
+    }
+}
+
+mod queue {
+    use super::stack::Stack;
+
+    pub struct Queue&lt;S: Stack&gt; {
+        istack: S,
+        ostack: S
+    }
+    
+    impl&lt;S: Stack&gt; Queue&lt;S&gt; {
+        pub fn new() -&gt; Self {
+            Self {istack: S::new(), ostack: S::new()}
+        }
+        pub fn enqueue(&amp;mut self, x: S::Item) {
+            self.istack.push(x)
+        }
+        pub fn dequeue(&amp;mut self) -&gt; Option&lt;S::Item&gt; {
+            if self.ostack.is_empty() {
+                while let Some(x) = self.istack.pop() {
+                    self.ostack.push(x)
+                }
+            }
+            self.ostack.pop()
+        }
+    }
+}
+
+type Queue&lt;T&gt; = queue::Queue&lt;stack::VecStack&lt;T&gt;&gt;;
+
+fn main() {
+    let mut q: Queue&lt;i32&gt; = Queue::new();
+    q.enqueue(1);
+    q.enqueue(2);
+    println!("{:?}", q.dequeue());
+    println!("{:?}", q.dequeue());
 }
 </pre>
 
