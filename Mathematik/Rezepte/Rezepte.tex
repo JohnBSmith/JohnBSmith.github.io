@@ -210,6 +210,33 @@ Koordinaten in Polarkoordinaten nutzt man am besten die Formel
 wobei $s(0)=1$ ist und sonst $s(y)=\sgn(y)$ gilt. Auf diese
 Weise entgeht man komplizierten Fallunterscheidungen.
 
+\subsection{Umformungen verifizieren}
+
+\begin{Rezept}
+Mit einem Plotter für implizite Kurven lassen sich
+Gleichungsumformungen verifizieren.
+\end{Rezept}
+
+\noindent
+Die Gleichung $y = \tfrac{x}{\sqrt{x^2+1}}$ ist nach $x$ umzustellen.
+Wir beschränken uns hierbei auf $x\ge 0$ und $y\ge 0$, da $y$
+als Funktion von $x$ punktsymmetrisch zum Koordinatenursprung ist.
+Unter dieser Einschränkung gilt
+\begin{gather*}
+y = \tfrac{x}{\sqrt{x^2+1}}\iff y^2 = \tfrac{x^2}{x^2+1}
+\iff y^2(x^2+1) = x^2\\
+\iff y^2 x^2 + y^2 = x^2
+\iff y^2 x^2 - x^2 = -y^2\\
+\iff x^2 (y^2 - 1) = -y^2
+\iff x^2 (1 - y^2) = y^2\\
+\iff x^2 = \tfrac{y^2}{1-y^2}
+\iff x = \tfrac{y}{\sqrt{1-y^2}}.
+\end{gather*}
+Lässt man die Gleichung mit einem Funktionenplotter als implizite Kurve
+zeichen, darf dem Graph durch die jeweilige Äquivalenzumformung keine
+Veränderung widerfahren. Auf diese Weise lässt sich die Richtigkeit
+jedes Umformungsschritts grafisch prüfen.
+
 \subsection{Ableitungen verifizieren}
 
 \begin{Rezept}
@@ -236,7 +263,6 @@ Mit dem Plotter kann man schließlich
 \[10^n (D_h f(x) - f'(x)) \approx 0\]
 für $n\in\{0,1,2,\ldots\}$ prüfen.
 
-\newpage
 \subsection{Fixpunktiteration}
 
 \begin{Rezept}
@@ -275,7 +301,7 @@ Kettenbruch ergibt sich die quadratische Gleichung
 So erhält man $1+\sqrt{2}$ für $a=2$ und $b=1$.
 Für $a=1$ und $b=1$ erhält man den goldenen Schnitt.
 
-
+\newpage
 \subsection{Konformität als Holomorphie}
 
 \begin{Rezept}
@@ -433,9 +459,9 @@ bestätigt die Majorante mit $b_k=1/k^2$, denn
 \iff k\le |4k-2| \iff k^2 \le (4k-2)^2\\
 \iff 0\le 15k^2-16k+4.
 \end{gather*}
-Diese Ungleichung ist für $k\ge 1$ erfüllt.
+Diese Ungleichung ist für alle $k\in\Z$ erfüllt, und somit erst recht
+für $k\ge 1$.
 
-\newpage
 \subsection{Bisektion}
 
 \begin{Rezept}
@@ -487,7 +513,7 @@ mittels Bisektion. Zur Verbesserung überlagert man die Zeichnung mit
 der analogen Zeichnung bezüglich Abtastung der $x$-Achse mit jeweils
 Lösungen $y$ der Gleichung $f(x_k,y)=0$.
 
-
+\newpage
 \subsection{Abschätzung der Lage von Lösungen}
 
 \begin{Rezept}
@@ -539,6 +565,62 @@ zurückgewinnen. Hiermit ist $(a_n)$ als eine Folge von
 Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
 
 \newpage
+\subsection{Fundamentallösung}
+
+\begin{Rezept}
+Ein Ansatz zur Lösung einer inhomogenen linearen gewöhnlichen
+Differentialgleichung ist die Auffindung einer Fundamentallösung.
+\end{Rezept}
+
+\noindent
+Betrachten wir die Aufgabe, die inhomogene Dgl. $y' - y = f$ zu lösen,
+wobei $f$ eine hinreichend gutartige gegebene Funktion sein soll.
+Zur Abstraktion notiert man die linke Seite mit dem linearen
+Differentialoperator $L=D^1-D^0$, so dass $Ly = f$ gilt.
+
+Ein $G(x,\xi)$, das (bezüglich $L=\frac{\partial}{\partial x}-1$) die
+Gleichung
+\[LG(x,\xi) = \delta(x-\xi)\]
+erfüllt, bezeichnet man als \emph{Fundamentallösung}. Mit $\delta$ ist
+hierbei die Delta"=Distribution gemeint. Die Auffindung des richtigen
+$G$ gelingt durch Beachtung von Zusatzbedingungen, wobei man $G$ dann
+als \emph{Greensche Funktion} bezeichnet, obwohl es sich im Allgemeinen
+um eine Distribution handelt. Mit ihr lässt sich die
+Lösung der Differentialgleichung als Integral
+\[y = \int_\Omega G(x,\xi)f(\xi)\,\mathrm d\xi,\]
+darstellen, denn es gilt
+\[Ly(x) =\! \int_\Omega\! LG(x,\xi)f(\xi)\,\mathrm d\xi
+=\! \int_\Omega\! \delta(x-\xi)f(\xi)\,\mathrm d\xi = f(x).\]
+Warum man den Operator $L$ in das Integral hineinschieben durfte, soll an
+dieser Stelle nicht beantwortet werden. Der Leser möge dies bei
+Interesse in einer ausführlichen Darstellung der Theorie nachschlagen.
+
+Für $x\ne \xi$ muss $LG = 0$ gelten, womit $G$ die Lösung der homogenen
+Gleichung sein muss, das ist $G(x,\xi)=C\ee^{x-\xi}$. Die Konstante $C$ ist
+hierbei allerdings für $x<\xi$ und für $x>\xi$ separat zu ermitteln.
+Außerdem muss die Anfangsbedingung $y_0=y(x_0)$ als Randbedingung
+betrachtet werden. Man gelangt zu
+\begin{gather*}
+G(x,\xi) = C_1\ee^{x-\xi}\;\text{für}\; x_0\le x<\xi,\\
+G(x,\xi) = C_2\ee^{x-\xi}\;\text{für}\; \xi < x < \infty.
+\end{gather*}
+Um $LG=\delta(x-\xi)$ zu erhalten, muss an der Stelle $x=\xi$ ein
+Einheitssprung befindlich sein, was $C_2 = C_1 + 1$ aufgrund
+$\ee^0=1$ nach sich zieht. Man findet nun
+\begin{align*}
+y &= \int_{x_0}^x G(x,\xi)f(\xi)\,\mathrm d\xi + \int_x^\infty G(x,\xi)f(\xi)\,\mathrm d\xi\\
+&= C_2\ee^x\int_{x_0}^x \ee^{-\xi} f(\xi)\,\mathrm d\xi + C_1\ee^x\int_x^\infty \ee^{-\xi}f(\xi)\,\mathrm d\xi\\
+&= C_1\ee^x\int_{x_0}^\infty \ee^{-\xi} f(\xi)\,\mathrm d\xi + \ee^x\int_{x_0}^x\ee^{-\xi} f(\xi)\,\mathrm d\xi.
+\end{align*}
+Aus der Anfangsbedingung $y_0=y(x_0)$ erhält man
+\[y_0\ee^{-x_0} = C_1\int_{x_0}^\infty \ee^{-\xi} f(\xi)\,\mathrm d\xi.\]
+Es findet sich schließlich
+\[y = y_0\ee^{x-x_0} + \ee^x\int_{x_0}^x \ee^{-\xi}f(\xi)\,\mathrm d\xi.\]
+Probe durch Einsetzen in die Dgl. bestätigt, dass die richtige
+Lösung gefunden ist. Wir haben dieselbe Lösung gefunden, die der
+Ansatz \emph{Variation der Konstanten} zum Resultat hat.
+
+\clearpage
 \section{Wahrscheinlichkeitsrechnung}
 
 \subsection{Zufallsgrößen}
