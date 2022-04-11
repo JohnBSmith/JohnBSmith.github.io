@@ -568,47 +568,55 @@ Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
 \subsection{Fundamentallösung}
 
 \begin{Rezept}
-Ein Ansatz zur Lösung einer inhomogenen linearen gewöhnlichen
-Differentialgleichung ist die Auffindung einer Fundamentallösung.
+Ein Weg zur Lösung einer inhomogenen linearen gewöhnlichen
+Differentialgleichung mit konstanten Koeffizienten
+besteht in der Auffindung einer Fundamentallösung.
 \end{Rezept}
 
 \noindent
+Die Faltung zweier Funktionen $f,g$ ist definiert als
+\[(f*g)(x) := \int_\R f(x-\xi)g(\xi)\,\mathrm d\xi.\]
+Die Faltung verhält sich, falls sie existiert, wie eine bilineare
+Abbildung. Das heißt, für Funktionen $f,f_1,f_2,g$ und eine
+Konstante $c$ gilt
+\begin{gather*}
+(f_1+f_2)*g = f_1*g + f_2*g,\\
+(c f)*g = c(f*g).
+\end{gather*}
+Außerdem gilt die Ableitungsregel
+\[(f*g)' = f'*g = f*g'.\]
+Sei nun $L$ ein linearer Differentialoperator mit konstanten
+Koeffizienten. Unter Nutzung der genannten Regeln findet sich die
+Regel
+\[L(g*f) = (Lg)*f.\]
 Betrachten wir die Aufgabe, die inhomogene Dgl. $y' - y = f$ zu lösen,
 wobei $f$ eine hinreichend gutartige gegebene Funktion sein soll.
 Zur Abstraktion notiert man die linke Seite mit dem linearen
 Differentialoperator $L=D^1-D^0$, so dass $Ly = f$ gilt.
 
-Ein $G(x,\xi)$, das (bezüglich $L=\frac{\partial}{\partial x}-1$) die
-Gleichung
-\[LG(x,\xi) = \delta(x-\xi)\]
-erfüllt, bezeichnet man als \emph{Fundamentallösung}. Mit $\delta$ ist
-hierbei die Delta"=Distribution gemeint. Die Auffindung des richtigen
-$G$ gelingt durch Beachtung von Zusatzbedingungen, wobei man $G$ dann
-als \emph{Greensche Funktion} bezeichnet, obwohl es sich im Allgemeinen
-um eine Distribution handelt. Mit ihr lässt sich die
-Lösung der Differentialgleichung als Integral
-\[y = \int_\Omega G(x,\xi)f(\xi)\,\mathrm d\xi,\]
-darstellen, denn es gilt
-\[Ly(x) =\! \int_\Omega\! LG(x,\xi)f(\xi)\,\mathrm d\xi
-=\! \int_\Omega\! \delta(x-\xi)f(\xi)\,\mathrm d\xi = f(x).\]
-Warum man den Operator $L$ in das Integral hineinschieben durfte, soll an
-dieser Stelle nicht beantwortet werden. Der Leser möge dies bei
-Interesse in einer ausführlichen Darstellung der Theorie nachschlagen.
-
-Für $x\ne \xi$ muss $LG = 0$ gelten, womit $G$ die Lösung der homogenen
-Gleichung sein muss, das ist $G(x,\xi)=C\ee^{x-\xi}$. Die Konstante $C$ ist
-hierbei allerdings für $x<\xi$ und für $x>\xi$ separat zu ermitteln.
+Ein $G$, das die Gleichung $LG = \delta$ erfüllt, bezeichnet man als
+\emph{Fundamentallösung}. Mit $\delta$ ist hierbei die
+Delta"=Distribution gemeint. Die Auffindung des richtigen
+$G$ gelingt durch Beachtung von Zusatzbedingungen, wobei man dann
+von einer \emph{greenschen Funktion} spricht, obwohl es sich im
+Allgemeinen auch um eine Distribution handeln kann. Mit ihr lässt sich
+die Lösung der Differentialgleichung als Faltung $y = G*f$ darstellen,
+denn es gilt
+\[Ly = L(G*f) = (LG)*f = \delta*f = f.\]
+An Stellen $x\ne 0$ muss $LG(x) = 0$ gelten, womit $G$ die Lösung der
+homogenen Gleichung sein muss, das ist $G(x)=C\ee^x$. Die Konstante $C$
+ist hierbei allerdings für $x<0$ und für $x>0$ separat zu ermitteln.
 Außerdem muss die Anfangsbedingung $y_0=y(x_0)$ als Randbedingung
 betrachtet werden. Man gelangt zu
 \begin{gather*}
-G(x,\xi) = C_1\ee^{x-\xi}\;\text{für}\; x_0\le x<\xi,\\
-G(x,\xi) = C_2\ee^{x-\xi}\;\text{für}\; \xi < x < \infty.
+G(x-\xi) = C_1\ee^{x-\xi}\;\text{für}\; x_0\le x<\xi,\\
+G(x-\xi) = C_2\ee^{x-\xi}\;\text{für}\; \xi < x < \infty.
 \end{gather*}
-Um $LG=\delta(x-\xi)$ zu erhalten, muss an der Stelle $x=\xi$ ein
+Um $LG(x-\xi)=\delta(x-\xi)$ zu erhalten, muss an der Stelle $x=\xi$ ein
 Einheitssprung befindlich sein, was $C_2 = C_1 + 1$ aufgrund
-$\ee^0=1$ nach sich zieht. Man findet nun
+$\ee^0=1$ nach sich zieht. Mit $f(x)=0$ für $x<x_0$ findet man nun
 \begin{align*}
-y &= \int_{x_0}^x G(x,\xi)f(\xi)\,\mathrm d\xi + \int_x^\infty G(x,\xi)f(\xi)\,\mathrm d\xi\\
+y &= \int_{x_0}^x G(x-\xi)f(\xi)\,\mathrm d\xi + \int_x^\infty G(x-\xi)f(\xi)\,\mathrm d\xi\\
 &= C_2\ee^x\int_{x_0}^x \ee^{-\xi} f(\xi)\,\mathrm d\xi + C_1\ee^x\int_x^\infty \ee^{-\xi}f(\xi)\,\mathrm d\xi\\
 &= C_1\ee^x\int_{x_0}^\infty \ee^{-\xi} f(\xi)\,\mathrm d\xi + \ee^x\int_{x_0}^x\ee^{-\xi} f(\xi)\,\mathrm d\xi.
 \end{align*}

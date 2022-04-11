@@ -273,6 +273,7 @@ fn decode_ascii(a: &amp;[u8]) -&gt; String {
 </pre>
 
 <p>Eine etwas informativere Abwandlung:
+
 <pre class="rust ibox">
 fn decode_ascii(a: &amp;[u8]) -&gt; String {
     use std::fmt::Write;
@@ -285,6 +286,15 @@ fn decode_ascii(a: &amp;[u8]) -&gt; String {
         }
     }
     acc
+}
+</pre>
+
+<p>Die Methode <code>escape_ascii</code> bietet dies bereits bequem:
+
+<pre class="rust ibox">
+fn main() {
+    let a: &amp;[u8] = b"Eule";
+    println!("{}", a.escape_ascii());
 }
 </pre>
 
@@ -310,7 +320,6 @@ fn decode_ascii(a: &amp;[u8]) -&gt; String {
     format!("{}", Text(a))
 }
 </pre>
-
 
 <h2 id="Puffer">Puffer</h2>
 
