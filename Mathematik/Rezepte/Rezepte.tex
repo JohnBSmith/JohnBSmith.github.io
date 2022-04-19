@@ -565,6 +565,93 @@ zurückgewinnen. Hiermit ist $(a_n)$ als eine Folge von
 Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
 
 \newpage
+\subsection{Euler-Verfahren}
+
+\begin{Rezept}
+Das Euler-Verfahren ist eine unkompliziert zu handhabende und
+automatisierbare Methode zur numerischen Lösung eines
+Anfangswertproblems.
+\end{Rezept}
+
+\noindent
+Das Auffinden symbolischer Lösungen von Anfangswertproblemen kann
+schwierig sein. Manchmal muss man dafür neue Funktionen definieren,
+die zu den speziellen Funktionen gezählt werden. Bei manchen
+Gleichungen stellt sich die Frage, ob es denn überhaupt möglich ist,
+eine symbolische Lösung zu gewinnen.
+
+Allerdings existieren allgemeine Verfahren zur numerischen Lösung von
+Anfangswertproblemen am Computer. Hiermit lässt sich ggf. auch eine
+numerische Probe bereits gefundener symbolischer Lösungen vornehmen.
+Das einfachste wie auch prototypische dieser Verfahren ist das
+Euler"=Verfahren, welches im Folgenden erläutert werden soll.
+
+Betrachten wir
+\[x' = f(t,x),\quad x'(t_0) = x_0.\]
+Man spricht vom allgemeinen Anfangswertproblem erster Ordnung. Den
+Differentialquotient approximieren wir nun durch einen
+Differenzenquotient:%
+\[\frac{x(t+h)-x(t)}{h} \approx f(t,x).\]
+Umformung dieser Gleichung führt zu
+\[x(t+h)\approx x(t)+hf(t,x).\]
+Demnach ergibt sich eine näherungsweise Lösung des Anfangswertproblems
+nun als iterative Lösung der Differenzengleichung%
+\begin{align*}
+t_{k} &= t_0+hk,\\
+x_{k+1} &= x_k+hf(t_k,x_k).
+\end{align*}
+Diese Iteration wird als \emph{Euler"=Verfahren} bezeichnet.
+
+Nun interessieren uns auch Dgln. höherer Ordnung, und ganz besonders
+die physikalisch wichtigen Dgln. zweiter Ordnung. Jede Dgl. höherer
+Ordnung ist aber als System erster Ordnung formulierbar. Vielen
+wichtigen Modellen liegt außerdem ein System erster Ordnung zugrunde.
+Es ist nun so, dass das Euler"=Verfahren ohne besondere Mühe
+auf ein System erster Ordnung übertragbar ist.
+
+Das Anfangswertproblem zu einem System von zwei Dgln. hat
+z.\,B. die allgemeine Form%
+\[\begin{split}
+x' &= f_1(t,x,y),\quad x'(t_0)=x_0,\\
+y' &= f_2(t,x,y),\quad y'(t_0)=y_0.
+\end{split}\]
+Fasst man die beiden Variablen $x,y$ zu einem Vektor
+$\bv x = (x,y)$ zusammen und definiert%
+\[
+f(t,\bv x) := \begin{pmatrix}
+f_1(t,\bv x)\\
+f_2(t,\bv x)
+\end{pmatrix},
+\]
+bekommt das Anfangswertproblem die kompakte
+vektorielle Form
+\[\begin{split}
+\bv x' &= f(t,\bv x),\quad \bv x'(t_0)=\bv x_0.
+\end{split}\]
+Diese Gleichung ist von der gleichartigen Form wie die anfangs
+beschriebene. Man kann hier im Weiteren analog vorgehen und findet%
+\begin{align*}
+t_{k} &= t_0+hk,\\
+\bv x_{k+1} &= \bv x_k+hf(t_k,\bv x_k).
+\end{align*}
+So unscheinbar diese Iteration auch ausschaut, ermöglicht sie die
+numerische Lösung einer außerordentlichen Vielfalt an Gleichungen.
+
+Es folgt noch eine alternative Herleitung des Euler"=Verfahrens. Beide
+Seiten der Dgl. $x'=f(x,t)$ werden
+von $a$ bis $b$ integriert. Das macht%
+\[x(b)-x(a) = \int_a^b f(t,x)\,\mathrm dt.\]
+Die Differentialgleichung ist hiermit zu einer äquivalenten
+Integralgleichung umgeformt.
+
+Ist der Abstand zwischen den Stellen
+$a$ und $b$ klein genug, erhält
+man die genügend gute Näherung%
+\[\int_a^b f(t,x)\,\mathrm dt \approx (b-a)f(a,x).\]
+Setzen wir $a:=t$ und $b:=t+h$ ein, finden wir
+zum zweiten Mal die näherungsweise Gleichung.
+
+
 \subsection{Fundamentallösung}
 
 \begin{Rezept}
