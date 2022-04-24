@@ -252,20 +252,94 @@ Existenzaussagen $\exists x\colon P(x)$ und $\exists x\colon Q(x)$
 erfüllt sind.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}[dm-g1: 1. allgemeines de morgansches Gesetz]%
+\label{dm-g1} Es gilt
+\[(\neg\exists x\colon P(x))\iff (\forall x\colon \neg P(x)).\]
+\end{Satz}
+\begin{Beweis} Unter Spezialisierung von Satz \ref{exists-implies-const}
+findet sich die äquivalente Umformung%
+\[\neg\exists x\colon P(x)\equiv (\exists x\colon P(x))\Rightarrow 0
+\equiv \forall x\colon (P(x)\Rightarrow 0)
+\equiv \forall x\colon \neg P(x).\,\qedsymbol\]
+\end{Beweis}
+\begin{Satz}[dm-g2: 2. allgemeines de morgansches Gesetz]%
+\label{dm-g2} Es gilt
+\[(\neg\forall x\colon P(x))\iff (\exists x\colon \neg P(x)).\]
+\end{Satz}
+\begin{Beweis}[Beweis (LEM)]
+Nutzung von LEM und Satz \ref{dm-g1} gestattet die äquivalente
+Umformung%
+\[\neg\forall x\colon P(x)
+\equiv\neg\forall x\colon \neg\neg P(x)
+\equiv\neg\neg\exists x\colon \neg P(x)
+\equiv\exists x\colon \neg P(x).\,\qedsymbol\]
+\end{Beweis}
+
 \begin{Satz}\label{exists-implies-const}
 Es gilt:
 \[(\forall x\colon (P(x)\implies A)) \iff ((\exists x\colon P(x))\implies A).\]
 \end{Satz}
+\begin{Beweis}[Beweis 1 (Natürliches Schließen)] Schematisch:\\
+\[\begin{array}{c@{\qquad}c}
+\infer[\infernote{1}]{(\exists x\colon P(x))\implies A}{
+\infer{A}{
+  \infer{P(a)\implies A}{\forall x\colon (P(x)\implies A)}
+  & \infer[\infernote{2}]{P(a)}{
+      \infer[\infernote{1}]{\exists x\colon P(x)}{}
+      & \infer[\infernote{2}]{P(a)}{}}
+}}
+&
+\infer{\forall x\colon (P(x)\implies A)}{
+  \infer[\infernote{1}]{P(x)\implies A}{
+    \infer{A}{
+      (\exists x\colon P(x))\implies A
+      & \infer{\exists x\colon P(x)}{
+          \infer[\infernote{1}]{P(x)}{}}}}}
+\end{array}
+\]
+Die linke Seite zeigt die Implikation von links nach rechts,
+die rechte die Implikation von rechts nach links.\,\qedsymbol
+\end{Beweis}
+\begin{Beweis}[Beweis 2 (LEM, boolesche Algebra)]
+Unter Nutzung von Satz \ref{general-dl} (general-dl)
+und Satz \ref{dm-g1} (dm-g1) gilt
+\begin{align*}
+\forall x\colon (P(x)\Rightarrow A)
+&\equiv \forall x\colon (\neg P(x)\lor A)
+\equiv (\forall x\colon \neg P(x))\lor A\\
+&\equiv \neg (\exists x\colon P(x))\lor A
+\equiv (\exists x\colon P(x))\Rightarrow A.\,\qedsymbol
+\end{align*}
+\end{Beweis}
 
 \begin{Satz}[exists-cl: Kommutativgesetz]\label{exists-cl}
 Es gilt:
 \[(\exists x\colon\exists y\colon P(x,y)) \iff (\exists y\colon\exists x\colon P(x,y)).\]
 \end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Die Implikation von links nach rechts:
+\[\infer{\exists y\colon\exists x\colon P(x,y)}{
+  \infer{\exists x\colon P(x, y)}{
+    \infer[\infernote{1}]{P(a,b)}{
+      \exists x\colon\exists y\colon P(x,b)
+      & \infer[\infernote{1}]{P(a,b)}{}}}
+}\]
+Die Implikation von rechts nach links geht analog.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}[all-cl: Kommutativgesetz]\label{all-cl}
 Es gilt:
-\[(\forall x\colon\forall y\colon P(x,y)) \iff (\forall y\colon\forall x\colon P(x,y)).\]
+\[(\forall x\colon\forall y\colon P(x,y))
+\iff (\forall y\colon\forall x\colon P(x,y)).\]
 \end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Die Implikations von links nach rechts:
+\[\infer{\forall y\colon\forall x\colon P(x,y)}{
+  \infer{\forall x\colon P(x,y)}{
+    \infer{P(x,y)}{\forall x\colon\forall y\colon P(x,y)}}
+}\]
+Die Implikation von rechts nach links geht analog.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}[bounded-general-dl: allgemeine Distributivgesetze]%
 \label{bounded-general-dl}
@@ -279,91 +353,90 @@ A\lor (\forall x{\in}M\colon P(x)) &\iff (\forall x{\in}M\colon A\lor P(x)).
 \begin{Beweis}
 Nach Def. \ref{def:bounded} (bounded)
 und Satz \ref{general-dl} (general-dl) gilt:
-\begin{align*}
-&A\land \exists x{\in}M\,(P(x))
-\iff A\land\exists x(x\in M\land P(x))
-\iff \exists x(A\land x\in M\land P(x))\\
-&\iff \exists x(x\in M\land A\land P(x))
-\iff \exists x{\in}M\,(A\land P(x)).
-\end{align*}
+\begin{gather*}
+A\land \exists x{\in}M\colon P(x)
+\equiv A\land \exists x\colon x\in M\land P(x)
+\equiv \exists x\colon A\land x\in M\land P(x)\\
+\equiv \exists x\colon x\in M\land A\land P(x)
+\equiv \exists x{\in}M\colon A\land P(x).
+\end{gather*}
 Nach Def. \ref{def:bounded} (bounded)
 und Satz \ref{general-dl} (general-dl) gilt:
-\begin{align*}
-& A\lor\forall x{\in}M\,(P(x))
-\iff A\lor\forall x(x\in M\implies P(x))
-\iff A\lor\forall x(x\notin M\lor P(x))\\
-&\iff \forall x(A\lor x\notin M\lor P(x))
-\iff \forall x(x\in M\implies A\lor P(x))\\
-&\iff \forall x{\in}M\,(A\lor P(x)).\;\qedsymbol
-\end{align*}
+\begin{gather*}
+A\lor\forall x{\in}M\colon P(x)
+\equiv A\lor\forall x\colon (x\in M\Rightarrow P(x))
+\equiv A\lor\forall x\colon x\notin M\lor P(x)\\
+\equiv \forall x\colon A\lor x\notin M\lor P(x)
+\equiv \forall x\colon (x\in M\Rightarrow A\lor P(x))\\
+\equiv \forall x{\in}M\colon A\lor P(x).\,\qedsymbol
+\end{gather*}
 \end{Beweis}
 
 \begin{Satz}\label{bounded-exists-cl}
 Es gilt:
-\[\exists x{\in}A\;\exists y{\in}B\;(P(x,y))
-\iff \exists y{\in}B\;\exists x{\in}A\;(P(x,y)).\]
+\[(\exists x{\in}A\colon \exists y{\in}B\colon P(x,y))
+\iff (\exists y{\in}B\colon \exists x{\in}A\colon P(x,y)).\]
 \end{Satz}
 
 \begin{Beweis} Nach Def. \ref{def:bounded} (bounded),
 Satz \ref{general-dl} (general-dl)
 und Satz \ref{exists-cl} (exists-cl) gilt:
 \begin{gather*}
-\exists x{\in}A\;\exists y{\in}B\;(P(x,y))
-\iff \exists x(x\in A\land\exists y[y\in B\land P(x,y)])\\
-\iff \exists x\exists y[x\in A\land y\in B\land P(x,y)]
-\iff \exists y\exists x[y\in B\land x\in A\land P(x,y)]\\
-\iff \exists y(y\in B\land \exists x[x\in A\land P(x,y)])
-\iff \exists y{\in}B\;\exists x{\in}A\; (P(x,y)).\;\qedsymbol
+\exists x{\in}A\colon \exists y{\in}B\colon P(x,y)
+\equiv \exists x\colon x\in A\land\exists y\colon y\in B\land P(x,y)\\
+\equiv \exists x\colon \exists y\colon x\in A\land y\in B\land P(x,y)
+\equiv \exists y\colon \exists x\colon y\in B\land x\in A\land P(x,y)\\
+\equiv \exists y\colon y\in B\land \exists x\colon x\in A\land P(x,y)
+\equiv \exists y{\in}B\colon\exists x{\in}A\colon P(x,y).\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
 \begin{Satz}\label{bounded-all-cl}
 Es gilt:
-\[\forall x{\in}A\;\forall y{\in}B\;(P(x,y))
-\iff \forall y{\in}B\;\forall x{\in}A\;(P(x,y)).\]
+\[(\forall x{\in}A\colon \forall y{\in}B\colon P(x,y))
+\iff (\forall y{\in}B\colon \forall x{\in}A\colon P(x,y)).\]
 \end{Satz}
-
-\begin{Beweis}
+\begin{Beweis}[Beweis (LEM, boolesche Algebra)]\mbox{}\\
 Nach Def. \ref{def:bounded} (bounded),
 Satz \ref{general-dl} (general-dl)
 und Satz \ref{all-cl} (all-cl) gilt:
 \begin{gather*}
-\forall x{\in}A\;\forall y{\in}B\;(P(x,y))
-\iff \forall x(x\in A\Rightarrow \forall y[y\in B\Rightarrow P(x,y)])\\
-\iff \forall x(x\notin A\lor \forall y[y\notin B\lor P(x,y)])
-\iff \forall x\forall y[x\notin A\lor y\notin B\lor P(x,y)]\\
-\iff \forall y\forall x[y\notin B\lor x\notin A\lor P(x,y)]
-\iff \forall y(y\notin B\lor \forall x[x\notin A\lor P(x,y)])\\
-\iff \forall y(y\in B\Rightarrow \forall x[x\in A\Rightarrow P(x,y)])
-\iff \forall y{\in}B\;\forall x{\in}A\;(P(x,y).\;\qedsymbol
+\forall x{\in}A\colon \forall y{\in}B\colon P(x,y)
+\equiv \forall x\colon x\in A\Rightarrow \forall y\colon y\in B\Rightarrow P(x,y)\\
+\equiv \forall x\colon x\notin A\lor \forall y\colon y\notin B\lor P(x,y)
+\equiv \forall x\colon \forall y\colon x\notin A\lor y\notin B\lor P(x,y)\\
+\equiv \forall y\colon \forall x\colon y\notin B\lor x\notin A\lor P(x,y)
+\equiv \forall y\colon y\notin B\lor \forall x\colon x\notin A\lor P(x,y)\\
+\equiv \forall y\colon y\in B\Rightarrow \forall x\colon x\in A\Rightarrow P(x,y)
+\equiv \forall y{\in}B\colon\forall x{\in}A\colon P(x,y).\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
 \begin{Satz}
 Für eine Aussage $P$, die nicht von $x$ abhängt, und ein nichtleeres
 Diskursuniversum gilt:
-\[\exists x(P) \iff P.\]
+\[(\exists x\colon P) \iff P.\]
 \end{Satz}
 \begin{Beweis}[Beweis]
 Nach \ref{general-dl} (general-dl) gilt:
-\[\exists x(P) \iff \exists x(1\land P)
-\iff \exists x(1)\land P\iff 1\land P\iff P.\]
+\[\exists x\colon P \equiv \exists x\colon 1\land P
+\equiv (\exists x\colon 1)\land P\equiv 1\land P\equiv P.\]
 Im vorletzten Schritt wurde dabei ausgenutzt, dass
-für ein nichtleeres Diskursuniversum immer $\exists x(1)\iff 1$
+für ein nichtleeres Diskursuniversum immer $(\exists x\colon 1)\equiv 1$
 gelten muss.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
 Es gilt
-\[\exists x{\in}M\;(P) \iff (M\ne\emptyset)\land P.\]
+\[(\exists x{\in}M\colon P) \iff (M\ne\emptyset)\land P.\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Def. \ref{def:bounded} (bounded) und Satz
 \ref{general-dl} (general-dl) gilt:
 \begin{gather*}
-\exists x{\in}M\;(P) \iff \exists x(x\in M\land P)
-\iff \exists x(x\in M)\land P\iff (M\ne\emptyset)\land P.\;\qedsymbol
+\exists x{\in}M\colon P \equiv \exists x\colon x\in M\land P
+\equiv (\exists x\colon x\in M)\land P\equiv (M\ne\emptyset)\land P.\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
