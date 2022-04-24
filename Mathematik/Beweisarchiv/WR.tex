@@ -269,19 +269,52 @@ wobei $X^{-1}(x) = \{X=x\}$.\;\qedsymbol
 \begin{Korollar}\label{prob-as-expected-value}
 Es gilt $P(A) = E(1_A)$, wobei $1_A$ die Indikatorfunktion ist.
 \end{Korollar}
-\strong{Beweis.} Gemäß Definition des Erwartungswertes ist
+\begin{Beweis}
+Gemäß Definition des Erwartungswertes ist
 \[E(1_A) = \sum_{\omega\in\Omega} 1_A(\omega)P(\{\omega\})
-= \sum_{\omega\in A}P(\{\omega\}) = P(A).\;\qedsymbol\]
+= \sum_{\omega\in A}P(\{\omega\}) = P(A).\,\qedsymbol\]
+\end{Beweis}
 
 \begin{Korollar}
 Es gilt $P(A\mid B) = E(1_A\mid B)$, wobei $1_A$ die Indikatorfunktion ist.
 \end{Korollar}
-\strong{Beweis.} Gemäß Definition \ref{def:cond-expected-value}
+\begin{Beweis}
+Gemäß Definition \ref{def:cond-expected-value}
 und Korollar \ref{prob-as-expected-value} ist
 \[E(1_A\mid B) = \frac{E(1_A 1_B)}{P(B)} = \frac{E(1_{A\cap B})}{P(B)}
-= \frac{P(A\cap B)}{P(B)} = P(A\mid B).\qedsymbol\]
+= \frac{P(A\cap B)}{P(B)} = P(A\mid B).\,\qedsymbol\]
+\end{Beweis}
 
+\begin{Korollar}
+Der Erwartungswert ist der Schwerpunkt der Wahrscheinlichkeitsmassen.
+\end{Korollar}
+\begin{Beweis} Der Schwerpunkt $s$ ist charakterisiert durch die folgende
+Gleichgewichtsbedingung, die wie folgt äquivalent umgeformt werden
+darf:
+\begin{gather*}
+\sum_{x\in X(\Omega)}\!\! (s-x)P(X=x) = 0
+\iff s\underbrace{\sum_{x\in X(\Omega)}\!\! P(X=x)}_{=1}\;
+- \sum_{x\in X(\Omega)}\!\! xP(X=x) = 0\\
+\iff s = \sum_{x\in X(\Omega)}\!\! xP(X=x) \iff s = E(X).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\newpage
 \section{Allgemeine Wahrscheinlichkeitsräume}
+
+\begin{Korollar}
+Der Erwartungswert ist der Schwerpunkt der Dichtefunktion.
+\end{Korollar}
+\begin{Beweis} Der Schwerpunkt $s$ ist charakterisiert durch die
+folgende Gleichgewichtsbedingung, die wie folgt äquivalent
+umgeformt werden darf:
+\begin{gather*}
+\int_\R (s-x)f(x)\,\mathrm dx = 0
+\iff s\underbrace{\int_\R\! f(x)\,\mathrm dx}_{=1}
+- \int_\R xf(x)\,\mathrm dx = 0\\
+\iff s = \int_\R xf(x)\,\mathrm dx = E(X).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
 
 \begin{Satz}\label{rv-transform-pdf}
 Sei $g\colon\R\to\R$ eine streng monotone Funktion. Seien
@@ -319,6 +352,7 @@ E(g(X)) &= E(Y) = \int_{-\infty}^\infty yf_Y(y)\,\mathrm dy
 = \int_{-\infty}^\infty g(x) f_X(x)\mathrm dx.\;\qedsymbol
 \end{align*}
 
+\newpage
 \section{Stochastische Prozesse}%
 \index{stochastischer Prozess}
 

@@ -107,7 +107,7 @@ Entweder gilt eine Aussage, oder ihre Negation gilt, kurz
 \[\vdash A\lor\neg A.\]
 \end{Axiom}
 Bemerkung: Zur Schaffung von Klarheit sollte ein Beweis die Markierung
-LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom bestehen.
+LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom besteht.
 Verzichtet keiner der Beweise eines Satzes auf LEM, sollte der Satz
 ebenfalls mit LEM markiert werden.
 
@@ -148,17 +148,109 @@ A\land (\exists x\colon P(x)) &\iff \exists x\colon (A\land P(x)),\\
 A\lor (\forall x\colon P(x)) &\iff \forall x\colon (A\lor P(x)).
 \end{align}
 \end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Schematisch. Zur ersten Äquivalenz:
+\[\begin{array}{c@{\qquad}c}
+\infer{\exists x\colon (A\land P(x))}{
+  \infer[\infernote{1}]{A\land P(a)}{
+    \exists x\colon P(x)
+    & \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}
+  }
+}
+&
+\infer[\infernote{1}]{A\land\exists x\colon P(x)}{
+\exists x\colon (A\land P(x))
+& \infer{A\land \exists x\colon P(x)}{
+    \infer{A}{\infer[\infernote{1}]{A\land P(a)}{}}
+  & \infer{\exists x\colon P(x)}{
+      \infer{P(a)}{\infer[\infernote{1}]{A\land P(a)}{}}}
+}
+}
+\end{array}\]
+Zur zweiten Äquivalenz:
+{\small
+\[\begin{array}{c@{\quad}c}
+\infer[\infernote{1}]{\forall x\colon (A\lor P(x))}{
+A{\lor}(\forall x\colon P(x))
+& \infer{\forall x\colon (A{\lor}P(x))}{
+    \infer{A\lor P(x)}{\infer[\infernote{1}]{A}{}}
+  }
+& \infer{\forall x\colon (A{\lor}P(x))}{
+    \infer{A\lor P(x)}{
+      \infer{P(x)}{\infer[\infernote{1}]{\forall x\colon P(x)}{}}
+    }
+  }
+}
+&
+\infer[\infernote{1}]{A\lor\forall x\colon P(x)}{
+  \infer{A\lor P(x)}{\forall x\colon (A{\lor}P(x))}
+  & \infer{A{\lor}\forall x\colon P(x)}{
+      \infer[\infernote{1}]{A}{}}
+  & \infer{A{\lor}\forall x\colon P(x)}{
+      \infer{\forall x\colon P(x)}{
+        \infer[\infernote{1}]{P(x)}{}}}
+}
+\end{array}\]
+}
+
+\noindent
+Die linken Schemata zeigen jeweils die Implikation von links nach
+rechts, die rechten jweils die Implikation von rechts nach
+links.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}[exists-dl: Distributivgesetz]\label{exists-dl}
 Es gilt:
 \[(\exists x\colon P(x)\lor Q(x)) \iff
 (\exists x\colon P(x))\lor(\exists x\colon Q(x)).\]
 \end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch.\\
+Die Implikation von links nach rechts:
+\[\infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+  \infer[\infernote{1}]{P(a)\lor Q(a)}{
+    \exists x\colon P(x){\lor}Q(x)
+    & \infer[\infernote{1}]{P(a){\lor}Q(a)}{}
+  }
+  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+      \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
+  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+      \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}
+}\]
+Die Implikation von rechts nach links:
+\[\infer[\infernote{1}]{\exists x\colon P(x)\lor Q(x)}{
+  (\exists x\colon P(x))\lor(\exists x\colon Q(x))
+  & \infer{\exists x\colon P(x)\lor Q(x)}{
+      \infer{P(a)\lor Q(a)}{
+        \infer[\infernote{2}]{P(a)}{
+          \infer[\infernote{1}]{\exists x\colon P(x)}{}
+          & \infer[\infernote{2}]{P(a)}{}}}}
+  & \infer{\exists x\colon P(x)\lor Q(x)}{
+      \infer{P(b)\lor Q(b)}{
+        \infer[\infernote{3}]{Q(b)}{
+          \infer[\infernote{1}]{\exists x\colon Q(x)}{}
+          & \infer[\infernote{3}]{Q(b)}{}}}}
+}\]
+Man beachte, dass die Zeugen $a,b$ unterschiedlich sein können.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}[exists-asym-dl: asymmetrisches Distributivgesetz]\label{exists-asym-dl}
 Es gilt:
 \[(\exists x\colon P(x)\land Q(x)) \implies (\exists x\colon P(x))\land (\exists x\colon Q(x)).\]
 \end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch:
+\[\infer[\infernote{1}]{(\exists x\colon P(x))\land (\exists x\colon Q(x))}{
+\exists x\colon P(x)\land Q(x)
+& \infer{(\exists x\colon P(x))\land (\exists x\colon Q(x))}{
+  \infer{\exists x\colon P(x)}{
+       \infer{P(a)}{\infer[\infernote{1}]{P(a)\land Q(a)}{}}}
+  & \infer{\exists x\colon Q(x)}{
+       \infer{Q(a)}{\infer[\infernote{1}]{P(a)\land Q(a)}{}}}}
+}\]
+In Worten: Weil aufgrund der Prämisse ein Zeuge $a$ mit sowohl $P(a)$
+als auch $Q(a)$ vorliegt, dürfen wir schließen, dass die
+Existenzaussagen $\exists x\colon P(x)$ und $\exists x\colon Q(x)$
+erfüllt sind.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}\label{exists-implies-const}
 Es gilt:
