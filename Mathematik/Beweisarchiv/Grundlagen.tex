@@ -830,25 +830,25 @@ Nach Def. \ref{def:seteq} (seteq) expandieren:
 Nach Def. \ref{def:img} (img), Def. \ref{def:cup} (cup),
 Satz \ref{bool-dl} (bool-dl) und Satz \ref{exists-dl} (exists-dl) gilt:
 \begin{align*}
-&y\in f(M_1\cup M_2) \iff \exists x[x\in M_1\cup M_2\land y=f(x)]\\
-&\iff \exists x[(x\in M_1\lor x\in M_2)\land y=f(x)]\\
-&\iff \exists x[x\in M_1\land y=f(x)\lor x\in M_2\land y=f(x)]\\
-&\iff \exists x[x\in M_1\land y=f(x)]\lor\exists x[x\in M_2\land y=f(x)]\\
+&y\in f(M_1\cup M_2) \iff (\exists x\colon x\in M_1\cup M_2\land y=f(x))\\
+&\iff (\exists x\colon (x\in M_1\lor x\in M_2)\land y=f(x))\\
+&\iff (\exists x\colon x\in M_1\land y=f(x)\lor x\in M_2\land y=f(x))\\
+&\iff (\exists x\colon x\in M_1\land y=f(x))\lor (\exists x\colon x\in M_2\land y=f(x))\\
 &\iff y\in f(M_1)\lor y\in f(M_2) \iff y\in f(M_1)\cup f(M_2).
 \end{align*}
 Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall y[y\in f(\bigcup_{i\in I} M_i)\iff y\in \bigcup_{i\in I} f(M_i)].\]
+\[\forall y\colon [y\in f(\bigcup_{i\in I} M_i)\iff y\in \bigcup_{i\in I} f(M_i)].\]
 Nach Def. \ref{def:img} (img), Def. \ref{def:union} (union),
 Satz \ref{general-dl} (general-dl)\\
 und Satz \ref{exists-cl} (exists-cl) gilt:
 \begin{align*}
 & y\in f(\bigcup_{i\in I} M_i)
-\iff \exists x(x\in\bigcup_{i\in I} M_i\land y=f(x))\\
-&\iff \exists x(\exists i(i\in I\land x\in M_i)\land y=f(x))
-\iff \exists x\exists i(i\in I\land x\in M_i\land y=f(x))\\
-&\iff \exists i\exists x(i\in I\land x\in M_i\land y=f(x))
-\iff \exists i(i\in I\land\exists x(x\in M_i\land y=f(x))\\
-&\iff \exists i(i\in I\land y\in f(M_i))
+\iff (\exists x\colon x\in\bigcup_{i\in I} M_i\land y=f(x))\\
+&\iff (\exists x\colon (\exists i\colon i\in I\land x\in M_i)\land y=f(x))
+\iff (\exists x\colon \exists i\colon i\in I\land x\in M_i\land y=f(x))\\
+&\iff (\exists i\exists x\colon i\in I\land x\in M_i\land y=f(x))
+\iff (\exists i\colon i\in I\land\exists x(x\in M_i\land y=f(x))\\
+&\iff (\exists i\colon i\in I\land y\in f(M_i))
 \iff y\in\bigcup_{i\in I} f(M_i).\;\qedsymbol
 \end{align*}
 \end{Beweis}
@@ -863,27 +863,27 @@ f(\bigcap_{i\in I} M_i) &\subseteq \bigcap_{i\in I} f(M_i).
 
 \begin{Beweis}
 Nach Def. \ref{def:subseteq} (subseteq) expandieren:
-\[\forall y(y\in f(M_1\cap M_2)\implies y\in f(M_1)\cap f(M_2)).\]
+\[\forall y\colon (y\in f(M_1\cap M_2)\implies y\in f(M_1)\cap f(M_2)).\]
 Nach Def. \ref{def:img} (img), Def. \ref{def:cap} (cap)
 und Satz. \ref{exists-asym-dl} (exists-asym-dl) gilt:
 \begin{align*}
-& y\in f(M_1\cap M_2) \iff \exists x(x\in M_1\cap x\in M_2\land y=f(x))\\
-&\iff \exists x(x\in M_1\land x\in M_2\land y=f(x))\\
-&\iff \exists x(x\in M_1\land y=f(x)\land x\in M_2\land y=f(x))\\
-&\implies \exists x(x\in M_1\land y=f(x))\land\exists x(x\in M_2\land y=f(x))\\
+& y\in f(M_1\cap M_2) \iff (\exists x\colon x\in M_1\cap x\in M_2\land y=f(x))\\
+&\iff (\exists x\colon x\in M_1\land x\in M_2\land y=f(x))\\
+&\iff (\exists x\colon x\in M_1\land y=f(x)\land x\in M_2\land y=f(x))\\
+&\implies (\exists x\colon x\in M_1\land y=f(x))\land (\exists x\colon x\in M_2\land y=f(x))\\
 &\iff y\in f(M_1)\land y\in f(M_2)\iff y\in f(M_1)\cap f(M_2).
 \end{align*}
 Nach Def. \ref{def:subseteq} (subseteq) expandieren:
-\[\forall y(y\in f(\bigcap_{i\in I} M_i)\implies y\in \bigcap_{i\in I} f(M_i))\]
+\[\forall y\colon (y\in f(\bigcap_{i\in I} M_i)\implies y\in \bigcap_{i\in I} f(M_i))\]
 Nach Def. \ref{def:img} (img) und Def. \ref{def:intersection} (intersection)
 gilt:
 \begin{align*}
-& y\in f(\bigcap_{i\in I} M_i)\iff \exists x[x\in\bigcap_{i\in I} M_i\land y=f(x)]\\
-& \iff \exists x[\forall i(i\in I\implies x\in M_i)\land y=f(x)]\\
-& \iff \exists x\forall i(i\in I\implies x\in M_i\land y=f(x))\\
-& \implies \forall i\exists x[i\in I\implies x\in M_i\land y=f(x)]\\
-& \iff \forall i(i\in I\implies \exists x[x\in M_i\land y=f(x)])\\
-& \iff \forall i(i\in I\implies y\in f(M_i))
+& y\in f(\bigcap_{i\in I} M_i)\iff (\exists x\colon x\in\bigcap_{i\in I} M_i\land y=f(x))\\
+& \iff (\exists x\colon (\forall i\colon i\in I\Rightarrow x\in M_i)\land y=f(x))\\
+& \iff (\exists x\colon \forall i\colon i\in I\Rightarrow x\in M_i\land y=f(x))\\
+& \implies (\forall i\colon\exists x\colon i\in I\Rightarrow x\in M_i\land y=f(x))\\
+& \iff (\forall i\colon i\in I\Rightarrow \exists x\colon x\in M_i\land y=f(x))\\
+& \iff (\forall i\colon i\in I\Rightarrow y\in f(M_i))
 \iff y\in\bigcap_{i\in I} f(M_i).\;\qedsymbol
 \end{align*}
 \end{Beweis}
@@ -939,8 +939,8 @@ Es gilt:
 
 \begin{Beweis}
 Nach Def. \ref{def:img} (img) und Def. \ref{def:union} (union) gilt:
-\[y\in f(M) \iff \exists x{\in}M\;(y=f(x))
-\iff \exists x{\in}M\;(y\in \{f(x)\})
+\[y\in f(M) \iff (\exists x{\in}M\colon y=f(x))
+\iff (\exists x{\in}M\colon y\in \{f(x)\})
 \iff y\in\bigcup_{x\in M}\{f(x)\}.\]
 Nach Def. \ref{def:seteq} (seteq) folgt dann die Behauptung.\,\qedsymbol
 \end{Beweis}
@@ -963,18 +963,18 @@ Es gilt $(g\circ f)(M) = g(f(M))$.
 \begin{Beweis}
 Nach Def. \ref{def:img} (img) und Def. \ref{def:seteq} expandieren,
 dann \ref{def:filter} (filter) anwenden:%
-\[\exists x(x\in M\land z=(g\circ f)(x))
-\iff \exists y(y\in f(M)\land z=g(y)).\]
+\[(\exists x\colon x\in M\land z=(g\circ f)(x))
+\iff (\exists y\colon y\in f(M)\land z=g(y)).\]
 Die rechte Seite mit Def. \ref{def:img} (img) expandieren und
 Def. \ref{def:filter} (filter) anwenden. Unter Anwendung von
 Satz \ref{general-dl} (general-dl) und Satz \ref{exists-cl} (exists-cl)
 ergibt sich%
 \begin{gather*}
-\exists y(\exists x(x\in M\land y=f(x))\land z=g(y))\\
-\iff \exists y\exists x(x\in M\land y=f(x)\land z=g(y))\\
-\iff \exists x(x\in M\land\exists y(y=f(x)\land z=g(y)))\\
-\iff \exists x(x\in M\land z=g(f(x)))\\
-\iff \exists x(x\in M\land z=(g\circ f)(x)).\,\qedsymbol
+(\exists y\colon (\exists x\colon x\in M\land y=f(x))\land z=g(y))\\
+\iff (\exists y\colon\exists x\colon x\in M\land y=f(x)\land z=g(y))\\
+\iff (\exists x\colon x\in M\land\exists y\colon y=f(x)\land z=g(y))\\
+\iff (\exists x\colon x\in M\land z=g(f(x)))\\
+\iff (\exists x\colon x\in M\land z=(g\circ f)(x)).\,\qedsymbol
 \end{gather*}
 \end{Beweis}
 
@@ -1180,7 +1180,8 @@ Nach Def. \ref{def:inj} (inj) muss gelten:
 \chi_A=\chi_B \implies A=B.\]
 Nach Satz \ref{feq} (feq) und Def. \ref{def:seteq} (seteq)
 wird die Aussage expandiert zu:
-\[\forall x(\chi_A(x)=\chi_B(x))\implies \forall x(x\in A\iff x\in B).\]
+\[(\forall x\colon \chi_A(x)=\chi_B(x))\implies
+(\forall x\colon x\in A\iff x\in B).\]
 Es gilt aber nun:
 \[\chi_A(x)=\chi_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\iff x\in B).\]
 \end{Beweis}
@@ -1189,7 +1190,7 @@ prüfen, dass $\{0,1\}^M\subseteq \varphi(2^M)$ gilt.
 Expansion nach Def. \ref{def:subseteq} (subseteq) und
 Def. \ref{def:img} (img)
 ergibt:
-\[\forall f(f\in \{0,1\}^M\implies\exists A{\in}2^M[f=\varphi(A)]).\]
+\[\forall f\colon (f\in \{0,1\}^M\implies\exists A{\in}2^M\colon f=\varphi(A)).\]
 Um dem Existenzquantor zu genügen, wähle
 \[A := f^{-1}(\{1\}) = \{x\in M\mid f(x)\in \{1\}\} = \{x\in M\mid f(x)=1\}.\]
 Es gilt $f=\chi_A$, denn

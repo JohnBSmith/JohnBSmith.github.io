@@ -67,6 +67,73 @@ Da $e$ das einzige Element von $\{e\}$ ist, sind damit alle
 überprüft.\;\qedsymbol
 \end{Beweis}
 
+\begin{Satz}[Untergruppenkriterium]
+Sei $G$ eine Gruppe und $H$ eine nichtleere Teilmenge von $G$. Sind
+die beiden Prämissen
+\begin{enumerate}
+\item $a,b\in H \implies ab\in H$,
+\item $a\in H\implies a^{-1}\in H$,
+\end{enumerate}
+erüllt, ist $H$ bereits eine Untergruppe von $G$.
+\end{Satz}
+\begin{Beweis} Die Abgeschlossenheit gilt wegen der ersten Prämisse.
+Das Assoziativgesetz vererbt sich auf die Elemente der Teilmenge.
+Nun existiert mindestens ein $x\in H$. Aufgrund der zweiten
+Prämisse muss somit $x^{-1}\in H$ sein und infolge $e = x^{-1}x$
+ein Element von $H$. Die zweite Prämisse sichert schließlich ab,
+dass jedes weitere Element von $H$ ein Inverses in $H$ besitzt.
+Der Nachweis aller Gruppenaxiome ist erbracht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz} Sei $X$ eine Menge. Die Menge der bijektiven
+Selbstabbildungen auf $X$ bildet bezüglich der Verkettung eine Gruppe,
+die man als symmetrische Gruppe $S(X)$ bezeichnet.
+\end{Satz}
+\begin{Beweis}
+Die Verkettung zweier Bijektionen ist ebenfalls bijektiv. Das
+Assoziativgesetz gilt für die Verkettung allgemein. Das neutrale
+Element ist offenbar die identische Abbildung. Zu einer Bijektion $f$
+nimmt die Umkehrabbildung $f^{-1}$ die Rolle des inversen Elements
+ein, denn $f\circ f^{-1}=\id$ und $f^{-1}\circ f=\id$. Demnach
+sind alle Gruppenaxiome erfüllt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Sei $X$ eine nichtleere algebraische Struktur, beispielsweise eine
+Gruppe, ein Ring oder Vektorraum. Die Menge der Automorphismen bildet
+bezüglich Verkettung eine Gruppe, die man Automorphismengruppe
+$\operatorname{Aut}(X)$ nennt. Sie ist eine Untergruppe der
+symmetrischen Gruppe $S(X)$.  
+\end{Korollar}
+\begin{Beweis}
+Offenbar ist $\operatorname{Aut}(X)$ eine nichtleere Teilmenge von
+$S(X)$. Die Verkettung zweier Automorphismen ist ebenfalls ein
+Automorphismus. Jeder Automorphismus besitzt einen inversen
+Automorphismus. Laut Untergruppenkriterium muss $\operatorname{Aut}(X)$
+eine Untergruppe von $S(X)$ sein.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Sei $K$ ein Körper. Die invertierbaren Matrizen $A\in K^{n\times n}$
+bilden eine Gruppe, die man allgemeine lineare Gruppe
+$\operatorname{GL}(n,K)$ nennt. Sie ist kanonisch isomorph zur
+Automorphismengruppe $\operatorname{Aut}(K^n)$.
+\end{Korollar}
+\begin{Beweis}
+Die Gruppenaxiome sind erfüllt, wobei die Einheitsmatrix das
+neutrale Element ist und die jeweilige inverse Matrix das
+inverse Element zu einer Matrix. Weil die Abbildung%
+\[\varphi\colon K^{m\times n}\to\operatorname{Hom}(K^n,K^m),\quad
+\varphi(A)(\mathbf v) := A\mathbf v\]
+bereits einen kanonischen Isomorphismus darstellt, erhält man bei
+Setzung $m=n$ und Einschränkung auf $\operatorname{GL}(n,K)$
+einen Monomorphismus. Weil zu jeder bijektiven linearen Abbildung genau
+eine invertierbare Matrix gehört, muss%
+\[\varphi\colon\operatorname{GL}(n,K)\to\operatorname{Aut}(K^n)\]
+außerdem surjektiv sein.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Ringtheorie}
 
 \subsection{Grundlagen}
@@ -195,9 +262,30 @@ Somit gilt
 
 \subsection{Einsetzungshomomorphismus}
 
-\begin{Satz}
+\begin{Definition}[Einsetzungshomomorphismus]\mbox{}\\*
 Die Abbildung $\Phi\colon\R[X]\to\Abb(\R,\R)$ mit $\Phi(f)(x):=f(x)$
-ist injektiv.
+nennt man Einsetzungshomomorphismus.
+\end{Definition}
+
+\begin{Satz}
+Beim Einsetzungshomomorphismus $\Phi$ handelt es sich um eine lineare
+Abbildung.
+\end{Satz}
+\begin{Beweis} Es gilt
+\begin{align*}
+\Phi(f+g)(x) &= \sum_k (a_k + b_k) x^k = \sum_k a_k x^k + \sum_k b_k x^k\\
+&= \Phi(f)(x) + \Phi(g)(x) = (\Phi(f)+\Phi(g))(x)
+\end{align*}
+und
+\begin{align*}
+\Phi(\lambda f)(x) &= \sum_k \lambda a_k x^k = \lambda\sum_k a_k x^k
+= \lambda\Phi(f)(x) = (\lambda\Phi(f))(x).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\newpage
+\begin{Satz}
+Der Einsetzungshomomorphismus $\Phi$ ist injektiv.
 \end{Satz}
 \begin{Beweis} Sei $f=\sum_{k=0}^n a_k X^k$
 und $g=\sum_{k=0}^n b_k X^k$, wobei $n=\max(\deg f,\deg g)$.

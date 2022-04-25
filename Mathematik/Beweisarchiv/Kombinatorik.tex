@@ -59,3 +59,54 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 = |A| + |B| - |A\cap B|.\,\qedsymbol
 \end{align*}
 \end{Beweis}
+
+\newpage
+\section{Summen}
+
+\begin{Definition}[Summe]
+Sei $(M,+,0)$ ein kommutatives Monoid und $a_k\in M$. Die Summe ist
+rekursiv definiert als
+\[\sum_{k=m}^{m-1} a_k := 0,\quad \sum_{k=m}^n a_k
+:= a_n + \sum_{k=m}^{n-1} a_k.\]
+\end{Definition}
+
+\begin{Korollar} Es gilt
+\[\sum_{k=m}^n (a_k + b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\]
+\end{Korollar}
+\begin{Beweis} Induktion über $n$.
+Induktionsanfang:
+\[\sum_{k=m}^{m-1} (a_k + b_k) = 0 = 0 + 0 = \sum_{k=m}^{m-1} a_k + \sum_{k=m}^{m-1} b_k.\]
+Induktionsschritt:
+\begin{align*}
+\sum_{k=m}^n (a_k+b_k) &= a_n + b_n + \sum_{k=m}^{n-1} (a_k+b_k)
+\stackrel{\mathrm{IV}}= a_n + b_n + \sum_{k=m}^{n-1} a_k + \sum_{k=m}^{n-1} b_k\\
+&= \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar} Sei $R$ ein Ring und $c,a_k\in R$. Sei $c$ eine
+Konstante. Es gilt
+\[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
+\end{Korollar}
+\begin{Beweis} Induktion über $n$. Induktionsanfang:
+\[\sum_{k=m}^{m-1} ca_k = 0 = c\cdot 0 = c\sum_{k=m}^{n-1} a_k.\]
+Induktionsschritt:
+\[\sum_{k=m}^n ca_k = ca_n + \sum_{k=m}^{n-1} ca_k
+\stackrel{\mathrm{IV}}= ca_n + c\sum_{k=m}^{n-1} a_k
+= c(a_n + \sum_{k=m}^{n-1} a_k) = c\sum_{k=m}^n a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}[Aufteilung einer Summe]
+Für $m\le p\le n$ gilt
+\[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\]
+\end{Korollar}
+\begin{Beweis} Induktion über $n$. Im Induktionsanfang ist $n=p$
+und folglich:
+\[\sum_{k=m}^p a_k = \sum_{k=m}^{p-1} a_k + p_k
+= \sum_{k=m}^{p-1} a_k + \sum_{k=p}^p a_k.\]
+Induktionsschritt:
+\[\sum_{k=m}^n a_k = a_n + \sum_{k=m}^{n-1} a_k
+\stackrel{\mathrm{IV}}= a_n + \sum_{k=m}^{p-1} a_k + \sum_{k=p}^{n-1} a_k
+= \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\,\qedsymbol
+\]
+\end{Beweis}
