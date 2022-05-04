@@ -157,9 +157,10 @@ absolut konvergent, dann nennt man%
 den Erwartungswert von $X$.
 \end{Definition}
 
-\begin{Satz} Es gilt
-\[E(X) = \sum_{x\in X(\Omega)} xP(X^{-1}(x))
-= \sum_{x\in X(\Omega)} xP(X=x).\]
+\begin{Satz}\label{prob-transform}
+Für $g\colon\R\to\R$ gilt
+\[E(g\circ X) = \sum_{x\in X(\Omega)} g(x)P(X^{-1}(x))
+= \sum_{x\in X(\Omega)} g(x)P(X=x).\]
 \end{Satz}
 \strong{Beweis.} Zunächst gilt
 \begin{gather*}
@@ -168,17 +169,24 @@ den Erwartungswert von $X$.
 = P(\{\omega\in\Omega\mid X(\omega)=x\})
 = P(X^{-1}(x)).
 \end{gather*}
-Da die Reihe zu $E(X)$ nach Def. \ref{def:expected-value}
+Da die Reihe zu $E(g\circ X)$ nach Def. \ref{def:expected-value}
 absolut konvergent ist, darf sie beliebig umgeordnet werden und
 man bekommt
 \begin{gather*}
-E(X) = \sum_{\omega\in\Omega}X(\omega)P(\omega)
-= \sum_{x\in X(\Omega)}\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}} xP(\omega)
-= \sum_{x\in X(\Omega)} x\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}}P(\omega)\\
-= \sum_{x\in X(\Omega)} xP(X^{-1}(x)).\;\qedsymbol
+E(g\circ X) = \sum_{\omega\in\Omega}g(X(\omega))P(\omega)
+= \sum_{x\in X(\Omega)}\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}} g(x)P(\omega)
+= \sum_{x\in X(\Omega)} g(x)\sum_{\substack{\omega\in\Omega\\ X(\omega)=x}}P(\omega)\\
+= \sum_{x\in X(\Omega)} g(x)P(X^{-1}(x)).\;\qedsymbol
 \end{gather*}
 
-\newpage
+\begin{Korollar}
+Es gilt
+\[E(X) = \sum_{x\in X(\Omega)} xP(X=x).\]
+\end{Korollar}
+\begin{Beweis} Spezialisierung von Satz \ref{prob-transform} mit
+$g:=\id$.\,\qedsymbol
+\end{Beweis}
+
 \begin{Korollar}\label{expected-value-op-linear}
 Der Erwartungswertoperator ist ein lineares Funktional,
 das heißt, es gilt $E(aX)=aE(X)$ und $E(X+Y)=E(X)+E(Y)$. 
@@ -497,3 +505,26 @@ schreiben, wobei $p_j(t):=p_{ij}(t)$ und $w_{ij}:=q_{ji}$ ist.
 Zudem kann man $w_{kk}:=0$ für jedes $k$ setzen, weil die Hauptdiagonale
 nicht in die Gleichung eingeht und redundante Information enthält.
 
+\section{Mathematische Statistik}
+
+\subsection{Schätzfunktionen}
+
+\begin{Definition}[Arithmetischer Mittelwert]\mbox{}\\*
+Das arithmetische Mittel von unabhängigen und identisch verteilten
+Zufallsgrößen $X_k\colon\Omega\to\R$ ist definiert als
+\[\textstyle\overline X := \frac{1}{n}\sum_{k=1}^n X_k.\]
+\end{Definition}
+
+\begin{Satz}
+Sei $X_k = w+\varepsilon_k$ eine Streuung um einen festen wahren Wert
+$w$. Die Streuung sei unverzerrt, das heißt, es gelte
+$E(\varepsilon_k)=0$ für alle $k$. Dann ist das arithmetische Mittel
+der $X_k$ ein erwartungstreuer Schätzer von $w$, das heißt, es gilt
+$E(\overline X)=w$.
+\end{Satz}
+\begin{Beweis} Aufgrund von
+$E(X_k) = E(w+\varepsilon_k) = w+E(\varepsilon_k) = w$ gilt
+\[E(\overline X) = E\bigg(\frac{1}{n}\sum_{k=1}^n X_k\bigg)
+= \frac{1}{n}\sum_{k=1}^n E(X_k) = \frac{1}{n}\sum_{k=1}^n w
+= \frac{1}{n}nw = w.\,\qedsymbol\]
+\end{Beweis}

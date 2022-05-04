@@ -269,6 +269,96 @@ und \eqref{eq:matrix-repr-complex-mul}.\;\qedsymbol
 \end{Beweis}
 
 \newpage
+\section{Lineare Abbildungen}
+
+\begin{Definition}\label{def:linear-independence}
+Sei $(\mathbf a_1,\ldots, \mathbf a_n)$ ein System von Vektoren.
+Man nennt es linear unabhängig, wenn
+\[\textstyle\sum_{k=1}^n \lambda_k\bv a_k = \bv 0
+\implies \forall k\colon\lambda_k = 0.\]
+\end{Definition}
+
+\begin{Korollar}
+Sei $K$ einer Körper und $A\in K^{m\times n}$ eine Matrix. Es besitzt
+$A$ genau dann den trivialen Kern, wenn ihre Spalten linear
+unabhängig sind.
+\end{Korollar}
+\begin{Beweis} Die Spalten seien die $\mathbf a_k := A\mathbf e_k$.
+Für die Aussage, trivialen Kern zu haben, findet sich die
+äquivalente Umformung
+\[\operatorname{Kern}(A) = \{\mathbf v\mid A\bv v = \bv 0\} = \{\bv 0\}
+\iff (A\bv v = \bv 0 \Rightarrow \bv v = \bv 0).\]
+Dies stellt mit $\lambda_k = v_k$ nun lediglich eine Kurzschreibweise
+für die Eigenschaft
+\[\textstyle\sum_{k=1}^n \lambda_k\bv a_k = \bv 0\implies \forall k\colon\lambda_k = 0.\]
+dar, die die lineare Unabhängigkeit Def. \ref{def:linear-independence}
+definiert.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Eine lineare Abbildung ist genau injektiv, wenn sie einen trivalen
+Kern besitzt.
+\end{Korollar}
+\begin{Beweis} Sei $L$ die lineare Abbildung. Für die Aussage,
+trivialen Kern zu haben, findet sich die äquivalente Umformung
+\begin{align*}
+\operatorname{Kern}(L) = \{0\}
+&\iff L(v) = 0\Rightarrow v = 0\\
+&\iff L(a-b) = 0\Rightarrow a - b = 0 && (v = a - b)\\
+&\iff L(a) - L(b) = 0\Rightarrow a - b = 0 && (\text{weil $L$ linear ist})\\
+&\iff L(a) = L(b) \Rightarrow a = b.
+\end{align*}
+Die letzte Aussage ist die definierende Eigenschaft
+der Injektivität Def. \ref{def:inj}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{gram-det-nonzero}
+Die Spaltenvektoren einer Matrix $A\in\R^{m\times n}$ sind
+genau dann linear unabhängig, wenn $\det(G)\ne 0$ gilt, wobei
+$G=A^T A$ die gramsche Matrix ist.
+\end{Satz}
+\begin{Beweis}
+Existiert ein $v\ne 0$ mit $Av = 0$, folgt sofort $Gv = A^T 0 = 0$,
+womit $G$ keine reguläre Matrix sein kann, was gleichbedeutend
+mit $\det(G)=0$ ist.
+
+Sei umgekehrt $\det(G)=0$. Da $G$ hiermit keine reguläre Matrix ist,
+existiert ein $v\ne 0$ mit $Gv=0$, und somit $\langle Gv,v\rangle = 0$.
+Laut Satz \ref{Verschiebungseigenschaft}
+ist $\langle Av,Av\rangle = \langle A^T A v,v\rangle$, was zur äquivalenten
+Umformung
+\[Av = 0\iff |Av| = 0\iff 0 = |Av|^2 = \langle Av,Av\rangle = \langle Gv,v\rangle\]
+führt. Demzufolge muss $Av = 0$ sein.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $K$ ein geordneter Körper. Die Spalten einer Matrix
+$A\in K^{m\times n}$ sind genau dann linear unabhängig, wenn
+$\det(G)\ne 0$ gilt, wobei $G=A^T A$ die gramsche Matrix ist.
+\end{Satz}
+\begin{Beweis}
+Man betrachte zu $v,w\in K^n$ die Bilinearform $B(v,w):=v^T w$.
+Laut Korollar \ref{of-sum-of-sq-positive} gilt $B(v,v)>0$ für
+$v\ne 0$. Analog zu Korollar \ref{Verschiebungseigenschaft} gilt
+$B(v,Aw) = B(A^T v,w)$, weshalb $B(Av,Av) = B(A^T A v,v)$  gilt.
+Mit den genannten Betrachtungen ist die zum Beweis von Satz
+\ref{gram-det-nonzero} analoge Argumentation
+durchführbar.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Spaltenvektoren einer Matrix $A\in\C^{m\times n}$ sind
+genau dann linear unabhängig, wenn $\det(G)\ne 0$ gilt, wobei
+$G=A^H A$ die gramsche Matrix ist.
+\end{Satz}
+\begin{Beweis}
+Die Argumentation verläuft analog zum Beweis von Satz
+\ref{gram-det-nonzero}, wobei Korollar
+\ref{Verschiebungseigenschaft-komplex} anstelle von
+Korollar \ref{Verschiebungseigenschaft} zur Anwendung kommt.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Bilinearformen}
 
 \begin{Definition}[Nicht-ausgeartete Bilinearform]%

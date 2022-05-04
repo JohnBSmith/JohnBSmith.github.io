@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kombinatorik</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+
+<h1>Kombinatorik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Suchraeume">Erzeugung von Suchräumen</a>
+  <ol>
+  <li><a href="#Produktmengen">Produktmengen</a>
+  <li><a href="#Abb">Raum der Abbildungen</a>
+  <li><a href="#Inj">Raum der Injektionen</a>
+  </ol>
+<li><a href="#Funktionen">Kombinatorische Funktionen</a>
+  <ol>
+  <li><a href="#Binomialkoeffizienten">Binomialkoeffizienten</a>
+  <li><a href="#Bernoulli-Zahlen">Bernoulli-Zahlen</a>
+  </ol>
+<li><a href="#Urbilder">Urbilder</a>
+</ol>
+
+<h2 id="Suchraeume">Erzeugung von Suchräumen</h2>
+
+<h3 id="Produktmengen">Produktmengen</h3>
+
+<p>Das kartesische Produkt zweier Listen lässt sich unschwer
+als Komprehension entsprechend der mathematischen
+Definition formulieren:
+
+<pre class="ibox python">
+def prod2(a, b):
+    return [(x, y) for x in a for y in b]
+</pre>
+
+<p>Bei dieser Formulierung dürfen <code>a</code> und <code>b</code>
+allgemeiner iterierbare Objekte sein. Darüber hinaus gestattet die
+Anpassung
+
+<pre class="ibox python">
+def prod2_iter(a, b):
+    return ((x, y) for x in a for y in b)
+</pre>
+
+<p>die Einspaarung von Speicher, dergestalt dass das Produkt nur
+einmal durch den erzeugten Iterator durchlaufen wird, dabei aber nicht
+als Ganzes im Speicher vorliegen muss.
+
+<p>Sind <code>a</code> und <code>b</code> geordnet,
+ist die Auflistung lexikographisch geordnet.
+
+<p>Eine allgemeine variadische Formulierung erhält man gemäß
+der üblichen rekursiven Definition des Produktes:
+
+<pre class="ibox python">
+def prod(*args):
+    if len(args) == 0:
+        return [()]
+    else:
+        return prod2(args[0], prod(*args[1:]))
+</pre>
+
+<p>Allerdings vererbt sich die rekursive Darstellung hierdurch auf
+die Tupel. Obwohl man Tupel in der Mathematik rekursiv auf diese
+Weise als Verschachtelung von Paaren definieren kann,  wollen wir uns
+hier lieber um flache Tupel bemühen. Man kann dies erreichen, indem die
+folgende Operation <code>flatten</code> hinter den Rekursionsschritt
+geschaltet wird.
+
+<pre class="ibox python">
+def flatten(a):
+    return [(x,) + y for (x, y) in a]
+
+def prod(*args):
+    if len(args) == 0:
+       return [()]
+    else:
+       return flatten(prod2(args[0], prod(*args[1:])))
+</pre>
+
+<p>Die seltsam anmutende Notation <code>(x,)</code> stellt ein
+1-Tupel dar. Das Komma kommt am Ende hinzu, damit ein
+syntaktischer Unterschied zur Prioritätsklammerung besteht.
+
+<p>Zur Optimierung expandieren wir noch <code>flatten</code> und
+<code>prod2</code> gemäß ihrer Definition. Es findet sich schließlich:
+
+<pre class="ibox python">
+def prod(*args):
+    if len(args) == 0:
+       return [()]
+    else:
+       return [(x,) + y for x in args[0] for y in prod(*args[1:])]
+</pre>
+
+<p>Die Standardbibliothek enthält eine optimierte Implementierung der
+lexikographischen Auflistung des kartesischen Produktes im Modul
+<code>itertools</code> unter der Bezeichnung <code>product</code>.
+Sie erzeugt der Erwartung entsprechend Iteratoren. Die kartesische
+Potenz zum Exponent <code>n</code> schreibt man
+
+<p class="indent"><code>product(a, repeat = n)</code>.
+
+<p>Beispielsweise gilt
+
+<p class="indent"><code>product(a, repeat = 4)</code> = <code>product(a, a, a, a)</code>.
+
+<h3 id="Abb">Raum der Abbildungen</h3>
+
+<p>Der Raum der Abbildungen von <code>X</code> nach <code>Y</code>
+lässt sich wie folgt erzeugen. Sei <code>n&nbsp;=&nbsp;len(X)</code>.
+Zunächst konstruiert die kartesische Potenz von <code>Y</code>
+zum Exponent <code>n</code> den Raum der Abbildungen von
+<code>range(0,&nbsp;n)</code> nach <code>Y</code> als Liste von
+Tupeln. Zippt man nun den Definitionsbereich <code>X</code> mit
+dem jeweiligen Tupel <code>t</code>, entsteht der Graph
+Funktion als Liste der Paare <code>(X[k],&nbsp;t[k])</code>
+für <code>k</code> in <code>range(0,&nbsp;n)</code>.
+
+<p>Kurzes Beispiel:
+
+<pre class="ibox python">
+X = ["a", "b"]; Y = [0, 1]
+
+product(Y, repeat = 2) = [[0, 0], [0, 1], [1, 0], [1, 1]]
+
+zip(X, [0, 0]) = [("a", 0), ("b", 0)]
+zip(X, [0, 1]) = [("a", 0), ("b", 1)]
+zip(X, [1, 0]) = [("a", 1), ("b", 0)]
+zip(X, [1, 1]) = [("a", 1), ("b", 1)]
+</pre>
+
+<p>Der Algorithmus zur Erzeugung des Raums ist insofern schlicht:
+
+<pre class="ibox python">
+def mappings(X, Y, conv = list):
+    return [conv(zip(X, t)) for t in product(Y, repeat = len(X))]
+</pre>
+
+<p>Das optionale Argument <code>conv</code> gestattet die Festlegung
+einer frei konstruierbaren Konvertierung des jeweiligen Graphen in
+eine gewünschte Darstellung. Es bestehen unter anderem die
+folgenden Darstellungen:
+
+<pre class="ibox python">
+mappings(X, Y, list)
+mappings(X, Y, dict)
+mappings(X, Y, set)
+mappings(X, Y, fn)
+
+def fn(it):
+    d = dict(it)
+    return lambda x: d[x]
+</pre>
+
+<h3 id="Inj">Raum der Injektionen</h3>
+
+<p>Eine endliche Abbildung ist genau dann injektiv, wenn ihr
+Definitionsbereich gleichmächtig zu ihrer Bildmenge ist.
+Der Raum der Injektionen ließe sich demnach erzeugen, indem
+bei der Erzeugung des Raums der Abbildungen diejenigen verworfen
+werden, bei denen diese Gleichmächtigkeit nicht besteht. Dies lässt
+sich folgendermaßen bewerkstelligen:
+
+<pre class="ibox python">
+def injections(X, Y, conv = list):
+    return [conv(zip(X, t)) for t in product(Y, repeat = len(X))
+        if len(X) == len(set(t))]
+</pre>
+
+<p>Es ist jedoch effizienter, schlicht die Auflistung der Variationen
+zu nutzen:
+
+<pre class="ibox python">
+from itertools import permutations
+
+def injections(X, Y, conv = list):
+    return [conv(zip(X, t)) for t in permutations(Y, len(X))]
+</pre>
+
+<p>Beispielsweise berechnet das Programm
+
+<pre class="ibox python">
+def S(X):
+    return injections(X, X)
+
+print([len(S(range(n))) for n in range(8)])
+</pre>
+
+<p>die ersten Fakultäten.
+
+<h2 id="Funktionen">Kombinatorische Funktionen</h2>
+
+<h3 id="Binomialkoeffizienten">Binomialkoeffizienten</h3>
+
+<p>Die Berechnung eines Binomialkoeffizienten erfolgt günstig
+über seine Produktformel, was zum Algorithmus
+
+<pre class="ibox python">
+def bc(n, k):
+    if n &lt; k: return 0
+    if n &lt; 2*k: k = n - k
+    acc = 1
+    for i in range(1, k + 1):
+        acc = acc*(n + 1 - i)//i
+    return acc
+</pre>
+
+<p>führt. Man beachte, dass die Ganzzahldivision in der
+Schleife niemals einen Rest lässt.
+
+<h3 id="Bernoulli-Zahlen">Bernoulli-Zahlen</h3>
+
+<p>Die Bernoulli-Zahlen lassen sich mit der Rekursionsformel
+
+<div class="indent"><img src = "img/Bn.png" width = "250em"></div>
+
+<p>berechnen. Das Vorkommen von Bruchzahlen wird hierbei durch den
+Typ <code>Fraction</code> berücksichtigt, wobei es genügt, den
+Basisfall in diesen Typ umzuwandeln, da dies die restlichen
+Operationen mit infiziert. Die Rekursion benötigt
+überdies unbedingt eine <a href="Memo.htm">Memoisierung</a>.
+
+<pre class="ibox python">
+from fractions import Fraction
+
+def memoize(f):
+    memo = {}
+    def f_memo(n):
+        if not n in memo: memo[n] = f(n)
+        return memo[n]
+    return f_memo
+
+@memoize
+def B(n):
+    if n == 0:
+        return Fraction(1)
+    else:
+        return 1 - sum(B(k)*bc(n + 1, k) for k in range(n))/(n + 1)
+</pre>
+
+<h2 id="Urbilder">Urbilder</h2>
+
+<p>Bei manchen kombinatorischen Problemen ist die Größe von
+Urbildern zu ermitteln.
+
+<p>Eine endliche Abbildung <var>f</var>:&nbsp;<var>X</var>→<var>Y</var>
+lässt sich invertieren, indem durch einmaliges Durchlaufen des
+Definitionsbereichs ein Wörterbuch erzeugt wird. Das Wörterbuch
+soll jedem Element dessen Urbild zuordnen.
+
+<pre class="ibox python">
+def inv(f, X):
+    d = {}
+    for x in X:
+        y = f(x)
+        if y in d:
+            d[y].append(x)
+        else:
+            d[y] = [x]
+    return d
+</pre>
+
+<p>Jede Abbildung zerlegt ihren Definitionsbereich in disjunkte
+Urbilder, die man auch als Äquivalenzklassen betrachten kann.
+Die Funktion
+
+<pre class="ibox python">
+def projection(f, X):
+    finv = inv(f, X)
+    return lambda x: finv(f(x))
+</pre>
+
+<p>erstellt die Projektion, die einem Element ihre Äquivalenzklasse
+zuordnet.
+
+</body>
+</html>

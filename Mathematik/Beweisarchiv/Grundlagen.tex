@@ -151,11 +151,10 @@ A\lor (\forall x\colon P(x)) &\iff \forall x\colon (A\lor P(x)).
 \begin{Beweis}[Beweis (Natürliches Schließen)]
 Schematisch. Zur ersten Äquivalenz:
 \[\begin{array}{c@{\qquad}c}
-\infer{\exists x\colon (A\land P(x))}{
-  \infer[\infernote{1}]{A\land P(a)}{
-    \exists x\colon P(x)
-    & \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}
-  }
+\infer[\infernote{1}]{\exists x\colon (A\land P(x))}{
+  \exists x\colon P(x)
+  & \infer{\exists x\colon (A\land P(x))}{
+      \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}}
 }
 &
 \infer[\infernote{1}]{A\land\exists x\colon P(x)}{
@@ -206,29 +205,32 @@ Es gilt:
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch.\\
 Die Implikation von links nach rechts:
-\[\infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
-  \infer[\infernote{1}]{P(a)\lor Q(a)}{
-    \exists x\colon P(x){\lor}Q(x)
-    & \infer[\infernote{1}]{P(a){\lor}Q(a)}{}
+\[
+\infer[\infernote{1}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+  \exists x\colon P(x)\lor Q(x)
+  &
+  \infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+    \infer[\infernote{1}]{P(a)\lor Q(a)}{}
+    & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+        \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
+    & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+        \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}
   }
-  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
-      \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
-  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
-      \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}
-}\]
+}
+\]
 Die Implikation von rechts nach links:
 \[\infer[\infernote{1}]{\exists x\colon P(x)\lor Q(x)}{
   (\exists x\colon P(x))\lor(\exists x\colon Q(x))
-  & \infer{\exists x\colon P(x)\lor Q(x)}{
+  & \infer[\infernote{2}]{\exists x\colon P(x)\lor Q(x)}{
+      \infer[\infernote{1}]{\exists x\colon P(x)}{}
+      &
       \infer{P(a)\lor Q(a)}{
-        \infer[\infernote{2}]{P(a)}{
-          \infer[\infernote{1}]{\exists x\colon P(x)}{}
-          & \infer[\infernote{2}]{P(a)}{}}}}
-  & \infer{\exists x\colon P(x)\lor Q(x)}{
+        \infer[\infernote{2}]{P(a)}{}}}
+  & \infer[\infernote{3}]{\exists x\colon P(x)\lor Q(x)}{
+      \infer[\infernote{1}]{\exists x\colon Q(x)}{}
+      &
       \infer{P(b)\lor Q(b)}{
-        \infer[\infernote{3}]{Q(b)}{
-          \infer[\infernote{1}]{\exists x\colon Q(x)}{}
-          & \infer[\infernote{3}]{Q(b)}{}}}}
+        \infer[\infernote{3}]{Q(b)}{}}}
 }\]
 Man beachte, dass die Zeugen $a,b$ unterschiedlich sein können.\,\qedsymbol
 \end{Beweis}
@@ -282,12 +284,14 @@ Es gilt:
 \begin{Beweis}[Beweis 1 (Natürliches Schließen)] Schematisch:\\
 \[\begin{array}{c@{\qquad}c}
 \infer[\infernote{1}]{(\exists x\colon P(x))\implies A}{
-\infer{A}{
-  \infer{P(a)\implies A}{\forall x\colon (P(x)\implies A)}
-  & \infer[\infernote{2}]{P(a)}{
-      \infer[\infernote{1}]{\exists x\colon P(x)}{}
+  \infer[\infernote{2}]{A}{
+    \infer[\infernote{1}]{\exists x\colon P(x)}{}
+    &
+    \infer{A}{
+      \infer{P(a)\implies A}{\forall x\colon (P(x)\implies A)}
       & \infer[\infernote{2}]{P(a)}{}}
-}}
+  }
+}
 &
 \infer{\forall x\colon (P(x)\implies A)}{
   \infer[\infernote{1}]{P(x)\implies A}{
@@ -318,11 +322,11 @@ Es gilt:
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)]
 Die Implikation von links nach rechts:
-\[\infer{\exists y\colon\exists x\colon P(x,y)}{
-  \infer{\exists x\colon P(x, y)}{
-    \infer[\infernote{1}]{P(a,b)}{
-      \exists x\colon\exists y\colon P(x,b)
-      & \infer[\infernote{1}]{P(a,b)}{}}}
+\[\infer[\infernote{1}]{\exists y\colon\exists x\colon P(x,y)}{
+  \exists x\colon\exists y\colon P(x,y)
+  &
+  \infer{\exists y\colon \exists x\colon P(x, y)}{
+    \infer[\infernote{1}]{P(a,b)}{}}
 }\]
 Die Implikation von rechts nach links geht analog.\,\qedsymbol
 \end{Beweis}
