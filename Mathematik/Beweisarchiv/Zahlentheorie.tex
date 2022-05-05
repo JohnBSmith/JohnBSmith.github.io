@@ -1,0 +1,52 @@
+
+\chapter{Zahlentheorie}
+
+\begin{Definition}[Teiler] Für $a,m\in\Z$ ist die Relation »$m$ teilt
+$a$« definiert als
+\[m\mid a\defiff \exists k\in\Z\colon a = km.\]
+\end{Definition}
+
+\begin{Definition}[Kongruenz]
+Für $a,b,m\in\Z$ ist die Relation »$a$ ist kongruent zu $b$ modulo
+$m$« definiert als
+\[a\equiv b \pmod m \defiff m\mid (b-a).\]
+\end{Definition}
+
+\begin{Definition}[Teilermenge] Die Teilermenge
+einer ganzen Zahl $a$ ist definiert durch
+\[m\in T(a)\defiff m\mid a.\]
+\end{Definition}
+\strong{Bemerkung.} Wir setzen $T_{>0}(a):=T(a)\cap\Z_{>0}$ und
+$T_{\ge 0}(a):=T(a)\cap\Z_{\ge 0}$.
+
+\begin{Korollar}\label{divisor-divisor-subset} Es gilt
+\[a\mid b \iff T(a)\subseteq T(b).\]
+\end{Korollar}
+\begin{Beweis}
+Zur Implikation von rechts nach links.
+Die Aussage $T(a)\subseteq T(b)$ ist laut ihrer Definition
+äquivalent zu $\forall m\colon m\mid a\Rightarrow m\mid b$.
+Die Anwendung dieser Prämsse auf den Ansatz $a\mid a$
+liefert sofort $a\mid b$.
+
+Zur Implikation von links nach rechts. Expandiert man die Aussage
+durch Einsetzen der Definitionen, ist
+\[(\exists k\colon b=ka)\implies
+(\forall m\colon (\exists x\colon a=xm)\implies (\exists y\colon b=ym)).\]
+zu zeigen. Wir haben einen Zeugen $k$ für $b=ka$ gegeben. 
+Gemäß Prämisse liegt ein Zeuge $x$ für $a=xm$ vor, wonach $ka=kxm$
+gilt, also $b=kxm$. Ergo ist $y:=kx$ ein Zeuge für
+$\exists y\colon b=ym$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Die Teilerrelation ist transitiv, das heißt,
+$a\mid b$ und $b\mid c$ impliziert $a\mid c$.
+\end{Korollar}
+\begin{Beweis}
+Unter Nutzung von Korollar \ref{divisor-divisor-subset}
+nimmt die Aussage die Gestalt
+\[T(a)\subseteq T(b)\land T(b)\subseteq T(c)\implies T(a)\subseteq T(c)\]
+an. Diese Aussage ist nun aber offenkunding, da die Relation »ist
+Teilmenge von« eine transitive ist.\,\qedsymbol
+\end{Beweis}
