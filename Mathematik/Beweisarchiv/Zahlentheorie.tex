@@ -6,11 +6,18 @@ $a$« definiert als
 \[m\mid a\defiff \exists k\in\Z\colon a = km.\]
 \end{Definition}
 
-\begin{Definition}[Kongruenz]
+\begin{Definition}[Kongruenz]\label{def:cong}
 Für $a,b,m\in\Z$ ist die Relation »$a$ ist kongruent zu $b$ modulo
 $m$« definiert als
-\[a\equiv b \pmod m \defiff m\mid (b-a).\]
+\[a\equiv b \pmod m \defiff m\mid (a-b).\]
 \end{Definition}
+
+\begin{Korollar}
+Es gilt $m\mid a$ genau dann, wenn $a\equiv 0\pmod m$.
+\end{Korollar}
+\begin{Beweis}
+Spezialisierung von Def. \ref{def:cong} mit $b:=0$.\,\qedsymbol
+\end{Beweis}
 
 \begin{Definition}[Teilermenge] Die Teilermenge
 einer ganzen Zahl $a$ ist definiert durch
@@ -49,4 +56,138 @@ nimmt die Aussage die Gestalt
 \[T(a)\subseteq T(b)\land T(b)\subseteq T(c)\implies T(a)\subseteq T(c)\]
 an. Diese Aussage ist nun aber offenkunding, da die Relation »ist
 Teilmenge von« eine transitive ist.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{divides-weaken}
+Gilt $m\mid a$ und $b\in\Z$, so gilt auch $m\mid (ab)$.
+\end{Korollar}
+\begin{Beweis}
+Die Prämisse liefert einen Zeugen $x$ mit $a=xm$, womit $ab=bxm$
+gilt. Ergo existiert mit $y:=bx$ ein Zeuge für
+$\exists y\colon ab=ym$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Die Kongruenzrelation ist eine Äquivalenzrelation. Das heißt, es gilt
+\begin{align*}
+& a\equiv a\pmod m, && \text{(Reflexivität)}\\
+& a\equiv b \implies b\equiv a\pmod m, && \text{(Symmetrie)}\\
+& a\equiv b\land b\equiv c\implies a\equiv c\pmod m. && \text{(Transitivität)}
+\end{align*}
+\end{Korollar}
+\begin{Beweis}
+Zur Reflexivität. Es gilt die äquivalente Umformung
+\[a\equiv a\pmod m \iff m\mid (a-a) \iff m\mid 0\iff (\exists k\colon 0 = km).\]
+Die letzte Aussage ist durch $k=0$ erfüllt.
+
+Zur Symmetrie. Die Prämisse liefert einen Zeugen $x$ mit $a-b = xm$,
+womit $b-a = -xm$ gilt. Ergo ist $y:=-x$ ein Zeuge für die
+Existenzaussage $\exists y\colon b-a = ym$.
+
+Zur Reflexivität. Die Prämissen liefern Zeugen $x$ mit $a-b=xm$
+und $y$ mit $b-c=ym$. Infolge gilt
+\[a-c = (a-b) + (b-c) = xm + ym = (x+y)m.\]
+Ergo ist $z:=x+y$ ein Zeuge für $\exists z\colon a-c = zm$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{cong-shift}
+Für ganze Zahlen $a,b,c$ gilt
+\begin{gather*}
+a\equiv b\pmod m \iff a+c\equiv b+c \pmod m,\\
+a\equiv b\pmod m \iff a-c\equiv b-c \pmod m.
+\end{gather*}
+\end{Korollar}
+\begin{Beweis}
+Unter Nutzung der Definition findet sich die äquivalente Umformung
+\begin{align*}
+a+c\equiv b+c\pmod m &\iff m\mid ((a+c)-(b+c))
+\iff m\mid (a-b)\\
+&\iff a\equiv b\pmod m.
+\end{align*}
+Der Beweis der zweiten Aussage verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{cong-scale}
+Für ganze Zahlen $a,b,c$ gilt
+\[a\equiv b\pmod m\implies ac=bc\pmod m.\]
+\end{Korollar}
+\begin{Beweis} Die Prämisse liefert einen Zeugen $x$ mit
+$a-b = xm$, womit $ac-bc = cxm$ gilt. Ergo existiert mit $y:=cx$ ein Zeuge
+für $\exists y\colon ac-bc = ym$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{cong-add-sub-mul}
+Gilt $a\equiv a'\pmod m$ und $b\equiv b'\pmod m$,
+so gilt auch
+\begin{gather*}
+a+b\equiv a'+b'\pmod m,\\
+a-b\equiv a'-b'\pmod m,\\
+ab\equiv a'b'\pmod m.
+\end{gather*}
+\end{Korollar}
+\begin{Beweis}
+Laut Prämisse liegen Zeugen $x$ mit $a=a'+xm$ und $y$ mit $b=b'+ym$ vor.
+Infolge gilt
+\[a+b = a'+xm+b'+ym = a'+b'+(x+y)m.\]
+Ergo existiert mit $z:=x+y$ ein Zeuge für
+$\exists z\colon (a+b)=(a'+b')+zm$. Der Beweis der zweiten Regel
+verläuft analog. Bei der Multiplikation gilt
+\[ab = (a'+xm)(b'+ym) = a'b' + a'ym+b'xm + xym^2
+= a'b' + (a'y+b'x+xym)m.\]
+Ergo existiert mit $z:=a'y+b'x+xym$ ein Zeuge für
+$\exists z\colon ab = a'b'+zm$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{cong-pow}
+Gilt $a\equiv a'\pmod m$ und $n\in\Z_{\ge 0}$, so gilt auch
+$a^n\equiv (a')^n\pmod m$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $n$ mit Induktionsanfang bei $n=0$. Mit $a^0=1$ und
+$(a')^0=1$ wird die Behauptung in diesem Fall zu $1\equiv 1$, die
+aufgrund der Reflexivität gilt. Induktionsschritt.
+Wendet man Korollar \ref{cong-add-sub-mul} auf die Prämisse
+$a\equiv a'$ und die Induktionsvoraussetzung $a^n\equiv (a')^n$
+an, findet sich $aa^n \equiv a'(a')^n$, also
+$a^{n+1}\equiv (a')^{n+1}$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{cong-sum}
+Gilt $a_k\equiv a_k'\pmod m$ für alle $k$, so gilt auch\\
+$\sum_{k=0}^{n-1} a_k\equiv \sum_{k=0}^{n-1} a_k'\pmod m$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $n$. Für $n=0$ wird die Behauptung zu $0\equiv 0$, die
+aufgrund der Reflexivität gilt. Induktionsschritt. Wendet man Korollar
+\ref{cong-add-sub-mul} auf die
+Prämisse $a_n\equiv a_n'$ und die Induktionsvoraussetzung
+$\sum_{k=0}^{n-1} a_k\equiv \sum_{k=0}^{n-1} a_k'$ an, folgt
+\[\sum_{k=0}^{n-1} a_k = a_n + \sum_{k=0}^{n-1} a_k\equiv a_n' + \sum_{k=0}^{n-1} a_k'
+= \sum_{k=0}^{n-1} a_k'.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Sei $p\in\Z[X]$, also ein Polynom mit ganzzahligen Koeffizienten.
+Gilt $x\equiv x'\pmod m$, so gilt auch $p(x)\equiv p(x')\pmod m$.
+\end{Korollar}
+\begin{Beweis}
+Laut Korollar \ref{cong-pow} gilt $x^k\equiv (x')^k$ für jedes
+$k\ge 0$. Im weiteren Fortgang gilt $a_k x^k\equiv a_k (x')^k$
+wegen Korollar \ref{cong-shift}. Mit Korollar \ref{cong-sum} erhält man
+schließlich
+\[p(x) = \sum_{k=0}^n a_k x^k\equiv\sum_{k=0}^n a_k (x')^k = p(x').\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Für jede ganze Zahl $n$ gilt $2\mid n \iff 2\mid n^2$.
+\end{Satz}
+\begin{Beweis}
+Die Implikation von links nach rechts gilt gemäß
+Korollar \ref{divides-weaken} mit $a:=n$ und $b:=n$.
+Zur Implikation von rechts nach links. Wir zeigen die Kontraposition
+\[\neg(2\mid n) \implies \neg(2\mid n^2).\]
+Laut Prämisse ist $n$ ungerade, also von der Form $n=2k+1$ mit $k\in\Z$.
+Nun gilt
+\[n^2 = (2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1,\]
+wonach $n^2$ ebenfalls ungerade sein muss.\,\qedsymbol
 \end{Beweis}

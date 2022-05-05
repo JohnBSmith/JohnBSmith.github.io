@@ -52,6 +52,7 @@ werden daraufhin effizientere Algorithmen entwickelt.
   <li><a href="#Kongruenzsysteme">Kongruenzsysteme</a>
   <li><a href="#Einheiten">Einheitengruppe</a>
   <li><a href="#Primitivwurzeln">Primitivwurzeln</a>
+  <li><a href="#Inverse">Modulare Inverse</a>
   </ol>
 </ol>
 
@@ -636,6 +637,56 @@ def generators(n):
 </pre>
 
 <p>berechnen.
+
+<h3 id="Inverse">Modulare Inverse</h3>
+
+<p>Für manche Aufgaben benötigt man die Inverse einer gegebenen Funktion
+<var>f</var>: ℤ/<var>m</var>ℤ→ℤ/<var>m</var>ℤ. Weil <var>f</var>
+dabei nicht als Injektion vorausgesetzt werden soll, muss die Inverse
+immer das Urbild ihres Arguments berechnen. Für kleine <var>m</var> lässt
+sich dieses Problem in kunstloser Weise lösen, indem einmalig
+die gesamte invertierte Wertetabelle berechnet wird.
+
+<pre class="python ibox">
+def inv(f, m):
+    d = {}
+    for x in range(m):
+        y = f(x, m)
+        if y in d:
+            d[y].append(x)
+        else:
+            d[y] = [x]
+    def finv(y):
+        return d[y] if y in d else []
+    return finv, sorted(d.keys())
+
+def tabulate_inv(f, m):
+    finv, img = inv(f, m)
+    space = len(str(m - 1))
+    for n in img:
+        print("{:{}}: {}".format(n, space, finv(n)))
+</pre>
+
+<p>Beispielsweise berechnet
+
+<pre class="python ibox">
+def sq(n, m):
+    return (n*n) % m
+
+tabulate_inv(sq, 24)
+</pre>
+
+<p>die Wertetabelle der Quadratwurzel modulo 24. Das Programm
+erzeugt die Ausgabe:
+
+<pre class="ibox">
+ 0: [0, 12]
+ 1: [1, 5, 7, 11, 13, 17, 19, 23]
+ 4: [2, 10, 14, 22]
+ 9: [3, 9, 15, 21]
+12: [6, 18]
+16: [4, 8, 16, 20]
+</pre>
 
 </body>
 </html>
