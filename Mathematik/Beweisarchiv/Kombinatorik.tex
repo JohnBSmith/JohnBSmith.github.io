@@ -63,6 +63,8 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \newpage
 \section{Summen}
 
+\subsection{Allgemeine Regeln}
+
 \begin{Definition}[Summe]
 Sei $(M,+,0)$ ein kommutatives Monoid und $a_k\in M$. Die Summe ist
 rekursiv definiert als
@@ -110,8 +112,7 @@ und folglich:
 Induktionsschritt:
 \[\sum_{k=m}^n a_k = a_n + \sum_{k=m}^{n-1} a_k
 \stackrel{\mathrm{IV}}= a_n + \sum_{k=m}^{p-1} a_k + \sum_{k=p}^{n-1} a_k
-= \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\,\qedsymbol
-\]
+= \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\,\qedsymbol\]
 \end{Beweis}
 
 \begin{Korollar}[Indexshift]\label{sum-indexshift}\mbox{}\\
@@ -127,11 +128,19 @@ a_{(n+d)-d}+\sum_{k=m+d}^{n+d-1}a_{k-d}
 \end{Beweis}
 \begin{Beweis}[Beweis 2]
 Mit der Substitution $k=k'-d$ findet sich die Umformung
-\[\sum_{k=m}^n a_k = \sum_{m\le k\le n} a_k
-= \sum_{m\le k'-d\le n} a_{k'-d}
-= \sum_{m+d\le k'\le n+d} a_{k'-d}
-= \sum_{k'=m+d}^{n+d} a_{k'-d}.\,\qedsymbol\]
+\[\sum_{k=m}^n a_k \stackrel{\text{(1)}}= \sum_{m\le k\le n} a_k
+\stackrel{\text{(2)}}= \sum_{m\le k'-d\le n} a_{k'-d}
+\stackrel{\text{(3)}}= \sum_{m+d\le k'\le n+d} a_{k'-d}
+\stackrel{\text{(4)}}= \sum_{k'=m+d}^{n+d} a_{k'-d},\]
+wobei (1), (4) gemäß Korollar \ref{sum-set-is-range} gelten
+und (2), (3) eine andere Schreibweise für die Substitutionsregel
+\ref{sum-set-subs} ist.\,\qedsymbol
 \end{Beweis}
+\strong{Bemerkung.} Der zweite Beweis ist eigentlich zirkulär,
+weil der Beweis der Substitutionsregel über den Beweis von
+Korollar \ref{sum-set-well-defined} in transitiver Abhängigkeit zum
+generalisierten Kommutativgesetz \ref{sum-perm-index} steht, dessen
+Beweis einen Indexshift enthält.
 
 \begin{Korollar} Es gilt
 \[\sum_{i=m}^n \sum_{j=m'}^{n'} a_{ij} = \sum_{j=m'}^{n'}\sum_{i=m}^n a_{ij}.\]
@@ -174,6 +183,79 @@ Wert null. Der Induktionsschritt ist
 wobei (1) gemäß Indexshift \ref{sum-indexshift} und
 (2) gemäß Aufteilung \ref{sum-split} gilt.\,\qedsymbol
 \end{Beweis}
+
+\newpage
+\begin{Satz}[Generalisiertes Kommutativgesetz]%
+\label{sum-perm-index}\mbox{}\\*
+Sei $M=\{k\in\Z\mid m\le k\le n\}$. Für jede Permutation $\pi\colon M\to M$ gilt
+\[\sum_{k=m}^n a_k = \sum_{k=m}^n a_{\pi(k)}.\]
+\end{Satz}
+\begin{Beweis} Induktiv. Sei ohne Beschränkung der Allgemeinheit $m=1$.
+Im Induktionsanfang $n=0$ und $n=1$ ist die Gleichung offenkundig erfüllt.
+
+Induktionsschritt. Induktionsvoraussetzung sei die Gültigkeit für $M$.
+Zu zeigen ist die Gültigkeit für $M\cup\{n+1\}$.
+
+Sei $t$ ein fester Parameter mit $1\le t\le n+1$.
+Im Fall $\pi(t) = n+1$ geht man wie folgt vor.
+Man setze $\sigma(k):=\pi(k)$ für $1\le k\le t-1$. Man setze
+$\sigma(k):=\pi(k+1)$ für $t\le k\le n$. Weil $n+1$ kein Wert von
+$\sigma$ ist, muss $\sigma$ eine Permutation $\sigma\colon M\to M$ sein.
+Ergo gilt
+\begin{align*}
+\sum_{k=1}^{n+1} a_{\pi(k)} &= \sum_{k=1}^{t-1} a_{\pi(k)}
++ a_{\pi(t)} + \sum_{k=t+1}^{n+1} a_{\pi(k)}
+= a_{\pi(t)} + \sum_{k=1}^{t-1} a_{\pi(k)}
++ \sum_{k=t}^n a_{\pi(k+1)}\\
+&= a_{n+1} + \sum_{k=1}^{t-1} a_{\sigma(k)}
++ \sum_{k=t}^n a_{\sigma(k)}
+= a_{n+1} + \sum_{k=1}^n a_{\sigma(k)}\\
+&\stackrel{\mathrm{IV}}= a_{n+1} + \sum_{k=1}^n a_k
+= \sum_{k=1}^{n+1} a_k.
+\end{align*}
+Man beachte, dass in den beiden Randfällen $t=1$ und $t=n+1$ die
+jeweilige Randsumme den Wert null hat und somit verschwindet.\,\qedsymbol
+\end{Beweis}
+
+\begin{Definition}\label{def:sum-set}
+Für eine endliche Menge $M$ definiert man
+\[\sum_{k\in M} a_k := \sum_{i=m}^n a_{f(i)},\]
+wobei $f\colon \{m,\ldots,n\}\to M$ eine frei wählbare Bijektion ist.
+\end{Definition}
+
+\begin{Korollar}\label{sum-set-well-defined}
+Der Wert Summe der auf der linken Seite von Def. \ref{def:sum-set}
+ist unabhängig von der gewählten Bijektion.
+\end{Korollar}
+\begin{Beweis} Seien $f,g$ zwei solche Bijektionen. Dann existiert
+$\pi$ mit $f=g\circ\pi$. Infolge gilt%
+\[\sum_{i=m}^n a_{f(i)} = \sum_{i=m}^n a_{g(\pi(i))} =
+\sum_{i=m}^n a_{g(i)}\]
+gemäß Satz \ref{sum-perm-index}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}\label{sum-set-is-range}
+Für $M = \{k\in\Z\mid m\le k\le n\}$ gilt
+\[\sum_{m\le k\le n} a_k := \sum_{k\in M} a_k = \sum_{k=m}^n a_k.\]
+\end{Korollar}
+\begin{Beweis} Es gilt
+$\sum_{k\in M} a_k = \sum_{k=m}^n a_{\id(k)} = \sum_{k=m}^n a_k$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Substitutionsregel]\label{sum-set-subs}
+Ist $\varphi\colon M'\to M$ eine Bijektion, gilt
+\[\sum_{k\in M} a_k = \sum_{k'\in M'} a_{\varphi(k')}.\]
+\end{Korollar}
+\begin{Beweis} Zur Bijektion $f\colon\{1,\ldots,|M|\}\to M$ existiert die Bijektion
+$g$ mit $f = \varphi\circ g$.
+
+Infolge gilt
+\[\sum_{k\in M} a_k = \sum_{i=1}^{|M|} a_{f(i)}
+= \sum_{i=1}^{|M|} a_{\varphi(g(i))}
+= \sum_{k'\in M'} a_{\varphi(k')}.\,\qedsymbol\]
+\end{Beweis}
+
+\subsection{Klassische Partialsummen}
 
 \begin{Korollar}[Partialsumme der konstanten Folge]%
 \label{sum-const}\mbox{}\\*
@@ -236,3 +318,4 @@ Seiten nach $z$ ableiten und anschließend beide Seiten mit $z$
 multiplizieren. Den Fall $m=0$ und in diesem den Summand zu $k=0$
 explizit betrachten, sonst aber auf dieselbe Weise vorgehen.\,\qedsymbol
 \end{Beweis}
+
