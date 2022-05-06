@@ -70,12 +70,13 @@ rekursiv definiert als
 := a_n + \sum_{k=m}^{n-1} a_k.\]
 \end{Definition}
 
-\begin{Korollar} Es gilt
+\begin{Korollar}\label{sum-add}
+Es gilt
 \[\sum_{k=m}^n (a_k + b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\]
 \end{Korollar}
-\begin{Beweis} Induktion über $n$.
-Induktionsanfang:
-\[\sum_{k=m}^{m-1} (a_k + b_k) = 0 = 0 + 0 = \sum_{k=m}^{m-1} a_k + \sum_{k=m}^{m-1} b_k.\]
+\begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben
+beide Seiten den Wert null.
+
 Induktionsschritt:
 \begin{align*}
 \sum_{k=m}^n (a_k+b_k) &= a_n + b_n + \sum_{k=m}^{n-1} (a_k+b_k)
@@ -84,19 +85,21 @@ Induktionsschritt:
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar} Sei $R$ ein Ring und $c,a_k\in R$. Sei $c$ eine
+\begin{Korollar}\label{sum-scale}
+Sei $R$ ein Ring und $c,a_k\in R$. Sei $c$ eine
 Konstante. Es gilt
 \[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
 \end{Korollar}
-\begin{Beweis} Induktion über $n$. Induktionsanfang:
-\[\sum_{k=m}^{m-1} ca_k = 0 = c\cdot 0 = c\sum_{k=m}^{n-1} a_k.\]
+\begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben beide
+Seiten den Wert null.
+
 Induktionsschritt:
 \[\sum_{k=m}^n ca_k = ca_n + \sum_{k=m}^{n-1} ca_k
 \stackrel{\mathrm{IV}}= ca_n + c\sum_{k=m}^{n-1} a_k
 = c(a_n + \sum_{k=m}^{n-1} a_k) = c\sum_{k=m}^n a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}[Aufteilung einer Summe]
+\begin{Korollar}[Aufteilung einer Summe]\label{sum-split}
 Für $m\le p\le n$ gilt
 \[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\]
 \end{Korollar}
@@ -109,4 +112,127 @@ Induktionsschritt:
 \stackrel{\mathrm{IV}}= a_n + \sum_{k=m}^{p-1} a_k + \sum_{k=p}^{n-1} a_k
 = \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\,\qedsymbol
 \]
+\end{Beweis}
+
+\begin{Korollar}[Indexshift]\label{sum-indexshift}\mbox{}\\
+Für die Indexverschiebung der Distanz $d\in\Z$ gilt
+\[\textstyle\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
+\end{Korollar}
+\begin{Beweis}[Beweis 1]
+Induktion über $n$. Im Anfang bei $n = m-1$ haben beide Seiten
+den Wert null. Induktionsschritt:
+\[\sum_{k=m}^n a_k = a_n+\sum_{k=m}^{n-1}a_k \stackrel{\mathrm{IV}}=
+a_{(n+d)-d}+\sum_{k=m+d}^{n+d-1}a_{k-d}
+= \sum_{k=m+d}^{n+d}a_{k-d}.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Mit der Substitution $k=k'-d$ findet sich die Umformung
+\[\sum_{k=m}^n a_k = \sum_{m\le k\le n} a_k
+= \sum_{m\le k'-d\le n} a_{k'-d}
+= \sum_{m+d\le k'\le n+d} a_{k'-d}
+= \sum_{k'=m+d}^{n+d} a_{k'-d}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar} Es gilt
+\[\sum_{i=m}^n \sum_{j=m'}^{n'} a_{ij} = \sum_{j=m'}^{n'}\sum_{i=m}^n a_{ij}.\]
+\end{Korollar}
+\begin{Beweis}
+Induktion über $n$ und $n'$. Im Anfang bei $n=m-1$ und $n'=m-1$
+haben beide Seiten den Wert null. Induktionsschritt für $n$:
+\[\sum_{i=m}^n\sum_{j=m'}^{n'} a_{ij}
+= \!\!\sum_{j=m'}^{n'} a_{nj}
++ \!\sum_{i=m}^{n-1}\sum_{j=m'}^{n'} a_{ij}
+\stackrel{\mathrm{IV}}=
+\!\sum_{j=m'}^{n'} a_{nj}
++ \!\sum_{j=m'}^{n'}\sum_{i=m}^{n-1} a_{ij}
+= \!\!\sum_{j=m'}^{n'} (a_{nj}+\sum_{i=m}^{n-1} a_{ij})
+= \!\!\sum_{j=m'}^{n'} \sum_{i=m}^n a_{ij}.\]
+Induktionsschritt für $n'$:
+\[\sum_{i=m}^n\sum_{j=m'}^{n'} a_{ij}
+= \!\!\sum_{i=m}^n (a_{in'}+\!\!\sum_{j=m'}^{n'-1}a_{ij})
+= \!\!\sum_{i=m}^n a_{in'}+\!\!\sum_{i=m}^n\sum_{j=m'}^{n'-1}a_{ij}
+\stackrel{\mathrm{IV}}=
+\!\sum_{i=m}^n a_{in'}+\sum_{j=m'}^{n'-1}\sum_{i=m}^n a_{ij}
+= \!\!\sum_{j=m'}^{n'}\sum_{i=m}^n a_{ij}.\]
+Weil immer ein Schritt nach rechts oder ein Schritt nach oben durchführbar ist,
+werden alle Punkte $(n,n')$ im Gitter $\Z_{\ge m-1}\times\Z_{\ge m'-1}$ erreicht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Umkehrung der Reihenfolge]\label{sum-rev}\mbox{}\\*
+Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten den
+Wert null. Der Induktionsschritt ist
+\begin{align*}
+\sum_{k=0}^n a_{n-k} &= a_{n-n} + \sum_{k=0}^{n-1} a_{n-k}
+\stackrel{\mathrm{IV}}= a_0+\sum_{k=0}^{n-1} a_{n-(n-1-k)}a_k\\
+&= a_0+\sum_{k=0}^{n-1} a_{k-1}
+\stackrel{\text{(1)}}= \sum_{k=0}^0 a_k+\sum_{k=1}^n a_k
+\stackrel{\text{(2)}}= \sum_{k=0}^n a_k,
+\end{align*}
+wobei (1) gemäß Indexshift \ref{sum-indexshift} und
+(2) gemäß Aufteilung \ref{sum-split} gilt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Partialsumme der konstanten Folge]%
+\label{sum-const}\mbox{}\\*
+Es gilt $\sum_{k=m}^n 1 = n-m+1$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=m-1$ haben beide Seiten
+den Wert null.
+
+Induktionsschritt:
+\[\sum_{k=m}^n 1 = 1 + \sum_{k=m}^{n-1}
+\stackrel{\mathrm{IV}}= 1 + n-1-m+1 = n-m+1.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Partialsumme der arithmetischen Folge]\mbox{}\\*
+Es gilt $\sum_{k=0}^n k = \frac{n}{2}(n+1)$.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten den Wert null.
+
+Induktionsschritt:
+\[\sum_{k=0}^n k = n + \sum_{k=0}^{n-1} k
+\stackrel{\mathrm{IV}}= n + \frac{n-1}{2}(n-1+1)
+= \frac{n}{2}(2 + n-1) = \frac{n}{2}(n+1).\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Klassischer Beweis. Man findet die Umformung
+\[2\sum_{k=0}^n k = \!\sum_{k=0}^n k + \!\sum_{k=0}^n k
+\stackrel{\text{(1)}}= \!\sum_{k=0}^n k + \!\sum_{k=0}^n (n-k)
+\stackrel{\text{(2)}}= \!\sum_{k=0}^n (k+n-k)
+= \!\sum_{k=0}^n n \stackrel{\text{(3)}}= n\!\sum_{k=0}^n 1
+\stackrel{\text{(4)}}= n(n+1),\]
+wobei (1), (2), (3), (4) gemäß Korollar
+\ref{sum-rev}, \ref{sum-add}, \ref{sum-scale}, \ref{sum-const}
+gelten.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Partialsumme der geometrischen Folge]%
+\label{sum-geom-seq}\mbox{}\\*
+Für $m\ge 0$ und $z\in\C\setminus\{1\}$ gilt $\sum_{k=m}^{n-1} z^k = \frac{z^n-z^m}{z-1}$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=m-1$ haben beiden Seiten den Wert null.
+
+Induktionsschritt:
+\[\sum_{k=m}^n z^k = z^n + \sum_{k=m}^{n-1} z^k
+\stackrel{\mathrm{IV}}= z^n + \frac{z^n-z^m}{z-1}
+= \frac{(z-1)z^n+z^n-z^m}{z-1}
+= \frac{z^{n+1}-z^m}{z-1}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Für $m\ge 0$ und $z\in\C\setminus\{1\}$ gilt
+\[\sum_{k=m}^{n-1} kz^k
+= \frac{(nz^n-mz^m)(z-1) - (z^n-z^m)z}{(z-1)^2}.\]
+\end{Korollar}
+\begin{Beweis}
+Die Gleichung von Satz \ref{sum-geom-seq} für $m\ge 1$ auf beiden
+Seiten nach $z$ ableiten und anschließend beide Seiten mit $z$
+multiplizieren. Den Fall $m=0$ und in diesem den Summand zu $k=0$
+explizit betrachten, sonst aber auf dieselbe Weise vorgehen.\,\qedsymbol
 \end{Beweis}
