@@ -51,6 +51,55 @@ Der Rand einer Menge $M$ ist
 = \overline M\cap\operatorname{int}(M)^\comp.\]
 \end{Definition}
 
+\begin{Definition}[Teilraumtopologie]\mbox{}\\*
+Sei $(X,T)$ ein topologischer Raum und $M\subseteq X$. Man bezeichnet
+\[T|M := \{A\cap M\mid A\in T\}.\]
+als Teilraumtopologie und $(M,T|M)$ als Teilraum.
+\end{Definition}
+
+\begin{Definition}[Diskrete Topologie]\mbox{}\\*
+Man sagt, ein topologischer Raum $(X,T)$ habe die diskrete Topologie $T$,
+wenn $T$ die Potenzmenge von $X$ ist -- wenn also jede Teilmenge
+von $X$ offen ist.
+\end{Definition}
+
+\subsection{Stetige Abbildungen}
+
+\begin{Definition}[Stetige Abbildung]\mbox{}\\*
+Seien $X$ und $Y$ topologischen Räume. Eine Abbildung $f\colon X\to Y$
+heißt stetig, wenn unter ihr das Urbild einer offenen Menge stets
+wieder offen ist.
+\end{Definition}
+
+\begin{Korollar}
+Sei $M\subseteq X$. Ist $f\colon X\to Y$ stetig, so ist
+die Einschränkung $f|_M$ stetig.
+\end{Korollar}
+\begin{Beweis}
+Vorgelegt ist ein offenes $B\subseteq Y$. Laut Prämisse ist $A=f^{-1}(B)$
+ebenfalls offen. Per Definition der Einschränkung gilt
+\[(f|_M)^{-1}(B) = M\cap f^{-1}(B) = M\cap A.\]
+Laut Definition ist $M\cap A$ ein Element der Teilraumtopologie $T(X)|M$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Auf jedem topologischen Raum ist die identische Abbildung stetig.
+\end{Korollar}
+\begin{Beweis}
+Ihre Urbildoperation ist ebenfalls eine identische Abbildung. Ergo
+verbleiben offene Mengen unverändert, also offen.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Die Verkettung stetiger Abbildungen ist stetig.
+\end{Korollar}
+\begin{Beweis}
+Seien $f\colon X\to Y$ und $g\colon Y\to Z$ stetig.
+Gemäß Satz \ref{preimg-chain} gilt $(g\circ f)^{-1}(M)=f^{-1}(g^{-1}(M))$.
+Ist $M$ offen, so auch $g^{-1}(M)$ und infolge $f^{-1}(g^{-1}(M))$.
+Ergo ist $g\circ f$ stetig.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \subsection{Elementares}
 
@@ -116,6 +165,68 @@ Ein Punkt $p$ liegt genau dann auf dem Rand einer Menge $M$, wenn
 jede Umgebung von $p$ mindestens einen Punkt aus $M$ und
 einen Punkt aus dem Komplement von $M$ enthält.
 \end{Satz}
+
+\newpage
+\subsection{Zusammenhang}
+
+\begin{Definition}[Zusammenhängender Raum]\mbox{}\\*
+Ein topologischer Raum $(X,T)$ heißt zusammenhängend, wenn er sich
+nicht in zwei disjunkte nichtleere offene Mengen zerlegen lässt. Gemeint ist
+\[\forall A,B\in T\colon A\ne\emptyset\land B\ne\emptyset\land A\cap B = \emptyset \implies A\cup B\ne X.\]
+\end{Definition}
+\strong{Bemerkung.} Ein Raum $(X,T)$ ist demnach unzusammenhängend, wenn
+Zeugen $A,B$ für die Aussage
+\[\exists A,B\in T\colon A\ne\emptyset\land B\ne\emptyset\land A\cap B = \emptyset \land A\cup B = X\]
+gefunden sind.
+
+\begin{Satz}\label{connected-iff-cont-is-const}
+Sei $X$ ein topologischer Raum und $\{0,1\}$ der topologische
+Raum mit der diskreten Topologie. Es ist $X$ genau dann
+zusammenhängend, wenn jede stetige Abbildung $f\colon X\to\{0,1\}$
+konstant sein muss.
+\end{Satz}
+\begin{Beweis}
+Sei $f$ stetig und nicht"=konstant. Man betrachte die Fasern
+$A:=f^{-1}(\{0\})$ und $B:=f^{-1}(\{1\})$. Weil $f$, wie gerade
+gefordert, beide Werte annehmen muss, gilt $A\ne\emptyset$ und
+$B\ne\emptyset$. Zudem sind $A,B$ offen, weil sie die Urbilder
+offener Mengen sind unter stetigem $f$ sind. Urbilder disjunkter
+Mengen sind immer disjunkt, womit $A\cap B=\emptyset$ gilt. Zudem gilt
+\[A\cup B = f^{-1}(\{0\})\cup f^{-1}(\{1\}) = f^{-1}(\{0\}\cup \{1\}) = X.\]
+Somit ist ein Gegenbeispiel konstruiert, so dass $X$ unzusammenhängend
+sein muss.
+
+Sei $X$ unzusammenhängend. Es existieren somit Zeugen $A,B\in T$
+mit $A\ne\emptyset$, $B\ne\emptyset$, $A\cup B=\emptyset$ und
+$A\cup B = X$. Sei $f$ definiert durch
+$f(x):=0$ für alle $x\in A$ und $f(x):=1$ für alle $x\in B$.
+Nun ist $f$ keine konstante Abbildung, da sie auf nichtleeren $A,B$
+unterschiedliche Werte annimmt. Wohl aber ist $f$ stetig,
+wie im Folgenden noch durchgerechnet wird. Die diskrete Topologie
+von $\{0,1\}$ ist ihre Potenzmenge. Es bestätigt sich
+\begin{gather*}
+f^{-1}(\emptyset) = \emptyset\in T,\\
+f^{-1}(\{0\}) = A\in T,\\
+f^{-1}(\{1\}) = B\in T,\\
+f^{-1}(\{0,1\}) = f^{-1}(\{0\}\cup\{1\}) = f^{-1}(\{0\})\cup f^{-1}(\{1\})
+= A\cup B = X\in T.\,\qedsymbol\\
+\end{gather*}
+\end{Beweis}
+
+\begin{Korollar}
+Die Vereinigung zweier zusammenhängender nichtdisjunkter Räume
+ist ein zusammenhängender Raum.
+\end{Korollar}
+\begin{Beweis}
+Seien $X,Y$ zusammenhängend und sei $X\cap Y\ne\emptyset$.
+Laut Prämisse existiert mindestens ein $p\in X\cap Y$. Sei
+$f\colon X\cup Y\to\{0,1\}$ stetig. Nun ist $f|_X$ stetig und
+konstant mit $f(x)=f(p)$ für alle $x\in X$, da $X$ zusammenhängend
+ist. Entsprechend ist $f|_Y$ stetig und konstant mit $f(y)=f(p)$
+für alle $y\in Y$. Ergo ist $f$ auf ganz $X\cup Y$ konstant $f(p)$.
+Laut Satz \ref{connected-iff-cont-is-const} muss $X\cup Y$
+also zusammenhängend sein.\,\qedsymbol
+\end{Beweis}
 
 \newpage
 \section{Metrische Räume}

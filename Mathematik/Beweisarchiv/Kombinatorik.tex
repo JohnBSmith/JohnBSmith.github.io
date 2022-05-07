@@ -61,7 +61,7 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \end{Beweis}
 
 \newpage
-\section{Summen}
+\section{Endliche Summen}
 
 \subsection{Allgemeine Regeln}
 
@@ -224,14 +224,14 @@ wobei $f\colon \{m,\ldots,n\}\to M$ eine frei wählbare Bijektion ist.
 \end{Definition}
 
 \begin{Korollar}\label{sum-set-well-defined}
-Der Wert Summe der auf der linken Seite von Def. \ref{def:sum-set}
+Der Wert Summe auf der rechten Seite von Def. \ref{def:sum-set}
 ist unabhängig von der gewählten Bijektion.
 \end{Korollar}
 \begin{Beweis} Seien $f,g$ zwei solche Bijektionen. Dann existiert
-$\pi$ mit $f=g\circ\pi$. Infolge gilt%
+$\pi$ mit $f=g\circ\pi$, womit%
 \[\sum_{i=m}^n a_{f(i)} = \sum_{i=m}^n a_{g(\pi(i))} =
 \sum_{i=m}^n a_{g(i)}\]
-gemäß Satz \ref{sum-perm-index}.\,\qedsymbol
+laut Satz \ref{sum-perm-index} gilt.\,\qedsymbol
 \end{Beweis}
 
 \begin{Korollar}\label{sum-set-is-range}
@@ -255,6 +255,105 @@ Infolge gilt
 = \sum_{k'\in M'} a_{\varphi(k')}.\,\qedsymbol\]
 \end{Beweis}
 
+\begin{Korollar} Es gilt
+$\sum\limits_{k\in M} ca_k = c\sum\limits_{k\in M} a_k$ und
+$\sum\limits_{k\in M} (a_k + b_k)
+= \sum\limits_{k\in M} a_k + \sum\limits_{k\in M} b_k$.
+\end{Korollar}
+\begin{Beweis}
+Laut Definition gilt
+\begin{gather*}
+\sum_{k\in M} ca_k = \sum_{i=1}^{|M|} ca_{f(i)}
+= c\sum_{i=1}^{|M|} a_{f(i)} = c\sum_{k\in M} a_k,\\
+\sum_{k\in M} (a_k+b_k) = \sum_{i=1}^{|M|} (a_{f(i)}+b_{f(i)}) =
+\sum_{i=1}^{|M|} a_{f(i)} + \sum_{i=1}^{|M|} b_{f(i)}
+= \sum_{k\in M} a_k + \sum_{k\in M} b_k.\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Korollar} Es gilt
+\[\sum_{k\in M}\sum_{l\in N} a_{kl} = \sum_{l\in N}\sum_{k\in M} a_{kl}.\]
+\end{Korollar}
+\begin{Beweis}
+Laut Definition gilt
+\[\sum_{k\in M}\sum_{l\in N} a_{kl}
+= \sum_{i=1}^{|M|}\sum_{j=1}^{|N|} a_{f(i),g(j)}
+= \sum_{j=1}^{|N|}\sum_{i=1}^{|M|} a_{f(i),g(j)}
+= \sum_{l\in N}\sum_{k\in M} a_{k,l}.\]
+\end{Beweis}
+
+\begin{Korollar}\label{sum-set-disjoint}
+Für $M\cap N=\emptyset$ gilt
+\[\sum_{k\in M\cup N} a_k = \sum_{k\in M} a_k + \sum_{k\in N} a_k.\]
+\end{Korollar}
+\begin{Beweis}
+Sei $m:=|M|$ und $n:=|N|$. Laut Prämisse existiert eine Bijektion
+$f\colon \{1,\ldots, m+n\}\to M\cup N$ mit $f(i)\in M$ für
+$1\le i\le m$ und $f(i)\in N$ für $m+1\le i\le m+n$. Das macht
+\[\sum_{k\in M\cup N} a_k = \sum_{i=1}^{m+n} a_{f(i)}
+= \sum_{i=1}^m a_{f(i)} + \sum_{i=m+1}^{m+n} a_{f(i)}
+= \sum_{k\in M} a_k + \sum_{k\in N} a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}\label{sum-partition}
+Für eine disjunkte Zerlegung $M = \bigcup_{i\in I} M_i$ gilt
+\[\sum_{k\in M} a_k = \sum_{i\in I}\sum_{k\in M_i} a_k.\]
+\end{Korollar}
+\begin{Beweis}
+Induktion über $I$. Im Anfang $I=\emptyset$ haben beide Seiten
+den Wert null. Induktionsvoraussetzung sei die Gültigkeit
+für $I$. Zu zeigen ist die Gültigkeit für $I\cup\{n\}$ mit $n\notin I$.
+Der Induktionsschritt ist
+\[\sum_{k\in M_n\cup M} a_k
+= \sum_{k\in M_n} a_k + \sum_{k\in M} a_k
+\stackrel{\mathrm{IV}}= \sum_{k\in M_n} a_k +
+\sum_{i\in I}\sum_{k\in M_i} a_k
+= \sum_{i\in I\cup\{n\}}\sum_{k\in M_i} a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Es gilt
+\[\sum_{t\in M\times N} a_t = \sum_{k\in M}\sum_{l\in N} a_{(k,l)}.\]
+\end{Korollar}
+\begin{Beweis}
+Es ist $M = \bigcup_{k\in M} \{k\}$ und weiter $M\times N =
+\bigcup_{k\in M} (\{k\}\times N)$ eine disjunkte Zerlegung. Hiermit
+findet sich die Umformung
+\[\sum_{t\in M\times N} a_t
+\stackrel{\text{(1)}}= \sum_{k\in M}\;\sum_{t\in \{k\}\times N} a_t
+\stackrel{\text{(2)}}= \sum_{k\in M}\sum_{l\in N} a_{(k,l)},\]
+wobei (1) laut Korollar \ref{sum-partition} gilt und (2) per Substitutionsregel
+\ref{sum-set-subs} mit der Bijektion $\varphi\colon N\to\{k\}\times N$
+mit $\varphi(l):=(k,l)$ und $t=\varphi(l)$.
+\end{Beweis}
+
+\begin{Korollar} Mit der Indikatorfunktion $1_A\colon M\to\{0,1\}$
+für $A\subseteq M$ gilt
+\[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} a_k.\]
+\end{Korollar}
+\begin{Beweis}
+Mit disjunkter Zerlegung $M=A\cup (M\setminus A)$
+und Korollar \ref{sum-set-disjoint} gilt
+\[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} \underbrace{1_A(k)}_{1} a_k
++ \sum_{k\in M\setminus A}\underbrace{1_A(k)}_{0} a_k
+= \sum_{k\in A} a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar} Allgemein gilt
+\[\sum_{k\in A\cup B} a_k = \sum_{k\in A} a_k + \sum_{k\in B} a_k
+- \sum_{k\in A\cap B} a_k.\]
+\end{Korollar}
+\begin{Beweis} Sei $G=A\cup B$ die Grundmenge. Gemäß Korollar
+\ref{indicator-set-op} darf man rechnen
+\begin{align*}
+\sum_{k\in G} a_k &= \sum_{k\in G} 1_{A\cup B}(k)a_k
+= \sum_{k\in G} 1_A(k)a_k + \sum_{k\in G} 1_B(k)a_k
+- \sum_{k\in G} 1_{A\cap B}(k)a_k\\
+&= \sum_{k\in A} a_k + \sum_{k\in B} a_k - \sum_{k\in A\cap B} a_k.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\newpage
 \subsection{Klassische Partialsummen}
 
 \begin{Korollar}[Partialsumme der konstanten Folge]%

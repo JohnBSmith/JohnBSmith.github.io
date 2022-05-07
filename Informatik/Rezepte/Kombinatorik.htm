@@ -198,6 +198,16 @@ print([len(S(range(n))) for n in range(8)])
 
 <p>die ersten Fakultäten.
 
+<p>Eine rekursive Ausführung von <code>permutations</code>
+gelingt mit:
+
+<pre class="ibox python">
+def permutations(a):
+    return [()] if len(a) == 0 else [(a[k],) + t
+        for k in range(len(a))
+        for t in permutations(a[0:k] + a[k+1:])]
+</pre>
+
 <h2 id="Funktionen">Kombinatorische Funktionen</h2>
 
 <h3 id="Binomialkoeffizienten">Binomialkoeffizienten</h3>
