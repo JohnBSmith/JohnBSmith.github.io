@@ -782,6 +782,33 @@ beschränkt ist, konnte im letzten Schritt Satz \ref{all-cart}
 angewendet werden.\;\qedsymbol
 \end{Beweis}
 
+\begin{Korollar} Für eine Abbildung $f$ gilt
+\[f(x)\in A\cap B\iff f(x)\in A\land f(x)\in B.\]
+\end{Korollar}
+\begin{Beweis}
+Es gelte $f(x)\in A\cap B$. Dann existiert laut Definition ein
+$y\in A\cap B$ mit $y=f(x)$, womit $y\in A$ und $y\in B$ gilt.
+Folglich gilt $f(x)\in A$ und $f(x)\in B$.
+
+Es gelte $f(x)\in A$ und $f(x)\in B$. Dann existiert laut Definition
+ein $y\in A$ mit $y=f(x)$ und ein $y'\in B$ mit $y'=f(x)$.
+Weil $f$ dem $x$ genau ein Bild zuordnet, muss $y=y'$ gelten.
+Folglich gilt $y\in A\cap B$, und somit $f(x)\in A\cap B$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar} Für eine Abbildung $f$ gilt
+\[f(x)\in A\cup B\iff f(x)\in A\lor f(x)\in B.\]
+\end{Korollar}
+\begin{Beweis} Es findet sich die äquivalente Umformung
+\begin{align*}
+f(x)\in A\cup B &\iff (\exists y\colon y\in A\cup B\land y=f(x))\\
+&\iff (\exists y\colon (y\in A\lor y\in B)\land y = f(x))\\
+&\iff (\exists y\colon y\in A\land y=f(x)\lor y\in B\land y = f(x))\\
+&\iff (\exists y\colon y\in A\land y=f(x))\lor (\exists y\colon y\in B\land y = f(x))\\
+&\iff f(x)\in A\lor f(x)\in B.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
 \begin{Satz}[preimg-dl: Distributivität der Urbildoperation]%
 \label{preimg-dl}\index{Distributivgesetz!Urbildoperation}\mbox{}\\
 Für $f\colon X\to Y$ und beliebige Mengen $M_i$ gilt:
@@ -1171,23 +1198,23 @@ Für eine Aussage $A$ sei
 1&\text{wenn $A$ gilt},\\
 0&\text{sonst}.
 \end{cases}\]
-Für $A\subseteq M$ betrachte man nun die
+Für eine Menge $A\subseteq M$ betrachte man nun die
 Indikatorfunktion\index{Indikatorfunktion}
-\[\chi_A\colon M\to\{0,1\},\quad \chi_A(x):=[x\in A].\]
+\[1_A\colon M\to\{0,1\},\quad 1_A(x):=[x\in A].\]
 Die Abbildung
-\[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=\chi_A\]
+\[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=1_A\]
 ist eine kanonische Bijektion.
 
 \strong{Zur Injektivität.}
 Nach Def. \ref{def:inj} (inj) muss gelten:
 \[\varphi(A)=\varphi(B)\implies A=B,\quad\text{d.\,h.}\quad
-\chi_A=\chi_B \implies A=B.\]
+1_A=1_B \implies A=B.\]
 Nach Satz \ref{feq} (feq) und Def. \ref{def:seteq} (seteq)
 wird die Aussage expandiert zu:
-\[(\forall x\colon \chi_A(x)=\chi_B(x))\implies
+\[(\forall x\colon 1_A(x)=1_B(x))\implies
 (\forall x\colon x\in A\iff x\in B).\]
 Es gilt aber nun:
-\[\chi_A(x)=\chi_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\iff x\in B).\]
+\[1_A(x)=1_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\iff x\in B).\]
 \end{Beweis}
 \strong{Zur Surjektivität.} Wir müssen nach Def. \ref{def:sur} (sur)
 prüfen, dass $\{0,1\}^M\subseteq \varphi(2^M)$ gilt.
@@ -1197,8 +1224,8 @@ ergibt:
 \[\forall f\colon (f\in \{0,1\}^M\implies\exists A{\in}2^M\colon f=\varphi(A)).\]
 Um dem Existenzquantor zu genügen, wähle
 \[A := f^{-1}(\{1\}) = \{x\in M\mid f(x)\in \{1\}\} = \{x\in M\mid f(x)=1\}.\]
-Es gilt $f=\chi_A$, denn
-\[\chi_A(x) = [x\in A] = [x\in\{x\mid f(x)=1\}] = [f(x)=1] = f(x).\]
+Es gilt $f=1_A$, denn
+\[1_A(x) = [x\in A] = [x\in\{x\mid f(x)=1\}] = [f(x)=1] = f(x).\]
 Da $\varphi$ eine Bijektion ist, müssen $2^M$ und $\{0,1\}^M$
 nach Def. \ref{def:equipotent} (equipotent) gleichmächtig
 sein.\,\qedsymbol

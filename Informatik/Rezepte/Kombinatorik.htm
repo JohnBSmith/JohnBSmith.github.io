@@ -203,10 +203,21 @@ gelingt mit:
 
 <pre class="ibox python">
 def permutations(a):
-    return [()] if len(a) == 0 else [(a[k],) + t
-        for k in range(len(a))
-        for t in permutations(a[0:k] + a[k+1:])]
+    return [()] if len(a) == 0 else [(a[i],) + t
+        for i in range(len(a))
+        for t in permutations(a[0:i] + a[i+1:])]
 </pre>
+
+<p>Allgemeiner berechnet
+
+<pre class="ibox python">
+def permutations(a, k):
+    return [()] if k == 0 else [(a[i],) + t
+        for i in range(len(a))
+        for t in permutations(a[0:i] + a[i+1:], k - 1)]
+</pre>
+
+<p>die Variationen der Länge <var>k</var>.
 
 <h2 id="Funktionen">Kombinatorische Funktionen</h2>
 

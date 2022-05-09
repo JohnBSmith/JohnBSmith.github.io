@@ -33,7 +33,7 @@ Für die Indikatorfunktion $1_M(x):=[x\in M]$ gilt
 \end{gather*}
 \end{Korollar}
 \begin{Beweis}
-Gemäß Korollar \ref{iverson-basic-rules} darf gelten die
+Gemäß Korollar \ref{iverson-basic-rules} gelten die
 Rechnungen
 \begin{align*}
 1_{A\cap B}(x) = [x\in A\cap B]
@@ -66,7 +66,7 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \subsection{Allgemeine Regeln}
 
 \begin{Definition}[Summe]
-Sei $(M,+,0)$ ein kommutatives Monoid und $a_k\in M$. Die Summe ist
+Sei $(G,+,0)$ eine kommutative Gruppe und $a_k\in G$. Die Summe ist
 rekursiv definiert als
 \[\sum_{k=m}^{m-1} a_k := 0,\quad \sum_{k=m}^n a_k
 := a_n + \sum_{k=m}^{n-1} a_k.\]
@@ -77,9 +77,7 @@ Es gilt
 \[\sum_{k=m}^n (a_k + b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\]
 \end{Korollar}
 \begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben
-beide Seiten den Wert null.
-
-Induktionsschritt:
+beide Seiten der Gleichung den Wert null. Induktionsschritt:
 \begin{align*}
 \sum_{k=m}^n (a_k+b_k) &= a_n + b_n + \sum_{k=m}^{n-1} (a_k+b_k)
 \stackrel{\mathrm{IV}}= a_n + b_n + \sum_{k=m}^{n-1} a_k + \sum_{k=m}^{n-1} b_k\\
@@ -93,9 +91,7 @@ Konstante. Es gilt
 \[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
 \end{Korollar}
 \begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben beide
-Seiten den Wert null.
-
-Induktionsschritt:
+Seiten der Gleichung den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n ca_k = ca_n + \sum_{k=m}^{n-1} ca_k
 \stackrel{\mathrm{IV}}= ca_n + c\sum_{k=m}^{n-1} a_k
 = c(a_n + \sum_{k=m}^{n-1} a_k) = c\sum_{k=m}^n a_k.\,\qedsymbol\]
@@ -120,8 +116,8 @@ Für die Indexverschiebung der Distanz $d\in\Z$ gilt
 \[\textstyle\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
 \end{Korollar}
 \begin{Beweis}[Beweis 1]
-Induktion über $n$. Im Anfang bei $n = m-1$ haben beide Seiten
-den Wert null. Induktionsschritt:
+Induktion über $n$. Im Anfang $n = m-1$ haben beide Seiten
+der Gleichung den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n a_k = a_n+\sum_{k=m}^{n-1}a_k \stackrel{\mathrm{IV}}=
 a_{(n+d)-d}+\sum_{k=m+d}^{n+d-1}a_{k-d}
 = \sum_{k=m+d}^{n+d}a_{k-d}.\,\qedsymbol\]
@@ -147,7 +143,7 @@ Beweis einen Indexshift enthält.
 \end{Korollar}
 \begin{Beweis}
 Induktion über $n$ und $n'$. Im Anfang bei $n=m-1$ und $n'=m-1$
-haben beide Seiten den Wert null. Induktionsschritt für $n$:
+haben beide Seiten der Gleichung den Wert null. Induktionsschritt für $n$:
 \[\sum_{i=m}^n\sum_{j=m'}^{n'} a_{ij}
 = \!\!\sum_{j=m'}^{n'} a_{nj}
 + \!\sum_{i=m}^{n-1}\sum_{j=m'}^{n'} a_{ij}
@@ -171,8 +167,8 @@ werden alle Punkte $(n,n')$ im Gitter $\Z_{\ge m-1}\times\Z_{\ge m'-1}$ erreicht
 Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
 \end{Korollar}
 \begin{Beweis}
-Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten den
-Wert null. Der Induktionsschritt ist
+Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten der Gleichung
+den Wert null. Der Induktionsschritt ist
 \begin{align*}
 \sum_{k=0}^n a_{n-k} &= a_{n-n} + \sum_{k=0}^{n-1} a_{n-k}
 \stackrel{\mathrm{IV}}= a_0+\sum_{k=0}^{n-1} a_{n-(n-1-k)}a_k\\
@@ -353,36 +349,135 @@ und Korollar \ref{sum-set-disjoint} gilt
 \end{align*}
 \end{Beweis}
 
+\begin{Definition}[Differenzenfolge] Zu einer Folge $(a_k)$ definiert man
+\[(\Delta a)_k := a_{k+1} - a_k.\]
+\end{Definition}
+
+\begin{Korollar}[Teleskopsumme]\label{sum-tele} Es gilt
+\[\sum_{k=m}^{n-1} (\Delta a)_k = \sum_{k=m}^{n-1} (a_{k+1} - a_k) = a_n - a_m.\]
+\end{Korollar}
+\begin{Beweis}[Beweis 1] Induktion über $n$. Im Anfang $n=m$ haben beide Seiten
+der Gleichung den Wert null. Induktionsschritt:
+\[\sum_{k=m}^n (a_{k+1} - a_k) = (a_{n+1} - a_n) + \!\!\sum_{k=m}^{n-1} (a_{k+1} - a_n)
+\stackrel{\mathrm{IV}}= a_{n+1} - a_n + a_n - a_m = a_{n+1} - a_m.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Per Indexshift \ref{sum-indexshift}
+gilt $\sum\limits_{k=m}^{n-1} a_{k+1} = \!\!\sum\limits_{k=m+1}^n\!\! a_k
+= a_n - a_m + \sum\limits_{k=m}^{n-1} a_k$.
+Somit ist%
+\[\sum_{k=m}^{n-1} (a_{k+1} - a_k) = \sum_{k=m}^{n-1} a_{k+1} - \sum_{k=m}^{n-1} a_k
+= a_n - a_m + \sum_{k=m}^{n-1} a_k - \sum_{k=m}^{n-1} a_k = a_n - a_m.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Zum Beweis einer Formel
+\[\sum_{k=m}^{n-1} a_k = s_n\]
+genügt es, $s_m=0$ und $(\Delta s)_n = a_n$ zu zeigen.
+\end{Korollar}
+\begin{Beweis}[Beweis 1]
+Induktion über $n$. Im Anfang $n=m$ haben beide Seiten der Gleichung laut
+der Prämisse den Wert null. Induktionsschritt:
+\[\sum_{k=m}^n a_k = a_n + \sum_{k=m}^{n-1} a_k
+\stackrel{\mathrm{IV}}= a_n + s_n
+= (\Delta s)_n + s_n = s_{n+1} - s_n + s_n = s_{n+1}.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Spezialisierung von Korollar \ref{sum-tele}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar} Der Differenzoperator ist linear. Das heißt,
+für alle Folgen $(a_n), (b_n)$ und jede Konstante $c$ gilt
+\begin{align*}
+& \Delta(a+b) = \Delta a + \Delta b, && ((a+b)_n := a_n + b_n)\\
+& \Delta(ca) = c\Delta a. && ((ca)_n := ca_n)
+\end{align*}
+\end{Korollar}
+\begin{Beweis} Man findet
+\begin{align*}
+(\Delta(a+b))_n &= (a+b)_{n+1} - (a+b)_n
+= (a_{n+1}+b_{n+1}) - (a_n+b_n)\\
+&= a_{n+1}-a_n + b_{n+1}-b_n = (\Delta a)_n + (\Delta b)_n
+= (\Delta a + \Delta b)_n
+\end{align*}
+und
+\[(\Delta(ca))_n = (ca)_{n+1} - (ca)_n = ca_{n+1} - ca_n
+= c(a_{n+1} - a_n) = c(\Delta a)_n = (c\Delta a)_n.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Definition}[Shiftoperator] Man definiert
+\[(Ta)_n := a_{n+1}.\]
+\end{Definition}
+
+\begin{Korollar}[Iterierter Differenzoperator]\mbox{}\\*
+Für jede Folge $(a_n)$ und $m\in\Z_{\ge 0}$ gilt
+\[(\Delta^m a)_n = (-1)^m\sum_{k=0}^m\binom{m}{k} (-1)^k a_{n+k}.\]
+\end{Korollar}
+\begin{Beweis} Es gilt $\Delta = T-\id$. Weil $T$ und $\id$ kommutieren,
+ist der binomische Lehrsatz anwendbar. Es ergibt sich
+\[\Delta^m = (T-\id)^m = \sum_{k=0}^m\binom{m}{k} (-1)^{m-k} T^k\id^{m-k}
+= (-1)^m \sum_{k=0}^m\binom{m}{k} (-1)^k T^k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}\label{delta-deg}
+Sei $f$ eine Polynomfunktion. Dann ist $\Delta_h f$ eine
+Polynomfunktion mit niedrigerem Grad.
+\end{Korollar}
+\begin{Beweis} Für $f(x)=\sum_{n=0}^m a_n x^n$ gilt
+\begin{gather*}
+\Delta_h f(x) = f(x+h) - f(x) = \sum_{n=0}^m a_n (x+h)^n - \sum_{n=0}^m a_n x^n
+= \sum_{n=0}^m a_n ((x+h)^n - x^n)\\
+= \sum_{n=0}^m a_n (x^n + \sum_{k=0}^{n-1}\binom{n}{k}x^k h^{n-k} - x^n)
+= \sum_{n=0}^m a_n \sum_{k=0}^{n-1}\binom{n}{k}x^k h^{n-k}.
+\end{gather*}
+In der Summe treten nur Monome bis $x^{m-1}$ auf.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz} Sei $f$ ein Polynom vom Grad $N$. Für $n,a\in\Z$ und $n\ge a$ gilt
+\[f(n) = \sum_{k=0}^N \frac{(\Delta^k f)(a)}{k!}(n-a)^{\underline k}
+= \sum_{k=0}^N \binom{n-a}{k}(\Delta^k f)(a).\]
+\end{Satz}
+\begin{Beweis}
+Es gilt $T=\Delta+\id$. Für jede nichtnegative ganze Zahl $m$ gilt
+\[T^m = (\Delta+\id)^m = \sum_{k=0}^m\binom{m}{k}\Delta^k\]
+mit dem binomischen Lehrsatz, da $\Delta$ und $\id$ kommutieren. Das macht
+\[f(a + m) = \sum_{k=0}^m\binom{m}{k}(\Delta^k f)(a).\]
+Man substituiere nun $n = a+m$. Für $n\ge a$ gilt dann
+\[f(n) = \sum_{k=0}^{n-a}\binom{n-a}{k}(\Delta^k f)(a)
+= \sum_{k=0}^N\binom{n-a}{k}(\Delta^k f)(a).\]
+Der Indexbereich der Summierung durfte auf bis $k=N$ geändert werden, weil
+$\Delta^k f = 0$ für $k>N$ laut Korollar \ref{delta-deg} gilt. Dass nun
+Summanden mit $k>n-a$ auftreten können, ist nicht weiter schlimm, weil
+in diesem Fall $\binom{n-a}{k}=0$ ist.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \subsection{Klassische Partialsummen}
 
-\begin{Korollar}[Partialsumme der konstanten Folge]%
+\begin{Korollar}[Partialsummen der konstanten Folge]%
 \label{sum-const}\mbox{}\\*
-Es gilt $\sum_{k=m}^n 1 = n-m+1$.
+Es gilt $\displaystyle\sum_{k=m}^n 1 = n-m+1$.
 \end{Korollar}
 \begin{Beweis}
 Induktion über $n$. Im Anfang $n=m-1$ haben beide Seiten
-den Wert null.
-
-Induktionsschritt:
+der Gleichung den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n 1 = 1 + \sum_{k=m}^{n-1}
 \stackrel{\mathrm{IV}}= 1 + n-1-m+1 = n-m+1.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Satz}[Partialsumme der arithmetischen Folge]\mbox{}\\*
-Es gilt $\sum_{k=0}^n k = \frac{n}{2}(n+1)$.
+\begin{Satz}[Partialsummen der arithmetischen Folge]\mbox{}\\*
+Es gilt $\displaystyle\sum_{k=0}^n k = \frac{n}{2}(n+1)$.
 \end{Satz}
 \begin{Beweis}[Beweis 1]
-Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten den Wert null.
-
-Induktionsschritt:
+Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten der Gleichung
+den Wert null. Induktionsschritt:
 \[\sum_{k=0}^n k = n + \sum_{k=0}^{n-1} k
 \stackrel{\mathrm{IV}}= n + \frac{n-1}{2}(n-1+1)
 = \frac{n}{2}(2 + n-1) = \frac{n}{2}(n+1).\,\qedsymbol\]
 \end{Beweis}
 \begin{Beweis}[Beweis 2]
 Klassischer Beweis. Man findet die Umformung
-\[2\sum_{k=0}^n k = \!\sum_{k=0}^n k + \!\sum_{k=0}^n k
+\[2\!\sum_{k=0}^n k = \!\sum_{k=0}^n k + \!\sum_{k=0}^n k
 \stackrel{\text{(1)}}= \!\sum_{k=0}^n k + \!\sum_{k=0}^n (n-k)
 \stackrel{\text{(2)}}= \!\sum_{k=0}^n (k+n-k)
 = \!\sum_{k=0}^n n \stackrel{\text{(3)}}= n\!\sum_{k=0}^n 1
@@ -392,14 +487,14 @@ wobei (1), (2), (3), (4) gemäß Korollar
 gelten.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Partialsumme der geometrischen Folge]%
+\begin{Satz}[Partialsummen der geometrischen Folge]%
 \label{sum-geom-seq}\mbox{}\\*
-Für $m\ge 0$ und $z\in\C\setminus\{1\}$ gilt $\sum_{k=m}^{n-1} z^k = \frac{z^n-z^m}{z-1}$.
+Für $m\ge 0$ und $z\in\C\setminus\{1\}$ gilt
+$\displaystyle\sum_{k=m}^{n-1} z^k = \frac{z^n-z^m}{z-1}$.
 \end{Satz}
 \begin{Beweis}
-Induktion über $n$. Im Anfang $n=m-1$ haben beiden Seiten den Wert null.
-
-Induktionsschritt:
+Induktion über $n$. Im Anfang $n=m-1$ haben beiden Seiten der Gleichung
+den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n z^k = z^n + \sum_{k=m}^{n-1} z^k
 \stackrel{\mathrm{IV}}= z^n + \frac{z^n-z^m}{z-1}
 = \frac{(z-1)z^n+z^n-z^m}{z-1}
@@ -416,5 +511,57 @@ Die Gleichung von Satz \ref{sum-geom-seq} für $m\ge 1$ auf beiden
 Seiten nach $z$ ableiten und anschließend beide Seiten mit $z$
 multiplizieren. Den Fall $m=0$ und in diesem den Summand zu $k=0$
 explizit betrachten, sonst aber auf dieselbe Weise vorgehen.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz} Es gilt
+\[\sum_{k=1}^n (-1)^k k = (-1)^n\left\lfloor\frac{n+1}{2}\right\rfloor.\]
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ haben beiden Seiten den Wert null.
+
+Induktionsschritt:
+\[\sum_{k=1}^n (-1)^k k = (-1)^n n + \sum_{k=1}^{n-1} (-1)^k k
+\stackrel{\mathrm{IV}}= (-1)^n n + (-1)^{n-1}\left\lfloor\frac{n}{2}\right\rfloor
+= (-1)^n (n-\left\lfloor\frac{n}{2}\right\rfloor).\]
+Zu zeigen verbleibt die Gleichung
+\[n-\left\lfloor\frac{n}{2}\right\rfloor = \left\lfloor\frac{n+1}{2}\right\rfloor
+\iff n = \left\lfloor\frac{n}{2}\right\rfloor + 
+\left\lfloor\frac{n+1}{2}\right\rfloor.\]
+Wir nehmen die Fallunterscheidung zwischen geraden und ungeraden
+Zahlen vor, um Korollar \ref{floor-add-int} und \ref{floor-is-zero}
+nutzen zu können. Im geraden Fall $n=2k$ bestätigt sich
+\[\left\lfloor\frac{2k}{2}\right\rfloor +  \left\lfloor\frac{2k+1}{2}\right\rfloor
+= \lfloor k\rfloor + \left\lfloor k + \frac{1}{2}\right\rfloor = k + k = 2k.\]
+Im ungeraden Fall $n=2k+1$ bestätigt sich
+\[\left\lfloor\frac{2k+1}{2}\right\rfloor + \left\lfloor\frac{2k+1+1}{2}\right\rfloor
+= \left\lfloor k + \frac{1}{2}\right\rfloor + \left\lfloor k+1\right\rfloor
+= k + k + 1 = 2k + 1.\,\qedsymbol\]
+\end{Beweis}
+
+\section{Funktionen}
+
+\begin{Definition}[Floorfunktion]\label{def:floor}
+Für $x\in\R$ definiert man
+\[y = \lfloor x\rfloor\defiff y\in\Z\land 0\le x-y < 1.\]
+\end{Definition}
+
+\begin{Korollar}\label{floor-add-int}
+Für jede ganze Zahl $k$ gilt $\lfloor k + x\rfloor = k + \lfloor x\rfloor$.
+\end{Korollar}
+\begin{Beweis} Für $y\in\Z$ ist aufgrund der Prämisse auch $y-k\in\Z$.
+Unter dieser Gegebenheit findet sich bezüglich Def. \ref{def:floor}
+die äquivalente Umformung
+\begin{align*}
+y = \lfloor k+x\rfloor &\iff 0\le (k+x)-y < 1\iff 0\le x-(y-k) < 1\\
+&\iff y - k = \lfloor x\rfloor \iff y = k + \lfloor x\rfloor.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Korollar}\label{floor-is-zero}
+Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
+\end{Korollar}
+\begin{Beweis}
+Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
 \end{Beweis}
 
