@@ -76,7 +76,8 @@ die beiden Prämissen
 \end{enumerate}
 erüllt, ist $H$ bereits eine Untergruppe von $G$.
 \end{Satz}
-\begin{Beweis} Die Abgeschlossenheit gilt wegen der ersten Prämisse.
+\begin{Beweis}
+Die Abgeschlossenheit gilt wegen der ersten Prämisse.
 Das Assoziativgesetz vererbt sich auf die Elemente der Teilmenge.
 Nun existiert mindestens ein $x\in H$. Aufgrund der zweiten
 Prämisse muss somit $x^{-1}\in H$ sein und infolge $e = x^{-1}x$
@@ -140,7 +141,7 @@ außerdem surjektiv sein.\,\qedsymbol
 
 \begin{Definition}[Ring]
 Eine Struktur $(R,+,\cdot)$ heißt genau dann Ring, wenn die folgenden
-Axiome erfüllt sind
+Axiome erfüllt sind:
 \begin{enumerate}
 \item[1.] $(R,+)$ ist eine kommutative Gruppe.
 \item[2.] $(R,\cdot)$ ist eine Halbgruppe.
@@ -178,7 +179,7 @@ Man rechnet
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}[»Minus mal minus macht plus«]\mbox{}\\*
+\begin{Korollar}[»Minus mal minus macht plus«]\newlinefirst
 Sei $R$ ein Ring und $a,b\in R$, dann gilt
 $(-a)(-b) = ab$.
 \end{Korollar}
@@ -246,7 +247,8 @@ Ringhomomorphismus.
 Bei jedem Ringhomomorphismus $\varphi$ gilt
 $\varphi(kx) = k\varphi(x)$ für $k\in\Z$.
 \end{Korollar}
-\strong{Beweis.} Für $k>0$ ist
+\begin{Beweis}
+Für $k>0$ ist
 \[\varphi(kx) = \varphi(\sum_{i=1}^k x)
 = \sum_{i=1}^k \varphi(x) = k\varphi(x).\]
 Nun der Fall $k=0$. Man rechnet $f(0) = f(0+0) = f(0)+f(0)$.
@@ -257,12 +259,13 @@ rechnet man zunächst
 Subtraktion von $f(x)$ auf beiden Seiten ergibt $f(-x) = -f(x)$.
 Somit gilt
 \[f(-kx) = -f(kx) = -kf(x).\;\qedsymbol\]
+\end{Beweis}
 
 \section{Polynomringe}
 
 \subsection{Einsetzungshomomorphismus}
 
-\begin{Definition}[Einsetzungshomomorphismus]\mbox{}\\*
+\begin{Definition}[Einsetzungshomomorphismus]\newlinefirst
 Die Abbildung $\Phi\colon\R[X]\to\Abb(\R,\R)$ mit $\Phi(f)(x):=f(x)$
 nennt man Einsetzungshomomorphismus.
 \end{Definition}
@@ -271,7 +274,8 @@ nennt man Einsetzungshomomorphismus.
 Beim Einsetzungshomomorphismus $\Phi$ handelt es sich um eine lineare
 Abbildung.
 \end{Satz}
-\begin{Beweis} Es gilt
+\begin{Beweis}
+Es gilt
 \begin{align*}
 \Phi(f+g)(x) &= \sum_k (a_k + b_k) x^k = \sum_k a_k x^k + \sum_k b_k x^k\\
 &= \Phi(f)(x) + \Phi(g)(x) = (\Phi(f)+\Phi(g))(x)
@@ -287,7 +291,8 @@ und
 \begin{Satz}
 Der Einsetzungshomomorphismus $\Phi$ ist injektiv.
 \end{Satz}
-\begin{Beweis} Sei $f=\sum_{k=0}^n a_k X^k$
+\begin{Beweis}
+Sei $f=\sum_{k=0}^n a_k X^k$
 und $g=\sum_{k=0}^n b_k X^k$, wobei $n=\max(\deg f,\deg g)$.
 Zu zeigen ist
 \[(\forall x\in\R\colon \Phi(f)(x)=\Phi(g)(x))\implies f=g,\]
@@ -310,7 +315,7 @@ usw. Man erhält $c_k=0$ für alle $k$.\;\qedsymbol
 \subsection{Geordnete Körper}
 
 \begin{Definition}[Geordneter Körper]\label{def:of}
-Eine Körper $K$ heißt geordnet bezülich einer strengen Totalordnung,
+Eine Körper $K$ heißt geordnet bezüglich einer strengen Totalordnung,
 wenn die beiden Axiome
 \begin{gather*}
 a<b \implies a+c<b+c,\\
@@ -401,7 +406,8 @@ gilt somit
 Sei $K$ ein geordneter Körper und $a_k\in K$. Es gilt
 \[\textstyle (\exists k\colon a_k\ne 0)\implies \sum_{k=1}^n a_k^2 > 0.\]
 \end{Korollar}
-\begin{Beweis} Aufgrund der Prämisse existiert die Permutation, die das
+\begin{Beweis}
+Aufgrund der Prämisse existiert die Permutation, die das
 erste nichtverschwindende $a_k$ mit $a_1$ vertauscht, weshalb ohne
 Beschränkung der Allgemeinheit $a_1\ne 0$ angenommen werden darf.
 Laut Korollar \ref{of-sq-positive} ist $a_k^2\ge 0$ für jedes $k$.
@@ -410,3 +416,111 @@ erläutert. Nun der Induktionsschritt. Mit dem Axiom~1 von Def. \ref{def:of}
 und der Induktionsvoraussetzung $0 < \sum_{k=1}^{n-1} a_k^2$ findet sich
 \[0\le a_n^2 < a_n^2 + \sum_{k=1}^{n-1} a_k^2 = \sum_{k=1}^n a_k^2.\,\qedsymbol\]
 \end{Beweis}
+
+\newpage
+\section{Formale Potenzreihen}
+
+\begin{Definition}[Formale Potenzreihe]\newlinefirst
+Sei $R$ ein kommutativer Ring mit Einselement. Eine Folge
+$a\colon\N_{\ge 0}\to R$ bezeichnet man auch als formale Potenzreihe
+und schreibt
+\[\sum_{k=0}^\infty a_k X^k := a = (a_k) = (a_k)_{k=0}^\infty
+= (a_0,a_1,a_2,\ldots).\]
+Addition und Multiplikation von formalen Potenzreihen ist hierbei
+definiert als
+\begin{align*}
+& \sum_{k=0}^\infty a_k X^k + \sum_{k=0}^\infty b_k X^k
+:= \sum_{k=0}^\infty (a_k + b_k)X^k, && \text{bzw.}\;\;(a_k) + (b_k) := (a_k + b_k),\\
+& \bigg(\sum_{i=0}^\infty a_i X^i\bigg)\bigg(\sum_{j=0}^\infty b_j X^j\bigg)
+:= \sum_{k=0}^\infty \bigg(\sum_{i=0}^k a_i b_{k-i}\bigg)X^k,
+&& \text{bzw.}\;\;(a_i)(b_j) := ({\textstyle\sum_{i=0}^k a_i b_{k-i}}).
+\end{align*}
+\end{Definition}
+
+\begin{Korollar} Es gilt
+\[\sum_{i=0}^k a_i b_{k-i} = \sum_{i=0}^k\sum_{j=0}^k a_i b_j [k=i+j].\qquad ([k=i+j]=\delta_{k,i+j})\]
+\end{Korollar}
+\begin{Beweis} Man findet
+\[\sum_{i=0}^k\sum_{j=0}^k a_i b_j [k{=}i{+}j]
+= \sum_{i=0}^k\sum_{j=0}^k a_i b_{k-i} [k{-}i{=}j]
+= \sum_{i=0}^k a_i b_{k-i} [0{\le}k{-}i{\le}k]
+= \sum_{k=0}^k a_i b_{k-i}.\]
+Die letzte Gleichung wird ersichtlich durch die äquivalente Umformung
+\[0\le k-i\land k-i\le k\iff i\le k\land 0\le i.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Formale Potenzreihen mit Koeffizienten in $R$ bilden bezüglich ihrer
+definierten Addition und Multiplikation einen kommutativen
+Ring mit Einselement, der durch $R[[X]]$ symbolisiert wird.
+\end{Korollar}
+\begin{Beweis}
+Addition und Multiplikation sind per Definition abgeschlossen.
+Das neutrale Element der Addition ist, wie unschwer zur erkennen,
+die Nullfolge. Das additiv inverse Element zu $(a_k)$ ist $(-a_k)$, denn%
+\[(a_k) + (-a_k) = (a_k - a_k) = (0, 0, 0, \ldots) = 0.\]
+Die Addition ist kommutativ, denn
+\[(a_k) + (b_k) = (a_k + b_k) = (b_k + a_k) = (b_k) + (a_k).\]
+Die Addition ist assoziativ, denn
+\begin{align*}
+((a_k) + (b_k)) + (c_k) &= (a_k + b_k) + (c_k) = (a_k + b_k + c_k)\\
+&= (a_k) + (b_k + c_k) = (a_k) + ((b_k) + (c_k)).
+\end{align*}
+Die Multiplikation ist kommutativ, denn mit Korollar \ref{sum-rev}
+findet sich
+\begin{gather*}
+\textstyle (a_k)(b_k) = (\sum_{i=0}^k a_i b_{k-i})
+= (\sum_{i=0}^k a_{k-i}b_{k-(k-i)})
+= (\sum_{i=0}^k b_i a_{k-i}) = (b_k)(a_k).
+\end{gather*}
+\end{Beweis}
+Die Multiplikation ist assoziativ, denn
+\begin{gather*}
+\textstyle
+((a_k)(b_k))(c_k) = (\sum_{i=0}^k\sum_{j=0}^k a_i b_j[k{=}i{+}j])(c_k)\\
+\textstyle
+= \sum_{i'=0}^k\sum_{j'=0}^k\sum_{i=0}^{i'}\sum_{j=0}^{i'} a_i b_j c_{j'}[i'{=}i{+}j][k{=}i'{+}j']\\
+\textstyle
+= \sum_{j'=0}^k\sum_{i=0}^{k-j'}\sum_{j=0}^{k-j'} a_i b_j c_{j'}[k{=}i{+}j{+}j']\\
+\textstyle
+= \sum_{j'=0}^k\sum_{i=0}^k\sum_{j=0}^k a_i b_j c_{j'}[k{=}i{+}j{+}j'].
+\end{gather*}
+Die letzte Gleichung wird klar durch die Überlegung
+\[i > k-j'\iff i > i+j+j'-j'\iff i > i+j \iff 0 > j\iff j < 0.\]
+Das Distributivgesetz ist erfüllt, denn
+\begin{gather*}
+\textstyle (c_k)((a_k)+(b_k)) =  (c_k)(a_k + b_k)
+= (\sum_{i=0}^k c_i (a_{k-i} + b_{k-i}))\\
+\textstyle
+= (\sum_{i=0}^k c_i a_{k-i} + \sum_{i=0}^k c_i b_{k-i})
+= (\sum_{i=0}^k c_i a_{k-i}) + (\sum_{i=0}^k c_i b_{k-i})\\
+\textstyle
+= (c_k)(a_k) + (c_k)(b_k).
+\end{gather*}
+Das Einselement ist $a_k=[k=0]$, also $(a_k) = (1,0,0,0,\ldots)$.\,\qedsymbol
+
+\begin{Definition}[Formale Potenzreihen in zwei Variablen]\newlinefirst
+Man definiert $R[[X,Y]]:=R[[X]][[Y]]$.
+\end{Definition}
+
+\begin{Definition}[Exponentialreihe] Man definiert
+\[\exp(X) := \sum_{k=0}^\infty \frac{X^k}{k!}.\]
+\end{Definition}
+
+\begin{Korollar}
+Es gilt $\exp(X+Y) = \exp(X)\exp(Y)$.
+\end{Korollar}
+\begin{Beweis}
+Mit der kurzen Vorbetrachtung
+$\frac{1}{n!}\binom{n}{k} = \frac{1}{n!}\frac{n!}{k!(n-k)!} = \frac{1}{k!(n-k)!}$
+findet sich
+\begin{align*}
+\exp(X+Y) &= \sum_{n=0}^\infty\frac{(X+Y)^n}{n!}
+= \sum_{n=0}^\infty\frac{1}{n!}\sum_{k=0}^n\binom{n}{k}X^k Y^{n-k}
+= \sum_{n=0}^\infty\sum_{k=0}^n\frac{X^k}{k!}\frac{Y^{n-k}}{(n-k)!}\\
+&= \bigg(\sum_{n=0}^\infty\frac{X^n}{n!}\bigg)
+\bigg(\sum_{n=0}^\infty\frac{Y^n}{n!}\bigg)
+= \exp(X)\exp(Y).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
