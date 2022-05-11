@@ -3,7 +3,7 @@
 
 \section{Endliche Mengen}
 
-\subsection{Indiktatorfunktion}
+\subsection{Indikatorfunktion}
 
 \begin{Definition}[Iverson-Klammer]\newlinefirst
 Für eine Aussage $A$ der klassischen Aussagenlogik definiert man
@@ -58,6 +58,37 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 &= \sum_{x\in G} 1_A(x) + \sum_{x\in G} 1_B(x) - \sum_{x\in G} 1_{A\cap B}(x)
 = |A| + |B| - |A\cap B|.\,\qedsymbol
 \end{align*}
+\end{Beweis}
+
+\newpage
+\subsection{Endliche Abbildungen}
+
+\begin{Definition}[Fakultät]\label{def:factorial}
+Man definiert rekursiv
+\[0! := 1,\quad (n+1)! := (n+1)n!.\]
+\end{Definition}
+
+\begin{Satz}[Anzahl der Bijektionen]\newlinefirst
+Seien $X,Y$ endliche Mengen, wobei $|X|=|Y|=n$ gelte.
+Die Menge der Bijektionen $X\to Y$ enthält $n!$ Elemente.
+\end{Satz}
+\begin{Beweis} Induktion über $n$. Im Anfang $n=0$ ist $X=\emptyset$
+und $Y=\emptyset$. Es existiert genau eine Bijektion
+$\emptyset\to\emptyset$, nämlich die leere Abbildung.
+Bei der Fakultät gilt ebenfalls $0! = 1$ laut
+Def. \ref{def:factorial}.
+
+Zum Induktionsschritt. Induktionsvoraussetzung sei die Gültigkeit für
+$n-1$. Es sei $|X|=n$. Gesucht ist die Anzahl der Möglichkeiten zur
+Festlegung der Bijektion $f\colon X\to Y$. Sei $x\in X$ fest. Für
+die Festlegung $f(x)=y$ bestehen genau $n$ Möglichkeiten, nämlich
+so viele, wie es Elemente $y\in Y$ gibt. Bei der Festlegung der übrigen
+Werte entfällt $y$ aufgrund der Injektivität von $f$. Für die Festlegung
+betrachtet man $f$ daher als Bijektion%
+\[f\colon X\setminus\{x\}\to Y\setminus\{y\},\]
+von denen es laut Voraussetzung $(n-1)!$ gibt. Wir haben also
+$n$ mal $(n-1)!$ Möglichkeiten, was gemäß Def. \ref{def:factorial}
+gleich $n!$ ist.\,\qedsymbol
 \end{Beweis}
 
 \newpage
@@ -549,11 +580,11 @@ Für $x\in\R$ definiert man
 \begin{Korollar}\label{floor-add-int}
 Für jede ganze Zahl $k$ gilt $\lfloor k + x\rfloor = k + \lfloor x\rfloor$.
 \end{Korollar}
-\begin{Beweis} Für $y\in\Z$ ist aufgrund der Prämisse auch $y-k\in\Z$.
-Unter dieser Gegebenheit findet sich bezüglich Def. \ref{def:floor}
-die äquivalente Umformung
+\begin{Beweis} Aufgrund der Prämisse $k\in\Z$ ist $y\in\Z$ äquivalent
+zu $y-k\in\Z$. Unter dieser Gegebenheit findet sich mit
+Def. \ref{def:floor} die äquivalente Umformung
 \begin{align*}
-y = \lfloor k+x\rfloor &\iff 0\le (k+x)-y < 1\iff 0\le x-(y-k) < 1\\
+y = \lfloor k+x\rfloor &\iff y\in\Z\land 0\le (k+x)-y < 1\iff y-k\in\Z\land 0\le x-(y-k) < 1\\
 &\iff y - k = \lfloor x\rfloor \iff y = k + \lfloor x\rfloor.\,\qedsymbol
 \end{align*}
 \end{Beweis}

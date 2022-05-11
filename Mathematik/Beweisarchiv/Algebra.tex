@@ -524,3 +524,63 @@ findet sich
 \end{align*}
 \end{Beweis}
 
+\begin{Definition}[Reihen der Hyperbelfunktionen] Man definiert
+\begin{gather*}
+\cosh(X) := \sum_{k=0}^\infty \frac{X^k}{(2k)!},\quad
+\sinh(X) := \sum_{k=0}^\infty \frac{X^{2k+1}}{(2k+1)!}.
+\end{gather*}
+\end{Definition}
+
+\begin{Korollar}[Paritätszerlegung der Exponentialreihe]%
+\label{exp-parity}\newlinefirst
+Es gilt $\exp(X)=\cosh(X)+\sinh(X)$.
+\end{Korollar}
+\begin{Beweis}
+Mit der Zerlegung $1 = [k\in 2\Z] + [k\in 2\Z+1]$ findet sich
+\begin{align*}
+\exp(X) &= \sum_{k=0}^\infty\frac{X^k}{k!}
+= \sum_{k=0}^\infty\frac{X^k}{k!}[k\in 2\Z] + \sum_{k=0}^\infty\frac{X^k}{k!}[k\in 2\Z+1]\\
+&= \sum_{k=0}^\infty\frac{X^{2k}}{(2k)!}
++ \sum_{k=0}^\infty\frac{X^{2k+1}}{(2k+1)!}
+= \cosh(X) + \sinh(X).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\newpage
+\begin{Definition}[Reihen der Winkelfunktionen] Man definiert
+\begin{gather*}
+\cos(X) := \sum_{k=0}^\infty (-1)^k\frac{X^k}{(2k)!},\quad
+\sin(X) := \sum_{k=0}^\infty (-1)^k\frac{X^k}{(2k+1)!}.
+\end{gather*}
+\end{Definition}
+
+\begin{Korollar}\label{cosh-sinh-imag-arg}
+Es gilt $\cosh(\ui X) = \cos(X)$ und $\sinh(\ui X) = \ui\sin(X)$,\\
+wobei $\ui$ die imaginäre Einheit ist.
+\end{Korollar}
+\begin{Beweis}
+Aufgrund $\ui^2=-1$ gilt $\ui^{2k} = (-1)^k$ und $\ui^{2k+1} = (-1)^k\ui$.
+Hiermit findet sich
+\begin{gather*}
+\cosh(\ui X) = \sum_{k=0}^\infty\frac{(\ui X)^{2k}}{(2k)!}
+= \sum_{k=0}^\infty\frac{\ui^{2k} X^{2k}}{(2k)!}
+= \sum_{k=0}^\infty (-1)^k\frac{X^{2k}}{(2k)!} = \cos(X),\\
+\sinh(\ui X) = \sum_{k=0}^\infty\frac{(\ui X)^{2k+1}}{(2k+1)!}
+= \sum_{k=0}^\infty\frac{\ui^{2k+1} X^{2k+1}}{(2k+1)!}
+= \ui\sum_{k=0}^\infty (-1)^k\frac{X^{2k+1}}{(2k+1)!}
+= \ui\sin(X).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Korollar}[Eulersche Formel]\newlinefirst
+Es gilt $\exp(\ui X) = \cos(X)+\ui\sin(X)$, wobei $\ui$ die
+imaginäre Einheit ist.
+\end{Korollar}
+\begin{Beweis}
+Man findet
+\[\exp(\ui X) \stackrel{\text{(1)}}= \cosh(\ui X) + \sinh(\ui X)
+\stackrel{\text{(2)}}= \cos(X)+\ui\sin(X).\]
+Die Überlegung zu (1) verläuft auf direkte Weise analog zu der von
+Korollar \ref{exp-parity}. Die Umformung (2) gilt gemäß Korollar
+\ref{cosh-sinh-imag-arg}.\,\qedsymbol
+\end{Beweis}
