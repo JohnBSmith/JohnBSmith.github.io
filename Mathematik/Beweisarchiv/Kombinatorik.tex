@@ -63,6 +63,26 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \newpage
 \subsection{Endliche Abbildungen}
 
+\begin{Satz}[Anzahl der Abbildungen]\newlinefirst
+Seien $X,Y$ endliche Mengen mit $|X| = k$ und $|Y|=n$. Die Menge
+der Abbildungen $X\to Y$ enthält $n^k$ Elemente.
+\end{Satz}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ ist $X=\emptyset$. Es gibt genau
+eine Abbildung $\emptyset\to Y$, nämlich die leere Abbildung.
+Gleichermaßen ist $n^0=1$.
+
+Zum Induktionsschritt. Induktionsvoraussetzung sei die Gültigkeit
+für $k-1$. Es  sei $|X|=k$ und $|Y|=n$. Gesucht ist die Anzahl
+der Möglichkeiten zur Festlegung der Abbildung $f\colon X\to Y$.
+Sei $x\in X$ fest. Für die Festlegung $f(x)=y$ bestehen nun genau $n$
+Möglichkeiten, nämlich so viele, wie es Elemente $y\in Y$ gibt.
+Für die Festlegung der übrigen Werte betrachtet man $f$ als Abbildung%
+\[f\colon X\setminus\{x\}\to Y,\]
+von denen es laut Voraussetzung $n^{k-1}$ gibt. Wir haben also
+$n$ mal $n^{k-1}$ Möglichkeiten, das sind $n^k$.\,\qedsymbol
+\end{Beweis}
+
 \begin{Definition}[Fakultät]\label{def:factorial}
 Man definiert rekursiv
 \[0! := 1,\quad (n+1)! := (n+1)n!.\]
@@ -72,7 +92,8 @@ Man definiert rekursiv
 Seien $X,Y$ endliche Mengen, wobei $|X|=|Y|=n$ gelte.
 Die Menge der Bijektionen $X\to Y$ enthält $n!$ Elemente.
 \end{Satz}
-\begin{Beweis} Induktion über $n$. Im Anfang $n=0$ ist $X=\emptyset$
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ ist $X=\emptyset$
 und $Y=\emptyset$. Es existiert genau eine Bijektion
 $\emptyset\to\emptyset$, nämlich die leere Abbildung.
 Bei der Fakultät gilt ebenfalls $0! = 1$ laut
@@ -90,6 +111,104 @@ von denen es laut Voraussetzung $(n-1)!$ gibt. Wir haben also
 $n$ mal $(n-1)!$ Möglichkeiten, was gemäß Def. \ref{def:factorial}
 gleich $n!$ ist.\,\qedsymbol
 \end{Beweis}
+
+\begin{Satz}[Anzahl der Injektionen]\newlinefirst
+Seien $X,Y$ endliche Mengen, wobei $|X|=k$ und $|Y|=n$ gelte.
+Die Menge der Injektionen $X\to Y$ enthält $n^{\underline k}$
+Elemente.
+\end{Satz}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ ist $X=\emptyset$. Es gibt
+genau eine Injektion $\emptyset\to Y$, nämlich die leere Abbildung.
+Gleichermaßen gilt $n^{\underline 0} = 1$.
+
+Zum Schritt. Voraussetzung sei die Gültigkeit
+für $k-1$. Es sei $|X|=k$ und $|Y|=n$. Gesucht ist die Anzahl
+der Möglichkeiten zur Festlegung der Injektion $f\colon X\to Y$.
+Sei $x\in X$ fest. Für die Festlegung $f(x)=y$ bestehen genau
+$n$ Möglichkeiten, nämlich so viele, wie es Elemente $y\in Y$ gibt.
+Bei der Festlegung der übrigen entfällt $y$ aufgrund der Injektivität
+von $f$. Für die Festlegung betrachtet man $f$ daher als Injektion%
+\[f\colon X\setminus\{x\}\to Y\setminus\{y\},\]
+von denen es laut Voraussetzung $(n-1)^{\underline{k-1}}$ gibt. Es sind
+also $n$ mal $(n-1)^{\underline{k-1}}$ Möglichkeiten, was gleich
+$n^{\underline k}$ ist.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{bijection-from-k-subsets-to-orbits}
+Seien $X,Y$ endliche Mengen und sei $|X|=k$. Sei $C_k(Y)$
+die Menge der $k$-elementigen Teilmengen von $Y$. Für zwei
+Injektionen $X\to Y$ sei ferner die Äquivalenzrelation
+\[f\sim g \defiff \exists\pi\in S_k\colon f=g\circ \pi\]
+definiert, wobei mit den $\pi\in S_k$ Permutationen gemeint sind.
+Zwischen der Quotientenmenge $\operatorname{Inj}(X, Y)/S_k$
+und $C_k(Y)$ besteht eine kanonische Bijektion.
+\end{Satz}
+\begin{Beweis}
+Wir definieren diese Bijektion als
+\[\varphi\colon \operatorname{Inj}(X, Y)/S_k\to C_k(Y),
+\quad \varphi([f]) := f(X),\]
+wobei $[f]=f\circ S_k$ die Äquivalenzklasse des Repräsentanten $f$
+bezeichne. Sie ist wohldefiniert, denn für $f\sim g$ gilt
+\[f(X) = (g\circ\pi)(X) = g(\pi(X)) = g(X).\]
+Für die Injektivität von $\varphi$ ist zu zeigen, dass $f(X) = g(X)$
+die Aussage $[f]=[g]$ impliziert, also die Existenz einer Permutation
+$\pi$ mit $f=g\circ\pi$. Weil $g$ injektiv ist, existiert eine
+Linksinverse $g^{-1}$, so dass wir $\pi:=g^{-1}\circ f$ wählen
+können. Es verbleibt somit die Gleichung $f=g\circ g^{-1}\circ f$ zu
+zeigen. Zwar ist $g^{-1}$ im Allgemeinen keine Rechtsinverse, ihre
+Einschränkung auf $g(X)$ aber schon. Wegen $f(X)=g(X)$ hebt sich
+$g\circ g^{-1}$ daher wie gewünscht auf $f(X)$ weg.
+
+Zur Surjektivität von $\varphi$. Hier ist zu zeigen, dass es zu jeder
+Menge $B\in C_k(Y)$ eine Injektion $f$ mit $f(X)=B$ gibt. Betrachten
+wir sie als Bijektion $f\colon X\to B$. Eine solche besteht,
+weil $X$ und $B$ gleichmächtig sind.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $Y$ eine endliche Menge mit $|Y|=n$ Elementen und sei $C_k(Y)$
+die Menge der $k$-elementigen Teilmengen von $Y$.
+Es gilt $|C_k(Y)| = \binom{n}{k}$.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Sei $X$ eine Menge mit $|X|=k$. Es gilt
+\[|C_k(Y)|
+\stackrel{\text{(1)}}= |\operatorname{Inj}(X,Y)/S_k|
+\stackrel{\text{(2)}}= \frac{|\operatorname{Inj}(X,Y)|}{|S_k|}
+= \frac{n^{\underline k}}{k!} = \binom{n}{k}.\]
+Gleichung (1) gilt hierbei laut Satz
+\ref{bijection-from-k-subsets-to-orbits}.
+Die Einsicht von (2) erhält man mit der folgenden Überlegung.
+Für jede Gruppe $G$ gilt die Bahnformel $|G| = |f\circ G|\cdot |G_f|$.
+Ist nun die Fixgruppe $G_f$ trivial, ist $|G_f|=1$ und
+infolge $|f\circ G|=|G|$. Dies ist bei der symmetrischen Gruppe
+$G=S_k$ der Fall. Aus diesem Grund enthält jede Bahn $f\circ S_k$
+gleich viele Elemente, $|S_k|$ an der Zahl. Weil die Bahnen außerdem
+paarweise disjunkt sind, erhält man die Faktorisierung
+\[|\operatorname{Inj}(X,Y)| = |S_k|\cdot |\operatorname{Inj}(X,Y)/S_k|.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Induktion über $(n, k)$. Im Anfang ist $k=0$ oder $k=n$. Der abstruse
+Fall $k=0$ sucht nach Teilmengen ohne Elemente. Es existiert genau eine
+solche Menge, nämlich die leere Menge, womit $C_0(Y)=1$ ist. Der Fall
+$k=n$ sucht nach Teilmengen, die so viele Elemente haben wie $Y$.
+Dies kann nur $Y$ selbst sein, womit $C_n(Y)=1$ gilt.
+Gleichermaßen gilt $\binom{n}{0}=1$ und $\binom{n}{n}=1$.
+
+Induktionsvoraussetzung sei die Gültigkeit für $(n-1, k-1)$ und
+$(n-1, k)$. Man nimmt nun ein Element $y$ aus $Y$ heraus,
+womit darin $n-1$ verbleiben. Entscheidet man sich,
+$y$ zur Teilmenge hinzuzufügen, verbleiben noch $k-1$ Elemente
+auszuwählen. Entscheidet man sich dagegen, verbleibt die Teilmenge
+unverändert, womit nach wie vor $k$ Elemente auszuwählen sind.
+Die Anzahl der Möglichkeiten ist somit
+\[|C_k(Y)| = |C_{k-1}(Y\setminus\{y\})| + |C_k(Y\setminus\{y\})|
+\stackrel{\mathrm{IV}}=\binom{n-1}{k-1} + \binom{n-1}{k}
+= \binom{n}{k}.\,\qedsymbol\]
+\end{Beweis}
+
+
 
 \newpage
 \section{Endliche Summen}
