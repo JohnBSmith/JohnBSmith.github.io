@@ -675,6 +675,38 @@ x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
+\begin{Korollar}
+Die Relation \emph{Teilmenge von} ist eine Partialordnung.
+Im Einzelnen gilt
+\begin{align*}
+\text{(1)}\;\;& A\subseteq A, && \text{(Reflexivität)}\\
+\text{(2)}\;\;& A\subseteq B\land B\subseteq A \implies A = B, && \text{(Antisymmetrie)}\\
+\text{(3)}\;\;& A\subseteq B\land B\subseteq C \implies A\subseteq C. && \text{(Transitivität)}
+\end{align*}
+\end{Korollar}
+\begin{Beweis}
+Jeweils Def. \ref{def:subseteq} nutzen.
+
+Zu (1). Die Aussage $A\subseteq A$ ist 
+äquivalent zu $\forall x\colon (x\in A\Rightarrow x\in A)$.
+Eine Prämisse impliziert sich im Allgemeinen selbst.
+
+Zu (2). Es findet sich die äquivalente Umformung
+\begin{gather*}
+A\subseteq B\land B\subseteq A\iff
+(\forall x\colon x\in A\Rightarrow x\in B)
+\land (\forall x\colon x\in B\Rightarrow x\in A)\\
+\iff (\forall x\colon (x\in A\Rightarrow x\in B)\land (x\in B\Rightarrow x\in A))
+\iff (\forall x\colon (x\in A\Leftrightarrow x\in B))\\
+\iff A = B.
+\end{gather*}
+
+Zu (3). Zu zeigen ist $\forall x\colon (x\in A\Rightarrow x\in C)$.
+Sei $x\in A$ fest, aber beliebig. Wegen $A\subseteq B$ muss $x\in B$
+sein. Wegen $B\subseteq C$ muss infolge $x\in C$ sein.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Relationen}\index{Relation}
 \begin{Definition}[rel: Relation]\newlinefirst
 Zu zwei Mengen $X,Y$ bezeichnet man

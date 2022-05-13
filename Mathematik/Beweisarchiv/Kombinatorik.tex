@@ -60,6 +60,20 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \end{align*}
 \end{Beweis}
 
+\begin{Korollar}
+Für endliche Mengen $A,B$ mit $A\subseteq B$ gilt $|A|\le |B|$.
+\end{Korollar}
+\begin{Beweis}
+Mithilfe der Indiktorfunktion findet sich
+\begin{gather*}
+A\subseteq B \iff (\forall x\colon 1_A(x)\le 1_B(x))
+\iff (\forall x\colon 0\le 1_B(x)-1_A(x))\\
+\implies 0\le \sum_{x\in B}(1_B(x)-1_A(x))
+= \sum_{x\in B} 1_B(x) - \sum_{x\in B} 1_A(x) = |B| - |A|\\
+\implies |A|\le |B|.\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
 \newpage
 \subsection{Endliche Abbildungen}
 
@@ -82,11 +96,6 @@ Für die Festlegung der übrigen Werte betrachtet man $f$ als Abbildung%
 von denen es laut Voraussetzung $n^{k-1}$ gibt. Wir haben also
 $n$ mal $n^{k-1}$ Möglichkeiten, das sind $n^k$.\,\qedsymbol
 \end{Beweis}
-
-\begin{Definition}[Fakultät]\label{def:factorial}
-Man definiert rekursiv
-\[0! := 1,\quad (n+1)! := (n+1)n!.\]
-\end{Definition}
 
 \begin{Satz}[Anzahl der Bijektionen]\newlinefirst
 Seien $X,Y$ endliche Mengen, wobei $|X|=|Y|=n$ gelte.
@@ -135,6 +144,7 @@ also $n$ mal $(n-1)^{\underline{k-1}}$ Möglichkeiten, was gleich
 $n^{\underline k}$ ist.\,\qedsymbol
 \end{Beweis}
 
+\newpage
 \begin{Satz}\label{bijection-from-k-subsets-to-orbits}
 Seien $X,Y$ endliche Mengen und sei $|X|=k$. Sei $C_k(Y)$
 die Menge der $k$-elementigen Teilmengen von $Y$. Für zwei
@@ -166,8 +176,8 @@ wir sie als Bijektion $f\colon X\to B$. Eine solche besteht,
 weil $X$ und $B$ gleichmächtig sind.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}
-Sei $Y$ eine endliche Menge mit $|Y|=n$ Elementen und sei $C_k(Y)$
+\begin{Satz}[Anzahl der Kombinationen]\newlinefirst
+Sei $Y$ eine $|Y|=n$ Elemente enthaltende endliche Menge und $C_k(Y)$
 die Menge der $k$-elementigen Teilmengen von $Y$.
 Es gilt $|C_k(Y)| = \binom{n}{k}$.
 \end{Satz}
@@ -691,9 +701,16 @@ Im ungeraden Fall $n=2k+1$ bestätigt sich
 
 \section{Funktionen}
 
+\subsection{Floor und Ceil}
+
 \begin{Definition}[Floorfunktion]\label{def:floor}
 Für $x\in\R$ definiert man
 \[y = \lfloor x\rfloor\defiff y\in\Z\land 0\le x-y < 1.\]
+\end{Definition}
+
+\begin{Definition}[Ceilfunktion]\label{def:ceil}
+Für $x\in\R$ definiert man
+\[y = \lceil x\rceil\defiff y\in\Z\land 0\le y-x < 1.\]
 \end{Definition}
 
 \begin{Korollar}\label{floor-add-int}
@@ -715,3 +732,99 @@ Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
 Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
 \end{Beweis}
 
+\newpage
+\subsection{Faktorielle}
+
+\begin{Definition}[Fakultät]%
+\label{def:factorial}\newlinefirst
+Für eine nichtnegative ganze Zahl $n$ definiert man $n!$ rekursiv durch
+\[0! := 1,\quad (n+1)! := (n+1)n!.\]
+\end{Definition}
+
+\begin{Definition}[Fallende Faktorielle]%
+\label{def:falling-factorial}\newlinefirst
+Für $k\in\Z_{\ge 0}$ und $n\in\Z$ (oder allgemeiner $n\in\C$)
+definiert man $n^{\underline k}$ rekursiv durch
+\[n^{\underline 0} := 1,\quad n^{\underline {k+1}}:=n(n-1)^{\underline k}.\]
+\end{Definition}
+
+\begin{Definition}[Steigende Faktorielle]%
+\label{def:raising-factorial}\newlinefirst
+Für $k\in\Z_{\ge 0}$ und $n\in\Z$ (oder allgemeiner $n\in\C$)
+definiert man $n^{\overline k}$ rekursiv durch
+\[n^{\overline 0} := 1,\quad n^{\overline {k+1}}:=n(n+1)^{\underline k}.\]
+\end{Definition}
+
+\begin{Korollar}\label{relation-ff-factorial}
+Für $n,k\in\Z_{\ge 0}$ und $k\le n$ gilt
+\[n^{\underline k} = \frac{n!}{(n-k)!}.\]
+\end{Korollar}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ resultieren beide Seiten der
+Gleichung im gleichen Wert~1. Der Induktionsschritt ist
+\[n^{\underline k} = n(n-1)^{\underline{k-1}}
+\stackrel{\text{IV}}= n\frac{(n-1)!}{((n-1)-(k-1))!}
+= \frac{n(n-1)!}{(n-k)!}
+= \frac{n!}{(n-1)!}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Für ganze Zahlen $n,k$ mit $n\ge 1$ und $k\ge 1-n$ gilt
+\[n^{\overline k} = \frac{(n+k-1)!}{(n-1)!}.\]
+\end{Korollar}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ resultieren beide Seiten der
+Gleichung im gleichen Wert~1. Der Induktionsschritt ist
+\begin{align*}
+n^{\overline k} &= n(n+1)^{\overline{k-1}}
+\stackrel{\text{IV}}= n\frac{(n+1+k-1-1)!}{(n+1-1)!}
+= \frac{n(n+k-1)!}{n!}\\
+&= \frac{n(n+k-1)!}{n(n-1)!}
+= \frac{(n+k-1)!}{(n-1)!}.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\newpage
+\subsection{Binomialkoeffizient}
+
+\begin{Definition}[Binomialkoeffizient]\label{def:binom}\newlinefirst
+Für $k\in\Z_{\ge 0}$ und $n\in\Z$ (oder allgemeiner $n\in\C$)
+definiert man
+\[\binom{n}{k} := \frac{n^{\underline k}}{k!}.\]
+\end{Definition}
+
+\begin{Korollar}
+Für $n\in\Z$ mit $k\le n$ gilt
+\[\binom{n}{k} = \frac{n!}{k!(n-k)!}\]
+\end{Korollar}
+\begin{Beweis}
+Folgt direkt aus Def. \ref{def:binom} und Korollar
+\ref{relation-ff-factorial}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Für $k\ge 1$ und $n\in\Z$ (oder allgemeiner $n\in\C$) gilt
+\[\binom{n}{k} = \frac{n}{k}\binom{n-1}{k-1}.\]
+\end{Korollar}
+\begin{Beweis}
+Es findet sich die Umformung
+\[\binom{n}{k} = \frac{n^{\underline k}}{k!}
+= \frac{n(n-1)^{\underline {k-1}}}{k(k-1)!}
+= \frac{n}{k}\binom{n-1}{k-1}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Für $k\ge 1$ und $n\in\Z$ (oder allgemeiner $n\in\C$) gilt
+\[\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich die Umformung
+\begin{align*}
+\binom{n-1}{k-1} + \binom{n-1}{k}
+&= \frac{(n-1)^{\underline{k-1}}}{(k-1)!} + \frac{(n-1)^{\underline k}}{k!}
+= \frac{k(n-1)^{\underline{k-1}}}{k!} + \frac{(n-1)^{\underline{k-1}}(n-k)}{k!}\\
+&= \frac{(n-1)^{\underline{k-1}}}{k!}(k + n -k)
+= \frac{n(n-1)^{\underline{k-1}}}{k!}
+= \frac{n^{\underline k}}{k!} = \binom{n}{k}.\,\qedsymbol
+\end{align*}
+\end{Beweis}
