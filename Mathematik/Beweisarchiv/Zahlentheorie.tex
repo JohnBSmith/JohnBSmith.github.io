@@ -55,7 +55,7 @@ $a\mid b$ und $b\mid c$ impliziert $a\mid c$.
 Unter Nutzung von Korollar \ref{divisor-divisor-subset}
 nimmt die Aussage die Gestalt
 \[T(a)\subseteq T(b)\land T(b)\subseteq T(c)\implies T(a)\subseteq T(c)\]
-an. Diese Aussage ist nun aber offenkunding, da die Relation »ist
+an. Diese Aussage ist nun aber offenkundig, da die Relation »ist
 Teilmenge von« eine transitive ist.\,\qedsymbol
 \end{Beweis}
 
@@ -192,3 +192,45 @@ Nun gilt
 \[n^2 = (2k+1)^2 = 4k^2 + 4k + 1 = 2(2k^2 + 2k) + 1,\]
 wonach $n^2$ ebenfalls ungerade sein muss.\,\qedsymbol
 \end{Beweis}
+
+\section{Primzahlen}
+
+\begin{Definition}[Teilerfunktion]\newlinefirst
+Für eine positive ganze Zahl $n$ definiert man
+\[\sigma_k(n) := \sum_{d\mid n} d^k,\]
+wobei mit $d\mid n$ die positiven Teiler $d\in T_{\ge 1}(n)$ gemeint
+sind.
+\end{Definition}
+
+\begin{Definition}[Primzahl]\newlinefirst
+Eine positive ganze Zahl $n$ wird Primzahl genannt, wenn sie
+zwei unterschiedliche positive Teiler besitzt, womit $\sigma_0(n)=2$
+gemeint ist.
+\end{Definition}
+
+\begin{Korollar}
+Eine Zahl $n$ ist genau dann eine Primzahl, wenn $n\ge 2$ ist und
+ihre einzigen beiden positiven Teiler 1 und $n$ selbst sind.
+\end{Korollar}
+\begin{Beweis}
+Jede ganze Zahl besitzt 1 und sich selbst als Teiler. Somit muss
+$\sigma_0(n)=2$ für $n\ge 2$ äquivalent zu $T_{\ge 1}(n)=\{1,n\}$
+sein.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Satz des Euklid]
+Es gibt unendlich viele Primzahlen.
+\end{Satz}
+\begin{Beweis}[Klassischer Beweis]
+Sei $M=\{p_1,\ldots,p_n\}$ eine endliche Menge von Primzahlen.
+Es wird gezeigt, dass eine weitere Primzahl $p\notin M$ existiert.
+Man bilde dazu das Produkt $m=\prod_{k=1}^n p_k$. Nun ist $m+1$ entweder
+prim oder nicht. Falls $m+1$ prim ist, ist mit $p=m+1$ eine weitere
+Primzahl gefunden. Sei also $m+1$ nicht prim, womit mindestens
+ein Primfaktor $p$ enthalten ist. Angenommen, es wäre $p=p_k$ für eines
+der $k$. Dann gälte $p_k\mid m+1$. Es gilt gemäß Konstruktion von $m$
+aber auch $p_k\mid m$. Ergo wäre $p_k$ ebenso ein Teiler der
+Differenz $(m+1)-m = 1$. Das ist absurd, weil keine Primzahl
+ein Teiler der Zahl~1 ist.\,\qedsymbol
+\end{Beweis}
+

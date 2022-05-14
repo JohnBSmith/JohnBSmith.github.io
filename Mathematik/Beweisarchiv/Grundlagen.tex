@@ -423,7 +423,7 @@ Diskursuniversum gilt:
 \end{Satz}
 \begin{Beweis}[Beweis]
 Nach \ref{general-dl} (general-dl) gilt:
-\[\exists x\colon P \equiv \exists x\colon 1\land P
+\[\exists x\colon P \equiv \exists x\colon (1\land P)
 \equiv (\exists x\colon 1)\land P\equiv 1\land P\equiv P.\]
 Im vorletzten Schritt wurde dabei ausgenutzt, dass
 für ein nichtleeres Diskursuniversum immer $(\exists x\colon 1)\equiv 1$
@@ -439,7 +439,7 @@ Es gilt
 Nach Def. \ref{def:bounded} (bounded) und Satz
 \ref{general-dl} (general-dl) gilt:
 \begin{gather*}
-\exists x{\in}M\colon P \equiv \exists x\colon x\in M\land P
+\exists x{\in}M\colon P \equiv \exists x\colon (x\in M\land P)
 \equiv (\exists x\colon x\in M)\land P\equiv (M\ne\emptyset)\land P.\,\qedsymbol
 \end{gather*}
 \end{Beweis}
@@ -677,11 +677,11 @@ Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
 
 \begin{Korollar}
 Die Relation \emph{Teilmenge von} ist eine Partialordnung.
-Im Einzelnen gilt
+Im Einzelnen gilt%
 \begin{align*}
-\text{(1)}\;\;& A\subseteq A, && \text{(Reflexivität)}\\
-\text{(2)}\;\;& A\subseteq B\land B\subseteq A \implies A = B, && \text{(Antisymmetrie)}\\
-\text{(3)}\;\;& A\subseteq B\land B\subseteq C \implies A\subseteq C. && \text{(Transitivität)}
+\text{(1)}\quad & A\subseteq A, && \text{(Reflexivität)}\\
+\text{(2)}\quad & A\subseteq B\land B\subseteq A \implies A = B, && \text{(Antisymmetrie)}\\
+\text{(3)}\quad & A\subseteq B\land B\subseteq C \implies A\subseteq C. && \text{(Transitivität)}
 \end{align*}
 \end{Korollar}
 \begin{Beweis}
@@ -706,8 +706,30 @@ Sei $x\in A$ fest, aber beliebig. Wegen $A\subseteq B$ muss $x\in B$
 sein. Wegen $B\subseteq C$ muss infolge $x\in C$ sein.\,\qedsymbol
 \end{Beweis}
 
+\begin{Korollar}
+Die Aussage $A\subseteq B$ ist äquivalent zu $1_A\le 1_B$.
+\end{Korollar}
+\begin{Beweis}
+Es gelte $A\subseteq B$. Um $\forall x\colon 1_A(x)\le 1_B(x)$ zu
+zeigen, wird eine Fallunterscheidung in drei Fälle vorgenommen.
+Sei $x\notin B$. Dann ist $x\notin A$
+und daher $1_A(x)=0$ und $1_B(x)=0$, womit $1_A(x)\le 1_B(x)$ gilt.
+Sei $x\in A$. Dann ist $x\in B$, und daher $1_A(x)=1$ und $1_B(x)=1$,
+womit $1_A(x)\le 1_B(x)$ gilt.
+Sei $x\notin A$, aber $x\in B$. Dann ist $1_A(x)=0$ und $1_B(x)=1$,
+womit $1_A(x)\le 1_B(x)$ gilt.
+
+Es gelte $\forall x\colon 1_A(x)\le 1_B(x)$. Sei $x\in A$ fest,
+aber beliebig. Wegen $1_A(x)=1$ ist $1\le 1_B(x)$. Weil somit
+$1_B(x)\ne 0$ ist, verbleibt nur noch $1_B(x)=1$, was
+gleichbedeutend mit $x\in B$ ist.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Relationen}\index{Relation}
+
+\subsection{Allgemeine Gesetzmäßigkeiten}
+
 \begin{Definition}[rel: Relation]\newlinefirst
 Zu zwei Mengen $X,Y$ bezeichnet man
 jede Menge $R\subseteq X\times Y$ als Relation.
@@ -745,6 +767,102 @@ Infolge ist $x\in A\setminus B$. Somit bezeugt $x$ die
 Existenzaussage auf der rechten Seite.\,\qedsymbol
 \end{Beweis}
 
+\subsection{Äquivalenzrelationen}
+
+\begin{Definition}[Äquivalenzrelation]\newlinefirst
+Sei $M$ eine Menge. Man nennt $R\subseteq M\times M$, notiert als
+$R(x,y) = (x\sim y)$, eine Äquivalenzrelation auf $M$, wenn für alle
+$x,y,z\in M$ erfüllt ist:%
+\begin{align*}
+& x\sim x, && \text{(Reflexivität)}\\
+& x\sim y\implies y\sim x, && \text{(Symmetrie)}\\
+& x\sim y\land y\sim z\implies x\sim y. && \text{(Transitivität)}
+\end{align*}
+\end{Definition}
+
+\begin{Definition}[Äquivalenzklasse]\newlinefirst
+Sei $M$ eine Menge und $x\sim y$ eine Äquivalenzrelation für $x,y\in M$.
+Die Menge%
+\[[a] := \{x\in M\mid x\sim a\}\]
+nennt man Äquivalenzklasse zum Repräsentanten $a\in M$.
+\end{Definition}
+
+\begin{Definition}[Quotientenmenge]\newlinefirst
+Die Menge $M/{\sim} := \{A\mid \exists a\in M\colon A = [a]\}$
+aller Äquivalenzklassen heißt Quotientenmenge von $M$ bezüglich der
+Äquivalenzlation ${\sim}$.
+\end{Definition}
+
+\begin{Definition}[Quotientenabbildung]\newlinefirst
+Die Abbildung $\pi\colon M\to M/{\sim}$ mit $\pi(x):=[x]$
+heißt Quotientenabbildung.
+\end{Definition}
+
+\begin{Korollar}[Äquivalenzrelation induziert disjunkte Zerlegung]\newlinefirst
+Eine Menge wird durch eine auf ihr definierte Äquivalenzrelation
+in paarweise disjunkte Äquivalenzklassen zerlegt.
+\end{Korollar}
+\begin{Beweis}
+Es ist zu zeigen, dass zwei unterschiedliche Äquivalenzklassen 
+kein Element gemeinsam haben. Wir zeigen die Kontraposition, dass die
+Existenz eines $x$ mit $x\in [a]$ und $x\in [b]$ bereits $[a]=[b]$ impliziert.
+Laut Prämisse ist $x\sim a$ und $x\sim b$, und wegen der Transitivtät
+infolge $a\sim b$, was äquivalent zu $[a]=[b]$ ist.
+
+Zu bestätigen verbleibt noch, dass die Quotientenabbildung eine
+surjektive ist. Dies ist wahr, weil $M/{\sim}$ gerade so definiert ist, 
+dass direkt $M/{\sim}=\pi(M)$ gilt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Disjunkte Zerlegung induziert Äquivalenzrelation]\newlinefirst
+Sei $M$ eine Menge. Die Familie $(A_k)$ der $A_k\subseteq M$ sei
+eine Zerlegung von $M$ in paarweise disjunkte Mengen. Dann definiert
+\[x\sim y\defiff \exists k\colon x\in A_k\land y\in A_k\]
+eine Äquivalenzrelation.
+\end{Korollar}
+\begin{Beweis}
+Da die $A_k$ die Menge $M$ überdecken, muss für jedes $x\in M$
+ein $k$ mit $x\in A_k$ existieren, womit die Reflexivität
+$x\sim x$ erfüllt ist.
+
+Die Symmetrie folgt unmittelbar aus der Kommutativität der Konjunktion.
+
+Zur Transitivität. Seien $x,y,z$ fest, aber beliebig. Zudem seien die
+Prämissen $x\sim y$ und $y\sim z$ erfüllt. Wir haben daher einen Zeugen
+$i$ mit $x\in A_i$ und $y\in A_i$ und einen Zeugen $j$ mit $y\in A_j$
+und $z\in A_j$. Infolge ist $y\in A_i\cap A_j$. Wegen
+$A_i\cap A_j=\emptyset$ für $i\ne j$ muss $i=j$ sein. Deshalb ist
+$i$ ein Zeuge für $\exists i\colon x\in A_i\land z\in A_i$, womit
+$x\sim z$ gilt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Charakterisierung von Äquivalenzklassen]\newlinefirst
+Sei $\sim$ eine Äquivalenzrelation auf der Menge $M$. Eine
+Teilmenge $A\subseteq M$ ist genau dann eine Äquivalenzklasse, wenn%
+\begin{gather*}
+\text{(1)}\quad A\ne\emptyset,\\
+\text{(2)}\quad x,y\in A\implies x\sim y,\\
+\text{(3)}\quad x\in A\land y\in M\land x\sim y\implies y\in A.
+\end{gather*}
+\end{Satz}
+\begin{Beweis}
+Sei $A$ eine Äquivalenzklasse. Dann existiert definitionsgemäß
+ein $a$, so dass $A=[a]$ gilt. Ergo ist $a\in A$, womit
+$A\ne\emptyset$ sein muss. Mit $x,y\in A$ ergibt sich $[x]=[y]$,
+was äquivalent zu $x\sim y$ ist. Sei nun $x\in A$ und $y$ irgendein
+Element in $M$ mit $x\sim y$. Dies bedeutet $A=[x]=[y]$, womit
+$y\in A$ sein muss.
+
+Umgekehrt seien die drei Eigenschaften erfüllt. Zu zeigen ist,
+dass ein Zeuge $a$ mit $A=[a]$ existiert. Weil $A$ gemäß (1)
+nichtleer ist, muss ein Element $a\in A$ existieren. Für jedes
+weitere Element $x\in A$ ergibt sich $x\sim a$ aufgrund (2),
+also $x\in [a]$, womit wir $A\subseteq [a]$ haben.
+Es verbleibt $[a]\subseteq A$ zu zeigen. Sei also $x\in [a]$.
+Wir haben damit die Situation $a\in A$ und $x\sim a$, womit
+laut (3) ebenso $x\in A$ sein muss.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Abbildungen}\index{Abbildung}
 \subsection{Definitionen}
@@ -771,7 +889,7 @@ als Urbildmenge von $B$ unter $f$ bezeichnet.
 
 \begin{Definition}[inj: Injektion]%
 \label{def:inj}\index{Injektion}\newlinefirst
-Eine Abbildung $f\colon X\to Y$ heißt genau dann injektiv, wenn gilt:
+Eine Abbildung $f\colon X\to Y$ heißt genau dann injektiv, wenn gilt:%
 \[\forall x_1\colon \forall x_2\colon (f(x_1)=f(x_2)\implies x_1=x_2)\]
 bzw. äquivalent (Kontraposition)
 \[\forall x_1\colon \forall x_2\colon (x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
@@ -779,13 +897,13 @@ bzw. äquivalent (Kontraposition)
 
 \begin{Definition}[sur: Surjektion]%
 \label{def:sur}\index{Surjektion}\newlinefirst
-Eine Abbildung $f\colon X\to Y$ heißt genau dann surjektiv, wenn gilt:
+Eine Abbildung $f\colon X\to Y$ heißt genau dann surjektiv, wenn gilt:%
 \[Y\subseteq f(X).\]
 \end{Definition}
 
 \begin{Definition}[composition: Verkettung]\label{def:composition}%
 \index{Komposition}\index{Verkettung}\newlinefirst
-Für Abbildungen $f\colon X\to Y$ und $g\colon Y\to Z$ heißt
+Für Abbildungen $f\colon X\to Y$ und $g\colon Y\to Z$ heißt%
 \[(g\circ f)\colon X\to Z,\quad (g\circ f)(x):=g(f(x))\]
 Verkettung von $f$ und $g$, sprich »$g$ nach $f$«.
 \end{Definition}
@@ -794,14 +912,14 @@ Verkettung von $f$ und $g$, sprich »$g$ nach $f$«.
 \begin{Satz}[feq: Gleichheit von Abbildungen]%
 \label{feq}\index{Gleichheit!von Abbildungen}
 Zwei Abbildungen $f\colon X\to Y$ und $g\colon X'\to Y'$ sind genau
-dann gleich, kurz $f=g$, wenn $X=X'$ und $Y=Y'$ und
+dann gleich, kurz $f=g$, wenn $X=X'$ und $Y=Y'$ und%
 \[\forall x\colon f(x)=g(x).\]
 \end{Satz}
 
 \begin{Beweis}
 Nach Definition gilt $f=g$ genau dann, wenn $(G_f,X,Y)=(G_g,X',Y')$,
 was äquivalent zu $G_f=G_g\land X=X'\land Y=Y'$ ist. Nach Def.
-\ref{def:seteq} (seteq) gilt
+\ref{def:seteq} (seteq) gilt%
 \[G_f=G_g\iff \forall t\colon (t\in G_f\Leftrightarrow t\in G_g).\]
 Nach Satz \ref{eq-iff-all-iff} und Def. \ref{def:app} (app) gilt
 \begin{align*}
@@ -843,7 +961,7 @@ f(x)\in A\cup B &\iff (\exists y\colon y\in A\cup B\land y=f(x))\\
 
 \begin{Satz}[preimg-dl: Distributivität der Urbildoperation]%
 \label{preimg-dl}\index{Distributivgesetz!Urbildoperation}\newlinefirst
-Für $f\colon X\to Y$ und beliebige Mengen $M_i$ gilt:
+Für $f\colon X\to Y$ und beliebige Mengen $M_i$ gilt:%
 \begin{align}
 f^{-1}(M_1\cap M_2) &= f^{-1}(M_1)\cap f^{-1}(M_2),\\
 f^{-1}(M_1\cup M_2) &= f^{-1}(M_1)\cup f^{-1}(M_2),\\
@@ -1143,7 +1261,7 @@ was Voraussetzung war.\;\qedsymbol
 
 \begin{Satz}
 Für jede Abbildung $f\colon A\to B$ gilt
-$\exists M(f(M)=N)\iff N\subseteq f(A)$.
+$(\exists M\colon f(M)=N)\iff N\subseteq f(A)$.
 \end{Satz}
 \begin{Beweis}
 Hat man ein $M$ mit $f(M)=N$, dann ist trivialerweise
