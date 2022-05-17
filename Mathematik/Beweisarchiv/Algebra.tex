@@ -584,3 +584,358 @@ Die Überlegung zu (1) verläuft auf direkte Weise analog zu der von
 Korollar \ref{exp-parity}. Die Umformung (2) gilt gemäß Korollar
 \ref{cosh-sinh-imag-arg}.\,\qedsymbol
 \end{Beweis}
+
+\section{Zahlenbereiche}
+
+\subsection{Die natürlichen Zahlen}
+
+\begin{Definition}[Natürliche Zahlen]\newlinefirst
+Man bezeichnet $\N$ bezüglich einer Nachfolgerabbildung $s\colon\N\to\N$
+als die natürlichen Zahlen, wenn die folgenden Axiome erfüllt sind:
+\begin{gather*}
+\text{(P1)}\quad 0\in\N,\\
+\text{(P2)}\quad \text{$s$ ist injektiv},\\
+\text{(P3)}\quad \forall n\in\N\colon s(n)\ne 0,\\
+\text{(P4)}\quad \forall M\colon 0\in M\land (\forall n\in\N\colon n\in M\Rightarrow s(n)\in M)\Rightarrow \N\subseteq M.
+\end{gather*}
+\end{Definition}
+
+\begin{Definition}[Addition natürlicher Zahlen]\newlinefirst
+Man definiert rekursiv
+\[a+0 := a,\quad a + s(b) := s(a + b).\]
+\end{Definition}
+
+\begin{Korollar}
+Mit $1:=s(0)$ gilt $s(a) = a+1$.
+\end{Korollar}
+\begin{Beweis}
+Es findet sich $a+1 = a+s(0) = s(a+0) = s(a)$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}[Assoziativgesetz der Addition]\newlinefirst
+Für alle $a,b,c\in\N$ gilt $(a+b)+c = a+(b+c)$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $c$. Im Anfang $c=0$ gilt
+\[(a+b)+c = (a+b)+0 = a+b = a+(b+0) = a+(b+c).\]
+Zum Schritt. Induktionsvoraussetzung sei $(a+b)+c = a+(b+c)$. Man findet
+\[(a+b)+s(c) = s((a+b)+c) \stackrel{\mathrm{IV}}= s(a+(b+c))
+= a+s(b+c) = a+(b+s(c)).\,\qedsymbol\]
+\end{Beweis}
+
+\newpage
+\begin{Korollar}[Neutrales Element der Addition]%
+\label{nat-zero}\newlinefirst
+Für alle $a\in\N$ gilt $0+a = a+0 = a$.
+\end{Korollar}
+\begin{Beweis}
+Per Definition gilt $a+0=a$. Zu $0+a$ per Induktion über $a$.
+Im Anfang $a=0$ ist $0+a = 0$ per Definition. Zum Schritt.
+Induktionsvorausetzung sei $0+a=a$. Man findet
+\[0+s(a) = s(0+a) \stackrel{\mathrm{IV}}= s(a).\,\qedsymbol\]
+\end{Beweis}
+
+
+\begin{Korollar}[Kommutativgesetz der Addition]\newlinefirst
+Für alle $a,b\in\N$ gilt $a+b = b+a$.
+\end{Korollar}
+\begin{Beweis}
+Zunächst $a+1 = 1+a$ per Induktion über $a$. Im Anfang $a=0$ gilt
+die Aussage gemäß Korollar \ref{nat-zero}. Zum Schritt. Man findet
+\[1+s(a) = s(1+a) \stackrel{\mathrm{IV}}= s(a+1) = a+s(1).\]
+Nun $a+b=b+a$ per Induktion über $b$. Der Fall $b=0$
+gilt gemäß Korollar \ref{nat-zero}. Anfang sei $b=1$. Dieser
+wurde zuvor gezeigt. Zum Schritt. Man findet
+\begin{align*}
+s(b) + a &= (b+1)+a = b+(1+a) = b+(a+1) = b+s(a)\\
+&= s(b+a)\stackrel{\mathrm{IV}}= s(a+b) = a+s(b).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Definition}[Multiplikation natürlicher Zahlen]\newlinefirst
+Man definiert rekursiv
+\[a\cdot 0 := 0,\quad a\cdot s(b) := a\cdot b+a.\]
+\end{Definition}
+
+\begin{Korollar}[Distributivgesetz der Multiplikation]\newlinefirst
+Für alle $a,b,c\in\N$ gilt $(a+b)c = ac+bc$.
+\end{Korollar}
+\begin{Beweis} Induktion über $c$. Im Anfang $c=0$ resultieren
+beide Seiten der Gleichung im Wert~$0$. Zum Schritt. Man findet
+\[(a+b)s(c) = (a+b)c+(a+b) \stackrel{\mathrm{IV}}= ac+bc+a+b = ac+a+bc+b
+= as(c) + bs(c).\qedsymbol\]
+\end{Beweis}
+
+\begin{Lemma}\label{nat-mul-zero}
+Für alle $a\in\N$ gilt $0a=0$.
+\end{Lemma}
+\begin{Beweis}
+Induktion über $a$. Im Anfang $a=0$ ist per Definition $0a=0$.
+Der Schritt ist
+\[0s(a) = 0a+0 \stackrel{\mathrm{IV}}= 0+0 = 0.\]
+\end{Beweis}
+
+\begin{Korollar}\label{nat-mul-one}
+Für alle $a\in\N$ gilt $a\cdot 1=a$ und $1\cdot a=a$.
+\end{Korollar}
+\begin{Beweis}
+Die Formel $a\cdot 1 = a$ folgt unmittelbar aus der Definition
+und bereits bekannten Regeln.
+
+Die Formel $1\cdot a = a$ per Induktion über $a$. Im Anfang $a=0$ folgt
+die Regel unmittelbar aus der Definition. Der Schritt ist
+\[1s(a) = 1a+1 \stackrel{\mathrm{IV}}= a+1 = s(a).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}[Kommutativgesetz der Multiplikation]\newlinefirst
+Für alle $a,b\in\N$ gilt $ab=ba$.
+\end{Korollar}
+\begin{Beweis}
+Induktion über $b$. Im Anfang $b=0$ gilt die Regel gemäß
+Lemma \ref{nat-mul-zero}. Der Schritt ist
+\[as(b) = ab+a \stackrel{\mathrm{IV}}= ba+a = ba + 1a = (b+1)a = s(b)a.\,\qedsymbol\]
+\end{Beweis}
+
+\subsection{Die ganzen Zahlen}
+
+\begin{Definition}[Ganze Zahlen]\newlinefirst
+Man definiert die ganzen Zahlen $\Z$ als Quotientenmenge
+\[\Z := (\N\times\N)/{\sim},\quad (x,y)\sim (x',y')\defiff x+y' = x'+y.\]
+\end{Definition}
+
+\begin{Satz}
+Die Menge $\Z$ bildet bezüglich den wohldefinierten Operationen
+\begin{gather*}
+[(x,y)] + [(x',y')] := [(x+x',y+y')],\\
+[(x,y)]\cdot [(x',y')] := [(xx'+yy',xy'+x'y)]
+\end{gather*}
+einen kommutativen unitären Ring.
+\end{Satz}
+\begin{Beweis}
+Wohldefiniert heißt, dass das Resultat der Operation nicht von den
+gewählten Repräsentanten abhängt. Sei dazu $(x,y)\sim (a,b)$ und
+$(x',y')\sim (a'b')$. Zu zeigen ist%
+\[(x+x',y+y') \sim (a+a',b+b'), \iff x+x'+b+b' = y+y'+a+a'.\]
+Mit den Prämissen gilt $x+b=y+a$ und $x'+b'=y'+a'$, womit
+\[(x+b)+(x'+b') = (y+a)+(y'+a'), \iff x+x'+b+b' = y+y'+a+a'.\]
+Mit der Multiplikation verhält es sich ein wenig komplizierter.
+Zu Vereinfachung wird zunächst gezeigt:
+\begin{gather*}
+[(x,y)]\cdot [(x',y')] = [(a,b)]\cdot [(x',y')]\\
+\iff (xx'+yy',xy'+yx')\sim (ax'+by',ay'+bx')\\
+\iff xx'+yy' + ay'+bx' = ax'+by' + xy'+yx'\\
+\iff (x+b)x' + (a+y)y' = (a+y)x' + (x+b)y'.
+\end{gather*}
+Diese Gleichung ist gemäß Voraussetzung $(x,y)\sim (a,b)$
+bzw. $x+b=a+y$ erfüllt.
+
+Analog bestätigt man
+\[[(a,b)]\cdot [(x',y')] = [(a,b)]\cdot [(a',b')].\]
+Gemäß Transitivität ergibt sich somit
+\[[(x,y)]\cdot [(x',y')] = [(a,b)]\cdot [(a',b')].\]
+Es ist nun zu bestätigen, dass $(\Q,+)$ eine kommutative Gruppe ist.
+Das Assoziativgesetz:
+\begin{gather*}
+([(x,y)]+[(x',y')])+[(x'',y'')]
+= [(x+x',y+y')] + [(x'',y'')]\\
+= [(x+x'+x'',y+y'+y'')]
+= [(x,y)]+[(x'+x'',y'+y'')]\\
+= [(x,y)]+([(x',y')]+[(x'',y'')]).
+\end{gather*}
+Das neutrale Element ist $[(0,0)]$, denn
+\[[(x,y)]+[(0,0)] = [(x+0,y+0)] = [(x,y)].\]
+Das inverse Element zu $[(x,y)]$ ist $[(y,x)]$, denn es gilt
+\begin{gather*}
+[(x,y)]+[(y,x)] = [(x+y,y+x)] = [(0,0)]\\
+\iff (x+y,y+x)\sim (0,0)\iff x+y+0 = y+x+0.
+\end{gather*}
+Das Kommutativgesetz:
+\[[(x,y)]+[(x',y')] = [(x+x',y+y')]
+= [(x'+x,y'+y)]
+= [(x',y')]+[(x,y)].\]
+Es ist nun zu bestätigen, dass $(\Q,\cdot)$ ein kommutatives
+Monoid bildet. Das Assoziativgesetz:
+\begin{gather*}
+([(x,y)]\cdot [(x',y')])\cdot [(x'',y'')]
+= [(xx'+yy',xy'+x'y)]\cdot [(x'',y'')]\\
+= [(xx'x''+x''yy'+xy'y''+x'yy'',\;
+xx'y''+yy'y''+xx''y'+x'x''y)]\\
+= [(x,y)]\cdot [(x'x''+y'y'',x'y''+x''y')]
+= [(x,y)]\cdot ([(x',y')]\cdot [(x'',y'')]).
+\end{gather*}
+Das Kommutativgesetz:
+\begin{gather*}
+[(x,y)]\cdot [(x',y')] = [(xx'+yy',\;xy'+yx')]\\
+= [(x'x+y'y,\;x'y+xy')] = [(x',y')]\cdot [(x,y)].
+\end{gather*}
+Das neutrale Element ist $[(1,0)]$, denn es gilt
+\[[(x,y)]\cdot [(1,0)] = [(x\cdot 1+y\cdot 0,\;1\cdot y+x\cdot 0)]
+= [(x,y)].\]
+Schließlich ist noch das Distributivgesetz zu bestätigen.
+Man findet
+\begin{gather*}
+[(a,b)]\cdot ([(x,y)]+[(x',y')])
+= [(a,b)]\cdot [(x+x',y+y')]\\
+= [(ax+ax'+by+by',\;ay+ay'+bx+bx')]\\
+= [(ax+by,ay+bx)]+[(ax'+by',ay'+bx')]\\
+= [(a,b)]\cdot [(x,y)] + [(a,b)]\cdot [(x',y')].
+\end{gather*}
+Somit sind alle Axiome bestätigt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Definition}[Monoidhomomorphismus]\newlinefirst
+Seien $(M,+)$ und $(M',+')$ zwei Monoide. Eine Abbildung
+$\varphi\colon M\to M'$ heißt Monoidhomomorphismus, wenn
+für alle $a,b\in M$ gilt
+\[\varphi(a+b) = \varphi(a)+\varphi(b)\]
+und $\varphi(0)=0'$ ist.
+\end{Definition}
+
+\begin{Satz}[Einbettung der natürlichen Zahlen in die ganzen]%
+\label{embedding-nat-int}\newlinefirst
+Die Abbildung $\varphi\colon\N_0\to\Z$ mit $\varphi(n):=[(n,0)]$
+ist ein Monoidmonomorphismus.
+\end{Satz}
+\strong{Beweis.} Es ergibt sich
+\[\varphi(a+b) = [(a+b,0)] = [(a,0)]+[(b,0)] = \varphi(a)+\varphi(b).\]
+Außerdem ist $\varphi(0)=[(0,0)]$, und $[(0,0)]$
+ist das neutrale Element von $(\Z,+)$.
+
+Schließlich ist noch die Injektivität zu prüfen:
+\begin{gather*}
+[(a,0)] = \varphi(a) = \varphi(b)  = [(b,0)]\iff (a,0)\sim (b,0)\\
+\iff a+0 = b+0 \iff a=b.\;\qedsymbol
+\end{gather*}
+\strong{Bemerkung.}
+Anstelle von $\varphi(n)=[(n,0)]$ darf man daher kurz
+$n=[(n,0)]$ schreiben. Außerdem definiert man $a-b:=a+(-b)$. Daraus
+ergibt sich nun
+\[[(x,y)] = [(x,0)]+[(0,y)] = [(x,0)] - [(y,0)] = x-y.\]
+Die umständliche Schreibweise $[(x,y)]$ wird ab jetzt nicht
+mehr benötigt.
+
+\begin{Definition}[Totalordnung der ganzen Zahlen]\newlinefirst
+Auf $\Z$ wird die folgende strenge Totalordnung definiert:
+\[[(x,y)] < [(x',y')] \defiff x+y'<x'+y.\]
+\end{Definition}
+
+\begin{Satz}[Einbettung der Totalordnung]\mbox{}\\*
+Die Abbildung $\varphi$ aus Satz \ref{embedding-nat-int}
+genügt der Forderung
+\[a<b \implies \varphi(a)<\varphi(b).\]
+\end{Satz}
+\begin{Beweis}
+Nach den Definitionen ist
+\[\varphi(a)<\varphi(b)\iff [(a,0)]<[(b,0)]\iff a+0<0+b\iff a<b.\,\qedsymbol\]
+\end{Beweis}
+
+\subsection{Die rationalen Zahlen}
+
+\begin{Definition}[Rationale Zahlen]\newlinefirst
+Man definiert die rationalen Zahlen $\Q$ als Quotientenmenge
+\[\Q := (\Z\times\Z_{\ge 1})/{\sim},\quad (x,y)\sim (x',y')\defiff xy' = x'y.\]
+\end{Definition}
+
+\noindent
+Für die Äquivalenzklasse $[(x,y)]\in\Q$ schreiben wir im Folgenden
+$\frac{x}{y}$.
+
+\begin{Satz}
+Die Menge $\Q$ bildet bezüglich den wohldefinierten Operationen
+\begin{gather*}
+\frac{x}{y}+\frac{x'}{y'} := \frac{xy'+x'y}{yy'},\quad
+\frac{x}{y}\cdot\frac{x'}{y'} := \frac{xx'}{yy'}
+\end{gather*}
+einen Körper.
+\end{Satz}
+\begin{Beweis}
+Wohldefiniert bedeutet, dass das Ergebnis der
+Operationen nicht von den gewählten Repräsentanten der Argumente
+abhängig ist. Sei dazu $(a,b)\sim (x,y)$ und
+$(a',b')\sim (x',y')$. Zu zeigen ist nun
+\begin{align*}
+&(ab'+a'b,bb')\sim (xy'+x'y,yy')\\
+&\iff (ab'+a'b)(yy') = (xy'+x'y)(bb')\\
+&\iff ab' yy' + a'byy' = xy'bb'+x'ybb'.
+\end{align*}
+Substituiert man $ay=xb$ und $a'y'=x'b'$ auf
+der linken Seite der Gleichung, ergibt sich die rechte Seite.
+Zu zeigen ist weiterhin
+\begin{align*}
+(aa',bb')\sim (xx',yy')
+\iff aa'yy' = xx'bb'.
+\end{align*}
+Wieder wird linke Seite der Gleichung über $ay=xb$
+und $a'y'=x'b'$ in die rechte Seite überführt.
+Die Wohldefiniertheit der Operationen ist damit bestätigt.
+
+Es bleibt zu prüfen, dass $(\Q,+,\cdot)$ allen Körperaxiomen genügt.
+Das neutrale Element der Addition ist $0/1$, denn es gilt
+\[\frac{x}{y}+\frac{0}{1} = \frac{x\cdot 1+0\cdot y}{y\cdot 1} = \frac{x}{y}.\]
+Das neutrale Element der Multiplikation ist $1/1$, denn es gilt
+\[\frac{x}{y}\cdot\frac{1}{1} = \frac{x\cdot 1}{y\cdot 1} = \frac{x}{y}.\]
+Die Assoziativität der Addition ergibt sich ohne größere Umstände:
+\begin{align*}
+\bigg(\frac{x}{y}+\frac{x'}{y'}\bigg)+\frac{x''}{y''}
+&= \frac{xy'+x'y}{yy'} + \frac{x''}{y''}
+= \frac{xy'y''+x'yy''+x''yy'}{yy'y''},\\
+\frac{x}{y}+\bigg(\frac{x'}{y'}+\frac{x''}{y''}\bigg)
+&= \frac{x}{y}+\frac{x'y''+x''y'}{y'y''}
+= \frac{xy'y''+x'yy''+x''yy'}{yy'y''}.
+\end{align*}
+Die Assoziativität der Multiplikation ist etwas einfacher:
+\[\bigg(\frac{x}{y}\cdot\frac{x'}{y'}\bigg)\cdot\frac{x''}{y''}
+= \frac{xx'}{yy'}\cdot\frac{x''}{y''} = \frac{xx'x''}{yy'y''}
+= \frac{x}{y}\cdot\frac{x'x''}{y'y''}
+= \frac{x}{y}\cdot\bigg(\frac{x'}{y'}\cdot\frac{x''}{y''}\bigg).\]
+Das Kommutativgesetz der Addition:
+\[\frac{x}{y}+\frac{x'}{y'} = \frac{xy'+x'y}{yy'}
+= \frac{x'y+xy'}{y'y}
+= \frac{x'}{y'}+\frac{x}{y}.\]
+Das Kommutativgesetz der Multiplikation:
+\[\frac{x}{y'}\cdot\frac{x'}{y'}
+= \frac{xx'}{yy'} = \frac{x'x}{y'y}
+= \frac{x'}{y'}\cdot\frac{x}{y}.\]
+Das additiv inverse Element zu $x/y$ ist $(-x)/y$, denn es gilt
+\[\frac{x}{y}+\frac{-x}{y} = \frac{xy+(-x)y}{y^2}
+= \frac{0}{y^2} = \frac{0}{1}.\]
+Das multiplikativ inverse Element zu $x/y$ mit $x\ne 0$
+ist $y/x$, denn es gilt
+\[\frac{x}{y}\cdot\frac{y}{x} = \frac{xy}{xy} = \frac{1}{1}.\]
+Schließlich findet bestätigt man noch das Distributivgesetz:
+\begin{align*}
+&\frac{a}{b}\cdot\bigg(\frac{x}{y}+\frac{x'}{y'}\bigg)
+= \frac{a}{b}\cdot\frac{xy'+x'y}{yy'}
+= \frac{axy'+ax'y}{byy'},\\
+&\frac{ax}{by}+\frac{ax'}{by'}
+= \frac{axby'+ax'by}{byby'}
+= \frac{b}{b}\cdot\frac{axy'+ax'y}{byy'}.
+\end{align*}
+Hierbei beachtet man, dass $b/b=1/1$ das multiplikativ
+neutrale Element ist.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}[Einbettung der ganzen Zahlen in die rationalen]\newlinefirst
+Sei $\varphi\colon\Z\to\Q$ mit $\varphi(z):=z/1$. Die
+Abbildung $\varphi$ ist ein Eins"=erhaltender Ringmonomorphismus.
+\end{Satz}
+\begin{Beweis}
+Die Erhaltung des Einselements ergibt sich
+trivial. Ferner findet man
+\[\varphi(a+b) = \frac{a+b}{1} = \frac{a\cdot 1+b\cdot 1}{1\cdot 1}
+= \frac{a}{1}+\frac{b}{1} = \varphi(a)+\varphi(b)\]
+und
+\[\varphi(ab) = \frac{ab}{1} = \frac{ab}{1\cdot 1} = \frac{a}{1}\cdot\frac{b}{1}
+= \varphi(a)\cdot\varphi(b).\,\qedsymbol\]
+\end{Beweis}
+\strong{Bemerkung.}
+Vermittels der Einbettung können wir die ganze Zahl $z$ ab jetzt
+mit der rationalen Zahl $z/1$ identifizieren. Das heißt, man schreibt
+einfach $z=z/1$ anstelle von $\varphi(z)=z/1$.
+
+\begin{Definition}[Division rationaler Zahlen]\mbox{}\\*
+Wie in jedem Körper ist die Division für $a,b\in\Q$
+definiert als $a/b := ab^{-1}$.
+\end{Definition}
+
