@@ -358,6 +358,42 @@ Die Argumentation verläuft analog zum Beweis von Satz
 Korollar \ref{Verschiebungseigenschaft} zur Anwendung kommt.\,\qedsymbol
 \end{Beweis}
 
+\begin{Korollar}
+Zu einer linearen Abbildung $f\colon V\to W$ ist die Bildmenge $f(V)$
+ein Untervektorraum von $W$.
+\end{Korollar}
+\begin{Beweis}
+Wir ziehen das Untervektorraumkriterium heran. Es ist $f(V)$ nichtleer,
+weil der Definitionsbereich $V$ nichtleer ist, da dieser mindestens
+den Nullvektor enthalten muss. Es gelte $w\in f(V)$ und $w'\in f(V)$.
+Dann existieren Zeugen $v$ mit $w=f(v)$ und $v'$ mit $w'=f(v')$.
+Infolge gilt $w+w' = f(v)+f(v') = f(v+v')$, womit $v+v'$ ein
+Zeuge für $w+w'\in f(V)$ ist. Gleichermaßen gilt $\lambda w = \lambda f(v)
+= f(\lambda v)$, womit $\lambda v$ ein Zeuge für $\lambda w\in f(V)$
+ist. Die Forderungen des Kriteriums sind also erfüllt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Korollar}
+Zu einer linearen Abbildung $f\colon V\to W$ ist Graph von $f$
+ein Untervektorraum von $V\times W$.
+\end{Korollar}
+\begin{Beweis}
+Der Graph von $f$ ist die Menge
+\[G = \{(v,w)\in V\times W\mid w=f(v)\}.\]
+Der Raum $V\times W$ hat die Addition $(v,w)+(v',w'):=(v+v',w+w')$ und
+die Skalarmultiplikation $\lambda (v,w) := (\lambda v,\lambda w)$.
+
+Wir ziehen das Untervektorraumkriterium heran. Der Graph $G$ ist
+nichtleer, weil der Definitionsbereich $V$ nichtleer ist, da dieser
+mindestens den Nullvektor enthalten muss. Zu zeigen ist nun
+$(v+v',w+w')\in G$, sofern $(v,w)\in G$ und $(v',w')\in G$. Aufgrund
+der Prämissen ist $w=f(v)$ und $w'=f(v')$, womit
+\[w+w' = f(v)+f(v') = f(v+v'), \iff (w+w',v+v')\in G.\]
+Zu zeigen ist schließlich $(\lambda v,\lambda w)\in G$, sofern
+$(v,w)\in G$. Aufgrund der Prämisse ist $w=f(v)$, womit
+\[\lambda w = \lambda f(v) = f(\lambda v), \iff (\lambda w,\lambda v)\in G.\qedsymbol\]
+\end{Beweis}
+
 \newpage
 \section{Bilinearformen}
 
@@ -526,6 +562,79 @@ Demnach gilt
 Umformung der Gleichung führt zur Behauptung.\;\qedsymbol
 \end{Beweis}
 
+\begin{Lemma}
+Sei durch $\bv p(t):=\bv a+t\bv v$ mit $\bv a,\bv v\in\R^n$
+eine Parametergerade gegeben und sei $\bv b\in\R^n$ nicht auf der Gerade.
+Wir betrachten die Abstandsvektoren $\bv d(t) = \bv b - \bv p(t)$. Man
+erhält den kürzesten Abstand, wenn $\bv p(t)$ der Lotfußpunkt ist.
+\end{Lemma}
+\begin{Beweis}
+Man ermittelt die Ableitung
+\[d'(t) = \tfrac{\partial}{\partial t} |\bv d(t)|
+= \frac{1}{2|\bv d(t)|} 2\langle\bv d(t),\bv d'(t)\rangle
+= -\frac{\langle\bv d(t),\bv v\rangle}{|\bv d(t)|}.\]
+Aus dem notwendigen Kriterium $d'(t)=0$ ergibt sich
+$\langle\bv d,\bv v\rangle = 0$, womit $\bv d$ rechtwinklig auf
+$\bv v$ stehen muss. Es verbleibt zu zeigen, dass es sich um ein
+Minimum handelt. Wir bestimmen dazu die zweite Ableitung.
+Mit $d'(t)d(t) = -\langle\bv d(t),\bv v\rangle$ findet sich
+\[\tfrac{\partial}{\partial t}(d'(t)d(t)) = d''(t)d(t) + d'(t)^2
+= -\tfrac{\partial}{\partial t}\langle\bv d(t),\bv v\rangle
+= -\langle\bv d'(t),\bv v\rangle = \langle\bv v,\bv v\rangle.\]
+Man erhält an der kritischen Stelle also
+\[d''(t) = \frac{|\bv v|^2}{d(t)} > 0,\]
+womit dort ein Minimum befindlich sein muss.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei durch $\bv p(t):=\bv a+ t\bv v$ mit $\bv a, \bv v\in\R^n$ eine
+Parametergerade gegeben und sei $\bv b\in\R^n$ ein weiterer Punkt.
+Der Abstand von $\bv b$ zur Gerade beträgt
+\[d = \bigg|\bv b-\bv a - \frac{\langle\bv b-\bv a,\bv v\rangle}{|\bv v|^2}\bv v\bigg|.\]
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Es ist der Parameter $t$ gesucht, bei dem der Abstandsvektor
+$\bv d := \bv b-\bv p(t)$ rechtwinklig zum Richtungsvektor $\bv v$ steht.
+Allgemein stehen zwei Vektoren genau dann rechtwinklig, wenn ihr
+Skalarprodukt verschwindet. Es muss also gelten
+\[0 = \langle\bv d,\bv v\rangle
+= \langle\bv b - \bv a-t\bv v, \bv v\rangle
+= \langle\bv b - \bv a, \bv v\rangle - t\langle\bv v,\bv v\rangle,
+\iff t = \frac{\langle\bv b-\bv a,\bv v\rangle}{|\bv v|^2}.\]
+Es findet sich der Abstand
+\[d = |\bv d| = |\bv b-\bv p|
+= \Big|\bv b - \bv a - \tfrac{\langle\bv b-\bv a,\bv v\rangle}
+{|\bv v|^2}\bv v\Big|.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Wir verschieben alle Ortsvektoren um $-\bv a$, damit die Gerade
+durch den Ursprung verläuft. Aus dem verschobenen Punkt
+$\bv b' = \bv b-\bv a$ lässt sich nun der Lotfußpunkt vermittels der
+orthogonalen Projektion $P_{\bv v}(\bv b')$ erhalten. Der gesuchte
+Abstand ist die zwischen $\bv b'$ und dem Lotfußpunkt befindliche
+Distanz. Man erhält
+\[d = |\bv b' - P_{\bv v}(\bv b')|
+= \Big|\bv b-\bv a - \tfrac{\langle\bv b-\bv a,\bv v\rangle}
+{\langle\bv v,\bv v\rangle}\bv v\Big|.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Korollar}
+Seien $\bv a,\bv v\in\R^n$ fest. Die beiden Mengen
+\begin{gather*}
+\{\bv p\mid \exists t\colon\bv p = \bv a+t\bv v\},\quad
+\{\bv p\mid (\bv p-\bv a)\wedge\bv v = 0\}
+\end{gather*}
+beschreiben dieselbe Gerade.
+\end{Korollar}
+\begin{Beweis}
+Zu zeigen ist die Äquivalenz
+\[(\exists t\colon\bv p-\bv a = t\bv v)\iff (\bv p-\bv a)\wedge\bv v = 0.\]
+Die linke Seite verlangt, dass $\bv p-\bv a$ kollinear zu $\bv v$ sein
+soll. Das äußere Produkt zweier Vektoren verschwindet im Allgemeinen
+genau dann, wenn diese kollinear sind. Mithin ist die rechte Seite
+äquivalent zur linken.\,\qedsymbol
+\end{Beweis}
+
 \begin{Satz}[Lagrange-Identität]\newlinefirst
 Für zwei Vektoren $\bv a,\bv b\in\R^n$ gilt
 \[|\bv a\wedge\bv b|^2 = \sum_{i,j:i<j}(a_i b_j - a_j b_i)^2 
@@ -542,3 +651,4 @@ Es findet sich die Umformung
 = |\bv a|^2 |\bv b|^2 - \langle\bv a,\bv b\rangle^2.\,\qedsymbol
 \end{gather*}
 \end{Beweis}
+

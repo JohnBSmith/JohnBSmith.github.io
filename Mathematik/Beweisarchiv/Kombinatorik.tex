@@ -225,12 +225,34 @@ oder der Schritt nach $(x,y+1)$ gewährt ist. Die Anzahl der monotonen
 Gitterwege von $(0,0)$ zu $(x,y)$ beträgt
 \[\frac{(x+y)!}{x!y!} = \binom{x+y}{x} = \binom{x+y}{y}.\]
 \end{Satz}
-\begin{Beweis}
+\begin{Beweis}[Beweis 1]
 Alle Gitterwege besitzen dieselbe Länge $x+y$. Die Knoten des jeweiligen
 Wegs nummerieren wir der Reihe nach mit Ausnahme des letzten. Nun
 ist von den $x+y$ Nummern eine Teilmenge von $y$ Nummern auszuwählen,
 an denen ein Schritt nach oben stattfinden soll. Dafür gibt es
 $\binom{x+y}{y}$ Möglichkeiten.\,\qedsymbol
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2]
+Es bezeichne $f(x,y)$ die Anzahl der Wege von $(0,0)$
+zu $(x,y)$. Zum Erreichen eines Randpunktes besteht immer nur eine
+einzige Möglichkeit, womit $f(x,0)=1$ und $f(0,y)=1$ gilt. Der nicht
+auf dem Rand befindliche Punkt $(x,y)$ kann nun von $(x-1,y)$ oder von
+$(x,y-1)$ aus erreicht werden, womit
+\[f(x,y) = f(x-1,y) + f(x,y-1)\]
+gelten muss. Man sieht nun, dass diese Rekursion ein gedrehtes
+pascalsches Dreieck erzeugt. Wir setzen daher $f(x,y) = C(x+y,x)$ und
+führen die Koordinatentransformation $x+y=n$ und $x=k$ aus. Die
+Rekurrenz nimmt damit die Form
+\begin{gather*}
+C(x+y,x) = C(x-1+y,x-1) + C(x+y-1,x)\\
+\iff C(n,k) = C(n-1,k-1) + C(n-1,k).
+\end{gather*}
+an. Die Randbedingungen führen zu $C(n,n)=1$ und $C(n,0)=1$. Durch diese
+Rekurrenz ist eindeutig der Binomialkoeffizient $C(n,k)=\binom{n}{k}$
+bestimmt, womit
+\[f(x,y) = C(x+y,x) = \binom{x+y}{x}\]
+gelten muss.\,\qedsymbol
 \end{Beweis}
 
 \newpage
