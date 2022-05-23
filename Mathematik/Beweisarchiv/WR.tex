@@ -230,7 +230,7 @@ die Ereignisse $\{X\in A\}$ und $\{X\in B\}$
 für alle Mengen $A,B\subseteq\R$ unabhängig sind.
 \end{Definition}
 
-\begin{Satz}
+\begin{Satz}\label{rand-var-independence-char}
 Zwei Zufallsgrößen $X,Y\colon\Omega\to\R$ sind genau dann unabhängig,
 wenn für alle $x\in X(\Omega)$ und $y\in Y(\Omega)$ gilt:
 \[P(X=x,Y=y)= P(X=x)P(Y=y).\]
@@ -305,6 +305,44 @@ darf:
 - \sum_{x\in X(\Omega)}\!\! xP(X=x) = 0\\
 \iff s = \sum_{x\in X(\Omega)}\!\! xP(X=x) \iff s = E(X).\,\qedsymbol
 \end{gather*}
+\end{Beweis}
+
+\newpage
+\begin{Satz}\label{prob-fn2-preimg}
+Für $X,Y\colon\Omega\to\R$ und $g\colon\R^2\to\R$ gilt
+\[P(g(X,Y)=a) = \sum_{(x,y)\mathrlap{:g(x,y)=a}}P(X=x, Y=y)
+= \sum_{(x,y)\mathrlap{\in X(\Omega)\times Y(\Omega)}} P(\{X=x\}\cap\{Y=y\})[g(x,y)=a].\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich
+\begin{gather*}
+P(g(X,Y)=a) = P(\{\omega\in\Omega\mid g(X(\omega),Y(\omega))=a\})\\
+= P(\{\omega\in\Omega\mid \exists (x,y)\colon g(x,y)=a\land X(\omega)=x\land Y(\omega)=y\})\\
+= P(\{\omega\in\Omega\mid \exists (x,y)\in \{(x,y)\mid g(x,y)=a\}\colon X(\omega)=x\land Y(\omega)=y\})\\
+= P(\bigcup_{(x,y)\mathrlap{:g(x,y)=a}} \{\omega\in\Omega\mid X(\omega)=x\land Y(\omega)=y\})
+= P(\bigcup_{(x,y)\mathrlap{:g(x,y)=a}} X^{-1}(x)\cap Y^{-1}(y))\\
+= \sum_{(x,y)\mathrlap{:g(x,y)=a}} P(X^{-1}(x)\cap Y^{-1}(y))
+= \sum_{(x,y)\mathrlap{:g(x,y)=a}} P(X=x,Y=y).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\begin{Korollar}
+Für unabhängige Zufallsgrößen $X,Y$ gilt
+\begin{gather*}
+P(X+Y=a) = \sum_{\mathclap{x\in X(\Omega)}} P(X=x)P(Y=a-x),\\
+P(X-Y=a) = \sum_{\mathclap{x\in X(\Omega)}} P(X=x)P(Y=x-a).
+\end{gather*}
+\end{Korollar}
+\begin{Beweis}
+Es findet sich
+\begin{align*}
+P(X+Y=a) &\stackrel{\text(1)}= \sum_{(x,y)\mathrlap{:x+y=a}} P(X=x,Y=y)
+\stackrel{\text(2)}= \sum_{(x,y)\mathrlap{:x+y=a}}P(X=x)P(Y=y)\\
+&= \sum_{(x,y)}P(X=x)P(Y=y)[x+y=a]
+= \sum_x P(X=x)P(Y=a-x).
+\end{align*}
+Hierbei gilt (1) laut Satz \ref{prob-fn2-preimg}
+und (2) laut Satz \ref{rand-var-independence-char}.\,\qedsymbol
 \end{Beweis}
 
 \newpage

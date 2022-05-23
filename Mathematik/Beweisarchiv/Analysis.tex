@@ -783,3 +783,50 @@ gilt dabei%
 Der Fixpunkt von $\varphi$ ist also die einzige Nullstelle von $f$.\;\qedsymbol
 \end{Beweis}
 
+\newpage
+\section{Ungleichungen}
+
+\begin{Satz}[Lagrangesche Schranke]\newlinefirst
+Sei $a_k\in\C$ und $a_n\ne 0$. Für jede Lösung $z\in\C$ der Gleichung
+$\sum_{k=0}^n a_k z^k = 0$ gilt%
+\[|z|\le\max(1,\sum_{k=0}^{n-1}\bigg|\frac{a_k}{a_n}\bigg|).\]
+\end{Satz}
+\begin{Beweis}
+Sei $z$ eine Lösung. Für $|z|\le 1$ ist die Aussage offenkundig
+erfüllt. Sei also $|z|>1$, womit insbesondere $|z|\ne 0$ gilt.
+Abspaltung des Leitmonoms von der Summe bringt die Gleichung in die
+Form $-a_n z^n = \sum_{k=0}^{n-1} a_k z^k$.
+Man findet nun%
+\[|a_n| |z|^n = |a_n z^n| = \bigg|\sum_{k=0}^{n-1} a_k z^k\bigg|
+\stackrel{\text{(1)}}\le\sum_{k=0}^{n-1} |a_k| |z|^k
+\stackrel{\text{(2)}}\le\sum_{k=0}^{n-1} |a_k| |z|^{n-1}.\]
+Dividiert man diese Ungleichung auf beiden Seiten durch $|a_n|$
+und $|z|^{n-1}$, ergibt sich%
+\[|z|\le \sum_{k=0}^{n-1}\frac{|a_k|}{|a_n|}.\]
+Die Abschätzung (1) gilt gemäß der Dreiecksungleichung. Zur
+Abschätzung (2) überlegt man sich $|z|^k\le |z|^{n-1}$ wegen
+$|z|>1$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Cauchysche Schranke]\newlinefirst
+Sei $a_k\in\C$ und $a_n\ne 0$. Für jede Lösung $z\in\C$ der Gleichung
+$\sum_{k=0}^n a_k z^k = 0$ gilt%
+\[|z| \le 1 + \max(\bigg|\frac{a_0}{a_n}\bigg|,\ldots,\bigg|\frac{a_{n-1}}{a_n}\bigg|).\]
+\end{Satz}
+\begin{Beweis}
+Sei $z$ eine Lösung. Für $|z|\le 1$ ist die Aussage offenkundig
+erfüllt. Sei also $|z|>1$. Abspaltung des Leitmonoms von der Summe
+bringt die Gleichung in die Form $-a_n z^n = \sum_{k=0}^{n-1} a_k z^k$.
+Man findet
+\[|a_n| |z|^n = |a_n z^n| = \bigg|\sum_{k=0}^{n-1} a_k z^k\bigg|
+\stackrel{\text{(1)}} \le \sum_{k=0}^{n-1} |a_k| |z|^k
+\stackrel{\text{(2)}} \le \sum_{k=0}^{n-1} m |z|^k
+= m\frac{|z|^n-1}{|z|-1} \le \frac{m|z|^n}{|z|-1},\]
+wobei $m=\max(|a_0|,\ldots,|a_{n-1}|)$. Kürzen von $|z|^n$ und
+anschließende Umformung nach $|z|$ resultiert in
+\[|z| \le 1 + \frac{m}{|a_n|} \stackrel{\text(3)}=
+1 + \max(\frac{|a_0|}{|a_n|},\ldots,\frac{|a_{n-1}|}{|a_n|}).\]
+Die Abschätzung (1) gilt gemäß der Dreiecksungleichung. Die
+Abschätzung (2) gilt aufgrund $|a_k|\le m$ für jedes $k$. Gleichung
+(3) gilt, weil die Maximumsfunktion positiv homogen ist.\,\qedsymbol
+\end{Beweis}
