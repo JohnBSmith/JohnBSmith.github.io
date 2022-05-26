@@ -227,10 +227,10 @@ $f\in\mathcal O(g)$, genau dann, wenn
 \[\exists c{>}0\colon\,\exists x_0\colon\,\forall x{>}x_0\colon\, |f(x)|\le c|g(x)|.\]
 \end{Definition}
 
-\begin{Korollar}
+\begin{Satz}
 Ist $r\in\R$ mit $r\ne 0$ eine Konstante, dann gilt
 $\mathcal O(rg)=\mathcal O(g)$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Nach Def. \ref{Landau-O} ist
 \[f\in\mathcal O(rg) \iff 
@@ -246,9 +246,9 @@ darf $c>0$ gegen $c'>0$ ersetzt werden und man erhält die
 Nach Def. \ref{Landau-O} ist das gerade $f\in\mathcal O(g)$.\;\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Sind $f_1,f_2\in\mathcal O(g)$, ist auch $f_1+f_2\in\mathcal O(g)$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Als Prämissen liegen Zeugen $c'>0,x_0'$ und $c''>0,x_0''$ für
 \begin{gather*}
@@ -297,11 +297,11 @@ existiert, so dass
 für alle $a\in D$.
 \end{Definition}
 
-\begin{Korollar}
+\begin{Satz}
 Eine Funktion ist genau dann Lipschitz"=stetig, wenn sie an jeder
 Stelle Lipschitz"=stetig ist und die Menge der optimalen
 Lipschitz"=Konstanten dabei beschränkt.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Eine Lipschitz"=stetige Funktion ist trivialerweise an jeder Stelle
 Lipschitz"=stetig. Ist $f\colon D\to\R$ an der Stelle $b$ Lipschitz"=stetig,
@@ -381,9 +381,9 @@ Satz \ref{diff-bounded-Lipschitz-cont} muss $f$ Lipschitz"=stetig
 sein.\;\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Eine stetig differenzierbare Funktion ist lokal Lipschitz"=stetig.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Sei $f\colon D\to\R$ stetig differenzierbar. Sei $[a,b]\in D$. Sei
 $x_0\in [a,b]$. Die Einschränkung von $f$ auf $[a,b]$ ist
@@ -453,6 +453,21 @@ der Beweis der Behauptung erbracht ist.\;\qedsymbol
 Die Diskussion Gegenbeispiels $f(0):=0$, $f(x):=\sin(x^2)/x$ macht
 ersichtlich, dass die Aussage ohne Lipschitz-Stetigkeit nicht einmal
 für glatte Funktionen gilt.
+
+\newpage
+\begin{Satz}
+Eine Bijektion $f\colon\R\to [0,1]$ kann nicht stetig sein.
+\end{Satz}
+\begin{Beweis}
+Angenommen, $f$ ist stetig. Weil die Werte 0 und 1 Bilder von $f$
+sind, existieren $a,b$ mit $f(a)=0$ und $f(b)=1$. Zudem gilt
+$[0,1]\subseteq f([a,b])$ laut dem Zwischenwertsatz. Infolge findet sich
+\[\R = f^{-1}([0,1]) \stackrel{\text{(1)}}\subseteq f^{-1}(f([a,b]))
+\stackrel{\text{(2)}}= (f^{-1}\circ f)([a,b]) = \id([a,b]) = [a,b],\]
+wobei (1) laut Satz \ref{img-subseteq} und (2) laut Satz
+\ref{img-chain} gilt. Die Aussage $\R\subseteq [a,b]$ ist aber
+absurd. Widerspruch zur Annahme.\,\qedsymbol
+\end{Beweis}
 
 \newpage
 \section{Differentialrechnung}
@@ -630,7 +645,7 @@ Für eine Funktion $f\colon U\to\R$ ist die Zahl
 falls sie existiert, die Richtungsableitung von $f$ an der Stelle $x$ in
 Richtung $v$.
 \end{Definition}
-\begin{Korollar}
+\begin{Satz}
 Die Funktionen $f,g$ seien an der Stelle $x$ in Richtung $v$
 differenzierbar. Sei $c$ eine reelle Zahl. Dann sind auch
 $f+g$, $f-g$, $cf$, $fg$ differenzierbar und es gelten die
@@ -641,7 +656,7 @@ D_v(f-g)(x) &= D_v f(x)+D_v g(x),\\
 D_v(cf)(x) &= cD_v f(x),\\
 D_v(fg)(x) &= g(x)D_v f(x) + f(x)D_v g(x).
 \end{align*}
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Die Ableitungsregeln werden über die Definition
 auf die Ableitungsregeln für gewöhnliche reelle Funktionen
@@ -655,12 +670,12 @@ D_v(f+g)(x) &= ((f+g)\circ\gamma)'(0)
 Der Beweis der restlichen Regeln ist analog.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}[Kettenregel]\newlinefirst
+\begin{Satz}[Kettenregel]\newlinefirst
 Sei $g\colon\R\to\R$ differenzierbar und
 $f$ differenzierbar an der Stelle $x$ in Richtung $v$. Dann ist
 auch $g\circ f$ entsprechend differenzierbar, und es gilt
 \[D_v(g\circ f)(x) = (g'\circ f)(x)\cdot D_v f(x).\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Die Regel ist gemäß der Definition auf die gewöhnliche Kettenregel
 zurückführbar. Man bekommt
@@ -677,10 +692,10 @@ Die partielle Ableitung $\partial_k f(x)$ ist definiert als
 die Richtungsableitung $D_v f(x)$ bezüglich $v=\mathbf e_k$.
 \end{Definition}
 
-\begin{Korollar}
+\begin{Satz}
 Zur jeder gewöhnlichen Ableitungsregel besitzt die
 Richtungsableitung eine analoge Regel.
-\end{Korollar}
+\end{Satz}
 \strong{Vorbereitung.}
 Sei $f=(f_1,\ldots,f_n)$ ein Tupel von Funktionen aus einem
 Funktionenraum und sei entsprechend

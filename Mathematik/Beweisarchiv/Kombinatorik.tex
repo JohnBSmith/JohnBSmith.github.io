@@ -13,7 +13,7 @@ Für eine Aussage $A$ der klassischen Aussagenlogik definiert man
 \end{cases}\]
 \end{Definition}
 
-\begin{Korollar}\label{iverson-basic-rules}
+\begin{Satz}\label{iverson-basic-rules}
 Es gilt
 \begin{gather*}
 [A\land B] = [A][B],\\
@@ -21,19 +21,19 @@ Es gilt
 [\neg A] = 1-[A],\\
 [A\to B] = 1-[A](1-[B]).
 \end{gather*}
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Trivial mittels Wertetabelle.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}\label{indicator-set-op}
+\begin{Satz}\label{indicator-set-op}
 Für die Indikatorfunktion $1_M(x):=[x\in M]$ gilt
 \begin{gather*}
 1_{A\cap B} = 1_A 1_B,\\
 1_{A\cup B} = 1_A + 1_B - 1_{A\cap B}.
 \end{gather*}
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
-Gemäß Korollar \ref{iverson-basic-rules} gelten die
+Gemäß Satz \ref{iverson-basic-rules} gelten die
 Rechnungen
 \begin{align*}
 1_{A\cap B}(x) = [x\in A\cap B]
@@ -51,7 +51,7 @@ und
 Für endliche Mengen $A,B$ gilt $|A\cup B| = |A|+|B|-|A\cap B|$.
 \end{Satz}
 \begin{Beweis}
-Gemäß Korollar \ref{indicator-set-op} darf man rechnen
+Gemäß Satz \ref{indicator-set-op} darf man rechnen
 \begin{align*}
 |A\cup B| &= \sum_{x\in G} 1_{A\cup B}(x)
 = \sum_{x\in G} (1_A(x) + 1_B(x) - 1_{A\cap B}(x))\\
@@ -60,9 +60,9 @@ Gemäß Korollar \ref{indicator-set-op} darf man rechnen
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Für endliche Mengen $A,B$ mit $A\subseteq B$ gilt $|A|\le |B|$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Mithilfe der Indiktorfunktion findet sich
 \begin{gather*}
@@ -267,10 +267,10 @@ rekursiv definiert als
 := a_n + \sum_{k=m}^{n-1} a_k.\]
 \end{Definition}
 
-\begin{Korollar}\label{sum-add}
+\begin{Satz}\label{sum-add}
 Es gilt
 \[\sum_{k=m}^n (a_k + b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben
 beide Seiten der Gleichung den Wert null. Induktionsschritt:
 \begin{align*}
@@ -280,11 +280,11 @@ beide Seiten der Gleichung den Wert null. Induktionsschritt:
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}\label{sum-scale}
+\begin{Satz}\label{sum-scale}
 Sei $R$ ein Ring und $c,a_k\in R$. Sei $c$ eine
 Konstante. Es gilt
 \[\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Induktion über $n$. Im Anfang $n=m-1$ haben beide
 Seiten der Gleichung den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n ca_k = ca_n + \sum_{k=m}^{n-1} ca_k
@@ -292,10 +292,10 @@ Seiten der Gleichung den Wert null. Induktionsschritt:
 = c(a_n + \sum_{k=m}^{n-1} a_k) = c\sum_{k=m}^n a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}[Aufteilung einer Summe]\label{sum-split}
+\begin{Satz}[Aufteilung einer Summe]\label{sum-split}
 Für $m\le p\le n$ gilt
 \[\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Induktion über $n$. Im Induktionsanfang ist $n=p$
 und folglich:
 \[\sum_{k=m}^p a_k = \sum_{k=m}^{p-1} a_k + p_k
@@ -306,10 +306,10 @@ Induktionsschritt:
 = \sum_{k=m}^{p-1} a_k + \sum_{k=p}^n a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}[Indexshift]\label{sum-indexshift}\newlinefirst
+\begin{Satz}[Indexshift]\label{sum-indexshift}\newlinefirst
 Für die Indexverschiebung der Distanz $d\in\Z$ gilt
 \[\textstyle\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}[Beweis 1]
 Induktion über $n$. Im Anfang $n = m-1$ haben beide Seiten
 der Gleichung den Wert null. Induktionsschritt:
@@ -323,19 +323,19 @@ Mit der Substitution $k=k'-d$ findet sich die Umformung
 \stackrel{\text{(2)}}= \sum_{m\le k'-d\le n} a_{k'-d}
 \stackrel{\text{(3)}}= \sum_{m+d\le k'\le n+d} a_{k'-d}
 \stackrel{\text{(4)}}= \sum_{k'=m+d}^{n+d} a_{k'-d},\]
-wobei (1), (4) gemäß Korollar \ref{sum-set-is-range} gelten
+wobei (1), (4) gemäß Satz \ref{sum-set-is-range} gelten
 und (2), (3) eine andere Schreibweise für die Substitutionsregel
 \ref{sum-set-subs} ist.\,\qedsymbol
 \end{Beweis}
 \strong{Bemerkung.} Der zweite Beweis ist eigentlich zirkulär,
 weil der Beweis der Substitutionsregel über den Beweis von
-Korollar \ref{sum-set-well-defined} in transitiver Abhängigkeit zum
+Satz \ref{sum-set-well-defined} in transitiver Abhängigkeit zum
 generalisierten Kommutativgesetz \ref{sum-perm-index} steht, dessen
 Beweis einen Indexshift enthält.
 
-\begin{Korollar} Es gilt
+\begin{Satz} Es gilt
 \[\sum_{i=m}^n \sum_{j=m'}^{n'} a_{ij} = \sum_{j=m'}^{n'}\sum_{i=m}^n a_{ij}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $n$ und $n'$. Im Anfang bei $n=m-1$ und $n'=m-1$
 haben beide Seiten der Gleichung den Wert null. Induktionsschritt für $n$:
@@ -358,9 +358,9 @@ Weil immer ein Schritt nach rechts oder ein Schritt nach oben durchführbar ist,
 werden alle Punkte $(n,n')$ im Gitter $\Z_{\ge m-1}\times\Z_{\ge m'-1}$ erreicht.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}[Umkehrung der Reihenfolge]\label{sum-rev}\newlinefirst
+\begin{Satz}[Umkehrung der Reihenfolge]\label{sum-rev}\newlinefirst
 Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $n$. Im Anfang $n=-1$ haben beide Seiten der Gleichung
 den Wert null. Der Induktionsschritt ist
@@ -414,10 +414,10 @@ Für eine endliche Menge $M$ definiert man
 wobei $f\colon \{m,\ldots,n\}\to M$ eine frei wählbare Bijektion ist.
 \end{Definition}
 
-\begin{Korollar}\label{sum-set-well-defined}
+\begin{Satz}\label{sum-set-well-defined}
 Der Wert Summe auf der rechten Seite von Def. \ref{def:sum-set}
 ist unabhängig von der gewählten Bijektion.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Seien $f,g$ zwei solche Bijektionen. Dann existiert
 $\pi$ mit $f=g\circ\pi$, womit%
 \[\sum_{i=m}^n a_{f(i)} = \sum_{i=m}^n a_{g(\pi(i))} =
@@ -425,18 +425,18 @@ $\pi$ mit $f=g\circ\pi$, womit%
 laut Satz \ref{sum-perm-index} gilt.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}\label{sum-set-is-range}
+\begin{Satz}\label{sum-set-is-range}
 Für $M = \{k\in\Z\mid m\le k\le n\}$ gilt
 \[\sum_{m\le k\le n} a_k := \sum_{k\in M} a_k = \sum_{k=m}^n a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Es gilt
 $\sum_{k\in M} a_k = \sum_{k=m}^n a_{\id(k)} = \sum_{k=m}^n a_k$.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}[Substitutionsregel]\label{sum-set-subs}
+\begin{Satz}[Substitutionsregel]\label{sum-set-subs}
 Ist $\varphi\colon M'\to M$ eine Bijektion, gilt
 \[\sum_{k\in M} a_k = \sum_{k'\in M'} a_{\varphi(k')}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Zur Bijektion $f\colon\{1,\ldots,|M|\}\to M$ existiert die Bijektion
 $g$ mit $f = \varphi\circ g$.
 
@@ -446,11 +446,11 @@ Infolge gilt
 = \sum_{k'\in M'} a_{\varphi(k')}.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar} Es gilt
+\begin{Satz} Es gilt
 $\sum\limits_{k\in M} ca_k = c\sum\limits_{k\in M} a_k$ und
 $\sum\limits_{k\in M} (a_k + b_k)
 = \sum\limits_{k\in M} a_k + \sum\limits_{k\in M} b_k$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Laut Definition gilt
 \begin{gather*}
@@ -462,9 +462,9 @@ Laut Definition gilt
 \end{gather*}
 \end{Beweis}
 
-\begin{Korollar} Es gilt
+\begin{Satz} Es gilt
 \[\sum_{k\in M}\sum_{l\in N} a_{kl} = \sum_{l\in N}\sum_{k\in M} a_{kl}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Laut Definition gilt
 \[\sum_{k\in M}\sum_{l\in N} a_{kl}
@@ -473,10 +473,10 @@ Laut Definition gilt
 = \sum_{l\in N}\sum_{k\in M} a_{k,l}.\]
 \end{Beweis}
 
-\begin{Korollar}\label{sum-set-disjoint}
+\begin{Satz}\label{sum-set-disjoint}
 Für $M\cap N=\emptyset$ gilt
 \[\sum_{k\in M\cup N} a_k = \sum_{k\in M} a_k + \sum_{k\in N} a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Sei $m:=|M|$ und $n:=|N|$. Laut Prämisse existiert eine Bijektion
 $f\colon \{1,\ldots, m+n\}\to M\cup N$ mit $f(i)\in M$ für
@@ -486,10 +486,10 @@ $1\le i\le m$ und $f(i)\in N$ für $m+1\le i\le m+n$. Das macht
 = \sum_{k\in M} a_k + \sum_{k\in N} a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}\label{sum-partition}
+\begin{Satz}\label{sum-partition}
 Für eine disjunkte Zerlegung $M = \bigcup_{i\in I} M_i$ gilt
 \[\sum_{k\in M} a_k = \sum_{i\in I}\sum_{k\in M_i} a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $I$. Im Anfang $I=\emptyset$ haben beide Seiten
 den Wert null. Induktionsvoraussetzung sei die Gültigkeit
@@ -502,10 +502,10 @@ Der Induktionsschritt ist
 = \sum_{i\in I\cup\{n\}}\sum_{k\in M_i} a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Es gilt
 \[\sum_{t\in M\times N} a_t = \sum_{k\in M}\sum_{l\in N} a_{(k,l)}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Es ist $M = \bigcup_{k\in M} \{k\}$ und weiter $M\times N =
 \bigcup_{k\in M} (\{k\}\times N)$ eine disjunkte Zerlegung. Hiermit
@@ -513,28 +513,28 @@ findet sich die Umformung
 \[\sum_{t\in M\times N} a_t
 \stackrel{\text{(1)}}= \sum_{k\in M}\;\sum_{t\in \{k\}\times N} a_t
 \stackrel{\text{(2)}}= \sum_{k\in M}\sum_{l\in N} a_{(k,l)},\]
-wobei (1) laut Korollar \ref{sum-partition} gilt und (2) per Substitutionsregel
+wobei (1) laut Satz \ref{sum-partition} gilt und (2) per Substitutionsregel
 \ref{sum-set-subs} mit der Bijektion $\varphi\colon N\to\{k\}\times N$
 mit $\varphi(l):=(k,l)$ und $t=\varphi(l)$.
 \end{Beweis}
 
-\begin{Korollar} Mit der Indikatorfunktion $1_A\colon M\to\{0,1\}$
+\begin{Satz} Mit der Indikatorfunktion $1_A\colon M\to\{0,1\}$
 für $A\subseteq M$ gilt
 \[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} a_k.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Mit disjunkter Zerlegung $M=A\cup (M\setminus A)$
-und Korollar \ref{sum-set-disjoint} gilt
+und Satz \ref{sum-set-disjoint} gilt
 \[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} \underbrace{1_A(k)}_{1} a_k
 + \sum_{k\in M\setminus A}\underbrace{1_A(k)}_{0} a_k
 = \sum_{k\in A} a_k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar} Allgemein gilt
+\begin{Satz} Allgemein gilt
 \[\sum_{k\in A\cup B} a_k = \sum_{k\in A} a_k + \sum_{k\in B} a_k
 - \sum_{k\in A\cap B} a_k.\]
-\end{Korollar}
-\begin{Beweis} Sei $G=A\cup B$ die Grundmenge. Gemäß Korollar
+\end{Satz}
+\begin{Beweis} Sei $G=A\cup B$ die Grundmenge. Gemäß Satz
 \ref{indicator-set-op} darf man rechnen
 \begin{align*}
 \sum_{k\in G} a_k &= \sum_{k\in G} 1_{A\cup B}(k)a_k
@@ -548,9 +548,9 @@ und Korollar \ref{sum-set-disjoint} gilt
 \[(\Delta a)_k := a_{k+1} - a_k.\]
 \end{Definition}
 
-\begin{Korollar}[Teleskopsumme]\label{sum-tele} Es gilt
+\begin{Satz}[Teleskopsumme]\label{sum-tele} Es gilt
 \[\sum_{k=m}^{n-1} (\Delta a)_k = \sum_{k=m}^{n-1} (a_{k+1} - a_k) = a_n - a_m.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}[Beweis 1] Induktion über $n$. Im Anfang $n=m$ haben beide Seiten
 der Gleichung den Wert null. Induktionsschritt:
 \[\sum_{k=m}^n (a_{k+1} - a_k) = (a_{n+1} - a_n) + \!\!\sum_{k=m}^{n-1} (a_{k+1} - a_n)
@@ -565,11 +565,11 @@ Somit ist%
 = a_n - a_m + \sum_{k=m}^{n-1} a_k - \sum_{k=m}^{n-1} a_k = a_n - a_m.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Zum Beweis einer Formel
 \[\sum_{k=m}^{n-1} a_k = s_n\]
 genügt es, $s_m=0$ und $(\Delta s)_n = a_n$ zu zeigen.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}[Beweis 1]
 Induktion über $n$. Im Anfang $n=m$ haben beide Seiten der Gleichung laut
 der Prämisse den Wert null. Induktionsschritt:
@@ -578,16 +578,16 @@ der Prämisse den Wert null. Induktionsschritt:
 = (\Delta s)_n + s_n = s_{n+1} - s_n + s_n = s_{n+1}.\,\qedsymbol\]
 \end{Beweis}
 \begin{Beweis}[Beweis 2]
-Spezialisierung von Korollar \ref{sum-tele}.\,\qedsymbol
+Spezialisierung von Satz \ref{sum-tele}.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar} Der Differenzoperator ist linear. Das heißt,
+\begin{Satz} Der Differenzoperator ist linear. Das heißt,
 für alle Folgen $(a_n), (b_n)$ und jede Konstante $c$ gilt
 \begin{align*}
 & \Delta(a+b) = \Delta a + \Delta b, && ((a+b)_n := a_n + b_n)\\
 & \Delta(ca) = c\Delta a. && ((ca)_n := ca_n)
 \end{align*}
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Man findet
 \begin{align*}
 (\Delta(a+b))_n &= (a+b)_{n+1} - (a+b)_n
@@ -604,20 +604,20 @@ und
 \[(Ta)_n := a_{n+1}.\]
 \end{Definition}
 
-\begin{Korollar}[Iterierter Differenzoperator]\newlinefirst
+\begin{Satz}[Iterierter Differenzoperator]\newlinefirst
 Für jede Folge $(a_n)$ und $m\in\Z_{\ge 0}$ gilt
 \[(\Delta^m a)_n = (-1)^m\sum_{k=0}^m\binom{m}{k} (-1)^k a_{n+k}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Es gilt $\Delta = T-\id$. Weil $T$ und $\id$ kommutieren,
 ist der binomische Lehrsatz anwendbar. Es ergibt sich
 \[\Delta^m = (T-\id)^m = \sum_{k=0}^m\binom{m}{k} (-1)^{m-k} T^k\id^{m-k}
 = (-1)^m \sum_{k=0}^m\binom{m}{k} (-1)^k T^k.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}\label{delta-deg}
+\begin{Satz}\label{delta-deg}
 Sei $f$ eine Polynomfunktion. Dann ist $\Delta_h f$ eine
 Polynomfunktion mit niedrigerem Grad.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Für $f(x)=\sum_{n=0}^m a_n x^n$ gilt
 \begin{gather*}
 \Delta_h f(x) = f(x+h) - f(x) = \sum_{n=0}^m a_n (x+h)^n - \sum_{n=0}^m a_n x^n
@@ -641,7 +641,7 @@ Man substituiere nun $n = a+m$. Für $n\ge a$ gilt dann
 \[f(n) = \sum_{k=0}^{n-a}\binom{n-a}{k}(\Delta^k f)(a)
 = \sum_{k=0}^N\binom{n-a}{k}(\Delta^k f)(a).\]
 Der Indexbereich der Summierung durfte auf bis $k=N$ geändert werden, weil
-$\Delta^k f = 0$ für $k>N$ laut Korollar \ref{delta-deg} gilt. Dass nun
+$\Delta^k f = 0$ für $k>N$ laut Satz \ref{delta-deg} gilt. Dass nun
 Summanden mit $k>n-a$ auftreten können, ist nicht weiter schlimm, weil
 in diesem Fall $\binom{n-a}{k}=0$ ist.\,\qedsymbol
 \end{Beweis}
@@ -649,10 +649,10 @@ in diesem Fall $\binom{n-a}{k}=0$ ist.\,\qedsymbol
 \newpage
 \subsection{Klassische Partialsummen}
 
-\begin{Korollar}[Partialsummen der konstanten Folge]%
+\begin{Satz}[Partialsummen der konstanten Folge]%
 \label{sum-const}\newlinefirst
 Es gilt $\displaystyle\sum_{k=m}^n 1 = n-m+1$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $n$. Im Anfang $n=m-1$ haben beide Seiten
 der Gleichung den Wert null. Induktionsschritt:
@@ -677,7 +677,7 @@ Klassischer Beweis. Man findet die Umformung
 \stackrel{\text{(2)}}= \!\sum_{k=0}^n (k+n-k)
 = \!\sum_{k=0}^n n \stackrel{\text{(3)}}= n\!\sum_{k=0}^n 1
 \stackrel{\text{(4)}}= n(n+1),\]
-wobei (1), (2), (3), (4) gemäß Korollar
+wobei (1), (2), (3), (4) gemäß Satz
 \ref{sum-rev}, \ref{sum-add}, \ref{sum-scale}, \ref{sum-const}
 gelten.\,\qedsymbol
 \end{Beweis}
@@ -696,11 +696,11 @@ den Wert null. Induktionsschritt:
 = \frac{z^{n+1}-z^m}{z-1}.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Für $m\ge 0$ und $z\in\C\setminus\{1\}$ gilt
 \[\sum_{k=m}^{n-1} kz^k
 = \frac{(nz^n-mz^m)(z-1) - (z^n-z^m)z}{(z-1)^2}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Die Gleichung von Satz \ref{sum-geom-seq} für $m\ge 1$ auf beiden
 Seiten nach $z$ ableiten und anschließend beide Seiten mit $z$
@@ -724,7 +724,7 @@ Zu zeigen verbleibt die Gleichung
 \iff n = \left\lfloor\frac{n}{2}\right\rfloor + 
 \left\lfloor\frac{n+1}{2}\right\rfloor.\]
 Wir nehmen die Fallunterscheidung zwischen geraden und ungeraden
-Zahlen vor, um Korollar \ref{floor-add-int} und \ref{floor-is-zero}
+Zahlen vor, um Satz \ref{floor-add-int} und \ref{floor-is-zero}
 nutzen zu können. Im geraden Fall $n=2k$ bestätigt sich
 \[\left\lfloor\frac{2k}{2}\right\rfloor +  \left\lfloor\frac{2k+1}{2}\right\rfloor
 = \lfloor k\rfloor + \left\lfloor k + \frac{1}{2}\right\rfloor = k + k = 2k.\]
@@ -748,9 +748,9 @@ Für $x\in\R$ definiert man
 \[y = \lceil x\rceil\defiff y\in\Z\land 0\le y-x < 1.\]
 \end{Definition}
 
-\begin{Korollar}\label{floor-add-int}
+\begin{Satz}\label{floor-add-int}
 Für jede ganze Zahl $k$ gilt $\lfloor k + x\rfloor = k + \lfloor x\rfloor$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Aufgrund der Prämisse $k\in\Z$ ist $y\in\Z$ äquivalent
 zu $y-k\in\Z$. Unter dieser Gegebenheit findet sich mit
 Def. \ref{def:floor} die äquivalente Umformung
@@ -760,9 +760,9 @@ y = \lfloor k+x\rfloor &\iff y\in\Z\land 0\le (k+x)-y < 1\iff y-k\in\Z\land 0\le
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}\label{floor-is-zero}
+\begin{Satz}\label{floor-is-zero}
 Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
 \end{Beweis}
@@ -790,10 +790,10 @@ definiert man $n^{\overline k}$ rekursiv durch
 \[n^{\overline 0} := 1,\quad n^{\overline {k+1}}:=n(n+1)^{\underline k}.\]
 \end{Definition}
 
-\begin{Korollar}\label{relation-ff-factorial}
+\begin{Satz}\label{relation-ff-factorial}
 Für $n,k\in\Z_{\ge 0}$ und $k\le n$ gilt
 \[n^{\underline k} = \frac{n!}{(n-k)!}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $k$. Im Anfang $k=0$ resultieren beide Seiten der
 Gleichung im gleichen Wert~1. Der Induktionsschritt ist
@@ -803,10 +803,10 @@ Gleichung im gleichen Wert~1. Der Induktionsschritt ist
 = \frac{n!}{(n-1)!}.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Für ganze Zahlen $n,k$ mit $n\ge 1$ und $k\ge 1-n$ gilt
 \[n^{\overline k} = \frac{(n+k-1)!}{(n-1)!}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Induktion über $k$. Im Anfang $k=0$ resultieren beide Seiten der
 Gleichung im gleichen Wert~1. Der Induktionsschritt ist
@@ -828,19 +828,19 @@ definiert man
 \[\binom{n}{k} := \frac{n^{\underline k}}{k!}.\]
 \end{Definition}
 
-\begin{Korollar}
+\begin{Satz}
 Für $n\in\Z$ mit $k\le n$ gilt
 \[\binom{n}{k} = \frac{n!}{k!(n-k)!}\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
-Folgt direkt aus Def. \ref{def:binom} und Korollar
+Folgt direkt aus Def. \ref{def:binom} und Satz
 \ref{relation-ff-factorial}.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Für $k\ge 1$ und $n\in\Z$ (oder allgemeiner $n\in\C$) gilt
 \[\binom{n}{k} = \frac{n}{k}\binom{n-1}{k-1}.\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Es findet sich die Umformung
 \[\binom{n}{k} = \frac{n^{\underline k}}{k!}

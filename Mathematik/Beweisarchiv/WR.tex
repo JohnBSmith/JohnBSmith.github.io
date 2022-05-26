@@ -51,13 +51,13 @@ Gleichung (P) gilt hierbei laut Prämisse.\,\qedsymbol
 \end{Beweis}
 
 \newpage
-\begin{Korollar}[Additivität des Wahrscheinlichkeitsmaßes]%
+\begin{Satz}[Additivität des Wahrscheinlichkeitsmaßes]%
 \label{prob-additivity}\newlinefirst
 Seien die $A_i$ paarweise disjunkte Mengen. Dann gilt
 \[P(\bigcup_{i\in I} A_i) = \sum_{i\in I} P(A_i).\]
 Für zwei disjunkte Menge $A,B$ gilt speziell
 \[P(A\cup B) = P(A) + P(B).\]
-\end{Korollar}
+\end{Satz}
 
 \begin{Beweis}[Beweis 1]
 Weil $A\cap B=\emptyset$ gilt, ist $[\omega\in A\cup B]
@@ -83,9 +83,9 @@ P(\bigcup_{i\in I} A_i)
 \end{gather*}
 \end{Beweis}
 \begin{Beweis}[Beweis 2]
-Laut Korollar \ref{prob-as-expected-value},
+Laut Satz \ref{prob-as-expected-value},
 Lemma \ref{indicator-disjoint}
-und Korollar \ref{expected-value-op-linear} gilt
+und Satz \ref{expected-value-op-linear} gilt
 \[P(A\cup B) = E(1_{A\cup B}) = E(1_A+1_B) = E(1_A) + E(1_B)
 = P(A) + P(B).\]
 Die allgemeine Rechnung ist
@@ -94,16 +94,16 @@ Die allgemeine Rechnung ist
 = \sum_{i\in I} E(1\{A_i\}) = \sum_{i\in I} P(A_i).\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Sei $(\Omega,P)$ ein diskreter Wahrscheinlichkeitsraum in Form von Def.
 \ref{def:discrete-prob-space}. Der Raum ist in Form des Tripels
 $(\Omega,2^\Omega,P)$ ein Wahrscheinlichkeitsraum, denn das Maß
 $P$ erfüllt die drei kolmogorowschen Axiome.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Die ersten beiden Axiome, $(\forall A\colon P(A)\ge 0)$ und
 $P(\Omega)=1$, gelten per Definition. Das dritte Axiom, die Additivität,
-gilt laut Korollar \ref{prob-additivity}. Dass es sich bei $2^\Omega$
+gilt laut Satz \ref{prob-additivity}. Dass es sich bei $2^\Omega$
 um eine sigma-Algebra handelt, ist kaum einer ausdrücklichen
 Erwähnung wert.\,\qedsymbol
 \end{Beweis}
@@ -125,19 +125,19 @@ P(A) &= P(A\cap\Omega) = P(A\cap\bigcup_{B\in Z} B)
 \end{align*}
 \end{Beweis}
 
-\begin{Korollar}[Gesetz der totalen Wahrscheinlichkeit für Zufallsgrößen]%
+\begin{Satz}[Gesetz der totalen Wahrscheinlichkeit für Zufallsgrößen]%
 \label{total-prob-rv}\newlinefirst
 Seien $X,Y\colon\Omega\to\Omega'$ Zufallsgrößen. Dann gilt%
 \[P(Y\in A) = \sum_{x\in X(\Omega)} P(Y\in A\mid X=x)P(X=x),\]
 speziell
 \[P(Y=y) = \sum_{x\in X(\Omega)} P(Y=y\mid X=x)P(X=x).\]
-\end{Korollar}
+\end{Satz}
 
 \begin{Beweis}
 Sei $Z=X(\Omega)$. Zunächst gilt
 \[\Omega = X^{-1}(Z) = X^{-1}(\bigcup_{x\in Z} \{x\})
 = \bigcup_{x\in Z} X^{-1}(x)\]
-gemäß Satz \ref{preimg-dl} (preimg-dl), und gemäß Korollar
+gemäß Satz \ref{preimg-dl} (preimg-dl), und gemäß Satz
 \ref{disjoint-preimg} ist das eine Vereinigung nichtleerer
 paarweise disjunkter Mengen. Laut dem Gesetz der totalen
 Wahrscheinlichkeit gilt daher%
@@ -179,18 +179,18 @@ E(g\circ X) = \sum_{\omega\in\Omega}g(X(\omega))P(\omega)
 = \sum_{x\in X(\Omega)} g(x)P(X^{-1}(x)).\;\qedsymbol
 \end{gather*}
 
-\begin{Korollar}
+\begin{Satz}
 Es gilt
 \[E(X) = \sum_{x\in X(\Omega)} xP(X=x).\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Spezialisierung von Satz \ref{prob-transform} mit
 $g:=\id$.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}\label{expected-value-op-linear}
+\begin{Satz}\label{expected-value-op-linear}
 Der Erwartungswertoperator ist ein lineares Funktional,
 das heißt, es gilt $E(aX)=aE(X)$ und $E(X+Y)=E(X)+E(Y)$. 
-\end{Korollar}
+\end{Satz}
 \strong{Beweis.} Aufgrund der Konvergenz der Reihen gilt
 \[E(aX) = \sum_{\omega\in\Omega}aX(\omega)P(\omega)
 = a\sum_{\omega\in\Omega}X(\omega)P(\omega) = aE(X)\]
@@ -202,8 +202,8 @@ E(X+Y) &= \sum_{\omega\in\Omega} (X(\omega)+Y(\omega))P(\omega)
 + \sum_{\omega\in\Omega} Y(\omega)P(\omega) = E(X)+E(Y).\;\qedsymbol
 \end{align*}
 
-\begin{Korollar} Ist $X\le Y$, dann ist auch $E(X)\le E(Y)$.
-\end{Korollar}
+\begin{Satz} Ist $X\le Y$, dann ist auch $E(X)\le E(Y)$.
+\end{Satz}
 \strong{Beweis.} Gemäß $P(\omega)\ge 0$ ist
 \begin{gather*}
 X\le Y\iff X(\omega)\le Y(\omega)\iff 0\le Y(\omega)-X(\omega)
@@ -274,28 +274,28 @@ E(1_A X) &= \sum_{\omega\in\Omega} 1_A(\omega) X(\omega) P(\{\omega\})
 \end{align*}
 wobei $X^{-1}(x) = \{X=x\}$.\;\qedsymbol
 
-\begin{Korollar}\label{prob-as-expected-value}
+\begin{Satz}\label{prob-as-expected-value}
 Es gilt $P(A) = E(1_A)$, wobei $1_A$ die Indikatorfunktion ist.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Gemäß Definition des Erwartungswertes ist
 \[E(1_A) = \sum_{\omega\in\Omega} 1_A(\omega)P(\{\omega\})
 = \sum_{\omega\in A}P(\{\omega\}) = P(A).\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Es gilt $P(A\mid B) = E(1_A\mid B)$, wobei $1_A$ die Indikatorfunktion ist.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Gemäß Definition \ref{def:cond-expected-value}
-und Korollar \ref{prob-as-expected-value} ist
+und Satz \ref{prob-as-expected-value} ist
 \[E(1_A\mid B) = \frac{E(1_A 1_B)}{P(B)} = \frac{E(1_{A\cap B})}{P(B)}
 = \frac{P(A\cap B)}{P(B)} = P(A\mid B).\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Der Erwartungswert ist der Schwerpunkt der Wahrscheinlichkeitsmassen.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Der Schwerpunkt $s$ ist charakterisiert durch die folgende
 Gleichgewichtsbedingung, die wie folgt äquivalent umgeformt werden
 darf:
@@ -308,6 +308,22 @@ darf:
 \end{Beweis}
 
 \newpage
+\begin{Satz}
+Für $X\colon\Omega\to\R$ und $g\colon\R\to\R$ gilt
+\[P(g(X)=y) = P((g\circ X) = y) = \sum_{\mathclap{x\in g^{-1}(y)}} P(X=x)
+= \sum_{\mathclap{x:g(x)=y}} P(X=x).\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich
+\begin{gather*}
+P(g(X)=y) = P((g\circ X)^{-1}(\{y\})) = P(X^{-1}(g^{-1}(\{y\}))
+= P_X(g^{-1}(\{y\}))\\
+= P_X(\bigcup\nolimits_{x\in g^{-1}(\{y\})} \{x\})
+= \sum_{\mathclap{x\in g^{-1}(\{y\})}} P_X(\{x\})
+= \sum_{\mathclap{x\in g^{-1}(\{y\})}} P(X=x).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
 \begin{Satz}\label{prob-fn2-preimg}
 Für $X,Y\colon\Omega\to\R$ und $g\colon\R^2\to\R$ gilt
 \[P(g(X,Y)=a) = \sum_{(x,y)\mathrlap{:g(x,y)=a}}P(X=x, Y=y)
@@ -326,13 +342,13 @@ P(g(X,Y)=a) = P(\{\omega\in\Omega\mid g(X(\omega),Y(\omega))=a\})\\
 \end{gather*}
 \end{Beweis}
 
-\begin{Korollar}
+\begin{Satz}
 Für unabhängige Zufallsgrößen $X,Y$ gilt
 \begin{gather*}
 P(X+Y=a) = \sum_{\mathclap{x\in X(\Omega)}} P(X=x)P(Y=a-x),\\
 P(X-Y=a) = \sum_{\mathclap{x\in X(\Omega)}} P(X=x)P(Y=x-a).
 \end{gather*}
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Es findet sich
 \begin{align*}
@@ -345,12 +361,30 @@ Hierbei gilt (1) laut Satz \ref{prob-fn2-preimg}
 und (2) laut Satz \ref{rand-var-independence-char}.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}
+Für $X,Y\colon\Omega\to\R$ und $g\colon\R^2\to\R$ gilt
+\[E(g(X,Y)) = \sum_{(x,y)} g(x,y)P(X=x,Y=y),\]
+wobei die Summe die $(x,y)\in X(\Omega)\times Y(\Omega)$ durchläuft.
+\end{Satz}
+\begin{Beweis}
+Mit der Abkürzung $A_{xy}:=\{\omega\in\Omega\mid X(\omega)=x\land Y(\omega)=y\}$
+findet sich%
+\begin{gather*}
+E(g(X,Y)) = \sum_{\omega\in\Omega} g(X,Y)(\omega)P(\{\omega\})
+= \sum_{\omega\in\Omega} g(X(\omega),Y(\omega))P(\{\omega\})\\
+= \sum_{(x,y)}\sum_{\omega\in A_{xy}} g(x,y)P(\{\omega\})
+= \sum_{(x,y)}g(x,y)\sum_{\mathclap{\omega\in A_{xy}}} P(\{\omega\})
+= \sum_{(x,y)}g(x,y)P(X=x,Y=y).
+\end{gather*}
+Diese Rechnung ist anlog zu der im Beweis von Satz \ref{prob-transform}.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Allgemeine Wahrscheinlichkeitsräume}
 
-\begin{Korollar}
+\begin{Satz}
 Der Erwartungswert ist der Schwerpunkt der Dichtefunktion.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis} Der Schwerpunkt $s$ ist charakterisiert durch die
 folgende Gleichgewichtsbedingung, die wie folgt äquivalent
 umgeformt werden darf:
@@ -461,10 +495,10 @@ für $h\searrow 0$ überein.
 Der Grenzwert in Def. \ref{def:intensity-matrix} existiert.
 \end{Satz}
 
-\begin{Korollar}
+\begin{Satz}
 Für die Übergangsmatrix gilt
 \[P(h) = E + hQ + o(h),\,\text{bzw.}\; p_{ij}(h) = \delta_{ij} + hq_{ij} + o(h).\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Weil $P$ laut Satz \ref{intensity-matrix-exists} an der Stelle $0$
 differenzierbar ist, besteht die Linearisierung
@@ -512,9 +546,9 @@ $R'(t)=0$. Damit ist $R$ konstant mit $R(t)=R(0)=E$ laut Anfangsbedingung.
 Es gibt also keine weitere Lösung außer $P(t)=\ee^{tQ}$.\,\qedsymbol
 \end{Beweis}
 
-\begin{Korollar}\label{intensity-matrix-row-sum}
+\begin{Satz}\label{intensity-matrix-row-sum}
 Für die Intensitätsmatrix gilt $\sum_{j\in S} q_{ij} = 0$.
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
 Weil $p_{ij}(t)$ eine Wahrscheinlichkeitsfunktion in $j$ ist, muss
 $\sum_{j\in S}p_{ij}(t)=1$ gelten. Demzufolge ist
@@ -522,12 +556,12 @@ $\sum_{j\in S}p_{ij}(t)=1$ gelten. Demzufolge ist
 = \sum_{j\in S} q_{ij}.\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Korollar}[Mastergleichung]\newlinefirst
+\begin{Satz}[Mastergleichung]\newlinefirst
 Die Übergangsmatrix erfüllt die Mastergleichung
 \[p_{ij}'(t) = \sum_{k\ne j} (p_{ik}(t)q_{kj} - p_{ij}(t)q_{jk}).\]
-\end{Korollar}
+\end{Satz}
 \begin{Beweis}
-Da die Zeilensummen laut Korollar \ref{intensity-matrix-row-sum}
+Da die Zeilensummen laut Satz \ref{intensity-matrix-row-sum}
 verschwinden, gilt $q_{jj} = -\sum_{k\ne j} q_{jk}$.
 Damit erhält man die Umformung
 \begin{align*}
