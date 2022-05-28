@@ -111,12 +111,13 @@ LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom besteht.
 Verzichtet keiner der Beweise eines Satzes auf LEM, sollte der Satz
 ebenfalls mit LEM markiert werden.
 
-\begin{Axiom}[Beseitigung der Doppelnegation]\label{DNE}\newlinefirst
+\begin{Axiom}[DN: Beseitigung der Doppelnegation]\label{DNE}\newlinefirst
 Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
 \[\vdash (\neg\neg A\implies A).\]
 \end{Axiom}
 
-\begin{Satz} Das Axiom \ref{LEM} (LEM) zieht \ref{DNE} nach sich.
+\begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{PE} (PE)
+implizieren Axiom \ref{DNE} (DN).
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)]
 Zu $\neg A \lor A\vdash (\neg\neg A \Rightarrow A)$.
@@ -130,6 +131,135 @@ s\mapsto\match s\begin{cases}
 konstruieren.\;\qedsymbol
 \end{Beweis}
 
+\newpage
+
+\begin{Satz}[Transitivgesetz der Implikation]\newlinefirst
+Es gilt
+$(A\Rightarrow B) \land (B\Rightarrow C) \Rightarrow (A\Rightarrow C)$.
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Schematisch:
+\[\infer[\infernote{1}]{A\Rightarrow C}{
+  \infer{C}{
+   \infer{B}{\infer[\infernote{1}]{A}{}
+   & \infer{A\Rightarrow B}{(A\Rightarrow B)\land (B\Rightarrow C)}}
+   & \infer{B\Rightarrow C}{(A\Rightarrow B)\land (B\Rightarrow C)}}
+}
+\]
+Programmterm:
+\[(A\to B)\times (B\to C)\to (A\to C),\quad
+(f, g)\mapsto (a\colon A)\mapsto g(f(a)).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Kontrapositionsableitung]\label{contrapos-intro}\newlinefirst
+Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch:
+\[
+\begin{array}{@{}l@{\qquad\qquad}l}
+\infer[\infernote{2}]{\neg B\Rightarrow\neg A}{
+  \infer[\infernote{1}]{\neg A}{
+    \infer{0}{
+       \infer{B}{A\Rightarrow B & \infer[\infernote{1}]{A}{}}
+       & \infer[\infernote{2}]{\neg B}{}
+    }
+  }
+}
+&
+\infer{A\Rightarrow B\vdash \neg B\Rightarrow\neg A}{
+  \infer{A\Rightarrow B, \neg B\vdash\neg A}{
+    \infer{A\Rightarrow B, \neg B, A\vdash 0}{
+      \infer{A\Rightarrow B, A\vdash B}{
+        \infer{A\vdash A}{}
+      }
+    }
+  }
+}
+\end{array}
+\]
+Programmterm zu $(A\Rightarrow B)\Rightarrow (B\Rightarrow 0)\Rightarrow (A\Rightarrow 0)$:
+\[(A\to B)\to (B\to 0)\to (A\to 0),\quad
+f\mapsto g\mapsto (a\colon A)\mapsto g(f(a)).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Kontraposition] \strong{[LEM]}\newlinefirst
+Es gilt $A\Rightarrow B \iff \neg B\Rightarrow\neg A$.
+\end{Satz}
+\begin{Beweis}[Beweis 1 (LEM, boolesche Algebra)]
+Es findet sich
+\[A\Rightarrow B \equiv \neg A\lor B\equiv B\lor\neg A
+\equiv \neg\neg B\lor\neg A \equiv \neg B\Rightarrow \neg A.\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2 (LEM, natürliches Schließen)]
+Zu $\neg B\Rightarrow\neg A\vdash A\Rightarrow B$. Schematisch
+\[
+\infer[\infernote{1}]{A\Rightarrow B}{
+  \infer[\infernote{2}]{B}{
+    \infer[\infernote{LEM}]{B\lor \neg B}{}
+    & \infer[\infernote{2}]{B}{}
+    & \infer[\infernote{PE}]{B}{
+      \infer{0}{
+        \infer[\infernote{1}]{A}{}
+        & \infer{\neg A}{
+          \infer[\infernote{2}]{\neg B}{}
+          & \neg B\Rightarrow\neg A}}}}}
+\]
+Die umgekehrte Richtung bestätigt Satz \ref{contrapos-intro}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Axiom \ref{DNE} (DN) impliziert
+Axiom \ref{PE} (PE).
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Schematisch:
+\[
+\begin{array}{@{}l@{\qquad\qquad}l}
+\infer[\infernote{DN}]{A}{
+  \infer{\neg\neg A}{
+    \infer{\neg A\Rightarrow 0}{0}
+  }
+}
+&
+\infer[\infernote{DN}]{0\vdash A}{
+  \infer{0\vdash\neg\neg A}{
+    \infer{0\vdash \neg A\Rightarrow 0}{
+      \infer{0,\neg A\vdash 0}{}
+    }
+  }
+}
+\end{array}
+\]
+Vermittels $\operatorname{dn}(A)\colon ((A\mapsto 0)\mapsto 0)\mapsto A$
+findet sich der Programmterm
+\[0\to A,\quad x\mapsto \operatorname{dn}(A)((f: A\to 0)\mapsto x).
+\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Axiom \ref{DNE} (DN) impliziert Axiom \ref{LEM} (LEM).
+\end{Satz}
+\begin{Beweis}[Beweis (Natürliches Schließen)]
+Schematisch:
+\[\infer[\infernote{DN}]{A\lor\neg A}{
+  \infer[\infernote{1}]{\neg\neg (A\lor\neg A)}{
+    \infer{0}{
+      \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
+    & \infer{A\lor\neg A}{
+        \infer[\infernote{2}]{\neg A}{
+          \infer{0}{
+            \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
+          & \infer{A\lor\neg A}{\infer[\infernote{2}]{A}{}}}}}}}}
+\]
+Der diesbezügliche Programmterm ist
+\[A + (A\to 0),\quad
+\operatorname{dn}(A + (A\to 0))(
+  f\mapsto f(\operatorname{inr}((a: A)\mapsto f(\operatorname{inl}(a))))
+),\]
+wobei $f\colon A + (A \to 0)\to 0$ sein soll.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Prädikatenlogik}\index{Praedikatenlogik@Prädikatenlogik}
 
 \begin{Definition}[bounded: beschränkte Quantifizierung]%
