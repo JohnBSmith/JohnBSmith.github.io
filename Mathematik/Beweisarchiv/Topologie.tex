@@ -330,6 +330,46 @@ Folgt trivial aus Satz \ref{construction-disjoint-ep-balls}.
 Wähle speziell z.\,B. $a=b=d(p,q)/2$.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{metric-transform}
+Sei $d$ eine Metrik. Ist $f\colon\R_{\ge 0}\to\R$ eine streng monoton
+steigende und subadditive Funktion mit $f(0)=0$, so ist $f\circ d$
+ebenfalls eine Metrik.
+\end{Satz}
+\begin{Beweis}
+Aufgrund der strengen Monotonie ist $f(r)=0\Leftrightarrow r = 0$,
+womit $d(x,y)=0\Leftrightarrow f(d(x,y))=0$ gilt. Zur
+Dreiecksungleichung findet sich
+\[d(x,y) \le d(x,z) + d(z,y)
+\stackrel{\text{(1)}}\implies f(d(x,y))\le f(d(x,z) + d(z,y))
+\stackrel{\text{(2)}}\le f(d(x,z)) + f(d(z,y)),\]
+wobei (1) mit der Monotonie und (2) mit der Subadditivität
+gilt. Man erhält
+\[(f\circ d)(x,y)\le (f\circ d)(x,z) + (f\circ d)(z,y).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Zu einer Metrik $d$ ist
+\[d_b(x,y) := \frac{d(x,y)}{1+d(x,y)}\]
+ebenfalls eine Metrik, die man auch als beschränkte Metrik bezeichnet.
+\end{Satz}
+\begin{Beweis}
+Es gilt $d_b = f\circ d$ bezüglich $f(r) = \frac{r}{1+r}$.
+Nun wird Satz \ref{metric-transform} zur Anwendung gebracht, dessen
+Voraussetzungen zu prüfen sind. Der Umstand
+$f(0)=0$ ist trivial. Es ist $f$ streng monoton steigend, denn
+die Ableitung $f'(r)$ ist stetig, hat positive Werte und besitzt keine
+Nullstellen. Nun wird die Subadditivität $f(x+y)\le f(x)+f(y)$ gezeigt.
+Wegen $x\ge 0$ und $y\ge 0$ gilt $1+x>0$ und $1+y>0$ und
+$1+x+y>0$, womit sich die äquivalente Umformung
+\[\frac{x+y}{1+x+y} \le \frac{x}{1+x} + \frac{y}{1+y}
+\Leftrightarrow (x+y)(1+x)(1+y) \le ((1+y)x + (1+x)y)(1+x+y)\]
+findet. Multipliziert man beide Seiten aus und kürzt, verbleibt
+\[0\le xy^2 + x^2 y + 2xy = (x+y+2)xy\]
+zu zeigen. Diese ist erfüllt wegen $x+y+2>0$ zuzüglich $x\ge 0$ und
+$y\ge 0$.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \subsection{Normierte Räume}
 \begin{Definition}[normed-space: normierter Raum]%
 \label{def:normed-space}\index{normierter Raum}\index{Dreiecksungleichung}
@@ -385,6 +425,7 @@ ist, $\R\setminus\{f(0)\}$ aber nicht, kann $f$ laut Satz
 \ref{intermediate-value-general} nicht stetig sein.\,\qedsymbol
 \end{Beweis}
 
+\newpage
 \section{Übungen}
 
 \begin{Satz}
