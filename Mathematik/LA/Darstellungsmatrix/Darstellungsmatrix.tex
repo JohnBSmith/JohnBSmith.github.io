@@ -157,6 +157,58 @@ Transformationsmatrix für den Basiswechsel von $A$ zu $B$.
 \end{frame}
 
 \begin{frame}
+\begin{center}
+\strong{Darstellungsmatrix einer Bilinearform}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Sei $s\colon\R^2\times\R^2\to\R$ eine beliebige Bilinearform. Wendet
+man sie auf zwei Koordinatenvektoren $\bv v = v_1\bv e_1 + v_2\bv e_2$
+und $\bv w = w_1\bv e_1+w_2\bv e_2$ an, darf man aufgrund der
+Bilinearität ausmultiplizieren, womit sich
+\[s(\bv v,\bv w) =
+v_1 w_1 s_{11} + v_1 w_2 s_{12}
++ v_2 w_1 s_{21} + v_2 w_2 s_{22}\]
+mit $s_{ij}:=s(\bv e_i,\bv e_j)$ ergibt.\pause{} Dieser Ausdruck lässt sich
+umformen zu
+\[s(\bv v,\bv w) = \begin{pmatrix}
+v_1 & v_2
+\end{pmatrix}\begin{pmatrix}
+s_{11} w_1 + s_{12} w_2\\
+s_{21} w_1 + s_{22} w_2
+\end{pmatrix}
+= \begin{pmatrix}v_1 & v_2\end{pmatrix}
+\begin{pmatrix}s_{11} & s_{12}\\
+s_{21} & s_{22}\end{pmatrix}
+\begin{pmatrix}w_1\\ w_2 \end{pmatrix},\]
+also mit der Matrix $S=(s_{ij})$ zu
+\[s(\bv v,\bv w) = \bv v^T S\bv w.\]
+\end{frame}
+
+\begin{frame}
+Nun wollen wir in Erfahrung bringen, wie die Bilinearform ausgedrückt
+werden kann, wenn die Argumente in der Basis $A$ vorliegen.
+Mit $\bv v = A\bv v_A$ und $\bv w = A\bv w_A$ erhält man
+\[s(\bv v,\bv w) = s(A\bv v_A,A\bv w_A) = (A\bv v_A)^T S(A\bv w_A)
+= \bv v_A^T A^T S A\bv w_A.\]\pause
+Bezüglich der Basis $A$ besitzt die Bilinearform also die Darstellung
+\[s(\bv v,\bv w) = \bv v_A^T S'\bv w_A,\]
+wobei $S'=A^T SA$ die \emph{Darstellungsmatrix} ist.
+\end{frame}
+
+\begin{frame}
+Es gibt noch einen alternativen Weg zur Bestimmung der Darstellungsmatrix.
+Wir erinnern uns dafür daran, dass $\bv a_k = A\bv e_k$ gilt.
+Setzt man nun $\bv v_A := \bv e_i$ und $\bv w_A := \bv e_j$ ein,
+ergibt sich
+\[s(\bv a_i,\bv a_j) = \bv e_i^T S'\bv e_j = (S')_{ij}.\]\pause
+Wir halten fest:
+\emph{Die Komponenten der Darstellungsmatrix sind die Bilder der
+Basisvektoren.}
+\end{frame}
+
+\begin{frame}
 Ende.
 \vfill\hfill\modest{Juni 2021}\\
 \hfill\modest{Creative Commons CC0 1.0}

@@ -20,6 +20,7 @@
   <li><a href="#Produktmengen">Produktmengen</a>
   <li><a href="#Abb">Raum der Abbildungen</a>
   <li><a href="#Inj">Raum der Injektionen</a>
+  <li><a href="#Kombinationen">Raum der Kombinationen</a>
   </ol>
 <li><a href="#Funktionen">Kombinatorische Funktionen</a>
   <ol>
@@ -162,6 +163,19 @@ def fn(it):
     return lambda x: d[x]
 </pre>
 
+<p>Für die Erzeugung eines Raums mehrstelliger Abbildungen genügt
+es, für den Definitionsbereich das entsprechende kartesische Produkt
+einzufügen. Das Programm
+
+<pre class="ibox python">
+X = list(product([0, 1], repeat = 2))
+Y = [0, 1]
+for f in mappings(X, Y):
+    print(f)
+</pre>
+
+<p>beschreibt beispielweise die Auflistung der 16 zweistelligen.
+
 <h3 id="Inj">Raum der Injektionen</h3>
 
 <p>Eine endliche Abbildung ist genau dann injektiv, wenn ihr
@@ -218,6 +232,74 @@ def permutations(a, k):
 </pre>
 
 <p>die Variationen der Länge <var>k</var>.
+
+<h3 id="Kombinationen">Raum der Kombinationen</h3>
+
+<p>Zur Erzeugung des Raums der Kombinationen steht die Funktion
+<code>combinations</code> aus dem Modul <code>itertools</code>
+zur Verfügung. Der Aufruf <code>combinations(a,&nbsp;k)</code>
+erzeugt die <code>k</code>-elementigen Teilmengen von <code>a</code>
+in Form von Tupeln. Beispielsweise erzeugt
+
+<pre class="ibox python">
+from itertools import combinations
+
+print(list(combinations([0, 1, 2], 2)))
+</pre>
+
+<p>die Ausgabe:
+
+<pre class="ibox">
+[(0, 1), (0, 2), (1, 2)]
+</pre>
+
+<p>Die rekursive Erzeugung geht auf dieselbe Weise vonstatten wie
+der Beweis der Übereinstimmung des Binomialkoeffizienten mit
+der Anzahl der Kombinationen. Das Argument ist Induktion über die
+Paare (<var>n</var>,&nbsp;<var>k</var>). Gesucht seien also die
+<var>k</var>-elementigen Teilmengen einer Menge&nbsp;<var>Y</var> mit
+<var>n</var>&nbsp;=&nbsp;|<var>Y</var>|. Im Anfang
+<var>k</var>&nbsp;=&nbsp;0 gibt es genau eine Kombination, nämlich
+die leere Menge. Im Anfang <var>k</var>&nbsp;=&nbsp;<var>n</var> gibt es ebenfalls
+eine Kombination, nämlich die Menge&nbsp;<var>Y</var> selbst. Im Induktionsschritt
+nimmt man ein beliebiges Element&nbsp;<var>y</var> aus der Menge&nbsp;<var>Y</var>
+heraus, an welchem eine Fallunterscheidung vorgenommen wird. Entscheidet man
+sich, das Element&nbsp;<var>y</var> hinzuzufügen, verbleiben die
+(<var>k</var>&minus;1)-elementigen Teilmengen von <var>Y</var>\{<var>y</var>}
+zu erzeugen. Entscheidet man sich dagegen, verbleiben die
+<var>k</var>-elementigen Teilmengen von <var>Y</var>\{<var>y</var>} zu erzeugen.
+Es entsteht der folgende Algorithmus:
+
+<pre class="ibox python">
+def combinations(Y, k):
+    if k == 0:
+        return [set()]
+    elif k == len(Y):
+        return [Y]
+    else:
+        Y_minus_y = Y.copy(); y = Y_minus_y.pop()
+        C_take = [{y} | C for C in combinations(Y_minus_y, k - 1)]
+        C_skip = combinations(Y_minus_y, k)
+        return C_take + C_skip
+</pre>
+
+<p>Fast mühelos findet sich eine Anpassung, die mit Tupeln oder Listen
+anstelle von Mengen arbeitet:
+
+<pre class="ibox python">
+def combinations(a, k):
+    if k == 0:
+        return [()]
+    elif k == len(a):
+        return [tuple(a)]
+    else:
+        c_take = [(a[0],) + c for c in combinations(a[1:], k - 1)]
+        c_skip = combinations(a[1:], k)
+        return c_take + c_skip
+</pre>
+
+<p>Die Auflistung geht hierbei lexikografisch geordnet
+vonstatten, sofern <code>a</code> geordnet ist.
 
 <h2 id="Funktionen">Kombinatorische Funktionen</h2>
 

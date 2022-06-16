@@ -25,7 +25,7 @@
 \numberwithin{equation}{section}
 
 \usepackage{bm}
-\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\bv}[1]{\mathbf{#1}}
 \newcommand{\R}{\mathbb R}
 
 \begin{document}
@@ -45,95 +45,144 @@
 
 \subsection{Bewegungen}
 
-Im Raum $\R^3$ befinden sich $N$ Punktmassen mit Koordinaten
-$\bvec x_k$ für $k\in\{1,\ldots,N\}$. Eine Bewegung liegt vor,
-wenn jede Punktmasse jeweils eine stetige Funktion der Zeit ist:
-\begin{equation}
-\bvec x_k\colon T\to\R^3, \quad\text{$T\subseteq\R$ ein Zeitintervall}.
-\end{equation}
+Im Raum $\R^3$ seien $N$ Punktmassen mit Koordinaten
+$\bv x_k$ für $k\in\{1,\ldots,N\}$ befindlich. Eine \emph{Bewegung}
+liegt vor, wenn jede Punktmasse jeweils eine stetige Funktion der Zeit ist:%
+\[\bv x_k\colon T\to\R^3, \quad\text{$T\subseteq\R$ ein Zeitintervall}.\]
 Die Koordinaten der Punktmassen lassen sich zusammenfassen zu einem
 Koordinatenpunkt im $\R^{3N}$, dem \emph{Ortsraum}. Die Bewegung des
 Systems von Punktmassen ist also beschrieben durch eine stetige
 Funktion
-\begin{equation}
-\bvec x\colon T\to\R^{3N}.
-\end{equation}
+\[\bv x\colon T\to\R^{3N}.\]
+Bei Bewegungen wird meist die Differentialrechnung eine Rolle spielen,
+weshalb man glatte oder zumindest hinreichend oft differenzierbare
+Bewegungen betrachten wird.
 
 \subsection{Zwangsbedingungen}
 
-Eine Einschränkung der Bewegungsfreiheit lässt sich formulieren
-als implizite Funktion. Sei dazu $f\colon\R^{3N}\to\R^p$
-differenzierbar und $0$ ein regulärer Wert. Dann ist die Lösungsmenge
-der Gleichung $f(\bvec x)=0$ eine Untermannigfaltigkeit der Dimension
+Kurze Rekapitulation. Sei $f\colon\R^n\to\R^m$ eine differenzierbare
+Abbildung. Man nennt $y\in\R^m$ einen regulären Wert von $f$, wenn
+$\mathrm df(x)$ für jedes $x\in f^{-1}(\{y\})$ surjektiv ist, oder
+äquivalent, wenn $\mathrm df$ den konstanten Rang $m$ hat.
+Unter diesem Umstand ist $M:=f^{-1}(\{y\})$ eine Untermannigfaltigkeit
+von $\R^n$ mit der Dimension $\dim M = n-m$. Man bezeichnet die
+Einschränkung $f|M$ als Submersion. Außerdem gilt
+$T_x M = \operatorname{Kern}(\mathrm df(x))$, wobei mit $T_x M$
+der Tangentialraum von $M$ am Punkt $x$ gemein ist.
+
+Eine Einschränkung der Bewegungsfreiheit lässt sich
+als implizite Funktion formulieren. Sei dazu $f\colon\R^{3N}\to\R^p$
+differenzierbar und 0 ein regulärer Wert von $f$. Dann ist die Lösungsmenge
+der Gleichung $f(\bv x)=0$ eine Untermannigfaltigkeit der Dimension
 $3N-p$. Man bezeichnet dies als holonom"=skleronome Zwangsbedingung.
 
 Nun kann eine Zwangsbedingung aber auch zeitabhängig sein. Sei dazu
-$f\colon\R^{3N+1}\to\R^p$ differenzierbar und $0$ ein regulärer Wert.
-Dann ist die Lösungsmenge $f(t,\bvec x)=0$ eine Untermannigfaltigkeit
-des $\R^{3N+1}$ mit der Dimension $3N+1-p$. Man spricht von einer
+\[f\colon\R\times\R^{3N}\to\R^p\]
+differenzierbar und sei $0$ zu jedem festen Parameter $t$ ein
+regulärer Wert von $\bv x\mapsto f(t,\bv x)$. Dann ist die
+Lösungsmenge $f(t,\bv x)=0$ zu jedem $t$ eine Untermannigfaltigkeit
+des $\R^{3N}$ mit der Dimension $3N-p$. Man spricht von einer
 holonom"=rheonomen Zwangsbedingung.
+
+\subsection{Generalisierte Koordinaten}
+
+Eine solche als Lösungsmenge einer holonomen Zwangsbedingung $f(t,\bv x)=0$
+beschriebene Untermannigfaltigkeit $M$ bezeichnet man als
+\emph{Konfigurationsmannigfaltigkeit}.
+
+Orte auf $M$ lassen sich durch ein lokales Koordinatensystems
+$\Phi\colon U\to M$ mit $U\subseteq\R^S$ mit $S=3N-p$ beschreiben, so
+dass $\bv x = \Phi(q)$ für jedes $q\in U$ die Gleichung $f(t,\bv x)=0$
+löst. Man bezeichnet $q=(q_1,\ldots,q_S)$ als \emph{generalisierte Koordinaten}.
+
+Die Elemente aus $T_q U\cong\R^S$ bezeichnet man als
+\emph{virtuelle Verrückungen}. Die Tangentialvektoren aus
+$T_{\bv x} M$ bezüglich $\bv x = \Phi(q)$ tragen ebenfalls diese
+Bezeichnung, da der lineare Isomorphismus%
+\[\mathrm d\Phi(q)\colon T_q U\to T_{\bv x} M\]
+besteht.
 
 \subsection{Zwangskräfte}
 
-Die Wahl eines lokalen Koordinatensystem $\Phi\colon U\to\R^{3N}$ mit
-$U\subseteq\R^{3N-p}$, so dass $\bvec x := \Phi(q)$ die Gleichung
-$f(\bvec x)=0$ löst, nennt man \emph{generalisierte Koordinaten}.
-
 Betrachten wir zunächst den Fall $N=1$ und $p=1$. Nun kann sich die
 Punktmasse nicht mehr frei bewegen, sondern ist auf die
-Mannigfaltigkeit $M$ eingeschränkt. Befindet man sich innerhalb
-der Mannigfaltigkeit und weiß nichts über den umliegenden Raum,
-wird die Punktmasse durch eine Kraft $\bvec F$ beschleunigt,
-die im Tangentialraum $T_{\bvec x} M$ liegen muss.
+Mannigfaltigkeit $M$ eingeschränkt. Die Bewegung wollen wir aber
+weiterhin mit dem zweiten newtonschen Gesetz als
+\[m\bv x''(t) = \bv F\]
+beschrieben wissen. Wäre bei Abhandensein äußerer Kräfte $\bv F=0$,
+resultiert die Anfangswertaufgabe in einer geradlinigen Bewegung, was
+aber bei gekrümmtem $M$ absurd ist, da die Bewegung innerhalb $M$
+verlaufen soll. Ergo muss eine weitere Kraft
+existieren, die wir als \emph{Zwangskraft} bezeichnen. Die Kraft
+$\bv F$ wird gemäß $\bv F = \bv K+\bv Z$ in zwei Anteile zerlegt.
+Der Anteil $\bv K$ ist die von außen wirkende Kraft, auch
+\emph{eingeprägte Kraft} genannt. Dies ist die bei Abhandensein
+von Zwangsbedingungen bestehende Kraft, z.\,B. die gewöhnliche
+Gewichtskraft. Der Anteil $\bv Z$ ist die Zwangskraft.
 
-Die Kraft wird gemäß $\bvec F = \bvec K+\bvec Z$ in zwei
-Anteile zerlegt. Der Anteil $\bvec K$ ist die von außen wirkende
-Kraft, auch eingeprägte Kraft genannt. Dies ist die Kraft, wenn keine
-Zwangsbedingungen vorhanden wären, z.\,B. die gewöhnliche
-Gewichtskraft. Der Anteil $\bvec Z$
-ist die Zwangskraft, welche aus zwei Anteilen besteht. Der erste
-Anteil von $\bvec Z$ kompensiert den zum Tangentialraum normalen
-Anteil von $\bvec K$, denn sonst würde $\bvec F$ nicht im
-Tangentialraum liegen. Der zweite Anteil von $\bvec Z$ wirkt
-der lokalen Zentrifugalkraft \emph{aus der Mannigfaltigkeit heraus}
-entgegen, ist also ein Anteil der lokalen Zentripetalkraft, dieser
-steht auch normal auf dem Tangentialraum. Somit steht $\bvec Z$
-insgesamt normal auf $T_{\bvec x} M$.
+Betrachten wir die Situation $\bv K = 0$ unter einer skleronomen
+Zwangsbedingung genauer, in der sich die
+Punktmasse mit konstanter Geschwindigkeit bewegt. Die Konstanz
+der Geschwindigkeit $|\bv x'|$ ist gleichbedeutend mit der Konstanz
+der kinetischen Energie $T = \frac{1}{2}m|\bv x'|^2$. Infolge gilt
+\[0=\frac{\mathrm dT}{\mathrm dt}
+= \frac{1}{2}m\frac{\mathrm d}{\mathrm dt}\langle\bv x',\bv x'\rangle
+= \langle m\bv x'',\bv x'\rangle = \langle\bv Z,\bv x'\rangle.\]
+Es steht also $\bv Z$ normal auf $\bv x'$.
 
-Die Zentrifugalkraft ist von der Geschwindigkeit $\bvec x'(t)$
-abhängig, daher auch $\bvec Z$. Das ist problematisch.
-Zum Aufstellen von Bewegungsgleichungen muss $\bvec Z$ irgendwie
-herausgerechnet werden.
+Die Betrachtung ist zudem auch für ein allgemeines $\bv K$
+unter einer skleronomen Zwangsbedingung durchführbar.
+Mit $m\bv x''=\bv K+\bv Z$ findet sich
+\[\frac{\mathrm dT}{\mathrm dt} = \langle\bv K+\bv Z,\bv x'\rangle
+= \langle\bv K,\bv x'\rangle + \langle\bv Z,\bv x'\rangle.\]
+Unsere Auffassung von der Zwangskraft ist die, dass sie allein
+dafür da ist, die Punktmasse in $M$ zu halten, aber keine
+Änderung der kinetischen Energie bewirkt. Ergo muss
+$\langle\bv Z,\bv x'\rangle = 0$ gelten. Es steht also $\bv Z$
+ganz allgemein normal auf $\bv x'$. Anders ausgedrückt darf die
+Zwangskraft keine Arbeit verrichten. Als Nebenresultat ergibt sich die
+Beziehung
+$\frac{\mathrm dT}{\mathrm dt} = \langle\bv K,\bv x'\rangle$.
 
-Bekannt ist außerdem, dass der Gradient $\nabla f$ aus
-mathematischen Gründen normal auf $T_{\bvec x} M$ stehen muss.
-Demnach sind Zwangskraft und Gradient kollinear:%
-\begin{equation}
-\bvec Z(t) = \lambda(t)\nabla f(\bvec x(t)).
-\end{equation}
-Allgemein kann $\lambda$ bei skleronomen Zwangsbedingungen
-auch dargestellt werden als Funktion
-$\lambda(\bvec x(t),\bvec x'(t))$.
+Wir Postulieren an dieser Stelle, dass $\bv Z$ allgemein keinen
+tangentialen Einfluss haben darf, auch bei rheonomen Zwangsbedingungen.
+Demzufolge steht $\bv Z$ an jedem Punkt $\bv x$ rechtwinklig auf
+$T_{\bv x} M$.
 
-Weil $\bvec Z(t)$ rechtwinklig zu $\bvec x'(t)\in T_{\bvec x(t)} M$
-steht, ist
-\begin{equation}
-\langle\bvec Z(t),\bvec x'(t)\rangle = 0.
-\end{equation}
-Die Zwangskraft kann daher keine Arbeit verrichten.
+Weil $M$ als Niveaumenge definiert wurde, auf der $f$ konstant ist,
+verschwindet die Richtungsableitung am Punkt $\bv x$ für jeden
+Tangentialvektor aus $T_{\bv x} M$. Ergo steht der räumliche Gradient
+$\nabla f(t,\bv x)$ im rechten Winkel zum Tangentialraum. Mit räumlich
+ist hierbei gemeint, dass der Gradient nicht die Zeitableitung enthalten
+soll.
 
-Weil innerhalb von $M$ nur die tangentiale Kraft einen Einfluss auf
-die Bewegung haben kann, ergibt sich die Bewegungsgleichung
-\begin{equation}
-m\bvec x''(t) = \bvec F = \bvec K+\bvec Z = \bvec K+\lambda\nabla f.
-\end{equation}
-Diese Gleichung wird \emph{Lagrange"=Gleichung erster Art} genannt.
+\subsection{Lagrange-Gleichung erster Art}
 
+Demnach sind Zwangskraft und Gradient kollinear, womit zu jedem
+Zeitpunkt $t$ ein Skalar $\lambda$ existiert, so dass
+\[\bv Z(t) = \lambda\nabla f(t,\bv x(t))\]
+gilt. Es findet sich die Bewegungsgleichung
+\[m\bv x'' = \bv F = \bv K+\bv Z = \bv K+\lambda\nabla f,\]
+die \emph{Lagrange"=Gleichung erster Art} genannt wird. Man stellt
+$\lambda$ als Funktion $\lambda(t,\bv x(t),\bv x'(t))$ dar, da es
+ein Teilterm einer Dgl. zweiter Ordnung ist.
+
+\newpage
 \begin{thebibliography}{00}
 \bibitem{Fischer} Helmut Fischer, Helmut Kaul:
 \emph{Mathematik für Physiker Band 3}. Springer, Wiesbaden 2003, 3. Aufl. 2013.
+
 \bibitem{Arnold} Vladimir I. Arnold: \emph{Mathematical Methods of Classical
 Mechanics}. Springer, New York 1978, 2. Aufl. 1989.
+
+\bibitem{Bartelmann} Matthias Bartelmann u. a.:
+\emph{Theoretische Physik}. Springer, Berlin \& Heidelberg 2015.
+
+\bibitem{Lee} John M. Lee: \emph{Introduction to Smooth Manifolds}.
+Springer, New York 2003, 2. Auflage 2013.
+
+\bibitem{Jaenich} Klaus Jänich: \emph{Mathematik 2: Geschrieben für
+Physiker}. Springer, Heidelberg 2002, 2. Auflage 2011.
 \end{thebibliography}
 
 \vfill\noindent
