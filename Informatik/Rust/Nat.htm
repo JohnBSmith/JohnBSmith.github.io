@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust-Buch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/rust.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Rust.htm">Programmieren in Rust</a>
+<h1>Die natürlichen Zahlen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Darstellung">Darstellung der natürlichen Zahlen</a>
+<li><a href="#Einheiten">Anwendung: Einheiten</a>
+</ol>
+
+<h2 id="Darstellung">Darstellung der natürlichen Zahlen</h2>
+
+<p>Wir wollen die natürlichen Zahlen wie bei Peano und Dedekind
+über die ordinale Struktur darstellen. Es muss also ein Typ
+<code>Zero</code> vorhanden sein, der die Null darstellt. Außerdem muss
+es eine Nachfolgerabbildung <code>Succ</code> geben, die jedem Typ
+<code>N</code> dessen Nachfolger <code>Succ&lt;N&gt;</code> zuordnet.
+
+<p>Zudem möchten wir ausdrücken können, dass ein Typparameter zu den
+natürlichen Zahlen gehören soll. Wir definieren daher einen Trait
+<code>Nat</code> und implementieren diesen für alle natürlichen
+Zahlen. Obwohl nicht unbedingt notwendig, ist es praktisch, außerdem
+eine assoziierte Konstante <code>VALUE</code> zum Trait hinzuzufügen,
+mit der sich der Typ zur Kompilierzeit in dessen Entsprechung als Zahl
+umwandeln lässt.
+
+<pre class="rust ibox">
+struct Zero;
+struct Succ&lt;N&gt;(N);
+
+trait Nat {const VALUE: u32;}
+impl Nat for Zero {const VALUE: u32 = 0;}
+impl&lt;N: Nat&gt; Nat for Succ&lt;N&gt; {
+    const VALUE: u32 = N::VALUE + 1;
+}
+</pre>
+
+<p>Die Addition ist rekursiv definiert als
+
+<p class="indent">0 + <var>b</var> := <var>b</var>,<br>
+succ(<var>a</var>) + <var>b</var> := succ(<var>a</var> + <var>b</var>).
+
+<p>Um diese Rekursion implementieren zu können, definiert man als Hilfsmittel einen
+trait <code>Plus</code> mit dem rechten Summand als Parameter und
+assoziiertem Typ <code>Value</code> als Wert der Addition.
+
+<pre class="rust ibox">
+trait Plus&lt;B&gt; {type Value;}
+type Add&lt;A, B&gt; = &lt;A as Plus&lt;B&gt;&gt;::Value;
+
+impl&lt;B: Nat&gt; Plus&lt;B&gt; for Zero {
+    type Value = B;
+}
+
+impl&lt;A: Nat + Plus&lt;B&gt;, B: Nat&gt; Plus&lt;B&gt; for Succ&lt;A&gt; {
+    type Value = Succ&lt;Add&lt;A, B&gt;&gt;;
+}
+</pre>
+
+<p>Die Multiplikation ist rekursiv definiert als
+
+<p class="indent">0&sdot;<var>b</var> := 0,<br>
+succ(<var>a</var>)&sdot;<var>b</var> := <var>a</var>&sdot;<var>b</var> + <var>b</var>.
+
+<p>Die Potenzierung ist rekursiv definiert als
+
+<p class="indent"><var>a</var><sup>0</sup> := 1,<br>
+<var>a</var><sup>succ(<var>n</var>)</sup> := <var>a</var>&sdot;<var>a</var><sup><var>n</var></sup>.
+
+<p>Die Rekursion wird analog wie bei der Addition implementiert.
+
+<pre class="rust ibox">
+trait Times&lt;B&gt; {type Value;}
+type Mul&lt;A, B&gt; = &lt;A as Times&lt;B&gt;&gt;::Value;
+
+impl&lt;B: Nat&gt; Times&lt;B&gt; for Zero {
+    type Value = Zero;
+}
+
+impl&lt;A: Nat + Times&lt;B&gt;, B: Nat&gt; Times&lt;B&gt; for Succ&lt;A&gt;
+where Mul&lt;A, B&gt;: Plus&lt;B&gt;
+{
+    type Value = Add&lt;Mul&lt;A, B&gt;, B&gt;;
+}
+
+trait ExpBase&lt;A&gt; {type Value;}
+type Pow&lt;A, N&gt; = &lt;N as ExpBase&lt;A&gt;&gt;::Value;
+
+impl&lt;A: Nat&gt; ExpBase&lt;A&gt; for Zero {
+    type Value = Succ&lt;Zero&gt;;
+}
+
+impl&lt;A: Nat, N: Nat + ExpBase&lt;A&gt;&gt; ExpBase&lt;A&gt; for Succ&lt;N&gt;
+where A: Times&lt;Pow&lt;A, N&gt;&gt;
+{
+    type Value = Mul&lt;A, Pow&lt;A, N&gt;&gt;;
+}
+</pre>
+
+<p>Mit den drei Operationen <code>Add</code>, <code>Mul</code>,
+<code>Pow</code> lässt sich nun, wenngleich ein wenig umständlich,
+jede natürliche Zahl im Stellenwertsystem darstellen.
+Das folgende Beispiel zeigt die Darstellung der Zahl 360 im
+Dezimalsystem.
+
+<pre class="rust ibox">
+type N0 = Zero;
+type N1 = Succ&lt;N0&gt;;
+type N2 = Succ&lt;N1&gt;;
+type N3 = Succ&lt;N2&gt;;
+type N4 = Succ&lt;N3&gt;;
+type N5 = Succ&lt;N4&gt;;
+type N6 = Succ&lt;N5&gt;;
+type N7 = Succ&lt;N6&gt;;
+type N8 = Succ&lt;N7&gt;;
+type N9 = Succ&lt;N8&gt;;
+type N10 = Succ&lt;N9&gt;;
+
+fn main() {
+    type N360 = Add&lt;Mul&lt;N3, Pow&lt;N10, N2&gt;&gt;, Mul&lt;N6, N10&gt;&gt;;
+    println!("{}", N360::VALUE);
+}
+</pre>
+
+<h2 id="Einheiten">Anwendung: Einheiten</h2>
+
+<p>Mit den natürlichen Zahlen lassen sich Größen durch die Dimension
+parametrisieren, ohne Konstanten als Typparameter heranziehen zu müssen.
+
+<p>Die Definition von <code>Nat</code> sollte zu <code>Nat:&nbsp;Copy</code>
+modifiziert werden, damit die Größen <code>Copy</code> sein können.
+Der Einfachheit halber wird der Typ <code>Quantity</code> lediglich
+durch Dimensionen zur Basis Länge parametrisiert.
+
+<pre class="rust ibox">
+mod quantities {
+    use super::{Nat, Zero, Succ, Plus};
+    use std::ops::{Add, Mul};
+    use std::marker::PhantomData as Ph;
+    use std::fmt;
+
+    #[derive(Clone, Copy)]
+    pub(super) struct Quantity&lt;L: Nat&gt; {
+        value: f64, dim: Ph&lt;L&gt;
+    }
+
+    impl&lt;L: Nat&gt; Add&lt;Quantity&lt;L&gt;&gt; for Quantity&lt;L&gt; {
+        type Output = Quantity&lt;L&gt;;
+        fn add(self, y: Quantity&lt;L&gt;) -&gt; Self::Output {
+            Quantity {value: self.value + y.value, dim: Ph}
+        }
+    }
+
+    impl&lt;L: Nat&gt; Mul&lt;Quantity&lt;L&gt;&gt; for f64 {
+        type Output = Quantity&lt;L&gt;;
+        fn mul(self, y: Quantity&lt;L&gt;) -&gt; Self::Output {
+            Quantity {value: self*y.value, dim: Ph}
+        }
+    }
+    
+    impl&lt;L1: Nat, L2: Nat&gt; Mul&lt;Quantity&lt;L2&gt;&gt; for Quantity&lt;L1&gt;
+    where L1: Plus&lt;L2&gt;, super::Add&lt;L1, L2&gt;: Nat
+    {
+        type Output = Quantity&lt;super::Add&lt;L1, L2&gt;&gt;;
+        fn mul(self, y: Quantity&lt;L2&gt;) -&gt; Self::Output {
+            Quantity {value: self.value*y.value, dim: Ph}
+        }
+    }
+
+    impl&lt;N: Nat&gt; fmt::Display for Quantity&lt;N&gt; {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+            write!(f, "{} m^{}", self.value, N::VALUE)
+        }
+    }
+
+    pub(super) type Length = Quantity&lt;Succ&lt;Zero&gt;&gt;;
+    pub(super) type Area = Quantity&lt;Succ&lt;Succ&lt;Zero&gt;&gt;&gt;;
+    
+    pub(super) struct Meter;
+    impl Mul&lt;Meter&gt; for f64 {
+        type Output = Length;
+        fn mul(self, _rhs: Meter) -&gt; Self::Output {
+            Quantity {value: self, dim: Ph}
+        }
+    }
+}
+
+use quantities::{Length, Area, Meter};
+use std::f64::consts::PI;
+
+fn circle_area(radius: Length) -&gt; Area {
+    PI*radius*radius
+}
+
+fn main() {
+    println!("{}", circle_area(2.0*Meter));
+}
+</pre>
+
+<p>Dieses Beispiel zeigt bereits auf, dass die gemachten Konstruktionen
+nicht nur eine »akademische Spielerei« darstellen, sondern tatsächliche
+Bedeutung für die Typsicherheit haben können. Allerdings macht
+die allgemeine Verfügbarkeit von Konstanten als Typparameter
+die Konstruktion von <code>Nat</code> für diesen Zweck entbehrlich.
+
+</body>
+</html>
