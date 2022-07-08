@@ -15,7 +15,7 @@
 
 <ol>
 <li>Programm mit <code>cargo clippy</code> untersuchen.
-<li>Programm mit <code>valgrind</code> untersuchen.
+<li>Programm mit <code>valgrind</code> und <code>miri</code> untersuchen.
 <li>Möglichst reichhaltige Unit-Tests schreiben.
 <li>Arithmetische Operationen bezüglich Überlauf analysieren.
 <li>Typkonvertierungen bezüglich Überlauf analysieren.
@@ -36,6 +36,11 @@
 <li>Ggf. Formate und Semantiken formal spezifizieren.
 <li>Die Dokumentation sollte so umfänglich sein, dass das
   Projekt jederzeit von jemand anderem fortgeführt werden kann.
+<li>Debug-Formatierung ist bisweilen nicht fest spezifiert. Daher darf
+  sie im fertigen Programm eigentlich nicht genutzt werden.
+<li>Der Befehl <code>println</code> kann unter Umständen zu panic führen.
+Ist dies unerwünscht, sollte <code>write_all</code> bezüglich
+<code>io::stdout</code> genutzt werden.
 </ol>
 
 <h3>Portabilität</h3>
@@ -51,6 +56,7 @@
 <li>Programm bietet grundlegende Unterstützung von Unicode.
 <li>Benutzerschnittstelle ist leicht in eine andere Sprache
   übersetzbar.
+<li>Portabilität der transitiven Abhängigkeiten prüfen.
 </ol>
 
 <h3>Literatur</h3>

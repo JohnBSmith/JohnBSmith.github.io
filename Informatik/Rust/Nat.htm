@@ -15,16 +15,111 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Darstellung">Darstellung der natürlichen Zahlen</a>
+<li><a href="#Typen">Die natürlichen Zahlen als Typen</a>
 <li><a href="#Einheiten">Anwendung: Einheiten</a>
+<li><a href="#Gleichheit">Gleichheit</a>
+<li><a href="#Literatur">Literatur</a>
 </ol>
 
 <h2 id="Darstellung">Darstellung der natürlichen Zahlen</h2>
 
-<p>Wir wollen die natürlichen Zahlen wie bei Peano und Dedekind
-über die ordinale Struktur darstellen. Es muss also ein Typ
-<code>Zero</code> vorhanden sein, der die Null darstellt. Außerdem muss
-es eine Nachfolgerabbildung <code>Succ</code> geben, die jedem Typ
-<code>N</code> dessen Nachfolger <code>Succ&lt;N&gt;</code> zuordnet.
+<p>Den Mathematikern Richard Dedekind und Giuseppe Peano gelang
+Ende des 19. Jahrhunderts erstmals eine strenge Definition der
+natürlichen Zahlen. Ihr Vorgehen baut auf dem Gedankengang auf,
+dass jede natürliche Zahl einen Nachfolger besitzt. Sie nutzen die
+Nachfolgerabbildung, um die arithmetischen Operationen rekursiv zu
+definieren. Die wesentliche Schwierigkeit, die sich dabei stellt, ist
+das Prinzip der Induktion, das die Grundlage für das fundamentale
+Beweisverfahren <i>vollständige Induktion</i> bildet. Das Prinzip
+wird durch das Induktionsaxiom abgesichert, das letzte und
+komplizierteste Axiom in Peanos System.
+
+<p>Dieses Kapitel beschäftigt sich mit der Darstellung der natürlichen
+Zahlen als Typen. Zur Vorbereitung wollen wir die Zahlen aber erst
+einmal als Werte darstellen. Bei beiden Unterfangen wird die
+Vorgehensweise von Dedekind und Peano genutzt.
+
+<p>Es bezeichne <code>Zero</code> die Zahl null und
+<code>Succ</code> bzw. <code>succ</code> als Abkürzung von <i>successor</i>
+die Nachfolgerabbildung. Man stellt die natürlichen Zahlen als
+Enumeration dar:
+
+<pre class="rust ibox">
+#[derive(Clone, PartialEq, Eq, Debug)]
+enum Nat {
+    Zero,
+    Succ(Box&lt;Nat&gt;)
+}
+
+use Nat::{Zero, Succ};
+
+fn succ(a: Nat) -&gt; Nat {Succ(Box::new(a))}
+</pre>
+
+<p>Die Addition ist rekursiv definiert als
+
+<p class="indent">0 + <var>b</var> := <var>b</var>,<br>
+succ(<var>a</var>) + <var>b</var> := succ(<var>a</var> + <var>b</var>).
+
+<p>Man kann sie direkt so implementieren:
+
+<pre class="rust ibox">
+fn add(a: Nat, b: Nat) -&gt; Nat {
+    match a {
+        Zero =&gt; b,
+        Succ(a) =&gt; succ(add(*a, b))
+    }
+}
+</pre>
+
+<p>Nun lässt sich berechnen, ob 1&nbsp;+&nbsp;1 = 2 gilt:
+
+<pre class="rust ibox">
+fn main() {
+    let one = succ(Zero);
+    let two = succ(one.clone());
+    assert_eq!(add(one.clone(), one), two);
+}
+</pre>
+
+<p>Eine weniger umständliche Formulierung ergibt sich durch Kodierung
+der natürlichen Zahlen als Werte des Typs <code>u32</code>. Bei dieser
+entfällt leider die Durchführbarkeit, auf das Muster
+<code>Succ(a)</code> abgleichen zu können. Wir überlegen uns dazu,
+dass dies bisher geklappt hat, weil <code>Succ</code> eine injektive
+Abbildung ist. Allgemein gehört zu jeder Enum-Variante eine einbettende
+Injektion. Daher können wir die Umkehrabbildung mit Ausnahme der Null
+für alle natürlichen Zahlen definieren und mit dieser arbeiten. Sie sei
+mit <code>pred</code> als Abkürzung für <i>predecessor</i> bezeichnet.
+
+<pre class="rust ibox">
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+struct Nat(u32);
+
+fn succ(a: Nat) -&gt; Nat {Nat(a.0 + 1)}
+fn pred(a: Nat) -&gt; Nat {
+    if a.0 == 0 {unreachable!()} else {Nat(a.0 - 1)}
+}
+
+fn add(a: Nat, b: Nat) -&gt; Nat {
+    match a {
+        Nat(0) =&gt; b,
+        a =&gt; succ(add(pred(a), b))
+    }
+}
+
+fn main() {
+    assert_eq!(add(Nat(1), Nat(1)), Nat(2));
+}
+</pre>
+
+<h2 id="Typen">Die natürliche Zahlen als Typen</h2>
+
+<p>Wir wollen nun dazu übergehen, die natürlichen Zahlen als Typen
+darzustellen. Die Nachfolgerabbildung <code>Succ</code> wird hierbei
+zu einen Typkonstruktor, der dem Typ <code>N</code> dessen Nachfolger
+<code>Succ&lt;N&gt;</code> zuordnet.  Es muss außerdem der Typ
+<code>Zero</code> vorhanden sein, der die Null darstellt.
 
 <p>Zudem möchten wir ausdrücken können, dass ein Typparameter zu den
 natürlichen Zahlen gehören soll. Wir definieren daher einen Trait
@@ -45,7 +140,15 @@ impl&lt;N: Nat&gt; Nat for Succ&lt;N&gt; {
 }
 </pre>
 
-<p>Die Addition ist rekursiv definiert als
+<p>Alternativ lässt sich <code>Zero</code> als leere Enumeration
+<code>enum&nbsp;Zero&nbsp;{}</code> definieren, die die Erstellung
+von Werten unmöglich macht. Absurderweise kann man Werte dennoch
+mittels <code>PhantomData</code> erstellen. Für das erzeugte
+Maschinenprogramm ergibt sich dabei kein Unterschied, weil
+<code>Zero</code> bezüglich <code>struct&nbsp;Zero;</code> bereits keine
+Information trägt, also kein Artefakt im Maschinenprogramm hinterlässt.
+
+<p>Kurze Rekapitulation. Die Addition ist rekursiv definiert als
 
 <p class="indent">0 + <var>b</var> := <var>b</var>,<br>
 succ(<var>a</var>) + <var>b</var> := succ(<var>a</var> + <var>b</var>).
@@ -77,7 +180,7 @@ succ(<var>a</var>)&sdot;<var>b</var> := <var>a</var>&sdot;<var>b</var> + <var>b<
 <p class="indent"><var>a</var><sup>0</sup> := 1,<br>
 <var>a</var><sup>succ(<var>n</var>)</sup> := <var>a</var>&sdot;<var>a</var><sup><var>n</var></sup>.
 
-<p>Die Rekursion wird analog wie bei der Addition implementiert.
+<p>Die Rekursion wird analog zur Addition implementiert.
 
 <pre class="rust ibox">
 trait Times&lt;B&gt; {type Value;}
@@ -114,23 +217,28 @@ Das folgende Beispiel zeigt die Darstellung der Zahl 360 im
 Dezimalsystem.
 
 <pre class="rust ibox">
-type N0 = Zero;
-type N1 = Succ&lt;N0&gt;;
-type N2 = Succ&lt;N1&gt;;
-type N3 = Succ&lt;N2&gt;;
-type N4 = Succ&lt;N3&gt;;
-type N5 = Succ&lt;N4&gt;;
-type N6 = Succ&lt;N5&gt;;
-type N7 = Succ&lt;N6&gt;;
-type N8 = Succ&lt;N7&gt;;
-type N9 = Succ&lt;N8&gt;;
-type N10 = Succ&lt;N9&gt;;
+type P0 = Zero;
+type P1 = Succ&lt;P0&gt;;
+type P2 = Succ&lt;P1&gt;;
+type P3 = Succ&lt;P2&gt;;
+type P4 = Succ&lt;P3&gt;;
+type P5 = Succ&lt;P4&gt;;
+type P6 = Succ&lt;P5&gt;;
+type P7 = Succ&lt;P6&gt;;
+type P8 = Succ&lt;P7&gt;;
+type P9 = Succ&lt;P8&gt;;
+type P10 = Succ&lt;P9&gt;;
 
 fn main() {
-    type N360 = Add&lt;Mul&lt;N3, Pow&lt;N10, N2&gt;&gt;, Mul&lt;N6, N10&gt;&gt;;
-    println!("{}", N360::VALUE);
+    type P360 = Add&lt;Mul&lt;P3, Pow&lt;P10, P2&gt;&gt;, Mul&lt;P6, P10&gt;&gt;;
+    println!("{}", P360::VALUE);
 }
 </pre>
+
+<p>Das <code>P</code> soll hierbei für <i>plus</i> stehen. Fügt man
+später negative Zahlen hinzu, kann man sie dann
+<code>M1</code>,&nbsp;<code>M2</code>
+usw. für &minus;1,&nbsp;&minus;2 usw. nennen.
 
 <h2 id="Einheiten">Anwendung: Einheiten</h2>
 
@@ -144,7 +252,7 @@ durch Dimensionen zur Basis Länge parametrisiert.
 
 <pre class="rust ibox">
 mod quantities {
-    use super::{Nat, Zero, Succ, Plus};
+    use super::{Nat, Plus, P1, P2};
     use std::ops::{Add, Mul};
     use std::marker::PhantomData as Ph;
     use std::fmt;
@@ -183,8 +291,8 @@ mod quantities {
         }
     }
 
-    pub(super) type Length = Quantity&lt;Succ&lt;Zero&gt;&gt;;
-    pub(super) type Area = Quantity&lt;Succ&lt;Succ&lt;Zero&gt;&gt;&gt;;
+    pub(super) type Length = Quantity&lt;P1&gt;;
+    pub(super) type Area = Quantity&lt;P2&gt;;
     
     pub(super) struct Meter;
     impl Mul&lt;Meter&gt; for f64 {
@@ -212,6 +320,126 @@ nicht nur eine »akademische Spielerei« darstellen, sondern tatsächliche
 Bedeutung für die Typsicherheit haben können. Allerdings macht
 die allgemeine Verfügbarkeit von Konstanten als Typparameter
 die Konstruktion von <code>Nat</code> für diesen Zweck entbehrlich.
+
+<h2 id="Gleichheit">Gleichheit</h2>
+
+<p>Um den Compiler prüfen zu lassen, ob zwei natürliche Zahlen oder
+allgemeiner zwei Typen gleich sind, bietet sich der folgende Trick an,
+den wir in ein Makro verpacken.
+
+<pre class="rust ibox">
+macro_rules! assert_type_eq {
+    ($t1:ty, $t2:ty) =&gt; {
+        const _: Option&lt;$t1&gt; = Option::&lt;$t2&gt;::None;
+    }
+}
+
+assert_type_eq!(P3, Add&lt;P1, P2&gt;);
+</pre>
+
+<p>Dabei wurde zunutze gemacht, dass <code>Option::None</code> keine
+Daten trägt. Insofern kann man ebensogut <code>PhantomData</code>
+heranziehen.
+
+
+<pre class="rust ibox">
+use std::marker::PhantomData as Ph;
+
+macro_rules! assert_type_eq {
+    ($t1:ty, $t2:ty) =&gt; {
+        const _: Ph&lt;$t1&gt; = Ph::&lt;$t2&gt;;
+    }
+}
+</pre>
+
+<p>Auf diese Weise sind aber lediglich konkrete Typen vergleichbar.
+Mathematisch interessante Fragen wie die nach der
+die allgemeinen Gleichheit von <code>Add&lt;A,&nbsp;B&gt;</code> und
+<code>Add&lt;B,&nbsp;A&gt;</code> lassen sich so nicht beantworten.
+
+<p>Für einige Spezialfälle wie
+
+<p class="indent">∀<var>n</var> ∈ ℕ: 0 + <var>n</var> = <var>n</var>
+
+<p>findet sich unschwer ein prüfendes Programm. Es genügt dafür,
+einen Kontext zu erstellen, der die allquantifizierte Variable
+enthält. Eine mögliche Formulierung ist:
+
+<pre class="rust ibox">
+fn context&lt;N: Nat&gt;(n: N) -> Add&lt;Zero, N&gt; {n}
+</pre>
+
+<p>oder:
+
+<pre class="rust ibox">
+fn context&lt;N: Nat&gt;() {
+    let _: Option&lt;Add&lt;Zero, N&gt;&gt; = Option::&lt;N&gt;::None;
+}
+</pre>
+
+oder auch:
+
+<pre class="rust ibox">
+trait Context&lt;N: Nat&gt; {
+    const C: Option&lt;Add&lt;Zero, N&gt;&gt; = Option::&lt;N&gt;::None;
+}
+</pre>
+
+<p>Diese Methodik schlägt allerdings bereits bei einer unscheinbaren
+Aussage wie
+
+<p class="indent">∀<var>n</var> ∈ ℕ: <var>n</var> + 0 = <var>n</var>
+
+<p>fehl. Der Beweis dieser Aussage ist nämlich induktiv zu führen,
+wofür das Induktionsaxiom benötigt wird. Der Induktionsschritt ist
+eigentlich ein Kinderspiel, nämlich
+
+<p class="indent">succ(<var>n</var>) + 0 = succ(<var>n</var> + 0) = succ(<var>n</var>),
+
+<p>wobei die erste Gleichung gemäß der Definition der Addition und
+die zweite Gleichung gemäß der Induktionsvoraussetzung gilt. Der
+Induktionsanfang ist mit 0&nbsp;+&nbsp;0 = 0 noch banaler. Das
+Induktionsaxiom sichert nun ab, dass die Aussage somit bereits
+für alle natürlichen Zahlen gilt, oder die Kette der Dominosteine
+ohne Ausnahmen purzelt, wie man sich das auch immer veranschaulichen mag.
+
+<p>Damit das Induktionsaxiom dies schafft, muss es die Existenz
+von Parallelstrukturen verhindern, das wären Dominosteine neben
+der Kette, die nicht von der Kettenreaktion betroffen sind. Bei uns ist
+das Axiom jedoch abhanden. Tatsächlich können wir eine solche
+Parallelstruktur herstellen und damit Schabernack treiben. Es genügt
+ein einziger Stein bzw. ein einziger Typ dafür:
+
+<pre class="rust ibox">
+struct A0;
+
+impl Nat for A0 {}
+
+impl&lt;B: Nat&gt; Plus&lt;B&gt; for A0 {
+    type Value = B;
+}
+</pre>
+
+<p>Mit dieser Definition gilt <code>Add&lt;A0,&nbsp;Zero&gt; = Zero</code>,
+womit die Setzung <code>N:=A0</code> ein Gegenbeispiel zu
+<code>Add&lt;N,&nbsp;Zero&gt; = N</code> erbringt.
+
+<h2 id="Literatur">Literatur</h2>
+
+<ol>
+<li>Stefan Müller-Stach: »Richard Dedekind: Was sind und was sollen die
+  Zahlen? Stetigkeit und Irrationale Zahlen«. Springer, 2017.  
+<li>Richard Dedekind: »Was sind und was sollen die Zahlen?«. Vieweg,
+  Braunschweig&nbsp;1888, 10. Auflage 1965.
+<li>Giuseppe Peano: »Arithmetices principia: nova methodo«.
+  Fratres Bocca, Turin 1889. Englische Übersetzung
+  »The principles of arithmetic, presented by a new method«
+  in: Jan van Heijenoort: »From Frege to Goedel«. Harvard University
+  Press, 1967.
+<li>Philip Wadler, Wen Kokke, Jeremy G. Siek:
+»Programming Language Foundations in Agda«.
+Kapitel »<a href="https://plfa.github.io/Naturals/">Naturals: Natural numbers</a>«.
+</ol>
 
 </body>
 </html>
