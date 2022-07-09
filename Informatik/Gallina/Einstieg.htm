@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Einstieg</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Einstieg</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Terme-und-Typen">Terme und Typen</a>
+<li><a href="#Funktionen">Funktionen</a>
+<li><a href="#Abhaengige-Funktionen">Abhängige Funktionen</a>
+</ol>
+
+<h2 id="Terme-und-Typen">Terme und Typen</h2>
+
+<p>In Gallina besitzt jeder Term einen Typ, womit der Typ des Resultats
+der Auswertung des Terms gemeint ist. Die Notation
+<code>t:&nbsp;T</code> drückt aus, dass der Term <code>t</code>
+vom Typ <code>T</code> sein soll. Beispielsweise gilt
+<code>0:&nbsp;nat</code>, womit gesagt wird, dass <code>0</code> eine
+natürliche Zahl ist.
+
+<p>Man benutzt <code>Check</code> um prüfen zu lassen, ob ein Term
+wohltypisiert ist. Damit verbunden lässt sich der Typ des Terms
+ermitteln. So liefert
+
+<pre class="ibox gallina">
+Check 1 + 2.
+</pre>
+
+<p>den Typ <code>nat</code>, was für den Typ der natürlichen Zahlen
+steht. Der Wert des Terms wird mit
+
+<pre class="ibox gallina">
+Compute 1 + 2.
+</pre>
+
+<p>berechnet. Der Befehl <code>Definition</code> bindet eine Variable
+an einen Wert.
+
+<pre class="ibox gallina">
+Definition x: nat := 1.
+Compute x + 1.
+</pre>
+
+<p>Typinferenz gestattet hierbei die Auslassung der Typangabe.
+
+<pre class="ibox gallina">
+Definition x := 1.
+Compute x + 1.
+</pre>
+
+<h2 id="Funktionen">Funktionen</h2>
+
+<p>Mit einer Funktion darf man umgehen wie mit einem gewöhnlichen
+Wert. Möchte wir die Funktion <var>f</var>(<var>x</var>)&nbsp;:=
+2<var>x</var>&nbsp;+&nbsp;1 definieren, können wir dies
+als Bindung von <var>x</var>&nbsp;↦ 2<var>x</var>&nbsp;+&nbsp;1 an die
+Variable <var>f</var> ausdrücken. Man schreibt dies so:
+
+<pre class="ibox gallina">
+Definition f := fun x => 2*x + 1.
+Compute f 10.
+</pre>
+
+Die übliche Schreibweise geht aber auch:
+
+<pre class="ibox gallina">
+Definition f x := 2*x + 1.
+Compute f 10.
+</pre>
+
+<p>Bei der Applikation muss man keine Klammern benutzen.
+Für <var>f</var>(10)</var> darf man also <code>f&nbsp;10</code>
+anstelle von <code>f(10)</code> schreiben. Bei der Definition ist
+zwingend <code>f&nbsp;x</code> anstelle von <code>f(x)</code> zu
+schreiben.
+
+<p>Wie jeder Term muss eine Funktion einen Typ besitzen. Fügt man
+überall die Typangabe hinzu, nimmt die Definition die Form
+
+<pre class="ibox gallina">
+Definition f: nat -> nat := fun x: nat => 2*x + 1.
+</pre>
+
+<p>bzw.
+
+<pre class="ibox gallina">
+Definition f (x: nat): nat := 2*x + 1.
+</pre>
+
+<p>an. Eine zweistellige Funktion wie
+<var>f</var>(<var>x</var>,&nbsp;<var>y</var>)&nbsp;:= <var>x</var>&nbsp;+&nbsp;<var>y</var>
+wird in geschönfinkelter Form beschrieben, also als
+<var>f</var>(<var>x</var>)(<var>y</var>)&nbsp;:= <var>x</var>&nbsp;+&nbsp;<var>y</var>
+bzw.
+
+<p class="indent"><var>f</var> := <var>x</var> ↦  <var>y</var> ↦ <var>x</var>&nbsp;+&nbsp;<var>y</var>.
+
+<p>Man formuliert dies so:
+
+<pre class="ibox gallina">
+Definition f := fun x => fun y => x + y.
+Compute f 1 2.
+</pre>
+
+<p>Auch hier darf man Kurzschreibweise nutzen:
+
+<pre class="ibox gallina">
+Definition f x y := x + y.
+Compute f 1 2.
+</pre>
+
+<p>Der Typ von <code>f</code> ist <code>nat -&gt; nat -&gt; nat</code>.
+Eine Typ wie <var>A</var>&nbsp;→&nbsp;<var>B</var>&nbsp;→&nbsp;<var>C</var>
+wird also leichter verständlich, wenn man ihn inhaltlich als
+<var>A</var>&nbsp;&times;&nbsp;<var>B</var>&nbsp;→&nbsp;<var>C</var>
+auffasst. Eigentlich lässt sich eine Funktion sogar in dieser üblichen
+Form formulieren. Man schreibt:
+
+<pre class="ibox gallina">
+Definition f t := match t with (x, y) => x + y end.
+Compute f (1, 2).
+</pre>
+
+<p>Der Typ von <code>f</code> ist nun <code>nat*nat&nbsp;-&gt;&nbsp;nat</code>,
+was ℕ&times;ℕ&nbsp;→&nbsp;ℕ entspricht. Das Beispiel
+
+<pre class="ibox gallina">
+Definition t0 := (1, 2).
+Compute f t0.
+</pre>
+
+<p>macht deutlich, dass die Argumente hierbei tatsächlich eine
+Zusammenfassung zu einem Tupel bilden, welches sich von der Applikation
+trennen lässt.
+
+<h2 id="Abhaengige-Funktionen">Abhängige Funktionen</h2>
+
+<p>Zu jedem Typ ist die identische Funktion definierbar, die ihr
+Argument unverändert lässt. Für die natürlichen Zahlen würde man
+
+<pre class="ibox gallina">
+Definition id (x: nat) := x.
+</pre>
+
+festlegen, für Wahrheitswerte dagegen
+
+<pre class="ibox gallina">
+Definition id (x: bool) := x.
+</pre>
+
+<p>Es ist machbar und ein Kernkonzept, diese Funktion in allgemeiner
+Weise definieren zu können. Hierzu bekommt die Funktion den Typ
+von <code>x</code> als weiteres Argument:
+
+<pre class="ibox gallina">
+Definition id T (x: T) := x.
+
+Compute id nat 0.
+Compute id bool false.
+</pre>
+
+<p>Es tut sich nun die Frage auf, welchen Typ diese Funktion denn
+eigentlich haben soll. Hier hängt der Typ des zweiten Arguments
+vom ersten Argument ab. Eingehender betrachtet hängt der Typ der
+Funktion vom ersten Argument ab.
+
+<p>Für tieferes Verständnis möchte ich eine Betrachtung in der
+Mengenlehre einwerfen. Es sei das Tupel
+
+<p class="indent">(1, 2, 3, 4) ∈ ℕ×ℕ×ℕ×ℕ
+
+<p>gegeben. Auslesen der Komponenten des Tupels geschieht per
+Indizierung. Nun verhält es sich so, dass diese Indizierung als
+Funktion betrachtet bereits die gesamte Information über das Tupel
+enthält. Schärfer, das Tupel und dessen Indizierung charakterisieren
+sich gegenseitig, sind in gewissem Sinn isomorph. Dem gegebenen Tupel
+entspricht demzufolge die Funktion
+
+<p class="indent">{0 ↦ 1, 1 ↦ 2, 2 ↦ 3, 3 ↦ 4} ∈ (<var>I</var> → ℕ)
+
+<p>für die Indexmenge <var>I</var> = {0, 1, 2, 3}. Diese alternative
+Sichtweise öffnet uns nun die Tür, ein allgemeines Produkt von
+Mengen zu definieren. Es findet sich das Monstrum
+
+<p class="indent">∏<sub><var>i</var>∈<var>I</var></sub>
+<var>X</var><sub><var>i</var></sub>
+= {<var>f</var>: <var>I</var> → ⋃<sub><var>i</var>∈<var>I</var></sub>
+<var>X</var><sub><var>i</var></sub>|
+∀<var>i</var>∈<var>I</var>: <var>f</var>(<var>i</var>) ∈ <var>X</var><sub><var>i</var></sub>}.
+
+<p>Einfach gesprochen ordnet die Funktion <var>f</var> hier jedem Index
+ein Element einer anderen Menge zu, sofern die Mengen
+<var>X</var><sub><var>i</var></sub> unterschiedlich sind.
+Im Spezialfall, wo die Mengen gleich einer Menge <var>X</var> sind,
+vereinfacht sich das Produkt zur Menge der Abbildungen <var>I</var>&nbsp;→&nbsp;<var>X</var>.
+So ist es im obigen Beispiel, wo <var>X</var><sub><var>i</var></sub>&nbsp;=&nbsp;ℕ
+und <var>f</var>(<var>i</var>)&nbsp;=&nbsp;<var>i</var>&nbsp;+&nbsp;1 gilt.
+
+<p>Zu diesem allgemeinen Produkt gibt es in der Typentheorie eine
+Entsprechung. Ein solches Produkt ist genau das, was wir haben wollen.
+Der Typ <var>T</var> nimmt die Rolle des Index ein. Nun ordnet id jedem
+<var>T</var> eine Funktion id(<var>T</var>) eines anderen Typs zu,
+und dieser Typ ist <var>T</var>&nbsp;→&nbsp;<var>T</var>. Es findet
+sich somit die Typisierung
+
+<p class="indent">id: ∏<sub><var>T</var>: Type</sub> (<var>T</var> → <var>T</var>).
+
+<p>In Gallina schreibt man dies so:
+
+<pre class="ibox gallina">
+id: forall(T: Type), T -&gt; T
+</pre>
+
+<p>Der Grund für die Notation <code>forall</code> liegt darin, dass dem Produkt
+aufgrund der Curry-Howard-Korrespondenz die Allquantifizierung entspricht.
+
+</body>
+</html>
