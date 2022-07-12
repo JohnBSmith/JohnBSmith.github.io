@@ -22,30 +22,36 @@
 </ol>
 
 <h2 id="Strukturen">Strukturen</h2>
-<p>Wenn man sich einen Datentyp zunächst als Menge von zulässigen Werten
-vorstellt, dann ergibt auch das kartesische Produkt von zwei oder
-mehr Datentypen einen Sinn. Sind <code>A</code> und <code>B</code> zwei
-Datentypen, dann ist das kartesische Produkt die Menge
 
-<p class="math">A &times; B
-:= {(<var>a</var>,&nbsp;<var>b</var>) | <var>a</var>&in;A &and; <var>b</var>&in;B},
+<p>Zum Verständnis möchte ich zunächst auf eine Konstruktion in der
+Mengenlehre eingehen. Für zwei Mengen <var>A</var> und <var>B</var> ist
+das kartesische Produkt definiert als
+
+<p class="math"><var>A</var> &times; <var>B</var>
+:= {(<var>a</var>,&nbsp;<var>b</var>) |
+<var>a</var> ∈ <var>A</var> &and; <var>b</var> ∈ <var>B</var>},
 
 <p>das ist die Menge aller geordneten Paare, bei denen die erste
-Komponente den Typ <code>A</code> und die zweite Komponente
-den Typ <code>B</code> besitzt. In Rust schreibt man diesen Typ
-als <code>(A,B)</code>. Zu beachten ist, dass die Indizierung
+Komponente ein Element von <var>A</var> und die zweite Komponente
+ein Element von <var>B</var> ist.
+
+<p>Bei den Typen gibt es eine direkte Entsprechung des kartesischen
+Produktes. Man stelle sich einen Datentyp hierfür als Menge von
+zulässigen Werten vor. In Rust schreibt man den Produkttyp
+als <code>(A,&nbsp;B)</code>, und dessen Elemente als
+<code>(a,&nbsp;b)</code>. Zu beachten ist, dass die Indizierung
 nicht bei eins startet, sondern bei null. Ein Beispiel dazu:
 
 <pre class="rust ibox">
 fn main() {
     let t: (u32, u32) = (360, 240);
-    println!("({}|{})", t.0, t.1);
+    println!("({} | {})", t.0, t.1);
 }
 </pre>
 
 <p>Aus ergonomischen Gründen ist es nun wünschenswert,
 die Komponenten der Tupel nicht unter ihrem Index anzusprechen,
-sondern über Bezeichner. Man schreibt in Rust dann z.&nbsp;B.
+sondern über Bezeichner. Man schreibt dann z.&nbsp;B.
 <code>struct Name {a: A, b: B}</code>, wobei die erste Komponente unter
 dem Bezeichner <code>a</code> und die zweite unter <code>b</code>
 angesprochen wird. Ein Beispiel dazu:
@@ -57,11 +63,11 @@ struct Point {
 
 fn main() {
     let t: Point = Point {a: 360, b: 240};
-    println!("({}|{})", t.a, t.b);
+    println!("({} | {})", t.a, t.b);
 }
 </pre>
 
-<p>Ein als <code>struct</code> definierter zusammengesetzer Datentyp
+<p>Ein als <code>struct</code> definierter zusammengesetzter Datentyp
 wird als <i>Struktur</i> bezeichnet. In der theoretischen Informatik
 spricht man vom <i>Produkt</i>. Bei Pascal und verwandten
 Sprachen kennt man die synonymen Begriffe <i>Record</i>
@@ -69,25 +75,69 @@ und <i>Verbund</i>.
 
 
 <h2 id="Enumerationen">Enumerationen</h2>
-<p>Stellen wir uns einen Datentyp zunächst wieder als Menge von
-zulässigen Werten vor, dann ergibt auch die disjunkte Vereinigung
-von zwei oder mehr Datentypen einen Sinn. Sind <code>A</code>
-und <code>B</code> zwei Datentypen, dann ist disjunkte Vereinigung
-die Menge
 
-<p class="math">A + B
-:= {(0,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;A}
-&cup; {(1,&nbsp;<var>x</var>)&nbsp;|&nbsp;<var>x</var>&in;B}.
+<p>Zum tieferen Verständnis möchte ich zunächst wieder eine
+Konstruktion der Mengenlehre erläutern. Zu je zwei Mengen <var>A</var>
+und <var>B</var> darf man die Vereinigungsmenge
+<var>A</var>&nbsp;&cup;&nbsp;<var>B</var> bilden, die ein Element genau
+dann enthält, wenn es in <var>A</var> oder in <var>B</var> enthalten
+ist. Nun kann es sein, dass sich die Mengen <var>A</var> und
+<var>B</var> überschneiden, dass es also Elemente gibt, die sowohl
+in <var>A</var> als auch in <var>B</var> enthalten sind. Wir würden
+die Überschneidung nun gerne künstlich verhindern, beispielsweise,
+indem die Elemente vor der Vereinigung eingefärbt werden. Alle
+Elemente von <var>A</var> werden in Blau eingefärbt und alle Elemente
+von <var>B</var> in Grün.
 
-<p>Die disjunkte Vereinigung, auch <i>Summe</i> genannt,
-wird demnach als Zusammenfassung der Wertemengen betrachtet,
-wobei aber ein <i>Tag</i>, hier <code>0</code> oder <code>1</code>,
-eine strenge Unterscheidung der Wertemengen ermöglicht.
+<p>Anstelle der Einfärbung lässt sich ein Element genauso gut
+mit einem <i>Tag</i> versehen, auch <i>Diskriminator</i> genannt.
+Jedes Element von <var>A</var> bekommt das Tag&nbsp;0 und jedes Element
+von <var>B</var> das Tag&nbsp;1. Insofern ist die disjunkte
+Vereinigung gemäß
+
+<p class="math"><var>A</var> + <var>B</var>
+:= {(0,&nbsp;<var>a</var>)&nbsp;|&nbsp;<var>a</var> ∈ <var>A</var>}
+&cup; {(1,&nbsp;<var>b</var>)&nbsp;|&nbsp;<var>b</var> ∈ <var>B</var>}
+
+<p>definiert.
+
+<p>Auch zur disjunkten Vereinigung gibt es eine Entsprechung für
+Typen. Die obige Formulierung würde man als
+
+<pre class="rust ibox">
+enum E {T0(A), T1(B)}
+</pre>
+
+<p>schreiben, wobei der Wert <code>E::T0(a)</code> dem Paar
+(0,&nbsp;<var>a</var>) entspricht, und <code>E::T1(b)</code>
+dem Paar (1,&nbsp;<var>b</var>). Zu jedem Summand bzw. jedem Tag gibt
+es eine in die Summe einbettende injektive Funktion.
+Es gilt folgender Zusammenhang:
+
+<p class="indent">
+<code>E::T0</code> entspricht der Injektion <var>a</var> ↦ (0,&nbsp;<var>a</var>),<br>
+<code>E::T1</code> entspricht der Injektion <var>b</var> ↦ (1,&nbsp;<var>b</var>).
+
+<p>Tatsächlich darf man
+
+<pre class="rust ibox">
+let f: fn(A) -&gt; E = E::T0;
+</pre>
+
+<p>schreiben. Mit <code>E::T0</code> ist also entweder das Tag oder die
+zugehörige Injektion gemeint, wobei es nicht sonderlich problematisch
+ist, zwischen den beiden keine strenge Unterscheidung vorzunehmen.
 
 <p>Aus ergonomischen Gründen ist es nun wieder wünschenswert,
 wenn Bezeichner anstelle von Indizes als Tags verwendet werden.
-Eine solche Konstruktion wird in Rust als <code>enum</code> bezeichnet.
-Ein Beispiel:
+Das Schlüsselwort <code>enum</code> leitet eine solche Konstruktion
+ein. Hiermit kann man nun die farbliche Überlegung als
+
+<pre class="rust ibox">
+enum E {Blue(A), Green(B)}
+</pre>
+
+<p>darstellen. Ein längeres Beispiel:
 
 <pre class="rust ibox">
 enum E {
@@ -113,9 +163,44 @@ fn main() {
 Tags <code>E::Int</code> und <code>E::Char</code>.
 
 <p>Synonym zu <i>Enumeration</i> und <i>Summe</i> spricht man
-auch von einer <i>disjunkten Vereinigung</i>
-(engl. <i>disjoint union</i>), <i>diskriminierten Vereinigung</i>
-(engl. <i>tagged union</i>), oder einem <i>Koprodukt</i>.
+auch von einer <i>diskriminierten Vereinigung</i>,
+engl. <i>tagged union</i>. Die Entsprechung in der Mengenlehre heißt
+wie gesagt <i>disjunkte Vereinigung</i>, engl. <i>disjoint union</i>.
+Die Kategorientheorie abstrahiert die Summe aus der Typentheorie und
+die disjunkte Vereinigung aus der Mengenlehre zum selben Konzept
+<i>Koprodukt</i>. Ein solches wird über die Betrachtung
+der besprochenen Injektionen definiert.
+
+<p>Ein Tag muss nicht unbedingt Daten tragen. Nämlich existiert
+der Einheitstyp <code>()</code>, der lediglich das leere Tupel
+<code>()</code> enthält, welches keine Daten tragen kann.
+Beispielsweise kann man den Typ der Wahrheitswerte damit als
+
+<pre class="rust ibox">
+enum Bool {False(()), True(())}
+</pre>
+
+<p>beschreiben. Die Sprache gestattet es, diesen Typ weniger
+umständlich als
+
+<pre class="rust ibox">
+enum Bool {False, True}
+</pre>
+
+<p>zu schreiben. Wahrheitsfunktionen definiert man nun per
+Fallunterscheidung mit dem Musterabgleich:
+
+<pre class="rust ibox">
+use Bool::{False, True};
+
+fn not(a: Bool) -&gt; Bool {
+    match a {
+        False =&gt; True,
+        True  =&gt; False
+    }
+}
+</pre>
+
 
 <h2 id="Nominal">Nominale Typisierung</h2>
 
@@ -138,20 +223,20 @@ strukturelle Typen in Rust erstellt werden:
 <th>Strukturell
 <tr>
 <th>Struktur
-<td><code>struct Name{x:X,y:Y}</code>
+<td><code>struct Name {x:&nbsp;X, y:&nbsp;Y}</code>
 <td>nicht vorhanden
 <tr>
 <th>Tupel
-<td><code>struct Name(X,Y);</code>
-<td><code>(X,Y)</code>
+<td><code>struct Name(X,&nbsp;Y);</code>
+<td><code>(X,&nbsp;Y)</code>
 <tr>
 <th>Enumeration
-<td><code>enum Name{A(X),B(Y)}</code>
+<td><code>enum Name {A(X), B(Y)}</code>
 <td>nicht vorhanden
 <tr>
 <th>Feld
-<td><code>struct Name([X;2]);</code>
-<td><code>[X;2]</code>
+<td><code>struct Name([X;&nbsp;2]);</code>
+<td><code>[X;&nbsp;2]</code>
 </table>
 
 <p>Die strukturelle Typisierung erlaubt vor allem Ergonomie und
@@ -165,14 +250,14 @@ genannt.
 
 <p>Die Konstruktion komplexer struktureller Typen führt nun zu langer
 Syntax, &ndash; da tut sich die Frage auf, ob sich das denn nicht abkürzen
-lässt. Dies geschieht mit dem Schlüsselwort <code>type</code>, welches
-einen <i>Typalias</i> einleitet. Schreibt man also
+lässt. Dies geschieht durch einen <i>Typalias</i>, der mit dem
+Schlüsselwort <code>type</code> eingeleitet wird. Mit der Festlegung
 <pre class="rust ibox">
 type Pair = (i32, i32);
 </pre>
 
-<p>dann ist <code>Pair</code> an jeder Stelle des Moduls
-synonym zu <code>(i32,i32)</code>.
+<p>ist <code>Pair</code> also an jeder Stelle des Programms
+synonym zu <code>(i32,&nbsp;i32)</code>.
 
 <h2 id="Methoden">Methoden</h2>
 
@@ -214,7 +299,7 @@ fn main() {
 Außerdem ist <code>&amp;self</code> eine Kurzschreibweise für
 <code>self:&nbsp;&amp;Self</code>. Die Punkt-Schreibweise
 <code>v.abs()</code> ist eine Kurzschreibweise für
-<code>Vector::abs(&amp;v)</code>. Somit ist die folgende Angabe
+<code>Vector::abs(&amp;v)</code>. Somit ist die folgende Formulierung
 äquivalent:
 
 <pre class="rust ibox">

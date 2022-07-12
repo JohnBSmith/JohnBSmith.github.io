@@ -17,6 +17,8 @@
 <li><a href="#Terme-und-Typen">Terme und Typen</a>
 <li><a href="#Funktionen">Funktionen</a>
 <li><a href="#Abhaengige-Funktionen">Abhängige Funktionen</a>
+<li><a href="#Summen">Summen</a>
+<li><a href="#Kommentare">Kommentare</a>
 </ol>
 
 <h2 id="Terme-und-Typen">Terme und Typen</h2>
@@ -194,8 +196,8 @@ Mengen zu definieren. Es findet sich das Monstrum
 
 <p class="indent">∏<sub><var>i</var>∈<var>I</var></sub>
 <var>X</var><sub><var>i</var></sub>
-= {<var>f</var>: <var>I</var> → ⋃<sub><var>i</var>∈<var>I</var></sub>
-<var>X</var><sub><var>i</var></sub>|
+:= {<var>f</var>: <var>I</var> → ⋃<sub><var>i</var>∈<var>I</var></sub>
+<var>X</var><sub><var>i</var></sub> |
 ∀<var>i</var>∈<var>I</var>: <var>f</var>(<var>i</var>) ∈ <var>X</var><sub><var>i</var></sub>}.
 
 <p>Einfach gesprochen ordnet die Funktion <var>f</var> hier jedem Index
@@ -223,6 +225,148 @@ id: forall(T: Type), T -&gt; T
 
 <p>Der Grund für die Notation <code>forall</code> liegt darin, dass dem Produkt
 aufgrund der Curry-Howard-Korrespondenz die Allquantifizierung entspricht.
+
+<p>Typinferenz ist ebenfalls zur Ableitung von Typargumenten fähig.
+Anstelle von <code>id&nbsp;nat&nbsp;0</code> darf man
+<code>id&nbsp;_&nbsp;0</code> schreiben, wobei der Unterstrich eine
+Leerstelle beschreibt. Wird das Typargument in der Definition von
+geschweiften Klammern umfasst, darf der Unterstrich bei der Applikation
+entfallen:
+
+<pre class="ibox gallina">
+Definition id {T} (x: T) := x.
+
+Compute id 0.
+Compute id false.
+</pre>
+
+<p>Möchte man das Typargument dennoch explizit aufführen, wird dem
+Bezeichner der Funktion ein at-Zeichen vorangestellt:
+
+<pre class="ibox gallina">
+Compute @id nat 0.
+</pre>
+
+<p>Erwähnen möchte ich noch, dass die gezeigte Art von abhängigen
+Funktionen ebenfalls in vielen anderen Programmiersprachen
+zu finden ist. Man nennt sie <i>generisch</i> oder <i>parametrisch
+polymorph</i>. Das Typargument nennt man <i>Typparameter</i>. In Rust
+kommen Typparameter in spitze Klammern. In Standard ML und Objective
+Caml wird ein Typparameter nicht explizit als Argument aufgeführt.
+
+<table class="bt">
+<tr><th>Sprache<th>Notation
+<tr><th>Gallina<td><code><b>Definition</b> id T (x: T): T := x.</code>
+<tr><th>Rust<td><code><b>fn</b> id&lt;T&gt;(x: T) -&gt; T {x}</code>
+<tr><th>SML<td><code><b>fun</b> id (x: 'T): 'T = x;</code>
+<tr><th>OCaml<td><code><b>let</b> id (x: 'T): 'T = x;;</code>
+</table>
+
+<p>In SML/OCaml schreibt man üblicherweise <code>'a</code> anstelle
+von <code>'T</code>.
+
+<p>Obwohl die vier Sprachen eng miteinander verwandt sind, ist hier
+bereits ein erheblicher Wildwuchs an unterschiedlicher Syntax zu
+verzeichnen.
+
+<h2 id="Summen">Summen</h2>
+
+<p>In der Mengenlehre kann man zu je zwei Mengen <var>A</var> und
+<var>B</var> die Vereinigungsmenge <var>A</var>&nbsp;∪&nbsp;<var>B</var>
+betrachten, die ein Element genau dann enthält, wenn es in
+<var>A</var> oder in <var>B</var> enthalten ist. Nun kann es sein, dass
+sich die Mengen <var>A</var> und <var>B</var> überschneiden, dass es
+also Elemente gibt, die sowohl in <var>A</var> als auch in <var>B</var>
+enthalten sind. Wir wollen die Überschneidung nun künstlich verhindern,
+indem die Elemente vor der Vereinigung ein Tag bekommen.
+Alle Elemente von <var>A</var> bekommen das Tag left
+und alle Elemente von <var>B</var> das Tag right.
+Auf diese Weise ist die disjunkte Vereinigung
+
+<p class="indent"><var>A</var> + <var>B</var>
+:= {(left, <var>a</var>) | <var>a</var> ∈ <var>A</var>}
+∪ {(right, <var>b</var>) | <var>b</var> ∈ <var>B</var>}
+
+<p>definiert. Mit den beiden injektiven Funktionen
+
+<p class="indent">inl(<var>a</var>) := (left, <var>a</var>),<br>
+inr(<var>b</var>) := (right, <var>b</var>)
+
+<p>erhält man eine Charakterisierung der Konstruktion.
+In der Typentheorie gibt es nun eine <i>Summe</i> genannte direkte
+Entsprechung der disjunkten Vereinigung, wobei auch
+die Begriffe <i>Enumeration</i> und <i>diskriminierte Vereinigung</i>
+gebräuchlich sind. Zur Definition der Summe schreiben wir:
+
+<pre class="ibox gallina">
+Inductive S := inl: A -&gt; S | inr: B -&gt; S.
+</pre>
+
+<p>Hierbei darf man <code>inl</code> und <code>inr</code> als Tags
+oder als Injektionen auffassen. So gesagt steht <code>inl</code>
+stellvertretend für left und <code>inr</code>
+stellvertretend für right.
+
+<p>Ein Tag muss nicht unbedingt Informationen tragen.
+Der Typ <code>bool</code> lässt sich als Summe definieren,
+die lediglich aus den beiden Tags <code>true</code> und
+<code>false</code> besteht:
+
+<pre class="ibox gallina">
+Inductive bool := true | false.
+</pre>
+
+<p>Wahrheitsfunktionen definiert man nun per Fallunterscheidung,
+wofür der Musterabgleich mit <code>match</code> zur Verfügung
+steht.
+
+<pre class="ibox gallina">
+Definition not (a: bool) := match a with
+  | false => true
+  | true  => false
+end.
+
+Definition and (a: bool) (b: bool) := match a with
+  | false => match b with
+      | false => false
+      | true  => false
+    end
+  | true  => match b with
+      | false => false
+      | true  => true
+    end
+end.
+
+Definition or (a: bool) (b: bool) := match a with
+  | false => match b with
+      | false => false
+      | true  => true
+    end
+  | true  => match b with
+      | false => true
+      | true  => true
+    end
+end.
+
+Compute or (not false) false.
+</pre>
+
+<h2 id="Kommentare">Kommentare</h2>
+
+<p>Kommentare stehen wie in SML/OCaml zwischen von runden
+Klammern umfassten Sternchen.
+
+<pre class="ibox gallina">
+(* Kommentar *)
+</pre>
+
+<p>Sie dürfen verschachtelt werden.
+
+<pre class="ibox gallina">
+(*
+    (* Kommentar *)
+*)
+</pre>
 
 </body>
 </html>

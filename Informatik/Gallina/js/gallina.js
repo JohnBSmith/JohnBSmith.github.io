@@ -8,8 +8,8 @@ function isdigit(s){
 }
 
 var gallina_keyword = {
-   "Check":0, "Compute":0, "Definition":0, "fix":0, "fun":0,
-   "match":0, "end":0, "with":0, "forall":0
+   "Check":0, "Compute":0, "Definition":0, "Inductive":0,
+   "fix":0, "fun":0, "match":0, "end":0, "with":0, "forall":0
 };
 
 function node_syntax(s){
@@ -59,16 +59,15 @@ function node_syntax(s){
                 s2 += "<span class='symbol'>'</span>";
                 i++;
             }
-        }else if(c=='#'){
-            st = "<span class='comment'>";
-            while(i<s.length && s[i]!='\n'){st+=s[i]; i++;}
-            st+="</span>";
-            s2+=st;
         }else if(c=='(' && i+1<s.length && s[i+1]=='*'){
             st = "<span class='comment'>(*";
             i+=2;
-            while(i+1<s.length && s[i]!='*' && s[i+1]!=')'){
-                st+=s[i]; i++;
+            var nesting = 1;
+            while(i+1 < s.length){
+                if(s[i] == '*' && s[i+1] == ')') nesting -= 1;
+                else if(s[i] == '(' && s[i+1] == '*') nesting += 1;
+                if(nesting == 0) break;
+                st += s[i]; i++;
             }
             i+=2;
             st+="*)</span>";
