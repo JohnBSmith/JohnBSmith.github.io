@@ -7,7 +7,7 @@
 
 \begin{Definition}[Ganze Zahlen]\mbox{}\\*
 Auf $\N_0\times\N_0$ wird die folgende Äquivalenzrelation definiert:
-\[(x_1,y_1)\sim (x_2,y_2) \defiff x_1+y_2 = x_2+y_1.\]
+\[(x,y)\sim (x',y') \defiff x+y' = x'+y.\]
 Die Quotientenmenge $\Z := (\N_0\times\N_0)/{\sim}$ nennt man
 die ganzen Zahlen.
 \end{Definition}
@@ -15,48 +15,47 @@ die ganzen Zahlen.
 \begin{Satz}[Ring der ganzen Zahlen]\mbox{}\\*
 Die Operationen
 \begin{align*}
-[(x_1,y_1)]+[(x_2,y_2)] &:= [(x_1+x_2,y_1+y_2)],\\
-[(x_1,y_1)]\cdot [(x_2,y_2)] &:= [(x_1x_2+y_1y_2,x_1y_2+x_2y_1)]
+[(x,y)]+[(x',y')] &:= [(x+x',y+y')],\\
+[(x,y)]\cdot [(x',y')] &:= [(xx'+yy',xy'+x'y)]
 \end{align*}
 sind auf $\Z$ wohldefiniert und $(\Z,+,\cdot)$ bildet einen
 kommutativen unitären Ring.
 \end{Satz}
 \strong{Beweis.} Wohldefiniert heißt, dass das Ergebnis der Operationen
 nicht von den gewählten Repräsentanten der Argumente abhängig ist.
-Sei dazu $(x_1,y_1)\sim(a_1,b_1)$ und
-$(x_2,y_2)\sim (a_2,b_2)$. Zu zeigen ist nun
-\begin{gather*}
-(x_1+x_2,y_1+y_2)\sim (a_1+a_2,b_1+b_2)\\
-\iff (x_1+x_2)+(b_1+b_2) = (a_1+a_2)+(y_1+y_2).
-\end{gather*}
-Gemäß Voraussetzung ist $x_1+b_1=a_1+y_1$ und $x_2+b_2=a_2+y_2$.
+Sei dazu $(x,y)\sim(a,b)$ und
+$(x',y')\sim (a',b')$. Zu zeigen ist nun
+\[(x+x',y+y')\sim (a+a',b+b'),\]
+was laut Definition zu
+\[(x+x')+(b+b') = (a+a')+(y+y').\]
+äquivalent ist. Gemäß Voraussetzung ist $x+b=a+y$ und $x'+b'=a'+y'$.
 Man bekommt damit auf der linken Seite
-\[x_1+x_2+b_1+b_2 = a_1+y_1+a_2+y_2,\]
+\[x+x'+b+b' = x+b+x'+b' = a+y+a'+y',\]
 was wiederum mit der rechten Seite übereinstimmt.
 
 Mit der Multiplikation verhält es sich etwas komplizierter.
 Zu Vereinfachung wird zunächst gezeigt:
 \begin{gather*}
-[(x_1,y_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(x_2,y_2)]\\
-\iff (x_1x_2+y_1y_2,x_1y_2+y_1x_2)\sim (a_1x_2+b_1y_2,a_1y_2+b_1x_2)\\
-\iff x_1x_2+y_1y_2 + a_1y_2+b_1x_2 = a_1x_2+b_1y_2 + x_1y_2+y_1x_2\\
-\iff (x_1+b_1)x_2 + (a_1+y_1)y_2 = (a_1+y_1)x_2 + (x_1+b_1)y_2.
+[(x,y)]\cdot [(x',y')] = [(a,b)]\cdot [(x',y')],\\
+\iff (xx'+yy',xy'+yx')\sim (ax'+by',ay'+bx')\\
+\iff xx'+yy' + ay'+bx' = ax'+by' + xy'+yx'\\
+\iff (x+b)x' + (a+y)y' = (a+y)x' + (x+b)y'.
 \end{gather*}
-Diese Gleichung ist gemäß Voraussetzung $(x_1,y_1)\sim (a_1,b_1)$
-bzw. $x_1+b_1=a_1+y_1$ erfüllt.
+Diese Gleichung ist gemäß Voraussetzung $(x,y)\sim (a,b)$
+bzw. $x+b=a+y$ erfüllt.
 
 Analog bestätigt man
-\[[(a_1,b_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(a_2,b_2)].\]
+\[[(a,b)]\cdot [(x',y')] = [(a,b)]\cdot [(a',b')].\]
 Gemäß Transitivität ergibt sich somit
-\[[(x_1,y_1)]\cdot [(x_2,y_2)] = [(a_1,b_1)]\cdot [(a_2,b_2)].\]
+\[[(x,y)]\cdot [(x',y')] = [(a,b)]\cdot [(a',b')].\]
 Es ist nun zu bestätigen, dass $(\Z,+)$ eine kommutative Gruppe ist.
 Das Assoziativgesetz:
 \begin{gather*}
-([(x_1,y_1)]+[(x_2,y_2)])+[(x_3,y_3)]
-= [(x_1+x_2,y_1+y_2)] + [(x_3,y_3)]\\
-= [(x_1+x_2+x_3,y_1+y_2+y_3)]
-= [(x_1,y_1)]+[(x_2+x_3,y_2+y_3)]\\
-= [(x_1,y_1)]+([(x_2,y_2)]+[(x_3,y_3)]).
+([(x,y)]+[(x',y')])+[(x'',y'')]
+= [(x+x',y+y')] + [(x'',y'')]\\
+= [(x+x'+x'',y+y'+y'')]
+= [(x,y)]+[(x'+x'',y'+y'')]\\
+= [(x,y)]+([(x',y')]+[(x'',y'')]).
 \end{gather*}
 Das neutrale Element ist $[(0,0)]$:
 \[[(x,y)]+[(0,0)] = [(x+0,y+0)] = [(x,y)].\]
@@ -66,25 +65,22 @@ Das inverse Element zu $[(x,y)]$ ist $[(y,x)]$, denn es gilt
 \iff (x+y,y+x)\sim (0,0)\iff x+y+0 = y+x+0.
 \end{gather*}
 Das Kommutativgesetz:
-\begin{gather*}
-[(x_1,y_1)]+[(x_2,y_2)] = [(x_1+x_2,y_1+y_2)]
-= [(x_2+x_1,y_2+y_1)]\\
-= [(x_2,y_2)]+[(x_1,y_1)].
-\end{gather*}
+\[[(x,y)]+[(x',y')] = [(x+x',y+y')] = [(x'+x,y'+y)]
+= [(x',y')]+[(x,y)].\]
 Es ist nun zu bestätigen, dass $(\Z,\cdot)$ ein kommutatives
 Monoid bildet. Das Assoziativgesetz:
 \begin{gather*}
-([(x_1,y_1)]\cdot [(x_2,y_2)])\cdot [(x_3,y_3)]
-= [(x_1x_2+y_1y_2,x_1y_2+x_2y_1)]\cdot [(x_3,y_3)]\\
-= [(x_1x_2x_3+x_3y_1y_2+x_1y_2y_3+x_2y_1y_3,\;
-x_1x_2y_3+y_1y_2y_3+x_1x_3y_2+x_2x_3y_1)]\\
-= [(x_1,y_1)]\cdot [(x_2x_3+y_2y_3,x_2y_3+x_3y_2)]
-= [(x_1,y_1)]\cdot ([(x_2,y_2)]\cdot [(x_3,y_3)]).
+([(x,y)]\cdot [(x',y')])\cdot [(x'',y'')]
+= [(xx'+yy',xy'+x'y)]\cdot [(x'',y'')]\\
+= [(xx'x''+x''yy'+xy'y''+x'yy'',\;
+xx'y''+yy'y''+xx''y'+x'x''y)]\\
+= [(x,y)]\cdot [(x'x''+y'y'',x'y''+x''y')]
+= [(x,y)]\cdot ([(x',y')]\cdot [(x'',y'')]).
 \end{gather*}
 Das Kommutativgesetz:
 \begin{gather*}
-[(x_1,y_1)]\cdot [(x_2,y_2)] = [(x_1x_2+y_1y_2,\;x_1y_2+y_1x_2)]\\
-= [(x_2x_1+y_2y_1,\;x_2y_1+x_1y_2)] = [(x_2,y_2)]\cdot [(x_1,y_1)].
+[(x,y)]\cdot [(x',y')] = [(xx'+yy',\;xy'+yx')]\\
+= [(x'x+y'y,\;x'y+xy')] = [(x',y')]\cdot [(x,y)].
 \end{gather*}
 Das neutrale Element ist $[(1,0)]$, denn es gilt
 \[[(x,y)]\cdot [(1,0)] = [(x\cdot 1+y\cdot 0,\;1\cdot y+x\cdot 0)]
@@ -92,11 +88,11 @@ Das neutrale Element ist $[(1,0)]$, denn es gilt
 Schließlich ist noch das Distributivgesetz zu bestätigen.
 Man findet
 \begin{gather*}
-[(a,b)]\cdot ([(x_1,y_1)]+[(x_2,y_2)])
-= [(a,b)]\cdot [(x_1+x_2,y_1+y_2)]\\
-= [(ax_1+ax_2+by_1+by_2,\;ay_1+ay_2+bx_1+bx_2)]\\
-= [(ax_1+by_1,ay_1+bx_1)]+[(ax_2+by_2,ay_2+bx_2)]\\
-= [(a,b)]\cdot [(x_1,y_1)] + [(a,b)]\cdot [(x_2,y_2)].
+[(a,b)]\cdot ([(x,y)]+[(x',y')])
+= [(a,b)]\cdot [(x+x',y+y')]\\
+= [(ax+ax'+by+by',\;ay+ay'+bx+bx')]\\
+= [(ax+by,ay+bx)]+[(ax'+by',ay'+bx')]\\
+= [(a,b)]\cdot [(x,y)] + [(a,b)]\cdot [(x',y')].
 \end{gather*}
 Somit sind alle Axiome bestätigt.\;\qedsymbol
 
@@ -135,7 +131,7 @@ mehr benötigt.
 
 \begin{Definition}[Totalordnung der ganzen Zahlen]\mbox{}\\*
 Auf $\Z$ wird die folgende strenge Totalordnung definiert:
-\[[(x_1,y_1)] < [(x_2,y_2)] \defiff x_1+y_2<x_2+y_1.\]
+\[[(x,y)] < [(x',y')] \defiff x+y'<x'+y.\]
 \end{Definition}
 
 \begin{Satz}[Einbettung der Totalordnung]\mbox{}\\*
@@ -154,7 +150,7 @@ genügt der Forderung
 
 \begin{Definition}[Rationale Zahlen]\mbox{}\\*
 Auf $\Z\times\N_1$ wird die folgende Äquivalenzrelation definiert:
-\[(x_1,y_1)\sim (x_2,y_2) \defiff x_1y_2 = x_2y_1.\]
+\[(x,y)\sim (x',y') \defiff xy' = x'y.\]
 Die Quotientenmenge $\Q := (\Z\times\N_1)/{\sim}$ nennt man
 die rationalen Zahlen.
 \end{Definition}
@@ -162,28 +158,28 @@ Für die Äquivalenzklasse $[(x,y)]$ schreibt man $\frac{x}{y}$.
 
 \begin{Satz}[Körper der rationalen Zahlen]\mbox{}\\*
 Die Operationen
-\[\frac{x_1}{y_1}+\frac{x_2}{y_2} := \frac{x_1y_2+x_2y_1}{y_1y_2},
-\qquad\frac{x_1}{y_1}\cdot \frac{x_2}{y_2} := \frac{x_1x_2}{y_1y_2}\]
+\[\frac{x}{y}+\frac{x'}{y'} := \frac{xy'+x'y}{yy'},
+\qquad\frac{x}{y}\cdot \frac{x'}{y'} := \frac{xx'}{yy'}\]
 sind auf $\Q$ wohldefiniert und $(\Q,+,\cdot)$ bildet einen Körper.
 \end{Satz}
 \strong{Beweis.} Wohldefiniert bedeutet, dass das Ergebnis der
 Operationen nicht von den gewählten Repräsentanten der Argumente
-abhängig ist. Sei dazu $(a_1,b_1)\sim (x_1,y_1)$ und
-$(a_2,b_2)\sim (x_2,y_2)$. Zu zeigen ist nun
+abhängig ist. Sei dazu $(a,b)\sim (x,y)$ und
+$(a',b')\sim (x',y')$. Zu zeigen ist nun
 \begin{align*}
-&(a_1b_2+a_2b_1,b_1b_2)\sim (x_1y_2+x_2y_1,y_1y_2)\\
-&\iff (a_1b_2+a_2b_1)(y_1y_2) = (x_1y_2+x_2y_1)(b_1b_2)\\
-&\iff a_1b_2 y_1y_2 + a_2b_1y_1y_2 = x_1y_2b_1b_2+x_2y_1b_1b_2.
+&(ab'+a'b,bb')\sim (xy'+x'y,yy'),\\
+&\iff (ab'+a'b)(yy') = (xy'+x'y)(bb')\\
+&\iff ab' yy' + a'byy' = xy'bb'+x'ybb'.
 \end{align*}
-Substituiert man $a_1y_1=x_1b_1$ und $a_2y_2=x_2b_2$ auf
+Substituiert man $ay=xb$ und $a'y'=x'b'$ auf
 der linken Seite der Gleichung, ergibt sich die rechte Seite.
 Zu zeigen ist weiterhin
 \begin{align*}
-(a_1a_2,b_1b_2)\sim (x_1x_2,y_1y_2)
-\iff a_1a_2y_1y_2 = x_1x_2b_1b_2.
+(aa',bb')\sim (xx',yy')
+\iff aa'yy' = xx'bb'.
 \end{align*}
-Wieder wird linke Seite der Gleichung über $a_1y_1=x_1b_1$
-und $a_2y_2=x_2b_2$ in die rechte Seite überführt.
+Wieder wird linke Seite der Gleichung über $ay=xb$
+und $a'y'=x'b'$ in die rechte Seite überführt.
 Die Wohldefiniertheit der Operationen ist damit bestätigt.
 
 Es bleibt zu prüfen, dass $(\Q,+,\cdot)$ allen Körperaxiomen genügt.
@@ -193,26 +189,26 @@ Das neutrale Element der Multiplikation ist $1/1$, denn es gilt
 \[\frac{x}{y}\cdot\frac{1}{1} = \frac{x\cdot 1}{y\cdot 1} = \frac{x}{y}.\]
 Die Assoziativität der Addition ergibt sich ohne größere Umstände:
 \begin{align*}
-\bigg(\frac{x_1}{y_1}+\frac{x_2}{y_2}\bigg)+\frac{x_3}{y_3}
-&= \frac{x_1y_2+x_2y_1}{y_1y_2} + \frac{x_3}{y_3}
-= \frac{x_1y_2y_3+x_2y_1y_3+x_3y_1y_2}{y_1y_2y_3},\\
-\frac{x_1}{y_1}+\bigg(\frac{x_2}{y_2}+\frac{x_3}{y_3}\bigg)
-&= \frac{x_1}{y_1}+\frac{x_2y_3+x_3y_2}{y_2y_3}
-= \frac{x_1y_2y_3+x_2y_1y_3+x_3y_1y_2}{y_1y_2y_3}.
+\bigg(\frac{x}{y}+\frac{x'}{y'}\bigg)+\frac{x''}{y''}
+&= \frac{xy'+x'y}{yy'} + \frac{x''}{y''}
+= \frac{xy'y''+x'yy''+x''yy'}{yy'y''},\\
+\frac{x}{y}+\bigg(\frac{x'}{y'}+\frac{x''}{y''}\bigg)
+&= \frac{x}{y}+\frac{x'y''+x''y'}{y'y''}
+= \frac{xy'y''+x'yy''+x''yy'}{yy'y''}.
 \end{align*}
 Die Assoziativität der Multiplikation ist etwas einfacher:
-\[\bigg(\frac{x_1}{y_1}\cdot\frac{x_2}{y_2}\bigg)\cdot\frac{x_3}{y_3}
-= \frac{x_1x_2}{y_1y_2}\cdot\frac{x_3}{y_3} = \frac{x_1x_2x_3}{y_1y_2y_3}
-= \frac{x_1}{y_1}\cdot\frac{x_2x_3}{y_2y_3}
-= \frac{x_1}{y_1}\cdot\bigg(\frac{x_2}{y_2}\cdot\frac{x_3}{y_3}\bigg).\]
+\[\bigg(\frac{x}{y}\cdot\frac{x'}{y'}\bigg)\cdot\frac{x''}{y''}
+= \frac{xx'}{yy'}\cdot\frac{x''}{y''} = \frac{xx'x''}{yy'y''}
+= \frac{x}{y}\cdot\frac{x'x''}{y'y''}
+= \frac{x}{y}\cdot\bigg(\frac{x'}{y'}\cdot\frac{x''}{y''}\bigg).\]
 Das Kommutativgesetz der Addition:
-\[\frac{x_1}{y_1}+\frac{x_2}{y_2} = \frac{x_1y_2+x_2y_1}{y_1y_2}
-= \frac{x_2y_1+x_1y_2}{y_2y_1}
-= \frac{x_2}{y_2}+\frac{x_1}{y_1}.\]
+\[\frac{x}{y}+\frac{x'}{y'} = \frac{xy'+x'y}{yy'}
+= \frac{x'y+xy'}{y'y}
+= \frac{x'}{y'}+\frac{x}{y}.\]
 Das Kommutativgesetz der Multiplikation:
-\[\frac{x_1}{y_2}\cdot\frac{x_2}{y_2}
-= \frac{x_1x_2}{y_1y_2} = \frac{x_2x_1}{y_2y_1}
-= \frac{x_2}{y_2}\cdot\frac{x_1}{y_1}.\]
+\[\frac{x}{y'}\cdot\frac{x'}{y'}
+= \frac{xx'}{yy'} = \frac{x'x}{y'y}
+= \frac{x'}{y'}\cdot\frac{x}{y}.\]
 Das additiv inverse Element zu $x/y$ ist $(-x)/y$, denn es gilt
 \[\frac{x}{y}+\frac{-x}{y} = \frac{xy+(-x)y}{y^2}
 = \frac{0}{y^2} = \frac{0}{1}.\]
@@ -221,12 +217,12 @@ ist $y/x$, denn es gilt
 \[\frac{x}{y}\cdot\frac{y}{x} = \frac{xy}{xy} = \frac{1}{1}.\]
 Schließlich findet bestätigt man noch das Distributivgesetz:
 \begin{align*}
-&\frac{a}{b}\cdot\bigg(\frac{x_1}{y_1}+\frac{x_2}{y_2}\bigg)
-= \frac{a}{b}\cdot\frac{x_1y_2+x_2y_1}{y_1y_2}
-= \frac{ax_1y_2+ax_2y_1}{by_1y_2},\\
-&\frac{ax_1}{by_1}+\frac{ax_2}{by_2}
-= \frac{ax_1by_2+ax_2by_1}{by_1by_2}
-= \frac{b}{b}\cdot\frac{ax_1y_2+ax_2y_1}{by_1y_2}.
+&\frac{a}{b}\cdot\bigg(\frac{x}{y}+\frac{x'}{y'}\bigg)
+= \frac{a}{b}\cdot\frac{xy'+x'y}{yy'}
+= \frac{axy'+ax'y}{byy'},\\
+&\frac{ax}{by}+\frac{ax'}{by'}
+= \frac{axby'+ax'by}{byby'}
+= \frac{b}{b}\cdot\frac{axy'+ax'y}{byy'}.
 \end{align*}
 Hierbei beachtet man, dass $b/b=1/1$ das multiplikativ
 neutrale Element ist.\;\qedsymbol
@@ -259,7 +255,7 @@ und
 \[\varphi(ab) = \frac{ab}{1} = \frac{ab}{1\cdot 1} = \frac{a}{1}\cdot\frac{b}{1}
 = \varphi(a)\cdot\varphi(b).\;\qedsymbol\]
 Gemäß der Einbettung können wir die ganze Zahl $z$ ab jetzt
-mit der rationalen Zahl $z/1$ identifizieren. D.\,h. man schreibt
+mit der rationalen Zahl $z/1$ identifizieren. Das heißt, man schreibt
 einfach $z=z/1$ anstelle von $\varphi(z)=z/1$.
 
 \begin{Definition}[Division rationaler Zahlen]\mbox{}\\*
@@ -268,7 +264,7 @@ definiert als $a/b := ab^{-1}$.
 \end{Definition}
 Die Division ist also gerade die Multiplikation des Kehrwertes
 des Nenners:
-\[\frac{x_1}{y_1}/\frac{x_2}{y_2} = \frac{x_1}{y_1}\cdot\frac{y_2}{x_2}.\]
+\[\frac{x}{y}/\frac{x'}{y'} = \frac{x}{y}\cdot\frac{y'}{x'}.\]
 Die Division muss natürlich mit der Notation für rationale Zahlen
 kompatibel sein, sonst dürfte man nicht die gleiche Schreibweise
 verwenden. Zur Unterscheidung schreiben wir Division für einen

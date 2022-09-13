@@ -180,7 +180,7 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;, Error&gt; {
             while let Some(&amp;c) = a.get(i) {
                 col += 1;
                 if c.is_ascii_digit() {
-                    match mul10_add(value,c) {
+                    match mul10_add(value, c) {
                         Some(x) =&gt; value = x,
                         None =&gt; return Err(syntax_error(line, col,
                             "integer literal overflow.".into()))
@@ -238,11 +238,12 @@ fn scan(a: &amp;[u8]) -&gt; Result&lt;Vec&lt;Token&gt;, Error&gt; {
                         if c == b'\n' {col = 0; line += 1;}
                         s.push(char::from(c));
                     }
-                    tokens.push(Token {value: Symbol::String(s), line, col: col0});
+                    tokens.push(Token {
+                        value: Symbol::String(s), line, col: col0});
                 }
                 c =&gt; {
                     return Err(syntax_error(line, col,
-                        format!("unexpected character: '{}'.",char::from(c))));
+                        format!("unexpected character: '{}'.", char::from(c))));
                 }
             }
         }
@@ -305,7 +306,7 @@ fn parse(tokens: &amp;[Token]) -&gt; Result&lt;Vec&lt;Object&gt;, Error&gt; {
     }
     for x in &amp;mut list {
         let tab = &amp;mut ScopeTable::new(None);
-        *x = transform(tab,x)?;
+        *x = transform(tab, x)?;
     }
     Ok(list)
 }
@@ -315,7 +316,7 @@ mod scope_table {
     use std::{rc::Rc, cell::RefCell};
     use crate::{App, Object, transform_symbol, UNDEFINED};
 
-    #[derive(Clone,Copy)]
+    #[derive(Clone, Copy)]
     pub enum VarInfo {Argument(usize), Context(usize)}
     pub struct Frame {
         map: HashMap&lt;Rc&lt;str&gt;, VarInfo&gt;,
@@ -433,7 +434,7 @@ fn let_expression(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;App)
             _ =&gt; return let_syntax_error(app)
         }
     }
-    transform_app(env,&amp;Rc::new(App {
+    transform_app(env, &amp;Rc::new(App {
         line: app.line, col: app.col, list: a}))
 }
 
@@ -483,10 +484,10 @@ fn transform_app(env: &amp;Rc&lt;ScopeTable&gt;, app: &amp;Rc&lt;App&gt;)
                     context,
                     body]})));
         } else if id.as_ref() == "let" {
-            return let_expression(env,&amp;app);
+            return let_expression(env, &amp;app);
         }
     }
-    let list = app.list.iter().map(|x| transform(env,x))
+    let list = app.list.iter().map(|x| transform(env, x))
         .collect::&lt;Result&lt;Vec&lt;Object&gt;, _&gt;&gt;()?;
     Ok(Object::App(Rc::new(App {line: app.line, col: app.col, list})))
 }
@@ -501,8 +502,8 @@ fn transform(env: &amp;Rc&lt;ScopeTable&gt;, t: &amp;Object)
         Object::Fn(f) =&gt; Object::Fn(f.clone()),
         Object::FnLazy(f) =&gt; Object::FnLazy(f.clone()),
         Object::Err(e) =&gt; Object::Err(e.clone()),
-        Object::Symbol(id) =&gt; transform_symbol(env,id),
-        Object::App(app) =&gt; return transform_app(env,app),
+        Object::Symbol(id) =&gt; transform_symbol(env, id),
+        Object::App(app) =&gt; return transform_app(env, app),
         Object::Interface(x) =&gt; Object::Interface(x.clone())
     })
 }
@@ -644,50 +645,50 @@ fn op2_err(env: &amp;Env, op: &amp;str) -&gt; Object {
 }
 
 fn add(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"+"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"+"));
-    Object::Int(x+y)
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "+"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "+"));
+    Object::Int(x + y)
 }
 
 fn sub(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"-"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"-"));
-    Object::Int(x-y)
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "-"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "-"));
+    Object::Int(x - y)
 }
 
 fn mul(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"*"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"*"));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "*"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "*"));
     Object::Int(x*y)
 }
 
 fn div(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"/"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"/"));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "/"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "/"));
     Object::Int(x/y)
 }
 
 fn rem(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"%"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"%"));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "%"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "%"));
     Object::Int(x%y)
 }
 
 fn obj_eq(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"="));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"="));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "="));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "="));
     Object::Bool(x == y)
 }
 
 fn obj_lt(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"&lt;"));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"&lt;"));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "&lt;"));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "&lt;"));
     Object::Bool(x &lt; y)
 }
 
 fn obj_le(env: &amp;mut Env) -&gt; Object {
-    let x = expect!(env.arg(0), Object::Int, return op2_err(env,"&lt;="));
-    let y = expect!(env.arg(1), Object::Int, return op2_err(env,"&lt;="));
+    let x = expect!(env.arg(0), Object::Int, return op2_err(env, "&lt;="));
+    let y = expect!(env.arg(1), Object::Int, return op2_err(env, "&lt;="));
     Object::Bool(x &lt;= y)
 }
 
@@ -751,7 +752,7 @@ fn not(env: &amp;mut Env) -&gt; Object {
 }
 
 fn define(env: &amp;mut Env, app: &amp;App) -&gt; Object {
-    let id = expect!(&amp;app.list[1],Object::Symbol).clone();
+    let id = expect!(&amp;app.list[1], Object::Symbol).clone();
     let value = eval(env, &amp;app.list[2]);
     if let Object::Err(_) = value {return value;}
     env.map.insert(id, value);
@@ -795,7 +796,7 @@ fn lambda(env: &amp;mut Env, app: &amp;App) -&gt; Object {
     let argc = expect!(argv[1], Object::Int) as usize;
     let context: Vec&lt;Object&gt; = match argv[2] {
         Object::App(ref app) =&gt; {
-            app.list.iter().map(|x| eval(env,x)).collect()
+            app.list.iter().map(|x| eval(env, x)).collect()
         },
         _ =&gt; Vec::new()
     };
@@ -809,12 +810,12 @@ fn lambda(env: &amp;mut Env, app: &amp;App) -&gt; Object {
 }
 
 fn load_arg(env: &amp;mut Env, app: &amp;App) -&gt; Object {
-    let index = expect!(&amp;app.list[1],Object::Int);
+    let index = expect!(&amp;app.list[1], Object::Int);
     env.arg(*index as usize).clone()
 }
 
 fn load_context(env: &amp;mut Env, app: &amp;App) -&gt; Object {
-    let index = expect!(&amp;app.list[1],Object::Int);
+    let index = expect!(&amp;app.list[1], Object::Int);
     env.active_fn.context[*index as usize].clone()
 }
 
@@ -822,7 +823,7 @@ fn tail_call(env: &amp;mut Env, app: &amp;App) -&gt; Object {
     let argv = &amp;app.list[1..];
     let mut list = Vec::with_capacity(argv.len());
     for x in argv {
-        let value = eval(env,x);
+        let value = eval(env, x);
         if let Object::Err(_) = value {return value;}
         list.push(value);
     }
@@ -830,9 +831,9 @@ fn tail_call(env: &amp;mut Env, app: &amp;App) -&gt; Object {
 }
 
 fn tail_iter(env: &amp;mut Env, app: &amp;App) -&gt; Object {
-    let mut value = eval(env,&amp;app.list[1]);
+    let mut value = eval(env, &amp;app.list[1]);
     while let Object::App(_) = value {
-        value = eval(env,&amp;value);
+        value = eval(env, &amp;value);
     }
     value
 }
@@ -840,11 +841,11 @@ fn tail_iter(env: &amp;mut Env, app: &amp;App) -&gt; Object {
 fn load_file(env: &amp;mut Env) -&gt; Object {
     let path = match downcast::&lt;StrObj&gt;(env.arg(0)) {
         Some(s) =&gt; s.0.as_ref(),
-        _ =&gt; return op1_err(env,"load")
+        _ =&gt; return op1_err(env, "load")
     };
     let file_input = expect!(std::fs::read(path), Ok,
         return Object::Err(value_error(
-            format!("could not load file '{}'.",path))));
+            format!("could not load file '{}'.", path))));
     let result = eval_string(env, &amp;file_input);
     print_result(env, &amp;result);
     Object::None
@@ -913,7 +914,7 @@ impl Env {
         &amp;self.stack[self.base_pointer..]
     }
     fn traceback(&amp;mut self, id: &amp;Rc&lt;str&gt;, line: usize, col: usize) {
-        self.traceback.push((id.clone(),line,col));
+        self.traceback.push((id.clone(), line, col));
     }
 }
 
@@ -952,7 +953,7 @@ fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
             }
         },
         Object::App(app) =&gt; {
-            let f = eval(env,&amp;app.list[0]);
+            let f = eval(env, &amp;app.list[0]);
             if let Object::Err(e) = f {
                 Object::Err(e)
             } else if let Object::Fn(f) = f {
@@ -963,7 +964,7 @@ fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
                 }
                 let len = env.stack.len();
                 for x in &amp;app.list[1..] {
-                    let object = eval(env,x);
+                    let object = eval(env, x);
                     if let Object::Err(e) = object {
                         while len != env.stack.len() {
                             env.stack.pop();
@@ -982,7 +983,7 @@ fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
                     env.stack.pop();
                 }
                 if let Object::Err(_) = value {
-                    env.traceback(&amp;f.id,app.line,app.col);
+                    env.traceback(&amp;f.id, app.line, app.col);
                 }
                 value
             } else if let Object::FnLazy(f) = f {
@@ -994,7 +995,7 @@ fn eval(env: &amp;mut Env, object: &amp;Object) -&gt; Object {
                 (f.fp)(env, &amp;app)
             } else {
                 Object::Err(value_error(
-                    format!("Object {} is not callable.",f)))
+                    format!("Object {} is not callable.", f)))
             }
         },
         Object::Err(e) =&gt; Object::Err(e.clone())
@@ -1006,7 +1007,7 @@ fn eval_string(env: &amp;mut Env, s: &amp;[u8]) -&gt; Result&lt;Object, Error&gt
     let a = parse(&amp;tokens)?;
     let mut value = Object::None;
     for t in &amp;a {
-        value = eval(env,t);
+        value = eval(env, t);
         if let Object::Err(e) = value {
             return Err(e);
         }
@@ -1015,9 +1016,9 @@ fn eval_string(env: &amp;mut Env, s: &amp;[u8]) -&gt; Result&lt;Object, Error&gt
 }
 
 fn input(prompt: &amp;str) -&gt; std::io::Result&lt;String&gt; {
-    use std::{io,io::Write};
+    use std::{io, io::Write};
     let mut buffer = String::new();
-    print!("{}",prompt);
+    print!("{}", prompt);
     io::stdout().flush()?;
     io::stdin().read_line(&amp;mut buffer)?;
     if buffer.ends_with('\n') {
@@ -1140,6 +1141,8 @@ fn main() -&gt; std::io::Result&lt;()&gt; {
 <li>R7RS Working Group 1: »<a href="https://small.r7rs.org/"
   >Revised7 Report on the Algorithmic Language Scheme</a>«.
   Juli 2013.
+<li>Inanna Malick: »<a href="https://recursion.wtf/posts/rust_schemes/"
+  >Elegant and performant recursion in Rust</a>«. Juli 2022.
 </ol>
 
 </body>

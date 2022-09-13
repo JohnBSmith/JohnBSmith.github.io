@@ -149,7 +149,7 @@ trait Sq&lt;T&gt; {
     fn sq(&amp;self) -&gt; Vec&lt;T&gt;;
 }
 
-impl&lt;T: Copy+Mul&gt; Sq&lt;T&gt; for Vec&lt;T&gt;
+impl&lt;T: Copy + Mul&gt; Sq&lt;T&gt; for Vec&lt;T&gt;
     where Vec&lt;T&gt;: FromIterator&lt;&lt;T as Mul&gt;::Output&gt;
 {
     fn sq(&amp;self) -&gt; Vec&lt;T&gt; {
@@ -158,7 +158,7 @@ impl&lt;T: Copy+Mul&gt; Sq&lt;T&gt; for Vec&lt;T&gt;
 }
 
 fn main() {
-    println!("{:?}",vec![1,2,3,4].sq());
+    println!("{:?}", vec![1, 2, 3, 4].sq());
 }
 </pre>
 
@@ -183,10 +183,55 @@ wenn zum Typ oder zum Trait neue Methoden hinzugefügt werden.
 Aus diesem Grund würde ich eher dazu neigen, solche
 Erweiterungsmethoden zu vermeiden.
 
+<p>Eine elegante Alternative zur Wucherung von Erweiterungsmethoden
+bietet die allgemeine Beschreibung des Postfix-Aufrufs durch eine
+einzige Erweiterungsmethode <code>pipe</code>:
+
+<pre class="rust ibox">
+trait Pipe {
+    fn pipe&lt;Y&gt;(self, f: impl FnOnce(Self) -&gt; Y) -&gt; Y
+    where Self: Sized
+        {f(self)}
+    fn pipe_ref&lt;Y&gt;(&amp;self, f: impl FnOnce(&amp;Self) -&gt; Y) -&gt; Y {f(self)}
+}
+impl&lt;T&gt; Pipe for T {}
+</pre>
+
+<p>Man schreibt nun freistehende Funktionen anstelle von
+Erweiterungsmethoden:
+
+<pre class="rust ibox">
+fn sq&lt;T: Copy + Mul&gt;(a: &amp;Vec&lt;T&gt;) -&gt; Vec&lt;T&gt;
+where Vec&lt;T&gt;: FromIterator&lt;&lt;T as Mul&gt;::Output&gt;
+{
+    a.iter().map(|&amp;x| x*x).collect()
+}
+
+fn main() {
+    println!("{:?}", vec![1, 2, 3, 4].pipe_ref(sq));
+}
+</pre>
+
+<p>Bei mehrstelligen Funktionen ist nun partielle Applikation
+erforderlich. Eine solche formuliert man üblicherweise als
+anonyme Funktion. Kurzes Beispiel:
+
+<pre class="rust ibox">
+fn add(x: i32, y: i32) -&gt; i32 {x + y}
+
+let a = 0;
+let b = a.pipe(|x| add(x, 1));
+</pre>
+
+<p>Eine vollständige Implementierung von <code>Pipe</code> ist
+im Crate <i>tap</i> [2] zu finden.
+
 <h2>Links</h2>
 
 <ul>
-<li id="ref-num">[1] <a href="https://crates.io/crates/num">num</a> <code>(https://crates.io/crates/num)</code>.
+<li id="ref-num">[1] <a href="https://crates.io/crates/num">num</a>, <code>https://crates.io/crates/num</code>.
+<li>[2] <a href="https://docs.rs/tap/1.0.1/tap/trait.Pipe.html"
+  >Pipe</a> in tap, <code>https://crates.io/crates/tap</code>.
 </ul>
 
 </body>

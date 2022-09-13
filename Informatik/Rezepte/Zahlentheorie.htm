@@ -39,6 +39,7 @@ werden daraufhin effizientere Algorithmen entwickelt.
 <li><a href="#PFZ">Primfaktorzerlegung</a>
   <ol>
   <li><a href="#PFZ-Probedivision">Probedivision</a>
+  <li><a href="#PFZ-Probedivision-verbessert">Verbesserte Probedivision</a>
   </ol>
 <li><a href="#Funktionen">Zahlentheoretische Funktionen</a>
   <ol>
@@ -361,6 +362,8 @@ def factor(n):
     return acc
 </pre>
 
+<h3 id="PFZ-Probedivision-verbessert">Verbesserte Probedivision</h3>
+
 <p>Analog zum Primzahltest erhält man eine erhebliche Verbesserung,
 wenn man die Bedingung <code>n&nbsp;!=&nbsp;1</code> bzw.
 <code>p&nbsp;&lt;=&nbsp;n</code> gegen <code>p*p&nbsp;&lt;=&nbsp;n</code>
@@ -370,15 +373,36 @@ Primfaktor handeln.
 
 <pre class="python ibox">
 def factor(n):
-    assert n != 0
     acc = []
-    if n &lt; 0: n = -n; acc.append((-1, 1))
     p = 2
     while p*p &lt;= n:
         e = 0
-        while n%p == 0: n = n//p; e += 1
+        while n%p == 0: n //= p; e += 1
         if e != 0: acc.append((p, e))
         p += 1
+    if n != 1: acc.append((n, 1))
+    return acc
+</pre>
+
+<p>Auch hier erhält man durch Beschränkung auf die Restklassen&nbsp;1
+und&nbsp;5 modulo&nbsp;6 nochmals eine geringfügige Beschleunigung.
+
+<pre class="python ibox">
+def trial_div(acc, n, p):
+    e = 0
+    while n%p == 0: n //= p; e += 1
+    if e != 0: acc.append((p, e))
+    return n
+
+def factor(n):
+    acc = []
+    n = trial_div(acc, n, 2)
+    n = trial_div(acc, n, 3)
+    p = 5; i = 2
+    while p*p &lt;= n:
+        if n%p == 0:
+            n = trial_div(acc, n, p)
+        p += i; i = 6 - i
     if n != 1: acc.append((n, 1))
     return acc
 </pre>

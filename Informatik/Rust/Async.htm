@@ -87,11 +87,11 @@ use std::thread::sleep;
 
 enum Poll&lt;T&gt; {Ready(T), Pending}
 
-type Future&lt;T&gt; = Box&lt;dyn FnMut() -&gt; Poll&lt;T&gt;&gt;;
+struct Future&lt;T&gt; {poll: Box&lt;dyn FnMut() -&gt; Poll&lt;T&gt;&gt;}
 
 fn block_on&lt;T&gt;(mut f: Future&lt;T&gt;) -&gt; T {
     loop {
-        match f() {
+        match (f.poll)() {
             Poll::Ready(x) =&gt; return x,
             Poll::Pending =&gt; {}
         }
@@ -101,13 +101,13 @@ fn block_on&lt;T&gt;(mut f: Future&lt;T&gt;) -&gt; T {
 
 fn new_task(time: u64) -&gt; Future&lt;()&gt; {
     let clock = Instant::now();
-    Box::new(move || {
+    Future {poll: Box::new(move || {
         if clock.elapsed().as_secs() &lt; time {
             Poll::Pending
         } else {
             Poll::Ready(())
         }
-    })
+    })}
 }
 
 fn main() {
@@ -119,6 +119,7 @@ fn main() {
 <p>Gibt es nun zwei Aufgaben zu bewältigen, die jeweils zwei Sekunden
 dauern, braucht das Programm bei sequentieller Ausführung schon
 vier Sekunden.
+
 <pre class="rust ibox">
 fn main() {
     let f1 = new_task(2);
@@ -138,16 +139,16 @@ wir <code>block_on</code> wiederbenutzen.
 <pre class="rust ibox">
 fn join_all(a: Vec&lt;Future&lt;()&gt;&gt;) -&gt; Future&lt;()&gt; {
     let mut a: Vec&lt;_&gt; = a.into_iter().map(Some).collect();
-    Box::new(move || {
+    Future {poll: Box::new(move || {
         let mut empty = true;
         for x in &amp;mut a {
             if let Some(f) = x {
                 empty = false;
-                if let Poll::Ready(()) =  f() {*x = None;}
+                if let Poll::Ready(()) =  (f.poll)() {*x = None;}
             }
         }
         if empty {Poll::Ready(())} else {Poll::Pending}
-    })
+    })}
 }
 
 fn main() {
@@ -165,12 +166,12 @@ dass sie auch die Werte der Futures zurückgeben kann.
 fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec&lt;T&gt;&gt; {
     enum Either&lt;X, Y&gt; {Left(X), Right(Y)}
     let mut a: Vec&lt;_&gt; = a.into_iter().map(Either::Left).collect();
-    Box::new(move || {
+    Future {poll: Box::new(move || {
         let mut empty = true;
         for x in &amp;mut a {
             if let Either::Left(f) = x {
                 empty = false;
-                if let Poll::Ready(value) = f() {
+                if let Poll::Ready(value) = (f.poll)() {
                     *x = Either::Right(value);
                 }
             }
@@ -183,7 +184,7 @@ fn join_all&lt;T: 'static&gt;(a: Vec&lt;Future&lt;T&gt;&gt;) -&gt; Future&lt;Vec
                     _ =&gt; unreachable!()
                 }).collect()),
         }
-    })
+    })}
 }
 </pre>
 
@@ -232,7 +233,7 @@ Future.
 use std::future::Future;
 
 fn new_task(time: u64) -> impl Future&lt;Output = ()&gt; {
-    async move{task::sleep(Duration::from_secs(time)).await;}
+    async move {task::sleep(Duration::from_secs(time)).await;}
 }
 </pre>
 

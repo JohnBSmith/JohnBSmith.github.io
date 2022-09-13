@@ -1005,11 +1005,11 @@ Gehen wir mal von der Kontraposition aus -- sind die beiden Mengen
 $A,B$ verschieden, dann muss es ein Element in $A$ geben, welches nicht
 in $B$ enthalten ist, oder eines in $B$, welches nicht $A$ enthalten
 ist. Als Formel:%
-\[A\ne B \implies (\exists x\in A)(x\notin B)\lor(\exists x\in B)(x\notin A).\]
+\[A\ne B \implies (\exists x\in A\colon x\notin B)\lor(\exists x\in B\colon x\notin A).\]
 Hiervon bildet man wieder die Kontraposition. Gemäß den
 de morganschen Gesetzen und den verallgemeinerten
 de morganschen Gesetzen ergibt sich%
-\[(\forall x\in A)(x\in B)\land(\forall x\in B)(x\in A)\implies A=B.\]
+\[(\forall x\in A\colon x\in B)\land(\forall x\in B\colon x\in A)\implies A=B.\]
 Auf der linken Seite stehen aber nach Definition
 Teilmengenbeziehungen, es ergibt sich%
 \[A\subseteq B\land B\subseteq A\implies A=B.\]
@@ -1021,15 +1021,15 @@ $A$ auch in $B$ enthalten ist, und jedes von $B$ auch in $A$ enthalten:%
 \end{Definition}
 \begin{Satz}\label{set-eq}
 Es gilt
-\[A=B\iff (\forall x)(x\in A\iff x\in B).\]
+\[A=B\iff \forall x\colon x\in A\Leftrightarrow x\in B.\]
 \end{Satz}
 \strong{Beweis.} Wir müssen ein wenig Prädikatenlogik bemühen:%
 \begin{align*}
 A\subseteq B\land B\subseteq A
-&\iff (\forall x\in A)(x\in B)\land(\forall x\in B)(x\in A)\\
-&\iff (\forall x)(x\in A\implies x\in B)\land(\forall x)(x\in B\implies x\in A)\\
-&\iff (\forall x)((x\in A\implies x\in B)\land (x\in B\implies x\in A))\\
-&\iff (\forall x)(x\in A\iff x\in B).
+&\iff (\forall x\in A\colon x\in B)\land(\forall x\in B\colon x\in A)\\
+&\iff (\forall x\colon x\in A\Rightarrow x\in B)\land(\forall x\colon x\in B\Rightarrow x\in A)\\
+&\iff (\forall x\colon (x\in A\Rightarrow x\in B)\land (x\in B\Rightarrow x\in A))\\
+&\iff (\forall x\colon x\in A\Leftrightarrow x\in B).
 \end{align*}
 Im letzten Schritt wurde ausgenutzt, dass die Äquivalenz
 $\varphi\Leftrightarrow\psi$ gleichbedeutend
@@ -1054,7 +1054,7 @@ In Worten: Die Menge der $n\in\Z$, für die gilt: $n<4$.
 Mit dieser Notation kann man nun z.\,B. schreiben:%
 \begin{align*}
 \N_0 &= \{n\in\Z\mid n\ge 0\},\\
-\N_1 &= \{n\in\Z\mid n>0\}.
+\N_1 &= \{n\in\Z\mid n\ge 1\}.
 \end{align*}
 Mit der folgenden formalen Definition wird die beschreibende Angabe
 auf ein festes Fundament gebracht.
@@ -1153,7 +1153,7 @@ Man spricht auch von einer sogenannten \emph{Komprehension},
 die Bildung einer Bildmenge ist ein Spezialfall davon.
 \begin{Definition}[Komprehension]
 Für ein beliebiges Prädikat $P$ ist
-\[\{T(x)\mid P(x)\} := \{y\mid(\exists x)(P(x)\land y=T(x))\}.\]
+\[\{T(x)\mid P(x)\} := \{y\mid\exists x\colon P(x)\land y=T(x)\}.\]
 \end{Definition}
 Die zuvor angegebene Bildmenge erhält man mit $P(x):=(x\in A)$.
 
@@ -1161,8 +1161,8 @@ In dieser Definition muss $P(x)$ auf der gesamen betrachteten Grundmenge
 $G$ definiert sein und $T(x)$ muss auf $\{x\in G\mid P(x)\}$ einen
 Sinn ergeben. Möchte man sich auf die Menge $M$ beschränken,
 dann betrachtet man
-\[\{T(x)\mid x\in M\land P(x)\} = \{y\mid(\exists x\in M)(P(x)\land y=T(x))\}.\]
-D.\,h. für ein auf $M$ definiertes Prädikat $P$ ergibt sich ein
+\[\{T(x)\mid x\in M\land P(x)\} = \{y\mid\exists x\in M\colon P(x)\land y=T(x)\}.\]
+Das heißt, für ein auf $M$ definiertes Prädikat $P$ ergibt sich ein
 auf ganz $G$ definiertes Prädikat $Q$ mit $P(x)=Q(x)$ auf $M$ und
 sonst $Q(x)=0$, indem man $Q(x):=(x\in M\land P(x))$ setzt.
 
@@ -1220,7 +1220,7 @@ Auf beiden Seiten der Äquivalenz steht jetzt die gleiche Aussage:%
 \begin{Definition}[Vereinigung beliebig vieler Mengen]\mbox{}\\*
 Sei $M$ eine Menge von Mengen. Die Vereinigung der $A\in M$ ist
 definiert gemäß
-\[\bigcup M = \bigcup_{A\in M} A := \{x\mid (\exists A)(A\in M\land x\in A)\}.\]
+\[\bigcup M = \bigcup_{A\in M} A := \{x\mid\exists A\colon A\in M\land x\in A\}.\]
 \end{Definition}
 Für $M=\{\}$ ist $\bigcup_{A\in M} A = \{\}$.
 
@@ -1232,42 +1232,42 @@ auf die Mengenoperationen übertragen. Z.\,B. lautet das
 Distributivgesetz für Mengen
 \[B\cap\bigcup_{A\in M} A = \bigcup_{A\in M}(B\cap A).\]
 Diese Gleichung lässt sich nämlich expandieren in die logische Formel
-\[x\in B\land(\exists A\in M)(x\in A) \iff (\exists A\in M)(x\in B\land x\in A).\]
+\[x\in B\land(\exists A\in M\colon x\in A) \iff (\exists A\in M\colon x\in B\land x\in A).\]
 Die Äquivalenz ist wie gesagt gültig gemäß Satz
 \ref{logical-dist-general}.
 
 \begin{Definition}[Schnitt beliebig vieler Mengen]\mbox{}\\*
 Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$
 ist definiert gemäß
-\[\bigcap M = \bigcap_{A\in M} A := \{x\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
+\[\bigcap M = \bigcap_{A\in M} A := \{x\mid\forall A\colon A\in M\Rightarrow x\in A\}.\]
 \end{Definition}
 Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap_{A\in M} A$ 
-für $M=\{\}$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
-Zum einen könnte man die Bedingung $M\ne\{\}$ einfach fallen
+für $M=\emptyset$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
+Zum einen könnte man die Bedingung $M\ne\emptyset$ einfach fallen
 lassen, dann ergibt sich beim leeren Schnitt immer die Grundmenge
 $G=\{x\mid 1\}$. Im allgemeinen Mengenuniversum ist $G$ die
 Allklasse. Diese ist nach den ZFC"=Axiomen jedoch keine Menge mehr.
 
 Aus diesen Grund gibt es noch die alternative Definition
 \[\bigcap_{A\in M} A :=
-\{x\in\bigcup_{A\in M} A\mid(\forall A)(A\in M\Rightarrow x\in A)\}.\]
+\{x\in\bigcup_{A\in M} A\mid\forall A\colon A\in M\Rightarrow x\in A\}.\]
 Eine Familie $(A_i)$ von Mengen $A_i$ mit $i\in I$ ist eine Abbildung
 $A\colon I\to Z$, wobei $Z$ eine Zielmenge ist, welche die
 $A_i$ als Elemente enthält. Die Menge $I$ wird in diesem Zusammenhang
 auch Indexmenge genannt. Man definiert dafür
 \[\bigcup_{i\in I} A_i := \bigcup A(I)
-= \bigcup\{X\mid(\exists i\in I)(X=A_i)\} = \{x\mid (\exists i\in I)(x\in A_i)\},\]
+= \bigcup\{X\mid\exists i\in I\colon X=A_i\} = \{x\mid\exists i\in I\colon x\in A_i\},\]
 wobei mit $A(I)$ das Bild von $I$ unter $A$ gemeint ist. Gemäß Def. \ref{def:img} bekommt man
 \begin{align*}
 \bigcup_{i\in I} A_i
-&= \{x\mid (\exists X)(X\in \{X\mid(\exists i\in I)(X=A_i)\}\land x\in X)\}\\
-&= \{x\mid (\exists X)((\exists i\in I)(X=A_i)\land x\in X)\}
-= \{x\mid (\exists X)(\exists i\in I)(X=A_i\land x\in X)\}\\
-&= \{x\mid (\exists X)(\exists i\in I)(x\in A_i)\}
-= \{x\mid (\exists i\in I)(x\in A_i)\}.
+&= \{x\mid\exists X\colon X\in \{X\mid\exists i\in I\colon X=A_i\}\land x\in X\}\\
+&= \{x\mid\exists X\colon (\exists i\in I\colon X=A_i)\land x\in X\}
+= \{x\mid\exists X\colon \exists i\in I\colon X=A_i\land x\in X\}\\
+&= \{x\mid\exists X\colon \exists i\in I\colon x\in A_i\}
+= \{x\mid\exists i\in I\colon x\in A_i\}.
 \end{align*}
-Für $I\ne\{\}$ definiert man entsprechend
-\[\bigcap_{i\in I} A_i := \bigcap A(I) = \{x\mid (\exists i\in I)(x\in A_i)\}.\]
+Für $I\ne\emptyset$ definiert man entsprechend
+\[\bigcap_{i\in I} A_i := \bigcap A(I) = \{x\mid\exists i\in I\colon x\in A_i\}.\]
 
 \newpage
 \begin{Definition}[Differenzmenge]\mbox{}\\*
@@ -1352,10 +1352,10 @@ Das kartesische Produkt der Mengen $A,B$ ist die Menge der
 Paare $(a,b)$, für die $a\in A$ und $b\in B$ ist, kurz
 \[A\times B = \{(a,b)\mid a\in A\land b\in B\}.\]
 \end{Definition}
-Zu beachten ist, dass hier eine Bildmenge vorliegt, d.\,h. es gilt
+Zu beachten ist, dass hier eine Bildmenge vorliegt, das heißt es gilt
 \begin{align*}
-A\times B &= \{t\mid(\exists a\in A)(\exists b\in B)(t=(a,b))\}\\
-&= \{t\mid(\exists a)(\exists b)(a\in A\land b\in B\land t=(a,b))\}.
+A\times B &= \{t\mid\exists a\in A\colon \exists b\in B\colon t=(a,b)\}\\
+&= \{t\mid\exists a\colon \exists b\colon a\in A\land b\in B\land t=(a,b)\}.
 \end{align*}
 
 \begin{Satz}
@@ -1366,13 +1366,13 @@ und $\emptyset\times B=\emptyset$.
 Unter Anwendung von Satz \ref{set-eq} und \eqref{eq:set-builder}
 bekommt man zunächst die äquivalente Aussage
 \begin{gather*}
-t\in A\times\emptyset \iff (\exists a)(\exists b)(a\in A\land b\in\emptyset\land t=(a,b)).
+t\in A\times\emptyset \iff \exists a\colon \exists b\colon a\in A\land b\in\emptyset\land t=(a,b).
 \end{gather*}
 Nun ist aber $b\in\emptyset$ niemals wahr, da die leere Menge keine
 Elemente enthält. Demnach ergibt sich
 \begin{gather*}
-(\exists a)(\exists b)(a\in A\land b\in\emptyset\land t=(a,b))
-\iff (\exists a)(\exists b)\, 0 \iff (\exists a)\,0\iff 0.
+(\exists a\colon \exists b\colon a\in A\land b\in\emptyset\land t=(a,b))
+\iff (\exists a\colon \exists b\colon 0) \iff (\exists a\colon 0)\iff 0.
 \end{gather*}
 Die Aussage $t\in A\times\emptyset$ ist also immer falsch,
 daher kann $A\times\emptyset$ keine Elemente enthalten.\;\qedsymbol
@@ -1418,9 +1418,9 @@ und Mengenlehre erscheint deshalb erstrebenswert.
 Sei $G\subseteq A\times B$. Man nennt ein Tripel $f=(G,A,B)$ eine
 Abbildung, wenn die folgenden zwei Bedingungen erfüllt sind.
 1. Zu jedem $x\in A$ gibt es mindestens ein Bild:
-\[(\forall x\in A)(\exists y\in B)((x,y)\in G).\]
+\[\forall x\in A\colon\exists y\in B\colon (x,y)\in G.\]
 2. Zu jedem $x\in A$ gibt es höchstens ein Bild:
-\[(\forall (x_1,y_1),(x_2,y_2)\in G)(x_1=x_2\implies y_1=y_2).\]
+\[\forall (x_1,y_1),(x_2,y_2)\in G\colon x_1=x_2\Rightarrow y_1=y_2.\]
 Man definiert außerdem
 \[y=f(x)\defiff (x,y)\in G.\]
 \end{Definition}
@@ -1483,8 +1483,8 @@ f^{-1}[\bigcap_{i\in I} B_i] &= \bigcap_{i\in I} f^{-1}[B_i].
 \begin{align*}
 x\in f^{-1}[\bigcup_{i\in I} B_i]
 &\iff f(x)\in \bigcup_{i\in I} B_i
-\iff (\exists i\in I)(f(x)\in B_i)\\
-&\iff (\exists i\in I)(x\in f^{-1}[B_i])
+\iff (\exists i\in I\colon f(x)\in B_i)\\
+&\iff (\exists i\in I\colon x\in f^{-1}[B_i])
 \iff x\in \bigcup_{i\in I} f^{-1}[B_i].
 \end{align*}
 Für den Schnitt ist das wieder analog.\;\qedsymbol
@@ -1499,14 +1499,16 @@ aber wir wollen ja so gut es geht alle Formeln zu prädikatenlogischen
 Ausdrücken reduzieren können, die nur vorher bereits definierte
 Begriffe enthalten. Nun siehe da, aus dem Kaninchenbau kommen
 neue Quantoren hervor, die die Argumentation ein wenig verkomplizieren:
-\[f(x)\in B \defiff (\exists y\in B)(y=f(x)).\]
+\[f(x)\in B \defiff \exists y\in B\colon y=f(x).\]
 Wir müssen nun zeigen
 \[f(x)\in B_1\cap B_2 \iff f(x)\in B_1\land f(x)\in B_2.\]
 Expandiert man dies, ist zu zeigen
-\[(\exists y)(y\in B_1\land y\in B_2\land y=f(x))
-\iff (\exists y)(y\in B_1\land y=f(x))\land (\exists y)(y\in B_2\land y=f(x)).\]
+\[(\exists y\colon y\in B_1\land y\in B_2\land y=f(x))
+\iff (\exists y\colon y\in B_1\land y=f(x))
+\land (\exists y\colon y\in B_2\land y=f(x)).\]
 Die Implikation von links nach rechts ist wahr, denn es gilt ganz allgemein
-\[(\exists y)(P(y)\land Q(y)) \implies (\exists y)P(y)\land (\exists y)Q(y).\]
+\[(\exists y\colon P(y)\land Q(y)) \implies
+(\exists y\colon P(y))\land (\exists y\colon Q(y)).\]
 Zur Bestätigung der Implikation von rechts nach links muss man
 allerdings die Bedingung $y=f(x)$ ausnutzen. Nur dadurch ist gesichert,
 dass das $y\in B_1$ das gleiche ist wie das $y\in B_2$.

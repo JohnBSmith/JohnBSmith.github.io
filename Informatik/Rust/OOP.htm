@@ -28,8 +28,19 @@ von Konzepten, die dazu dienen, Prozeduren eng an Daten zu
 binden. Die Daten werden in diesem Zusammenhang als <i>Objekte</i>
 bezeichnet, ihre Prozeduren als <i>Methoden</i>.
 
-<h2 id="Klassen">Klassen</h2>
+<p>Die Sprache Rust unterstützt nicht jedes Konzept in direkter Weise.
+Dies gilt vor allem für dynamische Mechanismen wie Reflektion.
+Um ein Gefühl dafür zu bekommen, inwieweit Objektorientierung
+ermöglicht wird, wollen wir Umsetzungen in kurzen Beispielen
+erläutern. Für solche Mechanismen, die nicht direkt möglich sind, soll
+hierbei der Versuch einer Emulierung in Angriff genommen werden.
 
+<p>Erwähnen möchte ich noch, dass es prinzipell möglich ist, mit
+Trait-Objekten ein beliebiges Objektsystem zu konstruieren. Allerdings
+geht hiermit der Verlust von Optimierungen und von statischer
+Typsicherheit einher.
+
+<h2 id="Klassen">Klassen</h2>
 
 <pre class="rust ibox">
 struct Bird {
@@ -146,7 +157,7 @@ fn main() {
 <h2 id="Klassenvariablen">Klassenvariablen</h2>
 
 <p>Klassenvariablen sind Variablen die nicht Speicherplätze von
-Objekten  sind, sondern von Klassen. D.&nbsp;h. eine solche Variable
+Objekten  sind, sondern von Klassen. Das heißt, eine solche Variable
 liegt nur einmal pro Klasse vor. Zur Modellierung konstruiert
 man am besten eine Laufzeitumgebung <code>env</code>, die eine
 Laufzeitdarstellung der Klasse enthält. Damit das Programm an allen

@@ -201,6 +201,35 @@ fn not(a: Bool) -&gt; Bool {
 }
 </pre>
 
+<p>Wo ein Tag ein Tupel oder eine Struktur trägt, ist eine
+alternative Formulierung möglich, bei der auf die doppelte
+Klammerung verzichtet wird. Beispielsweise lässt sich
+
+<pre class="rust ibox">
+struct S {x: i32, y: i32}
+
+enum E {
+    T((i32, i32)),
+    S(S)
+}
+
+let e1 = E::T((0, 0));
+let e2 = E::S(S {x: 0, y: 0});
+</pre>
+
+<p>alternativ in der Form
+
+<pre class="rust ibox">
+enum E {
+    T(i32, i32),
+    S {x: i32, y: i32}
+}
+
+let e1 = E::T(0, 0);
+let e2 = E::S {x: 0, y: 0};
+</pre>
+
+<p>ausdrücken.
 
 <h2 id="Nominal">Nominale Typisierung</h2>
 

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Breitensuche</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Breitensuche</h1>
+
+<h2 id="Stern-Brocot">Beispiel: Stern-Brocot-Baum</h2>
+
+<p>Zu je zwei rationalen Zahlen in gekürzter Darstellung erhält man die
+Mediante, wenn man die Summe der Zähler durch die Summe der Nenner
+teilt. Dies stellt eine gewisse Art von Mittelwert dar, in dem Sinne,
+dass das Ergebnis immer zwischen den beiden Argumenten liegt.
+
+<p>Es bezeichne (<var>p</var>, <var>q</var>) das durch die beiden
+Argumente begrenzte offene Intervall und <var>m</var> die Mediante.
+Wir können nun die beiden Teilintervalle (<var>p</var>,&nbsp;<var>m</var>)
+und (<var>m</var>,&nbsp;<var>q</var>) bilden und auch von ihren
+Begrenzungen die Mediante berechnen. Es entstehen wieder Teilintervalle,
+auf die die Prozedur abermals angwendet wird. Hierdurch ensteht
+der sogenannte Stern-Brocot-Baum. Man kann zeigen, dass dieser Baum
+jede positive rationale Zahl zwischen <var>p</var> und <var>q</var>
+genau einmal als Mediante enthält. Als Trick kann man sogar
+<var>q</var>&nbsp;=&nbsp;1/0, also gewissermaßen unendlich, setzen,
+so dass alle positiven rationalen Zahlen aufgezählt werden.
+
+<p>Problemstellung sei nun, die rationalen Nullstellen einer
+Funktion aufzuspüren. Wir klappern dazu alle rationalen Zahlen
+ab, wobei Breitensuche beim Stern-Brocot-Baum zur Anwendung kommt.
+
+<p>Zunächst der Algorithmus der Breitensuche für die Durchsuchung
+eines Baums:
+<pre class="python ibox">
+from collections import deque
+
+def bfs(node, children):
+    q = deque()
+    q.append(node)
+    while len(q) != 0:
+        node = q.popleft()
+        yield node
+        for child in children(node):
+            q.append(child)
+</pre>
+
+<p>Und nun die Nullstellensuche. Der Baum ist wie gesagt binär,
+jeder Knoten hat zwei Kinder.
+
+<pre class="python ibox">
+from itertools import islice
+from fractions import Fraction as fr
+
+def mediant(p, q):
+    return (p[0] + q[0], p[1] + q[1])
+
+def children(node):
+    m = mediant(node[0], node[1])
+    return [(node[0], m), (m, node[1])]
+
+def find_zeros(f, max_iter):
+    if f(fr(0)) == 0: print(0)
+    a = (0, 1); b = (1, 0)
+    for (p, q) in islice(bfs((a, b), children), 0, max_iter):
+        m = mediant(p, q)
+        x = fr(m[0], m[1])
+        if f(x) == 0: print(x)
+        if f(-x) == 0: print(-x)
+
+f = lambda x: 245*x**4 - 1624*x**3 + 3450*x**2 - 2432*x + 361
+find_zeros(f, 1000)
+</pre>
+
+<p>Man kann sich alternativ auch auf ein Intervall beschränken:
+
+<pre class="python ibox">
+from itertools import islice
+from fractions import Fraction as fr
+
+def mediant(p, q):
+    return fr(p.numerator + q.numerator, p.denominator + q.denominator)
+
+def children(node):
+    m = mediant(node[0], node[1])
+    return [(node[0], m), (m, node[1])]
+
+def find_zeros(f, a, b, max_iter):
+    for (p, q) in islice(bfs((a, b), children), 0, max_iter):
+        x = mediant(p, q)
+        if f(x) == 0: print(x)    
+
+f = lambda x: 245*x**4 - 1624*x**3 + 3450*x**2 - 2432*x + 361
+find_zeros(f, fr(-10), fr(10), 1000)
+</pre>
+
+<p>Das Verfahren ist sehr allgemein, weil es überhaupt kein Wissen über
+die Funktion voraussetzt, außer dass sie ihre Funktionswerte in exakter
+Weise berechnet. Als ein Brute-Force-Verfahren ist es natürlich
+ausgesprochen unwirtschaftlich.
+
+<p>Sofern die Funktion auf dem Intervall streng monoton ist, darf die
+Breitensuche durch die wesentlich effizientere binäre Suche im
+Stern-Brocot-Baum ersetzt werden. Man erhält das Bisektionsverfahren,
+mit dem Unterschied, dass die Mediante anstelle des arithmetischen
+Mittels berechnet wird.
+
+</body>
+</html>
