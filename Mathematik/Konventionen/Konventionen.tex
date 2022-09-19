@@ -12,15 +12,14 @@
 \cfoot{}
 \ofoot{}
 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
 \usepackage{libertine}
 \usepackage[libertine]{newtxmath}
 \usepackage[scaled=0.88]{DejaVuSans}
 \usepackage[scaled=0.80]{DejaVuSansMono}
-
-
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{booktabs}
 
 \usepackage{color}
 \definecolor{c1}{RGB}{00,40,60}
@@ -538,6 +537,24 @@ Zur Praxis fügt man noch hinzu, dass $\forall x\varphi$ gleichbedeutend
 mit $(\forall x)\varphi$ sein soll, sofern sich dadurch keine
 Zweideutigkeit ergibt.
 
+\subsection{Formeln und Feststellungen}
+
+Die logische Formel »$A$ impliziert $B$« möchte man gerne
+von der Feststellung »$A$ gilt, somit ist $B$
+deduziert« unterscheiden. Idee wäre, die Formel mit kurzem Pfeil als
+$A\to B$ oder $A\Rightarrow B$ zu schreiben, die Feststellung mit
+langem Pfeil als $A\implies B$.
+
+Analog ist die als $A\leftrightarrow B$ oder $A\Rightarrow B$
+geschriebene Formel zu unterscheiden von der Feststellung
+$A\iff B$.
+
+Kritisieren mag man, dass dies doch ein wenig subtil zu sein scheint.
+Im ProofWiki schreibt man die Feststellungen unmissverständlich
+als $A\rightsquigarrow B$ und $A\leftrightsquigarrow B$. Wenngleich
+mir diese Notation zu unordentlich ausschaut, mag ich die Klarheit,
+die sie schafft.
+
 \subsection{Ganzzahlintervalle}
 
 Für Ganzzahlintervalle bieten sich die folgenden Schreibweisen an:
@@ -550,52 +567,34 @@ bis $b$ weitergeht. Die Klammern entsprechen der Schreibweise
 für die kontinuierlichen Intervalle.
 
 \subsection{Natürliche Zahlen}
-Zunächst wird die folgende unmissverständliche Schreibweise definiert:%
-\begin{equation}
-\N_a := \N_{\ge a} = \{n\in\Z\mid n\ge a\}.
-\end{equation}
-Man streitet sich nun zwischen den Schreibweisen
-\begin{equation}
-\N := \N_{\ge 1},\quad \N_0 := \N_{\ge 0}
-\end{equation}
-und
-\begin{equation}
-\N := \N_{\ge 0},\quad \N^* := \N_{\ge 1}.
-\end{equation}
-Die Schreibweise $\N:=\N_{\ge 1}$ scheint davon die bessere zu sein.
-Das hat den einfachen Grund, dass $\N_0$ leichter von der Hand
-geht als $\N^*$. Außerdem schaut $\N_0^2$ besser aus
-als $(\N^*)^2$. Weiterhin würde man den Folgenraum reeller Folgen
-ab Index null lieber mit $\R^{\N_0}$ notieren als den ab Index eins
-mit $\R^{\N^*}$, wo die doppelte
-Hochstellung sehr unästhetisch wirkt und die Zacken des Asterisks
-wie in $\sum_{k\in\N^*} a_k$ kaum mehr zu erkennen sind.
 
-Zudem ist $\N_0$ eine auf Peano
-zurückgehende Notation, die somit als hinreichend konservativ
-betrachtet werden darf.
+Man ist sich nicht darüber einig, mit welcher Zahl die natürlichen
+Zahlen beginnen sollen. In der Informatik ist ein Beginn mit der Null
+vorteilhaft, weil man beispielsweise einer leeren Liste sonst keine
+Länge zuordnen könnte. In der Zahlentheorie wird dagegen zuweilen der
+Beginn mit der Eins gewählt, damit die Null nicht ständig explizit
+ausgeschlossen werden muss.
 
-Man kann $\N$ auch undefiniert lassen, was besonders da sinnvoll
-erscheint, wo es keine Rolle spielt, ob $\N=\N_0$ oder $\N=\N_1$
-ist. Das ist z.\,B. bei Betrachtungen zur Kardinalität der Fall,
-denn es gilt ja $|\N_0|=|\N_1|$.
-
-Als alternative Notation bietet sich noch an:
+Insofern beides seine Berechtigung haben kann, könnte die Frage nach
+der richtigen Festlegung womöglich ohne gute Antwort bleiben. Daher
+ist man gut beraten, der Problematik aus dem Weg zu gehen und beides
+gleichberechtigt zu definieren. Als unmissverständliche Symbolik
+scheint mir
 \begin{align}
-[a..b] &:= \{n\in\Z\mid a\le n\wedge n\le b\},\\
-[a..]  &:= \{n\in\Z\mid a\le n\},\\
-[..b]  &:= \{n\in\Z\mid n\le b\}.
+\Z_{\ge 0} &= \{0, 1, 2, 3, \ldots\}, && \text{(nichtnegative ganze Zahlen)}\\
+\Z_{\ge 1} &= \{1, 2, 3, 4, \ldots\}. && \text{(positive ganze Zahlen)}
 \end{align}
-Somit ist $\N_0=[0..]$ und $\N=[1..]$.
-Ich würde außerdem $\omega=\N_0$ setzen, weil das am ehesten
-dem Von-Neumann-Modell entspricht. Ohne $2=\{0,1\}$ lässt
-sich $2^A$ nicht als Abbildung in die Wahrheitswerte
-interpretieren.
+am günstigsten. Findet man dies zu langatmig, bieten sich noch
+\begin{align}
+\N &= \{0, 1, 2, 3, \ldots\},\\
+\mathbb E &= \{1, 2, 3, 4, \ldots\}
+\end{align}
+als kurze Symbole an.
 
 \subsection{Bildmenge, Urbildmenge}
 
 Für die Bildmenge von $M$ unter $f$ wird häufig die Notation $f(M)$
-benutzt, für das Urbild von $N$ unter $f$ häufig die
+benutzt. Für das Urbild von $N$ unter $f$ häufig die
 Notation $f^{-1}(N)$. Hierbei überschlägt sich die Notation leider mit
 der für die Applikation von $f$ auf ein Element.
 

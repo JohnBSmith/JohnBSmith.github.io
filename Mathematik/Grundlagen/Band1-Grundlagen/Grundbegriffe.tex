@@ -587,40 +587,43 @@ jedes $x_k$ erfüllt ist. Man bekommt die aussagenlogische Formel%
 \[\bigwedge_{k=1}^n P(x_k)
 \enspace\equiv\enspace P(x_1)\land P(x_2)\land\ldots\land P(x_n).\]
 Meistens benutzen wir die Schreibweisen
-\[(\forall x\in M)P(x) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
-(\exists x\in M)P(x) \equiv \bigvee_{k=1}^n P(x_k),\]
+\[(\forall x\in M\colon P(x)) \equiv \bigwedge_{k=1}^n P(x_k),\qquad
+(\exists x\in M\colon P(x)) \equiv \bigvee_{k=1}^n P(x_k),\]
 wobei $M=\{x_1,x_2,\ldots,x_n\}$ die Zusammenfassung
 der Objekte ist. Auch Kurzformen wie $\forall xP(x)$ oder
 $\forall_x P_x$ sind üblich, sie sparen vor allem Schreibaufwand
 beim Rechnen.
 
+\strong{Operatorrangfolge und Schreibweisen.}
 Nun muss man für diese Operatoren auch eine Operatorrangfolge
 festlegen. Da die Operatoren präfix sind, ist dabei leglich die
-rechte Seite zu berücksichtigen. Alle bisher genannten Schreibweisen
-haben die höchste Rangfolge, werden also gelesen wie die Negation.
-D.\,h. $(\forall x)P(x)$ wird gelesen wie $\neg P(x)$. Z.\,B. wird
-die Formel
-\[(\forall x\in M)P(x)\land A\quad
+rechte Seite zu berücksichtigen.  Wir legen fest, dass alles hinter
+dem Doppelpunkt in den Wirkungsbereich des Quantors fallen soll.
+Z.\,B. wird die Formel
+\[\forall x\in M\colon P(x)\land A\quad
 \text{gelesen als}\quad
-((\forall x\in M)P(x))\land A,\]
+\forall x\in M\colon (P(x)\land A).\]
 Davon zu unterscheiden ist die Formel
-\[(\forall x\in M)(P(x)\land A).\]
-Daneben gibt es noch die Schreibweisen $\forall x\colon P(x)$ und
-$\exists x\colon P(x)$, die in der Mathematik außerhalb der Logik
-üblicher sind. Eine gängige Festlegung ist hierbei, dass alles hinter
-dem Doppelpunkt in den Wirkungsbereich des Quantors fällt. Weil das
-der ersten Festlegung widerspricht und sich nicht jeder daran hält,
-werden wir diese Schreibweise nur dann benutzen, wenn es nicht
-zu Zweideutigkeiten kommt. Bei all der Umständlichkeit geht es nur um
-das Einsparen von Klammern, einen tieferen Grund gibt es nicht.
+\[(\forall x\in M\colon P(x))\land A.\]
+Auch in der Typentheorie treten logische Formeln auf. Dort schreibt
+man $\forall x.\,P(x)$ anstelle von $\forall x\colon P(x)$, da
+der Doppelpunkt dort bereits für das Urteil $x\colon T$ genutzt wird,
+was bedeutet, dass $x$ vom Typ $T$ ist.
 
-\newpage
+Daneben gibt es noch die Schreibweisen $(\forall x)P(x)$ und
+$(\exists x)P(x)$, die vor allem innerhalb der Logik genutzt werden.
+Man schreibt zur Einsparung von Klammern auch kurz $\forall xPx$ oder
+$\forall_x P_x$. Hier haben die Quantoren die höchste Rangfolge, werden
+also gelesen wie die Negation, das heißt, $(\forall x)\mathrm{Term}$
+wird gelesen wie $\neg\mathrm{Term}$, wobei $\mathrm{Term}$ ein
+ungeklammerter Term sein soll.
+
 \begin{Satz}[Distributivgesetze]\mbox{}\\*
 Ist $M$ endlich, $A$ eine Aussage und $P(x)$ ein Prädikat auf $M$,
 dann gilt
 \begin{align*}
-A\lor(\forall x\in M)P(x) &\equiv (\forall x\in M)(A\lor P(x)),\\
-A\land(\exists x\in M)P(x) &\equiv (\exists x\in M)(A\land P(x)).
+A\lor(\forall x\in M\colon P(x)) &\equiv (\forall x\in M\colon A\lor P(x)),\\
+A\land(\exists x\in M\colon P(x)) &\equiv (\exists x\in M\colon A\land P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Induktiv mittels boolescher Algebra. Induktionsanfang:
@@ -640,8 +643,8 @@ Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 \begin{Satz}[De morgansche Gesetze]\mbox{}\\*
 Ist $M$ endlich und $P(x)$ ein Prädikat auf $M$, dann gilt
 \begin{align*}
-\neg(\forall x\in M)P(x) &\equiv (\exists x\in M)\;\neg P(x),\\
-\neg(\exists x\in M)P(x) &\equiv (\forall x\in M)\;\neg P(x).
+\neg(\forall x\in M\colon P(x)) &\equiv (\exists x\in M\colon\neg P(x)),\\
+\neg(\exists x\in M\colon P(x)) &\equiv (\forall x\in M\colon\neg P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Induktionsanfang:
@@ -663,8 +666,10 @@ Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 \label{finite-quantifier-compatibility}\mbox{}\\*
 Ist $M$ endlich und sind $P(x),Q(x)$ Prädikate auf $M$, dann gilt
 \begin{align*}
-(\forall x\in M)(P(x)\land Q(x)) \equiv (\forall x\in M)P(x)\land(\forall x\in M)Q(x),\\
-(\exists x\in M)(P(x)\lor Q(x)) \equiv (\exists x\in M)P(x)\lor(\exists x\in M)Q(x).
+(\forall x\in M\colon P(x)\land Q(x))
+& \equiv (\forall x\in M\colon P(x))\land(\forall x\in M\colon Q(x)),\\
+(\exists x\in M\colon P(x)\lor Q(x))
+& \equiv (\exists x\in M\colon P(x))\lor(\exists x\in M\colon Q(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Induktionsanfang:
@@ -686,8 +691,10 @@ Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
 \begin{Satz}[Vertauschbarkeit gleichartiger Quantoren]\mbox{}\\*
 Sind $M,N$ endlich, dann gilt
 \begin{align*}
-(\forall x\in M)(\forall x\in N)P(x,y)&\equiv (\forall x\in N)(\forall x\in M)P(x,y),\\
-(\exists x\in M)(\exists x\in N)P(x,y)&\equiv (\exists x\in N)(\exists x\in M)P(x,y).
+(\forall x\in M\colon \forall x\in N\colon P(x,y))
+& \equiv (\forall x\in N\colon\forall x\in M\colon P(x,y)),\\
+(\exists x\in M\colon \exists x\in N\colon P(x,y))
+& \equiv (\exists x\in N\colon\exists x\in M\colon P(x,y)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.}
@@ -711,16 +718,16 @@ Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
 Man denkt sich nun ein Universum $U$, das alle denkbaren Objekte
 enthält. Das Prädikat $P(x)$ sei für jedes $x\in U$ definiert.
-Anstelle von $(\forall x\in U)P(x)$ schreibt man kürzer
-$(\forall x)P(x)$. Anstelle von $(\exists x\in U)P(x)$ schreibt
-man kürzer $(\exists x)P(x)$. Das Universum darf unendlich sein,
+Anstelle von $\forall x\in U\colon P(x)$ schreibt man kürzer
+$\forall x\colon P(x)$. Anstelle von $\exists x\in U\colon P(x)$ schreibt
+man kürzer $\exists x\colon P(x)$. Das Universum darf unendlich sein,
 aber nicht leer, es muss immer mindestens ein Element enthalten.
 \begin{Definition}[Allquantor]\mbox{}\\*
-Es gilt $(\forall x)P(x)$ genau dann, wenn $P(x)$ für jedes
+Es gilt $\forall x\colon P(x)$ genau dann, wenn $P(x)$ für jedes
 beliebige $x$ wahr ist.
 \end{Definition}
 \begin{Definition}[Existenzquantor]\mbox{}\\*
-Es gilt $(\exists x)P(x)$ genau dann, wenn ein $x$ gefunden
+Es gilt $\exists x\colon P(x)$ genau dann, wenn ein $x$ gefunden
 werden kann, das $P(x)$ erfüllt.
 \end{Definition}
 Das Problem das sich jetzt stellt, ist, dass zur Überprüfung
@@ -739,86 +746,92 @@ Wahrheitswerten belegt. Auch Prädikatvariablen werden mit Prädikaten
 belegt. Da es unendlich viele Prädikate gibt, lässt sich das natürlich
 praktisch nicht mehr durchführen.
 \begin{Satz}
-Es gilt $A\equiv (\forall x)A$ und $A\equiv(\exists x)A$.
+Es gilt $A\equiv (\forall x\colon A)$ und $A\equiv(\exists x\colon A)$.
 \end{Satz}
 \strong{Beweis.} Im Fall $A\equiv 0$ ist auch
-$(\forall x)0$ falsch, da $0$ für kein $x$ erfüllt ist.
-Im Fall $A\equiv 1$ ist auch $(\forall x)1$ wahr, da $1$ für jedes
+$\forall x\colon 0$ falsch, da $0$ für kein $x$ erfüllt ist.
+Im Fall $A\equiv 1$ ist auch $\forall x\colon 1$ wahr, da $1$ für jedes
 beliebige $x$ erfüllt ist. Für den Existenzquantor ist die
 Argumentation analog.\;\qedsymbol
 
 Vorsicht, das Universum darf nicht leer sein,
-denn $(\forall x{\in}\{\})\,0\equiv 1$.
+denn $(\forall x{\in}\emptyset\colon 0)\equiv 1$.
 
 \begin{Satz}[Verallgemeinerte Distributivgesetze]\mbox{}\\*
 Es gilt
 \begin{align*}
-A\lor (\forall x)P(x) &\equiv (\forall x)(A\lor P(x)),\\
-A\land(\exists x)P(x) &\equiv (\exists x)(A\land P(x)).
+A\lor (\forall x\colon P(x)) &\equiv (\forall x\colon A\lor P(x)),\\
+A\land(\exists x\colon P(x)) &\equiv (\exists x\colon A\land P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Im Fall $A\equiv 0$ ergibt sich
-\[A\lor(\forall x)P(x) \equiv 0\lor(\forall x)P(x)
-\equiv (\forall x)P(x)\equiv (\forall x)(0\lor P(x))\equiv (\forall x)(A\lor P(x)).\]
+\[A\lor(\forall x\colon P(x)) \equiv 0\lor(\forall x\colon P(x))
+\equiv (\forall x\colon P(x))\equiv (\forall x\colon 0\lor P(x))
+\equiv (\forall x\colon A\lor P(x)).\]
 Im Fall $A\equiv 1$ ergibt sich
-\[A\lor(\forall x)P(x)\equiv 1\lor(\forall x)P(x) \equiv 1 \equiv (\forall x)1
-\equiv (\forall x)(1\lor P(x))\equiv (\forall x)(A\lor P(x)).\]
+\[A\lor(\forall x\colon P(x))\equiv 1\lor(\forall x\colon P(x))
+\equiv 1 \equiv (\forall x\colon 1)
+\equiv (\forall x\colon 1\lor P(x))
+\equiv (\forall x\colon A\lor P(x)).\]
 Für den Existenzquantor ist die Argumentation analog.\;\qedsymbol
 
 \begin{Satz}[Verallgemeinerte de morgansche Gesetze]\mbox{}\\*
 Es gilt
 \begin{align*}
-\neg (\forall x)P(x) &\equiv (\exists x)\;\neg P(x),\\
-\neg (\exists x)P(x) &\equiv (\forall x)\;\neg P(x).
+\neg (\forall x\colon P(x)) &\equiv (\exists x\colon\neg P(x)),\\
+\neg (\exists x\colon P(x)) &\equiv (\forall x\colon\neg P(x)).
 \end{align*}
 \end{Satz}
-\strong{Beweis.} Gilt $(\forall x)P(x)$, dann ist $P(x)\equiv 1$.
+\strong{Beweis.} Gilt $\forall x\colon P(x)$, dann ist $P(x)\equiv 1$.
 Es ergibt sich
 \begin{equation}
-\neg(\forall x)P(x) \equiv \neg 1 \equiv 0 \equiv (\exists x)0
-\equiv (\exists x)\;\neg 1\equiv (\exists x)\;\neg P(x).
+\neg(\forall x\colon P(x)) \equiv \neg 1 \equiv 0 \equiv (\exists x\colon 0)
+\equiv (\exists x\colon\neg 1)\equiv (\exists x\colon\neg P(x)).
 \end{equation}
-Gilt $(\forall x)P(x)$ nicht, dann muss es ein $x$ mit
+Gilt $\forall x\colon P(x)$ nicht, dann muss es ein $x$ mit
 $\neg P(x)\equiv 1$ geben und es gilt
 \begin{equation}
-\neg(\forall x)P(x) \equiv \neg 0\equiv 1\equiv (\exists x)1
-\equiv (\exists x)\;\neg P(x).
+\neg(\forall x\colon P(x)) \equiv \neg 0\equiv 1\equiv (\exists x\colon 1)
+\equiv (\exists x\colon\neg P(x)).
 \end{equation}
 Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
 
 \begin{Satz}[Verträglichkeitsgesetze]\mbox{}\\*
 Es gilt
 \begin{align*}
-(\forall x)(P(x)\land Q(x)) &\equiv (\forall x)P(x)\land (\forall x)Q(x),\\
-(\exists x)(P(x)\lor Q(x)) &\equiv (\exists x)P(x)\lor (\exists x)Q(x).
+(\forall x\colon P(x)\land Q(x))
+& \equiv (\forall x\colon P(x))\land (\forall x\colon Q(x)),\\
+(\exists x\colon P(x)\lor Q(x))
+& \equiv (\exists x\colon P(x))\lor (\exists x\colon Q(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Angenommen, die linke Seite ist wahr. Dann muss
 $P(x)\land Q(x)\equiv 1$ sein, und daher auch $P(x)\equiv 1$ und
 $Q(x)\equiv 1$. Dann ist aber auch
-$(\forall x)P(x)\equiv 1$ und $(\forall x)Q(x)\equiv 1$. Somit gilt
+$(\forall x\colon P(x))\equiv 1$ und $(\forall x\colon Q(x))\equiv 1$.
+Somit gilt
 \begin{equation}
-(\forall x)(P(x)\land Q(x)) \equiv 1 \equiv
-1\land 1 \equiv (\forall x)P(x)\land (\forall x)Q(x).
+(\forall x\colon P(x)\land Q(x)) \equiv 1 \equiv
+1\land 1 \equiv (\forall x\colon P(x))\land (\forall x\colon Q(x)).
 \end{equation}
 Angenommen, die linke Seite ist falsch. Dann gibt es
 ein $x$, für welches $P(x)\land Q(x)\equiv 0$ ist. Für dieses $x$
 muss also $P(x)\equiv 0$ oder $Q(x)\equiv 0$ sein, oder beides.
-Dann ist auch $(\forall x)P(x)\equiv 0$ oder $(\forall x)Q(x)\equiv 0$.
-Somit ist
+Dann ist auch $(\forall x\colon P(x))\equiv 0$ oder
+$(\forall x\colon Q(x))\equiv 0$. Somit ist
 \begin{equation}
-(\forall x)P(x)\land(\forall x)Q(x)\equiv 0.
+(\forall x\colon P(x))\land(\forall x\colon Q(x))\equiv 0.
 \end{equation}
 Für den Existenzquantor ist die Argumentation analog. Alternativ
 ergibt sich nach den de morganschen und verallgemeinerten de morganschen
 Gesetzen
 \begin{gather}
-(\exists x)(P(x)\lor Q(x))
-\equiv \neg(\forall x)\;\neg (P(x)\lor Q(x))\\
-\equiv \neg(\forall x)(\neg P(x)\land \neg Q(x))
-\equiv \neg((\forall x)\;\neg P(x)\land (\forall x)\;\neg Q(x))\\
-\equiv \neg(\forall x)\;\neg P(x)\lor\neg(\forall x)\;\neg Q(x)
-\equiv (\exists x) P(x)\lor(\exists x) Q(x).\;\qedsymbol
+(\exists x\colon P(x)\lor Q(x))
+\equiv \neg(\forall x\colon\neg (P(x)\lor Q(x)))\\
+\equiv \neg(\forall x\colon\neg P(x)\land \neg Q(x))
+\equiv \neg((\forall x\colon\neg P(x))\land (\forall x\colon\neg Q(x)))\\
+\equiv \neg(\forall x\colon\neg P(x))\lor\neg(\forall x\colon\neg Q(x))
+\equiv (\exists x\colon P(x))\lor(\exists x\colon Q(x)).\;\qedsymbol
 \end{gather}
 
 
@@ -828,58 +841,59 @@ Gesetzen
 Ist $P$ ein Prädikat auf $U$ und $M\subseteq U$ eine Teilmenge von
 $U$, dann definiert man
 \begin{align*}
-(\forall x\in M)P(x) &:\equiv (\forall x)(x\in M\Rightarrow P(x)),\\
-(\exists x\in M)P(x) &:\equiv (\exists x)(x\in M\land P(x)).
+(\forall x\in M\colon P(x)) &:\equiv (\forall x\colon x\in M\Rightarrow P(x)),\\
+(\exists x\in M\colon P(x)) &:\equiv (\exists x\colon x\in M\land P(x)).
 \end{align*}
 \end{Definition}
 Zuweilen schreibt man auch
 \begin{align}
-(\forall R(x))P(x) &:\equiv (\forall x)(R(x)\Rightarrow P(x)),\\
-(\exists R(x))P(x) &:\equiv (\exists x)(R(x)\land P(x)),
+(\forall R(x)\colon P(x)) &:\equiv (\forall x\colon R(x)\Rightarrow P(x)),\\
+(\exists R(x)\colon P(x)) &:\equiv (\exists x\colon R(x)\land P(x)),
 \end{align}
 solange klar bleibt, dass $x$ die gebundene Variable ist.
-Z.\,B. $(\forall x{<}4)P(x)$ und ähnlich.
+Z.\,B. $\forall x{<}4\colon P(x)$ und ähnlich.
 
 \begin{Satz}[Verallgemeinerte Distributivgesetze]%
 \label{logical-dist-general}\mbox{}\\*
 Es gilt
 \begin{align*}
-A\lor (\forall x\in M)P(x) &\equiv (\forall x\in M)(A\lor P(x)),\\
-A\land(\exists x\in M)P(x) &\equiv (\exists x\in M)(A\land P(x)).
+A\lor (\forall x\in M\colon P(x)) &\equiv (\forall x\in M\colon A\lor P(x)),\\
+A\land(\exists x\in M\colon P(x)) &\equiv (\exists x\in M\colon A\land P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Für den Allquantor gilt
-\begin{gather}
-A\lor (\forall x\in M)P(x)
-\equiv A\lor(\forall x)(x\in M\Rightarrow P(x))\\
-\equiv A\lor(\forall x)(\neg x\in M\lor P(x))
-\equiv (\forall x)(A\lor\neg x\in M\lor P(x))\\
-\equiv (\forall x)(x\in M\Rightarrow A\lor P(x))
-\equiv (\forall x\in M)(A\lor P(x)).
-\end{gather}
+\begin{gather*}
+A\lor (\forall x\in M\colon P(x))
+\equiv A\lor(\forall x\colon x\in M\Rightarrow P(x))\\
+\equiv A\lor(\forall x\colon \neg x\in M\lor P(x))
+\equiv (\forall x\colon A\lor\neg x\in M\lor P(x))\\
+\equiv (\forall x\colon x\in M\Rightarrow A\lor P(x))
+\equiv (\forall x\in M\colon A\lor P(x)).
+\end{gather*}
 Für den Existenzquantor gilt
-\begin{gather}
-A\land (\exists x\in M)P(x)
-\equiv A\land(\exists x)(x\in M\land P(x))\\
-\equiv (\exists x)(A\land x\in M\land P(x))
-\equiv (\exists x)(x\in M\land A\land P(x))\\
-\equiv (\exists x\in M)(A\land P(x)).\;\qedsymbol
-\end{gather}
+\begin{gather*}
+A\land (\exists x\in M\colon P(x))
+\equiv A\land(\exists x\colon x\in M\land P(x))\\
+\equiv (\exists x\colon A\land x\in M\land P(x))
+\equiv (\exists x\colon x\in M\land A\land P(x))\\
+\equiv (\exists x\in M\colon A\land P(x)).\;\qedsymbol
+\end{gather*}
 
 \begin{Satz}[Verallgemeinerte de morgansche Gesetze]\mbox{}\\*
 Es gilt
 \begin{align*}
-\neg (\forall x\in M)P(x) &\equiv (\exists x\in M)\;\neg P(x),\\
-\neg (\exists x\in M)P(x) &\equiv (\forall x\in M)\;\neg P(x).
+\neg (\forall x\in M\colon P(x)) &\equiv (\exists x\in M\colon\neg P(x)),\\
+\neg (\exists x\in M\colon P(x)) &\equiv (\forall x\in M\colon\neg P(x)).
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Es gilt
-\begin{gather}
-\neg(\forall x\in M)P(x) \equiv \neg(\forall x)(x\in M\Rightarrow P(x))
-\equiv \neg(\forall x)(\neg x\in M\lor P(x))\\
-\equiv (\exists x)(x\in M\land \neg P(x))
-\equiv (\exists x\in M)\;\neg P(x).
-\end{gather}
+\begin{gather*}
+\neg(\forall x\in M\colon P(x))
+\equiv \neg(\forall x\colon x\in M\Rightarrow P(x))
+\equiv \neg(\forall x\colon \neg x\in M\lor P(x))\\
+\equiv (\exists x\colon x\in M\land \neg P(x))
+\equiv (\exists x\in M\colon\neg P(x)).
+\end{gather*}
 Die Argumentation für den Existenzquantor ist analog.\;\qedsymbol
 
 \newpage
@@ -1428,7 +1442,7 @@ Man definiert außerdem
 \begin{Definition}[Bildmenge]\label{def:img}\mbox{}\\*
 Sei $f\colon A\to B$ eine Abbildung.
 Für eine Menge $M\subseteq A$ nennt man die Menge
-\[f[M] := \{y\mid(\exists x\in M)(y=f(x))\}\]
+\[f[M] := \{y\mid\exists x\in M\colon y=f(x)\}\]
 das Bild von $M$ unter $f$.
 \end{Definition}
 
@@ -1550,15 +1564,15 @@ Seien $f\colon A\to B$ und $g\colon B\to C$, dann gilt
 $(g\circ f)[M] = g[f[M]]$.
 \end{Satz}
 \strong{Beweis.} Die Gleichung gemäß Definition expandieren:
-\[(\exists x)(x\in M\land z
-= (g\circ f)(x))\iff (\exists y)(y\in f[M]\land z=g(y)).\]
+\[(\exists x\colon x\in M\land z
+= (g\circ f)(x))\iff (\exists y\colon y\in f[M]\land z=g(y)).\]
 Auf der rechten Seite ergibt sich nun
 \begin{gather*}
-(\exists y)(y\in f[M]\land z=g(y))
-\equiv (\exists y)((\exists x)(x\in M\land y=f(x))\land z=g(y))\\
-\equiv (\exists y)(\exists x)(x\in M\land y=f(x)\land z=g(y))\\
-\equiv (\exists x)(x\in M\land (\exists y)(y=f(x)\land z=g(y)))\\
-\equiv (\exists x)(x\in M\land z=g(f(x))).\;\qedsymbol
+(\exists y\colon y\in f[M]\land z=g(y))
+\equiv (\exists y\colon (\exists x\colon x\in M\land y=f(x))\land z=g(y))\\
+\equiv (\exists y\colon \exists x\colon x\in M\land y=f(x)\land z=g(y))\\
+\equiv (\exists x\colon x\in M\land (\exists y\colon y=f(x)\land z=g(y)))\\
+\equiv (\exists x\colon x\in M\land z=g(f(x))).\;\qedsymbol
 \end{gather*}
 
 \noindent
@@ -1579,9 +1593,9 @@ x\in (g\circ f)^{-1}[N] &\iff (g\circ f)(x)\in N\iff g(f(x))\in N\\
 
 \begin{Definition}[Injektive Abbidlung]\mbox{}\\*
 Eine Abbildung $f\colon A\to B$ heißt injektiv, wenn
-\[(\forall x_1,x_2\in A)(f(x_1)=f(x_2)\implies x_1=x_2)\]
+\[\forall x_1,x_2\in A\colon f(x_1)=f(x_2)\Rightarrow x_1=x_2\]
 bzw.
-\[(\forall x_1,x_2\in A)(x_1\ne x_2\implies f(x_1)\ne f(x_2)).\]
+\[\forall x_1,x_2\in A\colon x_1\ne x_2\Rightarrow f(x_1)\ne f(x_2).\]
 \end{Definition}
 
 \begin{Definition}[Surjektive Abbildung]\mbox{}\\*
@@ -1625,7 +1639,7 @@ allerdings als intuitiv deutbarer Hilfsbegriff das Verständnis ab.
 Entsprechend dem Produkt von zwei Mengen ist das Produkt von
 $n$ Mengen die Menge der $n$"=Tupel, das ist%
 \begin{equation}
-\prod_{k=1}^n A_k := \{(a_1,\ldots,a_n)\mid (\forall k)\;a_k\in A_k\}.
+\prod_{k=1}^n A_k := \{(a_1,\ldots,a_n)\mid\forall k\colon a_k\in A_k\}.
 \end{equation}
 Sei $K:=\{1,\ldots,n\}$. Die $n$-Tupel sind Funktionen
 $f\colon K\to \bigcup_{k\in K} A_k$ mit $f(k)\in A_k$. Offenbar besteht
@@ -1633,7 +1647,7 @@ die Produktmenge aus allen solchen Funktionen. Die Definition lässt
 sich demnach umformulieren zu
 \begin{equation}
 \prod_{k\in K} A_k := \{f\colon K\to\bigcup_{k\in K}A_k\mid
-(\forall k\in K)\,f(k)\in A_k\}.
+\forall k\in K\colon f(k)\in A_k\}.
 \end{equation}
 So unschuldig die letzte Umformulierung auch daher kam, hält uns
 nun nichts mehr davon ab, für $K$ eine beliebige Menge einzusetzen.
@@ -1645,7 +1659,7 @@ aus.
 
 Die intuitiv klar erscheinende Überlegung
 \begin{equation}
-(\forall k\in K)(A_k\ne\emptyset) \implies \prod_{k\in K} A_k\ne\emptyset
+(\forall k\in K\colon A_k\ne\emptyset) \implies \prod_{k\in K} A_k\ne\emptyset
 \end{equation}
 hat es in sich, sie wird als \emph{Auswahlaxiom} bezeichnet.
 Man hat herausgefunden, dass dieses Axiom wahr oder auch falsch sein
@@ -1710,9 +1724,9 @@ sein.\;\qedsymbol
 \begin{Satz}[Zerlegung induziert Äquivalenzrelation]\mbox{}\\*
 Sei $M$ eine Menge. Die Familie $(A_k)$ von Mengen $A_k\subseteq M$
 bilde eine Zerlegung von $M$, d.\,h. dass die Vereinigung aller
-$A_k$ die Menge $M$ überdeckt und dass paarweise $A_i\cap A_j=\{\}$
+$A_k$ die Menge $M$ überdeckt und dass paarweise $A_i\cap A_j=\emptyset$
 für $i\ne j$ ist. Dann ist%
-\[x\sim y\defiff (\exists k)(x\in A_k\land y\in A_k)\]
+\[x\sim y\defiff \exists k\colon x\in A_k\land y\in A_k\]
 eine Äquivalenzrelation auf $M$.
 \end{Satz}
 \strong{Beweis.} Da die $A_k$ die Menge $M$ überdecken,
@@ -1724,13 +1738,13 @@ Die Symmetrie ergibt sich trivial.
 Zur Transitivität. Voraussetzung ist $x\sim y$ und $y\sim z$.
 Es gibt also ein $i$ mit $x\in A_i$ und $y\in A_i$. Außerdem gibt
 es ein $j$ mit $y\in A_j$ und $z\in A_j$. Somit gilt%
-\[(\exists i)(\exists j)(x\in A_i\land y\in A_i\land y\in A_j\land z\in A_j).\]
+\[\exists i\colon\exists j\colon x\in A_i\land y\in A_i\land y\in A_j\land z\in A_j.\]
 Wegen
-\[A_i\cap A_j = \{\} \iff (\forall y)(y\in A_i\land y\in A_j\iff 0)\]
+\[A_i\cap A_j = \emptyset \iff \forall y\colon (y\in A_i\land y\in A_j\Leftrightarrow 0)\]
 für $i\ne j$ kann $y\in A_i\land y\in A_j$ aber nur erfüllt sein,
 wenn $i=j$ ist. Daher ergibt sich%
-\[(\exists i)(x\in A_i\land z\in A_i),\]
-d.\,h. $x\sim z$.\;\qedsymbol
+\[\exists i\colon x\in A_i\land z\in A_i,\]
+das heißt $x\sim z$.\;\qedsymbol
 
 \begin{Definition}[Quotientenmenge]
 \index{Quotientenmenge}\index{Faktormenge}\mbox{}\\*
@@ -1878,7 +1892,7 @@ Gegeben seien zwei Quotientenmengen $M/\sim$ und $M'/\sim'$.
 Eine vorhandene Abbildung $f\colon M\to M'$ induziert dann
 eventuell gemäß%
 \begin{equation}\label{eq:induzierte-Abbildung}
-f\colon M/\sim\to M'/\sim',\; f([a]):=[f(a)]
+f\colon M/\sim\to M'/\sim',\quad f([a]):=[f(a)]
 \end{equation}
 eine Abbildung zwischen den Quotientenmengen. Kommt es dabei nicht
 zu einem Widerspruch, liegt also eine Abbildung vor, spricht man
@@ -1894,7 +1908,7 @@ x\sim a \implies f(x)\sim' f(a).
 Für mehrstellige Abbildungen ist das Vorgehen analog. Eine
 Abbildung $f\colon M^2\to M'$ induziert%
 \begin{equation}
-f\colon (M/\sim)^2\to M'/\sim',\; f([a],[b]):=[f(a,b)],
+f\colon (M/\sim)^2\to M'/\sim',\quad f([a],[b]):=[f(a,b)],
 \end{equation}
 sofern
 \begin{equation}

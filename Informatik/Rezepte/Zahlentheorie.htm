@@ -40,6 +40,7 @@ werden daraufhin effizientere Algorithmen entwickelt.
   <ol>
   <li><a href="#PFZ-Probedivision">Probedivision</a>
   <li><a href="#PFZ-Probedivision-verbessert">Verbesserte Probedivision</a>
+  <li><a href="#Miller-Rabin">Miller-Rabin-Test</a>
   </ol>
 <li><a href="#Funktionen">Zahlentheoretische Funktionen</a>
   <ol>
@@ -340,6 +341,74 @@ def is_prime(n):
         if n%k == 0: return False
         k += i;
         i = 6 - i
+    return True
+</pre>
+
+<h3 id="Miller-Rabin">Miller-Rabin-Test</h3>
+
+<p>Die Probedivision verhält sich lediglich für kleine Zahlen
+vorteilhaft. Für größere Zahlen beschrieb Gary Miller im Jahr 1976
+einen Test, den Michael Rabin im Jahr 1980 zu einem probalistischen
+Test modifizierte.
+
+<p>Die ungerade ganze Zahl <var>n</var> &gt; 2 wird zuänchst in die Form
+<var>n</var>&nbsp;=&nbsp;2<sup><var>s</var></sup><var>d</var>&nbsp;+&nbsp;1
+gebracht. Sei außerdem 1&nbsp;&le;&nbsp;<var>a</var>&nbsp;&lt;&nbsp;<var>n</var>.
+Man nennt <var>n</var> eine starke Pseudoprimzahl zur Basis <var>a</var>,
+falls mindestens eine der folgenden beiden Bedingungen erfüllt ist:
+
+<ol>
+<li><var>a</var><sup><var>d</var></sup> ≡ 1 (mod <var>n</var>),
+<li><var>a</var><sup>2<sup><var>r</var></sup><var>d</var></sup>
+   ≡ &minus;1 (mod <var>n</var>) für mindestens ein <var>r</var> mit
+  0&nbsp;&le;&nbsp;<var>r</var>&nbsp;&lt;&nbsp;<var>s</var>.
+</ol>
+
+<p>Andernfalls ist <var>a</var> ein Zeuge dafür, dass <var>n</var>
+definitiv zusammengesetzt sein muss. Für den Test wird <var>a</var>
+nun zufällig aus dem Bereich
+2&nbsp;&le;&nbsp;<var>a</var>&nbsp;&le;&nbsp;<var>n</var>&minus;2
+ausgewählt. Wird dieser Test <var>k</var> mal wiederholt, sinkt die
+Wahrscheinlichkeit dafür, dass eine zusammengesetzte Zahl fälschlich
+als prim gesehen wird, auf 4<sup>&minus;<var>k</var></sup> ab.
+Wir wählen <var>k</var>&nbsp;=&nbsp;128 als Vorgabewert.
+
+<pre class="python ibox">
+from random import randint
+
+def is_witness(a, n, d, s):
+    if pow(a, d, n) == 1:
+        return False
+    else:
+        for r in range(0, s):
+            if pow(a, d*2**r, n) == n - 1: return False
+    return True
+
+def is_probably_prime(n, count = 128):
+    if n == 2 or n == 3:
+        return True
+    elif n%2 == 0 or n &lt; 2:
+        return False
+    s = 0; d = n - 1
+    while d%2 == 0:
+        s += 1; d = d//2
+    for i in range(count):
+        a = randint(2, n - 2)
+        if is_witness(a, n, d, s): return False
+    return True
+</pre>
+
+<p>Der Test-Algorithmus lässt sich noch ein wenig optimieren:
+
+<pre class="python ibox">
+def is_witness(a, n, d, s):
+    x = pow(a, d, n)
+    if x == 1 or x == n - 1:
+        return False
+    else:
+        for i in range(s - 1):
+            x = (x*x)%n
+            if x == n - 1: return False
     return True
 </pre>
 

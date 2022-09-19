@@ -32,19 +32,46 @@ A\lor B \iff B\lor A.
 \end{gather}
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)]\\
-Zu $A\land B\vdash B\land A$. Schematisch:
-\[\infer{B\land A}{
-   \infer{A}{A\land B}
-   & \infer{B}{A\land B}
-}\]
+Zu $A\land B\Rightarrow B\land A$. Schematisch:
+\[
+\begin{array}{@{}l@{\qquad\qquad}l}
+\infer[\infernote{1}]{A\land B\Rightarrow B\land A}{
+  \infer{B\land A}{
+     \infer{A}{\infer[\infernote{1}]{A\land B}{}}
+     & \infer{B}{\infer[\infernote{1}]{A\land B}{}}
+  }
+}
+&
+\infer{\vdash A\land B\Rightarrow B\land A}{
+  \infer{A\land B\vdash B\land A}{
+    \infer{A\land B\vdash B}{
+      \infer{A\land B\vdash A\land B}{}}
+    & \infer{A\land B\vdash A}{
+      \infer{A\land B\vdash A\land B}{}}
+  }
+}
+\end{array}
+\]
 Programmterm:
 \[A\times B\to B\times A,\; (a,b)\mapsto (b,a).\]
-Zu $A\lor B\vdash B\lor A$. Schematisch:
-\[\infer[\infernote{1}]{B\lor A}{
-  A\lor B
-  & \infer{B\lor A}{\infer[\infernote{1}]{A}{}}
-  & \infer{B\lor A}{\infer[\infernote{1}]{B}{}}
-}\]
+Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
+\[
+\begin{array}{@{}l@{\qquad\qquad}l}
+\infer[\infernote{2}]{A\lor B\Rightarrow B\lor A}{
+  \infer[\infernote{1}]{B\lor A}{
+    \infer[\infernote{2}]{A\lor B}{}
+    & \infer{B\lor A}{\infer[\infernote{1}]{A}{}}
+    & \infer{B\lor A}{\infer[\infernote{1}]{B}{}}}}
+&
+\infer{\vdash A\lor B\Rightarrow B\lor A}{
+  \infer{A\lor B\vdash B\lor A}{
+    \infer{A\lor B\vdash A\lor B}{}
+    & \infer{A\lor B, A\vdash B\lor A}{
+        \infer{A\lor B, A\vdash A}{}}
+    & \infer{A\lor B, B\vdash B\lor A}{
+        \infer{A\lor B, B\vdash B}{}}}}
+\end{array}
+\]
 Programmterm:
 \[A+B\to B+A,\; s\mapsto\match s\begin{cases}
 \inl(a)\mapsto \inr(a),\\
