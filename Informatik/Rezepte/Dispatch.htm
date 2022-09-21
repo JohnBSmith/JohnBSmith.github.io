@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Wechselseitiger Dispatch</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Wechselseitiger Dispatch</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+
+<ol>
+<li><a href="#Problemstellung">Problemstellung</a>
+<li><a href="#Param-Module">Parametrisierte Module</a>
+<li><a href="#Globale-Variablen">Globale Variablen</a>
+<li><a href="#Vererbung">Vererbung</a>
+</ol>
+
+<h2 id="Problemstellung">Problemstellung</h2>
+
+<p>Wir betrachten Eierzahlen, die sich verhalten wie gewöhnliche ganze
+Zahlen, aber von diesen zu unterscheiden sind. Es ist eine allgemeine
+Nachfolgerabbildung zu formulieren, die sowohl für gewöhnliche als auch
+für Eierzahlen definiert ist. Weiterhin soll diese Abbildung polymorph
+formuliert sein, dergestalt dass die passende Abbildung über einen
+Dispatch ermittelt wird. Innerhalb der Abbildung soll sie nochmals
+aufgerufen werden, so dass ein wechselseitiger Dispatch stattfinden
+kann. Ausgangspunkt ist so gesagt das folgende Programm:
+
+<pre class="ibox python">
+# Datei egg.py
+class Egg:
+    def __init__(self, value):
+        self.value = value
+    def __repr__(self):
+        return "Egg({})".format(repr(self.value))
+    def __succ__(self):
+        return Egg(succ(self.value))
+        
+# Datei succ.py
+def succ(x):
+    return x + 1 if isinstance(x, int) else x.__succ__()
+
+# Datei app.py
+from egg import Egg
+from succ import succ
+
+print(succ(Egg(0)))
+</pre>
+
+<p>Hier stellt sich das Problem, dass <code>succ</code> in
+<code>Egg</code> unbekannt ist. Man könnte also <code>succ</code>
+einfach importieren. Wir würden nun aber gerne haben, dass
+<code>egg</code> nichts über <code>succ</code> wissen braucht
+und umgekehrt <code>succ</code> nichts über <code>egg</code> wissen
+braucht.
+
+<h2 id="Param-Module">Parametrisierte Module</h2>
+
+<p>Ein Lösungsansatz besteht in der Formulierung eines
+parametrisierten Moduls. Hier dürfen dem Modul beim Laden zusätzliche
+Parameter gegeben werden.
+
+<pre class="ibox python">
+# Datei egg.py
+def load(succ = None):
+    class Egg:
+        def __init__(self, value):
+            self.value = value
+        def __repr__(self):
+            return "Egg({})".format(repr(self.value))
+    if succ != None:
+        def __succ__(self):
+            return Egg(succ(self.value))
+        Egg.__succ__ = __succ__
+    return Egg
+
+# Datei succ.py
+def succ(x):
+    return x + 1 if isinstance(x, int) else x.__succ__()
+
+# Datei app.py
+import egg
+from succ import succ
+Egg = egg.load(succ = succ)
+
+print(succ(Egg(0)))
+</pre>
+
+<h2 id="Globale-Variablen">Globale Variablen</h2>
+
+<p>Parametrisierung kann alternativ über globale Variablen
+stattfinden. Im der nächsten Formulierung ist <code>module_table</code>
+eine von jedem Modul aus zugängliche globale Variable.
+Es tut sich hier leider das kleine Defizit auf, dass die Reihenfolge,
+in der die Module importiert werden, nun eine Rolle spielt, was dem
+Nutzer der Programmierschnittstelle nicht unbedingt klar sein muss.
+
+<pre class="ibox python">
+# Datei config.py
+module_table = {}
+
+# Datei egg.py
+import config
+
+class Egg:
+    def __init__(self, value):
+        self.value = value
+    def __repr__(self):
+        return "Egg({})".format(repr(self.value))
+
+if "succ" in config.module_table:
+    succ = config.module_table["succ"].succ
+    def __succ__(self):
+        return Egg(succ(self.value))
+    Egg.__succ__ = __succ__
+
+# Datei succ.py
+import config
+config.module_table[__name__] = __import__(__name__)
+
+def succ(x):
+    if isinstance(x, int):
+        return x + 1
+    else:
+        return x.__succ__()
+
+# Datei app.py
+from succ import succ
+from egg import Egg
+
+print(succ(Egg(0)))
+</pre>
+
+<h2 id="Vererbung">Vererbung</h2>
+
+<p>Eine recht ordentliche Konstruktion findet sich, wenn man
+für die zusätzliche Funktionalität eine extra Klasse definiert,
+die die gewöhnliche Eierklasse als Basis hat. Es verbleibt das
+kleine Defizit, dass bei der Nutzung der Programmierschnittstelle die
+passende Konfiguration gewählt werden muss.
+
+<pre class="ibox python">
+# Datei egg.py
+class Egg:
+    def __init__(self, value):
+        self.value = value
+    def __repr__(self):
+        return "Egg({})".format(repr(self.value))
+
+# Datei eggsucc.py
+from egg import Egg as PlainEgg
+from succ import succ
+
+class Egg(PlainEgg):
+    def __succ__(self):
+        return Egg(succ(self.value))
+
+# Datei succ.py
+def succ(x):
+    return x + 1 if isinstance(x, int) else x.__succ__()
+
+# Datei app.py
+from eggsucc import Egg
+from succ import succ
+
+print(succ(Egg(0)))
+</pre>
+
+</body>
+</html>
