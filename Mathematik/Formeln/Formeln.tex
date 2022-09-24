@@ -156,8 +156,8 @@ $L\{f(t)\} := \int_0^{\infty}\! f(t)\ee^{-pt}\mathrm dt$,\;
 $F\{f(t)\} := \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}
 f(t)\ee^{-\ui\omega t}\mathrm dt$\\
 $\ds\frac{\mathrm d}{\mathrm dx}\int_{a(x)}^{b(x)} f(x,t)\,\mathrm dt
-= \int_{a(x)}^{b(x)} \frac{\partial}{\partial x}f(x,t)\,\mathrm dt+g(x)$\\
-$g(x) = f(x,b(x))b'(x) - f(x,a(x))a'(x)$
+= g(x) + \int_{a(x)}^{b(x)} \frac{\partial}{\partial x}f(x,t)\,\mathrm dt$\\
+wobei $g(x) = f(x,b(x))b'(x) - f(x,a(x))a'(x)$
 
 \newpage
 \noindent
@@ -374,6 +374,36 @@ $(M\cup\{\varphi\}\vdash\psi)\Leftrightarrow (M\vdash \varphi\rightarrow\psi)$\\
 $(M\cup\{\varphi\}\models\psi)\Leftrightarrow (M\models \varphi\rightarrow\psi)$\\
 $(M\models\varphi_1)\land (M\models\varphi_2)\land (\{\varphi_1,\varphi_2\}\models\psi)
 \Rightarrow (M\models\psi)$\\[-4pt]
+\rule{\columnwidth}{\heavyrulewidth}
+\strong{Natürliches Schließen}\\[4pt]
+\begin{tabular}{@{}l@{\quad}l@{\quad}l@{\quad}l@{\quad}l}
+$\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A}$
+& $\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B}$
+& $\dfrac{\Gamma\vdash A\quad\Gamma\vdash B}{\Gamma\vdash A\land B}$
+& $\dfrac{}{\Gamma,A\vdash A}$
+& $\dfrac{}{\Gamma\vdash\top}$
+\end{tabular}\\[6pt]
+\begin{tabular}{@{}lll}
+$\dfrac{\Gamma, A\vdash B}{\Gamma\vdash A\to B}$
+& $\dfrac{\Gamma\vdash A\lor B\quad\Gamma,A\vdash C\quad\Gamma,B\vdash C}{\Gamma\vdash C}$
+& $\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
+\end{tabular}\\[6pt]
+\begin{tabular}{@{}l@{\quad}l@{\quad}l@{\quad}l}
+$\dfrac{\Gamma\vdash A\to B\quad\Gamma\vdash A}{\Gamma\vdash B}$
+& $\dfrac{\Gamma\vdash\neg A\quad\Gamma\vdash A}{\Gamma\vdash\bot}$
+& $\dfrac{\Gamma\vdash\bot}{\Gamma\vdash A}$
+& $\bigg(\dfrac{\Gamma\vdash\neg\neg A}{\Gamma\vdash A}\bigg)$
+\end{tabular}\\[6pt]
+\begin{tabular}{@{}l@{\qquad}l@{\qquad}l}
+$\dfrac{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}(x\notin\operatorname{FV}(\Gamma))$
+& $\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}$
+& $\dfrac{\Gamma\vdash A}{\Gamma,\Delta\vdash A}$
+\end{tabular}\\[6pt]
+\begin{tabular}{@{}l@{\qquad}l}
+$\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}$
+& $\dfrac{\Gamma\vdash\exists x\colon A\quad\Gamma,A\vdash B}{\Gamma\vdash B}
+(x\notin\operatorname{FV}(\Gamma)\cup\operatorname{FV}(B))$
+\end{tabular}\\[6pt]
 \rule{\columnwidth}{\heavyrulewidth}\\
 \strong{Mengenlehre}\\[2pt]
 \begin{tabular}{@{}l@{\;\,}|@{\;\;}l}
