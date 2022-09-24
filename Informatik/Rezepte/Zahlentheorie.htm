@@ -416,11 +416,17 @@ def is_witness(a, n, d, s):
 
 <h3 id="PFZ-Probedivision">Probedivision</h3>
 
+<p>Bei der Faktorisierung per Probedivision wird der kleinste
+Primteiler der Zahl ermittelt und so oft abgespalten wie dieser
+enthalten ist. Der Vorgang wird anschließend abermals auf die
+verbleibende Zahl angewendet. Das geht solange weiter, bis keine
+Primteiler mehr enthalten sind bzw. bis die verbleibende Zahl gleich
+eins geworden ist.
+
 <pre class="python ibox">
 def factor(n):
-    assert n != 0
+    assert n &gt; 0
     acc = []
-    if n &lt; 0: n = -n; acc.append((-1, 1))
     p = 2
     while n != 1:
         e = 0
@@ -434,10 +440,11 @@ def factor(n):
 <h3 id="PFZ-Probedivision-verbessert">Verbesserte Probedivision</h3>
 
 <p>Analog zum Primzahltest erhält man eine erhebliche Verbesserung,
-wenn man die Bedingung <code>n&nbsp;!=&nbsp;1</code> bzw.
-<code>p&nbsp;&lt;=&nbsp;n</code> gegen <code>p*p&nbsp;&lt;=&nbsp;n</code>
+wenn man die Bedingung <var>n</var>&nbsp;≠&nbsp;1 bzw.
+<var>p</var>&nbsp;≤&nbsp;<var>n</var> gegen
+<var>p</var><sup>2</sup>&nbsp;≤&nbsp;<var>n</var>
 ersetzt. Ist diese Bedingung nicht erfüllt, muss es sich bei
-<var>n</var> im Fall <var>n</var>&ne;1 um einen
+<var>n</var> im Fall <var>n</var>&nbsp;&ne;&nbsp;1 um einen
 Primfaktor handeln.
 
 <pre class="python ibox">
@@ -531,10 +538,10 @@ def phi(n):
     y = 1; p = 2
     while p*p &lt;= n:
         e = 0
-        while n%p == 0: n = n//p; e += 1
+        while n%p == 0: n //= p; e += 1
         if e != 0: y *= p**(e-1)*(p - 1)
         p += 1
-    if n != 1: y *= n - 1
+    if n != 1: y *= (n - 1)
     return y
 </pre>
 
@@ -734,7 +741,7 @@ def generators(n):
 <h3 id="Inverse">Modulare Inverse</h3>
 
 <p>Für manche Aufgaben benötigt man die Inverse einer gegebenen Funktion
-<var>f</var>: ℤ/<var>m</var>ℤ→ℤ/<var>m</var>ℤ. Weil <var>f</var>
+<var>f</var>:&nbsp;ℤ/<var>m</var>ℤ&nbsp;→&nbsp;ℤ/<var>m</var>ℤ. Weil <var>f</var>
 dabei nicht als Injektion vorausgesetzt werden soll, muss die Inverse
 immer das Urbild ihres Arguments berechnen. Für kleine <var>m</var> lässt
 sich dieses Problem in kunstloser Weise lösen, indem einmalig

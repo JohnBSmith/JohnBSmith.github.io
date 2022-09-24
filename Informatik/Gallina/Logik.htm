@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Logik</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Logik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Aussagenlogik">Aussagenlogik</a>
+</ol>
+
+<h2 id="Aussagenlogik">Aussagenlogik</h2>
+
+<p>Die Konstruktion von Beweisen in Gallina stellt eine Form
+des natürlichen Schließens dar. Wie es sich genauer verhält,
+soll anhand von Beispielen erläutert werden.
+
+<p>Der Beweis der tautologischen Aussage
+<var>A</var>&nbsp;∧&nbsp;<var>B</var>&nbsp;⇒&nbsp;<var>A</var>
+soll unser erstes Beispiel sein. Der schematische Beweis
+geht im Kalkül des natürlichen Schließens&nbsp;so:
+
+<table class="bt indent">
+<tr><th>Formeln<th>Sequenzen<th>Seq. von Programmtermen
+<tr><td>
+<pre class="proof">
+  ───── <small>1</small>
+  A ∧ B
+  ─────
+    A
+────────── <small>1</small>  
+A ∧ B ⇒ A
+</pre>
+<td>
+<pre class="proof">
+──────────────  
+A ∧ B ⊢ A ∧ B
+──────────────
+  A ∧ B ⊢ A
+ ────────────
+ ⊢ A ∧ B ⇒ A
+</pre>
+<td>
+<pre class="proof">
+──────────────────────────
+(a, b): A×B ⊢ (a, b): A×B
+──────────────────────────
+    (a, b): A×B ⊢ a: A
+  ──────────────────────
+  ⊢ (a, b) ↦ a: A×B → A
+</pre>
+</table>
+
+<p>In der ersten Form kommt eine Annahme vor, die weiter unten durch
+die Einführung der Implikation getilgt wird. Es kann in dieser Form also
+sein, dass eine Formel nur in einem Kontext von Annahmen gültig ist.
+In der zweiten Form enthalten die Sequenzen die Buchführung der Annahmen
+explizit auf ihrer linken Seite. Jede beweisbare Sequenz stellt daher
+für sich allein ein Theorem dar. Die dritte Form zeigt die
+entsprechenden Sequenzen von Programmtermen.
+
+<p>Der konstruierte Programmterm gibt für sich bereits den Beweis wieder.
+Daher genügt die Niederschrift des Programmterms zur Kodierung des
+Beweises. In Gallina schreibt sich dies&nbsp;so:
+
+<pre class="ibox gallina">
+Definition proj_left: forall A B: Type, A*B -&gt; A :=
+  fun A B t =&gt; match t with (a, b) =&gt; a end.
+</pre>
+
+<p>Für <code>A</code>,&nbsp;<code>B</code> vom Typ <code>Prop</code>
+bekommt der Beweis die Gestalt
+
+<pre class="ibox gallina">
+Definition proj_left: forall A B: Prop, A /\ B -> A :=
+  fun A B t => match t with conj a b => a end.
+</pre>
+
+</body>
+</html>

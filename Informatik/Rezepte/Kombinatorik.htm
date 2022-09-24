@@ -123,7 +123,7 @@ Zunächst konstruiert die kartesische Potenz von <code>Y</code>
 zum Exponent <code>n</code> den Raum der Abbildungen von
 <code>range(0,&nbsp;n)</code> nach <code>Y</code> als Liste von
 Tupeln. Zippt man nun den Definitionsbereich <code>X</code> mit
-dem jeweiligen Tupel <code>t</code>, entsteht der Graph
+dem jeweiligen Tupel <code>t</code>, entsteht der Graph der
 Funktion als Liste der Paare <code>(X[k],&nbsp;t[k])</code>
 für <code>k</code> in <code>range(0,&nbsp;n)</code>.
 
@@ -132,12 +132,12 @@ für <code>k</code> in <code>range(0,&nbsp;n)</code>.
 <pre class="ibox python">
 X = ["a", "b"]; Y = [0, 1]
 
-product(Y, repeat = 2) = [[0, 0], [0, 1], [1, 0], [1, 1]]
+product(Y, repeat = 2) = [(0, 0), (0, 1), (1, 0), (1, 1)]
 
-zip(X, [0, 0]) = [("a", 0), ("b", 0)]
-zip(X, [0, 1]) = [("a", 0), ("b", 1)]
-zip(X, [1, 0]) = [("a", 1), ("b", 0)]
-zip(X, [1, 1]) = [("a", 1), ("b", 1)]
+zip(X, (0, 0)) = [("a", 0), ("b", 0)]
+zip(X, (0, 1)) = [("a", 0), ("b", 1)]
+zip(X, (1, 0)) = [("a", 1), ("b", 0)]
+zip(X, (1, 1)) = [("a", 1), ("b", 1)]
 </pre>
 
 <p>Der Algorithmus zur Erzeugung des Raums ist insofern schlicht:
@@ -238,7 +238,7 @@ def permutations(a, k):
 <p>Zur Erzeugung des Raums der Kombinationen steht die Funktion
 <code>combinations</code> aus dem Modul <code>itertools</code>
 zur Verfügung. Der Aufruf <code>combinations(a,&nbsp;k)</code>
-erzeugt die <code>k</code>-elementigen Teilmengen von <code>a</code>
+erzeugt die <var>k</var>-elementigen Teilmengen von <code>a</code>
 in Form von Tupeln. Beispielsweise erzeugt
 
 <pre class="ibox python">
@@ -305,8 +305,8 @@ vonstatten, sofern <code>a</code> geordnet ist.
 
 <h3 id="Binomialkoeffizienten">Binomialkoeffizienten</h3>
 
-<p>Die Berechnung eines Binomialkoeffizienten erfolgt günstig
-über seine Produktformel, was zum Algorithmus
+<p>Die Berechnung des Binomialkoeffizienten erfolgt günstig
+über dessen Produktformel, was zum Algorithmus
 
 <pre class="ibox python">
 def bc(n, k):
@@ -356,7 +356,7 @@ def B(n):
 <p>Bei manchen kombinatorischen Problemen ist die Größe von
 Urbildern zu ermitteln.
 
-<p>Eine endliche Abbildung <var>f</var>:&nbsp;<var>X</var>→<var>Y</var>
+<p>Eine endliche Abbildung <var>f</var>:&nbsp;<var>X</var>&nbsp;→&nbsp;<var>Y</var>
 lässt sich invertieren, indem durch einmaliges Durchlaufen des
 Definitionsbereichs ein Wörterbuch erzeugt wird. Das Wörterbuch
 soll jedem Element dessen Urbild zuordnen.
