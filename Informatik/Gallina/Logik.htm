@@ -22,6 +22,7 @@
 <li><a href="#Praedikatenlogik">Prädikatenlogik</a>
   <ol>
   <li><a href="#Allq">Allquantifizierungen</a>
+  <li><a href="#Existenzq">Existenzquantifizierungen</a>
   </ol>
 </ol>
 
@@ -40,31 +41,31 @@ geht im Kalkül des natürlichen Schließens&nbsp;so:
 
 <table class="bt indent">
 <tr><th>Formeln<th>Sequenzen<th>Seq. von Programmtermen
-<tr><td>
+<tr><td style="padding-right: 1.6em">
 <pre class="proof">
   ───── <small>1</small>
   A ∧ B
   ─────
     A
-────────── <small>1</small>  
+────────── <small>1</small>
 A ∧ B ⇒ A
 </pre>
-<td>
+<td style="padding-right: 2em">
 <pre class="proof">
-──────────────  
+─────────────
 A ∧ B ⊢ A ∧ B
-──────────────
+─────────────
   A ∧ B ⊢ A
- ────────────
+ ───────────
  ⊢ A ∧ B ⇒ A
 </pre>
 <td>
 <pre class="proof">
-──────────────────────────
+─────────────────────────
 (a, b): A×B ⊢ (a, b): A×B
-──────────────────────────
+─────────────────────────
     (a, b): A×B ⊢ a: A
-  ──────────────────────
+  ─────────────────────
   ⊢ (a, b) ↦ a: A×B → A
 </pre>
 </table>
@@ -116,13 +117,13 @@ A ⇒ B ⇒ A ∧ B
 </pre>
 <td>
 <pre class="proof">
-─────────    ─────────
+────────     ────────
 A, B ⊢ A     A, B ⊢ B
-──────────────────────
+─────────────────────
    A, B ⊢ A ∧ B
    ─────────────
    A ⊢ B ⇒ A ∧ B
-  ────────────────
+  ───────────────
   ⊢ A ⇒ B ⇒ A ∧ B
 </pre>
 </table>
@@ -131,13 +132,13 @@ A, B ⊢ A     A, B ⊢ B
 <tr><th>Sequenzen von Programmtermen
 <tr><td>
 <pre class="proof">
-──────────────────    ──────────────────
+─────────────────     ─────────────────
 a: A, b: B ⊢ a: A     a: A, b: B ⊢ b: B
-────────────────────────────────────────
+───────────────────────────────────────
        a: A, b: B ⊢ (a, b): A×B
-      ───────────────────────────
+      ──────────────────────────
       a: A ⊢ b ↦ (a, b): B → A×B
-     ──────────────────────────────
+     ─────────────────────────────
      ⊢ a ↦ b ↦ (a, b): A → B → A×B
 </pre>
 </table>
@@ -175,20 +176,20 @@ A ⇒ A ∨ B
 </pre>
 <td>
 <pre class="proof">
-    ──────
+    ─────
     A ⊢ A
-  ──────────
+  ─────────
   A ⊢ A ∨ B
- ────────────
+ ───────────
  ⊢ A ⇒ A ∨ B
 </pre>
 <td>
 <pre class="proof">
-       ────────────
+       ───────────
        a: A ⊢ a: A
-   ─────────────────────
+   ────────────────────
    a: A ⊢ inl(a): A + B
-  ────────────────────────
+  ───────────────────────
   ⊢ a ↦ inl(a): A → A + B
 </pre>
 </table>
@@ -201,7 +202,7 @@ linke Injektion des Terms.
 
 <pre class="ibox gallina">
 Definition proof: forall A B: Type, A -&gt; A + B
-  := fun A B =&gt; fun a =&gt; inl(a).
+  := fun A B =&gt; fun a =&gt; inl a.
 </pre>
 
 <p>Für <code>A</code>, <code>B</code> vom Typ <code>Prop</code>
@@ -209,7 +210,64 @@ gilt wieder eine analoge Formulierung:
 
 <pre class="ibox gallina">
 Definition proof: forall A B: Prop, A -&gt; A \/ B
-  := fun A B =&gt; fun a =&gt; or_introl(a).
+  := fun A B =&gt; fun a =&gt; or_introl a.
+</pre>
+
+<p><p>Der folgende Beweis der Tautologie
+<var>A</var>&nbsp;∨&nbsp;<var>B</var>&nbsp;⇒&nbsp;<var>B</var>&nbsp;∨&nbsp;<var>A</var>
+dient als ein Beispiel, in dem eine Oder-Einführung vorkommt.
+Bei der Oder-Einführung wird eine Fallunterscheidung vorgenommen.
+Der Programmterm zu dieser Fallunterscheidung wird als Musterabgleich
+dargestellt.
+
+<table class="bt indent">
+<tr><th>Natürliches Schließen von Sequenzen
+<tr><td>
+<pre class="proof">
+                    ─────         ─────
+                    A ⊢ A         B ⊢ B
+─────────────     ─────────     ─────────
+A ∨ B ⊢ A ∨ B     A ⊢ B ∨ A     B ⊢ B ∨ A
+─────────────────────────────────────────
+              A ∨ B ⊢ B ∨ A
+             ───────────────
+             ⊢ A ∨ B ⇒ B ∨ A
+</pre>
+</table>
+<br>
+<table class="bt indent">
+<tr><th>Sequenzen von Programmtermen
+<tr><td>
+<pre class="proof">
+                            ───────────             ───────────
+                            a: A ⊢ a: A             b: B ⊢ b: B
+───────────────────    ────────────────────    ────────────────────
+s: A + B ⊢ s: A + B    a: A ⊢ inr(a): B + A    b: B ⊢ inl(b): B + A
+───────────────────────────────────────────────────────────────────
+   s: A + B ⊢ match s {inl(a) ↦ inr(a), inr(b) ↦ inl(b)}: B + A
+  ───────────────────────────────────────────────────────────────
+  ⊢ s ↦ match s {inl(a) ↦ inr(a), inr(b) ↦ inl(b)}: A + B → B + A
+</pre>
+</table>
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Type, A + B -&gt; B + A
+  := fun A B =&gt; fun s =&gt; match s with
+     | inl a =&gt; inr a
+     | inr b =&gt; inl b
+     end.
+</pre>
+
+<p>Für <code>A</code>, <code>B</code> vom Typ <code>Prop</code>:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Prop, A \/ B -&gt; B \/ A
+  := fun A B =&gt; fun s =&gt; match s with
+     | or_introl a =&gt; or_intror a
+     | or_intror b =&gt; or_introl b
+     end.
 </pre>
 
 <h2 id="Praedikatenlogik">Prädikatenlogik</h2>
@@ -229,18 +287,18 @@ zu gruppieren:
 <tr><th>Natürliches Schließen von Sequenzen
 <tr><td>
 <pre class="proof">
-                         ───────────────────
-                         Γ ⊢ A ∧ (∀x: P(x))
-───────────────────      ───────────────────
+                       ──────────────────
+                       Γ ⊢ A ∧ (∀x: P(x))
+──────────────────     ──────────────────
 Γ ⊢ A ∧ (∀x: P(x))        Γ ⊢ ∀x: P(x)
-───────────────────       ─────────────
+──────────────────        ────────────
      Γ ⊢ A                   Γ ⊢ P(x)
-     ─────────────────────────────────
-                Γ ⊢ A ∧ P(x)
-             ──────────────────
-             Γ ⊢ (∀x: A ∧ P(x))
-      ──────────────────────────────────
-      ⊢ A ∧ (∀x: P(x)) ⇒ (∀x: A ∧ P(x))
+     ────────────────────────────────
+              Γ ⊢ A ∧ P(x)
+           ──────────────────
+           Γ ⊢ (∀x: A ∧ P(x))
+    ─────────────────────────────────
+    ⊢ A ∧ (∀x: P(x)) ⇒ (∀x: A ∧ P(x))
 
 
 Γ = {A ∧ (∀x: P(x))}
@@ -269,6 +327,86 @@ Definition proof: forall (A: Prop) (X: Type) (P: X -&gt; Prop),
   A /\ (forall x, P x) -&gt; (forall x, A /\ (P x))
   := fun A X P t =&gt; match t with conj a p =&gt; fun x =&gt; conj a (p x) end.
 </pre>
+
+<h3 id="Existenzq">Existenzquantifizierungen</h3>
+
+<p>Der Beweis der Tautologie <var>A</var>&nbsp;∧&nbsp;(∃<var>x</var>:&nbsp;<var>P</var>(<var>x</var>))
+⇒&nbsp;(∃<var>x</var>:&nbsp;<var>A</var>&nbsp;∧&nbsp;<var>P</var>(<var>x</var>))
+wird als Beispiel für den Umgang mit Existenzaussagen dienen.
+Der Beweisbaum:
+
+<table class="bt indent">
+<tr><th>Natürliches Schließen von Sequenzen
+<tr><td>
+<pre class="proof">
+                      ──────────────────
+                      Γ ⊢ A ∧ (∃x: P(x))
+                      ──────────────────      ───────────
+                            Γ ⊢ A             P(x) ⊢ P(x)
+──────────────────          ─────────────────────────────
+Γ ⊢ A ∧ (∃x: P(x))              Γ, P(x) ⊢ A ∧ P(x)
+──────────────────           ────────────────────────
+   Γ ⊢ ∃x: P(x)              Γ, P(x) ⊢ (∃x: A ∧ P(x))
+   ──────────────────────────────────────────────────
+                 Γ ⊢ (∃x: A ∧ P(x))
+          ─────────────────────────────────
+          ⊢ A ∧ (∃x: P(x)) ⇒ (∃x: A ∧ P(x))
+
+
+Γ = {A ∧ (∃x: P(x))}
+</pre>
+</table>
+<br>
+<table class="bt indent">
+<tr><th>Sequenzen von Termen
+<tr><td>
+<pre class="proof">
+                        ───────────────
+                        Γ ⊢ (a, (u, p))
+                        ───────────────     ─────────────────
+                           Γ ⊢ a: A         p: P(u) ⊢ p: P(u)
+  ───────────────          ──────────────────────────────────
+  Γ ⊢ (a, (u, p))            Γ, p: P(u) ⊢ (a, p): A × P(u)
+────────────────────       ──────────────────────────────────
+Γ ⊢ (u, p): ∑x. P(x)       Γ, p ⊢ (u, (a, p)): (∑x. A × P(x))
+─────────────────────────────────────────────────────────────
+               Γ ⊢ (u, (a, p)): (∑x. A × P(x))
+────────────────────────────────────────────────────────────
+⊢ (a, (u, p)) ↦ (u, (a, p)): A × (∑x. P(x)) → (∑x. A × P(x))
+
+
+Γ = {(a, (u, p)): A × (∑x. P(x))}
+</pre>
+</table>
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition proof: forall (A: Prop) (X: Type) (P: X -&gt; Prop),
+  A /\ (exists x, P x) -&gt; (exists x, A /\ (P x))
+  := fun A X P t =&gt; match t with
+     | conj a (ex_intro _ u p) =&gt; ex_intro _ u (conj a p)
+     end.
+</pre>
+
+<p>Ein Term (<var>u</var>,&nbsp;<var>p</var>) vom Typ
+∑<var>x</var>.&nbsp;<var>P</var>(<var>x</var>) ist wie folgt zu
+verstehen. Der Zeuge <var>u</var> belegt mit dem Beweis
+<var>p</var> vom Typ <var>P</var>(<var>u</var>), dass der Typ
+<var>P</var>(<var>u</var>) bewohnt ist. Weil also mindestens ein
+Summand bewohnt ist, muss mithin die Summe bewohnt
+sein. Anders betrachtet kann man die Summe auch als disjunkte Vereinigung
+unendlich vieler Summanden sehen, wobei <var>u</var> das Tag
+für den Wert <var>p</var> darstellt.
+
+<p>Anstelle von <code>(u,&nbsp;p)</code> schreibt man in Gallina
+<code>ex_intro&nbsp;_&nbsp;u&nbsp;p</code>. Die genaue Signatur
+von <code>ex_intro</code> ist
+
+<p class="indent"><code>ex_intro P u p</code> bzw. <code>@ex_intro X P u p</code>
+
+<p>mit dem Prädikat <code>P: X -&gt; Prop</code>, dem Zeugen
+<code>u:&nbsp;X</code> und dem Beweis <code>p:&nbsp;P&nbsp;u</code>.
 
 </body>
 </html>
