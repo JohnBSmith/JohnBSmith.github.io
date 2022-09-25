@@ -15,11 +15,21 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Aussagenlogik">Aussagenlogik</a>
+  <ol>
+  <li><a href="#Konj">Konjunktionen</a>
+  <li><a href="#Disj">Disjunktionen</a>
+  </ol>
+<li><a href="#Praedikatenlogik">Prädikatenlogik</a>
+  <ol>
+  <li><a href="#Allq">Allquantifizierungen</a>
+  </ol>
 </ol>
 
 <h2 id="Aussagenlogik">Aussagenlogik</h2>
 
-<p>Die Konstruktion von Beweisen in Gallina stellt eine Form
+<h3 id="Konj">Konjunktionen</h3>
+
+Die Konstruktion von Beweisen in Gallina stellt eine Form
 des natürlichen Schließens dar. Wie es sich genauer verhält,
 soll anhand von Beispielen erläutert werden.
 
@@ -72,16 +82,192 @@ Daher genügt die Niederschrift des Programmterms zur Kodierung des
 Beweises. In Gallina schreibt sich dies&nbsp;so:
 
 <pre class="ibox gallina">
-Definition proj_left: forall A B: Type, A*B -&gt; A :=
-  fun A B t =&gt; match t with (a, b) =&gt; a end.
+Definition proof: forall A B: Type, A*B -&gt; A
+  := fun A B t =&gt; match t with (a, b) =&gt; a end.
 </pre>
 
 <p>Für <code>A</code>,&nbsp;<code>B</code> vom Typ <code>Prop</code>
 bekommt der Beweis die Gestalt
 
 <pre class="ibox gallina">
-Definition proj_left: forall A B: Prop, A /\ B -> A :=
-  fun A B t => match t with conj a b => a end.
+Definition proof: forall A B: Prop, A /\ B -&gt; A
+  := fun A B t =&gt; match t with conj a b =&gt; a end.
+</pre>
+
+<p>Der Beweis der tautologischen Aussage
+<var>A</var> ⇒&nbsp;<var>B</var> ⇒&nbsp;<var>A</var>&nbsp;∧&nbsp;<var>B</var>
+soll als Beispiel für die Und-Einführung dienen. Im Wesentlichen
+besteht diese lediglich aus der Zusammensetzung des geordneten
+Paares, dessen Typ das Produkt <var>A</var>×<var>B</var> ist.
+Der Beweisbaum:
+
+<table class="bt indent">
+<tr><th>Formeln<th>Sequenzen
+<tr><td>
+<pre class="proof">
+ ─── 1   ─── 2
+  A       B
+  ─────────
+    A ∧ B
+  ────────── <small>2</small>
+  B ⇒ A ∧ B
+────────────── <small>1</small>
+A ⇒ B ⇒ A ∧ B
+</pre>
+<td>
+<pre class="proof">
+─────────    ─────────
+A, B ⊢ A     A, B ⊢ B
+──────────────────────
+   A, B ⊢ A ∧ B
+   ─────────────
+   A ⊢ B ⇒ A ∧ B
+  ────────────────
+  ⊢ A ⇒ B ⇒ A ∧ B
+</pre>
+</table>
+<br>
+<table class="bt indent">
+<tr><th>Sequenzen von Programmtermen
+<tr><td>
+<pre class="proof">
+──────────────────    ──────────────────
+a: A, b: B ⊢ a: A     a: A, b: B ⊢ b: B
+────────────────────────────────────────
+       a: A, b: B ⊢ (a, b): A×B
+      ───────────────────────────
+      a: A ⊢ b ↦ (a, b): B → A×B
+     ──────────────────────────────
+     ⊢ a ↦ b ↦ (a, b): A → B → A×B
+</pre>
+</table>
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Type, A -&gt; B -&gt; A*B
+  := fun A B =&gt; fun a =&gt; fun b =&gt; (a, b).
+</pre>
+
+<p>Für <code>A</code>,&nbsp;<code>B</code> vom Typ <code>Prop</code>:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Prop, A -&gt; B -&gt; A /\ B
+  := fun A B =&gt; fun a =&gt; fun b =&gt; conj a b.
+</pre>
+
+<h3 id="Disj">Disjunktionen</h3>
+
+<p>Die tautologische Aussage
+<var>A</var>&nbsp;⇒&nbsp;<var>A</var>&nbsp;∨&nbsp;<var>B</var> sei zu beweisen.
+Schematisch als Beweisbaum:
+
+<table class="bt indent">
+<tr><th>Formeln<th>Sequenzen<th>Seq. von Programmtermen
+<tr><td>
+<pre class="proof">
+   ─── <small>1</small>
+    A
+  ─────
+  A ∨ B
+────────── <small>1</small>
+A ⇒ A ∨ B
+</pre>
+<td>
+<pre class="proof">
+    ──────
+    A ⊢ A
+  ──────────
+  A ⊢ A ∨ B
+ ────────────
+ ⊢ A ⇒ A ∨ B
+</pre>
+<td>
+<pre class="proof">
+       ────────────
+       a: A ⊢ a: A
+   ─────────────────────
+   a: A ⊢ inl(a): A + B
+  ────────────────────────
+  ⊢ a ↦ inl(a): A → A + B
+</pre>
+</table>
+
+<p>Der Disjunktion von zwei Aussagen entspricht die Summe von
+zwei Typen. Der ersten Regel zur Oder-Einführung entspricht die
+linke Injektion des Terms.
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Type, A -&gt; A + B
+  := fun A B =&gt; fun a =&gt; inl(a).
+</pre>
+
+<p>Für <code>A</code>, <code>B</code> vom Typ <code>Prop</code>
+gilt wieder eine analoge Formulierung:
+
+<pre class="ibox gallina">
+Definition proof: forall A B: Prop, A -&gt; A \/ B
+  := fun A B =&gt; fun a =&gt; or_introl(a).
+</pre>
+
+<h2 id="Praedikatenlogik">Prädikatenlogik</h2>
+
+<h3 id="Allq">Allquantifizierungen</h3>
+
+<p>Wir wollen zunächst den Beweis der Aussage
+
+<p class="indent"><var>A</var> ∧ (∀<var>x</var>: <var>P</var>(<var>x</var>))
+⇒ (∀<var>x</var>: <var>A</var> ∧ <var>P</var>(<var>x</var>))
+
+<p>erbringen. Vom Prinzip her verläuft der Beweis fast trivial. Die Prämisse
+ist lediglich in ihre Bestandteile zu zerlegen und neu
+zu gruppieren:
+
+<table class="bt indent">
+<tr><th>Natürliches Schließen von Sequenzen
+<tr><td>
+<pre class="proof">
+                         ───────────────────
+                         Γ ⊢ A ∧ (∀x: P(x))
+───────────────────      ───────────────────
+Γ ⊢ A ∧ (∀x: P(x))        Γ ⊢ ∀x: P(x)
+───────────────────       ─────────────
+     Γ ⊢ A                   Γ ⊢ P(x)
+     ─────────────────────────────────
+                Γ ⊢ A ∧ P(x)
+             ──────────────────
+             Γ ⊢ (∀x: A ∧ P(x))
+      ──────────────────────────────────
+      ⊢ A ∧ (∀x: P(x)) ⇒ (∀x: A ∧ P(x))
+
+
+Γ = {A ∧ (∀x: P(x))}
+</pre>
+</table>
+
+<p>Es findet sich der entsprechende Programmterm
+
+<p class="indent">(<var>a</var>, <var>p</var>)
+↦ (<var>x</var> ↦ (<var>a</var>, <var>p</var>(<var>x</var>))):
+<var>A</var> × (∏<var>x</var>. <var>P</var>(<var>x</var>))
+→ (∏<var>x</var>. <var>A</var> × <var>P</var>(<var>x</var>)).
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition proof: forall (A X: Type) (P: X -&gt; Type),
+  A*(forall x, P x) -&gt; (forall x, A*(P x))
+  := fun A X P t =&gt; match t with (a, p) =&gt; fun x =&gt; (a, p x) end.
+</pre>
+
+<p>Für <code>A</code>, <code>(P&nbsp;x)</code> vom Typ <code>Prop</code>:
+
+<pre class="ibox gallina">
+Definition proof: forall (A: Prop) (X: Type) (P: X -&gt; Prop),
+  A /\ (forall x, P x) -&gt; (forall x, A /\ (P x))
+  := fun A X P t =&gt; match t with conj a p =&gt; fun x =&gt; conj a (p x) end.
 </pre>
 
 </body>
