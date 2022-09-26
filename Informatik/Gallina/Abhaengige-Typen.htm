@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Abhängige Typen</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Abhängige Typen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Funktionen">Abhängige Funktionen</a>
+</ol>
+
+<h2 id="Funktionen">Abhängige Funktionen</h2>
+
+<p>Funktionentypen dürfen nicht nur von Typen abhängig sein,
+sondern gleichermaßen von Werten. Ein einfaches Beispiel hierfür
+bietet der Umgang mit einem durch eine natürliche Zahl
+parametrisieren Typ.
+
+<p>Es soll durchführbar sein, zwei Längen zu addieren,
+zwei Flächen zu addieren, zwei Volumina zu addieren.
+Aber es soll nicht durchführbar sein, eine Länge und eine Fläche
+zu addieren. Wir definieren dazu einen neuen Typkonstruktor
+<code>Quantity</code>, der jeder Dimension einen unterschiedlichen
+Typ zuordnet:
+
+<table class="bt indent">
+<tr><th>Typ<th>Bedeutung
+<tr><td><code>Quantity&nbsp;1</code><td>eine Länge
+<tr><td><code>Quantity&nbsp;2</code><td>eine Fläche
+<tr><td><code>Quantity&nbsp;3</code><td>ein Volumen
+</table>
+
+<p>Der Typkonstruktor und die generische Addition sind
+wie folgt implementierbar:
+
+<pre class="ibox gallina">
+Inductive Quantity: nat -&gt; Type :=
+  quantity: forall (dim: nat), nat -&gt; Quantity dim.
+
+Definition length := quantity 1.
+
+Definition add {dim: nat} (x y: Quantity dim): Quantity dim
+  := match x with quantity _ xv =&gt;
+       match y with quantity _ yv =&gt; quantity _ (xv + yv) end
+     end.
+
+Compute add (length 12) (length 9).
+</pre>
+
+<p>Es ist <code>add</code> vom abhängigen Typ
+
+<p class="indent">∏<sub><var>n</var>: ℕ</sub> (Quantity(<var>n</var>)
+→ Quantity(<var>n</var>) → Quantity(<var>n</var>)).
+
+<p>Bereits der Wertkonstruktor <code>quantity</code> hat einen
+abhängigen Typ, der da ist
+
+<p class="indent">∏<sub><var>n</var>: ℕ</sub> (ℕ → Quantity(<var>n</var>)).
+
+</body>
+</html>

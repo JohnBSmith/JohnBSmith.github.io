@@ -16,8 +16,10 @@
 <ol>
 <li><a href="#Aussagenlogik">Aussagenlogik</a>
   <ol>
+  <li><a href="#Impl">Implikationen</a>
   <li><a href="#Konj">Konjunktionen</a>
   <li><a href="#Disj">Disjunktionen</a>
+  <li><a href="#Neg">Negationen</a>
   </ol>
 <li><a href="#Praedikatenlogik">Prädikatenlogik</a>
   <ol>
@@ -28,11 +30,120 @@
 
 <h2 id="Aussagenlogik">Aussagenlogik</h2>
 
-<h3 id="Konj">Konjunktionen</h3>
-
-Die Konstruktion von Beweisen in Gallina stellt eine Form
+<p>Die Konstruktion von Beweisen in Gallina stellt eine Form
 des natürlichen Schließens dar. Wie es sich genauer verhält,
 soll anhand von Beispielen erläutert werden.
+
+<h3 id="Impl">Implikationen</h3>
+
+<p>Die Einführungsregel der Implikation besagt, dass auf die
+Aussage <var>A</var>&nbsp;⇒&nbsp;<var>B</var> geschlossen
+werden darf, sofern <var>B</var> unter Annahme von <var>A</var>
+beweisbar ist. Die Beseitigungsregel entspricht dem Modus ponens.
+
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung
+<tr><td style="padding-right: 1.6em">
+<pre class="proof">
+Γ, A ⊢ B
+─────────
+Γ ⊢ A ⇒ B
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ A ⇒ B    Γ ⊢ A
+──────────────────
+      Γ ⊢ B
+</pre>
+</table>
+
+<p>Entsprechende Regeln bestehen für Programmterme. Die
+Einführungsregel entspricht der Abstraktion, womit die
+Einführung einer anonymen Funktion gemeint ist. Die Beseitigungsregel
+entspricht der Applikation einer Funktion.
+
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung
+<tr><td style="padding-right: 1.6em">
+<pre class="proof">
+ Γ, a: A ⊢ b: B
+────────────────
+Γ ⊢ a ↦ b: A → B
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ f: A → B    Γ ⊢ a: A
+────────────────────────
+      Γ ⊢ f(a): B
+</pre>
+</table>
+
+<p>Als einfaches Beispiel wollen wir uns davon überzeugen, dass
+es sich bei der Aussage <var>A</var>&nbsp;⇒&nbsp;<var>B</var>
+um eine tautologische handelt. Der Beweisbaum lässt sich in
+drei unterschiedlichen Formen darstellen:
+
+<table class="bt indent">
+<tr><th>Formeln<th>Sequenzen<th>Seq. von Termen
+<tr><td style="padding-right: 1.6em">
+<pre class="proof">
+ ─── <small>1</small>
+  A
+────── <small>1</small>
+A ⇒ A
+</pre>
+<td style="padding-right: 2em">
+<pre class="proof">
+ ─────
+ A ⊢ A
+───────
+⊢ A ⇒ A
+</pre>
+<td>
+<pre class="proof">
+ ───────────
+ a: A ⊢ a: A
+──────────────
+⊢ a ↦ a: A → A
+</pre>
+</table>
+
+<p>In Gallina schreibt sich das beweisende Programm so:
+
+<pre class="ibox gallina">
+Definition proof: forall A: Type, A -&gt; A
+  := fun A =&gt; fun a =&gt; a.
+</pre>
+
+<h3 id="Konj">Konjunktionen</h3>
+
+<p>Die Einführungsregel der Konjunktion besagt, dass auf eine
+Konjunktion zweier Aussagen geschlossen werden darf, sofern die
+beiden Aussagen beweisbar sind. Die Beseitigungsregel besagt,
+das von einer Konjunktion zweier Aussagen auf jede der beiden
+Aussagen geschlossen werden darf.
+
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung<th>Beseitigung
+<tr><td style="padding-right: 1.6em">
+<pre class="proof">
+Γ ⊢ A    Γ ⊢ B
+──────────────
+  Γ ⊢ A ∧ B
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ A ∧ B
+──────────
+  Γ ⊢ A
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ A ∧ B
+──────────
+  Γ ⊢ B
+</pre>
+</table>
 
 <p>Der Beweis der tautologischen Aussage
 <var>A</var>&nbsp;∧&nbsp;<var>B</var>&nbsp;⇒&nbsp;<var>A</var>
@@ -159,6 +270,35 @@ Definition proof: forall A B: Prop, A -&gt; B -&gt; A /\ B
 
 <h3 id="Disj">Disjunktionen</h3>
 
+<p>Die Einführungsregel der Disjunktion besagt, dass
+zu einer beweisbaren Aussage auf eine Disjunktion geschlossen werden
+darf, in der die Aussage auf der linken oder rechten Seite vorkommt.
+Die Beseitigungsregel erfordert, dass unter Fallunterscheidung zwischen
+linker und rechter Aussage der Disjunktion dieselbe Aussage bewiesen
+werden kann.
+
+<table class="bt indent">
+<tr><th>Einführung<th>Einführung<th>Beseitigung
+<tr><td style="padding-right: 1.6em">
+<pre class="proof">
+  Γ ⊢ A
+──────────
+Γ ⊢ A ∨ B
+</pre>
+<td style="padding-right: 1.6em">
+<pre class="proof">
+  Γ ⊢ B
+──────────
+Γ ⊢ A ∨ B
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ A ∨ B    Γ, A ⊢ C    Γ, B ⊢ C
+─────────────────────────────────
+              Γ ⊢ C
+</pre>
+</table>
+
 <p>Die tautologische Aussage
 <var>A</var>&nbsp;⇒&nbsp;<var>A</var>&nbsp;∨&nbsp;<var>B</var> sei zu beweisen.
 Schematisch als Beweisbaum:
@@ -195,7 +335,7 @@ A ⇒ A ∨ B
 </table>
 
 <p>Der Disjunktion von zwei Aussagen entspricht die Summe von
-zwei Typen. Der ersten Regel zur Oder-Einführung entspricht die
+zwei Typen. Der ersten Regel zur Disjunktions-Einführung entspricht die
 linke Injektion des Terms.
 
 <p>Die Implementierung:
@@ -269,6 +409,97 @@ Definition proof: forall A B: Prop, A \/ B -&gt; B \/ A
      | or_intror b =&gt; or_introl b
      end.
 </pre>
+
+<h3 id="Neg">Negationen</h3>
+
+<p>Auf ¬<var>A</var> darf geschlossen werden, wenn sich aus
+<var>A</var> die Kontradiktion, also ein Widerspruch ableiten lässt.
+Aus dieser Überlegung ergibt sich die Einführungsregel der
+Negation. Zur Beseitigung überlegt man sich, dass es widersprüchlich
+ist, sowohl auf ¬<var>A</var> als auch auf <var>A</var> zu schließen,
+was also zwingend zu einer Kontradiktion führen muss.
+Die Schlussregeln sind somit:
+
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung
+<tr><td>
+<pre class="proof">
+Γ, A ⊢ ⊥
+────────
+ Γ ⊢ ¬A
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ ¬A    Γ ⊢ A
+───────────────
+     Γ ⊢ ⊥
+</pre>
+</table>
+
+<p>Der Beweis der Kontrapositionsregel
+(<var>A</var>&nbsp;⇒&nbsp;<var>B</var>)
+⇒&nbsp;(¬<var>B</var>&nbsp;⇒&nbsp;¬<var>A</var>)
+soll als Beispiel dienen. Der Beweisbaum:
+
+<table class="bt indent">
+<tr><th>Sequenzen
+<tr><td>
+<pre class="proof">
+           ─────────────    ─────
+           A ⇒ B ⊢ A ⇒ B    A ⊢ A
+───────    ──────────────────────
+¬B ⊢ ¬B        A ⇒ B, A ⊢ B
+───────────────────────────
+     A ⇒ B, ¬B, A ⊢ ⊥
+     ────────────────
+     A ⇒ B, ¬B ⊢ ¬A
+     ───────────────
+     A ⇒ B ⊢ ¬B ⇒ ¬A
+  ─────────────────────
+  ⊢ (A ⇒ B) ⇒ (¬B ⇒ ¬A)
+</pre>
+</table>
+
+<p>Die Negation ¬<var>A</var> kann man als <var>A</var>&nbsp;⇒&nbsp;⊥
+kodieren. Die Schlussregeln der Negation stellen sich damit als
+Spezialfälle der Schlussregeln der Implikation heraus.
+Ermittelt man noch die entsprechenden Terme, findet sich:
+
+<table class="bt indent">
+<tr><th>Sequenzen von Termen
+<tr><td>
+<pre class="proof">
+                       ───────────────────    ───────────
+                       f: A → B ⊢ f: A → B    a: A ⊢ a: A
+───────────────────    ──────────────────────────────────
+g: B → 0 ⊢ g: B → 0        f: A → B, a: A ⊢ f(a): B
+───────────────────────────────────────────────────
+     f: A → B, g: B → 0, a: A ⊢ g(f(a)): 0
+     ───────────────────────────────────────
+     f: A → B, g: B → 0 ⊢ a ↦ g(f(a)): A → 0
+   ─────────────────────────────────────────────
+   f: A → B ⊢ g ↦ a ↦ g(f(a)): (B → 0) → (A → 0)
+────────────────────────────────────────────────────
+⊢ f ↦ g ↦ a ↦ g(f(a)): (A → B) → ((B → 0) → (A → 0))
+</pre>
+</table>
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Inductive zero: Type :=.
+
+Definition proof: forall A B: Type,
+  (A -&gt; B) -&gt; (B -&gt; zero) -&gt; (A -&gt; zero)
+  := fun A B =&gt; fun f =&gt; fun g =&gt; fun a =&gt; g (f a).
+</pre>
+
+<p>Die Kontraposition entpuppt sich somit als Spezialfall des Kettenschlusses.
+Dieser besagt, dass man von <var>A</var>&nbsp;⇒&nbsp;<var>B</var>
+und <var>B</var>&nbsp;⇒&nbsp;<var>C</var> auf
+<var>A</var>&nbsp;⇒&nbsp;<var>C</var> schließen darf. Um die
+Regel der Kontraposition zu erhalten, wird lediglich
+<var>C</var>&nbsp;:=&nbsp;⊥ eingesetzt.
 
 <h2 id="Praedikatenlogik">Prädikatenlogik</h2>
 
