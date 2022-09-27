@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Funktionen">Abhängige Funktionen</a>
+<li><a href="#Paare">Abhängige Paare</a>
 </ol>
 
 <h2 id="Funktionen">Abhängige Funktionen</h2>
@@ -64,6 +65,93 @@ Compute add (length 12) (length 9).
 abhängigen Typ, der da ist
 
 <p class="indent">∏<sub><var>n</var>: ℕ</sub> (ℕ → Quantity(<var>n</var>)).
+
+<h2 id="Paare">Abhängige Paare</h2>
+
+<p>Die Summe
+∑<sub><var>x</var>:&nbsp;<var>U</var></sub>&nbsp;<var>B</var>(<var>x</var>)
+kann man sich für ein unendlich großes Universum <var>U</var> als
+disjunkte Vereinigung unendlich vieler Typen vorstellen. Ein Wert
+dieses Typs ist ein Paar (<var>a</var>,&nbsp;<var>b</var>), bei
+dem <var>b</var> vom Typ <var>B</var>(<var>a</var>) ist. Weil also
+der Typ des rechten Eintrags vom linken abhängt, spricht man
+von einem <i>abhängigen Paar</i>. Synonym zu <i>Summe</i> und
+<i>Sigma-Typ</i> spricht man daher auch von einem <i>Typ abhängiger Paare</i>.
+
+<p>In Gallina werden Summen und abhängige Paare so dargestellt:
+
+<table class="bt indent">
+<tr>
+<th>Ausdruck
+<th>Syntax
+<tr>
+<td>∑<sub><var>x</var>:&nbsp;<var>U</var></sub>&nbsp;<var>B</var>(<var>x</var>)
+<td><code>{x: U &amp; B x}</code>
+<tr>
+<td>(<var>a</var>,&nbsp;<var>b</var>)
+<td><code>existT _ a b</code>
+</table>
+
+<p>Man kann Summen zum verstecken von Information nutzen,
+womit sich abstrakte Datentypen modellieren lassen.
+Ein kurzes Beispiel hierzu. Es soll ein Typ für Zeitwerte definiert
+werden, wobei sich der Wert über Zugriffsfunktionen bzw. Methoden
+in Minuten oder Sekunden auslesen lässt. Zunächst die Funktionalität:
+
+<pre class="ibox gallina">
+Record Time T := {value: T; min: T -&gt; nat; sec: T -&gt; nat}.
+
+Definition from_min (m: nat): Time nat
+  := {| value := m; min := fun m =&gt; m; sec := fun m =&gt; 60*m |}.
+  
+Definition t := from_min 2.
+Compute t.(min nat) t.(value nat).
+Compute t.(sec nat) t.(value nat).
+</pre>
+
+<p>Um einen abstrakten Datentyp zu erhalten, würde wir gerne
+den Zugriff auf den internen Wert verbergen. Das heißt, der
+Wert soll lediglich über die Schnittstellen <code>min</code>
+und <code>sec</code> auslesbar sein, aber nicht in direkter
+Weise als
+
+<pre class="ibox gallina">
+Compute t.(value nat).
+</pre>
+
+<p>Ändert man <code>from_min</code> nun so, dass die Signatur
+ℕ&nbsp;→&nbsp;∑<sub><var>T</var></sub>&nbsp;Time(<var>T</var>)
+anstelle ℕ&nbsp;→&nbsp;Time(ℕ) lautet, wird der interne Wert
+verborgen. Wir können zwar noch den Wert (<var>T</var>,&nbsp;<var>t</var>)
+mit <var>t</var>:&nbsp;Time(<var>T</var>) erhalten, aber es bleibt
+unbekannt dass <var>T</var> mit ℕ übereinstimmt.
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Definition from_min (m: nat): {T: Type &amp; Time T}
+  := existT _ (nat: Type) {| value := m;
+     min := fun m =&gt; m; sec := fun m =&gt; 60*m |}.
+  
+Definition t := from_min 2.
+Compute match t with existT _ T t =&gt; t.(min T) t.(value T) end.
+Compute match t with existT _ T t =&gt; t.(sec T) t.(value T) end.
+</pre>
+
+<p>Den umständlichen Zugriff kann man schließlich noch in Funktionen
+verpacken:
+
+<pre class="ibox gallina">
+Definition in_min (t: {x: Type &amp; Time x}): nat
+  := match t with existT _ T t =&gt; t.(min T) t.(value T) end.
+  
+Definition in_sec (t: {x: Type &amp; Time x}): nat
+  := match t with existT _ T t =&gt; t.(sec T) t.(value T) end.
+  
+Definition t := from_min 2.
+Compute in_min t.
+Compute in_sec t.
+</pre>
 
 </body>
 </html>

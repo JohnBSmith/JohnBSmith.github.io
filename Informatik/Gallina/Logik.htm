@@ -613,6 +613,17 @@ Der Beweisbaum:
 <p>Die Implementierung:
 
 <pre class="ibox gallina">
+Definition proof: forall (A X: Type) (P: X -&gt; Type),
+  A*{x &amp; P x} -&gt; {x &amp; prod A (P x)}
+  := fun A X P t =&gt; match t with
+     | (a, existT _ u p) =&gt; existT _ u (a, p)
+     end.
+</pre>
+
+<p>Für <code>A</code>, <code>(P&nbsp;x)</code> vom Typ
+<code>Prop</code>:
+
+<pre class="ibox gallina">
 Definition proof: forall (A: Prop) (X: Type) (P: X -&gt; Prop),
   A /\ (exists x, P x) -&gt; (exists x, A /\ (P x))
   := fun A X P t =&gt; match t with
@@ -638,6 +649,27 @@ von <code>ex_intro</code> ist
 
 <p>mit dem Prädikat <code>P: X -&gt; Prop</code>, dem Zeugen
 <code>u:&nbsp;X</code> und dem Beweis <code>p:&nbsp;P&nbsp;u</code>.
+
+<p>Es ist noch zu bemerken, dass es sich bei der für Sigma-Typen
+verwendeten Notation eigentlich nur um eine alternative Schreibweise
+handelt, die auf bereits vorhandene Konzepte der Sprache
+zurückgeführt wird:
+
+<table class="bt indent">
+<tr><th>Syntaktischer Zucker<th>Bedeutung
+<tr>
+<td><code>{x: X &amp; P x}</code>
+<td><code>sigT (fun x:&nbsp;X =&gt; P&nbsp;x)</code>
+<tr>
+<td><code>exists x: X, P x</code>
+<td><code>ex (fun x:&nbsp;X =&gt; P&nbsp;x)</code>
+</table>
+
+<p>Die Idee dabei ist, dass der Lambdakalkül mit den anonymen Funktionen
+bereits das Konzept gebundener Variablen enthält. Anstelle einen
+weiteren Ausdruck mit gebundenen Variablen einzuführen, kann man den
+Ausdruck daher als Anwendung eines Typkonstruktors auf eine anonyme
+Funktion darstellen.
 
 </body>
 </html>
