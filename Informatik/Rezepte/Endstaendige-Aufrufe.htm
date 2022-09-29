@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Endrekursion">Endrekursion</a>
 <li><a href="#CPS">Continuation-Passing-Style</a>
+<li><a href="#Trampolin">Refaktorisierung des Trampolins</a>
 </ol>
 
 <h2 id="Endrekursion">Endrekursion</h2>
@@ -193,7 +194,7 @@ def odd(n):
 print(call_ev(even, 10000))
 </pre>
 
-<p>Nun transformieren wir das Programm in CPS:
+<p>Nun transformieren wir das Programm in den CPS:
 
 <pre class="python ibox">
 def even(cont, n):
@@ -298,6 +299,51 @@ def label_d():
     print("Programmende")
  
 call_ev(label_a)
+</pre>
+
+<h2 id="Trampolin">Refaktorisierung des Trampolins</h2>
+
+<p>Überladung der Aufruf-Operation und Nutzung der
+Dekorateur-Syntax bietet die Möglichkeit, die Tail-Call-Optimierung,
+kurz TCO, weitgehend transparent umzusetzen. Unabhängig davon kann
+man sie so implementieren, dass sie nach Wunsch ausgeschaltet werden
+kann.
+
+<pre class="ibox python">
+TCO = True
+
+class Thunk:
+    def __init__(self, cb):
+        self.cb = cb
+
+class TailCall:
+    def __init__(self, f):
+        self.f = f
+    def __call__(self, *args):
+        return Thunk(lambda: self.f(*args))
+
+def tail_call(f):
+    return TailCall(f) if TCO else f
+
+def evaluate(y):
+    while isinstance(y, Thunk):
+        y = y.cb()
+    return y
+
+@tail_call
+def loop(cont, n):
+    print("Schleifendurchlauf {}".format(n))
+    return cont() if n == 100000 else loop(cont, n + 1)
+
+@tail_call
+def final_message():
+    print("Programmende")
+
+@tail_call
+def main():
+    return loop(final_message, 1)
+
+evaluate(main())
 </pre>
 
 </body>
