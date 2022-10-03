@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Aussagenlogik">Aussagenlogik</a>
   <ol>
+  <li><a href="#Seq">Sequenzen</a>
   <li><a href="#Impl">Implikationen</a>
   <li><a href="#Konj">Konjunktionen</a>
   <li><a href="#Disj">Disjunktionen</a>
@@ -30,9 +31,113 @@
 
 <h2 id="Aussagenlogik">Aussagenlogik</h2>
 
+<h3 id="Seq">Sequenzen</h3>
+
 <p>Die Konstruktion von Beweisen in Gallina stellt eine Form
 des natürlichen Schließens dar. Wie es sich genauer verhält,
-soll anhand von Beispielen erläutert werden.
+soll anhand von Beispielen erläutert werden. Zuvor sind aber ein
+paar für das bessere Verständnis erforderliche Begrifflichkeiten zu
+erklären. Es geht hierbei um Sequenzen und Schlussregeln.
+
+<p>Als <i>Sequenz</i> bezeichnet man die Metasprachliche Aussage »Unter
+den Annahmen aus Γ ist die Aussage <var>A</var> ableitbar«, die
+symbolisch kurz
+
+<p class="indent">Γ ⊢ <var>A</var>
+
+<p>geschrieben wird. Hierbei ist der Kontext Γ eine Ansammlung von
+Aussagen, die als endliche Liste oder als endliche Menge von Aussagen
+kodiert werden darf.
+
+Es ist klar, dass die Sequenz <var>A</var>&nbsp;⊢&nbsp;<var>A</var>,
+also beispielsweise
+
+<p class="indent">Es regnet ⊢ Es regnet
+
+<p>als gültig angenommen werden darf. Wir drücken das dadurch
+aus, dass eine solche Sequenz ohne Prämissen abgeleitet werden darf.
+Dies führt zu der folgenden Schlussregel:
+
+<table class="bt indent">
+<tr><th>Axiom
+<tr><td>
+<pre class="proof">
+────────────
+Γ, A, Γ' ⊢ A
+</pre>
+</table>
+
+<p>Insofern der Kontext als Menge kodiert ist, darf das Axiom
+gleichermaßen in der äquivalenten Form
+
+<table class="bt indent">
+<tr><th>Axiom
+<tr><td>
+<pre class="proof">
+───────────
+Γ ∪ {A} ⊢ A
+</pre>
+</table>
+
+<p>beschrieben werden. Es gilt beispielsweise
+
+<p class="indent">∅ ∪ {Es regnet} ⊢ Es regnet.
+
+<p>Klar ist weiterhin, dass zu den Annahmen beliebig viele
+weitere hinzugefügt werden dürfen.
+
+<table class="bt indent">
+<tr><th>Abschwächungsregel
+<tr><td>
+<pre class="proof">
+Γ ⊢ A
+─────────
+Γ, Γ' ⊢ A
+</pre>
+</table>
+
+<p>Zur Anwendung der Abschwächungsregel ein Beispiel. Wir wollen
+zeigen, dass die scheinbar allgemeinere Regel
+
+<pre class="proof indent">
+Γ ⊢ A    Γ' ⊢ B
+───────────────
+ Γ, Γ' ⊢ A ∧ B
+</pre>
+
+<p>eigentlich äquivalent zur speziellen Regel
+
+<pre class="proof indent">
+Γ ⊢ A    Γ ⊢ B
+──────────────
+  Γ ⊢ A ∧ B
+</pre>
+
+<p>ist. Die spezielle Regel ergibt sich aus der allgemeinen durch
+Gleichsetzen von Γ und Γ'. Um die allgemeine Regel aus der
+speziellen zu erhalten, wendet man nun einfach als Zwischenschritt
+die Abschwächungsregel an:
+
+<pre class="proof indent">
+  Γ ⊢ A       Γ' ⊢ B
+─────────    ─────────
+Γ, Γ' ⊢ A    Γ, Γ' ⊢ B
+──────────────────────
+    Γ, Γ' ⊢ A ∧ B
+</pre>
+
+<p>Es ist noch zu bemerken, dass die Aussagen in Sequenzen nicht
+unbedingt atomar sein müssen, sondern auch zusammengesetzt sein dürfen.
+Wenn wir beispielsweise den Modus ponens bezüglich Aussagen
+<var>A</var>, <var>B</var> als
+
+<p class="indent"><var>A</var>, (<var>A</var> ⇒ <var>B</var>) ⊢ <var>B</var>
+
+<p>ausdrücken, meinen wir eigentlich
+
+<p class="indent"><var>φ</var>, (<var>φ</var> ⇒ <var>ψ</var>) ⊢ <var>ψ</var>
+
+<p>für beliebige Formeln <var>φ</var>, <var>ψ</var>.
 
 <h3 id="Impl">Implikationen</h3>
 
@@ -505,6 +610,22 @@ Regel der Kontraposition zu erhalten, wird lediglich
 
 <h3 id="Allq">Allquantifizierungen</h3>
 
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung
+<tr><td style="padding-right: 3em">
+<pre class="proof">
+  Γ ⊢ A
+───────── (x ∉ FV(Γ))
+Γ ⊢ ∀x: A
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ ∀x: A
+───────────
+Γ ⊢ A[x:=t]
+</pre>
+</table>
+
 <p>Wir wollen zunächst den Beweis der Aussage
 
 <p class="indent"><var>A</var> ∧ (∀<var>x</var>: <var>P</var>(<var>x</var>))
@@ -560,6 +681,22 @@ Definition proof: forall (A: Prop) (X: Type) (P: X -&gt; Prop),
 </pre>
 
 <h3 id="Existenzq">Existenzquantifizierungen</h3>
+
+<table class="bt indent">
+<tr><th>Einführung<th>Beseitigung
+<tr><td style="padding-right: 2em">
+<pre class="proof">
+Γ ⊢ A[x:=t]
+───────────
+Γ ⊢ ∃x: A
+</pre>
+<td>
+<pre class="proof">
+Γ ⊢ ∃x: A    Γ, A ⊢ B
+───────────────────── (x ∉ FV(Γ, B))
+        Γ ⊢ B
+</pre>
+</table>
 
 <p>Der Beweis der Tautologie <var>A</var>&nbsp;∧&nbsp;(∃<var>x</var>:&nbsp;<var>P</var>(<var>x</var>))
 ⇒&nbsp;(∃<var>x</var>:&nbsp;<var>A</var>&nbsp;∧&nbsp;<var>P</var>(<var>x</var>))
