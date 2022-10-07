@@ -21,6 +21,7 @@
   <li><a href="#Abb">Raum der Abbildungen</a>
   <li><a href="#Inj">Raum der Injektionen</a>
   <li><a href="#Kombinationen">Raum der Kombinationen</a>
+  <li><a href="#Potenzmengen">Potenzmengen</a>
   </ol>
 <li><a href="#Funktionen">Kombinatorische Funktionen</a>
   <ol>
@@ -52,7 +53,7 @@ def prod2_iter(a, b):
     return ((x, y) for x in a for y in b)
 </pre>
 
-<p>die Einspaarung von Speicher, dergestalt dass das Produkt nur
+<p>die Einsparung von Speicher, dergestalt dass das Produkt nur
 einmal durch den erzeugten Iterator durchlaufen wird, dabei aber nicht
 als Ganzes im Speicher vorliegen muss.
 
@@ -174,7 +175,7 @@ for f in mappings(X, Y):
     print(f)
 </pre>
 
-<p>beschreibt beispielweise die Auflistung der 16 zweistelligen.
+<p>beschreibt beispielsweise die Auflistung der 16 zweistelligen.
 
 <h3 id="Inj">Raum der Injektionen</h3>
 
@@ -300,6 +301,129 @@ def combinations(a, k):
 
 <p>Die Auflistung geht hierbei lexikografisch geordnet
 vonstatten, sofern <code>a</code> geordnet ist.
+
+<h3 id="Potenzmengen">Potenzmengen</h3>
+
+<p>Die Potenzmenge von <var>X</var> ist definiert als die Menge
+der Teilmengen von <var>X</var>. Zu jeder Teilmenge
+<var>A</var>&nbsp;⊆&nbsp;<var>X</var> gehört genau
+eine Indikatorfunktion
+
+<p class="indent">1<sub><var>A</var></sub>(<var>x</var>) := 1 wenn <var>x</var> ∈ <var>A</var>, sonst 0.
+
+<p>Liegt umgekehrt die Indikatorfunktion der Teilmenge <var>A</var>
+vor, kann die Teilmenge per Komprehension
+
+<p class="indent"><var>A</var> = {<var>x</var> ∈ <var>X</var>
+| 1<sub><var>A</var></sub>(<var>x</var>) = 1}
+
+<p>zurückgewonnen werden. Zwischen der Potenzmenge und der Menge
+der Indikatorfunktionen besteht also eine natürliche
+Eins-zu-eins-Beziehung. Die Menge der Indikatorfunktionen ist aber
+nichts anderes als die Menge der Abbildungen
+<var>X</var>&nbsp;→&nbsp;{0,&nbsp;1}.
+Das heißt, die Konstruktion der Potenzmenge lässt sich auf die
+Konstruktion des Raums der Indikatorfunktionen zurückführen.
+
+<p>Die Implementierung:
+
+<pre class="ibox python">
+def power_set(X, conv = list):
+    return [conv(x for x in X if indicator[x] == 1)
+        for indicator in mappings(X, [0, 1], dict)]
+</pre>
+
+<p>Alternativ erhält man die Potenzmenge als Vereinigung
+aus jeder Menge der <var>k</var>-elementigen Teilmengen, wobei <var>k</var> von
+<var>k</var>&nbsp;=&nbsp;0 bis <var>k</var>&nbsp;=&nbsp;|<var>X</var>|
+läuft. Weil die Mengen disjunkt sind, genügt ihre Konkatenation.
+
+<pre class="ibox python">
+from itertools import combinations
+
+def power_set(X, conv = list):
+    return [conv(x) for k in range(len(X) + 1)
+        for x in combinations(X, k)]
+</pre>
+
+<p>Die so erzeugte Potenzmenge ist der Größe nach und je Größe
+lexikographisch geordnet.
+
+<p>Zur Berechnung der Potenzmenge findet sich aber auch ein in
+direkter Weise rekursiver Algorithmus. Analog zu
+
+<p class="indent">2<sup><var>n</var>+1</sup> = 2&sdot;2<sup><var>n</var></sup>
+= (1 + 1)&sdot;2<sup><var>n</var></sup>
+= 2<sup><var>n</var></sup> + 1&sdot;2<sup><var>n</var></sup>
+
+<p>überlegt man sich für <var>x</var>&nbsp;∉&nbsp;<var>X</var>
+die Umformung
+
+<p class="indent">P(<var>X</var> ∪ {<var>x</var>})
+≃ P({<var>x</var>})×P(<var>X</var>) = {∅, {<var>x</var>}}×P(<var>X</var>)
+<br>= ({∅} ∪ {{<var>x</var>}})×P(<var>X</var>)
+= {∅}×P(<var>X</var>) ∪ {{<var>x</var>}}×P(<var>X</var>)
+<br>≃ P(<var>X</var>) ∪ {{<var>x</var>} ∪ <var>A</var> | <var>A</var> ∈ P(<var>X</var>)}.
+
+<p>Es ist unschwer zu bestätigen, dass die Gleichung
+
+<p class="indent">P(<var>X</var> ∪ {<var>x</var>})
+= P(<var>X</var>) ∪ {{<var>x</var>} ∪ <var>A</var> | <var>A</var> ∈ P(<var>X</var>)}
+
+<p>in exakter Weise gilt. Man gelangt zu:
+
+<pre class="ibox python">
+def power_set(X):
+    if len(X) == 0:
+        return [set()]
+    else:
+        x = X[-1]; P = power_set(X[:-1])
+        return P + [{x} | A for A in P]
+</pre>
+
+<p>bzw.
+
+<pre class="ibox python">
+def power_set(X):
+    if len(X) == 0:
+        return [[]]
+    else:
+        x = X[-1]; P = power_set(X[:-1])
+        return P + [A + [x] for A in P]
+</pre>
+
+<p>Umwandlung in einen iterativen Algorithmus führt zu:
+
+<pre class="ibox python">
+def power_set(X):
+    acc = [[]]
+    for x in X:
+        for A in acc.copy():
+            acc.append(A + [x])
+    return acc
+</pre>
+
+<p>Die innere Schleife ließe sich noch durch <code>extend</code>
+beschreiben:
+
+<pre class="ibox python">
+def power_set(X):
+    acc = [[]]
+    for x in X:
+        acc.extend(A + [x] for A in acc.copy())
+    return acc
+</pre>
+
+<p>Anstelle das Hilfsmittel <code>acc.copy()</code> oder
+<code>acc[:]</code> zu verwenden, ginge auch:
+
+<pre class="ibox python">
+def power_set(X):
+    acc = [[]]
+    for x in X:
+        acc.extend([A + [x] for A in acc])
+    return acc
+</pre>
 
 <h2 id="Funktionen">Kombinatorische Funktionen</h2>
 
