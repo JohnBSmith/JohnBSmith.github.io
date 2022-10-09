@@ -1,5 +1,61 @@
 
 \chapter{Grundlagen}
+\section{Metalogik}
+\begin{Satz}[Deduktionstheorem für Sequenzen]\label{sequent-dt}\newlinefirst
+Es gilt $\Gamma,A\vdash B$ genau dann, wenn $\Gamma\vdash A\Rightarrow B$.
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma\vdash A\Rightarrow B}{\Gamma,A\vdash B}
+&
+\infer{\Gamma,A\vdash B}{\Gamma\vdash A\Rightarrow B & \infer{A\vdash A}{}}
+\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
+\begin{Satz}\label{eq-impl-eq-sequents}
+Sofern $\vdash A\Leftrightarrow B$ gilt,
+ist $\Gamma\vdash A$ äquivalent zu $\Gamma\vdash B$.
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma\vdash B}{\Gamma\vdash A &
+  \infer{\vdash A\Rightarrow B}{\vdash A\Leftrightarrow B}}
+&
+\infer{\Gamma\vdash A}{\Gamma\vdash B &
+  \infer{\vdash B\Rightarrow A}{\vdash A\Leftrightarrow B}}\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
+\begin{Satz}
+Die Sequenz $\Gamma, A\land B\vdash C$ gilt genau dann, wenn $\Gamma,A,B\vdash C$.
+\end{Satz}
+\begin{Beweis}
+Es gilt
+\begin{align*}
+& (\Gamma, A\land B\vdash C)\iff (\Gamma\vdash A\land B\Rightarrow C),
+  &&\text{(Satz \ref{sequent-dt})}\\
+& (\Gamma,A,B\vdash C)\iff (\Gamma\vdash A\Rightarrow B\Rightarrow C),
+  &&\text{(Satz \ref{sequent-dt})}\\
+& {\vdash (A\land B\Rightarrow C)\Leftrightarrow (A\Rightarrow B\Rightarrow C)}.
+  &&\text{(Satz \ref{curry-impl})}
+\end{align*}
+Mit Satz \ref{eq-impl-eq-sequents} folgt somit die Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Sequenzen erzeugen Schlussregeln]\newlinefirst
+Gilt $A\vdash B$, dann darf von $\Gamma\vdash A$ auf $\Gamma\vdash B$
+geschlossen werden.
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\infer{\Gamma\vdash B}{
+  \infer{\vdash A\Rightarrow B}{A\vdash B}
+  & \Gamma\vdash A}\;\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \section{Aussagenlogik}\index{Aussagenlogik}
 
 \begin{Satz}[mp: Modus ponens]
@@ -123,7 +179,7 @@ Sämtliche Teilaussagen sind bewiesen.\;\qedsymbol
 
 \begin{Axiom}[PE: Principle of explosion]\label{PE}
 Eine falsche Aussage impliziert jede beliebige Aussage, kurz
-\[\vdash (0\implies A).\]
+\[\vdash (\bot\Rightarrow A).\]
 \end{Axiom}
 Bemerkung: Dieses Prinzip erlaubt Programmterme mit leerem
 Pattern matching, so dass ein Zeuge für $0\to A$ konstruiert
@@ -140,7 +196,7 @@ ebenfalls mit LEM markiert werden.
 
 \begin{Axiom}[DN: Beseitigung der Doppelnegation]\label{DNE}\newlinefirst
 Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
-\[\vdash (\neg\neg A\implies A).\]
+\[\vdash (\neg\neg A\Rightarrow A).\]
 \end{Axiom}
 
 \begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{PE} (PE)
@@ -186,7 +242,7 @@ Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer[\infernote{2}]{\neg B\Rightarrow\neg A}{
   \infer[\infernote{1}]{\neg A}{
-    \infer{0}{
+    \infer{\bot}{
        \infer{B}{A\Rightarrow B & \infer[\infernote{1}]{A}{}}
        & \infer[\infernote{2}]{\neg B}{}
     }
@@ -195,16 +251,17 @@ Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
 &
 \infer{A\Rightarrow B\vdash \neg B\Rightarrow\neg A}{
   \infer{A\Rightarrow B, \neg B\vdash\neg A}{
-    \infer{A\Rightarrow B, \neg B, A\vdash 0}{
+    \infer{A\Rightarrow B, \neg B, A\vdash\bot}{
       \infer{A\Rightarrow B, A\vdash B}{
-        \infer{A\vdash A}{}
-      }
+        \infer{A\Rightarrow B\vdash A\Rightarrow B}{}
+        & \infer{A\vdash A}{}}
+      & \infer{\neg B\vdash\neg B}{}
     }
   }
 }
 \end{array}
 \]
-Programmterm zu $(A\Rightarrow B)\Rightarrow (B\Rightarrow 0)\Rightarrow (A\Rightarrow 0)$:
+Programmterm zu $(A\Rightarrow B)\Rightarrow (B\Rightarrow\bot)\Rightarrow (A\Rightarrow\bot)$:
 \[(A\to B)\to (B\to 0)\to (A\to 0),\quad
 f\mapsto g\mapsto (a\colon A)\mapsto g(f(a)).\,\qedsymbol\]
 \end{Beweis}
@@ -225,7 +282,7 @@ Zu $\neg B\Rightarrow\neg A\vdash A\Rightarrow B$. Schematisch
     \infer[\infernote{LEM}]{B\lor \neg B}{}
     & \infer[\infernote{2}]{B}{}
     & \infer[\infernote{PE}]{B}{
-      \infer{0}{
+      \infer{\bot}{
         \infer[\infernote{1}]{A}{}
         & \infer{\neg A}{
           \infer[\infernote{2}]{\neg B}{}
@@ -244,20 +301,20 @@ Schematisch:
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer[\infernote{DN}]{A}{
   \infer{\neg\neg A}{
-    \infer{\neg A\Rightarrow 0}{0}
+    \infer{\neg A\Rightarrow\bot}{\bot}
   }
 }
 &
-\infer[\infernote{DN}]{0\vdash A}{
-  \infer{0\vdash\neg\neg A}{
-    \infer{0\vdash \neg A\Rightarrow 0}{
-      \infer{0,\neg A\vdash 0}{}
+\infer[\infernote{DN}]{\bot\vdash A}{
+  \infer{\bot\vdash\neg\neg A}{
+    \infer{\bot\vdash \neg A\Rightarrow\bot}{
+      \infer{\bot,\neg A\vdash\bot}{}
     }
   }
 }
 \end{array}
 \]
-Vermittels $\operatorname{dn}(A)\colon ((A\mapsto 0)\mapsto 0)\mapsto A$
+Vermittels $\operatorname{dn}(A):=((A\mapsto 0)\mapsto 0)\mapsto A$
 findet sich der Programmterm
 \[0\to A,\quad x\mapsto \operatorname{dn}(A)((f: A\to 0)\mapsto x).
 \,\qedsymbol\]
@@ -270,11 +327,11 @@ Axiom \ref{DNE} (DN) impliziert Axiom \ref{LEM} (LEM).
 Schematisch:
 \[\infer[\infernote{DN}]{A\lor\neg A}{
   \infer[\infernote{1}]{\neg\neg (A\lor\neg A)}{
-    \infer{0}{
+    \infer{\bot}{
       \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
     & \infer{A\lor\neg A}{
         \infer[\infernote{2}]{\neg A}{
-          \infer{0}{
+          \infer{\bot}{
             \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
           & \infer{A\lor\neg A}{\infer[\infernote{2}]{A}{}}}}}}}}
 \]
@@ -286,13 +343,42 @@ Der diesbezügliche Programmterm ist
 wobei $f\colon A + (A \to 0)\to 0$ sein soll.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{curry-impl}
+Es gilt $(A\land B\Rightarrow C)\iff (A\Rightarrow B\Rightarrow C)$.
+\end{Satz}
+\begin{Beweis}
+Für links nach rechts findet sich:
+\[
+\infer{A\land B\Rightarrow C\vdash A\Rightarrow B\Rightarrow C}{
+  \infer{A\land B\Rightarrow C, A, B\vdash C}{
+    \infer{A\land B\Rightarrow C\vdash A\land B\Rightarrow C}{}
+    & \infer{A, B\vdash A\land B}{
+        \infer{A\vdash A}{} & \infer{B\vdash B}{}}}}
+\]
+Für rechts nach links findet sich:
+\[
+\infer{A\Rightarrow B\Rightarrow C\vdash A\land B\Rightarrow C}{
+  \infer{A\Rightarrow B\Rightarrow C, A\land B\vdash C}{
+    \infer{A\Rightarrow B\Rightarrow C, A\land B\vdash B\Rightarrow C}{
+      \infer{A\Rightarrow B\Rightarrow C\vdash A\Rightarrow B\Rightarrow C}{}
+      & \infer{A\land B\vdash A}{\infer{A\land B\vdash A\land B}{}}}
+    & \infer{A\land B\vdash B}{\infer{A\land B\vdash A\land B}{}}}}
+\]
+Die Programmterme sind Schönfinkeln (Currying)
+\[(A\times B\to C)\to (A\to B\to C),\quad
+f\mapsto a\mapsto b\mapsto f(a,b)\]
+und Entschönfinkeln (Uncurrying)
+\[(A\to B\to C)\to (A\times B\to C),\quad
+f\mapsto (a, b)\mapsto f(a)(b).\,\qedsymbol\]
+\end{Beweis}
+
 \newpage
 \section{Prädikatenlogik}\index{Praedikatenlogik@Prädikatenlogik}
 
 \begin{Definition}[bounded: beschränkte Quantifizierung]%
 \label{def:bounded}
 \begin{align}
-(\forall x{\in}M\colon P(x)) &\defiff \forall x\colon (x\in M\implies P(x)),\\
+(\forall x{\in}M\colon P(x)) &\defiff \forall x\colon (x\in M\Rightarrow P(x)),\\
 (\exists x{\in}M\colon P(x)) &\defiff \exists x\colon (x\in M\land P(x)).
 \end{align}
 \end{Definition}
@@ -629,6 +715,11 @@ Nach Def. \ref{def:bounded} (bounded) und Satz
 \[A\cup B := \{x\mid x\in A\lor x\in B\}.\]
 \end{Definition}
 
+\begin{Definition}[set-diff: Differenz]%
+\label{def:set-diff}\index{Differenzmenge}
+\[A\setminus B := \{x\mid x\in A\land x\notin B\}.\]
+\end{Definition}
+
 \begin{Definition}[intersection: Schnitt]\label{def:intersection}
 \[\bigcap_{i\in I} A_i := \{x\mid \forall i{\in}I\colon x\in A_i\}
 = \{x\mid \forall i\colon (i\in I\implies x\in A_i)\}.\]
@@ -642,7 +733,7 @@ Nach Def. \ref{def:bounded} (bounded) und Satz
 \begin{Definition}[cart: kartesisches Produkt]%
 \label{def:cart}\index{kartesisches Produkt}
 \[A\times B := \{(a,b)\mid a\in A\land b\in B\}
-= \{t\mid\exists a\colon\exists b\colon (t=(a,b)\land a\in A\land b\in B)\}.\]
+= \{t\mid\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B\}.\]
 \end{Definition}
 
 \subsection{Rechenregeln}
@@ -707,6 +798,48 @@ ist aber tautologisch, denn
 \equiv (\neg\varphi\lor\varphi)\land(\neg\varphi\land\psi)
 \equiv 1\land(\varphi\Rightarrow\psi)\equiv \varphi\Rightarrow\psi.\]
 Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{setdiff-dist}
+Es gilt
+\begin{align*}
+(A\cup B)\setminus C &= (A\setminus C)\cup (B\setminus C),\\
+(A\cap B)\setminus C &= (A\setminus C)\cap (B\setminus C).
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Es findet sich
+\begin{align*}
+x\in (A\cup B)\setminus C &\iff x\in A\cup B\land x\notin C
+\iff (x\in A\lor x\in B)\land x\notin C\\
+&\iff (x\in A\land x\notin C)\lor (x\in B\land x\notin C)\\
+&\iff (x\in A\setminus C)\lor (x\in B\setminus C)
+\iff x\in (A\setminus C)\cup (B\setminus C)
+\end{align*}
+und
+\begin{align*}
+x\in (A\cap B)\setminus C&\iff x\in A\cap B\land x\notin C
+\iff x\in A\land x\in B\land x\notin C\\
+&\iff (x\in A\land x\notin C)\land (x\in B\land x\notin C)\\
+& \iff x\in A\setminus C\land x\in B\setminus C
+\iff x\in (A\setminus C)\cap (B\setminus C).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}\label{subseteq-diff}
+Es gilt $A\subseteq B\implies A\setminus C\subseteq B\setminus C$.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Die Aussage ist äquivalent zu
+\[\forall x\colon x\in A\Rightarrow x\in B\vdash \forall x\colon x\in A\setminus C\Rightarrow x\in B\setminus C.\]
+Zu zeigen verbleibt daher
+\[x\in A, x\notin C, \forall x\colon x\in A\Rightarrow x\in B\vdash x\in B\land x\notin C.\]
+Es ist $x\notin C$ bereits gegeben. Es folgt $x\in B$ per Modus ponens aus $x\in A$.\,\qedsymbol
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Mit $A\subseteq B\Leftrightarrow A\cup B=B$ und Satz \ref{setdiff-dist} findet sich
+\[B\setminus C = (A\cup B)\setminus C = (A\setminus C)\cup (B\setminus C),\]
+was wiederum zu $A\setminus C\subseteq B\setminus C$ äquivalent ist.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{eq-iff-all-iff}
@@ -794,7 +927,6 @@ Da $\exists t\colon P(t)\land t=(a,b)$ gegen $P(a,b)$ ersetzt
 werden darf, folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
-\newpage
 \begin{Satz}\label{cup-cart}
 Es gilt:
 \[\bigcup_{t\in I\times J} A_t
@@ -832,6 +964,7 @@ x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
+\newpage
 \begin{Satz}
 Die Relation \emph{Teilmenge von} ist eine Partialordnung.
 Im Einzelnen gilt%
