@@ -1,6 +1,61 @@
 
 \chapter{Grundlagen}
-\section{Metalogik}
+\section{Logische Schlussregeln}
+
+\subsection{Kalkül des natürlichen Schließens}
+
+\subsubsection{Schlussregeln}
+\begin{tabular}{lc@{\qquad}c}
+\toprule
+& \strong{Einführung} & \strong{Beseitigung}\\
+\toprule
+\strong{Konjunktion}
+& $\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma, \Gamma'\vdash A\land B}$
+& $\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A}\quad\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}$\\[14pt]
+\strong{Disjunktion}
+& $\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B}\quad\dfrac{\Gamma\vdash B}{\Gamma\vdash A\lor B}$
+& $\dfrac{\Gamma\vdash A\lor B\qquad\Gamma',A\vdash C\qquad\Gamma'',B\vdash C}{\Gamma,\Gamma',\Gamma''\vdash C}$\\[14pt]
+\strong{Implikation}
+& $\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\Rightarrow B}$
+& $\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$\\[14pt]
+\strong{Negation}
+& $\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
+& $\dfrac{\Gamma\vdash \neg A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}$\\[14pt]
+\strong{Äquivalenz}
+& $\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash B\Rightarrow A}{\Gamma,\Gamma'\vdash A\Leftrightarrow B}$
+& $\dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash A\Rightarrow B}\quad
+   \dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash B\Rightarrow A}$\\[14pt]
+\strong{Universalq.}
+& $\dfrac{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}(x\notin\mathrm{FV}(\Gamma))$
+& $\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}$\\[14pt]
+\strong{Existenzq.}
+& $\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}$
+& $\dfrac{\Gamma\vdash\exists x\colon A\qquad\Gamma, A\vdash B}{\Gamma\vdash B}(x\notin\mathrm{FV}(\Gamma,B))$\\[8pt]
+\bottomrule
+\end{tabular}
+
+\subsubsection{Strukturelle Schlussregeln}
+\begin{tabular}{ccc}
+\toprule
+\strong{Abschwächung} & \strong{Vertauschung} & \strong{Kontraktion}\\[2pt]
+$\dfrac{\Gamma,\Gamma'\vdash B}{\Gamma,A,\Gamma'\vdash B}$
+& $\dfrac{\Gamma,A,B,\Gamma'\vdash C}{\Gamma,B,A,\Gamma'\vdash C}$
+& $\dfrac{\Gamma,A,A,\Gamma'\vdash B}{\Gamma,A,\Gamma'\vdash B}$\\[8pt]
+\bottomrule
+\end{tabular}
+
+\subsubsection{Axiome}
+
+\begin{Axiom}
+Es gilt $\Gamma,A,\Gamma'\vdash A$.
+\end{Axiom}
+
+\begin{Axiom}
+Es gilt $\Gamma\vdash\top$.
+\end{Axiom}
+
+\newpage
+\subsection{Gesetzmäßigkeiten}
 \begin{Satz}[Deduktionstheorem für Sequenzen]\label{sequent-dt}\newlinefirst
 Es gilt $\Gamma,A\vdash B$ genau dann, wenn $\Gamma\vdash A\Rightarrow B$.
 \end{Satz}
@@ -53,6 +108,86 @@ geschlossen werden.
 \[\infer{\Gamma\vdash B}{
   \infer{\vdash A\Rightarrow B}{A\vdash B}
   & \Gamma\vdash A}\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Sequenzen erzeugen Schlussregeln]\newlinefirst
+Gilt $A_1,\ldots,A_n\vdash B$, dann darf auf $\Gamma\vdash B$
+geschlossen werden, falls $\Gamma\vdash A_k$ für jedes $k$
+von $k=1$ bis $k=n$ gilt.
+\end{Satz}
+\begin{Beweis} Für $n=2$ findet sich sich:
+\[\infer{\Gamma\vdash B}{
+  \infer{\Gamma\vdash A_2\Rightarrow B}{
+    \infer{\vdash A_1\Rightarrow A_2\Rightarrow B}{
+      \infer{A_1\vdash A_2\Rightarrow B}{A_1,A_2\vdash B}}
+    & \Gamma\vdash A_1}
+  & \Gamma\vdash A_2}\]
+Für höhere $n$ verläuft der Beweis analog.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}[Modus tollens]
+Es gelten die Schlussregeln
+\[\dfrac{\Gamma\vdash A\Rightarrow B}{\Gamma\vdash\neg B\Rightarrow\neg A},\qquad
+\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash\neg B}{\Gamma,\Gamma'\vdash\neg A}.\]
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\Gamma\vdash\neg B\Rightarrow\neg A}{
+  \infer{\Gamma,\neg B\vdash\neg A}{
+    \infer{\Gamma,\neg B, A\vdash\bot}{
+      \infer{\neg B\vdash\neg B}{}
+      & \infer{\Gamma,A\vdash B}{
+          \Gamma\vdash A\Rightarrow B
+          & \infer{A\vdash A}{}}}}}
+&
+\infer{\Gamma,\Gamma'\vdash\neg A}{
+  \infer{\Gamma\vdash\neg B\Rightarrow\neg A}{\Gamma\vdash A\Rightarrow B}
+  & \Gamma'\vdash\neg B}\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
+\begin{Satz}[Modus tollendo ponens]
+Es gilt die Schlussregel
+\[\dfrac{\Gamma\vdash A\lor B\qquad\Gamma'\vdash \neg A}{\Gamma,\Gamma'\vdash B}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[\infer{\Gamma,\Gamma'\vdash B}{
+  \Gamma\vdash A\lor B
+  & \infer[\infernote{PE}]{\Gamma',A\vdash B}{
+      \infer{\Gamma',A\vdash\bot}{
+        \Gamma'\vdash\neg A & \infer{A\vdash A}{}}}
+  & \infer{B\vdash B}{}}\]
+Mit PE ist Axiom \ref{PE} gemeint.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Kettenschluss]
+Es gilt die Schlussregel
+\[\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash B\Rightarrow C}
+{\Gamma,\Gamma'\vdash A\Rightarrow C}.\]
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\infer{\Gamma,\Gamma'\vdash A\Rightarrow C}{
+  \infer{\Gamma,\Gamma',A\vdash C}{
+    \Gamma'\vdash B\Rightarrow C &
+      \infer{\Gamma,A\vdash B}{
+        \Gamma\vdash A\Rightarrow B
+        & \infer{A\vdash A}{}}}}\;\qedsymbol
+\]
+\end{Beweis}
+
+\begin{Satz}[Klassische Reductio ad absurdum] \strong{[LEM]}\\
+Es gilt die Schlussregel
+\[\dfrac{\Gamma,\neg A\vdash\bot}{\Gamma\vdash A}.\]
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[\infer[\infernote{DN}]{\Gamma\vdash A}{
+  \infer{\Gamma\vdash\neg\neg A}{
+    \Gamma,\neg A\vdash\bot}}
+\]
+Die genutzte Regel DN gilt lediglich klassisch.\,\qedsymbol
 \end{Beweis}
 
 \newpage
