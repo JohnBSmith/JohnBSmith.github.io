@@ -126,7 +126,7 @@ Für höhere $n$ verläuft der Beweis analog.\,\qedsymbol
 \end{Beweis}
 
 \newpage
-\begin{Satz}[Modus tollens]
+\begin{Satz}[Modus tollens]\label{modus-tollens}
 Es gelten die Schlussregeln
 \[\dfrac{\Gamma\vdash A\Rightarrow B}{\Gamma\vdash\neg B\Rightarrow\neg A},\qquad
 \dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash\neg B}{\Gamma,\Gamma'\vdash\neg A}.\]
@@ -190,15 +190,61 @@ Es gilt die Schlussregel
 Die genutzte Regel DN gilt lediglich klassisch.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}[Konstruktives Dilemma]\label{destructive-dilemma}
+Es gilt die Schlussregel
+\[\dfrac{\Gamma\vdash A\lor C\qquad
+\Gamma'\vdash A\Rightarrow B\qquad\Gamma''\vdash C\Rightarrow D}{
+\Gamma,\Gamma',\Gamma''\vdash B\lor D}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[\infer{\Gamma,\Gamma',\Gamma''\vdash B\lor D}{
+  \Gamma\vdash A\lor C
+  & \infer{\Gamma',A\vdash B\lor D}{
+      \infer{\Gamma',A\vdash B}{
+        \Gamma'\vdash A\Rightarrow B
+        & \infer{A\vdash A}{}}}
+  & \infer{\Gamma'',C\vdash B\lor D}{
+      \infer{\Gamma'',C\vdash D}{
+        \Gamma''\vdash C\Rightarrow D
+        & \infer{C\vdash C}{}}}}\;\qedsymbol
+\]
+\end{Beweis}
+
+\begin{Satz}[Destruktives Dilemma]
+Es gilt die Schlussregel
+\[\dfrac{\Gamma\vdash \neg B\lor \neg D\qquad
+\Gamma'\vdash A\Rightarrow B\qquad\Gamma''\vdash C\Rightarrow D}{
+\Gamma,\Gamma',\Gamma''\vdash \neg A\lor \neg C}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[
+\infer[\infernote{(3)}]{\Gamma,\Gamma',\Gamma''\vdash \neg A\lor \neg C}{
+  \Gamma\vdash \neg B\lor \neg D
+  & \infer[\infernote{(1)}]{\Gamma'\vdash\neg B\Rightarrow\neg A}{
+      \Gamma'\vdash A\Rightarrow B}
+  & \infer[\infernote{(2)}]{\Gamma''\vdash\neg D\Rightarrow\neg C}{
+      \Gamma''\vdash C\Rightarrow D}}
+\]
+Hierbei gilt (1), (2) gemäß Satz \ref{modus-tollens} und (3) gemäß Satz
+\ref{destructive-dilemma}.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Aussagenlogik}\index{Aussagenlogik}
 
-\begin{Satz}[mp: Modus ponens]
-Es gilt $(A\Rightarrow B)\land A \implies B$.
+\begin{Satz}[Tautologie zum Modus ponens]\newlinefirst
+Es gilt $(A\Rightarrow B)\land A \Rightarrow B$.
 \end{Satz}
-\begin{Beweis}[Beweis 1 (Natürliches Schließen)]\\
-Zu $\{A\Rightarrow B, A\}\vdash B$. Trivial, da eine Inferenzregel des Kalküls. Schematisch:
-\[\infer{B}{A\Rightarrow B & A}\]
+\begin{Beweis}[Beweis 1]
+Sei $\Gamma:=[(A\Rightarrow B)\land A]$. Schematisch:
+\[\infer{\vdash (A\Rightarrow B)\land A\Rightarrow B}{
+    \infer{\Gamma\vdash B}{
+      \infer{\Gamma\vdash A\Rightarrow B}{
+        \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}
+      & \infer{\Gamma\vdash A}{
+        \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}}}\]
 Programmterm:
 \[(A\to B)\times A\to B,\; (f, a)\mapsto f(a).\,\qedsymbol\]
 \end{Beweis}
@@ -217,30 +263,26 @@ wobei $\varphi :\equiv \neg A\lor B$.\;\qedsymbol
 \begin{Satz}[bool-cl: Kommutativgesetze]%
 \label{bool-cl}\index{Kommutativgesetz!boolesche Algebra}
 Es gilt
-\begin{gather}
+\begin{gather*}
 A\land B \iff B\land A,\\
 A\lor B \iff B\lor A.
-\end{gather}
+\end{gather*}
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)]\\
 Zu $A\land B\Rightarrow B\land A$. Schematisch:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
-\infer[\infernote{1}]{A\land B\Rightarrow B\land A}{
-  \infer{B\land A}{
-     \infer{A}{\infer[\infernote{1}]{A\land B}{}}
-     & \infer{B}{\infer[\infernote{1}]{A\land B}{}}
-  }
-}
-&
 \infer{\vdash A\land B\Rightarrow B\land A}{
   \infer{A\land B\vdash B\land A}{
     \infer{A\land B\vdash B}{
       \infer{A\land B\vdash A\land B}{}}
     & \infer{A\land B\vdash A}{
-      \infer{A\land B\vdash A\land B}{}}
-  }
-}
+      \infer{A\land B\vdash A\land B}{}}}}
+&
+\infer[\infernote{1}]{A\land B\Rightarrow B\land A}{
+  \infer{B\land A}{
+     \infer{B}{\infer[\infernote{1}]{A\land B}{}}
+     & \infer{A}{\infer[\infernote{1}]{A\land B}{}}}}
 \end{array}
 \]
 Programmterm:
@@ -248,19 +290,19 @@ Programmterm:
 Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
+\infer{\vdash A\lor B\Rightarrow B\lor A}{
+  \infer{A\lor B\vdash B\lor A}{
+    \infer{A\lor B\vdash A\lor B}{}
+    & \infer{A\vdash B\lor A}{
+        \infer{A\vdash A}{}}
+    & \infer{B\vdash B\lor A}{
+        \infer{B\vdash B}{}}}}
+&
 \infer[\infernote{2}]{A\lor B\Rightarrow B\lor A}{
   \infer[\infernote{1}]{B\lor A}{
     \infer[\infernote{2}]{A\lor B}{}
     & \infer{B\lor A}{\infer[\infernote{1}]{A}{}}
     & \infer{B\lor A}{\infer[\infernote{1}]{B}{}}}}
-&
-\infer{\vdash A\lor B\Rightarrow B\lor A}{
-  \infer{A\lor B\vdash B\lor A}{
-    \infer{A\lor B\vdash A\lor B}{}
-    & \infer{A\lor B, A\vdash B\lor A}{
-        \infer{A\lor B, A\vdash A}{}}
-    & \infer{A\lor B, B\vdash B\lor A}{
-        \infer{A\lor B, B\vdash B}{}}}}
 \end{array}
 \]
 Programmterm:
@@ -274,10 +316,10 @@ Vertauschen von $A,B$ erbringt jeweils die umgekehrte Implikation.\;\qedsymbol
 \begin{Satz}[bool-dl: Distributivgesetze]%
 \label{bool-dl}\index{Distributivgesetz!boolesche Algebra}
 Es gilt:
-\begin{align}
+\begin{align*}
 A\land (B\lor C) &\iff A\land B\lor A\land C,\\
 A\lor (B\land C) &\iff (A\lor B)\land (A\lor C).
-\end{align}
+\end{align*}
 \end{Satz}
 \strong{Beweis (Natürliches Schließen).}\\
 Zu $A\land (B\lor C) \vdash A\land B\lor A\land C$.
@@ -339,11 +381,11 @@ implizieren Axiom \ref{DNE} (DN).
 \end{Satz}
 \begin{Beweis}[Beweis (Natürliches Schließen)]
 Zu $\neg A \lor A\vdash (\neg\neg A \Rightarrow A)$.
-Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{ex}(A)$
+Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{exfq}(A)$
 für $0\to A$. Damit lässt sich der Programmterm
 \[(A\to 0) + A \to (((A\to 0)\to 0)\to A),\;
 s\mapsto\match s\begin{cases}
-\inl f\mapsto g\mapsto \operatorname{ex}(A)(g(f)),\\
+\inl f\mapsto g\mapsto \operatorname{exfq}(A)(g(f)),\\
 \inr a\mapsto g\mapsto a.
 \end{cases}\]
 konstruieren.\;\qedsymbol
@@ -355,14 +397,17 @@ konstruieren.\;\qedsymbol
 Es gilt
 $(A\Rightarrow B) \land (B\Rightarrow C) \Rightarrow (A\Rightarrow C)$.
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)]
-Schematisch:
-\[\infer[\infernote{1}]{A\Rightarrow C}{
-  \infer{C}{
-   \infer{B}{\infer[\infernote{1}]{A}{}
-   & \infer{A\Rightarrow B}{(A\Rightarrow B)\land (B\Rightarrow C)}}
-   & \infer{B\Rightarrow C}{(A\Rightarrow B)\land (B\Rightarrow C)}}
-}
+\begin{Beweis}[Beweis]
+Sei $\Gamma:=[(A\Rightarrow B) \land (B\Rightarrow C)]$. Schematisch:
+\[
+\infer{\vdash (A\Rightarrow B) \land (B\Rightarrow C) \Rightarrow (A\Rightarrow C)}{
+  \infer{\Gamma\vdash A\Rightarrow C}{
+    \infer{\Gamma,A\vdash C}{
+     \infer{\Gamma,A\vdash B}{\infer{A\vdash A}{}
+     & \infer{\Gamma\vdash A\Rightarrow B}{
+         \infer{\Gamma\vdash (A\Rightarrow B)\land (B\Rightarrow C)}{}}}
+     & \infer{\Gamma\vdash B\Rightarrow C}{
+         \infer{\Gamma\vdash (A\Rightarrow B)\land (B\Rightarrow C)}{}}}}}
 \]
 Programmterm:
 \[(A\to B)\times (B\to C)\to (A\to C),\quad
@@ -372,28 +417,22 @@ Programmterm:
 \begin{Satz}[Kontrapositionsableitung]\label{contrapos-intro}\newlinefirst
 Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch:
+\begin{Beweis}[Beweis] Schematisch:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
-\infer[\infernote{2}]{\neg B\Rightarrow\neg A}{
-  \infer[\infernote{1}]{\neg A}{
-    \infer{\bot}{
-       \infer{B}{A\Rightarrow B & \infer[\infernote{1}]{A}{}}
-       & \infer[\infernote{2}]{\neg B}{}
-    }
-  }
-}
-&
 \infer{A\Rightarrow B\vdash \neg B\Rightarrow\neg A}{
   \infer{A\Rightarrow B, \neg B\vdash\neg A}{
     \infer{A\Rightarrow B, \neg B, A\vdash\bot}{
       \infer{A\Rightarrow B, A\vdash B}{
         \infer{A\Rightarrow B\vdash A\Rightarrow B}{}
-        & \infer{A\vdash A}{}}
-      & \infer{\neg B\vdash\neg B}{}
-    }
-  }
-}
+      & \infer{A\vdash A}{}}
+    & \infer{\neg B\vdash\neg B}{}}}}
+&
+\infer[\infernote{2}]{\neg B\Rightarrow\neg A}{
+  \infer[\infernote{1}]{\neg A}{
+    \infer{\bot}{
+      \infer{B}{A\Rightarrow B & \infer[\infernote{1}]{A}{}}
+    & \infer[\infernote{2}]{\neg B}{}}}}
 \end{array}
 \]
 Programmterm zu $(A\Rightarrow B)\Rightarrow (B\Rightarrow\bot)\Rightarrow (A\Rightarrow\bot)$:
@@ -409,19 +448,20 @@ Es findet sich
 \[A\Rightarrow B \equiv \neg A\lor B\equiv B\lor\neg A
 \equiv \neg\neg B\lor\neg A \equiv \neg B\Rightarrow \neg A.\,\qedsymbol\]
 \end{Beweis}
-\begin{Beweis}[Beweis 2 (LEM, natürliches Schließen)]
-Zu $\neg B\Rightarrow\neg A\vdash A\Rightarrow B$. Schematisch
+\begin{Beweis}[Beweis 2 (LEM)]
+Sei $\Gamma:=[\neg B\Rightarrow\neg A]$. Schematisch
 \[
-\infer[\infernote{1}]{A\Rightarrow B}{
-  \infer[\infernote{2}]{B}{
-    \infer[\infernote{LEM}]{B\lor \neg B}{}
-    & \infer[\infernote{2}]{B}{}
-    & \infer[\infernote{PE}]{B}{
-      \infer{\bot}{
-        \infer[\infernote{1}]{A}{}
-        & \infer{\neg A}{
-          \infer[\infernote{2}]{\neg B}{}
-          & \neg B\Rightarrow\neg A}}}}}
+\infer{\vdash (\neg B\Rightarrow\neg A)\Rightarrow (A\Rightarrow B)}{
+  \infer{\Gamma\vdash A\Rightarrow B}{
+    \infer{\Gamma,A\vdash B}{
+      \infer[\infernote{LEM}]{\vdash B\lor \neg B}{}
+      & \infer{B\vdash B}{}
+      & \infer[\infernote{PE}]{\Gamma,A,\neg B\vdash B}{
+        \infer{\Gamma,A,\neg B\vdash\bot}{
+          \infer{A\vdash A}{}
+          & \infer{\Gamma,\neg B\vdash\neg A}{
+            \infer{\Gamma\vdash\neg B\Rightarrow\neg A}{}
+            & \infer{\neg B\vdash\neg B}{}}}}}}}
 \]
 Die umgekehrte Richtung bestätigt Satz \ref{contrapos-intro}.\,\qedsymbol
 \end{Beweis}
@@ -430,23 +470,18 @@ Die umgekehrte Richtung bestätigt Satz \ref{contrapos-intro}.\,\qedsymbol
 Axiom \ref{DNE} (DN) impliziert
 Axiom \ref{PE} (PE).
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)]
+\begin{Beweis}[Beweis]
 Schematisch:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
-\infer[\infernote{DN}]{A}{
-  \infer{\neg\neg A}{
-    \infer{\neg A\Rightarrow\bot}{\bot}
-  }
-}
-&
 \infer[\infernote{DN}]{\bot\vdash A}{
   \infer{\bot\vdash\neg\neg A}{
     \infer{\bot\vdash \neg A\Rightarrow\bot}{
-      \infer{\bot,\neg A\vdash\bot}{}
-    }
-  }
-}
+      \infer{\bot,\neg A\vdash\bot}{}}}}
+&
+\infer[\infernote{DN}]{A}{
+  \infer{\neg\neg A}{
+    \infer{\neg A\Rightarrow\bot}{\bot}}}
 \end{array}
 \]
 Vermittels $\operatorname{dn}(A):=((A\mapsto 0)\mapsto 0)\mapsto A$
@@ -458,17 +493,17 @@ findet sich der Programmterm
 \begin{Satz}
 Axiom \ref{DNE} (DN) impliziert Axiom \ref{LEM} (LEM).
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)]
-Schematisch:
-\[\infer[\infernote{DN}]{A\lor\neg A}{
-  \infer[\infernote{1}]{\neg\neg (A\lor\neg A)}{
-    \infer{\bot}{
-      \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
-    & \infer{A\lor\neg A}{
-        \infer[\infernote{2}]{\neg A}{
-          \infer{\bot}{
-            \infer[\infernote{1}]{\neg (A\lor\neg A)}{}
-          & \infer{A\lor\neg A}{\infer[\infernote{2}]{A}{}}}}}}}}
+\begin{Beweis}[Beweis]
+Sei $\Gamma:=[\neg (A\lor\neg A)]$. Schematisch:
+\[\infer[\infernote{DN}]{\vdash A\lor\neg A}{
+  \infer{\vdash\neg\neg (A\lor\neg A)}{
+    \infer{\Gamma\vdash\bot}{
+      \infer{\Gamma\vdash\neg (A\lor\neg A)}{}
+    & \infer{\Gamma\vdash A\lor\neg A}{
+        \infer{\Gamma\vdash\neg A}{
+          \infer{\Gamma,A\vdash\bot}{
+            \infer{\Gamma\vdash\neg (A\lor\neg A)}{}
+          & \infer{A\vdash A\lor\neg A}{\infer{A\vdash A}{}}}}}}}}
 \]
 Der diesbezügliche Programmterm ist
 \[A + (A\to 0),\quad
@@ -479,7 +514,7 @@ wobei $f\colon A + (A \to 0)\to 0$ sein soll.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{curry-impl}
-Es gilt $(A\land B\Rightarrow C)\iff (A\Rightarrow B\Rightarrow C)$.
+Es gilt $(A\land B\Rightarrow C)\Leftrightarrow (A\Rightarrow B\Rightarrow C)$.
 \end{Satz}
 \begin{Beweis}
 Für links nach rechts findet sich:
@@ -487,8 +522,8 @@ Für links nach rechts findet sich:
 \infer{A\land B\Rightarrow C\vdash A\Rightarrow B\Rightarrow C}{
   \infer{A\land B\Rightarrow C, A, B\vdash C}{
     \infer{A\land B\Rightarrow C\vdash A\land B\Rightarrow C}{}
-    & \infer{A, B\vdash A\land B}{
-        \infer{A\vdash A}{} & \infer{B\vdash B}{}}}}
+  & \infer{A, B\vdash A\land B}{
+      \infer{A\vdash A}{} & \infer{B\vdash B}{}}}}
 \]
 Für rechts nach links findet sich:
 \[
@@ -496,8 +531,8 @@ Für rechts nach links findet sich:
   \infer{A\Rightarrow B\Rightarrow C, A\land B\vdash C}{
     \infer{A\Rightarrow B\Rightarrow C, A\land B\vdash B\Rightarrow C}{
       \infer{A\Rightarrow B\Rightarrow C\vdash A\Rightarrow B\Rightarrow C}{}
-      & \infer{A\land B\vdash A}{\infer{A\land B\vdash A\land B}{}}}
-    & \infer{A\land B\vdash B}{\infer{A\land B\vdash A\land B}{}}}}
+    & \infer{A\land B\vdash A}{\infer{A\land B\vdash A\land B}{}}}
+  & \infer{A\land B\vdash B}{\infer{A\land B\vdash A\land B}{}}}}
 \]
 Die Programmterme sind Schönfinkeln (Currying)
 \[(A\times B\to C)\to (A\to B\to C),\quad
@@ -505,6 +540,104 @@ f\mapsto a\mapsto b\mapsto f(a,b)\]
 und Entschönfinkeln (Uncurrying)
 \[(A\to B\to C)\to (A\times B\to C),\quad
 f\mapsto (a, b)\mapsto f(a)(b).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $(A\Rightarrow B\Rightarrow C)\Rightarrow ((A\Rightarrow B)\Rightarrow (A\Rightarrow C))$.
+\end{Satz}
+
+\begin{Beweis}
+Sei $\Gamma:=[A\Rightarrow B\Rightarrow C]$. Es findet sich:
+\[\infer{\vdash (A\Rightarrow B\Rightarrow C)\Rightarrow ((A\Rightarrow B)\Rightarrow (A\Rightarrow C))}{
+  \infer{\Gamma\vdash (A\Rightarrow B)\Rightarrow (A\Rightarrow C)}{
+    \infer{\Gamma, A\Rightarrow B\vdash A\Rightarrow C}{
+      \infer{\Gamma, A\Rightarrow B, A\vdash C}{
+        \infer{\Gamma, A\vdash B\Rightarrow C}{
+          \infer{\Gamma\vdash A\Rightarrow B\Rightarrow C}{} & \infer{A\vdash A}{}}
+    & \infer{A\Rightarrow B, A\vdash B}{
+        \infer{A\Rightarrow B\vdash A\Rightarrow B}{} & \infer{A\vdash A}{}}}}}}
+\]
+Der Programmterm:
+\[(A\to B\to C)\to (A\to B)\to A\to C,\quad
+f\mapsto g\mapsto a\mapsto (f(a))(g(a)).\,\qedsymbol\]
+\end{Beweis}
+\newpage
+
+\begin{Satz}
+Es gilt $\neg A\land\neg B\Rightarrow\neg (A\lor B)$.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma:=[\neg A\land\neg B]$. Es findet sich:
+\[
+\infer{\vdash \neg A\land\neg B\Rightarrow\neg (A\lor B)}{
+  \infer{\Gamma\vdash\neg (A\lor B)}{
+    \infer{\Gamma, A\lor B\vdash\bot}{
+      \infer{A\lor B\vdash A\lor B}{}
+    & \infer{\Gamma,A\vdash\bot}{
+        \infer{\Gamma\vdash\neg A}{\infer{\Gamma\vdash\neg A\land\neg B}{}}
+      & \infer{A\vdash A}{}}
+    & \infer{\Gamma,B\vdash\bot}{
+        \infer{\Gamma\vdash\neg B}{\infer{\Gamma\vdash\neg A\land\neg B}{}}
+      & \infer{B\vdash B}{}}}}}
+\]
+Programmterm zu $(A\Rightarrow\bot)\land (B\Rightarrow\bot)\Rightarrow (A\lor B)\Rightarrow\bot$:
+\[(A\to 0)\times (B\to 0)\to (A+B)\to 0,\quad (f, g)\mapsto s\mapsto\match s
+\begin{cases}
+\inl(a)\mapsto f(a),\\
+\inr(b)\mapsto g(b).\,\qedsymbol
+\end{cases}\]
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $\neg A\lor\neg B\Rightarrow\neg (A\land B)$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[
+\infer{\vdash\neg A\lor\neg B\Rightarrow\neg (A\land B)}{
+  \infer{\neg A\lor\neg B\vdash\neg (A\land B)}{
+    \infer{\neg A\lor\neg B, A\land B\vdash\bot}{
+      \infer{\neg A\lor\neg B\vdash\neg A\lor\neg B}{}
+    & \infer{A\land B,\neg A\vdash\bot}{
+        \infer{\neg A\vdash\neg A}{}
+      & \infer{A\land B\vdash A}{\infer{A\land B\vdash A\land B}{}}}
+    & \infer{A\land B,\neg B\vdash\bot}{
+        \infer{\neg B\vdash\neg B}{}
+      & \infer{A\land B\vdash B}{\infer{A\land B\vdash A\land B}{}}}}}}
+\]
+Der Programmterm zu
+$(A\Rightarrow\bot)\lor(B\Rightarrow\bot)\Rightarrow (A\land B\Rightarrow\bot)$:
+\[(A\to 0)+(B\to 0)\to (A\times B\to 0),\quad
+s\mapsto\match s\begin{cases}
+\inl(f)\mapsto (a,b)\mapsto f(a),\\
+\inr(g)\mapsto (a,b)\mapsto g(b).\,\qedsymbol
+\end{cases}\]
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $A\lor B\Rightarrow (\neg A\Rightarrow B)$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[
+\infer{\vdash A\lor B\Rightarrow (\neg A\Rightarrow B)}{
+  \infer{A\lor B\vdash \neg A\Rightarrow B}{
+    \infer{A\lor B, \neg A\vdash B}{
+      \infer{A\lor B\vdash A\lor B}{}
+    & \infer[\infernote{PE}]{\neg A, A\vdash B}{
+        \infer{\neg A, A\vdash\bot}{
+          \infer{\neg A\vdash\neg A}{}
+        & \infer{A\vdash A}{}}}
+    & \infer{B\vdash B}{}}}}
+\]
+Programmterm zu $A\lor B\Rightarrow (A\Rightarrow\bot)\Rightarrow B$:
+\[A+B\to (A\to 0)\to B,\quad s\mapsto f\mapsto\match s\begin{cases}
+\inl(a)\mapsto \operatorname{exfq}(B)(f(a)),\\
+\inr(b)\mapsto b
+\end{cases}\]
+Der Schluss PE bzw. die Verfügbarkeit von
+$\operatorname{exfq}(B)\colon 0\to B$
+gilt gemäß Axiom \ref{PE}.\,\qedsymbol
 \end{Beweis}
 
 \newpage
