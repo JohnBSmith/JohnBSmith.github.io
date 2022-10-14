@@ -1111,21 +1111,33 @@ was wiederum zu $A\setminus C\subseteq B\setminus C$ äquivalent ist.\,\qedsymbo
 \end{Beweis}
 
 \begin{Satz}\label{eq-iff-all-iff}
-Es gilt $a=b\iff \forall x\colon (x=a\iff x=b)$.
+Es gilt $a=b\iff \forall x\colon x=a\Leftrightarrow x=b$.
 \end{Satz}
 
 \begin{Beweis}
-Die Implikation $a=b\implies\forall x\colon (x=a\iff x=b)$.
-Wenn wir $a=b$ voraussetzen, kann $b$ gegen $a$ ersetzt werden
-und es ergibt sich
-\[(\forall x\colon (x=a\iff x=a))\iff (\forall x\colon 1)\iff 1.\]
-Die andere Implikation bringen wir zunächst in ihre Kontraposition:
-\[a\ne b\implies \exists x\colon ((x=a)\oplus (x=b)).\]
-Auf einer leeren Grundmenge wird der Allquantifizierung
-über $a,b$ immer genügt. Besitzt die Grundmenge nur ein Element,
-dann muss $a=b$ sein, womit $a\ne b$ falsch ist und die Implikation
-somit erfüllt. Wir setzen nun $a\ne b$ voraus. Wählt man nun
-$x=a$, dann ist $x\ne b$, womit die Kontravalenz erfüllt wird.\;\qedsymbol
+Für links nach rechts findet sich:
+\[
+\infer{\vdash a=b\Rightarrow\forall x\colon x=a\Leftrightarrow x=b}{
+  \infer{a=b\vdash\forall x\colon x=a\Leftrightarrow x=b}{
+    \infer{a=b\vdash x=a\Leftrightarrow x=b}{
+      \infer{a=b\vdash x=a\Rightarrow x=b}{
+        \infer{a=b,x=a\vdash x=b}{
+          \infer{x=a\vdash x=a}{} & \infer{a=b\vdash a=b}{}}}
+    & \infer{a=b\vdash x=b\Rightarrow x=a}{
+        \infer{a=b,x=b\vdash x=a}{
+          \infer{x=b\vdash x=b}{} & \infer{a=b\vdash b=a}{}}}}}}
+\]
+Für rechts nach links findet sich:
+\[
+\infer{\vdash(\forall x\colon x=a\Leftrightarrow x=b)\Rightarrow a=b}{
+  \infer{\Gamma\vdash a=b}{
+    \infer{\Gamma\vdash a=a\Rightarrow a=b}{
+      \infer{\Gamma\vdash a=a\Leftrightarrow a=b}{
+        \infer{\Gamma\vdash\forall x\colon x=a\Leftrightarrow x=b}{}}}
+  & \infer{\vdash a=a}{}}}
+\]
+Hierbei steht $\Gamma$ als Abkürzung für
+$\Gamma:=[\forall x\colon x=a\Leftrightarrow x=b]$.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
@@ -1133,15 +1145,36 @@ Es gilt $a=b\iff\{a\}=\{b\}$.
 \end{Satz}
 
 \begin{Beweis}
-Es gilt:
-\[\{a\}=\{b\}\iff \{x\mid x=a\}=\{x\mid x=b\}\iff \forall x\colon (x=a\iff x=b).\]
-Nach Satz \ref{eq-iff-all-iff} ist das aber äquivalent zu $a=b$.\;\qedsymbol
+Man unternimmt die Umformung
+\[\{a\}=\{b\}\iff (\forall x\colon x\in\{a\}\Leftrightarrow x\in\{b\})
+\iff (\forall x\colon x=a\Leftrightarrow x=b).\]
+Laut Satz \ref{eq-iff-all-iff} ist die rechte Aussage
+äquivalent zu $a=b$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{eq-substitution}
-Es gilt:
-\[\forall x\colon\forall y\colon (x=y\land P(x)\iff P(y))\]
+Es gilt $P(x)\iff (\exists y\colon P(y)\land x=y)$.
 \end{Satz}
+\begin{Beweis}
+Für links nach rechts wähle $y:=x$ als Zeugen:
+\[
+\infer{P(x)\vdash\exists y\colon P(y)\land x=y}{
+  \infer{P(x)\vdash P(x)\land x=x}{
+    \infer{P(x)\vdash P(x)}{}
+  & \infer{\vdash x=x}{}}}
+\]
+Für rechts nach links:
+\[
+\infer{\exists y\colon P(y)\land x=y\vdash P(x)}{
+  \infer{\exists y\colon A\vdash\exists y\colon A}{}
+& \infer{A\vdash P(x)}{
+    \infer{A\vdash P(y)}{
+      \infer{A\vdash P(y)\land x=y}{}}
+  & \infer{A\vdash x=y}{
+      \infer{A\vdash P(y)\land x=y}{}}}}
+\]
+Hierbei steht $A$ als Abkürzung für $P(y)\land x=y$.\,\qedsymbol
+\end{Beweis}
 
 \begin{Satz}\label{all-cart}
 Es gilt:
@@ -1177,22 +1210,16 @@ Es gilt:
 \end{Satz}
 
 \begin{Beweis}
-Nach Def. \ref{def:cart} (cart) gilt:
+Mit Def. \ref{def:cart} (cart) findet sich die Umformung
 \begin{gather*}
 (\exists t{\in}A{\times}B\colon P(t))
 \iff (\exists t\colon P(t)\land t\in A\times B)\\
 \iff (\exists t\colon P(t)\land \exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\\
 \iff (\exists t\colon \exists a\colon \exists b\colon P(t)\land a\in A\land b\in B\land t=(a,b))\\
-\iff \exists a{\in}A\colon \exists b{\in}B\colon \exists t\colon P(t)\land t=(a,b).
+\iff (\exists a{\in}A\colon \exists b{\in}B\colon \exists t\colon P(t)\land t=(a,b)).
 \end{gather*}
-Nun gilt aber ganz offensichtlich
-\[(\exists t\colon P(t)\land t=(a,b))\iff P(a,b).\]
-Nimmt man $P(a,b)$ an, dann lässt sich $\exists t\colon P(t)\land t=(a,b)$
-durch Wahl von $t:=(a,b)$ bestätigen. Nimmt man umgekehrt
-$\exists t\colon P(t)\land t=(a,b)$ an, lässt sich $P(a,b)$ daraus
-unter Anwendung von Satz \ref{eq-substitution} ableiten.
-Da $\exists t\colon P(t)\land t=(a,b)$ gegen $P(a,b)$ ersetzt
-werden darf, folgt die Behauptung.\,\qedsymbol
+Laut Satz \ref{eq-substitution} gilt nun
+\[(\exists t\colon P(t)\land t=(a,b))\iff P(a,b).\,\qedsymbol\]
 \end{Beweis}
 
 \begin{Satz}\label{cup-cart}
@@ -1232,7 +1259,6 @@ x\in\bigcup_{i\in I}\bigcup_{j\in J} A_{ij}
 Nach Def. \ref{def:seteq} (seteq) folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
-\newpage
 \begin{Satz}
 Die Relation \emph{Teilmenge von} ist eine Partialordnung.
 Im Einzelnen gilt%
