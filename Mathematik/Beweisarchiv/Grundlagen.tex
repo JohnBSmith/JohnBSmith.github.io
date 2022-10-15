@@ -231,6 +231,31 @@ Hierbei gilt (1), (2) gemäß Satz \ref{modus-tollens} und (3) gemäß Satz
 \ref{destructive-dilemma}.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz} Die beiden Schlussregeln
+\[\dfrac{\Gamma\vdash x=y}{\Gamma\vdash P(x)\Leftrightarrow P(y)},\qquad
+\dfrac{\Gamma\vdash x=y\qquad\Gamma'\vdash P(x)}{\Gamma,\Gamma'\vdash P(y)}\]
+sind äquivalent.
+\end{Satz}
+\begin{Beweis}
+Sie gehen aus sich hervor:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma,\Gamma'\vdash P(y)}{
+  \infer{\Gamma\vdash P(x)\Rightarrow P(y)}{
+    \infer{\Gamma\vdash P(x)\Leftrightarrow P(y)}{\Gamma\vdash x=y}}
+& \Gamma'\vdash P(x)}
+&
+\infer{\Gamma\vdash P(x)\Leftrightarrow P(y)}{
+  \infer{\Gamma\vdash P(x)\Rightarrow P(y)}{
+    \infer{\Gamma, P(x)\vdash P(y)}{
+      \Gamma\vdash x=y & \infer{P(x)\vdash P(x)}{}}}
+& \infer{\Gamma\vdash P(y)\Rightarrow P(x)}{
+    \infer{\Gamma,P(y)\vdash P(x)}{
+      \Gamma\vdash x=y & \infer{P(y)\vdash P(y)}{}}}}\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
 \newpage
 \section{Aussagenlogik}\index{Aussagenlogik}
 
@@ -517,7 +542,7 @@ wobei $f\colon A + (A \to 0)\to 0$ sein soll.\,\qedsymbol
 Es gilt $(A\land B\Rightarrow C)\Leftrightarrow (A\Rightarrow B\Rightarrow C)$.
 \end{Satz}
 \begin{Beweis}
-Für links nach rechts findet sich:
+Für von links nach rechts findet sich:
 \[
 \infer{A\land B\Rightarrow C\vdash A\Rightarrow B\Rightarrow C}{
   \infer{A\land B\Rightarrow C, A, B\vdash C}{
@@ -525,7 +550,7 @@ Für links nach rechts findet sich:
   & \infer{A, B\vdash A\land B}{
       \infer{A\vdash A}{} & \infer{B\vdash B}{}}}}
 \]
-Für rechts nach links findet sich:
+Für von rechts nach links findet sich:
 \[
 \infer{A\Rightarrow B\Rightarrow C\vdash A\land B\Rightarrow C}{
   \infer{A\Rightarrow B\Rightarrow C, A\land B\vdash C}{
@@ -750,15 +775,16 @@ Man beachte, dass die Zeugen $a,b$ unterschiedlich sein können.\,\qedsymbol
 Es gilt:
 \[(\exists x\colon P(x)\land Q(x)) \implies (\exists x\colon P(x))\land (\exists x\colon Q(x)).\]
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)] Schematisch:
-\[\infer[\infernote{1}]{(\exists x\colon P(x))\land (\exists x\colon Q(x))}{
-\exists x\colon P(x)\land Q(x)
-& \infer{(\exists x\colon P(x))\land (\exists x\colon Q(x))}{
-  \infer{\exists x\colon P(x)}{
-       \infer{P(a)}{\infer[\infernote{1}]{P(a)\land Q(a)}{}}}
-  & \infer{\exists x\colon Q(x)}{
-       \infer{Q(a)}{\infer[\infernote{1}]{P(a)\land Q(a)}{}}}}
-}\]
+\begin{Beweis}[Beweis] Sei $A:\equiv P(a)\land Q(a)$. Es findet sich:
+\[
+\infer{\exists x\colon P(x)\land Q(x)\vdash (\exists x\colon P(x))\land (\exists x\colon Q(x))}{
+  \infer{\exists a\colon A\vdash\exists a\colon A}{}
+& \infer{A\vdash (\exists x\colon P(x))\land (\exists x\colon Q(x))}{
+    \infer{A\vdash\exists x\colon P(x)}{
+      \infer{A\vdash P(a)}{\infer{A\vdash P(a)\land Q(a)}{}}}
+  & \infer{A\vdash\exists x\colon Q(x)}{
+       \infer{A\vdash Q(a)}{\infer{A\vdash P(a)\land Q(a)}{}}}}}
+\]
 In Worten: Weil aufgrund der Prämisse ein Zeuge $a$ mit sowohl $P(a)$
 als auch $Q(a)$ vorliegt, dürfen wir schließen, dass die
 Existenzaussagen $\exists x\colon P(x)$ und $\exists x\colon Q(x)$
@@ -847,8 +873,8 @@ Es gilt:
 \[(\forall x\colon\forall y\colon P(x,y))
 \iff (\forall y\colon\forall x\colon P(x,y)).\]
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)]
-Die Implikations von links nach rechts:
+\begin{Beweis}[Beweis]
+Die Implikation von links nach rechts:
 \[\infer{\forall y\colon\forall x\colon P(x,y)}{
   \infer{\forall x\colon P(x,y)}{
     \infer{P(x,y)}{\forall x\colon\forall y\colon P(x,y)}}
@@ -953,6 +979,53 @@ Nach Def. \ref{def:bounded} (bounded) und Satz
 \exists x{\in}M\colon P \equiv \exists x\colon (x\in M\land P)
 \equiv (\exists x\colon x\in M)\land P\equiv (M\ne\emptyset)\land P.\,\qedsymbol
 \end{gather*}
+\end{Beweis}
+
+\begin{Satz}\label{imp-dl}
+Es gilt $(A\Rightarrow\forall x\colon P(x))\Leftrightarrow (\forall x\colon A\Rightarrow P(x))$.
+\end{Satz}
+\begin{Beweis}
+Mit $\Gamma:=[A\Rightarrow\forall x\colon P(x)]$
+und $\Gamma':=[\forall x\colon A\Rightarrow P(x)]$
+lautet der Beweisbaum:
+\[
+\infer{\vdash (A\Rightarrow\forall x\colon P(x))\Leftrightarrow (\forall x\colon A\Rightarrow P(x))}{
+  \infer{\vdash (A\Rightarrow\forall x\colon P(x))\Rightarrow (\forall x\colon A\Rightarrow P(x))}{
+    \infer{\Gamma\vdash\forall x\colon A\Rightarrow P(x)}{
+      \infer{\Gamma\vdash A\Rightarrow P(x)}{
+        \infer{\Gamma, A\vdash P(x)}{
+          \infer{\Gamma, A\vdash\forall x\colon P(x)}{
+            \infer{\Gamma\vdash A\Rightarrow\forall x\colon P(x)}{}
+          & \infer{A\vdash A}{}}}}}}
+& \infer{\vdash (\forall x\colon A\Rightarrow P(x))\Rightarrow (A\Rightarrow\forall x\colon P(x))}{
+    \infer{\Gamma'\vdash A\Rightarrow\forall x\colon P(x)}{
+      \infer{\Gamma', A\vdash\forall x\colon P(x)}{
+        \infer{\Gamma', A\vdash P(x)}{
+          \infer{\Gamma'\vdash A\Rightarrow P(x)}{
+            \infer{\Gamma'\vdash\forall x\colon A\Rightarrow P(x)}{}
+          }
+        & \infer{A\vdash A}{}}}}}}\;\qedsymbol
+\]
+\end{Beweis}
+
+\begin{Satz}\label{redundant-eq}
+Es gilt $P(x)\Leftrightarrow (\forall y\colon x=y\Rightarrow P(y))$.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma:=[\forall y\colon x=y\Rightarrow P(y)]$. Es findet sich:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{P(x)\vdash\forall y\colon x=y\Rightarrow P(y)}{
+  \infer{P(x)\vdash x=y\Rightarrow P(y)}{
+    \infer{P(x),x=y\vdash P(y)}{
+      \infer{P(x)\vdash P(x)}{} & \infer{x=y\vdash x=y}{}}}}
+&
+\infer{\Gamma\vdash P(x)}{
+  \infer{\Gamma\vdash x=x\Rightarrow P(x)}{
+    \infer{\Gamma\vdash\forall y\colon x=y\Rightarrow P(y)}{}}
+& \infer{\vdash x=x}{}}\;\qedsymbol
+\end{array}
+\]
 \end{Beweis}
 
 \newpage
@@ -1115,7 +1188,7 @@ Es gilt $a=b\iff \forall x\colon x=a\Leftrightarrow x=b$.
 \end{Satz}
 
 \begin{Beweis}
-Für links nach rechts findet sich:
+Für von links nach rechts findet sich:
 \[
 \infer{\vdash a=b\Rightarrow\forall x\colon x=a\Leftrightarrow x=b}{
   \infer{a=b\vdash\forall x\colon x=a\Leftrightarrow x=b}{
@@ -1127,7 +1200,7 @@ Für links nach rechts findet sich:
         \infer{a=b,x=b\vdash x=a}{
           \infer{x=b\vdash x=b}{} & \infer{a=b\vdash b=a}{}}}}}}
 \]
-Für rechts nach links findet sich:
+Für von rechts nach links findet sich:
 \[
 \infer{\vdash(\forall x\colon x=a\Leftrightarrow x=b)\Rightarrow a=b}{
   \infer{\Gamma\vdash a=b}{
@@ -1156,14 +1229,14 @@ Laut Satz \ref{eq-iff-all-iff} ist die rechte Aussage
 Es gilt $P(x)\iff (\exists y\colon P(y)\land x=y)$.
 \end{Satz}
 \begin{Beweis}
-Für links nach rechts wähle $y:=x$ als Zeugen:
+Für von links nach rechts wähle $y:=x$ als Zeugen:
 \[
 \infer{P(x)\vdash\exists y\colon P(y)\land x=y}{
   \infer{P(x)\vdash P(x)\land x=x}{
     \infer{P(x)\vdash P(x)}{}
   & \infer{\vdash x=x}{}}}
 \]
-Für rechts nach links:
+Für von rechts nach links:
 \[
 \infer{\exists y\colon P(y)\land x=y\vdash P(x)}{
   \infer{\exists y\colon A\vdash\exists y\colon A}{}
@@ -1182,25 +1255,35 @@ Es gilt:
 \end{Satz}
 
 \begin{Beweis}
-Nach Def. \ref{def:cart} (cart) gilt:
+Es findet sich die Umformung
+\begin{gather*}
+(\forall t \in A{\times}B\colon P(t))
+\stackrel{\text{(1)}}{\iff} (\forall t\colon t\in A\times B\Rightarrow P(t))\\
+\stackrel{\text{(2)}}{\iff}
+(\forall t\colon (\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\Rightarrow P(t))\\
+\stackrel{\text{(3)}}{\iff}
+(\forall t\colon\forall a\colon\forall b\colon t=(a,b)\land a\in A\land b\in B\Rightarrow P(t))\\
+\stackrel{\text{(4)}}{\iff}
+(\forall a\colon\forall b\colon\forall t\colon t=(a,b)\Rightarrow a\in A\Rightarrow b\in B\Rightarrow P(t)).
+\end{gather*}
+Hierbei gilt (1) laut Def. \ref{def:bounded}, (2) laut Def. \ref{def:cart},
+(3) unter doppelter Anwendung von Satz \ref{exists-implies-const}
+und (4) unter doppelter Anwendung von Satz \ref{all-cl}, gefolgt
+von doppelter Anwendung von Satz \ref{curry-impl}.
+Auf der anderen Seite gilt die Umformung
 \begin{align*}
-&(\forall t \in A{\times}B\colon P(t))\iff (\forall t\colon t\in A\times B\implies P(t))\\
-&\iff (\forall t\colon (\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\implies P(t)).
+(\forall a{\in}A\colon\forall b{\in}B\colon P(a,b))
+&\stackrel{\text{(5)}}{\iff}
+(\forall a\colon a\in A\Rightarrow\forall b\colon b\in B\Rightarrow P(a,b))\\
+&\stackrel{\text{(6)}}{\iff}
+(\forall a\colon\forall b\colon a\in A\Rightarrow b\in B\Rightarrow P(a,b)).
 \end{align*}
-Unter doppelter Anwendung von Satz \ref{exists-implies-const} gilt weiter:
-\[\iff \forall t\colon\forall a\colon\forall b\colon [t=(a,b)\land a\in A\land b\in B\implies P(t)].\]
-Substituiert man $t:=(a,b)$, dann ergibt sich:
-\[\implies (\forall a\colon\forall b\colon a\in A\land B\in B\implies P(a,b))
-\iff \forall a{\in}a\colon\forall b{\in}B\colon P(a,b),\]
-wobei $P(a,b)$ eine Kurzschreibweise für $P((a,b))$ ist.
-Von der Gegenrichtung bilden wir die Kontraposition:
-\[(\exists t\colon\exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B\land \overline{P(t)})
-\implies \exists a\colon\exists b\colon a\in a\land b\in B\land \overline{P(a,b)}.\]
-Dem $\exists t$ wird aber immer durch $t:=(a,b)$ genügt, so dass sich die
-äquivalente Formel
-\[(\exists a\colon\exists b\colon a\in A\land b\in B\land \overline{P(a,b)})
-\implies \exists a\colon \exists b\colon a\in A\land b\in B\land \overline{P(a,b)}.\]
-ergibt.\;\qedsymbol
+Hierbei gilt (5) per Def. \ref{def:bounded} und (6) per Satz \ref{imp-dl}.
+Wir definieren die Abkürzung
+\[Q(t) := (a\in A\Rightarrow b\in B\Rightarrow P(t)).\]
+Zu zeigen verbleibt also
+\[Q(a,b)\iff (\forall t\colon t=(a,b)\Rightarrow Q(t)).\]
+Diese Äquivalenz gilt laut Satz \ref{redundant-eq}.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{exists-cart}
