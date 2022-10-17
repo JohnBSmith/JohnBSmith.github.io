@@ -44,7 +44,8 @@ $\dfrac{\Gamma,\Gamma'\vdash B}{\Gamma,A,\Gamma'\vdash B}$
 \bottomrule
 \end{tabular}
 
-\subsubsection{Axiome}
+\newpage
+\subsubsection{Logische Axiome}
 
 \begin{Axiom}
 Es gilt $\Gamma,A,\Gamma'\vdash A$.
@@ -52,6 +53,53 @@ Es gilt $\Gamma,A,\Gamma'\vdash A$.
 
 \begin{Axiom}
 Es gilt $\Gamma\vdash\top$.
+\end{Axiom}
+
+\begin{Axiom}[PE: Principle of explosion]\label{PE}
+Eine falsche Aussage impliziert jede beliebige Aussage, kurz
+\[\vdash \bot\Rightarrow A.\]
+\end{Axiom}
+Bemerkung: Dieses Prinzip erlaubt Programmterme mit leerem
+Pattern matching, so dass ein Zeuge für $0\to A$ konstruiert
+werden kann.
+
+\begin{Axiom}[LEM: Satz vom ausgeschlossenen Dritten]\label{LEM}\newlinefirst
+Entweder gilt eine Aussage, oder ihre Negation gilt, kurz
+\[\vdash A\lor\neg A.\]
+\end{Axiom}
+Bemerkung: Zur Schaffung von Klarheit sollte ein Beweis die Markierung
+LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom besteht.
+Verzichtet keiner der Beweise eines Satzes auf LEM, sollte der Satz
+ebenfalls mit LEM markiert werden.
+
+\begin{Axiom}[DN: Beseitigung der Doppelnegation]\label{DNE}\newlinefirst
+Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
+\[\vdash \neg\neg A\Rightarrow A.\]
+\end{Axiom}
+
+\subsubsection{Axiome zur Gleichheit}
+\begin{Axiom}[Reflexivität]
+Es gilt $\vdash x=x$.
+\end{Axiom}
+
+\begin{Axiom}[Symmetrie]
+Es gilt $\vdash x=y\Rightarrow y=x$. Infolge gilt die Schlussregel
+\[\dfrac{\Gamma\vdash x=y}{\Gamma\vdash y=x}.\]
+\end{Axiom}
+
+\begin{Axiom}[Transitivität]
+Es gilt $\vdash x=y\land y=z\Rightarrow x=z$. Infolge gilt
+\[\dfrac{\Gamma\vdash x=y\qquad\Gamma'\vdash y=z}{\Gamma,\Gamma'\vdash x=z}.\]
+\end{Axiom}
+
+\begin{Axiom}
+Es gilt $\vdash x=y\land P(x)\Rightarrow P(y)$. Infolge gilt
+\[\dfrac{\Gamma\vdash x=y\qquad\Gamma'\vdash P(x)}{\Gamma,\Gamma'\vdash P(y)}.\]
+\end{Axiom}
+
+\begin{Axiom}
+Es gilt $\vdash x=y\Rightarrow f(x)=f(y)$. Infolge gilt
+\[\dfrac{\Gamma\vdash x=y}{\Gamma\vdash f(x)=f(y)}.\]
 \end{Axiom}
 
 \newpage
@@ -256,6 +304,30 @@ Sie gehen aus sich hervor:
 \]
 \end{Beweis}
 
+\begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{PE} (PE)
+implizieren Axiom \ref{DNE} (DN).
+\end{Satz}
+\begin{Beweis} Es findet sich:
+\[
+\infer{\neg\neg A\vdash A}{
+  \infer{\vdash\neg A\lor A}{}
+& \infer[\infernote{PE}]{\neg\neg A,\neg A\vdash A}{
+    \infer{\neg\neg A,\neg A\vdash\bot}{
+      \infer{\neg\neg A\vdash\neg\neg A}{}
+    & \infer{\neg A\vdash\neg A}{}}}
+& \infer{A\vdash A}{}}
+\]
+Zu $\vdash \neg A \lor A\Rightarrow (\neg\neg A \Rightarrow A)$.
+Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{exfq}(A)$
+für $0\to A$. Damit lässt sich der Programmterm
+\[(A\to 0) + A \to ((A\to 0)\to 0)\to A,\quad
+s\mapsto\match s\begin{cases}
+\inl f\mapsto g\mapsto \operatorname{exfq}(A)(g(f)),\\
+\inr a\mapsto g\mapsto a.
+\end{cases}\]
+konstruieren.\;\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Aussagenlogik}\index{Aussagenlogik}
 
@@ -311,7 +383,7 @@ Zu $A\land B\Rightarrow B\land A$. Schematisch:
 \end{array}
 \]
 Programmterm:
-\[A\times B\to B\times A,\; (a,b)\mapsto (b,a).\]
+\[A\times B\to B\times A,\quad (a,b)\mapsto (b,a).\]
 Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
@@ -331,7 +403,7 @@ Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
 \end{array}
 \]
 Programmterm:
-\[A+B\to B+A,\; s\mapsto\match s\begin{cases}
+\[A+B\to B+A,\quad s\mapsto\match s\begin{cases}
 \inl(a)\mapsto \inr(a),\\
 \inr(b)\mapsto \inl(b).
 \end{cases}\]
@@ -379,41 +451,36 @@ t\mapsto\match t\begin{cases}
 \]
 Sämtliche Teilaussagen sind bewiesen.\;\qedsymbol
 
-\begin{Axiom}[PE: Principle of explosion]\label{PE}
-Eine falsche Aussage impliziert jede beliebige Aussage, kurz
-\[\vdash (\bot\Rightarrow A).\]
-\end{Axiom}
-Bemerkung: Dieses Prinzip erlaubt Programmterme mit leerem
-Pattern matching, so dass ein Zeuge für $0\to A$ konstruiert
-werden kann.
-
-\begin{Axiom}[LEM: Satz vom ausgeschlossenen Dritten]\label{LEM}\newlinefirst
-Entweder gilt eine Aussage, oder ihre Negation gilt, kurz
-\[\vdash A\lor\neg A.\]
-\end{Axiom}
-Bemerkung: Zur Schaffung von Klarheit sollte ein Beweis die Markierung
-LEM bekommen, wenn transitive Abhängigkeit zu diesem Axiom besteht.
-Verzichtet keiner der Beweise eines Satzes auf LEM, sollte der Satz
-ebenfalls mit LEM markiert werden.
-
-\begin{Axiom}[DN: Beseitigung der Doppelnegation]\label{DNE}\newlinefirst
-Die Doppelnegation einer Aussage $A$ impliziert die Aussage $A$, kurz
-\[\vdash (\neg\neg A\Rightarrow A).\]
-\end{Axiom}
-
-\begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{PE} (PE)
-implizieren Axiom \ref{DNE} (DN).
+\begin{Satz}\label{from-conj}
+Es gilt $A\land B\Rightarrow B$ und $A\Rightarrow A\lor B$.
 \end{Satz}
-\begin{Beweis}[Beweis (Natürliches Schließen)]
-Zu $\neg A \lor A\vdash (\neg\neg A \Rightarrow A)$.
-Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{exfq}(A)$
-für $0\to A$. Damit lässt sich der Programmterm
-\[(A\to 0) + A \to (((A\to 0)\to 0)\to A),\;
-s\mapsto\match s\begin{cases}
-\inl f\mapsto g\mapsto \operatorname{exfq}(A)(g(f)),\\
-\inr a\mapsto g\mapsto a.
-\end{cases}\]
-konstruieren.\;\qedsymbol
+\begin{Beweis}[Beweis 1]
+Die Beweisbäume:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\vdash A\land B\Rightarrow B}{
+  \infer{A\land B\vdash B}{
+    \infer{A\land B\vdash A\land B}{}}}
+&
+\infer{\vdash A\Rightarrow A\lor B}{
+  \infer{A\vdash A\lor B}{
+    \infer{A\vdash A}{}}}
+\end{array}
+\]
+Die Programmterme sind
+\[
+A\times B\to A,\quad (a,b)\mapsto a;\qquad
+A\to A+B,\quad a\mapsto\inl(a).\,\qedsymbol\]
+\end{Beweis}
+\begin{Beweis}[Beweis 2 (LEM)]
+Mit boolescher Algebra erhält man
+\begin{gather*}
+A\land B\Rightarrow A\equiv \neg(A\land B)\lor A
+\equiv \neg A\lor\neg B\lor A
+\equiv 1\lor\neg B\equiv 1,\\
+A\Rightarrow A\lor B\equiv \neg A\lor A\lor B
+\equiv 1\lor B\equiv 1.\,\qedsymbol
+\end{gather*}
 \end{Beweis}
 
 \newpage
@@ -666,6 +733,65 @@ gilt gemäß Axiom \ref{PE}.\,\qedsymbol
 \end{Beweis}
 
 \newpage
+\begin{Satz}[Assoziativgesetz]\newlinefirst
+Es gilt $A\land (B\land C)\Leftrightarrow (A\land B)\land C$.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma:=[A\land (B\land C)]$. Der Beweisbaum:
+\[
+\infer{\vdash A\land (B\land C)\Rightarrow (A\land B)\land C}{
+  \infer{\Gamma\vdash (A\land B)\land C}{
+    \infer{\Gamma\vdash A\land B}{
+      \infer{\Gamma\vdash A}{
+        \infer{\Gamma\vdash A\land (B\land C)}{}}
+    & \infer{\Gamma\vdash B}{
+        \infer{\Gamma\vdash B\land C}{
+          \infer{\Gamma\vdash A\land (B\land C)}{}}}}
+  & \infer{\Gamma\vdash C}{
+      \infer{\Gamma\vdash B\land C}{
+        \infer{\Gamma\vdash A\land (B\land C)}{}}}}}
+\]
+Der Programmterm ist
+\[A\times (B\times C)\to (A\times B)\times C,\quad
+(a, (b, c))\mapsto ((a, b), c).\]
+Für die Umkehrung verläuft der Beweis analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{conj-premise}
+Es gilt $(A\Rightarrow B)\Leftrightarrow (A\Rightarrow A\land B)$.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Der Beweisbaum:
+\[
+\infer{\vdash (A\Rightarrow B)\Leftrightarrow (A\Rightarrow A\land B)}{
+  \infer{\vdash (A\Rightarrow B)\Rightarrow A\Rightarrow A\land B}{
+    \infer{A\Rightarrow B\vdash A\Rightarrow A\land B}{
+      \infer{A\Rightarrow B, A\vdash A\land B}{
+        \infer{A\vdash A}{}
+      & \infer{A\Rightarrow B, A\vdash B}{
+          \infer{A\Rightarrow B\vdash A\Rightarrow B}{}
+        & \infer{A\vdash A}{}}}}}
+& \infer{\vdash (A\Rightarrow A\land B)\Rightarrow A\Rightarrow B}{
+    \infer{A\Rightarrow A\land B\vdash A\Rightarrow B}{
+      \infer{A\Rightarrow A\land B, A\vdash B}{
+        \infer{A\Rightarrow A\land B, A\vdash A\land B}{
+          \infer{A\Rightarrow A\land B\vdash A\Rightarrow A\land B}{}
+        & \infer{A\vdash A}{}}}}}}
+\]
+Die Programmterme sind
+\begin{gather*}
+(A\to B)\to A\to A\times B,\quad f\mapsto a\mapsto (a, f(a)),\\
+(A\to A\times B)\to A\to B,\quad f\mapsto a\mapsto \pi_{\mathrm r}(f(a)).
+\end{gather*}
+\end{Beweis}
+\begin{Beweis}[Beweis 2 (LEM, boolesche Algebra)]
+Es gilt die Umformung
+\[A\Rightarrow A\land B\equiv \neg A\lor (A\land B)
+\equiv (\neg A\lor A)\land (\neg A\land B)
+\equiv 1\land (A\Rightarrow B)\equiv A\Rightarrow B.\,\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \section{Prädikatenlogik}\index{Praedikatenlogik@Prädikatenlogik}
 
 \begin{Definition}[bounded: beschränkte Quantifizierung]%
@@ -689,18 +815,15 @@ Schematisch. Zur ersten Äquivalenz:
 \[\begin{array}{c@{\qquad}c}
 \infer[\infernote{1}]{\exists x\colon (A\land P(x))}{
   \exists x\colon P(x)
-  & \infer{\exists x\colon (A\land P(x))}{
-      \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}}
-}
+& \infer{\exists x\colon (A\land P(x))}{
+    \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}}}
 &
 \infer[\infernote{1}]{A\land\exists x\colon P(x)}{
-\exists x\colon (A\land P(x))
+  \exists x\colon (A\land P(x))
 & \infer{A\land \exists x\colon P(x)}{
     \infer{A}{\infer[\infernote{1}]{A\land P(a)}{}}
   & \infer{\exists x\colon P(x)}{
-      \infer{P(a)}{\infer[\infernote{1}]{A\land P(a)}{}}}
-}
-}
+      \infer{P(a)}{\infer[\infernote{1}]{A\land P(a)}{}}}}}
 \end{array}\]
 Zur zweiten Äquivalenz:
 {\small
@@ -744,15 +867,12 @@ Die Implikation von links nach rechts:
 \[
 \infer[\infernote{1}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
   \exists x\colon P(x)\lor Q(x)
-  &
-  \infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+& \infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
     \infer[\infernote{1}]{P(a)\lor Q(a)}{}
-    & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
-        \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
-    & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
-        \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}
-  }
-}
+  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+      \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
+  & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
+      \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}}}
 \]
 Die Implikation von rechts nach links:
 \[\infer[\infernote{1}]{\exists x\colon P(x)\lor Q(x)}{
@@ -818,24 +938,21 @@ Umformung%
 Es gilt:
 \[(\forall x\colon (P(x)\implies A)) \iff ((\exists x\colon P(x))\implies A).\]
 \end{Satz}
-\begin{Beweis}[Beweis 1 (Natürliches Schließen)] Schematisch:\\
+\begin{Beweis}[Beweis 1 (Natürliches Schließen)] Schematisch:
 \[\begin{array}{c@{\qquad}c}
 \infer[\infernote{1}]{(\exists x\colon P(x))\implies A}{
   \infer[\infernote{2}]{A}{
     \infer[\infernote{1}]{\exists x\colon P(x)}{}
-    &
-    \infer{A}{
+  & \infer{A}{
       \infer{P(a)\implies A}{\forall x\colon (P(x)\implies A)}
-      & \infer[\infernote{2}]{P(a)}{}}
-  }
-}
+    & \infer[\infernote{2}]{P(a)}{}}}}
 &
 \infer{\forall x\colon (P(x)\implies A)}{
   \infer[\infernote{1}]{P(x)\implies A}{
     \infer{A}{
       (\exists x\colon P(x))\implies A
-      & \infer{\exists x\colon P(x)}{
-          \infer[\infernote{1}]{P(x)}{}}}}}
+    & \infer{\exists x\colon P(x)}{
+        \infer[\infernote{1}]{P(x)}{}}}}}
 \end{array}
 \]
 Die linke Seite zeigt die Implikation von links nach rechts,
@@ -1084,61 +1201,68 @@ Es gilt $A\cap B = B\cap A$ und $A\cup B = B\cup A$.
 \end{Satz}
 
 \begin{Beweis}
-Nach Def. \ref{def:seteq} (seteq) expandieren:
+Man unternimmt die Umformung
+\[x\in A\cap B
+\stackrel{\text{(1)}}{\iff} x\in A\land x\in B
+\stackrel{\text{(2)}}{\iff} x\in B\land x\in A
+\stackrel{\text{(3)}}{\iff} x\in B\cap A.\]
+Hierbei gilt (1), (3) laut Def. \ref{def:cap} in Verbindung mit
+Def. \ref{def:filter}. Die Vertauschung (2) darf gemäß Satz \ref{bool-cl}
+vorgenommen werden. Man erhält also
 \[\forall x\colon (x\in A\cap B \iff x\in B\cap A).\]
-Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
-\[x\in A\cap B \iff x\in A\land x\in B \iff x\in B\land x\in A
-\iff x\in B\cap A.\]
-Für die Vereinigung ist das analog.\,\qedsymbol
+Laut Def. \ref{def:seteq} ist diese Aussage äquivalent zu
+$A\cap B = B\cap A$.
+Bei der Vereinigung verläuft der Beweis analog.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Assoziativgesetze]%
-\index{Assoziativgesetz!Mengen, boolesche Algebra}
+\index{Assoziativgesetz!Mengen, boolesche Algebra}\newlinefirst
 Es gilt $A\cap (B\cap C) = (A\cap B)\cap C$
 und $A\cup (B\cup C) = (A\cup B)\cup C$.
 \end{Satz}
 
 \begin{Beweis}
-Nach Def. \ref{def:seteq} (seteq) expandieren:
-\[\forall x\colon [x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C].\]
-Nach Def. \ref{def:cap} (cap) und Def. \ref{def:filter} (filter) gilt:
-\begin{align*}
-&x\in A\cap (B\cap C) \iff x\in A\land x\in B\cap C
-\iff x\in A\land (x\in B\land x\in C)\\
-&\iff (x\in A\land x\in B)\land x\in C
-\iff x\in A\cap B\land x\in C
-\iff x\in (A\cap B)\cap C.
-\end{align*}
-Für die Vereinigung ist das analog.\,\qedsymbol
+Es findet sich die Umformung
+\begin{gather*}
+x\in A\cap (B\cap C)
+\stackrel{\text{(1)}}\iff x\in A\land x\in B\cap C
+\stackrel{\text{(2)}}\iff x\in A\land (x\in B\land x\in C)\\
+\stackrel{\text{(3)}}\iff (x\in A\land x\in B)\land x\in C
+\stackrel{\text{(4)}}\iff x\in A\cap B\land x\in C
+\stackrel{\text{(5)}}\iff x\in (A\cap B)\cap C.
+\end{gather*}
+Hierbei gilt (1), (2), (4), (5) laut Def. \ref{def:cap} in Verbindung
+mit Def. \ref{def:filter}. Die Umformung (3) gilt, weil Konjunktionen
+das Assoziativgesetz allgemein erfüllen. Man erhält also
+\[\forall x\colon (x\in A\cap (B\cap C) \iff x\in (A\cap B)\cap C).\]
+Per Def. \ref{def:seteq} ist diese Aussage äquivalent zur
+Behauptung. Bei der Vereinigung verläuft der Beweis analog.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{cap-subseteq}
 Es gilt $A\cap B\subseteq A$.
 \end{Satz}
 \begin{Beweis}
-Expansion liefert die Formel $x\in A\land x\in B\implies x\in A$.
-Gemäß boolescher Algebra gilt allgemein
-\[\varphi\land\psi\Rightarrow\varphi
-\equiv \neg(\varphi\land\psi)\lor\varphi
-\equiv \neg\varphi\lor\neg\psi\lor\varphi
-\equiv 1\lor\neg\psi\equiv 1.\]
-Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
+Laut Def. \ref{def:subseteq} und Def. \ref{def:cap} in Verbindung
+mit Def. \ref{def:filter} darf $A\cap B\subseteq A$ zu
+\[\forall x\colon (x\in A\land x\in B\implies x\in A)\]
+umgeformt werden. Diese Aussage ist laut Satz \ref{from-conj}
+immer erfüllt.
 \end{Beweis}
 
 \begin{Satz}\label{subseteq-char}
 Es gilt $A\subseteq B\iff A\cap B=A$.
 \end{Satz}
 \begin{Beweis}
-Aufgrund von Satz \ref{cap-subseteq} muss lediglich
-$A\subseteq B\iff A\subseteq A\cap B$ gezeigt werden.
-Expansion führt zur Formel
+Aufgrund von Satz \ref{cap-subseteq} muss lediglich die Äquivalenz
+von $A\subseteq B$ und $A\subseteq A\cap B$ gezeigt werden.
+Laut Satz \ref{conj-premise} gilt die Formel
 \[x\in A\Rightarrow x\in B\iff x\in A\Rightarrow x\in A\land x\in B.\]
-Die Formel $\varphi\Rightarrow\psi\iff\varphi\Rightarrow\varphi\land\psi$
-ist aber tautologisch, denn
-\[\varphi\Rightarrow\varphi\land\psi\equiv\neg\varphi\lor(\varphi\land\psi)
-\equiv (\neg\varphi\lor\varphi)\land(\neg\varphi\land\psi)
-\equiv 1\land(\varphi\Rightarrow\psi)\equiv \varphi\Rightarrow\psi.\]
-Setze $\varphi:=(x\in A)$ und $\psi:=(x\in B)$.\;\qedsymbol
+Gemäß der Ersetzungsregel gilt also auch
+\[(\forall x\colon x\in A\Rightarrow x\in B)
+\iff (\forall x\colon x\in A\Rightarrow x\in A\land x\in B).\]
+Per Def. \ref{def:subseteq} und Def. \ref{def:cup} in Verbindung
+mit Def. \ref{def:filter} folgt nun die Behauptung.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{setdiff-dist}
@@ -1250,8 +1374,9 @@ Hierbei steht $A$ als Abkürzung für $P(y)\land x=y$.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{all-cart}
-Es gilt:
-\[(\forall t \in A{\times}B\colon P(t)) \iff \forall a{\in}A\colon\forall b{\in}B\colon P(a,b).\]
+Es gilt
+$(\forall t \in A{\times}B\colon P(t))
+\Leftrightarrow (\forall a{\in}A\colon\forall b{\in}B\colon P(a,b))$.
 \end{Satz}
 
 \begin{Beweis}
@@ -1287,20 +1412,25 @@ Diese Äquivalenz gilt laut Satz \ref{redundant-eq}.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{exists-cart}
-Es gilt:
-\[(\exists t\in A{\times}B\colon P(t))
-\iff (\exists a{\in}A\colon \exists b{\in}B\colon P(a,b)).\]
+Es gilt $(\exists t\in A{\times}B\colon P(t))
+\Leftrightarrow (\exists a{\in}A\colon \exists b{\in}B\colon P(a,b))$.
 \end{Satz}
 
 \begin{Beweis}
-Mit Def. \ref{def:cart} (cart) findet sich die Umformung
+Es findet sich die Umformung
 \begin{gather*}
 (\exists t{\in}A{\times}B\colon P(t))
-\iff (\exists t\colon P(t)\land t\in A\times B)\\
-\iff (\exists t\colon P(t)\land \exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\\
-\iff (\exists t\colon \exists a\colon \exists b\colon P(t)\land a\in A\land b\in B\land t=(a,b))\\
-\iff (\exists a{\in}A\colon \exists b{\in}B\colon \exists t\colon P(t)\land t=(a,b)).
+\stackrel{\text{(1)}}{\iff} (\exists t\colon P(t)\land t\in A\times B)\\
+\stackrel{\text{(2)}}{\iff}
+(\exists t\colon P(t)\land \exists a\colon\exists b\colon t=(a,b)\land a\in A\land b\in B)\\
+\stackrel{\text{(3)}}{\iff}
+(\exists t\colon \exists a\colon \exists b\colon P(t)\land a\in A\land b\in B\land t=(a,b))\\
+\stackrel{\text{(4)}}{\iff}
+(\exists a{\in}A\colon \exists b{\in}B\colon \exists t\colon P(t)\land t=(a,b)).
 \end{gather*}
+Hierbei gilt (1), (4) per Def. \ref{def:bounded}, (2) per Def. \ref{def:cart}
+und (3) per Satz. \ref{general-dl}.
+
 Laut Satz \ref{eq-substitution} gilt nun
 \[(\exists t\colon P(t)\land t=(a,b))\iff P(a,b).\,\qedsymbol\]
 \end{Beweis}

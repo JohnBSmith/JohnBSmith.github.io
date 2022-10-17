@@ -15,7 +15,7 @@ Raum, falls die folgenden drei Axiome erfüllt sind:
 Die Elemente der Topologie nennt man offene Mengen.
 \end{Definition}
 
-\begin{Definition}[Abgeschlossene Menge]
+\begin{Definition}[Abgeschlossene Menge]\label{def:closed-set}
 Sei $X$ ein topologischer Raum. Eine Menge $M\subseteq X$
 nennt man abgeschlossen, wenn das Komplement $X\setminus M$ offen ist.
 \end{Definition}
@@ -65,10 +65,16 @@ von $X$ offen ist.
 
 \subsection{Stetige Abbildungen}
 
-\begin{Definition}[Stetige Abbildung]\newlinefirst
+\begin{Definition}[Stetige Abbildung]\label{def:cont}\newlinefirst
 Seien $X$ und $Y$ topologischen Räume. Eine Abbildung $f\colon X\to Y$
 heißt stetig, wenn unter ihr das Urbild einer offenen Menge stets
 wieder offen ist.
+\end{Definition}
+
+\begin{Definition}[Homöomorphismus]\newlinefirst
+Seien $X$ und $Y$ topologische Räume. Eine bijektive Abbildung
+$f\colon X\to Y$ heißt Homöomorphismus, wenn sowohl $f$ als auch
+$f^{-1}$ stetig sind.
 \end{Definition}
 
 \begin{Satz}
@@ -100,11 +106,18 @@ Ist $M$ offen, so auch $g^{-1}(M)$ und infolge $f^{-1}(g^{-1}(M))$.
 Ergo ist $g\circ f$ stetig.\,\qedsymbol
 \end{Beweis}
 
-\begin{Definition}[Homöomorphismus]\newlinefirst
-Seien $X$ und $Y$ topologische Räume. Eine bijektive Abbildung
-$f\colon X\to Y$ heißt Homöomorphismus, wenn sowohl $f$ als auch
-$f^{-1}$ stetig sind.
-\end{Definition}
+\begin{Satz}\label{cont-implies-closed-closed}
+Das Urbild einer abgeschlossenen Menge unter einer stetigen Abbildung
+ist abgeschlossen.
+\end{Satz}
+\begin{Beweis}
+Sei $f\colon X\to Y$ stetig. Sei $B\subseteq Y$ abgeschlossen.
+Per Def. \ref{def:closed-set} ist $Y\setminus B$ offen. Laut Def.
+\ref{def:cont} ist folglich das Urbild
+\[f^{-1}(Y\setminus B) = f^{-1}(Y)\setminus f^{-1}(B) = X\setminus f^{-1}(B)\]
+offen. Wir blicken nochmals auf Def. \ref{def:closed-set} und sehen,
+$f^{-1}(B)$ ist abgeschlossen.\,\qedsymbol
+\end{Beweis}
 
 \newpage
 \subsection{Elementares}
@@ -280,7 +293,7 @@ $X$ ebenfalls unzusammenhängend.\,\qedsymbol
 \newpage
 \section{Metrische Räume}
 \subsection{Metrische Räume}
-\begin{Definition}[metric-space: metrischer Raum]%
+\begin{Definition}[Metrischer Raum]%
 \index{metrischer Raum}\label{metric-space}
 Man bezeichet $(M,d)$ mit $d\colon M^2\to\R$ genau dann als
 metrischen Raum, wenn die folgenden Axiome erfüllt sind:
@@ -291,12 +304,18 @@ metrischen Raum, wenn die folgenden Axiome erfüllt sind:
 \end{align*}
 \end{Definition}
 
-\begin{Definition}[open-ep-ball: offene Epsilon-Umgebung]\newlinefirst
+\begin{Definition}[Offene Epsilon-Umgebung]\newlinefirst
 Für einen metrischen Raum $(M,d)$ und $p\in M$:
 \[U_\varepsilon(p) := \{x\mid d(p,x)<\varepsilon\}.\]
 \end{Definition}
 Bemerkung: Unter einer Epsilon-Umgebung ohne weitere Attribute
 versteht man immer eine offene Epsilon-Umgebung.
+
+\begin{Definition}[Offene Menge]\newlinefirst
+Sei $M$ ein metrischer Raum. Eine Menge $A\subseteq M$ heißt
+offen, wenn jeder Punkt $p\in A$ ein $\varepsilon$ besitzt, so dass
+$U_\varepsilon(p)\subseteq A$ gilt.
+\end{Definition}
 
 \begin{Satz}[Konstruktion disjunkter Epsilon-Umgebungen]%
 \label{construction-disjoint-ep-balls}
@@ -319,7 +338,7 @@ $c<a+b\le c$ und somit den Widerspruch $c<c$.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Unterschiedliche Punkte eines metrischen Raumes
-besitzen disjunkte Epsilon-Umgebungen]
+besitzen disjunkte Epsilon-Umgebungen]\label{uneq-points-disjoint-ep-balls}
 Sei $(M,d)$ ein metrischer Raum und $p,q\in M$.
 Wenn $p\ne q$ ist, dann gibt es disjunkte offene
 Epsilon-Umgebungen $U_a(p)$ und $U_b(q)$.
@@ -328,6 +347,17 @@ Epsilon-Umgebungen $U_a(p)$ und $U_b(q)$.
 \begin{Beweis}
 Folgt trivial aus Satz \ref{construction-disjoint-ep-balls}.
 Wähle speziell z.\,B. $a=b=d(p,q)/2$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{singleton-closed}
+Jede einelementige Teilmenge eines metrischen Raums ist abgeschlossen.
+\end{Satz}
+\begin{Beweis}
+Es sei $M$ ein metrischer Raum und $p\in M$ ein Punkt. Es ist $\{p\}$
+per Def. \ref{def:closed-set} abgeschlossen, wenn $M\setminus\{p\}$ offen
+ist. Die Menge $M\setminus\{p\}$ ist offen, denn jeder ihrer Punkte
+besitzt laut Satz \ref{uneq-points-disjoint-ep-balls} eine offene
+Epsilon"=Umgebung, die den Punkt $p$ nicht enthält.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{metric-transform}
@@ -371,7 +401,7 @@ $y\ge 0$.\,\qedsymbol
 
 \newpage
 \subsection{Normierte Räume}
-\begin{Definition}[normed-space: normierter Raum]%
+\begin{Definition}[Normierter Raum]%
 \label{def:normed-space}\index{normierter Raum}\index{Dreiecksungleichung}
 Sei $V$ ein Vektorraum über dem Körper der rellen oder komplexen
 Zahlen. Sei $N(x)=\|x\|$ eine Abbildung, die jedem $x\in V$ eine
@@ -384,18 +414,17 @@ normierten Raum, wenn die folgenden Axiome erfüllt sind:
 \end{align*}
 \end{Definition}
 
-\begin{Satz}[umgekehrte Dreiecksungleichung]%
+\begin{Satz}[Umgekehrte Dreiecksungleichung]%
 \label{rev-tineq}\index{umgekehrte Dreiecksungleichung}%
-\index{Dreiecksungleichung!umgekehrte}
+\index{Dreiecksungleichung!umgekehrte}\newlinefirst
 In jedem normierten Raum gilt
 \[|\|x\|-\|y\|| \le \|x-y\|.\]
 \end{Satz}
 \begin{Beweis}
-Auf beiden Seiten von Def. \ref{def:normed-space} (normed-space)
-Axiom (N3) wird $\|y\|$ subtrahiert.
-Es ergibt sich
-\[\|x+y\| - \|y\| \le \|x\|.\]
-Substitution $x:=x-y$ bringt nun
+Auf beiden Seiten von Def. \ref{def:normed-space}
+Axiom (N3) wird $\|y\|$ subtrahiert, was zu
+\[\|x+y\| - \|y\| \le \|x\|\]
+führt. Substitution $x:=x-y$ bringt nun
 \[\|x\| - \|y\| \le \|x-y\|.\]
 Vertauscht man nun $x$ und $y$, dann ergibt sich
 \[\|y\|-\|x\| \le \|y-x\| \iff -(\|x\|-\|y\|)\le \|x-y\|.\]
@@ -405,6 +434,32 @@ man die letzte Ungleichung mit $-1$, dann ergibt sich $a\ge -b$.
 Somit ist $-b\le a\le b$, kurz $|a|\le b$.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{norm-cont}
+Die Funktion $x\mapsto\|x\|$ ist eine stetige.
+\end{Satz}
+\begin{Beweis}
+Laut Definition der Stetigkeit ist
+\[\forall\varepsilon{>}0\colon\,\exists\delta{>}0\colon\,\forall x\colon\,
+(\|x-a\| < \delta \implies |\|x\|-\|a\|| < \varepsilon)\]
+für eine beliebige Stelle $a$ zu zeigen. Man wählt schlicht
+$\delta:=\varepsilon$ als Zeuge, denn gemäß der umgekehrten
+Dreiecksungleichung gilt
+\[|\|x\|-\|a\|| \le \|x-a\| < \delta = \varepsilon.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Die Sphäre $\{x\mid \|x\| = r\}$ ist kompakt.
+\end{Satz}
+\begin{Beweis}
+Sei $f(x):=\|x\|$. Weil $f$ laut Satz \ref{norm-cont} stetig
+und $\{r\}$ laut Satz \ref{singleton-closed} abgeschlossen ist, muss
+laut Satz \ref{cont-implies-closed-closed}
+auch das Urbild $f^{-1}(\{r\})$ abgeschlossen sein. Dieses Urbild ist die
+Sphäre. Als Teilmenge der Kugel $\{x\mid\|x\|\le r\}$ ist
+sie zudem beschränkt.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \subsection{Homöomorphien}
 \begin{Satz}[Verallgemeinerung des Zwischenwertsatzes]%
 \label{intermediate-value-general}\newlinefirst
@@ -425,7 +480,6 @@ ist, $\R\setminus\{f(0)\}$ aber nicht, kann $f$ laut Satz
 \ref{intermediate-value-general} nicht stetig sein.\,\qedsymbol
 \end{Beweis}
 
-\newpage
 \section{Übungen}
 
 \begin{Satz}
