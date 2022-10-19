@@ -174,7 +174,7 @@ Für höhere $n$ verläuft der Beweis analog.\,\qedsymbol
 \end{Beweis}
 
 \newpage
-\begin{Satz}[Modus tollens]\label{modus-tollens}
+\begin{Satz}[Kontraposition, Modus tollens]\label{modus-tollens}
 Es gelten die Schlussregeln
 \[\dfrac{\Gamma\vdash A\Rightarrow B}{\Gamma\vdash\neg B\Rightarrow\neg A},\qquad
 \dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash\neg B}{\Gamma,\Gamma'\vdash\neg A}.\]
@@ -326,6 +326,177 @@ s\mapsto\match s\begin{cases}
 \inr a\mapsto g\mapsto a.
 \end{cases}\]
 konstruieren.\;\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}[Ersetzungsregel] Es gelten die beiden äquivalenten Regeln
+\[\dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash P(A)\Leftrightarrow P(B)},
+\qquad\dfrac{\Gamma\vdash A\Leftrightarrow B\qquad\Gamma'\vdash P(A)}{\Gamma,\Gamma'\vdash P(B)}.
+\]
+\end{Satz}
+\begin{Beweis}
+Zur Äquivalenz der beiden Regeln:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma,\Gamma'\vdash P(B)}{
+  \infer{\Gamma\vdash P(A)\Rightarrow P(B)}{
+    \infer{\Gamma\vdash P(A)\Leftrightarrow P(B)}{
+      \Gamma\vdash A\Leftrightarrow B}}
+& \Gamma'\vdash P(A)}
+&
+\infer{\Gamma\vdash P(A)\Leftrightarrow P(B)}{
+  \infer{\Gamma\vdash P(A)\Rightarrow P(B)}{
+    \infer{\Gamma, P(A)\vdash P(B)}{
+      \Gamma\vdash A\Leftrightarrow B
+    & \infer{P(A)\vdash P(A)}{}}}
+& \infer{\Gamma\vdash P(B)\Rightarrow P(A)}{
+    \infer{\Gamma, P(B)\vdash P(A)}{
+      \Gamma\vdash A\Leftrightarrow B
+    & \infer{P(B)\vdash P(B)}{}}}}
+\end{array}
+\]
+Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
+Ist $P(X):=\varphi$ bezüglich der atomaren logischen Variable $X$
+definiert, gilt $P(t):=\varphi[X{:=}t]$, wobei mit $\varphi[X{:=}t]$
+die Substitution jedes freien Vorkommens von $X$ durch die Formel $t$
+gemeint ist. Die Behauptung wird in der Form
+\[\dfrac{\Gamma\vdash t\Leftrightarrow t'}{
+\Gamma\vdash\varphi[X{:=}t]\Leftrightarrow\varphi[X{:=}t']}\]
+geschrieben und es werden die Abkürzungen
+\[A:=\varphi[X{:=}t],\quad A':=\varphi[X{:=}t'],\quad B:=\psi[X{:=}t],
+\quad B':=\psi[X{:=}t']\]
+definiert. Zunächst die Basisfälle. Die Formeln $\varphi:=\bot$,
+$\varphi:=\top$ und $\varphi:=v$ mit atomarer Variable $v\ne X$
+bleiben von der Substitution unbetroffen und sind offenkundig zu sich
+selbst äquivalent. Für $v=X$ erhält man schlicht die Prämisse.
+
+Zum Induktionsschritt. Man hat nun
+\[(\varphi\land\psi)[X{:=}t]
+\equiv \varphi[X{:=}t]\land\psi[X{:=}t]\equiv A\land B\]
+usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
+und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist,
+dass dann ebenfalls
+\begin{align*}
+& \Gamma\vdash A\land B \Leftrightarrow A'\land B',
+&& \Gamma\vdash (A\Rightarrow B) \Leftrightarrow (A'\Rightarrow B'),
+&& \Gamma\vdash (\forall x\colon A)\Leftrightarrow (\forall x\colon A'),\\
+& \Gamma\vdash A\lor B \Leftrightarrow A'\lor B',
+&& \Gamma\vdash (A\Leftrightarrow B)\Leftrightarrow (A'\Leftrightarrow B'),
+&& \Gamma\vdash (\exists x\colon A)\Leftrightarrow (\exists x\colon A')
+\end{align*}
+und $\Gamma\vdash\neg A\Leftrightarrow\neg A'$ gilt. Zur Negation:
+\[\infer{\Gamma\vdash\neg A\Leftrightarrow\neg A'}{
+  \infer{\Gamma\vdash\neg A\Rightarrow\neg A'}{
+    \infer{\Gamma,\neg A\vdash\neg A'}{
+      \infer{\Gamma\vdash\neg A\Rightarrow\neg A'}{
+        \infer{\Gamma\vdash A'\Rightarrow A}{
+          \Gamma\vdash A\Leftrightarrow A'}}
+    & \infer{\neg A\vdash\neg A}{}}}
+& \infer{\Gamma\vdash\neg A'\Rightarrow\neg A}{
+    \infer{\Gamma,\neg A'\vdash\neg A}{
+      \infer{\Gamma\vdash\neg A'\Rightarrow\neg A}{
+        \infer{\Gamma\vdash A\Rightarrow A'}{
+          \Gamma\vdash A\Leftrightarrow A'}}
+    & \infer{\neg A'\vdash\neg A'}{}}}}
+\]
+Zur Konjunktion:
+\[
+\infer{\Gamma\vdash A\land B\Leftrightarrow A'\land B'}{
+  \infer{\Gamma\vdash A\land B\Rightarrow A'\land B'}{
+    \infer{\Gamma,A\land B\vdash A'\land B'}{
+      \infer{\Gamma,A\land B\vdash A'}{
+        \infer{\Gamma\vdash A\Rightarrow A'}{
+          \Gamma\vdash A\Leftrightarrow A'}
+      & \infer{A\land B\vdash A}{
+          \infer{A\land B\vdash A\land B}{}}}
+    & \infer{\Gamma,A\land B\vdash B'}{
+        \infer{\Gamma\vdash B\Rightarrow B'}{
+          \Gamma\vdash B\Leftrightarrow B'}
+      & \infer{A\land B\vdash B}{
+          \infer{A\land B\vdash A\land B}{}}}}}
+& \infer{\Gamma\vdash A'\land B'\Rightarrow A\land B}{\text{analog}}}
+\]
+Zur Disjunktion:
+\[
+\infer{\Gamma\vdash A\lor B\Leftrightarrow A'\lor B'}{
+& \infer{\Gamma\vdash A\lor B\Rightarrow A'\lor B'}{
+    \infer{\Gamma, A\lor B\vdash A'\lor B'}{
+      \infer{A\lor B\vdash A\lor B}{}
+    & \infer{\Gamma, A\vdash A'\lor B'}{
+        \infer{\Gamma, A\vdash A'}{
+          \infer{\Gamma\vdash A\Rightarrow A'}{
+            \Gamma\vdash A\Leftrightarrow A'}
+        & \infer{A\vdash A}{}}}
+    & \infer{\Gamma, B\vdash A'\lor B'}{
+        \infer{\Gamma, B\vdash B'}{
+          \infer{\Gamma\vdash B\Rightarrow B'}{
+            \Gamma\vdash B\Leftrightarrow B'}
+        & \infer{B\vdash B}{}}}}}
+& \infer{\Gamma\vdash A'\lor B'\Rightarrow A\lor B}{\text{analog}}}
+\]
+Zur Implikation:
+\[
+\infer{\Gamma\vdash (A\Rightarrow B)\Leftrightarrow (A'\Rightarrow B')}{
+  \infer{\Gamma\vdash (A\Rightarrow B)\Rightarrow (A'\Rightarrow B')}{
+    \infer{\Gamma,A\Rightarrow B\vdash A'\Rightarrow B'}{
+      \infer{\Gamma,A\Rightarrow B, A'\vdash B'}{
+        \infer{\Gamma\vdash B\Rightarrow B'}{
+          \Gamma\vdash B\Leftrightarrow B'}
+      & \infer{\Gamma,A\Rightarrow B\vdash B}{
+          \infer{A\Rightarrow B\vdash A\Rightarrow B}{}
+        & \infer{\Gamma,A'\vdash A}{
+            \infer{\Gamma\vdash A'\Rightarrow A}{
+              \Gamma\vdash A\Leftrightarrow A'}
+          & \infer{A'\vdash A'}{}}}}}}
+& \infer{\Gamma\vdash (A'\Rightarrow B')\Rightarrow (A\Rightarrow B)}{\text{analog}}}
+\]
+Zur Äquivalenz:
+\[
+\infer{\Gamma\vdash (A\Leftrightarrow B)\Leftrightarrow (A'\Leftrightarrow B')}{
+  \infer{\Gamma\vdash (A\Leftrightarrow B)\Rightarrow (A'\Leftrightarrow B')}{
+    \infer{\Gamma, A\Leftrightarrow B\vdash A'\Leftrightarrow B'}{
+      \infer{\Gamma, A\Leftrightarrow B\vdash A'\Rightarrow B'}{
+        \Gamma\vdash A\Leftrightarrow A'
+      & \Gamma\vdash B\Leftrightarrow B'}
+    & \infer{\Gamma, A\Leftrightarrow B\vdash B'\Rightarrow A'}{
+        \Gamma\vdash A\Leftrightarrow A'
+      & \Gamma\vdash B\Leftrightarrow B'}}}
+& \infer{\Gamma\vdash (A'\Leftrightarrow B')\Rightarrow (A\Leftrightarrow B)}{\text{analog}}}
+\]
+Zur Universalquantifizierung:
+\[
+\infer{\Gamma\vdash (\forall x\colon A)\Leftrightarrow (\forall x\colon A')}{
+  \infer{\Gamma\vdash (\forall x\colon A)\Rightarrow (\forall x\colon A')}{
+    \infer[(x\notin\mathrm{FV(\Gamma)})]
+    {\Gamma,\forall x\colon A\vdash\forall x\colon A'}{
+      \infer{\Gamma,\forall x\colon A\vdash A'}{
+        \infer{\Gamma\vdash A\Rightarrow A'}{
+          \Gamma\vdash A\Leftrightarrow A'}
+      & \infer{\forall x\colon A\vdash A}{
+          \infer{\forall x\colon A\vdash\forall x\colon A}{}}}}}
+& \infer{\Gamma\vdash (\forall x\colon A')\Rightarrow (\forall x\colon A)}{
+    \text{analog}}
+}
+\]
+Zur Existenzquantifizierung:
+\[
+\infer{\Gamma\vdash (\exists x\colon A)\Leftrightarrow (\exists x\colon A')}{
+  \infer{\Gamma\vdash (\exists x\colon A)\Rightarrow (\exists x\colon A')}{
+    \infer[(x\notin\mathrm{FV}(\Gamma))]
+    {\Gamma, \exists x\colon A\vdash\exists x\colon A'}{
+      \infer{\exists x\colon A\vdash\exists x\colon A}{}
+    & \infer{\Gamma, A\vdash\exists x\colon A'}{
+        \infer{\Gamma, A\vdash A'}{
+          \infer{\Gamma\vdash A\Rightarrow A'}{
+            \Gamma\vdash A\Leftrightarrow A'}
+        & \infer{A\vdash A}{}}}}}
+& \infer{\Gamma\vdash (\exists x\colon A')\Rightarrow (\exists x\colon A)}{
+    \text{analog}}
+}
+\]
+Die Forderung $x\notin\mathrm{FV}(\Gamma)$ kann immer erfüllt werden,
+indem die Variable an den Stellen, wo sie gebunden vorliegt,
+in eine frische umbenannt wird.\,\qedsymbol
 \end{Beweis}
 
 \newpage
@@ -789,6 +960,38 @@ Es gilt die Umformung
 \[A\Rightarrow A\land B\equiv \neg A\lor (A\land B)
 \equiv (\neg A\lor A)\land (\neg A\land B)
 \equiv 1\land (A\Rightarrow B)\equiv A\Rightarrow B.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{non-eq-prop-neg}
+Es gilt $\neg (A\Leftrightarrow\neg A)$.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma:=[A\Leftrightarrow\neg A]$. Der Beweisbaum:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\Gamma\vdash\neg A}{
+  \infer{\Gamma,A\vdash\bot}{
+    \infer{\Gamma,A\vdash\neg A}{
+      \infer{\Gamma\vdash A\Rightarrow\neg A}{
+        \infer{\Gamma\vdash A\Leftrightarrow\neg A}{}}
+    & \infer{A\vdash A}{}}
+  & \infer{A\vdash A}{}}}
+&
+\infer{\vdash\neg (A\Leftrightarrow\neg A)}{
+  \infer{\Gamma\vdash\bot}{
+    \Gamma\vdash\neg A
+  & \infer{\Gamma\vdash A}{
+      \infer{\Gamma\vdash\neg A\Rightarrow A}{
+        \infer{\Gamma\vdash A\Leftrightarrow\neg A}{}}
+    & \Gamma\vdash\neg A}}}
+\end{array}
+\]
+Der Programmterm ist
+\begin{gather*}
+(A\to A\to 0)\times ((A\to 0)\to A)\to 0,\\
+(f,g)\mapsto\text{\strong{let}}\; h\colon A\to 0 = (a\mapsto f(a)(a))
+\;\,\text{\strong{in}}\;\, h(g(h)).\,\qedsymbol
+\end{gather*}
 \end{Beweis}
 
 \newpage
@@ -2357,19 +2560,22 @@ Eine Menge ist stets weniger mächtig als ihre Potenzmenge. Kurz $|A|<|2^A|$.
 \end{Satz}
 
 \begin{Beweis}
-Eine Injektion $A\to 2^A$ können wir mit $x\mapsto\{x\}$ trivial angeben.
-Nun wird die Annahme, es gäbe eine Surjektion $f\colon A\to 2^A$
-zum Widerspruch geführt, womit es erst recht keine Bijektion gibt.
-Dazu definiert man die Menge
+Für das Vorhandensein einer Injektion $A\to 2^A$ bietet $x\mapsto\{x\}$
+einen schlichten Beleg. Nun wird aus der Annahme, es gäbe eine Surjektion
+$f\colon A\to 2^A$, ein Widerspruch abgeleitet, womit erst recht
+keine Bijektion bestehen kann. Erreicht wird dies nach Cantor durch ein
+Diagonalargument. Dazu definiert man die Menge
 \[D := \{x\in A\mid x\notin f(x)\}.\]
-Weil $D\subseteq A$ ist, hat man $D\in 2^A$. Weil $f$ surjektiv sein
-soll, muss es ein $x\in A$ geben, so dass $f(x) = D$. Gemäß Def.
-\ref{def:seteq} (seteq) und Definition von $D$ muss also
-\[\exists x\in A\colon \forall u\colon (u\in f(x) \iff u\in A\land u\notin f(u))\]
-gelten. Die allquantifizierte Aussage ist allerdings für $u:=x$ nicht erfüllt,
-denn unter Berücksichtigung $x\in A$ gelangt man zur widersprüchlichen
-Aussage
-\[x\in f(x) \iff x\notin f(x).\,\qedsymbol\]
+Weil $D\subseteq A$ ist, hat man $D\in 2^A$. Angenommen, $f$ ist surjektiv.
+Es liegt somit ein Zeuge $x\in A$ vor, so dass $f(x) = D$. Speziell muss also
+$x\in f(x) \Leftrightarrow x\in D$
+per Def. \ref{def:seteq} erfüllt sein. Man erhält weiterhin die Umformung
+\[x\in D \stackrel{\text{(1)}}\iff x\in A\land x\notin f(x)
+\stackrel{\text{(2)}}\iff x\notin f(x),\]
+wobei (1) laut Definition von $D$ gilt, und (2), weil $x\in A$
+ja vorliegt. Man gelangt zur Aussage
+\[x\in f(x) \iff x\notin f(x),\]
+die laut Satz \ref{non-eq-prop-neg} aber widersprüchlich ist.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
