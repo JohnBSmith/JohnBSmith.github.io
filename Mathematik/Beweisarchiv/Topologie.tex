@@ -3,7 +3,7 @@
 \section{Grundbegriffe}
 \subsection{Definitionen}
 
-\begin{Definition}[Topologischer Raum]
+\begin{Definition}[Topologischer Raum]\index{topologischer Raum}
 Sei $X$ eine Menge und $T$ eine Menge von Teilmengen von $X$.
 Man nennt das System $T$ eine Topologie und $(X,T)$ einen topologischen
 Raum, falls die folgenden drei Axiome erfüllt sind:
@@ -15,12 +15,13 @@ Raum, falls die folgenden drei Axiome erfüllt sind:
 Die Elemente der Topologie nennt man offene Mengen.
 \end{Definition}
 
-\begin{Definition}[Abgeschlossene Menge]\label{def:closed-set}
+\begin{Definition}[Abgeschlossene Menge]%
+\label{def:closed-set}\index{abgeschlossene Menge}
 Sei $X$ ein topologischer Raum. Eine Menge $M\subseteq X$
 nennt man abgeschlossen, wenn das Komplement $X\setminus M$ offen ist.
 \end{Definition}
 
-\begin{Definition}[nh-filter: Umgebungsfilter]%
+\begin{Definition}[Umgebungsfilter]%
 \label{def:nh-filter}\index{Umgebungsfilter}
 Zu einem Punkt $x\in X$ ist
 \[\underline U(x) := \{U{\subseteq}X\mid
@@ -45,19 +46,21 @@ Sei $X$ ein topologischer Raum und $M\subseteq X$. Die abgeschlossene Hülle von
 \[\overline M := X\setminus\operatorname{ext}(M) = \operatorname{int}(M^\comp)^\comp.\]
 \end{Definition}
 
-\begin{Definition}[Rand]
+\begin{Definition}[Rand]\index{Rand}
 Der Rand einer Menge $M$ ist
 \[\partial M := \overline M\setminus\operatorname{int}(M)
 = \overline M\cap\operatorname{int}(M)^\comp.\]
 \end{Definition}
 
-\begin{Definition}[Teilraumtopologie]\newlinefirst
+\begin{Definition}[Teilraumtopologie]%
+\index{Teilraumtopologie}\newlinefirst
 Sei $(X,T)$ ein topologischer Raum und $M\subseteq X$. Man bezeichnet
 \[T|M := \{A\cap M\mid A\in T\}.\]
 als Teilraumtopologie und $(M,T|M)$ als Teilraum.
 \end{Definition}
 
-\begin{Definition}[Diskrete Topologie]\newlinefirst
+\begin{Definition}[Diskrete Topologie]%
+\index{diskrete Topologie}\newlinefirst
 Man sagt, ein topologischer Raum $(X,T)$ habe die diskrete Topologie $T$,
 wenn $T$ die Potenzmenge von $X$ ist -- wenn also jede Teilmenge
 von $X$ offen ist.
@@ -65,13 +68,15 @@ von $X$ offen ist.
 
 \subsection{Stetige Abbildungen}
 
-\begin{Definition}[Stetige Abbildung]\label{def:cont}\newlinefirst
+\begin{Definition}[Stetige Abbildung]%
+\label{def:cont}\index{stetig}\newlinefirst
 Seien $X$ und $Y$ topologischen Räume. Eine Abbildung $f\colon X\to Y$
 heißt stetig, wenn unter ihr das Urbild einer offenen Menge stets
 wieder offen ist.
 \end{Definition}
 
-\begin{Definition}[Homöomorphismus]\newlinefirst
+\begin{Definition}[Homöomorphismus]%
+\index{Homoeomorphismus@Homöomorphismus}\newlinefirst
 Seien $X$ und $Y$ topologische Räume. Eine bijektive Abbildung
 $f\colon X\to Y$ heißt Homöomorphismus, wenn sowohl $f$ als auch
 $f^{-1}$ stetig sind.
@@ -159,16 +164,16 @@ von $M$, kurz%
 \end{Satz}
 
 \begin{Beweis}
-Nach Def. \ref{def:seteq} (seteq) und Def. \ref{def:int} (int)
+Nach Def. \ref{def:seteq} und Def. \ref{def:int}
 expandieren:%
 \[\forall x\colon [x\in M\land M\in\underline U(x)
 \iff x\in\bigcup_{O\in 2^M\cap T} O].\]
 Den äußeren Allquantor brauchen wir nicht weiter mitschreiben, da alle
 freien Variablen automatisch allquantifiziert werden.
-Nach Def. \ref{def:nh-filter} (nh-filter) weiter expandieren, wobei die
+Vermittels Def. \ref{def:nh-filter} weiter expandieren, wobei die
 Bedingung $U\subseteq X$ als tautologisch entfallen kann,
 weil $X$ die Grundmenge ist. Auf der rechten Seite wird nach Def.
-\ref{def:union} (union) expandiert. Es ergibt sich:
+\ref{def:union} expandiert. Es ergibt sich:
 \[x\in M\land (\exists O\colon O\in T\land x\in O\land O\subseteq M)
 \iff (\exists O\colon O\subseteq M\land O\in T\land x\in O).\]
 Wegen $A\land(\exists x\colon P(x))\iff (\exists x\colon A\land P(x))$ ergibt
@@ -495,7 +500,7 @@ oder äquivalent $\gamma^{-1}(\partial M)=\emptyset$.
 Allgemein ist
 \[\R^n = \operatorname{int}(M) \cup \partial M \cup \operatorname{ext}(M)\]
 laut Satz \ref{partition-int-bd-ext} eine disjunkte Zerlegung.
-Gemäß Satz \ref{preimg-dl} (preimg-dl) gilt
+Gemäß Satz \ref{preimg-dl} gilt
 \[[0,1] = \gamma^{-1}(\R^n) = \gamma^{-1}(\operatorname{int}(M))
 \cup \gamma^{-1}(\partial M)\cup \gamma^{-1}(\operatorname{ext}(M)),\]
 was auch eine disjunkte Zerlegung ist, weil je zwei disjunkte Mengen
