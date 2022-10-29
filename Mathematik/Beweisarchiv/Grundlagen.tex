@@ -334,6 +334,41 @@ konstruieren.\;\qedsymbol
 \end{Beweis}
 
 \newpage
+\begin{Satz}[Resolution]
+Es gilt die Schlussregel
+\[\dfrac{\Gamma\vdash A\lor B\qquad\Gamma'\vdash\neg A\lor C}{\Gamma,\Gamma'\vdash B\lor C}.\]
+\end{Satz}
+\begin{Beweis}
+Der Beweisbaum:
+\[
+\infer{\Gamma,\Gamma'\vdash B\lor C}{
+  \Gamma\vdash A\lor B
+& \infer{\Gamma', A\vdash B\lor C}{
+    \infer{\Gamma', A\vdash C}{
+      \Gamma'\vdash\neg A\lor C
+    & \infer{A,\neg A\vdash C}{
+        \infer{A,\neg A\vdash\bot}{
+          \infer{\neg A\vdash \neg A}{}
+        & \infer{A\vdash A}{}}}
+    & \infer{C\vdash C}{}}}
+& \infer{B\vdash B\lor C}{\infer{B\vdash B}{}}}\;\qedsymbol
+\]
+\end{Beweis}
+
+\begin{Satz} \strong{[LEM]}
+Es gilt die Schlussregel
+\[\dfrac{\Gamma,\neg A\vdash B\qquad\Gamma', A\vdash B}{\Gamma,\Gamma'\vdash B}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[\infer{\Gamma,\Gamma'\vdash B}{
+  \infer[\infernote{LEM}]{\vdash A\lor\neg A}{}
+& \Gamma,\neg A\vdash B
+& \Gamma', A\vdash B
+}\;\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \begin{Satz}[Ersetzungsregel]\index{Ersetzungsregel}
 Es gelten die beiden äquivalenten Regeln
 \[\dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash P(A)\Leftrightarrow P(B)},
@@ -1352,6 +1387,35 @@ Sei $\Gamma:=[\forall y\colon x=y\Rightarrow P(y)]$. Es findet sich:
 \end{Beweis}
 
 \newpage
+\begin{Satz}[Leere Wahrheit]\newlinefirst
+Die Formeln $\forall x\in\emptyset\colon P(x)$ und $\neg\exists x\in\emptyset\colon P(x)$
+sind tautologisch.
+\end{Satz}
+\begin{Beweis}
+Sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\vdash\forall x\in\emptyset\colon P(x)}{
+  \infer{\vdash\forall x\colon x\in\emptyset\Rightarrow P(x)}{
+    \infer{\vdash x\in\emptyset\Rightarrow P(x)}{
+      \infer{x\in\emptyset\vdash P(x)}{
+        \infer{x\in\emptyset\vdash\bot}{
+          \infer{\vdash x\notin\emptyset}{}
+        & \infer{x\in\emptyset\vdash x\in\emptyset}{}}}}}}
+&
+\infer{\vdash\neg\exists x\in\emptyset\colon P(x)}{
+  \infer{\vdash\neg\exists x\colon A}{
+    \infer{\exists x\colon A\vdash\bot}{
+      \infer{\exists x\colon A\vdash\exists x\colon A}{}
+    & \infer{A\vdash\bot}{
+        \infer{\vdash x\notin\emptyset}{}
+      & \infer{A\vdash x\in\emptyset}{
+          \infer{A\vdash x\in\emptyset\land P(x)}{}}}}}}\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
+\newpage
 \section{Mengenlehre}\index{Mengenlehre}
 \subsection{Definitionen}
 
@@ -1679,7 +1743,8 @@ Nach Def. \ref{def:seteq} folgt die Behauptung.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Die Relation \emph{Teilmenge von} ist eine Partialordnung.
+Sei $M$ eine beliebige Menge. Die Relation $A\subseteq B$ macht die
+Potenzmenge von $M$ zu einer partiell geordneten.
 Im Einzelnen gilt%
 \begin{align*}
 \text{(1)}\quad & A\subseteq A, && \text{(Reflexivität)}\\
@@ -1817,7 +1882,8 @@ surjektive ist. Dies ist wahr, weil $M/{\sim}$ gerade so definiert ist,
 dass direkt $M/{\sim}=\pi(M)$ gilt.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Disjunkte Zerlegung induziert Äquivalenzrelation]\newlinefirst
+\begin{Satz}[Disjunkte Zerlegung induziert Äquivalenzrelation]%
+\label{eq-relation-from-partition}\newlinefirst
 Sei $M$ eine Menge. Die Familie $(A_k)$ der $A_k\subseteq M$ sei
 eine Zerlegung von $M$ in paarweise disjunkte Mengen. Dann definiert
 \[x\sim y\defiff \exists k\colon x\in A_k\land y\in A_k\]
@@ -1891,6 +1957,47 @@ $\overline g\circ\pi = \overline f\circ\pi$. Als surjektive Abbildung
 ist $\pi$ laut Satz \ref{right-cancellative} rechtskürzbar, womit sich
 $\overline g = \overline f$ ergibt.\,\qedsymbol
 \end{Beweis}
+
+\begin{Satz}
+Es sei $f\colon X\to Y$ eine Abbildung und $a\sim b$ genau dann,
+wenn $f(a)=f(b)$. Hierdurch ist eine Äquivalenzrelation definiert.
+Ferner lässt sich auf diese Weise jede Äquivalenzrelation durch
+passende Wahl von $f$ definieren.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Die Bestätigung der drei Axiome Reflexivität, Symmetrie und
+Transitivität verläuft trivial, da es sich bei der Gleichheitsrelation
+bereits um eine Äquivalenzrelation handelt.
+
+Sei ${\sim}$ nun gegeben. Gesucht ist ein passendes $f$. Man wähle
+$Y:=X/{\sim}$ und für $f$ die Quotientenabbildung, also $f(x):=[x]$.\,\qedsymbol
+\end{Beweis}
+\begin{Beweis}[Beweis 2]
+Für $y,y'\in f(X)$ mit $y\ne y'$ sind die Urbilder $f^{-1}(\{y\})$ und
+$f^{-1}(\{y'\})$ gemäß Satz \ref{disjoint-preimg} disjunkt. Die
+Abbildung $f$ zerlegt $X$ auf diese Weise in paarweise disjunkte
+Teile, wodurch laut Satz \ref{eq-relation-from-partition} eine
+Äquivalenzrelation gegeben ist. Es ist dieselbe, wie definiert
+wurde, denn genau innerhalb eines Urbilds verbleibt $f$ konstant.
+
+Sei ${\sim}$ nun gegeben. Wir nehmen ein vollständiges
+Repräsentantensystem und ordnen jedem Repräsentant $x$ einen
+einzigartigen Wert $y$ zu. Es soll nun $f([x])=\{y\}$ gelten,
+wodurch $f$ auf ganz $X$ definiert wird. Wir setzen
+$Y:=f(X)$.\,\qedsymbol
+\end{Beweis}
+
+\subsection{Ordnungsrelationen}
+\begin{Definition}[Halbordnung]\index{Halbordnung}\newlinefirst
+Eine Relation $\le$ auf einer Menge $M$ heißt Halbordnung
+und die Struktur $(M,\le)$ halbgeordnete Menge,
+wenn die folgenden drei Axiome erfüllt sind:
+\begin{align*}
+&\forall x\in M\colon x\le x, &&\text{(Reflexivität)}\\
+&\forall x,y,z\in M\colon x\le y\land y\le z\Rightarrow x\le z, &&\text{(Transitivität)}\\
+&\forall x,y\in M\colon x\le y\land y\le x\Rightarrow x=y. &&\text{(Antisymmetrie)}
+\end{align*}
+\end{Definition}
 
 \newpage
 \section{Abbildungen}\index{Abbildung}
@@ -2251,50 +2358,54 @@ f^{-1}(A)\setminus f^{-1}(B) = \{x\mid x\in f^{-1}(A)\land \neg x\in f^{-1}(B)\}
 \end{Beweis}
 
 \begin{Satz}\label{img-preimg}
-Für jede Abbildung $f$ gilt $f(f^{-1}(N)\subseteq N$.
+Sei $f\colon X\to Y$, $A\subseteq X$, $B\subseteq Y$. Es gilt
+$A\subseteq f^{-1}(f(A))$ und $f(f^{-1}(B)\subseteq B$.
 \end{Satz}
 \begin{Beweis}
 Gemäß Definition bekommt man
 \begin{gather*}
-y\in f(f^{-1}(N))
-\iff (\exists x\colon x\in f^{-1}(N)\land y=f(x))
-\iff (\exists x\colon f(x)\in N\land y=f(x)).
+y\in f(f^{-1}(B))
+\iff (\exists x\colon x\in f^{-1}(B)\land y=f(x))
+\iff (\exists x\colon f(x)\in B\land y=f(x)),\\
+x\in f^{-1}(f(A)) \iff f(x)\in f(A)
+\iff (\exists a\in A\colon f(x)=f(a)).
 \end{gather*}
-Leicht ersichtlich ist nun, dass
-\begin{gather*}
-(\exists x\colon f(x)\in N\land y=f(x)) \implies y\in N.\;\qedsymbol
-\end{gather*}
+Leicht zu bestätigen ist nun, dass
+\begin{align*}
+& \exists x\colon f(x)\in B\land y=f(x)\vdash y\in B, && (\text{Substitution $f(x):=y$ in $f(x)\in B$})\\
+& x\in A\vdash\exists a\in A\colon f(x)=f(a).\,\qedsymbol && (\text{Zeuge $a:=x$})
+\end{align*}
 \end{Beweis}
 
 \begin{Satz}\label{img-preimg-imgset}
-Für jede Abbildung $f\colon A\to B$ gilt $f(f^{-1}(N))=N$,
-sofern $N\subseteq f(A)$ ist.
+Für jede Abbildung $f\colon X\to Y$ gilt $f(f^{-1}(B))=B$,
+sofern $B\subseteq f(X)$ ist.
 \end{Satz}
 \begin{Beweis}
 Laut Satz \ref{img-preimg} bleibt zu zeigen
 \begin{gather*}
-y\in N\implies (\exists x\in A\colon f(x)\in N\land y=f(x)).
+y\in B\implies (\exists x\in X\colon f(x)\in B\land y=f(x)).
 \end{gather*}
-Setzt man nun $N\subseteq f(A)$ voraus, dann ist $f(x)\in N$
+Setzt man nun $B\subseteq f(X)$ voraus, dann ist $f(x)\in B$
 allgemeingültig. Man bekommt
 \begin{gather*}
-(\exists x\in A\colon f(x)\in N\land y=f(x))
-\iff (\exists x\in A\colon y=f(x))\iff y\in f(A).
+(\exists x\in X\colon f(x)\in B\land y=f(x))
+\iff (\exists x\in X\colon y=f(x))\iff y\in f(X).
 \end{gather*}
-Die Implikation $y\in N\implies y\in f(A)$ ist nun
-wiederum definitionsgemäß äquivalent zu $N\subseteq f(A)$,
+Die Implikation $y\in B\Rightarrow y\in f(X)$ ist nun
+wiederum definitionsgemäß äquivalent zu $B\subseteq f(X)$,
 was Voraussetzung war.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Für jede Abbildung $f\colon A\to B$ gilt
-$(\exists M\colon f(M)=N)\iff N\subseteq f(A)$.
+Sei $f\colon X\to Y$. Es gilt $B\subseteq f(X)$ genau dann,
+wenn $\exists A\colon f(A)=B$.
 \end{Satz}
 \begin{Beweis}
-Hat man ein $M$ mit $f(M)=N$, dann ist trivialerweise
-$f(M)\subseteq f(A)$, also $N\subseteq f(A)$. Liegt umgekehrt
-eine Menge $N\subseteq f(A)$ vor, dann kann man $M:=f^{-1}(N)$
-setzen, nach Satz \ref{img-preimg-imgset} gilt dann $f(M)=N$.\;\qedsymbol
+Hat man ein $A$ mit $f(A)=B$, dann ist trivialerweise
+$f(A)\subseteq f(X)$, also $B\subseteq f(X)$. Liegt umgekehrt
+eine Menge $B\subseteq f(X)$ vor, dann kann man $A:=f^{-1}(B)$
+setzen, nach Satz \ref{img-preimg-imgset} gilt dann $f(A)=B$.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{inj-img-setminus}
@@ -2317,18 +2428,21 @@ $f(A)\setminus f(B) = f(A\setminus B).\;\qedsymbol$
 \end{Beweis}
 
 \begin{Satz}
-Ist $f$ eine bijektive Abbildung und $f^{-1}$ die Umkehrabbildung
-von $f$, dann stimmt das Urbild $f^{-1}(N)$ mit der Bildmenge
-von $N$ unter der Umkehrabbildung -- zur Unterscheidung $(f^{-1})(N)$
+Ist $f\colon X\to Y$ bijektiv und $f^{-1}$ die
+Umkehrabbildung von $f$, dann stimmt das Urbild $f^{-1}(M)$ mit der Bildmenge
+von $M$ unter der Umkehrabbildung -- zur Unterscheidung $(f^{-1})(M)$
 geschrieben -- überein.
 \end{Satz}
 \begin{Beweis}
-Expansion der Gleichung $f^{-1}(N)=(f^{-1})(N)$ führt zur Bedingung
-\[f(x)\in N\iff (\exists y\colon y\in N\land x=f^{-1}(y)).\]
-Da $f$ bijektiv ist, gilt $x=f^{-1}(y)\iff f(x)=f(f^{-1}(y))=y$.
-Demnach ist
-\[(\exists y\colon y\in N\land x=f^{-1}(y))\iff (\exists y\colon f(x)\in N)\iff f(x)\in N.\]
-Die Bedingung ist daher immer erfüllt.\;\qedsymbol
+Zu zeigen ist $(f^{-1})(M) = f^{-1}(M)$. Es findet sich die Umformung
+\begin{align*}
+x\in (f^{-1})(M) &\stackrel{\text{(1)}}\iff (\exists y\colon y\in M\land x=f^{-1}(y))
+\stackrel{\text{(2)}}\iff (\exists y\colon f(x)\in M)\\
+&\iff f(x)\in M\stackrel{\text{(3)}}\iff x\in f^{-1}(M).
+\end{align*}
+Hierbei gilt (1), (3) laut Definition. Es gilt (2), weil $f$ bijektiv
+ist, womit die Gleichung $x=f^{-1}(y)$ äquivalent zu
+$f(x)=f(f^{-1}(y))=y$ umgeformt werden darf.\,\qedsymbol
 \end{Beweis}
 Es genügt nicht, wenn $f$ injektiv ist. Als Gegenbeispiel setze
 \[f\colon\{0\}\to\{0,1\},\quad f(x):=x.\]
@@ -2365,6 +2479,68 @@ Es ist nun $x:=g(y)$ ein Zeuge der Existenzaussage, denn
 \end{Beweis}
 
 \newpage
+\begin{Satz}
+Genau dann ist $f\colon X\to Y$ injektiv, wenn
+$\forall A\subseteq X\colon A=f^{-1}(f(A))$.
+\end{Satz}
+\begin{Beweis}
+Sei $f$ injektiv. Laut Satz \ref{img-preimg} genügt es,
+$f^{-1}(f(A))\subseteq A$ zu zeigen. Laut Definition gilt die Umformung
+\[x\in f^{-1}(f(A))\iff f(x)\in f(A)\iff(\exists a\in A\colon f(x)=f(a)).\]
+Zu zeigen ist insofern
+\[f\;\text{injektiv}, (\exists a\in A\colon f(x)=f(a))\vdash x\in A.\]
+Mit dem Zeugen $a\in A$ hat man nun $f(x)=f(a)$, aufgrund der Injektivität
+somit $x=a$, womit $x\in A$ gelten muss.
+
+Nun zur Umkehrung. Zu zeigen verbleibt
+\[(\forall A\colon \forall x\colon x\in f^{-1}(f(A))\Rightarrow x\in A)
+\vdash f\;\text{injektiv}.\]
+Man setze $A:=\{a\}$. Nun ist $f(A)=f(\{a\}) = \{f(a)\}$. Es finden sich
+die Umformungen
+\begin{gather*}
+x\in f^{-1}(f(A))\iff f(x)\in f(A)\iff f(x)\in\{f(a)\}\iff f(x)=f(a),\\
+x\in A\iff x\in\{a\}\iff x=a.
+\end{gather*}
+Weil $a$ von nichts abhängt, darf generalisiert werden. Man erhält
+\[\forall a\colon\forall x\colon f(x)=f(a)\Rightarrow x=a.\]
+Diese Bedingung definiert die Injektivität.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Eine Abbildung $f\colon X\to Y$ ist genau dann injektiv, wenn
+$f^{-1}(\{y\})$ zu jedem $y\in Y$ höchstens ein Element enthält.
+\end{Satz}
+\begin{Beweis}
+Dass eine Menge $A\subseteq X$ höchstens ein Element enthält,
+lässt sich als $\exists x\in X\colon A\subseteq\{x\}$ formalisieren.
+Zu beweisen ist also die Aussage
+\[f\;\text{injektiv}\iff\forall y\in Y\colon\exists x\in X\colon f^{-1}(\{y\})\subseteq\{x\}.\]
+Für die Implikation von links nach rechts ist
+\[f\;\text{injektiv}\vdash\exists x\in X\colon \forall a\colon f(a)=y\Rightarrow a=x\]
+zu bestätigen. Wir machen eine Fallunterscheidung. Im Fall $y\notin Y$
+ist $f(a)=y$ nicht erfüllbar, womit aber $a=x$ per ex falso quodlibet
+gilt. Insofern darf man sich ein beliebiges $x\in X$ aussuchen.
+Im Fall $y\in Y$ gibt es ein $b\in X$ mit $y=f(b)$. Aufgrund
+der Injektivität zieht $f(a)=f(b)$ nun $a=b$ nach sich. Man wählt
+also $x:=b$ als Zeugen.
+
+Für die Implikation von rechts nach links ist
+\[(\forall y\in Y\colon\exists x\in X\colon
+\forall a\colon f(a)=y\Rightarrow a=x)
+\vdash f\;\text{injektiv},\]
+zu bestätigen. Das heißt, zu zeigen verbleibt
+\[f(a)=f(b), (\forall y\in Y\colon\exists x\in X\colon
+\forall u\colon f(u)=y\Rightarrow u=x)
+\vdash a=b.\]
+Man setze $y:=f(b)$. Nun liegt ein $x$ vor, mit dem die Aussage
+unter dem Existenzquantor gilt. Man setze einmal $u:=a$, womit man
+mit $f(a)=f(b)$ die Gleichung $a=x$ erhält. Man setze nun $u:=b$.
+Weil $f(b)=f(b)$ tautologisch ist, erhält man
+die Gleichung $b=x$. Demzufolge besteht in $x$ der Brückenpfeiler,
+um transitiv die gewünschte Gleichung $a=b$ zu erhalten.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \subsection{Kardinalzahlen}
 
 \begin{Axiom}[acc: Abzählbares Auswahlaxiom]\label{acc}%
@@ -2381,8 +2557,8 @@ eine Bijektion $f\colon A\to B$ existiert.
 \end{Definition}
 
 \begin{Satz}
-Sei $M$ eine beliebige Menge. Die Potenzmenge $2^M$ ist zur
-Menge $\{0,1\}^M$ gleichmächtig.
+Es sei $M$ eine beliebige Menge. Die Potenzmenge $\mathcal P(M)$ ist zur
+Menge $\Abb(M,\{0,1\})$ gleichmächtig.
 \end{Satz}
 
 \begin{Beweis}
@@ -2395,7 +2571,7 @@ Für eine Menge $A\subseteq M$ betrachte man nun die
 Indikatorfunktion\index{Indikatorfunktion}
 \[1_A\colon M\to\{0,1\},\quad 1_A(x):=[x\in A].\]
 Die Abbildung
-\[\varphi\colon 2^M\to \{0,1\}^M,\quad \varphi(A):=1_A\]
+\[\varphi\colon\mathcal P(M)\to\Abb(M,\{0,1\}),\quad \varphi(A):=1_A\]
 ist eine kanonische Bijektion.
 
 \strong{Zur Injektivität.}
@@ -2410,14 +2586,14 @@ Es gilt aber nun:
 \[1_A(x)=1_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\iff x\in B).\]
 \end{Beweis}
 \strong{Zur Surjektivität.} Wir müssen nach Def. \ref{def:sur}
-prüfen, dass $\{0,1\}^M\subseteq \varphi(2^M)$ gilt.
+prüfen, dass $\Abb(M,\{0,1\})\subseteq \varphi(\mathcal P(M))$ gilt.
 Expansion nach Def. \ref{def:subseteq} und Def. \ref{def:img} ergibt:
-\[\forall f\colon (f\in \{0,1\}^M\implies\exists A{\in}2^M\colon f=\varphi(A)).\]
+\[\forall f\colon (f\in\Abb(M,\{0,1\})\implies\exists A\in\mathcal P(M)\colon f=\varphi(A)).\]
 Um dem Existenzquantor zu genügen, wähle
 \[A := f^{-1}(\{1\}) = \{x\in M\mid f(x)\in \{1\}\} = \{x\in M\mid f(x)=1\}.\]
 Es gilt $f=1_A$, denn
 \[1_A(x) = [x\in A] = [x\in\{x\mid f(x)=1\}] = [f(x)=1] = f(x).\]
-Da $\varphi$ eine Bijektion ist, müssen $2^M$ und $\{0,1\}^M$
+Da $\varphi$ eine Bijektion ist, müssen $\mathcal P(M)$ und $\Abb(M,\{0,1\})$
 nach Def. \ref{def:equipotent} gleichmächtig
 sein.\,\qedsymbol
 
@@ -2597,17 +2773,18 @@ Bijektion $A\to B$.
 \end{Definition}
 
 \begin{Satz}[Satz von Cantor]\newlinefirst
-Eine Menge ist stets weniger mächtig als ihre Potenzmenge. Kurz $|A|<|2^A|$. 
+Eine Menge ist stets weniger mächtig als ihre Potenzmenge.
+Kurz $|A|<|\mathcal P(A)|$. 
 \end{Satz}
 
 \begin{Beweis}
-Für das Vorhandensein einer Injektion $A\to 2^A$ bietet $x\mapsto\{x\}$
+Für das Vorhandensein einer Injektion $A\to\mathcal P(A)$ bietet $x\mapsto\{x\}$
 einen schlichten Beleg. Nun wird aus der Annahme, es gäbe eine Surjektion
 $f\colon A\to 2^A$, ein Widerspruch abgeleitet, womit erst recht
 keine Bijektion bestehen kann. Erreicht wird dies nach Cantor durch ein
 Diagonalargument. Dazu definiert man die Menge
 \[D := \{x\in A\mid x\notin f(x)\}.\]
-Weil $D\subseteq A$ ist, hat man $D\in 2^A$. Angenommen, $f$ ist surjektiv.
+Weil $D\subseteq A$ ist, hat man $D\in\mathcal P(A)$. Angenommen, $f$ ist surjektiv.
 Es liegt somit ein Zeuge $x\in A$ vor, so dass $f(x) = D$. Speziell muss also
 $x\in f(x) \Leftrightarrow x\in D$
 per Def. \ref{def:seteq} erfüllt sein. Man erhält weiterhin die Umformung
