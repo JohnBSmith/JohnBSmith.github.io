@@ -397,12 +397,12 @@ $\dfrac{\Gamma\vdash A\to B\quad\Gamma\vdash A}{\Gamma\vdash B}$
 \begin{tabular}{@{}l@{\qquad}l@{\qquad}l}
 $\dfrac{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}(x\notin\operatorname{FV}(\Gamma))$
 & $\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}$
-& $\dfrac{\Gamma\vdash A}{\Gamma,\Delta\vdash A}$
+& $\dfrac{\Gamma\vdash A}{\Gamma,\Gamma'\vdash A}$
 \end{tabular}\\[6pt]
 \begin{tabular}{@{}l@{\qquad}l}
 $\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}$
 & $\dfrac{\Gamma\vdash\exists x\colon A\quad\Gamma,A\vdash B}{\Gamma\vdash B}
-(x\notin\operatorname{FV}(\Gamma)\cup\operatorname{FV}(B))$
+(x\notin\operatorname{FV}(\Gamma, B))$
 \end{tabular}\\[6pt]
 \rule{\columnwidth}{\heavyrulewidth}\\
 \strong{Mengenlehre}\\[2pt]
@@ -418,18 +418,21 @@ $\bigcup_{i\in I} A_i := \{x\mid \exists i{\in}I\colon x{\in}A_i\}$
 $A\subseteq B :\Leftrightarrow \forall_{\!x}(x\in A\Rightarrow x\in B)$\\
 $A=B :\Leftrightarrow \forall_{\!x}(x\in A\Leftrightarrow x\in B)$\\
 $A=B :\Leftrightarrow A\subseteq B\land B\subseteq A$\\
-$f(M) := \{y\mid\exists x{\in}M\colon y{=}f(x)\}$\\
-$f^{-1}(N) := \{x\mid f(x)\in N\}$
+$f(A) := \{y\mid\exists x{\in}A\colon y{=}f(x)\}$\\
+$f^{-1}(B) := \{x\mid f(x)\in B\}$
 }
 \end{tabular}\\
 $A\times B := \{t\mid \exists x{\in}A\colon \exists y{\in}B\colon t=(x,y)\}$\\
 $A\subseteq B\Leftrightarrow A\cup B=B\Leftrightarrow A\cap B=A
 \Leftrightarrow A\setminus B=\emptyset$\\[2pt]
 \begin{tabular}{@{}l@{\;\,}|@{\;\,}l}
-$f(M\cup N) = f(M)\cup f(N)$ & $f^{-1}(M\cup N) = f^{-1}(M)\cup f^{-1}(N)$\\
-$f(M\cap N) \subseteq f(M)\cap f(N)$ & $f^{-1}(M\cap N) = f^{-1}(M)\cap f^{-1}(N)$\\
-$M\subseteq N\Rightarrow f(M)\subseteq f(N)$ & $M\subseteq N\Rightarrow f^{-1}(M)\subseteq f^{-1}(N)$\\
-$(g\circ f)(M) = g(f(M))$ & $(g\circ f)^{-1}(M) = f^{-1}(g^{-1}(M))$
+$f(A\cup B) = f(A)\cup f(B)$ & $f^{-1}(A\cup B) = f^{-1}(A)\cup f^{-1}(B)$\\
+$f(A\cap B) \subseteq f(A)\cap f(B)$ & $f^{-1}(A\cap B) = f^{-1}(A)\cap f^{-1}(B)$\\
+$A\subseteq B\Rightarrow f(A)\subseteq f(B)$ & $A\subseteq B\Rightarrow f^{-1}(A)\subseteq f^{-1}(B)$\\
+$(g\circ f)(A) = g(f(A))$ & $(g\circ f)^{-1}(B) = f^{-1}(g^{-1}(B))$\\
+$A\subseteq f^{-1}(f(A))$ & $f(f^{-1}(B))\subseteq B$\\
+$f\;\text{inj.}\Leftrightarrow A = f^{-1}(f(A))$
+& $f\;\text{sur.}\Leftrightarrow B = f(f^{-1}(B))$
 \end{tabular}
 
 \newpage
@@ -453,7 +456,11 @@ $\quad n!=\Gamma(n+1),\;\; \Gamma(z+1) = z\Gamma(z),\;\;
 $\binom{n+1}{k+1} = \binom{n}{k}+\binom{n+1}{k}$,\quad
 $\binom{n}{k} = \binom{n}{n-k}$,\quad $\binom{n}{0} = \binom{n}{n} = 1$\\[4pt]
 $n! \approx\sqrt{2\pi n}\,n^n \exp\big(\frac{1}{12n}-n\big)
-\approx\sqrt{2\pi n}\,(n/e)^n$\\[4pt]
+\approx\sqrt{2\pi n}\,(n/e)^n$\\
+$(a_k)*(b_k) = (\sum_{i=0}^k a_i b_{k-i})
+= (\sum_{i=0}^k\sum_{j=0}^k a_i b_j [k{=}i{+}j])$\\
+$y = \lfloor x\rfloor \Leftrightarrow y\in\Z\land 0\le x-y<1$\\
+$y = \lceil x\rceil \Leftrightarrow y\in\Z\land 0\le y-x<1$\\[4pt]
 \strong{Twelvefold way.} Fächer: $n:=|N|$, Karten: $k:=|K|$\\
 \begin{tabular}{@{}c|ccc@{}}
 \toprule

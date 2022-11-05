@@ -30,7 +30,8 @@
 & $\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}$\\[14pt]
 \strong{Existenzq.}
 & $\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}$
-& $\dfrac{\Gamma\vdash\exists x\colon A\qquad\Gamma, A\vdash B}{\Gamma\vdash B}(x\notin\mathrm{FV}(\Gamma,B))$\\[8pt]
+& $\!\!\!\!\dfrac{\Gamma\vdash\exists x\colon A\qquad\Gamma', A\vdash B}{\Gamma,\Gamma'\vdash B}
+(x\notin\mathrm{FV}(\Gamma,\Gamma',B))\!\!$\\[8pt]
 \bottomrule
 \end{tabular}
 
@@ -1933,7 +1934,8 @@ laut (3) ebenso $x\in A$ sein muss.\,\qedsymbol
 \end{Beweis}
 
 \newpage
-\begin{Satz}[Universelle Eigenschaft der Quotientenmenge]\newlinefirst
+\begin{Satz}[Universelle Eigenschaft der Quotientenmenge]%
+\label{quotient-universal-property}\newlinefirst
 Sei $\pi\colon X\to X/{\sim}$ die Quotientenabbildung einer
 Äquivalenzrelation. Es sei $f\colon X\to Y$ eine auf den
 Äquivalenzklassen konstante Abbildung, das heißt, $f(a)=f(b)$ gelte
@@ -1985,6 +1987,72 @@ Repräsentantensystem und ordnen jedem Repräsentant $x$ einen
 einzigartigen Wert $y$ zu. Es soll nun $f([x])=\{y\}$ gelten,
 wodurch $f$ auf ganz $X$ definiert wird. Wir setzen
 $Y:=f(X)$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $f\colon X\to Y$ surjektiv und $a\sim b$ genau dann, wenn
+$f(a)=f(b)$. Zwischen $Y$ und der Quotientenmenge $X/{\sim}$
+besteht eine Bijektion.
+\end{Satz}
+\begin{Beweis}[Beweis 1]
+Man definiert
+\[\varphi\colon Y\to X/{\sim},\quad \varphi(y):=f^{-1}(\{y\}).\]
+Zu jedem $y\in Y$ ist $\varphi(y)$ die Klasse all der $x\in X$, für
+die $f(x)=y$ gilt. Weil $f$ surjektiv ist, ist sie nichtleer und damit
+in $X/{\sim}$. Sei nun $x\in X$ beliebig, womit $[x]$ eine beliebige
+Klasse ist. Weil $f$ surjektiv ist, muss ein $y$ mit $f(x)=y$ existieren,
+womit $x\in f^{-1}(\{y\})$ gilt, also $[x] = \varphi(y)$. Ergo ist
+$\varphi$ surjektiv.
+
+Weiterhin darf man rechnen
+\begin{gather*}
+\varphi(y) = \varphi(y') \iff f^{-1}(\{y\}) = f^{-1}(\{y\})
+\implies f(f^{-1}(\{y\})) = f(f^{-1}(\{y'\}))\\
+\stackrel{\text{(1)}}\implies \{y\} = \{y'\} \implies y=y',
+\end{gather*}
+wobei (1) gemäß Satz \ref{sur-img-of-preimg} gilt. Somit muss
+$\varphi$ injektiv sein.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Beweis}[Beweis 2]
+Durch $\varphi\colon Y\to X/{\sim}$ mit $\varphi(y):=f^{-1}(\{y\})$ ist
+eine Bijektion definiert.
+
+Man betrachte hierzu $\eta(y):=\{y\}$ und $(Ff)(B) = f^{-1}(B).$
+Gemäß Satz \ref{preimg-induces-functor} handelt es sich bei $F$ um einen
+kontravarianten Funktor. Das heißt, es gilt
+$F(\id)=\id$ und $F(f\circ g) = (Fg)\circ (Ff).$ Weil $f$ surjektiv ist,
+existiert eine Rechtsinverse $g$ mit $f\circ g = \id.$ Ergo gilt
+\[\id = F(\id) = F(f\circ g) = (Fg)\circ (Ff).\]
+Somit ist $Fg$ eine Linksinverse von $Ff.$ Folglich ist $Ff$ injektiv,
+womit ebenso die Verkettung $\varphi = (Ff)\circ \eta$ injektiv ist,
+denn $\eta$ ist ja eine Injektion.
+
+Weiterhin ist die Äquivalenzrelation so definiert, dass die
+Quotientenabbildung $\pi$ die Gleichung $\pi=\varphi\circ f$ erfüllt, denn
+\begin{gather*}
+(\varphi\circ f)(x) = f^{-1}(\{f(x)\}) = \{a\in X\mid f(a)\in \{f(x)\}\}\\
+= \{a\in X\mid f(a)=f(b)\} = \{a\in X\mid a\sim x\} = \pi(x).
+\end{gather*}
+Weil $f$ surjektiv ist, gilt $Y=f(X).$ Infolge gilt
+\[\varphi(Y) = \varphi(f(X)) = (\varphi\circ f)(X) = \pi(X) = X/{\sim}.\]
+Ergo ist $\varphi$ surjektiv.\,\qedsymbol
+\end{Beweis}
+\begin{Beweis}[Beweis 3]
+Die Abbildung $\varphi\colon Y\to X/{\sim}$ mit $\varphi(y):=f^{-1}(\{y\})$
+ist bijektiv, wie die folgende Argumentation bestätigt.
+Aufgrund der universellen Eigenschaft der Quotientenmenge, Satz
+\ref{quotient-universal-property}, gibt es
+genau eine Abbildung $\psi$ mit $f = \psi\circ\pi$. Die
+Äquivalenzrelation wurde überdies so definiert, dass
+$\pi = \varphi\circ f$ gilt. Daraus ergeben sich die Gleichungen
+\[\psi\circ\varphi\circ f = f,\quad \varphi\circ\psi\circ\pi = \pi.\]
+Als Surjektionen sind $f$ und $\pi$ rechtskürzbar, womit man
+die Gleichungen $\psi\circ\varphi = \id$ und $\varphi\circ\psi = \id$
+erhält. Somit ist $\psi$ die Linksinverse $\varphi$, womit
+$\varphi$ injektiv sein muss, und auch die Rechtsinverse, womit
+$\varphi$ surjektiv sein muss.\,\qedsymbol
 \end{Beweis}
 
 \subsection{Ordnungsrelationen}
@@ -2538,6 +2606,52 @@ mit $f(a)=f(b)$ die Gleichung $a=x$ erhält. Man setze nun $u:=b$.
 Weil $f(b)=f(b)$ tautologisch ist, erhält man
 die Gleichung $b=x$. Demzufolge besteht in $x$ der Brückenpfeiler,
 um transitiv die gewünschte Gleichung $a=b$ zu erhalten.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}\label{sur-img-of-preimg}
+Genau dann ist $f\colon X\to Y$ surjektiv,
+wenn $\forall B\subseteq Y\colon B=f(f^{-1}(B))$.
+\end{Satz}
+\begin{Beweis}
+Sei $f$ surjektiv. Aufgrund von Satz \ref{img-preimg} genügt es,
+$B\subseteq f(f^{-1}(B))$ zu zeigen. Das heißt, zu bestätigen ist
+\[y\in B\vdash\exists x\colon f(x)\in B\land y=f(x).\]
+Weil $f$ surjektiv und $y\in Y$ ist, gibt es $x\in X$ mit $y=f(x)$.
+Weil außerdem $y\in B$ Prämisse ist, gilt zusätzlich $f(x)\in B$.
+
+Zur Umkehrung. Setze $B:=Y$. Dann ist $f^{-1}(B)=X$. Wir haben also
+$Y=f(X)$, womit $f$ laut Definition surjektiv sein muss.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Abbildung $F\colon\Abb(X,Y)\to\Abb(\mathcal P(X),\mathcal P(Y))$
+mit $F(f)(A):=f(A)$ ist ein kovarianter Funktor. Das heißt, es gilt
+$F(\id)=\id$ und $F(g\circ f) = F(g)\circ F(f)$.
+\end{Satz}
+\begin{Beweis}
+Man darf rechnen
+\[F(g\circ f)(A) = (g\circ f)(A) \stackrel{\text{(1)}}= g(f(A))
+= F(g)(F(f)(A)) = (F(g)\circ F(f))(A),\]
+wobei (1) gemäß Satz \ref{img-chain} gilt. Und es gilt
+\[F(\id_X)(A) = \id_X(A) = \bigcup_{x\in A} \{\id_X(x)\}
+= \bigcup_{x\in A}\{x\}
+= A = \id_{\mathcal P(X)}(A).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{preimg-induces-functor}
+Die Abbildung $F\colon\Abb(X,Y)\to\Abb(\mathcal P(Y),\mathcal P(X))$
+mit $F(f)(B):=f^{-1}(B)$ ist ein kontravarianter Funktor. Das
+heißt, es gilt $F(\id) = \id$ und $F(g\circ f) = F(f)\circ F(g)$.
+\end{Satz}
+\begin{Beweis}
+Man darf rechnen
+\[F(g\circ f)(B) = (g\circ f)^{-1}(B)
+\stackrel{\text{(1)}}= f^{-1}(g^{-1}(B))
+= F(f)(F(g)(B)) = (F(f)\circ F(g))(B),\]
+wobei (1) gemäß Satz \ref{preimg-chain} gilt. Und es gilt
+\[F(\id_X)(B) = \id_X^{-1}(B) = \{x\in X\mid x\in B\}
+= B = \id_{\mathcal P(X)}(B).\,\qedsymbol\]
 \end{Beweis}
 
 \newpage
