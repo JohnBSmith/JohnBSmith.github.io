@@ -1,0 +1,259 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\bicond}{\leftrightarrow}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+
+\title{Der Kalkül des natürlichen Schließens}
+\subtitle{Teil 3: Theorien mit Gleichheit}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+Um mathematische Strukturen beforschen zu können, müssen den
+logischen Axiomen auch noch mathematische Axiome hinzugefügt
+werden.
+
+\parspace
+Beispielsweise die Axiome der Mengenlehre. Deneben gibt es aber auch
+viele weniger umfängliche Theorien.
+
+\parspace
+Viele Theorien beinhalten einen Begriff der Gleichheit.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Axiom (Reflexivität)}
+\[\vdash\forall x\colon x=x\]
+\end{block}\pause
+
+\begin{block}{Axiom (Symmetrie)}
+\[\vdash\forall x\colon\forall y\colon x=y\cond y=x\]
+\end{block}\pause
+
+\begin{block}{Axiom (Transitivität)}
+\[\vdash\forall x\colon\forall y\colon\forall z\colon x=y\land y=z\cond x=z\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Die Axiome induzieren Schlussregeln. Beispielsweise gilt
+\[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash t'=t}\]
+für beliebige Terme $t,t'$, denn:
+
+\[
+\infer{\Gamma\vdash t'=t}{
+  \infer{\vdash t=t'\cond t'=t}{
+    \infer{\vdash\forall y\colon t=y\cond y=t}{
+      \infer{\vdash\forall x\colon\forall y\colon x=y\cond y=x}{}}}
+& \Gamma\vdash t=t'}
+\]
+\end{frame}
+
+\begin{frame}
+\begin{block}{Schlussregel zur Reflexivität}
+\[\dfrac{}{\Gamma\vdash t=t}\]
+\end{block}\pause
+
+\begin{block}{Schlussregel zur Symmetrie}
+\[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash t'=t}\]
+\end{block}\pause
+
+\begin{block}{Schlussregel zur Transitivität}
+\[\dfrac{\Gamma\vdash t=t'\qquad\Gamma'\vdash t'=t''}{\Gamma,\Gamma'\vdash t=t''}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Ersetzungsregeln}
+\end{frame}
+
+\begin{frame}
+Im Folgengen sei $f(x)$ ein Funktionsterm in der Variable $x$,
+beispielsweise $f(x):=2x$. Die Applikation ist als $f(t):=f(x)[x:=t]$
+definiert.\pause
+
+\parspace
+In gleichartiger Weise sei $P(x)$ eine Formel in der Variable $x$,
+beispielsweise $P(x):=(x>0)$. Die Applikation ist als $P(t):=P(x)[x:=t]$
+definiert.\pause
+
+\parspace
+Wichtig: Hier ist mit $f$ keine allgemeine Funktion gemeint, sondern
+eine, deren Funktionsterm auf ein Blatt Papier geschrieben werden kann.
+Gleichermaßen ist mit $P$ kein allgemeines Prädikat gemeint, sondern
+eines, dessen Formel auf ein Blatt Papier geschrieben werden kann.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Ersetzungsregel für Terme}
+\[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash f(t)=f(t')}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Ersetzungsregel für Formeln}
+\[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash P(t)\bicond P(t')}\]
+\end{block}\pause
+Alternativ ginge:
+\begin{block}{Ersetzungsregel für Formeln}
+\[\dfrac{\Gamma\vdash t=t'\qquad\Gamma'\vdash P(t)}{\Gamma,\Gamma'\vdash P(t')}\]
+\end{block}\pause
+Die beiden Regeln sind äquivalent, denn (setze $x:=t$ und $y:=t'$):
+\begin{small}
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma,\Gamma'\vdash P(y)}{
+  \infer{\Gamma\vdash P(x)\cond P(y)}{
+    \infer{\Gamma\vdash P(x)\bicond P(y)}{\Gamma\vdash x=y}}
+& \Gamma'\vdash P(x)}
+&
+\infer{\Gamma\vdash P(x)\bicond P(y)}{
+  \infer{\Gamma\vdash P(x)\cond P(y)}{
+    \infer{\Gamma, P(x)\vdash P(y)}{
+      \Gamma\vdash x=y & \infer{P(x)\vdash P(x)}{}}}
+& \infer{\Gamma\vdash P(y)\cond P(x)}{
+    \infer{\Gamma,P(y)\vdash P(x)}{
+      \Gamma\vdash x=y & \infer{P(y)\vdash P(y)}{}}}}
+\end{array}
+\]
+\end{small}
+\end{frame}
+
+\begin{frame}
+Außerdem gibt es in der Logik noch eine weitere besonders nützliche
+Ersetzungsregel, die allerdings nicht vorausgesetzt werden muss.
+Sie folgt aus den übrigen logischen Schlussregeln.
+
+\parspace
+Es bezeichne hierzu $P(X)$ eine Formel in der logischen Variablen $X$,
+beispielsweise $P(X) := (A\land X)$. Zu einer weiteren Formel
+$B$ verstehen wir abermals $P(B):=P(X)[X:=B]$ als Applikation.\pause
+
+\begin{block}{Zulässige Ersetzungsregel}
+\[\dfrac{\Gamma\vdash A\leftrightarrow B}{\Gamma\vdash P(A)\leftrightarrow P(B)}\]
+\end{block}\pause
+Bewiesen werden kann sie per struktureller Induktion über den
+Formelaufbau.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Gruppentheorie}
+\end{frame}
+
+\begin{frame}
+Das Diskursuniversum sei $U=G$, wobei $(G,\cdot,e)$ eine Gruppe ist.
+Hiermit treten die folgenden zusätzlichen Axiome in Erscheinung:
+\begin{align*}
+& \forall a\colon\forall b\colon\forall c\colon (ab)c = a(bc) && \text{(Assoziativität)}\\
+& \forall a\colon ae = a\land ea = a && \text{(Eigenschaft des neutralen Elements)}\\
+& \forall a\colon\exists b\colon ab = e\land ba = e && \text{(Existenz inverser Elemente)}
+\end{align*}\pause
+{\footnotesize\strong{Bemerkung.} Diese Variante der Axiome setzt
+das Vorhandensein genau eines neutralen Elements voraus. Begnügt man
+sich mit der Existenz eines solchen, wird die Argumentation umständlicher,
+weil man mit Existenzaussagen hantieren muss.}
+\end{frame}
+
+\begin{frame}
+Eine einfache Aufgabe.
+
+\vspace{1em}
+\strong{Satz.} \emph{Jedes Element einer Gruppe besitzt nicht mehr
+als ein Inverses.}\pause
+
+\parspace
+\strong{Beweis.}
+Sei $(G,\cdot,e)$ eine Gruppe. Seien $a,b,b'\in G$.
+Sei sowohl $b$ als auch $b'$ invers zu $a$. Es findet sich die
+Termumformung
+\[b = eb = (b'a)b = b'(ab) = b'e = b'.\,\qedsymbol\]
+\end{frame}
+
+\begin{frame}
+Formalisierung der Aussage:
+\[\forall a\colon\forall b\colon\forall b'\colon ab=e\land b'a=e\cond b=b'\]\pause
+Formalisierter Beweis:
+
+\begin{small}
+\[
+\infer{\vdash\forall a\colon\forall b\colon\forall b'\colon ab=e\land b'a=e\cond b=b'}{
+  \infer{\vdash ab=e\land b'a=e\cond b=b'}{
+    \infer{1\vdash b=b'}{
+      \infer{1\vdash b=eb'}{
+        \infer{1\vdash b=b'(ab)}{
+          \infer{1\vdash b=(b'a)b}{
+            \infer{\vdash b=eb}{}
+          & \infer{1\vdash (b'a)b=eb}{
+              \infer{1\vdash b'a=e}{
+                \infer{1\equiv ab=e\land b'a=e}{}}}
+          }
+        & \infer{\vdash (b'a)b = b'(ab)}{}
+        }
+      & \infer{1\vdash b'(ab)=b'e}{
+            \infer{1\vdash ab=e}{
+              \infer{1\equiv ab=e\land b'a=e}{}}}
+      }
+    & \infer{\vdash eb'=b'}{}}}}
+\]
+\end{small}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{November 2022}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+
+\end{document}
+
+

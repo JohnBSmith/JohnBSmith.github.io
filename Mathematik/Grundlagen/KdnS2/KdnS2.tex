@@ -1,0 +1,341 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\FV}{\mathrm{FV}}
+
+\title{Der Kalkül des natürlichen Schließens}
+\subtitle{Teil 2: Prädikatenlogik}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+\centerheadline{Freie Variablen}
+\end{frame}
+
+\begin{frame}
+In der Formel $A\land P(x)$ taucht die Variable $x$ frei auf,
+wogegen sie in der Formel $\forall x\colon A\land P(x)$ nur gebunden
+vorkommt.\pause
+
+\parspace
+Wir bezeichnen mit $\FV(A)$ die Menge der freien Variablen
+der Formel $A$. Man kann sie rekursiv über den Formelaufbau definieren:
+\begin{align*}
+& \FV(A\land B) = \FV(A)\cup\FV(B), && \FV(A\cond B) = \FV(A)\cup\FV(B),\\
+& \FV(A\lor B)  = \FV(A)\cup\FV(B), && \FV(A\leftrightarrow B) = \FV(A)\cup\FV(B),\\
+& \FV(\forall x\colon A) = \FV(A)\setminus\{x\}, && \FV(\neg A) = \FV(A),\\
+& \FV(\exists x\colon A) = \FV(A)\setminus\{x\}, && \FV(\bot) = \FV(\top) = \emptyset
+\end{align*}
+und
+\[\FV(P(t_1,\ldots,t_n)) = \FV(t_1)\cup\ldots\cup\FV(t_n),\]
+wobei $\FV(t)$ die im Term $t$ auftauchenden Variablen sind, was
+man abermals rekursiv definieren kann.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Substitution}
+\end{frame}
+
+\begin{frame}
+Man bezeichnet mit $A[x:=t]$, auch $A[t/x]$ geschrieben, die Formel,
+die dadurch entsteht, dass in der Formel $A$ jedes freie Vorkommen
+der Variable $x$ gegen den Term $t$ ersetzt wird.\pause
+
+\parspace
+Beispielsweise resultiert $(x^2\ge 0)[x:=a+1]$ in der Formel $(a+1)^2\ge 0$.\pause
+
+\parspace
+Zusätzlich soll gelten, dass bei $A[x:=t]$ die Variablen in $t$ nicht
+eingefangen im Sinne von überschattet werden dürfen.\pause
+
+\parspace
+Beispielsweise resultiert $(\exists x\colon P(x,y))[y:=a]$ in
+$\exists x\colon P(x,a)$. Jedoch ist $(\exists x\colon P(x,y))[y:=x]$
+nicht $\exists x\colon P(x,x)$, sondern $\exists u\colon P(u,x)$.
+Es musste die gebundene Variable hier also umbenannt werden, damit
+es nicht zur Überschattung kommt.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Universalquantifizierungen}
+\end{frame}
+
+\begin{frame}
+Von »Alle Enten haben einen Schnabel« dürfen wir schließen auf
+»Donald hat einen Schnabel«.\pause
+\begin{block}{Beseitigung der Universalquantifizierung}
+\[\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}\]
+\end{block}\pause
+Sei $E(x)$ beispielsweise das Prädikat »$x$ ist eine Ente« und $S(x)$
+das Prädikat »$x$ hat einen Schnabel«. Man darf schließen:
+\[
+\infer[\infernote{$\cond$B}]{\vdash S(\text{Donald})}{
+  \infer[\infernote{$\forall$B}]{\vdash E(\text{Donald})\cond S(\text{Donald})}{
+    \vdash\forall x\colon E(x)\cond S(x)}
+& \vdash E(\text{Donald})}
+\]
+\end{frame}
+
+\begin{frame}
+Es gelte $0<x$. Addiert man $1$ zu beiden Seiten,
+erhält man $1<x+1$. Wegen $0<1$ gilt folglich erst recht
+$0<x+1$. Wir haben also
+\[0<x\vdash 0<x+1.\]\pause
+Da keine weiteren Annahmen über $x$ gemacht wurden, dürfen
+wir eine Universalquantifizierung einführen: 
+\[
+\infer[\infernote{$\forall$E}]{\vdash\forall x\colon 0<x\cond 0<x+1}{
+  \infer[\infernote{$\cond$E}]{\vdash 0<x\cond 0<x+1}{
+    0<x\vdash 0<x+1}}
+\]\pause
+
+\begin{footnotesize}
+\strong{Bemerkung.} Stillschweigend vorausgesetzt wurde die Gestalt des
+Diskursuniversums $U$, über das alle Quantifizierungen laufen. Das heißt,
+mit $\forall x$ ist immer $\forall x\in U$ gemeint. Wir haben hier
+beispielsweise $U=\Z$ oder $U=\R$. Ein Diskursuniversum muss immer
+nichtleer sein, da man sonst weitere Spitzfindigkeiten berücksichtigen
+müsste.
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Einführung der Universalquantifizierung}
+\[\dfrac{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}(x\notin\mathrm{FV}(\Gamma))\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Bei der allgemeinen Regel zur gemachten Schlussform ist zu beachten,
+dass die Variable, über die allquantifiziert wird, nicht in einer
+Aussage im Kontext vorkommt. Hierdurch könnte nämlich die allgemeine
+Gültigkeit der Aussage, über die quantifiziert wird, eingeschränkt
+werden.\pause
+
+\parspace
+Beispiel für das Unheil einer irrigen Ableitung:
+\[
+\infer[\infernote{$\forall$B, x:=0}]{\vdash 1 < 0}{
+  \infer[\infernote{$\cond$B}]{\vdash\forall x\colon 1 < x}{
+    \infer[\infernote{$\forall$B, x:=2}]{\vdash 1 < 2\cond\forall x\colon 1 < x}{
+      \infer[\infernote{$\forall$E}]{\vdash \forall x\colon 1 < x\cond\forall x\colon 1 < x}{
+        \infer[\infernote{$\cond$E}]{\vdash 1 < x\cond\forall x\colon 1 < x}{
+          \infer[\infernote{$\forall$E irrig}]{1 < x\vdash\forall x\colon 1 < x}{
+            \infer[\infernote{Ax}]{1 < x\vdash 1 < x}{}}}}}
+  & \infer{\vdash 1<2}{\text{\footnotesize unwichtig}}
+  }
+}
+\]
+\end{frame}
+
+\begin{frame}[t]
+\vspace{7em}
+Beispiel einer korrekten Ableitung:
+
+\vspace{1em}
+\onslide*<1>{\[
+\vdash A\subseteq A
+\]}
+\onslide*<2>{\[
+\infer[\infernote{per Def.}]{\vdash A\subseteq A}{
+  \vdash\forall x\colon x\in A\cond x\in A}
+\]}
+\onslide*<3>{\[
+\infer[\infernote{per Def.}]{\vdash A\subseteq A}{
+  \infer[\infernote{$\forall$E}]{\vdash\forall x\colon x\in A\cond x\in A}{
+    \vdash x\in A\cond x\in A}}
+\]}
+\onslide*<4>{\[
+\infer[\infernote{per Def.}]{\vdash A\subseteq A}{
+  \infer[\infernote{$\forall$E}]{\vdash\forall x\colon x\in A\cond x\in A}{
+    \infer[\infernote{$\cond$E}]{\vdash x\in A\cond x\in A}{
+      \infer[\infernote{Ax}]{x\in A\vdash x\in A}{}}}}
+\]}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{6em}
+Beispiel einer korrekten Ableitung in der reinen Logik:
+
+\vspace{1em}
+\onslide*<1>{\[
+\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))
+\]}
+\onslide*<2>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))}{
+  1\vdash \forall x\colon A\land P(x)}
+\]}
+\onslide*<3>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))}{
+  \infer[\infernote{$\forall$E}]{1\vdash \forall x\colon A\land P(x)}{
+    1\vdash A\land P(x)}}
+\]}
+\onslide*<4>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))}{
+  \infer[\infernote{$\forall$E}]{1\vdash \forall x\colon A\land P(x)}{
+    \infer[\infernote{$\land$E}]{1\vdash A\land P(x)}{
+      1\vdash A
+    & 1\vdash P(x)}}}
+\]}
+\onslide*<5>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))}{
+  \infer[\infernote{$\forall$E}]{1\vdash \forall x\colon A\land P(x)}{
+    \infer[\infernote{$\land$E}]{1\vdash A\land P(x)}{
+      \infer[\infernote{$\land$B}]{1\vdash A}{
+        \infer[\infernote{Ax}]{1\equiv A\land(\forall x\colon P(x))}{}}
+    & \infer[\infernote{$\forall$B}]{1\vdash P(x)}{
+        1\vdash\forall x\colon P(x)}}}}
+\]}
+\onslide*<6>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\forall x\colon P(x))\cond (\forall x\colon A\land P(x))}{
+  \infer[\infernote{$\forall$E}]{1\vdash \forall x\colon A\land P(x)}{
+    \infer[\infernote{$\land$E}]{1\vdash A\land P(x)}{
+      \infer[\infernote{$\land$B}]{1\vdash A}{
+        \infer[\infernote{Ax}]{1\equiv A\land(\forall x\colon P(x))}{}}
+    & \infer[\infernote{$\forall$B}]{1\vdash P(x)}{
+        \infer[\infernote{$\land$B}]{1\vdash\forall x\colon P(x)}{
+          \infer[\infernote{Ax}]{1\equiv A\land (\forall x\colon P(x))}{}}}}}}
+\]}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Existenzquantifizierungen}
+\end{frame}
+
+\begin{frame}
+Es ist ja $2\in\Z$ und $2^2=4$. Ergo ist $x:=2$ ein Zeuge für
+$\exists x\colon x\in\Z\land x^2=4$.\pause
+
+\parspace
+Zur Einführung muss also ein Zeuge der Existenzaussage
+gefunden werden.
+\begin{block}{Einführung der Existenzquantifizierung}
+\[\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Die Existenzaussage $\exists x\colon P(x)$ wird wie folgt beseitigt.
+Mir ihr liegt ein Zeuge $a$ mit $P(a)$ vor. Unter Verwendung
+der Aussage $P(a)$ wird eine Aussage $B$ hergeleitet, in der $a$ nicht
+frei vorkommt. Somit ist $B$ unabhängig vom gewählten Zeugen, was
+erforderlich ist, da unbekannt bleibt, welcher der Zeugen vorliegt.\pause
+
+\begin{block}{Beseitigung der Existenzquantifizierung}
+\[\dfrac{\Gamma\vdash\exists a\colon A\qquad\Gamma',A\vdash B}{\Gamma,\Gamma'\vdash B}
+(a\notin\mathrm{FV}(\Gamma,\Gamma',B))\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{6em}
+Beispiel einer korrekten Ableitung:
+
+\vspace{1em}
+\onslide*<1>{\[
+\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))
+\]}
+\onslide*<2>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))}{
+  1\vdash\exists x\colon A\land P(x)}
+\]}
+\onslide*<3>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))}{
+  \infer[\infernote{$\exists$B}]{1\vdash\exists x\colon A\land P(x)}{
+    1\vdash\exists a\colon P(a)
+  & 1, P(a)\vdash\exists x\colon A\land P(x)}}
+\]}
+\onslide*<4>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))}{
+  \infer[\infernote{$\exists$B}]{1\vdash\exists x\colon A\land P(x)}{
+    \infer[\infernote{$\land$B}]{1\vdash\exists a\colon P(a)}{
+      \infer[\infernote{Ax}]{1\equiv A\land (\exists x\colon P(x))}{}}
+  & \infer[\infernote{$\exists$E}]{1, P(a)\vdash\exists x\colon A\land P(x)}{
+      1, P(a)\vdash A\land P(a)}}}
+\]}
+\onslide*<5>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))}{
+  \infer[\infernote{$\exists$B}]{1\vdash\exists x\colon A\land P(x)}{
+    \infer[\infernote{$\land$B}]{1\vdash\exists a\colon P(a)}{
+      \infer[\infernote{Ax}]{1\equiv A\land (\exists x\colon P(x))}{}}
+  & \infer[\infernote{$\exists$E}]{1, P(a)\vdash\exists x\colon A\land P(x)}{
+      \infer[\infernote{$\land$B}]{1, P(a)\vdash A\land P(a)}{
+        1\vdash A
+      & \infer[\infernote{Ax}]{P(a)\vdash P(a)}{}}}}}
+\]}
+\onslide*<6>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\land (\exists x\colon P(x))\cond (\exists x\colon A\land P(x))}{
+  \infer[\infernote{$\exists$B}]{1\vdash\exists x\colon A\land P(x)}{
+    \infer[\infernote{$\land$B}]{1\vdash\exists a\colon P(a)}{
+      \infer[\infernote{Ax}]{1\equiv A\land (\exists x\colon P(x))}{}}
+  & \infer[\infernote{$\exists$E}]{1, P(a)\vdash\exists x\colon A\land P(x)}{
+      \infer[\infernote{$\land$B}]{1, P(a)\vdash A\land P(a)}{
+        \infer[\infernote{$\land$B}]{1\vdash A}{
+          \infer[\infernote{Ax}]{1\equiv A\land (\exists x\colon P(x))}{}}
+      & \infer[\infernote{Ax}]{P(a)\vdash P(a)}{}}}}}
+\]
+
+\parspace
+Hier ist $a$ mit $A\land P(a)$ ein Zeuge für $\exists x\colon A\land P(x)$.
+}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{November 2022}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+
+\end{document}
+
+

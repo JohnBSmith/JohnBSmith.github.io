@@ -1182,24 +1182,28 @@ Umformung%
 \end{Beweis}
 
 \begin{Satz}\label{exists-implies-const}
-Es gilt:
-\[(\forall x\colon (P(x)\implies A)) \iff ((\exists x\colon P(x))\implies A).\]
+Es gilt die Äquivalenz
+\[(\forall x\colon (P(x)\Rightarrow A))
+\iff ((\exists x\colon P(x))\Rightarrow A).\]
 \end{Satz}
-\begin{Beweis}[Beweis 1] Schematisch:
-\[\begin{array}{c@{\qquad}c}
-\infer[\infernote{1}]{(\exists x\colon P(x))\implies A}{
-  \infer[\infernote{2}]{A}{
-    \infer[\infernote{1}]{\exists x\colon P(x)}{}
-  & \infer{A}{
-      \infer{P(a)\implies A}{\forall x\colon (P(x)\implies A)}
-    & \infer[\infernote{2}]{P(a)}{}}}}
-&
-\infer{\forall x\colon (P(x)\implies A)}{
-  \infer[\infernote{1}]{P(x)\implies A}{
-    \infer{A}{
-      (\exists x\colon P(x))\implies A
-    & \infer{\exists x\colon P(x)}{
-        \infer[\infernote{1}]{P(x)}{}}}}}
+\begin{Beweis}[Beweis 1] Mit $\Gamma:=[\forall x\colon (P(x)\Rightarrow A)]$
+und $\Gamma':=[(\exists x\colon P(x))\Rightarrow A]$
+lauten die Beweisbäume:
+\[\begin{array}{c@{\qquad}c}\small
+\infer{\Gamma\vdash (\exists x\colon P(x))\Rightarrow A}{
+  \infer{\Gamma,\exists x\colon P(x)\vdash A}{
+    \infer{\exists x\colon P(x)\vdash\exists a\colon P(a)}{}
+  & \infer{\Gamma,P(a)\vdash A}{
+      \infer{\Gamma\vdash P(a)\Rightarrow A}{
+        \infer{\Gamma\vdash\forall x\colon (P(x)\Rightarrow A)}{}}
+    & \infer{P(a)\vdash P(a)}{}}}}
+&\small
+\infer{\Gamma'\vdash\forall x\colon (P(x)\Rightarrow A)}{
+  \infer{\Gamma'\vdash P(x)\Rightarrow A}{
+    \infer{\Gamma',P(x)\vdash A}{
+      \infer{\Gamma'\vdash (\exists x\colon P(x))\Rightarrow A}{}
+    & \infer{P(x)\vdash \exists x\colon P(x)}{
+        \infer{P(x)\vdash P(x)}{}}}}}
 \end{array}
 \]
 Die linke Seite zeigt die Implikation von links nach rechts,
@@ -1218,32 +1222,46 @@ und Satz \ref{dm-g1} gelingt die Umformung
 \end{Beweis}
 
 \begin{Satz}[Kommutativgesetz]\label{exists-cl}
-Es gilt:
+Es gilt die Äquivalenz
 \[(\exists x\colon\exists y\colon P(x,y)) \iff (\exists y\colon\exists x\colon P(x,y)).\]
 \end{Satz}
 \begin{Beweis}[Beweis]
-Die Implikation von links nach rechts:
-\[\infer[\infernote{1}]{\exists y\colon\exists x\colon P(x,y)}{
-  \exists x\colon\exists y\colon P(x,y)
-  &
-  \infer{\exists y\colon \exists x\colon P(x, y)}{
-    \infer[\infernote{1}]{P(a,b)}{}}
-}\]
-Die Implikation von rechts nach links geht analog.\,\qedsymbol
+Sei $\Gamma:=[\exists x\colon\exists y\colon P(x,y)]$.
+Beweisbaum:
+\[
+\infer{\vdash(\exists x\colon\exists y\colon P(x,y))
+  \Rightarrow (\exists y\colon\exists x\colon P(x,y))
+}{
+  \infer{\Gamma\vdash\exists y\colon\exists x\colon P(x,y)}{
+    \infer{\Gamma\vdash\exists a\colon\exists y\colon P(a,y)}{}
+  & \infer{\exists y\colon P(a,y)\vdash\exists y\colon\exists x\colon P(x,y)}{
+      \infer{\exists y\colon P(a,y)\vdash\exists b\colon P(a,b)}{}
+    & \infer{P(a,b)\vdash\exists y\colon\exists x\colon P(x,y)}{
+        \infer{P(a,b)\vdash\exists x\colon P(x,b)}{
+          \infer{P(a,b)\vdash P(a,b)}{}}}}}}
+\]
+Der Beweis der Umkehrung verläuft analog.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Kommutativgesetz]\label{all-cl}
-Es gilt:
+Es gilt die Äquivalenz
 \[(\forall x\colon\forall y\colon P(x,y))
 \iff (\forall y\colon\forall x\colon P(x,y)).\]
 \end{Satz}
 \begin{Beweis}[Beweis]
-Die Implikation von links nach rechts:
-\[\infer{\forall y\colon\forall x\colon P(x,y)}{
-  \infer{\forall x\colon P(x,y)}{
-    \infer{P(x,y)}{\forall x\colon\forall y\colon P(x,y)}}
-}\]
-Die Implikation von rechts nach links geht analog.\,\qedsymbol
+Sei $\Gamma:=[\forall x\colon\forall y\colon P(x,y)]$.
+Beweisbaum:
+\[
+\infer{\vdash (\forall x\colon\forall y\colon P(x,y))
+  \Rightarrow (\forall y\colon\forall x\colon P(x,y))
+}{
+  \infer{\Gamma\vdash\forall y\colon\forall x\colon P(x,y)}{
+    \infer{\Gamma\vdash\forall x\colon P(x,y)}{
+      \infer{\Gamma\vdash P(x,y)}{
+        \infer{\Gamma\vdash\forall y\colon P(x,y)}{
+          \infer{\Gamma\vdash\forall x\colon\forall y\colon P(x,y)}{}}}}}}
+\]
+Der Beweis der Umkehrung verläuft analog.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Allgemeine Distributivgesetze]%

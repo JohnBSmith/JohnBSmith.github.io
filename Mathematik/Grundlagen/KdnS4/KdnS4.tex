@@ -1,0 +1,195 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\kw}[1]{\textbf{#1}}
+
+\title{Der Kalkül des natürlichen Schließens}
+\subtitle{Teil 4: Programme als Beweise}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+\centerheadline{Die Curry-Howard-Korrespondenz}
+\end{frame}
+
+\begin{frame}
+Die Schreibweise $a\colon A$ drückt das Urteil aus, dass $a$ ein Term
+vom Typ $A$ sein muss.\pause{} Analog zur Logik ist ein Kontext eine Liste
+\[\Gamma = [a_1\colon A_1,\ldots,a_n\colon A_n].\]
+Ist nun die Sequenz
+\[\Gamma\vdash (b\colon B)\]
+eine ableitbare, liegt das Urteil $b\colon B$ vor, sofern die Terme
+in $\Gamma$ vorausgesetzt werden dürfen. Das ist so zu verstehen,
+dass man mit dem Termen aus $\Gamma$ den Term $b$ zusammenbasteln kann.
+Ein Term darf hierbei mehrmals benutzt werden.\pause
+\end{frame}
+
+\begin{frame}
+Zur Konstruktion von Termen finden sich nun Schlussregeln, die die
+logischen widerspiegeln.\pause
+
+\begin{block}{Axiom (Einführung von Grundsequenzen)}
+\begin{center}
+\begin{tabular}{c@{\qquad\qquad}c}
+\strong{Aussagen} & \strong{Typurteile}\\[10pt]
+$\dfrac{}{A\vdash A}$ & $\dfrac{}{(a\colon A)\vdash (a\colon A)}$
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\qquad}c}
+\strong{Konjunktion}
+& \strong{Paar}\\[10pt]
+$\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma,\Gamma'\vdash A\land B}$
+&
+$\dfrac{\Gamma\vdash a\colon A\qquad\Gamma'\vdash b\colon B}{\Gamma,\Gamma'\vdash (a,b)\colon A\times B}$\\[18pt]
+$\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A}$
+& $\dfrac{\Gamma\vdash t\colon A\times B}{\Gamma\vdash \pi_l(t)\colon A}$\\[18pt]
+$\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}$
+& $\dfrac{\Gamma\vdash t\colon A\times B}{\Gamma\vdash \pi_r(t)\colon B}$
+\end{tabular}
+\end{center}
+\end{block}\pause
+
+\parspace
+In Worten: Die Einführung der Konjunktion entspricht der Konstruktion
+des Paares. Die Beseitigung der Konjunktion entspricht der Projektion
+auf eine der Komponenten.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\qquad}c}
+\strong{Implikation}
+& \strong{Funktion}\\[10pt]
+$\dfrac{\Gamma, A\vdash B}{\Gamma\vdash A\cond B}$
+&
+$\dfrac{\Gamma, a\colon A\vdash b\colon B}{\Gamma\vdash (a\mapsto b)\colon A\to B}$\\[18pt]
+$\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$
+& $\dfrac{\Gamma\vdash f\colon A\to B\qquad\Gamma'\vdash a\colon A}{\Gamma,\Gamma'\vdash f(a)\colon B}$
+\end{tabular}
+\end{center}
+\end{block}\pause
+
+\parspace
+In Worten: Die Einführung der Implikation entspricht der Einführung
+einer anonymen Funktion (Abstraktion). Die Beseitigung der Implikation
+entspricht der Applikation der Funktion.\pause
+
+\parspace
+Alonzo Church schrieb $\lambda x.t$ anstelle von $x\mapsto t$.
+Die Applikation $f(x)$ wird oft zu $fx$ verkürzt.
+Churchs Notation hat sich im Laufe der Zeit irgendwie in die Informatik
+eingebürgert. Die Regeln, die wir hier aufstellen, bilden den einfach
+typisierten $\lambda$-Kalkül mit Erweiterungen um Produkte von zwei
+Faktoren und Summen von zwei Summanden.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\begin{tabular}{c@{\qquad\qquad}c}
+\strong{Aussagen} & \strong{Programmterme}\\[8pt]
+$\infer{\vdash A\land B\cond A}{
+  \infer{A\land B\vdash A}{
+    \infer{A\land B\vdash A\land B}{}}}$
+&
+$\infer{\vdash (t\mapsto \pi_l(t))\colon A\times B\to A}{
+  \infer{t\colon A\times B\vdash \pi_l(t)\colon A}{
+    \infer{t\colon A\times B\vdash t\colon A\times B}{}}}$
+\end{tabular}
+\end{center}\pause
+
+\parspace
+\strong{Bemerkung.}
+Anstelle von $t\mapsto\pi_l(t)$ kann man auch $(a,b)\mapsto a$
+schreiben. Streng genommen muss hierbei allerdings ein unabweisbarer
+Musterabgleich durchgeführt werden. Ist $t$ das Argument, wird $t$
+mit $(a,b)$ abgeglichen, weshalb $a=\pi_l(t)$ sein muss.
+\end{frame}
+
+\begin{frame}[t]
+\strong{Implementierung der Konstruktion}
+
+\vspace{4em}
+Der konstruierte Programmterm liefert den Beweis, dass der Typ
+$A\times B\to A$ ein bewohnter ist. Man kann den Term nun in
+Gallina formulieren und durch den Beweisassistent Coq prüfen lassen,
+ob die Konstruktion fehlerfrei durchgeführt wurde:\pause
+
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof1(A B: Type): A*B -> A\\
+\ \ := \kw{fun} t => fst t.}
+\end{block}\pause
+
+\parspace
+Es ginge auch so:
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof2(A B: Type): A*B -> A\\
+\ \ := \kw{fun} t => \kw{match} t \kw{with} (a, b) => a \kw{end}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{November 2022}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+
+\end{document}
+
+

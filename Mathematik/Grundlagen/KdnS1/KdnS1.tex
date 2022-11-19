@@ -1,0 +1,741 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\usepackage{booktabs}
+\usepackage{fitch}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+
+\title{Der Kalkül des natürlichen Schließens}
+\subtitle{Teil 1: Aussagenlogik}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+\centerheadline{Konjunktionen}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Sind zwei Aussagen wahr, dürfen wir auf ihre Konjunktion schließen:
+\[\dfrac{\text{Es schneit}\qquad\text{Es regnet}}{
+  \text{Es fällt Schneeregen}}\]\pause
+Von der Konjunktion dürfen wir auf die Bestandteile schließen:
+\[\dfrac{\text{Es fällt Schneeregen}}{\text{Es regnet}}\qquad\quad
+  \dfrac{\text{Es fällt Schneeregen}}{\text{Es schneit}}\]\pause
+Insofern bestehen Schlussregeln:
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{\small Einführung der Konjunktion}
+& \strong{\small Beseitigung der Konjunktion}\\[6pt]
+$\dfrac{A\qquad B}{A\land B}$
+& $\dfrac{A\land B}{A}\qquad\dfrac{A\land B}{B}$\\
+\end{tabular}
+\end{center}\pause
+
+\parspace
+\begin{footnotesize}
+\strong{Bemerkung.} Es stehen hier Variablen $A,B,C,D$ nicht nur
+für atomare logische Variablen, sondern für beliebige Formeln.
+In der Metatheorie der Logik würde man eher $\varphi,\chi,\psi$
+schreiben.
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Sequenzen}
+\end{frame}
+
+\begin{frame}
+Nun kann es aber sein, dass eine Aussage lediglich relativ unter
+Voraussetzung einer anderen Aussage wahr ist. Angenommen, es schneit
+zwischen 0:00 und 2:00 Uhr. Ebenfalls angenommen, es regnet zwischen
+1:00 und 3:00 Uhr. Dann dürfen wir nicht einfach schließen, dass
+Schneeregen fällt. Der Schneeregen fällt lediglich zwischen
+1:00 und 2:00 Uhr.\pause
+
+\parspace
+Berücksichtigung relativer Wahrheit notiert man als \emph{Sequenz}
+\[A_1,A_2,\ldots,A_n\vdash B.\]
+Dies soll bedeuten: Unter den Voraussetzungen $A_1$ bis $A_n$
+gilt die Aussage $B$.\pause
+
+\parspace
+Es sind die $A_1$ bis $A_n$ die \emph{Antezedenzen} oder
+\emph{Vorderformeln} der Sequenz. Die Aussage $B$ ist die
+\emph{Sukzedenz} oder \emph{Hinterformel} der Sequenz.
+\end{frame}
+
+\begin{frame}
+Wir kürzen $\Gamma := [A_1,A_2,\ldots,A_n]$ ab, wobei $\Gamma$
+als Liste oder auch als endliche Menge von Antezedenzen betrachtet wird.
+Die Sequenz lautet nun
+\[\Gamma\vdash B.\]
+Man bezeichnet $\Gamma$ auch als den \emph{Kontext}.\pause
+
+\parspace
+Wir schreiben
+$\Gamma,\Gamma'\vdash B$ für $\Gamma\cup\Gamma'\vdash B$ bzw.
+\[A_1,A_2,\ldots,A_n,A_1',A_2',\ldots,A_n'\vdash B.\]
+
+\parspace
+\begin{footnotesize}
+\strong{Bemerkung.} Zu bemerken ist, dass für Sequenzen und Ableitbarkeit
+dieselbe Symbolik benutzt wird. Streng genommen ist Ableitbarkeit zunächst
+allerdings ein metalogischer, von Sequenzen zu unterscheidender Begriff.
+Zur Schaffung von Klarheit ist es daher günstig, Sequenzen bei der
+metalogischen Untersuchung eine andere Symbolik zu geben,
+beispielsweise $\Gamma\succ B$.
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Nochmals Konjunktionen}
+\end{frame}
+
+\begin{frame}
+Die gemachte Betrachtung führt zur folgenden allgemeinen Regel.
+\begin{block}{Schlussregel zur Einführung der Konjunktion}
+\[\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma,\Gamma'\vdash A\land B}\]
+\end{block}\pause
+Man setze beispielsweise
+\begin{align*}
+& A := \text{Es schneit},\\
+& B := \text{Es regnet},\\
+& \Gamma := [\text{Es ist zwischen 0:00 und 2:00 Uhr}],\\
+& \Gamma' := [\text{Es ist zwischen 1:00 und 3:00 Uhr}].
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Schlussregeln zur Beseitigung der Konjunktion}
+\[\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A},\qquad
+\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Implikationen}
+\end{frame}
+
+\begin{frame}
+Aus der Antezedenz »Es regnet« leiten wir ab, »Die Erde wird nass«.
+Insofern ist die Implikation »Wenn es regnet, dann wird die Erde
+nass« gültig.\pause
+
+\parspace
+Vergessen wir für einen Moment, wie es sich mit Regen verhält.
+Ist die genannte Implikation und außerdem »Es regnet« als
+Antezedenz gegeben, leiten wir trotzdem ab, »Die Erde wird nass«.\pause
+
+\parspace
+Insofern bestehen Regeln des Schließens.
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{\small Einführung der Implikation}
+& \strong{\small Beseitigung der Implikation}\\[6pt]
+$\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\cond B}$
+& $\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$\\
+\end{tabular}
+\end{center}
+\end{block}\pause
+
+\parspace
+Die Beseitigung der Implikation ist auch als \emph{Modus ponens}
+bekannt.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Ein Axiom}
+\end{frame}
+
+\begin{frame}
+Manche Sequenzen darf man als offenkundig gültig betrachten. Beispielsweise
+\[\text{Es regnet}\vdash\text{Es regnet}.\]\pause
+Insofern darf man $A\vdash A$ für jede Aussage $A$
+axiomatisch als gültig befinden. Eine Sequenz dieser Form heißt
+\emph{Grundsequenz}.\pause
+
+\parspace
+Wir können diesen Umstand auch als Schlussregel darstellen, bei der
+die Sequenz aus dem Nichts abgeleitet wird.
+\begin{block}{Axiom}
+\[\dfrac{}{A\vdash A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Eine Bemerkung noch. Offenbar dürfen Sequenzen abgeschwächt werden.
+Das heißt, wenn
+$\Gamma\vdash A$ gilt, dann gilt erst recht $\Gamma,\Gamma'\vdash A$.\pause
+\begin{block}{Abschwächungsregel}
+\[\dfrac{\Gamma\vdash A}{\Gamma,\Gamma'\vdash A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Ein erster Beweis}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\strong{Abkürzung} & \strong{Bedeutung}\\
+\midrule
+Ax & Axiom\\
+$\land$E & Einführung der Konjunktion\\
+$\land$B & Beseitigung der Konjunktion\\
+$\cond$E & Einführung der Implikation\\
+$\cond$B & Beseitigung der Implikation\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]
+\strong{Darstellung: Beweisbaum}
+
+\vspace{4em}
+Als erste Aufgabe soll der Beweis der Aussage
+$(A\cond B)\land A\cond B$ erbracht werden, die dem
+Modus ponens entspricht.
+
+\parspace
+Man kann den Beweis rückwärts konstruieren:
+
+\vspace{1em}
+\onslide*<2>{
+\[\vdash (A\cond B)\land A\cond B\]}
+\onslide*<3>{
+\[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
+  (A\cond B)\land A\vdash B}\]
+}
+\onslide*<4>{
+\[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
+  \infer[\infernote{$\cond$B}]{(A\cond B)\land A\vdash B}{
+    (A\cond B)\land A\vdash A\cond B
+  & (A\cond B)\land A\vdash A}}\]
+}
+\onslide*<5>{
+\[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
+  \infer[\infernote{$\cond$B}]{(A\cond B)\land A\vdash B}{
+    \infer[\infernote{$\land$B}]{(A\cond B)\land A\vdash A\cond B}{
+      \infer[\infernote{Ax}]{(A\cond B)\land A\vdash (A\cond B)\land A}{}}
+  & \infer[\infernote{$\land$B}]{(A\cond B)\land A\vdash A}{
+      \infer[\infernote{Ax}]{(A\cond B)\land A\vdash (A\cond B)\land A}{}}}}\]
+}
+\end{frame}
+
+\begin{frame}[t]
+\strong{Darstellung: Beweisbaum in Kurzform}
+
+\vspace{3em}
+Ein recht hoher Schreibaufwand.\pause{}
+Kürzen wir die Antezedenzen
+doch durch Nummern ab:
+\[\infer{\vdash (A\cond B)\land A\cond B}{
+  \infer{1\vdash B}{
+    \infer{1\vdash A\cond B}{
+      \infer{1\equiv (A\cond B)\land A}{}}
+  & \infer{1\vdash A}{
+      \infer{1\equiv (A\cond B)\land A}{}}}}\]\pause
+
+Oder noch kürzer:
+\[\infer[\infernote{\discharge 1}]{(A\cond B)\land A\cond B}{
+  \infer{B}{
+    \infer{A\cond B}{
+      \infer[\infernote{1}]{(A\cond B)\land A}{}}
+  & \infer{A}{
+      \infer[\infernote{1}]{(A\cond B)\land A}{}}}}\]
+Hier bezeichnet 1 die Annahme~1 und \discharge{1} ihre Tilgung.
+\end{frame}
+
+\begin{frame}[t]
+\strong{Darstellung: Liste}
+
+\vspace{3em}
+Eine weitere, sehr systematische Darstellung setzt den Beweis aus
+einer Liste von Tabellenzeilen zusammen.
+
+\vspace{1em}
+\begin{center}
+\begin{tabular}{cclcl}
+\toprule
+\strong{\small Abhängigkeiten} & \strong{\small Nr.}
+& \strong{\small Aussage} & \strong{\small Regel}
+& \strong{\small angewendet auf}\\
+\midrule
+1 & 1 & $(A\cond B)\land A$ & Ax &\\
+1 & 2 & $A\cond B$ & $\land$B & 1\\
+1 & 3 & $A$ & $\land$B & 1\\
+1 & 4 & $B$ & $\cond$B & 2, 3\\
+$\emptyset$ & 5 & $(A\cond B)\land A\cond B$ & $\cond$E & 1, 4\\
+\bottomrule
+\end{tabular}
+\end{center}\pause
+
+\vspace{1em}
+Jede Zeile enthält eine Aussage und dahinter zusätzlich die
+Information, wie und woraus die Aussage abgeleitet wurde.
+Die Abhängigkeiten sind die Antezedenzen der Sequenz.
+\end{frame}
+
+\begin{frame}[t]
+\strong{Darstellung: Fitch-Style}
+
+\vspace{3em}
+Einige bevorzugen die Darstellung nach Fitch, engl.
+\emph{Fitch notation} oder \emph{Fitch-style proof} genannt.
+Bei dieser wird durch jede Annahme ein neuer, von einer senkrechten
+Linie umfasster Bereich der Gültigkeit eröffnet. Die Annahme steht am
+Anfang des Bereichs über einer waagerechten Linie.
+\[\begin{nd}
+\open
+\hypo {1} {(A\cond B)\land A}
+  \have {2} {A\cond B} \ae{1}
+  \have {3} {A} \ae{1}
+  \have {4} {B} \ie{2,3}
+\close
+\have {5} {(A\cond B)\land A\cond B} \ii{1,4}
+\end{nd}\]
+\end{frame}
+
+\begin{frame}[t]
+\strong{Darstellung: In Worten}
+
+\vspace{4em}
+\strong{Satz.} \emph{Die Formel $(A\cond B)\land A\cond B$
+ist allgemeingültig.}
+
+\parspace
+\strong{Beweis.}
+Angenommen, es gilt $(A\cond B)\land A$. Dann liegt
+sowohl $A\cond B$ als auch $A$ vor. Per Modus ponens erhält
+man somit $B$. Die Einführung der Implikation
+$(A\cond B)\land A\cond B$ tilgt schließlich die
+gemachte Annahme.\,\qedsymbol\pause
+
+\vspace{2em}
+Die Klassische Darstellung der Beweisführung. Charakteristisch sind
+blumige Formulierungen und vor allem die Auslassung mühseliger
+technischer Details.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Zulässige Schlussregeln}
+\end{frame}
+
+\begin{frame}
+Schlussregeln ermöglichen nicht nur die Schaffung von Beweisen,
+sie bieten auch ein Werkzeug zur Herleitung weiterer Schlussregeln.
+Hergeleitete bezeichnet man als \emph{zulässige Schlussregeln}.\pause{}
+
+\parspace
+Umstände wie der folgende sind beispielsweise
+dem Verständnis dienlich.
+
+\begin{block}{Lemma}
+Ist $A\cond B$ eine allgemeingültige
+Formel, dann ist
+\[\dfrac{\Gamma\vdash A}{\Gamma\vdash B}\]
+eine zulässige Regel.
+\end{block}\pause
+
+\parspace
+\strong{Beweis.} Dies wird bereits durch den kurzen Beweisbaum
+\[\dfrac{\vdash A\cond B\qquad \Gamma\vdash A}{
+  \Gamma\vdash B}\;\,\infernote{$\cond$B}\]
+bestätigt.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\centerheadline{Negationen}
+\end{frame}
+
+\begin{frame}
+Die Verneinung $\neg A$ kann allgemein durch $A\cond\bot$
+definiert werden, da beide Formeln im Minimalkalkül, und damit sowohl
+in klassischer als auch in intuitionistischer Logik äquivalent sind.
+Hiermit kann die Einführung und Beseitigung der Verneinung auf die
+Regeln der Implikation zurückgeführt werden.\pause
+
+\parspace
+Man kommt zum folgenden Resultat.
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{\small Einführung der Negation}
+& \strong{\small Beseitigung der Negation}\\[6pt]
+$\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
+& $\dfrac{\Gamma\vdash\neg A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}$\\
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Wir werden uns nun wie Münchhausen an den eigenen Haaren aus dem
+Sumpf ziehen. Unterfangen ist die Herleitung der zulässigen Regeln
+\emph{Kontraposition} und \emph{Modus tollens}.\pause
+
+\parspace
+Herfür muss zunächst bewiesen werden, dass es sich bei
+\[(A\cond B)\cond (\neg B\cond\neg A)\]
+um eine allgemeingültige Formel handelt.
+\end{frame}
+
+\begin{frame}[t]
+
+\vspace{6em}
+Konstruktion des Beweisbaums:
+
+\vspace{1em}
+\onslide*<2>{
+\[\vdash (A\cond B)\cond (\neg B\cond\neg A)\]
+}
+\onslide*<3>{
+\[\infer[\infernote{$\cond$E}]{
+  \vdash (A\cond B)\cond (\neg B\cond\neg A)
+}{
+  A\cond B\vdash \neg B\cond\neg A}
+\]
+}
+\onslide*<4>{
+\[\infer[\infernote{$\cond$E}]{
+  \vdash (A\cond B)\cond (\neg B\cond\neg A)
+}{
+  \infer[\infernote{$\cond$E}]{
+    A\cond B\vdash \neg B\cond\neg A
+  }{
+    A\cond B, \neg B\vdash \neg A}}
+\]
+}
+\onslide*<5>{
+\[\infer[\infernote{$\cond$E}]{
+  \vdash (A\cond B)\cond (\neg B\cond\neg A)
+}{
+  \infer[\infernote{$\cond$E}]{
+    A\cond B\vdash \neg B\cond\neg A
+  }{
+    \infer[\infernote{$\neg$E}]{A\cond B, \neg B\vdash \neg A}{
+      A\cond B, \neg B, A\vdash \bot}}}
+\]
+}
+\onslide*<6>{
+\[\infer[\infernote{$\cond$E}]{
+  \vdash (A\cond B)\cond (\neg B\cond\neg A)
+}{
+  \infer[\infernote{$\cond$E}]{
+    A\cond B\vdash \neg B\cond\neg A
+  }{
+    \infer[\infernote{$\neg$E}]{A\cond B, \neg B\vdash \neg A}{
+      \infer[\infernote{$\neg$B}]{A\cond B, \neg B, A\vdash \bot}{
+        \neg B\vdash\neg B
+      & A\cond B, A\vdash B}}}}
+\]
+}
+\onslide*<7>{
+\[\infer[\infernote{$\cond$E}]{
+  \vdash (A\cond B)\cond (\neg B\cond\neg A)
+}{
+  \infer[\infernote{$\cond$E}]{
+    A\cond B\vdash \neg B\cond\neg A
+  }{
+    \infer[\infernote{$\neg$E}]{A\cond B, \neg B\vdash \neg A}{
+      \infer[\infernote{$\neg$B}]{A\cond B, \neg B, A\vdash \bot}{
+        \infer[\infernote{Ax}]{\neg B\vdash\neg B}{}
+      & \infer[\infernote{$\cond$B}]{A\cond B, A\vdash B}{
+          \infer[\infernote{Ax}]{A\cond B\vdash A\cond B}{}
+        & \infer[\infernote{Ax}]{A\vdash A}{}}}}}}
+\]
+}
+\end{frame}
+
+\begin{frame}
+Beweisbaum in Kurzform:
+
+\parspace
+\begin{center}
+\begin{tabular}{l@{\qquad\quad}l}
+$\infer{\vdash (A\cond B)\cond (\neg B\cond\neg A)}{
+  \infer{2\vdash \neg B\cond\neg A}{
+    \infer{1, 2\vdash \neg A}{
+      \infer{1, 2, 3\vdash \bot}{
+        \infer{1\equiv\neg B}{}
+      & \infer{2, 3\vdash B}{
+          \infer{2\equiv A\cond B}{}
+        & \infer{3\equiv A}{}}}}}}$
+&
+$\infer[\infernote{\discharge 2}]{\vdash (A\cond B)\cond (\neg B\cond\neg A)}{
+  \infer[\infernote{\discharge 1}]{\neg B\cond\neg A}{
+    \infer[\infernote{\discharge 3}]{\neg A}{
+      \infer{\bot}{
+        \infer[\infernote{1}]{\neg B}{}
+      & \infer{B}{
+          \infer[\infernote{2}]{A\cond B}{}
+        & \infer[\infernote{3}]{A}{}}}}}}$
+\end{tabular}
+\end{center}
+
+\parspace
+Liste:
+\begin{center}
+\begin{tabular}{cclcl}
+\toprule
+\strong{\small Abh.} & \strong{\small Nr.}
+& \strong{\small Aussage} & \strong{\small Regel}
+& \strong{\small auf}\\
+\midrule
+1 & 1 & $\neg B$ & Ax &\\
+2 & 2 & $(A\cond B)$ & Ax &\\
+3 & 3 & $A$ & Ax &\\
+2, 3 & 4 & $B$ & $\cond$B & 2, 3\\
+1, 2, 3 & 5 & $\bot$ & $\neg$B & 1, 4\\
+1, 2 & 6 & $\neg A$ & $\neg$E & 5\\
+2 & 7 & $\neg B\cond\neg A$ & $\cond$E & 6\\
+$\emptyset$ & 8 & $(A\cond B)\cond (\neg B\cond\neg A)$ & $\cond$E & 7\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Fitch-Style:
+\[\begin{nd}
+\open
+  \hypo {1} {A\cond B}
+  \open
+    \hypo {2} {\neg B}
+    \open
+    \hypo {3} {A}
+    \have {4} {B} \ie{1,3}
+    \have {5} {\bot} \ne{2,4}
+    \close
+  \have {6} {\neg A} \ni{5}
+  \close
+\have {7} {\neg B\cond\neg A} \ii{6}
+\close
+\have {8} {(A\cond B)\cond (\neg B\cond\neg A)} \ii{7}
+\end{nd}\]
+\end{frame}
+
+\begin{frame}
+In Worten:
+
+\parspace
+\strong{Beweis.}
+Um $(A\cond B)\cond (\neg B\cond\neg A)$
+zu zeigen, ist unter Annahme von sowohl $A\cond B$
+als auch $\neg B$ als auch $A$ ein Widerspruch abzuleiten.
+Zunächst erhält man $B$ aus $A\cond B$ und $A$
+per Modus ponens. Nun steht $\neg B$ bereits im Widerspruch
+zu $B$.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+Die Regel der Kontraposition erhält man nun unverzüglich unter
+Anwendung des Lemmas als Korollar.
+
+\begin{block}{Kontraposition}
+\[\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash\neg B\cond\neg A}\]
+\end{block}\pause
+
+Deraufhin erhält man sogleich:
+\begin{block}{Modus tollens}
+\[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash\neg B}{\Gamma,\Gamma'\vdash\neg A}\]
+\end{block}\pause
+\strong{Beweis.} Zeigt der kurze Beweisbaum:
+\[\infer[\infernote{$\cond$B}]{\Gamma,\Gamma'\vdash\neg A}{
+  \infer{\Gamma\vdash\neg B\cond\neg A}{\Gamma\vdash A\cond B}
+& \Gamma'\vdash\neg B}
+\]
+\end{frame}
+
+\begin{frame}
+\centerheadline{Disjunktionen}
+\end{frame}
+
+\begin{frame}
+Die Regeln zur Einführung sind eigentlich erwartungsgemäß.
+\begin{block}{Einführung der Disjunktion}
+\[\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B},\qquad
+\dfrac{\Gamma\vdash B}{\Gamma\vdash A\lor B}\]
+\end{block}\pause
+
+\parspace
+Bei der Beseitigung macht man eine Fallunterscheidung. Wenn nämlich
+eine Aussage $C$ sowohl aus $A$ als auch aus $B$ folgt, darf man doch
+als gültig befinden, dass $C$ auch aus der Disjunktion $A\lor B$ folgt.\pause
+
+\begin{block}{Beseitigung der Disjunktion}
+\[\dfrac{\Gamma\vdash A\lor B\qquad\Gamma',A\vdash C\qquad\Gamma'',B\vdash C}{
+  \Gamma,\Gamma',\Gamma''\vdash C}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+
+\vspace{6em}
+Es drängt sich auf, als erste Aufgabe die Allgemeingültigkeit von
+$A\lor B\cond B\lor A$ zu bestätigen.
+
+\parspace
+Konstruktion des Beweisbaums:
+
+\vspace{1em}
+\onslide*<2>{\[
+\vdash A\lor B\cond B\lor A
+\]}
+\onslide*<3>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
+  A\lor B\vdash B\lor A}
+\]}
+\onslide*<4>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
+  \infer[\infernote{$\lor$B}]{A\lor B\vdash B\lor A}{
+    \infer[\infernote{Ax}]{A\lor B\vdash A\lor B}{}
+  & A\vdash B\lor A
+  & B\vdash B\lor A}}
+\]}
+\onslide*<5>{\[
+\infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
+  \infer[\infernote{$\lor$B}]{A\lor B\vdash B\lor A}{
+    \infer[\infernote{Ax}]{A\lor B\vdash A\lor B}{}
+  & \infer[\infernote{$\lor$E}]{A\vdash B\lor A}{
+      \infer[\infernote{Ax}]{A\vdash A}{}}
+  & \infer[\infernote{$\lor$E}]{B\vdash B\lor A}{
+      \infer[\infernote{Ax}]{B\vdash B}{}}}}
+\]}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Erweiterungen}
+\end{frame}
+
+\begin{frame}[t]
+\strong{Intuitionistische Logik}
+
+\vspace{5em}
+Die bisherigen Schlussregeln stellen den Minimalkalkül dar.
+Um die intuitionistische Logik zu erhalten, bedarf es noch einer
+weiteren Regel.\pause
+\begin{block}{Ex falso quotlibet}
+\[\dfrac{\Gamma\vdash\bot}{\Gamma\vdash A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\strong{Klassische Logik}
+
+\vspace{3em}
+Zur Klassischen Logik führt:
+\begin{block}{Beseitigung der Doppelnegation}
+\[\dfrac{\Gamma\vdash\neg\neg A}{\Gamma\vdash A}\]
+\end{block}\pause
+
+\parspace
+Ebenfalls zur klassischen Logik führt ein zusätzliches Axiom:
+\begin{block}{Satz vom ausgeschlossenen Dritten}
+\[\dfrac{}{\vdash A\lor\neg A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Fazit}
+\end{frame}
+
+\begin{frame}
+In der Retrospektive fällt es einem nach einiger Zeit wie
+Schuppen von den Augen. Man kommt zu frappierenden Einsichten:
+\begin{itemize}
+\item Schließen von Sequenzen entpuppt sich als Kalkül für die metasprachliche Ableitbarkeit.\\
+\item Die Einführung der Implikation spiegelt das Deduktionstheorem wider.
+\end{itemize}
+
+\parspace
+Kalkül und Metalogik sind insofern bereits zutiefst verwoben.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+\strong{Literatur}
+\begin{itemize}
+\item Gerhard Gentzen: \emph{Untersuchungen über das logische Schließen}.\\
+In: \emph{Mathematische Zeitschrift}. Band 39, 1935, S. 176--210, S. 405--431.
+\href{https://gdz.sub.uni-goettingen.de/id/PPN266833020_0039}{Band 39 online via GDZ}.
+\item Gerhard Gentzen: \emph{Die Widerspruchsfreiheit der reinen
+Zahlentheorie}.\\
+In: \emph{Mathematische Annalen}. Band 112, 1936, S. 493--565.
+\href{https://gdz.sub.uni-goettingen.de/id/PPN235181684_0112}{Band 112 online via GDZ}.
+---Zum KdnS von Sequenzen.
+\item Samuel Mimram: \emph{Program = Proof}.
+\href{https://www.lix.polytechnique.fr/Labo/Samuel.Mimram/publications/}{Link (Open Access)}.
+\item Ingebrigt Johansson: \emph{Der Minimalkalkül, ein reduzierter
+intuitionistischer Formalismus}. In: \emph{Compositio Mathematica}.
+Band 4, 1937, S. 119--136.
+\item Andrzej Indrzejczak: \href{https://iep.utm.edu/natural-deduction/}{\emph{Natural Deduction}}.
+In: \emph{The Internet Encyclopedia of Philosophy}.
+\item Francis Jeffry Pelletier, Allen Hazen:
+\href{https://plato.stanford.edu/entries/natural-deduction/}{\emph{Natural Deduction Systems in Logic}}.
+In: \emph{The Stanford Encyclopedia of Philosophy}.
+\item Eckart Menzler-Trott: \emph{Gentzens Problem. Mathematische Logik
+  im nationalsozialistischen Deutschland}. Birkhäuser, Basel 2001.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{November 2022}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+
+\end{document}
+
+
