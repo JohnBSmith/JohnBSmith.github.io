@@ -46,6 +46,7 @@
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
 \newcommand{\kw}[1]{\textbf{#1}}
+\newcommand{\unres}{{?}}
 
 \title{Der Kalkül des natürlichen Schließens}
 \subtitle{Teil 4: Programme als Beweise}
@@ -171,16 +172,264 @@ Gallina formulieren und durch den Beweisassistent Coq prüfen lassen,
 ob die Konstruktion fehlerfrei durchgeführt wurde:\pause
 
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof1(A B: Type): A*B -> A\\
+\texttt{\kw{Definition} proof1 (A B: Type): A*B -> A\\
 \ \ := \kw{fun} t => fst t.}
 \end{block}\pause
 
 \parspace
 Es ginge auch so:
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof2(A B: Type): A*B -> A\\
+\texttt{\kw{Definition} proof2 (A B: Type): A*B -> A\\
 \ \ := \kw{fun} t => \kw{match} t \kw{with} (a, b) => a \kw{end}.}
 \end{block}
+\end{frame}
+
+\begin{frame}
+Aussagen bekommen eigentlich den speziellen Typ \texttt{Prop}.
+Infolgedessen verändern sich Syntax und genutzte Funktionen,
+wobei die Mechanismen aber äquivalent bleiben.
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof3 (A B: Prop): A /{\textbackslash} B -> A\\
+\ \ := \kw{fun} h => proj1 h.}
+\end{block}\pause
+Auch hier ist eine Zerlegung per Musterabgleich durchführbar:
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof4 (A B: Prop): A /{\textbackslash} B -> A\\
+\ \ := \kw{fun} h => \kw{match} h \kw{with} conj a b => a \kw{end}.}
+\end{block}\pause
+Äquivalent zum Musterabgleich ist das Induktionsprinzip der Konjunktion:
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof5 (A B: Prop): A /{\textbackslash} B -> A\\
+\ \ := \kw{fun} h => and\_ind (fun a b => a) h.}
+\end{block}
+Der Beweis einer Konjunktion wird hier in seine beiden Teile zerlegt,
+um einen oder beide nutzen zu können. Die Zerlegung wird durch eine
+Rückruffunktion dargestellt, die \texttt{and\_ind} als erstes Argument
+bekommt.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Taktiken}
+\end{frame}
+
+\begin{frame}
+Als Alternative zur direkten Formulierung von Termen bietet Coq
+außerdem noch Taktiken an, darunter versteht man Prozeduren zur
+automatischen Erstellung von Teilbeweisen.\pause
+
+\parspace
+Die Erstellung des Beweisbaums verläuft hierbei rückwärts.
+Man arbeitet sich also von der Wurzel aus bis zu den Blättern durch.
+Ein noch unbestätigter Knoten stellt in diesem Zusammenhang ein zu
+erreichendes \emph{Ziel} dar, dessen Kindknoten die \emph{Unterziele}.
+
+\parspace
+Es stehen Basistaktiken zur Verfügung, die im Prinzip die Schlussregeln
+des natürlichen Schließens widerspiegeln.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Taktik zum Axiom}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{Regel} & \strong{Taktik}\\[6pt]
+$\dfrac{}{\Gamma, h\colon A, \Gamma'\vdash h\colon A}$
+& \texttt{exact h}
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Taktiken zu den Einführungsregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{Regel} & \strong{Taktik}\\[6pt]
+$\dfrac{\Gamma, h\colon A\vdash\unres\colon B}{\Gamma\vdash\unres\colon A\to B}$
+& \texttt{intro h}\\[14pt]
+$\dfrac{\Gamma\vdash\unres\colon A\qquad\Gamma\vdash\unres\colon B}
+  {\Gamma\vdash\unres\colon A\land B}$
+& \texttt{split}\\[14pt]
+$\dfrac{\Gamma\vdash\unres\colon A}{\Gamma\vdash\unres\colon A\lor B}$
+& \texttt{left}\\[14pt]
+$\dfrac{\Gamma\vdash\unres\colon B}{\Gamma\vdash\unres\colon A\lor B}$
+& \texttt{right}
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Taktiken zu den Beseitigungsregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{Regel} & \strong{Taktik}\\[6pt]
+$\dfrac{\Gamma\vdash h\colon A\to B\qquad\Gamma\vdash\unres\colon A}{\Gamma\vdash\unres\colon B}$
+& \texttt{apply h}\\[14pt]
+$\dfrac{\Gamma,a\colon A,b\colon B,\Gamma'\vdash\unres\colon C}
+  {\Gamma,h\colon A\land B,\Gamma'\vdash\unres\colon C}$
+& \texttt{destruct h as (a, b)}
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Um $A\land B\cond A$ zu zeigen, können wir also wie folgt vorgehen:
+\[\infer[\texttt{intro h}]{\vdash (h\mapsto a)\colon A\land B\cond A}{
+  \infer[\texttt{destruct h as (a, b)}]{h\colon A\land B\vdash a\colon A}{
+    \infer[\texttt{exact a}]{a\colon A, b\colon B\vdash a\colon A}{}
+  }
+}\]\pause
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} projl (A B: Prop): A /{\textbackslash} B -> A.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (a, b).\\
+\ \ exact a.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Um $(A\cond B)\land A\cond B$ zu zeigen, können wir wie folgt vorgehen:
+\[\infer[\texttt{intro h}]{\vdash (h\mapsto f(a))\colon (A\to B)\land A\to B}{
+  \infer[\texttt{destruct h as (f, a)}]{h\colon (A\to B)\land A\vdash f(a)\colon B}{
+    \infer[\texttt{apply f}]{f\colon A\to B, a\colon A\vdash f(a)\colon B}{
+      \infer{f\colon A\to B\vdash f\colon A\to B}{}
+    & \infer[\texttt{exact a}]{a\colon A\vdash a\colon A}{}
+    }
+  }
+}\]\pause
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} mp (A B: Prop): (A -> B) /{\textbackslash} A -> B.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (f, a).\\
+\ \ apply f.\\
+\ \ exact a.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Um $A\land B\cond B\land A$ zu zeigen, können wir wie folgt vorgehen:
+\[\infer[\texttt{intro h}]{\vdash (h\mapsto \mathrm{conj}(b)(a))\colon A\land B\to B\land A}{
+  \infer[\texttt{destruct h as (a, b)}]{h\colon A\land B\vdash\mathrm{conj}(b)(a)\colon B\land A}{
+    \infer[\texttt{split}]{a\colon A, b\colon B\vdash\mathrm{conj}(b)(a)\colon B\land A}{
+      \infer[\texttt{exact b}]{b\colon B\vdash b\colon B}{}
+    & \infer[\texttt{exact a}]{a\colon A\vdash a\colon A}{}
+    }
+  }
+}\]\pause
+
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} conjunction\_commutes (A B: Prop): A /{\textbackslash} B -> B /{\textbackslash} A.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (a, b).\\
+\ \ split.\\
+\ \ - exact b.\\
+\ \ - exact a.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Um $A\lor B\cond B\lor A$ zu zeigen, können wir wie folgt vorgehen:
+\begin{small}
+\[
+\infer[\texttt{intro h}]{\vdash (h\mapsto s)\colon A\lor B\to B\lor A}{
+  \infer[\texttt{destruct h as [a | b]}]{h\colon A\lor B\vdash s\colon B\lor A}{
+    \infer{h\colon A\lor B\vdash h\colon A\lor B}{}
+  & \infer{a\colon A\vdash r(a)\colon B\lor A}{
+      \infer{a\colon A\vdash a\colon A}{}}
+  & \infer[\texttt{left}]{b\colon B\vdash l(b)\colon B\lor A}{
+      \infer[\texttt{exact b}]{b\colon B\vdash b\colon B}{}}}}
+\]
+\end{small}
+mit $l := \mathrm{or\_introl}$, $r := \mathrm{or\_intror}$ und
+\[s := \strong{match}\;h\begin{cases}
+l(a)\mapsto r(a),\\
+r(b)\mapsto l(b).
+\end{cases}
+\]\pause
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} disjunction\_commutes (A B: Prop): A {\textbackslash}/ B -> B {\textbackslash}/ A.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as [a | b].\\
+\ \ - right. exact a.\\
+\ \ - left.  exact b.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Nun wird man irgendwann höhre kognitive Sprünge ausführen und
+mühseligen Kleinkram auslassen wollen. Hierfür stehen höhre Taktiken
+zur Verfügung, die einfache Beweise gänzlich automatisch konstruieren.
+Ein Beispiel hierfür ist \texttt{tauto}.\pause
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} projl (A B: Prop): A /{\textbackslash} B -> A.\\
+\kw{Proof}.\\
+\ \ tauto.\\
+\kw{Qed}.}
+\end{block}\pause
+Gut, das wäre im ersten Semester nicht gestattet. Nun kann man trotzdem
+Schummeln, indem man sich den erzeugten Beweis einfach anschaut:
+\begin{block}{Gallina}
+\texttt{\kw{Print} projl.\\
+\mbox{}\\
+(* Ausgabe: *)\\
+projl = \\
+\kw{fun} (A B: Prop) (H: A /{\textbackslash} B) => and\_ind (\kw{fun} (H0: A) (\_: B) => H0) H\\
+\ \ \ \ \ : \kw{forall} A B: Prop, A /{\textbackslash} B -> A}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Für $(A\land\forall x. P(x))\to\forall x. A\land P(x)$ findet sich:\pause
+\[
+\infer[\texttt{intro h}]{\vdash (h\mapsto x\mapsto y)\colon (A\land\forall x. P(x))\to\forall x. A\land P(x)}{
+  \infer[\texttt{destruct h as (a, f)}]{h\colon A\land\forall x. P(x)\vdash (x\mapsto y)\colon\forall x.A\land P(x)}{
+    \infer[\texttt{intro x}]{a\colon A, f\colon \forall x.P(x)\vdash (x\mapsto y)\colon\forall x.A\land P(x)}{
+      \infer[\texttt{split}]{a\colon A, f\colon \forall x.P(x), x\colon\mathrm{Type}\vdash y\colon A\land P(x)}{
+        \infer[\texttt{exact a}]{a\colon A\vdash a\colon A}{}
+      & \infer[\texttt{apply f}]{f\colon\forall x.P(x), x\colon\mathrm{Type}\vdash f(x)}{}}}}}
+\]
+Hierbei gilt $y:=\mathrm{conj}(a)(f(x))$. Die Implementierung:\pause
+
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} const\_factor (A B: Prop) (P: Type -> Prop):\\
+\ \ A /{\textbackslash} (\kw{forall} x, P x) -> \kw{forall} x, A /{\textbackslash} P x.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (a, f).\\
+\ \ intro x.\\
+\ \ split.\\
+\ \ - exact a.\\
+\ \ - apply f.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\strong{Literatur}
+\begin{itemize}
+\item Christine Paulin-Mohring: \emph{Introduction to the Coq
+proof-assistant for practical software verification}. Laboratoire de
+recherche en informatique, Université Paris-Saclay, 2011.
+\href{https://www.lri.fr/~paulin/}{Link (Open Access)}.
+\item Benjamin C. Pierce u.\,a.:
+\emph{Software Foundations. Volume 1: Logical Foundations.}
+University of Pennsylvania, 2022.
+\href{https://softwarefoundations.cis.upenn.edu/}{Link (Open Access)}.
+\end{itemize}
 \end{frame}
 
 \begin{frame}

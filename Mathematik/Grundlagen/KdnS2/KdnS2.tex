@@ -43,6 +43,7 @@
   \begin{center}\strong{#1}\end{center}}
 \newcommand{\parspace}{\vspace{0.8em}}
 \newcommand{\cond}{\rightarrow}
+\newcommand{\bicond}{\leftrightarrow}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
 \newcommand{\FV}{\mathrm{FV}}
@@ -327,6 +328,36 @@ Beispiel einer korrekten Ableitung:
 \parspace
 Hier ist $a$ mit $A\land P(a)$ ein Zeuge für $\exists x\colon A\land P(x)$.
 }
+\end{frame}
+
+\begin{frame}
+Beispiel einer Ableitung in der Zahlentheorie.
+Das Diskursuniversum sei $U=\Z$. Wir schreiben kurz $m\mid n$
+für »$m$ teilt $n$«. Man kann dies so definieren:
+\[\vdash m\mid n\bicond\exists k\colon n=km.\]\pause
+\strong{Satz.} \emph{Ist eine Zahl durch zwei teilbar, so
+ist ihr Quadrat ebenfalls durch zwei teilbar.}\pause
+
+\parspace
+Zunächst die Beweisführung in Worten.
+Es gelte $2\mid n$. Dann gibt es einen Zeugen $k$ mit $n=2k$.
+Somit gilt $n^2 = (2k)^2 = 4k^2 = 2(2k^2)$. Mit $k':=2k^2$ hat
+man also einen Zeugen für $\exists k'\colon n^2=2k'$, womit
+laut Definition $2\mid n^2$ gilt.\pause
+
+\parspace
+Die Ableitung von Gleichungen belassen wir informal.
+Es findet sich:
+\[
+\infer{\vdash 2\mid n \cond 2\mid n^2}{
+  \infer{2\mid n\vdash 2\mid n^2}{
+    \infer{2\mid n\vdash\exists k\colon n=2k}{
+      \infer{2\mid n\vdash 2\mid n}{}}
+  & \infer{n=2k\vdash 2\mid n^2}{
+      \infer{n=2k\vdash\exists k'\colon n^2=2k'}{
+        \infer{n=2k\vdash n^2 = 2(2k^2)}{
+          \infer{n=2k\vdash n=2k}{}}}}}}
+\]
 \end{frame}
 
 \begin{frame}
