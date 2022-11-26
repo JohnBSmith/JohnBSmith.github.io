@@ -217,7 +217,7 @@ nichtnegative Zahl <var>n</var> ist die Potenz
 := <var>x</var>&sdot;<var>x</var><sup><var>n</var>&minus;1</sup>.
 
 <p>Per Definition berechnet das Programm
-<pre class="python ibox">
+<pre class="ibox python">
 def pow_rec(x, n):
     return 1 if n == 0 else x*pow_rec(x, n - 1)
 </pre>
@@ -226,7 +226,7 @@ def pow_rec(x, n):
 
 <p>Es wird nun gezeigt, wie man mithilfe des Hoare-Kalküls die
 partielle Korrektheit des iterativen Berechnungsverfahrens
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     for i in range(0, n): y *= x
@@ -236,7 +236,7 @@ def pow(x, n):
 <p>zeigt. Zunächst müssen wir die for-Schleife in eine äquivalente
 while-Schleife transformieren. Dies resultiert in:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     i = 0
@@ -256,7 +256,7 @@ eine Schleifeninvariante handelt. Wie sich herausstellt, ist diese
 Vermutung richtig und zielführend.
 
 <p>Nun werden zum Algorithmus die Zusicherungen annotiert.
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     i = 0
@@ -330,7 +330,7 @@ und <code>n</code> zur Laufzeit prüfen lassen. Zwar liefert das
 keine Garantie für die Korrektheit des Beweises, jedoch sind solche
 Tests nützlich, um Fehler aufzuspüren.
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     i = 0
@@ -358,7 +358,7 @@ test()
 <p>Ein weiterer Algorithmus zur Berechnung von Potenzen ist die
 schnelle Potenzierung.
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     while n &gt; 1:
@@ -373,7 +373,7 @@ Argumente konstant bleiben. Das ist notwendig, weil diese in die
 Überlegung einbezogen werden müssen. Der Algorithmus wird damit
 transformiert zu:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     a = x
@@ -391,7 +391,7 @@ Der Rückgabewert am Ende muss <code>y==x<sup>n</sup></code> sein,
 so wie das auch im einfachen Algorithmus war. Zunächst findet
 man:
 
-<pre class="python ibox">
+<pre class="ibox python">
 # {y == x<sup>n</sup> ∧ i == 0 ∨ y*a == x<sup>n</sup> ∧ i == 1}
 if i == 1: y = y*a
 # {y == x<sup>n</sup>}
@@ -433,7 +433,7 @@ günstige Schleifeninvariante.
 
 <p>Nun zum Schleifenrumpf. Das Tripel zur ersten Anweisung ist:
 
-<pre class="python ibox">
+<pre class="ibox python">
 # {y*a<sup>i</sup> == x<sup>n</sup>}
 if i%2 == 1: y = y*a
 # {y*a<sup>i-1</sup> == x<sup>n</sup> ∧ i%2 == 1 ∨ y*a<sup>i</sup> == x<sup>n</sup> ∧ i%2 == 0}
@@ -453,14 +453,14 @@ i - i%2 == 2*(i//2).
 
 <p>Mit dieser Vorbereitung ist der Rest ein Kinderspiel.
 Gemäß Zuweisungsaxiom sind die Tripel
-<pre class="python ibox">
+<pre class="ibox python">
 # {y*a<sup>2*(i//2)</sup> == x<sup>n</sup>}
 i //= 2;
 # {y*a<sup>2i</sup> == x<sup>n</sup>}
 </pre>
 
 <p>und
-<pre class="python ibox">
+<pre class="ibox python">
 # {y*a<sup>2i</sup> == x<sup>n</sup>}
 a = a*a;
 # {y*a<sup>i</sup> == x<sup>n</sup>}
@@ -470,7 +470,7 @@ a = a*a;
 zu beweisen verbleibt, ist auch der Algorithmus bewiesen.
 Der Algorithmus mit sämtlichen Zusicherungen:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow(x, n):
     y = 1
     a = x
@@ -497,7 +497,7 @@ unterlaufen sein. Ein naheliegender Weg zur Vermeidung sind Proben
 zur Laufzeit, denn die Zusicherungen lassen sich ja für konkrete
 Variablenbelegungen zur Laufzeit ausführen.
 
-<pre class="python ibox">
+<pre class="ibox python">
 def pow_iter(x, n):
     y = 1; a = x; i = n
     p = pow_rec(x, n)

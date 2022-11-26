@@ -48,7 +48,7 @@
 \newcommand{\kw}[1]{\textbf{#1}}
 \newcommand{\unres}{{?}}
 
-\title{Der Kalkül des natürlichen Schließens}
+\title{Natürliches Schließen}
 \subtitle{Teil 4: Programme als Beweise}
 \date{}
 
@@ -63,15 +63,59 @@
 \end{frame}
 
 \begin{frame}
+Die Curry-Howard-Korrespondenz ist eine Beziehung zwischen Aussagen und
+Typen. Jedem Junktor entspricht hierbei eine ganz bestimmte Typkonstruktion.\pause
+\begin{center}
+\begin{tabular}{rl}
+\toprule
+\strong{Aussage} & \strong{Typ}\\
+\midrule
+Konjunktion --- $A\land B$ & $A\times B$ --- Produkt\\
+Disjunktion --- $A\lor B$ & $A+B$ --- Summe\\
+Implikation --- $A\cond B$ & $A\to B$ --- Funktionentyp\\
+Kontradiktion --- $\bot$ & $0$ --- leerer Typ\\
+Tautologie --- $\top$ & $1$ --- Einheitstyp\\
+\bottomrule
+\end{tabular}
+\end{center}\pause
+Darüber hinaus stellt sie eine Beziehung zwischen Beweisen und Termen
+dar. Zu jedem Beweis gehört ein bestimmter Term. Die Schlussregeln des
+natürlichen Schließens spiegeln die Regeln zur Konstruktion von
+Termen wider.
+\end{frame}
+
+\begin{frame}[t]
+\strong{Typen}
+
+\vspace{3em}
 Die Schreibweise $a\colon A$ drückt das Urteil aus, dass $a$ ein Term
-vom Typ $A$ sein muss.\pause{} Analog zur Logik ist ein Kontext eine Liste
-\[\Gamma = [a_1\colon A_1,\ldots,a_n\colon A_n].\]
+vom Typ $A$ sein muss.\pause
+
+\parspace
+Analog zur Logik ist ein Kontext eine Liste\footnote{Technisches Detail:
+Ein Kontext soll wohlgeformt sein.
+Beispielsweise ist
+$[n\colon\mathrm{string}, P\colon (\mathrm{nat}\to\mathrm{nat}), P(n)\colon\mathrm{nat}]$
+irrsinnig. In der einfachen Typentheorie treten solche Probleme allerdings
+nocht nicht auf; erst wenn abhängige Typen ins Spiel kommen.}
+\[\Gamma = [(a_1\colon A_1),\ldots,(a_n\colon A_n)].\]
 Ist nun die Sequenz
 \[\Gamma\vdash (b\colon B)\]
 eine ableitbare, liegt das Urteil $b\colon B$ vor, sofern die Terme
 in $\Gamma$ vorausgesetzt werden dürfen. Das ist so zu verstehen,
 dass man mit dem Termen aus $\Gamma$ den Term $b$ zusammenbasteln kann.
-Ein Term darf hierbei mehrmals benutzt werden.\pause
+Ein Term darf hierbei mehrmals benutzt werden.
+
+\parspace
+Ein Objekt $b\colon B$ stellt einen Zeugen dafür dar, dass der Typ
+$B$ von mindestens einem Objekt bewohnt ist. Anders ausgedrückt ist
+$b$ ein Beweis für die Aussage $B$.
+
+\parspace
+\begin{small}
+Die runden Klammern schreibt man nicht mit. Ich wollte nur einmal
+verdeutlichen, wie die Formeln zu lesen sind.
+\end{small}
 \end{frame}
 
 \begin{frame}
@@ -82,7 +126,7 @@ logischen widerspiegeln.\pause
 \begin{center}
 \begin{tabular}{c@{\qquad\qquad}c}
 \strong{Aussagen} & \strong{Typurteile}\\[10pt]
-$\dfrac{}{A\vdash A}$ & $\dfrac{}{(a\colon A)\vdash (a\colon A)}$
+$\dfrac{}{A\vdash A}$ & $\dfrac{}{a\colon A\vdash a\colon A}$
 \end{tabular}
 \end{center}
 \end{block}
@@ -129,18 +173,26 @@ $\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$
 \parspace
 In Worten: Die Einführung der Implikation entspricht der Einführung
 einer anonymen Funktion (Abstraktion). Die Beseitigung der Implikation
-entspricht der Applikation der Funktion.\pause
+entspricht der Applikation einer Funktion.\pause
 
 \parspace
+\begin{small}
 Alonzo Church schrieb $\lambda x.t$ anstelle von $x\mapsto t$.
-Die Applikation $f(x)$ wird oft zu $fx$ verkürzt.
-Churchs Notation hat sich im Laufe der Zeit irgendwie in die Informatik
-eingebürgert. Die Regeln, die wir hier aufstellen, bilden den einfach
-typisierten $\lambda$-Kalkül mit Erweiterungen um Produkte von zwei
+Für $f(x)$ schrieb er $(f\,x)$ oder kurz $f\,x$.%
+\footnote{Alonzo Church: \emph{The Calculi of Lambda-Conversion}.
+In: \emph{Annals of Mathematics Studies}. Nr.~6.\\
+Princeton University Press, Princeton 1941.}
+Im Laufe der Zeit verbreitete sich diese Notation in der Informatik.
+Die Regeln, die wir hier aufstellen, bilden den einfach
+typisierten $\lambda$-Kalkül mit Erweiterung um Produkte von zwei
 Faktoren und Summen von zwei Summanden.
+\end{small}
 \end{frame}
 
 \begin{frame}
+Eine kurze Ableitung:
+
+\vspace{1em}
 \begin{center}
 \begin{tabular}{c@{\qquad\qquad}c}
 \strong{Aussagen} & \strong{Programmterme}\\[8pt]
@@ -200,12 +252,166 @@ Auch hier ist eine Zerlegung per Musterabgleich durchführbar:
 Äquivalent zum Musterabgleich ist das Induktionsprinzip der Konjunktion:
 \begin{block}{Gallina}
 \texttt{\kw{Definition} proof5 (A B: Prop): A /{\textbackslash} B -> A\\
-\ \ := \kw{fun} h => and\_ind (fun a b => a) h.}
+\ \ := \kw{fun} h => and\_ind (\kw{fun} a b => a) h.}
 \end{block}
 Der Beweis einer Konjunktion wird hier in seine beiden Teile zerlegt,
 um einen oder beide nutzen zu können. Die Zerlegung wird durch eine
 Rückruffunktion dargestellt, die \texttt{and\_ind} als erstes Argument
 bekommt.
+\end{frame}
+
+\begin{frame}
+Zum Verständnis der Summe $A+B$ zweier Typen $A,B$ betrachten wir
+zunächst die Analogie für Mengen. Seien $\mathrm L,\mathrm R$
+zwei Konstanten, als \emph{Tags} oder \emph{Diskriminatoren} bezeichnet.
+Man definiert die disjunkte Vereinigung als
+\[A+B := (\{\mathrm L\}\times A)\cup (\{\mathrm R\}\times B).\]\pause
+Nun definiert man die beiden Injektionen
+\begin{align*}
+&\iota_l\colon A\to A+B,\quad\iota_l(a) := (\mathrm L, a),\\
+&\iota_r\colon B\to A+B,\quad\iota_r(b) := (\mathrm R, b).
+\end{align*}
+Weil es sich um Injektionen handelt, kann zu einem Wert aus $A+B$
+eine Fallunterscheidung per Musterabgleich vorgenommen werden.
+Es wird dabei schlicht geprüft, welches der beiden Tags vorliegt.\pause{}
+Sinnloses Beispiel:
+\[f\colon\Z+\Z\to\Z,\quad f(n) := \strong{match}\;\,n\,\begin{cases}
+\iota_l(a)\mapsto a,\\
+\iota_r(b)\mapsto b^2.
+\end{cases}\]
+\end{frame}
+
+\begin{frame}
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\qquad}c}
+\strong{Disjunktion}
+& \strong{Term der Summe}\\[10pt]
+$\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B}$
+& $\dfrac{\Gamma\vdash a\colon A}{\Gamma\vdash\iota_l(a)\colon A+B}$\\[18pt]
+$\dfrac{\Gamma\vdash B}{\Gamma\vdash A\lor B}$
+& $\dfrac{\Gamma\vdash b\colon B}{\Gamma\vdash\iota_r(b)\colon A+B}$\\[18pt]
+$\dfrac{\Gamma\vdash A\lor B\quad\Gamma,A\vdash C\quad\Gamma,B\vdash C}{\Gamma\vdash C}$
+& $\dfrac{\Gamma\vdash t\colon A+B\quad\Gamma,a\colon A\vdash c\colon C
+  \quad\Gamma,b\colon B\vdash c'\colon C}{\Gamma\vdash\strong{match}\;\,t\;\{\iota_l(a)\mapsto c, \iota_r(b)\mapsto c'\}\colon C}$
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Einen Term vom Typ $A+B\to B+A$ erhält man beispielsweise wie folgt:\pause
+\[t\mapsto\strong{match}\;\,t\,\begin{cases}
+\iota_l(a)\mapsto\iota_r(a),\\
+\iota_r(b)\mapsto\iota_l(b).
+\end{cases}\]\pause
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof6 (A B: Type): A + B -> B + A\\
+\ \ := \kw{fun} t =>\\
+\ \ \ \ \kw{match} t \kw{with}\\
+\ \ \ \ | inl(a) => inr(a)\\
+\ \ \ \ | inr(b) => inl(b)\\
+\ \ \ \ \kw{end}.}\\
+\mbox{}\\
+\texttt{\kw{Definition} proof7 (A B: Prop): A {\textbackslash}/ B -> B {\textbackslash}/ A\\
+\ \ := \kw{fun} t =>\\
+\ \ \ \ \kw{match} t \kw{with}\\
+\ \ \ \ | or\_introl(a) => or\_intror(a)\\
+\ \ \ \ | or\_intror(b) => or\_introl(b)\\
+\ \ \ \ \kw{end}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Abhängige Typen}
+\end{frame}
+
+\begin{frame}
+Zur Ausweitung der Korrespondenz auf die Prädikatenlogik
+muss die Typentheorie um \emph{abhängige Typen} erweitert werden.
+Ein Typ darf hier von einem Term abhängen, analog dazu wie eine
+Menge als indizierte Familie von einem Index abhängt. Die logische
+Entsprechung eines solchen Typs ist ein Prädikat. Ist $P$ ein
+Prädikat, dann kann je $x$ die Aussage $P(x)$ eine wahre oder
+eine falsche sein. Ein abhängiger Typ kann gleichermaßen bewohnt oder
+unbewohnt sein.
+
+\parspace
+Im Fortgang vermitteln zwei neue Konstruktionen
+die Kodierung der Quantoren:
+\begin{itemize}
+\item \emph{Pi-Typen} entsprechen Universalquantifizierungen,
+\item \emph{Sigma-Typen} entsprechen Existenzquantifizierungen.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\strong{Pi-Typen}
+
+\vspace{3em}
+Erklärung anhand der Analogie in der Mengenlehre. Ein Produkt $A\times B$
+enthält Paare $(a,b)$ mit $a\in A$ und $b\in B$. Nun fasst man das
+Paar als endliche Folge auf, also als Abbildung
+\[f\colon\{0,1\}\to A\cup B, \quad f(0):=a,\quad f(1):=b.\]\pause
+Allgemein definiert man insofern
+\[\prod_{x\in X} A_x := \{f\colon X\to\bigcup_{x\in X}A_x\mid\forall x\in X\colon f(x)\in A_x\}.\]\pause
+Bei Typen verhält es sich analog.
+
+\parspace
+Eine Term $f$ vom Typ $\prod_{x\colon X} A_x$ heißt \emph{abhängige Funktion}.
+Ihr Wert $f(x)$ ist vom Typ $A_x$. Der Typ des Wertes hängt also vom Argument
+der Funktion ab.\pause
+
+\parspace
+So wie das zweistellige Produkt die Konjunktion kodiert, kodiert
+das allgemeine Produkt die Allquantifizierung. Wurde die Funktion $f$
+konstruiert, erbringt dies für jedes $x$ einen Zeugen bzw. Beweis $f(x)$,
+dass der Typ $A_x$ bewohnt ist.
+\end{frame}
+
+\begin{frame}[t]
+\strong{Sigma-Typen}
+
+\vspace{3em}
+Betrachten wir zunächst die disjunkte Vereinigung von Mengen.
+Für $t\in A+B$ ist entweder $t=(\mathrm L,a)$ mit $a\in A$ oder
+$t=(\mathrm R,b)$ mit $b\in B$. Möchte man den Begriff nun auf
+beliebig viele Summanden ausdehen, findet sich
+\[\sum_{x\in X} A_x := \bigcup_{x\in X} (\{x\}\times A_x).\]\pause
+Analog verhält es sich bei der Summe von Typen. Ein Term $t$ vom
+Typ $\sum_{x\colon X} A_x$ heißt \emph{abhängiges Paar}.
+Für $t=(x,a)$ ist $a$ vom Typ $A_x$. Der Typ der rechten Komponente
+des Paars hängt also von der linken Komponente ab.\pause
+
+\parspace
+So wie die zweistellige Summe die Disjunktion kodiert, kodiert
+die allgemeine Summe die Existenzquantifizierung. Ein konstruiertes
+Paar $(x,a)$ bezeugt, dass die Summe bewohnt ist. Hierbei ist
+$x$ ein Zeuge, und $a$ der zugehörige Beweis, dass der Summand
+$A_x$ bewohnt ist.
+\end{frame}
+
+\begin{frame}
+Wir schreiben ab jetzt $\forall x.P(x)$ und $\exists x.P(x)$ anstelle
+von $\forall x\colon P(x)$ und $\exists x\colon P(x)$, um Verwirrung
+zu vermeiden.
+
+\parspace
+Der Aussage
+\[A\land(\forall x. P(x))\cond\forall x.A\land P(x)\]
+entspricht
+\[A\times(\prod_x P(x))\to\prod_x (A\times P(x)).\]
+Es ist also ein Paar $(a,f)$ mit $a\colon A$ und $f\colon\prod_x P(x)$
+gegeben. Zu konstruieren ist eine abhängige Funktion, die jedem
+$x$ ein Paar $(a,y)$ mit $a\colon A$ und $y\colon P(x)$ zuordnet.\pause
+
+\parspace
+Schlicht $y:=f(x)$ setzen. Die gesuchte Funktion ist also $x\mapsto (a,f(x))$.
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof8 (A: Type) (X: Type) (P: X -> Type):\\
+\ \ A*(forall x, P x) -> forall x, A*(P x)\\
+\ \ := \kw{fun} t => \kw{match} t \kw{with} (a, f) => \kw{fun} x => (a, f x) \kw{end}.}
+\end{block}
 \end{frame}
 
 \begin{frame}
@@ -225,7 +431,10 @@ erreichendes \emph{Ziel} dar, dessen Kindknoten die \emph{Unterziele}.
 
 \parspace
 Es stehen Basistaktiken zur Verfügung, die im Prinzip die Schlussregeln
-des natürlichen Schließens widerspiegeln.
+des natürlichen Schließens widerspiegeln. Dies darf allerdings nicht
+immer allzu genau verstanden werden. Man kann ja zu einigen Regeln
+alternative Formulierungen in Form von zulässigen Schlussregeln herleiten.
+Im gleichen Sinne steht ein Sammelsurium von Taktiken zur Verfügung.
 \end{frame}
 
 \begin{frame}
@@ -398,14 +607,14 @@ Für $(A\land\forall x. P(x))\to\forall x. A\land P(x)$ findet sich:\pause
 \infer[\texttt{intro h}]{\vdash (h\mapsto x\mapsto y)\colon (A\land\forall x. P(x))\to\forall x. A\land P(x)}{
   \infer[\texttt{destruct h as (a, f)}]{h\colon A\land\forall x. P(x)\vdash (x\mapsto y)\colon\forall x.A\land P(x)}{
     \infer[\texttt{intro x}]{a\colon A, f\colon \forall x.P(x)\vdash (x\mapsto y)\colon\forall x.A\land P(x)}{
-      \infer[\texttt{split}]{a\colon A, f\colon \forall x.P(x), x\colon\mathrm{Type}\vdash y\colon A\land P(x)}{
+      \infer[\texttt{split}]{a\colon A, f\colon \forall x.P(x), x\colon X\vdash y\colon A\land P(x)}{
         \infer[\texttt{exact a}]{a\colon A\vdash a\colon A}{}
-      & \infer[\texttt{apply f}]{f\colon\forall x.P(x), x\colon\mathrm{Type}\vdash f(x)}{}}}}}
+      & \infer[\texttt{apply f}]{f\colon\forall x.P(x), x\colon X\vdash f(x)}{}}}}}
 \]
 Hierbei gilt $y:=\mathrm{conj}(a)(f(x))$. Die Implementierung:\pause
 
 \begin{block}{Gallina}
-\texttt{\kw{Theorem} const\_factor (A B: Prop) (P: Type -> Prop):\\
+\texttt{\kw{Theorem} const\_factor (A: Prop) (X: Type) (P: X -> Prop):\\
 \ \ A /{\textbackslash} (\kw{forall} x, P x) -> \kw{forall} x, A /{\textbackslash} P x.\\
 \kw{Proof}.\\
 \ \ intro h.\\
@@ -419,8 +628,131 @@ Hierbei gilt $y:=\mathrm{conj}(a)(f(x))$. Die Implementierung:\pause
 \end{frame}
 
 \begin{frame}
+Für $A\land (\exists x. P(x))\to\exists x. A\land P(x)$ findet sich:\pause
+\begin{small}
+\[
+\infer[\texttt{intro h}]{\vdash (h\mapsto s')\colon A\land (\exists x. P(x))\to\exists x. A\land P(x)}{
+  \infer[\texttt{destruct h as (a, s)}]{h\colon A\land\exists x. P(x)\vdash s'\colon\exists x. A\land P(x)}{
+    \infer[\texttt{destruct s as (x, p)}]{a\colon A,s\colon\exists x.P(x)\vdash s'\colon\exists x.A\land P(x)}{
+      \infer{s\colon\exists x.P(x)\vdash s\colon\exists x.P(x)}{}
+    & \infer[\texttt{exists x}]{a\colon A,x\colon X,p\colon P(x)\vdash s'\colon\exists x.A\land P(x)}{
+        \infer[\texttt{split}]{a\colon A,x\colon X,p\colon P(x)\vdash \mathrm{conj}(a)(p)\colon A\land P(x)}{
+          \infer[\texttt{exact a}]{a\colon A\vdash a\colon A}{}
+        & \infer[\texttt{exact p}]{x\colon X,p\colon P(x)\vdash p\colon P(x)}{}}}}}}
+\]
+\end{small}\pause
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Theorem} distribute (A: Prop) (X: Type) (P: X -> Prop):\\
+\ \ A /{\textbackslash} (\kw{exists} x, P x) -> \kw{exists} x, A /{\textbackslash} P x.\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (a, s).\\
+\ \ destruct s as (x, p).\\
+\ \ exists x.\\
+\ \ split.\\
+\ \ - exact a.\\
+\ \ - exact p.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Zum Abschluss Zahlentheorie}
+\end{frame}
+
+\begin{frame}
+Gleichungen werden durch Typen ausgedrückt. Wir schreiben
+$p\colon (n = 2k)$ für das Urteil, dass $p$ vom Typ $n = 2k$ ist.
+Es stellt also $p$ einen Beweis für die Gleichheit $n = 2k$ dar.\pause
+
+\parspace
+Nun darf die Ersetzungsregel zur Anwendung kommen. Man schreibt dies als
+\[\dfrac{\Gamma\vdash p\colon n = 2k}{\Gamma\vdash y\colon f(n) = f(2k)}
+\quad\text{mit}\;y:=\mathrm{f\_equal}(f)(p).\]\pause
+Hiermit findet sich:
+\begin{small}
+\[
+\infer[\texttt{intro h}]{(h\mapsto y'')\colon(\exists k. n = 2k)\to (\exists l. n^2 = 2l)}{
+  \infer[\texttt{destruct h as (k, p)}]{h\colon\exists k. n = 2k\vdash y''\colon\exists l. n^2 = 2l}{
+    \infer{h\colon (\exists k. n = 2k)\vdash h\colon (\exists k. n = 2k)}{}
+  & \infer[\texttt{exists ($kn$)}]{\Gamma\vdash y''\colon\exists l. n^2 = 2l}{
+      \infer[\texttt{rewrite Nat.mul\_assoc}]{\Gamma\vdash y'\colon n^2 = 2(kn)}{
+        \infer[\texttt{apply (f\_equal ($x\mapsto xn$) $p$)}]{\Gamma\vdash y\colon n^2 = (2k)n}{
+          \infer{\Gamma\vdash p\colon n = 2k}{}}}}}}
+\]
+\end{small}
+mit $\Gamma:=[k\colon\mathrm{nat}, p\colon n = 2k]$.
+\end{frame}
+
+\begin{frame}
+Die Implementierung:
+\begin{block}{Gallina}
+\texttt{\kw{Require} \kw{Import} Coq.Arith.PeanoNat.\\
+\mbox{}\\
+\kw{Theorem} even\_square (n: nat):\\
+\ \ (\kw{exists} k, n = 2*k) -> (\kw{exists} l, n*n = 2*l).\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (k, p).\\
+\ \ exists (k*n).\\
+\ \ rewrite Nat.mul\_assoc.\\
+\ \ apply (f\_equal (\kw{fun} x => x*n) p).\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Möchte man den Beweisterm von Hand schreiben, erhält man zunächst
+separat $n^2 = (2k)n$ per Ersetzungsregel und $2(kn) = (2k)n$
+per Assoziativgesetz. Um aus den beiden Gleichungen nun
+$n^2 = 2(kn)$ zu gewinnen, muss noch explizit das
+Transitivgesetz angewendet werden, wofür die Funktion
+\texttt{eq\_trans\_r} zur Verfügung steht.\pause
+
+\begin{block}{Gallina}
+\texttt{\kw{Require} \kw{Import} Coq.Arith.PeanoNat.\\
+\mbox{}\\
+\kw{Theorem} even\_square (n: nat):\\
+\ \ (\kw{exists} k, n = 2*k) -> (\kw{exists} l, n*n = 2*l).\\
+\kw{Proof}.\\
+\ \ exact (\kw{fun} t =>\\
+\ \ \ \ \kw{match} t \kw{with} ex\_intro \_ k p => ex\_intro \_ (k*n)\\
+\ \ \ \ \ \ (\kw{let} y := f\_equal (\kw{fun} x => x*n) p \kw{in}\\
+\ \ \ \ \ \ \ \ eq\_trans\_r y (Nat.mul\_assoc 2 k n))\\
+\ \ \ \ \kw{end}).\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Alternativ kann man sich aber auch vom Fluss der verbleibenden
+Ziele leiten lassen und Taktiken zur Termersetzung nutzen:
+\begin{block}{Gallina}
+\texttt{\kw{Require} \kw{Import} Coq.Arith.PeanoNat.\\
+\mbox{}\\
+\kw{Theorem} even\_square (n: nat):\\
+\ \ (\kw{exists} k, n = 2*k) -> (\kw{exists} l, n*n = 2*l).\\
+\kw{Proof}.\\
+\ \ intro h.\\
+\ \ destruct h as (k, p).\\
+\ \ exists (k*n).\\
+\ \ rewrite Nat.mul\_assoc.\\
+\ \ replace (2*k) with n.\\
+\ \ reflexivity.\\
+\kw{Qed}.}
+\end{block}
+\end{frame}
+
+\begin{frame}
 \strong{Literatur}
 \begin{itemize}
+\item Philip Wadler: \emph{Propositions as Types}.
+In: \emph{Communications of the ACM}. Band~58, Nr.~12, 2015. S.~75--84.
+\href{https://doi.org/10.1145/2699407}{doi:10.1145/2699407}.
+---Der klassische Einführungsartikel in die Thematik.
+\item Samuel Mimram: \emph{Program = Proof}.
+\href{https://www.lix.polytechnique.fr/Labo/Samuel.Mimram/publications/}{Link (Open Access)}.
 \item Christine Paulin-Mohring: \emph{Introduction to the Coq
 proof-assistant for practical software verification}. Laboratoire de
 recherche en informatique, Université Paris-Saclay, 2011.

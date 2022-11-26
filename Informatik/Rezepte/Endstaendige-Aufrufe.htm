@@ -26,7 +26,7 @@ Komplikationen. Allerdings bietet Python als dynamische Sprache die
 nötigen Mittel zur Konstruktion fortentwickelter Rekursion. Das kurze
 Beispiel
 
-<pre class="python ibox">
+<pre class="ibox python">
 def add(x, y):
     return y if x == 0 else add(x - 1, y + 1)
 </pre>
@@ -34,7 +34,7 @@ def add(x, y):
 <p>soll hierbei den Ausgangspunkt der nachfolgenden Betrachtungen
 darstellen. Ruft man nun auf
 
-<pre class="python ibox">
+<pre class="ibox python">
 print(add(10000, 0))
 </pre>
 
@@ -54,7 +54,7 @@ eine Iteration umwandeln lässt. Um dies automatisieren zu können,
 müssen wir zunächst expliziten Eingriff in die Rekursion bekommen.
 Dazu definiert man den Fixpunkt-Kombinator:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     def rec(x): return cb(rec, x)
     return rec
@@ -67,7 +67,7 @@ einem Argument die Argumente zu einem Tupel zusammenfassen. Man kann
 <code>rec</code> aber so verallgemeinern, dass die Anzahl der Argumente
 beliebig sein darf:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     def rec(*t): return cb(rec, *t)
     return rec
@@ -75,14 +75,14 @@ def fix(cb):
 
 <p>Nun ist die Rekursion wie folgt zu formulieren:
 
-<pre class="python ibox">
+<pre class="ibox python">
 add = fix(lambda rec, x, y: y if x == 0 else rec(x - 1, y + 1))
 </pre>
 
 <p>Pythons Dekorateur-Syntax ermöglicht hierbei eine kleine
 Aufhübschung der Notation:
 
-<pre class="python ibox">
+<pre class="ibox python">
 @fix
 def add(rec, x, y):
     return y if x == 0 else rec(x - 1, y + 1)
@@ -99,7 +99,7 @@ ein Closure ohne Argumente nutzen; das macht am wenigsten Aufwand und
 genügt für die nachfolgende Diskussion. Es findet sich der modifizierte
 Fixpunkt-Kombinator:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     def rec(*n):
         rec_lazy = lambda *n: lambda: rec(*n)
@@ -114,7 +114,7 @@ def fix(cb):
 <p>Überdies ist die Rekursionstiefe nun nicht einmal mehr durch den
 Arbeitsspeicher beschränkt, weshalb man ein Konstrukt wie
 
-<pre class="python ibox">
+<pre class="ibox python">
 @fix
 def loop(rec, n):
     print("Schleifendurchlauf {}".format(n))
@@ -127,7 +127,7 @@ loop(0)
 
 <p>Bei Funktionen wie der rekursiv definierten Fakultät
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fac(n):
     return 1 if n == 0 else n*fac(n - 1)
 </pre>
@@ -136,7 +136,7 @@ def fac(n):
 Endrekursion erfordert hier die Hinzuziehung eines Akkumulators als
 Hilfsvariable:
 
-<pre class="python ibox">
+<pre class="ibox python">
 @fix
 def fac(rec, n, acc = 1):
     return acc if n == 0 else rec(n - 1, n*acc)
@@ -146,7 +146,7 @@ print([fac(n) for n in range(10)])
 
 <p>Bei wechselseitiger Rekursion, beispielsweise
 
-<pre class="python ibox">
+<pre class="ibox python">
 def even(n):
     return True if n == 0 else odd(n - 1)
  
@@ -156,7 +156,7 @@ def odd(n):
 
 <p>ist es erforderlich, eine der Funktionen in die andere zu schieben:
 
-<pre class="python ibox">
+<pre class="ibox python">
 @fix
 def even(rec, n):
     def odd(n):
@@ -176,7 +176,7 @@ Dazu bauen wir die Verzögerung aus dem Fixpunkt-Kombinator aus,
 definieren stattdessen den Operator <code>call</code> zur Verzögerung
 und <code>call_ev</code> zur Auswertung:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def call(f, *t):
     return lambda: f(*t)
  
@@ -196,7 +196,7 @@ print(call_ev(even, 10000))
 
 <p>Nun transformieren wir das Programm in den CPS:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def even(cont, n):
     return cont(True) if n == 0 else call(odd, cont, n - 1)
  
@@ -211,7 +211,7 @@ call_ev(main)
 
 <p>Eine endliche Schleife im CPS:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def loop(cont, n):
     print("Schleifendurchlauf {}".format(n))
     return cont() if n == 4 else call(loop, cont, n + 1)
@@ -227,7 +227,7 @@ call_ev(main)
 
 <p>Außerdem lassen sich Koroutinen emulieren. Klassisches Beispiel:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def produce():
     for i in range(0, 4):
         print("Wert {} produziert".format(i))
@@ -248,7 +248,7 @@ print("Programmende")
 
 <p>Im CPS nimmt dieses Programm etwa die folgende Gestalt an:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def final_message():
     print("Programmende")
  
@@ -274,7 +274,7 @@ call_ev(produce, final_message, context)
 
 <p>Zum Abschluss will ich eine Emulation von Gotos aufzeigen:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def goto(f):
     return lambda: f()
  

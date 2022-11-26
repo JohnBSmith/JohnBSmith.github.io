@@ -45,7 +45,7 @@
 \newcommand{\parspace}{\vspace{0.8em}}
 \newcommand{\cond}{\rightarrow}
 
-\title{Der Kalkül des natürlichen Schließens}
+\title{Natürliches Schließen}
 \subtitle{Teil 1: Aussagenlogik}
 \date{}
 
@@ -216,7 +216,16 @@ Das heißt, wenn
 $\Gamma\vdash A$ gilt, dann gilt erst recht $\Gamma,\Gamma'\vdash A$.\pause
 \begin{block}{Abschwächungsregel}
 \[\dfrac{\Gamma\vdash A}{\Gamma,\Gamma'\vdash A}\]
-\end{block}
+\end{block}\pause
+Setzt man in der Einführungsregel der Konjunktion $\Gamma=\Gamma'$, vereinfacht sie sich zu
+\[\dfrac{\Gamma\vdash A\qquad\Gamma\vdash B}{\Gamma\vdash A\land B}.\]
+Aus dieser speziellen Form kann die allgemeine Regel allerdings immer noch
+hervorgebracht werden, denn per Abschwächungsregel findet sich:
+\[
+\infer{\Gamma,\Gamma'\vdash A\land B}{
+  \infer{\Gamma,\Gamma'\vdash A}{\Gamma\vdash A}
+& \infer{\Gamma,\Gamma'\vdash B}{\Gamma'\vdash B}}
+\]
 \end{frame}
 
 \begin{frame}

@@ -25,14 +25,14 @@
 
 <p>Die rekursive Definition der Fibonacci-Folge:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fib(n):
     return 1 if n &lt; 3 else fib(n - 1) + fib(n - 2)
 </pre>
 
 <p>Lässt man die Werte nun per
 
-<pre class="python ibox">
+<pre class="ibox python">
 for n in range(1, 100):
     print("{} | {}".format(n, fib(n)))
 </pre>
@@ -59,7 +59,7 @@ zur Anwendung. Hierbei werden bereits berechnete Werte in einem
 <i>Memo</i> oder <i>Cache</i> gespeichert, um sie nicht ständig
 erneut ermitteln zu müssen. Als Speicher diene zunächst ein Array.
 
-<pre class="python ibox">
+<pre class="ibox python">
 fib_memo = 1000*[None]
 
 def fib(n):
@@ -76,7 +76,7 @@ jedoch die Nutzung eines dynamischen Arrays oder eines Wörterbuchs.
 Ersetzt man das Array durch ein Wörterbuch, nimmt das Programm
 die folgende Gestalt an:
 
-<pre class="python ibox">
+<pre class="ibox python">
 fib_memo = {}
 
 def fib(n):
@@ -98,7 +98,7 @@ vom Algorithmus. Eine Funktion <code>memoize</code> erzeugt hierbei
 eine neue Funktion, die die urspüngliche in eine Memoisierung
 einhüllt. Dies gelingt folgendermaßen:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def memoize(f):
     memo = {}
     def f_memo(n):
@@ -116,7 +116,7 @@ fib = memoize(fib)
 abschließend noch einen syntaktischen Zucker, mit dem sich die
 Memoisierung ideal notieren lässt:
 
-<pre class="python ibox">
+<pre class="ibox python">
 @memoize
 def fib(n):
     return 1 if n &lt; 3 else fib(n - 1) + fib(n - 2)
@@ -127,7 +127,7 @@ mehrstellige Funktionen einbezieht, wenn man die Argumente der
 jeweiligen Funktion zu einem Tupel zusammenfasst. Man betrachte zur
 Demonstration die rekursive Berechnung der Binomialkoeffizienten:
 
-<pre class="python ibox">
+<pre class="ibox python">
 @memoize
 def bc(t):
     (n, k) = t
@@ -145,7 +145,7 @@ for n in range(0, 10):
 <code>memoize</code> überdies so verallgemeinern, dass mehrstellige
 Funktion explizit einbezogen sind.
 
-<pre class="python ibox">
+<pre class="ibox python">
 def memoize(f):
     memo = {}
     def f_memo(*t):
@@ -176,7 +176,7 @@ zu finden.
 an <code>memoize</code> übergeben werden, womit die Fallunterscheidung
 im jeweiligen Algorithmus entfallen darf. Das geht so:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def memoize(memo):
     def cb(f):
         def f_memo(n):
@@ -200,7 +200,7 @@ kann man die Memoisierung alternativ in den Fixpunkt-Kombinator einbauen.
 
 <p>Zunächst der reine Fixpunkt-Kombinator:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     def rec(n): return cb(rec, n)
     return rec
@@ -213,7 +213,7 @@ def fib(rec, n):
 <p>Nun bringen wir die Memoisierung ein und berücksichtigen
 mehrstellige Funktionen wieder mit der Asterisk-Syntax:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     memo = {}
     def rec(*t):
@@ -232,7 +232,7 @@ def fib(rec, n):
 Fixpunkt-Kombinator zweckdienlich. Die Funktionen sind hierfür zu einer
 Struktur zusammenzufassen, die wir durch ein Wörterbuch darstellen.
 
-<pre class="python ibox">
+<pre class="ibox python">
 def fix(cb):
     rec = {}
     rec.update(cb(rec))
@@ -249,7 +249,7 @@ odd = s["odd"]
 
 <p>Die Memoisierung verläuft nun folgendermaßen:
 
-<pre class="python ibox">
+<pre class="ibox python">
 def memo_fn(f):
     memo = {}
     def mf(*t):
