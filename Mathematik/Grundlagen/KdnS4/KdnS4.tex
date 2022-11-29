@@ -93,18 +93,17 @@ vom Typ $A$ sein muss.\pause
 
 \parspace
 Analog zur Logik ist ein Kontext eine Liste\footnote{Technisches Detail:
-Ein Kontext soll wohlgeformt sein.
+Ein Kontext soll wohlgeformt sein.\\
 Beispielsweise ist
-$[n\colon\mathrm{string}, P\colon (\mathrm{nat}\to\mathrm{nat}), P(n)\colon\mathrm{nat}]$
-irrsinnig. In der einfachen Typentheorie treten solche Probleme allerdings
-nocht nicht auf; erst wenn abhängige Typen ins Spiel kommen.}
-\[\Gamma = [(a_1\colon A_1),\ldots,(a_n\colon A_n)].\]
-Ist nun die Sequenz
+$[s\colon\mathrm{string}, P\colon (\mathrm{nat}\to\mathrm{Type}), x\colon P(s)]$
+irrsinnig.}
+\[\Gamma = [(a_1\colon A_1),\ldots,(a_n\colon A_n)],\]
+wobei die $a_k$ Variablen sind. Ist nun die Sequenz
 \[\Gamma\vdash (b\colon B)\]
-eine ableitbare, liegt das Urteil $b\colon B$ vor, sofern die Terme
+eine ableitbare, liegt das Urteil $b\colon B$ vor, sofern die Variablen
 in $\Gamma$ vorausgesetzt werden dürfen. Das ist so zu verstehen,
-dass man mit dem Termen aus $\Gamma$ den Term $b$ zusammenbasteln kann.
-Ein Term darf hierbei mehrmals benutzt werden.
+dass man mit den Variablen aus $\Gamma$ den Term $b$ zusammenbasteln kann.
+Eine Variable darf hierbei mehrmals benutzt werden.
 
 \parspace
 Ein Objekt $b\colon B$ stellt einen Zeugen dafür dar, dass der Typ
@@ -207,11 +206,14 @@ $\infer{\vdash (t\mapsto \pi_l(t))\colon A\times B\to A}{
 \end{center}\pause
 
 \parspace
+\begin{footnotesize}
 \strong{Bemerkung.}
 Anstelle von $t\mapsto\pi_l(t)$ kann man auch $(a,b)\mapsto a$
-schreiben. Streng genommen muss hierbei allerdings ein unabweisbarer
-Musterabgleich durchgeführt werden. Ist $t$ das Argument, wird $t$
+schreiben. Streng genommen müsste man hierfür allerdings ein erweitertes
+formales System definieren. Technisch wird ein unabweisbarer
+Musterabgleich durchgeführt. Ist $t$ das Argument, wird $t$
 mit $(a,b)$ abgeglichen, weshalb $a=\pi_l(t)$ sein muss.
+\end{footnotesize}
 \end{frame}
 
 \begin{frame}[t]
@@ -234,6 +236,11 @@ Es ginge auch so:
 \texttt{\kw{Definition} proof2 (A B: Type): A*B -> A\\
 \ \ := \kw{fun} t => \kw{match} t \kw{with} (a, b) => a \kw{end}.}
 \end{block}
+Oder kurz:
+\begin{block}{Gallina}
+\texttt{\kw{Definition} proof3 (A B: Type): A*B -> A\\
+\ \ := \kw{fun} '(a, b) => a.}
+\end{block}
 \end{frame}
 
 \begin{frame}
@@ -241,17 +248,17 @@ Aussagen bekommen eigentlich den speziellen Typ \texttt{Prop}.
 Infolgedessen verändern sich Syntax und genutzte Funktionen,
 wobei die Mechanismen aber äquivalent bleiben.
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof3 (A B: Prop): A /{\textbackslash} B -> A\\
+\texttt{\kw{Definition} proof4 (A B: Prop): A /{\textbackslash} B -> A\\
 \ \ := \kw{fun} h => proj1 h.}
 \end{block}\pause
 Auch hier ist eine Zerlegung per Musterabgleich durchführbar:
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof4 (A B: Prop): A /{\textbackslash} B -> A\\
+\texttt{\kw{Definition} proof5 (A B: Prop): A /{\textbackslash} B -> A\\
 \ \ := \kw{fun} h => \kw{match} h \kw{with} conj a b => a \kw{end}.}
 \end{block}\pause
 Äquivalent zum Musterabgleich ist das Induktionsprinzip der Konjunktion:
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof5 (A B: Prop): A /{\textbackslash} B -> A\\
+\texttt{\kw{Definition} proof6 (A B: Prop): A /{\textbackslash} B -> A\\
 \ \ := \kw{fun} h => and\_ind (\kw{fun} a b => a) h.}
 \end{block}
 Der Beweis einer Konjunktion wird hier in seine beiden Teile zerlegt,
@@ -306,14 +313,14 @@ Einen Term vom Typ $A+B\to B+A$ erhält man beispielsweise wie folgt:\pause
 \iota_r(b)\mapsto\iota_l(b).
 \end{cases}\]\pause
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof6 (A B: Type): A + B -> B + A\\
+\texttt{\kw{Definition} proof7 (A B: Type): A + B -> B + A\\
 \ \ := \kw{fun} t =>\\
 \ \ \ \ \kw{match} t \kw{with}\\
 \ \ \ \ | inl(a) => inr(a)\\
 \ \ \ \ | inr(b) => inl(b)\\
 \ \ \ \ \kw{end}.}\\
 \mbox{}\\
-\texttt{\kw{Definition} proof7 (A B: Prop): A {\textbackslash}/ B -> B {\textbackslash}/ A\\
+\texttt{\kw{Definition} proof8 (A B: Prop): A {\textbackslash}/ B -> B {\textbackslash}/ A\\
 \ \ := \kw{fun} t =>\\
 \ \ \ \ \kw{match} t \kw{with}\\
 \ \ \ \ | or\_introl(a) => or\_intror(a)\\
@@ -408,7 +415,7 @@ $x$ ein Paar $(a,y)$ mit $a\colon A$ und $y\colon P(x)$ zuordnet.\pause
 \parspace
 Schlicht $y:=f(x)$ setzen. Die gesuchte Funktion ist also $x\mapsto (a,f(x))$.
 \begin{block}{Gallina}
-\texttt{\kw{Definition} proof8 (A: Type) (X: Type) (P: X -> Type):\\
+\texttt{\kw{Definition} proof9 (A: Type) (X: Type) (P: X -> Type):\\
 \ \ A*(forall x, P x) -> forall x, A*(P x)\\
 \ \ := \kw{fun} t => \kw{match} t \kw{with} (a, f) => \kw{fun} x => (a, f x) \kw{end}.}
 \end{block}

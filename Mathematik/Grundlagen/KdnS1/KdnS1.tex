@@ -56,6 +56,25 @@
 \end{frame}
 
 \begin{frame}
+\centerheadline{Schließen}
+\end{frame}
+
+\begin{frame}
+Allgemein wird beim logischen Schließen in jedem Schritt aus Prämissen
+eine Konklusion gewonnen.
+
+\parspace
+So darf von den Prämissen »Stockholm liegt in Schweden« und
+»Gustaf wohnt in Stockholm« auf die Konklusion »Gustaf wohnt in Schweden«
+geschlossen werden.\pause
+
+\parspace
+Man notiert
+\[\dfrac{\text{Stockholm liegt in Schweden}\qquad\qquad\text{Gustaf wohnt in Stockholm}}{
+\text{Gustaf wohnt in Schweden}}.\]
+\end{frame}
+
+\begin{frame}
 \centerheadline{Konjunktionen}
 \end{frame}
 
@@ -187,8 +206,11 @@ $\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\cond B}$
 \end{block}\pause
 
 \parspace
-Die Beseitigung der Implikation ist auch als \emph{Modus ponens}
-bekannt.
+Bemerkung:
+\begin{itemize}
+\item Die Einführung der Implikation spiegelt das Deduktionstheorem wider.
+\item Die Beseitigung der Implikation stellt den \emph{Modus ponens} dar.
+\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -286,9 +308,8 @@ Man kann den Beweis rückwärts konstruieren:
 \strong{Darstellung: Beweisbaum in Kurzform}
 
 \vspace{3em}
-Ein recht hoher Schreibaufwand.\pause{}
-Kürzen wir die Antezedenzen
-doch durch Nummern ab:
+Ein recht hoher Schreibaufwand.\pause{}\\
+Kürzen wir die Antezedenzen doch durch Nummern ab:
 \[\infer{\vdash (A\cond B)\land A\cond B}{
   \infer{1\vdash B}{
     \infer{1\vdash A\cond B}{
@@ -378,6 +399,31 @@ technischer Details.
 \end{frame}
 
 \begin{frame}
+\centerheadline{Negationen}
+\end{frame}
+
+\begin{frame}
+Die Verneinung $\neg A$ kann allgemein durch $A\cond\bot$
+definiert werden, da beide Formeln im Minimalkalkül, und damit sowohl
+in klassischer als auch in intuitionistischer Logik äquivalent sind.
+Hiermit kann die Einführung und Beseitigung der Verneinung auf die
+Regeln der Implikation zurückgeführt werden.\pause
+
+\parspace
+Man kommt zum folgenden Resultat.
+\begin{block}{Schlussregeln}
+\begin{center}
+\begin{tabular}{c@{\qquad\quad}c}
+\strong{\small Einführung der Negation}
+& \strong{\small Beseitigung der Negation}\\[6pt]
+$\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
+& $\dfrac{\Gamma\vdash\neg A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}$\\
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}
 \centerheadline{Zulässige Schlussregeln}
 \end{frame}
 
@@ -402,31 +448,6 @@ eine zulässige Regel.
 \[\dfrac{\vdash A\cond B\qquad \Gamma\vdash A}{
   \Gamma\vdash B}\;\,\infernote{$\cond$B}\]
 bestätigt.\,\qedsymbol
-\end{frame}
-
-\begin{frame}
-\centerheadline{Negationen}
-\end{frame}
-
-\begin{frame}
-Die Verneinung $\neg A$ kann allgemein durch $A\cond\bot$
-definiert werden, da beide Formeln im Minimalkalkül, und damit sowohl
-in klassischer als auch in intuitionistischer Logik äquivalent sind.
-Hiermit kann die Einführung und Beseitigung der Verneinung auf die
-Regeln der Implikation zurückgeführt werden.\pause
-
-\parspace
-Man kommt zum folgenden Resultat.
-\begin{block}{Schlussregeln}
-\begin{center}
-\begin{tabular}{c@{\qquad\quad}c}
-\strong{\small Einführung der Negation}
-& \strong{\small Beseitigung der Negation}\\[6pt]
-$\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
-& $\dfrac{\Gamma\vdash\neg A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}$\\
-\end{tabular}
-\end{center}
-\end{block}
 \end{frame}
 
 \begin{frame}
@@ -694,22 +715,6 @@ Ebenfalls zur klassischen Logik führt ein zusätzliches Axiom:
 \begin{block}{Satz vom ausgeschlossenen Dritten}
 \[\dfrac{}{\vdash A\lor\neg A}\]
 \end{block}
-\end{frame}
-
-\begin{frame}
-\centerheadline{Fazit}
-\end{frame}
-
-\begin{frame}
-In der Retrospektive fällt es einem nach einiger Zeit wie
-Schuppen von den Augen. Man kommt zu frappierenden Einsichten:
-\begin{itemize}
-\item Schließen von Sequenzen entpuppt sich als Kalkül für die metasprachliche Ableitbarkeit.\\
-\item Die Einführung der Implikation spiegelt das Deduktionstheorem wider.
-\end{itemize}
-
-\parspace
-Kalkül und Metalogik sind insofern bereits zutiefst verwoben.
 \end{frame}
 
 \begin{frame}[t]
