@@ -93,10 +93,10 @@ vom Typ $A$ sein muss.\pause
 
 \parspace
 Analog zur Logik ist ein Kontext eine Liste\footnote{Technisches Detail:
-Ein Kontext soll wohlgeformt sein.\\
-Beispielsweise ist
+Ein Kontext soll wohlgeformt sein. Beispielsweise ist
 $[s\colon\mathrm{string}, P\colon (\mathrm{nat}\to\mathrm{Type}), x\colon P(s)]$
-irrsinnig.}
+irrsinnig. In der einfachen Typentheorie treten solche Komplikationen
+allerdings noch nicht auf; erst in der abhängigen.}
 \[\Gamma = [(a_1\colon A_1),\ldots,(a_n\colon A_n)],\]
 wobei die $a_k$ Variablen sind. Ist nun die Sequenz
 \[\Gamma\vdash (b\colon B)\]
@@ -230,7 +230,6 @@ ob die Konstruktion fehlerfrei durchgeführt wurde:\pause
 \ \ := \kw{fun} t => fst t.}
 \end{block}\pause
 
-\parspace
 Es ginge auch so:
 \begin{block}{Gallina}
 \texttt{\kw{Definition} proof2 (A B: Type): A*B -> A\\
@@ -361,7 +360,8 @@ enthält Paare $(a,b)$ mit $a\in A$ und $b\in B$. Nun fasst man das
 Paar als endliche Folge auf, also als Abbildung
 \[f\colon\{0,1\}\to A\cup B, \quad f(0):=a,\quad f(1):=b.\]\pause
 Allgemein definiert man insofern
-\[\prod_{x\in X} A_x := \{f\colon X\to\bigcup_{x\in X}A_x\mid\forall x\in X\colon f(x)\in A_x\}.\]\pause
+\[\prod_{x\in X} A_x := \{f\colon X\to\bigcup_{x\in X}A_x\mid
+\forall x\in X\colon f(x)\in A_x\}.\]\pause
 Bei Typen verhält es sich analog.
 
 \parspace
@@ -383,7 +383,7 @@ dass der Typ $A_x$ bewohnt ist.
 Betrachten wir zunächst die disjunkte Vereinigung von Mengen.
 Für $t\in A+B$ ist entweder $t=(\mathrm L,a)$ mit $a\in A$ oder
 $t=(\mathrm R,b)$ mit $b\in B$. Möchte man den Begriff nun auf
-beliebig viele Summanden ausdehen, findet sich
+beliebig viele Summanden ausdehnen, findet sich
 \[\sum_{x\in X} A_x := \bigcup_{x\in X} (\{x\}\times A_x).\]\pause
 Analog verhält es sich bei der Summe von Typen. Ein Term $t$ vom
 Typ $\sum_{x\colon X} A_x$ heißt \emph{abhängiges Paar}.
@@ -393,9 +393,10 @@ des Paars hängt also von der linken Komponente ab.\pause
 \parspace
 So wie die zweistellige Summe die Disjunktion kodiert, kodiert
 die allgemeine Summe die Existenzquantifizierung. Ein konstruiertes
-Paar $(x,a)$ bezeugt, dass die Summe bewohnt ist. Hierbei ist
-$x$ ein Zeuge, und $a$ der zugehörige Beweis, dass der Summand
-$A_x$ bewohnt ist.
+Paar $(x,a)$ bezeugt, dass die Summe bewohnt ist. Man bezeichnet auch
+$x$ selbst als den Zeugen, wobei zugehörige Beweis $a$ belegt, dass der
+Summand $A_x$ bewohnt ist. Der Zeuge besteht also eigentlich nicht nur
+in $x$, sondern in der gesamten Information $(x,a)$.
 \end{frame}
 
 \begin{frame}
@@ -454,6 +455,11 @@ $\dfrac{}{\Gamma, h\colon A, \Gamma'\vdash h\colon A}$
 \end{tabular}
 \end{center}
 \end{block}
+\begin{footnotesize}
+\strong{Bemerkung.} Es gestattet \texttt{exact} nicht nur Variablen
+für die Blätter des Baums. Die Erstellung
+beliebiger korrekt konstruierter Terme ist ebenfalls möglich.
+\end{footnotesize}
 \end{frame}
 
 \begin{frame}
@@ -586,8 +592,8 @@ Die Implementierung:
 \end{frame}
 
 \begin{frame}
-Nun wird man irgendwann höhre kognitive Sprünge ausführen und
-mühseligen Kleinkram auslassen wollen. Hierfür stehen höhre Taktiken
+Nun wird man irgendwann höhere kognitive Sprünge vollführen und
+mühseligen Kleinkram auslassen wollen. Hierfür stehen höhere Taktiken
 zur Verfügung, die einfache Beweise gänzlich automatisch konstruieren.
 Ein Beispiel hierfür ist \texttt{tauto}.\pause
 \begin{block}{Gallina}

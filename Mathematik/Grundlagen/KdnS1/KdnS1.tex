@@ -209,7 +209,7 @@ $\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\cond B}$
 Bemerkung:
 \begin{itemize}
 \item Die Einführung der Implikation spiegelt das Deduktionstheorem wider.
-\item Die Beseitigung der Implikation stellt den \emph{Modus ponens} dar.
+\item Die Beseitigung der Implikation stellt den Modus ponens dar.
 \end{itemize}
 \end{frame}
 
@@ -279,22 +279,25 @@ $(A\cond B)\land A\cond B$ erbracht werden, die dem
 Modus ponens entspricht.
 
 \parspace
-Man kann den Beweis rückwärts konstruieren:
+Es sind verschiedene Vorgehensweisen denkbar.
+
+\parspace
+Zum Erfolg führt oft schon, den Beweis rückwärts zu konstruieren:
 
 \vspace{1em}
-\onslide*<2>{
+\onslide*<1>{
 \[\vdash (A\cond B)\land A\cond B\]}
-\onslide*<3>{
+\onslide*<2>{
 \[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
   (A\cond B)\land A\vdash B}\]
 }
-\onslide*<4>{
+\onslide*<3>{
 \[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
   \infer[\infernote{$\cond$B}]{(A\cond B)\land A\vdash B}{
     (A\cond B)\land A\vdash A\cond B
   & (A\cond B)\land A\vdash A}}\]
 }
-\onslide*<5>{
+\onslide*<4>{
 \[\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\land A\cond B}{
   \infer[\infernote{$\cond$B}]{(A\cond B)\land A\vdash B}{
     \infer[\infernote{$\land$B}]{(A\cond B)\land A\vdash A\cond B}{
@@ -308,7 +311,9 @@ Man kann den Beweis rückwärts konstruieren:
 \strong{Darstellung: Beweisbaum in Kurzform}
 
 \vspace{3em}
-Ein recht hoher Schreibaufwand.\pause{}\\
+Ein recht hoher Schreibaufwand.\pause
+
+\parspace
 Kürzen wir die Antezedenzen doch durch Nummern ab:
 \[\infer{\vdash (A\cond B)\land A\cond B}{
   \infer{1\vdash B}{
@@ -456,7 +461,7 @@ Sumpf ziehen. Unterfangen ist die Herleitung der zulässigen Regeln
 \emph{Kontraposition} und \emph{Modus tollens}.\pause
 
 \parspace
-Herfür muss zunächst bewiesen werden, dass es sich bei
+Hierfür muss zunächst bewiesen werden, dass es sich bei
 \[(A\cond B)\cond (\neg B\cond\neg A)\]
 um eine allgemeingültige Formel handelt.
 \end{frame}
@@ -467,17 +472,17 @@ um eine allgemeingültige Formel handelt.
 Konstruktion des Beweisbaums:
 
 \vspace{1em}
-\onslide*<2>{
+\onslide*<1>{
 \[\vdash (A\cond B)\cond (\neg B\cond\neg A)\]
 }
-\onslide*<3>{
+\onslide*<2>{
 \[\infer[\infernote{$\cond$E}]{
   \vdash (A\cond B)\cond (\neg B\cond\neg A)
 }{
   A\cond B\vdash \neg B\cond\neg A}
 \]
 }
-\onslide*<4>{
+\onslide*<3>{
 \[\infer[\infernote{$\cond$E}]{
   \vdash (A\cond B)\cond (\neg B\cond\neg A)
 }{
@@ -487,7 +492,7 @@ Konstruktion des Beweisbaums:
     A\cond B, \neg B\vdash \neg A}}
 \]
 }
-\onslide*<5>{
+\onslide*<4>{
 \[\infer[\infernote{$\cond$E}]{
   \vdash (A\cond B)\cond (\neg B\cond\neg A)
 }{
@@ -498,7 +503,7 @@ Konstruktion des Beweisbaums:
       A\cond B, \neg B, A\vdash \bot}}}
 \]
 }
-\onslide*<6>{
+\onslide*<5>{
 \[\infer[\infernote{$\cond$E}]{
   \vdash (A\cond B)\cond (\neg B\cond\neg A)
 }{
@@ -511,7 +516,7 @@ Konstruktion des Beweisbaums:
       & A\cond B, A\vdash B}}}}
 \]
 }
-\onslide*<7>{
+\onslide*<6>{
 \[\infer[\infernote{$\cond$E}]{
   \vdash (A\cond B)\cond (\neg B\cond\neg A)
 }{
@@ -660,21 +665,21 @@ $A\lor B\cond B\lor A$ zu bestätigen.
 Konstruktion des Beweisbaums:
 
 \vspace{1em}
-\onslide*<2>{\[
+\onslide*<1>{\[
 \vdash A\lor B\cond B\lor A
 \]}
-\onslide*<3>{\[
+\onslide*<2>{\[
 \infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
   A\lor B\vdash B\lor A}
 \]}
-\onslide*<4>{\[
+\onslide*<3>{\[
 \infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
   \infer[\infernote{$\lor$B}]{A\lor B\vdash B\lor A}{
     \infer[\infernote{Ax}]{A\lor B\vdash A\lor B}{}
   & A\vdash B\lor A
   & B\vdash B\lor A}}
 \]}
-\onslide*<5>{\[
+\onslide*<4>{\[
 \infer[\infernote{$\cond$E}]{\vdash A\lor B\cond B\lor A}{
   \infer[\infernote{$\lor$B}]{A\lor B\vdash B\lor A}{
     \infer[\infernote{Ax}]{A\lor B\vdash A\lor B}{}
@@ -718,7 +723,7 @@ Ebenfalls zur klassischen Logik führt ein zusätzliches Axiom:
 \end{frame}
 
 \begin{frame}[t]
-\vspace{2em}
+\vspace{3em}
 \strong{Literatur}
 \begin{itemize}
 \item Gerhard Gentzen: \emph{Untersuchungen über das logische Schließen}.\\

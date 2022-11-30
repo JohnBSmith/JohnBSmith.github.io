@@ -63,7 +63,7 @@ logischen Axiomen auch noch mathematische Axiome hinzugefügt
 werden.
 
 \parspace
-Beispielsweise die Axiome der Mengenlehre. Deneben gibt es aber auch
+Beispielsweise die Axiome der Mengenlehre. Daneben gibt es aber auch
 viele weniger umfängliche Theorien.
 
 \parspace
@@ -117,7 +117,7 @@ für beliebige Terme $t,t'$, denn:
 \end{frame}
 
 \begin{frame}
-Im Folgengen sei $f(x)$ ein Funktionsterm in der Variable $x$,
+Im Folgenden sei $f(x)$ ein Funktionsterm in der Variable $x$,
 beispielsweise $f(x):=2x$. Die Applikation ist als $f(t):=f(x)[x:=t]$
 definiert.\pause
 
@@ -137,6 +137,8 @@ eines, dessen Formel auf ein Blatt Papier geschrieben werden kann.
 \begin{block}{Ersetzungsregel für Terme}
 \[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash f(t)=f(t')}\]
 \end{block}
+Bzw. als Axiom
+\[\vdash \forall x\colon\forall y\colon x=y\cond f(x)=f(y).\]
 \end{frame}
 
 \begin{frame}
@@ -232,68 +234,6 @@ Die Ableitung der Gleichung nochmals formal betrachtet:
 \strong{Bemerkung.} Das Assoziativgesetz ist aus den
 Peano"=Axiomen herleitbar.
 \end{footnotesize}
-\end{frame}
-
-\begin{frame}
-\centerheadline{Gruppentheorie}
-\end{frame}
-
-\begin{frame}
-Das Diskursuniversum sei $U=G$, wobei $(G,\cdot,e)$ eine Gruppe ist.
-Hiermit treten die folgenden zusätzlichen Axiome in Erscheinung:
-\begin{align*}
-& \forall a\colon\forall b\colon\forall c\colon (ab)c = a(bc) && \text{(Assoziativität)}\\
-& \forall a\colon ae = a\land ea = a && \text{(Eigenschaft des neutralen Elements)}\\
-& \forall a\colon\exists b\colon ab = e\land ba = e && \text{(Existenz inverser Elemente)}
-\end{align*}\pause
-{\footnotesize\strong{Bemerkung.} Diese Variante der Axiome setzt
-das Vorhandensein genau eines neutralen Elements voraus. Begnügt man
-sich mit der Existenz eines solchen, wird die Argumentation umständlicher,
-weil man mit Existenzaussagen hantieren muss.}
-\end{frame}
-
-\begin{frame}
-Eine einfache Aufgabe.
-
-\vspace{1em}
-\strong{Satz.} \emph{Jedes Element einer Gruppe besitzt nicht mehr
-als ein Inverses.}\pause
-
-\parspace
-\strong{Beweis.}
-Sei $(G,\cdot,e)$ eine Gruppe. Seien $a,b,b'\in G$.
-Sei sowohl $b$ als auch $b'$ invers zu $a$. Es findet sich die
-Termumformung
-\[b = eb = (b'a)b = b'(ab) = b'e = b'.\,\qedsymbol\]
-\end{frame}
-
-\begin{frame}
-Formalisierung der Aussage:
-\[\forall a\colon\forall b\colon\forall b'\colon ab=e\land b'a=e\cond b=b'\]\pause
-Formalisierter Beweis:
-
-\begin{small}
-\[
-\infer{\vdash\forall a\colon\forall b\colon\forall b'\colon ab=e\land b'a=e\cond b=b'}{
-  \infer{\vdash ab=e\land b'a=e\cond b=b'}{
-    \infer{1\vdash b=b'}{
-      \infer{1\vdash b=eb'}{
-        \infer{1\vdash b=b'(ab)}{
-          \infer{1\vdash b=(b'a)b}{
-            \infer{\vdash b=eb}{}
-          & \infer{1\vdash (b'a)b=eb}{
-              \infer{1\vdash b'a=e}{
-                \infer{1\equiv ab=e\land b'a=e}{}}}
-          }
-        & \infer{\vdash (b'a)b = b'(ab)}{}
-        }
-      & \infer{1\vdash b'(ab)=b'e}{
-            \infer{1\vdash ab=e}{
-              \infer{1\equiv ab=e\land b'a=e}{}}}
-      }
-    & \infer{\vdash eb'=b'}{}}}}
-\]
-\end{small}
 \end{frame}
 
 \begin{frame}
