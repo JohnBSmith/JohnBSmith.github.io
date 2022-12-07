@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Arithmetik</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Arithmetik</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Subtraktion">Subtraktion</a>
+<li><a href="#Gleichungen">Gleichungen</a>
+</ol>
+
+<h2 id="Subtraktion">Subtraktion</h2>
+
+<p>Die Subtraktion lässt sich mit <code>unfold</code>
+auf die Addition des negierten Subtrahenden zurückführen.
+
+<table>
+<tr><td>
+<pre class="ibox gallina">
+Require Import ZArith.
+Local Open Scope Z_scope.
+
+Theorem plus_minus_assoc (a b c: Z):
+  (a + b) - c = a + (b - c).
+Proof.
+  unfold Zminus.
+  rewrite Zplus_assoc.
+  reflexivity.
+Qed.
+</pre>
+<td>
+<pre class="ibox gallina">
+Require Import Reals.
+Local Open Scope R_scope.
+
+Theorem plus_minus_assoc (a b c: R):
+  (a + b) - c = a + (b - c).
+Proof.
+  unfold Rminus.
+  rewrite Rplus_assoc.
+  reflexivity.
+Qed.
+</pre>
+</table>
+
+<h2 id="Gleichungen">Gleichungen</h2>
+
+<pre class="ibox gallina">
+Require Import Reals.
+Local Open Scope R_scope.
+
+Goal forall (x: R),
+  2*x + 1 = 0 -&gt; x = -1/2.
+Proof.
+  intro x. intro h.
+  apply (f_equal (fun t =&gt; t - 1)) in h.
+  unfold Rminus in h.
+  rewrite Rplus_assoc in h.
+  rewrite Rplus_opp_r in h.
+  rewrite Rplus_0_r in h.
+  rewrite Rplus_0_l in h.
+  apply (f_equal (fun t =&gt; t/2)) in h.
+  unfold Rdiv in h at 1.
+  rewrite Rmult_comm in h.
+  rewrite &lt;- Rmult_assoc in h.
+  rewrite (Rmult_comm (/ 2) 2) in h.
+  rewrite Rinv_r in h by trivial.
+  rewrite Rmult_1_l in h.
+  exact h.
+Qed.
+</pre>
+
+<p>Mit automatisierter Vereinfachung:
+
+<pre class="ibox gallina">
+Goal forall (x: R),
+  2*x + 1 = 0 &lt;-&gt; x = -1/2.
+Proof.
+  intro x.
+  split.
+  * intro h.
+    apply (f_equal (fun t =&gt; t - 1)) in h.
+    field_simplify in h.
+    apply (f_equal (fun t =&gt; t/2)) in h.
+    field_simplify in h.
+    exact h.
+  * intro h. rewrite h. field.
+Qed.
+</pre>
+
+</body>
+</html>

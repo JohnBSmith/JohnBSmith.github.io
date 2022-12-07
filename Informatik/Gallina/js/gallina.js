@@ -8,8 +8,10 @@ function isdigit(s){
 }
 
 var gallina_keyword = {
-   "Check":0, "Compute":0, "Definition":0, "Inductive":0, "Record":0,
-   "fix":0, "fun":0, "match":0, "end":0, "with":0, "forall":0
+    "Admitted":0, "Check":0, "Compute":0, "Defined":0, "Definition":0,
+    "end":0, "fix":0, "forall":0, "fun":0, "Goal":0, "Import":0,
+    "Inductive":0, "Local":0, "match":0, "Open":0, "Proof":0, "Qed":0,
+    "Record":0, "Require":0, "Scope":0, "Theorem":0, "with":0
 };
 
 function node_syntax(s){

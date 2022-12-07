@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Gleichheit</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Gleichheit</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Grundgesetze">Grundgesetze</a>
+  <ol>
+  <li><a href="#Reflexivitaet">Reflexivität</a>
+  <li><a href="#Symmetrie">Symmetrie</a>
+  <li><a href="#Transitivitaet">Transitivität</a>
+  <li><a href="#Ersetzungsregel">Ersetzungsregel</a>
+  </ol>
+<li><a href="#Identitaeten">Identitäten</a>
+<li><a href="#Umformung">Umformung</a>
+<li><a href="#Aussagen">Gleichheit von Aussagen</a>
+  <ol>
+  <li><a href="#Aequivalenz">Von der Gleichheit zur Äquivalenz</a>
+  <li><a href="#Extensionalitaet">Extensionalitätsprinzip für Aussagen</a>
+  </ol>
+<li><a href="#Leibniz">Die leibnizsche Charakterisierung</a>
+</ol>
+
+<h2 id="Grundgesetze">Grundgesetze</h2>
+
+<h3 id="Reflexivitaet">Reflexivität</h3>
+
+<p>Das Axiom der Reflexivität besagt, dass jeder Term sich selbst
+gleich ist. Es wird durch die Funktion <code>eq_refl</code> vermittelt.
+Man wendet sie auf einen Term an, um den Beweisterm der Gleichheit
+zu sich selbst zu erhalten.
+
+<pre class="ibox gallina">
+Goal 0 = 0.
+Proof.
+  assert (e := eq_refl 0).
+  exact e.
+Qed.
+
+Goal exists n: nat, n = n.
+Proof.
+  exists 0.
+  exact (eq_refl 0).
+Qed.
+</pre>
+
+<p>Man erhält mit der Reflexivität nicht nur die Gleichheit
+von Atomen zu sich selbst, auch die beliebiger Terme zu sich selbst.
+Beispielsweise:
+
+<pre class="ibox gallina">
+Goal forall (X Y: Type) (f: X -&gt; Y) (x: X),
+  (f x) = (f x).
+Proof.
+  intros X Y. intro f. intro x.
+  assert (e := eq_refl (f x)).
+  exact e.
+Qed.
+</pre>
+
+<p>Reflexivität für sich allein bleibt langweilig. Interessante
+Folgerungen ergeben sich erst im Zusammenspiel mit weiteren Regeln.
+
+<h3 id="Symmetrie">Symmetrie</h3>
+
+<p>Vermittels der Symmetrie lässt sich eine Hypothese folgendermaßen
+transformieren:
+
+<pre class="ibox gallina">
+Goal forall a b: Type, a = b -&gt; b = a.
+Proof.
+  intros a b. intro h.
+  apply eq_sym in h.
+  exact h.
+Qed.
+</pre>
+
+<p>Möchte man einen neuen Bezeichner haben, geht man stattdessen
+so vor:
+
+<pre class="ibox gallina">
+Goal forall a b: Type, a = b -&gt; b = a.
+Proof.
+  intros a b. intro eqab.
+  assert (eqba := eq_sym eqab).
+  exact eqba.
+Qed.
+</pre>
+
+<p>Rückwärtsschließen ist hier ebenfalls möglich:
+
+<pre class="ibox gallina">
+Goal forall a b: Type, a = b -&gt; b = a.
+Proof.
+  intros a b. intro h.
+  apply eq_sym. exact h.
+Qed.
+</pre>
+
+<h3 id="Transitivitaet">Transitivität</h3>
+
+<p>Die Funktion <code>eq_trans</code> vermittelt das Transitivgesetz.
+Sie wird auf die Beweisterme der beiden Gleichungen angewendet, um
+den Beweisterm der dritten Gleichung zu erhalten.
+
+<pre class="ibox gallina">
+Goal forall a b c: Type, a = b /\ b = c -&gt; a = c.
+Proof.
+  intros a b c. intro h. destruct h as (eqab, eqbc).
+  assert (eqac := eq_trans eqab eqbc).
+  exact eqac.
+Qed.
+</pre>
+
+<h3 id="Ersetzungsregel">Ersetzungsregel</h3>
+
+<p>Hat man eine Gleichung <var>x</var>&nbsp;=&nbsp;<var>y</var>
+und zu einem Prädikat <var>P</var> die Aussage <var>P</var>(<var>x</var>),
+darf in der Aussage <var>x</var> durch <var>y</var> ersetzt
+werden, womit man <var>P</var>(<var>y</var>) erhält.
+
+<p>Als Schlussregel dargestellt lautet sie:
+
+<pre class="proof indent">
+Γ ⊢ x = y    Γ' ⊢ P(x)
+──────────────────────
+     Γ, Γ' ⊢ P(y)
+</pre>
+
+<p>Man spricht auch von der <i>Beseitigung der Gleichheit</i>,
+oder dem <i>Induktionsprinzip der Gleichheit</i>. Kodiert ist es durch
+die Funktion <code>eq_ind</code>. Ihre Typsignatur 
+
+<pre class="ibox gallina">
+eq_ind: forall (X: Type) (x: X) (P: X -&gt; Prop),
+  P x -&gt; forall y, x = y -&gt; P y
+</pre>
+
+<p>darf man als ein wenig kompliziert bezeichnen. Man sollte bereits
+vorher wissen, was erreicht werden soll, sonst droht der Verlust von
+Überblick. Zumal ist die Reihenfolge der Argumente eine andere als
+die der klassischen Theorie. Wir können die Argumente allerdings
+mühelos in die übliche Reihenfolge bringen:
+
+<pre class="ibox gallina">
+Theorem replacement (X: Type) (x y: X) (P: X -&gt; Prop):
+  x = y -&gt; P x -&gt; P y.
+Proof.
+  intro eqxy. intro hx.
+  exact (eq_ind x P hx y eqxy).
+Qed.
+</pre>
+
+<p>Ist die Ersetzungsregel vorhanden, stellt die Symmetrie ein
+redundantes Axiom dar. Mit <code>eq_ind</code> findet sich nämlich:
+
+<pre class="ibox gallina">
+Theorem eq_sym (A: Type) (x y: A):
+  x = y -&gt; y = x.
+Proof.
+  intro h.
+  exact (eq_ind x (fun t =&gt; t = x) (eq_refl x) y h).
+Qed.
+</pre>
+
+<p>Die Transitivität ist ebenfalls redundant:
+
+<pre class="ibox gallina">
+Theorem eq_trans (A: Type) (x y z: A):
+  x = y /\ y = z -&gt; x = z.
+Proof.
+  intro h. destruct h as (eqxy, eqyz).
+  assert (f := eq_ind y (fun t =&gt; t = z) eqyz x).
+  simpl in f.
+  exact (f (eq_sym eqxy)).
+Qed.
+</pre>
+
+<h2 id="Identitaeten">Identitäten</h2>
+
+<p>Sind zwei Funktionen <var>f</var>,&nbsp;<var>g</var> gleich,
+muss auch <var>f</var>(<var>x</var>)&nbsp;=&nbsp;<var>g</var>(<var>x</var>)
+für jedes Argument <var>x</var> gelten. Um dies zu bestätigen,
+muss man ein wenig um die Ecke denken. Nämlich ist die Applikation
+einer Funktion auf ein festes <var>x</var>, also
+<var>φ</var>&nbsp;↦&nbsp;<var>φ</var>(<var>x</var>), selbst wieder
+eine Funktion, die sich vermittels <code>f_equal</code> auf beide
+Seiten der Gleichung anwenden lässt.
+
+<pre class="ibox gallina">
+Goal forall (X Y: Type) (f g: X -&gt; Y) (x: X),
+  f = g -&gt; (f x) = (g x).
+Proof.
+  intros X Y. intros f g. intro x.
+  intro h.
+  assert (e := f_equal (fun phi => phi x) h).
+  simpl in e.
+  exact e.
+Qed.
+</pre>
+
+<p>Die genutzte Funktion <code>f_equal</code> ist aus den
+Axiomen <code>eq_refl</code> und <code>eq_ind</code> herleitbar.
+Es findet sich:
+
+<pre class="ibox gallina">
+Theorem f_equal (A B: Type) (f: A -&gt; B) (x y: A):
+  x = y -&gt; f x = f y.
+Proof.
+  intro h.
+  assert (e := eq_refl (f x)).
+  exact (eq_ind x (fun y =&gt; f x = f y) e y h).
+Qed.
+</pre>
+
+<h2 id="Umformung">Umformung</h2>
+
+<p>Die Umformung der linken Seite in die rechte:
+
+<pre class="ibox gallina">
+Require Import Coq.Arith.PeanoNat.
+
+Theorem double (x: nat): 2*x = x + x.
+Proof.
+  rewrite Nat.mul_succ_l.
+  rewrite Nat.mul_1_l.
+  reflexivity.
+Qed.
+
+Theorem square (x: nat): x^2 = x*x.
+Proof.
+  rewrite Nat.pow_succ_r.
+  rewrite Nat.pow_succ_r.
+  rewrite Nat.pow_0_r.
+  rewrite Nat.mul_1_r.
+  reflexivity.
+  exact (le_n 0).
+  assert (f := le_S 0 0).
+  exact (f (le_n 0)).
+Qed.
+
+Theorem erste_binomische_Formel (a b: nat):
+  (a + b)^2 = a^2 + 2*a*b + b^2.
+Proof.
+  rewrite square.
+  rewrite Nat.mul_add_distr_l.
+  rewrite Nat.mul_add_distr_r.
+  rewrite Nat.mul_add_distr_r.
+  rewrite (Nat.mul_comm b a).
+  rewrite &lt;- Nat.add_assoc.
+  rewrite (Nat.add_assoc (a*b)).
+  rewrite &lt;- Nat.mul_add_distr_l.
+  rewrite &lt;- double.
+  rewrite Nat.mul_assoc.
+  rewrite (Nat.mul_comm a 2).
+  rewrite Nat.add_assoc.
+  rewrite &lt;- square.
+  rewrite &lt;- square.
+  reflexivity.
+Qed.
+</pre>
+
+<p>Alternativ die Umformung der rechten Seite in die linke:
+
+<pre class="ibox gallina">
+Theorem erste_binomische_Formel (a b: nat):
+  (a + b)^2 = a^2 + 2*a*b + b^2.
+Proof.
+  rewrite (square a).
+  rewrite (square b).
+  rewrite &lt;- (Nat.mul_assoc 2 a b).
+  rewrite double.
+  rewrite Nat.add_assoc.
+  rewrite &lt;- Nat.mul_add_distr_l.
+  rewrite &lt;- Nat.add_assoc.
+  rewrite &lt;- Nat.mul_add_distr_r.
+  rewrite (Nat.mul_comm (a + b) b).
+  rewrite &lt;- Nat.mul_add_distr_r.
+  rewrite &lt;- square.
+  reflexivity.
+Qed.
+</pre>
+
+<p>Es wurden bereits einzelne Fähigkeiten von Computeralgebrasystemen
+geschaffen. Mit der Taktik <code>ring</code> lassen sich
+Polynome vereinfachen und Gleichungen zwischen Polynomen lösen.
+Hiermit erhält man eine weitgehende Automatisierung.
+
+<pre class="ibox gallina">
+Require Import Coq.Arith.Arith.
+
+Theorem square (x: nat): x^2 = x*x.
+Proof.
+  rewrite Nat.pow_succ_r.
+  rewrite Nat.pow_succ_r.
+  rewrite Nat.pow_0_r.
+  ring. auto. auto.
+Qed.
+
+Theorem erste_binomische_Formel (a b: nat):
+  (a + b)^2 = a^2 + 2*a*b + b^2.
+Proof.
+  repeat rewrite square.
+  ring.
+Qed.
+</pre>
+
+<p>Die Variante für ganze Zahlen schließt die Verarbeitung
+von Potenzen mit ein.
+
+<pre class="ibox gallina">
+Require Import ZArith.
+Local Open Scope Z_scope.
+
+Theorem erste_binomische_Formel (a b: Z):
+  (a + b)^2 = a^2 + 2*a*b + b^2.
+Proof.
+  ring.
+Qed.
+</pre>
+
+<h2 id="Leibniz">Die leibnizsche Charakterisierung</h2>
+
+<pre class="ibox gallina">
+Theorem eq_from_uq_cond (X: Type) (x y: X):
+  (forall (P: X -&gt; Prop), P x -&gt; P y) -&gt; x = y.
+Proof.
+  intro h.
+  assert (f := h (fun t =&gt; t = x)). simpl in f.
+  exact (eq_sym (f (eq_refl x))).
+  Print eq_rec.
+Qed.
+
+Theorem Leibniz_characterisation (X: Type) (x y: X):
+  x = y &lt;-&gt; (forall (P: X -&gt; Prop), P x &lt;-&gt; P y).
+Proof.
+  split.
+  * intro h. intro P.
+    apply (f_equal P) in h.
+    exact (eq_implies_bicond (P x) (P y) h).
+  * intro h. apply eq_from_uq_cond.
+    intro P. exact (proj1 (h P)).
+Qed.
+</pre>
+
+<h2 id="Aussagen">Gleichheit von Aussagen</h2>
+
+<h3 id="Aequivalenz">Von der Gleichheit zur Äquivalenz</h3>
+
+<p>Wir zeigen zunächst, dass die Gleichheit zweier Aussagen
+ihre Äquivalenz impliziert. Dieser Umstand lässt sich aus
+der Ersetzungsregel
+
+<pre class="proof indent">
+Γ ⊢ x = y    Γ' ⊢ P(x)
+──────────────────────
+     Γ, Γ' ⊢ P(y)
+</pre>
+
+<p>schlussfolgern. Mit ihr findet sich nämlich:
+
+<pre class="proof indent">
+Γ ⊢ A = B    ⊢ A ⇒ A    Γ ⊢ A = B    ⊢ B ⇒ B
+────────────────────    ────────────────────
+     Γ ⊢ A ⇒ B               Γ ⊢ B ⇒ A
+     ─────────────────────────────────
+                 Γ ⊢ A ⇔ B
+</pre>
+
+<p>Die Implementierung hierzu ist:
+
+<pre class="ibox gallina">
+Theorem cond_refl (A: Prop): A -&gt; A.
+Proof.
+  intro h. exact h.
+Qed.
+
+Theorem eq_implies_bicond (A B: Prop):
+  (A = B) -&gt; (A &lt;-&gt; B).
+Proof.
+  intro h.
+  split.
+  * exact (eq_ind A (fun X =&gt; A -&gt; X) (cond_refl A) B h).
+  * exact (eq_ind B (fun X =&gt; B -&gt; X) (cond_refl B) A (eq_sym h)).
+Qed.
+</pre>
+
+<h3 id="Extensionalitaet">Extensionalitätsprinzip für Aussagen</h3>
+
+<p>Mit dem Extensionalitätsprinzip lässt sich
+die gewünschte generelle Ersetzungsregel
+herleiten:
+
+<pre class="ibox gallina">
+Definition Substitution := forall (A B: Prop) (P: Prop -&gt; Prop),
+  (A &lt;-&gt; B) -&gt; (P A &lt;-&gt; P B).
+
+Definition PropExtensionality := forall (A B: Prop),
+  (A &lt;-&gt; B) -&gt; A = B.
+
+Theorem prop_extensionality_implies_substitution:
+  PropExtensionality -> Substitution.
+Proof.
+  unfold PropExtensionality.
+  unfold Substitution.
+  intro exten. intros A B. intro P. intro e.
+  assert (eqab := exten A B e).
+  split.
+  * intro h. exact (eq_ind A P h B eqab).
+  * intro h. exact (eq_ind B P h A (eq_sym eqab)). 
+Qed.
+</pre>
+
+<p>Umgekehrt gilt, dass die generelle Ersetzungsregel bereits
+das Extensionalitätsprinzip impliziert:
+
+<pre class="ibox gallina">
+Theorem substition_implies_prop_extensionality:
+  Substitution -&gt; PropExtensionality.
+Proof.
+  unfold Substitution.
+  unfold PropExtensionality.
+  intro subs. intros A B. intro e.
+  apply eq_from_cond.
+  intro P.
+  exact (proj1 (subs A B P e)).
+Qed.
+</pre>
+
+</body>
+</html>
