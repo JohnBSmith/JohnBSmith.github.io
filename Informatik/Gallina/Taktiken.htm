@@ -14,8 +14,175 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Assistiertes-Schliessen">Assistiertes Schließen</a>
+<li><a href="#Vorwaertsschliessen">Vorwärtsschließen</a>
 <li><a href="#Definition">Definition vermittels Taktiken</a>
 </ol>
+
+<h2 id="Assistiertes-Schliessen">Assistiertes Schließen</h2>
+
+<p>Rüchwärtsschließen. Man arbeitet sich also von der Wurzel des
+Beweisbaums bis zu Blättern durch.
+
+<table class="bt indent">
+<tr><th>Regel<th>Taktik
+<tr><td>
+<pre class="proof">
+Γ ⊢ ?: A    Γ ⊢ ?: B
+────────────────────
+    Γ ⊢ ?: A∧B
+</pre>
+<td style="vertical-align: middle"><code>split</code>
+
+<tr><td>
+<pre class="proof">
+Γ, a: A, b: B ⊢ ?: C
+────────────────────
+  Γ, h: A∧B ⊢ ?: C
+</pre>
+<td style="vertical-align: middle"><code>destruct h as (a, b)</code>
+
+<tr><td>
+<pre class="proof">
+Γ, a: A ⊢ ?: B
+──────────────
+ Γ ⊢ ?: A → B
+</pre>
+<td style="vertical-align: middle"><code>intro a</code>
+
+<tr><td>
+<pre class="proof">
+Γ ⊢ f: A → B    Γ ⊢ ?: A
+────────────────────────
+        Γ ⊢ ?: B
+</pre>
+<td style="vertical-align: middle"><code>apply f</code>
+
+<tr><td>
+<pre class="proof">
+ Γ ⊢ ?: A
+──────────
+Γ ⊢ ?: A∨B
+</pre>
+<td style="vertical-align: middle"><code>left</code>
+
+<tr><td>
+<pre class="proof">
+ Γ ⊢ ?: B
+──────────
+Γ ⊢ ?: A∨B
+</pre>
+<td style="vertical-align: middle"><code>right</code>
+</table>
+
+<br>
+<table class="bt indent">
+<tr><th>Regel<th>Taktik
+<tr><td>
+<pre class="proof">
+Γ ⊢ h: A∨B    Γ, a: A ⊢ :?    Γ, b: B ⊢ :?
+──────────────────────────────────────────
+                  Γ ⊢ ?:
+</pre>
+<td style="vertical-align: middle"><code>destruct h as [a | b]</code>
+</table>
+
+<p>Kurzes Beispiel:
+
+<pre class="proof indent">
+───────────────── <small>exact a</small>
+a: A, b: B ⊢ a: A
+───────────────── <small>destruct h as (a, b)</small>
+  h: A∧B ⊢ a: A
+────────────────── <small>intro h</small>
+⊢ (h ↦ a): A∧B → A
+</pre>
+
+<p>Die Implementierung:
+
+<pre class="ibox gallina">
+Theorem projl (A B: Prop):
+  A /\ B -&gt; A.
+Proof.
+  intro h.
+  destruct h as (a, b).
+  exact a.
+Qed.
+</pre>
+
+<p>Die integrierte Entwicklungsumgebung zeigt hierbei nach jedem
+Schritt die verbleibenden Ziele und die vorhandenen Antezedenzen
+an.
+
+<h2 id="Vorwaertsschliessen">Vorwärtsschließen</h2>
+
+<p>Beim Rückwärtsschließen führt man verbleibende Ziele bei
+einfacheren Teilbeweisen schrittweise auf Unterziele zurück.
+
+
+<pre class="ibox gallina">
+Theorem contraposition (A B: Prop):
+  (A -> B) -> (~B -> ~A).
+Proof.
+  (* unfold not. *)
+  intro h. intro nb. intro a.
+  apply nb. apply h. exact a.
+Qed.
+</pre>
+
+<p>In der integrierten Entwicklungsumgebung sieht man den folgenden
+Verlauf der verbleibenden Ziele:
+
+<div style="overflow: auto">
+<table class="bt" style="white-space: nowrap">
+<tr><th>Kontext<th>Verbleibendes Ziel<th>Nächste Taktik
+<tr><td>leer (<code>A, B: Prop</code>)
+  <td><code>(A → B) → ¬B → ¬A</code><td><code>intro h</code>
+<tr><td><code>h: A → B</code><td><code>¬B → ¬A</code><td><code>intro nb</code>
+<tr><td><code>h: A → B</code>, <code>nb: ¬B</code><td><code>¬A</code><td><code>intro a</code>
+<tr><td><code>h: A → B</code>, <code>nb: ¬B</code>, <code>a: A</code><td><code>⊥</code><td><code>apply nb</code>
+<tr><td><code>h: A → B</code>, <code>nb: ¬B</code>, <code>a: A</code><td><code>B</code><td><code>apply h</code>
+<tr><td><code>h: A → B</code>, <code>nb: ¬B</code>, <code>a: A</code><td><code>A</code><td><code>exact a</code>
+</table>
+</div>
+
+<p>Die Taktik <code>assert</code> ermöglicht es nun, innerhalb des
+Rückwärtsschließens abschnittsweise ein Vorwärtsschließen zu vollführen.
+Dies geschieht, indem einem neuen Bezeichner ein Term zugewiesen wird,
+den man mit den im Kontext vorhandenen Variablen konstruiert. Der
+Bezeichner steht daraufhin ebenfalls als Variable im Kontext zur
+Verfügung. Der Vorgang läuft also gleichermaßen ab, wie die Zuweisung
+in der Programmierung.
+
+<pre class="ibox gallina">
+Theorem contraposition (A B: Prop):
+  (A -> B) -&gt; (~B -> ~A).
+Proof.
+  intro h. intro nb. intro a.
+  assert (b := h a).
+  assert (contradiction := nb b).
+  exact contradiction.
+Qed.
+</pre>
+
+<p>Die Konstruktion des Terms lässt sich auch in einem Rutsch bewältigen:
+
+<pre class="ibox gallina">
+  intro h. intro nb. intro a.
+  exact (nb (h a)).
+</pre>
+
+<p>Oder man gibt auf Anhieb den gesamten Beweisterm an:
+
+<pre class="ibox gallina">
+  exact (fun h nb a =&gt; nb (h a)).
+</pre>
+
+<p>Zum Vergleich die Zuweisung:
+
+<pre class="ibox gallina">
+fun h nb a => let b := h a in nb b
+</pre>
 
 <h2 id="Definition">Definition vermittels Taktiken</h2>
 

@@ -398,7 +398,7 @@ Es gibt differenzierbare Funktionen, die nicht überall lokal
 Lipschitz"=stetig sind.
 \end{Satz}
 \begin{Beweis}
-Aus Satz \ref{diff-bounded-Lipschitz-cont} ergibt sich also
+Aus Satz \ref{diff-bounded-Lipschitz-cont} ergibt sich als
 Kontraposition, dass eine Funktion mit unbeschränkter Ableitung
 nicht Lipschitz"=stetig sein kann.
 
@@ -468,6 +468,68 @@ $[0,1]\subseteq f([a,b])$ laut dem Zwischenwertsatz. Infolge findet sich
 wobei (1) laut Satz \ref{img-subseteq} und (2) laut Satz
 \ref{img-chain} gilt. Die Aussage $\R\subseteq [a,b]$ ist aber
 absurd. Widerspruch zur Annahme.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Funktion $f\colon\R\to\R$ mit $f(x):=ax+b$ ist stetig.
+\end{Satz}
+\begin{Beweis}
+Zunächst unternimmt man die Termumformung
+\[|f(x)-f(x_0)| = |ax-ax_0| = |a|\cdot |x-x_0|.\]
+Laut Definition der Stetigkeit ist ein $\delta>0$ ausfindig zu machen,
+mit dem die Ableitung von
+\[\varepsilon>0, |x-x_0|<\delta\vdash |a|\cdot |x-x_0|<\varepsilon\]
+gelingt. Im Fall $a=0$ reduziert sich die Sukzedenz zu
+$0<\varepsilon$, was ja gegeben ist. Im Fall $a\ne 0$ gelangt man nun
+durch äquivalente Umformung der Sukzedenz zu
+$|x-x_0| < \frac{\varepsilon}{|a|}$.
+Es darf also $\delta:=\frac{\varepsilon}{|a|}$ gesetzt werden.
+Da die Umformung eine äquivalente war, darf sie rückgängig gemacht
+werden, was zur gewünschten Aussage führt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $a$ eine Konstante. Ist eine Funktion $f\colon\R\to\R$ an einer
+Stelle stetig, dann ist auch $x\mapsto af(x)$ an dieser Stelle stetig.
+\end{Satz}
+\begin{Beweis}
+Man unternimmt die Termumformung
+\[|af(x)-af(x_0)| = |a|\cdot |f(x)-f(x_0)|.\]
+Laut Definition ist somit ein $\delta>0$ zu finden, mit dem sich
+\[f\;\text{stetig in}\;x_0,\varepsilon>0,|x-x_0|<\delta\vdash |a|\cdot |f(x)-f(x_0)|<\varepsilon\]
+bestätigt. Im Fall $a=0$ ist dies trivial. Sei also $a\ne 0$.
+Aus $\varepsilon>0$ folgt nun $\tfrac{\varepsilon}{|a|}>0$. Laut Definition gilt zudem
+\[\forall\varepsilon'>0\colon\exists\delta>0\colon\forall x\colon |x-x_0|<\delta\to |f(x)-f(x_0)|<\varepsilon'.\]
+Mit der Spezialisierung $\varepsilon':=\tfrac{\varepsilon}{|a|}$ erhält
+man nun einen gewünschten Zeugen $\delta$. Mit $|x-x_0|<\delta$ folgt
+daraufhin $|f(x)-f(x_0)|<\tfrac{\varepsilon}{|a|}$ per Modus ponens.
+Äquivalente Umformung führt schließlich zur gewünschten Aussage
+$|a|\cdot |f(x)-f(x_0)|<\varepsilon$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sind $f,g$ stetig in einer Stelle, so auch $x\mapsto f(x)+g(x)$.
+\end{Satz}
+\begin{Beweis}
+Es ist ein $\delta>0$ zu finden, mit dem
+\[f,g\;\text{stetig in}\;x_0,\varepsilon>0,\|x-x_0\|<\delta\vdash
+\|(f(x)+g(x))-(f(x_0)+g(x_0))\|<\varepsilon\]
+bestätigt werden kann. Gegeben ist
+\begin{gather*}
+\forall\varepsilon'\;>0\colon\exists\delta'\;>0\colon\forall x\colon \|x-x_0\|<\delta'\;\to \|f(x)-f(x_0)\|<\varepsilon',\\
+\forall\varepsilon''>0\colon\exists\delta''>0\colon\forall x\colon \|x-x_0\|<\delta''\to \|g(x)-g(x_0)\|<\varepsilon''.
+\end{gather*}
+Man spezialisiere $\varepsilon':=\frac{\varepsilon}{2}$ und
+$\varepsilon'':=\frac{\varepsilon}{2}$. Man wähle nun
+$\delta:=\min(\delta',\delta'')$. Dann impliziert $\|x-x_0\|<\delta$
+sowohl $\|x-x_0\|<\delta'$ als auch $\|x-x_0\|<\delta''$. Per Modus ponens
+erhält man also $\|f(x)-f(x_0)\|<\varepsilon'$ und $\|g(x)-g(x_0)\|<\varepsilon''$.
+Mit diesen findet sich
+\begin{align*}
+\|(f(x)+g(x))-(f(x_0)+g(x_0))\| &= \|f(x)-f(x_0)+g(x)-g(x_0)\|\\
+&\stackrel{\text{(1)}}\le \|f(x)-f(x_0)\|+\|g(x)-g(x_0)\| < \varepsilon'+\varepsilon'' = \varepsilon,
+\end{align*}
+wobei für (1) die Dreiecksungleichung zur Anwendung kam.\,\qedsymbol
 \end{Beweis}
 
 \newpage
@@ -848,4 +910,74 @@ anschließende Umformung nach $|z|$ resultiert in
 Die Abschätzung (1) gilt gemäß der Dreiecksungleichung. Die
 Abschätzung (2) gilt aufgrund $|a_k|\le m$ für jedes $k$. Gleichung
 (3) gilt, weil die Maximumsfunktion positiv homogen ist.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\section{Spezielle Funktionen}
+\subsection{Gammafunktion}
+
+\begin{Definition}[Gammafunktion]
+Für $x>0$ definiert man
+\[\Gamma(x) := \int_0^\infty t^{x-1}\ee^{-t}\,\mathrm dt.\]
+\end{Definition}
+
+\begin{Satz}
+Die Gammafunktion ist wohldefiniert.
+\end{Satz}
+\begin{Beweis}
+Es ist zu bestätigen, dass das Integral, durch das $\Gamma(x)$ definiert
+wurde, für $x>0$ existiert. Zu beachten ist hierbei, dass es
+für $x<1$ ebenfalls bezüglich der unteren Grenze ein uneigentliches ist.
+Wir trennen es daher bezüglich der Stelle $t=1$ in zwei Summanden auf.
+Man hat also
+\[\Gamma(x) = I_1 + I_2 = \int_0^1 t^{x-1}\ee^{-t}\,\mathrm dt +
+\int_1^\infty t^{x-1}\ee^{-t}\,\mathrm dt.\]
+Wir haben nun
+\[\lim_{t\searrow 0} \frac{t^{x-1}\ee^{-t}}{t^{x-1}}
+= \lim_{t\searrow 0}\ee^{-t} = 1.\]
+Somit besitzt $I_1$ laut dem
+Grenzwertkriterium für uneigentliche Integrale dasselbe
+Konvergenzverhalten wie $\int_0^1 t^{x-1}\,\mathrm dt$, das für
+$x>0$ konvergiert. Außerdem haben wir
+\[\lim_{t\to\infty}\frac{t^{x-1}\ee^{-t}}{1/t^2}
+= \lim_{t\to\infty} t^{x+1}\ee^{-t} = 0.\]
+Laut dem Grenzwertkriterium muss $I_2$ also für alle $x\in\R$
+konvergieren, da das Integral $\int_1^\infty \frac{1}{t^2}\,\mathrm dt$
+konvergent ist.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Gamma-funceq}
+Die Gammafunktion genügt der Funktionalgleichung
+$\Gamma(x+1)=x\Gamma(x)$.
+\end{Satz}
+\begin{Beweis}
+Man rechnet die partielle Integration
+\[\Gamma(x+1) = \int_0^\infty t^x\,\ee^{-t}\,\mathrm dt =
+[-t^x\ee^{-t}]_{t=0}^\infty + x\int_0^\infty t^{x-1}\ee^{-t}\,\mathrm dt
+= 0 + x\Gamma(x).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $n! = \Gamma(n+1) \stackrel{\text{def}}= \int_0^\infty t^n\,\ee^{-t}\,\mathrm dt$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ bestätigt man $\Gamma(1)=1=0!$
+mühelos. Im Induktionsschritt rechnet man
+\[\Gamma(n+1) \stackrel{\text{(1)}}= n\Gamma(n)
+\stackrel{\mathrm{IV}}= n(n-1)! \stackrel{\text{(2)}}= n!,\]
+wobei (1) gemäß Satz \ref{Gamma-funceq} und (2) laut Definition
+\ref{def:factorial} gilt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $n! = \int_0^1 \ln\big(\frac{1}{x}\big)^n\,\mathrm dx$.
+\end{Satz}
+\begin{Beweis}
+Per Substitution $\ln(1/x)=t$ erhält man
+\[
+\lim_{a\to 0}\int_a^1 \ln\big(\tfrac{1}{x}\big)^n\,\mathrm dx
+= \lim_{a\to 0}\int_{\ln(1/a)}^0 -t^n\ee^{-t}\,\mathrm dt
+= \int_\infty^0 -t^n\ee^{-t}\,\mathrm dt = \int_0^\infty t^n\ee^{-t}\,\mathrm dt
+= n!.\,\qedsymbol
+\]
 \end{Beweis}

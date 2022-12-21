@@ -1434,6 +1434,143 @@ Sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
 \]
 \end{Beweis}
 
+\section{Metatheorie der Logik}
+\subsection{Klassische Aussagenlogik}
+
+\begin{Definition}[Ableitbare Formel]\newlinefirst
+Eine Theorie sei eine beliebige Menge von Formeln.
+Es sei $T$ eine Theorie. Wir nennen eine Formel $\varphi$ ableitbar aus
+$T$, kurz $T\vdash\varphi$, wenn es eine endliche Teilmenge
+$\Gamma\subseteq T$ gibt, so dass die Sequenz $\Gamma\succ\varphi$
+ableitbar ist.
+\end{Definition}
+\begin{Satz}\label{derivable-iff}
+Sei $\Gamma$ endlich. Es gilt $\Gamma\vdash\varphi$ genau dann,
+wenn $\Gamma\succ\varphi$ ableitbar ist, kurz
+\[(\Gamma\vdash\varphi) \iff (\vdash \Gamma\succ\varphi).\]
+\end{Satz}
+\begin{Beweis}
+Es gelte $\Gamma\vdash\varphi$. Somit existiert
+$\Gamma'\subseteq\Gamma$ mit $\Gamma'\succ\varphi$.
+Per Abschwächungsregel erhält man $\Gamma\succ\varphi$.
+
+Es sei umgekehrt $\Gamma\succ\varphi$ ableitbar. Man wähle schlicht
+$\Gamma\subseteq\Gamma$ als Zeuge für die endliche Teilmenge.
+Es folgt $\Gamma\vdash\varphi$.\,\qedsymbol
+\end{Beweis}
+\begin{Satz}
+Es gilt $\vdash\varphi$ genau dann, wenn $\vdash\succ\varphi$.
+\end{Satz}
+\begin{Beweis}
+Korollar zu Satz \ref{derivable-iff} mit $\Gamma=\emptyset$.
+\end{Beweis}
+
+\begin{Definition}[Klassische Semantik]\label{def:sat}\newlinefirst
+Sei $V$ die Menge der Variablen. Sei $I\colon V\to\{0,1\}$ eine
+Belegung mit Wahrheitswerten. Man definiert $I\models\varphi$,
+sprich »$I$ erfüllt $\varphi$«, rekursiv als
+\begin{align*}
+(I\models v) &\iff I(v),\\
+(I\models\neg\varphi) &\iff \neg (I\models\varphi),\\
+(I\models \varphi\land\psi) &\iff (I\models\varphi)\land (I\models\psi),\\
+(I\models \varphi\lor\psi) &\iff (I\models\varphi)\lor (I\models\psi),\\
+(I\models \varphi\Rightarrow\psi) &\iff (I\models\varphi)\Rightarrow (I\models\psi),\\
+(I\models \varphi\Leftrightarrow\psi) &\iff (I\models\varphi)\Leftrightarrow (I\models\psi),
+\end{align*}
+wobei der jeweilige Junktor der rechten Seite per Wahrheitstafel
+definiert ist.
+\end{Definition}
+\begin{Definition}\label{def:sat-context}
+Man definiert außerdem noch die Abküzrung
+\[(I\models\{\varphi_1,\ldots,\varphi_n\})
+\defiff (I\models\varphi_1)\land\ldots\land (I\models\varphi_n).\]
+\end{Definition}
+
+\newpage
+\begin{Definition}[Gültigkeit --- klassische Aussagenlogik]%
+\label{def:valid}\newlinefirst
+Man nennt eine Formel $\varphi$ gültig im Kontext $\Gamma$,
+wenn sie erfüllt ist, sofern sämtliche Formeln des Kontextes
+erfüllt sind. Kurz
+\[(\Gamma\models\varphi) \defiff \forall I\colon
+(I\models\Gamma) \Rightarrow (I\models\varphi).\]
+\end{Definition}
+
+\begin{Satz}[Korrektheit des natürlichen Schließens]\newlinefirst
+Aus $\Gamma\vdash\varphi$ folgt $\Gamma\models\varphi$.
+\end{Satz}
+\begin{Beweis}
+Strukturelle Induktion über die Konstruktion von Beweisen.
+Zu bestätigen ist zunächst das Axiom der
+Grundsequenzen als Induktionsanfang. Des Weiteren ist die
+Abschwächungsregel zu verifizieren.
+
+\begin{tabular}{l@{\qquad\quad}l}
+\strong{Zu den Grundsequenzen} & \strong{Zur Abschwächungsregel}\\[2pt]
+$\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\cup\{\varphi\}\models\varphi}{
+  \infer[\infernote{$\sim$1}]{(I\models\Gamma\cup\{\varphi\})\Rightarrow (I\models\varphi)}{
+    \infer{I\models\varphi}{
+      \infer[\infernote{Def. \ref{def:sat-context}}]{(I\models\Gamma)\land (I\models\varphi)}{
+        \infer[\infernote{1}]{I\models\Gamma\cup\{\varphi\}}{}}}}}$
+&
+$\infer[\infernote{$\sim$1}]{(\Gamma\models\varphi)\Rightarrow (\Gamma\cup\{\psi\}\models\varphi)}{
+  \infer[\infernote{$\sim$2, Def. \ref{def:valid}}]{\Gamma\cup\{\psi\}\models\varphi}{
+    \infer{I\models\varphi}{
+      \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\Rightarrow (I\models\varphi)}{
+        \infer[\infernote{1}]{\Gamma\models\varphi}{}}
+    & \infer[\infernote{Def. \ref{def:sat-context}}]{I\models\Gamma}{
+        \infer[\infernote{2}]{I\models\Gamma\cup\{\psi\}}{}}}}}$
+\end{tabular}
+
+\noindent
+Nun zu den Schlussregeln für die Junktoren.
+
+\begin{tabular}{l}
+\strong{Zur Einführung der Konjunktion}\\[2pt]
+$\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\models\varphi\land\psi}{
+  \infer[\infernote{$\sim$1}]{(I\models\Gamma)\Rightarrow (I\models\varphi\land\psi)}{
+    \infer[\infernote{Def. \ref{def:sat}}]{I\models\varphi\land\psi}{
+      \infer{(I\models\varphi)\land (I\models\psi)}{
+        \infer{I\models\varphi}{
+          \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\Rightarrow (I\models\varphi)}{
+            \Gamma\models\varphi}
+        & \infer[\infernote{1}]{I\models\Gamma}{}}
+      & \infer{I\models\psi}{
+          \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\Rightarrow (I\models\psi)}{
+            \Gamma\models\psi}
+        & \infer[\infernote{1}]{I\models\Gamma}{}}}}}}$
+\end{tabular}
+
+\begin{tabular}{l@{\qquad}l}
+\strong{Zur Beseitigung der Konjunktion}
+& \strong{Zur Einführung der Implikation}\\[2pt]
+$\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\models\varphi}{
+  \infer[\infernote{$\sim$1}]{(I\models\Gamma)\Rightarrow (I\models\varphi)}{
+    \infer{I\models\varphi}{
+      \infer[\infernote{Def. \ref{def:sat}}]{(I\models\varphi)\land (I\models\psi)}{
+        \infer{I\models\varphi\land\psi}{
+          \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\Rightarrow (I\models\varphi\land\psi)}{
+            \Gamma\models\varphi\land\psi}
+        & \infer[\infernote{1}]{I\models\Gamma}{}}}}}}$
+&
+$\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\models\varphi\Rightarrow\psi}{
+  \infer[\infernote{$\sim$1}]{(I\models\Gamma)\Rightarrow (I\models\varphi\Rightarrow\psi)}{
+    \infer[\infernote{Def. \ref{def:sat}}]{I\models\varphi\Rightarrow\psi}{
+      \infer[\infernote{$\sim$2}]{(I\models\varphi)\Rightarrow (I\models\psi)}{
+        \infer{I\models\psi}{
+          \infer{(I\models\Gamma\cup\{\varphi\})\Rightarrow (I\models\psi)}{
+            \Gamma\cup\{\varphi\}\models\psi}
+        & \infer{I\models\Gamma\cup\{\varphi\}}{
+            \infer[\infernote{1}]{I\models\Gamma}{}
+          & \infer[\infernote{2}]{I\models\varphi}{}}
+        }}}}}$
+\end{tabular}
+
+\noindent
+Die Bestätigung der restlichen Schlussregeln verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+
 \newpage
 \section{Mengenlehre}\index{Mengenlehre}
 \subsection{Definitionen}
