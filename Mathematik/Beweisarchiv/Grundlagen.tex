@@ -56,8 +56,8 @@ Es gilt $\Gamma,A,\Gamma'\vdash A$.
 Es gilt $\Gamma\vdash\top$.
 \end{Axiom}
 
-\begin{Axiom}[PE: Principle of explosion]%
-\label{PE}\index{Ex falso quodlibet}
+\begin{Axiom}[EFQ: Ex falso quodlibet]%
+\label{EFQ}\index{Ex falso quodlibet}
 Eine falsche Aussage impliziert jede beliebige Aussage, kurz
 \[\vdash \bot\Rightarrow A.\]
 \end{Axiom}
@@ -209,11 +209,11 @@ Es gilt die Schlussregel
 Es findet sich:
 \[\infer{\Gamma,\Gamma'\vdash B}{
   \Gamma\vdash A\lor B
-  & \infer[\infernote{PE}]{\Gamma',A\vdash B}{
+  & \infer[\infernote{EFQ}]{\Gamma',A\vdash B}{
       \infer{\Gamma',A\vdash\bot}{
         \Gamma'\vdash\neg A & \infer{A\vdash A}{}}}
   & \infer{B\vdash B}{}}\]
-Mit PE ist Axiom \ref{PE} gemeint.\,\qedsymbol
+Mit EFQ ist Axiom \ref{EFQ} gemeint.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Kettenschluss]\index{Kettenschluss}
@@ -310,21 +310,21 @@ Sie gehen aus sich hervor:
 \]
 \end{Beweis}
 
-\begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{PE} (PE)
+\begin{Satz} Die Axiome \ref{LEM} (LEM), \ref{EFQ} (EFQ)
 implizieren Axiom \ref{DNE} (DN).
 \end{Satz}
 \begin{Beweis} Es findet sich:
 \[
 \infer{\neg\neg A\vdash A}{
   \infer{\vdash\neg A\lor A}{}
-& \infer[\infernote{PE}]{\neg\neg A,\neg A\vdash A}{
+& \infer[\infernote{EFQ}]{\neg\neg A,\neg A\vdash A}{
     \infer{\neg\neg A,\neg A\vdash\bot}{
       \infer{\neg\neg A\vdash\neg\neg A}{}
     & \infer{\neg A\vdash\neg A}{}}}
 & \infer{A\vdash A}{}}
 \]
 Zu $\vdash \neg A \lor A\Rightarrow (\neg\neg A \Rightarrow A)$.
-Gemäß Axiom \ref{PE} (PE) existiert ein Zeuge $\operatorname{exfq}(A)$
+Gemäß Axiom \ref{EFQ} (EFQ) existiert ein Zeuge $\operatorname{exfq}(A)$
 für $0\to A$. Damit lässt sich der Programmterm
 \[(A\to 0) + A \to ((A\to 0)\to 0)\to A,\quad
 s\mapsto\match s\begin{cases}
@@ -549,15 +549,26 @@ in eine frische umbenannt wird.\,\qedsymbol
 Es gilt $(A\Rightarrow B)\land A \Rightarrow B$.
 \end{Satz}
 \begin{Beweis}[Beweis 1]
-Sei $\Gamma:=[(A\Rightarrow B)\land A]$. Schematisch:
-\[\infer{\vdash (A\Rightarrow B)\land A\Rightarrow B}{
-    \infer{\Gamma\vdash B}{
-      \infer{\Gamma\vdash A\Rightarrow B}{
-        \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}
-      & \infer{\Gamma\vdash A}{
-        \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}}}\]
-Programmterm:
-\[(A\to B)\times A\to B,\; (f, a)\mapsto f(a).\,\qedsymbol\]
+Zur Abkürzung sei $\Gamma:=[(A\Rightarrow B)\land A]$. Der Beweisbaum:
+\[
+\begin{array}{l@{\qquad\qquad}l}
+\infer{\vdash (A\Rightarrow B)\land A\Rightarrow B}{
+  \infer{\Gamma\vdash B}{
+    \infer{\Gamma\vdash A\Rightarrow B}{
+      \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}
+  & \infer{\Gamma\vdash A}{
+      \infer{\Gamma\vdash (A\Rightarrow B)\land A}{}}}}
+&
+\infer[\infernote{$\sim$1}]{(A\Rightarrow B)\land A\Rightarrow B}{
+  \infer{B}{
+    \infer{A\Rightarrow B}{
+      \infer[\infernote{1}]{(A\Rightarrow B)\land A}{}}
+  & \infer{A}{
+      \infer[\infernote{1}]{(A\Rightarrow B)\land A}{}}}}
+\end{array}
+\]
+Der Programmterm:
+\[(A\to B)\times A\to B,\quad (f, a)\mapsto f(a).\,\qedsymbol\]
 \end{Beweis}
 
 \begin{Beweis}[Beweis 2 (LEM, boolesche Algebra)]
@@ -580,7 +591,7 @@ A\lor B \iff B\lor A.
 \end{gather*}
 \end{Satz}
 \begin{Beweis}[Beweis]
-Zu $A\land B\Rightarrow B\land A$. Schematisch:
+Zu $A\land B\Rightarrow B\land A$. Der Beweisbaum:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer{\vdash A\land B\Rightarrow B\land A}{
@@ -590,15 +601,15 @@ Zu $A\land B\Rightarrow B\land A$. Schematisch:
     & \infer{A\land B\vdash A}{
       \infer{A\land B\vdash A\land B}{}}}}
 &
-\infer[\infernote{1}]{A\land B\Rightarrow B\land A}{
+\infer[\infernote{$\sim$1}]{A\land B\Rightarrow B\land A}{
   \infer{B\land A}{
      \infer{B}{\infer[\infernote{1}]{A\land B}{}}
      & \infer{A}{\infer[\infernote{1}]{A\land B}{}}}}
 \end{array}
 \]
-Programmterm:
+Der Programmterm:
 \[A\times B\to B\times A,\quad (a,b)\mapsto (b,a).\]
-Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
+Zu $A\lor B\Rightarrow B\lor A$. Der Beweisbaum:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer{\vdash A\lor B\Rightarrow B\lor A}{
@@ -609,14 +620,14 @@ Zu $A\lor B\Rightarrow B\lor A$. Schematisch:
     & \infer{B\vdash B\lor A}{
         \infer{B\vdash B}{}}}}
 &
-\infer[\infernote{2}]{A\lor B\Rightarrow B\lor A}{
-  \infer[\infernote{1}]{B\lor A}{
+\infer[\infernote{$\sim$2}]{A\lor B\Rightarrow B\lor A}{
+  \infer[\infernote{$\sim$1}]{B\lor A}{
     \infer[\infernote{2}]{A\lor B}{}
     & \infer{B\lor A}{\infer[\infernote{1}]{A}{}}
     & \infer{B\lor A}{\infer[\infernote{1}]{B}{}}}}
 \end{array}
 \]
-Programmterm:
+Der Programmterm:
 \[A+B\to B+A,\quad s\mapsto\match s\begin{cases}
 \inl(a)\mapsto \inr(a),\\
 \inr(b)\mapsto \inl(b).
@@ -626,9 +637,9 @@ Vertauschen von $A,B$ erbringt jeweils die umgekehrte Implikation.\;\qedsymbol
 
 \begin{Satz}[Distributivgesetze]%
 \label{bool-dl}\index{Distributivgesetz!boolesche Algebra}
-Es gilt:
+Es gilt
 \begin{align*}
-A\land (B\lor C) &\iff A\land B\lor A\land C,\\
+A\land (B\lor C) &\iff (A\land B)\lor (A\land C),\\
 A\lor (B\land C) &\iff (A\lor B)\land (A\lor C).
 \end{align*}
 \end{Satz}
@@ -705,7 +716,8 @@ Es gilt
 $(A\Rightarrow B) \land (B\Rightarrow C) \Rightarrow (A\Rightarrow C)$.
 \end{Satz}
 \begin{Beweis}[Beweis]
-Sei $\Gamma:=[(A\Rightarrow B) \land (B\Rightarrow C)]$. Schematisch:
+Zur Abkürzung sei $\Gamma:=[(A\Rightarrow B) \land (B\Rightarrow C)]$.
+Beweisbaum:
 \[
 \infer{\vdash (A\Rightarrow B) \land (B\Rightarrow C) \Rightarrow (A\Rightarrow C)}{
   \infer{\Gamma\vdash A\Rightarrow C}{
@@ -721,10 +733,10 @@ Programmterm:
 (f, g)\mapsto (a\colon A)\mapsto g(f(a)).\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Satz}[Kontrapositionsableitung]\label{contrapos-intro}\newlinefirst
-Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
+\begin{Satz}[Tautologie zur Kontraposition]\label{contrapos-intro}\newlinefirst
+Es gilt $(A\Rightarrow B)\Rightarrow (\neg B\Rightarrow\neg A)$.
 \end{Satz}
-\begin{Beweis}[Beweis] Schematisch:
+\begin{Beweis}[Beweis] Beweisbaum:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer{A\Rightarrow B\vdash \neg B\Rightarrow\neg A}{
@@ -735,8 +747,8 @@ Es gilt $(A\Rightarrow B)\implies (\neg B\Rightarrow\neg A)$.
       & \infer{A\vdash A}{}}
     & \infer{\neg B\vdash\neg B}{}}}}
 &
-\infer[\infernote{2}]{\neg B\Rightarrow\neg A}{
-  \infer[\infernote{1}]{\neg A}{
+\infer[\infernote{$\sim$2}]{\neg B\Rightarrow\neg A}{
+  \infer[\infernote{$\sim$1}]{\neg A}{
     \infer{\bot}{
       \infer{B}{A\Rightarrow B & \infer[\infernote{1}]{A}{}}
     & \infer[\infernote{2}]{\neg B}{}}}}
@@ -747,8 +759,8 @@ Programmterm zu $(A\Rightarrow B)\Rightarrow (B\Rightarrow\bot)\Rightarrow (A\Ri
 f\mapsto g\mapsto (a\colon A)\mapsto g(f(a)).\,\qedsymbol\]
 \end{Beweis}
 
-\begin{Satz}[Kontraposition] \strong{[LEM]}\newlinefirst
-Es gilt $A\Rightarrow B \iff \neg B\Rightarrow\neg A$.
+\begin{Satz}[Tautologie zur klassischen Kontraposition] \strong{[LEM]}\newlinefirst
+Es gilt $(A\Rightarrow B)\Leftrightarrow (\neg B\Rightarrow\neg A)$.
 \end{Satz}
 \begin{Beweis}[Beweis 1 (LEM, boolesche Algebra)]
 Es findet sich
@@ -756,14 +768,14 @@ Es findet sich
 \equiv \neg\neg B\lor\neg A \equiv \neg B\Rightarrow \neg A.\,\qedsymbol\]
 \end{Beweis}
 \begin{Beweis}[Beweis 2 (LEM)]
-Sei $\Gamma:=[\neg B\Rightarrow\neg A]$. Schematisch
+Sei $\Gamma:=[\neg B\Rightarrow\neg A]$. Beweisbaum:
 \[
 \infer{\vdash (\neg B\Rightarrow\neg A)\Rightarrow (A\Rightarrow B)}{
   \infer{\Gamma\vdash A\Rightarrow B}{
     \infer{\Gamma,A\vdash B}{
       \infer[\infernote{LEM}]{\vdash B\lor \neg B}{}
       & \infer{B\vdash B}{}
-      & \infer[\infernote{PE}]{\Gamma,A,\neg B\vdash B}{
+      & \infer[\infernote{EFQ}]{\Gamma,A,\neg B\vdash B}{
         \infer{\Gamma,A,\neg B\vdash\bot}{
           \infer{A\vdash A}{}
           & \infer{\Gamma,\neg B\vdash\neg A}{
@@ -775,10 +787,10 @@ Die umgekehrte Richtung bestätigt Satz \ref{contrapos-intro}.\,\qedsymbol
 
 \begin{Satz}
 Axiom \ref{DNE} (DN) impliziert
-Axiom \ref{PE} (PE).
+Axiom \ref{EFQ} (EFQ).
 \end{Satz}
 \begin{Beweis}[Beweis]
-Schematisch:
+Beweisbaum:
 \[
 \begin{array}{@{}l@{\qquad\qquad}l}
 \infer[\infernote{DN}]{\bot\vdash A}{
@@ -801,7 +813,7 @@ findet sich der Programmterm
 Axiom \ref{DNE} (DN) impliziert Axiom \ref{LEM} (LEM).
 \end{Satz}
 \begin{Beweis}[Beweis]
-Sei $\Gamma:=[\neg (A\lor\neg A)]$. Schematisch:
+Sei $\Gamma:=[\neg (A\lor\neg A)]$. Beweisbaum:
 \[\infer[\infernote{DN}]{\vdash A\lor\neg A}{
   \infer{\vdash\neg\neg (A\lor\neg A)}{
     \infer{\Gamma\vdash\bot}{
@@ -931,7 +943,7 @@ Es findet sich:
   \infer{A\lor B\vdash \neg A\Rightarrow B}{
     \infer{A\lor B, \neg A\vdash B}{
       \infer{A\lor B\vdash A\lor B}{}
-    & \infer[\infernote{PE}]{\neg A, A\vdash B}{
+    & \infer[\infernote{EFQ}]{\neg A, A\vdash B}{
         \infer{\neg A, A\vdash\bot}{
           \infer{\neg A\vdash\neg A}{}
         & \infer{A\vdash A}{}}}
@@ -942,9 +954,9 @@ Programmterm zu $A\lor B\Rightarrow (A\Rightarrow\bot)\Rightarrow B$:
 \inl(a)\mapsto \operatorname{exfq}(B)(f(a)),\\
 \inr(b)\mapsto b
 \end{cases}\]
-Der Schluss PE bzw. die Verfügbarkeit von
+Der Schluss EFQ bzw. die Verfügbarkeit von
 $\operatorname{exfq}(B)\colon 0\to B$
-gilt gemäß Axiom \ref{PE}.\,\qedsymbol
+gilt gemäß Axiom \ref{EFQ}.\,\qedsymbol
 \end{Beweis}
 
 \newpage
@@ -1039,6 +1051,82 @@ Der Programmterm ist
 \end{Beweis}
 
 \newpage
+\begin{Satz}\label{xor-char1}\strong{[LEM]}
+Es gilt $A\oplus B \Leftrightarrow (\neg A\Leftrightarrow B)$.
+\end{Satz}
+\begin{Beweis}[Beweis (boolesche Algebra)]
+Es findet sich die Umformung
+\begin{align*}
+\neg A\Leftrightarrow B
+&\equiv (\neg A\Rightarrow B)\land (B\Rightarrow\neg A)
+\equiv (\neg\neg A\lor B)\land (\neg B\lor\neg A)\\
+&\equiv ((A\lor B)\land\neg B)\lor ((A\lor B)\land\neg A)
+\equiv ((A\land\neg B)\lor\bot)\lor (\bot\lor (B\land\neg A))\\
+&\equiv (A\land\neg B)\lor (B\land\neg A)
+\equiv A\oplus B.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}\label{xor-char2}\strong{[LEM]}
+Es gilt $A\oplus B \Leftrightarrow \neg (A\Leftrightarrow B)$.
+\end{Satz}
+\begin{Beweis}[Beweis (boolesche Algebra)]
+Es findet sich die Umformung
+\begin{align*}
+\neg (A\Leftrightarrow B) &\equiv
+\neg ((A\Rightarrow B)\land (B\Rightarrow A))
+\equiv \neg ((\neg A\lor B)\land (\neg B\lor A))\\
+&\equiv \neg (\neg A\lor B)\lor \neg (\neg B\lor A)
+\equiv (\neg\neg A\land\neg B)\lor (\neg\neg B\land \neg A)\\
+&\equiv (A\land\neg B)\lor (B\land\neg A) \equiv A\oplus B.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}\label{iff-assoc}\strong{[LEM]}
+Es gilt $(A\Leftrightarrow (B\Leftrightarrow C))\Leftrightarrow
+((A\Leftrightarrow B)\Leftrightarrow C)$.
+\end{Satz}
+\begin{Beweis}[Beweis (boolesche Algebra)]
+Zur Abkürzung schreiben wir $AB$ anstelle von $A\land B$,
+und $\bar A$ anstelle von $\neg A$. Für die linke Seite findet sich die
+Umformung
+\begin{align*}
+A\Leftrightarrow (B\Leftrightarrow C)
+&\equiv A\Leftrightarrow (BC \lor \bar B\bar C)
+\equiv A(BC\lor\bar B\bar C)\lor \bar A(\overline{BC\lor\bar B\bar C})\\
+&\equiv A(BC\lor\bar B\bar C)\lor \bar A(\bar B\lor \bar C)(B\lor C)
+\equiv ABC\lor A\bar B\bar C\lor \bar A\bar BC\lor\bar AB\bar C.
+\end{align*}
+Die rechte Seite formt man analog in dieselbe disjunktive Normalform
+um.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{xor3-char}\strong{[LEM]}
+Es gilt $A\oplus (B\oplus C)\Leftrightarrow (A\Leftrightarrow (B\Leftrightarrow C))$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich die Umformung
+\[A\oplus (B\oplus C)\stackrel{\text{(1)}}\equiv
+A\Leftrightarrow \neg (B\oplus C)
+\stackrel{\text{(2)}}\equiv A\Leftrightarrow\neg\neg (B\Leftrightarrow C)
+\equiv A\Leftrightarrow (B\Leftrightarrow C).\]
+Hierbei gilt (1) laut Satz \ref{xor-char1}, und (2) laut Satz
+\ref{xor-char2}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{xor-assoc}\strong{[LEM]}
+Es gilt $A\oplus (B\oplus C)\Leftrightarrow (A\oplus B)\oplus C$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich die Umformung
+\[A\oplus (B\oplus C)\stackrel{\text{(1)}}\equiv A\Leftrightarrow (B\Leftrightarrow C)
+\stackrel{\text{(2)}}\equiv (A\Leftrightarrow B)\Leftrightarrow C
+\stackrel{\text{(3)}}\equiv (A\oplus B)\oplus C.\]
+Hierbei gilt (1), (3) laut Satz \ref{xor3-char},
+und (2) laut Satz \ref{iff-assoc}.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Prädikatenlogik}\index{Praedikatenlogik@Prädikatenlogik}
 
 \begin{Definition}[Beschränkte Quantifizierung]%
@@ -1058,78 +1146,74 @@ A\lor (\forall x\colon P(x)) &\iff \forall x\colon (A\lor P(x)).
 \end{align*}
 \end{Satz}
 \begin{Beweis}[Beweis]
-Schematisch. Zur ersten Äquivalenz:
+Die Beweisbäume zur ersten Äquivalenz:
 \[\begin{array}{c@{\qquad}c}
-\infer[\infernote{1}]{\exists x\colon (A\land P(x))}{
+\infer[\infernote{$\sim$1}]{\exists x\colon (A\land P(x))}{
   \exists x\colon P(x)
 & \infer{\exists x\colon (A\land P(x))}{
     \infer{A\land P(a)}{A & \infer[\infernote{1}]{P(a)}{}}}}
 &
-\infer[\infernote{1}]{A\land\exists x\colon P(x)}{
+\infer[\infernote{$\sim$1}]{A\land\exists x\colon P(x)}{
   \exists x\colon (A\land P(x))
 & \infer{A\land \exists x\colon P(x)}{
     \infer{A}{\infer[\infernote{1}]{A\land P(a)}{}}
   & \infer{\exists x\colon P(x)}{
       \infer{P(a)}{\infer[\infernote{1}]{A\land P(a)}{}}}}}
 \end{array}\]
-Zur zweiten Äquivalenz:
+Die Beweisbäume zur zweiten Äquivalenz:
 {\small
 \[\begin{array}{c@{\quad}c}
-\infer[\infernote{1}]{\forall x\colon (A\lor P(x))}{
+\infer[\infernote{$\sim$1}]{\forall x\colon (A\lor P(x))}{
 A{\lor}(\forall x\colon P(x))
 & \infer{\forall x\colon (A{\lor}P(x))}{
     \infer{A\lor P(x)}{\infer[\infernote{1}]{A}{}}
   }
 & \infer{\forall x\colon (A{\lor}P(x))}{
     \infer{A\lor P(x)}{
-      \infer{P(x)}{\infer[\infernote{1}]{\forall x\colon P(x)}{}}
-    }
-  }
-}
+      \infer{P(x)}{\infer[\infernote{1}]{\forall x\colon P(x)}{}}}}}
 &
-\infer[\infernote{1}]{A\lor\forall x\colon P(x)}{
+\infer[\infernote{$\sim$1}]{A\lor\forall x\colon P(x)}{
   \infer{A\lor P(x)}{\forall x\colon (A{\lor}P(x))}
   & \infer{A{\lor}\forall x\colon P(x)}{
       \infer[\infernote{1}]{A}{}}
   & \infer{A{\lor}\forall x\colon P(x)}{
       \infer{\forall x\colon P(x)}{
-        \infer[\infernote{1}]{P(x)}{}}}
-}
+        \infer[\infernote{1}]{P(x)}{}}}}
 \end{array}\]
 }
 
 \noindent
-Die linken Schemata zeigen jeweils die Implikation von links nach
-rechts, die rechten jeweils die Implikation von rechts nach
+Die linken Bäume zeigen jeweils die Implikation von links nach
+rechts, die rechten die Implikation von rechts nach
 links.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Distributivgesetz]\label{exists-dl}
-Es gilt:
+\begin{Satz}\label{exists-dl}
+Es gilt
 \[(\exists x\colon P(x)\lor Q(x)) \iff
 (\exists x\colon P(x))\lor(\exists x\colon Q(x)).\]
 \end{Satz}
-\begin{Beweis}[Beweis] Schematisch.\\
-Die Implikation von links nach rechts:
+\begin{Beweis}[Beweis]
+Der Beweisbaum zur Implikation von links nach rechts:
 \[
-\infer[\infernote{1}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+\infer[\infernote{$\sim$1}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
   \exists x\colon P(x)\lor Q(x)
-& \infer[\infernote{2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
+& \infer[\infernote{$\sim$2}]{(\exists x\colon P(x))\lor (\exists x\colon Q(x))}{
     \infer[\infernote{1}]{P(a)\lor Q(a)}{}
   & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
       \exists x\colon P(x)}{\infer[\infernote{2}]{P(a)}{}}}
   & \infer{(\exists x\colon P(x)){\lor}(\exists x\colon Q(x))}{\infer{
       \exists x\colon Q(x)}{\infer[\infernote{2}]{Q(a)}{}}}}}
 \]
-Die Implikation von rechts nach links:
-\[\infer[\infernote{1}]{\exists x\colon P(x)\lor Q(x)}{
+Der Beweisbaum zur Implikation von rechts nach links:
+\[\infer[\infernote{$\sim$1}]{\exists x\colon P(x)\lor Q(x)}{
   (\exists x\colon P(x))\lor(\exists x\colon Q(x))
-  & \infer[\infernote{2}]{\exists x\colon P(x)\lor Q(x)}{
+  & \infer[\infernote{$\sim$2}]{\exists x\colon P(x)\lor Q(x)}{
       \infer[\infernote{1}]{\exists x\colon P(x)}{}
       &
       \infer{P(a)\lor Q(a)}{
         \infer[\infernote{2}]{P(a)}{}}}
-  & \infer[\infernote{3}]{\exists x\colon P(x)\lor Q(x)}{
+  & \infer[\infernote{$\sim$3}]{\exists x\colon P(x)\lor Q(x)}{
       \infer[\infernote{1}]{\exists x\colon Q(x)}{}
       &
       \infer{P(b)\lor Q(b)}{
@@ -1138,7 +1222,7 @@ Die Implikation von rechts nach links:
 Man beachte, dass die Zeugen $a,b$ unterschiedlich sein können.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Asymmetrisches Distributivgesetz]\label{exists-asym-dl}
+\begin{Satz}\label{exists-asym-dl}
 Es gilt:
 \[(\exists x\colon P(x)\land Q(x)) \implies (\exists x\colon P(x))\land (\exists x\colon Q(x)).\]
 \end{Satz}
@@ -1158,7 +1242,7 @@ Existenzaussagen $\exists x\colon P(x)$ und $\exists x\colon Q(x)$
 erfüllt sind.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Allgemeines de morgansches Gesetz]%
+\begin{Satz}[Allgemeines de morgansches Gesetz 1]%
 \label{dm-g1} Es gilt
 \[(\neg\exists x\colon P(x))\iff (\forall x\colon \neg P(x)).\]
 \end{Satz}
@@ -1168,7 +1252,7 @@ findet sich die äquivalente Umformung%
 \equiv \forall x\colon (P(x)\Rightarrow 0)
 \equiv \forall x\colon \neg P(x).\,\qedsymbol\]
 \end{Beweis}
-\begin{Satz}[Allgemeines de morgansches Gesetz]%
+\begin{Satz}[Allgemeines de morgansches Gesetz 2]%
 \label{dm-g2} Es gilt
 \[(\neg\forall x\colon P(x))\iff (\exists x\colon \neg P(x)).\]
 \end{Satz}
@@ -1186,7 +1270,7 @@ Es gilt die Äquivalenz
 \[(\forall x\colon (P(x)\Rightarrow A))
 \iff ((\exists x\colon P(x))\Rightarrow A).\]
 \end{Satz}
-\begin{Beweis}[Beweis 1] Mit $\Gamma:=[\forall x\colon (P(x)\Rightarrow A)]$
+\begin{Beweis}[Beweis 1] Mit den Abkürzungen $\Gamma:=[\forall x\colon (P(x)\Rightarrow A)]$
 und $\Gamma':=[(\exists x\colon P(x))\Rightarrow A]$
 lauten die Beweisbäume:
 \[\begin{array}{c@{\qquad}c}\small
@@ -1221,7 +1305,7 @@ und Satz \ref{dm-g1} gelingt die Umformung
 \end{align*}
 \end{Beweis}
 
-\begin{Satz}[Kommutativgesetz]\label{exists-cl}
+\begin{Satz}[Kommutativgesetz der Quantoren]\label{exists-cl}
 Es gilt die Äquivalenz
 \[(\exists x\colon\exists y\colon P(x,y)) \iff (\exists y\colon\exists x\colon P(x,y)).\]
 \end{Satz}
@@ -1243,7 +1327,7 @@ Beweisbaum:
 Der Beweis der Umkehrung verläuft analog.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Kommutativgesetz]\label{all-cl}
+\begin{Satz}[Kommutativgesetz der Quantoren]\label{all-cl}
 Es gilt die Äquivalenz
 \[(\forall x\colon\forall y\colon P(x,y))
 \iff (\forall y\colon\forall x\colon P(x,y)).\]
@@ -1408,10 +1492,10 @@ Sei $\Gamma:=[\forall y\colon x=y\Rightarrow P(y)]$. Es findet sich:
 \newpage
 \begin{Satz}[Leere Wahrheit]\newlinefirst
 Die Formeln $\forall x\in\emptyset\colon P(x)$ und $\neg\exists x\in\emptyset\colon P(x)$
-sind tautologisch.
+sind gültig.
 \end{Satz}
 \begin{Beweis}
-Sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
+Zur Abkürzung sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
 \[
 \begin{array}{@{}l@{\qquad\quad}l}
 \infer{\vdash\forall x\in\emptyset\colon P(x)}{
@@ -1481,7 +1565,7 @@ wobei der jeweilige Junktor der rechten Seite per Wahrheitstafel
 definiert ist.
 \end{Definition}
 \begin{Definition}\label{def:sat-context}
-Man definiert außerdem noch die Abküzrung
+Man definiert außerdem noch die Abkürzung
 \[(I\models\{\varphi_1,\ldots,\varphi_n\})
 \defiff (I\models\varphi_1)\land\ldots\land (I\models\varphi_n).\]
 \end{Definition}
@@ -1947,6 +2031,21 @@ Es gelte $\forall x\colon 1_A(x)\le 1_B(x)$. Sei $x\in A$ fest,
 aber beliebig. Wegen $1_A(x)=1$ ist $1\le 1_B(x)$. Weil somit
 $1_B(x)\ne 0$ ist, verbleibt nur noch $1_B(x)=1$, was
 gleichbedeutend mit $x\in B$ ist.\,\qedsymbol
+\end{Beweis}
+
+\begin{Definition}[Symmetrische Differenz]\label{def:symm-diff}\newlinefirst
+\[A\triangle B := (A\setminus B)\cup (B\setminus A) = \{x\mid (x\in A)\oplus (x\in B)\}.\]
+\end{Definition}
+\begin{Satz}
+Es gilt $A\triangle (B\triangle C) = (A\triangle B)\triangle C$.
+\end{Satz}
+\begin{Beweis}
+Mit Def. \ref{def:symm-diff} und Satz \ref{xor-assoc} findet sich
+\begin{gather*}
+x\in A\triangle (B\triangle C) \stackrel{\text{def}}\iff (x\in A)\oplus ((x\in B)\oplus (x\in C))\\
+\iff ((x\in A)\oplus (x\in B))\oplus (x\in C)
+\stackrel{\text{def}}\iff x\in (A\triangle B)\triangle C.\,\qedsymbol
+\end{gather*}
 \end{Beweis}
 
 \newpage
@@ -2812,7 +2911,7 @@ wobei (1) gemäß Satz \ref{preimg-chain} gilt. Und es gilt
 \newpage
 \subsection{Kardinalzahlen}
 
-\begin{Axiom}[acc: Abzählbares Auswahlaxiom]\label{acc}%
+\begin{Axiom}[ACC: Abzählbares Auswahlaxiom]\label{acc}%
 \index{abzählbares Auswahlaxiom}\index{Auswahlaxiom!abzählbares}
 Sei $(A_n)_{n\in\N}$ eine Folge nichtleerer Mengen.
 Dann existiert eine Funktion $f\colon\N\to\bigcup_{n\in\N} A_n$
@@ -2868,7 +2967,7 @@ sein.\,\qedsymbol
 
 \newpage
 \begin{Satz}\label{countable-union-countable}
-Man setze Axiom \ref{acc} (acc) voraus.
+Man setze Axiom \ref{acc} (ACC) voraus.
 Die Vereinigung von abzählbar vielen abzählbar unendlichen Mengen
 ist abzählbar unendlich. Kurz $|\bigcup_{n\in\N} A_n| = |\N|$, wenn
 $|A_n|=|\N|$ für jedes $n$.
@@ -2876,7 +2975,7 @@ $|A_n|=|\N|$ für jedes $n$.
 
 \begin{Beweis}
 Sei $B_n$ die Menge der Bijektionen aus $\Abb(\N,A_n)$. 
-Nach Axiom \ref{acc} (acc) kann aus jeder Menge $B_n$
+Nach Axiom \ref{acc} (ACC) kann aus jeder Menge $B_n$
 eine Bijektion $f_n\colon\N\to A_n$ ausgewählt werden.
 Man betrachte nun
 \[\varphi\colon\N\times\N\to\bigcup_{n\in\N} A_n,\quad
