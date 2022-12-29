@@ -193,6 +193,45 @@ die Behauptung
 \[a_n b_n\to ab.\,\qedsymbol\]
 \end{Beweis}
 
+\begin{Satz}
+Ist $(a_n)$ konvergent und $(b_n)$ divergent, dann ist
+$(a_n+b_n)$ divergent.
+\end{Satz}
+\begin{Beweis}
+Per Negationseinführung verbleibt das Ziel, aus der Annahme,
+$(a_n+b_n)$ wäre konvergent, einen Widerspruch abzuleiten.
+Mit den Grenzwertsätzen erhält man nun
+\[\lim_{n\to\infty} (a_n + b_n) - \lim_{n\to\infty} a_n
+= \lim_{n\to\infty} (a_n + b_n - a_n) = \lim_{n\to\infty} b_n,\]
+womit $(b_n)$ konvergent sein würde, was jedoch im Widerspruch zur
+zweiten Prämisse steht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $(a_n)$ frei von Nullstellen. Ist $(a_n)$ konvergent und $(b_n)$
+divergent, dann ist $(a_n b_n)$ divergent.
+\end{Satz}
+\begin{Beweis}
+Per Negationseinführung verbleibt das Ziel, aus der Annahme,
+$(a_n b_n)$ wäre konvergent, einen Widerspruch abzuleiten.
+Mit den Grenzwertsätzen erhält man nun
+\[\lim_{n\to\infty} (a_n^{-1})\lim_{n\to\infty} (a_n b_n)
+= \lim_{n\to\infty} (a_n^{-1} a_n b_n) = \lim_{n\to\infty} b_n,\]
+womit $(b_n)$ konvergent sein würde, was jedoch im Widerspruch
+zur zweiten Prämisse steht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Seien $(a_n),(b_n)$ Folgen reeller Zahlen mit $a_n\to a$ und $b_n\to b$,
+wobei $b_n>0$ und $b>0$. Dann gilt $(b_n)^{a_n}\to b^a$.
+\end{Satz}
+\begin{Beweis}
+Aufgrund der Stetigkeit von $\exp$ und $\ln$ findet sich
+\[\lim_{n\to\infty} (b_n)^{a_n} = \lim_{n\to\infty} \exp(\ln(b_n)a_n)
+= \exp(\ln(\lim_{n\to\infty} b_n) \lim_{n\to\infty} a_n)
+= \exp(\ln(b)a) = b^a.\,\qedsymbol\]
+\end{Beweis}
+
 \newpage
 \begin{Satz}\label{cont-seqcont}%
 \index{folgenstetig}\index{stetig!folgenstetig}
@@ -910,6 +949,74 @@ anschließende Umformung nach $|z|$ resultiert in
 Die Abschätzung (1) gilt gemäß der Dreiecksungleichung. Die
 Abschätzung (2) gilt aufgrund $|a_k|\le m$ für jedes $k$. Gleichung
 (3) gilt, weil die Maximumsfunktion positiv homogen ist.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\section{Monotonie}
+\begin{Definition}[Monotone reelle Funktion]\label{def:monotonic}\newlinefirst
+Eine Funktion $f\colon X\to \R$ mit $X\subseteq\R$ heißt
+\begin{align*}
+\text{monoton steigend}&\defiff\forall a,b\in X\colon a\le b\Rightarrow f(a)\le f(b),\\
+\text{monoton fallend}&\defiff\forall a,b\in X\colon a\le b\Rightarrow f(b)\le f(a),\\
+\text{streng monoton steigend}&\defiff\forall a,b\in X\colon a<b\Rightarrow f(a)<f(b),\\
+\text{streng monoton fallend}&\defiff\forall a,b\in X\colon a<b\Rightarrow f(b)<f(a).
+\end{align*}
+\end{Definition}
+
+\begin{Satz}
+Jede streng monotone Funktion ist injektiv.
+\end{Satz}
+\begin{Beweis}
+Laut Def. \ref{def:inj} ist $a=b$ unter der Annahme $f(a)=f(b)$ zu
+bestätigen. Es sei $f$ streng monoton steigend. Wäre $a<b$, dann wäre $f(a)<f(b)$,
+was der Annahme widerspricht. Wäre $b<a$, dann wäre $f(b)<f(a)$, was der
+Annahme ebenso widerspricht. Aufgrund der Trichotomie verbleibt nur
+noch $a=b$. Für streng monoton fallende Funktionen verläuft die
+Argumentation analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Ist $f$ streng monoton steigend und $g$ wenigstens monoton steigend,
+dann ist $f+g$ streng monoton steigend.
+\end{Satz}
+\begin{Beweis}
+Laut Def. \ref{def:monotonic} ist
+\[a<b\implies f(a)+g(a) < f(b)+g(b)\]
+zu bestätigen. Mit den mit Def. \ref{def:monotonic} entfalteten Prämissen
+impliziert $a<b$ zunächst $f(a)<f(b)$ und $g(a)\le g(b)$. Weiterhin gilt
+\begin{align*}
+f(a) < f(b) &\implies f(a)+g(a) < f(b)+g(a),\\
+g(a)\le g(b) &\implies f(b)+g(a)\le f(b)+g(b).
+\end{align*}
+Per Transitivgesetz erhält man nun das gewünschte Resultat.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Potenzfunktion $f\colon\R_{\ge 0}\to\R, f(x):=x^n$ ist für $n\in\Z_{\ge 1}$
+streng monoton steigend.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=1$ ist die Forderung von Def.
+\ref{def:monotonic} trivial erfüllt. Im Schritt ist
+\[0\le a,a<b,a^n<b^n\vdash a^{n+1}<b^{n+1}\]
+zu bestätigen. Mit $a\ge 0$ ist auch $a^n\ge 0$.
+Multipliziert man also $a<b$ auf beiden Seiten mit $a^n$,
+erhält man $a^{n+1}\le a^n b$. Multipliziert man $a^n<b^n$ auf beiden
+Seiten mit $b>0$, erhält man $a^n b < b^{n+1}$. Per Transitivgesetz
+findet sich nun $a^{n+1}<b^{n+1}$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Sei $I$ ein offenes Intervall und $f\colon I\to\R$. Ist $f$ differenzierbar
+mit positiver Ableitung an jeder Stelle, dann ist $f$ streng monoton steigend.
+\end{Satz}
+\begin{Beweis}
+Seien $a,b\in I$ beliebig. Laut Def. \ref{def:monotonic} ist $f(a)<f(b)$
+aus $a<b$ zu folgern. Laut dem Mittelwertsatz der Differentialrechnung
+existiert eine Stelle $x\in (a,b)$ mit
+\[f(b)-f(a) = f'(x)(b-a).\]
+Gemäß der Prämisse ist nun $f'(x)>0$. Wegen $a<b$ ist außerdem $b-a>0$.
+Ergo ist $f'(x)(b-a)>0$ und somit $f(b)-f(a)>0$, also $f(a)<f(b)$.\,\qedsymbol
 \end{Beweis}
 
 \newpage

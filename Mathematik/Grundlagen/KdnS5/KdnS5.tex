@@ -1,0 +1,377 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\lnec}{\Box}
+\newcommand{\lpos}{\Diamond}
+
+\title{Natürliches Schließen}
+\subtitle{Teil 5: Modallogik}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+\centerheadline{Formeln der Modallogik}
+\end{frame}
+
+\begin{frame}
+Die Modallogik fügt zu den Junktoren der Aussagenlogik zwei
+einstellige Operatoren hinzu:
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\strong{Aussage} & \strong{Lesung}\\
+\midrule[\heavyrulewidth]
+$\lnec A$ & notwendigerweise $A$\\
+$\lpos A$ & möglicherweise $A$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Zur Syntax: Beiden kommt die höchste Operatorrangfolge zu, also
+dieselbe wie der Negation.
+
+\end{frame}
+
+\begin{frame}
+\centerheadline{System K}
+\end{frame}
+
+\begin{frame}
+Es gibt unterschiedliche modallogische Systeme. Eine große Familie%
+\footnote{Die Familie der normalen Modallogiken.}
+baut auf dem System K auf, womit man K als grundlegend betrachten
+kann. Insofern wollen wir zunächst K diskutieren, bevor wir
+uns den anderen Systemen zuwenden.
+
+\parspace
+Das formale System K entsteht dadurch, dass sämtliche Regeln und Axiome
+der Aussagenlogik weiterhin erhalten bleiben und diesen lediglich eine
+weitere Regel (Regel~N) und ein weiteres Axiom%
+\footnote{Eigentlich ein Axiomenschema,
+da man beliebige Formeln einfügen darf.}
+(Axiom~K) hinzugefügt werden.\pause
+
+\parspace
+\begin{block}{Regel N (Nezessisierungsregel)}
+\[\dfrac{\vdash A}{\vdash\lnec A}\]
+\end{block}
+In Worten: Ist eine Formel ein Theorem, so soll deren
+Notwendigkeit ebenfalls ein Theorem sein.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Axiom K (Axiom der Verteilung)}
+\[\vdash \lnec (A\cond B) \cond (\lnec A\cond\lnec B)\]
+\end{block}\pause
+Wir dürfen aus diesem Axiom wie üblich per Modus ponens
+eine zulässige Schlussregel ableiten:
+\begin{block}{Regel K}
+\[\dfrac{\Gamma\vdash \lnec (A\cond B)}{\Gamma\vdash\lnec A\cond\lnec B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Eine erste Aufgabe. Gesucht ist der Beweis von
+\[\vdash \lnec (A\land B)\cond\lnec A.\]
+Man findet:\pause
+
+\[
+\infer[\infernote{K}]{\vdash \lnec (A\land B)\cond\lnec A}{
+  \infer[\infernote{N}]{\vdash\lnec (A\land B\cond A)}{
+    \infer{\vdash A\land B\cond A}{
+      \infer{A\land B\vdash A}{
+        \infer{A\land B\vdash A\land B}{}}}}}
+\]\pause
+
+Frage: Ist $\lnec A\land\lnec B\cond\lnec (A\land B)$
+ebenfalls beweisbar?\pause{} Ja, ist sie. Zur Ausführung benötigen wir
+allerdings eine kurze Vorbereitung.
+\end{frame}
+
+\begin{frame}
+Wir bestätigen zunächst einmal die Regel
+\[\dfrac{\vdash A\cond (B\cond C)}{\vdash\lnec A\cond (\lnec B\cond\lnec C)}.\]
+Es findet sich:\pause
+
+\[
+\infer{\vdash\lnec A\cond (\lnec B\cond\lnec C)}{
+  \infer[\infernote{K}]{\lnec A\vdash\lnec B\cond\lnec C}{
+    \infer{\lnec A\vdash\lnec (B\cond C)}{
+      \infer[\infernote{K}]{\vdash\lnec A\cond\lnec (B\cond C)}{
+        \infer[\infernote{N}]{\vdash\lnec (A\cond (B\cond C))}{
+          \vdash A\cond (B\cond C)}}
+    & \infer{\lnec A\vdash\lnec A}{}}}}
+\]
+\end{frame}
+
+\begin{frame}
+Beachtet man nun die allgemeine Äquivalenz von $A\land B\cond C$
+und $A\cond (B\cond C)$, erhält man die Regel in der Form
+\[\dfrac{\vdash A\land B\cond C}{\vdash\lnec A\land\lnec B\cond\lnec C}.\]
+Hiermit gelingt die gesuchte Ableitung kurzerhand:\pause
+\[
+\infer{\vdash\lnec A\land\lnec B\cond\lnec (A\land B)}{
+  \infer{\vdash A\land B\cond A\land B}{
+    \infer{A\land B\vdash A\land B}{}}}
+\]
+\end{frame}
+
+\begin{frame}
+Im Fortgang zur gemachten Überlegung finden wir eine verallgemeinerte
+Regel der Nezessisierung.
+\begin{block}{Regel N*}
+\[\dfrac{A_1,\ldots,A_n\vdash B}{\lnec A_1,\ldots,\lnec A_n\vdash\lnec B}\]
+\end{block}\pause
+\strong{Beweis.}
+Induktion über $n$. Im Anfang $n=0$ nimmt die Regel schlicht die Form
+der Nezessisierungsregel an. Den Induktionsschritt bestätigt der Beweisbaum:
+
+\[
+\infer{\lnec A_1,\ldots,\lnec A_n,\lnec A_{n+1}\vdash\lnec B}{
+  \infer[\infernote{K}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec A_{n+1}\cond\lnec B}{
+    \infer[\infernote{IV}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec (A_{n+1}\cond B)}{
+      \infer{A_1,\ldots,A_n\vdash A_{n+1}\cond B}{
+        A_1,\ldots,A_n,A_{n+1}\vdash B}}}
+& \infer{\lnec A_{n+1}\vdash\lnec A_{n+1}}{}}
+\]
+\end{frame}
+
+\begin{frame}
+Nun zur Möglichkeit. Sie wird auf eine Formel mit einer
+Notwendigkeit zurückgeführt.
+\begin{block}{Definition der Möglichkeit}
+\[\lpos A :\equiv \neg\lnec\neg A\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+Man kann $\neg\lpos A\cond\lnec\neg A$ zeigen, sofern die Beseitigung
+der Doppelnegation gewährt ist:\pause
+
+\[
+\infer[\infernote{Def.}]{\vdash\neg\lpos A\cond\lnec\neg A}{
+  \infer{\vdash\neg\neg\lnec\neg A\cond\lnec\neg A}{
+    \infer[\infernote{DN}]{\neg\neg\lnec\neg A\vdash\lnec\neg A}{
+      \infer{\neg\neg\lnec\neg A\vdash\neg\neg\lnec\neg A}{}}}}
+\]\pause
+
+Man kann $\neg\lnec A\cond\lpos\neg A$ ebenfalls zeigen,
+es ist allerdings ein wenig schwieriger:\pause
+
+\[
+\infer[\infernote{Def.}]{\vdash \neg\lnec A\cond\lpos\neg A}{
+  \infer{\vdash \neg\lnec A\cond\neg\lnec\neg\neg A}{
+    \infer{\neg\lnec A\vdash\neg\lnec\neg\neg A}{
+      \infer{\neg\lnec A, \lnec\neg\neg A\vdash\bot}{
+        \infer{\neg\lnec A\vdash\neg\lnec A}{}
+      & \infer{\lnec\neg\neg A\vdash \lnec A}{
+          \infer[\infernote{K}]{\vdash\lnec\neg\neg A\cond\lnec A}{
+            \infer[\infernote{N}]{\vdash\lnec(\neg\neg A\cond A)}{
+              \infer[\infernote{DN}]{\vdash\neg\neg A\cond A}{}}}}}}}}
+\]
+\end{frame}
+
+\begin{frame}
+Weiterhin zeigt sich die Formel $\lnec (A\cond B)\cond (\lpos A\cond\lpos B)$
+als beweisbar.
+
+\parspace
+Man zieht hierfür zweimal die Regel der Kontraposition heran:\pause
+
+\vspace{1em}
+\[
+\infer{\vdash\lnec (A\cond B)\cond (\lpos A\cond\lpos B)}{
+  \infer[\infernote{Def.}]{\lnec (A\cond B)\vdash\lpos A\cond\lpos B}{
+    \infer[\infernote{Kontraposition}]{\lnec (A\cond B)\vdash\neg\lnec\neg A\cond\neg\lnec\neg B}{
+      \infer[\infernote{K}]{\lnec (A\cond B)\vdash\lnec\neg B\cond\lnec\neg A}{
+        \infer{\lnec (A\cond B)\vdash\lnec (\neg B\cond\neg A)}{
+          \infer{\lnec (A\cond B)\vdash\lnec (A\cond B)}{}
+        & \infer[\infernote{K}]{\vdash\lnec (A\cond B)\cond\lnec (\neg B\cond\neg A)}{
+            \infer[\infernote{N}]{\vdash\lnec ((A\cond B)\cond(\neg B\cond\neg A))}{
+              \infer[\infernote{Kontraposition}]{\vdash (A\cond B)\cond (\neg B\cond\neg A)}{}}}}}}}}
+\]
+\end{frame}
+
+\begin{frame}
+\centerheadline{Zusätzliche Axiome}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\strong{Kürzel} & \strong{Axiom}\\
+\midrule[\heavyrulewidth]
+T & $\vdash\lnec A\cond A$\\
+B & $\vdash A\cond\lnec\lpos A$\\
+D & $\vdash\lnec A\cond\lpos A$\\
+4 & $\vdash\lnec A\cond\lnec\lnec A$\\
+5 & $\vdash\lpos A\cond\lnec\lpos A$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\strong{System} & \strong{Axiome}\\
+\midrule[\heavyrulewidth]
+K & K\\
+T & K, T\\
+B & K, T, B\\
+D & K, D\\
+S4 & K, T, 4\\
+S5 & K, T, 5\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+Das Axiom T impliziert $A\cond\lpos A$. Nämlich findet sich:
+
+\[
+\infer{\vdash A\cond\lpos A}{
+  \infer{A\vdash\lpos A}{
+    \infer[\infernote{Def.}]{\vdash\neg\neg A\cond\lpos A}{
+      \infer[\infernote{Kontraposition}]{\vdash\neg\neg A\cond\neg\lnec\neg A}{
+        \infer[\infernote{$B:=\neg A$}]{\vdash\lnec\neg A\cond\neg A}{
+          \infer[\infernote{T}]{\vdash\lnec B\cond B}{}}}}
+  & \infer{A\vdash\neg\neg A}{}}}
+\]\pause
+
+Ist die Beseitigung der Doppelnegation gewährt, impliziert
+$A\cond\lpos A$ umgekehrt das Axiom T. Nämlich findet sich:
+
+\[
+\infer{\vdash\lnec A\cond A}{
+  \infer[\infernote{DN}]{\lnec A\vdash A}{
+    \infer{\lnec A\vdash\neg\neg A}{
+      \infer[\infernote{Kontraposition}]{\vdash\neg\lpos\neg A\cond\neg\neg A}{
+        \infer[\infernote{$B:=\neg A$}]{\vdash\neg A\cond\lpos\neg A}{
+          \vdash B\cond\lpos B}}
+    & \infer[\infernote{Def.}]{\lnec A\vdash\neg\lpos\neg A}{
+        \infer{\lnec A\vdash\neg\neg\lnec\neg\neg A}{
+          \infer[\infernote{N*}]{\lnec A\vdash\lnec\neg\neg A}{
+            \infer{A\vdash\neg\neg A}{}}}}}}}
+\]
+\end{frame}
+
+\begin{frame}
+Mit der gemachten Vorbetrachtung findet man nun mühelos, dass Axiom~B
+in System~S5 ableitbar ist. Der Beweisbaum ist:\pause
+
+\[
+\infer{\vdash A\cond\lnec\lpos A}{
+  \infer[\infernote{5}]{A\vdash\lnec\lpos A}{
+    \infer{A\vdash\lpos A}{
+      \infer[\infernote{T}]{\vdash A\cond\lpos A}{}
+    & \infer{A\vdash A}{}}}}
+\]
+Bzw. als schlichter Kettenschluss:
+\[
+\infer[\infernote{Kettenschluss}]{\vdash A\cond\lnec\lpos A}{
+  \infer[\infernote{T}]{\vdash A\cond\lpos A}{}
+& \infer[\infernote{5}]{\vdash\lpos A\cond\lnec\lpos A}{}
+}
+\]
+\end{frame}
+
+\begin{frame}
+Ferner stellt sich heraus, dass Axiom~4 im System S5 ableitbar ist.
+Wir nutzen dazu die Feststellung $\neg\lnec A\equiv\lpos\neg A$
+als Hilfsmittel. Alternativ kann man die Ersetzungsregel mit
+$\neg\neg A\equiv A$ nutzen --- wir verzichten drauf, da die
+Ersetzungsregel in Beweisassistenten nicht unbedingt direkt zur
+Verfügung steht.
+
+\parspace
+Der Beweisbaum fällt ein wenig länger aus:\pause
+
+\[
+\infer[\infernote{Kettenschluss}]{\vdash\lnec A\cond\lnec\lnec A}{
+  \infer[\infernote{$B:=\lnec A$}]{\vdash\lnec A\cond\lnec\lpos\lnec A}{
+    \infer[\infernote{B}]{\vdash B\cond\lnec \lpos B}{}}
+& \hspace{-4em}\infer[\infernote{N, K}]{\vdash\lnec\lpos\lnec A\cond\lnec\lnec A}{
+    \infer[\infernote{Def.}]{\vdash\lpos\lnec A\cond\lnec A}{
+      \infer[\infernote{DN}]{\vdash\neg\lnec\neg\lnec A\cond\lnec A}{
+        \infer[\infernote{Kontraposition}]{\vdash\neg\lnec\neg\lnec A\cond\neg\neg\lnec A}{
+          \infer[\infernote{Kettenschluss}]{\vdash\neg\lnec A\cond\lnec\neg\lnec A}{
+            \infer{\vdash\neg\lnec A\cond\lpos\neg A}{
+              \neg\lnec A\equiv\lpos\neg A}
+          & \infer[\infernote{Kettenschluss}]{\vdash\lpos\neg A\cond\lnec\neg\lnec A}{
+              \infer[\infernote{$B:=\neg A$}]{\vdash\lpos\neg A\cond\lnec\lpos\neg A}{
+                \infer[\infernote{5}]{\vdash\lpos B\cond\lnec\lpos B}{}}
+            & \infer[\infernote{N, K}]{\vdash\lnec\lpos\neg A\cond\lnec\neg\lnec A}{
+                \infer{\vdash\lpos\neg A\cond\neg\lnec A}{
+                  \neg\lnec A\equiv\lpos\neg A}}}}}}}}}
+\]
+\end{frame}
+
+\begin{frame}
+\strong{Literatur}
+\begin{itemize}
+\item Johan van Benthem: \href{https://iep.utm.edu/modal-lo/}{\emph{Modal Logic: A Contemporary View}}.
+In: \emph{The Internet Encyclopedia of Philosophy}.
+\item James Garson: \href{https://plato.stanford.edu/entries/logic-modal/}{\emph{Modal Logic}}.
+In: \emph{The Stanford Encyclopedia of Philosophy}.
+\item Open Logic Project: \href{https://openlogicproject.org/}{\emph{The Open Logic Text}}.
+  Part XI, \emph{Normal Modal Logics}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{Dezember 2022}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+\end{document}
+

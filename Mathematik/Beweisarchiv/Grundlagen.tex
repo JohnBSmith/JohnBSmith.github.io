@@ -2036,7 +2036,7 @@ gleichbedeutend mit $x\in B$ ist.\,\qedsymbol
 \begin{Definition}[Symmetrische Differenz]\label{def:symm-diff}\newlinefirst
 \[A\triangle B := (A\setminus B)\cup (B\setminus A) = \{x\mid (x\in A)\oplus (x\in B)\}.\]
 \end{Definition}
-\begin{Satz}
+\begin{Satz}\label{symm-diff-assoc}\strong{[LEM]}
 Es gilt $A\triangle (B\triangle C) = (A\triangle B)\triangle C$.
 \end{Satz}
 \begin{Beweis}
@@ -2046,6 +2046,44 @@ x\in A\triangle (B\triangle C) \stackrel{\text{def}}\iff (x\in A)\oplus ((x\in B
 \iff ((x\in A)\oplus (x\in B))\oplus (x\in C)
 \stackrel{\text{def}}\iff x\in (A\triangle B)\triangle C.\,\qedsymbol
 \end{gather*}
+\end{Beweis}
+
+\newpage
+\begin{Satz}\label{symm-diff-empty}
+Es gilt $A\triangle A = \emptyset$ und $A\triangle\emptyset = A$.
+\end{Satz}
+\begin{Beweis}
+Mit Def. \ref{def:symm-diff} findet sich
+\begin{align*}
+A\triangle A &\stackrel{\text{def}}= (A\setminus A)\cup (A\setminus A)
+= \emptyset\cup\emptyset = \emptyset,\\
+A\triangle\emptyset &\stackrel{\text{def}}=
+(A\setminus\emptyset)\cup (\emptyset\setminus A)
+= A\cup\emptyset = A.
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}\strong{[LEM]}\label{symm-diff-involution}
+Es gilt $(A\triangle B)\triangle B = A$.
+\end{Satz}
+\begin{Beweis}
+Man darf rechnen
+\[(A\triangle B)\triangle B \stackrel{\text{(1)}}= A\triangle (B\triangle B)
+\stackrel{\text{(2)}}= A\triangle\emptyset \stackrel{\text{(3)}}= A.\]
+Hierbei gilt (1) laut Satz \ref{symm-diff-assoc}, und (2), (3) laut
+Satz \ref{symm-diff-empty}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\strong{[LEM]}
+Es gilt $A\triangle C = B\triangle C\Rightarrow A = B$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich
+\[A \stackrel{\text(1)}= (A\triangle C)\triangle C
+\stackrel{\text{(2)}}= (B\triangle C)\triangle C
+\stackrel{\text{(3)}}= B.\]
+Hierbei gilt (1), (3) laut Satz \ref{symm-diff-involution},
+und (2) laut Prämisse.\,\qedsymbol
 \end{Beweis}
 
 \newpage
