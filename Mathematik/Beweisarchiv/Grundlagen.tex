@@ -1,10 +1,10 @@
 
 \chapter{Grundlagen}
-\section{Logische Schlussregeln}
+\section{Logisches Schließen}
 
-\subsection{Kalkül des natürlichen Schließens}
+\subsection{Natürliches Schließen}
 
-\subsubsection{Schlussregeln}
+\subsubsection{Logische Schlussregeln}
 \begin{tabular}{lc@{\qquad}c}
 \toprule
 & \strong{Einführung} & \strong{Beseitigung}\\
@@ -1518,6 +1518,122 @@ Zur Abkürzung sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
 \]
 \end{Beweis}
 
+\section{Modallogik}
+\subsection{Modallogische Axiome}
+
+\begin{Axiom}[K]\label{axiom-K}
+Es gilt das Schema $\vdash\lnec (A\cond B)\cond (\lnec A\cond\lnec B)$.
+\end{Axiom}
+
+\begin{Axiom}[T]
+Es gilt das Schema $\vdash\lnec A\cond A$.
+\end{Axiom}
+
+\begin{Axiom}[B]
+Es gilt das Schema $\vdash A\cond\lnec\lpos A$.
+\end{Axiom}
+
+\begin{Axiom}[D]
+Es gilt das Schema $\vdash\lnec A\cond\lpos A$.
+\end{Axiom}
+
+\begin{Axiom}[4]
+Es gilt das Schema $\vdash\lnec A\cond\lnec\lnec A$.
+\end{Axiom}
+
+\begin{Axiom}[5]
+Es gilt das Schema $\vdash\lpos A\cond\lnec\lpos A$.
+\end{Axiom}
+
+\subsection{System K}
+
+\begin{Definition}[System K]\newlinefirst
+Das formale System~K ist dadurch festgelegt, dass sämtliche Regeln
+und Axiome der klassischen Aussagenlogik gelten, und zusätzlich
+das Axiom \ref{axiom-K} (K) und die Schlussregel
+\[\dfrac{\vdash A}{\vdash\lnec A}.\qquad\text{(N: Nezessisierungsregel)}\]
+\end{Definition}
+
+\begin{Definition}[Möglichkeit]\label{def:possibly}\newlinefirst
+Man legt $\lpos A :\equiv \neg\lnec\neg A$ fest, gelesen
+»möglicherweise $A$«.
+\end{Definition}
+
+\begin{Satz}[Regel K]
+Die Schlussregel $\dfrac{\Gamma\vdash\lnec (A\cond B)}{\Gamma\vdash\lnec A\cond\lnec B}$
+ist im System~K zulässig. 
+\end{Satz}
+\begin{Beweis} Wird kurzerhand durch den Beweisbaum
+\[
+\infer[\infernote{Modus ponens}]{\Gamma\vdash\lnec A\cond\lnec B}{
+  \infer[\infernote{Axiom K}]{\vdash\lnec (A\cond B)\cond (\lnec A\cond\lnec B)}{}
+& \Gamma\vdash\lnec (A\cond B)}
+\]
+bestätigt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel N*]
+Für $n\ge 0$ gilt im System~K die Schlussregel
+\[\dfrac{A_1,\ldots,A_n\vdash B}{\lnec A_1,\ldots,\lnec A_n\vdash\lnec B}.\]
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ nimmt die Regel schlicht die Form
+der Nezessisierungsregel an. Der Induktionsschritt wird durch den Beweisbaum
+\[
+\infer[\infernote{Modus ponens}]{\lnec A_1,\ldots,\lnec A_n,\lnec A_{n+1}\vdash\lnec B}{
+  \infer[\infernote{K}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec A_{n+1}\cond\lnec B}{
+    \infer[\infernote{IV}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec (A_{n+1}\cond B)}{
+      \infer{A_1,\ldots,A_n\vdash A_{n+1}\cond B}{
+        A_1,\ldots,A_n,A_{n+1}\vdash B}}}
+& \infer{\lnec A_{n+1}\vdash\lnec A_{n+1}}{}}
+\]
+bestätigt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz} Mit Axiom \ref{DNE} (DN) gilt $\lnec\neg A\bicond\neg\lpos A$
+im System~K.
+\end{Satz}
+\begin{Beweis}
+Mit dem Baum
+\[
+\infer{\vdash \lnec\neg A\bicond\neg\lpos A}{
+  \infer[\infernote{Def. \ref{def:possibly}}]{\vdash\lnec\neg A\cond\neg\lpos A}{
+    \infer[\infernote{$B:=\lnec\neg A$}\quad]{\vdash\lnec\neg A\cond\neg\neg\lnec\neg A}{
+      \infer{\vdash B\cond\neg\neg B}{}}}
+& \infer[\infernote{Def. \ref{def:possibly}}]{\vdash\neg\lpos A\cond\lnec\neg A}{
+    \infer[\infernote{$B:=\lnec\neg A$}]{\vdash\neg\neg\lnec\neg A\cond\lnec\neg A}{
+      \infer[\infernote{DN}]{\vdash\neg\neg B\cond B}{}}}}
+\]
+ist die Ableitung gefunden.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Im System K gilt $\lpos (A\land B)\cond\lpos A$
+und $\lpos (A\land B)\cond\lpos B$.\\
+Mithin gilt $\lpos (A\land B)\cond\lpos A\land\lpos B$.
+\end{Satz}
+\begin{Beweis} Der Beweisbaum:
+\[
+\begin{array}{l@{\qquad\quad}l}
+\infer[\infernote{Def. \ref{def:possibly}}]{\vdash\lpos (A\land B)\cond\lpos A}{
+  \infer[\infernote{Kontraposition}]{\vdash\neg\lnec\neg (A\land B)\cond\neg\lnec\neg A}{
+    \infer[\infernote{K}]{\vdash\lnec\neg A\cond\lnec\neg (A\land B)}{
+      \infer[\infernote{Nezessisierung}]{\vdash\lnec(\neg A\cond\neg (A\land B))}{
+        \infer[\infernote{Kontraposition}]{\vdash\neg A\cond\neg (A\land B)}{
+          \infer{\vdash A\land B\cond A}{}}}}}}
+&
+\infer{\vdash\lpos (A\land B)\cond\lpos A\land\lpos B}{
+  \infer{\lpos (A\land B)\vdash\lpos A\land\lpos B}{
+    \infer{\lpos (A\land B)\vdash\lpos A}{
+      \infer{\vdash\lpos (A\land B)\cond\lpos A}{}}
+  & \infer{\lpos (A\land B)\vdash\lpos B}{
+      \infer{\vdash\lpos (A\land B)\cond\lpos B}{}}}}
+\end{array}
+\]
+Der Beweis der zweiten Formel verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Metatheorie der Logik}
 \subsection{Klassische Aussagenlogik}
 
@@ -1570,8 +1686,7 @@ Man definiert außerdem noch die Abkürzung
 \defiff (I\models\varphi_1)\land\ldots\land (I\models\varphi_n).\]
 \end{Definition}
 
-\newpage
-\begin{Definition}[Gültigkeit --- klassische Aussagenlogik]%
+\begin{Definition}[Gültigkeit in der klassischen Aussagenlogik]%
 \label{def:valid}\newlinefirst
 Man nennt eine Formel $\varphi$ gültig im Kontext $\Gamma$,
 wenn sie erfüllt ist, sofern sämtliche Formeln des Kontextes
@@ -1580,6 +1695,7 @@ erfüllt sind. Kurz
 (I\models\Gamma) \Rightarrow (I\models\varphi).\]
 \end{Definition}
 
+\newpage
 \begin{Satz}[Korrektheit des natürlichen Schließens]\newlinefirst
 Aus $\Gamma\vdash\varphi$ folgt $\Gamma\models\varphi$.
 \end{Satz}

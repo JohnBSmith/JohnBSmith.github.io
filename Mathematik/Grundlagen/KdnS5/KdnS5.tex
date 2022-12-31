@@ -43,6 +43,7 @@
   \begin{center}\strong{#1}\end{center}}
 \newcommand{\parspace}{\vspace{0.8em}}
 \newcommand{\cond}{\rightarrow}
+\newcommand{\bicond}{\leftrightarrow}
 \newcommand{\lnec}{\Box}
 \newcommand{\lpos}{\Diamond}
 
@@ -188,34 +189,74 @@ Nun zur Möglichkeit. Sie wird auf eine Formel mit einer
 Notwendigkeit zurückgeführt.
 \begin{block}{Definition der Möglichkeit}
 \[\lpos A :\equiv \neg\lnec\neg A\]
-\end{block}
+\end{block}\pause
+
+\vspace{2em}
+Man bestätigt mühelos die Äquivalenz $\lpos\neg A\equiv\neg\lnec A$,
+sofern die Beseitigung der Doppelnegation gewährt ist.\pause{} Nämlich
+findet sich die äquivalente Umformung
+\[\lpos\neg A\equiv\neg\lnec\neg\neg A\equiv\neg\lnec A.\]
+Wir wollen die Äquivalenz aber nochmals durch Beweisbäume herstellen.\pause
+
+\vspace{2em}
+\begin{small}
+\strong{Bemerkung.} Gleichermaßen erhält man $\neg\lpos\neg A\equiv\lnec A$
+mit der Umformung
+\[\neg\lpos\neg A\equiv\neg\neg\lnec\neg\neg A\equiv\lnec A.\]
+\end{small}
 \end{frame}
 
 \begin{frame}
-Man kann $\neg\lpos A\cond\lnec\neg A$ zeigen, sofern die Beseitigung
-der Doppelnegation gewährt ist:\pause
+Zu $\lpos\neg A\cond\neg\lnec A$ findet sich:\pause
 
 \[
-\infer[\infernote{Def.}]{\vdash\neg\lpos A\cond\lnec\neg A}{
-  \infer{\vdash\neg\neg\lnec\neg A\cond\lnec\neg A}{
-    \infer[\infernote{DN}]{\neg\neg\lnec\neg A\vdash\lnec\neg A}{
-      \infer{\neg\neg\lnec\neg A\vdash\neg\neg\lnec\neg A}{}}}}
+\infer[\infernote{Def.}]{\vdash\lpos\neg A\cond\neg\lnec A}{
+  \infer[\infernote{Kontraposition}]{\vdash\neg\lnec\neg\neg A\cond\neg\lnec A}{
+    \infer[\infernote{K}]{\vdash\lnec A\cond\lnec\neg\neg A}{
+      \infer[\infernote{N}]{\vdash\lnec (A\cond\neg\neg A)}{
+        \infer[\infernote{bekanntlich}]{\vdash A\cond\neg\neg A}{}
+      }
+    }
+  }}
 \]\pause
 
-Man kann $\neg\lnec A\cond\lpos\neg A$ ebenfalls zeigen,
-es ist allerdings ein wenig schwieriger:\pause
+Für $\neg\lnec A\cond\lpos\neg A$ benötigen wir nun die Beseitigung
+der Doppelnegation:\pause
 
 \[
-\infer[\infernote{Def.}]{\vdash \neg\lnec A\cond\lpos\neg A}{
-  \infer{\vdash \neg\lnec A\cond\neg\lnec\neg\neg A}{
-    \infer{\neg\lnec A\vdash\neg\lnec\neg\neg A}{
-      \infer{\neg\lnec A, \lnec\neg\neg A\vdash\bot}{
-        \infer{\neg\lnec A\vdash\neg\lnec A}{}
-      & \infer{\lnec\neg\neg A\vdash \lnec A}{
-          \infer[\infernote{K}]{\vdash\lnec\neg\neg A\cond\lnec A}{
-            \infer[\infernote{N}]{\vdash\lnec(\neg\neg A\cond A)}{
-              \infer[\infernote{DN}]{\vdash\neg\neg A\cond A}{}}}}}}}}
+\infer[\infernote{Def.}]{\vdash\neg\lnec A\cond\lpos\neg A}{
+  \infer[\infernote{Kontraposition}]{\vdash\neg\lnec A\cond\neg\lnec\neg\neg A}{
+    \infer[\infernote{K}]{\vdash\lnec\neg\neg A\cond\lnec A}{
+      \infer[\infernote{N}]{\vdash\lnec(\neg\neg A\cond A)}{
+        \infer[\infernote{DN}]{\vdash\neg\neg A\cond A}{}}}}}
 \]
+\end{frame}
+
+\begin{frame}
+Die Äquivalenz $\lnec\neg A\equiv\neg\lpos A$
+ist ebenfalls unschwer zu bestätigen.
+
+\parspace
+Es findet sich:\pause
+
+\[
+\infer{\vdash \lnec\neg A\bicond\neg\lpos A}{
+  \infer[\infernote{Def.}]{\vdash\lnec\neg A\cond\neg\lpos A}{
+    \infer[\infernote{$B:=\lnec\neg A$}\quad]{\vdash\lnec\neg A\cond\neg\neg\lnec\neg A}{
+      \infer[\infernote{bekanntlich}]{\vdash B\cond\neg\neg B}{}}}
+& \infer[\infernote{Def.}]{\vdash\neg\lpos A\cond\lnec\neg A}{
+    \infer[\infernote{$B:=\lnec\neg A$}]{\vdash\neg\neg\lnec\neg A\cond\lnec\neg A}{
+      \infer[\infernote{DN}]{\vdash\neg\neg B\cond B}{}}}}
+\]\pause
+
+\vspace{2em}
+\begin{small}
+\strong{Bemerkung.}
+Man kann diese Regeln als Analogon zu den de morganschen Gesetzen
+$\neg\forall x\colon P(x)\equiv\exists x\colon\neg P(x)$
+und $\neg\exists x\colon P(x)\equiv\forall x\colon\neg P(x)$
+auffassen.
+\end{small}
 \end{frame}
 
 \begin{frame}
@@ -327,14 +368,13 @@ Bzw. als schlichter Kettenschluss:
 \begin{frame}
 Ferner stellt sich heraus, dass Axiom~4 im System S5 ableitbar ist.
 Wir nutzen dazu die Feststellung $\neg\lnec A\equiv\lpos\neg A$
-als Hilfsmittel. Alternativ kann man die Ersetzungsregel mit
-$\neg\neg A\equiv A$ nutzen --- wir verzichten drauf, da die
-Ersetzungsregel in Beweisassistenten nicht unbedingt direkt zur
+als Hilfsmittel. Alternativ ginge es auch, die zulässige
+Ersetzungsregel mit $\neg\neg A\equiv A$ zu nutzen --- wir verzichten drauf,
+da sie in Beweisassistenten nicht unbedingt direkt zur
 Verfügung steht.
 
 \parspace
 Der Beweisbaum fällt ein wenig länger aus:\pause
-
 \[
 \infer[\infernote{Kettenschluss}]{\vdash\lnec A\cond\lnec\lnec A}{
   \infer[\infernote{$B:=\lnec A$}]{\vdash\lnec A\cond\lnec\lpos\lnec A}{
@@ -345,13 +385,13 @@ Der Beweisbaum fällt ein wenig länger aus:\pause
         \infer[\infernote{Kontraposition}]{\vdash\neg\lnec\neg\lnec A\cond\neg\neg\lnec A}{
           \infer[\infernote{Kettenschluss}]{\vdash\neg\lnec A\cond\lnec\neg\lnec A}{
             \infer{\vdash\neg\lnec A\cond\lpos\neg A}{
-              \neg\lnec A\equiv\lpos\neg A}
+              \infer{\neg\lnec A\equiv\lpos\neg A}{}}
           & \infer[\infernote{Kettenschluss}]{\vdash\lpos\neg A\cond\lnec\neg\lnec A}{
               \infer[\infernote{$B:=\neg A$}]{\vdash\lpos\neg A\cond\lnec\lpos\neg A}{
                 \infer[\infernote{5}]{\vdash\lpos B\cond\lnec\lpos B}{}}
             & \infer[\infernote{N, K}]{\vdash\lnec\lpos\neg A\cond\lnec\neg\lnec A}{
                 \infer{\vdash\lpos\neg A\cond\neg\lnec A}{
-                  \neg\lnec A\equiv\lpos\neg A}}}}}}}}}
+                  \infer{\neg\lnec A\equiv\lpos\neg A}{}}}}}}}}}}
 \]
 \end{frame}
 
