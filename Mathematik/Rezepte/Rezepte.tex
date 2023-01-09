@@ -4,9 +4,6 @@
 \usepackage[ngerman]{babel}
 \usepackage{microtype}
 
-% Bugfix. Siehe https://komascript.de/node/2295
-% \unsettoc{toc}{onecolumn}
-
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -44,15 +41,16 @@
   {\thmname{#1}\thmnote{\;(#3)}.}
 
 \theoremstyle{rmbox}
-\newtheorem{Rezept}{Rezept}[section]
+% \newtheorem{Rezept}{Rezept}[section]
+\newenvironment{Rezept}[1]{\strong{#1}\\}{}
 
-\definecolor{boxmargin}{rgb}{0.4,0.2,0.1}
-\definecolor{boxbg}{rgb}{0.95,0.9,0.7}
+\definecolor{boxmargin}{rgb}{0.1,0.4,0.5}
+\definecolor{boxbg}{rgb}{0.9,0.9,1.0}
 
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
   linecolor=boxmargin, backgroundcolor=boxbg,
   linewidth=3.5pt, innerleftmargin=4pt,%
-  innertopmargin=3pt, innerbottommargin=4pt,%
+  innertopmargin=4pt, innerbottommargin=4pt,%
   innerrightmargin=6pt%
 ]{Rezept}
 
@@ -79,9 +77,27 @@
 \clearpage
 \section{Grundlagen}
 
-\subsection{Natürliches Schließen}
+\subsection{Logik}
 
-\begin{Rezept}
+\begin{Rezept}{Boolesche Algebra für die Aussagenlogik}
+Man nutze die Umformung $(A\Rightarrow B)\equiv (\neg A\lor B)$,
+um Tautologien der klassischen Aussagenlogik mittels boolescher
+Algebra zu bestätigen.
+\end{Rezept}
+Betrachten wir $(A\Rightarrow B)\land A\Rightarrow B$,
+die Formel zum Modus ponens. Mit den de morganschen Gesetzen
+findet sich
+\begin{align*}
+(A\Rightarrow B)\land A\Rightarrow B
+&\equiv \neg ((\neg A\lor B)\land A)\lor B
+\equiv \neg (\neg A\lor B)\lor\neg A\lor B\\
+&\equiv \neg C\lor C \equiv 1,
+\end{align*}
+wobei $C :\equiv \neg A\lor B$ abgekürzt wurde.
+Die Formel ist folglich stets erfüllt, ganz gleich mit welchen
+Wahrheitswerten die Variablen $A,B$ belegt werden.
+
+\begin{Rezept}{Natürliches Schließen}
 Natürliche Schließen systematisiert gewohnte Beweisführung.
 \end{Rezept}
 \strong{Beispiel 1.}
@@ -99,11 +115,40 @@ Mit $n'$ wurde ein Zeuge für die rechte Existenzaussage konstruiert.
 Somit wurde die Konklusion aus der Prämsse abgeleitet. Der Beweis
 ist erbracht.
 
+\newpage
 \section{Lineare Algebra}
 
-\subsection{Lineare Koordinatenabbildungen}
+\subsection{Lineare Abbildungen}
 
-\begin{Rezept}
+\begin{Rezept}{Inverse Matrix}
+Die $a_{ij}$ seien Elemente eines Körpers, bspw. reelle
+oder komplexe Zahlen. Zur Invertierung einer $2\times 2$-Matrix
+existiert die Formel
+\[A^{-1} = \frac{1}{\det A}\begin{pmatrix}
+a_{22} & -a_{12}\\
+-a_{21} & a_{11}
+\end{pmatrix},\quad A = \begin{pmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{pmatrix},\quad\det A = a_{11}a_{22}-a_{12}a_{21}.\]
+\end{Rezept}
+Betrachten wir die Rotationsmatrix
+\[R(\varphi) = \begin{pmatrix}\cos\varphi & -\sin\varphi\\
+\sin\varphi & \cos\varphi\end{pmatrix}.\]
+Zunächst erhält man $\det R(\varphi) = 1$ aufgrund des trigonometrischen
+Pythogras
+\[(\cos\varphi)^2+(\sin\varphi)^2=1.\]
+Mit den Symmetrien $\cos(-\varphi)=\cos\varphi$
+und $\sin(-\varphi) = -\sin\varphi$ findet sich nun
+\[R(-\varphi) = \begin{pmatrix}
+\cos(-\varphi) & -\sin(-\varphi)\\
+\sin(-\varphi) & \cos(-\varphi)
+\end{pmatrix} = \begin{pmatrix}
+\cos\varphi & \sin\varphi\\
+-\sin\varphi & \cos \varphi
+\end{pmatrix} = R(\varphi)^{-1}.\]
+
+\begin{Rezept}{Lineare Koordinatenabbildungen}
 Die darstellende Matrix $A$ einer linearen Abbildung $L\colon\R^n\to\R^m$
 lässt sich sofort gemäß $A\bv e_k = L(\bv e_k)$ bestimmen.
 \end{Rezept}
@@ -119,9 +164,7 @@ dass eine lineare Abbildung bereits durch die Bilder der Basisvektoren
 eindeutig bestimmt ist.
 
 \newpage
-\subsection{Basiswechsel}
-
-\begin{Rezept}
+\begin{Rezept}{Basiswechsel}
 Umständliche Rechnungen zum Basiswechsel kann man mit der
 Gleichung $B\bv v_B = A\bv v_A$ zu einer kurzen Matrizenrechnung
 reduzieren.
@@ -160,9 +203,7 @@ Mit diesen Überlegungen ist eigentlich auch bereits fast alles
 Wichtige gesagt, um Darstellungsmatrizen und ihre Transformation
 bei Basiswechsel verstehen zu können.
 
-% \newpage
-\subsection{Darstellungsmatrizen}
-\begin{Rezept}
+\begin{Rezept}{Darstellungsmatrizen}
 Beim Basiswechsel ist die Darstellungsmatrix zu transformieren,
 was man mittels Matrizenrechnung kurzfassen kann.
 \end{Rezept}
@@ -187,8 +228,7 @@ Man betrachte nun die Kette%
 Demzufolge gilt
 \[M_D^B(f) = D^{-1}C\,M_C^A(f)A^{-1}B = T_D^C M_C^A(f) T_A^B.\]
 
-\subsection{Lineare Unabhängigkeit}
-\begin{Rezept}
+\begin{Rezept}{Lineare Unabhängigkeit}
 Zum Vektorraum $K^n$ ist $B=(\bv b_1,\ldots,\bv b_n)$ genau dann eine
 Basis, wenn $\det(B)\ne 0$ gilt.
 \end{Rezept}
@@ -208,9 +248,9 @@ automatisch durchgeführt werden kann.
 \clearpage
 \section{Analysis}
 
-\subsection{Polarkoordinaten}
+\subsection{Geometrische Bezüge}
 
-\begin{Rezept}
+\begin{Rezept}{Polarkoordinaten}
 Bei der Umrechnung in Polarkoordinaten wird das Auftreten
 umständlicher Fallunterscheidungen verhindert,
 indem man $x=r\cos\varphi$ nach $\varphi$ umstellt
@@ -228,102 +268,32 @@ Koordinaten in Polarkoordinaten nutzt man am besten die Formel
 wobei $s(0)=1$ ist und sonst $s(y)=\sgn(y)$ gilt. Auf diese
 Weise entgeht man komplizierten Fallunterscheidungen.
 
-\subsection{Umformungen verifizieren}
-
-\begin{Rezept}
-Mit einem Plotter für implizite Kurven lassen sich
-Gleichungsumformungen verifizieren.
+\begin{Rezept}{Rotationsmatrizen}
+Die Multiplikation von Rotationsmatrizen bietet eine Merkhilfe
+für die Additionstheoreme.
 \end{Rezept}
+Es sei $c_x := \cos x$ und $s_x := \sin x$. Es stellt
+$R_x := \big(\begin{smallmatrix}
+c_x & -s_x\\ s_x & c_x
+\end{smallmatrix}\big)$ die
+Rotationsmatrix für die Rotation um den Winkel $x$ gegen den
+Uhrzeigersinn dar. Die Additionstheoreme lassen sich nun
+via $R_{x+y} = R_x R_y$ ablesen an der Matrizenmultiplikation
+\[\begin{pmatrix}
+c_{x+y} & -s_{x+y}\\
+s_{x+y} & c_{x+y}
+\end{pmatrix} = \begin{pmatrix}
+c_x & -s_x\\
+s_x & c_x
+\end{pmatrix}\begin{pmatrix}
+c_y & -s_y\\
+s_y & c_y
+\end{pmatrix} = \begin{pmatrix}
+c_x c_y - s_x s_y & -c_x s_y - c_y s_x\\
+c_x s_y + c_y s_x & c_x c_y - s_x s_y
+\end{pmatrix}.\]
 
-\noindent
-Die Gleichung $y = \tfrac{x}{\sqrt{x^2+1}}$ ist nach $x$ umzustellen.
-Wir beschränken uns hierbei auf $x\ge 0$ und $y\ge 0$, da $y$
-als Funktion von $x$ punktsymmetrisch zum Koordinatenursprung ist.
-Unter dieser Einschränkung gilt
-\begin{gather*}
-y = \tfrac{x}{\sqrt{x^2+1}}\iff y^2 = \tfrac{x^2}{x^2+1}
-\iff y^2(x^2+1) = x^2\\
-\iff y^2 x^2 + y^2 = x^2
-\iff y^2 x^2 - x^2 = -y^2\\
-\iff x^2 (y^2 - 1) = -y^2
-\iff x^2 (1 - y^2) = y^2\\
-\iff x^2 = \tfrac{y^2}{1-y^2}
-\iff x = \tfrac{y}{\sqrt{1-y^2}}.
-\end{gather*}
-Lässt man die Gleichung mit einem Funktionenplotter als implizite Kurve
-zeichen, darf dem Graph durch die jeweilige Äquivalenzumformung keine
-Veränderung widerfahren. Auf diese Weise lässt sich die Richtigkeit
-jedes Umformungsschritts grafisch prüfen.
-
-\subsection{Ableitungen verifizieren}
-
-\begin{Rezept}
-Es ist zuträglich, nach dem Bestimmen der Ableitung im Anschluss
-mit einem Plotter oder einem CAS die Probe durchzuführen.
-\end{Rezept}
-
-\noindent
-Die Ableitung einer reellen Funktion $f$ ist definiert als%
-\[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
-Möchte man erfahren, ob sie unter Anwendung
-der Ableitungsregeln richtig ermittelt wurde, kann man die Probe
-machen, indem der Differenzenquotient%
-\[D_h f(x) = \frac{f(x+h)-f(x)}{h}\]
-an einer konkreten Stelle $x$ für ein kleines $h$ numerisch
-berechnet und mit $f'(x)$ verglichen wird.
-
-Da dies recht umständlich ist, ist es sinnvoll, diese Aufgabe einem
-Funktionenplotter zu überlassen. Numerisch günstiger ist es, den
-Differenzenquotient nicht naiv gemäß der Definition zu berechnen,
-sondern als%
-\[D_h f(x) = \frac{f(x+h)-f(x-h)}{2h}.\]
-Mit dem Plotter kann man schließlich
-\[10^n (D_h f(x) - f'(x)) \approx 0\]
-für $n\in\{0,1,2,\ldots\}$ prüfen.
-
-\newpage
-\subsection{Fixpunktiteration}
-
-\begin{Rezept}
-Wann immer eine Rekurrenz der Form $x_{n+1} = \varphi(x_n)$
-auftritt, betrachte man die Fixpunktgleichung $x = \varphi(x)$. Ob
-$x_n$ gegen den Fixpunkt $x$ konvergiert, hängt allerdings von den
-Eigenschaften von $\varphi$ ab.
-\end{Rezept}
-
-\noindent
-Man kann sich die Frage stellen, welchen Wert der endlose
-Kettenbruch
-\[a+\frac{b}{a+\frac{b}{a+\frac{b}{a+\ldots}}}\]
-für feste Zahlen $a,b$ besitzt. Zunächst muss geklärt sein, was
-damit gemeint sein soll. Man beginnt bei einem Startwert $x_0$
-und betrachtet die Rekurrenz
-\[x_{n+1} = a+\frac{b}{x_n}.\]
-Wir abstrahieren durch Einführung der Funktion $\varphi$, so dass
-\[x_{n+1} = \varphi(x_n)\]
-gilt. Wie man mühelos bestätigen kann, handelt es sich bei $\varphi$
-für $a>0$ und $b>0$ um eine stetige Selbstabbildung auf $\R_{>0}$.
-Nehmen wir nun an, die Folge $(x_n)$ konvergiert gegen eine Zahl $x$.
-Dann muss gelten
-\begin{align*}
-x &= \lim_{n\to\infty} x_{n} = \lim_{n\to\infty} x_{n+1}
-= \lim_{n\to\infty}\varphi(x_n)\\
-&= \varphi(\lim_{n\to\infty} x_n) = \varphi(x),
-\end{align*}
-wobei $\varphi$ aufgrund der Stetigkeit aus der Grenzwertbildung
-herausgezogen werden durfte. Die Gleichung
-\[x = \varphi(x)\]
-bezeichnet man als \emph{Fixpunktgleichung}. Ihre Lösungen
-bezeichnet man als \emph{Fixpunkte} von $\varphi$. Speziell für den
-Kettenbruch ergibt sich die quadratische Gleichung
-\[x^2 - ax - b = 0.\]
-So erhält man $1+\sqrt{2}$ für $a=2$ und $b=1$.
-Für $a=1$ und $b=1$ erhält man den goldenen Schnitt.
-
-\newpage
-\subsection{Konformität als Holomorphie}
-
-\begin{Rezept}
+\begin{Rezept}{Konstruktion konformer Abbildungen}
 Zur Konstruktion konformer Abbildungen der Ebene
 nutze man holomorphe Funktionen.
 \end{Rezept}
@@ -365,10 +335,9 @@ $f(z):=u+v\ui$. Das heißt, $f$ ist genau dann eine konforme
 Abbidlung, wenn $f$ holomorph ist und ihre Ableitung keine
 Nullstellen besitzt.
 
-\newpage
-\subsection{Vollständige Induktion}
+\subsection{Rekurrenzen und Summen}
 
-\begin{Rezept}
+\begin{Rezept}{Vollständige Induktion}
 Eine Aussage $A(n)$ für $n\in\Z, n\ge n_0$ sei offensiv
 hergeleitet worden unter Nutzung von höheren oder
 heuristischen Methoden, deren Gültigkeit nicht zweifelsfrei
@@ -414,9 +383,22 @@ unter welchen Prämissen diese gültig sind. Sogar vage und skizzenhafte
 Argumentationen sind nicht unbedingt tabu.
 
 \newpage
-\subsection{Lineare Rekurrenzen}
+\begin{Rezept}{Teleskopsumme}
+Bezüglich $(\Delta s)_k := s_{k+1}-s_k$ gilt die
+Teleskopsumme $\sum_{k=m}^{n-1} (\Delta s)_k = s_n - s_m$.
+Um beispielsweise eine Identität $\sum_{k=0}^{n-1} a_k = s_n$
+zu beweien, genügt es, $s_0=0$ und $(\Delta s)_k = a_k$ zu bestätigen.
+\end{Rezept}
+Für die Summe der Dreieckszahlen gilt bekanntlich die Identität
+\[\sum_{k=0}^{n-1} k = \frac{n}{2}(n-1).\]
+Es sei $s_n:=\frac{n}{2}(n-1)$. Man erhält direkt ersichtlich $s_0=0$,
+und kurzerhand
+\[(\Delta s)_k = \frac{k+1}{2}k - \frac{k}{2}(k-1)
+= \frac{1}{2}(k^2 + k - k^2 + k) = k.\]
+Wir haben die Formel somit bereits bewiesen, ohne eine vollständige
+Induktion zu bemühen.
 
-\begin{Rezept}
+\begin{Rezept}{Lineare Rekurrenzen}
 Jede lineare Rekurrenz lässt sich durch Hilfsvariablen und homogene
 Koordinaten in die Form eines homogenen linearen Systems erster Ordnung
 bringen, das in vektorieller Form als $\mathbf v_{n+1}=A\mathbf v_n$
@@ -458,9 +440,58 @@ a & b & c\\
 x_n\\ y_n\\ 1
 \end{pmatrix}.\]
 
-\subsection{Majorantenkriterium}
+\newpage
+\subsection{Grenzwerte}
 
-\begin{Rezept}
+\begin{Rezept}{Fixpunktiteration}
+Wann immer eine Rekurrenz der Form $x_{n+1} = \varphi(x_n)$
+auftritt, betrachte man die Fixpunktgleichung $x = \varphi(x)$. Ob
+$x_n$ gegen den Fixpunkt $x$ konvergiert, hängt allerdings von den
+Eigenschaften von $\varphi$ ab.
+\end{Rezept}
+
+\noindent
+Man kann sich die Frage stellen, welchen Wert der endlose
+Kettenbruch
+\[a+\frac{b}{a+\frac{b}{a+\frac{b}{a+\ldots}}}\]
+für feste Zahlen $a,b$ besitzt. Zunächst muss geklärt sein, was
+damit gemeint sein soll. Man beginnt bei einem Startwert $x_0$
+und betrachtet die Rekurrenz
+\[x_{n+1} = a+\frac{b}{x_n}.\]
+Wir abstrahieren durch Einführung der Funktion $\varphi$, so dass
+\[x_{n+1} = \varphi(x_n)\]
+gilt. Wie man mühelos bestätigen kann, handelt es sich bei $\varphi$
+für $a>0$ und $b>0$ um eine stetige Selbstabbildung auf $\R_{>0}$.
+Nehmen wir nun an, die Folge $(x_n)$ konvergiert gegen eine Zahl $x$.
+Dann muss gelten
+\[x = \lim_{n\to\infty} x_{n} = \lim_{n\to\infty} x_{n+1}
+= \lim_{n\to\infty}\varphi(x_n)
+= \varphi(\lim_{n\to\infty} x_n) = \varphi(x),\]
+wobei $\varphi$ aufgrund der Stetigkeit aus der Grenzwertbildung
+herausgezogen werden durfte. Die Gleichung $x = \varphi(x)$
+bezeichnet man als \emph{Fixpunktgleichung}. Ihre Lösungen
+bezeichnet man als \emph{Fixpunkte} von $\varphi$. Speziell für den
+Kettenbruch ergibt sich die quadratische Gleichung
+\[x^2 - ax - b = 0.\]
+So erhält man $1+\sqrt{2}$ für $a=2$ und $b=1$.
+Für $a=1$ und $b=1$ erhält man den goldenen Schnitt.
+
+\begin{Rezept}{Folgen als Reihen}
+Jede Folge kann durch Bildung der Differenzenfolge als Reihe
+aufgefasst werden, womit sämtliche Konvergenzkriterien für Reihen
+zur Verfügung stehen.
+\end{Rezept}
+
+\noindent
+Zu jeder Folge $(a_n)$ kann man die durch
+\[(\Delta a)_k := a_{k+1} - a_k\]
+definierte Differenzenfolge bilden. Umgekehrt lässt sich $a_n$ über
+die Teleskopsumme
+\[a_n-a_0 = \sum_{k=0}^{n-1} (\Delta a)_k\]
+zurückgewinnen. Hiermit ist $(a_n)$ als eine Folge von
+Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
+
+\begin{Rezept}{Majorantenkriterium}
 Kann man zu einer Reihe von Elementen eines Banachraums eine
 konvergente Majorante finden, dann muss die Reihe absolut konvergent
 sein. 
@@ -483,9 +514,88 @@ bestätigt die Majorante mit $b_k=1/k^2$, denn
 Diese Ungleichung ist für alle $k\in\Z$ erfüllt, und somit erst recht
 für $k\ge 1$.
 
-\subsection{Bisektion}
+\begin{Rezept}{Ausklammern}
+Manchmal ist es zielführend, einen Term auszuklammern.
+\end{Rezept}
+Ein elementares Beispiel bietet die Rechnung
+\[\frac{x}{x+1} = \frac{x}{x}\frac{1}{(1+\frac{1}{x})}
+= \frac{1}{1+\frac{1}{x}}\xrightarrow{x\to\infty}\frac{1}{1+0} = 1.\]
+Etwas schwieriger ist es, die Konvergenz $(x^n+1)^{1/n}-x\to 0$ für
+$n\ge 2$ bezüglich $x\to\infty$ zu bestätigen. Die binomische Reihe
+ist allerdings nicht direkt anzuwenden, da das Argument bei großen $x$
+außerhalb des Konvergenzbereichs liegt. Klammert man aber $x$ aus, löst
+sich diese Komplikation magisch in Luft auf. Es findet sich
+\begin{gather*}
+(x^n+1)^{1/n}-x = x\Big(\Big(1+\frac{1}{x^n}\Big)^{1/n}-1\Big)\\
+= x(\sum_{k=0}^\infty\binom{1/n}{k}x^{-nk}-1)
+= \sum_{k=1}^\infty\binom{1/n}{k}\frac{1}{x^{nk-1}}
+\xrightarrow{x\to\infty} 0,
+\end{gather*}
+denn wegen $nk>1$ konvergiert jeder Summand gegen null. Im letzten
+Schritt ist streng genommen noch zu bestätigen, dass die Grenzwerte
+vertauscht werden dürfen. Bezüglich der Substitution $\frac{1}{x}=u$
+ist gemeint
+\[\lim_{u\to 0}\lim_{m\to\infty}\sum_{k=1}^m\binom{1/n}{k}u^{nk-1}
+= \lim_{m\to\infty}\lim_{u\to 0}\sum_{k=1}^m\binom{1/n}{k}u^{nk-1}.\]
+Abgesichert wird dies durch die gleichmäßige Konvergenz der
+Partialsummenfolge der Potenzreihe auf den kompakten Teilmengen ihres
+Konvergenzintervalls. Dieser Umstand muss nicht extra nachgewiesen
+werden, er gilt für jede Potenzreihe.
 
-\begin{Rezept}
+\subsection{Differentialrechnung}
+
+\begin{Rezept}{Ableitungen verifizieren}
+Es ist zuträglich, nach dem Bestimmen der Ableitung im Anschluss
+mit einem Plotter oder einem CAS die Probe durchzuführen.
+\end{Rezept}
+
+\noindent
+Die Ableitung einer reellen Funktion $f$ ist definiert als%
+\[f'(x) := \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.\]
+Möchte man erfahren, ob sie unter Anwendung
+der Ableitungsregeln richtig ermittelt wurde, kann man die Probe
+machen, indem der Differenzenquotient%
+\[D_h f(x) = \frac{f(x+h)-f(x)}{h}\]
+an einer konkreten Stelle $x$ für ein kleines $h$ numerisch
+berechnet und mit $f'(x)$ verglichen wird.
+
+Da dies recht umständlich ist, ist es sinnvoll, diese Aufgabe einem
+Funktionenplotter zu überlassen. Numerisch günstiger ist es, den
+Differenzenquotient nicht naiv gemäß der Definition zu berechnen,
+sondern als%
+\[D_h f(x) = \frac{f(x+h)-f(x-h)}{2h}.\]
+Mit dem Plotter kann man schließlich
+\[10^n (D_h f(x) - f'(x)) \approx 0\]
+für $n\in\{0,1,2,\ldots\}$ prüfen.
+
+\subsection{Zur Lösung von Gleichungen}
+
+\begin{Rezept}{Umformungen verifizieren}
+Mit einem Plotter für implizite Kurven lassen sich
+Gleichungsumformungen verifizieren.
+\end{Rezept}
+
+\noindent
+Die Gleichung $y = \tfrac{x}{\sqrt{x^2+1}}$ ist nach $x$ umzustellen.
+Wir beschränken uns hierbei auf $x\ge 0$ und $y\ge 0$, da $y$
+als Funktion von $x$ punktsymmetrisch zum Koordinatenursprung ist.
+Unter dieser Einschränkung gilt
+\begin{gather*}
+y = \tfrac{x}{\sqrt{x^2+1}}\iff y^2 = \tfrac{x^2}{x^2+1}
+\iff y^2(x^2+1) = x^2\\
+\iff y^2 x^2 + y^2 = x^2
+\iff y^2 x^2 - x^2 = -y^2\\
+\iff x^2 (y^2 - 1) = -y^2
+\iff x^2 (1 - y^2) = y^2\\
+\iff x^2 = \tfrac{y^2}{1-y^2}
+\iff x = \tfrac{y}{\sqrt{1-y^2}}.
+\end{gather*}
+Lässt man die Gleichung mit einem Funktionenplotter als implizite Kurve
+zeichen, darf dem Graph durch die jeweilige Äquivalenzumformung keine
+Veränderung widerfahren. Auf diese Weise lässt sich die Richtigkeit
+jedes Umformungsschritts grafisch prüfen.
+
+\begin{Rezept}{Bisektion}
 Bisektion ist ein allgemeines und automatisierbares
 Verfahren zur Ermittlung von Nullstellen.
 \end{Rezept}
@@ -534,9 +644,7 @@ mittels Bisektion. Zur Verbesserung überlagert man die Zeichnung mit
 der analogen Zeichnung bezüglich Abtastung der $x$-Achse mit jeweils
 Lösungen $y$ der Gleichung $f(x_k,y)=0$.
 
-\subsection{Abschätzung der Lage von Lösungen}
-
-\begin{Rezept}
+\begin{Rezept}{Abschätzung der Lage von Lösungen}
 Auch wenn bei einer Gleichung kein Lösungsansatz zu finden ist,
 lassen sich oft Abschätzungen angeben, wo die Lösungen
 befindlich sein müssen.
@@ -568,27 +676,9 @@ Folge von Abschätzungen jedoch blitzartig mit dem Bisektionsverfahren,
 weil $P(0)=-1$ negativ und $P(1)=7$ positiv ist.
 
 \newpage
-\subsection{Folgen als Reihen}
+\subsection{Differentialgleichungen}
 
-\begin{Rezept}
-Jede Folge kann durch Bildung der Differenzenfolge als Reihe
-aufgefasst werden, womit sämtliche Konvergenzkriterien für Reihen
-zur Verfügung stehen.
-\end{Rezept}
-
-\noindent
-Zu jeder Folge $(a_n)$ kann man die durch
-\[(\Delta a)_k := a_{k+1} - a_k\]
-definierte Differenzenfolge bilden. Umgekehrt lässt sich $a_n$ über
-die Teleskopsumme
-\[a_n-a_0 = \sum_{k=0}^{n-1} (\Delta a)_k\]
-zurückgewinnen. Hiermit ist $(a_n)$ als eine Folge von
-Partialsummen dargestellt, kann also als Reihe aufgefasst werden.
-
-\newpage
-\subsection{Euler-Verfahren}
-
-\begin{Rezept}
+\begin{Rezept}{Euler-Verfahren}
 Das Euler-Verfahren ist eine unkompliziert zu handhabende und
 automatisierbare Methode zur numerischen Lösung eines
 Anfangswertproblems.
@@ -672,10 +762,7 @@ man die genügend gute Näherung%
 Setzen wir $a:=t$ und $b:=t+h$ ein, finden wir
 zum zweiten Mal die näherungsweise Gleichung.
 
-
-\subsection{Fundamentallösung}
-
-\begin{Rezept}
+\begin{Rezept}{Fundamentallösung}
 Ein Weg zur Lösung einer inhomogenen linearen gewöhnlichen
 Differentialgleichung mit konstanten Koeffizienten
 besteht in der Auffindung einer Fundamentallösung.
@@ -741,7 +828,7 @@ Ansatz \emph{Variation der Konstanten} zum Resultat hat.
 
 \subsection{Zufallsgrößen}
 
-\begin{Rezept}
+\begin{Rezept}{Zufallsgröße}
 Eine Zufallsgröße $X\colon\Omega\to\Omega'$ schafft eine kausale
 Verbindung, dergestalt dass ein Ergbnis $\omega\in\Omega$ zum
 Ergebnis $X(\omega)$ wird. Ein Ereignis $A'\subseteq\Omega'$

@@ -1525,7 +1525,7 @@ Zur Abkürzung sei $A:=(x\in\emptyset\land P(x))$. Die Beweisbäume:
 Es gilt das Schema $\vdash\lnec (A\cond B)\cond (\lnec A\cond\lnec B)$.
 \end{Axiom}
 
-\begin{Axiom}[T]
+\begin{Axiom}[T]\label{axiom-T}
 Es gilt das Schema $\vdash\lnec A\cond A$.
 \end{Axiom}
 
@@ -1608,6 +1608,47 @@ ist die Ableitung gefunden.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
+Mit Axiom \ref{DNE} (DN) gilt $\lpos\neg A\bicond\neg\lnec A$ im System~K.
+\end{Satz}
+\begin{Beweis} Der Beweisbaum
+\[
+\infer{\vdash\lpos\neg A\bicond\neg\lnec A}{
+  \infer[\infernote{Def. \ref{def:possibly}}]{\vdash\lpos\neg A\cond\neg\lnec A}{
+    \infer[\infernote{Kontraposition}]{\vdash\neg\lnec\neg\neg A\cond\neg\lnec A}{
+      \infer[\infernote{K}]{\vdash\lnec A\cond\lnec\neg\neg A}{
+        \infer[\infernote{Nezessisierung}]{\vdash\lnec (A\cond\neg\neg A)}{
+          \infer{\vdash A\cond\neg\neg A}{}
+        }
+      }
+    }}
+& \infer[\infernote{Def. \ref{def:possibly}}]{\vdash\neg\lnec A\cond\lpos\neg A}{
+    \infer[\infernote{Kontraposition}]{\vdash\neg\lnec A\cond\neg\lnec\neg\neg A}{
+      \infer[\infernote{K}]{\vdash\lnec\neg\neg A\cond\lnec A}{
+        \infer[\infernote{Nezessisierung}]{\vdash\lnec(\neg\neg A\cond A)}{
+          \infer[\infernote{DN}]{\vdash\neg\neg A\cond A}{}}}}}}
+\]
+zeigt die Ableitung.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Im System K gilt $\lnec (A\cond B)\cond (\lpos A\cond\lpos B)$.
+\end{Satz}
+\begin{Beweis} Mit dem Baum
+\[
+\infer{\vdash\lnec (A\cond B)\cond (\lpos A\cond\lpos B)}{
+  \infer[\infernote{Def. \ref{def:possibly}}]{\lnec (A\cond B)\vdash\lpos A\cond\lpos B}{
+    \infer[\infernote{Kontraposition}]{\lnec (A\cond B)\vdash\neg\lnec\neg A\cond\neg\lnec\neg B}{
+      \infer[\infernote{K}]{\lnec (A\cond B)\vdash\lnec\neg B\cond\lnec\neg A}{
+        \infer{\lnec (A\cond B)\vdash\lnec (\neg B\cond\neg A)}{
+          \infer{\lnec (A\cond B)\vdash\lnec (A\cond B)}{}
+        & \infer[\infernote{K}]{\vdash\lnec (A\cond B)\cond\lnec (\neg B\cond\neg A)}{
+            \infer[\infernote{Nezessisierung}]{\vdash\lnec ((A\cond B)\cond(\neg B\cond\neg A))}{
+              \infer[\infernote{Kontraposition}]{\vdash (A\cond B)\cond (\neg B\cond\neg A)}{}}}}}}}}
+\]
+ist die Ableitung gefunden.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
 Im System K gilt $\lpos (A\land B)\cond\lpos A$
 und $\lpos (A\land B)\cond\lpos B$.\\
 Mithin gilt $\lpos (A\land B)\cond\lpos A\land\lpos B$.
@@ -1631,6 +1672,39 @@ Mithin gilt $\lpos (A\land B)\cond\lpos A\land\lpos B$.
 \end{array}
 \]
 Der Beweis der zweiten Formel verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+\subsection{System T}
+
+\begin{Satz}
+Mit Axiom \ref{DNE} (DN) ist
+die Hinzunahme von Axiom \ref{axiom-T} (T) zum System~K äquivalent
+zur Hinzunahme des Schemas $\vdash A\cond\lpos A$.
+\end{Satz}
+\begin{Beweis} Die Ableitungen
+\[
+\begin{array}{l@{\qquad}l}
+\infer{\vdash A\cond\lpos A}{
+  \infer{A\vdash\lpos A}{
+    \infer[\infernote{Def. \ref{def:possibly}}]{\vdash\neg\neg A\cond\lpos A}{
+      \infer{\vdash\neg\neg A\cond\neg\lnec\neg A}{
+        \infer[\infernote{$B:=\neg A$}]{\vdash\lnec\neg A\cond\neg A}{
+          \vdash\lnec B\cond B}}}
+  & \infer{A\vdash\neg\neg A}{}}}
+&
+\infer{\vdash\lnec A\cond A}{
+  \infer[\infernote{DN}]{\lnec A\vdash A}{
+    \infer{\lnec A\vdash\neg\neg A}{
+      \infer{\vdash\neg\lpos\neg A\cond\neg\neg A}{
+        \infer[\infernote{$B:=\neg A$}]{\vdash\neg A\cond\lpos\neg A}{
+          \vdash B\cond\lpos B}}
+    & \infer[\infernote{Def. \ref{def:possibly}}]{\lnec A\vdash\neg\lpos\neg A}{
+        \infer{\lnec A\vdash\neg\neg\lnec\neg\neg A}{
+          \infer[\infernote{N*}]{\lnec A\vdash\lnec\neg\neg A}{
+            \infer{A\vdash\neg\neg A}{}}}}}}}
+\end{array}
+\]
+bestätigen das Gesagte.\,\qedsymbol
 \end{Beweis}
 
 \newpage

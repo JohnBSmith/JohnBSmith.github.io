@@ -1,0 +1,96 @@
+
+\chapter{Grenzwerte}
+
+\section{Asymptoten}
+
+Es sei eine reelle Funktion $f$ gegeben. Eine weitere Funktion $g$
+wollen wir eine \emph{Asymptote}\index{Asymptote}
+von $f$ nennen, wenn die Konvergenz
+\[f(x)-g(x)\to 0\]
+für $x\to\infty$ bzw. $x\to -\infty$ vorliegt. Untersuchen wir,
+welche Funktionen geradlinige Asymptoten haben, das sind solche
+der Form
+\[g(x) = ax + b.\]
+Man betrachte die Faktorisierung
+\[f(x) - (ax + b) = \left(\frac{f(x)}{x}-a-\frac{b}{x}\right)x.\]
+Damit der Term gegen null konvergiert, muss notwendigerweise der erste
+Faktor gegen null konvergieren, da ja $x$ bei $x\to\infty$ immer größer
+wird. Wir haben nun $a\to a$ und $b/x\to 0$ für $x\to\infty$.
+Ergo muss $f(x)/x$ gegen $a$ konvergieren, denn gemäß den
+Grenzwertsätzen gilt
+\begin{align*}
+0 &= \lim_{x\to\infty}\left(\frac{f(x)}{x}-a-\frac{b}{x}\right)\\
+&= \lim_{x\to\infty}\frac{f(x)}{x}-\lim_{x\to\infty}a-\lim_{x\to\infty}\frac{n}{x}
+= \lim_{x\to\infty}\frac{f(x)}{x} - a.
+\end{align*}
+Existiert der Grenzwert $\lim_{x\to\infty}\frac{f(x)}{x}$ nicht,
+folgt in Kontraposition die Nichtexistenz einer nichtvertikalen
+geradlinigen Asymptote.
+
+Wegen $b\to b$ für $x\to\infty$ gilt nach den Grenzwertsätzen außerdem
+\begin{align*}
+b &= 0 + b = \lim_{x\to\infty}(f(x) - (ax + b)) + \lim_{x\to\infty}b\\
+&= \lim_{x\to\infty} (f(x) - (ax + b) + b) = \lim_{x\to\infty} (f(x) - ax).
+\end{align*}
+Abschließend stellen wir fest, dass die Existenz der beiden Grenzwerte
+für die Existenz der Asymptote hinreichend ist, denn unter
+abermaliger Anwendung der Grenzwertsätze erhält man
+\begin{align*}
+0 &= b-b = \lim_{x\to\infty}(f(x)-ax) - \lim_{x\to\infty} b\\
+&= \lim_{x\to\infty} (f(x)-(ax+b)),
+\end{align*}
+was ja die definierende Bedingung der Asymptote darstellt.
+
+\strong{Beispiel 1.} Es sei beispielsweise die Funktion
+\[f(x) := \frac{x^2}{x+1}\]
+gegeben. Wir haben nun
+\[a = \lim_{x\to\infty}\frac{f(x)}{x} = \lim_{x\to\infty}\frac{x}{x+1}
+= \lim_{x\to\infty}\frac{1}{1+\tfrac{1}{x}} = \frac{1}{1+0} = 1.\]
+Weiterhin erhält man
+\[\frac{x^2}{x+1} = x-\frac{x}{x+1}\]
+via einem Schritt Polynomdivision. Hiermit findet sich
+\[b = \lim_{x\to\infty} (f(x) - ax) = \lim_{x\to\infty} \frac{-x}{x+1}
+= \lim_{x\to\infty}\frac{-1}{1+\tfrac{1}{x}} = -1.\]
+Wir haben für $x\to\infty$ die schiefe Asymptote $y = x-1$
+ermittelt. Führt man die analoge Überlegung für $x\to -\infty$,
+findet sich dieselbe Asymptote.
+
+\strong{Beispiel 2.} Betrachten wir $x^2-y^2=1$. Beschränken wir uns
+zunächst $y\ge 0$ auf, da Symmetrie besteht. Formt man die Gleichung
+nun nach $y$ um, erhält man die Funktion
+\[f(x) := y = \sqrt{x^2-1}.\]
+Für $x>0$ findet sich
+\[\frac{f(x)}{x} = \frac{\sqrt{x^2-1}}{\sqrt{x^2}}
+= \sqrt{\frac{x^2-1}{x^2}} = \sqrt{1-\frac{1}{x^2}}.\]
+Man erhält somit $a = \lim_{x\to\infty} f(x)/x = 1$. Im Fortgang nutzen
+wir nun den Trick
+\[(\sqrt{x^2-1}-x)(\sqrt{x^2-1}+x) = x^2-1-x^2 = 1.\]
+Hiermit erhält man
+\[f(x) - ax = \sqrt{x^2-1}-x = \frac{1}{x+\sqrt{x^2-1}}.\]
+Nun ist $\sqrt{x^2-1}>0$ als Wurzel, womit $x+\sqrt{x^2-1}\to\infty$
+für $x\to\infty$. Man erhält schließlich
+\[b = \lim_{x\to\infty} (f(x)-ax) = 0.\]
+Man erhält also die Asymptote $y=x$. Analog erhält man $y=-x$ für
+$x\to -\infty$.
+
+\strong{Beispiel 3.}
+Es sei $f(x):=x+\tfrac{\sin(\ee^x)}{\ee^x}$, definiert auf ganz $\R$.
+Man erhält
+\[a = \lim_{x\to\infty}\frac{f(x)}{x} = \lim_{x\to\infty} (1+\tfrac{\sin(\ee^x)}{x\ee^x})
+= 1+0 = 1\]
+und
+\[b = \lim_{x\to\infty}(f(x)-ax) = \lim_{x\to\infty}\frac{\sin(\ee^x)}{\ee^x} = 0.\]
+Somit ist $y = x$ eine schiefe Asymptote von $f$.
+
+Den Grenzwert $\lim_{h\to 0}\frac{\sin(h)}{h}=1$ nutzen wir nun
+als Hilfsmittel. Man erhält hiermit
+\begin{align*}
+a' &= \lim_{x\to -\infty}\frac{f(x)}{x} =
+\lim_{x\to -\infty}(1+\tfrac{\sin(\ee^x)}{x\ee^x})\\
+&= 1+(\lim_{x\to -\infty}\tfrac{1}{x})(\lim_{x\to -\infty}\tfrac{\sin(\ee^x)}{\ee^x})
+= 1+0\cdot 1 = 1.
+\end{align*}
+Im Fortgang findet sich
+\[b' = \lim_{x\to -\infty} (f(x)-ax) = \lim_{x\to -\infty}\tfrac{\sin(\ee^x)}{\ee^x}
+= 1.\]
+Somit ist $y = x+1$ ebenfalls eine schiefe Asymptote von $f$.

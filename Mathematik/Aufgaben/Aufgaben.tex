@@ -70,7 +70,7 @@
 {\huge\normalfont\sffamily\bfseries Aufgaben\par}
 
 \vspace{2mm}
-\noindent Juni 2021
+\noindent Dezember 2022
 
 \vspace{2mm}
 \noindent
@@ -166,7 +166,6 @@ Man erhält den Widerspruch $1=0$. Nach Reductio ad absurdum muss
 die Annahme also falsch sein.\;\qedsymbol
 
 \newpage
-
 \subsection{Integralrechnung}
 \begin{Aufgabe}
 Berechne $\displaystyle\int x^2\sin x\,\mathrm dx$.
@@ -1950,6 +1949,86 @@ f(x) &= F'(x) = \frac{\mathrm d}{\mathrm dx}\int_0^x F_1(x-a)f_2(a)\,\mathrm da
 \end{align*}
 Die Dichte $f$ ist die Faltung der Dichten $f_1,f_2$.\;\qedsymbol
 
+\begin{Aufgabe}
+Auf dem Einheitskreis werden zwei zufällige Punkte gewählt. Wie groß
+ist der Erwartungswert der Länge der Sehne, die die beiden
+Punkte verbindet?
+\end{Aufgabe}
+\strong{Lösung 1.}
+Man lege den Koordinatenursprung in den Mittelpunkt des Kreises
+und drehe es so, dass sich der erste Punkt in $(1,0)$ befindet.
+Der zweite Punkt ist nun durch den auf $[0,2\pi]$ uniform
+verteilten Winkel $\Phi$ gegeben, dessen Dichte
+$f(\varphi) = \tfrac{1}{2\pi}1_{[0,2\pi]}(\varphi)$ ist.
+Für die Länge der Sehne bezüglich $\varphi$ erhält man
+\[L(\varphi) = \left\|\begin{pmatrix}\cos\varphi\\ \sin\varphi\end{pmatrix}
+- \begin{pmatrix}1\\ 0\end{pmatrix}\right\|
+= \sqrt{(\cos\varphi -1)^2 + (\sin\varphi)^2}
+= \sqrt{2-2\cos\varphi} = 2\cdot |\sin\tfrac{\varphi}{2}|.\]
+Somit findet sich der Erwartungswert
+\[E(L(\Phi)) = \int_\R L(\varphi)f(\varphi)\,\mathrm d\varphi
+= \frac{1}{2\pi}\int_0^{2\pi} L(\varphi)\,\mathrm d\varphi
+= \frac{1}{\pi}\int_0^{2\pi} \sin(\tfrac{\varphi}{2})\,\mathrm d\varphi
+= \frac{4}{\pi}.\,\qedsymbol\]
+
+\strong{Lösung 2.}
+Die beiden Punkt sind gegeben durch auf $[0,2\pi]$ uniform verteilte
+Winkel $\Phi,\Psi$. Die gemeinsame Dichte von $(\Phi,\Psi)$ ist
+\[f(\varphi,\psi) = \frac{1}{(2\pi)^2}1_{[0,2\pi]}(\varphi)1_{[0,2\pi]}(\psi).\]
+Die Länge der Sehne ist
+\[L(\varphi,\psi) = \left\|\begin{pmatrix}\cos\varphi\\ \sin\varphi\end{pmatrix}
+- \begin{pmatrix}\cos\psi\\ \sin\psi\end{pmatrix}\right\|
+= \sqrt{(\cos\varphi-\cos\psi)^2 + (\sin\varphi-\sin\psi)^2}
+= 2\cdot |\sin(\tfrac{x}{2}-\tfrac{y}{2})|.\]
+Hiermit findet sich der Erwartungswert
+\[E(L(\varphi,\psi)) = \int_\R\int_\R L(\varphi,\psi)f(\varphi,\psi)\,\mathrm d\varphi d\psi
+= \frac{4}{\pi}.\,\qedsymbol\]
+
+\begin{Aufgabe}
+Auf dem Einheitskreis werden drei zufällige Punkte als Ecken eines
+Dreiecks gewählt. Wie groß ist der Erwartungswert seines Flächeninhalts?
+\end{Aufgabe}
+\strong{Lösung.}
+Das Koordinatensystem wird so festgelegt, dass sich der erste Punkt
+in $p_0=(1, 0)$ befindet. Die anderen beiden Punkte sind nun durch
+auf $[0,2\pi]$ uniform verteilte Winkel $\Phi,\Psi$ gegeben als
+$p_1=(\cos\Phi,\sin\Phi)$ und $p_2=(\cos\Psi,\sin\Psi)$. Der Flächeninhalt
+des Dreiecks bezüglich $\varphi,\psi$ ist
+\begin{align*}
+A(\varphi,\psi) &= \tfrac{1}{2}\|(p_1-p_0)\wedge (p_2-p_0)\|
+= \tfrac{1}{2}|(\cos\varphi-1)\sin\psi - (\cos\psi-1)\sin\varphi|\\
+&= \tfrac{1}{2}|\sin(\psi-\varphi)+\sin\varphi-\sin\psi|.
+\end{align*}
+Die gemeinsame Dichte von $(\Phi,\Psi)$ ist
+\[f(\varphi,\psi) = \frac{1}{(2\pi)^2}1_{[0,2\pi]}(\varphi)1_{[0,2\pi]}(\psi).\]
+Man kommt zum Erwartungswert
+\begin{align*}
+E(A(\Phi,\Psi)) &= \int_\R\int_\R A(\varphi,\psi)f(\varphi,\psi)\,\mathrm d\varphi\mathrm d\psi
+= \frac{1}{(2\pi)^2}\int_0^{2\pi}\int_0^{2\pi} A(\varphi,\psi)\,\mathrm d\varphi\mathrm d\psi\\
+&= \frac{1}{(2\pi)^2}\int_0^{2\pi}\int_0^\varphi (\sin(\varphi-\psi)-\sin\varphi+\sin\psi)\,\mathrm d\psi\,\mathrm d\varphi
+= \frac{3}{2\pi}.\,\qedsymbol
+\end{align*}
+
+\begin{Aufgabe}
+Auf dem Einheitskreis mit Mittelpunkt $M$ werden zwei zufällige Punkte
+$P,Q$ gewählt. Sie sind die Eckpunkte des Dreiecks $\triangle MPQ$.
+Wie groß ist der Erwartungswert seines Flächeninhalts?
+\end{Aufgabe}
+\strong{Lösung.} Das Koordinatensystem wird so festgelegt, dass sich
+$M$ im Ursprung und $P$ in $(1,0)$ befindet. Nun ist $Q$ gegeben durch
+den in $[0,2\pi]$ uniform verteilten Winkel $\Phi$ als
+$(\cos\Phi,\sin\Phi)$. Der Flächeninhalt bezüglich $\varphi$ ist
+\[A(\varphi) = \frac{1}{2}\left\|\begin{pmatrix}1\\ 0\end{pmatrix}
+\wedge\begin{pmatrix}\cos\varphi\\ \sin\varphi\end{pmatrix}\right\|
+= \frac{1}{2}|\sin\varphi|.\]
+Die Dichte von $\Phi$ ist $f(\varphi)=\frac{1}{2\pi}1_{[0,2\pi]}(\varphi)$.
+Es findet sich der Ewartungswert
+\[E(A(\Phi)) = \int_\R A(\varphi)f(\varphi)\,\mathrm d\varphi
+= \frac{1}{4\pi}\int_0^{2\pi}|\sin\varphi|\,\mathrm d\varphi
+= \frac{1}{2\pi}\int_0^\pi \sin\varphi\,\mathrm d\varphi
+= \frac{1}{\pi}.\,\qedsymbol\]
+
+\newpage
 \section{Mengelehre}
 \subsection{Abbildungen}
 
