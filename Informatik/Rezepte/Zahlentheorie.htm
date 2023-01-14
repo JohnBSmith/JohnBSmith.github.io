@@ -57,6 +57,10 @@ werden daraufhin effizientere Algorithmen entwickelt.
   <li><a href="#Primitivwurzeln">Primitivwurzeln</a>
   <li><a href="#Inverse">Modulare Inverse</a>
   </ol>
+<li><a href="#Hilfsfunktionen">Hilfsfunktionen</a>
+  <ol>
+  <li><a href="#isqrt">Abgerundete Quadratwurzel</a>
+  </ol>
 </ol>
 
 <h2 id="Teilbarkeit">Teilbarkeit</h2>
@@ -98,7 +102,7 @@ def divides(x, n):
 
 <p>Man kann die Korrektheit dieser Berechnung anhand der Definition
 
-<p class="indent"><var>x</var>|<var>n</var> :⇔ ∃<var>k</var> ∈ ℤ:
+<p class="indent"><var>x</var> | <var>n</var> :⇔ ∃<var>k</var> ∈ ℤ:
 <var>n</var> = <var>k</var><var>x</var>
 
 <p>prüfen. Beschränken wir uns zunächst auf positive Zahlen.
@@ -344,6 +348,22 @@ def is_prime(n):
         i = 6 - i
     return True
 </pre>
+
+<p>Ferner lässt sich noch die Quadrierung von <var>k</var> aus der
+Schleife entfernen, dergestalt dass mit der Funktion <code>isqrt</code>
+einmalig die abgerundete Wurzel von <var>n</var> berechnet wird.
+Genauer gesagt ist die Bedingung <code>k*k&nbsp;&lt;=&nbsp;n</code>
+äquivalent zu <code>k&nbsp;&lt;=&nbsp;isqrt(n)</code>.
+Mit der allgemeinen Äquivalenz von 0&nbsp;≤&nbsp;x und
+0&nbsp;≤&nbsp;⌊<var>x</var>⌋
+findet sich nämlich die äquivalente Umformung
+
+<p class="indent"><var>k</var><sup>2</sup> ≤ <var>n</var>
+⇔ <var>k</var> ≤  √<var>n</var>
+⇔ 0 ≤ √<var>n</var>&nbsp;&minus;&nbsp;<var>k</var>
+⇔ 0 ≤ ⌊√<var>n</var>&nbsp;&minus;&nbsp;<var>k</var>⌋
+= ⌊√<var>n</var>⌋&nbsp;&minus;&nbsp;<var>k</var>
+⇔&nbsp;<var>k</var>&nbsp;≤&nbsp;⌊√<var>n</var>⌋.
 
 <h3 id="Miller-Rabin">Miller-Rabin-Test</h3>
 
@@ -846,6 +866,124 @@ for m in range(1, 20):
 <p>berechnet die Tafel der quadratischen Reste, wobei zum Modul
 teilerfremde quadratische Reste von den übrigen getrennt als
 Erstes aufgelistet werden.
+
+<h2 id="Hilfsfunktionen">Hilfsfunktionen</h2>
+
+<h3 id="isqrt">Abgerundete Quadratwurzel</h3>
+
+<h4>Bisektion</h4>
+
+<p>Die Bisektion ist ein gutmütiges, vergleichsweise leicht einsichtiges
+numerisches Verfahren. Wir können sie durch Anpassung auch zur Berechnung
+der abgerundeten Wurzel einsetzen. Im Unterschied zur Bisektion bei
+reellen Funktionen liefert sie hier das exakte Ergebnis in einer
+endlichen Anzahl von Schritten.
+
+<pre class="ibox python">
+def isqrt(n):
+    assert isinstance(n, int) and n &gt;= 0
+    a = 0; b = n + 1
+    while a != b - 1:
+        m = (a + b)//2
+        if m*m &lt;= n:
+            a = m
+        else:
+            b = m
+    return a
+</pre>
+
+<p>Beim Eintritt in die Funktion soll <var>n</var>&nbsp;≥&nbsp;0 als
+Vorbedingung gelten. Die zielführende Schleifeninvariante ist
+<var>a</var><sup>2</sup>&nbsp;≤&nbsp;<var>n</var>&nbsp;&lt;&nbsp;<var>b</var><sup>2</sup>.
+Mit dem Austritt aus der Schleife gilt nun zusätzlich
+<var>b</var>&nbsp;=&nbsp;<var>a</var>&nbsp;+&nbsp;1,
+und somit
+
+<p class="indent"><var>a</var><sup>2</sup> ≤ <var>n</var> &lt; (<var>a</var> + 1)<sup>2</sup>
+⇔ <var>a</var> ≤ √<var>n</var> &lt; <var>a</var> + 1
+⇔&nbsp;0&nbsp;≤&nbsp;√<var>n</var>&nbsp;&minus;&nbsp;<var>a</var>&nbsp;&lt;&nbsp;1
+⇔&nbsp;<var>a</var>&nbsp;=&nbsp;⌊√<var>n</var>⌋.
+
+<p>Im letzten Schritt wurde genutzt
+
+<p class="indent"><var>y</var> = ⌊<var>x</var>⌋
+:⇔ <var>y</var> ∈ ℤ und 0 ≤ <var>x</var> &minus; <var>y</var> &lt; 1.
+
+<p>Wie gewünscht gilt <var>a</var>&nbsp;=&nbsp;⌊√<var>n</var>⌋
+beim Verlassen der Funktion. Es wurde <code>isqrt</code> nach einigen
+Jahren dem Modul <code>math</code> hinzugefügt. Man erhält demgemäß
+mit
+
+<pre class="ibox python">
+assert all(isqrt(n) == math.isqrt(n) for n in range(0, 10000))
+</pre>
+
+<p>noch kurzerhand einen flüchtigen Realitätsabgleich.
+
+<h4>Heron-Verfahren</h4>
+
+<p>Obgleich die Bisektion eine logarithmische Zeitkomplexität besitzt,
+kommt eine Anpassung des Heron-Verfahrens zumindest für große Zahlen
+noch wesentlich schneller zum Ziel. Eine schnell zu berechnende,
+möglichst gute Startnäherung verleiht dem Verfahren den Feinschliff.
+
+<pre class="ibox python">
+def isqrt(n):
+    assert isinstance(n, int) and n &gt;= 0
+    if n == 0: return 0
+    x = 1 &lt;&lt; (n.bit_length() + 1 &gt;&gt; 1)
+    while True:
+        y = (x + n//x) &gt;&gt; 1
+        if y &gt;= x:
+            return x
+        x = y
+</pre>
+
+<p>Die zielführende Schleifeninvariante ist
+√<var>n</var>&nbsp;&lt;&nbsp;<var>x</var>&nbsp;+&nbsp;1. Dass sie von
+der Zuweisung <var>x</var>&nbsp;:=&nbsp;<var>y</var> unberührt bleibt,
+bestätigt die aus
+0&nbsp;≤&nbsp;(<var>x</var>&nbsp;&minus;&nbsp;√<var>n</var>)<sup>2</sup>
+gefolgerte Abschätzung
+
+<p class="indent">√<var>n</var> ≤ (<var>x</var> + <var>n</var>/<var>x</var>)/2
+&lt; ⌊(<var>x</var> + <var>n</var>/<var>x</var>)/2⌋ + 1
+=&nbsp;⌊(<var>x</var>&nbsp;+&nbsp;⌊<var>n</var>/<var>x</var>⌋)/2⌋&nbsp;+&nbsp;1.
+
+<p>Beim Austritt aus der Funktion gilt außerdem
+
+<p class="indent"><var>x</var> ≤ <var>y</var>
+= ⌊(<var>x</var> + <var>n</var>/<var>x</var>)/2⌋
+≤ (<var>x</var> + <var>n</var>/<var>x</var>)/2,
+
+<p>was man für <var>x</var>&nbsp;&gt;&nbsp;0 zu <var>x</var><sup>2</sup> ≤ <var>n</var>
+umformen kann. Insgesamt gilt also beim Austritt wie gewünscht
+
+<p class="indent"><var>x</var> ≤ √<var>n</var> &lt; <var>x</var> + 1
+⇔ 0 ≤ √<var>n</var> &minus; <var>x</var> &lt; 1
+⇔&nbsp;<var>x</var>&nbsp;=&nbsp;⌊√<var>n</var>⌋.
+
+<p>Schließlich ist noch zu prüfen, dass die Schleifeninvariante auch beim
+Eintritt in die Schleife erfüllt ist. Hierzu wird die Startnäherung in die
+Invariante eingesetzt. Weiterhin besteht die Beziehung
+
+<p class="indent"><code>big_length</code>(<var>n</var>) = ⌊log<sub>2</sub>(<var>n</var>)⌋ + 1.
+
+<p>Zu prüfen ist also, dass jedes <var>n</var>&nbsp;≥&nbsp;1 der Ungleichung
+
+<p class="indent">√<var>n</var> &lt; 2<sup>⌊(⌊log<sub>2</sub>(<var>n</var>)⌋ + 2)/2⌋</sup> + 1
+= 2<sup>⌊log<sub>2</sub>(<var>n</var>)/2⌋ + 1</sup> + 1
+
+<p>genügt. Sie lässt sich in die logarithmierte äquivalente Form
+
+<p class="indent">log<sub>2</sub>(√<var>n</var> &minus; 1) &minus; 1 &lt; ⌊log<sub>2</sub>(<var>n</var>)/2⌋
+
+<p>bringen. Aufgrund der Identität <var>x</var>&nbsp;&minus;&nbsp;1&nbsp;&lt;&nbsp;⌊<var>x</var>⌋
+folgt die Ungleichung aus
+
+<p class="indent">log<sub>2</sub>(√<var>n</var> &minus; 1) ≤ log<sub>2</sub>(<var>n</var>)/2
+⇔ (√<var>n</var> &minus; 1)<sup>2</sup> ≤ <var>n</var>
+⇔&nbsp;<var>n</var>&nbsp;≥&nbsp;1/4.
 
 </body>
 </html>
