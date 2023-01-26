@@ -993,42 +993,42 @@ Quadraturverfahren am Computer schnell ein hochgenauer Wert ermitteln.
 
 Betrachten wir eine gutartige Funktion $f$, bei der die Lösungsmenge
 der Gleichung $f(x,y)=0$ eine Kurve in der Ebene ist. Sei außerdem
-$p=(x_0,y_0)$ ein Punkt der Kurve. Ist es machbar, die Gleichung
-der Tangente am Punkt $p$ aufzustellen, ohne die Gleichung der Kurve
+$p_0=(x_0,y_0)$ ein Punkt der Kurve. Ist es machbar, die Gleichung
+der Tangente am Punkt $p_0$ aufzustellen, ohne die Gleichung der Kurve
 bezüglich $x$ oder $y$ in eine explizite Form zu bringen?
 
 Angenommen wir würden eine die Kurve durchlaufende Parameterkurve
-$c$ kennen, so dass $c(0)=p$ ist und $c'(0)$ der Tangentialvektor,
-dessen Richtung mit der Tangente am Punkt $p$ übereinstimmt.
+$c$ kennen, so dass $c(0)=p_0$ ist und $c'(0)$ der Tangentialvektor,
+dessen Richtung mit der Tangente am Punkt $p_0$ übereinstimmt.
 Demnach gilt $f(c(t))=0$ für alle Parameterwerte $t$. Infolge
 verschwindet auch die Ableitung nach $t$ an allen Stellen. Auch
 für die Verkettung $f\circ c$ gilt eine bestimmte Form der
 Kettenregel, so dass wir erhalten%
-\[0 = (f\circ c)'(t) = \langle\nabla f(p), c'(t)\rangle.\]
-Der Vektor $\nabla f(p)$ ist hierbei der Gradient der Funktion
-$f$ an der Stelle $p$. Weil das Skalarprodukt verschwindet,
+\[0 = (f\circ c)'(0) = \langle\nabla f(p_0), c'(0)\rangle.\]
+Der Vektor $\nabla f(p_0)$ ist hierbei der Gradient der Funktion
+$f$ an der Stelle $p_0$. Weil das Skalarprodukt verschwindet,
 muss der Gradient also rechtwinklig zum Tangentialvektor stehen.
 
 Die Kurve $c$ vergessen wir nun wieder, sie ist nicht länger
 von Bedeutung. Rotieren wir den Gradient mit
 $R(90^\circ)=\big(\begin{smallmatrix}0 & -1\\ 1 & 0\end{smallmatrix}\big)$
 um $90^\circ$ gegen den Uhrzeigersinn, bringt uns dies als
-Ergebnis einen Tangentialvektor. Die Tangente am Punkt $p$ ist
+Ergebnis einen Tangentialvektor. Die Tangente am Punkt $p_0$ ist
 demzufolge gemäß%
-\[t\mapsto p + tR(90^\circ)\nabla f(p)\]
+\[t\mapsto p_0 + tR(90^\circ)\nabla f(p_0)\]
 als Parametergerade beschrieben.
 
 Alternativ können wir wie folgt vorgehen. Wir suchen einen zum
 Gradient rechtwinkligen Vektor $\mathbf v$, so dass gilt%
-\[\langle\nabla f(p),\mathbf v\rangle = 0.\]
-Mit $\nabla f(p) = \begin{pmatrix}\partial_1 f(p)\\ \partial_2 f(p)\end{pmatrix}$
+\[\langle\nabla f(p_0),\mathbf v\rangle = 0.\]
+Mit $\nabla f(p_0) = \begin{pmatrix}\partial_1 f(p_0)\\ \partial_2 f(p_0)\end{pmatrix}$
 und $\mathbf v = \begin{pmatrix}v_1\\ v_2\end{pmatrix}$ erhalten wir
-\[\langle\nabla f(p),\mathbf v\rangle
-= \partial_1 f(p)v_1 + \partial_2 f(p)v_2.\]
+\[\langle\nabla f(p_0),\mathbf v\rangle
+= \partial_1 f(p_0)v_1 + \partial_2 f(p_0)v_2.\]
 Man darf sich nun $v_1,v_2$ so aussuchen, dass die Gleichung erfüllt
 ist. Wir wählen $v_1:=1$, dann ist $v_2$ nämlich der Anstieg der
 Geraden. Wir bekommen
-\[v_2 = -\frac{\partial_1 f(p)}{\partial_2 f(p)}.\]
+\[v_2 = -\frac{\partial_1 f(p_0)}{\partial_2 f(p_0)}.\]
 Die Gerade ist beschrieben durch
 \[y = y_0 + v_2(x-x_0).\]
 Als Beispiel diene Geronos Lemniskate
@@ -1053,4 +1053,72 @@ Weil bei diesem Beispiel mit die Findung einer expliziten Form für $y$
 möglich war, können wir nun $\frac{\mathrm dy}{\mathrm dx}$ alternativ
 mit üblicher Differentialrechnung bestimmen und gelangen so zum
 gleichen Ergebnis für $v_2$.
+
+Allgemein lässt sich die Tangente mit dem äußeren Produkt auch
+parameterfrei beschreiben als
+\[R(90^\circ)\nabla f(p_0)\wedge (p-p_0) = 0.\]
+Das sind alle die Koordinaten $p=(x,y)$, für die der um $90^\circ$
+gedrehte Gradient kollinear zum Vektor $p-p_0$ steht. Entfaltung
+dieser kompakten Beschreibung führt zur Gleichung%
+\[\partial_1 f(x_0,y_0)(x-x_0) + \partial_2 f(x_0,y_0)(y-y_0) = 0.\]
+
+\subsection{Anfangswertaufgabe}
+
+Weil auf jedem Punkt einer gutartigen impliziten Kurve der
+Tangentialvektor bekannt ist, können wir uns daraus eine
+Differentialgleichung zu einer Parameterkurve basteln, die die implizite
+Kurve durchläuft. Der Tangentialvektor beschreibt hierbei schlicht die
+Ableitung der Parameterkurve. Es findet sich insofern die Anfangswertaufgabe
+\[c'(t) = R(90^\circ)\nabla f(c(t)),\quad f(c(0))=0.\]
+Wollen wir haben, dass die Kurve in Einheitsgeschwindigkeit durchlaufen
+wird, wir nennen eine solche auch nach Bogenlänge parametrisiert,
+muss die modifizierte Anfangswertaufgabe
+\[c'(t) = \frac{R(90^\circ)\nabla f(c(t))}{|R(90^\circ)\nabla f(c(t))|},\quad f(c(0))=0\]
+betrachtet werden. Wir haben hier gewöhnliche explizite
+Differentialgleichungen, die sie numerisch weitgehend automatisierbar
+lösen lassen. Man bringt meist das Eulerverfahren oder das
+Runge"=Kutta"=Verfahren zur Anwendung.
+
+Ein einfaches Beispiel. Der Einheitskreis ist beschrieben
+als Nullstellenmenge der Funktion
+\[f(x,y):=x^2+y^2-1.\]
+Man erhält einen Tangentialvektor
+\[\bvec v = R(90^\circ)\nabla f(x,y) = \begin{pmatrix}-2y\\ 2x\end{pmatrix},\]
+und somit den Tangenteneinheitsvektor
+\[\frac{\bvec v}{|\bvec v|} = \begin{pmatrix}-y\\ x\end{pmatrix}.\]
+Hiermit ergibt sich die Anfangswertaufgabe
+\[\begin{pmatrix}x'(t)\\ y'(t)\end{pmatrix} = 
+\begin{pmatrix}-y(t)\\ x(t)\end{pmatrix},\quad
+\begin{pmatrix}x(0)\\ y(0)\end{pmatrix} = 
+\begin{pmatrix}1\\ 0\end{pmatrix}.\]
+Man bestätigt unschwer, dass die Funktionen $x(t)=\cos(t)$ und
+$y(t)=\sin(t)$ eine Lösung des Systems sind.
+
+\subsection{Lokale Auflösung}
+
+Eine implizite Funktion können wir auch, falls sie bestimmte
+Voraussetzungen erfüllt, lokal in eine als Anfangswertaufgabe
+beschriebene explizite Form bringen.
+
+Wir nehmen dazu an, dass es eine Parameterkurve $c(t)=(t,g(t))$ gibt,
+die in einem bestimmten Parameterbereich der Gleichung $(f\circ c)(t)=0$
+genügt. Mit der Kettenregel folgt dann 
+\[0 = (f\circ c)'(t) = \partial_1 f(c(t)) + \partial_2 f(c(t))g'(t),\]
+was umgeformt werden kann zu
+\[g'(t) = -\frac{\partial_1 f(c(t))}{\partial_2 f(c(t))}.\]
+Mit der Benennung $x=t$ bekommt man die Anfangswertaufgabe
+\[g'(x) = -\frac{\partial_1 f(x,g(x))}{\partial_2 f(x,g(x))},\quad
+f(x_0,g(x_0)) = 0.\]
+Zwangsläufig muss $\partial_2 f(x,y)\ne 0$ in allen Punkten $(x,y)$
+der impliziten Kurve gelten, die durch $g$ beschrieben werden sollen.
+Ist dies nicht gegeben, verläuft der Graph beispielsweise senkrecht,
+was sich nicht mehr durch eine Funktion beschreiben lässt. Oft spaltet
+sich die Funktion an einem solchen Punkt außerdem in zwei Zweige auf.
+
+Numerisch könnte man beispielsweise abermals das Eulerverfahren
+zur Anwendung bringen, wobei sich allerdings die Frage stellt,
+welchen Vorteil es gegenüber einer Bisektion bietet. Man kann auch
+beide Verfahren in Symbiose einsetzen. Das Eulerverfahren wird
+genutzt, um einem Zweig zu folgen, das Bisektionsverfahren daraufhin, um
+die Genauigkeit der Lösung zu verbessern.
 

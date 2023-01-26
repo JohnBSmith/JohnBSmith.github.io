@@ -17,6 +17,7 @@
 <li><a href="#Assistiertes-Schliessen">Assistiertes Schließen</a>
 <li><a href="#Vorwaertsschliessen">Vorwärtsschließen</a>
 <li><a href="#Definition">Definition vermittels Taktiken</a>
+<li><a href="#Kunstgriffe">Kunstgriffe</a>
 </ol>
 
 <h2 id="Assistiertes-Schliessen">Assistiertes Schließen</h2>
@@ -202,6 +203,89 @@ Proof.
   exact y.
 Defined.
 </pre>
+
+<h2 id="Kunstgriffe">Kunstgriffe</h2>
+
+<p>In das Maschinenwerk der Taktiken wurde einige Funktionalität verbaut,
+die die Erstellung von Beweisen ergonomischer macht.
+
+<p>Die Taktik <code>intros</code> ermöglicht es, die durch <code>intro</code>
+bewerkstelligte Einführung einer Annahme und die mit <code>destruct</code>
+bewerkstelligte Zerlegung dieser in einem Zug auszuführen. Hiermit
+bleibt erspart, die Annahme mit einer Hilfsvariable benennen zu müssen.
+
+<table class="bt">
+<tr><th>Einfache Form<th>Kurzform
+<tr><td>
+<pre class="ibox gallina">
+Goal forall A B: Prop,
+  A /\ B -&gt; B /\ A.
+Proof.
+  intro A. intro B. intro h.
+  destruct h as (a, b).
+  exact (conj b a).
+Qed.
+</pre>
+<td>
+<pre class="ibox gallina">
+Goal forall A B: Prop,
+  A /\ B -&gt; B /\ A.
+Proof.
+  intros A B (a, b).
+  exact (conj b a).
+Qed.
+</pre>
+</table>
+
+<p>Außerdem sind <code>destruct</code> und <code>intros</code> fähig,
+geschachtelte Konstruktionen in einem Zug zu zerlegen. Dadurch wird
+nochmals eine Verkürzung und eine Einsparung von Hilfsvariablen erreicht.
+
+<table class="bt">
+<tr><th>Einfache Form<th>Kurzform
+<tr><td><pre class="ibox gallina">
+Goal forall A B C: Prop,
+  A /\ B /\ C -&gt; C /\ B /\ A.
+Proof.
+  intros A B C. intro h.
+  destruct h as (a, hr).
+  destruct hr as (b, c).
+  exact (conj c (conj b a)).
+Qed.
+</pre>
+<td><pre class="ibox gallina">
+Goal forall A B C: Prop,
+  A /\ B /\ C -&gt; C /\ B /\ A.
+Proof.
+  intros A B C. intro h.
+  destruct h as (a, (b, c)).
+  exact (conj c (conj b a)).
+Qed.
+</pre>
+</table>
+
+<p>Die Taktik <code>auto</code> erstellt verbleibende Beweisschritte
+in bestimmten Situationen automatisch.
+
+<table class="bt">
+<tr><th>Einfache Form<th>Kurzform
+<tr><td><pre class="ibox gallina">
+Goal forall A B: Prop,
+  A /\ B -&gt; B /\ A.
+Proof.
+  intros A B. intro h.
+  destruct h as (a, b).
+  exact (conj b a).
+Qed.
+</pre>
+<td><pre class="ibox gallina">
+Goal forall A B: Prop,
+  A /\ B -&gt; B /\ A.
+Proof.
+  intros A B (a, b). auto.
+Qed.
+</pre>
+</table>
 
 </body>
 </html>

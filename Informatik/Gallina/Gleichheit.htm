@@ -23,12 +23,13 @@
   </ol>
 <li><a href="#Identitaeten">Identitäten</a>
 <li><a href="#Umformung">Umformung</a>
+<li><a href="#Leibniz">Die leibnizsche Charakterisierung</a>
 <li><a href="#Aussagen">Gleichheit von Aussagen</a>
   <ol>
   <li><a href="#Aequivalenz">Von der Gleichheit zur Äquivalenz</a>
   <li><a href="#Extensionalitaet">Extensionalitätsprinzip für Aussagen</a>
+  <li><a href="#Zulaessige-Ersetzungsregel">Zulässige Ersetzungsregel</a>
   </ol>
-<li><a href="#Leibniz">Die leibnizsche Charakterisierung</a>
 </ol>
 
 <h2 id="Grundgesetze">Grundgesetze</h2>
@@ -370,6 +371,7 @@ der Ersetzungsregel
 <p>schlussfolgern. Mit ihr findet sich nämlich:
 
 <pre class="proof indent">
+             ───────                 ───────
 Γ ⊢ A = B    ⊢ A ⇒ A    Γ ⊢ A = B    ⊢ B ⇒ B
 ────────────────────    ────────────────────
      Γ ⊢ A ⇒ B               Γ ⊢ B ⇒ A
@@ -434,6 +436,94 @@ Proof.
   apply eq_from_cond.
   intro P.
   exact (proj1 (subs A B P e)).
+Qed.
+</pre>
+
+<h3 id="Zulaessige-Ersetzungsregel">Zulässige Ersetzungsregel</h3>
+
+<p>Eine bestimmte Form der Ersetzungsregel gilt an sich, gilt in jeder
+Hinsicht, ohne eine Form der Gleichheit als solche zu haben.
+Wir nennen sie die zulässige Ersetzungsregel, weil sie sich per
+struktureller Induktion bereits aus den Regeln und Axiomen der Logik
+herleiten lässt. Es bezeichne <var>C</var>[<var>X</var>:=<var>A</var>]
+die Ersetzung jedes Vorkommens der freien logischen Variable <var>X</var>
+in der Formel <var>C</var> durch die Formel <var>A</var>. Die Regel
+wird hiermit notiert als:
+
+<pre class="proof indent">
+      Γ ⊢ A ⇔ B
+─────────────────────
+Γ ⊢ C[X:=A] ⇔ C[X:=B]
+</pre>
+
+<p>Sie ist in der generellen enthalten, wobei
+wir allerdings wie gezeigt das Extensionalitätsprinzip annehmen müssten.
+Ohne dieses ist sie nicht direkt formulierbar. Das ist aber nicht
+weiter schlimm. Bei Gleichungen benutzt man die Ersetzungsregel ohnehin
+nur in indirekter Weise über die Taktik <code>rewrite</code>. Das Modul
+<code>Setoid</code> befähigt uns nun, diese Taktik ebenfalls bezüglich
+Äquivalenzen zu nutzen.
+
+<pre class="ibox gallina">
+Require Import Setoids.Setoid.
+
+Goal forall A B C: Prop,
+  (A &lt;-&gt; B) -&gt; (C /\ A &lt;-&gt; C /\ B).
+Proof.
+  intros A B C. intro h.
+  rewrite h. reflexivity.
+Qed.
+</pre>
+
+<p>Zum Vergleich ein Beweis unter Bemühung der generellen Regel:
+
+<pre class="ibox gallina">
+Goal Substitution -&gt; forall A B C: Prop,
+  (A &lt;-&gt; B) -&gt; (C /\ A &lt;-&gt; C /\ B).
+Proof.
+  intro subs. intros A B C. intro h.
+  assert (f := subs A B (fun X =&gt; C /\ X)).
+  simpl in f.
+  exact (f h).
+Qed.
+</pre>
+
+<p>In der klassischen Logik stehen mit <code>Setoid</code> mithin die
+Umformungen der booleschen Algebra zur Verfügung. Sie sind allerdings
+recht mühselig. Wie bei den Grundrechenarten muss sogar das
+Assoziativgesetz in expliziter Weise angewendet werden. Die Rechnung
+
+<p class="indent">A ∧ B ⇒ A ≡ ¬(A ∧ B) ∨ A ≡ ¬A ∨ B ∨ A
+≡&nbsp;(¬A&nbsp;∨&nbsp;A)&nbsp;∨&nbsp;B
+≡&nbsp;1&nbsp;∨&nbsp;B ≡&nbsp;1
+
+<p>wird beispielsweise wie folgt formalisiert.
+
+<pre class="ibox gallina">
+Require Import Setoids.Setoid.
+Require Import Logic.Classical.
+
+(* Benötigte Regeln der booleschen Algebra *)
+Theorem imp_char (A B: Prop): (A -&gt; B) &lt;-&gt; ~A \/ B.
+Proof. tauto. Qed.
+Theorem and_de_morgan (A B: Prop): ~(A /\ B) &lt;-&gt; ~A \/ ~B.
+Proof. tauto. Qed.
+Theorem or_complement (A: Prop): A \/ ~A &lt;-&gt; True.
+Proof. tauto. Qed.
+Theorem or_extremal (A: Prop): A \/ True &lt;-&gt; True.
+Proof. tauto. Qed.
+
+Goal forall A B: Prop, A /\ B -&gt; A.
+Proof.
+  intros A B.
+  rewrite imp_char.
+  rewrite and_de_morgan.
+  rewrite or_comm.
+  rewrite &lt;- or_assoc.
+  rewrite or_complement.
+  rewrite or_comm.
+  rewrite or_extremal.
+  exact I.
 Qed.
 </pre>
 

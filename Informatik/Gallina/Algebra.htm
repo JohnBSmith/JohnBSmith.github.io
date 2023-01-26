@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Arithmetik</title>
+  <title>Elementare Algebra</title>
   <link href="css/main.css" rel="stylesheet">
   <script src="js/main.js"></script>
   <script src="js/gallina.js"></script>
@@ -10,12 +10,13 @@
 <body>
 
 <p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
-<h1>Arithmetik</h1>
+<h1>Elementare Algebra</h1>
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Subtraktion">Subtraktion</a>
 <li><a href="#Gleichungen">Gleichungen</a>
+<li><a href="#Ungleichungen">Ungleichungen</a>
 </ol>
 
 <h2 id="Subtraktion">Subtraktion</h2>
@@ -94,6 +95,45 @@ Proof.
     field_simplify in h.
     exact h.
   * intro h. rewrite h. field.
+Qed.
+</pre>
+
+<h2 id="Ungleichungen">Ungleichungen</h2>
+
+<pre class="ibox gallina">
+Require Import Reals.
+Local Open Scope R_scope.
+
+Theorem pos_half: 0 &lt; 1/2.
+Proof.
+  unfold Rdiv.
+  rewrite Rmult_1_l.
+  apply (Rinv_0_lt_compat 2).
+  replace 2 with (1 + 1) by trivial.
+  apply Rplus_lt_0_compat.
+  exact Rlt_0_1.
+  exact Rlt_0_1.
+Qed.
+
+Goal forall x: R, 2*x - 1 &lt; 0 -&gt; x &lt; 1/2.
+Proof.
+  intro x. intro h.
+  About Rplus_lt_compat_r.
+  apply (Rplus_lt_compat_r 1) in h.
+  unfold Rminus in h.
+  rewrite Rplus_assoc in h.
+  rewrite Rplus_opp_l in h.
+  rewrite Rplus_0_r in h.
+  rewrite Rplus_0_l in h.
+  apply (Rmult_lt_compat_r (1/2) _ _ pos_half) in h.
+  rewrite Rmult_1_l in h.
+  rewrite Rmult_comm in h.
+  rewrite &lt;- Rmult_assoc in h.
+  unfold Rdiv in h at 1.
+  rewrite Rmult_1_l in h.
+  rewrite Rinv_l in h by trivial.
+  rewrite Rmult_1_l in h.
+  exact h.
 Qed.
 </pre>
 
