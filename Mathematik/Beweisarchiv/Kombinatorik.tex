@@ -668,6 +668,36 @@ Summanden mit $k>n-a$ auftreten können, ist nicht weiter schlimm, weil
 in diesem Fall $\binom{n-a}{k}=0$ ist.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}
+Es sei $(\theta f)(x) := xf'(x)$, zuweilen geschrieben als $xD$ oder
+$x\tfrac{\mathrm d}{\mathrm dx}$. Es sei $f$ an der Stelle $x$ definiert
+und dort $m$-mal differenzierbar. Für die $m$-te Iteration von $\theta$
+gilt dann die Formel%
+\[(\theta^m f)(x) = \sum_{k=0}^m\begin{Bmatrix}m\\ k\end{Bmatrix}x^k f^{(k)}(x),\]
+wobei die $\big\{\!\begin{smallmatrix}m\\ k\end{smallmatrix}\!\big\}$ die
+Stirling"=Zahlen zweiter Art bezeichnen.
+\end{Satz}
+\begin{Beweis} Induktion über $m$. Im Anfang $m=0$ muss
+$\theta^0$ per Definition der Iteration die identische Abbildung
+sein. Dies bestätigt sich mit
+$\big\{\!\begin{smallmatrix}0\\ 0\end{smallmatrix}\!\big\}=1$
+und $f^{(0)}(x)=f(x)$.
+
+Zum Schritt. Für $m\ge 1$ gilt die Rekurrenz
+\[\begin{Bmatrix}m\\ k\end{Bmatrix} = k\begin{Bmatrix}m-1\\ k\end{Bmatrix} + \begin{Bmatrix}m-1\\ k-1\end{Bmatrix}.\]
+Mit dieser gelingt die Umformung
+\begin{align*}
+\theta^m f(x) &= \theta \theta^{m-1} f(x) \stackrel{\mathrm{IV}}=
+x\tfrac{\mathrm d}{\mathrm dx}\sum_{k=0}^{m-1}\begin{Bmatrix}m-1\\ k\end{Bmatrix}x^k f^{(k)}(x)\\
+&= \sum_{k=0}^{m-1}\begin{Bmatrix}{m-1}\\ k\end{Bmatrix}kx^k f^{(k)}(x)
++ \sum_{k=0}^{m-1}\begin{Bmatrix}m-1\\ k\end{Bmatrix}x^{k+1} f^{(k+1)}(x)\\
+&= \sum_{k=1}^m\begin{Bmatrix}{m-1}\\ k\end{Bmatrix}kx^k f^{(k)}(x)
++ \sum_{k=1}^m\begin{Bmatrix}m-1\\ k-1\end{Bmatrix}x^k f^{(k)}(x)\\
+&= \sum_{k=1}^m\begin{Bmatrix}m\\ k\end{Bmatrix}x^k f^{(k)}(x)
+= \sum_{k=0}^m\begin{Bmatrix}m\\ k\end{Bmatrix}x^k f^{(k)}(x).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
 \newpage
 \subsection{Klassische Partialsummen}
 
