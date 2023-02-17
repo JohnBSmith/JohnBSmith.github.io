@@ -699,6 +699,30 @@ x\tfrac{\mathrm d}{\mathrm dx}\sum_{k=0}^{m-1}\begin{Bmatrix}m-1\\ k\end{Bmatrix
 \end{Beweis}
 
 \newpage
+\begin{Satz}
+Es sei $f\colon\R_{\ge 0}\to\R$ stetig und
+$(\theta_a^{-1} f)(x):=\int_a^x\frac{f(t)}{t}\,\mathrm dt$,
+wobei dieses Integral zunächst im eigentlichen Sinne verstanden sein
+soll, also $a>0$ sein soll. Für die $m$-te Iteration mit
+$m\in\Z_{\ge 1}$ gilt%
+\[(\theta_a^{-m}f)(x) = \frac{1}{(m-1)!}\int_a^x\ln\left(\frac{x}{t}\right)^{m-1}
+\frac{f(t)}{t}\,\mathrm dt.\]
+\end{Satz}
+\strong{Beweis.}
+Mit der Substitution $t=\ee^u$ findet sich%
+\[\theta_a^{-1} f(x) = \int_a^x\frac{f(t)}{t}\,\mathrm dt
+= \int_{\ln a}^{\ln x} f(\ee^u)\,\mathrm du.\]
+Bei der Iteration heben sich nun jeweils der Logarithmus der Grenze und
+das Exponentieren des Arguments gegenseitig auf. Man gelangt daher
+hinsichtlich $(I_c f)(x):=\int_c^x f(t)\,\mathrm dt$ mit
+der cauchyschen Formel für iterierte Integration zu%
+\[\theta_a^{-m} f(e^x) = I_{\ln a}^m (u\mapsto f(\ee^u))(x)
+= \frac{1}{(m-1)!}\int_{\ln a}^x (x-u)^{m-1}f(\ee^u)\,\mathrm du.\]
+Durch Resubstitution $\ee^u=t$ findet sich somit%
+\[\theta_a^{-m} f(x) = \frac{1}{(m-1)!}\int_a^x(\ln x-\ln t)^{m-1}
+\frac{f(t)}{t}\,\mathrm dt.\,\qedsymbol\]
+
+\newpage
 \subsection{Klassische Partialsummen}
 
 \begin{Satz}[Partialsummen der konstanten Folge]%
@@ -820,6 +844,39 @@ Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
 \end{Satz}
 \begin{Beweis}
 Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Definition}[Maximum, Minimum]\label{def:max-min}\newlinefirst
+Für eine Menge $M\subseteq\R$ definiert man
+\[\begin{array}{@{}l@{\,}l@{}}
+y = \max M &\defiff y\in M\land\forall k\in M\colon k\le y,\\[2pt]
+y = \min M &\defiff y\in M\land\forall k\in M\colon y\le k.
+\end{array}\]
+\end{Definition}
+
+\begin{Satz}
+Es gilt
+\begin{align*}
+\lfloor x\rfloor &= \max\{k\in\Z\mid k\le x\},\\
+\lceil x\rceil &= \min\{k\in\Z\mid x\le k\}.
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Mit bezüglich $y=\lfloor x\rfloor$ entfalteten Def. \ref{def:floor},
+\ref{def:max-min} lautet die Aussage
+\[y\in\Z\land 0\le x-y<1\iff
+y\in\Z\land y\le x\land (\forall k\in\Z\colon k\le x\Rightarrow k\le y).\]
+Für die Implikation von links nach rechts ist im Wesentlichen
+\[k\in\Z, y\in\Z, k\le x, x < y+1\vdash k\le y\]
+zu zeigen. Man erhält zunächst $k < y+1$ per Transitivgesetz.
+Wegen $k,y\in\Z$ folgt daraus $k\le y$. Für die Implikation von rechts
+nach links ist im Wesentlichen
+\[y\in\Z,(\forall k\in\Z\colon k\le x\Rightarrow k\le y)\vdash x < y + 1\]
+zu zeigen. Angenommen, es wäre $y+1\le x$. Die Allaussage wird mit
+$k:=y+1$ spezialisiert. Per Modus ponens erhält man den Widerspruch
+$y+1\le y$. Ergo muss die Annahme falsch sein, was äquivalent zu
+$x<y+1$ ist. Der Beweis zu Ceil verläuft analog.\,\qedsymbol
 \end{Beweis}
 
 \newpage

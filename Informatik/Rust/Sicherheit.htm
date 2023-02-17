@@ -1186,6 +1186,19 @@ damit die Err-Variante nicht versehentlich ignoriert wird,
 auch wenn die Ok-Variante nicht gebraucht wird. Ein solcher Fall
 zeigt sich ganz klar etwa bei <code>Result&lt;(),E&gt;</code>.
 
+<p>Einigen mag <code>must_use</code> nicht genügen, da diese Festlegung
+bei der Definition der Funktion vergessen werden kann. Erwähnenswert
+ist hierzu, dass sich mit
+
+<pre class="rust ibox">
+#![deny(unused_results)]
+</pre>
+
+<p>implizites Verwerfen für sämtliche Funktionen eines Moduls
+oder gar im ganzen Crate unterbinden lässt. Allerdings gilt dies
+anders als bei <code>must_use</code> nur innerhalb des Moduls. Die
+Schnittstellen zur Außenwelt sind nicht betroffen.
+
 <h2 id="Literatur">Literatur</h2>
 
 <ol>
