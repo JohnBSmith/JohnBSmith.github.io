@@ -80,7 +80,7 @@
 
 \noindent
 {\LARGE\sffamily\bfseries Aufzeichnungen
-{\mdseries\rmfamily\large\hfill August 2019}\\[-2pt]
+{\mdseries\rmfamily\large\hfill Februar 2023}\\[-2pt]
 zur Mathematik\par}
 
 
@@ -827,6 +827,41 @@ als Parameterintegral findet man
 = \int_0^1 \frac{1-t}{1-t^2}\,\mathrm dt = \ln 2.
 \end{gather*}
 
+\subsection{Zur eulerschen Reihentransformation}
+
+Vermittels Operatorenrechnung lässt sich eine kurze Herleitung der
+eulerschen Reihentransformation finden. Hierfür definiert man
+bezüglich einer Folge $a=(a_k)$ zunächst die Operatoren
+\begin{align*}
+&C_0 a := a_0, &&\text{(Einsetzung)}\\
+&(Ta)_k := a_{k+1},&&\text{(Translation)}\\
+&(\Delta a)_k := a_{k+1}-a_k.&&\text{(Differenzen)}
+\end{align*}
+Außerdem sei $Sa:=\sum_{n=0}^\infty a_n$.
+Gilt $a_n\to 0$ für $n\to\infty$, erhält man
+die Teleskopsumme
+\[(-S\Delta)a = -(a_\infty - a_0) = a_0 = C_0 a.\]
+Hiermit findet sich
+\[C_0 = -S\Delta = S(-\Delta) = S(1-T) = 2S\left(\frac{1-T}{2}\right).\]
+Mit der Invertierung des Operators $(1-T)/2$ gelangt man
+insofern zu
+\begin{gather*}
+2S = C_0\left(\frac{1-T}{2}\right)^{-1}
+= C_0\left(1-\frac{T+1}{2}\right)^{-1}.
+\end{gather*}
+Mit der neumannschen Reihe findet sich schließlich
+\begin{gather*}
+2\sum_{n=0}^\infty a_n = \sum_{n=0}^\infty C_0\left(\frac{T+1}{2}\right)^n a
+= \sum_{n=0}^\infty 2^{-n} C_0(T+1)^n a\\
+= \sum_{n=0}^\infty 2^{-n}\sum_{k=0}^n\binom{n}{k}C_0 T^k a
+= \sum_{n=0}^\infty 2^{-n}\sum_{k=0}^n\binom{n}{k} a_k.
+\end{gather*}
+Dies ist die eulersche Reihentransformation. Sie lässt sich zur
+Konvergenzbeschleunigung einiger alternierender Reihen nutzen, wobei
+sogar eine mehrmalige Anwendung vorteilhaft sein kann. Man betrachte
+beispielsweise, wie die Transformation die Partialsummen der Potenzreihe
+zu $\ee^x$ oder $\frac{1}{1-x}$ verändert.
+
 % \newpage
 \section{Lineare Algebra}
 \subsection{Lineare Abbildungen}
@@ -908,7 +943,7 @@ gilt.
 Wenn kein metrischer Raum vorliegt, lassen sich die Begriffe
 Cauchy-Folge und Vollständigkeit nicht mehr formulieren und es
 liegt eventuell nicht einmal mehr ein Hausdorff-Raum vor, was eine
-sehr komische Situation darstellt. Sind die Vektorräume nicht
+sehr sonderbare Situation darstellt. Sind die Vektorräume nicht
 topologisch, so lässt sich nicht einmal mehr der Begriff des
 Grenzwertes formulieren.
 

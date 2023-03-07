@@ -879,6 +879,40 @@ $y+1\le y$. Ergo muss die Annahme falsch sein, was äquivalent zu
 $x<y+1$ ist. Der Beweis zu Ceil verläuft analog.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}\label{floor-div-floor}
+Für $x\in\R$ und $n\in\Z_{\ge 1}$ gilt
+\[\left\lfloor\frac{x}{n}\right\rfloor
+= \left\lfloor\frac{\lfloor x\rfloor}{n}\right\rfloor.\]
+\end{Satz}
+\begin{Beweis}
+Sei $a:=x-\lfloor x\rfloor$. Per Def. \ref{def:floor} gilt $0 \le a < 1$.
+Laut dem Lemma zur euklidischen Division gilt außerdem
+$\lfloor x\rfloor = qn+r$
+mit $q=\lfloor\frac{\lfloor x\rfloor}{n}\rfloor$
+und $0\le r\le n - 1$. Infolge gilt $0\le a+r<n$, also
+$0\le\frac{a+r}{n}<1$ und somit $\lfloor\frac{a+r}{n}\rfloor = 0$
+laut Satz \ref{floor-is-zero}.
+Es findet sich%
+\[\left\lfloor\frac{x}{n}\right\rfloor
+= \left\lfloor\frac{a+\lfloor x\rfloor}{n}\right\rfloor
+= \left\lfloor\frac{a+qn+r}{n}\right\rfloor
+\stackrel{\text{(1)}}= q + \left\lfloor\frac{a+r}{n}\right\rfloor
+\stackrel{\text{(2)}}= q =
+\left\lfloor\frac{\lfloor x\rfloor}{n}\right\rfloor,\]
+wobei (1) laut Satz \ref{floor-add-int} gilt, und (2)
+wie soeben ausgeführt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Für $x\in\R$ und $m,n\in\Z$ mit $n\ge 1$ gilt
+\[\left\lfloor\frac{m+x}{n}\right\rfloor
+= \left\lfloor\frac{m+\lfloor x\rfloor}{n}\right\rfloor.\]
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{floor-add-int} ist $m+\lfloor x\rfloor = \lfloor m+x\rfloor$.
+Die Aussage folgt nun als Korollar aus Satz \ref{floor-div-floor}.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \subsection{Faktorielle}
 

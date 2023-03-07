@@ -1844,6 +1844,220 @@ $\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\models\varphi\Rightarrow\psi}{
 Die Bestätigung der restlichen Schlussregeln verläuft analog.\,\qedsymbol
 \end{Beweis}
 
+\newpage
+\subsection{Modallogik}
+\begin{Definition}[Kripke-Modell]\newlinefirst
+Ein Kripke-Modell ist ein Triplel $M=(W,R,V)$. Es ist $W$ eine nichtleere
+Menge von Welten, auch Universum genannt. Es ist $R\subseteq W\times W$
+eine beliebige Relation, auch Zugänglichkeitsrelation genannt. Es ist
+$V$ eine Bewertungsfunktion, die je Welt $w\in W$ einer jeden logischen
+Variable $v$ einen Wahrheitswert $V(w,v)\in\{0,1\}$ zuordnet.
+\end{Definition}
+
+\begin{Definition}[Kripke-Semantik der Modallogiken]\newlinefirst
+Sei $M=(W,R,V)$ ein Kripke-Modell. Man definiert $M,w\models\varphi$
+rekursiv als
+\begin{align*}
+(M,w\models v) &\iff V(w,v),\\
+(M,w\models\bot) &\iff 0,\\
+(M,w\models\top) &\iff 1,\\
+(M,w\models\neg\varphi) &\iff \neg (M,w\models\varphi),\\
+(M,w\models\varphi\land\psi) &\iff (M,w\models\varphi)\land (M,w\models\psi),\\
+(M,w\models\varphi\lor\psi) &\iff (M,w\models\varphi)\lor (M,w\models\psi),\\
+(M,w\models\varphi\Rightarrow\psi) &\iff (M,w\models\varphi)\Rightarrow (M,w\models\psi),\\
+(M,w\models\varphi\Leftrightarrow\psi) &\iff
+  (M,w\models\varphi\Rightarrow\psi)\land (M,w\models\psi\Rightarrow\phi),\\
+(M,w\models\lnec\varphi) &\iff\forall w'\in W\colon R(w,w')\Rightarrow (M,w'\models\varphi),\\
+(M,w\models\lpos\psi) &\iff\exists w'\in W\colon R(w,w')\land (M,w'\models\varphi).
+\end{align*}
+\end{Definition}
+
+\begin{Definition}
+Für einen Kontext $\Gamma = \{\varphi_1,\ldots,\varphi_n\}$ definiert man
+\[(M,w\models\Gamma)\defiff
+(M,w\models\varphi_1)\land\ldots\land (M,w\models\varphi_n).\]
+\end{Definition}
+
+\begin{Definition}[Gültigkeit bezüglich Kripke-Semantik]\newlinefirst
+Die $M=(W,R,V)$ seien Kripke-Modelle, wobei der Rahmen $(W,R)$ ggf. eine für
+die jeweilige Modallogik spezifische Rahmenbedingung erfüllen soll.
+Man definiert die Gültigkeit einer Formel $\varphi$ im Kontext $\Gamma$ als
+\[(\Gamma\models\varphi)\defiff\forall M\colon\forall w\in W\colon
+(M,w\models\Gamma)\Rightarrow (M,w\models\varphi).\]
+\end{Definition}
+
+\begin{Definition}[Rahmen]\newlinefirst
+Ein Rahmen ist ein Paar $F=(W,R)$, wobei $W$ nichtleer und $R$ eine
+binäre Relation auf $W$ ist. Ein Modell $M$ basiert genau dann auf
+$F$, wenn $M=(W,R,\_)$ gilt.
+\end{Definition}
+
+\newpage
+\begin{Satz}
+Ein modallogisches System darf die Abschwächungsregel
+\[\dfrac{\Gamma\vdash\psi}{\Gamma,\varphi\vdash\psi}.\]
+enthalten.
+\end{Satz}
+\begin{Beweis}
+Wir schreiben $w\models$ als Abkürzung für $M,w\models$. Der Baum
+\[
+\infer{\Gamma\cup\{\varphi\}\models\psi}{
+  \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
+  (w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
+    \infer[\infernote{$\sim$2}]{(w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
+      \infer{w\models\psi}{
+        \infer{(w\models\Gamma)\Rightarrow (w\models\psi)}{
+          \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\psi)}{
+            \Gamma\models\psi}
+        & \infer[\infernote{1}]{w\in W}{}}
+      & \infer{w\models\Gamma}{
+          \infer[\infernote{2}]{w\models\Gamma\cup\{\varphi\}}{}}}}}}
+\]
+bestätigt die Aussage\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Ein modallogisches System darf die Schlussregeln
+\[\dfrac{\Gamma\vdash\varphi\qquad\Gamma\vdash\psi}{\Gamma\vdash\varphi\land\psi},
+\qquad\dfrac{\Gamma\vdash\varphi\land\psi}{\Gamma\vdash\varphi},
+\qquad\dfrac{\Gamma\vdash\varphi\land\psi}{\Gamma\vdash\psi}\]
+enthalten.
+\end{Satz}
+\begin{Beweis}
+Wir schreiben $w\models$ als Abkürzung für $M,w\models$.
+Die Bäume
+\[
+\infer{\Gamma\models\varphi\land\psi}{
+  \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
+  (w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
+    \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
+      \infer{w\models\varphi\land\psi}{
+        \infer{(w\models\varphi)\land (w\models\psi)}{
+          \infer{w\models\varphi}{
+            \infer{(w\models\Gamma)\Rightarrow (w\models\varphi)}{
+              \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi)}{
+                \Gamma\models\varphi}
+            & \infer[\infernote{1}]{w\in W}{}}
+          & \infer[\infernote{2}]{w\models\Gamma}{}}
+        & \infer{w\models\psi}{\text{analog}}}}}}}
+\]
+und
+\[
+\infer{\Gamma\models\varphi}{
+  \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
+  (w\models\Gamma)\Rightarrow (w\models\varphi)}{
+    \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models\varphi)}{
+      \infer{w\models\varphi}{
+        \infer{(w\models\varphi)\land (w\models\psi)}{
+          \infer{w\models\varphi\land\psi}{
+            \infer{(w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
+              \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
+                \Gamma\models\varphi\land\psi}
+            & \infer[\infernote{1}]{w\in W}{}
+            }
+          & \infer[\infernote{2}]{w\models\Gamma}{}}}}}}}
+\]
+bestätigen die Aussage.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}
+Ein modallogisches System darf die Schlussregeln
+\[\dfrac{\Gamma\vdash\varphi\Rightarrow\psi\qquad\Gamma\vdash\varphi}{\Gamma\vdash\psi},
+\qquad\dfrac{\Gamma,\varphi\vdash\psi}{\Gamma\vdash\varphi\Rightarrow\psi}\]
+enthalten.
+\end{Satz}
+\begin{Beweis}
+Wir schreiben $w\models$ als Abkürzung für $M,w\models$.
+Die Bäume
+\begin{footnotesize}
+\[
+\infer{\Gamma\models\psi}{
+  \infer[\infernote{$\sim$1}]{\forall W\colon\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\psi)}{
+    \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models\psi)}{
+      \infer{w\models \psi}{
+        \infer{(w\models \varphi)\Rightarrow (w\models \psi)}{
+          \infer{w\models \varphi\Rightarrow\psi}{
+            \infer{(w\models\Gamma)\Rightarrow (w\models \varphi\Rightarrow\psi)}{
+              \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi\Rightarrow\psi)}{
+                \Gamma\models \varphi\Rightarrow\psi}
+            & \infer[\infernote{1}]{w\in W}{}}
+          & \infer[\infernote{2}]{w\models\Gamma}{}}}
+      & \infer{w\models\varphi}{
+          \infer{(w\models\Gamma)\Rightarrow (w\models\varphi)}{
+            \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi)}{
+              \Gamma\models \varphi
+            }
+          & \infer[\infernote{1}]{w\in W}{}}
+        & \infer[\infernote{2}]{w\models\Gamma}{}}}}}}
+\]
+\end{footnotesize}
+und
+\[
+\infer{\Gamma\models \varphi\Rightarrow\psi}{
+  \infer[\infernote{$\sim$1}]{\forall W\colon\forall w\in W\colon
+  (w\models\Gamma)\Rightarrow (w\models\varphi\Rightarrow\psi)}{
+    \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models \varphi\Rightarrow\psi)}{
+      \infer{(w\models \varphi\Rightarrow\psi)}{
+        \infer[\infernote{$\sim$3}]{(w\models\varphi)\Rightarrow (w\models \psi)}{
+          \infer{w\models \psi}{
+            \infer{(w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models \psi)}{
+              \infer{\forall w\in W\colon (w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
+                \Gamma\cup\{\varphi\}\models\psi}
+            & \infer[\infernote{1}]{w\in W}{}}
+          & \infer{w\models\Gamma\cup\{\varphi\}}{
+              \infer[\infernote{2}]{w\models\Gamma}{}
+            & \infer[\infernote{3}]{w\models\varphi}{}}}}}}}}
+\]
+bestätigen die Aussage.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Ein modallogisches System darf die Schlussregel
+\[\dfrac{\vdash\varphi}{\vdash\lnec\varphi}\]
+enthalten.
+\end{Satz}
+\begin{Beweis}
+Wir schreiben $w\models$ als Abkürzung für $M,w\models$. Der Baum
+\[
+\infer{\models\lnec\varphi}{
+  \infer{\forall (W,R,V)\colon\forall w\in W\colon (w\models \lnec\varphi)}{
+    \infer{w\models\lnec\varphi}{
+      \infer[\infernote{$\sim$1}]{\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\varphi)}{
+        \infer{R(w,w')\Rightarrow (w'\models\varphi)}{
+          \infer{w'\models\varphi}{
+            \infer{\forall (W,R,V)\colon\forall w'\in W\colon (w'\models\varphi)}{
+              \models\varphi}
+          & \infer[\infernote{1}]{w'\in W}{}}}}}}
+}
+\]
+bestätigt die Aussage.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\begin{Satz}
+Bereits im modallogischen System K gilt das Axiomenschema
+\[\vdash \lnec(\varphi\Rightarrow\psi)\Rightarrow
+(\lnec\varphi\Rightarrow\lnec\psi).\]
+\end{Satz}
+\begin{Beweis}
+Es sei $w\models$ Abkürzung für $M,w\models$. Zu bestätigen ist
+\[\forall (W,R,V)\colon\forall w\in W\colon
+(w\models\lnec(\varphi\Rightarrow\psi)\Rightarrow
+(\lnec\varphi\Rightarrow\lnec\psi)).\]
+Laut Definition der Semantik lässt sich die Implikation zurückführen auf
+\[(w\models\lnec(\varphi\Rightarrow\psi))\Rightarrow
+(w\models \lnec\varphi)\Rightarrow (w\models \lnec\psi).\]
+Zu zeigen ist also, dass $\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\psi)$ aus
+\begin{gather*}
+\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\varphi\Rightarrow\psi),\\
+\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\varphi)
+\end{gather*}
+folgt. Aus den beiden Annahmen $w'\in W$ und $R(w,w')$ ist also
+$w'\models\psi$ zu folgern. Mit den Annahmen ergibt sich
+$w'\models\varphi$ und $(w'\models\varphi)\Rightarrow (w'\models\psi)$
+aus den Prämissen. Infolge ergibt sich schließlich $w'\models\psi$.\,\qedsymbol
+\end{Beweis}
 
 \newpage
 \section{Mengenlehre}\index{Mengenlehre}
