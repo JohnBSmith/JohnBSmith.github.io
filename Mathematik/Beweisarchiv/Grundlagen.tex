@@ -139,7 +139,32 @@ ist $\Gamma\vdash A$ äquivalent zu $\Gamma\vdash B$.
 \begin{Satz}
 Die Sequenz $\Gamma, A\land B\vdash C$ gilt genau dann, wenn $\Gamma,A,B\vdash C$.
 \end{Satz}
-\begin{Beweis}
+\begin{Beweis}[Beweis 1]
+Laut den Beweisbäumen
+\[
+\begin{array}{@{}l@{\qquad}l@{}}
+\infer{\Gamma,A,B\vdash C}{
+  \infer{\Gamma\vdash A\land B\cond C}{
+    \Gamma,A\land B\vdash C}
+& \infer{A, B\vdash A\land B}{
+    \infer{A\vdash A}{}
+  & \infer{B\vdash B}{}}}
+&
+\infer{\Gamma,A\land B\vdash C}{
+  \infer{\Gamma,A\land B\vdash B\cond C}{
+    \infer{\Gamma\vdash A\cond (B\cond C)}{
+      \infer{\Gamma,A\vdash B\cond C}{
+        \Gamma,A,B\vdash C}}
+  & \infer{A\land B\vdash A}{
+      \infer{A\land B\vdash A\land B}{}}}
+& \infer{A\land B\vdash B}{
+    \infer{A\land B\vdash A\land B}{}}}
+\end{array}
+\]
+gehen die beiden Sequenzen gegenseitig aus sich hervor.\,\qedsymbol
+\end{Beweis}
+
+\begin{Beweis}[Beweis 2]
 Es gilt
 \begin{align*}
 & (\Gamma, A\land B\vdash C)\iff (\Gamma\vdash A\land B\Rightarrow C),
@@ -367,6 +392,43 @@ Es findet sich:
 & \Gamma,\neg A\vdash B
 & \Gamma', A\vdash B
 }\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Die beiden Schlussregeln
+\[\dfrac{\Gamma\vdash A\land B\qquad\Gamma',A\vdash C}{\Gamma,\Gamma'\vdash C},\qquad
+\dfrac{\Gamma\vdash A\land B\qquad\Gamma',B\vdash C}{\Gamma,\Gamma'\vdash C}\]
+sind zulässig.
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\Gamma,\Gamma'\vdash C}{
+  \infer{\Gamma\vdash A}{\Gamma\vdash A\land B}
+& \infer{\Gamma'\vdash A\Rightarrow C}{\Gamma',A\vdash C}}
+&
+\infer{\Gamma,\Gamma'\vdash C}{
+  \infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
+& \infer{\Gamma'\vdash B\Rightarrow C}{\Gamma',B\vdash C}}\;\qedsymbol
+\end{array}
+\]
+\end{Beweis}
+
+\begin{Satz}
+Die Schlussregel
+\[\dfrac{\Gamma,A\vdash C\qquad\Gamma',B\vdash C}{
+\Gamma,\Gamma',A\lor B\vdash C}\]
+ist zulässig.
+\end{Satz}
+\begin{Beweis}
+Es findet sich:
+\[
+\infer{\Gamma,\Gamma',A\lor B\vdash C}{
+  \infer{A\lor B\vdash A\lor B}{}
+& \Gamma,A\vdash C
+& \Gamma',B\vdash C}\;\qedsymbol
+\]
 \end{Beweis}
 
 \newpage
@@ -1854,7 +1916,8 @@ $V$ eine Bewertungsfunktion, die je Welt $w\in W$ einer jeden logischen
 Variable $v$ einen Wahrheitswert $V(w,v)\in\{0,1\}$ zuordnet.
 \end{Definition}
 
-\begin{Definition}[Kripke-Semantik der Modallogiken]\newlinefirst
+\begin{Definition}[Kripke-Semantik der Modallogiken]%
+\label{def:modal-sat}\newlinefirst
 Sei $M=(W,R,V)$ ein Kripke-Modell. Man definiert $M,w\models\varphi$
 rekursiv als
 \begin{align*}
@@ -1872,13 +1935,14 @@ rekursiv als
 \end{align*}
 \end{Definition}
 
-\begin{Definition}
+\begin{Definition}\label{def:modal-sat-context}
 Für einen Kontext $\Gamma = \{\varphi_1,\ldots,\varphi_n\}$ definiert man
 \[(M,w\models\Gamma)\defiff
 (M,w\models\varphi_1)\land\ldots\land (M,w\models\varphi_n).\]
 \end{Definition}
 
-\begin{Definition}[Gültigkeit bezüglich Kripke-Semantik]\newlinefirst
+\begin{Definition}[Gültigkeit bezüglich Kripke-Semantik]%
+\label{def:modal-valid}\newlinefirst
 Die $M=(W,R,V)$ seien Kripke-Modelle, wobei der Rahmen $(W,R)$ ggf. eine für
 die jeweilige Modallogik spezifische Rahmenbedingung erfüllen soll.
 Man definiert die Gültigkeit einer Formel $\varphi$ im Kontext $\Gamma$ als
@@ -1901,16 +1965,17 @@ enthalten.
 \begin{Beweis}
 Wir schreiben $w\models$ als Abkürzung für $M,w\models$. Der Baum
 \[
-\infer{\Gamma\cup\{\varphi\}\models\psi}{
+\infer[\infernote{Def. \ref{def:modal-valid}}]{\Gamma\cup\{\varphi\}\models\psi}{
   \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
   (w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
     \infer[\infernote{$\sim$2}]{(w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
       \infer{w\models\psi}{
         \infer{(w\models\Gamma)\Rightarrow (w\models\psi)}{
-          \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\psi)}{
+          \infer[\infernote{Def. \ref{def:modal-valid}}]%
+          {\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\psi)}{
             \Gamma\models\psi}
         & \infer[\infernote{1}]{w\in W}{}}
-      & \infer{w\models\Gamma}{
+      & \infer[\infernote{Def. \ref{def:modal-sat-context}}]{w\models\Gamma}{
           \infer[\infernote{2}]{w\models\Gamma\cup\{\varphi\}}{}}}}}}
 \]
 bestätigt die Aussage\,\qedsymbol
@@ -1927,15 +1992,16 @@ enthalten.
 Wir schreiben $w\models$ als Abkürzung für $M,w\models$.
 Die Bäume
 \[
-\infer{\Gamma\models\varphi\land\psi}{
+\infer[\infernote{Def. \ref{def:modal-valid}}]{\Gamma\models\varphi\land\psi}{
   \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
   (w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
     \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
-      \infer{w\models\varphi\land\psi}{
+      \infer[\infernote{Def. \ref{def:modal-sat}}]{w\models\varphi\land\psi}{
         \infer{(w\models\varphi)\land (w\models\psi)}{
           \infer{w\models\varphi}{
             \infer{(w\models\Gamma)\Rightarrow (w\models\varphi)}{
-              \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi)}{
+              \infer[\infernote{Def. \ref{def:modal-valid}}]%
+              {\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi)}{
                 \Gamma\models\varphi}
             & \infer[\infernote{1}]{w\in W}{}}
           & \infer[\infernote{2}]{w\models\Gamma}{}}
@@ -1943,15 +2009,17 @@ Die Bäume
 \]
 und
 \[
-\infer{\Gamma\models\varphi}{
+\infer[\infernote{Def. \ref{def:modal-valid}}]{\Gamma\models\varphi}{
   \infer[\infernote{$\sim$1}]{\forall M\colon\forall w\in W\colon
   (w\models\Gamma)\Rightarrow (w\models\varphi)}{
     \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models\varphi)}{
       \infer{w\models\varphi}{
-        \infer{(w\models\varphi)\land (w\models\psi)}{
+        \infer[\infernote{Def. \ref{def:modal-sat}}]%
+        {(w\models\varphi)\land (w\models\psi)}{
           \infer{w\models\varphi\land\psi}{
             \infer{(w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
-              \infer{\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
+              \infer[\infernote{Def. \ref{def:modal-valid}}]%
+              {\forall w\in W\colon (w\models\Gamma)\Rightarrow (w\models\varphi\land\psi)}{
                 \Gamma\models\varphi\land\psi}
             & \infer[\infernote{1}]{w\in W}{}
             }
@@ -1994,18 +2062,20 @@ Die Bäume
 \end{footnotesize}
 und
 \[
-\infer{\Gamma\models \varphi\Rightarrow\psi}{
+\infer[\infernote{Def. \ref{def:modal-valid}}]{\Gamma\models \varphi\Rightarrow\psi}{
   \infer[\infernote{$\sim$1}]{\forall W\colon\forall w\in W\colon
   (w\models\Gamma)\Rightarrow (w\models\varphi\Rightarrow\psi)}{
     \infer[\infernote{$\sim$2}]{(w\models\Gamma)\Rightarrow (w\models \varphi\Rightarrow\psi)}{
-      \infer{(w\models \varphi\Rightarrow\psi)}{
+      \infer[\infernote{Def. \ref{def:modal-sat}}]{(w\models \varphi\Rightarrow\psi)}{
         \infer[\infernote{$\sim$3}]{(w\models\varphi)\Rightarrow (w\models \psi)}{
           \infer{w\models \psi}{
             \infer{(w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models \psi)}{
-              \infer{\forall w\in W\colon (w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
+              \infer[\infernote{Def. \ref{def:modal-valid}}]%
+              {\forall w\in W\colon (w\models\Gamma\cup\{\varphi\})\Rightarrow (w\models\psi)}{
                 \Gamma\cup\{\varphi\}\models\psi}
             & \infer[\infernote{1}]{w\in W}{}}
-          & \infer{w\models\Gamma\cup\{\varphi\}}{
+          & \infer[\infernote{Def. \ref{def:modal-sat-context}}]%
+            {w\models\Gamma\cup\{\varphi\}}{
               \infer[\infernote{2}]{w\models\Gamma}{}
             & \infer[\infernote{3}]{w\models\varphi}{}}}}}}}}
 \]
@@ -2020,13 +2090,15 @@ enthalten.
 \begin{Beweis}
 Wir schreiben $w\models$ als Abkürzung für $M,w\models$. Der Baum
 \[
-\infer{\models\lnec\varphi}{
+\infer[\infernote{Def. \ref{def:modal-valid}}]{\models\lnec\varphi}{
   \infer{\forall (W,R,V)\colon\forall w\in W\colon (w\models \lnec\varphi)}{
-    \infer{w\models\lnec\varphi}{
-      \infer[\infernote{$\sim$1}]{\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\varphi)}{
+    \infer[\infernote{Def. \ref{def:modal-sat}}]{w\models\lnec\varphi}{
+      \infer[\infernote{$\sim$1}]%
+      {\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\varphi)}{
         \infer{R(w,w')\Rightarrow (w'\models\varphi)}{
           \infer{w'\models\varphi}{
-            \infer{\forall (W,R,V)\colon\forall w'\in W\colon (w'\models\varphi)}{
+            \infer[\infernote{Def. \ref{def:modal-valid}}]%
+            {\forall (W,R,V)\colon\forall w'\in W\colon (w'\models\varphi)}{
               \models\varphi}
           & \infer[\infernote{1}]{w'\in W}{}}}}}}
 }
@@ -2041,11 +2113,13 @@ Bereits im modallogischen System K gilt das Axiomenschema
 (\lnec\varphi\Rightarrow\lnec\psi).\]
 \end{Satz}
 \begin{Beweis}
-Es sei $w\models$ Abkürzung für $M,w\models$. Zu bestätigen ist
+Es sei $w\models$ Abkürzung für $M,w\models$.
+Per Def. \ref{def:modal-valid} ist
 \[\forall (W,R,V)\colon\forall w\in W\colon
 (w\models\lnec(\varphi\Rightarrow\psi)\Rightarrow
-(\lnec\varphi\Rightarrow\lnec\psi)).\]
-Laut Definition der Semantik lässt sich die Implikation zurückführen auf
+(\lnec\varphi\Rightarrow\lnec\psi))\]
+zu bestätigen. Laut Def. \ref{def:modal-sat} lässt sich die
+Implikation zurückführen auf
 \[(w\models\lnec(\varphi\Rightarrow\psi))\Rightarrow
 (w\models \lnec\varphi)\Rightarrow (w\models \lnec\psi).\]
 Zu zeigen ist also, dass $\forall w'\in W\colon R(w,w')\Rightarrow (w'\models\psi)$ aus
@@ -2057,6 +2131,68 @@ folgt. Aus den beiden Annahmen $w'\in W$ und $R(w,w')$ ist also
 $w'\models\psi$ zu folgern. Mit den Annahmen ergibt sich
 $w'\models\varphi$ und $(w'\models\varphi)\Rightarrow (w'\models\psi)$
 aus den Prämissen. Infolge ergibt sich schließlich $w'\models\psi$.\,\qedsymbol
+\end{Beweis}
+
+\newpage
+\subsection{Intuitionistische Logik}
+
+\begin{Definition}[Intuitionistisches Kripke-Modell]\newlinefirst
+Ein intuitionistisches Kripke-Modell ist ein Tripel $M=(W,\le,V)$.
+Es ist $W$ eine nichtleere Menge. Es ist $\le$ eine
+Quasiordnung (eine Halbordnung ginge auch). Es ist $V$ eine monotone
+Funktion, die jeder Welt $w\in W$ und jeder logischen Variable $v$
+einen Wahrheitswert $V(w,v)\in\{0,1\}$ zuordnet. Monoton heißt
+\[w\le w'\land V(w,v)\implies V(w',v).\]
+\end{Definition}
+
+\begin{Definition}[Kripke-Semantik der intuitionistischen Logik]%
+\label{def:intu-sat}\newlinefirst
+Es sei $M=(W,\le,V)$ intuitionistisches Kripke-Modell. Zu einer Welt
+$w\in W$ definiert man $M,w\models\varphi$ rekursiv als
+\begin{align*}
+(M,w\models v) &\iff V(w,v),\\
+(M,w\models\bot) &\iff 0,\\
+(M,w\models\top) &\iff 1,\\
+(M,w\models\lnot\varphi) &\iff
+  \forall w'\in W\colon w\le w'\Rightarrow \lnot (M,w'\models\varphi),\\
+(M,w\models\varphi\land\psi) &\iff (M,w\models\varphi)\land (M,w\models\psi),\\
+(M,w\models\varphi\lor\psi) &\iff (M,w\models\varphi)\lor (M,w\models\psi),\\
+(M,w\models\varphi\Rightarrow\psi) &\iff
+  \forall w'\in W\colon w\le w'\land (M,w'\models\varphi)\Rightarrow (M,w'\models\psi),\\
+(M,w\models\varphi\Leftrightarrow\psi) &\iff
+  (M,w\models\varphi\Rightarrow\psi)\land (M,w\models\psi\Rightarrow\varphi).
+\end{align*}
+\end{Definition}
+
+\begin{Definition}
+Für einen Kontext $\Gamma = \{\varphi_1,\ldots,\varphi_n\}$ definiert
+man
+\[(M,w\models\Gamma)\defiff (M,w\models\varphi_1)\land\ldots\land (M,w\models\varphi_n).\]
+\end{Definition}
+
+\begin{Definition}[Intuitionistische Gültigkeit]%
+\label{def:intu-valid}\newlinefirst
+Man definiert die Gültigkeit einer Formel $\varphi$ im Kontext $\Gamma$ als
+\[(\Gamma\models\varphi)\defiff\forall M\colon\forall w\in W\colon (M,w\models\Gamma)\Rightarrow (M,w\models\varphi).\]
+\end{Definition}
+
+\begin{Satz}
+Ex falso quodlibet, $\bot\Rightarrow\varphi$, ist ein intuitionistisch
+gültiges Schema.
+\end{Satz}
+\begin{Beweis}
+Weil die Metalogik klassisch ist, darf EFQ (ex falso quodlibet) in ihr
+angewendet werden. Der Baum
+\[
+\infer[\infernote{Def. \ref{def:intu-valid}}]{\models\bot\Rightarrow\varphi}{
+  \infer{\forall M\colon\forall w\in W\colon (M,w\models\bot\Rightarrow\varphi)}{
+    \infer[\infernote{Def. \ref{def:intu-sat}}]{M,w\models\bot\Rightarrow\varphi}{
+      \infer{\forall w'\in W\colon w\le w'\Rightarrow (M,w'\models\bot)\Rightarrow (M,w'\models\varphi)}{
+        \infer{(M,w'\models\bot)\Rightarrow (M,w'\models\varphi)}{
+          \infer[\infernote{Def. \ref{def:intu-sat}}]{(M,w'\models\bot)\Leftrightarrow 0}{}
+        & \infer[\infernote{EFQ}]{0\Rightarrow (M,w'\models\varphi)}{}}}}}}
+\]
+bestätigt insofern die Aussage.\,\qedsymbol
 \end{Beweis}
 
 \newpage
