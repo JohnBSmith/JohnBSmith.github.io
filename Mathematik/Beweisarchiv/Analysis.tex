@@ -252,8 +252,8 @@ Fixpunktgleichung $x=f(x)$ erfüllen.
 Wenn $x_n\to x$, dann gilt trivialerweise auch $x_{n+1}\to x$.
 Weil $f$ stetig ist, ist $f$ nach Satz \ref{cont-seqcont}
 auch folgenstetig. Daher gilt $\lim f(a_n) = f(\lim a_n)$ für jede
-konvergente Folge $(a_n)$. Somit gilt:
-\[x=\lim_{n\to\infty} x_{n+1} = \lim_{n\to\infty} f(x_n)
+konvergente Folge $(a_n)$. Somit gilt:%
+\[x = \lim_{n\to\infty} x_{n+1} = \lim_{n\to\infty} f(x_n)
 = f(\lim_{n\to\infty} x_n) = f(x).\;\qedsymbol\]
 \end{Beweis}
 
@@ -261,7 +261,7 @@ konvergente Folge $(a_n)$. Somit gilt:
 \begin{Definition}\label{Landau-O}
 Seien $f,g\colon D\to\R$ mit $D=\N$ oder $D=\R$. Man sagt, die
 Funktion $f$ wächst nicht wesentlich schneller als $g$, kurz
-$f\in\mathcal O(g)$, genau dann, wenn
+$f\in\mathcal O(g)$, genau dann, wenn%
 \[\exists c{>}0\colon\,\exists x_0\colon\,\forall x{>}x_0\colon\, |f(x)|\le c|g(x)|.\]
 \end{Definition}
 
@@ -278,7 +278,7 @@ Man hat nun
 Wegen $r\ne 0$ ist $|r|>0$ und daher auch $c>0\iff c|r|>0$. Sei
 $c':=r|c|$. Also gilt $c>0\iff c'>0$. Nach der Ersetzungsregel
 darf $c>0$ gegen $c'>0$ ersetzt werden und man erhält die
-äquivalente Bedingung
+äquivalente Bedingung%
 \[\exists c'{>}0\colon\,\exists x_0\colon\,
 \forall x{>}x_0\colon\,|f(x)|\le c'|g(x)|.\]
 Nach Def. \ref{Landau-O} ist das gerade $f\in\mathcal O(g)$.\;\qedsymbol
@@ -288,7 +288,7 @@ Nach Def. \ref{Landau-O} ist das gerade $f\in\mathcal O(g)$.\;\qedsymbol
 Sind $f_1,f_2\in\mathcal O(g)$, ist auch $f_1+f_2\in\mathcal O(g)$.
 \end{Satz}
 \begin{Beweis}
-Als Prämissen liegen Zeugen $c'>0,x_0'$ und $c''>0,x_0''$ für
+Als Prämissen liegen Zeugen $c'>0,x_0'$ und $c''>0,x_0''$ für%
 \begin{gather*}
 \forall x>x_0'\colon |f_1(x)|\le c'|g(x)|,\\
 \forall x>x_0''\colon |f_2(x)|\le c''|g(x)|
@@ -296,8 +296,9 @@ Als Prämissen liegen Zeugen $c'>0,x_0'$ und $c''>0,x_0''$ für
 vor. Mit der Dreiecksungleichung findet sich
 \[|f_1(x)+f_2(x)|\le |f_1(x)|+|f_2(x)| \le c'|g(x)|+c''|g(x)| = (c'+c'')|g(x)|\]
 für $x>\max(x_0',x_0'')$. Ergo sind $x_0:=\max(x_0',x_0'')$ und $c:=c'+c''$
-Zeugen für
-\[\exists c>0\colon\exists x_0\colon\forall x>x_0\colon |f_1(x)+f_2(x)|\le c|g(x)|.\,\qedsymbol\]
+Zeugen für%
+\[\exists c>0\colon\exists x_0\colon\forall x>x_0\colon
+  |f_1(x)+f_2(x)|\le c|g(x)|.\,\qedsymbol\]
 \end{Beweis}
 
 \newpage
@@ -315,37 +316,38 @@ Bei Konvergenz schreibt man $L=\lim\limits_{x\to p} f(x)$ und nennt $L$ den Gren
 \begin{Definition}[Stetig an einer Stelle]%
 \label{cont}\index{stetig}\newlinefirst
 Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt stetig an der
-Stelle $x_0\in D$, wenn
+Stelle $x_0\in D$, wenn%
 \[\forall \varepsilon{>}0\colon\,\exists \delta{>}0\colon\,\forall x{\in}D\colon\,
 (|x-x_0|<\delta\implies |f(x)-f(x_0)|<\varepsilon).\]
 \end{Definition}
 
-\begin{Definition}[Lipschitz-stetig]%
+\begin{Definition}[Dehnungsbeschränkte Funktion]%
 \index{Lipschitz-stetig}\index{stetig!Lipschitz-stetig}\newlinefirst
 Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt
-Lipschitz"=stetig, wenn eine Konstante $L$ existiert, so dass
+dehnungsbeschränkt, auch Lipschitz"=stetig genannt, wenn eine
+Konstante $L$ existiert, so dass%
 \[|f(b)-f(a)|\le L|b-a|\]
 für alle $a,b\in D$.
 \end{Definition}
 
-\begin{Definition}[Lipschitz-stetig an einer Stelle]%
+\begin{Definition}[Dehnungsbeschränkt an einer Stelle]%
 \label{Lipschitz-cont-at}\newlinefirst
 Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt
-Lipschitz"=stetig an der Stelle $x_0\in D$, wenn eine Konstante $L$
-existiert, so dass
+dehnungsbeschränkt an der Stelle $x_0\in D$, wenn eine Konstante $L$
+existiert, so dass%
 \[|f(x_0)-(a)|\le L|x_0-a|\]
 für alle $a\in D$.
 \end{Definition}
 
 \begin{Satz}
-Eine Funktion ist genau dann Lipschitz"=stetig, wenn sie an jeder
-Stelle Lipschitz"=stetig ist und die Menge der optimalen
+Eine Funktion ist genau dann dehnungsbeschränkt, wenn sie an jeder
+Stelle dehnungsbeschränkt ist und die Menge der optimalen
 Lipschitz"=Konstanten dabei beschränkt.
 \end{Satz}
 \begin{Beweis}
-Eine Lipschitz"=stetige Funktion ist trivialerweise an jeder Stelle
-Lipschitz"=stetig. Ist $f\colon D\to\R$ an der Stelle $b$ Lipschitz"=stetig,
-dann existiert eine Lipschitz"=Konstante $L_b$ mit%
+Eine dehnungsbeschränkte Funktion ist trivialerweise an jeder Stelle
+dehnungsbeschränkt. Ist $f\colon D\to\R$ an der Stelle $b$
+dehnungsbeschränkt, dann existiert eine Lipschitz"=Konstante $L_b$ mit%
 \[\forall a\in D\colon |f(b)-f(a)|\le L_b |b-a|.\]
 Nach Voraussetzung ist $L=\sup_{b\in D} L_b$ endlich. Alle $L_b$ können
 nun zu $L$ abgeschwächt werden und es ergibt sich%
@@ -353,27 +355,27 @@ nun zu $L$ abgeschwächt werden und es ergibt sich%
 \end{Beweis}
 
 
-\begin{Definition}[Lokal Lipschitz-stetig]\newlinefirst
+\begin{Definition}[Lokal dehnungsbeschränkt]\newlinefirst
 Eine Funktion $f\colon D\to\R$ mit $D\subseteq\R$ heißt lokal
-Lipschitz"=stetig in der Nähe einer Stelle $x_0\in D$, wenn es eine
+dehnungsbeschränkt in der Nähe einer Stelle $x_0\in D$, wenn es eine
 Epsilon"=Umgebung $U_\varepsilon(x_0)$ gibt, so dass die Einschränkung
-von $f$ auf diese Umgebung Lipschitz"=stetig ist. Die Funktion heißt
-lokal Lipschitz"=stetig, wenn sie in der Nähe jeder Stelle
-Lipschitz"=stetig ist.
+von $f$ auf diese Umgebung dehnungsbeschränkt ist. Die Funktion heißt
+lokal dehnungsbeschränkt, wenn sie in der Nähe jeder Stelle
+dehnungsbeschränkt ist.
 \end{Definition}
 
 \begin{Satz}\label{diff-nh-Lipschitz-cont-at}
 Ist die Funktion $f\colon D\to\R$ an der Stelle $x_0$ differenzierbar,
 dann gibt es ein $\delta>0$, so dass die Einschränkung von $f$
-auf $U_\delta(x_0)$ an der Stelle $x_0$ Lipschitz"=stetig ist.
+auf $U_\delta(x_0)$ an der Stelle $x_0$ dehnungsbeschränkt ist.
 \end{Satz}
 
 \begin{Beweis}
 Def. \ref{fn-lim} wird in Def. \ref{diff} (diff) eingesetzt.
-Es ergibt sich:
+Es ergibt sich:%
 \[0<|x-x_0|<\delta\implies
 \left|\frac{f(x)-f(x_0)}{x-x_0}-f'(x_0)\right|<\varepsilon.\]
-Nach der umgekehrten Dreiecksungleichung \ref{rev-tineq} gilt
+Nach der umgekehrten Dreiecksungleichung \ref{rev-tineq} gilt%
 \[\left|\frac{f(x)-f(x_0)}{x-x_0}\right|-|f'(x_0)| \le
 \left|\frac{f(x)-f(x_0)}{x-x_0}-f'(x_0)\right|
 < \varepsilon.\]
@@ -382,108 +384,103 @@ Daraus ergibt sich
 und somit erst recht
 \[|f(x)-f(x_0)| \le (|f'(x_0)|+\varepsilon)\cdot |x-x_0|,\]
 wobei jetzt auch $x=x_0$ erlaubt ist. Demnach wird Def.
-\ref{Lipschitz-cont-at} erfüllt:
+\ref{Lipschitz-cont-at} erfüllt:%
 \[\exists \delta{>}0\colon\,\forall x\in U_\delta(x_0)\colon\,
 |f(x)-f(x_0)| \le (|f'(x_0)|+\varepsilon)\cdot |x-x_0|.\;\qedsymbol\]
 \end{Beweis}
 
 \begin{Satz}\label{diff-bounded-Lipschitz-cont}
-Eine differenzierbare Funktion ist genau dann Lipschitz"=stetig,
+Eine differenzierbare Funktion ist genau dann dehnungsbeschränkt,
 wenn ihre Ableitung beschränkt ist.
 \end{Satz}
 \begin{Beweis}
-Wenn $f\colon I\to\R$ Lipschitz"=stetig ist, dann gibt es $L$ mit
+Wenn $f\colon I\to\R$ dehnungsbeschränkt ist, dann gibt es $L$ mit%
 \[\left|\frac{f(b)-f(a)}{b-a}\right|\le L\]
-für alle $a,b\in D$ mit $a\ne b$. Daraus folgt
+für alle $a,b\in D$ mit $a\ne b$. Daraus folgt%
 \[|f'(a)| = \left|\lim_{b\to a} \frac{f(b)-f(a)}{b-a}\right|
 = \lim_{b\to a} \left|\frac{f(b)-f(a)}{b-a}\right|
 \le L.\]
 Demnach ist die Ableitung beschränkt.
 
 Sei nun umgekehrt die Ableitung beschränkt. Für $a,b\in I$ mit $a\ne b$
-gibt es nach dem Mittelwertsatz ein $x_0\in(a,b)$, so dass
+gibt es nach dem Mittelwertsatz ein $x_0\in(a,b)$, so dass%
 \[|f'(x_0)| = \left|\frac{f(b)-f(a)}{b-a}\right|.\]
 Da die Ableitung beschränkt ist gibt es ein Supremum
 $L = \sup_{x\in I} |f'(x)|$. Demnach ist $|f'(x)|\le L$ für alle $x$.
-Es ergibt sich
+Es ergibt sich%
 \[\left|\frac{f(b)-f(a)}{b-a}\right|\le L|b-a| \implies |f(b)-f(a)|\le L|b-a|.\]
 Nun darf auch $a=b$ gewählt werden.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{diff-compact-Lipschitz-cont}
 Eine auf einem kompakten Intervall $[a,b]$ definierte stetig
-differenzierbare Funktion ist Lipschitz"=stetig.
+differenzierbare Funktion ist dehnungsbeschränkt.
 \end{Satz}
 \begin{Beweis}
 Sei $f\colon [a,b]\to\R$ stetig differenzierbar. Dann ist $f'(x)$ stetig.
 Nach dem Satz vom Minimum und Maximum ist $|f'(x)|$ beschränkt. Nach
-Satz \ref{diff-bounded-Lipschitz-cont} muss $f$ Lipschitz"=stetig
+Satz \ref{diff-bounded-Lipschitz-cont} muss $f$ dehnungsbeschränkt
 sein.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Eine stetig differenzierbare Funktion ist lokal Lipschitz"=stetig.
+Eine stetig differenzierbare Funktion ist lokal dehnungsbeschränkt.
 \end{Satz}
 \begin{Beweis}
 Sei $f\colon D\to\R$ stetig differenzierbar. Sei $[a,b]\in D$. Sei
 $x_0\in [a,b]$. Die Einschränkung von $f$ auf $[a,b]$ ist
-Lipschitz"=stetig nach Satz \ref{diff-compact-Lipschitz-cont}.
+dehnungsbeschränkt nach Satz \ref{diff-compact-Lipschitz-cont}.
 Dann ist auch die Einschränkung von $f$ auf
-$U_\varepsilon(x_0)\subseteq [a,b]$ Lipschitz"=stetig.\;\qedsymbol
+$U_\varepsilon(x_0)\subseteq [a,b]$ dehnungsbeschränkt.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
 Es gibt differenzierbare Funktionen, die nicht überall lokal
-Lipschitz"=stetig sind.
+dehnungsbeschränkt sind.
 \end{Satz}
 \begin{Beweis}
 Aus Satz \ref{diff-bounded-Lipschitz-cont} ergibt sich als
 Kontraposition, dass eine Funktion mit unbeschränkter Ableitung
-nicht Lipschitz"=stetig sein kann.
+nicht dehnungsbeschränkt sein kann.
 
 Ist $f\colon D\to\R$ an jeder Stelle differenzierbar und ist $f'$
 in jeder noch so kleinen Umgebung der Stelle $x_0$ unbeschränkt, dann
 kann $f$ also in der Nähe dieser Stelle auch nicht lokal
-Lipschitz"=stetig sein.
+dehnungsbeschränkt sein.
 
-Ein Beispiel für eine solche Funktion ist $f\colon{}[0,\infty)\to\R$
-mit
+Ein Beispiel für eine solche Funktion ist
+$f\colon{}[0,\infty)\to\R$ mit%
 \[f(0):=0\quad \text{und}\quad f(x):=x^{3/2}\cos\Big(\tfrac{1}{x}\Big).\]
 Einerseits gilt
 \[f'(0) = \lim_{h\to 0}\frac{f(0+h)-f(0)}{h} = \lim_{h\to 0}\frac{f(h)}{h}
 = \lim_{h\to 0} (h^{1/2}\cos\Big(\tfrac{1}{h}\Big)) = 0.\]
 Die Funktion ist also an der Stelle $x=0$ differenzierbar.
 Andererseits gilt nach den Ableitungsregeln%
-\[f'(x) = \frac{3}{2}\sqrt{x}\cos\Big(\tfrac{1}{x}\Big)+\frac{1}{\sqrt{x}}\sin\Big(\tfrac{1}{x}\Big).\]
+\[f'(x) = \frac{3}{2}\sqrt{x}\cos\Big(\tfrac{1}{x}\Big)
++ \frac{1}{\sqrt{x}}\sin\Big(\tfrac{1}{x}\Big)\]
 für $x>0$. Der Term $\tfrac{1}{\sqrt{x}}$ erwirkt für $x\to 0$ immer
 größere Maxima von $|f'(x)|$. Daher kann $f$ in der Nähe von $x=0$ nicht
-lokal Lipschitz"=stetig sein.\;\qedsymbol
+lokal dehnungsbeschränkt sein.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
 Sei $f\colon\R\to\R$ differenzierbar und $f(x)$ konvergent
-für $x\to\infty$. Ist außerdem $f'$  Lipschitz-stetig,
+für $x\to\infty$. Ist außerdem $f'$  dehnungsbeschränkt,
 zieht dies $f'(x)\to 0$ für $x\to\infty$ nach sich.
 \end{Satz}
 \begin{Beweis}
 Gemäß dem cauchyschen Konvergenzkriterium gibt es zu jedem
-$\varepsilon>0$ eine Stelle $x_0$, so dass
-\begin{equation}
-|f(b)-f(a)| < \varepsilon
-\end{equation}
+$\varepsilon>0$ eine Stelle $x_0$, so dass%
+\[|f(b)-f(a)| < \varepsilon\]
 für alle $a,b$ mit $x_0 < a \le b$. Nun ist $f'$ aufgrund
-der Lipschitz-Stetigkeit erst recht stetig, womit
-\begin{equation}
-\bigg|\int_a^b f'(x)\,\mathrm dx\bigg| = |f(b)-f(a)|
-\end{equation}
+der Dehnungsbeschränktheit erst recht stetig, womit%
+\[\bigg|\int_a^b f'(x)\,\mathrm dx\bigg| = |f(b)-f(a)|\]
 laut dem Fundamentalsatz gilt. Gezeigt wird nun, dass $|f'(a)|$
-beschränkt ist. Sei dazu $L$ die Lipschitz-Konstante. Ohne
+beschränkt ist. Sei dazu $L$ die Lipschitz"=Konstante. Ohne
 Beschränkung der Allgemeinheit sei $f'(a)>0$. Fallen darf $f'$ maximal
 mit dem Anstieg $-L$. Geschieht dies linear bis zur Nullstelle $b$,
-ergibt sich ein rechtwinkliges Dreieck mit dem Flächeninhalt
-\begin{equation}
-\frac{1}{2L} f'(a)^2 = \int_a^b f'(x)\,\mathrm dx < \varepsilon.
-\end{equation}
+ergibt sich ein rechtwinkliges Dreieck mit dem Flächeninhalt%
+\[\frac{1}{2L} f'(a)^2 = \int_a^b f'(x)\,\mathrm dx < \varepsilon.\]
 Demnach ist $f'(a) < \sqrt{2L\varepsilon}$. Weil dies für alle $a>x_0$
 gilt, muss $f'$ jede Beschränkung unterbieten, womit
 der Beweis der Behauptung erbracht ist.\;\qedsymbol
@@ -491,7 +488,7 @@ der Beweis der Behauptung erbracht ist.\;\qedsymbol
 
 \noindent
 Die Diskussion des Gegenbeispiels $f(0):=0$, $f(x):=\sin(x^2)/x$ macht
-ersichtlich, dass die Aussage ohne Lipschitz-Stetigkeit nicht einmal
+ersichtlich, dass die Aussage ohne Dehnungsbeschränktheit nicht einmal
 für glatte Funktionen gilt.
 
 \newpage
@@ -555,8 +552,10 @@ Es ist ein $\delta>0$ zu finden, mit dem
 \|(f(x)+g(x))-(f(x_0)+g(x_0))\|<\varepsilon\]
 bestätigt werden kann. Gegeben ist
 \begin{gather*}
-\forall\varepsilon'\;>0\colon\exists\delta'\;>0\colon\forall x\colon \|x-x_0\|<\delta'\;\to \|f(x)-f(x_0)\|<\varepsilon',\\
-\forall\varepsilon''>0\colon\exists\delta''>0\colon\forall x\colon \|x-x_0\|<\delta''\to \|g(x)-g(x_0)\|<\varepsilon''.
+\forall\varepsilon'\;>0\colon\exists\delta'\;>0\colon\forall x\colon
+  \|x-x_0\|<\delta'\;\to \|f(x)-f(x_0)\|<\varepsilon',\\
+\forall\varepsilon''>0\colon\exists\delta''>0\colon\forall x\colon
+  \|x-x_0\|<\delta''\to \|g(x)-g(x_0)\|<\varepsilon''.
 \end{gather*}
 Man spezialisiere $\varepsilon':=\frac{\varepsilon}{2}$ und
 $\varepsilon'':=\frac{\varepsilon}{2}$. Man wähle nun
@@ -566,7 +565,8 @@ erhält man also $\|f(x)-f(x_0)\|<\varepsilon'$ und $\|g(x)-g(x_0)\|<\varepsilon
 Mit diesen findet sich
 \begin{align*}
 \|(f(x)+g(x))-(f(x_0)+g(x_0))\| &= \|f(x)-f(x_0)+g(x)-g(x_0)\|\\
-&\stackrel{\text{(1)}}\le \|f(x)-f(x_0)\|+\|g(x)-g(x_0)\| < \varepsilon'+\varepsilon'' = \varepsilon,
+&\stackrel{\text{(1)}}\le \|f(x)-f(x_0)\|+\|g(x)-g(x_0)\|
+< \varepsilon'+\varepsilon'' = \varepsilon,
 \end{align*}
 wobei für (1) die Dreiecksungleichung zur Anwendung kam.\,\qedsymbol
 \end{Beweis}
@@ -576,7 +576,7 @@ wobei für (1) die Dreiecksungleichung zur Anwendung kam.\,\qedsymbol
 
 \subsection{Ableitungsregeln}
 
-\begin{Definition}[diff: differenzierbar, Ableitung]%
+\begin{Definition}[Differenzierbarkeit, Ableitung]%
 \label{diff}\index{differenzierbar}\index{Ableitung}
 Eine Funktion $f\colon D\to\R$ heißt differenzieraber an der Stelle
 $x_0\in D$, wenn der Grenzwert%
@@ -586,32 +586,31 @@ existiert. Man nennt $f'(x_0)$ die Ableitung von $f$ an der Stelle
 $x_0$.
 \end{Definition}
 
-\begin{Satz}\index{Produktregel}
+\begin{Satz}\label{diff-add-sub-mul}\index{Produktregel}
 Sei $I$ ein Intervall und $f,g\colon I\to\R$. Sind $f,g$
 differenzierbar an der Stelle $x\in I$, dann ist auch%
-\begin{align}
+\begin{align*}
 f+g&\;\text{dort differenzierbar mit}\;(f+g)'(x)=f'(x)+g'(x),\\
 f-g&\;\text{dort differenzierbar mit}\;(f-g)'(x)=f'(x)-g'(x),\\
-\label{eq:diff-mul}
 fg&\;\text{dort differenzierbar mit}\;(fg)'(x)=f'(x)g(x)+f(x)g'(x).
-\end{align}
+\end{align*}
 \end{Satz}
 
 \begin{Beweis} Es gilt
-\begin{gather}
+\begin{gather*}
 (f+g)'(x)
 = \lim_{h\to 0}\frac{(f+g)(x+h)-(f+g)(x)}{h}\\
 = \lim_{h\to 0}\frac{(f(x+h)+g(x+h))-(f(x)+g(x))}{h}\\
 = \lim_{h\to 0}\bigg(\frac{f(x+h)-f(x)}{h}+\frac{g(x+h)-g(x)}{h}\bigg)\\
 = \lim_{h\to 0}\frac{f(x+h)-f(x)}{h}+\lim_{h\to 0}\frac{g(x+h)-g(x)}{h}
 = f'(x)+g'(x).
-\end{gather}
+\end{gather*}
 Da die Grenzwerte auf der rechten Seite nach Voraussetzung existieren,
 muss auch der Grenzwert der Summe existieren.
 Die Rechnung für die Subtraktion ist analog.
 
 Bei der Multiplikation wird ein Nullsummentrick angewendet:
-\begin{gather}
+\begin{gather*}
 g(x)f'(x)+f(x)g'(x)
 = g(x)\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}
 + f(x)\lim_{h\to 0}\frac{g(x+h)-g(x)}{h}\\
@@ -623,7 +622,7 @@ g(x)f'(x)+f(x)g'(x)
 = \lim_{h\to 0}\frac{f(x+h)g(x+h)-f(x)g(x)}{h}
 = \lim_{h\to 0}\frac{(fg)(x+h)-(fg)(x)}{h}
 = (fg)'(x).
-\end{gather}
+\end{gather*}
 Hierbei wurde $\lim_{h\to 0}g(x+h)=g(x)$ benutzt, was richtig ist,
 weil $g$ an der Stelle $x$ differenzierbar ist und dort somit ganz
 sicher stetig.\;\qedsymbol
@@ -634,25 +633,21 @@ sicher stetig.\;\qedsymbol
 Sei $I$ ein Intervall. Sind $f,g\colon I\to\R$ an der Stelle
 $x$ differenzierbar und ist $g(x)\ne 0$, dann
 ist auch $f/g$ differenzierbar und es gilt
-\begin{equation}
-\bigg(\frac{f}{g}\bigg)'(x) = \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}.
-\end{equation}
+\[\bigg(\frac{f}{g}\bigg)'(x) = \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}.\]
 \end{Satz}
 \begin{Beweis}
-Nach der Produktregel \eqref{eq:diff-mul} gilt
-\begin{equation}
-0 = 1' = \bigg(g\cdot\frac{1}{g}\bigg)'
-= g'\cdot\frac{1}{g}+g\cdot \bigg(\frac{1}{g}\bigg)'.
-\end{equation}
+Nach der Produktregel in Satz \ref{diff-add-sub-mul} gilt
+\[0 = 1' = \bigg(g\cdot\frac{1}{g}\bigg)'
+= g'\cdot\frac{1}{g}+g\cdot \bigg(\frac{1}{g}\bigg)'.\]
 Umstellen bringt $(1/g)'(x)=-g'(x)/g(x)^2$. Nochmalige Anwendung der
-Produktregel \eqref{eq:diff-mul} bringt
-\begin{align}
+Produktregel bringt
+\begin{align*}
 \bigg(\frac{f}{g}\bigg)'(x)
 &= \bigg(f\cdot\frac{1}{g}\bigg)'(x)
 = f'(x)\cdot\frac{1}{g(x)}+f(x)\bigg(\frac{1}{g}\bigg)'(x)\\
 &= \frac{f'(x)}{g(x)}-\frac{f(x)g'(x)}{g(x)^2}
 = \frac{f'(x)g(x)-f(x)g'(x)}{g(x)^2}.\;\qedsymbol
-\end{align}
+\end{align*}
 \end{Beweis}
 
 \begin{Satz}\label{diff-power}
@@ -661,21 +656,22 @@ $f'(x)=nx^{n-1}$.
 \end{Satz}
 \begin{Beweis}[Beweis 1]
 Heranziehung des binomischen Lehrsatzes bringt
-\begin{align}
+\begin{align*}
 f'(x) &= \lim_{h\to 0}\frac{(x+h)^n-x^n}{h}
 = \lim_{h\to 0}\frac{\sum_{k=0}^n\binom{n}{k}x^{n-k} h^k-x^n}{h}\\
 &= \lim_{h\to 0}\bigg(nx^{n-1}+\sum_{k=2}^n\binom{n}{k}x^{n-k}h^{k-1}\bigg)
 = nx^{n-1}.\;\qedsymbol
-\end{align}
+\end{align*}
 \end{Beweis}
 \begin{Beweis}[Beweis 2]
 Induktiv. Der Induktionsanfang $\tfrac{\mathrm d}{\mathrm dx}x=1$ ist klar.
-Induktionsschritt mittels Produktregel \eqref{eq:diff-mul}:
-\begin{align}
+Mittels der Produktregel in Satz \ref{diff-add-sub-mul}
+bewältigt man den Induktionsschritt 
+\begin{align*}
 \tfrac{\mathrm d}{\mathrm dx} x^n = \tfrac{\mathrm d}{\mathrm dx} (x\cdot x^{n-1})
 = x^{n-1}+x\tfrac{\mathrm d}{\mathrm dx}x^{n-1}
 = x^{n-1}+(n-1)x^{n-1} = nx^{n-1}.\;\qedsymbol
-\end{align}
+\end{align*}
 \end{Beweis}
 
 \begin{Satz}
@@ -684,19 +680,17 @@ gilt $f'(x)=nx^{n-1}$.
 \end{Satz}
 \begin{Beweis}
 Der Fall $n=0$ ist trivial und $n\ge 1$ wurde schon in Satz
-\ref{diff-power} gezeigt. Sei nun $a\in\N$ und $n=-a$. Nach der
-Produktregel \eqref{eq:diff-mul} und Satz \ref{diff-power} gilt
-\begin{equation}
-0 = \tfrac{\mathrm d}{\mathrm dx} 1
+\ref{diff-power} gezeigt. Sei nun $a\in\Z_{\ge 1}$ und $n=-a$. Nach der
+Produktregel (Satz \ref{diff-add-sub-mul}) und Satz
+\ref{diff-power} gilt
+\[0 = \tfrac{\mathrm d}{\mathrm dx} 1
 = \tfrac{\mathrm d}{\mathrm dx} (x^a x^{-a})
 = x^{-a}\tfrac{\mathrm d}{\mathrm dx} x^a+x^a\tfrac{\mathrm d}{\mathrm dx} x^{-a}
-= x^{-a}ax^{a-1}+x^a\tfrac{\mathrm d}{\mathrm dx} x^{-a}.
-\end{equation}
+= x^{-a}ax^{a-1}+x^a\tfrac{\mathrm d}{\mathrm dx} x^{-a}.\]
 Dividiert man nun durch $x^a$ und formt um, dann ergibt sich
-\begin{equation}
-\tfrac{\mathrm d}{\mathrm dx} x^{-a} = -ax^{-a-1}
-\implies \tfrac{\mathrm d}{\mathrm dx} x^n = nx^{n-1}.\;\qedsymbol
-\end{equation}
+\[\tfrac{\mathrm d}{\mathrm dx} x^{-a} = -ax^{-a-1},
+\;\text{das heißt,}\;
+\tfrac{\mathrm d}{\mathrm dx} x^n = nx^{n-1}.\;\qedsymbol\]
 \end{Beweis}
 
 \newpage
@@ -845,7 +839,7 @@ p(y) = g(y), & R(y,y') = g'(y)y'.
 \begin{Definition}[Kontraktion]\index{Kontraktion}
 Sei $(M,d)$ ein vollständiger metrischer Raum. Eine Abbildung
 $\varphi\colon M\to M$ heißt Kontraktion, wenn sie
-Lipschitz"=stetig mit Lipschitz"=Konstante $L<1$ ist, das heißt
+dehnungsbeschränkt mit Lipschitz"=Konstante $L<1$ ist, das heißt,
 \[d(\varphi(x),\varphi(y))<L\,d(x,y)\]
 für alle $x,y\in M$.
 \end{Definition}
@@ -867,7 +861,7 @@ konvergiert für jeden Startwert $x_0\in M$ gegen diesen Fixpunkt.
 \end{Satz}
 \begin{Beweis}
 Nach Satz \ref{diff-bounded-Lipschitz-cont} ist eine differenzierbare
-Funktion $\varphi$ mit beschränkter Ableitung auch Lipschitz"=stetig,
+Funktion $\varphi$ mit beschränkter Ableitung auch dehnungsbeschränkt,
 und $L=\sup_{x\in M}|\varphi'(x)|$ eine Lipschitz"=Konstante.
 Wegen $|\varphi'(x)|<r$ muss $L\le r$ sein, und somit $L<1$.
 Das heißt, $\varphi$ ist eine Kontraktion. Die Konvergenz der Folge

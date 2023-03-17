@@ -1,0 +1,233 @@
+
+\chapter{Logisches Schließen}
+
+\section{Grundbegriffe}
+
+\subsection{Was ist eine Schlussregel?}
+
+% Alles Schlussregeln und Axiome müssen unmittelbar einsichtig sein,
+% müssen unbedenklich sein. Normalerweise will man in der Wissenschaft
+% nicht so informell sein, aber hier sind wir am basalen Grund.
+% Selbst in der Semantik wird der hier aufgestellte Formalismus
+% benötigt. Der Korrektheitsbeweis würde somit zirkulär.
+
+% Am Anfang ist noch nicht allzu viel zu rechnen. Wir müssen uns
+% erst um die Schlussregeln und Axiome bemühen, bevor das erste Theorem
+% bewiesen werden kann.
+
+% Zur Syntax. Rangfolge der Junktoren. Abstrakte Syntaxbäume.
+% Kurzschreibweisen, Verlockung nach Steno.
+
+Logisches Schließen findet in einzelnen Schritten statt.
+Ein Schritt stellt hierbei immer die Ableitung
+einer Schlussfolgerung aus einer oder mehreren Voraussetzungen dar.
+Die Voraussetzungen heißen \emph{Prämissen}, die Schlussfolgerung
+\emph{Konklusion}. Darstellen wollen wir den Schritt durch eine
+waagerechte Linie, wobei die Prämissen oberhalb befindlich sein sollen,
+und die Konklusion unterhalb. Der Schritt
+\[\dfrac{\text{wenn es regnet, wird die Straße nass}\qquad\text{es regnet}}
+{\text{die Straße wird nass}}\]
+beschreibt beispielsweise, dass aus den Prämissen »wenn es regnet, wird
+die Straße nass« und »es regnet« die Konklusion »die Straße wird nass«
+gefolgert wird.
+
+Schlüsse wie der Obige treten in der Mathematik ständig auf. Ihnen allen
+liegt ein bestimmtes Muster zugrunde, welches
+sich durch eine als \emph{Modus ponens}
+oder \emph{Abtrennungsregel} bezeichnete schematische \emph{Schlussregel}
+beschreiben lässt. Es bezeichne hierzu $A\cond B$ die Implikation
+»wenn $A$, dann $B$«. Es dürfen nun in
+\[\dfrac{A\cond B\qquad A}{B}\]
+für $A,B$ beliebige Aussagen eingesetzt werden. So darf »es regnet»
+für $A$ und »die Straße wird nass« für $B$ eingesetzt werden.
+
+\subsection{Sequenzen}
+
+Das Schließen von Aussagen allein genügt nicht. Um freier argumentieren
+zu können, würden wir gerne den Umstand beschreiben können, dass eine
+Aussage unter bestimmten Annahmen abgeleitet werden konnte. Diese
+Annahmen $A_k$ sind selbst Aussagen. Wir fassen sie zu einer endlichen
+Ansammlung
+\[\Gamma := [A_1,A_2,\ldots,A_n]\]
+zusammen, worunter wir eine endliche Liste, oder auch eine endliche
+Menge verstehen wollen, denn man soll mit dieser Liste umgehen können
+wie mit einer Menge. Das heißt, es ist nicht von Bedeutung, wie
+oft eine Aussage vorkommt oder in welcher Reihenfolge die Aussagen
+stehen. Man bezeichnet $\Gamma$ als die \emph{Antezedenz} oder die
+Liste der \emph{Antezedenzen}. Es wird $\Gamma$ auch der \emph{Kontext}
+oder die \emph{Umgebung} genannt, das sind auf die Typentheorie
+zurückzuführende Sprechweisen, die einen ganz ähnlichen Formalismus
+besitzt. Wir bezeichnen die Symbolik \[\Gamma\vdash A\]
+als \emph{Sequenz}. Sie drückt das \emph{Urteil} aus, dass die
+Aussage $A$ aus den Annahmen vermittels Schlussregeln ableitbar ist.
+Der Modus ponens wird nun in der allgemeinen Form
+\[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}\]
+beschrieben. Wir argumentieren beim Schließen also ab jetzt nicht mehr
+mit den Aussagen selbst, sondern mit den Sequenzen. Dies hat einen wichtigen
+Grund, nämlich dass die Berücksichtigung der Abhängigkeit von Annahmen
+expliziter Teil des Schließens wird.
+
+Ein Kontext kann auch eine leere Liste sein.
+Besitzt eine vermittels Schlussregeln ableitbare Sequenz einen
+leeren Kontext, so bezeichnet man die Antezedenz als ein
+\emph{Theorem} im engeren Sinne. Ein Theorem ist also eine
+Aussage, die für sich allein gilt, ohne dass dafür irgendwelche
+Annahmen getroffen werden müssen.
+
+Für Sequenzen gilt die \emph{Abschwächungsregel}. Sie besagt, dass
+falls die Aussage $A$ bereits aus $\Gamma$ ableitbar ist, diese
+Aussage erst recht ableitbar ist, wenn zu $\Gamma$ weitere Annahmen
+$\Gamma'$ hinzugefügt werden. Kurzum gilt die Regel
+\[\dfrac{\Gamma\vdash A}{\Gamma,\Gamma'\vdash A}.\]
+Hierbei bedeutet $\Gamma,\Gamma'$ die Konkatenation der Listen
+$\Gamma$ und $\Gamma'$, also im Wesentlichen dasselbe wie die
+Vereinigung $\Gamma\cup\Gamma'$, insofern man die Kontexte als
+Mengen betrachtet.
+
+\subsection{Zulässige Schlussregeln}
+
+Wiewohl die Regeln des Schließens den Mechanismus zum Beweis
+von Aussagen bilden, ist ihre Rolle sogar noch ein wenig tiefgreifender.
+Wir können sie nämlich ebenfalls zur Ableitung \emph{weiterer Regeln}
+nutzen. Das heißt, wir können sie dazu nutzen, den logischen Kalkül
+selbst zu erweitern. Erweiterungen dieser Art nennen wir
+\emph{zulässige Schlussregeln}.
+
+Mit den bisherigen Regeln ist bereits die zulässige Regel
+\[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash A}
+{\Gamma,\Gamma'\vdash B}\]
+ableitbar, die eine allgemeinere Form des Modus ponens darstellt. Man
+erhält sie kurzerhand, indem den Prämissen des Modus
+ponens jeweils die Abschwächungsregel vorgesetzt wird:
+\[\infer{\Gamma,\Gamma'\vdash B}{
+  \infer{\Gamma,\Gamma'\vdash A\cond B}{\Gamma\vdash A\cond B}
+& \infer{\Gamma,\Gamma'\vdash A}{\Gamma'\vdash A}}
+\]
+Die einfache Form des Modus ponens erhält man mit $\Gamma':=\Gamma$ als
+Spezialfall unter Anwendung der Kontraktionsregel.
+
+\subsection{Implikationseinführung}
+
+Ich möchte mich nun der Frage zuwenden, wie eine Implikation $A\cond B$
+bewiesen wird. Intuitiv ist hierzu aus der Annahme $A$ die
+Aussage $B$ zu folgern. Das heißt, es genügt die Ableitung
+der Sequenz $A\vdash B$. Ein weiteres Mal gilt es noch zu
+berücksichtigen, dass ein Beweis auch auf einen vorausgesetzten
+Kontext $\Gamma$ beschränkt sein dürfen soll. Reflektiert man darüber
+eine Weile, dürfte es der Überlegung nach wohl genügen, dass $A$
+einfach dem Kontext $\Gamma$ hinzugefügt wird, woraus $B$ zu folgern
+ist. Man gelangt zur Regel
+\[\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\cond B}.\]
+Wer diese Regel nicht so leicht fassbar findet, insbesondere nicht
+direkt plausibel, ob sie bedenkenlos eingesetzt werden darf, der
+ist nicht allein. Es gibt auch logische Kalküle, die diese Regel nicht
+explizit enthalten. Sie tritt dennoch als \emph{Deduktionstheorem} in
+Erscheinung, ein metalogisches Theorem, dessen Beweis erst erbracht
+werden muss. Ich möchte diesen Weg allerdings aus einem bestimmten Grund
+nicht gehen. Nämlich ist beim Beweis eigentlich natürliches Schließen
+auf der metalogischen Ebene zu verwenden, wenn dies auch in informaler
+Weise stattfinden mag. Aber nicht jeder Leser weiß zu diesem Zeitpunkt,
+wie akkurates logisches Schließen geht. Der Leser benötigt am Anfang
+etwas, um sich an den eigenen Haaren aus dem Sumpf zu ziehen.
+
+\subsection{Axiome}
+
+Zur Komplettierung des Kalküls gesellen sich schließlich auch noch
+\emph{Axiome} hinzu, das sind gemachte Grundannahmen, die nicht weiter
+bewiesen werden müssen. Sie sollten daher möglichst plausibel,
+oder besser noch zweifelsfrei einsichtig sein. Für die Logik selbst
+genügt das Axiom
+\[A\vdash A.\]
+Der Kalkül funktioniert dergestalt, dass für $A$ eine beliebige Aussage
+eingesetzt werden darf, worunter auch zusammengesetzte Aussagen
+wie fallen. Eine gern gewählter Weg der Definition des logischen
+Kalküls sieht $A$ als eine metasprachliche Variable, für die eine
+beliebige Formel eingesetzt werden darf. Unter dieser Sichtweise
+spricht man von einem \emph{Axiomenschema}. Wie eine Schablone
+produziert es für jede Einsetzung einer konkreten logischen Formel ein
+eigenes Axiom.
+
+Anstelle $A,B,C$ werden für metasprachliche Variablen zuweilen auch
+die griechischen Buchstaben $\varphi,\psi,\chi$ benutzt. Man muss sie
+von atomaren logischen Variablen unterscheiden, für die wir in diesem
+Buch, um Missverständnissen aus dem Weg zu gehen, kleine Buchstaben
+$a,b,c$ oder $p,q,r$ verwenden werden. Sprachlich suggestiv steht
+$\varphi$ für \emph{Formel} oder \emph{formula}, $a$ für
+\emph{Aussage} und $p$ für \emph{proposition}.
+
+In diesem Sinne sind auch die Schlussregeln Schemata. Sofern man
+Schlussregeln mit null Prämissen gestattet, lässt sich das
+Axiomenschema auch als Regel
+\[\dfrac{}{A\vdash A}\]
+auffassen. In dieser Weise wollen wir die Anwendung von Axiomen in den
+Beweisbäumen darstellen.
+
+Axiome in der Form von Sequenzen heißen auch \emph{Grundsequenzen}.
+
+Wir haben nun die Mittel in der Hand, um erste Theoreme beweisen
+zu können. Es ist $A\cond A$ ein Theorem. Der Beweisbaum ist:
+\[
+\infer[\infernote{Implikationseinführung}]{\vdash A\cond A}{
+  \infer[\infernote{Axiom}]{A\vdash A}{}}
+\]
+Unter der Lesung, dass $A$ eine Metavariable ist, handelt es
+eigentlich nicht nur um ein Theorem, sondern um ein Schema von
+Theoremen. Setzt man für $A$ bspw. die konkrete Formel $p\cond q$
+ein, bekommt man das konkrete Theorem
+\[\vdash (p\cond q)\cond (p\cond q).\]
+% Es ist zu bemerken, dass die Unterscheidung zwischen Metavariablen
+% und atomaren logischen Variablen später durch die Einsetzungsregel
+% mehr oder weniger hinfällig wird. Hierbei handelt es sich aber um eine
+% höhere Überlegung, deren Beweis der Logiker erbringen will. In der
+% Wissenschaft, insbesondere in der Logik, will man den Dingen auf den
+% Grund gehen, will alles genau auseinandernehmen. Da möchte man bestimmte
+% Regeln nicht einfach so als gegeben voraussetzen.
+
+\subsection{Junktoren}
+
+Bisher traten zusammengesetzte Aussagen alleinig in Form einer
+Implikation auf. Will man logische Zusammenhänge beschreiben können,
+muss die logische Sprache um weitere Junktoren bereichert werden.
+Unter einem \emph{Junktor} versteht man eine logische Verknüpfung von
+Aussagen zu einer zusammengesetzten Aussage.
+
+Wir werden einen Junktor durch \emph{Einführungsregeln} und
+\emph{Beseitigungsregeln} charakterisieren. Die Regeln der Implikation
+wurden bereits beschrieben; die Einführung geschieht per
+Implikationseinführung, die Beseitigung per Modus ponens.
+Für die restlichen Junktoren der Aussagenlogik lassen sich die Regeln
+wahlweise in Form von Axiomenschemata oder in Form von Schlussregeln
+darstellen. Ich möchte das per Schemata machen, weil diese ein wenig
+kompakter sind, was sie hoffentlich ein wenig leichter einsichtig macht.
+Die entsprechenden Schlussregeln leiten wir anschließend als zulässige
+Regeln ab.
+
+Die Konjunktion $A\land B$, auch Und"=Verknüpfung genannt,
+sprich »$A$ und $B$«, ist charakterisiert durch die Sequenzen
+\[A,B\vdash A\land B;\qquad A\land B\vdash A;\qquad A\land B\vdash B.\]
+Aus dem Fall von sowohl Regen als auch Schnee ist der Fall von
+Schneeregen ableitbar. Aus dem Fall von Schneeregen ist der Fall
+von Regen ableitbar. Aus dem Fall von Schneeregen ist der Fall
+von Schnee ableitbar. So sind diese Sequenzen zu verstehen.
+
+Die Einführung der Konjunktion geschieht mit der Regel
+\[\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma,\Gamma'\vdash A\land B}.\]
+Denn es findet sich der Beweisbaum:
+\[
+\infer[\infernote{MP}]{\Gamma,\Gamma'\vdash A\land B}{
+  \infer[\infernote{MP}]{\Gamma\vdash B\cond A\land B}{
+    \infer[\infernote{Impl-Einf.}]{\vdash A\cond (B\cond A\land B)}{
+      \infer[\infernote{Impl-Einf.}]{A\vdash B\cond A\land B}{
+        \infer[\infernote{Axiom}]{A,B\vdash A\land B}{}}}
+  & \Gamma\vdash A}
+& \Gamma'\vdash B}
+\]
+Es steht MP als Abkürzung für Modus ponens, und Impl-Einf. für
+Implikationseinführung. Man schreibt alternativ auch das Kürzel
+$\cond$E anstelle Impl-Einf. und das Kürzel $\cond$B anstelle
+von MP. Hierbei steht E offenkundig für \emph{Einführung} und
+B für \emph{Beseitigung}. Aber Vorsicht, in der englischsprachigen
+Literatur sind das I für \emph{introduction} und E für
+\emph{elimination}.
+
+
