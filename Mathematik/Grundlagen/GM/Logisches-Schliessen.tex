@@ -333,7 +333,142 @@ anstelle von $\lnot A$, $AB$ anstelle von $A\land B$ und $A+B$ anstelle
 von $A\lor B$. Hierbei darf die Disjunktion $A+B$ allerdings nicht mit
 der Kontravalenz $A\oplus B$ verwechselt werden.
 
+\subsection{Quantoren}
 
+Eine logische Sprache, die der freien Formulierung mathematischer
+Zusammenhänge dienlich sein soll, muss hinreichend reichhaltig sein.
+Ebenfalls schrieb der Philosoph Ludwig Wittgenstein in seinem
+\emph{Tractatus} den ähnlichen Gedanke »Die Grenzen meiner Sprache
+bedeuten die Grenzen meiner Welt.« Bislang fehlt das wichtige Konzept
+der Quantifizierung, das die Aussagenlogik zur Prädikatenlogik
+erweitert.
+
+In der Prädikatenlogik treten \emph{Aussageformen}\index{Aussageform}
+auf. Das sind Formeln, die \emph{freie Variablen}\index{freie Variable}
+enthalten. Erst wenn jede der freien Variablen mit einem Wert belegt
+wird, entsteht eine Aussage. Außerdem treten Quantoren auf. Ein
+\emph{Quantor}\index{Quantor} bindet eine freie Variable, und macht
+eine Aussageform dabei ebenfalls zu einer bestimmten Aussage.
+
+Es sei $A(x)$ eine Aussageform mit der freien Variable $x$. Anstelle
+von $A(x)$ schreibt man auch kurzum $A$. Anstelle von $A(t)$ schreibt
+man auch $A[x:=t]$ oder $A[t/x]$, womit die Ersetzung jedes Vorkommens
+von $x$ durch den Term $t$ gemeint ist. Genauer gesagt die Ersetzung
+jedes \emph{freien} Vorkommens, wobei man außerdem einer möglichen
+Überschattung einer der in $t$ enthaltenen Variablen aus dem Weg gehen
+muss. Diese Spitzfindigkeiten tauchen allerdings erst auf, wenn man mit
+Verschachtelungen von Quantoren hantiert. Ich will später
+genauer darauf eingehen.
+
+Die wesentlichen beiden Quantoren sind der \emph{Allquantor}%
+\index{Allquantor}\index{Universalquantor} $\forall$ und der
+\emph{Existenzquantor}\index{Existenzquantor} $\exists$. Man ließt
+$\forall x\colon A(x)$ als »für alle $x$ gilt $A(x)$« oder »jedes $x$
+hat die Eigenschaft $A(x)$«. Man ließt $\exists x\colon A(x)$ als »es
+gibt mindestens ein $x$, für das $A(x)$ gilt« oder »mindestens ein $x$
+hat die Eigenschaft $A(x)$«.
+
+Quantifiziert wird immer über ein bestimmtes \emph{Diskursuniversum}.
+Darunter versteht man die Gesamtheit der Objekte, auf die sich
+»für alle« und »es gibt« bezieht. Um bestimmten Komplikationen aus dem
+Weg zu gehen, muss es nichtleer sein. Zur Veranschaulichung des
+Übergangs von der Aussagenlogik zur Prädikatenlogik wählen wir ein
+endliches, das lediglich die Zahlen von eins bis vier enthält.
+Die Aussage $\forall x\colon A(x)$ bedeutet nun insofern dasselbe wie
+\[A(1)\land A(2)\land A(3)\land A(4).\]
+Diese schlichte Konjunktion gibt Anlass zu der Schlussregel
+\[\dfrac{\Gamma\vdash\forall x\colon A(x)}{\Gamma\vdash A(t)}.
+\qquad(\text{$t$ muss eine der Zahlen von eins bis vier sein})\]
+Die Beseitigung der Allquantifizierung darf insofern als Analogon zur
+Beseitigung der Konjunktion verstanden werden.
+
+Im Fortgang soll $\Gamma\vdash A(x)$ bedeuten, dass die Aussageform
+$A(x)$ aus dem Kontext $\Gamma$ ableitbar ist, wobei $x$ beliebig
+gelassen wird. Man leitet die vier Sequenzen
+\[\Gamma\vdash A(1);\quad\Gamma\vdash A(2);\quad\Gamma\vdash A(3);
+\quad\Gamma\vdash A(4)\]
+sozusagen in einen Zug ab. Es stellt sich nun die Frage
+\[\dfrac{\Gamma\vdash A(x)}{\Gamma\vdash\forall x\colon A(x)}?\]
+Betrachten wir $x=1\vdash A(x)$. Mit der Regel bekäme man ja
+$x=1\vdash\forall x\colon A(x)$. Damit wir nicht durcheinanderkommen,
+benennen wir die gebundene Variable $x$ in $y$ um, und erhalten
+$x=1\vdash\forall y\colon A(y)$. Wenn die ableitbar ist, dann erst
+recht der Fall $x:=1$. Nun braucht man $1=1$ nicht vorauszusetzen.
+Somit erhält man $\vdash\forall y\colon A(y)$. Den Quantor beseitigen
+wir nun noch mit $y:=x$, und erhalten $\vdash A(x)$. Die Annahme
+wurde also aus der Sequenz herausgemogelt. Um dies zu unterbinden,
+legen wir fest, dass $x$ keine freie Variable einer der Antezedenzen
+sein darf.
+
+Die Regel zur Einführung ist demnach zu formulieren als
+\[\dfrac{\Gamma\vdash A(x)}{\Gamma\vdash\forall x\colon A(x)}
+(x\notin\mathrm{FV}(\Gamma,\forall x\colon A(x))).\]
+Hierbei steht die Symbolik $\mathrm{FV}(\Gamma)$ für die Menge der
+freien Variablen von $\Gamma$. Mit elementarer Mengenlehre definiert
+man sie präzise als Rekursion über den Formelaufbau. Man legt fest
+\begin{gather*}
+\mathrm{FV}(A\land B) = \mathrm{FV}(A\lor B)
+= \mathrm{FV}(A\cond B) = \mathrm{FV}(A\bicond B)
+= \mathrm{FV}(A)\cup\mathrm{FV}(B),\\
+\mathrm{FV}(\lnot A) = \mathrm{FV}(A),\quad
+\hspace{13pt}\mathrm{FV}(\forall x\colon A) = \mathrm{FV}(\exists x\colon A)
+= \mathrm{FV}(A)\setminus\{x\},\\
+\mathrm{FV}(\bot) = \mathrm{FV}(\top) = \emptyset,\quad
+\mathrm{FV}(P(t_1,\ldots,t_n)) = \mathrm{FV}(t_1)\cup\ldots\cup\mathrm{FV}(t_n).
+\end{gather*}
+Hierbei steht $P$ für ein $n$-stelliges Prädikat. Und es ist $\mathrm{FV}(t)$
+die Menge der Variablen des Terms $t$. Man legt sie abermals
+rekursiv fest als
+\begin{gather*}
+\mathrm{FV}(t_1+t_2) = \mathrm{FV}(t_1-t_2) = \mathrm{FV}(t_1\cdot t_2)
+= \mathrm{FV}(t_1)\cup\mathrm{FV}(t_2),\\
+\mathrm{FV}(-t)=\mathrm{FV}(t),\quad
+\mathrm{FV}(v)=\{v\},\quad\mathrm{FV}(c) = \emptyset,
+\end{gather*}
+wobei $v$ für eine Variable und $c$ für eine Konstante steht.
+
+Die Aussage $\exists x\colon A(x)$ ist gleichwertig mit
+\[A(1)\lor A(2)\lor A(3)\lor A(4).\]
+Diese Perspektive gibt Anlass zur Einführungsregel
+\[\dfrac{\Gamma\vdash A(t)}{\Gamma\vdash\exists x\colon A(x)}.\quad
+(\text{$t$ muss eine der Zahlen von eins bis vier sein})\]
+Bei der Beseitigung müssen wir nun gewissermaßen eine Fallunterscheidung
+in die vier Fälle vornehmen und bestätigen, dass jeder Fall dieselbe
+Aussage $B$ impliziert. Dies soll allerdings parametrisch in einer
+einzigen Ableitung stattfinden. Man gelangt zu
+\[\dfrac{\Gamma\vdash\exists x\colon A(x)\qquad\Gamma',A(a)\vdash B}
+{\Gamma,\Gamma'\vdash B}(a\notin\mathrm{FV}(\Gamma,\Gamma',B,\exists x\colon A(x))).\]
+Diese Regel wird wie folgt interpretiert. Mit der Existenzaussage
+$\exists x\colon A(x)$ liegt ein Zeuge $a$ mit $A(a)$ vor. Unter
+Verwendung von $A(a)$ wird nun eine Aussage $B$ abgeleitet, in der $a$
+nicht frei vorkommt. Somit gilt $B$ unabhängig vom gewählten Zeugen,
+was notwendig ist, da unbekannt bleibt, welcher der Zahlen von eins
+bis vier als Zeuge vorliegt.
+
+Ohne die Bedingung an $a$ ließe sich leicht Schabernack vollführen.
+Man könnte beispielsweise kurzerhand eine Existenzaussage zu einer
+Allaussage machen:
+\[\infer{\vdash\forall x\colon A(x)}{
+  \infer{\vdash A(a)}{
+    \vdash \exists x\colon A(x)
+  & \infer{A(a)\vdash A(a)}{}}}\]
+Abschließend verbleibt noch näher zu erläutern, wie Substitution
+vonstatten geht. Ersetzt wird nur jedes freie Vorkommen einer
+Variablen. Ein durch einen Quantor gebundenes Vorkommen der Variable
+bleibt dagegen erhalten. So resultiert die Substitution
+\[(A(x)\land\forall x: B(x))[x:=y]\quad\text{in}\quad
+A(y)\land\forall x\colon B(x).\]
+Außerdem darf es bei einer Substitution nicht zu einer Überschattung
+durch eine gebundene Variable kommen. Die Substitution
+\[(\forall y\colon A(x)\land B(y))[x:=y]\]
+darf beispielsweise nicht direkt ausgeführt werden. Man geht der
+Überschattung aus dem Weg, indem die gebundene Variable $y$ zuerst
+in eine frische, nehmen wir $z$, umbenannt wird. Das Resultat der
+Substitution ist also
+\[\forall z\colon A(y)\land B(z),\quad\text{nicht}\quad
+\forall y\colon A(y)\land B(y).\]
+
+\newpage
 \section{Natürliches Schließen}
 
 \subsection{Darstellungsformen}
@@ -487,4 +622,37 @@ zu $\Gamma\vdash A$. Die Beseitigung der Doppelnegation ist allerdings
 lediglich in der klassischen Logik verfügbar, in der intuitionistischen
 gilt sie dagegen als unzulässig.
 
+\subsection{Klassische Kontraposition}
+
+Eine weitere Regel ist die umgekehrte Kontraposition
+\[\dfrac{\Gamma\vdash\lnot A\cond\lnot B}{\Gamma\vdash B\cond A}.\]
+Sie verlangt ebenfalls die klassische Logik. Mit ihr lässt sich
+nämlich die klassische Reductio ad absurdum herleiten:
+\[
+\infer[\infernote{Kürzung der Tautologie}]{\Gamma\vdash A}{
+  \infer[\infernote{Modus ponens}]{\Gamma,\top\vdash A}{
+    \infer[\infernote{bedenklich}]{\Gamma\vdash\top\cond A}{
+      \infer[\infernote{Impl-Einf.}]{\Gamma\vdash\lnot A\cond\lnot\top}{
+        \infer[\infernote{Neg-Einf.}]{\Gamma,\lnot A\vdash\lnot\top}{
+          \infer[\infernote{Abschwächung}]{\Gamma,\lnot A,\top\vdash\bot}{
+            \Gamma,\lnot A\vdash\bot}}}}
+  & \infer[\infernote{Axiom}]{\top\vdash\top}{}}}
+\]
+Weil alle anderen Schlüsse unbedenklich sind, kann die umgekehrte
+Kontraposition als der bedenkliche Schritt identifiziert werden.
+In der klassischen Logik ist sie allerdings zulässig. Die Herleitung
+unter Verwendung der Beseitigung der Doppelnegation sei dem Leser
+überlassen. Als kleiner Tipp sei aber gegeben, dass die Einführung
+der Doppelnegation unter allen Umständen zulässig ist, wie man sich
+unschwer überzeugt.
+
+Wir schreiben die Abkürzungen DNE für die Beseitigung der
+Doppelnegation, LEM für den Satz vom ausgeschlossenen Dritten
+und EFQ für Ex falso quodlibet. Eine Alternative zu DNE bietet
+LEM zuzüglich EFQ. Manche Beweise verkürzen sich damit, andere
+verlängern sich. Tatsächlich lässt sich DNE aus LEM zuzüglich EFQ
+herleiten. Umgekehrt lässt sich sowohl LEM als auch EFQ aus DNE
+herleiten. Es tut sich die Frage auf, ob sich EFQ aus LEM herleiten
+lässt. Die Antwort darauf lautet nein. Eine ausführliche Untersuchung
+findet man in \cite{Diener}.
 
