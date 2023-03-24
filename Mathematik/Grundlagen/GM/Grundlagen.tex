@@ -47,7 +47,7 @@ footskip=10mm, headsep=6mm}
   {\normalfont\sffamily\bfseries}% head font
   {~}% punctuation between head and body
   {0pt}% space after theorem head
-  {\thmname{#1}\;\thmnumber{#2}.\thmnote{\;#3.}}
+  {\thmname{#1} \thmnumber{#2}\thmnote{ (#3)}.}
 
 \theoremstyle{rmbox}
 \newtheorem{Definition}{Definition}
@@ -65,15 +65,15 @@ footskip=10mm, headsep=6mm}
 \definecolor{bordercolor}{rgb}{0.3,0.3,0.3}
 
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=greenblue, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=4pt, innerbottommargin=4pt,%
-  innerrightmargin=6pt, backgroundcolor=bgreen%
+  linecolor=bordercolor, linewidth=3.5pt, innerleftmargin=6pt,%
+  innertopmargin=2pt, innerbottommargin=3pt,%
+  innerrightmargin=6pt%
 ]{Definition}
 
 \newcommand{\framedtheorem}[1]{%
 \surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
   linecolor=bordercolor, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=3pt, innerbottommargin=3pt,%
+  innertopmargin=2pt, innerbottommargin=3pt,%
   innerrightmargin=6pt%
 ]{#1}}
 
@@ -109,6 +109,8 @@ footskip=10mm, headsep=6mm}
 \DeclareMathOperator{\Ob}{Ob}
 
 \newcommand{\infernote}[1]{\!\text{\scriptsize #1}}
+\newcommand{\newlinefirst}{\mbox{}\\}
+\renewcommand{\models}{\vDash}
 
 \usepackage{makeidx}
 \makeindex
@@ -127,6 +129,7 @@ Dieses Buch steht unter der Lizenz Creative Commons CC0 1.0.
 \tableofcontents
 
 \input{Logisches-Schliessen.tex}
+\input{Modelle.tex}
 \input{Literatur.tex}
 
 \printindex

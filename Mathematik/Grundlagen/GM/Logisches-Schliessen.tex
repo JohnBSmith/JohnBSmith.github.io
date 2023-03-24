@@ -15,6 +15,11 @@
 % erst um die Schlussregeln und Axiome bemühen, bevor das erste Theorem
 % bewiesen werden kann.
 
+% Soll ich den Begriff Junktor nur für das Symbol verwenden,
+% oder auch für die logische Verknüpfung/Operation?
+
+% Subjunktion oder Konditional, Bijunktion oder Bikonditional?
+
 Logisches Schließen findet in einzelnen Schritten statt. Ein Schritt
 stellt hierbei immer die Ableitung einer Schlussfolgerung aus einer
 oder mehreren Voraussetzungen dar. Die Voraussetzungen heißen
@@ -382,27 +387,25 @@ Diese schlichte Konjunktion gibt Anlass zu der Schlussregel
 Die Beseitigung der Allquantifizierung darf insofern als Analogon zur
 Beseitigung der Konjunktion verstanden werden.
 
-Im Fortgang soll $\Gamma\vdash A(x)$ bedeuten, dass die Aussageform
-$A(x)$ aus dem Kontext $\Gamma$ ableitbar ist, wobei $x$ beliebig
+Im Fortgang soll $\Gamma\vdash A(a)$ bedeuten, dass die Aussageform
+$A(a)$ aus dem Kontext $\Gamma$ ableitbar ist, wobei $a$ beliebig
 gelassen wird. Man leitet die vier Sequenzen
 \[\Gamma\vdash A(1);\quad\Gamma\vdash A(2);\quad\Gamma\vdash A(3);
 \quad\Gamma\vdash A(4)\]
 sozusagen in einen Zug ab. Es stellt sich nun die Frage
-\[\dfrac{\Gamma\vdash A(x)}{\Gamma\vdash\forall x\colon A(x)}?\]
-Betrachten wir $x=1\vdash A(x)$. Mit der Regel bekäme man ja
-$x=1\vdash\forall x\colon A(x)$. Damit wir nicht durcheinanderkommen,
-benennen wir die gebundene Variable $x$ in $y$ um, und erhalten
-$x=1\vdash\forall y\colon A(y)$. Wenn die ableitbar ist, dann erst
-recht der Fall $x:=1$. Nun braucht man $1=1$ nicht vorauszusetzen.
-Somit erhält man $\vdash\forall y\colon A(y)$. Den Quantor beseitigen
-wir nun noch mit $y:=x$, und erhalten $\vdash A(x)$. Die Annahme
+\[\dfrac{\Gamma\vdash A(a)}{\Gamma\vdash\forall x\colon A(x)}?\]
+Betrachten wir dazu $a=1\vdash A(a)$. Mit der bedenklichen Regel erhielte
+man aus ihr $a=1\vdash\forall x\colon A(x)$. Diese trifft insbesondere
+im Fall $a:=1$ zu. Nun braucht man $1=1$ nicht vorauszusetzen, womit
+man $\vdash\forall x\colon A(x)$ erhält. Den Quantor beseitigen
+wir nun noch mit $x:=a$, und erhalten $\vdash A(a)$. Die Annahme
 wurde also aus der Sequenz herausgemogelt. Um dies zu unterbinden,
-legen wir fest, dass $x$ keine freie Variable einer der Antezedenzen
+legen wir fest, dass $a$ keine freie Variable einer der Antezedenzen
 sein darf.
 
 Die Regel zur Einführung ist demnach zu formulieren als
-\[\dfrac{\Gamma\vdash A(x)}{\Gamma\vdash\forall x\colon A(x)}
-(x\notin\mathrm{FV}(\Gamma,\forall x\colon A(x))).\]
+\[\dfrac{\Gamma\vdash A(a)}{\Gamma\vdash\forall x\colon A(x)}
+(a\notin\mathrm{FV}(\Gamma,\forall x\colon A(x))).\]
 Hierbei steht die Symbolik $\mathrm{FV}(\Gamma)$ für die Menge der
 freien Variablen von $\Gamma$. Mit elementarer Mengenlehre definiert
 man sie präzise als Rekursion über den Formelaufbau. Man legt fest

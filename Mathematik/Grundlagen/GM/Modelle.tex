@@ -1,0 +1,147 @@
+
+\chapter{Elemente der Modelltheorie}
+
+\section{Semantik der klassischen Aussagenlogik}
+
+\subsection{Die Erfüllungsrelation}
+
+Bislang trat die Logik in der Form eines formalen Systems in
+Erscheinung. Gegenstand eines solchen Systems sind im Allgemeinen
+\emph{Wörter} einer formalen Sprache; im natürlichen Schließen sind das
+die Sequenzen. Einige Wörter, die \emph{Axiome}, werden als gegeben
+vorausgesetzt. Unter Anwendung von \emph{Ableitungsregeln}, auch
+\emph{Inferenzregeln} genannt, das sind die Schlussregeln, leitet man
+aus bereits abgeleiteten Wörtern weitere Wörter der Sprache ab.
+In diesem Sinne handelt es sich um ein rein syntaktisches System.
+
+Zum tieferen Verständnis muss man sich im Fortgang damit beschäftigen,
+welche inhaltliche Bedeutung den logischen Aussagen beigemessen
+wird. Der hierfür wesentliche Schritt besteht in der Definition
+einer passenden \emph{Semantik}\index{Semantik}.
+
+Gegenstand der Semantik der Logik ist der Wahrheitsgehalt von Aussagen.
+Man hat gefunden, dass es sich mit der Frage nach dem Wesen der Wahrheit
+schwierig verhält. Wir wollen daher an dieser Stelle gar nicht erst
+versuchen, sie zu ergründen. Stattdessen tritt Wahrheit für uns zunächst
+lediglich im leicht fassbaren Rahmen der zweiwertigen booleschen
+Algebra auf.
+
+In der klassischen Semantik der Aussagenlogik herrscht das
+\emph{Bivalenzprinzip}\index{Bivalenzprinzip}, das besagt, dass jede
+Aussage entweder \emph{wahr} oder \emph{falsch} sein muss, also einen
+von zwei Wahrheitswerten haben muss. Eine Aussage kann nicht
+\emph{ein wenig wahr} oder \emph{halbwegs wahr} sein, noch kann sie
+eine von mehreren unterschiedlichen gleichwertigen Wahrheiten haben.
+Wir schreiben kurz $0$ für falsch und $1$ für wahr. Enthält eine Formel
+logische Variablen, kommt ihr ein Wahrheitswert zu, sobald alle
+Variablen durch eine Interpretation\index{Interpretation} mit
+einem Wahrheitswert belegt wurden.
+
+Die Art und Weise, wie einer Formel ein Wahrheitswert zukommt,
+präzisiert die Erfüllungsrelation. Sie wird als Rekursion über den
+Formelaufbau definiert. Der Wahrheitswert einer Formel ist hierbei
+einzig und allein durch die Wahrheitswerte ihrer Teilformeln bestimmt.
+
+\begin{Definition}[Erfüllungsrelation]\newlinefirst
+Eine Interpretation $I$ ist eine Funktion, die jede atomare logische
+Variable $v$ mit einem Wahrheitswert $I(v)\in\{0,1\}$ belegt.
+Man definiert $I\models A$, sprich »$I$ erfüllt $A$«, rekursiv als
+\begin{align*}
+(I\models\bot) &\iff 0,\\
+(I\models\top) &\iff 1,\\
+(I\models v) &\iff I(v),\\
+(I\models\lnot A) &\iff \lnot (I\models A),\\
+(I\models A\land B) &\iff (I\models A)\land (I\models B),\\
+(I\models A\lor B) &\iff (I\models A)\lor (I\models B),\\
+(I\models A\cond B) &\iff (I\models A)\cond (I\models B),\\
+(I\models A\bicond B) &\iff (I\models A)\bicond (I\models B).
+\end{align*}
+\end{Definition}
+Die rechte Seite ist jeweils metalogisch zu verstehen und per
+Wahrheitstafel definiert, siehe Tabelle \ref{tab:Junktoren}.
+Die Schreibweise $I\nvDash A$ ist gleichbedeutend mit
+$\lnot (I\models A)$. Eine Interpretation wird auch als \emph{Modell}
+bezeichnet. Man nennt sie \emph{Modell} einer Formel, falls sie die
+Formel erfüllt. Andernfalls spricht man von einem \emph{Kontramodell}
+oder \emph{Gegenmodell} der Formel.
+
+\begin{table}
+\caption{Wahrheitstafel der Junktoren}
+\label{tab:Junktoren}
+\centering
+\begin{tabular}{cc@{\qquad}c@{\qquad}c@{\qquad}c@{\qquad}c@{\qquad}c}
+\toprule
+$A$ & $B$ & $\lnot A$ & $A\land B$ & $A\lor B$ & $A\cond B$ & $A\bicond B$\\
+\midrule
+$0$ & $0$ & $1$ & $0$ & $0$ & $1$ & $1$\\
+$1$ & $0$ & $0$ & $0$ & $1$ & $0$ & $0$\\
+$0$ & $1$ & $1$ & $0$ & $1$ & $1$ & $0$\\
+$1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{Definition}
+Für einen Kontext $\Gamma = \{A_1,\ldots,A_n\}$ setzt man
+\[(I\models\Gamma)\defiff (I\models A_1)\land\ldots\land (I\models A_n).\]
+\end{Definition}
+
+\subsection{Gültigkeit einer Formel}
+
+Eine wichtige Rolle spielen \emph{allgemeingültige} Formeln, die man
+in der Aussagenlogik auch als \emph{Tautologien}\index{Tautologie}
+bezeichnet. Sie sind immer wahr, unabhängig davon, mit welchem
+Wahrheitswert ihre logischen Variablen belegt werden.
+
+Als allgemeinere Begrifflichkeit wollen auf einen Kontext $\Gamma$
+bezogen gültige Formeln $A$ betrachten. Die Idee hierbei ist,
+dass wenn die Formeln des Kontextes als wahr angenommen werden, die
+Formel $A$ ebenfalls wahr sein muss. Trifft dies auf $A$ zu,
+schreibt man $\Gamma\models A$, sprich »im Kontext $\Gamma$ ist
+$A$ gültig«, oder auch »$\Gamma$ zieht $A$ nach sich«. Die Bezeichnung
+\emph{logische Folgerung} oder \emph{logische Konsequenz} ist
+ebenfalls verbreitet.
+
+\begin{Definition}[Gültige Formel]\newlinefirst
+Eine Formel $A$ heißt genau dann gültig im Kontext $\Gamma$,
+wenn jede Interpretation, die sämtliche Formeln von $\Gamma$ erfüllt,
+auch $A$ erfüllt. Metalogisch
+\[(\Gamma\models A)\defiff \forall I\colon (I\models\Gamma)\cond (I\models A).\]
+\end{Definition}
+Eine im leeren Kontext gültige aussagenlogische Formel $A$ nennt man
+wie gesagt Tautologie. Statt $\emptyset\models A$ schreibt man auch
+kurz $\models A$. Wie bei Sequenzen schreibt man auch $\Gamma,A,B\models C$
+anstelle von $\Gamma\cup\{A,B\}\models C$.
+
+\subsection{Wahrheitstafeln}
+
+Obgleich der Variablenvorrat unendlich groß sein darf, enthält ein
+eine Formel von den Variablen nur endlich viele. Insofern sind für eine
+Formel in einem Kontext auch nur endlich viele Interpretationen relevant.
+Sind insgesamt $n$ Variablen vorhanden, sind es $2^n$ Interpretationen.
+
+Eine Interpretation $I$ mit der Auswertung $I\models A$ ist nichts
+anderes als eine Zeile der Wahrheitstafel der Formel $A$. Eine Formel
+ist genau dann tautologisch, wenn in der Ergebnisspalte in jeder
+Zeile eine~1 steht.
+
+Die Wahrheitstafel \ref{tab:Tautologie-zur-Kontraposition} bestätigt
+\[\models (a\cond b)\bicond (\lnot b\cond\lnot a).\]
+
+\begin{table}
+\caption{Wahrheitstafel der Tautologie zur Kontraposition}
+\label{tab:Tautologie-zur-Kontraposition}
+\centering
+\begin{tabular}{cc@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c}
+\toprule
+$a$ & $b$ & $\lnot b$ & $\lnot a$ & $a\cond b$ & $\lnot b\cond\lnot a$
+& $(a\cond b)\bicond (\lnot b\cond\lnot a)$\\
+\midrule
+$0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+$1$ & $0$ & $1$ & $0$ & $0$ & $0$ & $1$ \\
+$0$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+$1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
