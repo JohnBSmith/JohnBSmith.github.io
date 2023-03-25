@@ -42,7 +42,7 @@ präzisiert die Erfüllungsrelation. Sie wird als Rekursion über den
 Formelaufbau definiert. Der Wahrheitswert einer Formel ist hierbei
 einzig und allein durch die Wahrheitswerte ihrer Teilformeln bestimmt.
 
-\begin{Definition}[Erfüllungsrelation]\newlinefirst
+\begin{Definition}[Erfüllungsrelation]\label{def:sat}\newlinefirst
 Eine Interpretation $I$ ist eine Funktion, die jede atomare logische
 Variable $v$ mit einem Wahrheitswert $I(v)\in\{0,1\}$ belegt.
 Man definiert $I\models A$, sprich »$I$ erfüllt $A$«, rekursiv als
@@ -81,7 +81,7 @@ $1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$\\
 \end{tabular}
 \end{table}
 
-\begin{Definition}
+\begin{Definition}\label{def:sat-context}
 Für einen Kontext $\Gamma = \{A_1,\ldots,A_n\}$ setzt man
 \[(I\models\Gamma)\defiff (I\models A_1)\land\ldots\land (I\models A_n).\]
 \end{Definition}
@@ -102,7 +102,7 @@ $A$ gültig«, oder auch »$\Gamma$ zieht $A$ nach sich«. Die Bezeichnung
 \emph{logische Folgerung} oder \emph{logische Konsequenz} ist
 ebenfalls verbreitet.
 
-\begin{Definition}[Gültige Formel]\newlinefirst
+\begin{Definition}[Gültige Formel]\label{def:valid}\newlinefirst
 Eine Formel $A$ heißt genau dann gültig im Kontext $\Gamma$,
 wenn jede Interpretation, die sämtliche Formeln von $\Gamma$ erfüllt,
 auch $A$ erfüllt. Metalogisch
@@ -144,4 +144,108 @@ $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\noindent
+Die Tafel führt zusätzlich die Teilformeln auf, was bei längeren
+Formeln recht mühselig erscheinen mag. Eine geschickte Methode zur
+Reduzierung des Schreibaufwands erspart die Teilformeln, und setzt ihre
+Wahrheitswerte dafür schlicht unter die Junktoren, denn Ziffern
+benötigen nicht viel Platz.
+
+Die Prüfung einer logischen Folgerung per Wahrheitstafel
+ermöglicht die metalogische Beziehung
+\[(A_1,\ldots,A_n\models A) \iff (\models A_1\land\ldots\land A_n\cond A).\]
+Nämlich findet sich die äquivalente Umformung
+\begin{align*}
+(A_1,\ldots,A_n\models A)
+&\;\Longleftrightarrow_{\text{(1)}}\;
+(\forall I\colon (I\models A_1)\land\ldots\land (I\models A_n)\cond (I\models A))\\
+&\;\Longleftrightarrow_{\text{(2)}}\;
+(\forall I\colon (I\models A_1\land\ldots\land A_n)\cond (I\models A))\\
+&\;\Longleftrightarrow_{\text{(3)}}\;
+(\forall I\colon I\models A_1\land\ldots\land A_n\cond A)\\
+&\;\Longleftrightarrow_{\text{(4)}}\;
+(\models A_1\land\ldots\land A_n\cond A).
+\end{align*}
+Hierbei gilt (1), (4) gemäß Def. \ref{def:valid}, \ref{def:sat-context}
+und (2), (3) gemäß Def. \ref{def:sat}.
+
+\subsection{Korrektheit des natürlichen Schließens}
+
+Jede Schlussregel und jedes Axiom besitzt eine semantische Entsprechung.
+Die Beweise dafür werden nun auf metalogischer Ebene mittels natürlichem
+Schließen selbst erbracht, was wie eine Art Zirkelschluss erscheinen
+mag.
+
+Zu den Grundsequenzen und zur Abschwächungsregel findet sich:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\cup\{A\}\models A}{
+  \infer[\infernote{$\sim$1}]{(I\models \Gamma\cup\{A\})\cond (I\models A)}{
+    \infer{I\models A}{
+      \infer[\infernote{Def. \ref{def:sat-context}}]{(I\models\Gamma)\land (I\models A)}{
+        \infer[\infernote{1}]{I\models\Gamma\cup\{A\}}{}}}}}
+&
+\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\cup\Gamma'\models A}{
+  \infer[\infernote{$\sim$1}]{(I\models\Gamma\cup\Gamma')\cond (I\models A)}{
+    \infer{I\models A}{
+      \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\cond (I\models A)}{
+        \Gamma\models A}
+    & \infer[\infernote{Def. \ref{def:sat-context}}]{I\models\Gamma}{
+        \infer[\infernote{1}]{I\models\Gamma\cup\Gamma'}{}}}}}
+\end{array}
+\]
+\begin{Satz}[Korrektheit des natürlichen Schließens]\newlinefirst
+Ist die Sequenz $\Gamma\vdash A$ ableitbar, so muss auch
+$\Gamma\models A$ gelten.
+\end{Satz}
+\strong{Beweis.}
+Strukturelle Induktion über die Konstruktion von Beweisbäumen.
+Induktionsanfänge sind die semantischen Entsprechungen
+der Grundsequenzen. Induktionsschritte sind die semantischen
+Entsprechungen der Schlussregeln. Die Beweise der Entsprechungen
+wurden bereits diskutiert.\,\qedsymbol
+
+\newpage
+\subsection{Logische Äquivalenz}
+\begin{Definition}[Äquivalente Formeln]\newlinefirst
+Die Äquivalenz zweier Formeln $A,B$ ist definiert als
+\[(A\equiv B)\defiff (\models A\bicond B).\]
+\end{Definition}
+
+\noindent
+Eine Äquivalenz besteht genau dann, wenn jede der beiden Formeln
+eine logische Folgerung der anderen ist. Das heißt, es besteht die
+metalogische Beziehung
+\[(\models A\bicond B)\iff (A\models B)\land (B\models A).\]
+Mit den semantischen Entsprechungen der Schlussregeln
+findet sich nämlich:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{A\models B}{
+  \infer{\models A\cond B}{
+    \models A\bicond B}
+& \infer{A\models A}{}}
+&
+\infer{\models A\bicond B}{
+  \infer{\models A\cond B}{
+    A\models B}
+& \infer{\models B\cond A}{
+    B\models A}}
+\end{array}
+\]
+\begin{Satz}\label{log-Aeq-ist-Aeqrel}
+Es ist $A\equiv B$ eine Äquivalenzrelation. Das heißt, es gilt
+\begin{align*}
+& A\equiv A, &&\text{(Reflexivität)}\\
+& (A\equiv B)\cond (B\equiv A), &&\text{(Symmetrie)}\\
+& (A\equiv B)\land (B\equiv C)\cond (A\equiv C). &&\text{(Transitivität)}
+\end{align*}
+\end{Satz}
+Der Beweis sei dem Leser als kleine Übung überlassen.
+
+Der Satz \ref{log-Aeq-ist-Aeqrel} vermittelt, dass Formeln mit
+Äquivalenzen so umgeformt werden dürfen, wie Terme mit Termumformungen.
+Es finden sich im Fortgang eine Reihe von grundlegenden Äquivalenzen,
+die Regeln der \emph{booleschen Algebra}.
 
