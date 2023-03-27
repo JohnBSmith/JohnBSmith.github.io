@@ -1,7 +1,7 @@
 
 \chapter{Elemente der Modelltheorie}
 
-\section{Semantik der klassischen Aussagenlogik}
+\section{Die klassische Semantik der Aussagenlogik}
 
 \subsection{Die Erfüllungsrelation}
 
@@ -72,7 +72,7 @@ oder \emph{Gegenmodell} der Formel.
 \begin{tabular}{cc@{\qquad}c@{\qquad}c@{\qquad}c@{\qquad}c@{\qquad}c}
 \toprule
 $A$ & $B$ & $\lnot A$ & $A\land B$ & $A\lor B$ & $A\cond B$ & $A\bicond B$\\
-\midrule
+\midrule[\heavyrulewidth]
 $0$ & $0$ & $1$ & $0$ & $0$ & $1$ & $1$\\
 $1$ & $0$ & $0$ & $0$ & $1$ & $0$ & $0$\\
 $0$ & $1$ & $1$ & $0$ & $1$ & $1$ & $0$\\
@@ -136,7 +136,7 @@ Die Wahrheitstafel \ref{tab:Tautologie-zur-Kontraposition} bestätigt
 \toprule
 $a$ & $b$ & $\lnot b$ & $\lnot a$ & $a\cond b$ & $\lnot b\cond\lnot a$
 & $(a\cond b)\bicond (\lnot b\cond\lnot a)$\\
-\midrule
+\midrule[\heavyrulewidth]
 $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
 $1$ & $0$ & $1$ & $0$ & $0$ & $0$ & $1$ \\
 $0$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
@@ -199,12 +199,19 @@ Zu den Grundsequenzen und zur Abschwächungsregel findet sich:
 Ist die Sequenz $\Gamma\vdash A$ ableitbar, so muss auch
 $\Gamma\models A$ gelten.
 \end{Satz}
-\strong{Beweis.}
+\begin{Beweis}
 Strukturelle Induktion über die Konstruktion von Beweisbäumen.
 Induktionsanfänge sind die semantischen Entsprechungen
 der Grundsequenzen. Induktionsschritte sind die semantischen
 Entsprechungen der Schlussregeln. Die Beweise der Entsprechungen
 wurden bereits diskutiert.\,\qedsymbol
+\end{Beweis}
+
+% Korrektheit verschafft noch mehr. In Kontraposition,
+% wenn ein Kontramodell $\Gamma\models A$ widerlegt,
+% ist die Sequenz $\Gamma\vdash A$ nicht ableitbar.
+% Solche Negativresultate sind ohne Semantik schwieriger
+% zu erbringen.
 
 \newpage
 \subsection{Logische Äquivalenz}
@@ -247,5 +254,128 @@ Der Beweis sei dem Leser als kleine Übung überlassen.
 Der Satz \ref{log-Aeq-ist-Aeqrel} vermittelt, dass Formeln mit
 Äquivalenzen so umgeformt werden dürfen, wie Terme mit Termumformungen.
 Es finden sich im Fortgang eine Reihe von grundlegenden Äquivalenzen,
-die Regeln der \emph{booleschen Algebra}.
+die Regeln der \emph{booleschen Algebra}. Sie wurde erstmals in der
+Mitte des 19. Jahrhunders vom britischen Mathematiker George Boole in
+seiner Abfassung \emph{The Mathematical Analysis of Logic} und seinem
+späteren Buch \emph{An Investigation of The Laws of Thought} beschrieben.
+Boole beschreibt allerdings, anders als heute üblich, eine Einbettung
+der logischen Operationen in die gewöhnliche Algebra, siehe
+Tabelle \ref{tab:Boole}.
+
+\begin{table}
+\centering
+\caption{Einbettung in die gewöhnliche Algebra}
+\label{tab:Boole}
+\begin{tabular}{ccccc}
+\toprule
+\strong{Modern} & $\lnot a$ & $a\land b$ & $a\lor b$ & $a\cond b$\\
+\strong{Boole} & $1-a$ & $ab$ & $a+b(1-a)$ & $1-a+ab$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Logische Äquivalenz im absoluten Sinne ist nicht unter allen Umständen
+der Weisheit letzter Schluss. In der Schaltalgebra tun sich
+Problemstellungen auf, wo der Wahrheitswert einer Formel $A$ in
+einzelnen Zeilen der Wahrheitstafel keine Rolle spielt, man spricht von
+\emph{Don't-Care"=Zellen}. Es sei $X$ eine Formel, die genau in diesen
+Zeilen wahr ist, in allen anderen falsch. Man möchte $A$ nun
+beispielsweise zu $B$ vereinfachen. Unter normalen Umständen sollte
+diese Vereinfachung die Äquivalenz $A\equiv B$ einhalten. Bei
+Vorhandensein der irrelevanten Zellen genügt jedoch die weniger strenge
+Forderung
+\[\lnot X\models A\bicond B.\]
+Wir haben es hier mit einer relativen Äquivalenz zu tun. Auch bei ihr
+handelt es sich um eine Äquivalenzrelation.
+
+\subsection{Die Einsetzungsregel}
+
+\begin{Satz}[Einsetzungsregel]\newlinefirst
+Ist die Formel $A$ allgemeingültig, so führt die simultane Ersetzung
+einiger atomarer Variablen durch Formeln bei ihr zu einer weiteren
+allgemeingültigen Formel. Metalogisch
+\[(\models A)\implies (\models A[v_1:=B_1,\ldots,v_n:=B_n]).\]
+\end{Satz}
+\begin{Beweis}
+Die Bestimmung von $I\models A[\ldots]$ läuft in
+derselben Weise ab wie die von $I\models A$, außer dass $I(v_k)$ durch
+$I\models B_k$ zu ersetzen ist. Sofern $A$ allgemeingültig ist, gilt
+$I\models A$ unabhängig davon, ob $I(v_k)$ wahr oder falsch ist.
+Ergo muss $I\models A[\ldots]$ unabhängig davon gelten, ob $I\models B_k$
+wahr oder falsch ist.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Ich mag daran erinnern, dass bei der Substitution \emph{jedes}
+Vorkommen der Variable durch dieselbe Formel zu ersetzen ist.
+
+Zum Beispiel erhält man zu der simultanen Ersetzung
+$a:=A$ und $b:=B$ aus
+\[\models (a\cond b)\bicond (\lnot b\cond\lnot a)\;\;\text{das Schema}\;\;
+\models (A\cond B)\bicond (\lnot B\cond\lnot A).\]
+Mit dem Vollständigkeitssatz infolge das Theoremschema
+\[\vdash (A\cond B)\bicond (\lnot B\cond\lnot A).\]
+Hiermit gewinnt man kurzum die Regeln
+\[\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash\lnot B\cond\lnot A},\qquad
+\dfrac{\Gamma\vdash\lnot B\cond\lnot A}{\Gamma\vdash A\cond B}.\]
+Die Vorgehensweise ermöglicht summa summarum die Auffindung von
+zulässigen Schlussregeln durch geistloses Ausfüllen von Wahrheitstafeln,
+was allerdings auf die klassische Aussagenlogik beschränkt bleibt.
+
+\subsection{Wahrheitsfunktionen}
+
+Mit der Bindung ihrer atomaren Variablen gehen aus den Formeln der
+Aussagenlogik Wahrheitsfunktionen hervor. Die Disjunktion vermittelt
+zum Beispiel die Funktion%
+\[f\colon\{0,1\}\times\{0,1\}\to\{0,1\},\quad f(a,b):=(a\lor b).\]
+Jede Wahrheitsfunktion in $n$ Variablen ist durch ihre Wahrheitstafel
+charakterisiert, die aus $2^n$ Zeilen besteht, da der Definitionsbereich
+so viele unterschiedliche Tupel enthält. Ein Tupel von Wahrheitswerten
+wird auch als Bitfolge betrachtet.
+
+Zwei Formeln $A,B$ sind genau dann äquivalent, wenn sie durch dieselben
+Interpretationen erfüllt werden, sich also in der Wahrheitstafel gleich
+verhalten. Man überzeugt sich davon unschwer mit der metalogischen
+Umformung%
+\begin{align*}
+(A\equiv B) &\iff (\models A\bicond B)
+\iff (\forall I\colon I\models A\bicond B)\\
+&\iff (\forall I\colon (I\models A)\bicond (I\models B)).
+\end{align*}
+Demnach charakterisieren äquivalente Formeln dieselbe
+Wahrheitsfunktion. Man kann dies auch so betrachten, dass die
+Wahrheitsfunktion die Äquivalenzklasse all ihrer Formeln repräsentiert.
+Unter den Formeln gibt es nun einen besonderen Vertreter, die
+\emph{disjunktive Normalform}\index{disjunktive Normalform}, kurz DNF,
+die eigentlich nichts anderes als eine direkte Kodierung der
+Wahrheitstafel ist. Insofern ließt sich an der Wahrheitstafel
+unmittelbar die DNF der Formel ab.
+
+Die Normalform einer Formel lässt sich unter Umständen
+vereinfachen. Bei der DNF der Disjunktion ist bereits klar, welche
+Formel Resultat der Vereinfachung sein müsste. Es findet sich
+\begin{gather*}
+(a\land\lnot b)\lor (\lnot a\land b)\lor (a\land b)
+\equiv (a\land\lnot b)\lor ((\lnot a\lor a)\land b)\\
+\equiv (a\land\lnot b)\lor (1\land b)
+\equiv (a\land\lnot b)\lor b
+\equiv (a\lor b)\land (\lnot b\lor b)\\
+\equiv (a\lor b)\land 1 \equiv a\lor b.
+\end{gather*}
+In der Schaltalgebra ist die Vereinfachung der DNF von großer
+Wichtigkeit, da sie den maßgeblichen Schritt zur Ermittelung von
+Schaltungen mit einer minimalen Zahl von Gattern darstellt.
+Aus dieser Anforderung heraus wurden systematische Verfahren
+zur Vereinfachung entwickelt. Für wenige Variablen stellt das
+sogenannte Karnaugh"=Veitch"=Diagramm ein geschicktes
+Hilfsmittel dar.
+
+Mit dem Verfahren nach Quine und McCluskey lassen sich Formeln mit
+beliebig vielen Variablen mit einem Computer automatisch vereinfachen.
+Der Algorithmus ist allerdings von exponentieller Laufzeit, dessen
+Ausführung also von einer kombinatorischen Explosion
+überschattet. Eine wesentliche Verbesserung darf man auch nicht erwarten,
+da die Problemstellung der Vereinfachung als NP"=vollständig befunden
+wurde. Für die Formeln mit sehr vielen Variablen liegt das Wissen über
+die beste Vereinfachung somit im Schleier der Dunkelheit.
 

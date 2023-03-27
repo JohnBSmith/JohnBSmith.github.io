@@ -296,48 +296,6 @@ Die entsprechenden charakterisierenden Sequenzen sind
 \[(A\cond B),(B\cond A)\vdash A\bicond B;\qquad (A\bicond B),A\vdash B;
 \qquad (A\bicond B),B\vdash A.\]
 
-\subsection{Zur Syntax}
-
-So wie »Punktrechnung vor Strichrechnung« gilt, legt man für jeden Junktor
-zur Einsparung von Klammern eine Stufe der Priorität fest. In
-absteigender Rangfolge sind dies ${\lnot}, {\land}, {\lor}, {\cond},
-{\bicond}$. So wird die Formel
-\[\lnot A\land B\lor C\cond D\quad\text{gelesen als}\quad
-(((\lnot A)\land B)\lor C)\cond D.\]
-Weiterhin legt man die Implikation als rechtsassoziativ fest. So
-wird
-\[A\cond B\cond C\quad\text{gelesen als}\quad A\cond (B\cond C).\]
-Manche Schüler haben Schwierigkeiten, die Struktur von Termen zu
-durchschauen. Infolge kann es bei ihnen zu Flüchtigkeitsfehlern
-bei der Ersetzung von Variablen durch Terme kommen. Sie vergessen,
-dass ein Term vor der Einfügung zunächst geklammert werden muss.
-Erst die Operatorrangfolge gewährt es, die Klammern unter Umständen
-nachträglich entfallen zu lassen. Für diese Schüler mag es förderlich
-sein, einen Term als \emph{abstrakten Syntaxbaum} darzustellen.
-Gleichermaßen verhält es sich mit der Programmiersprache Lisp, die
-Terme als Schachtelung von Listen darstellt, deren Klammern
-obligatorisch sind.  Die Aussage $A\land B\cond C$ ist beispielsweise
-beschreibbar als
-\[\text{\texttt{(implies (and A B) C)}}.\]
-Im Wesentlichen veranschaulicht diese Schachtelung
-nichts anderes als den abstrakten Syntaxbaum. Man kann gewissermaßen
-sagen, dass Lisp eine Programmiersprache ohne Syntax ist. Fast ohne,
-im höheren Sinne ohne.
-
-% In der Logik versucht man, die Objektsprache genau zu fassen.
-% Daher nutzt man das Konzept der formalen Sprache. Terme werden
-% in ihr durch Produktionsregeln beschrieben. Produktionsregeln
-% lassen unter anderem in Form der EBNF notieren.
-
-Schreibt man viele logische Formeln auf, drängt es, zumindest bei privaten
-Notizen und Rechnungen, nach Kurzschreibweisen. In der Logik ist für das
-Konditional $A\cond B$ auch die Schreibweise $A\rightarrow B$ gebräuchlich,
-für das Bikonditional $A\bicond B$ entsprechend $A\leftrightarrow B$.
-Insbesondere in der Schaltalgebra schreibt man auch $\overline A$
-anstelle von $\lnot A$, $AB$ anstelle von $A\land B$ und $A+B$ anstelle
-von $A\lor B$. Hierbei darf die Disjunktion $A+B$ allerdings nicht mit
-der Kontravalenz $A\oplus B$ verwechselt werden.
-
 \subsection{Quantoren}
 
 Eine logische Sprache, die der freien Formulierung mathematischer
@@ -471,6 +429,75 @@ Substitution ist also
 \[\forall z\colon A(y)\land B(z),\quad\text{nicht}\quad
 \forall y\colon A(y)\land B(y).\]
 
+\subsection{Zur Syntax}
+
+So wie »Punktrechnung vor Strichrechnung« gilt, legt man für jeden
+Junktor zur Einsparung von Klammern eine Stufe der Priorität fest. In
+absteigender Rangfolge sind dies ${\lnot}, {\land}, {\lor}, {\cond},
+{\bicond}$. So wird die Formel
+\[\lnot A\land B\lor C\cond D\quad\text{gelesen als}\quad
+(((\lnot A)\land B)\lor C)\cond D.\]
+Weiterhin legt man die Implikation als rechtsassoziativ fest. So
+wird
+\[A\cond B\cond C\quad\text{gelesen als}\quad A\cond (B\cond C).\]
+Wie den Junktoren kommt auch den Quantoren eine Rangstufe zu. Weil
+diese aber präfix sind, ist bei ihnen lediglich die rechte Seite zu
+berücksichtigen. Hier sind zwei Varianten verbreitet. In der
+Schreibweise $(\forall x)A(x)$ oder kurz $\forall xA(x)$ haben
+sie wie die Verneinung die höchste Rangstufe. In der Schreibweise
+$\forall x\colon A(x)$ oder $\forall x.\, A(x)$ dagegen die niedrigste,
+also eine Stufe niedriger als das Bikonditional, so dass alles
+hinter dem Doppelpunkt in den Wirkungsbereich des Quantors fällt.
+So wird
+\[\forall x\colon A(x)\land B\cond C\quad\text{gelesen als}\quad
+\forall x\colon ((A(x)\land B)\cond C).\]
+Manche Schüler haben Schwierigkeiten, die Struktur von Termen zu
+durchschauen. Infolge kann es bei ihnen zu Flüchtigkeitsfehlern
+bei der Ersetzung von Variablen durch Terme kommen. Sie vergessen,
+dass ein Term vor der Einfügung zunächst geklammert werden muss.
+Erst die Operatorrangfolge gewährt es, die Klammern unter Umständen
+nachträglich entfallen zu lassen. Für diese Schüler mag es förderlich
+sein, einen Term als \emph{abstrakten Syntaxbaum} darzustellen.
+Gleichermaßen verhält es sich mit der Programmiersprache Lisp, die
+Terme als Schachtelung von Listen darstellt, deren Klammern
+obligatorisch sind.  Die Aussage $A\land B\cond C$ ist beispielsweise
+beschreibbar als
+\[\text{\texttt{(implies (and A B) C)}}.\]
+Im Wesentlichen veranschaulicht diese Schachtelung
+nichts anderes als den abstrakten Syntaxbaum. Man kann gewissermaßen
+sagen, dass Lisp eine Programmiersprache ohne Syntax ist. Fast ohne,
+im höheren Sinne ohne.
+
+Um sich unmissverständlich auszudrücken, formalisieren Logiker die
+logische Sprache gern. Es wird hierzu eine \emph{formale Sprache} spezifiziert,
+was vermittels sogenannter \emph{Produktionsregeln} gemacht werden kann.
+Insofern Produktionsregeln etwas kryptisch anmuten mögen, beschreiben
+Logiker die syntaktische Struktur auch in Worten.
+Für die Aussagenlogik üblicherweise folgendermaßen.
+
+\begin{enumerate}\setlength\itemsep{0em}
+\item Die atomaren Variablen $a,b,c$ usw. sind Formeln.
+\item Die Symbole $\bot,\top$ sind Formeln.
+\item Ist $\lnot A$ eine Formel, so ist auch $(\lnot A)$ eine.
+\item Sind $A,B$ Formeln, so ist auch $(A\land B)$ eine.
+\item Sind $A,B$ Formeln, so ist auch $(A\lor B)$ eine.
+\item Sind $A,B$ Formeln, so ist auch $(A\cond B)$ eine.
+\item Sind $A,B$ Formeln, so ist auch $(A\bicond B)$ eine.
+\item Nichts anderes ist eine Formel.
+\end{enumerate}
+
+\noindent
+Schreibt man viele logische Formeln auf, drängt es, zumindest bei privaten
+Notizen und Rechnungen, nach Kurzschreibweisen. In der Logik ist für das
+Konditional $A\cond B$ auch die Schreibweise $A\rightarrow B$ gebräuchlich,
+für das Bikonditional $A\bicond B$ entsprechend $A\leftrightarrow B$.
+Insbesondere in der Schaltalgebra schreibt man auch $\overline A$
+anstelle von $\lnot A$, und $AB$ anstelle von $A\land B$ sowie $A+B$
+anstelle von $A\lor B$. Hierbei darf die Disjunktion $A+B$ allerdings
+nicht mit der Kontravalenz $A\oplus B$ verwechselt werden. Für die
+Quantifizierung $\forall x\colon A(x)$ bietet sich $\forall_x A_x$ oder
+$\forall x.\, A_x$ als kurzschriftliche Form an.
+
 \newpage
 \section{Natürliches Schließen}
 
@@ -549,7 +576,7 @@ $\text{Abh.}\vdash\text{Nr.}$ darstellt.
 \begin{tabular}{cclll}
 \toprule
 \strong{Abh.} & \strong{Nr.} & \strong{Aussage} & \strong{Regel} & \strong{auf}\\
-\midrule
+\midrule[\heavyrulewidth]
 1 & 1 & $\lnot B$ & Axiom &\\
 2 & 2 & $A\cond B$ & Axiom &\\
 3 & 3 & $A$ & Axiom &\\
@@ -627,6 +654,17 @@ zu $\Gamma\vdash A$. Die Beseitigung der Doppelnegation ist allerdings
 lediglich in der klassischen Logik verfügbar, in der intuitionistischen
 gilt sie dagegen als unzulässig.
 
+Manche stellen die Regeln in einer Form dar, in der die Kontradiktion
+nicht explizit auftaucht. Wir erhalten sie als zulässige Regeln, indem
+der Einführung der Kontradiktion direkt ihre Beseitigung
+angeschlossen wird. Es findet sich
+\[\dfrac{\Gamma,A\vdash\lnot B\qquad\Gamma'\vdash B}
+{\Gamma,\Gamma'\vdash\lnot A},\qquad
+\dfrac{\Gamma,\lnot A\vdash\lnot B\qquad\Gamma'\vdash B}
+{\Gamma,\Gamma'\vdash A}.\]
+Wie zuvor ist die linke Form allgemein verfügbar, die rechte dagegen
+nur bei Vorhandensein der Beseitigung der Doppelnegation.
+
 \subsection{Klassische Kontraposition}
 
 Eine weitere Regel ist die umgekehrte Kontraposition
@@ -677,4 +715,36 @@ Ist eine Bedingung $B$ sowohl notwendig als auch hinreichend für $A$,
 liegt eine Äquivalenz vor. Man hat also
 \[(A\bicond B) \iff (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
+\section{Logik mit Gleichheit}
 
+\subsection{Axiome der Gleichheit}
+
+Moderne Formulierungen charakterisieren die Gleichheit durch die Axiome
+\begin{align*}
+&\vdash\forall x\colon x=x, &&\text{(Reflexivität)}\\
+&\vdash\forall x\colon\forall y\colon x=y\cond A(x)\cond A(y).
+&&\text{(Ersetzung)}
+\end{align*}
+Das zweite Axiom ist eigentlich ein Schema, weil dieses für jede
+Formel $A$ gilt. Es meint $A(a)$ eine Aussageform, wobei $A(t)$ als
+$A(a)[a:=t]$ zu verstehen sein soll. Man gewinnt aus dem Schema
+kurzerhand die Regel
+\[\dfrac{\Gamma\vdash t=t'\qquad\Gamma'\vdash A(t)}
+{\Gamma,\Gamma'\vdash A(t')}.\qquad\text{($t,t'$ sind beliebige Terme)}\]
+Das erste Axiom charakterisiert insofern die Regel zur Einführung
+der Gleichheit, das zweite die Regel zur Beseitigung. Die Symmetrie
+der Gleichheit lässt sich aus den beiden Regeln ableiten. Sei hierzu
+$A(a):\equiv (a=x)$. Nun ist $A(x)\equiv (x=x)$ und
+$A(y)\equiv (y=x)$. Man setze $t:=x$ und $t':=y$. Es findet sich:
+\[
+\infer{x=y\vdash y=x}{
+  \infer{x=y\vdash x=y}{}
+& \infer{\vdash x=x}{}}
+\]
+Aus dieser Sequenz erhält man anschließend
+\[\vdash\forall x\colon\forall y\colon x=y\cond y=x.\]
+Bezüglich $A(a):\equiv (f(x)=f(a))$ führt die Ausübung der soeben
+gemachten Vorgehensweise auf
+\[\vdash\forall x\colon\forall y\colon x=y\cond f(x)=f(y).\]
+Es induziert die Ersetzungsregel für Funktionen,
+\[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash f(t)=f(t')}.\]
