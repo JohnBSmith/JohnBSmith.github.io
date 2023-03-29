@@ -1,0 +1,142 @@
+
+\chapter{Mengenlehre}
+
+\section{Grundbegriffe}
+
+\subsection{Der Mengenbegriff}
+
+Eine \emph{Menge} darf man sich wie einen Beutel vorstellen, der
+einzelne Objekte enthält. Die Objekte heißen \emph{Elemente} der Menge.
+Jedoch gilt es hierbei zu beachten, dass es sich mit einer Menge nicht
+gänzlich wie mit einem Beutel verhält, in dem dasselbe Objekt mehrmals
+zu finden sein kann.
+\begin{quote}
+»\emph{Unter einer Menge verstehen wir jede Zusammenfassung von
+bestimmten wohlunterschiedenen Objekten unserer Anschauung oder
+unseres Denkens zu einem Ganzen.}«\\
+--- Georg Cantor, 1895 (redigiert aus \cite{Cantor})
+\end{quote}
+Obwohl blumig anmutend, fassen diese Worte das Konzept recht gut
+auf den Punkt. Wichtig ist hier das Wort \emph{wohlunterschieden},
+das uns zu verstehen gibt, dass ein Element nicht mehrmals in einer
+Menge enthalten sein kann. \emph{Eine Menge ist genau dadurch festgelegt,
+welche Elemente sie enthält. Sie enthält Elemente weder mehrmals, noch
+in einer bestimmten Reihenfolge.}
+
+Es gibt die \emph{leere Menge}, notiert als $\emptyset$ oder $\{\}$.
+Man darf sie sich wie einen leeren Beutel vorstellen. Dagegen enthält
+die Menge $\{\emptyset\}$ genau ein Element. Es ist ein Beutel, 
+der den leeren Beutel enthält.
+
+Wir schreiben kurz $x\in A$ für »$x$ ist ein Element von $A$«,
+auch »$x$ gehört zu $A$« oder »$x$ liegt in $A$«.
+Es steht $x\notin A$ für $\lnot x\in A$.
+
+Für eine endliche Menge definiert man
+\[x\in\{x_1,\ldots,x_n\}\defiff x=x_1\lor\ldots\lor x=x_n.\]
+
+\subsection{Gleichheit von Mengen}
+
+Es wurde gesagt, eine Menge ist dadurch charakterisiert, welche
+Elemente sie enthält. Um diesen Gedanke näher zu erfassen, sollten
+wir klären, wie es sich mit der Gleichheit von Mengen verhält.
+Insofern Mengen durch ihre Elemente bestimmt sind, darf man doch sagen,
+zwei Mengen $A,B$ sind genau dann gleich, falls $A,B$ ein Objekt
+gemeinsam enthalten oder gemeinsam nicht enthalten. Das heißt, betrachtet
+man ein beliebiges Objekt $x$, so ist $x$ genau dann in $A$ enthalten,
+wenn $x$ in $B$ enthalten ist.
+\begin{Definition}[Gleichheit von Mengen]\newlinefirst
+Für zwei Mengen $A,B$ definiert man
+\[A = B \defiff (\forall x\colon x\in A\bicond x\in B).\]
+\end{Definition}
+Der Leser wird mühelos bestätigen, dass die Gleichheit die Axiome
+einer Äquivalenzrelation erfüllt. Wobei der Begriff der Relation
+noch zu definieren wäre. Weil die Gesamtheit aller Mengen eine
+sogenannte echte Klasse ist, handelt es sich nicht um eine
+Äquivalenzrelation im engeren Sinne.
+
+Es ist zulässig, ein Element bei der aufzählenden Angabe einer Menge
+mehrmals aufzuführen. Dies ändert allerdings nichts daran, dass ein
+Element stets nur einmal in einer Menge enthalten ist. Zum Beispiel
+gilt $\{\emptyset,\emptyset\}=\{\emptyset\}$. Mit der Definition der
+aufzählenden Angabe und dem Idempotenzgesetz
+der Aussagenlogik findet sich nämlich die äquivalente Umformung
+\[x\in\{\emptyset,\emptyset\}\iff x=\emptyset\lor x=\emptyset
+\iff x=\emptyset\iff x\in\{\emptyset\}.\]
+
+\subsection{Beschränkte Quantifizierung}
+
+In der Mathematik erstreckt sich die Quantifizierung meist nicht
+über das gesamte Diskursuniversum, sondern bleibt auf eine bestimmte
+Menge beschränkt. Eine extra Notation macht dies ergonomisch, wobei
+eine Erweiterung der logischen Sprache hierfür nicht nötig ist. Die
+beschränkte Quantifizierung wird logisch auf eine unbeschränkte
+zurückgeführt.
+
+\begin{Definition}[Beschränkte Quantifizierung]\newlinefirst
+Für jede Menge $M$ und jede Aussageform $A(x)$ setzt man
+\begin{gather*}
+(\forall x\in M\colon A(x))\defiff (\forall x\colon x\in M\cond A(x)),\\
+(\exists x\in M\colon A(x))\defiff (\exists x\colon x\in M\land A(x)).
+\end{gather*}
+\end{Definition}
+Die Aussage $\forall x\in\emptyset\colon A(x)$ ist allgemeingültig, man
+spricht von der \emph{leeren Wahrheit}, engl. \emph{vacuous truth}.
+Via Ex falso quodlibet erhält man nämlich:
+\[
+\infer{\vdash\forall x\colon x\in\emptyset\cond A(x)}{
+  \infer[\infernote{EFQ}]{x\in\emptyset\vdash A(x)}{
+    \infer{x\in\emptyset\vdash\bot}{
+      \infer{\vdash\lnot x\in\emptyset}{}
+    & \infer{x\in\emptyset\vdash x\in\emptyset}{}}}}
+\]
+Viele Regeln zur beschränkten Quantifizierung sind analog zu den
+Regeln der unbeschränkten. Beispielsweise gilt
+\[(\forall x\in M\colon A(x)\land B(x)) \iff (\forall x\in M\colon A(x))
+\land (\forall x\in M\colon B(x)).\]
+Man muss allerdings Vorsicht walten lassen. Nicht bei jeder Äquivalenz
+liegt eine direkte Analogie vor. Zwar besteht für eine Formel $A$,
+in der $x$ nicht frei vorkommt, die Äquivalenz
+\[(\exists x\colon A) \iff A.\]
+Die Analogie ist jedoch von der ein klein wenig intrikateren Form
+\[(\exists x\in M\colon A) \iff M\ne\emptyset\land A.\]
+Diese Beziehung erklärt sich durch die Umformung
+\[(\exists x\in M\colon A)\bicond (\exists x\colon x\in M\land A)
+\bicond (\exists x\colon x\in M)\land A \bicond M\ne\emptyset\land A.\]
+Die letzte Umformung gilt, weil $M\ne\emptyset$ gleichbedeutend mit
+$\exists x\colon x\in M$ ist.
+
+\subsection{Teilmengen}
+
+\begin{Definition}[Teilmengenbeziehung]\newlinefirst
+Man definiert $A\subseteq B$, sprich »$A$ ist eine Teilmenge von $B$«, als
+\[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
+\end{Definition}
+
+\begin{Definition}[Potenzmenge]\newlinefirst
+Die Potenzmenge einer Menge $M$ ist definiert als
+\[\mathcal P(M) := \{A\mid A\subseteq M\}.\]
+\end{Definition}
+Zum Beispiel ist $\mathcal P(\emptyset)=\{\emptyset\}$ und
+$\mathcal P(\{0\}) = \{\emptyset, \{0\}\}$. Des Weiteren
+\begin{gather*}
+\mathcal P(\{0,1\}) = \{\emptyset, \{0\}, \{1\}, \{0,1\}\},\\
+\mathcal P(\{0,1,2\}) = \{\emptyset, \{0\}, \{1\}, \{2\}, \{0,1\}, \{0,2\}, \{1,2\}, \{0,1,2\}\}.
+\end{gather*}
+% Eine Potenzmenge einer Grundmenge bildet mit der Teilmengenbeziehung
+% eine Poset, eine halbgeordnete Menge.
+
+\subsection{Mengenoperationen}
+
+\begin{Definition}[Schnitt, Vereinigung, Differenz]\newlinefirst
+Zu zwei Mengen $A,B$ definiert man
+\begin{align*}
+A\cap B &:= \{x\mid x\in A\land x\in B\}, && \text{(Schnittmenge)}\\
+A\cup B &:= \{x\mid x\in A\lor x\in B\}, && \text{(Vereinigungsmenge)}\\
+A\setminus B &:= \{x\mid x\in A\land x\notin B\}. && \text{(Differenzmenge)}
+\end{align*}
+\end{Definition}
+Sind $A,B$ Teilmengen einer Grundmenge $G$, so sind auch
+$A\cap B$, $A\cup B$ und $A\setminus B$ Teilmengen der Grundmenge.
+
+
