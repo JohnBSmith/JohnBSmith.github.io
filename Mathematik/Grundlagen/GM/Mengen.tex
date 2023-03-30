@@ -5,11 +5,11 @@
 
 \subsection{Der Mengenbegriff}
 
-Eine \emph{Menge} darf man sich wie einen Beutel vorstellen, der
-einzelne Objekte enthält. Die Objekte heißen \emph{Elemente} der Menge.
-Jedoch gilt es hierbei zu beachten, dass es sich mit einer Menge nicht
-gänzlich wie mit einem Beutel verhält, in dem dasselbe Objekt mehrmals
-zu finden sein kann.
+Eine \emph{Menge}\index{Menge} darf man sich wie einen Beutel
+vorstellen, der einzelne Objekte enthält. Die Objekte heißen
+\emph{Elemente}\index{Element} der Menge. Jedoch gilt es hierbei zu
+beachten, dass es sich mit einer Menge nicht gänzlich wie mit einem
+Beutel verhält, in dem dasselbe Objekt mehrmals zu finden sein kann.
 \begin{quote}
 »\emph{Unter einer Menge verstehen wir jede Zusammenfassung von
 bestimmten wohlunterschiedenen Objekten unserer Anschauung oder
@@ -23,10 +23,10 @@ Menge enthalten sein kann. \emph{Eine Menge ist genau dadurch festgelegt,
 welche Elemente sie enthält. Sie enthält Elemente weder mehrmals, noch
 in einer bestimmten Reihenfolge.}
 
-Es gibt die \emph{leere Menge}, notiert als $\emptyset$ oder $\{\}$.
-Man darf sie sich wie einen leeren Beutel vorstellen. Dagegen enthält
-die Menge $\{\emptyset\}$ genau ein Element. Es ist ein Beutel, 
-der den leeren Beutel enthält.
+Es gibt die \emph{leere Menge}\index{leere Menge}, notiert als
+$\emptyset$ oder $\{\}$. Man darf sie sich wie einen leeren Beutel
+vorstellen. Dagegen enthält die Menge $\{\emptyset\}$ genau ein Element.
+Es ist ein Beutel,  der den leeren Beutel enthält.
 
 Wir schreiben kurz $x\in A$ für »$x$ ist ein Element von $A$«,
 auch »$x$ gehört zu $A$« oder »$x$ liegt in $A$«.
@@ -81,8 +81,9 @@ Für jede Menge $M$ und jede Aussageform $A(x)$ setzt man
 \end{gather*}
 \end{Definition}
 Die Aussage $\forall x\in\emptyset\colon A(x)$ ist allgemeingültig, man
-spricht von der \emph{leeren Wahrheit}, engl. \emph{vacuous truth}.
-Via Ex falso quodlibet erhält man nämlich:
+spricht von der \emph{leeren Wahrheit}\index{leere Wahrheit}, engl.
+\emph{vacuous truth}\index{vacuous truth}. Via Ex falso quodlibet
+erhält man nämlich:
 \[
 \infer{\vdash\forall x\colon x\in\emptyset\cond A(x)}{
   \infer[\infernote{EFQ}]{x\in\emptyset\vdash A(x)}{
@@ -106,24 +107,71 @@ Diese Beziehung erklärt sich durch die Umformung
 Die letzte Umformung gilt, weil $M\ne\emptyset$ gleichbedeutend mit
 $\exists x\colon x\in M$ ist.
 
+\subsection{Komprehension}
+
+\begin{Definition}[Komprehension]\newlinefirst
+Zu einer Aussageform $A(x)$ definiert man die Klasse
+$\{x\mid A(x)\}$ gemäß
+\[a\in\{x\mid A(x)\}\defiff A(a).\]
+\end{Definition}
+Man muss mit der Komprehension ein wenig vorsichtig umgehen, denn nicht
+jede Klasse ist eine Menge. Das klassische Beispiel ist die russelsche
+Klasse $R := \{x\mid x\notin x\}$. Angenommen, $R$ wäre eine Menge.
+Dann dürfte man eine Aussage wie $R\in M$ bezüglich
+einer Menge $M$ formulieren, also speziell $R\in R$. Gemäß Definition
+von $R$ findet sich die folgende Ableitung:
+\[
+\infer{\vdash R\in R\bicond R\notin R}{
+  \infer[\infernote{Def.}]{R\in R\vdash R\notin R}{
+    \infer{R\in R\vdash R\in R}{}}
+& \infer[\infernote{Def.}]{R\notin R\vdash R\in R}{
+    \infer{R\notin R\vdash R\notin R}{}}}
+\]
+Für jede Formel $A$ gilt allerdings das Theorem
+\[\vdash (A\bicond\lnot A)\cond\bot.\]
+Insgesamt ergibt sich so ein Beweis der Kontradiktion. Irgendetwas kann
+also nicht gut sein. Man begegnet dem, indem man $R$ als eine echte
+Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
+werden.
+
+Man definiert eine weniger allegemeine Form der Komprehension, die
+\emph{Aussonderung}. Sie verhält sich gutartig, da sie nur
+das Ausfiltern von Elementen mit bestimmten Eigenschaften aus
+einer gegebenen Menge ermöglicht.
+
+\begin{Definition}[Aussonderung]\newlinefirst
+Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
+\[a\in\{x\in M\mid A(x)\}\defiff a\in M\land A(a).\]
+\end{Definition}
+
 \subsection{Teilmengen}
 
 \begin{Definition}[Teilmengenbeziehung]\newlinefirst
 Man definiert $A\subseteq B$, sprich »$A$ ist eine Teilmenge von $B$«, als
 \[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
 \end{Definition}
+Unschwer bestätigt sich die Äquivalenz
+\[A = B \iff A\subseteq B\land B\subseteq A.\]
 
 \begin{Definition}[Potenzmenge]\newlinefirst
 Die Potenzmenge einer Menge $M$ ist definiert als
 \[\mathcal P(M) := \{A\mid A\subseteq M\}.\]
 \end{Definition}
-Zum Beispiel ist $\mathcal P(\emptyset)=\{\emptyset\}$ und
+Zum Beispiel ist $\mathcal P(\emptyset) = \{\emptyset\}$ und
 $\mathcal P(\{0\}) = \{\emptyset, \{0\}\}$. Des Weiteren
 \begin{gather*}
 \mathcal P(\{0,1\}) = \{\emptyset, \{0\}, \{1\}, \{0,1\}\},\\
 \mathcal P(\{0,1,2\}) = \{\emptyset, \{0\}, \{1\}, \{2\}, \{0,1\}, \{0,2\}, \{1,2\}, \{0,1,2\}\}.
 \end{gather*}
-% Eine Potenzmenge einer Grundmenge bildet mit der Teilmengenbeziehung
+Die Potenzmenge einer Grundmenge $G$ bildet mit der Teilmengenbeziehung
+eine halbgeordnete Menge, engl. \emph{poset} für
+\emph{partially ordered set}. Das heißt, alle Mengen
+$A,B,C\in\mathcal P(G)$ erfüllen die drei Axiome
+\begin{align*}
+& A\subseteq A, &&\text{(Reflexivität)}\\
+& A\subseteq B\land B\subseteq A\cond A = B, &&\text{(Antisymmetrie)}\\
+& A\subseteq B\land B\subseteq C\cond A\subseteq C. &&\text{(Transitivität)}
+\end{align*}
 % eine Poset, eine halbgeordnete Menge.
 
 \subsection{Mengenoperationen}
@@ -138,5 +186,50 @@ A\setminus B &:= \{x\mid x\in A\land x\notin B\}. && \text{(Differenzmenge)}
 \end{Definition}
 Sind $A,B$ Teilmengen einer Grundmenge $G$, so sind auch
 $A\cap B$, $A\cup B$ und $A\setminus B$ Teilmengen der Grundmenge.
+Der Beweis zu $A\cap B\subseteq G$ ist:
+\[
+\infer{A\subseteq G\vdash A\cap B\subseteq G}{
+  \infer{A\subseteq G\vdash\forall x\colon x\in A\cap B\cond x\in G}{
+    \infer{A\subseteq G, x\in A\cap B\vdash x\in G}{
+      \infer{x\in A\cap B\vdash x\in A}{
+        \infer{x\in A\cap B\vdash x\in A\land x\in B}{
+          \infer{x\in A\cap B\vdash x\in A\cap B}{}}}
+    & \infer{A\subseteq G\vdash x\in A\cond x\in G}{
+        \infer{A\subseteq G\vdash \forall x\colon x\in A\cond x\in G}{
+          \infer{A\subseteq G\vdash A\subseteq G}{}}}}}}
+\]
+In so pedantischer Ausführlichkeit findet man Beweise in Büchern
+nicht vor. Erstens wird man stillschweigend zulässige Schlussregeln zur
+Verkürzung aufstellen. So nimmt der Baum die konzise Form
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{A\subseteq G\vdash A\cap B\subseteq G}{
+  \infer{A\subseteq G,x\in A\cap B\vdash x\in G}{
+    \infer{x\in A\cap B\vdash x\in A}{
+      \infer{x\in A\cap B\vdash x\in A\cap B}{}}
+  & \infer{A\subseteq G\vdash A\subseteq G}{}}}
+&
+\infer[\infernote{$\sim$1}]{A\cap B\subseteq G}{
+  \infer{x\in G}{
+    \infer{x\in A}{
+      \infer[\infernote{1}]{x\in A\cap B}{}}
+  & A\subseteq G}}
+\end{array}
+\]
+an. Zweitens formuliert der Mathematiker den Beweis meist in Worten:
+Um $A\cap B\subseteq G$ zu zeigen, muss $x\in G$ aus $x\in A\cap B$
+abgeleitet werden. Mit $x\in A\cap B$ gilt erst recht $x\in A$.
+Wegen $A\subseteq G$ ist somit $x\in G$, was zu zeigen war.\,\qedsymbol
+
+\begin{Definition}[Komplement]\newlinefirst
+Bezüglich einer Grundmenge $G$ heißt $A^\compc := G\setminus A$ Komplementärmenge.
+\end{Definition}
+Es zeigt sich elementar, dass die Potenzmenge einer Grundmenge $G$
+mit den Operationen $A\cap B$, $A\cup B$, $A^\compc$ die Axiome
+einer booleschen Algebra erfüllt, wobei $\emptyset$ das Nullelement
+und $G$ selbst das Einselement ist. Es gelten somit analoge Regeln
+wie in der klassischen Aussagenlogik. Wie die Notation suggeriert,
+entspricht der Schnitt der Konjunktion, die Vereinigung der
+Disjunktion und das Komplement der Negation.
 
 
