@@ -115,29 +115,38 @@ $\{x\mid A(x)\}$ gemäß
 \[a\in\{x\mid A(x)\}\defiff A(a).\]
 \end{Definition}
 Man muss mit der Komprehension ein wenig vorsichtig umgehen, denn nicht
-jede Klasse ist eine Menge. Das klassische Beispiel ist die russelsche
-Klasse $R := \{x\mid x\notin x\}$. Angenommen, $R$ wäre eine Menge.
-Dann dürfte man eine Aussage wie $R\in M$ bezüglich
+jede Klasse ist eine Menge. Die russellsche Klasse $R := \{x\mid x\notin x\}$
+ist das klassische Beispiel. Angenommen, $R$ wäre eine
+Menge. Dann dürfte man eine Aussage wie $R\in M$ bezüglich
 einer Menge $M$ formulieren, also speziell $R\in R$. Gemäß Definition
 von $R$ findet sich die folgende Ableitung:
 \[
 \infer{\vdash R\in R\bicond R\notin R}{
-  \infer[\infernote{Def.}]{R\in R\vdash R\notin R}{
+  \infer[\infernote{laut Def.}]{R\in R\vdash R\notin R}{
     \infer{R\in R\vdash R\in R}{}}
-& \infer[\infernote{Def.}]{R\notin R\vdash R\in R}{
+& \infer[\infernote{laut Def.}]{R\notin R\vdash R\in R}{
     \infer{R\notin R\vdash R\notin R}{}}}
 \]
 Für jede Formel $A$ gilt allerdings das Theorem
 \[\vdash (A\bicond\lnot A)\cond\bot.\]
 Insgesamt ergibt sich so ein Beweis der Kontradiktion. Irgendetwas kann
-also nicht gut sein. Man begegnet dem, indem man $R$ als eine echte
-Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
-werden.
+also nicht gut sein. Diese von Bertrand Russell im Jahre 1901 entdeckte
+Verwicklung, die seit jeher den Namen \emph{russellsche Antinomie}%
+\index{russellsche Antinomie} trägt, brachte Gottlob Freges
+logizistisches Programm in unangenehme Schwierigkeiten. Frege versuchte,
+eine Reduktion der Mathematik auf die Logik zu unternehmen, wurde
+daraufhin aber von Russell brieflich in Kenntnis gesetzt, dass sein
+Werk \emph{Grundgesetze der Arithmetik} in wesentlicher Weise von der
+Antinomie unterhöhlt wird. Russell führte das Programm fort, und
+veröffentlichte schließlich die \emph{Principia Mathematica}, die der
+Antinomie mithilfe einer Typentheorie aus dem Weg geht.
 
-Man definiert eine weniger allegemeine Form der Komprehension, die
-\emph{Aussonderung}. Sie verhält sich gutartig, da sie nur
-das Ausfiltern von Elementen mit bestimmten Eigenschaften aus
-einer gegebenen Menge ermöglicht.
+Man begegnet der Problematik, indem man $R$ als eine echte
+Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
+werden. Man definiert weiterhin eine weniger allgemeine Form der
+Komprehension, die \emph{Aussonderung}\index{Aussonderung}. Sie verhält
+sich gutartig, da sie nicht mehr ermöglicht, als das Ausfiltern von
+Elementen aus einer gegebenen Menge.
 
 \begin{Definition}[Aussonderung]\newlinefirst
 Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
@@ -146,15 +155,29 @@ Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
 
 \subsection{Teilmengen}
 
+Gehört jedes Element einer Menge $A$ auch zu einer Menge $B$, nennt
+man $A$ eine \emph{Teilmenge}\index{Teilmenge} von $B$. Man sagt auch,
+$B$ umfasse $A$, oder $B$ sei eine Obermenge von $A$. Eine \emph{echte
+Teilmenge} sei $A$ dann, wenn zusätzlich $A\ne B$ gilt. Die Menge der
+geraden Zahlen ist eine echte Teilmenge der ganzen Zahlen. Jede Menge
+ist eine Teilmenge von sich selbst, jedoch keine echte.
+
+Die Menge der Quadrate ist eine Teilmenge der Vierecke, genauer eine
+Teilmenge der Rechtecke und auch eine Teilmenge der Rhomben.
+Weder ist die Menge der Rechtecke eine Teilmenge der Rhomben, noch
+ist die Menge der Rhomben eine Teilmenge der Rechtecke. 
+Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
+eine Teilmenge der Parallelogramme.
+
 \begin{Definition}[Teilmengenbeziehung]\newlinefirst
-Man definiert $A\subseteq B$, sprich »$A$ ist eine Teilmenge von $B$«, als
+Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
 \end{Definition}
 Unschwer bestätigt sich die Äquivalenz
 \[A = B \iff A\subseteq B\land B\subseteq A.\]
 
 \begin{Definition}[Potenzmenge]\newlinefirst
-Die Potenzmenge einer Menge $M$ ist definiert als
+Die Potenzmenge\index{Potenzmenge} einer Menge $M$ ist definiert als
 \[\mathcal P(M) := \{A\mid A\subseteq M\}.\]
 \end{Definition}
 Zum Beispiel ist $\mathcal P(\emptyset) = \{\emptyset\}$ und
@@ -163,6 +186,12 @@ $\mathcal P(\{0\}) = \{\emptyset, \{0\}\}$. Des Weiteren
 \mathcal P(\{0,1\}) = \{\emptyset, \{0\}, \{1\}, \{0,1\}\},\\
 \mathcal P(\{0,1,2\}) = \{\emptyset, \{0\}, \{1\}, \{2\}, \{0,1\}, \{0,2\}, \{1,2\}, \{0,1,2\}\}.
 \end{gather*}
+Die Teilmengenbeziehung darf als eine Art Ordnung zwischen Mengen
+betrachtet werden, jedoch nicht als eine Totalordnung, das heißt,
+bei einigen Mengen $A,B$ gilt weder $A\subseteq B$ noch $B\subseteq A$.
+So ist wie gesagt weder die Menge der Rechtecke eine Teilmenge der
+Rhomben, noch umgekehrt.
+
 Die Potenzmenge einer Grundmenge $G$ bildet mit der Teilmengenbeziehung
 eine halbgeordnete Menge, engl. \emph{poset} für
 \emph{partially ordered set}. Das heißt, alle Mengen
@@ -172,7 +201,7 @@ $A,B,C\in\mathcal P(G)$ erfüllen die drei Axiome
 & A\subseteq B\land B\subseteq A\cond A = B, &&\text{(Antisymmetrie)}\\
 & A\subseteq B\land B\subseteq C\cond A\subseteq C. &&\text{(Transitivität)}
 \end{align*}
-% eine Poset, eine halbgeordnete Menge.
+
 
 \subsection{Mengenoperationen}
 
@@ -222,14 +251,215 @@ abgeleitet werden. Mit $x\in A\cap B$ gilt erst recht $x\in A$.
 Wegen $A\subseteq G$ ist somit $x\in G$, was zu zeigen war.\,\qedsymbol
 
 \begin{Definition}[Komplement]\newlinefirst
-Bezüglich einer Grundmenge $G$ heißt $A^\compc := G\setminus A$ Komplementärmenge.
+Bezüglich einer Grundmenge $G$ heißt $A^\compc := G\setminus A$
+Komplementärmenge.
 \end{Definition}
 Es zeigt sich elementar, dass die Potenzmenge einer Grundmenge $G$
-mit den Operationen $A\cap B$, $A\cup B$, $A^\compc$ die Axiome
-einer booleschen Algebra erfüllt, wobei $\emptyset$ das Nullelement
-und $G$ selbst das Einselement ist. Es gelten somit analoge Regeln
-wie in der klassischen Aussagenlogik. Wie die Notation suggeriert,
-entspricht der Schnitt der Konjunktion, die Vereinigung der
-Disjunktion und das Komplement der Negation.
+mit den Operationen $A\cap B$, $A\cup B$ die Axiome
+einer booleschen Algebra\index{boolesche Algebra} erfüllt, wobei
+$\emptyset$ das Nullelement und $G$ selbst das Einselement ist. Es
+gelten somit analoge Regeln wie in der klassischen Aussagenlogik. Wie
+die Notation suggeriert, entspricht der Schnitt der Konjunktion, die
+Vereinigung der Disjunktion und das Komplement der Negation.
 
+Wie in jedem Verband ist in einer booleschen Algebra
+$(M,\wedge,\vee)$ für $a,b\in M$ eine Halbordnung $a\le b$
+definiert, indem $a\le b$ und $a\wedge b = a$ als äquivalent
+angesehen werden. Bei der Mengenalgebra entpuppt sie sich
+als die Teilmengenrelation. Das heißt, es gilt%
+\[A\subseteq B\iff A\cap B = A\iff A\cup B = B.\]
+Für mehrere Mengen definiert man
+\[\bigcap_{i=1}^n A_i := A_1\cap A_2\cap\ldots\cap A_n,\qquad
+\bigcup_{i=1}^n A_i := A_1\cup A_2\cup\ldots\cup A_n.\]
+Pedantiker mögen die Schreibweise mit den Auslassungspunkten als
+ungenau empfinden. Zufriedenstellend ist für sie die Erklärung, dass
+es sich um die rekursive Festlegung
+\[\bigcap_{i=1}^1 A_i := A_1,\qquad
+\bigcap_{i=1}^n A_i := A_n\cap\bigcap_{i=1}^{n-1} A_i\]
+handelt. Regeln wie $B\cup\bigcap_{i=1}^n A_i
+= \bigcap_{i=1}^n (B\cup A_i)$ kann man nun per Induktion über $n$
+beweisen. Es geht fast trivial vonstatten, sobald man das Prinzip
+verstanden hat. Im Wesentlichen weiten sich hier die Regeln der
+booleschen Algebra von den zweistelligen auf die mehrstelligen
+Operationen aus.
+
+\begin{Definition}[Allgemeine Vereinigung]\newlinefirst
+Sei $M$ eine Menge von Mengen. Die Vereinigung der $A\in M$ ist
+\[\bigcup M = \bigcup_{A\in M} A := \{x\mid\exists A\in M\colon x\in A\}.\]
+\end{Definition}
+Für $M=\emptyset$ ist $\bigcup M = \emptyset$. Die Disjunktion findet
+ihre Entsprechung genau in der Vereinigung
+von zwei Mengen. Dazu passend findet der Existenzquantor seine
+Entsprechung genau in der Vereinigung beliebig vieler Mengen.
+Aus diesem Grund weiten sich die Regeln der booleschen Algebra
+auf die allgemeine Vereinigung aus. Zum Beispiel lautet das
+Distributivgesetz für Mengen
+\[B\cap\bigcup_{A\in M} A = \bigcup_{A\in M}(B\cap A).\]
+Entfaltung der Definition führt nämlich zur logischen Äquivalenz
+\[x\in B\land(\exists A\in M\colon x\in A) \iff (\exists A\in M\colon x\in B\land x\in A).\]
+Ihr Beweis gelingt mühelos.
+
+\begin{Definition}[Allgemeiner Schnitt]\newlinefirst
+Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$ ist
+\[\bigcap M = \bigcap_{A\in M} A := \{x\mid\forall A\in M\colon x\in A\}.\]
+\end{Definition}
+Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap M$ 
+für $M=\emptyset$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
+Zum einen könnte man die Bedingung $M\ne\emptyset$ einfach fallen
+lassen, dann ergibt im allgemeinen Mengenuniversum beim leeren Schnitt
+die Allklasse $\{x\mid\top\}$, die jedoch keine Menge ist.
+
+Aus diesen Grund gibt es noch die alternative Definition
+\[\bigcap M :=
+\{x\in G\mid\forall A\in M\colon x\in A\}.\]
+Hierzu ist eine Grundmenge $G$ festzulegen, so dass $M\subseteq\mathcal P(G)$
+gilt, oder man setzt $G:=\bigcup M$, wobei sich da die Frage
+nach der Nützlichkeit stellt.
+
+Eine Menge von Mengen nennt man ein \emph{Mengensystem}\index{Mengensystem},
+wobei aber einige Autoren diese Begrifflichkeit für eine Familie von
+Mengen benutzen, die von einer Menge von Mengen zu unterscheiden ist.
+Eine Familie stellt eine Verallgemeinerung einer Folge von Mengen dar.
+In ihr darf dieselbe Menge mehrmals vorkommen. Man kann Schnitt und
+Vereinigung auch für Familien definieren, was aber eigentlich keine
+wesentliche Verallgemeinerung zu den obigen Festlegungen darstellt,
+wie ich im Folgenden diskutieren möchte.
+
+Eine \emph{Familie}\index{Familie} $(A_i)$ von Mengen $A_i$ mit $i\in I$
+ist eine Abbildung $A\colon I\to Z$, wobei $Z$ eine Zielmenge ist,
+welche die $A_i$ als Elemente enthält. Die Menge $I$ wird in diesem
+Zusammenhang auch \emph{Indexmenge}\index{Indexmenge} genannt. Man
+definiert
+\[\bigcup_{i\in I} A_i := \bigcup A(I)
+= \bigcup\{X\mid\exists i\in I\colon X=A_i\} = \{x\mid\exists i\in I\colon x\in A_i\},\]
+wobei mit $A(I)$ das Bild von $I$ unter $A$ gemeint ist. Man bekommt
+\begin{align*}
+\smash{\bigcup_{i\in I} A_i}
+&= \{x\mid\exists X\colon X\in \{X\mid\exists i\in I\colon X=A_i\}\land x\in X\}\\
+&= \{x\mid\exists X\colon (\exists i\in I\colon X=A_i)\land x\in X\}\\
+&= \{x\mid\exists X\colon \exists i\in I\colon X=A_i\land x\in X\}
+= \{x\mid\exists i\in I\colon x\in A_i\}.
+\end{align*}
+Für $I\ne\emptyset$ definiert man entsprechend
+\[\bigcap_{i\in I} A_i := \bigcap A(I) = \{x\mid\forall i\in I\colon x\in A_i\}.\]
+Die Operation über eine Familie $(A_i)_{i\in I}$ kann also
+auf die jeweilige Operation über das System $A(I)$ zurückgeführt
+werden.
+
+Später nützlich ist der
+
+\begin{Satz}\label{Index-in-Schnitt}
+Es gilt $\bigcup_{i\in I\cap J} A_i = (\bigcup_{i\in I} A_i)\cap
+(\bigcup_{i\in J} A_j)$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich die äquivalente Umformung
+\begin{align*}\textstyle
+x\in\bigcup_{i\in I\cap J} A_i &\iff (\exists i\colon i\in I\cap J\land x\in A_i)\\
+&\iff(\exists i\colon (i\in I\land x\in A_i)\land (i\in J\land x\in A_i))\\
+&\iff(\exists i\colon i\in I\land x\in A_i)\land (\exists i\colon i\in J\land x\in A_i)\\
+&\iff\textstyle x\in\bigcup_{i\in I} A_i\land x\in\bigcup_{i\in J} A_i\\
+&\iff\textstyle x\in(\bigcup_{i\in I} A_i)\cap (\bigcup_{i\in J} A_i).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\noindent
+Gelegentlich hat man es mit einer \emph{disjunkten Vereinigung}%
+\index{disjunkte Vereinigung} zu tun. Sie ist bedeutsam in der
+Theorie der Kardinalzahlen und in der Informatik bei algebraischen
+Datentypen sowie deren Bezug zur Beweistheorie. Genauer gesagt hantiert
+man in der Informatik nicht mit Mengen, sondern mit Typen, die sich
+in gewissen Zügen analog zu Mengen verhalten. Die disjunkte Vereinigung
+zweier Mengen kennzeichnet jedes Element vor der Vereinigung mit einem
+Tag, das die Information liefert, aus welcher der Mengen es entstammt.
+Man setzt
+\[A\sqcup B := \{(0,a)\mid a\in A\}\cup\{(1,b)\mid b\in B\}.\]
+Die Zahlen $0,1$ sind hier die \emph{Tags} oder \emph{Diskriminatoren}.
+Anstelle der Zahlen könnten genauso gut zwei beliebige unterschiedliche
+Elemente als Tags verwendet werden. Beispielsweise ginge auch
+\[A\sqcup B = \{(\text{Grün},a)\mid a\in A\}\cup\{(\text{Blau},b)\mid b\in B\}.\]
+In der Informatik verwendet man gern left, right als Tags.
+
+Mit jeder disjunkten Vereinigung ist eine Fallunterscheidung verbunden.
+Liegt ein $x\in A\sqcup B$ vor, so muss entweder $x=(0,a)$ für ein
+$a\in A$ oder $x=(1,b)$ für ein $b\in B$ sein. Bei einer gewöhnlichen
+Vereinigung besteht dagegen kein ausschließendes Oder.
+
+Wir fassen zwei Objekte $x,y$ zu einem \emph{geordneten Paar}%
+\index{Paar}\index{geordnetes Paar} $(x,y)$ zusammen. Die beiden
+Objekte müssen nicht unbedingt etwas miteinander zu tun haben, sie
+dürfen völlig verschiedener Art sein. Im Unterschied zu einer Menge
+spielt bei Paaren die Reihenfolge eine Rolle, auch darf dasselbe Objekt
+zweimal vorkommen. Im Paar $t=(x,y)$ ist genau die Information über
+$x,y$ enthalten. Das heißt, es lassen sich $x,y$ aus dem Paar
+extrahieren. Man schreibt dafür $t_1=x$ und $t_2=y$. Die Schreibweise
+$t_i$ heißt \emph{Indizierung}, es ist darin $i$ der
+\emph{Index}\index{Index}.
+
+Zwei Paare seien definitionsgemäß genau dann gleich, wenn sie
+komponentenweise gleich sind,
+\[(x,y) = (x',y')\defiff x=x'\land y=y'.\]
+Die genannten Eigenschaften charakterisieren den Begriff Paar
+im Wesentlichen, mehr müssen wir nicht wissen. Man hat sich trotzdem
+auch mal überlegt, wie Paare in der reinen Mengenlehre dargestellt
+werden können, wo alle Objekte Mengen sein sollen. Nach Kuratowski
+sind Paare kodierbar als
+\[(x,y) := \{\{x\},\{x,y\}\}.\]
+Unter dem allgemeineren Begriff \emph{Tupel}\index{Tupel} fassen
+wir eine beliebige endliche Zahl von Objekten in einer bestimmten
+Reihenfolge zusammen. Tupel aus drei Objekten heißt \emph{Tripel},
+die aus vier heißen \emph{Quadrupel}. Analog zu den Paaren ist ihre
+Gleichheit definiert als
+\[(x_1,\ldots,x_n) = (x_1,\ldots,x_n')
+\defiff x_1=x_1'\land\ldots\land x_n=x_n'.\]
+Zu zwei Mengen $X,Y$ kann man nun die Menge aller Paare betrachten,
+deren erste Komponente $X$ entstammt, und deren zweite
+Komponente $Y$ entstammt. Sie heißt \emph{Produktmenge}\index{Produktmenge}
+oder \emph{kartesisches Produkt}\index{kartesisches Produkt}
+der Mengen $X,Y$.
+\begin{Definition}[Produktmenge]\newlinefirst
+Das kartesische Produkt zweier Mengen $X,Y$ ist
+\[X\times Y := \{(x,y)\mid x\in X\land y\in Y\}.\]
+\end{Definition}
+Genau genommen handelt es sich hierbei um eine Bildmenge, was bedeutet,
+dass sich im rechten Term Existenzquantoren verstecken. Ausführlich
+ausgeschrieben lautet der Term
+\begin{align*}
+X\times Y &= \{t\mid\exists x\in X\colon\exists y\in Y\colon t=(x,y)\}\\
+&= \{t\mid\exists x\colon\exists y\colon x\in X\land y\in Y\land t=(x,y)\}.
+\end{align*}
+Wie jede Bildmenge ist das Produkt als Vereinigung darstellbar. Es ist
+\[X\times Y = \bigcup_{x\in X}\bigcup_{y\in Y}\{(x,y)\}.\]
+Die beiden kurzen Identitäten $X\times\emptyset = \emptyset$ und
+$\emptyset\times Y = \emptyset$ gehen unmittelbar aus der Definition
+hervor. Es verhält sich analog wie mit der Multiplikation einer
+Zahl mit null. Eine sinnvolle Sichtweise, wie die Theorie der
+Kardinalzahlen lehrt.
+
+\begin{Satz}
+Ist $A\subseteq X$ und $B\subseteq Y$, dann ist
+$A\times B\subseteq X\times Y$.
+\end{Satz}
+\begin{Beweis}
+Es liege $t$ in $A\times B$. Laut Definition existieren mithin
+$a\in A$ und $b\in B$, so dass $t=(a,b)$. Wegen $A\subseteq X$ ist aber
+auch $a\in X$ und wegen $B\subseteq Y$ ist auch $b\in Y$. Daher existieren
+$a\in X$ und $b\in Y$, so dass $t=(a,b)$. Gemäß Definition heißt das,
+$t\in X\times Y$. Gemäß Definition ist $A\times B$ somit eine Teilmenge
+von $X\times Y$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt $X\times (A\cap B) = (X\times A)\cap (X\times B)$.
+\end{Satz}
+\begin{Beweis}
+Es ginge zu Fuß. Aber Satz \ref{Index-in-Schnitt} ermöglicht die
+kurze Termumformung
+\begin{align*}
+& X\times (A\cap B) = \bigcup_{x\in X}\bigcup_{y\in A\cap B} \{(x,y)\}
+= \bigcup_{x\in X}\Big(\Big(\bigcup_{y\in A}\{(x,y)\}\Big)\cap \Big(\bigcup_{y\in B}\{(x,y)\}\Big)\Big)\\
+&\quad = \Big(\bigcup_{x\in X}\bigcup_{y\in A}\{(x,y)\}\Big)\cap\Big(\bigcup_{x\in X}\bigcup_{y\in B}\{(x,y)\}\Big)
+= (X\times A)\cap (X\times B).\,\qedsymbol
+\end{align*}
+\end{Beweis}
 
