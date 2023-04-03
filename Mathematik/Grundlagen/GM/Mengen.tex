@@ -463,3 +463,217 @@ kurze Termumformung
 \end{align*}
 \end{Beweis}
 
+\newpage
+\section{Abbildungen}
+
+\subsection{Der Abbildungsbegriff}
+
+Unter einer \emph{Abbildung}\index{Abbildung}, auch \emph{Funktion}%
+\index{Funktion} genannt, verstehen wir ganz allgemein eine Zuordnung von
+Elementen einer Definitionsmenge zu Elementen einer Zielmenge, bei der
+zu \emph{jedem} Element der Definitionsmenge \emph{genau ein} Element
+der Zielmenge gehört. Es hat allerdings ein wenig gedauert, bis
+diese Vorstellung als die Förderliche erkannt wurde.
+
+In der historischen Entwicklung kam ihr die speziellere Vorstellung
+zuvor, dass eine Größe, etwa eine physikalische Größe, in einer
+rechnerischen Abhängigkeit von einer anderen Größe steht. So steht
+die Periodendauer der Schwingung eines Pendels in einer bestimmten
+rechnerischen Abhängigkeit von der Pendellänge.
+
+Eine recht pragmatische Vorstellung von einer Funktion vermittelt das Modell
+der Black Box, das soll eine Rechenmaschine sein, deren innere Mechaniken
+bzw. Elektroniken unbekannt bleiben. Speist man ein Argument $x$ in die
+Black Box ein, spuckt sie daraufhin einen Wert $f(x)$ aus. Speist man
+abermals dasselbe Argument ein, spuckt sie abermals denselben Wert aus.
+
+Der Begriff der Abbildung ist für die Mathematik zentral.
+
+\begin{Definition}[Abbildung]\newlinefirst
+Eine Abbildung $f\colon X\to Y$ ist eine Relation $f=(X,Y,G)$ mit
+$G\subseteq X\times Y$, die die beiden Eigenschaften
+\begin{gather*}
+\forall x\in X\colon\exists y\in Y\colon (x,y)\in G,\\
+\forall x\in X\colon\forall y,y'\in Y\colon (x,y)\in G\land (x,y')\in G\cond y=y'
+\end{gather*}
+erfüllt. Man nennt $G$ den Graph, $X$ die Definitions- und
+$Y$ die Zielmenge.
+\end{Definition}
+Genau genommen möchte man die Abbildung $f$ eigentlich nicht als mit
+dem Tripel $(X,Y,G)$ identisch sehen, sondern als dasjenige Objekt,
+dessen innere Information aus diesem Tripel besteht.
+
+Zuweilen wird der Graph von $f$ auch einfach als $f$ bezeichnet.
+Sollte dies verwirrend sein, schreibt man ausführlicher $G_f$ oder
+$\mathrm{Graph}(f)$.
+
+Statt $(x,y)\in G_f$ schreibt man üblicherweise $y=f(x)$. Es
+wird $f(x)$ gelesen als »$f$ von $x$« oder »das Bild von $x$ unter
+$f$«. Es wird $f\colon X\to Y$ gelesen als »$f$ ist eine Abbildung
+von $X$ nach $Y$«. Besitzt ein $y\in Y$ ein $x\in X$ mit $y=f(x)$,
+nennt man $x$ ein Urbildelement zu $y$.
+
+\newpage
+\subsection{Bild, Urbild}
+
+\begin{Definition}[Bild]\newlinefirst
+Die Bildmenge einer Menge $A\subseteq X$ unter der Abbildung
+$f\colon X\to Y$ ist
+\[f(A) := \{f(x)\mid x\in A\} = \{y\mid\exists x\in A\colon y=f(x)\}.\]
+\end{Definition}
+Insofern $y=f(x)$ als äquivalent zu $y\in\{f(x)\}$ befunden wird, ergibt
+sich auch die Darstellung $f(A) = \bigcup_{x\in A} \{f(x)\}$.
+Insbesondere in Programmiersprachen treten endliche Mengen als
+Objekte auf. Die Berechnung verläuft mithin gemäß der rekursiven Festlegung
+\[f(\emptyset) := \emptyset,\qquad f(\{x_1,\ldots,x_n\}) :=
+f(\{x_1,\ldots,x_{n-1}\})\cup \{f(x_n)\},\]
+für die auch die Bezeichnung $\mathrm{map}(f,A)$ gebräuchlich ist.
+
+\begin{Definition}[Urbild]\newlinefirst
+Das Urbild einer Menge $B$ unter $f\colon X\to Y$ ist
+\[f^{-1}(B) := \{x\in X\mid f(x)\in B\} = \{x\in X\mid \exists y\in B\colon y=f(x)\}.\]
+\end{Definition}
+Dem Wesen des Abbildungsbegriffs entspringend, zeichnet sich die
+Urbildoperation durch Verträglichkeit mit den Mengenoperationen aus,
+was bei der Bildoperation nur zum Teil stimmt.
+
+\begin{Satz}
+Für jede Abbildung $f$ und beliebige Mengen $A,B,A_i$ gilt
+\begin{align*}
+f^{-1}(A\cap B) &= f^{-1}(A)\cap f^{-1}(B), &&\textstyle
+f^{-1}(\bigcap_{i\in I} A_i) = \bigcap_{i\in I} f^{-1}(A_i),\\
+f^{-1}(A\cup B) &= f^{-1}(A)\cup f^{-1}(B), &&\textstyle
+f^{-1}(\bigcup_{i\in I} A_i) = \bigcup_{i\in I} f^{-1}(A_i).
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Den Beweis verschafft die äquivalente Umformung
+\begin{align*}
+&\textstyle x\in f^{-1}(\bigcap_{i\in I} A_i)
+\iff f(x)\in\bigcap_{i\in I} A_i
+\iff (\forall i\in I\colon f(x)\in A_i)\\
+&\textstyle\quad\iff (\forall i\in I\colon x\in f^{-1}(A_i))
+\iff x\in\bigcap_{i\in I} f^{-1}(A_i).
+\end{align*}
+Bei der Vereinigung verläuft die Umformung analog.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Der Satz lehrt die wichtige Folgerung, dass die Urbilder zweier
+disjunkter Mengen ebenfalls disjunkt sind. Allgemein überführt die
+Urbildoperation eine disjunkte Zerlegung einer Menge in disjunkte
+Urbilder. Ist die Zielmenge am feinsten zerlegt, besteht sie also
+aus einelementigen Mengen, nennt man die Urbilder dieser Mengen
+auch Fasern. Man beachte, dass ein Urbild oder eine Faser leer
+sein kann.
+
+Ist die Zielmenge bezüglich einer Ordnungsrelation angeordnet,
+nennt man die Fasern auch \emph{Niveaumengen}\index{Niveaumenge}.
+Diese Begrifflichkeit betrifft vor allem die Funktionen $f\colon X\to\R$
+mit $X\subseteq\R^n$. Eine Faser $f^{-1}(\{c\})$, auch als $f(x)=c$
+beschrieben, nennt man auch eine \emph{implizite Funktion}. Sie sind
+in der analytischen Geometrie und der mehrdimensionalen Analysis von
+großer Bedeutung.
+
+\subsection{Komposition}
+
+\begin{Definition}[Komposition]\newlinefirst
+Sei $f\colon X\to Y$ und $g\colon Y\to Z$. Ihre Verkettung,
+gelesen »$g$ nach $f$«, ist
+\[(g\circ f)\colon X\to Z,\quad (g\circ f)(x):=g(f(x)).\]
+\end{Definition}
+
+\noindent
+Oft liegt die Situation $f\colon X\to Y$ und $g\colon Y'\to Z$
+mit $Y\subseteq Y'$ vor. Das ist aber nicht weiter schlimm. Es
+darf dann $g\circ f := g|_Y\circ f$ gesetzt werden, wobei mit $g|_Y$ die
+Einschränkung des Definitionsbereichs von $g$ auf $Y$ gemeint ist.
+
+\begin{Definition}[Einschränkung]\newlinefirst
+Sei $f\colon X\to Y$ und $A\subseteq X$. Die Einschränkung von $f$ auf $A$ ist
+\[f|_A\colon A\to Y,\quad f|_A(x):=f(x).\]
+\end{Definition}
+
+\noindent
+Die Abbildung $\id_X\colon X\to X$ mit $\id_X(x):=x$ heißt
+\emph{identische Abbildung}\index{identische Abbildung}. Sie verhält
+sich bei der Komposition neutral, das heißt, bezüglich
+$f\colon X\to Y$ gilt $f\circ\id_X = f$ und $\id_Y\circ f=f$.
+
+\subsection{Injektionen, Surjektionen, Bijektionen}
+
+\begin{Definition}[Injektion]\newlinefirst
+Eine Abbildung $f\colon X\to Y$ heißt injektiv\index{injektiv}, wenn
+\[\forall x,x'\in X\colon f(x)=f(x')\cond x=x'.\]
+\end{Definition}
+
+\noindent
+Erinnern wir uns an den Abschnitt \emph{Logik mit Gleichheit}, fällt
+auf, dass die Definition der Injektivität als Umkehrung der
+Ersetzungsregel betrachtbar ist. Das heißt, für eine auf den Werten
+der Terme $t,t'$ definierte Injektion $f$ gilt die Äquivalenz
+\[t=t' \iff f(t)=f(t').\]
+Die Injektionen vermitteln genau die \emph{Äquivalenzumformungen}%
+\index{Aequivalenzumformung@Äquivalenzumforumung} von Gleichungen.
+In der Schulmathematik sind das zu Parametern $a,b$ mit
+$a\ne 0$ die Funktionen
+\[\begin{array}{@{}r@{\quad}r@{\,}l}
+f_a\colon\R\to\R, & f_a(x) &:=ax,\\[2pt]
+g_b\colon\R\to\R, & g_b(x) &:=x+b.
+\end{array}
+\]
+
+\begin{Satz}
+Eine Abbildung $g$ mit $g\circ f = \id$ heißt Linksinverse von $f$.
+Eine Abbildung $f\colon X\to Y$ mit nichtleerem $X$ ist genau dann
+injektiv, wenn sie mindestens eine Linksinverse besitzt.
+\end{Satz}
+\begin{Beweis}
+Sei $g$ eine Linksinverse von $f$. Seien $x,x'$ fest, aber beliebig,
+und sei $f(x)=f(x')$. Mithin gilt $g(f(x))=g(f(x'))$. Weil $g$ eine
+Linksinverse ist, hat man aber $g(f(x))=x$ und $g(f(x'))=x'$, womit
+sich wie gewünscht $x=x'$ ergibt.
+
+Sei $f$ injektiv. Mit $X\ne\emptyset$ liegt irgendein $a\in X$ vor.
+Sofern $y\in f(X)$ ist, liegt außerdem ein $x$ mit $y=f(x)$ vor.
+Es wird $g$ festgelegt per Fallunterscheidung
+\[g(y) := \begin{cases}
+x & \text{wenn}\;y\in f(X),\\
+a & \text{wenn}\;y\notin f(X).
+\end{cases}\]
+Sie ist verhält sich so, dass $g(f(x))=x$ für jedes $x\in X$ gilt,
+denn mit $x\in X$ ist $f(x)\in f(X)$. Somit existiert mit $g$ eine
+Linksinverse.\,\qedsymbol
+\end{Beweis}
+
+\begin{Definition}[Surjektion]\newlinefirst
+Eine Abbildung $f\colon X\to Y$ heißt surjektiv\index{surjektiv},
+wenn $f(X)=Y$ ist.
+\end{Definition}
+
+\noindent
+Weil $f(X)\subseteq Y$ allgemeingültig ist, genügt es generell,
+$Y\subseteq f(X)$ zu zeigen.
+
+\begin{Definition}[Bijektion]\newlinefirst
+Eine Abbildung heißt bijektiv, wenn sie sowohl injektiv als auch
+surjektiv ist.
+\end{Definition}
+
+\begin{Satz}
+Jede Bijektion $f$ besitzt eine eindeutig bestimmte Abbildung, welche
+sowohl ihre einzige Linksinverse als auch ihre einzige Rechtsinverse
+ist. Man nennt sie die Umkehrabbildung $f^{-1}$.
+\end{Satz}
+\begin{Beweis}
+Sei $f\colon X\to Y$ bijektiv. Es existiert somit mindestens eine
+Linksinverse $g$ und mindestens eine Rechtsinverse $h$. Weil die
+Verkettung das Assoziativgesetz erfüllt, darf man rechnen
+\[g = g\circ\id_Y = g\circ (f\circ h) = (g\circ f)\circ h
+= {\id_X}\circ h = h.\]
+Sei nun $g'$ eine weitere Linksinverse und $h'$ eine weitere
+Rechtsinverse. Wiederholt man die obige Rechnung abermals, erhält man
+$g'=h$ und $g'=h'$. Ergo gilt $g = h = g' = h'$.\,\qedsymbol
+\end{Beweis}
+
+
