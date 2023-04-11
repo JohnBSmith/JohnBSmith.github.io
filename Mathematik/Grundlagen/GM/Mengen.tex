@@ -45,7 +45,8 @@ zwei Mengen $A,B$ sind genau dann gleich, falls $A,B$ ein Objekt
 gemeinsam enthalten oder gemeinsam nicht enthalten. Das heißt, betrachtet
 man ein beliebiges Objekt $x$, so ist $x$ genau dann in $A$ enthalten,
 wenn $x$ in $B$ enthalten ist.
-\begin{Definition}[Gleichheit von Mengen]\newlinefirst
+\begin{Definition}[Gleichheit von Mengen]\label{def:Mengen-Gleichheit}%
+\newlinefirst
 Für zwei Mengen $A,B$ definiert man
 \[A = B \defiff (\forall x\colon x\in A\bicond x\in B).\]
 \end{Definition}
@@ -60,7 +61,7 @@ mehrmals aufzuführen. Dies ändert allerdings nichts daran, dass ein
 Element stets nur einmal in einer Menge enthalten ist. Zum Beispiel
 gilt $\{\emptyset,\emptyset\}=\{\emptyset\}$. Mit der Definition der
 aufzählenden Angabe und dem Idempotenzgesetz
-der Aussagenlogik findet sich nämlich die äquivalente Umformung
+der Aussagenlogik findet sich nämlich die äquivalente Umformung%
 \[x\in\{\emptyset,\emptyset\}\iff x=\emptyset\lor x=\emptyset
 \iff x=\emptyset\iff x\in\{\emptyset\}.\]
 
@@ -92,12 +93,12 @@ erhält man nämlich:
     & \infer{x\in\emptyset\vdash x\in\emptyset}{}}}}
 \]
 Viele Regeln zur beschränkten Quantifizierung sind analog zu den
-Regeln der unbeschränkten. Beispielsweise gilt
+Regeln der unbeschränkten. Beispielsweise gilt%
 \[(\forall x\in M\colon A(x)\land B(x)) \iff (\forall x\in M\colon A(x))
 \land (\forall x\in M\colon B(x)).\]
 Man muss allerdings Vorsicht walten lassen. Nicht bei jeder Äquivalenz
 liegt eine direkte Analogie vor. Zwar besteht für eine Formel $A$,
-in der $x$ nicht frei vorkommt, die Äquivalenz
+in der $x$ nicht frei vorkommt, die Äquivalenz%
 \[(\exists x\colon A) \iff A.\]
 Die Analogie ist jedoch von der ein klein wenig intrikateren Form
 \[(\exists x\in M\colon A) \iff M\ne\emptyset\land A.\]
@@ -109,6 +110,8 @@ $\exists x\colon x\in M$ ist.
 
 \subsection{Komprehension}
 
+Es wird $\{x\mid A(x)\}$ gelesen als »die Klasse der $x$, für die
+$A(x)$ gilt« oder »die Menge der $x$, für die $A(x)$ gilt«.
 \begin{Definition}[Komprehension]\newlinefirst
 Zu einer Aussageform $A(x)$ definiert man die Klasse
 $\{x\mid A(x)\}$ gemäß
@@ -148,7 +151,7 @@ Komprehension, die \emph{Aussonderung}\index{Aussonderung}. Sie verhält
 sich gutartig, da sie nicht mehr ermöglicht, als das Ausfiltern von
 Elementen aus einer gegebenen Menge.
 
-\begin{Definition}[Aussonderung]\newlinefirst
+\begin{Definition}[Aussonderung]\label{def:Aussonderung}\newlinefirst
 Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
 \[a\in\{x\in M\mid A(x)\}\defiff a\in M\land A(a).\]
 \end{Definition}
@@ -273,7 +276,7 @@ Für mehrere Mengen definiert man
 \bigcup_{i=1}^n A_i := A_1\cup A_2\cup\ldots\cup A_n.\]
 Pedantiker mögen die Schreibweise mit den Auslassungspunkten als
 ungenau empfinden. Zufriedenstellend ist für sie die Erklärung, dass
-es sich um die rekursive Festlegung
+es sich um die rekursive Festlegung%
 \[\bigcap_{i=1}^1 A_i := A_1,\qquad
 \bigcap_{i=1}^n A_i := A_n\cap\bigcap_{i=1}^{n-1} A_i\]
 handelt. Regeln wie $B\cup\bigcap_{i=1}^n A_i
@@ -293,14 +296,14 @@ von zwei Mengen. Dazu passend findet der Existenzquantor seine
 Entsprechung genau in der Vereinigung beliebig vieler Mengen.
 Aus diesem Grund weiten sich die Regeln der booleschen Algebra
 auf die allgemeine Vereinigung aus. Zum Beispiel lautet das
-Distributivgesetz für Mengen
+Distributivgesetz für Mengen%
 \[B\cap\bigcup_{A\in M} A = \bigcup_{A\in M}(B\cap A).\]
 Entfaltung der Definition führt nämlich zur logischen Äquivalenz
 \[x\in B\land(\exists A\in M\colon x\in A) \iff (\exists A\in M\colon x\in B\land x\in A).\]
 Ihr Beweis gelingt mühelos.
 
 \begin{Definition}[Allgemeiner Schnitt]\newlinefirst
-Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$ ist
+Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$ ist%
 \[\bigcap M = \bigcap_{A\in M} A := \{x\mid\forall A\in M\colon x\in A\}.\]
 \end{Definition}
 Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap M$ 
@@ -329,10 +332,10 @@ Eine \emph{Familie}\index{Familie} $(A_i)$ von Mengen $A_i$ mit $i\in I$
 ist eine Abbildung $A\colon I\to Z$, wobei $Z$ eine Zielmenge ist,
 welche die $A_i$ als Elemente enthält. Die Menge $I$ wird in diesem
 Zusammenhang auch \emph{Indexmenge}\index{Indexmenge} genannt. Man
-definiert
+definiert%
 \[\bigcup_{i\in I} A_i := \bigcup A(I)
 = \bigcup\{X\mid\exists i\in I\colon X=A_i\} = \{x\mid\exists i\in I\colon x\in A_i\},\]
-wobei mit $A(I)$ das Bild von $I$ unter $A$ gemeint ist. Man bekommt
+wobei mit $A(I)$ das Bild von $I$ unter $A$ gemeint ist. Man bekommt%
 \begin{align*}
 \smash{\bigcup_{i\in I} A_i}
 &= \{x\mid\exists X\colon X\in \{X\mid\exists i\in I\colon X=A_i\}\land x\in X\}\\
@@ -372,11 +375,11 @@ man in der Informatik nicht mit Mengen, sondern mit Typen, die sich
 in gewissen Zügen analog zu Mengen verhalten. Die disjunkte Vereinigung
 zweier Mengen kennzeichnet jedes Element vor der Vereinigung mit einem
 Tag, das die Information liefert, aus welcher der Mengen es entstammt.
-Man setzt
+Man setzt%
 \[A\sqcup B := \{(0,a)\mid a\in A\}\cup\{(1,b)\mid b\in B\}.\]
 Die Zahlen $0,1$ sind hier die \emph{Tags} oder \emph{Diskriminatoren}.
 Anstelle der Zahlen könnten genauso gut zwei beliebige unterschiedliche
-Elemente als Tags verwendet werden. Beispielsweise ginge auch
+Elemente als Tags verwendet werden. Beispielsweise ginge auch%
 \[A\sqcup B = \{(\text{Grün},a)\mid a\in A\}\cup\{(\text{Blau},b)\mid b\in B\}.\]
 In der Informatik verwendet man gern left, right als Tags.
 
@@ -397,20 +400,20 @@ $t_i$ heißt \emph{Indizierung}, es ist darin $i$ der
 \emph{Index}\index{Index}.
 
 Zwei Paare seien definitionsgemäß genau dann gleich, wenn sie
-komponentenweise gleich sind,
+komponentenweise gleich sind,%
 \[(x,y) = (x',y')\defiff x=x'\land y=y'.\]
 Die genannten Eigenschaften charakterisieren den Begriff Paar
 im Wesentlichen, mehr müssen wir nicht wissen. Man hat sich trotzdem
 auch mal überlegt, wie Paare in der reinen Mengenlehre dargestellt
 werden können, wo alle Objekte Mengen sein sollen. Nach Kuratowski
-sind Paare kodierbar als
+sind Paare kodierbar als%
 \[(x,y) := \{\{x\},\{x,y\}\}.\]
 Unter dem allgemeineren Begriff \emph{Tupel}\index{Tupel} fassen
 wir eine beliebige endliche Zahl von Objekten in einer bestimmten
-Reihenfolge zusammen. Tupel aus drei Objekten heißt \emph{Tripel},
+Reihenfolge zusammen. Tupel aus drei Objekten heißen \emph{Tripel},
 die aus vier heißen \emph{Quadrupel}. Analog zu den Paaren ist ihre
-Gleichheit definiert als
-\[(x_1,\ldots,x_n) = (x_1,\ldots,x_n')
+Gleichheit definiert als%
+\[(x_1,\ldots,x_n) = (x_1',\ldots,x_n')
 \defiff x_1=x_1'\land\ldots\land x_n=x_n'.\]
 Zu zwei Mengen $X,Y$ kann man nun die Menge aller Paare betrachten,
 deren erste Komponente $X$ entstammt, und deren zweite
@@ -418,17 +421,17 @@ Komponente $Y$ entstammt. Sie heißt \emph{Produktmenge}\index{Produktmenge}
 oder \emph{kartesisches Produkt}\index{kartesisches Produkt}
 der Mengen $X,Y$.
 \begin{Definition}[Produktmenge]\newlinefirst
-Das kartesische Produkt zweier Mengen $X,Y$ ist
+Das kartesische Produkt zweier Mengen $X,Y$ ist die Menge
 \[X\times Y := \{(x,y)\mid x\in X\land y\in Y\}.\]
 \end{Definition}
 Genau genommen handelt es sich hierbei um eine Bildmenge, was bedeutet,
 dass sich im rechten Term Existenzquantoren verstecken. Ausführlich
-ausgeschrieben lautet der Term
+ausgeschrieben lautet der Term%
 \begin{align*}
 X\times Y &= \{t\mid\exists x\in X\colon\exists y\in Y\colon t=(x,y)\}\\
 &= \{t\mid\exists x\colon\exists y\colon x\in X\land y\in Y\land t=(x,y)\}.
 \end{align*}
-Wie jede Bildmenge ist das Produkt als Vereinigung darstellbar. Es ist
+Wie jede Bildmenge ist das Produkt als Vereinigung darstellbar. Es ist%
 \[X\times Y = \bigcup_{x\in X}\bigcup_{y\in Y}\{(x,y)\}.\]
 Die beiden kurzen Identitäten $X\times\emptyset = \emptyset$ und
 $\emptyset\times Y = \emptyset$ gehen unmittelbar aus der Definition
@@ -454,7 +457,7 @@ Es gilt $X\times (A\cap B) = (X\times A)\cap (X\times B)$.
 \end{Satz}
 \begin{Beweis}
 Es ginge zu Fuß. Aber Satz \ref{Index-in-Schnitt} ermöglicht die
-kurze Termumformung
+kurze Termumformung%
 \begin{align*}
 & X\times (A\cap B) = \bigcup_{x\in X}\bigcup_{y\in A\cap B} \{(x,y)\}
 = \bigcup_{x\in X}\Big(\Big(\bigcup_{y\in A}\{(x,y)\}\Big)\cap \Big(\bigcup_{y\in B}\{(x,y)\}\Big)\Big)\\
@@ -475,8 +478,8 @@ zu \emph{jedem} Element der Definitionsmenge \emph{genau ein} Element
 der Zielmenge gehört. Es hat allerdings ein wenig gedauert, bis
 diese Vorstellung als die Förderliche erkannt wurde.
 
-In der historischen Entwicklung kam ihr die speziellere Vorstellung
-zuvor, dass eine Größe, etwa eine physikalische Größe, in einer
+In der historischen Entwicklung ging ihr die speziellere Vorstellung
+voran, dass eine Größe, etwa eine physikalische Größe, in einer
 rechnerischen Abhängigkeit von einer anderen Größe steht. So steht
 die Periodendauer der Schwingung eines Pendels in einer bestimmten
 rechnerischen Abhängigkeit von der Pendellänge.
@@ -516,6 +519,10 @@ nennt man $x$ ein Urbildelement zu $y$.
 \newpage
 \subsection{Bild, Urbild}
 
+Wird ein jedes Element einer Teilmenge der Definitionsmenge in eine
+Abbildung geschickt, formen die Werte eine neue Menge, die
+\emph{Bildmenge}\index{Bildmenge} der Teilmenge unter der Abbildung.
+
 \begin{Definition}[Bild]\newlinefirst
 Die Bildmenge einer Menge $A\subseteq X$ unter der Abbildung
 $f\colon X\to Y$ ist
@@ -523,11 +530,33 @@ $f\colon X\to Y$ ist
 \end{Definition}
 Insofern $y=f(x)$ als äquivalent zu $y\in\{f(x)\}$ befunden wird, ergibt
 sich auch die Darstellung $f(A) = \bigcup_{x\in A} \{f(x)\}$.
-Insbesondere in Programmiersprachen treten endliche Mengen als
-Objekte auf. Die Berechnung verläuft mithin gemäß der rekursiven Festlegung
+Insbesondere in Programmiersprachen treten endliche Mengen als Objekte
+auf. Die Berechnung verläuft mithin gemäß der rekursiven Festlegung%
 \[f(\emptyset) := \emptyset,\qquad f(\{x_1,\ldots,x_n\}) :=
 f(\{x_1,\ldots,x_{n-1}\})\cup \{f(x_n)\},\]
 für die auch die Bezeichnung $\mathrm{map}(f,A)$ gebräuchlich ist.
+
+Die analytische Geometrie sieht Figuren als Punktmengen. Abbildungen
+transformieren die Punktmengen, woraus neue Figuren hervorgehen.
+Ein einfaches Beispiel bietet die Abbildung%
+\[f\colon\R\to\R^2,\quad f(t) :=
+\begin{pmatrix}p_x + v_x t\\ p_y + v_y t\end{pmatrix}.\]
+In der Hinsicht, dass die reellen Zahlen $\R$ als eine Zahlengerade
+aufgefasst werden, formt ihr Bild $f(\R)$ eine Gerade der euklidischen
+Ebene. Die passende Wahl der Parameter $(p_x,p_y)$ als Basispunkt
+und $(v_x,v_y)$ als Geschwindigkeitsvektor gestattet es, jede
+beliebige Gerade der Ebene zu beschreiben. Man nennt in der üblichen
+Terminologie aber auch $t$ den Parameter und $f$ eine Parametergerade,
+wobei das Bild $f(\R)$ auch Spur genannt wird. Diese Sprechweisen
+entspringen der Sichtweise, dass $f(t)$ ein durch die Zeit $t$
+parametrisierter Punkt ist, der mit dem Lauf der Zeit eine Spur zieht.
+Der Geschwindigkeitsvektor charakterisiert die Bewegung des Punktes,
+für die Spur ist dagegen nur dessen Richtung von Bedeutung.
+
+Das \emph{Urbild}\index{Urbild} eines Wertes gibt Auskunft, welche
+Elemente der Definitionsmenge unter der Abbildung zu dem Wert führen.
+Allgemeiner gibt das Urbild einer Menge von Werten Auskunft, welche
+Elemente der Definitionsmenge in die Menge führen.
 
 \begin{Definition}[Urbild]\newlinefirst
 Das Urbild einer Menge $B$ unter $f\colon X\to Y$ ist
@@ -579,7 +608,7 @@ großer Bedeutung.
 
 \begin{Definition}[Komposition]\newlinefirst
 Sei $f\colon X\to Y$ und $g\colon Y\to Z$. Ihre Verkettung,
-gelesen »$g$ nach $f$«, ist
+gelesen »$g$ nach $f$«, ist%
 \[(g\circ f)\colon X\to Z,\quad (g\circ f)(x):=g(f(x)).\]
 \end{Definition}
 
@@ -590,7 +619,8 @@ darf dann $g\circ f := g|_Y\circ f$ gesetzt werden, wobei mit $g|_Y$ die
 Einschränkung des Definitionsbereichs von $g$ auf $Y$ gemeint ist.
 
 \begin{Definition}[Einschränkung]\newlinefirst
-Sei $f\colon X\to Y$ und $A\subseteq X$. Die Einschränkung von $f$ auf $A$ ist
+Sei $f\colon X\to Y$ und $A\subseteq X$. Die Einschränkung von
+$f$ auf $A$ ist%
 \[f|_A\colon A\to Y,\quad f|_A(x):=f(x).\]
 \end{Definition}
 
@@ -603,7 +633,7 @@ $f\colon X\to Y$ gilt $f\circ\id_X = f$ und $\id_Y\circ f=f$.
 \subsection{Injektionen, Surjektionen, Bijektionen}
 
 \begin{Definition}[Injektion]\newlinefirst
-Eine Abbildung $f\colon X\to Y$ heißt injektiv\index{injektiv}, wenn
+Eine Abbildung $f\colon X\to Y$ heißt injektiv\index{injektiv}, wenn%
 \[\forall x,x'\in X\colon f(x)=f(x')\cond x=x'.\]
 \end{Definition}
 
@@ -611,18 +641,52 @@ Eine Abbildung $f\colon X\to Y$ heißt injektiv\index{injektiv}, wenn
 Erinnern wir uns an den Abschnitt \emph{Logik mit Gleichheit}, fällt
 auf, dass die Definition der Injektivität als Umkehrung der
 Ersetzungsregel betrachtbar ist. Das heißt, für eine auf den Werten
-der Terme $t,t'$ definierte Injektion $f$ gilt die Äquivalenz
+der Terme $t,t'$ definierte Injektion $f$ gilt die Äquivalenz%
 \[t=t' \iff f(t)=f(t').\]
-Die Injektionen vermitteln genau die \emph{Äquivalenzumformungen}%
+Die Injektionen vermitteln somit genau die \emph{Äquivalenzumformungen}%
 \index{Aequivalenzumformung@Äquivalenzumforumung} von Gleichungen.
-In der Schulmathematik sind das zu Parametern $a,b$ mit
-$a\ne 0$ die Funktionen
-\[\begin{array}{@{}r@{\quad}r@{\,}l}
-f_a\colon\R\to\R, & f_a(x) &:=ax,\\[2pt]
-g_b\colon\R\to\R, & g_b(x) &:=x+b.
-\end{array}
-\]
+Wie sich aus Def. \ref{def:Mengen-Gleichheit} in Verbindung mit
+Def. \ref{def:Aussonderung} ergibt, erfährt die Lösungsmenge einer
+Bestimmungsgleichung durch sie keine Veränderung. Man notiert%
+\[L := \{x\in G\mid t=t'\} = \{x\in G\mid f(t)=f(t')\}\]
+für die Lösungsmenge $L$ der Gleichung $t=t'$ in der Variable $x$,
+die die Werte der Grundmenge $G$ durchläuft. Aufgrund dessen schaffen
+sie ein wesentliches Werkzeug zum Lösen von Bestimmungsgleichungen.
 
+Es muss $X$ bei $f\colon X\to Y$ nicht notwendigerweise die Grundmenge
+sein. Wichtig ist allein, dass die Terme $t,t'$ ausschließlich Werte in
+$X$ annehmen können. Beispielsweise ist das Quadrieren auf den reellen
+Zahlen zwar nicht injektiv, bei Einschränkung der Definitionsmenge auf
+die nichtnegativen reellen Zahlen allerdings schon. So initiiert es
+die äquivalente Umformung%
+\[|x| = |x-2| \bicond x^2 = (x-2)^2 = x^2-4x+4 \bicond
+0 = -4x+4 \bicond x = 1.\]
+Außerdem darf die Variable der Bestimmungsgleichung in einer
+Äquivalenzumformung als Parameter auftauchen. Die injektive Funktion%
+\[f_a\colon\R\to\R,\quad f_a(\xi) := \xi + a\]
+beschreibt zum Beispiel den Sachverhalt, dass eine Zahl $a$ zu beiden
+Seiten einer Gleichung addiert werden darf,%
+\[t = t' \iff t + a = t' + a.\]
+Hier darf insbesondere auch $a:=x$ als Parameter eingesetzt werden. Bei%
+\[f_a\colon\R\to\R,\quad f_a(\xi) := a\xi\]
+gilt es allerdings $a\ne 0$ zu berücksichtigen. Das heißt, die Setzung
+$a:=x$ liefert nur dann eine Äquivalenzumformung, wenn die Grundmenge,
+die $x$ durchläuft, eine Teilmenge von $\R\setminus\{0\}$ ist. Andernfalls
+müsste man diesen Umstand durch eine Fallunterscheidung künstlich herstellen.
+
+Erwähnenswert ist weiterhin, dass die gemachten Begriffe bereits
+Gleichungen in mehreren Variablen und Gleichungssysteme%
+\index{Gleichungssystem} umfassen. Eine Gleichung in zwei Variablen
+liegt vor, wenn die Grundmenge aus Paaren besteht. Ein System von zwei
+Gleichungen liegt vor, wenn die die Terme $t,t'$ jeweils ein Paar zum
+Wert haben. Diese formale Beschreibung müsste man allerdings als ein
+wenig oberflächlich befinden, kämen nicht weitere Erörterungen hinzu.
+Tiefersinnig wäre es an sich ohne Pointe, tauchte nur eine der Variablen in
+der Gleichung auf. Gleichermaßen mag ein System in zwei Variablen
+erst reizvoll sein, wenn die Gleichungen in nichttrivialer Weise
+miteinander verwoben sind.
+
+% Stellt eine Verbindung zu den Konzepten der Katengorientheorie her.
 \begin{Satz}
 Eine Abbildung $g$ mit $g\circ f = \id$ heißt Linksinverse von $f$.
 Eine Abbildung $f\colon X\to Y$ mit nichtleerem $X$ ist genau dann
@@ -638,8 +702,8 @@ Sei $f$ injektiv. Mit $X\ne\emptyset$ liegt irgendein $a\in X$ vor.
 Sofern $y\in f(X)$ ist, liegt außerdem ein $x$ mit $y=f(x)$ vor.
 Es wird $g$ festgelegt per Fallunterscheidung
 \[g(y) := \begin{cases}
-x & \text{wenn}\;y\in f(X),\\
-a & \text{wenn}\;y\notin f(X).
+x, & \text{wenn}\;y\in f(X),\\
+a, & \text{wenn}\;y\notin f(X).
 \end{cases}\]
 Sie ist verhält sich so, dass $g(f(x))=x$ für jedes $x\in X$ gilt,
 denn mit $x\in X$ ist $f(x)\in f(X)$. Somit existiert mit $g$ eine
@@ -675,5 +739,114 @@ Sei nun $g'$ eine weitere Linksinverse und $h'$ eine weitere
 Rechtsinverse. Wiederholt man die obige Rechnung abermals, erhält man
 $g'=h$ und $g'=h'$. Ergo gilt $g = h = g' = h'$.\,\qedsymbol
 \end{Beweis}
+
+\subsection{Allgemeines Mengenprodukt}
+
+Nachdem nun der Begriff der Abbildung bereits erklärt wurde, kann eine
+Begriffsverallgemeinerung des kartesischen Produktes erörtert werden,
+die Tupel mit Folgen und Funktionen in Beziehung setzt. Eine Folge
+darf man einerseits als Funktion betrachten, deren Definitionsbereich
+die natürlichen Zahlen sind. Andererseits ist eine Folge indizierbar wie
+ein Tupel. Das bringt uns auf die Idee, Tupel wie Folgen als Funktionen
+aufzufassen.
+
+Die Ziffern der Zahl 2520 sind in Little"=Endian"=Konvention das Tupel
+\[t=(0,2,5,2)\in\N\times\N\times\N\times\N.\]
+Die Indexmenge $I:=\{0,1,2,3\}$ enthält die Stellenwerte der Ziffern.
+Es verhält sich nun so, dass die Funktion
+\[f\colon I\to\N,\quad f(0) := 0,\; f(1) := 2,\; f(2) := 5,\; f(3) := 2\]
+genau die Information enthält, die das Tupel charakterisiert. Es ist
+$f(i) = t_i$ die Indizierung des Tupels. So gesehen ist jedes Tupel durch
+eine Funktion kodiert. Führt man diese Überlegung fort, gelangt man
+schließlich zum allgemeinen kartesischen Produkt
+\[\prod_{i\in I} X_i := \{f\colon I\to\bigcup_{i\in I} X_i\mid
+\forall i\in I\colon f(i)\in X_i\}.\]
+Der Formelsalat sagt im Wesentlichen nur, dass eine Abbildung
+$f\in\prod_{i\in I} X_i$ einen in $X_i$ liegenden Funktionswert
+$f(i)$ besitzt.
+
+Diese allgemeine Produkte von Mengen treten in der Mathematik nur sehr
+sporadisch in Erscheinung. Eine Rolle spielen sie in der Theorie der
+Kardinalzahlen. In der abhängigen Typentheorie besitzen sie allerdings ein
+direktes allgegenwärtiges Analogon, den \emph{Typ abhängiger Funktionen}.
+
+Bei einer Gleichsetzung wie $\prod_{i\in\{1,2\}} X_i\cong X_1\times X_2$ ist
+zu beachten, dass es sich eigentlich nicht um eine Gleichung handelt, denn
+Abbildungen sind ja nicht dasselbe wie Paare. Allerdings gehört zu jedem
+Paar wie gesagt in kanonischer Weise genau eine gleichartige Abbildung.
+Es besteht eine Isomorphie, was durch die Tilde über dem Gleichheitszeichen
+angedeutet wird. Damit verbunden liegt ein Isomorphismus vor, mit dem
+sich ein Objekt der einen Seite in ein Objekt der anderen Seite
+überführen lässt. Das ist so ähnlich wie die Übersetzung eines Textes
+von der einen in die andere Sprache. Die Gestalt ändert sich, aber der
+Inhalt bleibt gleich.
+
+Intuitiv sollte $\prod_{i\in I} X_i$ nichtleer sein, sofern jedes $X_i$
+nichtleer ist. Dennoch lässt sich dieser Sachverhalt nicht ohne Weiteres
+ableiten. Es handelt sich um ein Axiom der Mengenlehre, das sogenannte
+\emph{Auswahlaxiom}\index{Auswahlaxiom}. Es besagt, dass zu jeder
+Familie $(X_i)$ nichtleerer Mengen eine Auswahlfunktion $f$ existiert,
+die zu jeder Menge $X_i$ ein Element $f(i)\in X_i$ auswählt.
+Eine gründliche Untersuchung des Auswahlaxioms zeigt auf, dass es sich
+mit den Unendlichkeiten schwierig verhält. Unter bestimmten Umständen
+ist das Axiom nicht vonnöten. Außerdem, so lässt sich zeigen, impliziert
+es den Satz vom ausgeschlossenen Dritten.
+
+\section{Relationen}
+
+\subsection{Relationen im Allgemeinen}
+
+Beim Erlangen von tieferliegenden Einsichten in Probleme und
+Zusammenhänge spielt das Aufspüren und Klären unterschiedlicher
+Beziehungen eine wesentliche Rolle. Zwei Objekte können auf
+unterschiedliche Art und Weise in Beziehung stehen. In der Mathematik
+beschäftigt man sich mit Beziehungen, die zu den zwei Objekten eine
+Aussage trifft, der ein Wahrheitsgehalt beigemessen wird. Zwei Zahlen
+$x,y$ sind gleich. Eine Zahl $x$ ist kleiner als eine Zahl $y$. Der
+Betrag der Differenz zweier Zahlen $x,y$ ist kleiner als eine bstimmte
+Konstante. Der Abstand der Punkte $x=(x_1,x_2)$ und $y=(y_1,y_2)$ ist
+kleiner als eine bestimmte Konstante. Zwei Stühle $x,y$ eines
+Stuhlkreises sind benachbart. Die Schüler $x,y$ gehen in dieselbe
+Klasse. Es gibt einen Weg, der vom Ort $x$ zum Ort $y$ führt.
+
+Die eindrückliche Vielfalt möglicher Beziehungen macht es ja
+unerlässlich, eine allgemeine Auffassung von ihnen zu erhalten.
+Eine zweistellige Relation $R$ schafft ein Beziehungsgefüge zwischen
+zwei Mengen $X,Y$. Wir sagen, ein Objekt $x\in X$ steht bezüglich
+$R$ zu einem Objekt $y\in Y$ in Beziehung, wenn die Aussage $R(x,y)$
+eine wahre ist. Ein Beispiel wäre $R(x,y):=(x<y)$, wobei $X=Y$ die Menge
+der ganzen Zahlen sei.
+
+\begin{Definition}[Zweistellige Relation]\newlinefirst
+Es seien $X,Y$ zwei Mengen. Jede Teilmenge $R\subseteq X\times Y$ heißt
+Relation zwischen $X$ und $Y$. Zur Relation soll die Kenntnis von
+$X,Y$ dazugehören. Insofern ist das durch das Tripel $(X,Y,R)$ kodierte
+Objekt die Relation und $R$ ihr Graph.
+\end{Definition}
+
+\noindent
+Eine Relation ist auch interpretierbar als wahrheitswertige Funktion
+\[1_R\colon X\times Y\to\{0,1\},\quad 1_R(x,y):=[(x,y)\in R].\]
+Sie ist die Indikatorfunktion der Teilmenge $R$ bezüglich der
+Grundmenge $X\times Y$. Anstelle $(x,y)\in R$ oder $1_R(x,y)=1$
+schreiben wir schlicht $R(x,y)$ für die Aussage, dass $x$ und $y$
+bezüglich $R$ in Relation stehen.
+
+Eine Relation mit $X\ne Y$ heißt \emph{heterogen}, eine mit
+$X=Y$ heißt \emph{homogen}. Wir werden uns fast ausschließlich mit
+homogenen Relationen beschäftigen. Man darf allerdings sagen, dass
+auch die heterogenen in der Mathematik weit verbreitet sind, denn
+jede Abbildung ist betrachtbar als Relation mit speziellen
+Eigenschaften. Genauer ist eine Abbildung eine linkstotale und
+rechtseindeutige Relation. Linkstotal heißt, dass jedes $x\in X$
+zu mindestens einem $y\in Y$ in Beziehung steht. Rechtseindeutig heißt,
+dass ein $y\in Y$ höchstens zu einem $x\in X$ in Beziehung steht. Es
+handelt sich also lediglich um eine Sprechweise für die bereits
+bekannten definierenden Eigenschaften.
+
+Relationen lassen sich in Pfeildiagrammen darstellen. Man man zweichnet
+hierbei einem Pfeil von einem $x\in X$ zu einem $y\in Y$, falls $x,y$
+in Relation stehen.
+
 
 
