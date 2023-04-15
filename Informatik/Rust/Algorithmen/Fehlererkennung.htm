@@ -21,7 +21,7 @@
 <h2 id="CRC">Zyklische Redundanzprüfung</h2>
 
 <pre class="rust box">
-pub mod crc {
+pub mod crc32 {
     const POLYNOMIAL: u32 = 0xEDB88320;
 
     pub struct CRC32 {
@@ -52,8 +52,49 @@ pub mod crc {
     }
 }
 
+#[cfg(test)]
+mod crc32_test {
+    // Die Werte sind geprüft mit binascii.crc32
+    // aus der Python-Standardbibliothek.
+    const TEST_VECTORS: [(u32, &amp;[u8]); 14] = [
+        (0x00000000, b""),
+        (0xd202ef8d, b"\x00"),
+        (0x41d912ff, b"\x00\x00"),
+        (0xff000000, b"\xff"),
+        (0xffff0000, b"\xff\xff"),
+        (0xffffff00, b"\xff\xff\xff"),
+        (0xffffffff, b"\xff\xff\xff\xff"),
+        (0xd2fd1072, b"\xff\xff\xff\xff\xff"),
+        (0xe8b7be43, b"a"),
+        (0x078a19d7, b"aa"),
+        (0x9e83486d, b"ab"),
+        (0x2ca74a14, b"ba"),
+        (0x8587d865, b"abcde"),
+        (0xaeef2a50, b"abcdefgh")
+    ];
+
+    #[test]
+    fn test() {
+        let crc = crate::crc32::CRC32::new();
+        for (expected, data) in TEST_VECTORS {
+            assert_eq!(crc.hash(data, 0), expected);
+        }
+        assert_eq!(0x9e83486d, crc.hash(b"", crc.hash(b"ab", 0)));
+        assert_eq!(0x9e83486d, crc.hash(b"b", crc.hash(b"a", 0)));
+        assert_eq!(0x8587d865, crc.hash(b"e", crc.hash(b"abcd", 0)));
+        assert_eq!(0x8587d865, crc.hash(b"de", crc.hash(b"abc", 0)));
+        assert_eq!(0xaeef2a50, crc.hash(b"efgh", crc.hash(b"abcd", 0)));
+        assert_eq!(0xaeef2a50, crc.hash(b"fgh", crc.hash(b"abcde", 0)));
+        let mut value = 0;
+        for x in 0..u16::MAX {
+            value = crc.hash(&amp;u16::to_le_bytes(x), value);
+        }
+        assert_eq!(0xc7624fe6, value);
+    }
+}
+
 fn main() {
-    let crc = crc::CRC32::new();
+    let crc = crc32::CRC32::new();
     let data = b"Tee";
     println!("{:08x}", crc.hash(data, 0));
 }

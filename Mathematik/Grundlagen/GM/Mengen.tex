@@ -848,5 +848,306 @@ Relationen lassen sich in Pfeildiagrammen darstellen. Man man zweichnet
 hierbei einem Pfeil von einem $x\in X$ zu einem $y\in Y$, falls $x,y$
 in Relation stehen.
 
+\subsection{Äquivalenzrelationen}
+
+Manchmal interessiert man sich nicht für die gänzliche Gleichheit
+zweier Objekte. Die \emph{Äquivalenzrelationen}%
+\index{Aequivalenzrelation@Äquivalenzrelation} verallgemeinern den
+Gleichheitsbegriff dahingehend, dass zwei Objekte schon dann als
+\emph{gleichartig}\index{gleichartig} angesehen werden, wenn sie in
+in einer bestimmten Eigenschaft übereinstimmen. Um welche Eigenschaft
+es sich dabei handelt, bestimmt die Relation.
+
+\begin{Definition}[Äquivalenzrelation]\newlinefirst
+Seien $A$ eine Menge und seien $x,y,z\in A$. Sei $R(x,y):=(x\sim y)$ eine
+Relation. Man nennt $R$ Äquivalenzrelation, wenn gilt:
+\[\begin{array}{ll}
+x\sim x, &\text{(Reflexivität)}\\
+x\sim y \implies y\sim x, & \text{(Symmetrie)}\\
+x\sim y\land y\sim z\implies x\sim z.\quad & \text{(Transitivität)}
+\end{array}\]
+\end{Definition}
+
+\begin{Definition}[Äquivalenzklasse]\newlinefirst
+Sei $M$ eine Menge und $x\sim y$ eine Äquivalenzrelation für $x,y\in M$.
+Die Menge%
+\[[a] := \{x\in M\mid x\sim a\}\]
+nennt man die Äquivalenzklasse zum Repräsentanten $a\in M$.
+\end{Definition}
+
+\begin{Satz}[Äquivalenzrelation induziert Zerlegung]\newlinefirst
+Eine Menge wird durch eine Äquivalenzrelation in disjunkte
+Äquivalenzklassen zerlegt, lat. partitioniert.
+\end{Satz}
+\strong{Beweis.} Sei $M$ die Menge und $x\sim y$ die Äquivalenzrelation.
+Zu zeigen ist, dass kein Element von $M$ in mehr als einer
+Äquivalenzklasse vorkommt. Seien $a,b,c\in M$, sei $c\in [a]$
+und $c\in [b]$. Aufgrund von $c\sim a$ sowie $c\sim b$ und der
+Transitivität gilt%
+\[x\in [a]\iff x\sim a\iff x\sim c\iff x\sim b\iff x\in [b].\]
+Man hat also
+\[(\forall x\in M\colon x\in [a]\Leftrightarrow x\in [b])\iff [a]=[b].\]
+Wenn also $[a]\ne [b]$ ist, kann nicht gleichzeitig $c\in [a]$ und $c\in [b]$
+sein.\;\qedsymbol
+
+\begin{Satz}[Zerlegung induziert Äquivalenzrelation]\newlinefirst
+Sei $M$ eine Menge. Die Familie $(A_k)$ von Mengen $A_k\subseteq M$
+bilde eine Zerlegung von $M$, d.\,h. dass die Vereinigung aller
+$A_k$ die Menge $M$ überdeckt und dass paarweise $A_i\cap A_j=\emptyset$
+für $i\ne j$ ist. Dann ist%
+\[x\sim y\defiff \exists k\colon x\in A_k\land y\in A_k\]
+eine Äquivalenzrelation auf $M$.
+\end{Satz}
+\strong{Beweis.} Da die $A_k$ die Menge $M$ überdecken,
+muss es für ein beliebiges $x\in M$ mindestens eine Menge $A_k$
+geben, so dass $x\in A_k$. Daher gilt $x\sim x$.
+
+Die Symmetrie ergibt sich trivial.
+
+Zur Transitivität. Voraussetzung ist $x\sim y$ und $y\sim z$.
+Es gibt also ein $i$ mit $x\in A_i$ und $y\in A_i$. Außerdem gibt
+es ein $j$ mit $y\in A_j$ und $z\in A_j$. Somit gilt%
+\[\exists i\colon\exists j\colon x\in A_i\land y\in A_i\land y\in A_j\land z\in A_j.\]
+Wegen
+\[A_i\cap A_j = \emptyset \iff \forall y\colon (y\in A_i\land y\in A_j\Leftrightarrow 0)\]
+für $i\ne j$ kann $y\in A_i\land y\in A_j$ aber nur erfüllt sein,
+wenn $i=j$ ist. Daher ergibt sich%
+\[\exists i\colon x\in A_i\land z\in A_i,\]
+das heißt $x\sim z$.\;\qedsymbol
+
+\begin{Definition}[Quotientenmenge]%
+\index{Quotientenmenge}\index{Faktormenge}\newlinefirst
+Für eine gegebene Äquivalenzrelation wird die aus allen
+Äquivalenzklassen bestehende Menge
+\[M/{\sim} := \{[x]\mid x\in M\}\]
+als Quotientenmenge oder Faktormenge bezeichnet.
+\end{Definition}
+
+\begin{Definition}[Quotientenabbildung]%
+\index{Quotientenabbildung}\newlinefirst
+Für eine gegebene Äquivalenzrelation ist die Projektion
+\[\pi\colon M\to M/{\sim},\quad \pi(x):=[x]\]
+surjektiv und wird Quotientenabbildung genannt.
+\end{Definition}
+
+\begin{Definition}[Repräsentantensystem]%
+\index{Repräsentantensystem}\newlinefirst
+Für eine gegebene Äquivalenzrelation auf $M$ nennt man eine
+Teilemenge $A\subseteq M$ ein vollständiges Repräsentantensystem,
+wenn die Einschränkung $\pi|_A$ bijektiv ist, wobei mit $\pi$
+die Quotientenabbildung gemeint ist.
+\end{Definition}
+Repräsentantensysteme ermöglichen die einfache Handhabung von
+Äquivalenzklassen. Möchte man wissen, ob ein Element $x$ in der
+Äquivalenklasse $[a]$ enthalten ist, dann braucht man bloß
+zu überprüfen, ob $x\sim a$ ist. Außerdem besitzt die
+Quotientenabbildung nun eine Darstellung $p\colon M\to A$,
+dergestalt dass $\pi = \pi|_{A}\circ p$. Warum sollte das von
+Bedeutung sein? Nun, Äquivalenzklassen fallen oft unendlich groß
+aus. In der Kombinatorik treten zwar auch endliche Äquivalenzklassen auf,
+diese werden trotzdem schnell unzugänglich groß. Die Äquivalenzklassen
+und die Quotientenabbildung muss man also als abstrakte mathematische
+Objekte betrachten. Abstrakte mathematische Objekte müssen wir erst
+über eine Darstellung zugänglich machen, und genau dies ermöglicht
+ein Repräsentantensystem.
+
+
+\begin{Satz}[Charakterisierung von Äquivalenzklassen]\newlinefirst
+Sei auf der Menge $M$ eine Äquivalenzrelation gegeben. Eine
+Teilmenge $A\subseteq M$ ist genau dann eine Äquivalenzklasse,
+wenn%
+\begin{align*}
+1.\;& A\ne\emptyset,\\
+2.\;& x,y\in A\implies x\sim y,\\
+3.\;& x\in A\land y\in M\land x\sim y\implies y\in A.
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Angenommen, $A$ ist eine Äquivalenzklasse.
+Dann gibt es definitionsgemäß ein $a$ mit $A=[a]$. Daher ist
+mindestens $a\in A$ und somit $A\ne\emptyset$. Mit $x,y\in A$ ergibt
+sich $A=[x]=[y]$. Aufgrund von%
+\[x\sim y \iff [a]=[b]\]
+muss somit $x\sim y$ sein. Sei nun $x\in A$ und $y\in M$ mit
+$x\sim y$. Es folgt $A=[x]=[y]$. Daher muss $y\in A$ sein.
+
+Umgekehrt angenommen, die drei Eigenschaften sind erfüllt.
+Zu zeigen ist, dass es ein $a$ gibt mit $A=[a]$. Da $A$ gemäß 1.
+nichtleer ist, enthält es mindestens ein Element, dieses nennen wir
+$a$. Für jedes weitere Element $x\in A$ ergibt sich
+$x\sim a$, da sonst 2. verletzt sein würde. Schließlich muss man
+noch wissen, ob $x\in A$, wenn $x\sim a$ und $x\in M$ ist.
+Dies ist aber mit 3. gesichert. Es gibt also
+tatsächlich ein $a$ mit $A=\{x\in M\mid x\sim a\}$.\;\qedsymbol
+
+Eine große Fülle von Äquivalenzrelationen lässt sich auf die folgende
+einfache Art konstruieren. Hat man eine beliebige Abbildung
+$f\colon X\to Y$, dann sind die Urbilder $f^{-1}(\{y_1\})$ und
+$f^{-1}(\{y_2\})$ disjunkt, sofern $y_1\ne y_2$, denn%
+\[f^{-1}(\{y_1\})\cap f^{-1}(\{y_2\}) = f^{-1}(\{y_1\}\cap\{y_2\})
+= f^{-1}(\emptyset) = \emptyset.\]
+Demnach ist gemäß
+\[Z = X/{\sim} = \{f^{-1}(\{y\})\mid y\in f(X)\}\]
+eine Zerlegung des Definitionsbereichs $X$ gegeben und somit auch eine
+Äquivalenzrelation. Für $x_1,x_2\in X$ gilt%
+\[x_1\sim x_2 \iff f(x_1) = f(x_2).\]
+Ist $f$ zudem surjektiv, dann gehört zu jedem Element von $Y$ genau eine
+Äquivalenzklasse. Demnach definiert $f$ dann eine verallgemeinerte
+Quotientenabbildung, da die Elemente von $Y$ die Äquivalenzklassen
+charakterisieren. Die Bijektion $\varphi\colon Z\to Y$ hat dabei
+die Eigenschaft $f = \varphi\circ\pi$. Sofern $Y$ für uns zugänglich
+ist, resultiert hieraus auch eine verallgemeinerte Darstellung der
+Quotientenabbildung, denn
+\[f = \varphi\circ\pi = \varphi\circ (\pi|_A\circ p)
+= (\varphi\circ\pi|_A)\circ p.\]
+Nun ist $\varphi\circ\pi|_A$ auch bijektiv, weil $\varphi$
+und $\pi|_A$ es sind. Somit charakterisiert $Y$ ein
+vollständiges Repräsentantensystem.
+
+Was bisher erläutert wurde, mag recht abstrakt erscheinen. Wir haben
+aber eigentlich ein recht intuitives Verständnis für diese
+Begrifflichkeiten. Ein Bilderbuchbeispiel für eine Quotientenmenge
+bieten die Klassen einer Schule. Zwei Schüler seien genau dann
+äquivalent, wenn sie in dieselbe Klasse gehen. Die Äquivalenzklasse eines
+Schülers ist dann schlicht seine Schulklasse. Die Menge der Schüler der
+Schule wird in disjunkte Schulklassen zerlegt. Die Menge dieser
+Schulklassen bildet die Quotientenmenge. Ein vollständiges
+Repräsentantensystem entsteht zum Beispiel durch die Wahl eines
+Klassensprechers in jeder Klasse.
+
+Ein weiteres typisches Beispiel für eine Äquivalenzrelation ist die
+Kongruenz modulo $m$, die elementar in der Zahlentheorie
+und Gruppentheorie vorkommt. Die Äquivalenzklassen sind hier die
+Restklassen. Die Reste bilden ein kanonisches vollständiges
+Repräsentantensystem. Das Bilden des Restes zu einer Zahl ist
+eine Darstellung der Quotientenabbildung.
+
+\subsection{Operationen auf Äquivalenzklassen}
+
+Äquivalenzklassen werden später wichtig sein für die Formulierung von
+Konstruktionen. Bei diesen Konstruktionen ist eine Abbildung
+zwischen Quotientenmengen erforderlich. Weil die Äquivalenzklassen
+dabei über Repräsentanten dargestellt sind, liegt es nahe, auch
+die Abbildung über Repräsentanten zu definieren. Dies wirft die
+Frage nach der \emph{Wohldefiniertheit}\index{wohldefiniert} auf.
+Darunter versteht man, dass die Abbildung auch tatsächlich unabhängig
+von den gewählten Repräsentanten ist. Was das genau bedeutet, wird im
+folgenden Abschnitt erklärt.
+
+Gegeben seien zwei Quotientenmengen $M/\sim$ und $M'/\sim'$.
+Eine vorhandene Abbildung $f\colon M\to M'$ induziert dann
+eventuell gemäß%
+\[f\colon M/\sim\to M'/\sim',\quad f([a]):=[f(a)]\]
+eine Abbildung zwischen den Quotientenmengen. Kommt es dabei nicht
+zu einem Widerspruch, liegt also eine Abbildung vor, spricht man
+von \emph{Wohldefiniertheit}. Hierfür darf der Funktionswert nicht
+vom gewählten Repräsentant abhängen, d.\,h. die Bedingung%
+\[\forall x\in [a]\colon f(x)\in [f(a)]\]
+muss erfüllt sein. Anders formuliert:
+\[x\sim a \implies f(x)\sim' f(a).\]
+Für mehrstellige Abbildungen ist das Vorgehen analog. Eine
+Abbildung $f\colon M^2\to M'$ induziert%
+\[f\colon (M/\sim)^2\to M'/\sim',\quad f([a],[b]):=[f(a,b)],\]
+sofern
+\[x\sim a\land y\sim b\implies f(x,y)\sim' f(a,b).\]
+Bei den Konstruktionen kommen in der Regel zweistellige Abbildungen
+(mit $M=M'$) vor, weil die Verknüpfungen von Elementen der algebraischen
+Strukturen zweistellig sind. Diese Verknüpfungen werden im nächsten
+Abschnitt besprochen.
+
+\subsection{Kongruenzrelationen}
+
+\begin{Definition}[Kongruenzrelation]%
+\index{Kongruenzrelation}\newlinefirst
+Gegeben sei eine Menge $M$, auf der eine zweistellige
+Verknüpfung $*\colon M^2\to M$ definiert ist. Eine Äquivalenzrelation
+auf $M$ nennt man Kongruenzrelation, wenn die induzierte Verknüpfung
+$[a]*[b]:=[a*b]$ wohldefiniert ist.
+\end{Definition}
+Bei einer Kongruenzrelation sagt man »$a$ ist kongruent zu $b$«
+anstelle von »$a$ ist äquivalent zu $b$« und schreibt $a\equiv b$
+anstelle von $a\sim b$. Eigentlich kann man den Begriff für eine
+beliebige Stelligkeit definieren. Es besteht jedoch zunächst nur Bedarf
+an zweistelligen Verknüpfungen.
+
+Im Folgenden schreiben wir für die Verknüpfung kurz $ab$ anstelle
+$a*b$. Das spart ein wenig Schreibaufwand und ist so üblich, solange
+keine Verwechslungsgefahr mit einer bereits auf andere Art definierten
+Multiplikation besteht.
+
+\begin{Satz}\label{Kongruenz-Quotient}
+Sei $M$ eine Struktur aus der Liste Magma, Monoid, Halbgruppe,
+Gruppe, kommutatives Monoid, kommutative Gruppe. Sei $\equiv$ eine
+Kongruenzrelation auf $M$ und $\varphi$ die zugehörige
+Quotientenabbildung. Dann bildet die Quotienmenge $M/\equiv$
+bezüglich der induzierten Verknüpfung $\varphi(a)\varphi(b):=\varphi(ab)$
+ebenfalls eine Struktur derselben Art und $\varphi$ ist ein
+Homomorphismus.
+\end{Satz}
+\strong{Beweis.} Im Folgenden seien $a',b',c'$ beliebige Elemente
+der Quotientenmenge. Weil $\varphi$ surjektiv ist, gibt es immer
+$a,b,c\in M$ mit $a'=\varphi(a)$, $b'=\varphi(b)$ und $c'=\varphi(c)$.
+
+Die Verknüpfung auf $M$ sei abgeschlossen. Dann ist
+\[a'b' = \varphi(a)\varphi(b) = \varphi(ab)\in M/\equiv.\]
+Somit ist die Quotientenmenge bezüglich der induzierten Verknüpfung
+abgeschlossen.
+
+Die Verknüpfung auf $M$ erfülle das Assoziativgesetz. Dann gilt
+\[(a'b')c' = \varphi(ab)\varphi(c) = \varphi(abc)
+= \varphi(a)\varphi(bc) = a'(b'c').\]
+Die induzierte Verknüpfung erfüllt somit ebenfalls das
+Assoziativgesetz.
+
+Die Verknüpfung auf $M$ habe ein neutrales Element $e$. Dann gilt
+\[\varphi(a)=\varphi(ea) = \varphi(e)\varphi(a),\quad
+\varphi(a)=\varphi(ae)=\varphi(a)\varphi(e).\]
+Demzufolge besitzt $M/\equiv$ mit $e':=\varphi(e)$ ebenfalls
+ein neutrales Element.
+
+Zur Verknüpfung auf $M$ gebe es zu jedem Element ein inverses. Dann gilt
+\[\varphi(e) = \varphi(aa^{-1}) = \varphi(a)\varphi(a^{-1}),\quad
+\varphi(e) = \varphi(a^{-1}a) = \varphi(a^{-1})\varphi(a).\]
+Demzufolge gibt es auf der Quotientenstruktur mit
+$\varphi(a)^{-1}:=\varphi(a^{-1})$ ebenfalls zu jedem Element
+ein inverses.
+
+Die Verknüpfung auf $M$ sei kommutativ. Dann gilt
+\[a'b' = \varphi(a)\varphi(b) = \varphi(ab) = \varphi(ba)
+= \varphi(b)\varphi(a) = b'a'.\]
+Somit ist die Verknüpfung auf der Quotientenstruktur $M/\equiv$ ebenfalls
+kommutativ.\,\qedsymbol
+
+\begin{Satz}\label{Kongruenz-Ring-Quotient}
+Satz \ref{Kongruenz-Quotient} gilt auch für Ringe, unitäre Ringe,
+kommutative Ringe und kommutative unitäre Ringe, sofern die
+Relation eine Kongruenzrelation sowohl bezüglich der additiven
+als auch der multiplikativen Verknüpfung ist.
+\end{Satz}
+\strong{Beweis.} Sei $(R,+,\cdot)$ der Ring und $\equiv$ die
+Kongruenzrelation. Gemäß Satz \ref{Kongruenz-Quotient} ist
+$(R/\equiv,+)$ eine kommutative Gruppe und $(R/\equiv,\cdot)$
+eine Halbgruppe. Bei einem unitären Ring ist $(R/\equiv,\cdot)$
+ein Monoid, und bei einem kommutativen unitären Ring ein
+kommutatives Monoid.
+
+Es verbleiben noch die Distributivgesetze zu prüfen.
+Sei $\varphi$ die Quotientenabbildung. Man rechnet
+\begin{align*}
+a'(b'+c') &= \varphi(a)(\varphi(b)+\varphi(c)) = \varphi(a)(\varphi(b+c))
+= \varphi(a(b+c)) = \varphi(ab+ac)\\
+&= \varphi(ab)+\varphi(ac) = \varphi(a)\varphi(b)+\varphi(a)\varphi(c)
+= a'b'+a'c'.
+\end{align*}
+Die Rechnung zum Rechtsdistributivgesetz ist analog.
+
+Damit ist der Satz gezeigt, und ferner ist gezeigt dass $\varphi$ ein
+Ringhomomorphismus ist. Und für einen unitären Ring ist $\varphi$
+Eins-erhaltend, wie bereits aus Satz \ref{Kongruenz-Quotient}
+hervorgeht.\,\qedsymbol
+
+% Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
+% ins Unendliche. Der Stein mit Limesordinal muss extra umfallen,
+% zu ihm gibt es keinen Vorgänger.
+
 
 

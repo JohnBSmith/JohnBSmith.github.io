@@ -16,6 +16,7 @@
 <ol>
 <li><a href="#Konzept-Stromchiffre">Das Konzept der Stromchiffre</a>
 <li><a href="#ChaCha20">ChaCha20</a>
+<li><a href="#Testvektoren">Testvektoren</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -256,6 +257,65 @@ fn encipher(key: &amp;[u8; 32], iv: &amp;[u8; 8], data: &amp;mut [u8]) {
     }
 }
 </pre>
+
+<h2 id="Testvektoren">Testvektoren</h2>
+
+<table class="bt">
+<tr><th>Parameter<td><code>key = [0; 32]</code>; <code>iv = [0; 8]</code>
+<tr><th>Schlüsselstrom<td>
+<pre>
+76 b8 e0 ad a0 f1 3d 90 40 5d 6a e5 53 86 bd 28
+bd d2 19 b8 a0 8d ed 1a a8 36 ef cc 8b 77 0d c7
+da 41 59 7c 51 57 48 8d 77 24 e0 3f b8 d8 4a 37
+6a 43 b8 f4 15 18 a1 1c c3 87 b6 69 b2 ee 65 86
+9f 07 e7 be 55 51 38 7a 98 ba 97 7c 73 2d 08 0d
+cb 0f 29 a0 48 e3 65 69 12 c6 53 3e 32 ee 7a ed
+</pre>
+<tr><th>SHA-2-256<br>von 1&nbsp;MiB<td>
+<pre>
+fd71 55b0 3a35 4976 e6a9 85c0 f381 d313
+b7af 4513 7a51 4ca7 457b 7e76 254f 1a9a
+</pre>
+</table>
+
+<br>
+<table class="bt">
+<tr><th>Parameter<td><code>key = [0xff; 32]</code>; <code>iv = [0xff; 8]</code>
+<tr><th>Schlüsselstrom<td>
+<pre>
+d9 bf 3f 6b ce 6e d0 b5 42 54 55 77 67 fb 57 44
+3d d4 77 89 11 b6 06 05 5c 39 cc 25 e6 74 b8 36
+3f ea bc 57 fd e5 4f 79 0c 52 c8 ae 43 24 0b 79
+d4 90 42 b7 77 bf d6 cb 80 e9 31 27 0b 7f 50 eb
+5b ac 2a cd 86 a8 36 c5 dc 98 c1 16 c1 21 7e c3
+1d 3a 63 a9 45 13 19 f0 97 f3 b4 d6 da b0 77 87
+</pre>
+<tr><th>SHA-2-256<br>von 1&nbsp;MiB<td>
+<pre>
+a826 1c94 10cd 7198 2ea5 372c 3ffa 4e1b
+35eb 7391 c9bf 0251 baf0 d7f6 59a6 4760
+</pre>
+</table>
+
+<br>
+<table class="bt">
+<tr><th>Parameter<td><code>key = b"x152uhlwqtkr4sijepgy3ndmobavfz0c"</code>;<br>
+<code>iv = b"35270416"</code>
+<tr><th>Schlüsselstrom<td>
+<pre>
+04 15 c9 98 5f c3 af c9 0b 51 ff 22 52 cc 24 8d
+83 3c 2a a6 a0 96 3d 01 25 1e 75 8f bd f4 c0 43
+86 67 4a a0 5b 07 db 9e 23 a2 d1 5b cc 9e 37 8a
+47 28 aa ca 17 f6 4d 21 1e b1 4a 4f 77 3e 19 ee
+4a 62 c3 c2 f7 1a 43 37 c7 0a 8a 72 a6 e6 05 64
+3c 5a e4 d2 9b 54 c6 96 d0 ec be 6d 40 23 d0 aa
+</pre>
+<tr><th>SHA-2-256<br>von 1&nbsp;MiB<td>
+<pre>
+1446 5ea6 98b7 29b8 ccda a026 c110 d061
+8cbd 888a 0953 7559 57eb 78ef 4a15 cf32
+</pre>
+</table>
 
 <h2 id="Literatur">Literatur</h2>
 
