@@ -112,7 +112,7 @@ $\exists x\colon x\in M$ ist.
 
 Es wird $\{x\mid A(x)\}$ gelesen als »die Klasse der $x$, für die
 $A(x)$ gilt« oder »die Menge der $x$, für die $A(x)$ gilt«.
-\begin{Definition}[Komprehension]\newlinefirst
+\begin{Definition}[Komprehension]\label{def:Komprehension}\newlinefirst
 Zu einer Aussageform $A(x)$ definiert man die Klasse
 $\{x\mid A(x)\}$ gemäß
 \[a\in\{x\mid A(x)\}\defiff A(a).\]
@@ -352,17 +352,17 @@ werden.
 Später nützlich ist der
 
 \begin{Satz}\label{Index-in-Schnitt}
-Es gilt $\bigcup_{i\in I\cap J} A_i = (\bigcup_{i\in I} A_i)\cap
+Es gilt $\bigcup_{i\in I\cup J} A_i = (\bigcup_{i\in I} A_i)\cup
 (\bigcup_{i\in J} A_j)$.
 \end{Satz}
 \begin{Beweis}
 Es findet sich die äquivalente Umformung
 \begin{align*}\textstyle
-x\in\bigcup_{i\in I\cap J} A_i &\iff (\exists i\colon i\in I\cap J\land x\in A_i)\\
-&\iff(\exists i\colon (i\in I\land x\in A_i)\land (i\in J\land x\in A_i))\\
-&\iff(\exists i\colon i\in I\land x\in A_i)\land (\exists i\colon i\in J\land x\in A_i)\\
-&\iff\textstyle x\in\bigcup_{i\in I} A_i\land x\in\bigcup_{i\in J} A_i\\
-&\iff\textstyle x\in(\bigcup_{i\in I} A_i)\cap (\bigcup_{i\in J} A_i).\,\qedsymbol
+x\in\bigcup_{i\in I\cup J} A_i &\iff (\exists i\colon i\in I\cup J\land x\in A_i)\\
+&\iff(\exists i\colon (i\in I\land x\in A_i)\lor (i\in J\land x\in A_i))\\
+&\iff(\exists i\colon i\in I\land x\in A_i)\lor (\exists i\colon i\in J\land x\in A_i)\\
+&\iff\textstyle x\in\bigcup_{i\in I} A_i\lor x\in\bigcup_{i\in J} A_i\\
+&\iff\textstyle x\in(\bigcup_{i\in I} A_i)\cup (\bigcup_{i\in J} A_i).\,\qedsymbol
 \end{align*}
 \end{Beweis}
 
@@ -453,16 +453,16 @@ von $X\times Y$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Es gilt $X\times (A\cap B) = (X\times A)\cap (X\times B)$.
+Es gilt $X\times (A\cup B) = (X\times A)\cup (X\times B)$.
 \end{Satz}
 \begin{Beweis}
 Es ginge zu Fuß. Aber Satz \ref{Index-in-Schnitt} ermöglicht die
 kurze Termumformung%
 \begin{align*}
-& X\times (A\cap B) = \bigcup_{x\in X}\bigcup_{y\in A\cap B} \{(x,y)\}
-= \bigcup_{x\in X}\Big(\Big(\bigcup_{y\in A}\{(x,y)\}\Big)\cap \Big(\bigcup_{y\in B}\{(x,y)\}\Big)\Big)\\
-&\quad = \Big(\bigcup_{x\in X}\bigcup_{y\in A}\{(x,y)\}\Big)\cap\Big(\bigcup_{x\in X}\bigcup_{y\in B}\{(x,y)\}\Big)
-= (X\times A)\cap (X\times B).\,\qedsymbol
+& X\times (A\cup B) = \bigcup_{x\in X}\bigcup_{y\in A\cup B} \{(x,y)\}
+= \bigcup_{x\in X}\Big(\Big(\bigcup_{y\in A}\{(x,y)\}\Big)\cup \Big(\bigcup_{y\in B}\{(x,y)\}\Big)\Big)\\
+&\quad = \Big(\bigcup_{x\in X}\bigcup_{y\in A}\{(x,y)\}\Big)\cup\Big(\bigcup_{x\in X}\bigcup_{y\in B}\{(x,y)\}\Big)
+= (X\times A)\cup (X\times B).\,\qedsymbol
 \end{align*}
 \end{Beweis}
 
@@ -523,7 +523,7 @@ Wird ein jedes Element einer Teilmenge der Definitionsmenge in eine
 Abbildung geschickt, formen die Werte eine neue Menge, die
 \emph{Bildmenge}\index{Bildmenge} der Teilmenge unter der Abbildung.
 
-\begin{Definition}[Bild]\newlinefirst
+\begin{Definition}[Bild]\label{def:Bild}\newlinefirst
 Die Bildmenge einer Menge $A\subseteq X$ unter der Abbildung
 $f\colon X\to Y$ ist
 \[f(A) := \{f(x)\mid x\in A\} = \{y\mid\exists x\in A\colon y=f(x)\}.\]
@@ -607,7 +607,8 @@ großer Bedeutung.
 \subsection{Komposition}
 
 \begin{Definition}[Komposition]\newlinefirst
-Sei $f\colon X\to Y$ und $g\colon Y\to Z$. Ihre Verkettung,
+Sei $f\colon X\to Y$ und $g\colon Y\to Z$. Ihre
+Verkettung,\index{Komposition}\index{Verkettung}
 gelesen »$g$ nach $f$«, ist%
 \[(g\circ f)\colon X\to Z,\quad (g\circ f)(x):=g(f(x)).\]
 \end{Definition}
@@ -629,6 +630,57 @@ Die Abbildung $\id_X\colon X\to X$ mit $\id_X(x):=x$ heißt
 \emph{identische Abbildung}\index{identische Abbildung}. Sie verhält
 sich bei der Komposition neutral, das heißt, bezüglich
 $f\colon X\to Y$ gilt $f\circ\id_X = f$ und $\id_Y\circ f=f$.
+
+Mit der Bildmenge unter einer Komposition verhält es sich ganz analog
+wie mit dem Funktionswert eines einzelnen Elements. Sie lässt sich
+als die Hintereinanderschaltung der jeweiligen Mengenabbildungen
+darstellen, denn es gilt der
+
+\begin{Satz}\label{Bild-unter-Komposition}
+Es gilt $(g\circ f)(A) = g(f(A))$ für jede Menge $A\subseteq\dom(f)$.
+\end{Satz}
+\begin{Beweis}
+Mit der Entfaltung von Def. \ref{def:Bild}, \ref{def:Komprehension},
+\ref{def:Mengen-Gleichheit} nimmt die Aussage die Form
+\[(\exists x\in A\colon z=(g\circ f)(x)) \iff
+(\exists y\in f(A)\colon z = g(y))\]
+an. Angenommen, die linke Seite gilt. Dann liegt ein $x\in A$ mit
+$z=g(f(x))$ vor. Sei nun $y:=f(x)$, dann gilt $y\in f(A)$ und $z=g(y)$,
+womit die Existenzaussage der rechten Seite erfüllt wird.
+
+Angenommen, die rechte Seite gilt. Dann liegt ein $y\in f(A)$ mit
+$z=g(y)$ vor. Infolge existiert laut Def. \ref{def:Bild} ein $x\in A$ mit
+$y=f(x)$. Nun gilt $z=g(f(x))$, womit $x$ ebenfalls ein Zeuge
+für die linke Existenzaussage ist.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Beim Urbild unter einer Komposition dreht sich die Reihenfolge um.
+\begin{Satz}
+Es gilt $(g\circ f)^{-1}(B) = f^{-1}(g^{-1}(B))$ für jede Menge
+$B\subseteq\cod(g)$.
+\end{Satz}
+\begin{Beweis}
+Die äquivalente Umformung
+\begin{align*}
+x\in (g\circ f)^{-1}(B) &\iff (g\circ f)(x)\in B \iff g(f(x))\in B\\
+&\iff f(x)\in g^{-1}(B) \iff x\in f^{-1}(g^{-1}(B)).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\noindent
+Man kann diesen Beweis aber auch so führen, dass die Abbildungen in
+allgemeiner Weise als Relationen betrachtet werden. Die Gleichheit
+$y=f(x)$ ist bei einer Relation nicht erklärt, man hat nur $(x,y)\in f$.
+Unbeschadet dessen bleibt die Umformung durchführbar via
+\begin{align*}
+x\in (g\circ f)^{-1}(B)
+&\iff (\exists z\in B\colon (x,z)\in g\circ f)\\
+&\iff (\exists z\in B\colon\exists y\colon (y,z)\in g \land (x,y)\in f)\\
+&\iff (\exists y\colon (\exists z\in B\colon (y,z)\in g) \land (x,y)\in f)\\
+&\iff (\exists y\colon y\in g^{-1}(B)\land (x,y)\in f)\\
+&\iff x\in f^{-1}(g^{-1}(B)).
+\end{align*}
 
 \subsection{Injektionen, Surjektionen, Bijektionen}
 
@@ -688,9 +740,10 @@ miteinander verwoben sind.
 
 % Stellt eine Verbindung zu den Konzepten der Katengorientheorie her.
 \begin{Satz}
-Eine Abbildung $g$ mit $g\circ f = \id$ heißt Linksinverse von $f$.
-Eine Abbildung $f\colon X\to Y$ mit nichtleerem $X$ ist genau dann
-injektiv, wenn sie mindestens eine Linksinverse besitzt.
+Eine Abbildung $g$ mit $g\circ f = \id$ heißt Linksinverse%
+\index{Linksinverse} von $f$. Eine Abbildung $f\colon X\to Y$ mit
+nichtleerem $X$ ist genau dann injektiv, wenn sie mindestens eine
+Linksinverse besitzt.
 \end{Satz}
 \begin{Beweis}
 Sei $g$ eine Linksinverse von $f$. Seien $x,x'$ fest, aber beliebig,
@@ -720,8 +773,8 @@ Weil $f(X)\subseteq Y$ allgemeingültig ist, genügt es generell,
 $Y\subseteq f(X)$ zu zeigen.
 
 \begin{Definition}[Bijektion]\newlinefirst
-Eine Abbildung heißt bijektiv, wenn sie sowohl injektiv als auch
-surjektiv ist.
+Eine Abbildung heißt bijektiv,\index{bijektiv} wenn sie sowohl injektiv
+als auch surjektiv ist.
 \end{Definition}
 
 \begin{Satz}
