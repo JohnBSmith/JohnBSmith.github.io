@@ -178,6 +178,10 @@ Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \end{Definition}
 Unschwer bestätigt sich die Äquivalenz
 \[A = B \iff A\subseteq B\land B\subseteq A.\]
+% Sie wird zum beweisen benutzt. Man zeigt
+% $x\in A\cond x\in B$ und $x\in B\cond x\in A$,
+% für festes, aber beliebiges $x$. Und damit ist bereits klar,
+% dass $A = B$ sein muss.
 
 \begin{Definition}[Potenzmenge]\newlinefirst
 Die Potenzmenge\index{Potenzmenge} einer Menge $M$ ist definiert als
@@ -271,6 +275,35 @@ definiert, indem $a\le b$ und $a\wedge b = a$ als äquivalent
 angesehen werden. Bei der Mengenalgebra entpuppt sie sich
 als die Teilmengenrelation. Das heißt, es gilt%
 \[A\subseteq B\iff A\cap B = A\iff A\cup B = B.\]
+Die Beziehung $A\setminus B = A\cap B^\compc$ ist eine recht dienliche.
+Vermöge ihr können die Operationen mit der Differenzmenge ebenfalls mit
+der booleschen Algebra diskutiert werden. So ermöglicht sie
+die Rechnung
+\begin{align*}
+A\setminus (B\cap C) &= A\cap (B\cap C)^\compc
+= A\cap (B^\compc\cup C^\compc)\\
+&= (A\cap B^\compc)\cup (A\cap C^\compc)
+= (A\setminus B)\cup (B\setminus C).
+\end{align*}
+Dieses flippende Distributivgesetz ist also dadurch zu erklären,
+dass das Distributivgesetz des Schnittes an das de morgansche Gesetz
+angefügt wird. Mit dem Idempotenzgesetz $A=A\cap A$, zuzüglich
+dem Kommutativ- und Assoziativgesetz des Schnittes findet sich weiterhin
+\begin{align*}
+A\setminus (B\cup C) &= A\cap (B\cup C)^\compc
+= A\cap B^\compc\cap C^\compc = A\cap A\cap B^\compc\cap C^\compc\\
+&= A\cap B^\compc\cap A\cap C^\compc
+= (A\setminus B)\cap (B\setminus C).
+\end{align*}
+Die alternative Bestätigung dieser Formeln mittels natürlichem Schließen
+oder logischer Äquivalenzumformung bietet eine leichte Übung.
+Die Bestätigung von
+\begin{align*}
+(A\cap B)\setminus C &= (A\setminus C)\cap (B\setminus C),\\
+(A\cup B)\setminus C &= (A\setminus C)\cup (B\setminus C)
+\end{align*}
+verläuft analog.
+
 Für mehrere Mengen definiert man
 \[\bigcap_{i=1}^n A_i := A_1\cap A_2\cap\ldots\cap A_n,\qquad
 \bigcup_{i=1}^n A_i := A_1\cup A_2\cup\ldots\cup A_n.\]
@@ -466,6 +499,32 @@ kurze Termumformung%
 \end{align*}
 \end{Beweis}
 
+\noindent
+Da sich die Existenzquantifizierung nicht in allgemeiner Weise
+distributiv bezüglich der Konjuktion verhält, mag es intrikat erscheinen,
+dass der folgende Satz dennoch gilt.
+\begin{Satz}
+Es gilt $X\times (A\cap B) = (X\times A)\cap (X\times B)$.
+\end{Satz}
+\begin{Beweis}
+Wir wollen sodann auch einmal den Beweis betrachten, um zu verstehen,
+was da vonstatten geht.
+
+Es sei $t\in X\times (A\cap B)$. Dann existieren $x\in X$ und
+$y\in A\cap B$, so dass $t=(x,y)$. Ergo ist sowohl $y\in A$ als
+auch $y\in B$. Und somit sowohl $t\in X\times A$ als auch
+$t\in X\times B$. Ergo ist $t\in (X\times A)\cap (X\times B)$.
+Diese Implikation schafft der Existenzquantor auch in allgemeiner
+Weise. Betrachten wir nun die kritische umgekehrte Richtung.
+
+Es sei $t\in (X\times A)\cap (X\times B)$. Dann ist sowohl
+$t\in X\times A$ als auch $t\in X\times B$. Ergo existiert ein
+$x\in X$ und $y\in A$ mit $t=(x,y)$. Weiterhin ein $x'\in X$ und
+$y'\in B$ mit $t=(x',y')$. Hier liegt der Hase im Pfeffer: Wegen
+$(x,y)=t=(x',y')$ muss $x=x'$ und $y=y'$ sein. Wir wissen nun,
+$y\in A\cap B$, ergo $t\in X\times (A\cap B)$.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Abbildungen}
 
@@ -516,7 +575,36 @@ $f$«. Es wird $f\colon X\to Y$ gelesen als »$f$ ist eine Abbildung
 von $X$ nach $Y$«. Besitzt ein $y\in Y$ ein $x\in X$ mit $y=f(x)$,
 nennt man $x$ ein Urbildelement zu $y$.
 
-\newpage
+Alle denkbaren Abbildungen $X\to Y$ fasst man wiederum zu einer
+Menge zusammen, die $Y^X$ oder $\Abb(X,Y)$ notiert wird. Zu jeder
+Menge $M$ sei $|M|$ die Anzahl ihrer Elemente. Es seien $X,Y$ endlich.
+Zu jedem Argument $x\in X$ gibt es nun $|Y|$ Möglichkeiten, einen
+Funktionswert festzulegen. Hat $X$ zwei Elemente gibt es für das
+erste Elemente $|Y|$ Möglichkeiten, und für das zweite auch nochmals
+$|Y|$. Da man beide unabhängig wählen kann, multiplizieren sich die
+Möglichkeiten zu $|Y|^2$. Allgemein betrachtet findet sich
+$|Y^X| = |Y|^{|X|}$, was eine gewisse Rechtfertigung für die gewählte
+Notation liefert.
+
+Es stellt sich die Frage, ob die Formel denn auch im Trivialfall
+$X=\emptyset$ stimmt. Insofern man $0^0:=1$ definiert, so dass allgemein
+$|Y|^0=1$ gilt, lautet die Antwort ja, weil
+$Y^\emptyset=\{\emptyset\}$ ist. Überzeugung leistet die folgende
+kurze Überlegung. Soll $f\colon\emptyset\to Y$
+sein, muss $f$ als Relation eine Teilmenge von $\emptyset\times Y=\emptyset$
+sein. Die einzige Teilmenge der leeren Menge ist die leere Menge selbst.
+Sie ordnet wie gefordert jedem Element der leeren Definitionsmenge genau
+einen Wert zu. Das mag eigenartig wirken, ist aber, wir erinnern uns an
+das Prinzip der leeren Wahrheit, der richtige Schluss.
+
+Anders verhält es sich mit $Y=\emptyset$ bei $X\ne\emptyset$.
+Hier gilt $0^{|X|}=0$. Auch in diesem Fall stimmt die Formel, weil
+$\emptyset^X = \emptyset$ ist. Wie zuvor ist die einzige mögliche Relation
+die leere. Sie müsste allerdings jedem $x\in X$ ein $y\in\emptyset$
+zuordnen, was widersprüchlich ist. Ergo ist die Menge der Abbildungen
+$X\to\emptyset$ leer, sofern $X$ nichtleer ist.
+
+%\newpage
 \subsection{Bild, Urbild}
 
 Wird ein jedes Element einer Teilmenge der Definitionsmenge in eine
