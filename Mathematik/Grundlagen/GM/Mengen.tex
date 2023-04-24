@@ -83,7 +83,7 @@ Für jede Menge $M$ und jede Aussageform $A(x)$ setzt man
 \end{Definition}
 Die Aussage $\forall x\in\emptyset\colon A(x)$ ist allgemeingültig, man
 spricht von der \emph{leeren Wahrheit}\index{leere Wahrheit}, engl.
-\emph{vacuous truth}\index{vacuous truth}. Via Ex falso quodlibet
+\emph{vacuous truth}\index{vacuous truth}. Via ex falso quodlibet
 erhält man nämlich:
 \[
 \infer{\vdash\forall x\colon x\in\emptyset\cond A(x)}{
@@ -172,13 +172,13 @@ ist die Menge der Rhomben eine Teilmenge der Rechtecke.
 Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
 eine Teilmenge der Parallelogramme.
 
-\begin{Definition}[Teilmengenbeziehung]\newlinefirst
+\begin{Definition}[Teilmengenbeziehung]\label{def:Teilmenge}\newlinefirst
 Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
 \end{Definition}
 Unschwer bestätigt sich die Äquivalenz
 \[A = B \iff A\subseteq B\land B\subseteq A.\]
-% Sie wird zum beweisen benutzt. Man zeigt
+% [todo] Sie wird zum beweisen benutzt. Man zeigt
 % $x\in A\cond x\in B$ und $x\in B\cond x\in A$,
 % für festes, aber beliebiges $x$. Und damit ist bereits klar,
 % dass $A = B$ sein muss.
@@ -303,6 +303,43 @@ Die Bestätigung von
 (A\cup B)\setminus C &= (A\setminus C)\cup (B\setminus C)
 \end{align*}
 verläuft analog.
+
+\begin{table}
+\begin{center}
+\caption{Logische Entsprechungen der Mengenoperationen}
+\label{tab:op-Logik-Mengen}
+\begin{tabular}{c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}%
+c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c}
+\toprule
+$0$ & $1$ & $\lnot A$ & $A\land B$ & $A\lor B$
+& $A\cond B$ & $A\bicond B$ & $A\oplus B$\\
+$\emptyset$ & $G$ & $A^\compc$ & $A\cap B$ & $A\cup B$
+& $A^\compc\cup B$ & $(A\triangle B)^\compc$ & $A\triangle B$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+In gewisser Hinsicht spiegeln Mengen logische Aussagen wider.
+Zu jeder logischen Verknüpfung gehört eine Mengenoperation, siehe
+Tabelle \ref{tab:op-Logik-Mengen}. Die Subjunktion $A\cond B$
+wird dabei via $\lnot A\lor B$ übersetzt, was die klassische Logik
+verlangt. Man kann nun darüber hinaus einen
+Zusammenhang zwischen der Teilmengenbeziehung und den Sequenzen
+herstellen. Und zwar verhält sich die Beziehung
+\[A_1\cap\ldots\cap A_m\subseteq B_1\cup\ldots\cup B_n.\]
+analog zur allgemeinen Sequenz
+\[A_1,\ldots,A_m\vdash B_1,\ldots,B_n.\]
+Mehr noch, jede Schlussregel des natürlichen Schließens besitzt eine
+direkte Entsprechung. So verhält sich die Regel
+\[\frac{\Gamma\vdash A\land B}{\Gamma\vdash A}
+\quad\text{analog zu}\quad\Gamma\subseteq A\cap B\cond\Gamma\subseteq A.\]
+Aber Vorsicht, die Sequenz $\Gamma\cup\Gamma'\vdash A$ entspricht
+$\Gamma\cap\Gamma'\subseteq A$.
+
+Diese Sichtweise ermöglicht es, das natürliche Schließen durch
+Eulerdiagramme zu veranschaulichen. Umgekehrt hilft die Betrachtung
+als Sequenz beim Urteilen, ob Mengen in Teilmengenbeziehung stehen.
 
 Für mehrere Mengen definiert man
 \[\bigcap_{i=1}^n A_i := A_1\cap A_2\cap\ldots\cap A_n,\qquad
@@ -579,7 +616,7 @@ Alle denkbaren Abbildungen $X\to Y$ fasst man wiederum zu einer
 Menge zusammen, die $Y^X$ oder $\Abb(X,Y)$ notiert wird. Zu jeder
 Menge $M$ sei $|M|$ die Anzahl ihrer Elemente. Es seien $X,Y$ endlich.
 Zu jedem Argument $x\in X$ gibt es nun $|Y|$ Möglichkeiten, einen
-Funktionswert festzulegen. Hat $X$ zwei Elemente gibt es für das
+Funktionswert festzulegen. Hat $X$ zwei Elemente, gibt es für das
 erste Elemente $|Y|$ Möglichkeiten, und für das zweite auch nochmals
 $|Y|$. Da man beide unabhängig wählen kann, multiplizieren sich die
 Möglichkeiten zu $|Y|^2$. Allgemein betrachtet findet sich
@@ -772,7 +809,7 @@ x\in (g\circ f)^{-1}(B)
 
 \subsection{Injektionen, Surjektionen, Bijektionen}
 
-\begin{Definition}[Injektion]\newlinefirst
+\begin{Definition}[Injektion]\label{def:injektiv}\newlinefirst
 Eine Abbildung $f\colon X\to Y$ heißt injektiv\index{injektiv}, wenn%
 \[\forall x,x'\in X\colon f(x)=f(x')\cond x=x'.\]
 \end{Definition}
@@ -826,7 +863,8 @@ der Gleichung auf. Gleichermaßen mag ein System in zwei Variablen
 erst reizvoll sein, wenn die Gleichungen in nichttrivialer Weise
 miteinander verwoben sind.
 
-% Stellt eine Verbindung zu den Konzepten der Katengorientheorie her.
+% [todo] Stellt eine Verbindung zu den Konzepten der
+% Katengorientheorie her.
 \begin{Satz}
 Eine Abbildung $g$ mit $g\circ f = \id$ heißt Linksinverse%
 \index{Linksinverse} von $f$. Eine Abbildung $f\colon X\to Y$ mit
@@ -851,7 +889,7 @@ denn mit $x\in X$ ist $f(x)\in f(X)$. Somit existiert mit $g$ eine
 Linksinverse.\,\qedsymbol
 \end{Beweis}
 
-\begin{Definition}[Surjektion]\newlinefirst
+\begin{Definition}[Surjektion]\label{def:surjektiv}\newlinefirst
 Eine Abbildung $f\colon X\to Y$ heißt surjektiv\index{surjektiv},
 wenn $f(X)=Y$ ist.
 \end{Definition}
@@ -860,7 +898,7 @@ wenn $f(X)=Y$ ist.
 Weil $f(X)\subseteq Y$ allgemeingültig ist, genügt es generell,
 $Y\subseteq f(X)$ zu zeigen.
 
-\begin{Definition}[Bijektion]\newlinefirst
+\begin{Definition}[Bijektion]\label{def:bijektiv}\newlinefirst
 Eine Abbildung heißt bijektiv,\index{bijektiv} wenn sie sowohl injektiv
 als auch surjektiv ist.
 \end{Definition}
@@ -1286,9 +1324,218 @@ Ringhomomorphismus ist. Und für einen unitären Ring ist $\varphi$
 Eins-erhaltend, wie bereits aus Satz \ref{Kongruenz-Quotient}
 hervorgeht.\,\qedsymbol
 
+\section{Kardinalzahlen}
+
+\subsection{Gleichmächtigkeit}
+
+\begin{Definition}[Gleichmächtigkeit]\newlinefirst
+Zwei Mengen seien genau dann gleichmächtig, wenn zwischen diesen
+mindestens eine Bijektion existiert.
+\end{Definition}
+Die Aussage »$A$ ist gleichmächtig zu $B$« notiert man kurz $|A|=|B|$.
+
+Fast trivial ist, dass es sich bei der Gleichmächtigkeit um eine
+Äquivalenzrelation handelt. Seien dazu $A,B,C$ beliebig. Eine Bijektion
+$A\to A$ liefert die identische Abbildung, womit Reflexivität besteht.
+Liegt eine Bijektion $A\to B$ vor, so auch ihre bijektive Umkehrabbildung
+$B\to A$, womit Symmetrie besteht. Schließlich ist die Verkettung einer
+Bijektion $A\to B$ mit einer Bijektion $B\to C$ ebenfalls bijektiv, womit
+Transitivität besteht.
+
+\subsection{Kardinalzahlarithmetik}
+
+\begin{Satz}
+Die Addition $|A|+|B|:=|A\cup B|$ ist für $A\cap B=\emptyset$ wohldefiniert.
+\end{Satz}
+\begin{Beweis}
+Zu zeigen ist, dass das Ergebnis nicht von der Wahl der Repräsentanten
+$A,B$ abhängt. Das heißt, es ist zu zeigen, dass $|A\cup B|=|A'\cup B'|$
+aus $|A|=|A'|$ und $|B|=|B'|$ mit $A'\cap B'=\emptyset$ folgt. Nach
+Voraussetzung existieren Bijektionen $f_1\colon A\to A'$ und
+$f_2\colon B\to B'$. Wie bei der Summe, dem algebraischen Datentyp
+zur disjunkten Vereinigung, konstruiert man eine Fallunterscheidung
+\[f\colon A\cup B\to A'\cup B',\quad f(x) :=
+\begin{cases}
+f_1(x) & \text{für $x\in A$},\\
+f_2(x) & \text{für $x\in B$}.
+\end{cases}\]
+Die Abbildung $f$ ist injektiv. Sei dazu $y$ ein beliebiges Bild.
+Weil $A',B'$ disjunkt sind, ist entweder $y\in A'$, womit
+\[f(x_1)=f(x_2)=y\in A' \implies y=f_1(x_1)=f_1(x_2)\implies x_1=x_2,\]
+oder $y\in B'$, womit
+\[f(x_1)=f(x_2)=y\in B' \implies y=f_2(x_1)=f_2(x_2)\implies x_1=x_2. \]
+Zusammengefasst folgt $x_1=x_2$ aus $f(x_1)=f(x_2)$.
+
+Auch ist $f$ surjektiv. Sei dazu $y$ ein beliebiges Element der Zielmenge.
+Weil $A',B'$ disjunkt sind, ist entweder $y\in A'$, womit ein $x$ mit
+$y=f_1(x)$ vorliegt, oder $y\in B'$, womit ein $x$ mit $y=f_2(x)$
+vorliegt. Zusammengefasst existiert zu jedem $y\in A'\cup B'$ ein $x$
+mit $y=f(x)$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Multiplikation $|A|\cdot |B| := |A\times B|$ ist wohldefiniert.
+\end{Satz}
+\begin{Beweis}
+Zu zeigen ist, dass $|A\times B|=|A'\times B'|$ aus $|A|=|A'|$
+und $|B|=|B'|$ folgt. Nach Voraussetzung existieren Bijektionen
+$f_1\colon A\to A'$ und $f_2\colon B\to B'$. Man konstruiert mit ihnen
+die Bijektion
+\[f\colon A\times B\to A'\times B',\quad f(a,b) := (f_1(a),f_2(b)).\]
+Sie ist injektiv, denn für alle Paare $(a_1,b_1),(a_2,b_2)\in A\times B$ gilt
+\begin{align*}
+f(a_1,b_1) = f(a_2,b_2) &\iff (f_1(a_1),f_2(b_1)) = (f_1(a_2), f_2(b_2))\\
+&\iff f_1(a_1)=f_1(a_2)\land f_2(b_1)=f_2(b_2)\\
+&\iff a_1=a_2\land b_1=b_2\iff (a_1,b_1) = (a_2,b_2).
+\end{align*}
+Sie ist auch surjektiv. Sei dazu $(a',b')\in A'\times B'$ beliebig.
+Wegen $a'\in A'$ existiert ein $a$ mit $a'=f_1(a)$. Wegen $b'\in B'$
+existiert ein $b$ mit $b'=f_2(b)$. Laut Konstruktion liegt mit $(a,b)$
+somit ein Zeuge für $(a',b')=f(a,b)$ vor.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Potenzierung $|B|^{|A|} := |B^A|$ ist wohldefiniert.
+\end{Satz}
+\begin{Beweis}
+Zu zeigen gilt, dass $\Abb(A,B)=\Abb(A',B')$ aus $|A|=|A'|$
+und $|B|=|B'|$ folgt, wobei wir $\Abb(A,B)$ statt $B^A$ schreiben.
+Nach Voraussetzung existieren Bijektionen $f_1\colon A\to A'$
+und $f_2\colon B\to B'$. Man konstruiert mit ihnen die Bijektion
+\[F\colon \Abb(A,B)\to\Abb(A',B'),\quad F(f) := f_2\circ f\circ f_1^{-1}.\]
+Sie ist injektiv, weil
+\[F(f) = F(g) \iff f_2\circ f\circ f_1^{-1} = f_2\circ g\circ f_1^{-1} \iff f = g.\]
+Die letzte Umformung gilt, weil Bijektionen ja linkskürzbar und
+rechtskürzbar sind.
+
+Sie ist auch surjektiv. Dazu ist zu jedem $f'$ ein Zeuge $f$ für $f' = F(f)$
+gesucht. Man darf $f := f_2^{-1}\circ f'\circ f_1$ setzen, denn
+\[f_2^{-1}\circ f'\circ f_1  = f\iff  f'\circ f_1 = f_2\circ f
+\iff f' = f_2\circ f\circ f_1^{-1} = F(f).\,\qedsymbol\]
+\end{Beweis}
+
+\subsection{Der Satz von Cantor}
+
+\begin{Satz}
+Es sei $X$ eine beliebige Menge. Ihre Potenzmenge $\mathcal P(X)$ ist
+zur Menge $\Abb(X,\{0,1\})$ der binärwertigen Abbildungen gleichmächtig.
+\end{Satz}
+
+\begin{Beweis}
+Jede Menge $A\subseteq X$ wird kodiert durch ihre
+Indikatorfunktion\index{Indikatorfunktion}
+\[1_A\colon X\to\{0,1\},\quad 1_A(x) := [x\in A] =
+\begin{cases}
+1, & \text{wenn $x\in A$},\\
+0, & \text{wenn $x\notin A$}.
+\end{cases}\]
+Sie vermitteln die kanonische Bijektion
+\[\varphi\colon\mathcal P(X)\to\Abb(X,\{0,1\}),\quad \varphi(A):=1_A.\]
+Zur Injektivität. Definition \ref{def:injektiv} verlangt die Bestätigung von%
+\[\varphi(A)=\varphi(B)\Rightarrow A=B,\;\text{das heißt}\;
+1_A=1_B \Rightarrow A=B.\]
+Die linke seite enfaltet sich damit, dass zwei Abbildungen genau dann
+gleich sind, wenn sie in jedem ihrer Funktionswerte
+übereinstimmen. Die rechte Seite entfaltet sich per Extensionalität,
+das ist Def. \ref{def:Mengen-Gleichheit}. Dies führt zu
+\[(\forall x\colon 1_A(x)=1_B(x))\Rightarrow
+(\forall x\colon x\in A\Leftrightarrow x\in B).\]
+Die Aussage stimmt, denn man darf umformen
+\[1_A(x)=1_B(x)\iff [x\in A]=[x\in B] \iff (x\in A\Leftrightarrow x\in B).\]
+Zur Surjektivität. Es ist hierfür zu prüfen, dass $\Abb(X,\{0,1\})$ eine
+Teilmenge der Bildmenge $\varphi(\mathcal P(X))$ ist.
+Entfaltung von Def. \ref{def:Teilmenge} und Def. \ref{def:Bild} führt zu%
+\[\forall f\colon \Big(f\in\Abb(X,\{0,1\})\Rightarrow\exists A\in\mathcal P(X)\colon f=\varphi(A)\Big).\]
+Dem Existenzquantor genügt die »Einsfaser«
+\[A := f^{-1}(\{1\}) = \{x\in X\mid f(x)\in \{1\}\} = \{x\in X\mid f(x)=1\}.\]
+Es gilt $f=1_A$, denn
+\[1_A(x) = [x\in A] = [x\in\{x\mid f(x)=1\}] = [f(x)=1] = f(x).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Eine Teilmenge wird durch ihre Indikatorfunktion charakterisiert.
+Stellen wir uns beispielsweise einen gedrückten Akkord als Teilmenge
+einer Klaviatur vor. Die Indikatorfunktion ist hier eine endliche
+Folge, entspricht also einem Tupel, welches genau in den gedrückten
+Tasten den Wert 1 besitzt. Das Tupel ist zwar nicht der Akkord selbst,
+kodiert aber genau die Information des Akkords.
+% Oder: Die Indikatorfunktion als Black Box. Mir ihr lässt sich entscheiden,
+% ob ein Element hinzugehört. Angenommen, $f$ ist eine Indikatorfunktion
+% einer unbekannten Teilmenge $A\subseteq X$. Dann kann man die
+% Teilmenge zurückgewinnen per $A = \varphi^{-1}(f) = \{x\in X\mid f(x)=1\}$.
+
+\begin{Satz}[Satz von Cantor]\newlinefirst
+Jede Menge ist weniger mächtig als ihre Potenzmenge.
+\end{Satz}
+\begin{Beweis}
+Sei $X$ eine Menge. Zu zeigen ist $|X| < |\mathcal P(X)|$. Mit
+$x\mapsto\{x\}$ liegt unschwer Einsichtig eine Injektion
+$X\to\mathcal P(X)$ vor, denn aus $\{x\}=\{x'\}$ folgt $x=x'$.
+
+Die Widerlegung der Existenz einer Surjektion $f\colon X\to\mathcal P(X)$
+klärt uns nun darüber auf, dass erst recht keine Bijektion bestehen kann.
+Man erreicht dies nach Cantor durch das Diagonalargument zweiter Art.
+Hierfür definiert man die Diagonalmenge
+\[D := \{x\in X\mid x\notin f(x)\}.\]
+Als Aussonderung aus $X$ ist $D$ eine Teilmenge von $X$, also ein Element
+von $\mathcal P(X)$. Weil $f$ als surjektiv angenommen wird, muss
+$D\in f(X)$ sein. Das heißt, es muss ein $x\in X$ mit $D=f(x)$
+vorliegen. Weil es sich dabei um eine Gleichheit zwischen Mengen handelt,
+ist insbesondere $x\in D$ äquivalent zu $x\in f(x)$. Laut der Definition
+von $D$ ist $x\in D$ andererseits, weil $x\in X$ vorliegt, äquivalent
+zu $x\notin f(x)$. Summa summarum besteht die widersprüchliche Äquivalenz
+\[x\in f(x)\Leftrightarrow x\notin f(x).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Hierneben gibt es auch noch die folgende speziellere Formulierung des
+Sachverhaltes. Es ist $\N$ weniger mächtig als $\{0,1\}^\N$.
+Angenommen, es wäre $f\colon\N\to\{0,1\}^\N$ eine Abzählung. Sie
+ordnet jeder natürlichen Zahl $n$ eine Binärfolge
+\[(f(n)_0, f(n)_1, f(n)_2, \ldots)\]
+zu. Nun kann man allerdings eine weitere Binärfolge konstruieren, die
+sich von allen anderen unterscheidet, im Widerspruch zur Annahme,
+$f$ würde alle Binärfolgen abzählen. Dies geschieht wieder per
+Cantors Diagonalargument weiter Art. Man definiert dafür die Folge
+\[d\colon\N\to\{0,1\},\quad d_n := 1 - f(n)_n.\]
+Listet man die Folgen tabellarisch auf, je Zeile eine Folge, handelt es
+sich bei $(d_n)$ um die negierte Diagonale, womit sie sich von jeder
+Folge der Abzählung mindestens in dieser unterscheiden muss.
+
+Zu klären verbleibt, wie die allgemeine Form des Beweises mit der
+speziellen zusammenhängt. Hierfür erinnern wir uns, dass zu jeder
+Teilmenge von $\N$ in natürlicher Weise genau eine Indikatorfunktion
+gehört, womit eine Bijektion zwischen $\mathcal P(\N)$ und
+$\{0,1\}^\N$ hergestellt wird. Diese Indikatorfunktionen sind nichts
+anderes als die Binärfolgen. Demnach konstituiert
+\[D := \{n\in\N\mid f(n)_n = 0\}\]
+die analoge Beschreibung der Diagonalmenge. Wäre $f$ surjektiv, gäbe
+es ein $n$ mit $1_D=f(n)$, womit insbesondere $1_D(n)=f(n)_n$ wäre.
+Demnach ist $f(n)_n=1$ äquivalent zu $1_D(n)=1$, was $n\in D$ heißt,
+also $f(n)_n=0$. Die widersprüchliche Äquivalenz gestaltet sich nun
+also als
+\[f(n)_n = 1\Leftrightarrow f(n)_n = 0.\]
+Die letztendliche Klärung liefert die Rechnung
+\[1_D(n) = [f(n)_n = 0] = [\lnot f(n)_n = 1] = 1 - [f(n)_n = 1]
+= 1 - f(n)_n = d_n.\]
+Kurzum ist $1_D=d$. Die Folge der negierten diagonalen Bits entpuppt
+sich als Indikatorfunktion der Diagonalmenge.
+
+Man kann sich so eine Binärfolge als einen Pfad eines unendlich großen
+Binärbaums vorstellen. Von jedem Knoten gehen zwei Zweige aus, wobei
+das jeweilige Bit der Binärfolge kodiert, welcher der Zweige zu
+beschreiten ist. Das Abzählbare stellt man sich vor wie eine
+unendliche Reihe von Straßenlaternen, die man alle auf einmal
+betrachtet. Die Potenzmenge des Abzählbaren dagegen wie die Blätter
+des Baums, von denen jedes in den unendlich vielen Schritten des
+Durchschreitens seiner kodierenden Binärfolge erreicht würde.
+
+Ähnlich wie Hilberts Hotel hat so ein Baum die kontraintuitive
+Eigenschaft, dass jeder seiner Teilbäume genau so viele Blätter
+kodiert wie der gesamte Baum.
+
+% [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
 % ins Unendliche. Der Stein mit Limesordinal muss extra umfallen,
 % zu ihm gibt es keinen Vorgänger.
-
-
 
