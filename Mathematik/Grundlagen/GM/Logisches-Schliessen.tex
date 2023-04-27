@@ -633,6 +633,155 @@ Fügt man ihr den Modus ponens an, findet sich der
 % Zum Beweis der Verneinung einer Allaussage genügt es, ein
 % Gegenbeispiel zu finden.
 
+\subsection{Theoreme der Prädikatenlogik}
+
+In einer Formelsammlung zur Prädikatenlogik findet man eine Reihe von
+Äquivalenzen und Implikationen vor, von denen wir einige beweisen
+wollen.
+
+\begin{Satz}
+Es ist $A\land\forall x\colon B(x)$ äquivalent zu $\forall x\colon A\land B(x)$,
+sofern die Variable $x$ nicht frei in $A$ vorkommt.
+\end{Satz}
+\begin{Beweis}
+Zur Implikation von links nach rechts findet sich der Baum:
+\begin{small}
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer[\infernote{$\sim$1}]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}{
+  \infer{\forall x\colon A\land B(x)}{
+    \infer{A\land B(x)}{
+      \infer{A}{
+        \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}
+    & \infer{B(x)}{
+        \infer{\forall x\colon B(x)}{
+          \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}}}}}
+&
+\infer[\infernote{$\sim$1}]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}{
+  \infer{\forall x\colon A\land B(x)}{
+    \infer{A\land B(u)}{
+      \infer{A}{
+        \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}
+    & \infer{B(u)}{
+        \infer{\forall x\colon B(x)}{
+          \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}}}}}
+\end{array}
+\]
+\end{small}%
+Beide Formen sind zulässig. Die rechte Form gibt dem Parameter den
+eigenen Bezeichner $u$, die linke nennt diesen ebenfalls so wie die
+gebundene Variable. In Worten würde man diesen Beweis wie folgt
+führen. Es sei $u$ fest, aber beliebig, woraus $A\land B(u)$ abzuleiten
+ist. Laut Voraussetzung gilt sowohl $A$ als auch $\forall x\colon B(x)$.
+Spezialisierung $x:=u$ liefert $B(u)$. Ergo gilt sowohl $A$ als
+auch $B(u)$, und somit $A\land B(u)$.
+
+Zur Implikation von rechts nach links findet sich:
+\begin{small}
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer[\infernote{$\sim$1}]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}{
+  \infer{A\land\forall x\colon B(x)}{
+    \infer{A}{
+      \infer{A\land B(x)}{
+        \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}
+  & \infer{\forall x\colon B(x)}{
+      \infer{B(x)}{
+        \infer{A\land B(x)}{
+          \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}}}}
+&
+\infer[\infernote{$\sim$1}]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}{
+  \infer{A\land\forall x\colon B(x)}{
+    \infer{A}{
+      \infer{A\land B(u)}{
+        \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}
+  & \infer{\forall x\colon B(x)}{
+      \infer{B(u)}{
+        \infer{A\land B(u)}{
+          \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}}}}
+\end{array}
+\]
+\end{small}%
+In Worten: Es ist $A\land\forall x\colon B(x)$ abzuleiten, also
+sowohl $A$ als auch $\forall x\colon B(x)$, was sich mit $B(u)$ für ein
+festes, aber beliebiges $u$ bestätigt. Laut Voraussetzung erhält man
+$A\land B(u)$ per Spezialisierung $x:=u$. Ergo gilt sowohl $A$ als
+auch $B(u)$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Die ausführliche Formulierung verdeutlich nochmals, wie die Floskel
+\emph{fest, aber beliebig} einen Parameter, über den die Argumentation verläuft,
+einführt. Der Parameter steht für ein \emph{festes} Objekt, insofern er
+während der Argumentation für nur ein Objekt steht. Weil das Objekt
+\emph{beliebig} ist, also keine Einschränkungen an dessen Beschaffenheit
+gemacht wurden, darf anschließend ohne Weiteres die Einführung einer
+Allquantifizierung vorgenommen werden. Es besteht im logischen System,
+wie es in diesem Buch dargelegt wurde, kein formaler Unterschied
+zwischen einem Parameter und einer Variable. Ein Parameter verhält sich
+als freie Variable.
+
+\subsection{Bezug zum Tableaukalkül}
+
+Der \emph{Tableaukalkül}\index{Tableaukalkuel@Tableaukalkül} ist ein
+systematisches Beweisverfahren, bei dem durch abermalige Zurückführung
+einer Formel auf kleinere Formeln ein Baum entsteht. In einer
+verbreiteten Form des Verfahrens kommt der Beweis einer Aussage zustande,
+indem ihre Verneinung widerlegt wird. Die Widerlegung stellt sich
+dadurch her, dass jeder Pfad eine Formel enthält, deren
+Verneinung bereits auf dem direkten Pfad zur Wurzel vorkam, was auch
+als \emph{Schließung} des Pfades bezeichnet wird. Der Baum verzweigt
+sich nicht bei jeder Formel. Man unterscheidet zwischen
+Formeln vom Typ einer Konjunktion und Formeln vom Typ einer
+Disjunktion. Lediglich bei den Formeln vom Typ einer Disjunktion
+findet eine Verzweigung statt.
+
+Es stellt sich im Fortgang heraus, dass der Tableaukalkül in der Logik
+nicht abgeschieden steht. Ganz im Gegenteil lässt sich ein enger Bezug
+zum Schließen von Sequenzen herstellen. Genauer gesagt gehört zu jeder
+Regel des Tableaukalküls eine zulässige Regel des Schließens von
+Sequenzen, womit sich dieser als ein Teilsystem des allgemeinen
+Sequenzenkalküls erweist.
+
+Laut der Reductio ad absurdum ist $\Gamma\vdash A$ auf
+$\Gamma,\lnot\vdash\bot$ zurückführbar. Im Weiteren wird $\Gamma\vdash$
+als Abkürzung für $\Gamma\vdash\bot$ geschrieben. Man ruft sich nun
+die Äquivalenz der Aussagen $A\cond B$ und $\lnot A\lor B$ in Erinnerung.
+Weiterhin befindet man mit den de morganschen Gesetzen die Aussage
+$\lnot (A\land B)$ zu $\lnot A\lor\lnot B$ äquivalent, sowie $\lnot (A\lor B)$
+zu $\lnot A\land\lnot B$. Aus diesen Überlegungen heraus
+gelangt man zu den unverzweigenden zulässigen Regeln%
+\[
+\dfrac{\Gamma,A,B\vdash}{\Gamma,A\land B\vdash},\qquad
+\dfrac{\Gamma,\lnot A,\lnot B\vdash}{\Gamma,\lnot (A\lor B)\vdash},\qquad
+\dfrac{\Gamma,A,\lnot B\vdash}{\Gamma,\lnot(A\cond B)\vdash},
+\]
+und den verzweigenden zulässigen Regeln
+\[
+\dfrac{\Gamma,A\vdash\quad\Gamma,B\vdash}{\Gamma,A\lor B\vdash},\qquad
+\dfrac{\Gamma,\lnot A\vdash\quad\Gamma,\lnot B\vdash}{\Gamma,\lnot (A\land B)\vdash},\qquad
+\dfrac{\Gamma,\lnot A\vdash\quad\Gamma,B\vdash}{\Gamma,(A\cond B)\vdash}.
+\]
+Schließlich wäre noch festzustellen, dass $\Gamma,A,\lnot A\vdash$
+mit $\Gamma,A\vdash A$ gleichbedeutend ist, und somit die Rolle einer
+Grundsequenz einnehmen darf.
+
+Ein Beispiel. Mit den aufgestellten Regeln ergibt sich für die
+Kontraposition der folgende Beweisbaum:
+\[
+\infer{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
+  \infer{\lnot ((A\cond B)\cond (\lnot B\cond\lnot A))\vdash}{
+    \infer{A\cond B, \lnot(\lnot B\cond\lnot A)\vdash}{
+      \infer{A\cond B, \lnot B, \lnot\lnot A\vdash }{
+        \infer{\lnot A, \lnot B, \lnot\lnot A\vdash}{}
+      & \infer{B, \lnot B, \lnot\lnot A\vdash}{}}}}}
+\]
+Wird dieser Baum nun auf den Kopf gestellt und die Notation dergestalt
+verkürzt, dass jede der Formeln nur einmal aufgeschrieben werden
+muss, ergibt sich der Tableaukalkül. Man mag das Schließen von
+Sequenzen insofern als vielseitig bewerten. Die dazugewonnene Sichtweise
+schafft überdies ein tiefergründiges Verständnis des Tableaukalküls.
+
 \section{Bemerkungen zur Beweisführung}
 
 \subsection{Widerspruchsbeweise}
@@ -760,6 +909,11 @@ gemachten Vorgehensweise auf
 \[\vdash\forall x\colon\forall y\colon x=y\cond f(x)=f(y).\]
 Es induziert die Ersetzungsregel für Funktionen,
 \[\dfrac{\Gamma\vdash t=t'}{\Gamma\vdash f(t)=f(t')}.\]
+Zu beachten wäre allerdings, dass $f$ hierfür auf dem gesamten
+Diskursuniversum definiert sein muss. Würde das Symbol $f$ mit einer
+Funktion belegt, die für eine bestimmte Belegung von $x$ nicht definiert
+ist, was soll $f(x)$ dann sein?
+
 Mehrmalige Anwendung des Ersetzungsaxioms ermöglicht darüber hinaus
 mehrstellige Ersetzungen wie
 \begin{gather*}

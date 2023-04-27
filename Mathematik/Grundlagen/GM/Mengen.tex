@@ -562,6 +562,65 @@ $(x,y)=t=(x',y')$ muss $x=x'$ und $y=y'$ sein. Wir wissen nun,
 $y\in A\cap B$, ergo $t\in X\times (A\cap B)$.\,\qedsymbol
 \end{Beweis}
 
+\noindent
+Ob eine Aussageform in zwei Variablen über das Durchlaufen aller Paare
+Allquantifizierung erfährt, oder über das Durchlaufen der Variablen
+selbst, macht keinen Unterschied. Dieses Schönfinkeln der auf
+Produktmengen beschränkten Quantifizierung mag am Beispiel endlicher
+Mengen recht einsichtig sein. Die allgemeine Bestätigung vermittelt der
+
+\begin{Satz}
+Es ist $\forall t\in X\times Y\colon A(t)$
+äquivalent zu $\forall x\in X\colon\forall y\in X\colon A(x,y)$.
+\end{Satz}
+\begin{Beweis}
+Zur Implikation von links nach rechts. Aus festen, aber beliebigen
+$x\in X$ und $y\in Y$ muss $A(x,y)$ abgeleitet werden. Mit dem aus ihnen geformten
+Paar $t:=(x,y)$ bezeugen sie $t\in X\times Y$. Hiermit erhält man $A(t)$,
+also $A(x,y)$ aus der Voraussetzung.
+
+Zur Implikation von rechts nach links. Aus festem, aber beliebigem
+$t\in X\times Y$ ist $A(t)$ abzuleiten. Mit $t\in X\times Y$ existieren
+$x\in X$ und $y\in Y$ mit $t=(x,y)$. Hiermit erhält man $A(x,y)$ aus
+der Voraussetzung. Wegen der Gleichheit von $t$ und $(x,y)$ stimmt
+$A(x,y)$ mit $A(t)$ überein.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Ein analoger Sachverhalt besteht bei der Existenzquantifizierung.
+
+\begin{Satz}
+Es ist $\exists t\in X\times Y\colon A(t)$ äquivalent zu
+$\exists x\in X\colon\exists y\in Y\colon A(x,y)$.
+\end{Satz}
+\begin{Beweis}
+Zur Implikation von links nach rechts. Laut der Voraussetzung ist
+irgendein $t\in X\times Y$ mit $A(t)$ vorhanden, infolge $x\in X$ und $y\in X$
+mit $t=(x,y)$, womit $A(x,y)$ gilt. Ergo existieren $x\in X$ und
+$y\in Y$ mit $A(x,y)$.
+
+Zur Implikation von rechts nach links. Laut Voraussetzung sind $x\in X$
+und $y\in Y$ mit $A(x,y)$ vorhanden. Mit dem aus ihnen geformten
+Paar $t:=(x,y)$ bezeugen sie $t\in X\times Y$. Laut Festlegung ist
+$A(x,y)$ dasselbe wie $A(t)$, womit $t$ die Existenz eines
+$t\in X\times Y$ mit $A(t)$ bezeugt.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Mithin bestehen die korrespondierenden Termumformungen
+\[\bigcap_{t\in I\times J} A_t = \bigcap_{i\in I}\bigcap_{j\in J} A_{ij},\qquad
+\bigcup_{t\in I\times J} A_t = \bigcup_{i\in I}\bigcup_{j\in J} A_{ij}.\]
+Sie bestätigen sich mühelos via
+\begin{align*}\textstyle
+x\in\bigcap_{t\in I\times J} A_t &\iff
+\forall t\in I\times J\colon x\in A_t
+\iff\forall i\in I\colon\forall j\in J\colon x\in A_{ij}\\
+&\textstyle\iff\forall i\in I\colon x\in\bigcap_{j\in J} A_{ij}
+\iff x\in\bigcap_{i\in I}\bigcap_{j\in J} A_{ij}.
+\end{align*}
+Hier ist $A_{ij}$ eine Kurzschreibweise für $A_{(i,j)}$
+bzw. $A_{i,j}$.
+
 \newpage
 \section{Abbildungen}
 
@@ -1329,7 +1388,8 @@ hervorgeht.\,\qedsymbol
 \subsection{Gleichmächtigkeit}
 
 \begin{Definition}[Gleichmächtigkeit]\newlinefirst
-Zwei Mengen seien genau dann gleichmächtig, wenn zwischen diesen
+Zwei Mengen seien genau dann gleichmächtig%
+\index{gleichmaechtig@gleichmächtig}, wenn zwischen diesen
 mindestens eine Bijektion existiert.
 \end{Definition}
 Die Aussage »$A$ ist gleichmächtig zu $B$« notiert man kurz $|A|=|B|$.
@@ -1341,6 +1401,31 @@ Liegt eine Bijektion $A\to B$ vor, so auch ihre bijektive Umkehrabbildung
 $B\to A$, womit Symmetrie besteht. Schließlich ist die Verkettung einer
 Bijektion $A\to B$ mit einer Bijektion $B\to C$ ebenfalls bijektiv, womit
 Transitivität besteht.
+
+Die kontraintuitive Eigenart des Unendlichen wird gerne anhand von
+\emph{Hilberts Hotel}\index{Hilberts Hotel} veranschaulicht. Es handelt
+sich um ein Hotel mit unendlich vielen Zimmern, die mit den positiven
+ganzen Zahlen nummeriert sind. Anders als ein endliches, kann es auch
+dann weitere Gäste aufnehmen, wenn es bereits voll belegt ist.
+
+Die Zimmer in Hilberts Hotel seien mit $1, 2, 3$ usw. nummeriert
+und gänzlich jeweils mit einem Gast belegt. Nun kommt ein neuer Gast
+mit der Nummer $0$ hinzu. Um auch ihn im Hotel unterbringen zu können,
+wechselt jeder Gast in das nächste Zimmer. Formal handelt es sich
+um die Zuordnung
+\[f\colon\Z_{\ge 0}\to\Z_{\ge 1},\quad f(n) := n + 1.\]
+Hierbei kommt es, begründet durch die Endlosigkeit des Hotels, nie zu
+einer Komplikation. Es gibt kein letztes Zimmer, dessen Gast nun mangels
+freiem Zimmer im Flur stünde. Die Funktion $f$ ist ersichtlich bijektiv,
+denn \emph{jedes} Zimmer des Hotels wird belegt, und zwar von
+\emph{nicht mehr als einem} Gast. Das bedeutet aber, dass die
+nichtnegativen ganzen Zahlen, obwohl sie ein weiteres Element enthalten,
+zu den positiven ganzen Zahlen gleichmächtig sind.
+
+Allgemeiner kann auf diese Weise jede endliche Zahl weiterer
+Gäste im Hotel untergebracht werden. \emph{Die Mächtigkeit einer abgezählten
+unendlichen Menge erhöht sich nicht durch die Hinzunahme einer
+endlichen Zahl weiterer Elemente.}
 
 \subsection{Kardinalzahlarithmetik}
 
