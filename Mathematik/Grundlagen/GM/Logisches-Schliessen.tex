@@ -710,7 +710,7 @@ auch $B(u)$.\,\qedsymbol
 \end{Beweis}
 
 \noindent
-Die ausführliche Formulierung verdeutlich nochmals, wie die Floskel
+Die ausführliche Besprechung verdeutlicht nochmals, wie die Floskel
 \emph{fest, aber beliebig} einen Parameter, über den die Argumentation verläuft,
 einführt. Der Parameter steht für ein \emph{festes} Objekt, insofern er
 während der Argumentation für nur ein Objekt steht. Weil das Objekt
@@ -721,12 +721,156 @@ wie es in diesem Buch dargelegt wurde, kein formaler Unterschied
 zwischen einem Parameter und einer Variable. Ein Parameter verhält sich
 als freie Variable.
 
+\subsection{Bezug zum Sequenzenkalkül}
+
+Einige Regeln des natürlichen Schließens bieten bei der Lesung eines
+Beweisbaums von der Wurzel aus zu den Blättern hin routinemäßige
+Zurückführung eines Ziels auf Unterziele. Jedoch nicht jede der
+Regeln, womit das Schließen dennoch zum Denksport wird. Aufgrund dessen
+gestaltet sich auch die Auffindung eines Algorithmus' zur automatischen
+Erzeugung eines Beweisbaums als schwierig.
+
+Der Sequenzenkalkül macht das Schließen nun gänzlich zur Routine. Mithin
+ist zu diesem Kalkül ein Algorithmus zur Erzeugung von Beweisbäumen
+vergleichsweise leicht zu finden.
+
+\begin{table}
+\begin{center}
+\caption{Die Regeln des Sequenzenkalküls}
+\label{tab:Sequenzenkalkuel}
+\begin{tabular}{@{}c@{\quad\;\;}c@{\quad\;\;}c@{\quad\;\;}c@{}}
+\toprule
+& \strong{Linke Regel} & \strong{Rechte Regel} &\\
+\midrule[\heavyrulewidth]
+$\dfrac{\Gamma\vdash\Delta}{\Gamma,\Gamma'\vdash\Delta}$
+& $\dfrac{\Gamma, A, B\vdash\Delta}{\Gamma, A\land B\vdash\Delta}$
+& $\dfrac{\Gamma\vdash A,\Delta\qquad\Gamma'\vdash B,\Delta'}
+{\Gamma,\Gamma'\vdash A\land B,\Delta,\Delta'}$
+& $\dfrac{\Gamma\vdash\Delta}{\Gamma\vdash\Delta,\Delta'}$\\[14pt]
+$\dfrac{\Gamma,A,A\vdash\Delta}{\Gamma,A\vdash\Delta}$
+& $\dfrac{\Gamma,A\vdash\Delta\qquad\Gamma',B\vdash\Delta'}
+{\Gamma,\Gamma',A\lor B\vdash\Delta,\Delta'}$
+& $\dfrac{\Gamma\vdash A,B,\Delta}{\Gamma\vdash A\lor B,\Delta}$
+& $\dfrac{\Gamma\vdash B,B,\Delta}{\Gamma\vdash B,\Delta}$\\[14pt]
+$\dfrac{\Gamma,\top\vdash\Delta}{\Gamma\vdash\Delta}$
+& $\dfrac{\Gamma\vdash A,\Delta\qquad\Gamma',B\vdash\Delta'}
+{\Gamma,\Gamma',A\cond B\vdash\Delta,\Delta'}$
+& $\dfrac{\Gamma,A\vdash B,\Delta}{\Gamma\vdash A\cond B,\Delta}$
+& $\dfrac{\Gamma\vdash\Delta,\bot}{\Gamma\vdash\Delta}$\\[14pt]
+$\dfrac{}{\Gamma,\bot\vdash\Delta}$
+& $\dfrac{\Gamma\vdash A,\Delta}{\Gamma,\lnot A\vdash\Delta}$
+& $\dfrac{\Gamma,A\vdash\Delta}{\Gamma\vdash\lnot A,\Delta}$
+& $\dfrac{}{\Gamma\vdash\top,\Delta}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Man darf als dienlich erachten, dass die Darstellung des natürlichen
+Schließens, wie sie in diesem Buch dargelegt wurde, mit dem
+Sequenzenkalkül kompatibel ist. In ihm dürfen Sequenzen von der
+allgemeineren Form
+\[A_1\ldots,A_m\vdash B_1,\ldots,B_n\]
+sein, die für die Aussage
+\[A_1\land\ldots\land A_m\cond B_1\lor\ldots\lor B_n\]
+steht. Um die Regeln des Sequenzenkalküls vermittels natürlichem Schließen
+als zulässige Regeln herzuleiten, wird man daher zunächst die
+Übersetzungsregeln
+\[\dfrac{\Gamma\vdash B_1\lor\ldots\lor B_n}{\Gamma\vdash B_1,\ldots,B_n},\quad\;
+\dfrac{\Gamma\vdash\bot}{\Gamma\vdash},\quad\;
+\dfrac{\Gamma\vdash B_1,\ldots,B_n}{\Gamma\vdash B_1\lor\ldots\lor B_n},\quad\;
+\dfrac{\Gamma\vdash}{\Gamma\vdash\bot}.\]
+fordern. Eine Auflistung der wesentlichen Regeln zeigt die Tabelle
+\ref{tab:Sequenzenkalkuel}. Sie untergliedern sich in linke und rechte
+Regeln. Die linken gestatten es dabei, Ziele ebenfalls bezüglich
+Antezedenzen auf Unterziele zurückzuführen. Jede der Ansammlungen
+$\Gamma,\Gamma',\Delta,\Delta'$ darf leer sein. Eine algorithmische
+Umsetzung der Beweissuche mag $\Gamma=\Gamma'$ und $\Delta=\Delta'$
+setzen, für den Menschen entstünde dadurch aber umständlicher
+Schreibaufwand. Exemplarisch soll die linke Regel zur Disjunktion als
+zulässig bestätigt werden. Für sie findet sich der Baum:
+\[
+\infer{\Gamma,\Gamma',A\lor B\vdash \Delta,\Delta'}{
+  \infer{\Gamma,\Gamma',A\lor B\vdash C}{
+    \infer{A\lor B\vdash A\lor B}{}
+  & \infer{\Gamma,A\vdash C}{
+      \infer{\Gamma,A\vdash\Delta,\Delta'}{
+        \Gamma,A\vdash\Delta}}
+  & \infer{\Gamma',B\vdash C}{
+      \infer{\Gamma',B\vdash\Delta,\Delta'}{
+        \Gamma',B\vdash\Delta'}}}}
+\]
+Hierbei soll $C$ die Disjunktion der Aussagen von $\Delta,\Delta'$ sein.
+
+Es folgt am Beispiel des Theoremschemas zur Kontraposition, wie das
+Schließen vonstatten geht. Die Beweisbäume wären von unten nach oben
+zu lesen, weil das, was weiter oben steht, eigentlich noch unbekannt ist:
+\[
+\begin{array}{@{}l@{\qquad\quad}l}
+\infer{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
+  \infer{A\cond B\vdash\lnot B\cond\lnot A}{
+    \infer{A\cond B, \lnot B\vdash\lnot A}{
+      \infer{\vdash A, \lnot A}{
+        \infer{A\vdash A}{}}
+    & \infer{B, \lnot B\vdash}{
+        \infer{B\vdash B}{}}}}}
+&
+\infer{\vdash (\lnot B\cond\lnot A)\cond (A\cond B)}{
+  \infer{\lnot B\cond\lnot A\vdash A\cond B}{
+    \infer{\lnot B\cond\lnot A, A\vdash B}{
+      \infer{\vdash \lnot B, B}{
+        \infer{B\vdash B}{}}
+    & \infer{\lnot A, A\vdash}{
+        \infer{A\vdash A}{}}}}}
+\end{array}
+\]
+Der Kalkül muss ein klassischer sein, sonst wäre die Kontraposition
+nicht rückgängig zu machen. Noch drastischere Einsicht diesbezüglich
+schaffen die Bäume:
+\[
+\begin{array}{l@{\qquad}l}
+\infer[\infernote{$\lor$L}]{\vdash A\lor\lnot A}{
+  \infer[\infernote{$\lnot$R}]{\vdash A,\lnot A}{
+    \infer{A\vdash A}{}}}
+&
+\infer[\infernote{$\lnot$R}]{\lnot\lnot A\vdash A}{
+  \infer[\infernote{$\lnot$L}]{\vdash\lnot A, A}{
+    \infer{A\vdash A}{}}}
+\end{array}
+\]
+Es gibt auch Varianten des Sequenzenkalküls, die ausschließlich die
+Ableitung von Theoremen der intuitionistischen Logik gestatten. Sie sind
+allerdings umständlicher zu verwenden, da es sich um Einschränkungen des
+klassischen Kalküls handelt. Bereits Gentzen beschrieb so einen
+als LJ in \cite{Gentzen1935}. Eine sorgfältige Diskussion findet man
+in \cite{Mimram}.
+
+Alternative Formen der Regeln zur Implikation sind
+\[\dfrac{\Gamma,\lnot A\vdash\Delta\qquad\Gamma, B\vdash\Delta}
+{\Gamma, A\cond B\vdash\Delta},\qquad
+\dfrac{\Gamma\vdash \lnot A, B,\Delta}{\Gamma\vdash A\cond B,\Delta}.\]
+Die Regeln der Allquantifizierung sind
+\[\dfrac{\Gamma, A(t)\vdash\Delta}{\Gamma,\forall x\colon A(x)\vdash\Delta},\qquad
+\dfrac{\Gamma\vdash A(u),\Delta}{\Gamma\vdash (\forall x\colon A(x)),\Delta}
+(u\notin\mathrm{FV}(\Gamma,\Delta,A(x))),\]
+die der Existenzquantifizierung sind
+\[\dfrac{\Gamma, A(u)\vdash\Delta}{\Gamma,\exists x\colon A(x)\vdash\Delta}
+(u\notin\mathrm{FV}(\Gamma,\Delta,A(x))),\qquad
+\dfrac{\Gamma\vdash A(t),\Delta}{\Gamma\vdash (\exists x\colon A(x)),\Delta}.\]
+Eine besondere Bedeutung besitzt die Schnittregel
+\[\dfrac{\Gamma\vdash A,\Delta\qquad\Gamma',A\vdash\Delta'}
+{\Gamma,\Gamma'\vdash\Delta,\Delta'}.\]
+Laut Gentzens Hauptsatz findet sich zu jedem Beweis einer Sequenz,
+in dem die Schnittregel zur Anwendung kommt, ein alternativer Beweis,
+der auf sie verzichtet. Kurzum ist sie zulässig, aber redundant. Dieses
+Resultat ist von großer Bedeutung für die Beweistheorie.
+
 \subsection{Bezug zum Tableaukalkül}
 
 Der \emph{Tableaukalkül}\index{Tableaukalkuel@Tableaukalkül} ist ein
 systematisches Beweisverfahren, bei dem durch abermalige Zurückführung
 einer Formel auf kleinere Formeln ein Baum entsteht. In einer
-verbreiteten Form des Verfahrens kommt der Beweis einer Aussage zustande,
+geläufigen Form des Verfahrens kommt der Beweis einer Aussage zustande,
 indem ihre Verneinung widerlegt wird. Die Widerlegung stellt sich
 dadurch her, dass jeder Pfad eine Formel enthält, deren
 Verneinung bereits auf dem direkten Pfad zur Wurzel vorkam, was auch
