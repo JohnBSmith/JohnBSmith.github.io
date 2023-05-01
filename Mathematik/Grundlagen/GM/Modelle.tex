@@ -47,18 +47,18 @@ Eine Interpretation $I$ ist eine Funktion, die jede atomare logische
 Variable $v$ mit einem Wahrheitswert $I(v)\in\{0,1\}$ belegt.
 Man definiert $I\models A$, sprich »$I$ erfüllt $A$«, rekursiv als
 \begin{align*}
-(I\models\bot) &\iff 0,\\
-(I\models\top) &\iff 1,\\
-(I\models v) &\iff I(v),\\
-(I\models\lnot A) &\iff \lnot (I\models A),\\
-(I\models A\land B) &\iff (I\models A)\land (I\models B),\\
-(I\models A\lor B) &\iff (I\models A)\lor (I\models B),\\
-(I\models A\cond B) &\iff (I\models A)\cond (I\models B),\\
-(I\models A\bicond B) &\iff (I\models A)\bicond (I\models B).
+(I\models\bot) &:\Leftrightarrow 0,
+& (I\models A\land B) &:\Leftrightarrow ((I\models A)\land (I\models B)),\\
+(I\models\top) &:\Leftrightarrow 1,
+& (I\models A\lor B) &:\Leftrightarrow ((I\models A)\lor (I\models B)),\\
+(I\models v) &:\Leftrightarrow I(v),
+& (I\models A\cond B) &:\Leftrightarrow ((I\models A)\cond (I\models B)),\\
+(I\models\lnot A) &:\Leftrightarrow \lnot (I\models A),
+& (I\models A\bicond B) &:\Leftrightarrow ((I\models A)\bicond (I\models B)).
 \end{align*}
 \end{Definition}
-Die rechte Seite ist jeweils metalogisch zu verstehen und per
-Wahrheitstafel definiert, siehe Tabelle \ref{tab:Junktoren}.
+Die rechte Seite der jeweiligen Festsetzung ist metalogisch zu verstehen
+und per Wahrheitstafel definiert, siehe Tabelle \ref{tab:Junktoren}.
 Die Schreibweise $I\nvDash A$ ist gleichbedeutend mit
 $\lnot (I\models A)$. Eine Interpretation wird auch als \emph{Modell}
 bezeichnet. Man nennt sie \emph{Modell} einer Formel, falls sie die
@@ -93,11 +93,11 @@ in der Aussagenlogik auch als \emph{Tautologien}\index{Tautologie}
 bezeichnet. Sie sind immer wahr, unabhängig davon, mit welchem
 Wahrheitswert ihre logischen Variablen belegt werden.
 
-Als allgemeinere Begrifflichkeit wollen auf einen Kontext $\Gamma$
+Als allgemeinere Begrifflichkeit wollen wir auf einen Kontext $\Gamma$
 bezogen gültige Formeln $A$ betrachten. Die Idee hierbei ist,
 dass wenn die Formeln des Kontextes als wahr angenommen werden, die
 Formel $A$ ebenfalls wahr sein muss. Trifft dies auf $A$ zu,
-schreibt man $\Gamma\models A$, sprich »im Kontext $\Gamma$ ist
+schreibt man $\Gamma\models A$, gelesen »im Kontext $\Gamma$ ist
 $A$ gültig«, oder auch »$\Gamma$ zieht $A$ nach sich«. Die Bezeichnung
 \emph{logische Folgerung} oder \emph{logische Konsequenz} ist
 ebenfalls verbreitet.
@@ -196,6 +196,8 @@ Zu den Grundsequenzen und zur Abschwächungsregel findet sich:
         \infer[\infernote{1}]{I\models\Gamma\cup\Gamma'}{}}}}}
 \end{array}
 \]
+Die Prüfung der restlichen Entsprechungen sei dem Leser überlassen.
+
 \begin{Satz}[Korrektheit des natürlichen Schließens]\newlinefirst
 Ist die Sequenz $\Gamma\vdash A$ ableitbar, so muss auch
 $\Gamma\models A$ gelten.
@@ -215,7 +217,6 @@ wurden bereits diskutiert.\,\qedsymbol
 % Solche Negativresultate sind ohne Semantik schwieriger
 % zu erbringen.
 
-\newpage
 \subsection{Logische Äquivalenz}
 \begin{Definition}[Äquivalente Formeln]\newlinefirst
 Die Äquivalenz zweier Formeln $A,B$ ist definiert als

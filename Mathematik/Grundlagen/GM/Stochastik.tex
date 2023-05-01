@@ -1,0 +1,113 @@
+
+\chapter{Elemente der Stochastik}
+
+\section{Grundbegriffe}
+
+\subsection{Ereignisse}
+
+Die Wahrscheinlichkeitstheorie beschäftigt sich mit
+\emph{Zufallsexperimenten}. Darunter versteht man ein Experiment
+mit zufälligem Ausgang, das, um der Wissenschaftlichkeit genüge zu tun,
+unter genau definierten Versuchsbedingungen durchgeführt wird.
+Der Ausgang führt immer zu einem \emph{Ergebnis}. Alle erreichbaren
+Ergebnisse fasst man zur \emph{Ergebnismenge} zusammen. Allgemeiner
+genügt es, wenn jedes Ergebnis in der Ergebnismenge liegt, wobei diese
+aber auch Elemente enthalten darf, die das Experiment niemals abwirft.
+Jede Teilmenge der Ergebnismenge nennt man ein \emph{Ereignis}\index{Ereignis}.
+Die Potenzmenge der Ergebnismenge heißt \emph{Ereignisraum}, sie
+besteht aus allen denkbaren Ereignissen. Man sagt, ein Ereignis sei
+eingetreten, wenn das Ergebnis des Versuchs im diesem Ereignis liegt.
+
+Zu beachten ist, dass wir dabei eine endliche oder höchstens
+abzählbar unendliche Ergebnismenge voraussetzen. Bei überabzählbaren
+Ergebnismengen kommt es zu Unwägbarkeiten, deren Klärung Gegenstand der
+Maßtheorie ist.
+
+Ein schlichtes Experiment bietet der Wurf des Spielwüfels, ein mit
+Augenzahlen beschriftetes regelmäßiges Hexaeder. Die Ergebnismenge
+wird als
+\[\Omega := \{1, 2, 3, 4, 5, 6\}\]
+festgelegt. Betrachten wir die drei Ereignisse
+\[A := \{2\},\quad B := \{1,2\},\quad C:=\{1,3\}.\]
+Ist $\omega=2$ das Ergebnis des Versuchs, sind die Ereignisse $A,B$
+eingetreten. Zwei Ereignisse, die niemals gleichzeitig eintreten,
+heißen \emph{disjunkt}. So sind die $A,C$ disjunkt, weil ihre
+Schnittmenge leer ist.
+
+\subsection{Wahrscheinlichkeiten}
+
+Man kann nicht voraussagen, wie ein Experiment ausgehen wird. Das
+Wahrscheinlichkeitsmaß liefert dennoch ein Maß dafür, wie sicher der
+Eintritt eines Ereignisses ist. Wahrscheinlichkeit wird tiefergründig
+verständlich, wenn dasselbe Zufallsexperiment abermals wiederholt wird.
+Wir zählen, wie häufig ein Elementarereignis eingetreten ist.
+
+Es sei ein Versuch $n$ mal durchgeführt worden, was zu den Ergebnissen
+$a_i$ für $i=1$ bis $i=n$ geführt hat. Wir definieren die \emph{relative
+Häufigkeit} des Ereignisses $A$ als die Zahl
+\[r_{n,a}(A) := \frac{1}{n}|\{i\in\{1,\ldots,n\}\mid a_i\in A\}|.\]
+Relative Häufigkeiten bieten bei hinreichend großem $n$ eine Näherung
+für die Wahrscheinlichkeit. Zur Vermessung eines Würfels wird man
+diesen also möglichst oft werfen wollen. Man erhält so die relativen
+Häufigkeiten der Elementarereignisse, und damit näherungsweise auch
+ihre Wahrscheinlichkeiten. So lässt sich feststellen, ob ein
+Würfel gezinkt wurde.
+
+Fassen wir $a$ als Funktion $i\mapsto a_i$ auf, können wir schreiben
+\[\{i\mid a_i\in A\} = \{i\mid i\in a^{-1}(A)\} = a^{-1}(A).\]
+Für disjunkte Ereignisse $A,B$ erhält man nun
+\begin{align*}
+r_{n,a}(A\cup B) &= \tfrac{1}{n}|a^{-1}(A\cup B)|
+= \tfrac{1}{n}|a^{-1}(A)\cup a^{-1}(B)|\\
+&= \tfrac{1}{n}|a^{-1}(A)| + \tfrac{1}{n}|a^{-1}(B)|
+= r_{n,a}(A) + r_{n,a}(B).
+\end{align*}
+
+\subsection{Zufallsgrößen}
+
+Eine \emph{Zufallsgröße}\index{Zufallsgroesse@Zufallsgröße} darf man
+sich als eine Funktion $X\colon\Omega\to\Omega'$
+vorstellen, die eine kausale Verbindung zwischen den Ergebnismengen
+$\Omega,\Omega'$ schafft. Ein Ergebnis $\omega\in\Omega$ führt
+zu $X(\omega)$. Ursächlich für ein $x\in\Omega'$ sind daher all die
+$\omega$ mit $x=X(\omega)$. Das heißt, ursächlich für das
+Elementarereignis $\{x\}$ ist dessen Urbild $X^{-1}(\{x\})$.
+Infolge muss die Wahrscheinlichkeit von $\{x\}$ die es Urbildes sein.
+Insofern definiert man auf $\Omega'$ das Wahrscheinlichkeitsmaß%
+\[P_X\colon\mathcal P(\Omega')\to [0,1],\quad P_X(A) := P(X^{-1}(A)).\]
+Man nennt $P_X$ die \emph{Verteilung}\index{Verteilung} von $X$. Mit der
+identischen Zufallsgröße
+\[\id\colon\Omega\to\Omega,\quad \id(\omega) := \omega\]
+versteht sich auch das ursprüngliche Maß $P$ als die Verteilung $P=P_{\id}$.
+
+Geläufig sind die Schreibweisen
+\begin{align*}
+P(X=x) &:= P(X^{-1}(\{x\})), & \{X=x\} &:= X^{-1}(\{x\}),\\
+P(X\in A) &:= P(X^{-1}(A)), & \{X\in A\} &:= X^{-1}(A).
+\end{align*}
+Es ist $\{X=x\}$ dasselbe wie $\{X\in\{x\}\}$. 
+Ist $P$ die Gleichverteilung auf $\Omega$, ergibt sich
+\[P(X\in A) = \frac{|\{X\in A\}|}{|\Omega|}.\]
+Standardbeispiel. Wir werfen zwei Spielwürfel.
+Die Ergebnismenge sei%
+\[\Omega := \{1,\ldots,6\}\times\{1,\ldots,6\},\]
+und jedes der 36 elementaren Ereignisse sei gleich wahrscheinlich, habe
+also die Wahrscheinlichkeit $\tfrac{1}{36}$.
+Es bezeichne $\omega_1$ das Ergebnis des ersten, und $\omega_2$
+das des zweiten Wurfs. Wir betrachten die Zufallsgröße%
+\[X\colon\Omega\to\{2,\ldots,12\},\quad
+X(\omega_1,\omega_2) := \omega_1+\omega_2.\]
+Gesucht sei $P(X=4)$. Man ermittelt
+\[\{X=4\} = \{(1,3), (2,2), (3,1)\},\quad\text{ergo}\;P(X=4) = \tfrac{3}{36}.\]
+Allgemein zerfällt ein Ereignis $A$ ja in seine disjunkten Elementarereignisse
+$\{x\}$, so dass $A = \bigcup_{x\in A} \{x\}$ gilt. Weil nun die
+Fasern $X^{-1}(\{x\})$ ebenfalls disjunkt sind, muss $P(X\in A)$ die
+Summe der $P(X=x)$ mit $x\in A$ sein. Das heißt, man rechnet%
+\[P(X\in A) = P(X^{-1}(\bigcup_{x\in A} \{x\})) = P(\bigcup_{x\in A} X^{-1}(\{x\}))
+= \sum_{x\in A} P(X=x).\]
+Die Verteilung $P_X$ ist demzufolge bereits eindeutig bestimmt,
+sobald $P(X=x)$ für jedes $x\in\Omega'$ vorliegt. Dies motiviert
+uns, die Funktion
+\[p_X\colon\Omega\to[0,1],\quad p_X(x) := P(X=x)\]
+zu definieren, genannt die \emph{Wahrscheinlichkeitsfunktion} der
+Zufallsgröße $X$.
