@@ -1020,9 +1020,15 @@ Ist eine Bedingung $B$ sowohl notwendig als auch hinreichend für $A$,
 liegt eine Äquivalenz vor. Man hat also
 \[(A\bicond B) \iff (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
+\newpage
 \section{Logik mit Gleichheit}
 
 \subsection{Axiome der Gleichheit}
+
+Im Folgenden Abschnitt geht es um allgemeingültige Erwägungen zur
+Gleichheit. Das wären Gesetzmäßigkeiten, die die Gleichheit immer
+erfüllen soll, ungeachtet, ob sie zwischen zwei Zahlen, zwei Mengen,
+oder zwei wie auch immer gearteten Objekten besteht.
 
 Moderne Formulierungen charakterisieren die Gleichheit durch die Axiome
 \begin{align*}
@@ -1031,16 +1037,16 @@ Moderne Formulierungen charakterisieren die Gleichheit durch die Axiome
 &&\text{(Ersetzung)}
 \end{align*}
 Das zweite Axiom ist eigentlich ein Schema, weil dieses für jede
-Formel $A$ gilt. Es meint $A(a)$ eine Aussageform, wobei $A(t)$ als
-$A(a)[a:=t]$ zu verstehen sein soll. Man gewinnt aus dem Schema
+Formel $A$ gilt. Es meint $A(u)$ eine Aussageform, wobei $A(t)$ als
+$A(u)[u:=t]$ zu verstehen sein soll. Man gewinnt aus dem Schema
 kurzerhand die Regel
 \[\dfrac{\Gamma\vdash t=t'\qquad\Gamma'\vdash A(t)}
 {\Gamma,\Gamma'\vdash A(t')}.\qquad\text{($t,t'$ sind beliebige Terme)}\]
 Das erste Axiom charakterisiert insofern die Regel zur Einführung
 der Gleichheit, das zweite die Regel zur Beseitigung. Die Symmetrie
 der Gleichheit lässt sich aus den beiden Regeln ableiten. Sei hierzu
-$A(a):\equiv (a=x)$. Nun ist $A(x)\equiv (x=x)$ und
-$A(y)\equiv (y=x)$. Man setze $t:=x$ und $t':=y$. Es findet sich:
+$A(u):\bicond (u=x)$. Nun ist $A(x)\bicond (x=x)$ und
+$A(y)\bicond (y=x)$. Man setze $t:=x$ und $t':=y$. Es findet sich:
 \[
 \infer{x=y\vdash y=x}{
   \infer{x=y\vdash x=y}{}
@@ -1048,7 +1054,7 @@ $A(y)\equiv (y=x)$. Man setze $t:=x$ und $t':=y$. Es findet sich:
 \]
 Aus dieser Sequenz erhält man anschließend
 \[\vdash\forall x\colon\forall y\colon x=y\cond y=x.\]
-Bezüglich $A(a):\equiv (f(x)=f(a))$ führt die Ausübung der soeben
+Bezüglich $A(u):\bicond (f(x)=f(u))$ führt die Ausübung der soeben
 gemachten Vorgehensweise auf
 \[\vdash\forall x\colon\forall y\colon x=y\cond f(x)=f(y).\]
 Es induziert die Ersetzungsregel für Funktionen,
@@ -1069,5 +1075,222 @@ Ferner implizieren die Axiome das Transitivgesetz
 Es steht $\forall x,y,z\colon A$ als Abkürzung für
 $\forall x\colon\forall y\colon\forall z\colon A$.
 
+Ganz allgemein gilt
+\[\vdash\forall x\colon\forall y\colon x=y\cond s(x)=s(y)\]
+für jeden Term $s$. Dies bestätigt sich unschwer folgendermaßen.
+Sei $h$ eine frische Hilfsvariable, die nicht
+frei in $s$ vorkommt und
+\[A:\bicond (s[u:=x]=s[u:=h]),\]
+wobei $s(x)=s[u:=x]$ und $s(y)=s[u:=y]$ ist. Der Schluss
+\[\dfrac{\Gamma\vdash x=y\quad\vdash A[h:=x]}{\Gamma\vdash A[h:=y]}\]
+vereinfacht sich nun zu
+\[\dfrac{\Gamma\vdash x=y\quad\overline{\vdash s[u:=x]=s[u:=x]}}{\Gamma\vdash s[u:=x]=s[u:=y]},
+\;\;\text{kurz}\;\;\dfrac{\Gamma\vdash x=y\quad\overline{\vdash s(x)=s(x)}}{\Gamma\vdash s(x)=s(y)}.\]
+Es genügt übrigens, das Ersetzungsaxiom für atomare Aussageformen zu fordern.
+Seien hierzu $P,Q$ Prädikate. Sei $A(x)$ zum Beispiel die Formel $P(x)\land Q(x)$.
+Dann ist die Regel
+\[\dfrac{\Gamma\vdash x=y\qquad \Gamma'\vdash A(x)}{\Gamma,\Gamma'\vdash A(y)}\]
+zulässig, denn:
+\[
+\infer{\Gamma,\Gamma'\vdash P(y)\land Q(y)}{
+  \infer{\Gamma,\Gamma'\vdash P(y)}{
+    \Gamma\vdash x=y
+  & \infer{\Gamma'\vdash P(x)}{
+      \Gamma'\vdash P(x)\land Q(x)}}
+& \infer{\Gamma,\Gamma'\vdash Q(y)}{
+    \Gamma\vdash x=y
+  & \infer{\Gamma'\vdash Q(x)}{
+      \Gamma'\vdash P(x)\land Q(x)}}}
+\]
+Für die anderen Junktoren klappt es analog. Per struktureller Induktion
+über den Formelaufbau bestätigt sich die Regel daraufhin in allgemeiner
+Weise als zulässig.
 
+\subsection{Von der Identität des Ununterscheidbaren}
 
+Dem Gleichheitsbegriff wohnt das \emph{Principium
+identitatis indiscernibilium} inne, das \emph{Prinzip der Identität des
+Ununterscheidbaren}, englisch \emph{Identity of indiscernibles}.
+Es besagt, dass man keine zwei ungleichen Objekte finden kann,
+die in allen ihren Eigenschaften übereinstimmen. Man nennt es auch
+\emph{Gleichheit nach Leibniz}, weil Wilhelm Gottfried
+Leibniz dieses im 27. Kaptiel von
+\emph{Nouveaux Essais sur L'entendement humain II}
+im Bezug zum Kosmos beschrieb. Am Ende findet man das Wesentliche
+nochmals in fasslicher, bildhafter Form,
+
+\begin{quote}
+»Ich erinnere mich, dass eine große Prinzessin, die von erhabenem Geist
+ist, einmal sagte, als sie in ihrem Garten spazieren ging, dass sie
+nicht glaube, dass es zwei vollkommen ähnliche Blätter gebe. Ein
+geistreicher Herr, der mit auf dem Spaziergang war, glaubte, dass es
+leicht sein würde, solche zu finden; aber obwohl er viel suchte, wurde
+er durch seine Augen davon überzeugt, dass man immer einen Unterschied
+bemerken könne. Aus diesen bisher vernachlässigten Erwägungen wird
+ersichtlich, wie weit man sich in der Philosophie von den natürlichsten
+Begriffen entfernt hat und wie weit man von den großen Prinzipien der
+wahren Metaphysik entfernt war.«
+\end{quote}
+
+\noindent
+Formalisierung erfährt das Prinzip durch die Aussage
+\[(\forall P\colon P(x)\bicond P(y))\implies x=y.\]
+Man sollte bedenken, dass diese Formulierung die Prädikatenlogik
+zweiter Stufe erfordert, da hier über Prädikate quantifiziert wird.
+Die Umkehrung
+\[x=y\implies (\forall P\colon P(x)\bicond P(y)).\]
+wird als unbedenklich angesehen, so dass man das Prinzip auch als
+Äquivalenz formuliert. Die Umkehrung ist fast trivial aus den
+Axiomen ableitbar, weil es sich bereits um eine gewisse Form des
+Ersetzungsaxioms handelt. Umgekehrt können wir aus der Äquivalenz die
+beiden Axiome zurückgewinnen. Reflexivität besteht offenkundig, weil
+$P(x)$ immer äquivalent zu $P(x)$ ist. Und zum Ersetzungsaxiom wurde
+bereits ausgeführt, dass es genügt, dieses für Prädikate zu fordern.
+
+Es verbleibt zu untersuchen, ob das Prinzip aus den Axiomen
+herleitbar ist. Hierzu wird $P(u):=(x=u)$ als Prädikat gewählt, womit
+$x=x$ als äquivalent zu $x=y$ vorausgesetzt wird. Weil $x=x$ gemäß
+Reflexivität vorliegt, erhält man wie gewünscht $x=y$.
+
+\section{Induktion}
+
+\subsection{Strukturelle Induktion}
+
+Die herkömmliche Induktion verläuft über die natürlichen Zahlen.
+Sie beginnt ohne Beschränkung der Allgemeinheit in der Null, und setzt
+sich dann schrittweise auf den Nachfolger fort. Es wird also $A(0)$
+bestätigt, und $A(n+1)$ unter Annahme von $A(n)$.
+
+Strukturelle Induktion verläuft allgemeiner über Knoten. Es gibt ein
+oder mehrere Anfangsknoten $v_0$, für die jeweils der Induktionsanfang $A(v_0)$
+zu bestätigen ist. Außerdem liegen Regeln vor, wie aus bereits vorhandenen
+Knoten neue Knoten abzuleiten sind. Die neuen Knoten nehmen die Rolle der
+Nachfolger ein. So entsteht ein Baum oder ein gerichteter Graph.
+Leitet sich $v$ aus $v_1$ bis $v_n$ ab, so besteht der zugehörige
+Induktionsschritt darin, dass $A(v)$ unter Annahme von $A(v_1)$
+bis $A(v_n)$ gezeigt wird. Bei einem Baum verläuft die Induktion von
+den Blättern aus zu einer Wurzel hin. Die gewöhnliche Induktion verlief
+von der Null zu einer Zahl hin. Wurde alles gezeigt, ist die Induktion
+also \emph{vollständig}, darf die Wurzel wie die Zahl beliebig sein.
+
+Ich will versuchen, das Prinzip so mit Dominosteinen zu veranschaulichen,
+wie die herkömmliche Induktion als Fallen einer Dominoreihe verständlich
+wird. Man kann sich eine Regel als ein Plättchen bestimmter Art vorstellen.
+Sofern alle notwendigen Dominosteine das Plättchen erreichen, fällt es
+um, womit auch der auf das Plättchen folgende Dominostein umfällt.
+Abermals erreichen notwendige Steine, worunter auch oder nur Nachfolger
+zu finden sind, ein weiteres Plättchen, worauf auch dieses fällt.
+Das läuft zumindest solange, bis man das gewünschte Fallen des
+begehrten Wurzelsteins beobachtet. Als dynamischer Prozess gesehen,
+hat man hier eine kausale Struktur, bei der Wirkungen nur unter einer
+oder mehreren passenden Ursachen auftreten.
+
+Die herkömmliche Induktion stellt einen Spezialfall der strukturellen
+Induktion dar, bei der die Bäume endliche Listen sind. Bei
+der strukturellen Induktion über den Formelaufbau verläuft die Induktion
+über Formeln. Sie beginnt in den atomaren Formeln. Die Regeln zur
+Ableitung sind die Produktionsregeln. Bei der strukturellen Induktion
+über die Konstruktion eines Beweises verläuft die Induktion über
+Sequenzen. Sie beginnt in den Grundsequenzen. Die Regeln zur Ableitung
+sind die Schlussregeln.
+
+Ein weiteres Beispiel bietet die Induktion über die Punkte des
+Gitters $\Z_{\ge 0}\times Z_{\ge 0}$. Sagen wir, der einzige
+Anfang ist $A(0,0)$. Die erste Schrittweise bestehe in $A(m+1,n)$
+unter Annahme $A(m,n)$. Die zweite Schrittweise bestehe in $A(m,n+1)$
+unter Annahme $A(m,n)$. Diese Art von struktureller Induktion ist
+gleichwohl auf die herkömmliche zurückführbar. Der Beweis untergliedert
+sich dabei in zwei Induktionsbeweise. Es wird zunächst
+$A(m,0)$ für jedes $m$ bestätigt und $A(m,0)$ anschließend als
+Anfang für $A(m,n)$ benutzt. Der zweite Induktionsbeweis ist so gesehen
+durch $m$ parametrisiert, was nichts Schlimmes ist, denn
+parametrisierte Argumentation kennzeichnet ja das übliche Vorgehen
+zur Bestätigung allquantifizierter Aussagen.
+
+\section{Modallogik}
+
+\subsection{Das System K}
+
+Die Modallogik handelt von den Weisen, wie eine Aussage ausgeprägt sein
+kann, was durch modalisierende Operatoren ausgedrückt wird. Es gibt
+unterschiedliche Systeme der Modallogik. In vielen Systemen finden sich
+zwei Modalitäten, die \emph{Notwendigkeit} der Aussage und die
+\emph{Möglichkeit} der Aussage. Allerdings artikulieren diese Sprechweisen
+nur die \emph{alethische} Deutung der Modalitäten. Je nach System und
+Anwendung sind unterschiedliche Deutungen der Modalitäten zuträglich.
+
+Ist $A$ die Aussage »Es regnet«, drückt $\lnec A$ die Aussage
+»Es regnet notwendigerweise« und $\lpos A$ die Aussage
+»Es regnet möglicherweise« aus.
+
+Die Modallogik scheint wichtiger für Philosophen als für
+Mathematiker. Indessen kamen mit der Zeit Anwendungen in der
+Mathematik und der Informatik zum Vorschein. Dem Basiswissen besonders
+dienlich ist meines Erachtens die \emph{dynamische Logik} mit
+ihrer engen Beziehung zum Hoare"=Kalkül bzw. zum dijkstraschen wlp"=Kalkül.
+Diese Kalküle geben uns die Mittel in die Hand, Algorithmen auf ihre Korrektheit
+hin zu untersuchen. Die Funktion, die der Algorithmus darstellt, bekommt
+hierzu eine \emph{Spezifikation}, bestehend aus einer \emph{Vorbedingung}
+und einer \emph{Nachbedingung}. Man zeigt nun, dass der Algorithmus auch
+das tut, was er soll, dergestalt dass der Wert der Funktion immer die
+Nachbedingung erfüllt, sofern ihre Argumente die Vorbedingung erfüllen.
+
+Der Modallogik kommt somit auch eine gewisse Bedeutung für die praktische
+Arbeit zu, nicht nur für höhere mathematische respektive philosophische
+Erwägungen und Betrachtungen.
+
+Wir wollen uns zunächst mit dem \emph{System K} beschäftigen, dem
+Grundsystem der \emph{normalen Modallogiken}. Spezifischere Systeme
+entstehen durch Hinzunahme weiterer Axiome. Das System K enthält
+sämtliche Regeln und Axiome der klassischen Aussagenlogik. Hinzu kommt
+die Regel
+\[\dfrac{\vdash A}{\vdash\lnec A}\qquad\text{(Nezessisierungsregel)}\]
+und das Schema
+\[\vdash\lnec(A\cond B)\cond (\lnec A\cond\lnec B).\qquad\text{(Axiomenschema K)}\]
+Wie gehabt induziert das Schema sogleich eine zulässige Regel,
+\[\dfrac{\Gamma\vdash\lnec(A\cond B)}{\Gamma\vdash\lnec A\cond\lnec B}.\qquad\text{(Regel K)}\]
+Wichtig ist, dass nur Theoreme Nezessisierung erfahren dürfen.
+Dagegen ist
+\[\dfrac{a\vdash a}{a\vdash\lnec a}\qquad \text{(verboten)}\]
+ein unzulässiger Schluss. So ist $a\cond\lnec a$ kein Theorem. Man wird
+mit der Semantik für das System K leicht ein Gegenmodell dieser Formel
+finden.
+
+Man definiert $\lpos A$ als äquivalent zu $\lnot\lnec\lnot A$.
+
+Auch dem Fitch"=Style wurde eine Darstellung der Schlüsse der Modallogik
+hinzugefügt. Sie ist meines Erachtens etwas schwieriger zu durchschauen
+als das Schließen von Sequenzen. Ich will in diesem Buch nicht näher
+darauf eingehen.
+
+\subsection{Das System S4}
+
+\begin{table}
+\begin{center}
+\caption{Übersicht über zusätzliche Schemata}
+\label{tab:Modallogik-Schemata}
+\begin{tabular}{clll}
+\toprule
+& \strong{Schema} & \strong{Relationen} & \strong{Formel}\\
+\midrule[\heavyrulewidth]
+K & $\lnec (A\cond B)\cond(\lnec A\cond\lnec B)$ & sämtliche & keine Einschränkung\\
+T & $\lnec A\cond A$ & reflexive & $\forall x\colon R_{xx}$\\
+B & $A\cond \lnec\lpos A$ & symmetrische & $\forall x,y\colon R_{xy}\cond R_{yx}$\\
+D & $\lnec A\cond\lpos A$ & serielle & $\forall x\colon\exists y\colon R_{xy}$\\
+4 & $\lnec A\cond\lnec\lnec A$ & transitive & $\forall x,y,z\colon R_{xy}\land R_{yz}\cond R_{xz}$\\
+5 & $\lpos A\cond\lnec\lpos A$ & euklidische & $\forall x,y,z\colon R_{xy}\land R_{xz}\cond R_{yz}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+Das System S4 formt sich aus den Schemata KT4, siehe Tabelle
+\ref{tab:Modallogik-Schemata}.
+
+Die Übersetzung nach Gödel-McKinsey-Tarski ist
+\begin{align*}
+v' &= \lnec v, & (A\land B)' &= A'\land B', & (A\cond B)' &= \lnec (A'\cond B'),\\
+\bot' &= \bot, & (A\lor B)' &= A'\lor B', & (\lnot A)' &= \lnec\lnot A'.
+\end{align*}
+Man deutet $\lnec A$ als »A ist beweisbar«. Es ist $A$ genau
+dann ein Theorem der intuitionistischen Logik, wenn $A'$ ein
+Theorem im System S4 ist.
