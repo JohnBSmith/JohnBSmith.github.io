@@ -1021,6 +1021,118 @@ liegt eine Äquivalenz vor. Man hat also
 \[(A\bicond B) \iff (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
 \newpage
+\subsection{Die zulässige Ersetzungsregel}
+
+Mit der Äquivalenz zweier Aussagen verhält es sich in gewisser Weise
+wie mit einer Gleichheit. Und zwar vermittelt die \emph{zulässige
+Ersetzungsregel}, eine Teilformel gegen eine zu ihr äquivalente
+Formel ersetzen zu dürfen, analog wie bei der Termumformung eines
+Teilterms. Sie ermöglicht die bequeme Äquivalenzumformung von
+Aussagen, womit man sie als besonders nützlich erachten darf.
+
+\begin{Satz}[Zulässige Ersetzungsregel]%
+\index{Ersetzungsregel}\newlinefirst
+Es gelten die beiden gleichwertigen Regeln
+\[\dfrac{\Gamma\vdash A\Leftrightarrow B}
+{\Gamma\vdash C(A)\Leftrightarrow C(B)},\qquad
+\dfrac{\Gamma\vdash A\Leftrightarrow B\qquad\Gamma'\vdash C(A)}
+{\Gamma,\Gamma'\vdash C(B)}.\]
+\end{Satz}
+\begin{Beweis}
+Zunächst zur Gleichwertigkeit der beiden Regeln:
+\begin{small}
+\[
+\begin{array}{@{}l@{\quad}l}
+\infer{\Gamma,\Gamma'\vdash C(B)}{
+  \infer{\Gamma\vdash C(A)\cond C(B)}{
+    \infer{\Gamma\vdash C(A)\bicond C(B)}{
+      \Gamma\vdash A\bicond B}}
+& \Gamma'\vdash C(A)}
+&
+\infer{\Gamma\vdash C(A)\bicond C(B)}{
+  \infer{\Gamma\vdash C(A)\cond C(B)}{
+    \infer{\Gamma, C(A)\vdash C(B)}{
+      \Gamma\vdash A\bicond B
+    & \infer{C(A)\vdash C(A)}{}}}
+& \infer{\Gamma\vdash C(B)\cond C(A)}{
+    \infer{\Gamma, C(B)\vdash C(A)}{
+      \Gamma\vdash A\bicond B
+    & \infer{C(B)\vdash C(B)}{}}}}
+\end{array}
+\]
+\end{small}%
+Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
+Die Behauptung wird in der Form
+\[\dfrac{\Gamma\vdash F\Leftrightarrow F'\qquad\Gamma\vdash C(F)}{
+\Gamma\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
+geschrieben. Wir definieren die Abkürzungen
+\[A := C(F),\quad A' := C(F'),\quad B := D(F),\quad B' := D(F').\]
+Zunächst die Basisfälle. Die Formeln $C:=\bot$,
+$C:=\top$ und $C:=v$ mit atomarer Variable $v\ne X$
+bleiben von der Substitution unbetroffen und sind offenkundig zu sich
+selbst äquivalent. Für $C=X$ erhält man schlicht die Prämisse.
+
+Zum Induktionsschritt. Man hat nun
+\[(C\land D)[X{:=}F]
+\iff C[X{:=}F]\land D[X{:=}F]\iff A\land B\]
+usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
+und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
+\begin{align*}
+\dfrac{\Gamma\vdash A\bicond A'\quad\Gamma\vdash\lnot A}{\Gamma\vdash \lnot A'},\qquad
+\dfrac{\Gamma\vdash A\bicond A'\quad\Gamma\vdash B\bicond B'\quad\Gamma\vdash A\circ B}{\Gamma\vdash A'\circ B'},
+\end{align*}
+wobei $\circ$ jeder der Junktoren $\land,\lor,\cond,\bicond$ sein soll. Es findet sich:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer{\Gamma\vdash\lnot A'}{
+  \infer{\Gamma,A'\vdash\bot}{
+    \infer{\Gamma,A'\vdash A}{\Gamma\vdash A\bicond A'}
+  & \Gamma\vdash\lnot A}}
+&
+\infer{\Gamma\vdash A'\land B'}{
+  \infer{\Gamma\vdash A'}{
+    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
+  & \infer{\Gamma\vdash A}{\Gamma\vdash A\land B}}
+& \infer{\Gamma\vdash B'}{
+    \infer{\Gamma\vdash B\cond B'}{\Gamma\vdash B\bicond B'}
+  & \infer{\Gamma\vdash B}{\Gamma\vdash A\land B}}}
+\end{array}
+\]
+Die Erstellung der restlichen Bäume sei dem Leser überlassen.
+
+Für die Quantoren findet sich:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer[\infernote{$(x\notin\mathrm{FV}(\Gamma))$}]{\Gamma\vdash\forall x\colon A'}{
+  \infer{\Gamma\vdash A'}{
+    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
+  & \infer{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}}}
+&
+\infer[\infernote{$(x\notin\mathrm{FV}(\Gamma))$}]{\Gamma\vdash\exists x\colon A'}{
+  \Gamma\vdash\exists x\colon A
+& \infer{\Gamma, A\vdash\exists x\colon A'}{
+    \infer{\Gamma, A\vdash A'}{
+      \infer{\Gamma\vdash A\cond A'}{
+        \Gamma\vdash A\bicond A'}
+    & \infer{A\vdash A}{}}}}
+\end{array}
+\]
+Es darf hierbei $x\notin\mathrm{FV}(\Gamma)$ vorausgesetzt werden, weil
+die gebundene Variable andernfalls ja vor der Betrachtung in eine
+frische umbenannt werden kann.\,\qedsymbol
+
+Es wäre noch zu erwähnen, dass die Regel bei den modalisierenden
+Operatoren für gewöhnlich unzulässig ist. So ist in den modallogischen
+Systemen K, B, D, S4, S5 keine der Formeln
+\begin{gather*}
+(a\bicond b)\cond (\lnec a\bicond\lnec b),\\
+(a\bicond b)\cond (\lpos a\bicond\lpos b)
+\end{gather*}
+ein Theorem. Ein Gegenmodell ist jeweils schnell gefunden, dafür
+bedarf es nicht mehr als zwei Welten.
+\end{Beweis}
+
+\newpage
 \section{Logik mit Gleichheit}
 
 \subsection{Axiome der Gleichheit}
