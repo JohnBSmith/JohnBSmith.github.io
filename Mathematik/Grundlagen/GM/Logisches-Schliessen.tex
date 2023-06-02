@@ -1042,7 +1042,7 @@ Es gelten die beiden gleichwertigen Regeln
 Zunächst zur Gleichwertigkeit der beiden Regeln:
 \begin{small}
 \[
-\begin{array}{@{}l@{\quad}l}
+\begin{array}{@{}l@{\;\;}l}
 \infer{\Gamma,\Gamma'\vdash C(B)}{
   \infer{\Gamma\vdash C(A)\cond C(B)}{
     \infer{\Gamma\vdash C(A)\bicond C(B)}{
@@ -1062,10 +1062,12 @@ Zunächst zur Gleichwertigkeit der beiden Regeln:
 \]
 \end{small}%
 Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
-Die Behauptung wird in der Form
-\[\dfrac{\Gamma\vdash F\Leftrightarrow F'\qquad\Gamma\vdash C(F)}{
-\Gamma\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
-geschrieben. Wir definieren die Abkürzungen
+Die Behauptung wird hierbei in der Form
+\[\dfrac{\Gamma\vdash F\Leftrightarrow F'}{
+\Gamma,C(F)\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
+geschrieben. Weil $F,F'$ vertauscht werden dürfen, erhält man somit auch
+die umgekehrte Folgerung, so dass die Äquivalenz von $C(F)$ und $C(F')$
+hergestellt wird. Wir definieren die Abkürzungen
 \[A := C(F),\quad A' := C(F'),\quad B := D(F),\quad B' := D(F').\]
 Zunächst die Basisfälle. Die Formeln $C:=\bot$,
 $C:=\top$ und $C:=v$ mit atomarer Variable $v\ne X$
@@ -1078,38 +1080,47 @@ Zum Induktionsschritt. Man hat nun
 usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
 und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
 \begin{align*}
-\dfrac{\Gamma\vdash A\bicond A'\quad\Gamma\vdash\lnot A}{\Gamma\vdash \lnot A'},\qquad
-\dfrac{\Gamma\vdash A\bicond A'\quad\Gamma\vdash B\bicond B'\quad\Gamma\vdash A\circ B}{\Gamma\vdash A'\circ B'},
+& \Gamma,A\land B\vdash A'\land B',
+&& \Gamma,A\cond B\vdash A'\cond B',
+&& \Gamma,\forall x\colon A\vdash\forall x\colon A',\\
+& \Gamma,A\lor B\vdash A'\lor B',
+&& \Gamma,A\bicond B\vdash A'\bicond B',
+&& \Gamma,\exists x\colon A\vdash\exists x\colon A'
 \end{align*}
-wobei $\circ$ jeder der Junktoren $\land,\lor,\cond,\bicond$ sein soll. Es findet sich:
+und $\Gamma,\lnot A\vdash\lnot A'$. Es findet sich:
+\begin{small}
 \[
-\begin{array}{@{}l@{\qquad}l}
-\infer{\Gamma\vdash\lnot A'}{
-  \infer{\Gamma,A'\vdash\bot}{
+\begin{array}{@{}l@{\quad\;\;}l}
+\infer{\Gamma,\lnot A\vdash\lnot A'}{
+  \infer{\Gamma,\lnot A,A'\vdash\bot}{
     \infer{\Gamma,A'\vdash A}{\Gamma\vdash A\bicond A'}
-  & \Gamma\vdash\lnot A}}
+  & \infer{\lnot A\vdash\lnot A}{}}}
 &
-\infer{\Gamma\vdash A'\land B'}{
-  \infer{\Gamma\vdash A'}{
+\infer{\Gamma,A\land B\vdash A'\land B'}{
+  \infer{\Gamma,A\land B\vdash A'}{
     \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{\Gamma\vdash A}{\Gamma\vdash A\land B}}
-& \infer{\Gamma\vdash B'}{
+  & \infer{A\land B\vdash A}{
+      \infer{A\land B\vdash A\land B}{}}}
+& \infer{\Gamma,A\land B\vdash B'}{
     \infer{\Gamma\vdash B\cond B'}{\Gamma\vdash B\bicond B'}
-  & \infer{\Gamma\vdash B}{\Gamma\vdash A\land B}}}
+  & \infer{A\land B\vdash B}{
+      \infer{A\land B\vdash A\land B}{}}}}
 \end{array}
 \]
+\end{small}%
 Die Erstellung der restlichen Bäume sei dem Leser überlassen.
 
 Für die Quantoren findet sich:
 \[
-\begin{array}{@{}l@{\qquad}l}
-\infer[\infernote{$(x\notin\mathrm{FV}(\Gamma))$}]{\Gamma\vdash\forall x\colon A'}{
-  \infer{\Gamma\vdash A'}{
+\begin{array}{@{}l@{\quad\;\;}l}
+\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\forall x\colon A\vdash\forall x\colon A'}{
+  \infer{\Gamma,\forall x\colon A\vdash A'}{
     \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}}}
+  & \infer{\forall x\colon A\vdash A}{
+      \infer{\forall x\colon A\vdash\forall x\colon A}{}}}}
 &
-\infer[\infernote{$(x\notin\mathrm{FV}(\Gamma))$}]{\Gamma\vdash\exists x\colon A'}{
-  \Gamma\vdash\exists x\colon A
+\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\exists x\colon A\vdash\exists x\colon A'}{
+  \infer{\exists x\colon A\vdash\exists x\colon A}{}\hspace{-12pt}
 & \infer{\Gamma, A\vdash\exists x\colon A'}{
     \infer{\Gamma, A\vdash A'}{
       \infer{\Gamma\vdash A\cond A'}{
@@ -1120,7 +1131,9 @@ Für die Quantoren findet sich:
 Es darf hierbei $x\notin\mathrm{FV}(\Gamma)$ vorausgesetzt werden, weil
 die gebundene Variable andernfalls ja vor der Betrachtung in eine
 frische umbenannt werden kann.\,\qedsymbol
+\end{Beweis}
 
+\noindent
 Es wäre noch zu erwähnen, dass die Regel bei den modalisierenden
 Operatoren für gewöhnlich unzulässig ist. So ist in den modallogischen
 Systemen K, B, D, S4, S5 keine der Formeln
@@ -1130,7 +1143,6 @@ Systemen K, B, D, S4, S5 keine der Formeln
 \end{gather*}
 ein Theorem. Ein Gegenmodell ist jeweils schnell gefunden, dafür
 bedarf es nicht mehr als zwei Welten.
-\end{Beweis}
 
 \newpage
 \section{Logik mit Gleichheit}
