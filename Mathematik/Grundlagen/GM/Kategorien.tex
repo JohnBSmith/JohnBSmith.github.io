@@ -443,3 +443,63 @@ Wieder ist $f$ eindeutig bestimmt.
 
 Gelegentlich wird $f$ als $f=f_1\times f_2$ notiert.
 
+\begin{Definition}[Produkt]\newlinefirst
+Sei $C$ eine Kategorie und seien $Y_1,Y_2\in C$.
+Ein Objekt $Y\in\mathcal C$ mit Projektionen $\pi_1\colon Y\to Y_1$ und
+$\pi_2\colon Y\to Y_2$ heißt Produkt, wenn zu jedem Objekt
+$X\in C$ und allen Morphismen $f_1\colon X\to Y_1$
+und $f_2\colon X\to Y_2$ genau ein Morphismus $f\colon X\to Y$
+existiert, so dass $f_1=\pi_1\circ f$ und $f_2=\pi_2\circ f$.
+\end{Definition}
+
+\noindent
+Das kartesische Produkt $Y:=Y_1\times Y_2$ ist ein Produkt in
+der Kategorie der Mengen. Wir schreiben $f(x)=y$ mit $y=(y_1,y_2)$.
+Nun ist $\pi_1(y)=y_1$ und $\pi_2(y)=y_2$, laut Forderung soll also
+$y_1=f_1(x)$ und $y_2=f_2(x)$ sein. Dadurch ist $f$ mit
+$f(x):=(f_1(x),f_2(x))$ eindeutig festgelegt.
+
+Zu zwei Mengen können wir weiterhin die disjunkte Vereinigung
+$X_1\sqcup X_2$ bilden. Wir rekapitulieren, dass zu ihr die beiden
+kanonischen Injektionen
+\begin{align*}
+& i_1\colon X_1\to X_1\sqcup X_2,\quad i_1(x) := (1,x),\\
+& i_2\colon X_2\to X_1\sqcup X_2,\quad i_2(x) := (2,x)
+\end{align*}
+gehören. Man stellt sich nun die Frage, was das Wesensmerkmal
+der disjunkten Vereinigung ist. Das ist doch, dass zu jedem ihrer
+Elemente die Information vorliegt, ob es aus der linken oder der
+rechten Menge entstammt. Das heißt, es muss eine Abbildung geben,
+die auf den Tag projiziert. Betrachten wir dazu die Abbildungen
+$f_1\colon X_1\to Y$ und $f_2\colon X_2\to Y$ mit $Y:=\{1,2\}$ und
+$f_k(x):=k$. Mit der Abbildung $f_k$ gelangt man von $X_k$ also
+direkt zum Tag $k$. Nun ist eine Abbildung $f$ gesucht, so dass das
+Diagramm
+\[\xymatrix{
+X_1\ar[r]^{i_1}\ar[dr]_{f_1} & X_1\sqcup X_2\ar[d]^{f}
+& X_2\ar[l]_{i_2}\ar[dl]^{f_2}\\
+& Y &
+}\]
+kommutiert. Das heißt, es soll $f\circ i_k = f_k$ für $k\in\{1,2\}$ sein.
+Das macht $f((1,x)) = 1$ und $f((2,x)) = 2$. Dadurch ist $f$ eindeutig
+bestimmt. Es ist die gesuchte Projektion auf den Tag.
+
+\begin{Definition}[Koprodukt]\newlinefirst
+Sei $C$ eine Kategorie und seien $X_1,X_2\in C$. Ein Objekt $X$
+mit Morphismen $i_1\colon X_1\to X$ und $i_2\colon X_2\to X$
+heißt Koprodukt, wenn zu jedem Objekt $Y\in C$ und allen Morphismen
+$f_1\colon X_1\to Y$ und $f_2\colon X_2\to Y$ genau ein Morphismus
+$f\colon X\to Y$ existiert, so dass $f_1 = f\circ i_1$
+und $f_2 = f\circ i_2$.
+\end{Definition}
+
+\noindent
+Die disjunkte Vereinigung $X:=X_1\sqcup X_2$ mit den Injektionen
+$i_1(x):=(1,x)$ und $i_2(x):=(2,x)$ ist ein Koprodukt in der
+Kategorie der Mengen. Es gilt schon mal
+\[f(x) = \strong{match}\; x \begin{cases}
+(1,x)\mapsto y_1,\\
+(2,x)\mapsto y_2.
+\end{cases}\]
+Laut Forderung soll außerdem $y_1 = f_1(x)$ und $y_2 = f_2(x)$ sein,
+wodurch $f$ eindeutig festgelegt ist.

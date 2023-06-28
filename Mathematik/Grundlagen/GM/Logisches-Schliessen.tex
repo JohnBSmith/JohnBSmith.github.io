@@ -435,6 +435,54 @@ Substitution ist also
 \[\forall z\colon A(y)\land B(z),\quad\text{nicht}\quad
 \forall y\colon A(y)\land B(y).\]
 
+\subsection{Substitution}
+
+Es ist noch zu präzisieren, wie Substitution genau vonstatten geht.
+Substituiert werden können sowohl atomare logische Variablen gegen
+Formeln als auch Individuenvariablen gegen Terme. Betrachten wir
+zunächst die logischen.
+
+Allgemein definiert man ihre Substitution
+\[A[v_1:=C_1,\ldots v_n:=C_n],\,\text{kurz $A[S]$ oder $S(A)$}\]
+rekursiv über den Formelaufbau als
+\begin{align*}
+(\lnot A)[S] &:= \lnot (A[S]), & (\forall x\colon A)[S] &:= (\forall x\colon (A[S])),\\
+(A\circ B)[S] &:= ((A[S])\circ (B[S])), & (\exists x\colon A)[S] &:= (\exists x\colon (A[S])).
+\end{align*}
+wobei $\circ$ jeder der zweistelligen Junktoren
+$\land,\lor,\cond,\bicond$ ist. Die Basisfälle sind für die atomaren
+Variablen $v_1,\ldots, v_n$ und $w$ definiert gemäß
+\[w[v_1:=C_1, \ldots, v_n:=C_n] := \begin{cases}
+C_k, & \text{wenn sich $k$ mit $v_k=w$ findet},\\
+w, & \text{sonst}.
+\end{cases}\]
+Für $n\ge 2$ spricht man von \emph{simultaner Substitution}.
+
+Für $n=1$ vereinfacht sich die Substitution zu
+\begin{align*}
+w[v:=C] := \begin{cases}
+C, & \text{wenn}\;v=w,\\
+w, & \text{wenn}\;v\ne w.
+\end{cases}
+\end{align*}
+Beispielsweise ist
+\[(a\land b\cond a)[a:=a\lor b] = ((a\lor b)\land b\cond (a\lor b)).\]
+Simultane Substitution darf im Allgemeinen nicht schrittweise
+durchgeführt werden, weil dadurch ein anderes Resultat entstehen kann.
+Zum Beispiel ist
+\begin{alignat*}{2}
+& (a\land b)[a:=b,b:=c] &&= (b\land c),\\
+& (a\land b)[a:=b][b:=c] &&= (c\land c).
+\end{alignat*}
+Implementiert man die Substitution als Computerprogramm, bildet sie
+üblicherweise abstrakte Syntaxbäume auf abstrake Syntaxbäume ab.
+
+Die Substitution von Individuenvariablen gegen Terme definiert man
+ganz analog. Hier ist allerdings hinsichtlich der Quantoren zu beachten,
+dass nur freie Variablen substituiert werden, und man eine unter
+Umständen entstehende Überschattung durch Umbenennung der gebundenen
+Variablen umgehen muss.
+
 \subsection{Zur Syntax}
 
 So wie »Punktrechnung vor Strichrechnung« gilt, legt man für jeden
@@ -596,11 +644,45 @@ $\emptyset$ & 8 & $(A\cond B)\cond(\lnot B\cond\lnot A)$ & $\cond$E & 7\\
 \end{center}
 \end{table}
 
-Unabhängig von Gentzen entwickelte Jaśkowski das natürliche Schließen
-einige Jahre zuvor. Während Gentzen Beweise als Bäume darstellte, nutzte
-Jaśkowski zunächst eine grafische Darstellung, die später von Fitch
-adaptiert wurde und in dieser Form nun als \emph{Fitch"=Style}%
-\index{Fitch-Style} bekannt ist.
+Unabhängig von Gentzen entwickelte Stanisław Jaśkowski das natürliche
+Schließen einige Jahre zuvor. Während Gentzen Beweise als Bäume darstellte,
+nutzte Jaśkowski zunächst eine grafische Darstellung, die später von Frederic
+Brenton Fitch adaptiert wurde und in dieser Form nun als \emph{Fitch"=Style}%
+\index{Fitch-Style} bekannt ist. Die Abhängigkeit von einer Annahme
+wird hier kenntlich gemacht, indem die aus der Annahme abgeleiteten
+Aussagen hinter einer senkrechten Linie eingerückt stehen. Die Annahme
+selbst steht am Anfang der Einrückung, und zwar bereits innerhalb,
+weil sie ja von sich selbst abhängig ist.
+Siehe Tabelle \ref{tab:Kontraposition-Fitch}.
+% Annahmen können im Fitch-Style nur in der umgekehrten Reihenfolge
+% getilgt werden, in der sie eingeführt wurden.
+% In \emph{forall x: Calgary} wird das Schließen im Fitch-Style
+% sehr ausführlich beschrieben. Im Buch ist das Schließen sehr
+% ausführlich beschrieben, die Formalisierung gänzlich im Fitch-Style
+% gehalten.
+
+\begin{table}
+\begin{center}
+\caption{Beweis im Fitch-Style}
+\label{tab:Kontraposition-Fitch}
+$\begin{nd}
+\open
+  \hypo {1} {A\cond B}
+  \open
+    \hypo {2} {\neg B}
+    \open
+    \hypo {3} {A}
+    \have {4} {B} \ie{1,3}
+    \have {5} {\bot} \ne{2,4}
+    \close
+  \have {6} {\neg A} \ni{5}
+  \close
+\have {7} {\neg B\cond\neg A} \ii{6}
+\close
+\have {8} {(A\cond B)\cond (\neg B\cond\neg A)} \ii{7}
+\end{nd}$
+\end{center}
+\end{table}
 
 Zu guter Letzt muss die klassische Darstellung der Beweisführung
 aufgeführt werden. Die in Worten. Sie zeichnet sich durch die Auslassung
@@ -618,7 +700,7 @@ Nun steht $\lnot B$ bereits im Widerspruch zu $B$.\,\qedsymbol
 
 Als komfortablen Bonus erhält man mit dem Theorem nun im Anschluss
 kurzerhand eine weitere zulässige Regel, die
-\emph{Kontraposition}\index{Kontraposition}
+\emph{Kontrapositionsregel}\index{Kontraposition}
 \[\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash\lnot B\cond\lnot A},
 \quad\text{denn}\quad
 \dfrac{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)\quad\Gamma\vdash A\cond B}
@@ -1278,6 +1360,136 @@ Reflexivität vorliegt, erhält man wie gewünscht $x=y$.
 
 \section{Induktion}
 
+\subsection{Einfache Induktion}
+
+In der Philosophie bezeichnet man als \emph{Induktion} eine Art von
+Schlussfolgerung, die da ist der Schluss vom Speziellen auf das
+Allgemeine. Folgendes Beispiel verdeutlicht die Idee der Überlegung. Ein
+Gegenstand wird einmal fallen gelassen, man beobachtet wie dieser zu
+Boden fällt. Wiederholung des Experiments führt abermals zum selben
+Resultat. Induktiv schließt man daraus, dass dieses Resultat \emph{immer}
+eintreten wird. Jedoch kann Induktion zu Fehlschlüssen führen, weshalb
+es nicht als mathematisches Beweisverfahren brauchbar ist. Nur weil
+bereits dreimal eine Toastbrotscheibe auf die Marmeladenseite gefallen
+ist, heißt das nicht, dass dieses Resultat immer eintreten müsse. In der
+Mathematik bieten die Borwein"=Integrale ein prägnantes Beispiel, wo
+leichtfertige Argumentation verfänglich wäre.
+
+Mit der bedenklichen Induktion in der Philosophie teilt sich die
+\emph{vollständige Induktion} den Namen. Sie ist allerdings unfehlbar.
+Das Verfahren ist für die moderne Mathematik und Informatik von
+wesentlicher Bedeutung.
+
+Die vollständige Induktion wird vermittelt durch das Axiomenschema
+\[\vdash A(0)\land (\forall n\in\N\colon A(n)\cond A(n+1))
+\cond (\forall n\in\N\colon A(n)).\]
+Es induziert die Regel
+\[\dfrac{\Gamma\vdash A(0)\qquad\Gamma',n\in\N,A(n)\vdash A(n+1)}{
+\Gamma,\Gamma'\vdash\forall n\in\N\colon A(n)}.\]
+Zur Veranschaulichung wird gerne eine endlose Dominoreihe herangezogen.
+Fällt der erste Dominostein um, und ist sicher, dass mit einem
+Dominostein ebenso dessen Nachfolger umfällt, muss \emph{jeder}
+Dominostein irgendwann umfallen.
+
+Man bezeichnet $A(0)$ als den \emph{Induktionsanfang}\index{Induktionsanfang}.
+Die Ableitung von $A(n+1)$ aus $A(n)$ heißt \emph{Induktionsschritt}\index{Induktionsschritt},
+wobei $A(n)$ darin die Bezeichnung \emph{Induktionsvoraussetzung}\index{Induktionsvoraussetzung} trägt.
+
+Ein erstes Beispiel. Man definiert die Potenz einer Zahl $a$ rekursiv als
+\[a^0 := 1,\qquad a^{n+1} := aa^n.\]
+Zu beweisen sei das Potenzgesetz
+\[A(n)\defiff (ab)^n = a^n b^n.\]
+Der Anfang $A(0)$ bestätigt sich via
+\[(ab)^0 = 1 = 1\cdot 1 = a^0 b^0.\]
+Den Induktionsschritt $(A(n)\cond A(n+1))$ bestätigt
+die Rechnung
+\[(ab)^{n+1}\stackrel{\text{(1)}}= (ab)(ab)^n
+\stackrel{\text{IV}}= aba^n b^n = aa^n bb^n
+\stackrel{\text{(2)}}= a^{n+1} b^{n+1}.\]
+Die Stelle, wo $A(n)$ zur Anwendung kam, wurde mit IV annotiert,
+was für \emph{Induktionsvoraussetzung} steht. Die Umformungen
+(1), (2) gelten laut Definition.
+
+Bislang trat die Induktion so auf, dass der Anfang in der
+Zahl Null liegt. Aus der Regel folgt aber bereits, dass man den
+Anfang in jede beliebige natürliche Zahl legen kann.
+\begin{Satz}
+Es gilt für $n,n_0\in\N$ das allgemeine Schema
+\[\vdash A(n_0)\land (\forall n\ge n_0\colon A(n)\cond A(n+1))
+\cond (\forall n\ge n_0\colon A(n)).\]
+\end{Satz}
+\begin{Beweis}
+Die Prämisse wird spezialisiert mit $n:=u+n_0$, wobei $u$ beliebig sein
+darf, da $u+n_0\ge n_0$ für jedes $u\in\N$
+erfüllt ist. Es sei nun $B(u):\bicond A(u+n_0)$. Demnach ist
+$A(n_0)$ äquivalent zu $B(0)$. Und es ist $A(u+n_0+1)$ äquivalent
+zu $B(u+1)$. Insgesamt erhält man aus der Prämisse also
+\[B(0)\land (\forall u\colon B(u)\cond B(u+1)).\]
+Per herkömmlicher Induktion gilt also $B(u)$ bzw. $A(u+n_0)$ für
+jedes natürliche $u$. Wird dies nun mit der Resubstitution $u:=n-n_0$
+mit $n\ge n_0$ spezialisiert, erhält man $A(n)$, und somit schließlich die
+gesuchte Konklusion $(\forall n\ge n_0\colon A(n))$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Spezialisieren ist hier formal zu verstehen. Das Resultat
+der Substitution ist eigentlich nicht weniger allgemein als die
+ursprüngliche Aussage.
+
+Befasst man sich im Weiteren mit der Mengenlehre, wo gemeinhin mit
+Mengen argumentiert wird, bietet sich an, auch die Induktion bezüglich
+einer Menge zu formulieren. Sei hierzu $M\subseteq\N$ definiert als
+die Aussonderung
+\[M := \{n\in\N\mid A(n)\}.\]
+Mit $A(n)\bicond n\in M$ nimmt das Schema der Induktion daraufhin die Form
+\[\vdash 0\in M\land (\forall n\in\N\colon n\in M\cond n+1\in M)\cond M = \N\]
+an. Man verwendet diese Variante vorwiegend, um die axiomatische
+Charakterisierung der natürlichen Zahlen in Bezug zur Mengenlehre zu
+bringen. Sie wurde Ende des 19. Jahrhunderts von Richard Dedekind und
+Giuseppe Peano erdacht. Das Axiom der Induktion ist darin als letzte
+und komplizierteste. Es lautet
+\[\vdash (\forall P\colon P(0)\land\forall n\colon P(n)\cond P(S(n)))
+\cond (\forall n\colon P(n)).\]
+Hiermit wird allerdings die Prädikatenlogik zweiter Stufe vorausgesetzt,
+weil über alle Prädikate $P$ quantifiziert wird. Ein Verzicht auf die
+Logik zweiter Stufe ist aber möglich, indem das Axiom wie bisher als
+Schema formuliert wird. Das so in die Prädikatenlogik erster Stufe gebrachte
+System nennt man die \emph{Peano"=Arithmetik}.
+
+\subsection{Starke Induktion}
+
+Die starke Induktion verstärkt die Induktionsvoraussetzung
+dahingehend, dass sie nicht nur für den unmittelbaren Vorgänger, sondern
+für sämtliche Vorgänger vorausgesetzt werden darf. Damit wird der
+Induktionsbeweis unter Umständen erleichtert. Die starke muss nicht
+extra axiomatisch gefordert werden, sie ist aus der herkömmlichen
+ableitbar.
+\begin{Satz}[Starke Induktion]
+Es gilt das Schema
+\[\vdash A(0)\land (\forall n\in\N\colon (\forall k\le n\colon A(k))\cond A(n+1))
+\cond (\forall n\in\N\colon A(n))\]
+\end{Satz}
+\begin{Beweis}
+Sei hierzu
+\[C(n) :\bicond (\forall k\le n\colon A(k)).\]
+Die Prämissen seien angenommen. Es ist $A(0)$
+gleichbedeutend mit $C(0)$. Wir überzeugen uns nun von der Folgerung
+\[(\forall n\in\N\colon C(n)\cond A(n+1))\cond (\forall n\in \N\colon C(n)\cond C(n+1)).\]
+Sei also $n\in\N$ und $C(n)$ angenommen, dann haben wir auch $A(n+1)$
+und somit $C(n)\land A(n+1)$, was äquivalent zu $C(n+1)$ ist. Per
+herkömmlicher Induktion gilt also $C(n)$ für jedes natürliche
+$n$. Aus $C(n)$ folgt aber $A(n)$, womit erst recht $A(n)$ für jedes
+natürliche $n$ gilt.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Ein wenig eleganter formuliert sich das Schema auch in der Form
+\[\vdash (\forall n\in\N\colon (\forall k < n\colon A(k))\cond A(n))
+\cond (\forall n\in\N\colon A(n)).\]
+Weil keine natürliche Zahl kleiner als null existiert, greift hier
+das Prinzip der leeren Wahrheit, womit $A(0)$ trotzdem zu bestätigen
+ist.
+
 \subsection{Strukturelle Induktion}
 
 Die herkömmliche Induktion verläuft über die natürlichen Zahlen.
@@ -1323,7 +1535,7 @@ Gitters $\Z_{\ge 0}\times Z_{\ge 0}$. Sagen wir, der einzige
 Anfang ist $A(0,0)$. Die erste Schrittweise bestehe in $A(m+1,n)$
 unter Annahme $A(m,n)$. Die zweite Schrittweise bestehe in $A(m,n+1)$
 unter Annahme $A(m,n)$. Diese Art von struktureller Induktion ist
-gleichwohl auf die herkömmliche zurückführbar. Der Beweis untergliedert
+gleichwohl gegen die herkömmliche ersetzbar. Der Beweis untergliedert
 sich dabei in zwei Induktionsbeweise. Es wird zunächst
 $A(m,0)$ für jedes $m$ bestätigt und $A(m,0)$ anschließend als
 Anfang für $A(m,n)$ benutzt. Der zweite Induktionsbeweis ist so gesehen
@@ -1331,6 +1543,7 @@ durch $m$ parametrisiert, was nichts Schlimmes ist, denn
 parametrisierte Argumentation kennzeichnet ja das übliche Vorgehen
 zur Bestätigung allquantifizierter Aussagen.
 
+\newpage
 \section{Modallogik}
 
 \subsection{Das System K}
@@ -1381,6 +1594,23 @@ mit der Semantik für das System K leicht ein Gegenmodell dieser Formel
 finden.
 
 Man definiert $\lpos A$ als äquivalent zu $\lnot\lnec\lnot A$.
+
+Statt der einfachen Nezessisierung und Schema K kann man auch eine
+einzige allgemeine Nezessisierungsregel voraussetzen. Mit $n\ge 0$
+lautet sie
+\[\dfrac{A_1,\ldots,A_n\vdash B}{\lnec A_1,\ldots,\lnec A_n\vdash\lnec B}.\]
+Man beweist die Regel per Induktion über $n$ als zulässig. Im Anfang $n=0$
+nimmt sie schlicht die Form der Nezessisierungsregel an. Der
+Induktionsschritt wird durch den Beweisbaum
+\[
+\infer[\infernote{Modus ponens}]{\lnec A_1,\ldots,\lnec A_n,\lnec A_{n+1}\vdash\lnec B}{
+  \infer[\infernote{K}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec A_{n+1}\cond\lnec B}{
+    \infer[\infernote{IV}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec (A_{n+1}\cond B)}{
+      \infer{A_1,\ldots,A_n\vdash A_{n+1}\cond B}{
+        A_1,\ldots,A_n,A_{n+1}\vdash B}}}
+& \infer{\lnec A_{n+1}\vdash\lnec A_{n+1}}{}}
+\]
+bestätigt.
 
 Auch dem Fitch"=Style wurde eine Darstellung der Schlüsse der Modallogik
 hinzugefügt. Sie ist meines Erachtens etwas schwieriger zu durchschauen

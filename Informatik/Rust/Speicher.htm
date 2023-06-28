@@ -25,6 +25,7 @@
 <li><a href="#Vertauschung">Vertauschung von Werten</a>
 <li><a href="#Cow">Zeiger vom Typ Cow</a>
 <li><a href="#Freigabe">Freigabe des Speichers</a>
+<li><a href="#Bedarf">Initialisierung bei Bedarf</a>
 <li><a href="#Literatur">Literatur</a>
 </ol>
 
@@ -1230,6 +1231,63 @@ der Methode <code>drop</code> zu unterscheiden. Während
 vollen Destruktor ausführt, enthält die Methode
 <code>drop</code> nur die zusätzliche Funktionalität, die lediglich
 einen Teil des Destruktors darstellt.
+
+<h2 id="Bedarf">Initialisierung bei Bedarf</h2>
+
+<p>Statische Variablen müssen normalerweise bei ihrer Einführung
+initialisiert werden. Unter Umständen ist dies jedoch unmöglich oder
+ineffizient. Betrachten wir zunächst die folgende statische Tabelle,
+die dem Symbol eines chemischen Elements seine Ordnungszahl zuordnet.
+
+<pre class="rust ibox">
+static ELEMENTS: &amp;[(&amp;'static str, u32)] = &amp;[
+    ("B", 5), ("Be", 4), ("C", 6), ("F", 9), ("H", 1),
+    ("He", 2), ("Li", 3), ("N", 7),  ("Ne", 10), ("O", 8)
+];
+
+fn atomic_number(symbol: &amp;str) -&gt; u32 {
+    match ELEMENTS.binary_search_by_key(&amp;symbol, |&amp;(x, _)| x) {
+        Ok(index) =&gt; ELEMENTS[index].1,
+        _ =&gt; panic!("symbol {} not found", symbol)
+    }
+}
+
+fn main() {
+    println!("{}", atomic_number("H"));
+}
+</pre>
+
+<p>Wir würden die binäre Suche gern gegen eine Hashtabelle
+ersetzen dürfen. Man steht dabei jedoch vor dem Problem, dass die
+Initialisierung einer Hashtabelle dafür als konstante Funktion
+formulierbar sein müsste, was unmöglich ist.
+
+<p>Eine Umgehung dieses Problems ermöglichen die Zellen vom Typ
+<code>OnceLock</code>. Sie machen es durchführbar, die Initialisierung
+einer statischen Variable bis zu dem Punkt der Ausführung
+des Programms zu verzögern, wo sie das erste Mal gelesen wird.
+
+<pre class="rust ibox">
+use std::sync::OnceLock;
+use std::collections::HashMap;
+
+type Elements = HashMap&lt;&amp;'static str, u32&gt;;
+
+fn elements() -> &amp;'static Elements {
+    static ELEMENTS: OnceLock&lt;Elements&gt; = OnceLock::new();
+    ELEMENTS.get_or_init(|| {
+        HashMap::from([
+            ("H", 1), ("He", 2), ("Li", 3), ("Be", 4), ("B", 5),
+            ("C", 6), ("N", 7), ("O", 8), ("F", 9), ("Ne", 10)
+        ])
+    })
+}
+
+fn main() {
+    let atomic_number = elements();
+    println!("{}", atomic_number["H"]);
+}
+</pre>
 
 <h2 id="Literatur">Literatur</h2>
 

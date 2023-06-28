@@ -18,6 +18,8 @@
 <li><a href="#Vorwaertsschliessen">Vorwärtsschließen</a>
 <li><a href="#Definition">Definition vermittels Taktiken</a>
 <li><a href="#Kunstgriffe">Kunstgriffe</a>
+<li><a href="#Allquantoren">Taktiken für Allquantoren</a>
+<li><a href="#Existenzquantoren">Taktiken für Existenzquantoren</a>
 </ol>
 
 <h2 id="Assistiertes-Schliessen">Assistiertes Schließen</h2>
@@ -286,6 +288,81 @@ Proof.
 Qed.
 </pre>
 </table>
+
+<h2 id="Allquantoren">Taktiken für Allquantoren</h2>
+
+<p>Die Einführung der Allquantifizierung wird rückwärts über
+<code>intro&nbsp;x</code> vorgenommen, das bedeutet soviel wie
+»Sei <var>x</var> fest, aber beliebig«. Zu diesem <var>x</var>
+dürfen dann allquantifizierte Antezedenzen spezialisiert werden,
+womit man Allquantifizierungen beseitigt. Dies geschieht, indem man
+die allquantifizierte Aussage, als abhängige Funktion betrachtet,
+auf die Variable appliziert.
+
+<p>Beispiel. Der Beweis des Theorems
+
+<p class="indent">(∀<var>x</var>. <var>A</var>(<var>x</var>) ∧ <var>B</var>(<var>x</var>))
+⇔ (∀<var>x</var>. <var>A</var>(<var>x</var>)) ∧ (∀<var>x</var>. <var>B</var>(<var>x</var>))
+
+<p>ist gesucht.
+
+<pre class="ibox gallina">
+Theorem universal_quant_conj (X: Type) (A B: X -&gt; Prop):
+  (forall x, A x /\ B x) &lt;-&gt; (forall x, A x) /\ (forall x, B x).
+Proof.
+  split.
+  * intro h. split.
+    - intro x. assert (hx := h x). exact (proj1 hx).
+    - intro x. assert (hx := h x). exact (proj2 hx).
+  * intro h. intro x. split.
+    - exact (proj1 h x).
+    - exact (proj2 h x).
+Qed.
+</pre>
+
+<p>Nochmals der gleiche Beweis, aber mit reinem Rückwärtsschließen
+formuliert:
+
+<pre class="ibox gallina">
+Theorem universal_quant_conj (X: Type) (A B: X -&gt; Prop):
+  (forall x, A x /\ B x) &lt;-&gt; (forall x, A x) /\ (forall x, B x).
+Proof.
+  split.
+  * intro h. split.
+    - intro x. apply h.
+    - intro x. apply h.
+  * intros (hA, hB). intro x. split.
+    - apply hA.
+    - apply hB.
+Qed.
+</pre>
+
+<p>Anstelle <code>intro&nbsp;x</code> kann man auch
+<code>intro&nbsp;u</code> schreiben, womit die Unterscheidung
+zwischen der gebundenen Variable <var>x</var> und dem Parameter
+<var>u</var>, über dem man argumentiert, klargestellt wird.
+
+<h2 id="Existenzquantoren">Taktiken für Existenzquantoren</h2>
+
+<p>Beispiel. Der Beweis des Theorems
+
+<p class="indent">(∃<var>x</var>. <var>A</var>(<var>x</var>) ∧ <var>B</var>(<var>x</var>))
+⇒ (∃<var>x</var>. <var>A</var>(<var>x</var>)) ∧ (∃<var>x</var>. <var>B</var>(<var>x</var>))
+
+<p>ist gesucht.
+
+<pre class="ibox gallina">
+Theorem existential_quant_conj (X: Type) (A B: X -&gt; Prop):
+  (exists x, A x /\ B x) -&gt; (exists x, A x) /\ (exists x, B x).
+Proof.
+  intro h.
+  destruct h as (x, ab).
+  destruct ab as (a, b).
+  split.
+  - exists x. exact a.
+  - exists x. exact b.
+Qed.
+</pre>
 
 </body>
 </html>
