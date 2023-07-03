@@ -1,7 +1,9 @@
 
-\chapter{Kategorientheorie}
+\chapter{Ein kategorieller Blick auf die Logik}
 
 \section{Grundbegriffe}
+
+\subsection{Kategorien}
 
 \begin{Definition}[Kategorie]
 Eine Kategorie ist ein Tripel $\category C = (\Ob,\Hom,{\circ})$,
@@ -58,6 +60,8 @@ Körperhomomorphismen, Vektorräume mit Vektorraumhomomorphismen
 usw. Kategorien. Des Weiteren bilden die endlichen Mengen, Gruppen,
 Ringe jeweils eine Kategorie.
 
+\subsection{Funktoren}
+
 Nun ist es so, dass Gruppen auch Mengen und Homomorphismen
 auch Abbildungen sind. Die Kategorie der Gruppen ist gewissermaßen
 in der Kategorie der Mengen enthalten. Um das zu präzisieren,
@@ -66,8 +70,8 @@ benötigen wir den Begriff des Vergissfunktors.
 \begin{Definition}[Kovarianter Funktor]\mbox{}\\*
 Sind $\category C,\category D$ Kategorien, dann nennt man
 $F\colon\category C\to\category D$ einen
-kovarianten Funktor, wenn jedem Objekt $X\in\Ob(\category C)$ ein Objekt
-$F(X)\in\Ob(\category D)$ zugeordnet wird und jedem Morphismus
+kovarianten Funktor, wenn jedem Objekt $X$ von $\category C$ ein Objekt
+$F(X)$ von $\category D$ zugeordnet wird und jedem Morphismus
 $f\in\Hom_{\category C}(X,Y)$ ein ein Morphismus
 $F(f)\in\Hom_{\category D}(F(X),F(Y))$ zugeordnet wird,
 so dass die folgenden beiden Verträglichkeitsaxiome erfüllt sind:%
@@ -80,7 +84,7 @@ F(\id_X) = \id_{F(X)}.
 Wie beim kovarianten Funktor, mit dem Unterschied
 $F(g\circ f) = F(f)\circ F(g)$.
 \end{Definition}
-Bemerkung: Die Notation ist überladen. Nämlich ist die Zuordnung
+\strong{Bemerkung.} Die Notation ist überladen. Nämlich ist die Zuordnung
 $F\colon\Ob(\category C)\to\Ob(\category D)$ zu unterscheiden
 von
 \[\tilde F\colon\Hom_{\category C}(X,Y)\to\Hom_{\category D}(F(X),F(Y)).\]
@@ -138,13 +142,13 @@ X \ar[r]^f \ar[d]_{\eta(X)} & Y \ar[d]^{\eta(Y)} \\
 D.\,h. es gilt $\eta(Y)\circ f = P(f)\circ\eta(X)$.
 Die Zuordnung $\eta$ ist eine sogenannte natürliche Transformation.
 
-\begin{Definition}[Natürliche Transformation]
+\begin{Definition}[Natürliche Transformation]\newlinefirst
 Seien $\category C, \category D$ Kategorien und
 $F,G\colon \category C\to \category D$ Funktoren.
 Dann schreibt man $\eta\colon F\to G$ und nennt $\eta$ natürliche
 Transformation, wenn die folgenden beiden Axiome erfüllt sind:
 \begin{enumerate}
-\item Jedes Objekt $X\in\Ob(\category C)$ bekommt einen Morphismus
+\item Jedes Objekt $X$ von $\category C$ bekommt einen Morphismus\\
 $\eta(X)\colon F(X)\to G(X)$.
 \item Für jeden Morphismus $f\colon X\to Y$ gilt
 $\eta(Y)\circ F(f)=G(f)\circ\eta(X)$.
@@ -159,6 +163,7 @@ Ein weiteres Beispiel ergibt sich bezüglich Äquivalenzrelationen
 in Erinnerung an \eqref{eq:induzierte-Abbildung}.
 Eine Abbildung $f\colon M\to M'$ heiße \emph{induzierend}, wenn%
 \[x\sim a \implies f(x)\sim' f(a).\]
+
 \begin{Satz}
 Die Paare $(M,\sim)$, bestehend aus Menge und Äquivalenzrelation,
 bilden mit den induzierenden Abbildungen
@@ -257,36 +262,31 @@ präzisiert werden. Die Formulierung wollen wir allgemein für
 Operationen beliebiger Stelligkeit haben. Sei also $p\colon Y^n\to Y$
 eine $n$-stellige Operation, man stelle sich dabei $Y:=\R$ vor. Man
 definiert nun die punktweise Anwendung von $p$ als%
-\begin{equation}\label{eq:eta-punktweise}
-\eta_p\colon\Abb(X,Y)^n\to\Abb(X,Y),\quad
-\eta_p(f)(x) := p(f_1(x),\ldots,f_n(x)),
-\end{equation}
+\[\eta_p\colon\Abb(X,Y)^n\to\Abb(X,Y),\quad
+\eta_p(f)(x) := p(f_1(x),\ldots,f_n(x)),\]
 wobei $f:=(f_1,\ldots,f_n)$ ein Tupel von Funktionen ist. Sei außerdem%
-\begin{equation}
-F(\varphi)(f) := (\varphi(f_1),\ldots,\varphi(f_n)).
-\end{equation}
+\[F(\varphi)(f) := (\varphi(f_1),\ldots,\varphi(f_n)).\]
 Zeigen wollen wir für $\varphi(f):=f\circ g$ nun
-\begin{equation}
-\varphi(\eta_p(f))(x) = \eta_p(F(\varphi)(f))(x),
+\[\varphi(\eta_p(f))(x) = \eta_p(F(\varphi)(f))(x),
 \quad\text{kurz}\quad
-\varphi\circ\eta_p = \eta_p\circ F(\varphi).
-\end{equation}
+\varphi\circ\eta_p = \eta_p\circ F(\varphi).\]
 Bei der Bestätigung folgt man wieder blind den Definitionen und dem
 Formalismus. Es gilt%
-\begin{align}
+\begin{align*}
 \varphi(\eta_p(f))(x)
 &= \eta_p(f)(g(x)) = p(f_1(g(x)),\ldots,f_n(g(x)))\\
 &= p(\varphi(f_1)(x),\ldots,\varphi(f_n)(x))
 = \eta_p(\varphi(f_1),\ldots,\varphi(f_n))(x)\\
 &= \label{eq:Ende-eta-punktweise}\eta_p(F(\varphi)(f))(x).
-\end{align}
+\end{align*}
 Das bedeutet, dieses Diagramm kommutiert:
 \[\xymatrix{
 \Abb(X,Y)^n \ar[r]^{F(\varphi)} \ar[d]_{\eta_p}
 & \Abb(X',Y)^n \ar[d]^{\eta_p} \\
 \Abb(X,Y) \ar[r]_{\varphi} & \Abb(X',Y)}\]
-Das legt den Verdacht nahe, dass es sich bei $F$ um einen Funktor
-und bei $\eta_p$ um eine natürliche Transformation handelt.
+Aller Voraussicht nach müsste es sich bei $F$ um einen Funktor
+handeln. Dass $\eta_p$ dabei die Rolle einer natürlichen Transformation
+einnimmt, wurde soeben gezeigt.
 
 \begin{Satz}[Kategorie mit Kompositionsoperatoren als Morphismen]\mbox{}\\*
 Sei $Y\ne\emptyset$. Sei $\Omega:=\{\Abb(X,Y)\mid X\;\text{ist beliebig}\}$.
@@ -304,49 +304,38 @@ $\circ$ abgeschlossen ist. Sei $\varphi_1(f):=f\circ g_1$ und
 $\varphi_2(f):=f\circ g_2$ mit $\dom(\varphi_2)=\cod(\varphi_1)$, so
 dass man $\varphi:=\varphi_2\circ\varphi_1$ bilden kann.
 Gesucht ist ein $g$, so dass $\varphi = f\circ g$. Nun gilt%
-\begin{equation}
-(\varphi_2\circ\varphi_1)(f) = (f\circ g_1)\circ g_2
-= f\circ g_1\circ g_2 = f\circ (g_1\circ g_2).
-\end{equation}
+\[(\varphi_2\circ\varphi_1)(f) = (f\circ g_1)\circ g_2
+= f\circ g_1\circ g_2 = f\circ (g_1\circ g_2).\]
 Man kann also $g:=g_1\circ g_2$ setzen. Nun verbleibt bloß noch die
 Existenz fester Identitäten $\id$ zu bestätigen. Man definiert dazu
 $\id(f):=f\circ\id$. Für $\varphi(f):=f\circ g$ gilt dann%
-\begin{gather}
+\begin{gather*}
 (\varphi\circ\id)(f) = (f\circ \id)\circ g = f\circ g = \varphi(f),\\
 (\id\circ\varphi)(f) = (f\circ g)\circ\id = f\circ g = \varphi(f).\;\qedsymbol
-\end{gather}
+\end{gather*}
+
 \begin{Satz}
 Bei $F(\varphi)(f):=(\varphi(f_1),\ldots,\varphi(f_n))$ für
 $f=(f_1,\ldots,f_n)$ handelt es sich um einen kovarianten Funktor.
 \end{Satz}
 \strong{Beweis.} Es gilt
-\begin{align}
-F(\psi\circ\varphi)(f) &= (\psi(\varphi(f_1)),\ldots,\psi(\varphi(f_n)))
+\[F(\psi\circ\varphi)(f) = (\psi(\varphi(f_1)),\ldots,\psi(\varphi(f_n)))
 = F(\psi)(F(\varphi)(f))
-= (F(\psi)\circ F(\varphi))(f),
-\end{align}
+= (F(\psi)\circ F(\varphi))(f),\]
 kurz $F(\psi\circ\varphi) = F(\psi)\circ F(\varphi)$. Und es gilt
-\begin{equation}
-F(\id)(f) = (\id(f_1),\ldots,\id(f_n)) = (f_1,\ldots,f_n) = f = \id(f),
-\end{equation}
+\[F(\id)(f) = (\id(f_1),\ldots,\id(f_n)) = (f_1,\ldots,f_n) = f = \id(f),\]
 kurz $F(\id) = \id$.\;\qedsymbol
-\begin{Satz}
-Die in \eqref{eq:eta-punktweise} definierte Operation $\eta_p$ ist
-eine natürliche Transformation.
-\end{Satz}
-\strong{Beweis.} Wurde in \eqref{eq:eta-punktweise} bis
-\eqref{eq:Ende-eta-punktweise} schon gezeigt.\;\qedsymbol
 
 Jetzt haben wir so viele Funktoren kennengelernt, dass allgemeine
-Regeln betreffend Funktoren gut motiviert sind. Der folgende Korollar
+Regeln betreffend Funktoren gut motiviert sind. Der folgende Satz
 durchleuchtet die Funktoren ein wenig.
-\begin{Korollar}
+\begin{Satz}
 Wird ein Funktor auf einen Isomorphismus angewendet, ist das Resultat
 wieder ein Isomorphismus.
-\end{Korollar}
+\end{Satz}
 \strong{Beweis.} Dieser ist direkt aus den Definitionen zu erhalten.
-Wir betrachten nur einen kovarianten Funktor $F$, weil der Beweis für
-einen kontravarianten Funktor analog verläuft.
+Wir betrachten nur einen kovarianten Funktor $F$. Der Beweis für
+einen kontravarianten Funktor verläuft analog.
 
 Sei $f\colon X\to Y$ ein beliebiger Isomorphismus im Definitionsbereich
 des Funktors. Laut Definition existert eine Inverse, das heißt, ein
@@ -363,7 +352,7 @@ einen Gruppenisomorphismus angewendet, ist das Resultat zwingend
 eine Bijektion, da die Bijektionen die Isomorphismen in der Kategorie
 der Mengen sind.
 
-\section{Anfangsobjekte und Endobjekte}
+\subsection{Anfangsobjekte und Endobjekte}
 
 \begin{Definition}[Anfangsobjekt, Endobjekt, Nullobjekt]\mbox{}\\*
 Es sei $\category C$ eine Kategorie. Ein
@@ -406,7 +395,7 @@ für die $x(\emptyset)=x$ gilt. Zu einer Abbildung $f\colon X\to Y$
 können wir die Zuordnung $f(x)=y$ bzw. $(x,y)\in f$ nun in der Form
 $f\circ x = y$ beschreiben.
 
-\section{Produkt und Koprodukt}
+\subsection{Produkt und Koprodukt}
 
 Ein wichtiger Begriff der Theorie ist das Produkt von
 Objekten. Weil es sich dabei um eine Verallgemeinerung des
@@ -444,12 +433,13 @@ Wieder ist $f$ eindeutig bestimmt.
 Gelegentlich wird $f$ als $f=f_1\times f_2$ notiert.
 
 \begin{Definition}[Produkt]\newlinefirst
-Sei $C$ eine Kategorie und seien $Y_1,Y_2\in C$.
-Ein Objekt $Y\in\mathcal C$ mit Projektionen $\pi_1\colon Y\to Y_1$ und
-$\pi_2\colon Y\to Y_2$ heißt Produkt, wenn zu jedem Objekt
-$X\in C$ und allen Morphismen $f_1\colon X\to Y_1$
-und $f_2\colon X\to Y_2$ genau ein Morphismus $f\colon X\to Y$
-existiert, so dass $f_1=\pi_1\circ f$ und $f_2=\pi_2\circ f$.
+Sei $\category C$ eine Kategorie und seien $Y_1,Y_2$ Objekte von
+$\category C$. Ein Objekt $Y$ von $\category C$ mit Projektionen
+$\pi_1\colon Y\to Y_1$ und $\pi_2\colon Y\to Y_2$ heißt Produkt, wenn
+zu jedem Objekt $X$ von $\category C$ und allen Morphismen
+$f_1\colon X\to Y_1$ und $f_2\colon X\to Y_2$ genau ein Morphismus
+$f\colon X\to Y$ existiert, so dass $f_1=\pi_1\circ f$ und
+$f_2=\pi_2\circ f$.
 \end{Definition}
 
 \noindent
@@ -485,11 +475,12 @@ Das macht $f((1,x)) = 1$ und $f((2,x)) = 2$. Dadurch ist $f$ eindeutig
 bestimmt. Es ist die gesuchte Projektion auf den Tag.
 
 \begin{Definition}[Koprodukt]\newlinefirst
-Sei $C$ eine Kategorie und seien $X_1,X_2\in C$. Ein Objekt $X$
-mit Morphismen $i_1\colon X_1\to X$ und $i_2\colon X_2\to X$
-heißt Koprodukt, wenn zu jedem Objekt $Y\in C$ und allen Morphismen
-$f_1\colon X_1\to Y$ und $f_2\colon X_2\to Y$ genau ein Morphismus
-$f\colon X\to Y$ existiert, so dass $f_1 = f\circ i_1$
+Sei $\category C$ eine Kategorie und seien $X_1,X_2$ Objekte von
+$\category C$. Ein Objekt $X$ von $\category C$ mit Morphismen
+$i_1\colon X_1\to X$ und $i_2\colon X_2\to X$
+heißt Koprodukt, wenn zu jedem Objekt $Y$ von $\category C$ und allen
+Morphismen $f_1\colon X_1\to Y$ und $f_2\colon X_2\to Y$ genau ein
+Morphismus $f\colon X\to Y$ existiert, so dass $f_1 = f\circ i_1$
 und $f_2 = f\circ i_2$.
 \end{Definition}
 
@@ -503,3 +494,81 @@ Kategorie der Mengen. Es gilt schon mal
 \end{cases}\]
 Laut Forderung soll außerdem $y_1 = f_1(x)$ und $y_2 = f_2(x)$ sein,
 wodurch $f$ eindeutig festgelegt ist.
+
+\subsection{Exponentialobjekte}
+
+Die Notation $B^A$ stehe für die Menge der Abbildungen $A\to B$.
+Es soll nun die Applikation einer Abbildung auf ein Argument
+als eigenständige Operation
+\[\varepsilon\colon B^A\times A \to B,\quad
+\varepsilon(f,a) := f(a)\]
+gedacht werden. Einer zweistelligen Abbildung
+$g\colon X\times A\to B$ lässt sich die Abbildung
+\[\hat g\colon X\to B^A,\quad \hat g(x)(a) := g(x,a).\]
+zuordnen. Diesen Vorgang nennen wir Currying. Man findet nun
+\[g(x,a) = \hat g(x)(a) = \varepsilon(\hat g(x),a)
+= (\varepsilon\circ (\hat g\times\id_A))(x,a).\]
+Die Gleichung $g = \varepsilon\circ(\hat g\times\id_A)$ ist also
+für jede Abbildung $g$ erfüllt, was bedeutet, dass das Diagramm
+\[\xymatrix{
+X\times A\ar[dr]^g\ar[d]_{\hat g\times\id_A} & \\
+B^A\times A \ar[r]_{\varepsilon} & B
+}\]
+kommutiert.
+
+\begin{Definition}[Exponentialobjekt]%
+\label{def:Exponentialobjekt}\newlinefirst
+Sei $\category C$ eine Kagegorie, in der das Produkt je zweier Objekte
+existiert. Zu zwei Objekten $A,B$ von $\category C$ heißt ein
+Objekt $B^A$ von $\category C$ zusammen mit einem Morphismus
+$\varepsilon\colon B^A\times A\to B$ Exponentialobjekt, wenn es zu jedem
+Objekt $X$ von $\category C$ und Morphismus $g\colon X\times A\to B$
+genau einen Morphismus $\hat g\colon X\to B^A$ gibt, so dass
+$\varepsilon\circ (\hat g\times\id_A) = g$ gilt.
+\end{Definition}
+
+\begin{Satz}\label{Exp-Isomorphie}
+Es besteht die Isomorphie
+$\Hom_{\category C}(X\times A, B)\cong\Hom_{\category C}(X,B^A)$.
+\end{Satz}
+
+\noindent\strong{Beweis.} Es sei $\lambda(g):=\hat g$ bezüglich Def.
+\ref{def:Exponentialobjekt}. Zu zeigen ist, dass es sich bei $\lambda$
+um einen Isomorphismus handelt. Für jedes $h\colon X\to B^A$ sei dazu
+\[\lambda'(h) := \varepsilon\circ (h\times\id_{A})\colon X\times A\to B.\]
+Zu zeigen ist, dass $\lambda'$ der inverse Morphismus zu $\lambda$ ist.
+Def. \ref{def:Exponentialobjekt} sichert nun direkt zu, dass
+$\lambda'(\lambda(g)) = g$ gelten muss. Zu bestätigen verbleibt
+$\lambda(\lambda'(h)) = h$. Die Allaussage in Def. \ref{def:Exponentialobjekt}
+wird hierzu spezialisiert mit $g:=\varepsilon\circ (h\times\id_A)$.
+Nun wissen wir aber nicht nur, dass $\hat g$ existieren muss, wir
+können es mit der Setzung $\hat g:=h$ angeben, denn dieses erfüllt die
+Gleichung
+\[\varepsilon\circ (\hat g\times\id_A) = \varepsilon\circ (h\times\id_A).\]
+Infolge gilt
+\[\lambda(\lambda'(h)) = \lambda(\varepsilon\circ (h\times\id_A))
+= \lambda(\varepsilon\circ (\hat g\times\id_A))
+= \lambda(g) = \hat g = h.\,\qedsymbol\]
+
+\section{Kartesisch abgeschlossene Kategorien}
+
+\begin{Definition}[Kartesisch abgeschlossene Kategorie]\newlinefirst
+Eine Kategorie $\category C$ heißt genau dann kartesisch abgeschlossen,
+wenn
+\begin{enumerate}[nosep]
+\item sie ein Terminalobjekt enthält,
+\item je zwei Objekte $A,B$ von $\category C$ ein Produkt
+  $A\times B$ in $\category C$ besitzen,
+\item je zwei Objekte $A,B$ von $\category C$ ein Exponential
+  $B^A$ in $\category C$ besitzen.
+\end{enumerate}
+\end{Definition}
+
+\noindent
+Dass die Kategorie der Mengen kartesisch abgeschlossen ist, wurde
+bereits während der Diskussion der drei Begrifflichkeiten
+nachgerechnet. Die Kategorie der endlichen Mengen ist ebenfalls
+kartesisch abgeschlossen. Sind $A,B$ endlich, ist ja $A\times B$
+und $B^A$ ebenfalls eine endliche Menge.
+
+

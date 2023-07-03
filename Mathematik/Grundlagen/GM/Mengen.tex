@@ -1383,6 +1383,99 @@ Ringhomomorphismus ist. Und für einen unitären Ring ist $\varphi$
 Eins-erhaltend, wie bereits aus Satz \ref{Kongruenz-Quotient}
 hervorgeht.\,\qedsymbol
 
+\subsection{Ordnungsrelationen}
+
+Bei vielen Untersuchungen genügt es nicht, Elemente einer Menge
+nur vergleichen zu können. Man möchte zusätzlich in Erfahrung
+bringen können, ob Elemente in einer bestimmten Weise geordnet
+sind, in einer bestimmten Weise in Reihenfolge stehen. Hierfür definiert
+man \emph{Ordnungsrelationen}\index{Ordnungsrelation}, von denen es
+verschiedene Arten gibt, je nachdem, welche Axiome sie erfüllen. Auf
+einer Menge können auch mehrere unterschiedliche Ordungsrelationen
+derselben Art definiert werden.
+
+Eine in vielen Bereichen der Mathematik hiesige Art von Relation
+ist die \emph{Halbordnung}\index{Halbordnung}, auch
+\emph{Partialordnung}\index{Partialordnung} genannt. Eine wichtige
+Unterart der Halbordnungen stellen die \emph{Totalordnungen} dar. So ist
+die Totalordnung der reellen Zahlen in der Analysis von zentraler
+Bedeutung.
+
+\begin{Definition}[Halbordnung]\newlinefirst
+Eine auf einer Menge $M$ definierte Relation $\le$ heißt
+Halbordnung, wenn%
+\begin{align*}
+&\forall x\in M\colon x\le x, && \text{(Reflexivität)}\\
+&\forall x,y\in M\colon x\le y\land y\le x\cond x=y, &&\text{(Antisymmetrie)}\\
+&\forall x,y,z\in M\colon x\le y\land y\le z\cond x\le z. && \text{(Transitivität)}
+\end{align*}
+\end{Definition}
+
+\noindent
+Ist $\le$ eine Halbordnung auf $M$, nennt man $M$ eine halbgeordnete
+Menge und kodiert dies als Struktur $(M,\le)$, um klarzustellen,
+bezüglich welcher Relation die Menge halbgeordnet ist.
+
+Die zu einer Halbordnung zugehörige strenge Halbordnung wird
+definiert durch%
+\[x < y \defiff x\le y\land x\ne y.\]
+Eine Relation $R$ auf $M$ heißt \emph{irreflexiv}, wenn
+\[\lnot\exists x\in M\colon R(x,x),\]
+in Worten, wenn kein Element zu sich selbst in Relation steht.
+Man bestätigt mühelos, dass die strenge Halbordnung irreflexiv
+und transitiv ist.
+
+\begin{Definition}[Totalordnung]\newlinefirst
+Eine Halbordnung $\le$ auf $M$ heißt Totalordnung, wenn
+\[\forall x,y\in M\colon x\le y\lor y\le x.\qquad\text{(Totalität)}\]
+\end{Definition}
+
+\noindent
+Das geläufigste Beispiel für eine Totalordnung ist die
+herkömmliche Ordnung der reellen Zahlen.
+
+Wie bei Halbordnungen ist die zu einer Totalordnung zugehörige
+strenge Totalordnung erklärt durch
+\[x < y \defiff x\le y\land x\ne y.\]
+
+\begin{Satz}
+Die strenge Totalordnung ist \emph{trichotom}\index{Trichotomie},
+das heißt,
+\[\forall x,y\in M\colon (x<y) \oplus (x=y)\oplus (y<x).\]
+\end{Satz}
+\begin{Beweis}
+Zunächst machen wir uns klar,
+\[A\oplus B\oplus C\iff (A\land\lnot B\land\lnot C)\lor
+(\lnot A\land B\land\lnot C)\lor (\lnot A\land \lnot B\land C).\]
+In dem Fall, wo eine der drei Aussagen gezeigt wird, sind also
+außerdem die beiden anderen Aussagen zu widerlegen.
+
+Es wird eine Fallunterscheidung bezüglich der Gleichheit unternommen.
+Im Fall $x=y$ führt laut Definition der strengen Totalordnung
+sowohl $x<y$ als auch $y<x$ zu einem Widerspruch. Es sei nun $x\ne y$
+der Fall. Laut Totalität liegt $x\le y\lor y\le x$ vor.
+Es sei $x\le y$ der Unterfall. Sofort folgt $x<y$ gemäß Definition
+der strengen Totalordnung. Angenommen, es wäre $y<x$, dann wäre neben
+$x\le y$ laut Definition der strengen Totalordnung mithin auch $y\le x$,
+womit laut Antisymmetrie $x=y$ wäre, was aber im Widerspruch zu $x\ne y$
+steht. Die Argumentation im Unterfall $y\le x$ verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Ist $\le$ eine Totalordnung auf $M$, dann gilt
+\[\forall x,y\in M\colon \lnot (x \le y) \bicond y < x.\]
+\end{Satz}
+\begin{Beweis}
+Von links nach rechts. Es gelte $\lnot (x\le y)$. Laut Totalität muss
+dann $y\le x$ sein. Angenommen, es wäre $x=y$, dann wäre insbesondere
+$x\le y$, was widersprüchlich zur Voraussetzung ist. Also muss
+$x\ne y$ sein, und somit $y<x$.
+
+Von rechts nach links. Es gelte $y<x$, also $y\le x$ und $x\ne y$.
+Angenommen, es wäre $x\le y$, dann wäre $x=y$ gemäß Antisymmetrie, was
+aber im Widerspruch zu $x\ne y$ steht.\,\qedsymbol
+\end{Beweis}
+
 \section{Kardinalzahlen}
 
 \subsection{Gleichmächtigkeit}
@@ -1499,6 +1592,7 @@ gesucht. Man darf $f := f_2^{-1}\circ f'\circ f_1$ setzen, denn
 \iff f' = f_2\circ f\circ f_1^{-1} = F(f).\,\qedsymbol\]
 \end{Beweis}
 
+\newpage
 \subsection{Der Satz von Cantor}
 
 \begin{Satz}
@@ -1581,7 +1675,7 @@ ordnet jeder natürlichen Zahl $n$ eine Binärfolge
 zu. Nun kann man allerdings eine weitere Binärfolge konstruieren, die
 sich von allen anderen unterscheidet, im Widerspruch zur Annahme,
 $f$ würde alle Binärfolgen abzählen. Dies geschieht wieder per
-Cantors Diagonalargument weiter Art. Man definiert dafür die Folge
+Cantors Diagonalargument zweiter Art. Man definiert dafür die Folge
 \[d\colon\N\to\{0,1\},\quad d_n := 1 - f(n)_n.\]
 Listet man die Folgen tabellarisch auf, je Zeile eine Folge, handelt es
 sich bei $(d_n)$ um die negierte Diagonale, womit sie sich von jeder
