@@ -119,17 +119,13 @@ $\{x\mid A(x)\}$ gemäß
 \end{Definition}
 Man muss mit der Komprehension ein wenig vorsichtig umgehen, denn nicht
 jede Klasse ist eine Menge. Die russellsche Klasse $R := \{x\mid x\notin x\}$
-ist das klassische Beispiel. Angenommen, $R$ wäre eine
-Menge. Dann dürfte man eine Aussage wie $R\in M$ bezüglich
-einer Menge $M$ formulieren, also speziell $R\in R$. Gemäß Definition
-von $R$ findet sich die folgende Ableitung:
-\[
-\infer{\vdash R\in R\bicond R\notin R}{
-  \infer[\infernote{laut Def.}]{R\in R\vdash R\notin R}{
-    \infer{R\in R\vdash R\in R}{}}
-& \infer[\infernote{laut Def.}]{R\notin R\vdash R\in R}{
-    \infer{R\notin R\vdash R\notin R}{}}}
-\]
+ist das klassische Beispiel. Logisch gilt laut dieser Festlegung die
+Allaussage
+\[\forall x\colon x\in R\bicond x\notin x.\]
+Angenommen, $R$ wäre eine Menge. Insofern dürfte man die Aussage
+$R\in M$ bezüglich einer Menge $M$ formulieren, also speziell $R\in R$.
+Spezialisierung der Allaussage mit $x:=R$ führt nun kurzerhand zu
+\[R\in R\bicond R\notin R.\]
 Für jede Formel $A$ gilt allerdings das Theorem
 \[\vdash (A\bicond\lnot A)\cond\bot.\]
 Insgesamt ergibt sich so ein Beweis der Kontradiktion. Irgendetwas kann
@@ -144,9 +140,25 @@ Antinomie unterhöhlt wird. Russell führte das Programm fort, und
 veröffentlichte schließlich die \emph{Principia Mathematica}, die der
 Antinomie mithilfe einer Typentheorie aus dem Weg geht.
 
+Russell formulierte seine Antinomie anschaulich in Gestalt des
+Barbier"=Paradoxons. \emph{Ein Barbier rasiere all jene, und nur jene, die
+sich nicht selbst rasieren. Rasiert sich der Barbier selbst?}
+Mit der Zeit verbreiteten sich viele Abwandlungen. Das Wesen der
+Antinomie liegt in der problematischen Selbstbezüglichkeit, aus der
+auch das Lügner"=Paradoxon hervorgeht. In dürren Worten geht es so:
+\emph{Pinocchio sagt, »Meine Nase wird jetzt wachsen.«}
+
 Man begegnet der Problematik, indem man $R$ als eine echte
 Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
-werden. Man definiert weiterhin eine weniger allgemeine Form der
+werden. Trotzdem sind Begriffe wie die Vereinigung, der Schnitt
+und das kartesische Produkt allgemein für Klassen definierbar.
+Die Gleichheit von Mengen und die Teilmengenbeziehung wird zur
+Gleichheit von Klassen und Teilklassenbeziehung erweitert. Mithin
+sind Relationen und Abbildungen zwischen Klassen definierbar. Alles
+ohne Schwierigkeiten, analog wie bei Mengen. Nähere Ausführungen finden
+sich in \cite{Jech}.
+
+Man definiert weiterhin eine weniger allgemeine Form der
 Komprehension, die \emph{Aussonderung}\index{Aussonderung}. Sie verhält
 sich gutartig, da sie nicht mehr ermöglicht, als das Ausfiltern von
 Elementen aus einer gegebenen Menge.
@@ -178,10 +190,10 @@ Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \end{Definition}
 Unschwer bestätigt sich die Äquivalenz
 \[A = B \iff A\subseteq B\land B\subseteq A.\]
-% [todo] Sie wird zum beweisen benutzt. Man zeigt
-% $x\in A\cond x\in B$ und $x\in B\cond x\in A$,
-% für festes, aber beliebiges $x$. Und damit ist bereits klar,
-% dass $A = B$ sein muss.
+Diese Gegebenheit dient häufig als Hilfestellung beim Beweis der
+Gleichheit zweier Mengen. Man zeigt $x\in A\cond x\in B$ und
+$x\in B\cond x\in A$ für festes, aber beliebiges $x$. Und damit ist
+bereits klar, dass $A = B$ sein muss.
 
 \begin{Definition}[Potenzmenge]\newlinefirst
 Die Potenzmenge\index{Potenzmenge} einer Menge $M$ ist definiert als
@@ -209,7 +221,7 @@ $A,B,C\in\mathcal P(G)$ erfüllen die drei Axiome
 & A\subseteq B\land B\subseteq C\cond A\subseteq C. &&\text{(Transitivität)}
 \end{align*}
 
-
+\newpage
 \subsection{Mengenoperationen}
 
 \begin{Definition}[Schnitt, Vereinigung, Differenz]\newlinefirst
@@ -379,8 +391,8 @@ Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$ ist%
 Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap M$ 
 für $M=\emptyset$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
 Zum einen könnte man die Bedingung $M\ne\emptyset$ einfach fallen
-lassen, dann ergibt im allgemeinen Mengenuniversum beim leeren Schnitt
-die Allklasse $\{x\mid\top\}$, die jedoch keine Menge ist.
+lassen, womit sich im allgemeinen Mengenuniversum beim leeren
+Schnitt die Allklasse $\{x\mid\top\}$ ergibt, die jedoch keine Menge ist.
 
 Aus diesen Grund gibt es noch die alternative Definition
 \[\bigcap M :=
@@ -1476,6 +1488,186 @@ Angenommen, es wäre $x\le y$, dann wäre $x=y$ gemäß Antisymmetrie, was
 aber im Widerspruch zu $x\ne y$ steht.\,\qedsymbol
 \end{Beweis}
 
+\noindent
+Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Wir legen die
+Kurzschreibweisen
+\begin{gather*}
+A\le s\defiff\forall x\in A\colon x\le s,\\
+s\le A\defiff\forall x\in A\colon s\le x
+\end{gather*}
+fest. Ein $s$ mit $A\le s$ heißt \emph{obere Schranke} von $A$. Existiert
+mindestens ein $s$ mit dieser Eigenschaft, nennt man $A$ \emph{nach oben
+beschränkt}. Ein $s$ mit $s\le A$ heißt \emph{untere Schranke} von $A$.
+Existiert mindestens ein $s$ mit dieser Eigenschaft, nennt man $A$
+\emph{nach unten beschränkt}.
+
+\begin{Definition}[Maximum, Minimum]\newlinefirst
+Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
+\begin{alignat*}{3}
+y = &\hspace{1.4pt}\max(A)\,&\defiff y\in A\land A\le y,\\
+y = &\hspace{2.4pt}\min(A)\,&\defiff y\in A\land y\le A.
+\end{alignat*}
+\end{Definition}
+
+\noindent
+Statt vom Maximum spricht man auch vom größten Element,
+anstelle vom Minimum vom kleinsten Element. Die vier Sprechweisen
+deuten hin auf den
+
+\begin{Satz}
+Eine Teilmenge einer halbgeordneten Menge besitzt höchstens ein Maximum
+und höchstens ein Minimum.
+\end{Satz}
+\begin{Beweis}
+Sei $y=\max(A)$ und $y'=\max(A)$. Laut Definition des
+Maximums sind dann $y,y'\in A$, wobei $\forall x\in A\colon x\le y$
+und $\forall x\in A\colon x\le y'$. Die erste Allaussage wird
+mit $x:=y'$ spezialisiert, die zweite mit $x:=y$. Somit
+gilt $y'\le y$ und $y\le y'$, ergo $y=y'$ gemäß der Antisymmetrie.
+Zum Minimum analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Definition}[Supremum, Infimum]\newlinefirst
+Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
+\begin{alignat*}{2}
+\sup(A) &:= \min\{s\in M\mid A\le s\},&&\qquad\text{(kleinste obere Schranke)}\\
+\inf(A) &:= \max\{s\in M\mid s\le A\}.&&\qquad\text{(größte untere Schranke)}
+\end{alignat*}
+\end{Definition}
+Entfaltung von $\min$ und $\max$ führt zu
+\begin{alignat*}{2}
+y = &\hspace{1.4pt}\sup(A) &&\iff A\le y\land\forall s\in M\colon A\le s\cond y\le s,\\
+y = &\hspace{2.4pt}\inf(A) &&\iff y\le A\land\forall s\in M\colon s\le A\cond s\le y.
+\end{alignat*}
+
+\begin{Definition}[Maximales Element, Minimales Element]\newlinefirst
+Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
+\begin{alignat*}{2}
+&\text{$y$ ist ein maximales Element von $A$}&&\defiff y\in A\land\lnot\exists x\in A\colon y<x,\\
+&\text{$y$ ist ein minimales Element von $A$}&&\defiff y\in A\land\lnot\exists x\in A\colon x<y.
+\end{alignat*}
+\end{Definition}
+
+\noindent
+Sie lassen sich am Hasse"=Diagramm veranschaulichen. Ein minimales
+Element ist eines, in das keine Kanten hineinlaufen. Ein maximales
+Element ist eines, aus dem keine Kanten herauslaufen. Weiterhin
+gilt der
+
+\begin{Satz}
+Existiert ein Maximum, so ist dieses das einzige maximale Element.
+Existiert ein Minimum, so ist dieses das einzige minimale Element.
+\end{Satz}
+\begin{Beweis}
+Sei $y$ das Maximum von $A$. Wir zeigen, dass $y$ ein maximales
+Element ist, wofür $\lnot\exists x\in A\colon y<x$ zu bestätigen ist.
+Das heißt, wir müssen uns von
+\[(\forall x\in A\colon x\le y),(\exists x\in A\colon y<x)\vdash\bot\]
+überzeugen. Also angenommen, es läge ein $x\in A$ mit $y<x$ vor, womit
+$y\le x$ und $x\ne y$ wäre. Die Allaussage wird mit diesem $x$
+spezialisiert. Aus $x\le y$ und $y\le x$ folgt $x=y$ per Antisymmetrie,
+was im Widerspruch zu $x\ne y$ steht.
+
+Weiterhin gilt es noch zu zeigen, dass kein weiteres maximales
+Element existieren kann. Sei $y'$ ein weiteres maximales Element.
+Weil $y$ das Maximum ist, muss $y'\le y$ gelten. Wegen $y\ne y'$
+gilt außerdem $y'<y$. Weil $y'$ maximal sein soll, dürfte kein $x\in A$
+mit $y'<x$ zu finden sein, doch wir haben so eines mit $x:=y$, was
+absurd ist. Zum Minimum verläuft der Beweis analog.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Es drängt sich einigen Lesern nun womöglich auf, leichtfertig die
+Umkehrungen für allgemeingültig zu erachten. Ich meine die Aussage
+»Existiert ein einziges maximales Element, muss es sich bei diesem um
+das Maximum handeln.« Bei unendlichen Mengen braucht das aber nicht
+unbedingt richtig sein. Nämlich kann neben dem maximalen Element
+außerdem noch ein unendlicher Aufstieg vorliegen, womit kein
+Maximum existiert. Analog kann neben dem minimalen Element außerdem
+noch ein unendlicher Abstieg vorliegen. Im Englischen sind die
+Abkürzungen ACC und DSC geläufig, die für \emph{ascending chain condition}
+und \emph{descending chain condition} stehen. Die ACC ist bei
+Abhandensein unendlicher aufsteigender Ketten
+\[x_0<x_1<x_2<\ldots\]
+erfüllt. Analog ist die DSC bei Abhandensein unendlicher absteigender
+Ketten
+\[x_0>x_1>x_2>\ldots\]
+erfüllt. Unter der ACC bzw. DSC ist die jeweilige Umkehrung tatsächlich
+richtig.
+
+\subsection{Monotone Abbildungen}
+
+\begin{Definition}[Monotone Abbildung]\newlinefirst
+Es seien $(M,\le), (M',\le')$ halbgeordnet. Eine Abbildung
+$f\colon M\to M'$ heißt
+\begin{alignat*}{2}
+& \text{monoton steigend}, &&\quad \text{wenn $\forall x,y\in M\colon x\le y\cond f(x)\le' f(y)$},\\
+& \text{monoton fallend}, &&\quad \text{wenn $\forall x,y\in M\colon x\le y\cond f(y)\le' f(x)$},\\
+& \text{streng monoton steigend}, &&\quad \text{wenn $\forall x,y\in M\colon x<y\cond f(x)<'f(y)$},\\
+& \text{streng monoton fallend}, &&\quad \text{wenn $\forall x,y\in M\colon x<y\cond f(y)<'f(x)$}.
+\end{alignat*}
+\end{Definition}
+
+\noindent
+\strong{Beispiele.}
+Die Folge $a\colon\N\to\R$ mit $a_n := n$ ist streng monoton
+steigend. Monotonie von Folgen spielt eine wichtige Rolle in
+der Konvergenztheorie.
+
+Die reelle Funktion $f\colon\R_{\ge 0}\to\R_{\ge 0}$ mit $f(x):=x^2$
+ist streng monoton steigend. Monotonie reeller Funktionen spielt eine
+wichtige Rolle in der Analysis.
+
+Es sei $G$ eine endliche Grundmenge. Die Abbildung
+\[f\colon M\to M',\quad f(A):=|A|,\quad M:=\mathcal P(G),\quad M':=\{0,\ldots,|M|\}\]
+ist monoton steigend bezüglich $(M,\subseteq)$ und $(M',\le)$.
+
+\begin{Satz}\label{streng-monoton-injektiv}
+Es sei $(M,\le)$ eine totalgeordnete und $(M',\le')$ eine halbgeordnete
+Menge. Ist $f\colon M\to M'$ streng monoton, so ist $f$ auch injektiv.
+\end{Satz}
+\begin{Beweis}
+Gezeigt wird für streng monoton steigendes $f$ die Kontraposition
+\[x\ne y\cond f(x)\ne f(y).\]
+Es gelte $x\ne y$. Gemäß Trichotomie ist dann entweder $x<y$ oder
+$y<x$. Im Fall $x<y$ ist $f(x)<'f(y)$, und somit $f(x)\ne f(y)$.
+Im Fall $y<x$ ist $f(y)<'f(x)$, und somit ebenfalls $f(x)\ne f(y)$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Seien $(M,\le),(M',\le')$ totalgeordnete Mengen. Ist $f\colon M\to M'$
+streng monoton steigend (fallend) und surjektiv, so ist $f$ bijektiv und $f^{-1}$
+ebenfalls streng monoton steigend (fallend).
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{streng-monoton-injektiv} ist $f$ bijektiv. Wir betrachten
+die Kontraposition,
+\[(x <' y \cond f^{-1}(x) < f^{-1}(y))\iff
+(f^{-1}(y) \le f^{-1}(x)\cond y\le' x).\]
+Es gelte $f^{-1}(y) \le f^{-1}(x)$. Weil $f$ streng monoton steigend
+ist, gilt $f(f^{-1}(y))\le' f(f^{-1}(x))$, ergo $y\le' x$. Für fallende
+Abbildungen verläuft der Beweis analog.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+\strong{Beispiel.} Wir wollen die reelle Funktion $f\colon\R_{\ge 0}\to\R_{\ge 0}$
+mit $f(x):=x^2$ als injektiv wissen. Hierfür wird
+\[x\ge 0,x<y\vdash x^2<y^2\]
+gezeigt. Aus $0\le x$ und $x<y$ erhält man zunächst $y>0$. Multipliziert man
+$x<y$ nun beidseitig mit $y$, gelangt man zu $xy<y^2$. Im Fall $x=0$ ist
+$x^2=0$ und $xy=0$, ergo $x^2<y^2$. Im Fall $x>0$ multipliziert man
+$x<y$ beidseitig mit $x$ und erhält $x^2<xy$. Per Transitivität
+findet sich ebenfalls $x^2<y^2$.
+
+Die Antwort auf die Frage, ob $f$ surjektiv ist, vermittelt der
+Zwischenwertsatz. Hierfür ist zunächst der Begriff der stetigen
+Funktion zu erklären. So wie es scheint, sind streng genommen bereits
+Mittel der Analysis erforderlich, um einfache algebraische
+Problemstellungen lösen zu können. Es geht ja am Ende zumal darum, die
+beidseitige Anwendung von $f$ als Äquivalenzumformung einer
+Gleichung oder einer Ungleichung zu erkennen.
+
+\newpage
 \section{Kardinalzahlen}
 
 \subsection{Gleichmächtigkeit}
@@ -1592,7 +1784,6 @@ gesucht. Man darf $f := f_2^{-1}\circ f'\circ f_1$ setzen, denn
 \iff f' = f_2\circ f\circ f_1^{-1} = F(f).\,\qedsymbol\]
 \end{Beweis}
 
-\newpage
 \subsection{Der Satz von Cantor}
 
 \begin{Satz}

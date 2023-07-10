@@ -133,6 +133,28 @@ def divisors(n):
     return [x for x in range(1, abs(n) + 1) if n%x == 0]
 </pre>
 
+<p>Schließt man die trivialen Teiler 1 und <var>n</var> aus
+der Teilerliste von <var>n</var> aus, spricht man von der Liste
+der echten Teiler. Wird von jedem der echten Teiler
+abermals die Liste der echten Teiler bestimmt, entsteht eine
+Baumstruktur.
+
+<pre class="ibox python">
+def proper_divisors(n):
+    return [x for x in range(2, abs(n)) if n%x == 0]
+
+def divisor_tree(n, indent = [], node = ""):
+    L = proper_divisors(n)
+    print("".join(indent[:-1]) + node + str(n))
+    if len(L) != 0:
+        last = len(L) - 1
+        for (i, d) in enumerate(L):
+            if i == last:
+                divisor_tree(d, indent + ["   "], "└─ ")
+            else:
+                divisor_tree(d, indent + ["│  "], "├─ ")
+</pre>
+
 <h3 id="Teilerfunktion">Teilerfunktion</h3>
 
 <p>Der Wert der Teileranzahlfunktion ist schlicht die Länge
