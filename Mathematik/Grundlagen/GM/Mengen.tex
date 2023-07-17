@@ -369,46 +369,51 @@ booleschen Algebra von den zweistelligen auf die mehrstelligen
 Operationen aus.
 
 \begin{Definition}[Allgemeine Vereinigung]\newlinefirst
-Sei $M$ eine Menge von Mengen. Die Vereinigung der $A\in M$ ist
-\[\bigcup M = \bigcup_{A\in M} A := \{x\mid\exists A\in M\colon x\in A\}.\]
+Sei $\setsystem A$ eine Menge von Mengen. Die Vereinigung der
+$A\in\setsystem A$ ist
+\[\bigcup\setsystem A = \bigcup_{A\in\setsystem A} A
+:= \{x\mid\exists A\in\setsystem A\colon x\in A\}.\]
 \end{Definition}
-Für $M=\emptyset$ ist $\bigcup M = \emptyset$. Die Disjunktion findet
-ihre Entsprechung genau in der Vereinigung
+Für $\setsystem A=\emptyset$ ist $\bigcup\setsystem A = \emptyset$.
+Die Disjunktion findet ihre Entsprechung genau in der Vereinigung
 von zwei Mengen. Dazu passend findet der Existenzquantor seine
 Entsprechung genau in der Vereinigung beliebig vieler Mengen.
 Aus diesem Grund weiten sich die Regeln der booleschen Algebra
 auf die allgemeine Vereinigung aus. Zum Beispiel lautet das
 Distributivgesetz für Mengen%
-\[B\cap\bigcup_{A\in M} A = \bigcup_{A\in M}(B\cap A).\]
+\[B\cap\bigcup_{A\in\setsystem A} A = \bigcup_{A\in\setsystem A}(B\cap A).\]
 Entfaltung der Definition führt nämlich zur logischen Äquivalenz
-\[x\in B\land(\exists A\in M\colon x\in A) \iff (\exists A\in M\colon x\in B\land x\in A).\]
+\[x\in B\land(\exists A\in\setsystem A\colon x\in A)
+\iff (\exists A\in\setsystem A\colon x\in B\land x\in A).\]
 Ihr Beweis gelingt mühelos.
 
 \begin{Definition}[Allgemeiner Schnitt]\newlinefirst
-Sei $M$ eine nichtleere Menge von Mengen. Der Schnitt der $A\in M$ ist%
-\[\bigcap M = \bigcap_{A\in M} A := \{x\mid\forall A\in M\colon x\in A\}.\]
+Sei $\setsystem A$ eine nichtleere Menge von Mengen.
+Der Schnitt der $A\in\setsystem A$ ist%
+\[\bigcap\setsystem A = \bigcap_{A\in\setsystem A} A
+:= \{x\mid\forall A\in\setsystem A\colon x\in A\}.\]
 \end{Definition}
-Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap M$ 
-für $M=\emptyset$ undefiniert gelassen. Hier gibt es zwei Möglichkeiten.
-Zum einen könnte man die Bedingung $M\ne\emptyset$ einfach fallen
-lassen, womit sich im allgemeinen Mengenuniversum beim leeren
+Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap\setsystem A$ 
+für $\setsystem A=\emptyset$ undefiniert gelassen. Hier gibt es zwei
+Möglichkeiten. Zum einen könnte man die Bedingung $\setsystem A\ne\emptyset$
+einfach fallen lassen, womit sich im allgemeinen Mengenuniversum beim leeren
 Schnitt die Allklasse $\{x\mid\top\}$ ergibt, die jedoch keine Menge ist.
 
 Aus diesen Grund gibt es noch die alternative Definition
-\[\bigcap M :=
-\{x\in G\mid\forall A\in M\colon x\in A\}.\]
-Hierzu ist eine Grundmenge $G$ festzulegen, so dass $M\subseteq\mathcal P(G)$
-gilt, oder man setzt $G:=\bigcup M$, wobei sich da die Frage
-nach der Nützlichkeit stellt.
+\[\bigcap\setsystem A :=
+\{x\in G\mid\forall A\in\setsystem A\colon x\in A\}.\]
+Hierzu ist eine Grundmenge $G$ festzulegen, so dass
+$\setsystem A\subseteq\mathcal P(G)$ gilt, oder man setzt
+$G:=\bigcup\setsystem A$, wobei sich da die Frage nach der
+Nützlichkeit stellt.
 
-Eine Menge von Mengen nennt man ein \emph{Mengensystem}\index{Mengensystem},
-wobei aber einige Autoren diese Begrifflichkeit für eine Familie von
-Mengen benutzen, die von einer Menge von Mengen zu unterscheiden ist.
-Eine Familie stellt eine Verallgemeinerung einer Folge von Mengen dar.
-In ihr darf dieselbe Menge mehrmals vorkommen. Man kann Schnitt und
-Vereinigung auch für Familien definieren, was aber eigentlich keine
-wesentliche Verallgemeinerung zu den obigen Festlegungen darstellt,
-wie ich im Folgenden diskutieren möchte.
+Eine Menge von Mengen nennt man ein \emph{Mengensystem}\index{Mengensystem}.
+Hiervon zu unterscheiden ist der Begriff der \emph{indizierten
+Mengenfamilie}, kurz \emph{Familie}. Sie stellt eine Verallgemeinerung
+einer Folge von Mengen dar. In ihr darf dieselbe Menge mehrmals vorkommen.
+Man kann Schnitt und Vereinigung auch für Familien definieren, was aber
+eigentlich keine wesentliche Verallgemeinerung zu den obigen Festlegungen
+darstellt, wie ich im Folgenden diskutieren möchte.
 
 Eine \emph{Familie}\index{Familie} $(A_i)$ von Mengen $A_i$ mit $i\in I$
 ist eine Abbildung $A\colon I\to Z$, wobei $Z$ eine Zielmenge ist,
@@ -676,6 +681,11 @@ dessen innere Information aus diesem Tripel besteht.
 Zuweilen wird der Graph von $f$ auch einfach als $f$ bezeichnet.
 Sollte dies verwirrend sein, schreibt man ausführlicher $G_f$ oder
 $\mathrm{Graph}(f)$.
+
+Mit $\forall x\in X\colon\exists!y\in Y\colon (x,y)\in G_f$
+ist eine Relation $f$ kurzum eine Funktion, was laut Satz
+\ref{eindeutige-Existenz-separat} äquivalent zu den beiden
+Eigenschaften ist.
 
 Statt $(x,y)\in G_f$ schreibt man üblicherweise $y=f(x)$. Es
 wird $f(x)$ gelesen als »$f$ von $x$« oder »das Bild von $x$ unter
@@ -1594,6 +1604,50 @@ Ketten
 \[x_0>x_1>x_2>\ldots\]
 erfüllt. Unter der ACC bzw. DSC ist die jeweilige Umkehrung tatsächlich
 richtig.
+
+Ein wichtiges Beispiel für eine Halbordnung ist die Teilmengenbeziehung.
+Man folgert mühelos, dass das Maximum einer Menge, sofern existent,
+zugleich ihr Supremum sein muss. Analog ist das Minimum einer Menge,
+sofern existent, zugleich ihr Infimum.
+
+\begin{Satz}\label{sup-inf-Teilmengenbeziehung}
+Sei $G$ eine Grundmenge und $\setsystem A\subseteq\mathcal P(G)$ mit
+$\setsystem A\ne\emptyset$, das heißt, eine nichtleere Menge von
+Teilmengen von $G$. Auf $(\mathcal P(G),\subseteq)$ gilt
+\[\textstyle\bigcap\setsystem A = \inf(\setsystem A),\qquad
+\bigcup\setsystem A = \sup(\setsystem A).\]
+\end{Satz}
+\begin{Beweis} Zum Infimum. Entfaltung bringt die Aussage in die Form
+\[\textstyle (\forall A\in\setsystem A\colon\bigcap\setsystem A\subseteq A)\land
+(\forall S\in\setsystem A\colon (\forall A\in\setsystem A\colon S\subseteq A)
+\cond S\subseteq\bigcap\setsystem A).\]
+Zur ersten Aussage der Konjunktion gelangt man durch Bestätigung von
+\[\textstyle A\in\setsystem A, x\in\bigcap\setsystem A\vdash x\in A,\]
+was aber gerade aus der definierenden Eigenschaft von $\bigcap\setsystem A$
+hervorgeht. Zur zweiten Aussage der Konjunktion gelangt man durch
+Bestätigung von
+\[S\in\setsystem A, (\forall A\in\setsystem A\colon S\subseteq A), x\in S
+\vdash\forall A\in\setsystem A\colon x\in A.\]
+Also angenommen, $A\in\setsystem A$, dann erhält man $S\subseteq A$ vermittels
+der vorhandenen Allaussage. Mit $x\in S$ folgt somit die gewünschte
+Aussage $x\in A$.
+
+Zum Supremum. Entfaltung bringt die Aussage in die Form
+\[\textstyle (\forall A\in\setsystem A\colon A\subseteq\bigcup\setsystem A)\land
+(\forall S\in\setsystem A\colon (\forall A\in\setsystem A\colon A\subseteq S)
+\cond\bigcup\setsystem A\subseteq S).\]
+Zur ersten Aussage der Konjunktion gelangt man durch Bestätigung von
+\[\textstyle A\in\setsystem A, x\in A\vdash
+\exists A'\in\setsystem A\colon x\in A'.\]
+Man wähle dazu schlicht die Menge $A':=A$, bei der die geforderte
+Eigenschaft bereits vorausgesetzt ist. Zur zweiten Aussage der
+Konjunktion gelangt man durch Bestätigung von
+\[S\in M,(\forall A\in\setsystem A\colon A\subseteq S),
+(\exists A'\in\setsystem A\colon x\in A')\vdash x\in S.\]
+Es liegt ein $A'\in\setsystem A$ mit $x\in A'$ vor. Die Allaussage wird
+mit $A:=A'$ spezialisiert, womit man $A'\subseteq S$ erhält. Mit $x\in A'$
+folgt somit die gewünschte Aussage $x\in S$.\,\qedsymbol
+\end{Beweis}
 
 \subsection{Monotone Abbildungen}
 
