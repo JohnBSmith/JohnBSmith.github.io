@@ -59,11 +59,13 @@ stehen. Man bezeichnet $\Gamma$ als die \emph{Antezedenz}%
 $\Gamma$ auch der \emph{Kontext}\index{Kontext}
 oder die \emph{Umgebung}\index{Umgebung} genannt, das sind auf die
 Typentheorie zurückzuführende Sprechweisen, die einen ganz ähnlichen
-Formalismus besitzt. Wir bezeichnen die Symbolik \[\Gamma\vdash A\]
+Formalismus besitzt. Wir bezeichnen die Symbolik
+\[\Gamma\vdash A\]
 als \emph{Sequenz}\index{Sequenz}. Sie drückt das \emph{Urteil}%
 \index{Urteil} aus, dass die Aussage $A$ aus den Annahmen
-vermittels Schlussregeln ableitbar ist. Der Modus ponens%
-\index{Modus ponens} wird nun in der allgemeinen Form
+vermittels Schlussregeln ableitbar ist. Darin nennt man $A$ die
+\emph{Hinterformel} oder \emph{Sukzedenz}.
+Der Modus ponens\index{Modus ponens} wird nun in der allgemeinen Form
 \[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}\]
 beschrieben. Wir argumentieren beim Schließen also ab jetzt nicht mehr
 mit den Aussagen selbst, sondern mit den Sequenzen. Dies hat einen wichtigen
@@ -72,7 +74,7 @@ expliziter Teil des Schließens wird.
 
 Ein Kontext kann auch eine leere Liste sein. Besitzt eine vermittels
 Schlussregeln ableitbare Sequenz einen leeren Kontext, so bezeichnet
-man die Antezedenz als ein \emph{Theorem}\index{Theorem} im engeren
+man die Sukzedenz als ein \emph{Theorem}\index{Theorem} im engeren
 Sinne. Ein Theorem ist also eine Aussage, die für sich allein gilt,
 ohne dass dafür irgendwelche Annahmen getroffen werden müssen.
 
@@ -326,7 +328,7 @@ jedes \emph{freien} Vorkommens, wobei man außerdem einer möglichen
 Überschattung einer der in $t$ enthaltenen Variablen aus dem Weg gehen
 muss. Diese Spitzfindigkeiten tauchen allerdings erst auf, wenn man mit
 Verschachtelungen von Quantoren hantiert. Ich will später
-genauer darauf eingehen.
+näher darauf eingehen.
 
 Die wesentlichen beiden Quantoren sind der \emph{Allquantor}%
 \index{Allquantor}\index{Universalquantor} $\forall$ und der
@@ -1381,7 +1383,7 @@ Es gilt die Äquivalenz
 (\exists x\colon A(x))\land(\forall x,y\colon A(x)\land A(y)\cond x=y).\]
 \end{Satz}
 \begin{Beweis}
-Die rechte Seite gelte. Dann liegt ein $u$ mit $A(u)$
+Die linke Seite gelte. Dann liegt ein $u$ mit $A(u)$
 und $\forall y\colon A(y)\cond u=y$ vor. Der Existenzaussage wird
 mit $x:=u$ genügt. Die Eindeutigkeit geht via
 \[(\forall y\colon A(y)\cond u=y), A(x), A(y)\vdash x=y.\]
@@ -1389,7 +1391,7 @@ Wir spezialisieren die gegebene Allaussage einmal mit $y:=x$ und einmal
 mit $y:=y$. Mit $A(x)$ und $A(y)$ bekommt man daraufhin $u=x$ und $u=y$. Ergo
 folgt $x=y$ per Symmetrie und Transitivität der Gleichheit.
 
-Die linke Seite gelte. Dann liegt ein $u$ mit $A(u)$ vor. Wir wählen
+Die rechte Seite gelte. Dann liegt ein $u$ mit $A(u)$ vor. Wir wählen
 $x:=u$ für die Existenzaussage. Die Aussage $A(u)$ liegt bereits vor.
 Verbleibt $\forall y\colon A(y)\cond u=y$ zu bestätigen. Wir nehmen
 also $A(y)$ an. Aus der Spezialisierung der gegebenen Allaussage mit
@@ -1587,115 +1589,6 @@ Anfang für $A(m,n)$ benutzt. Der zweite Induktionsbeweis ist so gesehen
 durch $m$ parametrisiert, was nichts Schlimmes ist, denn
 parametrisierte Argumentation kennzeichnet ja das übliche Vorgehen
 zur Bestätigung allquantifizierter Aussagen.
-
-\newpage
-\subsection{Induktive Mengen}
-
-Wir wollen uns nun eingehender mit dem Wesen der Mengen beschäftigen,
-über die die Induktion verläuft. Der Leser mag diesen Abschnitt
-beim ersten Lesen überspringen. Zunächst sollte er sich durch das
-Kapitel zur Mengenlehre durcharbeiten, insbesondere auch durch den
-Abschnitt zu den Halbordnungen.
-
-Einige Autoren halten es für richtig, ein Buch linear zu schreiben, so
-dass alle benötigten Begriffe und Sätze bereits bei der Erklärung neuer
-Sachverhalte zur Verfügung stehen. Aber ich denke, man kann ein Buch
-auch nichtlinear formulieren, solange man das ordentlich macht. In jedem
-guten Spiel kommt doch irgendwo auch mal einen zunächst unzugänglicher
-Ort vor, an dessen Zugang man später noch einmal zurückkehren muss.
-
-Als Grundmenge werde die Menge der reellen Zahlen gewählt. Die Basis sei
-die Einermenge $B=\{0\}$ und die einzige Produktionsregel sei die
-Nachfolgerabbildung $S(n):=n+1$. Die Menge der induktiven Mengen definieren
-wir als
-\[\setsystem A := \{A\subseteq\R\mid
-B\subseteq A\land\forall n\in A\colon S(n)\in A\}.\]
-In Worten enthält sie alle Mengen, die die Basis als Untermenge
-haben und bezüglicher der Nachfolgerabbildung abgeschlossen sind.
-
-Wir definieren die natürlichen Zahlen als die Schnittmenge
-\[\textstyle\N := \bigcap\setsystem A.\]
-Aufgrund von Satz \ref{sup-inf-Teilmengenbeziehung} ist $\N$ das Infimum
-der induktiven Mengen. Wir zeigen nun, dass $\N$ selbst eine der
-induktiven Mengen ist, womit sie das Minimum, die kleinste
-induktive Menge sein muss. Das bedeutet, jede andere induktive Menge
-muss eine Obermenge von $\N$ sein.
-
-\begin{Satz}\label{N-is-inductive}
-Es ist $\N\in\setsystem A$.
-\end{Satz}
-\begin{Beweis}
-Der Beweis ist abermals rein technischer Natur. Die Aussage
-$\N\in\setsystem A$ wird zunächst bezüglich der Definition von
-$\setsystem A$ entfaltet, das bringt sie in die Form
-\[\textstyle B\subseteq\N\land\forall n\in\N\colon S(n)\in\N.\]
-Erste Aussage der Konjunktion. Entfaltung von $B\subseteq\N$ führt zu
-\[\forall n\colon n\in B\cond \forall A\in\setsystem A\colon n\in A.\]
-Mit $A\in\setsystem A$ ist $B\subseteq A$, somit ist mit $n\in B$ auch
-$n\in A$.
-
-Entfaltung der zweiten Aussage der Konjunktion führt zu
-\[\forall n\colon (\forall A\in\setsystem A\colon n\in A)\cond
-(\forall A\in\setsystem A\colon S(n)\in A),\]
-die via
-\[(\forall A\in\setsystem A\colon n\in A), A\in\setsystem A\vdash S(n)\in A.\]
-bewiesen wird. Mit $A\in\setsystem A$ erhält man zum einen $n\in A$ und
-laut Definition von $\setsystem A$ zum anderen $\forall n\in A\colon S(n)\in A$.
-Mit $n\in A$ folgt also $S(n)\in A$.\,\qedsymbol
-\end{Beweis}
-
-\noindent
-Aus der Beschreibung als Schnitt geht in der Tat hervor, dass das
-Prinzip der Induktion der Menge der natürlichen Zahlen innewohnt.
-Wir arbeiten es folgenderweise heraus. Es sei $A\subseteq\N$. Es sei
-außerdem gezeigt worden, dass $A$ induktiv ist. Allgemein folgt aber
-$\bigcap\setsystem A\subseteq A$ aus $A\in\bigcap\setsystem A$. Weil ja
-$\N$ der Schnitt aller induktiven Mengen ist, muss also $\N\subseteq A$
-gelten, und damit $A=\N$. Zusammengefasst gilt
-\[0\in A\land (\forall n\in A\colon S(n)\in A)\cond A = \N,\]
-was aber nichts anderes als das Schema der Induktion ist. Das heißt,
-wir haben das Schema der Induktion aus der Definition von $\N$ abgeleitet.
-
-Bislang wurden die natürlichen Zahlen mithilfe der reellen Zahlen
-beschrieben, die ihrerseits ein Gebilde komplizierter Art sind.
-Es ist aber auch machbar, die induktiven Mengen in kurzen Zügen mit
-den elementaren Mitteln der Mengenlehre zu modellieren. Wir definieren
-hierbei die Null als die leere Menge und die Nachfolgerabbildung als
-\[S(n) := n\cup \{n\}.\]
-Infolgedessen gilt
-\[0 = \emptyset,\quad 1 = \{0\},\quad 2 = \{0, 1\},\quad
-3 = \{0, 1, 2\},\quad\text{usw.}\]
-Nun definieren wir $\N$ wieder als den Schnitt der induktiven Mengen,
-mit dem Unterschied, dass wir als Grundgesamtheit nicht die Potenzmenge
-der reellen Zahlen, sondern die Klasse aller Mengen wählen. Man spricht
-von der Modellierung der natürlichen Zahlen nach John von Neumann,
-der $S(\alpha) = \alpha\cup\{\alpha\}$ sogar allgemeiner als den
-Nachfolger einer Ordinalzahl $\alpha$ betrachtete.
-
-Einige Logiker sehen die aufgezeigte Herangehensweise, $\N$ als kleinste
-induktive Menge zu definieren, als problematisch an. Dies bedingt
-nämlich, dass die gesuchte Menge $\N$ bereits im Mengensystem der
-induktiven Mengen enthalten ist. Wir haben es hier mit einer gewissen
-Art von Selbstbezüglichkeit zu tun, man spricht von einer
-\emph{imprädikativen} Definition.
-
-\subsection{Induktive Mengen allgemein}
-
-Allgemein sei $G$ eine Grundmenge, die die gesuchte Menge enthält.
-Zu einer Funktion $f\colon G^n\to G$ stehe $\operatorname{ar}(f):=n$
-für ihre Arität. Es sei $B\subseteq G$ die Menge von Grundelementen.
-Es sei $F$ die Menge der Funktion, die die Produktionsregeln kodieren.
-Die Menge der induktiven Mengen ist dann
-\[\setsystem A := \{A\subseteq G\mid B\subseteq A\land
-\forall f\in F\colon\forall x\in A^{\operatorname{ar}(f)}\colon f(x)\in A\}.\]
-Die Setzung $G:=\R$, $B:=\{0\}$ und $F:=\{S\}$ mit $S(x):=x+1$
-liefert wie gesagt die natürlichen Zahl via $\bigcap\setsystem A = \N$.
-
-Es zeigt sich wieder, ass $\bigcap\setsystem A$ die kleinste
-induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$ 
-läuft hierbei völlig analog zu dem von Satz \ref{N-is-inductive} ab.
-Aufgrund dessen will ich darauf verzichten, diesen technischen Klimbim
-nochmals auszuführen.
 
 \newpage
 \section{Modallogik}

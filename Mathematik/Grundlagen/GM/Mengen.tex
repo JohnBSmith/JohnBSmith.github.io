@@ -1954,9 +1954,186 @@ betrachtet. Die Potenzmenge des Abzählbaren dagegen wie die Blätter
 des Baums, von denen jedes in den unendlich vielen Schritten des
 Durchschreitens seiner kodierenden Binärfolge erreicht würde.
 
-Ähnlich wie Hilberts Hotel hat so ein Baum die kontraintuitive
+Ähnlich wie das hilbertsche Hotel besitzt so ein Baum die kontraintuitive
 Eigenschaft, dass jeder seiner Teilbäume genau so viele Blätter
 kodiert wie der gesamte Baum.
+
+\section{Induktive Mengen}
+
+\subsection{Modellierung der natürlichen Zahlen}
+
+Wir wollen uns nun eingehender mit dem Wesen der Mengen beschäftigen,
+über die die Induktion verläuft. Der Leser mag diesen Abschnitt
+beim ersten Lesen überspringen.
+
+Als Grundmenge werde die Menge der reellen Zahlen gewählt. Die Basis sei
+die Einermenge $B=\{0\}$ und die einzige Produktionsregel sei die
+Nachfolgerabbildung $S(n):=n+1$. Die Menge der induktiven Mengen definieren
+wir als
+\[\setsystem A := \{A\subseteq\R\mid
+B\subseteq A\land\forall n\in A\colon S(n)\in A\}.\]
+In Worten enthält sie alle Mengen, die die Basis als Untermenge
+haben und bezüglicher der Nachfolgerabbildung abgeschlossen sind.
+
+Wir definieren die natürlichen Zahlen als die Schnittmenge
+\[\textstyle\N := \bigcap\setsystem A.\]
+Aufgrund von Satz \ref{sup-inf-Teilmengenbeziehung} ist $\N$ das Infimum
+der induktiven Mengen. Wir zeigen nun, dass $\N$ selbst eine der
+induktiven Mengen ist, womit sie das Minimum, die kleinste
+induktive Menge sein muss. Das bedeutet, jede andere induktive Menge
+muss eine Obermenge von $\N$ sein.
+
+\begin{Satz}\label{N-is-inductive}
+Es ist $\N\in\setsystem A$.
+\end{Satz}
+\begin{Beweis}
+Der Beweis ist abermals rein technischer Natur. Die Aussage
+$\N\in\setsystem A$ wird zunächst bezüglich der Definition von
+$\setsystem A$ entfaltet, das bringt sie in die Form
+\[\textstyle B\subseteq\N\land\forall n\in\N\colon S(n)\in\N.\]
+Erste Aussage der Konjunktion. Entfaltung von $B\subseteq\N$ führt zu
+\[\forall n\colon n\in B\cond \forall A\in\setsystem A\colon n\in A.\]
+Mit $A\in\setsystem A$ ist $B\subseteq A$, somit ist mit $n\in B$ auch
+$n\in A$.
+
+Entfaltung der zweiten Aussage der Konjunktion führt zu
+\[\forall n\colon (\forall A\in\setsystem A\colon n\in A)\cond
+(\forall A\in\setsystem A\colon S(n)\in A),\]
+die via
+\[(\forall A\in\setsystem A\colon n\in A), A\in\setsystem A\vdash S(n)\in A.\]
+bewiesen wird. Mit $A\in\setsystem A$ erhält man zum einen $n\in A$ und
+laut Definition von $\setsystem A$ zum anderen $\forall n\in A\colon S(n)\in A$.
+Mit $n\in A$ folgt also $S(n)\in A$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Aus der Beschreibung als Schnitt geht in der Tat hervor, dass das
+Prinzip der Induktion der Menge der natürlichen Zahlen innewohnt.
+Wir arbeiten es folgenderweise heraus. Es sei $A\subseteq\N$. Es sei
+außerdem gezeigt worden, dass $A$ induktiv ist. Allgemein folgt aber
+$\bigcap\setsystem A\subseteq A$ aus $A\in\bigcap\setsystem A$. Weil ja
+$\N$ der Schnitt aller induktiven Mengen ist, muss also $\N\subseteq A$
+gelten, und damit $A=\N$. Zusammengefasst gilt
+\[0\in A\land (\forall n\in A\colon S(n)\in A)\cond A = \N,\]
+was aber nichts anderes als das Schema der Induktion ist. Das heißt,
+wir haben das Schema der Induktion aus der Definition von $\N$ abgeleitet.
+
+Bislang wurden die natürlichen Zahlen mithilfe der reellen Zahlen
+beschrieben, die ihrerseits ein Gebilde komplizierter Art sind.
+Es ist aber auch machbar, die induktiven Mengen in kurzen Zügen mit
+den elementaren Mitteln der Mengenlehre zu modellieren. Wir definieren
+hierbei die Null als die leere Menge und die Nachfolgerabbildung als
+\[S(n) := n\cup \{n\}.\]
+Infolgedessen gilt
+\[0 = \emptyset,\quad 1 = \{0\},\quad 2 = \{0, 1\},\quad
+3 = \{0, 1, 2\},\quad\text{usw.}\]
+Nun definieren wir $\N$ wieder als den Schnitt der induktiven Mengen,
+mit dem Unterschied, dass wir als Grundgesamtheit nicht die Potenzmenge
+der reellen Zahlen, sondern die Klasse aller Mengen wählen. Man spricht
+von der Modellierung der natürlichen Zahlen nach John von Neumann,
+der $S(\alpha) = \alpha\cup\{\alpha\}$ sogar allgemeiner als den
+Nachfolger einer Ordinalzahl $\alpha$ betrachtete.
+
+Einige Logiker sehen die aufgezeigte Herangehensweise, $\N$ als kleinste
+induktive Menge zu definieren, als problematisch an. Dies bedingt
+nämlich, dass die gesuchte Menge $\N$ bereits im Mengensystem der
+induktiven Mengen enthalten ist. Wir haben es hier mit einer gewissen
+Art von Selbstbezüglichkeit zu tun, man spricht von einer
+\emph{imprädikativen} Definition.
+
+\subsection{Induktive Mengen allgemein}
+
+Allgemein sei $G$ eine Grundmenge, die die gesuchte Menge enthält.
+Zu einer Funktion $f\colon G^n\to G$ stehe $\operatorname{ar}(f):=n$
+für ihre Arität. Es sei $B\subseteq G$ die Menge von Grundelementen.
+Es sei $F$ die Menge der Funktion, die die Produktionsregeln kodieren.
+Die Menge der induktiven Mengen ist dann
+\[\setsystem A := \{A\subseteq G\mid B\subseteq A\land
+\forall f\in F\colon\forall x\in A^{\operatorname{ar}(f)}\colon f(x)\in A\}.\]
+Die Setzung $G:=\R$, $B:=\{0\}$ und $F:=\{S\}$ mit $S(x):=x+1$
+liefert wie gesagt die natürlichen Zahlen via $\bigcap\setsystem A = \N$.
+
+Es zeigt sich wieder, dass $\bigcap\setsystem A$ die kleinste
+induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$ 
+läuft hierbei völlig analog zu dem von Satz \ref{N-is-inductive} ab.
+Aufgrund dessen will ich darauf verzichten, diesen technischen Klimbim
+nochmals auszuführen.
+
+\subsection{Der dedekindsche Rekursionssatz}
+
+\begin{Satz}[Rekursionssatz von Dedekind]\newlinefirst
+Zu einer $X$ Menge seien $x_0\in X$ und $\varphi\colon X\to X$
+festgelegt. Es bezeichne $S(n)=n+1$ die Nachfolgerabbildung. Die
+Funktionalgleichung
+\[\forall n\in\N\colon f(S(n)) = \varphi(f(n))\]
+besitzt zum Anfangswert $f(0)=x_0$ eine eindeutige Lösung
+$f\colon\N\to X$.
+\end{Satz}
+\begin{Beweis}[Beweis]
+Die Existenz bereitet gewisse Schwierigkeiten. Kümmern wir uns
+zunächst lieber um die Eindeutigkeit. Es seien $f,g$ zwei Lösungen.
+Wir müssen zu $f=g$ gelangen, das heißt, $f(n)=g(n)$ für alle $n$.
+Induktion über $n$. Im Anfang ist $f(0)=x_0$ und $g(0)=x_0$, ergo
+$f(0)=g(0)$. Im Induktionsschritt ist $f(S(n))=g(S(n))$ aus der
+Induktionsvoraussetzung $f(n)=g(n)$ zu folgern. Vermöge der
+Funktionalgleichung findet sich
+\[f(S(n)) = \varphi(f(n)) = \varphi(g(n)) = g(S(n)).\]
+Das war's schon. Zur Existenz betrachten wir das Mengensystem
+\[\setsystem A := \{A\subseteq\N\times X\mid (0,x_0)\in A\land
+\forall (n,x)\in A\colon (S(n),\varphi(x))\in A\}.\]
+Es ist $\setsystem A$ nichtleer, weil $\N\times X\in\setsystem A$ ist.
+Sei $G:=\bigcap\setsystem A$. Man überzeugt sich von $G\in\setsystem A$,
+womit $G$ die kleinste Menge des Systems sein muss. Wir bestätigen
+nun, dass $G$ der Graph einer Abbildung $f\colon\N\to X$ sein muss. Dazu
+wird
+\[\forall n\in\N\colon\exists! x\in X\colon (n,x)\in G\]
+vermittels Induktion über $n$ gezeigt. Im Anfang ist $(0,x_0)\in G$,
+weil das System nur aus solchen Mengen besteht. Angenommen, es gäbe
+noch ein weiteres $x_0'\ne x_0$ mit $(0,x_0')\in G$. Dann wäre
+$G\setminus\{(0,x_0')\}\in\setsystem A$ im Widerspruch dazu, dass $G$
+die kleinste Menge ist. Nämlich gilt
+\[\forall (m,x)\in G\setminus\{(0,x_0')\}\colon
+(S(m),\varphi(x))\in G\setminus\{(0,x_0')\}\]
+erfüllt, denn es ist $(S(m),\varphi(x))\ne (0,x_0')$ für jedes $m$
+wegen $0\notin S(\N)$.
+
+Zum Schritt. Induktionsvoraussetzung ist die Existenz genau eines $x$
+mit $(n,x)\in G$. Wegen $G\in\setsystem A$ gilt somit auch
+$(S(n),\varphi(x))\in G$. Angenommen, es gäbe ein weiteres
+$x'\ne\varphi(x)$ mit $(S(n),x')\in G$. Man setze
+$A:=G\setminus\{(S(n),x')\}$. Es wäre nun $A\in\mathcal A$ im
+Widerspruch dazu, dass $G$ die kleinste Menge ist. Nämlich gilt
+\[(0,x_0)\in A\land\forall (m,u)\in A\colon (S(m),\varphi(u))\in A.\]
+Die erste Aussage muss stimmen, weil $(0,x_0)$ nicht $(S(n),x')$ sein kann,
+da $S(n)\ne 0$ für jedes $n$. Zur zweiten Aussage ist im Wesentlichen
+$(S(m),\varphi(u))\ne (S(n),x')$ zu zeigen.
+Angenommen, $(S(m),\varphi(u)) = (S(n),x')$, das heißt,
+$S(m)=S(n)$ und $\varphi(u)=x'$. Weil $S$ injektiv ist, müsste dann
+$m=n$ sein. Demnach müsste $(n,x)$ mit $(m,u)$ übereinstimmen, weil ja
+nach Voraussetzung $x$ eindeutig bestimmt ist. Mit $x=u$ folgt daraufhin
+$\varphi(x)=\varphi(u)$. Aber aus $x'\ne\varphi(x)$ und $\varphi(u)=x'$
+folgt $\varphi(x)\ne\varphi(u)$, was widersprüchlich ist.
+
+Es darf $G$ demzufolge als Graph einer Abbildung $f$ gedeutet werden.
+Die Aussage $G\in\mathcal A$ bedeutet diesbezüglich nichts anderes als
+\[f(0)=x_0\land\forall n\in\N\colon f(S(n))=\varphi(f(n)),\]
+womit eine Lösung existiert.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Der letzte Teil des Beweises ist ein wenig haarig. Da findet ein
+Widerspruchsbeweis innerhalb eines Widerspurchsbeweises statt,
+und ich habe ein paar kleine Schritte ausgelassen, um die Darstellung
+nicht zu sehr mit Kleinkram aufzublähen.
+
+Der Beweis soll zurückgehen auf \cite{Lorenzen}, wobei die moderne
+Fassung in \cite{Halmos}, \cite{Mainzer} zu finden ist.
+Dedekind selbst bewies den Satz in \cite{Stach}. Allerdings setzt
+er dabei die zuvor definierte Ordnung der natürlichen Zahlen
+voraus. Beschränkt man sich auf die Peano"=Axiome allein, würde
+der Beweis zirkulär, sollte die Ordnung über die rekursiv festgelegte
+Addition definiert worden sein. Diese Problematik wird in \cite{Lamm}
+näher diskutiert.
 
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel

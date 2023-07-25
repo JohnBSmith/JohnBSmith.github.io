@@ -14,6 +14,7 @@
 
 <h2>Inhaltsverzeichnis</h2>
 <ol>
+<li><a href="#Hilfsbefehle">Hilfsbefehle</a>
 <li><a href="#Assistiertes-Schliessen">Assistiertes Schließen</a>
 <li><a href="#Vorwaertsschliessen">Vorwärtsschließen</a>
 <li><a href="#Definition">Definition vermittels Taktiken</a>
@@ -21,6 +22,16 @@
 <li><a href="#Allquantoren">Taktiken für Allquantoren</a>
 <li><a href="#Existenzquantoren">Taktiken für Existenzquantoren</a>
 </ol>
+
+<h2 id="Hilfsbefehle">Hilfsbefehle</h2>
+
+<table class="bt">
+<tr><th>Befehl<th>Erklärung
+<tr><td><code>Locate "/\".</code><td>Sucht die Definition des Symbols <code>/\</code>.
+<tr><td><code>About and.</code><td>Informiert über den Typ von <code>and</code>.
+<tr><td><code>Print and.</code><td>Term und Typ von <code>and</code>.
+<tr><td><code>Search (_ /\ _ -> _).</code><td>Findet unter anderem <code>proj1</code> und <code>proj2</code>.
+</table>
 
 <h2 id="Assistiertes-Schliessen">Assistiertes Schließen</h2>
 
@@ -185,6 +196,28 @@ Qed.
 
 <pre class="ibox gallina">
 fun h nb a => let b := h a in nb b
+</pre>
+
+<p>Zu beachten wäre noch, dass <code>assert</code> die innere
+Struktur des notierten Terms vergessen lässt. Es bleibt nur die
+Information übrig, dass eine Variable mit einem bestimmten Typ
+konstruiert werden konnte. Möchte man den Term beibehalten,
+ersetzt man den Befehl <code>assert</code> schlicht durch
+<code>pose</code> oder <code>set</code>. Bei <code>set</code> wird
+zusätzlich im Ziel die Substitution jedes Vorkommens der Terms durch
+die Variable vorgenommen. Vermittels <code>unfold</code> lässt sich
+die Variable wieder durch den ursprünglichen Term ersetzen.
+
+<pre class="ibox gallina">
+Theorem contraposition (A B: Prop):
+  (A -&gt; B) -&gt; (~B -&gt; ~A).
+Proof.
+  intro h. intro nb. intro a.
+  pose (b := h a).
+  pose (contradiction := nb b).
+  unfold b in contradiction.
+  exact contradiction.
+Qed.
 </pre>
 
 <h2 id="Definition">Definition vermittels Taktiken</h2>
