@@ -1958,6 +1958,51 @@ Durchschreitens seiner kodierenden Binärfolge erreicht würde.
 Eigenschaft, dass jeder seiner Teilbäume genau so viele Blätter
 kodiert wie der gesamte Baum.
 
+Die bisher gemachten Feststellungen sind schließlich als Folgerungen
+eines allgemeinen Satzes darstellbar, dessen Formulierung zunächst
+auf Mengen beschränkt bleiben soll. Für die allgemeine Fassung
+müssten wir zunächst die Begrifflichkeiten der Kategorientheorie
+einführen, was an dieser Stelle aber den Rahmen sprengen würde.
+
+\begin{Satz}[Fixpunktsatz von Lawvere für Mengen]\newlinefirst
+Existiert eine Surjektion $X\to\Abb(X,Y)$, muss jede Abbildung
+$Y\to Y$ mindestens einen Fixpunkt besitzen.
+\end{Satz}
+\begin{Beweis}
+Es sei $\varphi\colon Y\to Y$ beliebig. Laut Voraussetzung
+existiert eine Surjektion $f\colon X\to\Abb(X,Y)$. Man setzt
+\[d\colon X\to Y,\quad d(x) := \varphi(f(x)(x)).\]
+Weil $f$ surjektiv ist, existiert ein $a\in X$ mit $f(a)=d$.
+Es ist mit $y_a:=f(a)(a)$ ein Fixpunkt gefunden, denn
+\[\varphi(y_a) = \varphi(f(a)(a)) = d(a) = f(a)(a) = y_a.\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Für $|Y|\ge 2$ kann man immer eine Abbildung ohne Fixpunkt finden.
+Speziell für $X:=\N$ und $Y:=\{0,1\}$ findet sich $\varphi(y) := 1-y$,
+womit $d$ zu der zuvor diskutierten negierten Diagonale wird.
+
+Ein weiteres Beispiel. Es sei $X=V_\alpha$ eine Menge der
+Von"=Neumann-Hierarchie und $Y := \{0,1\}$. Die Abbildung%
+\[f\colon X\to\Abb(X,Y),\quad f(x)(u) := (u\in x)\]
+ordnet jeder Menge $x$ ihr Prädikat $P=f(x)$ zu, so dass sie
+umgekehrt als%
+\[x = \{u\in X\mid P(u)\}\]
+beschrieben ist, da $f$ injektiv ist, denn es gilt $(x\in X\cond x\subseteq X)$
+und daraufhin
+\[f(x) = f(x') \iff (\forall u\colon (u\in x) = (u\in x'))
+\iff x = x'\]
+gemäß dem Prinzip der Extensionalität, das die Gleichheit von Mengen
+definiert. Angenommen, $f$ wäre surjektiv, das heißt, jedes Prädikat
+beschriebe eine Menge. Dann hätte jede boolesche Funktion
+$\varphi\colon Y\to Y$ einen Fixpunkt. Aber die Verneinung
+$\varphi(y):=\lnot y$ besitzt keinen Fixpunkt. Das heißt, es existiert
+keine Menge $a\in X$, die die Gleichung%
+\[f(a)(a) = \varphi(f(a)(a)) \iff (a\in a) = (a\notin a),\]
+erfüllt. Wir haben hier eine gewisse Abart der der russellschen Antinomie
+in leichter Umformulierung. Die Diagonalmenge $D = \{x\in X\mid d(x)\}$
+entspricht hierbei der russellschen Klasse. Demnach muss $D\notin X$ sein.
+
 \section{Induktive Mengen}
 
 \subsection{Modellierung der natürlichen Zahlen}
