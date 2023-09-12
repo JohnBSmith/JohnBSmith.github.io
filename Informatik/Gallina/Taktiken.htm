@@ -299,7 +299,53 @@ Qed.
 </pre>
 </table>
 
-<p>Die Taktik <code>auto</code> erstellt verbleibende Beweisschritte
+<p>Weiterhin kann man <code>repeat</code> vor <code>split</code>
+setzen, um Konjunktionen von mehr als zwei Aussagen in einem Rutsch
+in Unterziele aufzutrennen.
+
+<table class="bt">
+<tr><th>Einfache Form<th>Kurzform
+<tr><td><pre class="ibox gallina">
+Goal forall A B C: Prop,
+  A /\ B /\ C -&gt; C /\ B /\ A.
+Proof.
+  intros A B C (a, (b, c)).
+  split.
+  * exact c.
+  * split.
+    - exact b.
+    - exact a.
+Qed.
+</pre>
+<td><pre class="ibox gallina">
+Goal forall A B C: Prop,
+  A /\ B /\ C -&gt; C /\ B /\ A.
+Proof.
+  intros A B C (a, (b, c)).
+  repeat split.
+  * exact c.
+  * exact b.
+  * exact a.
+Qed.
+</pre>
+</table>
+
+<p>Unter Umständen tut <code>repeat split</code> mehr als man möchte.
+Man kann die Aufteilung aber auch genau kontrollieren, indem man
+<code>repeat split</code> gegen
+
+<p class="indent"><code>split; [| split]</code>
+
+<p>ersetzt. Das Semikolon-Tactical darin bewirkt, dass die Taktik
+hinter dem Semikolon auf jedes durch die Taktik vor dem Semikolon
+erzeugte Unterziel angewendet wird. Soll es zu jedem der Unterziele
+eine eigene Taktik sein, werden diese in eckige Klammern gesetzt
+und durch einen senkrechten Strich getrennt. Weil in unserem Fall ein
+zusätzliches <code>split</code> nur auf das zweite Unterziel angewendet
+werden soll, entfällt die Taktik vor dem Strich.
+
+<p>Die Taktiken <code>trivial</code>, <code>auto</code> und
+<code>tauto</code> erstellen verbleibende Beweisschritte
 in bestimmten Situationen automatisch.
 
 <table class="bt">

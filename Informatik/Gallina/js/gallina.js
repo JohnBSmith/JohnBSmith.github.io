@@ -88,6 +88,11 @@ function node_syntax(s){
         ){
             s2+="<span class='symbol'>"+c+"</span>";
             i++;
+        }else if(c=='<'){
+            st = "";
+            while(i<s.length && s[i]!='>'){st+=s[i]; i++;}
+            s2+=st+">";
+            i++;
         }else{
             s2+=c;
             i++;

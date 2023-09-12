@@ -17,6 +17,7 @@
 <li><a href="#Subtraktion">Subtraktion</a>
 <li><a href="#Gleichungen">Gleichungen</a>
 <li><a href="#Ungleichungen">Ungleichungen</a>
+<li><a href="#Aequiv-Umformungen">Äquivalenzumformungen</a>
 </ol>
 
 <h2 id="Subtraktion">Subtraktion</h2>
@@ -134,6 +135,51 @@ Proof.
   rewrite Rinv_l in h by trivial.
   rewrite Rmult_1_l in h.
   exact h.
+Qed.
+</pre>
+
+<h2 id="Aequiv-Umformungen">Äquivalenzumformungen</h2>
+
+<p>Bislang wurde eine Äquivalenz aufgetrennt in Implikation
+und umgekehrte Implikation, deren Beweise jeweils für sich erbracht
+wurden. Es ist aber auch die äquivalente Umformung einer Gleichung
+innerhalb einer Aussage durchführbar. Wir erinnern uns hierfür
+daran, dass <code>setoid</code> es ermöglicht, die Taktik
+<code>rewrite</code> ebenfalls für die Umschreibung von Aussagen zu
+nutzen. Somit steht jede vorhandene Äquivalenz zur Umformung zur
+Verfügung.
+
+<pre class="ibox gallina">
+Require Import Reals.
+Local Open Scope R_scope.
+
+Theorem equi_sub (x y z: R):
+  x = y &lt;-&gt; x - z = y - z.
+Proof. Admitted.
+
+Theorem equi_div2 (x y: R):
+  x = y &lt;-&gt; x / 2 = y / 2.
+Proof. Admitted.
+
+Goal forall (x: R),
+  2*x + 1 = 0 &lt;-&gt; x = -1/2.
+Proof.
+  intro x.
+  <span class="highlight">rewrite (equi_sub _ 0 1).</span>
+  unfold Rminus at 1.
+  rewrite Rplus_assoc.
+  rewrite Rplus_opp_r.
+  rewrite Rplus_0_r.
+  unfold Rminus.
+  rewrite Rplus_0_l.
+  <span class="highlight">rewrite equi_div2.</span>
+  unfold Rdiv at 1.
+  rewrite Rmult_comm.
+  rewrite &lt;- Rmult_assoc.
+  rewrite (Rmult_comm (/ 2) 2).
+  rewrite Rinv_r by trivial.
+  rewrite Rmult_1_l.
+  apply iff_refl.
 Qed.
 </pre>
 

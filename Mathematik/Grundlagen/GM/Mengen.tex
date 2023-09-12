@@ -108,14 +108,42 @@ Diese Beziehung erklärt sich durch die Umformung
 Die letzte Umformung gilt, weil $M\ne\emptyset$ gleichbedeutend mit
 $\exists x\colon x\in M$ ist.
 
+\subsection{Teilmengen}
+
+Gehört jedes Element einer Menge $A$ auch zu einer Menge $B$, nennt
+man $A$ eine \emph{Teilmenge}\index{Teilmenge} von $B$. Man sagt auch,
+$B$ umfasse $A$, oder $B$ sei eine Obermenge von $A$. Eine \emph{echte
+Teilmenge} sei $A$ dann, wenn zusätzlich $A\ne B$ gilt. Die Menge der
+geraden Zahlen ist eine echte Teilmenge der ganzen Zahlen. Jede Menge
+ist eine Teilmenge von sich selbst, jedoch keine echte.
+
+Die Menge der Quadrate ist eine Teilmenge der Vierecke, genauer eine
+Teilmenge der Rechtecke und auch eine Teilmenge der Rhomben.
+Weder ist die Menge der Rechtecke eine Teilmenge der Rhomben, noch
+ist die Menge der Rhomben eine Teilmenge der Rechtecke.
+Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
+eine Teilmenge der Parallelogramme.
+
+\begin{Definition}[Teilmengenbeziehung]\label{def:Teilmenge}\newlinefirst
+Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
+\[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
+\end{Definition}
+Unschwer bestätigt sich die Äquivalenz
+\[A = B \iff A\subseteq B\land B\subseteq A.\]
+Diese Gegebenheit dient häufig als Hilfestellung beim Beweis der
+Gleichheit zweier Mengen. Man zeigt $x\in A\cond x\in B$ und
+$x\in B\cond x\in A$ für festes, aber beliebiges $x$. Und damit ist
+bereits klar, dass $A = B$ sein muss.
+
 \subsection{Komprehension}
 
 Es wird $\{x\mid A(x)\}$ gelesen als »die Klasse der $x$, für die
 $A(x)$ gilt« oder »die Menge der $x$, für die $A(x)$ gilt«.
-\begin{Definition}[Komprehension]\label{def:Komprehension}\newlinefirst
+\begin{Definition}[Komprehension]%
+\label{def:Komprehension}\newlinefirst
 Zu einer Aussageform $A(x)$ definiert man die Klasse
 $\{x\mid A(x)\}$ gemäß
-\[a\in\{x\mid A(x)\}\defiff A(a).\]
+\[u\in\{x\mid A(x)\}\defiff A(u).\]
 \end{Definition}
 Man muss mit der Komprehension ein wenig vorsichtig umgehen, denn nicht
 jede Klasse ist eine Menge. Die russellsche Klasse $R := \{x\mid x\notin x\}$
@@ -150,50 +178,119 @@ auch das Lügner"=Paradoxon hervorgeht. In dürren Worten geht es so:
 
 Man begegnet der Problematik, indem man $R$ als eine echte
 Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
-werden. Trotzdem sind Begriffe wie die Vereinigung, der Schnitt
-und das kartesische Produkt allgemein für Klassen definierbar.
-Die Gleichheit von Mengen und die Teilmengenbeziehung wird zur
-Gleichheit von Klassen und Teilklassenbeziehung erweitert. Mithin
-sind Relationen und Abbildungen zwischen Klassen definierbar. Alles
-ohne Schwierigkeiten, analog wie bei Mengen. Nähere Ausführungen finden
-sich in \cite{Jech}.
-
-Man definiert weiterhin eine weniger allgemeine Form der
-Komprehension, die \emph{Aussonderung}\index{Aussonderung}. Sie verhält
-sich gutartig, da sie nicht mehr ermöglicht, als das Ausfiltern von
-Elementen aus einer gegebenen Menge.
+werden. Ich will sogleich näher auf Klassen eingehen, zuvor aber eine
+weniger allgemeine Form der Komprehension, die \emph{Aussonderung}%
+\index{Aussonderung}, aufführen. Sie verhält sich gutartig, da sie nicht
+mehr ermöglicht, als das Ausfiltern von Elementen aus einer gegebenen Menge.
 
 \begin{Definition}[Aussonderung]\label{def:Aussonderung}\newlinefirst
 Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
-\[a\in\{x\in M\mid A(x)\}\defiff a\in M\land A(a).\]
+\[u\in\{x\in M\mid A(x)\}\defiff u\in M\land A(u).\]
 \end{Definition}
 
-\subsection{Teilmengen}
+\noindent
+Aussonderung schränkt das Argumentieren mehr ein als nötig. Einen
+durchdachten Weg aus der Antinomie, der uns ungehindertes Bilden von
+Komprehensionen zurückbringt, bietet das Konzept der Klassen.
+Generell soll jede denkbare Ansammlung, also auch jede Menge eine
+\emph{Klasse} sein.
 
-Gehört jedes Element einer Menge $A$ auch zu einer Menge $B$, nennt
-man $A$ eine \emph{Teilmenge}\index{Teilmenge} von $B$. Man sagt auch,
-$B$ umfasse $A$, oder $B$ sei eine Obermenge von $A$. Eine \emph{echte
-Teilmenge} sei $A$ dann, wenn zusätzlich $A\ne B$ gilt. Die Menge der
-geraden Zahlen ist eine echte Teilmenge der ganzen Zahlen. Jede Menge
-ist eine Teilmenge von sich selbst, jedoch keine echte.
+Alternativ bestünde auch die Möglichkeit, Mengen und Klassen als zwei
+unterschiedliche \emph{Sorten} aufzufassen, worunter man eine Art
+Typsystem versteht, das Mengen und Klassen zur Unterscheidung mit einem
+unterschiedlichen Typ behaftet. Die Elementbeziehung $x \in A$
+darf diesbezüglich nur geformt werden, wenn $x$ von der Sorte Menge ist,
+womit die russellsche Antinomie ebenfalls unterbunden würde. Diesen Weg
+wollen wir allerdings zugunsten der folgenden, ein wenig eleganteren
+Ausführungen nicht beschreiten.
 
-Die Menge der Quadrate ist eine Teilmenge der Vierecke, genauer eine
-Teilmenge der Rechtecke und auch eine Teilmenge der Rhomben.
-Weder ist die Menge der Rechtecke eine Teilmenge der Rhomben, noch
-ist die Menge der Rhomben eine Teilmenge der Rechtecke. 
-Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
-eine Teilmenge der Parallelogramme.
+Wir legen ein Universum $\mathcal U$ fest, das alle Mengen als Elemente
+enthält. Dieses, häufig auch mit $V$ abgekürzte, ist selbst
+eine Klasse, die Klasse aller Mengen, auch genannt die \emph{universelle
+Klasse} oder \emph{Allklasse}. Eine Klasse sei genau dann eine
+\emph{Menge}, wenn sie ein Element der universellen Klasse ist,
+andernfalls spricht man von einer \emph{echten Klasse}. Man darf sich
+eine echte Klasse demnach als eine Ansammlung vorstellen, die in
+irgendeiner Weise, gleich welcher Art das vonstatten gehen mag, zu
+reichhaltig ist, um als Menge gelten zu können.
 
-\begin{Definition}[Teilmengenbeziehung]\label{def:Teilmenge}\newlinefirst
-Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
-\[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
+Statt die universelle Klasse als Grundobjekt zu betrachten, wird sie
+logisch mit der Forderung
+\[u\in\setsystem U \defiff \exists C\colon u\in C\]
+auf die Elementbeziehung zurückgeführt. Das heißt, eine Klasse $u$
+sei genau dann eine Menge, wenn sie Element irgendeiner Klasse ist.
+Es wird nun eine gutartige Komprehension festgelegt.
+
+\begin{Definition}[Klassenkomprehension]\newlinefirst
+Zu jeder Aussageform $A(x)$ ist die Klasse $\{x\mid A(x)\}$
+definiert gemäß
+\[u\in \{x\mid A(x)\} \defiff u\in\setsystem U\land A(u).\]
 \end{Definition}
-Unschwer bestätigt sich die Äquivalenz
-\[A = B \iff A\subseteq B\land B\subseteq A.\]
-Diese Gegebenheit dient häufig als Hilfestellung beim Beweis der
-Gleichheit zweier Mengen. Man zeigt $x\in A\cond x\in B$ und
-$x\in B\cond x\in A$ für festes, aber beliebiges $x$. Und damit ist
-bereits klar, dass $A = B$ sein muss.
+Jede Klasse steht demnach nicht für eine beliebige Aussageform, sondern
+ist als eine Aussonderung aus der universellen Klasse interpretierbar.
+Die Komprehension wird hierdurch dahingehend entschärft, dass das
+Argument der russellschen Antinomie nicht mehr zu einer
+Kontradiktion führt. Dennoch bleibt die Argumentation wichtig,
+denn sie zeigt eben, dass die russellsche Klasse eine echte
+Klasse ist. Die Teilmengenbeziehung übernehmen wir unverändert,
+sprechen aber nun von der Teilklassenbeziehung. Daraufhin folgt sofort,
+dass jede Klasse eine Teilklasse der universelle Klasse sein muss.
+Es erscheint weiterhin vernünftig, jede Teilmenge einer Menge auch als
+Menge anzusehen. Wäre die universelle Klasse eine Menge, so müsste
+die russellsche Klasse als Teilklasse ebenso eine Menge sein, was aber
+nicht stimmt, wie wir gerade zuvor festgestellt haben. Ergo muss die
+universelle Klasse ebenfalls eine echte sein.
+
+Vermittels der Komprehension ist im Weiteren die leere Menge definierbar.
+Darüber hinaus können wir die universelle Klasse gleichfalls, insofern
+sie zuvor gemäß der genannten Existenzaussage erklärt war, via
+Komprehension darstellen. Wir legen die beiden Klassen,
+die einander Gegenpole sind, fest als
+\[\begin{array}{@{} c @{{}:={}} c @{{}={}} l @{}}
+\emptyset & \{x\mid\bot\} & \{x\mid x\ne x\},\\[2pt]
+\setsystem U & \{x\mid\top\} & \{x\mid x = x\}.
+\end{array}\]
+Die später erläuterten Begriffe Vereinigung, Schnitt, Differenz,
+Komplement und das kartesische Produkt sind eigentlich allgemein für
+Klassen definiert. Die Gleichheit von Mengen und die Teilmengenbeziehung
+wird wie gesagt zur Gleichheit von Klassen und Teilklassenbeziehung
+erweitert. Mithin sind Relationen und Abbildungen zwischen Klassen
+definierbar. Als Faustregel darf man sich merken, dass jeder Begriff
+zunächst für Klassen definiert wird, es sich aber, sofern diese als
+Elemente einer Klasse auftreten, um Mengen handeln muss.
+
+Im Fortgang tut sich irgendwann die Frage auf, welche Gesetzmäßigkeiten
+eigentlich wesentlich sind, um die allgemeine Mengenlehre ausarbeiten
+zu können. Mehr noch tut sich damit einhergehend die Frage auf, ob diese
+Gesetzmäßigkeiten wirklich unbedenklich sind. Zur Beantwortung der
+ersten Frage stellt man ein System von Axiomen auf, wir sprechen dann
+von einer \emph{axiomatischen Mengenlehre}. Davon wurde mehrere
+geschaffen, die zueinander in nichttrivialer Weise in Beziehung stehen.
+Mit der zweiten Frage verhält es sich schwierig.
+
+Die beiden Ansätze Aussonderung und Klassenkomprehension spiegeln
+sich in unterschiedlichen axiomatischen Mengenlehren wider. Das
+System ZFC, für \emph{Zermelo"=Fraenkel with Choice}, gewährt lediglich
+die Aussonderung. Man wird sich dabei fragen, wie größere Mengen
+überhaupt zu bilden sind, wenn doch aus Mengen nur Teilmengen ausgesondert
+werden. Dafür stehen zwei weitere Axiome zur Verfügung, das Axiom der
+Potenzmenge und das Axiom der Ersetzung.
+
+Befindet man Klassenkomprehension als zulässig, führt dies zum
+System MK, für \emph{Morse"=Kelley}. Gleichwohl bleiben das Axiom der
+Potenzmenge und das Axiom der Ersetzung weiterhin verfügbar, um Mengen
+von echten Klassen abgrenzen zu können. Wem dieses System zu allgemein
+ist,  dem steht als strengere Fassung noch das System NBG, für
+\emph{Neumann"=Bernays"=Gödel}, zur Verfügung. Man konnte zeigen,
+dass jede in NBG beweisbare Aussage, die nur Mengen betrifft,
+ebenfalls in ZFC beweisbar sein muss.
+
+Der Leser mag sich fragen, warum axiomatische Mengenlehre
+nicht direkt im Grundstudium an Hochschulen unterrichtet wird,
+schließlich sind Axiomensysteme doch sonst der Standard. Ist sie
+unpragmatisch? Dem ist nicht Fall. Zwar ist sie ein wenig umständlicher
+auszuarbeiten als die zur Abgrenzung als naiv bezeichnete Mengenlehre,
+es hält sich meines Erachtens aber sehr in Grenzen.
 
 \begin{Definition}[Potenzmenge]\newlinefirst
 Die Potenzmenge\index{Potenzmenge} einer Menge $M$ ist definiert als
@@ -393,7 +490,7 @@ Der Schnitt der $A\in\setsystem A$ ist%
 \[\bigcap\setsystem A = \bigcap_{A\in\setsystem A} A
 := \{x\mid\forall A\in\setsystem A\colon x\in A\}.\]
 \end{Definition}
-Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap\setsystem A$ 
+Im Gegensatz zur Vereinigung wurde der Schnitt $\bigcap\setsystem A$
 für $\setsystem A=\emptyset$ undefiniert gelassen. Hier gibt es zwei
 Möglichkeiten. Zum einen könnte man die Bedingung $\setsystem A\ne\emptyset$
 einfach fallen lassen, womit sich im allgemeinen Mengenuniversum beim leeren
@@ -1052,6 +1149,53 @@ mit den Unendlichkeiten schwierig verhält. Unter bestimmten Umständen
 ist das Axiom nicht vonnöten. Außerdem, so lässt sich zeigen, impliziert
 es den Satz vom ausgeschlossenen Dritten.
 
+\subsection{Definite Kennzeichnung}
+
+Sofern zu einer vorgelegte Aussageform $A(x)$ nicht nur ein diese
+erfüllendes Objekt existiert, sondern das Objekt auch eindeutig
+bestimmt ist, würden wir gerne über dieses Objekt reden können.
+Diesbezüglich stehe die Symbolik $\iota x\colon A(x)$ für
+»dasjenige $x$, das $A(x)$ erfüllt«. Sie enstammt der
+\emph{Principia Mathematica} und wird \emph{definite Kennzeichung}
+oder \emph{definite Beschreibung} genannt. Mit den Mitteln der
+Mengenlehre ist dieses Objekt darstellbar als die Schnittmenge
+\[(\iota x\colon A(x)) := {\textstyle\bigcap}\{x\mid A(x)\}.\]
+Nämlich ist $\{x\mid A(x)\}$ im Falle der eindeutigen Existenz eine
+Einermenge. Für jede Einermenge $\{x\}$ gilt
+\[\textstyle\bigcap\{x\} = \bigcup\{x\} = x.\]
+Hierfür ist allerdings eine reine Mengenlehre erforderlich, in der
+keine sogenannten Urelemente auftauchen, die selbst keine Mengen sind.
+Durchliefe die Variable $x$ Urelemente, obgleich es sich in Wirklichkeit
+nur um ein einziges handelt, wäre die Schnittmenge nicht definiert.
+
+Näher betrachtet sind eindeutige Existenz und Reduzierung auf eine
+Einermenge bedeutungsgleich, das soll heißen, es besteht die Äquivalenz
+\[(\exists! x\colon A(x)) \iff \exists y\colon \{x\mid A(x)\} = \{y\}\]
+Löst man die Gleichheit darin per Extensionalität auf, findet sich die
+kurze Charakterisierung
+\[(\exists! x\colon A(x)) \iff \exists y\colon\forall x\colon (A(x)\bicond x=y).\]
+Sie zeigt sich bereits in der reinen Logik mit Gleichheit als beweisbar,
+ohne dafür Mengenlehre zur Verfügung stellen zu müssen.
+
+Liegt eine Abbildung $f\colon X\to Y$ vor, unterstellt man die
+Bedeutung des Terms $f(x)$ üblicherweise wortlos als offenkundig.
+In der formalen Mengenlehre muss man diese Applikation allerdings erst
+einmal definieren. Wir legen fest,
+\[f(x) := (\iota y\colon (x,y)\in f)
+= \textstyle{\bigcap}\{y\mid (x, y)\in f\}.\]
+Unter dieser Festlegung stellt sich heraus, dass die Äquivalenz
+\[y = f(x) \iff (x,y)\in f\]
+die linke Seite nicht erklärt, sondern vielmehr für
+$x\in X$ beweisbar ist. Stünde die Festlegung nicht zur Verfügung,
+müsste man Aussagen, in denen $f(x)$ vorkommt, umständlich durch
+Existenzaussagen kodieren. Beispielsweise stünde $f(x)\in B$ für die
+Existenz eines $y\in B$ mit $(x,y)\in f$. Kommt mehrere Applikationen
+vor, führt dies im Allgemeinen zu geschachtelten Existenzaussagen.
+Höchst umständlich wäre es, würde man in einer längeren Rechnung jede
+Applikation einschließlich der arithmetische Operationen durch eine
+Existenzaussage kodieren. Auf diese Weise ließe sich aber die
+Gleichheit aus der Logik herausarbieten.
+
 \section{Relationen}
 
 \subsection{Relationen im Allgemeinen}
@@ -1649,6 +1793,7 @@ mit $A:=A'$ spezialisiert, womit man $A'\subseteq S$ erhält. Mit $x\in A'$
 folgt somit die gewünschte Aussage $x\in S$.\,\qedsymbol
 \end{Beweis}
 
+\newpage
 \subsection{Monotone Abbildungen}
 
 \begin{Definition}[Monotone Abbildung]\newlinefirst
@@ -1999,7 +2144,7 @@ $\varphi\colon Y\to Y$ einen Fixpunkt. Aber die Verneinung
 $\varphi(y):=\lnot y$ besitzt keinen Fixpunkt. Das heißt, es existiert
 keine Menge $a\in X$, die die Gleichung%
 \[f(a)(a) = \varphi(f(a)(a)) \iff (a\in a) = (a\notin a),\]
-erfüllt. Wir haben hier eine gewisse Abart der der russellschen Antinomie
+erfüllt. Wir haben hier eine gewisse Abart der russellschen Antinomie
 in leichter Umformulierung. Die Diagonalmenge $D = \{x\in X\mid d(x)\}$
 entspricht hierbei der russellschen Klasse. Demnach muss $D\notin X$ sein.
 
@@ -2089,17 +2234,17 @@ Art von Selbstbezüglichkeit zu tun, man spricht von einer
 \subsection{Induktive Mengen allgemein}
 
 Allgemein sei $G$ eine Grundmenge, die die gesuchte Menge enthält.
-Zu einer Funktion $f\colon G^n\to G$ stehe $\operatorname{ar}(f):=n$
-für ihre Arität. Es sei $B\subseteq G$ die Menge von Grundelementen.
-Es sei $F$ die Menge der Funktion, die die Produktionsregeln kodieren.
+Es sei $B\subseteq G$ die Menge von Grundelementen.
+Es bezeichne $\Phi$ die Menge der Funktionen, die die Produktionsregeln kodieren,
+wobei $(n,f)\in\Phi$ eine Funktion $f\colon G^n\to G$ bedeuten soll.
 Die Menge der induktiven Mengen ist dann
 \[\setsystem A := \{A\subseteq G\mid B\subseteq A\land
-\forall f\in F\colon\forall x\in A^{\operatorname{ar}(f)}\colon f(x)\in A\}.\]
+\forall (n,f)\in\Phi\colon\forall x\in A^n\colon f(x)\in A\}.\]
 Die Setzung $G:=\R$, $B:=\{0\}$ und $F:=\{S\}$ mit $S(x):=x+1$
 liefert wie gesagt die natürlichen Zahlen via $\bigcap\setsystem A = \N$.
 
 Es zeigt sich wieder, dass $\bigcap\setsystem A$ die kleinste
-induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$ 
+induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$
 läuft hierbei völlig analog zu dem von Satz \ref{N-is-inductive} ab.
 Aufgrund dessen will ich darauf verzichten, diesen technischen Klimbim
 nochmals auszuführen.
@@ -2179,6 +2324,91 @@ voraus. Beschränkt man sich auf die Peano"=Axiome allein, würde
 der Beweis zirkulär, sollte die Ordnung über die rekursiv festgelegte
 Addition definiert worden sein. Diese Problematik wird in \cite{Lamm}
 näher diskutiert.
+
+\subsection{Fixpunkteigenschaft kleinster induktiver Mengen}
+
+Zu einer Menge $A\subseteq G$ und Nachfolgerabbildung $S\colon G\to G$ sei
+\[F(A) := \{0\}\cup S(A) = \{0\}\cup\{m\in G\mid\exists n\in A\colon m = S(n)\}.\]
+Diesbezüglich finden sich einige Mengen $A$, die die Gleichung $F(A)=A$
+erfüllen, also Fixpunkte der Abbildung $F$ sind. Zum Beispiel ist dies
+$A:=\N$, aber auch $A:=\Z$, wobei die reellen Zahlen $G:=\R$ als
+Grundmenge dienen sollen und $S(x):=x+1$ zu jeder reellen Zahl $x$
+gesetzt wird.
+
+Eine Menge $A$ mit der Eigenschaft $F(A)\subseteq A$ bezeichnet
+man als \emph{Präfixpunkt}. Tatsächlich ist eine Menge genau dann
+ein Präfixpunkt, wenn sie induktiv ist. Nämlich findet sich
+die äquivalente Umformung
+\begin{align*}
+& m\in F(A)\cond m\in A\\
+\iff &(m = 0\lor\exists n\in A\colon m = S(n))\cond m\in A\\
+\iff &\lnot (m = 0\lor\exists n\in A\colon m = S(n))\lor m\in A\\
+\iff &m\ne 0\land(\forall n\in A\colon m\ne S(n))\lor m\in A\\
+\iff &(m\ne 0\lor m\in A)\land (\forall n\in A\colon m\ne S(n)\lor m\in A)\\
+\iff &(m=0\cond m\in A)\land (\forall n\in A\colon m=S(n)\cond m\in A)\\
+\iff &0\in A\land\forall n\in A\colon S(n)\in A.
+\end{align*}
+Demzufolge stimmt das System der Präfixpunkte mit dem System
+der induktiven Mengen überein. Mithin ist $\N$ der kleinste Präfixpunkt
+\[\textstyle\N = \bigcap\{A\subseteq G\mid F(A)\subseteq A\}.\]
+Ebenso ist $\N$ der kleinste Fixpunkt, wie folgendermaßen
+ersichtlich wird. Hat man zwei beliebige Mengensysteme
+$\setsystem A,\setsystem B$ mit $\setsystem A\subseteq\setsystem B$,
+so gilt $\bigcap\setsystem B\subseteq\bigcap\setsystem A$.
+Wir erinnern uns außerdem daran, dass die Schnittmenge eine
+untere Schranke ist, also $\bigcap\setsystem A\subseteq A$ für
+jedes $A\in\setsystem A$ gilt. Speziell gilt dies für
+\[\setsystem A := \{A\mid F(A)=A\},\quad\setsystem B := \{A\mid F(A)\subseteq A\}.\]
+Mit $\N\in\setsystem A$ erhält man somit
+\[\textstyle\N = \bigcap\setsystem B
+\subseteq\bigcap\setsystem A
+\subseteq\N.\]
+Ergo muss $\N=\bigcap\setsystem A$ sein, der kleinste Fixpunkt von $F$.
+
+Liegt nun in allgemeiner Weise eine induktive Struktur mit Basismenge
+$B$ und einer Menge $\Phi$ von Nachfolgerabbildungen vor, ist der
+Fortsetzungsschritt definiert gemäß
+\[\textstyle F(A) := B\cup\bigcup\{f(A^n)\mid (n,f)\in\Phi\}.\]
+Auch in dieser allgemeinen Situation lässt sich analog nachrechnen,
+dass das System der Präfixpunkte mit dem System der induktiven
+Mengen übereinstimmt. Und es ergibt sich wieder, dass der kleinste
+Fixpunkt $\setsystem\mathcal A$ mit dem kleinsten Präfixpunkt
+$X:=\bigcap\setsystem B$ übereinstimmt. Es verbleibt dafür lediglich
+$X\in\mathcal A$, also $F(X)=X$ zu zeigen, da dann wieder das Argument
+$\bigcap\mathcal A\subseteq X$ greift. Da $X$ Präfixpunkt ist,
+verbleibt nur noch $X\subseteq F(X)$ zu zeigen. Man rechnet
+zunächst nach, dass $F$ eine bezüglich der Inklusion monoton steigende
+Abbildung ist, das heißt, für beliebige Mengen $A_1,A_2$ gilt
+\[A_1 \subseteq A_2 \cond F(A_1) \subseteq F(A_2).\]
+Mithin folgt $F(F(X))\subseteq F(X)$ aus $F(X)\subseteq X$.
+Das heißt aber, $F(X)\in\setsystem B$, womit $\bigcap\setsystem B\subseteq F(X)$,
+gelten muss, weil $\bigcap\setsystem B$ eine untere Schranke von
+$\setsystem B$ ist. Mit Blick auf die Definition von $X$ wird
+$X\subseteq F(X)$ nun schließlich ersichtlich.
+
+Führt man Überlegungen dieser Art ganz abstrakt für Halbordnungen
+bzw. Verbände durch, gelangt man zum Fixpunktsatz von Knaster und
+Tarski. Dieser besagt, in einem vollständigen Verband bildet die Menge
+der Fixpunkte einer monoton steigenden Abbildung ebenfalls einen
+vollständigen Verband. Mithin existiert ein kleinster Fixpunkt.
+
+Man kann sich den natürlichen Zahlen auch von unten nähern. Es gilt
+\[F(\emptyset) = \{0\},\quad F(F(\emptyset)) = \{0,1\},\quad
+F(F(F(\emptyset))) = \{0,1,2\},\quad\text{usw.}\]
+Man überlegt sich nun den Grenzwert
+\[\textstyle\N = \bigcup\{F^n(\emptyset)\mid n\in\N\},\quad
+F^0(A):=A,\quad F^{n+1}(A) := F(F^n(A)).\]
+Allerdings ist diese Beziehung wohl nicht zur Definition von
+$\N$ nutzbar. Zum einen wäre sie zirkulär, da $\N$ innerhalb der
+Definition vorkäme. Zum anderen ist die Iterierte $F^n$ rekursiv
+definiert, wofür wir eigentlich einen Rekursionssatz benötigen, der
+$\N$ ebenfalls als definiert voraussetzt. Wie dem auch sei, die
+Entfaltung der Gleichung führt jedenfalls zu
+\[m\in\N \bicond \exists A\colon m\in A\land\exists n\in\N\colon A=F^n(\emptyset).\]
+Wegen $m\in F^{m+1}(\emptyset)$ kann man $A:=F^{m+1}(\emptyset)$
+und $n:=m+1$ setzen, um die rechte Seite aus der linken zu folgern.
+Und wegen $F^n(\emptyset)\subseteq\N$ zu jedem $n\in\N$ folgert man
+die linke Seite aus der rechten.
 
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
