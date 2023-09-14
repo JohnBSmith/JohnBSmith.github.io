@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Induktive Typen</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/gallina.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="Gallina.htm">Programmieren in Gallina</a>
+<h1>Induktive Typen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Induktive-Typen">Induktive Typen</a>
+</ol>
+
+<h2 id="Induktive-Typen">Induktive Typen</h2>
+
+<p>Zum Einstieg wurde bereits erklärt, wie sich mit <code>Inductive</code>
+neue Typen definieren lassen. Eigentlich handelt es sich bei der
+Konstruktion induktiver Typen um ein recht komplexes Werkzeug, etwas
+was man als eierlegende Wollmilchsau bezeichnen würde. Es enthält
+drei verschiedene Teilaspekte:
+
+<dl class="indent">
+<dt><b>Die Erklärung eines einzigartigen Typen</b>
+<dd>Jeder hiermit neu definierte Typ unterscheidet sich von allen
+  anderen. Das heißt, es steht ein Mittel zur nominalen
+  Typisierung zur Verfügung, vergleichbar mit <code>newtype</code> in Haskell
+  oder <code>enum</code>, <code>struct</code> in Rust. 
+<dt><b>Die Erklärung einer Summe</b>
+<dd>Kommt mehr als eine Konstruktorfunktion vor, handelt es sich um
+  eine Summe.
+<dt><b>Die Erklärung eines rekursiven Typen</b>
+<dd>Enthält eine Konstruktorfunktion den zu erklärten Typen als Typ einer
+  ihrer Argumente, so handelt es sich um einen rekursiven Typen im
+  eigentlichen Sinne.
+</dl>
+
+<h3>Nominaler Aspekt</h3>
+
+<p>Zum ersten Teilaspekt legen wir Typen <code>A</code> und
+<code>B</code> derselben Struktur fest.
+
+<pre class="ibox gallina">
+Inductive A := cons_A (n: nat).
+Inductive B := cons_B (n: nat).
+
+Definition a := cons_A 0.
+Check a: A.
+</pre>
+
+<p>Wäre die Typisierung von <code>A</code>,&nbsp;<code>B</code>
+strukturell, so würde <code>Check&nbsp;a:&nbsp;B</code> ebenfalls
+aufgehen. Der Typprüfer gibt uns jedoch zu verstehen, dass dies nicht
+stimmt. Sollen <code>A</code>,&nbsp;<code>B</code> tatsächlich
+strukturell typisiert sein, müsste man sie vermittels
+<code>Definition</code> als Typalias zu <code>nat</code> festlegen.
+
+<pre class="ibox gallina">
+Definition A := nat.
+Definition B := nat.
+
+Definition a: A := 0.
+Check a: B.
+</pre>
+
+<p>Man stellt weiterhin fest, dass als <code>Record</code> definierte
+Typen allem Anschein nach bereits nominal typisiert sind. Wir testen
+dies kurzerhand am Beispiel
+
+<pre class="ibox gallina">
+Record PointA := {Ax: nat; Ay: nat}.
+Record PointB := {Bx: nat; By: nat}.
+
+Definition a := {|Ax := 0; Ay := 0|}.
+Check a: PointA.
+</pre>
+
+<p>aus. Läge strukturelle Typisierung vor, würde
+<code>Check&nbsp;a:&nbsp;PointB</code> aufgehen. Es tut sich die
+Frage auf, ob Strukturen mit benannten Feldern bzw. Projektionen
+überhaupt definierbar sind. Zuweilen betrifft dies auch andere
+Sprachen. So tat man sich bei Rust schwer, <i>structural
+records</i> zur Sprache hinzuzufügen; bisweilen sind sie nur emulierbar.
+Sie sind aus ergonomischen Gründen wünschenswert, dergestalt dass damit
+Funktionen mit benannten Argumenten erklärt werden können.
+In Gallina bekommen wir benannte Argumente elegant als Winkelzug
+via Typinferenz auf Basis der Projektionen. Betrachten wir dazu die
+folgende quadratische Form <code>sq</code> mit den benannten Argumenten
+<code>x</code> und&nbsp;<code>y</code>.
+
+<pre class="ibox gallina">
+Record Point := {x: nat; y: nat}.
+
+Definition sq (a: Point) :=
+  3*a.(x)*a.(x) + 2*a.(y)*a.(y).
+
+Compute sq {|x := 1; y := 2|}.
+</pre>
+
+<p>Eine Struktur lässt sich sogar per Musterabgleich auflösen, wie
+
+<pre class="ibox gallina">
+Definition sq '(Build_Point x y) :=
+  3*x*x + 2*y*y.
+</pre>
+
+<p>zeigt. Man darf dies allerdings als bedenklich erachten, weil
+es nun, da die Projektionen vom selben Typ sind, auf die
+Reihenfolge ankommt.
+
+</body>
+</html>
