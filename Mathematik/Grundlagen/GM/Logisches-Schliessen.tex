@@ -1695,3 +1695,82 @@ v' &= \lnec v, & (A\land B)' &= A'\land B', & (A\cond B)' &= \lnec (A'\cond B'),
 Man deutet $\lnec A$ als »A ist beweisbar«. Es ist $A$ genau
 dann ein Theorem der intuitionistischen Logik, wenn $A'$ ein
 Theorem im System S4 ist.
+
+\section{Beweistheoretische Überlegungen}
+
+\subsection{Ableitbarkeit}
+
+Auf das Urteil $\Gamma\vdash A$ blickt man aus zwei Sichtweisen. Zum
+einen ein stellt es sich als syntaktisches Konstrukt dar, das Gegenstand
+eines formalen Systems ist. Zum anderen stellt es sich als die
+metasprachliche Aussage dar, dass $A$ aus $\Gamma$ ableitbar ist. Zur
+Schaffung von Klarheit wollen wir bei beweistheoretischen Betrachtungen
+näher zwischen den beiden Sichtweisen unterscheiden. Dazu notieren
+wir $\Gamma\succ A$ für die Sequenz als syntaktisches Konstrukt,
+und im Unterschied dazu $\Gamma\vdash A$ für die metasprachliche Aussage.
+\begin{Definition}[Ableitbarkeit]\newlinefirst
+Man nennt $A$ aus der Formelmenge $\Gamma$ ableitbar, kurz
+$\Gamma\vdash A$, wenn ein endliche Menge $\Gamma_0\subseteq\Gamma$
+existiert, so dass die Sequenz $\Gamma_0\succ A$ ableitbar ist.
+\end{Definition}
+Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash A$
+demzufolge genau dann, wenn die Sequenz $\Gamma_0\succ A$ ableitbar ist,
+symbolisch%
+\[(\Gamma_0\vdash A) \bicond (\vdash \Gamma_0\succ A).\]
+Die Endlichkeit ist genau deshalb erfordlich, weil Sequenzen nur für
+endliche Kontexte erklärt sind. Für die Ableitbarkeit besteht damit
+verbunden Kompaktheit, dergestalt dass $\Gamma\vdash A$ genau dann gilt,
+wenn ein endliches $\Gamma_0\subseteq\Gamma$ mit $\Gamma_0\vdash A$
+existiert.
+
+Weiterhin sind die Schlussregeln nun als metasprachliche Aussagen
+fassbar. So ist die Einführung der Konjunktion beschrieben durch%
+\[(\Gamma\vdash A)\land (\Gamma'\vdash B)\cond (\Gamma\cup\Gamma'\vdash A\land B).\]
+Anders als in der Regel dürfen $\Gamma,\Gamma'$ hierbei auch
+unendlich sein.
+
+Vermittels der Einführung von Grundsequenzen, der Abschwächungsregel
+und des Modus ponens gelangt man zu den drei Einsichten%
+\begin{align*}
+&A\in\Gamma\cond (\Gamma\vdash A), &&\text{(Extensivität)}\\
+&\Gamma\subseteq\Gamma'\land (\Gamma\vdash A)\cond (\Gamma'\vdash A), &&\text{(Monotonie)}\\
+&(\Gamma\cup\{A\}\vdash B)\land (\Gamma\vdash A)\cond (\Gamma\vdash B). &&\text{(Schnittregel)}
+\end{align*}
+Eine Darstellung aus der Sichtweise der Mengenlehre fördert die Einordnung
+dieser Sachverhalte. Als Hilfsmittel dient hierbei der
+\emph{tarskische Konsequenzoperator}%
+\[\Cn(\Gamma) := \{A\mid \Gamma\vdash A\},\]
+der $\Gamma$ die Menge aller Formeln zuordnet,
+die aus $\Gamma$ ableitbar sind. Man spricht auch vom
+\emph{Inferenzoperator} oder vom \emph{deduktiven Abschluss}.
+Dieser genügt den drei Axiomen
+\begin{align*}
+&\Gamma\subseteq\Cn(\Gamma), &&\text{(Extensivität)}\\
+&\Gamma\subseteq\Gamma'\cond \Cn(\Gamma)\subseteq\Cn(\Gamma'), &&\text{(Monotonie)}\\
+&\Cn(\Cn(\Gamma)) \subseteq \Cn(\Gamma). &&\text{(Abgeschlossenheit)}
+\end{align*}
+Das heißt, es handelt sich bei $\Cn$ um einen Hüllenoperator. Aus der
+Anfügung der Monotonie an die Extensivität folgt auch die Umkehrung
+der Abgeschlossenheit. Somit gilt mehr noch die Idempotenz
+\[\Cn(\Cn(\Gamma)) = \Cn(\Gamma).\]
+Die vormals
+vorhandene Schnittregel leitet sich aus den drei Axiomen ab.
+Sie wird zunächst in die Form%
+\[A\in\Cn(\Gamma)\cond\Cn(\Gamma\cup\{A\})\subseteq\Cn(\Gamma)\]
+gebracht. Es gilt $\Gamma\cup\{A\}\subseteq\Cn(\Gamma)$, denn
+$\Gamma\subseteq\Cn(\Gamma)$ gilt gemäß Extensivität und
+$\{A\}\subseteq\Cn(\Gamma)$ gilt gemäß der Prämisse.
+Laut Monotonie und Idempotenz folgt%
+\[\Cn(\Gamma\cup\{A\})\subseteq\Cn(\Cn(\Gamma)) = \Cn(\Gamma).\]
+Obgleich die Abgeschlossenheit intuitiv klar erscheint, ist sie
+umgekehrt aus der Schnittregel zu gewinnen. Prämisse sei also
+$A\in\Cn(\Cn(\Gamma)$, womit $\Cn(\Gamma)\vdash A$. Das heißt aber,
+es existiert eine endliche Teilmenge
+\[\{A_1,\ldots,A_n\}\subseteq\Cn(\Gamma)\;\text{mit}\;
+\{A_1,\ldots,A_n\}\vdash A.\]
+Mithin gilt $\Gamma\vdash A_k$ zu jedem $k$.
+Nun unternimmt man der Reihe nach den Schnitt der Form
+\[\dfrac{\Gamma\cup\{A_1,\ldots,A_k\}\vdash A\qquad\Gamma\vdash A_k}
+{\Gamma\cup\{A_1,\ldots,A_{k-1}\}\vdash A}\]
+zu den $k$ von $k=n$ bis $k=1$. Man gelangt damit schließlich zu
+$\Gamma\vdash A$, also zum gewünschten $A\in\Cn(\Gamma)$.

@@ -555,17 +555,17 @@ Gelegentlich hat man es mit einer \emph{disjunkten Vereinigung}%
 \index{disjunkte Vereinigung} zu tun. Sie ist bedeutsam in der
 Theorie der Kardinalzahlen und in der Informatik bei algebraischen
 Datentypen sowie deren Bezug zur Beweistheorie. Genauer gesagt hantiert
-man in der Informatik nicht mit Mengen, sondern mit Typen, die sich
-in gewissen Zügen analog zu Mengen verhalten. Die disjunkte Vereinigung
-zweier Mengen kennzeichnet jedes Element vor der Vereinigung mit einem
-Tag, das die Information liefert, aus welcher der Mengen es entstammt.
-Man setzt%
+man in der Informatik diesbezüglich nicht mit Mengen, sondern mit Typen,
+die sich in gewissen Zügen analog zu Mengen verhalten. Die disjunkte
+Vereinigung zweier Mengen kennzeichnet jedes Element vor der Vereinigung
+mit einem Tag, das die Information liefert, aus welcher der Mengen es
+entstammt. Man setzt%
 \[A\sqcup B := \{(0,a)\mid a\in A\}\cup\{(1,b)\mid b\in B\}.\]
 Die Zahlen $0,1$ sind hier die \emph{Tags} oder \emph{Diskriminatoren}.
 Anstelle der Zahlen könnten genauso gut zwei beliebige unterschiedliche
 Elemente als Tags verwendet werden. Beispielsweise ginge auch%
 \[A\sqcup B = \{(\text{Grün},a)\mid a\in A\}\cup\{(\text{Blau},b)\mid b\in B\}.\]
-In der Informatik verwendet man gern left, right als Tags.
+In der Informatik verwendet man auch gern left, right als Tags.
 
 Mit jeder disjunkten Vereinigung ist eine Fallunterscheidung verbunden.
 Liegt ein $x\in A\sqcup B$ vor, so muss entweder $x=(0,a)$ für ein
@@ -581,7 +581,9 @@ zweimal vorkommen. Im Paar $t=(x,y)$ ist genau die Information über
 $x,y$ enthalten. Das heißt, es lassen sich $x,y$ aus dem Paar
 extrahieren. Man schreibt dafür $t_1=x$ und $t_2=y$. Die Schreibweise
 $t_i$ heißt \emph{Indizierung}, es ist darin $i$ der
-\emph{Index}\index{Index}.
+\emph{Index}\index{Index}. Näher betrachtet vermittelt je Index $i$
+eine Projektionsabbildung $\pi_i$ die Indizierung, also
+$t_i = \pi_i(t)$.
 
 Zwei Paare seien definitionsgemäß genau dann gleich, wenn sie
 komponentenweise gleich sind,%
@@ -592,6 +594,12 @@ auch mal überlegt, wie Paare in der reinen Mengenlehre dargestellt
 werden können, wo alle Objekte Mengen sein sollen. Nach Kuratowski
 sind Paare kodierbar als%
 \[(x,y) := \{\{x\},\{x,y\}\}.\]
+Die beiden Projektionen sind diesbezüglich darstellbar als
+\begin{align*}
+\pi_1(t) &= \textstyle\bigcup\bigcap t,\\
+\pi_2(t) &= \textstyle(\bigcap\bigcup t)\cup
+  ((\bigcup\bigcup t)\setminus (\bigcup\bigcap t)).
+\end{align*}
 Unter dem allgemeineren Begriff \emph{Tupel}\index{Tupel} fassen
 wir eine beliebige endliche Zahl von Objekten in einer bestimmten
 Reihenfolge zusammen. Tupel aus drei Objekten heißen \emph{Tripel},
@@ -1170,7 +1178,7 @@ nur um ein einziges handelt, wäre die Schnittmenge nicht definiert.
 
 Näher betrachtet sind eindeutige Existenz und Reduzierung auf eine
 Einermenge bedeutungsgleich, das soll heißen, es besteht die Äquivalenz
-\[(\exists! x\colon A(x)) \iff \exists y\colon \{x\mid A(x)\} = \{y\}\]
+\[(\exists! x\colon A(x)) \iff \exists y\colon \{x\mid A(x)\} = \{y\}.\]
 Löst man die Gleichheit darin per Extensionalität auf, findet sich die
 kurze Charakterisierung
 \[(\exists! x\colon A(x)) \iff \exists y\colon\forall x\colon (A(x)\bicond x=y).\]
@@ -1189,12 +1197,12 @@ die linke Seite nicht erklärt, sondern vielmehr für
 $x\in X$ beweisbar ist. Stünde die Festlegung nicht zur Verfügung,
 müsste man Aussagen, in denen $f(x)$ vorkommt, umständlich durch
 Existenzaussagen kodieren. Beispielsweise stünde $f(x)\in B$ für die
-Existenz eines $y\in B$ mit $(x,y)\in f$. Kommt mehrere Applikationen
+Existenz eines $y\in B$ mit $(x,y)\in f$. Kommen mehrere Applikationen
 vor, führt dies im Allgemeinen zu geschachtelten Existenzaussagen.
 Höchst umständlich wäre es, würde man in einer längeren Rechnung jede
-Applikation einschließlich der arithmetische Operationen durch eine
+Applikation einschließlich der arithmetischen Operationen durch eine
 Existenzaussage kodieren. Auf diese Weise ließe sich aber die
-Gleichheit aus der Logik herausarbieten.
+Gleichheit aus der Logik herausarbeiten.
 
 \section{Relationen}
 
@@ -2409,6 +2417,109 @@ Wegen $m\in F^{m+1}(\emptyset)$ kann man $A:=F^{m+1}(\emptyset)$
 und $n:=m+1$ setzen, um die rechte Seite aus der linken zu folgern.
 Und wegen $F^n(\emptyset)\subseteq\N$ zu jedem $n\in\N$ folgert man
 die linke Seite aus der rechten.
+
+\subsection{Hüllenoperatoren}
+
+Die kleinste induktive Menge wurde als Schnitt des Systems
+der induktiven Mengen erhalten. Man darf sie als eine Hülle der
+fundierenden Menge betrachten, denn sie schließt die fundierende Menge
+insofern ab, als vermittels der Produktionsregeln keine weiteren
+Elemente mehr produziert werden können, die außerhalb der Hülle lägen.
+Der deduktive Abschluss einer Formelmenge stellt ebenfalls eine Hülle dar,
+wie bereits diskutiert wurde.
+Weitere Beispiele für Hüllen sind die lineare Hülle einer Teilmenge
+eines Vektorraums, die abgeschlossene Hülle einer Teilmenge eines
+topologischen Raums, die konvexe Hülle einer Teilmenge eines euklidischen
+Vektorraums und die kleensche Hülle einer Menge von Zeichenketten. In
+der Maßtheorie ist die kleinste $\sigma$"=Algebra, die eine Teilmenge der
+Grundmenge umfasst, eine Hülle der Teilmenge.
+
+Zur Schaffung von Ordnung
+wollen wir einige allgemeine Prinzipien zu Hüllen ausarbeiten.
+\begin{Definition}[Hüllenoperator]\newlinefirst
+Zu einer Grundmenge $U$ wird eine Abbildung
+$C\colon\mathcal P(U)\to\mathcal P(U)$
+als Hüllenoperator, engl. \emph{closure operator} bezeichnet,
+sofern gilt
+\begin{align*}
+& \forall X\subseteq U\colon X\subseteq C(X),
+&& \text{(Extensivität)}\\
+& \forall X,Y\subseteq U\colon X\subseteq Y\cond C(X)\subseteq C(Y),
+&& \text{(Monotonie)}\\
+& \forall X\subseteq U\colon C(C(X))\subseteq C(X).
+&& \text{(Abgeschlossenheit)}
+\end{align*}
+\end{Definition}
+In der Konsequenz geht $C(X)\subseteq C(C(X))$ zu jedem
+$X\subseteq U$ aus der Anfügung der Monotonie an die Extensivität hervor.
+Somit erweitert sich die Abgeschlossenheit postwendend zur Idempotenz
+\[\forall X\subseteq U\colon C(C(X)) = C(X).\]
+Ein Mengensystem $\mathcal A\subseteq\setsystem P(U)$
+wird \emph{Hüllensystem} genannt, sofern
+\[\textstyle U\in\setsystem A\land (\forall\setsystem T\subseteq\setsystem A\colon
+\setsystem T\ne\emptyset\cond\bigcap\setsystem T\in\setsystem A).\]
+
+\begin{Satz}
+Ist $\setsystem A$ ein Hüllensystem, so ist
+\[\textstyle C(X) := \bigcap\{A\in\setsystem A\mid X\subseteq A\}\]
+ein Hüllenoperator.
+\end{Satz}
+\begin{Beweis}
+Die Extensivität bestätigt sich unschwer, indem
+$x\in C(X)$ aus $x\in X$ mit $x$ fest, aber beliebig abgeleitet wird.
+Die Monotonie zeigt sich analog. Zu bemerken ist hierbei, dass die Extensivität
+und Monotonie für jedes beliebige Mengensystem gilt, da die definierende
+Eigenschaft des Hüllensystems bisher nicht benötigt wurde. Kommen wir
+zur interessanteren Abgeschlossenheit. Man überzeugt sich zunächst von
+$C(X)\in\setsystem A$ zu jedem $X\subseteq U$. Dazu wird die
+definierende Eigenschaft des Hüllensystems mit
+$\setsystem T:=\{A\in\setsystem A\mid X\subseteq A\}$ spezialisiert,
+die als Aussonderung eine Teilmenge von $\setsystem A$ ist. Es ist
+$\setsystem T$ außerdem nichtleer, da $U\in\setsystem T$, wie
+aus $U\in\setsystem A$ und der Prämisse $X\subseteq U$ hervorgeht.
+
+Mit dieser Vorbereitung gelingt der folgende Gedankengang.
+Die Entfaltung des ersten $C$ in der zu beweisenden Abgeschlossenheit
+bringt diese in die Form
+\[\textstyle\bigcap\{A\in\setsystem A\mid C(X)\subseteq A\}\subseteq C(X).\]
+Nun ist die Schnittmenge aber eine untere Schranke bezüglich
+der Inklusion. Das heißt, es verbleibt bloß noch
+\[C(X)\in\{A\in\setsystem A\mid C(X)\subseteq A\}\]
+zu bestätigen. Es wurde $C(X)\in\setsystem A$ zuvor gezeigt, und
+$C(X)\subseteq C(X)$ gilt gemäß Reflexivität der Inklusion.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Das System der Induktiven Mengen ist ein Hüllensystem.
+\end{Satz}
+\begin{Beweis}
+Dabei dürfen die per se vorhandene fundierende Menge $B$ und das
+Argument des Hüllenoperators als unterschiedlich angesehen werden, das
+macht die Formulierung ein wenig allgemeiner, als wenn wir diese beiden
+koinzidieren lassen.
+Als erstes wird also $B\subseteq\bigcap\setsystem T$
+gezeigt. Aus $\setsystem T\subseteq\setsystem A$ folgt
+$\bigcap\setsystem A\subseteq\bigcap\setsystem T$, womit
+bereits $B\subseteq\bigcap\setsystem A$ genügt. Es verbleibt demnach
+die Bestätigung der Aussage
+\[x\in B\vdash\forall A\in\setsystem A\colon x\in A,\]
+die aber ersichtlich ist, denn $B\subseteq A$ ist schlicht in der
+Aussage $A\in\setsystem A$ enthalten.
+
+Außerdem muss man sich noch von $f(x)\in\bigcap\setsystem T$ überzeugen,
+wobei $x\in (\bigcap\setsystem T)^n$ bezüglich $(n,f)\in\Phi$ mit
+$f\colon U^n\to U$ vorausgesetzt wird. Demnach muss $f(x)\in A$
+zu einem beliebigen $A\in\setsystem T$ bestätigt werden. Aus
+$\setsystem T\subseteq\setsystem A$ folgt $A\in\setsystem A$, womit
+\[\forall (n,f)\in\Phi\colon\forall x\in A^n\colon f(x)\in A.\]
+Diese Allaussage wird mit dem vorliegenden $(n,f)$ und $x$
+spezialisiert. Es verbleibt demnach $x\in A^n$ zu bestätigen, was wir
+aus $(\bigcap\setsystem T)^n\subseteq A^n$ folgern, die wiederum aus
+$\bigcap\setsystem T\subseteq A$ folgt. Man macht sich an dieser
+Stelle wieder zunutze, dass der Schnitt eine untere Schranke bezüglich
+der Inklusion ist. Dafür muss $A\in\setsystem T$ sein, was aber
+vorausgesetzt werden durfte.\,\qedsymbol
+\end{Beweis}
 
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
