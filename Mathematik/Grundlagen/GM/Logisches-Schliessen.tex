@@ -1105,130 +1105,6 @@ liegt eine Äquivalenz vor. Man hat also
 \[(A\bicond B) \iff (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
 \newpage
-\subsection{Die zulässige Ersetzungsregel}
-
-Mit der Äquivalenz zweier Aussagen verhält es sich in gewisser Weise
-wie mit einer Gleichheit. Und zwar vermittelt die \emph{zulässige
-Ersetzungsregel}, eine Teilformel gegen eine zu ihr äquivalente
-Formel ersetzen zu dürfen, analog wie bei der Termumformung eines
-Teilterms. Sie ermöglicht die bequeme Äquivalenzumformung von
-Aussagen, womit man sie als besonders nützlich erachten darf.
-
-\begin{Satz}[Zulässige Ersetzungsregel]%
-\index{Ersetzungsregel}\newlinefirst
-Es gelten die beiden gleichwertigen Regeln
-\[\dfrac{\Gamma\vdash A\Leftrightarrow B}
-{\Gamma\vdash C(A)\Leftrightarrow C(B)},\qquad
-\dfrac{\Gamma\vdash A\Leftrightarrow B\qquad\Gamma'\vdash C(A)}
-{\Gamma,\Gamma'\vdash C(B)}.\]
-\end{Satz}
-\begin{Beweis}
-Zunächst zur Gleichwertigkeit der beiden Regeln:
-\begin{small}
-\[
-\begin{array}{@{}l@{\;\;}l}
-\infer{\Gamma,\Gamma'\vdash C(B)}{
-  \infer{\Gamma\vdash C(A)\cond C(B)}{
-    \infer{\Gamma\vdash C(A)\bicond C(B)}{
-      \Gamma\vdash A\bicond B}}
-& \Gamma'\vdash C(A)}
-&
-\infer{\Gamma\vdash C(A)\bicond C(B)}{
-  \infer{\Gamma\vdash C(A)\cond C(B)}{
-    \infer{\Gamma, C(A)\vdash C(B)}{
-      \Gamma\vdash A\bicond B
-    & \infer{C(A)\vdash C(A)}{}}}
-& \infer{\Gamma\vdash C(B)\cond C(A)}{
-    \infer{\Gamma, C(B)\vdash C(A)}{
-      \Gamma\vdash A\bicond B
-    & \infer{C(B)\vdash C(B)}{}}}}
-\end{array}
-\]
-\end{small}%
-Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
-Die Behauptung wird hierbei in der Form
-\[\dfrac{\Gamma\vdash F\Leftrightarrow F'}{
-\Gamma,C(F)\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
-geschrieben. Weil $F,F'$ vertauscht werden dürfen, erhält man somit auch
-die umgekehrte Folgerung, so dass die Äquivalenz von $C(F)$ und $C(F')$
-hergestellt wird. Wir definieren die Abkürzungen
-\[A := C(F),\quad A' := C(F'),\quad B := D(F),\quad B' := D(F').\]
-Zunächst die Basisfälle. Die Formeln $C:=\bot$,
-$C:=\top$ und $C:=v$ mit atomarer Variable $v\ne X$
-bleiben von der Substitution unbetroffen und sind offenkundig zu sich
-selbst äquivalent. Für $C=X$ erhält man schlicht die Prämisse.
-
-Zum Induktionsschritt. Man hat nun
-\[(C\land D)[X{:=}F]
-\iff C[X{:=}F]\land D[X{:=}F]\iff A\land B\]
-usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
-und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
-\begin{align*}
-& \Gamma,A\land B\vdash A'\land B',
-&& \Gamma,A\cond B\vdash A'\cond B',
-&& \Gamma,\forall x\colon A\vdash\forall x\colon A',\\
-& \Gamma,A\lor B\vdash A'\lor B',
-&& \Gamma,A\bicond B\vdash A'\bicond B',
-&& \Gamma,\exists x\colon A\vdash\exists x\colon A'
-\end{align*}
-und $\Gamma,\lnot A\vdash\lnot A'$. Es findet sich:
-\begin{small}
-\[
-\begin{array}{@{}l@{\quad\;\;}l}
-\infer{\Gamma,\lnot A\vdash\lnot A'}{
-  \infer{\Gamma,\lnot A,A'\vdash\bot}{
-    \infer{\Gamma,A'\vdash A}{\Gamma\vdash A\bicond A'}
-  & \infer{\lnot A\vdash\lnot A}{}}}
-&
-\infer{\Gamma,A\land B\vdash A'\land B'}{
-  \infer{\Gamma,A\land B\vdash A'}{
-    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{A\land B\vdash A}{
-      \infer{A\land B\vdash A\land B}{}}}
-& \infer{\Gamma,A\land B\vdash B'}{
-    \infer{\Gamma\vdash B\cond B'}{\Gamma\vdash B\bicond B'}
-  & \infer{A\land B\vdash B}{
-      \infer{A\land B\vdash A\land B}{}}}}
-\end{array}
-\]
-\end{small}%
-Die Erstellung der restlichen Bäume sei dem Leser überlassen.
-
-Für die Quantoren findet sich:
-\[
-\begin{array}{@{}l@{\quad\;\;}l}
-\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\forall x\colon A\vdash\forall x\colon A'}{
-  \infer{\Gamma,\forall x\colon A\vdash A'}{
-    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{\forall x\colon A\vdash A}{
-      \infer{\forall x\colon A\vdash\forall x\colon A}{}}}}
-&
-\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\exists x\colon A\vdash\exists x\colon A'}{
-  \infer{\exists x\colon A\vdash\exists x\colon A}{}\hspace{-12pt}
-& \infer{\Gamma, A\vdash\exists x\colon A'}{
-    \infer{\Gamma, A\vdash A'}{
-      \infer{\Gamma\vdash A\cond A'}{
-        \Gamma\vdash A\bicond A'}
-    & \infer{A\vdash A}{}}}}
-\end{array}
-\]
-Es darf hierbei $x\notin\mathrm{FV}(\Gamma)$ vorausgesetzt werden, weil
-die gebundene Variable andernfalls ja vor der Betrachtung in eine
-frische umbenannt werden kann.\,\qedsymbol
-\end{Beweis}
-
-\noindent
-Es wäre noch zu erwähnen, dass die Regel bei den modalisierenden
-Operatoren für gewöhnlich unzulässig ist. So ist in den modallogischen
-Systemen K, B, D, S4, S5 keine der Formeln
-\begin{gather*}
-(a\bicond b)\cond (\lnec a\bicond\lnec b),\\
-(a\bicond b)\cond (\lpos a\bicond\lpos b)
-\end{gather*}
-ein Theorem. Ein Gegenmodell ist jeweils schnell gefunden, dafür
-bedarf es nicht mehr als zwei Welten.
-
-\newpage
 \section{Logik mit Gleichheit}
 
 \subsection{Axiome der Gleichheit}
@@ -1591,7 +1467,7 @@ parametrisierte Argumentation kennzeichnet ja das übliche Vorgehen
 zur Bestätigung allquantifizierter Aussagen.
 
 \newpage
-\section{Modallogik}
+\section{Modallogik}\label{sec:Modallogik}
 
 \subsection{Das System K}
 
@@ -1773,4 +1649,152 @@ Nun unternimmt man der Reihe nach den Schnitt der Form
 \[\dfrac{\Gamma\cup\{A_1,\ldots,A_k\}\vdash A\qquad\Gamma\vdash A_k}
 {\Gamma\cup\{A_1,\ldots,A_{k-1}\}\vdash A}\]
 zu den $k$ von $k=n$ bis $k=1$. Man gelangt damit schließlich zu
-$\Gamma\vdash A$, also zum gewünschten $A\in\Cn(\Gamma)$.
+$\Gamma\vdash A$, also zu der gewünschten Feststellung $A\in\Cn(\Gamma)$.
+
+\newpage
+\subsection{Die zulässige Ersetzungsregel}
+
+Mit der Äquivalenz zweier Aussagen verhält es sich in gewisser Weise
+wie mit einer Gleichheit. Und zwar vermittelt die \emph{zulässige
+Ersetzungsregel}, eine Teilformel gegen eine zu ihr äquivalente
+Formel ersetzen zu dürfen, analog wie bei der Termumformung eines
+Teilterms. Sie ermöglicht die bequeme Äquivalenzumformung von
+Aussagen, womit man sie als besonders nützlich erachten darf.
+
+\begin{Satz}[Zulässige Ersetzungsregel]%
+\index{Ersetzungsregel}\newlinefirst
+Es gelten die beiden gleichwertigen Regeln
+\[\dfrac{\Gamma\vdash A\Leftrightarrow B}
+{\Gamma\vdash C(A)\Leftrightarrow C(B)},\qquad
+\dfrac{\Gamma\vdash A\Leftrightarrow B\qquad\Gamma'\vdash C(A)}
+{\Gamma,\Gamma'\vdash C(B)}.\]
+\end{Satz}
+\begin{Beweis}
+Zunächst zur Gleichwertigkeit der beiden Regeln:
+\begin{small}
+\[
+\begin{array}{@{}l@{\;\;}l}
+\infer{\Gamma,\Gamma'\vdash C(B)}{
+  \infer{\Gamma\vdash C(A)\cond C(B)}{
+    \infer{\Gamma\vdash C(A)\bicond C(B)}{
+      \Gamma\vdash A\bicond B}}
+& \Gamma'\vdash C(A)}
+&
+\infer{\Gamma\vdash C(A)\bicond C(B)}{
+  \infer{\Gamma\vdash C(A)\cond C(B)}{
+    \infer{\Gamma, C(A)\vdash C(B)}{
+      \Gamma\vdash A\bicond B
+    & \infer{C(A)\vdash C(A)}{}}}
+& \infer{\Gamma\vdash C(B)\cond C(A)}{
+    \infer{\Gamma, C(B)\vdash C(A)}{
+      \Gamma\vdash A\bicond B
+    & \infer{C(B)\vdash C(B)}{}}}}
+\end{array}
+\]
+\end{small}%
+Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
+Die Behauptung wird hierbei in der Form
+\[\dfrac{\Gamma\vdash F\Leftrightarrow F'}{
+\Gamma,C(F)\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
+geschrieben. Weil $F,F'$ vertauscht werden dürfen, erhält man somit auch
+die umgekehrte Folgerung, so dass die Äquivalenz von $C(F)$ und $C(F')$
+hergestellt wird. Wir definieren die Abkürzungen
+\[A := C(F),\quad A' := C(F'),\quad B := D(F),\quad B' := D(F').\]
+Zunächst die Basisfälle. Die Formeln $C:=\bot$,
+$C:=\top$ und $C:=v$ mit atomarer Variable $v\ne X$
+bleiben von der Substitution unbetroffen und sind offenkundig zu sich
+selbst äquivalent. Für $C=X$ erhält man schlicht die Prämisse.
+
+Zum Induktionsschritt. Man hat nun
+\[(C\land D)[X{:=}F]
+\iff C[X{:=}F]\land D[X{:=}F]\iff A\land B\]
+usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
+und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
+\begin{align*}
+& \Gamma,A\land B\vdash A'\land B',
+&& \Gamma,A\cond B\vdash A'\cond B',
+&& \Gamma,\forall x\colon A\vdash\forall x\colon A',\\
+& \Gamma,A\lor B\vdash A'\lor B',
+&& \Gamma,A\bicond B\vdash A'\bicond B',
+&& \Gamma,\exists x\colon A\vdash\exists x\colon A'
+\end{align*}
+und $\Gamma,\lnot A\vdash\lnot A'$. Es findet sich:
+\begin{small}
+\[
+\begin{array}{@{}l@{\quad\;\;}l}
+\infer{\Gamma,\lnot A\vdash\lnot A'}{
+  \infer{\Gamma,\lnot A,A'\vdash\bot}{
+    \infer{\Gamma,A'\vdash A}{\Gamma\vdash A\bicond A'}
+  & \infer{\lnot A\vdash\lnot A}{}}}
+&
+\infer{\Gamma,A\land B\vdash A'\land B'}{
+  \infer{\Gamma,A\land B\vdash A'}{
+    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
+  & \infer{A\land B\vdash A}{
+      \infer{A\land B\vdash A\land B}{}}}
+& \infer{\Gamma,A\land B\vdash B'}{
+    \infer{\Gamma\vdash B\cond B'}{\Gamma\vdash B\bicond B'}
+  & \infer{A\land B\vdash B}{
+      \infer{A\land B\vdash A\land B}{}}}}
+\end{array}
+\]
+\end{small}%
+Die Erstellung der restlichen Bäume sei dem Leser überlassen.
+
+Für die Quantoren findet sich:
+\[
+\begin{array}{@{}l@{\quad\;\;}l}
+\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\forall x\colon A\vdash\forall x\colon A'}{
+  \infer{\Gamma,\forall x\colon A\vdash A'}{
+    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
+  & \infer{\forall x\colon A\vdash A}{
+      \infer{\forall x\colon A\vdash\forall x\colon A}{}}}}
+&
+\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\exists x\colon A\vdash\exists x\colon A'}{
+  \infer{\exists x\colon A\vdash\exists x\colon A}{}\hspace{-12pt}
+& \infer{\Gamma, A\vdash\exists x\colon A'}{
+    \infer{\Gamma, A\vdash A'}{
+      \infer{\Gamma\vdash A\cond A'}{
+        \Gamma\vdash A\bicond A'}
+    & \infer{A\vdash A}{}}}}
+\end{array}
+\]
+Es darf hierbei $x\notin\mathrm{FV}(\Gamma)$ vorausgesetzt werden, weil
+die gebundene Variable andernfalls ja vor der Betrachtung in eine
+frische umbenannt werden kann.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Es wäre noch zu erwähnen, dass die Regel bei den modalisierenden
+Operatoren für gewöhnlich unzulässig ist. So ist in den modallogischen
+Systemen K, T, B, D, S4, S5 keine der Formeln
+\begin{gather*}
+(a\bicond b)\cond (\lnec a\bicond\lnec b),\\
+(a\bicond b)\cond (\lpos a\bicond\lpos b)
+\end{gather*}
+ein Theorem. Ein Gegenmodell ist jeweils schnell gefunden, dafür
+bedarf es nicht mehr als zwei Welten.
+
+Es besteht hier aber ein wesentlicher Unterschied zwischen relativer
+Äquivalenz $\Gamma\vdash A\bicond B$ und absoluter Äquivalenz
+$\vdash A\bicond B$. Zu einer absoluten Äquivalenz gilt die Ersetzungsregel
+selbst in der Modallogik. Der Induktionsbeweis wird hierzu für leeres
+$\Gamma$ erweitert um:
+\[
+\begin{array}{@{}l@{\qquad}l}
+\infer{\vdash\lnec A\bicond\lnec A'}{
+  \infer{\vdash\lnec A\cond\lnec A'}{
+    \infer{\vdash\lnec(A\cond A')}{
+      \infer{\vdash A\cond A'}{\vdash A\bicond A'}}}
+& \infer{\vdash\lnec A'\cond\lnec A}{
+    \infer{\vdash\lnec(A'\cond A)}{
+      \infer{\vdash A'\cond A}{\vdash A\bicond A'}}}}
+&
+\infer{\vdash\lpos A\bicond\lpos A'}{
+  \infer{\vdash\lnot\lnec\lnot A\bicond\lnot\lnec\lnot A'}{
+    \infer{\vdash\lnec\lnot A\bicond\lnec\lnot A'}{
+      \infer{\vdash\lnot A\bicond\lnot A'}{
+        \vdash A\bicond A'}}}}
+\end{array}
+\]
+Der Leser möge diesbezüglich zunächst Abschnitt \ref{sec:Modallogik} studieren.

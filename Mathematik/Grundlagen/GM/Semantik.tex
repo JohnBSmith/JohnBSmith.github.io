@@ -1,5 +1,5 @@
 
-\chapter{Elemente der Modelltheorie}
+\chapter{Semantik}
 
 \section{Die klassische Semantik der Aussagenlogik}
 
@@ -428,4 +428,321 @@ Ausführung also von einer kombinatorischen Explosion
 da die Problemstellung der Vereinfachung als NP"=vollständig befunden
 wurde. Für die Formeln mit sehr vielen Variablen liegt das Wissen über
 die beste Vereinfachung somit im Schleier der Dunkelheit.
+
+\section{Die klassische Semantik der Logik erster Stufe}
+
+\subsection{Strukturen}
+
+Wie in der Aussagenlogik soll den Formeln eine Bedeutung zukommen.
+Eine Formel der Prädikatenlogik ist allerdings komplizierter als eine
+Formel der Aussagenlogik. Statt nur atomare Variablen mit
+Wahrheitswerten zu belegen, sind nun unterschiedliche Arten von
+Symbolen vorhanden, die mit einer Bedeutung versehen werden müssen.
+
+Es gibt erstens die logischen Verknüpfungen, denen eine für die
+Logik spezifische feste Funktion zukommt. Ebenso ist die Gleichheit
+zweier Terme fest definiert. Zweitens können in einer Formel Symbole
+für Funktionen und Relationen vorkommen, darunter fallen auch
+Konstanten. Sie werden je nach gewählter Struktur anders mit
+Funktionen und Relationen belegt. Drittens darf eine Formel
+freie Variablen enthalten. Sie werden durch eine extra definierte
+Belegungsfunktion mit Werten belegt. Bei der Interpretation einer
+quantifizierten Teilformel wird die Belegungsfunktion modifiziert.
+
+Je nach Festlegung des logisch"=mathematischen Systems und dessen
+inhaltlicher Deutung haben die mathematischen Terme Werte
+in einer bestimmten Menge $U$, die wir \emph{Universum},
+\emph{Domäne}, \emph{Träger}, \emph{Grundbereich} oder
+\emph{Diskursuniversum} nennen.  Die Elemente von $U$ nennen wir
+\emph{Individuen} oder \emph{Objekte}. Ich möchte noch einmal daran
+erinnern, dass der beschriebene Kalkül der Prädikatenlogik die
+Menge $U$ als nichtleer fordert.
+
+Eine \emph{Struktur} $M$ sei das Universum $U$ zusammen mit einer
+Interpretationsfunktion, die jedem Funktionssymbol $f$ von $n$ Argumenten
+eine Funktion $f^M\colon U^n \to U$ und jedem Relationssymbol $R$ von
+$n$ Argumenten eine Relation $R^M\colon U^n\to\{0,1\}$ zuordnet.
+Konstanten deuten wir als Funktionen von null Argumenten.
+
+Man kann eine Struktur auf unterschiedliche Art kodieren, wobei
+unter Umständen die Hilfsbegriffe \emph{Signatur} und
+\emph{Ariätsfunktion} gebraucht werden. Die Signatur beschreibt hierbei
+die Menge der Funktionssymbole und die Menge Relationssymbole. Die
+Aritätsfunktion ordnet jedem Funktionssymbol und jedem Relationssymbol
+seine Stelligkeit zu, das ist die Anzahl der Argumente.
+
+Beispiel 1. Wir betrachten einen Kalkül für Halbordnungen. Zusätzlich zu
+den Regeln und Axiomen der Prädikatenlogik sollen als mathematische Axiome
+demnach noch die Axiome für Halbordnungen gelten. Die Signatur enthalte
+dazu lediglich das Relationssymbol $\le$. Eine mögliche Struktur $M$
+ist die Menge $U:=\mathcal P(G)$ zu irgendeiner Grundmenge $G$, zusammen
+mit der Setzung ${\le^M} := {\subseteq}$, so dass je zwei Mengen $A,B\in U$
+ein Wahrheitswert $A\subseteq B$ zugeordnet wird. Man notiert so
+eine Struktur üblicherweise einfach schludrig als $(U,\le^M)$,
+konkret $(\mathcal P(G),\subseteq)$.
+
+Beispiel 2. Wir betrachten einen Kalkül für die Gruppentheorie. Zusätzlich
+zu den Regeln und Axiomen der Prädikatenlogik sollen als mathematische Axiome
+demnach noch die Axiome für Gruppen gelten. Die Signatur enthalte
+dazu ein Konstantensymbol für das neutrale Element, die Verknüpfung von
+Elementen als zweistelliges Funktionssymbol und die Invertierungsfunktion
+als einstelliges Funktionssymbol. Eine Struktur notiert man dann als
+$(G,\cdot,e,\mathrm{inv})$. Eine mögliche Struktur ist $(\R,+,0,\mathrm{inv})$
+mit $\mathrm{inv}(x):=-x$, die Gruppe der reellen Zahlen bezüglich
+Addition. Eine andere mögliche Struktur ist $(S(X),\circ,\id,\mathrm{inv})$
+mit $\mathrm{inv}(f):=f^{-1}$, die Gruppe der bijektiven Selbstabbildungen
+auf der Menge $X$ bezüglich der Verkettung, auch symmetrische Gruppe
+genannt. Es ist hier $\id$ die identische Abbildung und $f^{-1}$
+die Umkehrabbildung von $f$.
+
+\subsection{Interpretationen}
+
+Zur Interpretation eines Terms $t$ mit freien Variablen betrachtet
+man außerdem noch eine \emph{Belegung} $\beta$, die jeder Variablen $x$
+einen Wert $\beta(x)\in U$ zuordnet. Geläufig ist ebenfalls die
+Bezeichnung \emph{Zuweisung}.
+
+Man nennt nun $I=(M,\beta)$ eine \emph{Interpretation} der Formel $A$.
+Wir definieren $I(t)$ für einen Term $t$ rekursiv über den Termaufbau
+als%
+\begin{gather*}
+I(x) := \beta(x),\\
+I(f(t_1,\ldots,t_n)) := f^M(I(t_1),\ldots,I(t_n)),
+\end{gather*}
+wobei $x$ eine Variable und $f$ ein $n$-stelliges Funktionssymbol
+ist. Die Belegung mit einer modifiziert belegten Variable wird
+diesbezüglich definiert als%
+\begin{gather*}
+\beta[y{:=}u](x) := \begin{cases}
+u, & \text{wenn}\;x=y,\\
+\beta(x), & \text{sonst}.
+\end{cases}
+\end{gather*}
+Für $I=(M,\beta)$ sei $I[y{:=}u] := (M,\beta[y{:=}u])$.
+
+Um Missverständnissen aus dem Weg zu gehen, sollte ich erwähnen, dass
+die Begriffe \emph{Variable} und \emph{Atom} in der Prädikatenlogik
+anders verstanden werden als in der Aussagenlogik. Die atomaren
+Variablen der Aussagenlogik entsprechen nullstelligen Relationssymbolen,
+denen bei einer Interpretation Relationen von null Argumenten zukommt,
+das sind schlicht die konstanten Wahrheitswerte. Dagegen meint Variable
+in der Prädikatenlogik üblicherweise eine Individuenvariable. Eine
+atomare Formel ist in der Prädikatenlogik nicht nur ein nullstelliges
+Relationssymbol, sondern jede Applikation eines Relationssymbols und
+jede Gleichung.
+
+Die Erfüllungsrelation definiert man analog zur Aussagenlogik, also
+\[(I\models A\land B):\Leftrightarrow (I\models A)\land (I\models B)\]
+und so weiter. Zusätzlich setzt man%
+\begin{gather*}
+(I\models t_1 = t_2) :\Leftrightarrow I(t_1) = I(t_2),\\
+(I\models R(t_1,\ldots,t_n)):\Leftrightarrow R^M(I(t_1),\ldots,I(t_n)),\\
+(I\models\forall x\colon A) :\Leftrightarrow\forall u\in U\colon I[x{:=}u]\models A,\\
+(I\models\exists x\colon A) :\Leftrightarrow\exists u\in U\colon I[x{:=}u]\models A.
+\end{gather*}
+Man definiert hiermit die semantische Folgerung analog zur Aussagenlogik als
+\[(\Gamma\models A) \defiff \forall I\colon (I\models\Gamma)\cond (I\models A).\]
+Wir nennen $A$ \emph{allgemeingültig}, falls $\emptyset\models A$, was
+wir wieder durch $\models A$ abkürzen wollen.
+
+Sofern die Formel $A$ geschlossen ist, das heißt, keine freien
+Variablen besitzt, spielt die Belegung der Variablen noch keine Rolle, sie
+entsteht eigentlich erst bei der rekursiven Bestimmung von $I\models A$
+mit dem Einstieg in eine quantifizierte Formel. Bei einer einer
+geschlossenen Formel $A$ darf man insofern $M\models A$ statt
+$M,\beta\models A$ schreiben. Gilt $M\models A$, nennt man $M$ ein
+\emph{Modell für} $A$.
+
+Ich will erklären, warum die Interpretation der Quantoren so durchgeführt
+wurde wie beschrieben. Intuitiv erfüllt $I$ die Formel
+$\forall x\colon A$ genau dann, wenn $I$ die Formel $A[x:=u]$ für jedes
+$u\in U$ erfüllt. Allerdings ist $u$ kein Term der logischen Sprache,
+womit $A[x:=u]$ keine Formel mehr wäre. Wir könnten nicht einmal für
+jedes $u$ eine Konstante zur Sprache hinzufügen, weil $U$ überabzählbar
+sein darf, während eine gewöhnliche Sprache nur abzählbar viele
+Symbole in Form von Zeichenketten umfassen kann. Die gewählte Ausweg
+aus der Problematik besteht darin, dass die Belegung $x:=u$ erst einmal
+in der Interpretation gespeichert wird, statt sie direkt
+als Substitution auf die Formel anzuwenden.
+
+\subsection{Korrektheit des natürlichen Schließens}
+
+Wir müssen nun wieder aufzeigen, dass der Kalkül des natürlichen
+Schließens bezüglich der definierten Semantik korrekt ist. Dies
+geschieht wieder per struktureller Induktion über den Aufbau des
+Beweises. Für die bereits in der Aussagenlogik vorhandenen Regeln
+können wir die dort gemachte Argumentation unverändert übernehmen.
+Zu bestätigen verbleibt die Korrektheit der Regeln zur Einführung und
+Beseitigung der Quantoren, und ggf. noch die Korrektheit der Regeln zum
+Umgang mit Gleichheiten.
+
+\begin{Satz}\label{interpretation-lemma}
+Es ist $I[x:=I(t)]\models A$ äquivalent zu $I\models A[x:=t]$.
+\end{Satz}
+\begin{Beweis}
+Man unternimmt hierzu eine strukturelle Induktion über den Formelaufbau
+von $A$. Die Induktionsvoraussetzungen sind jeweils unschwer zu verarbeiten.
+Im Wesentlichen verbleibt nun%
+\[I[x:=I(t)](v) = I(v[x:=t])\]
+für jede Individuenvariable $v$ zu zeigen. Man nimmt dazu die
+Fallunterscheidung zwischen $x=v$ und $x\ne v$ vor. Im ersten Fall gilt%
+\[I[x:=I(t)](v) = I(t) = I(x[x:=t]) = I(v[x:=t]),\]
+und im zweiten Fall gilt
+\[I[x:=I(t)](v) = I(v) = I(v[x:=t]).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Aus $\Gamma\models\forall x\colon A$ folgt $\Gamma\models A[x:=t]$.
+\end{Satz}
+\begin{Beweis}
+Laut der Prämisse muss zu jedem $I$ mit $I\models\Gamma$
+auch $I[x:=u]\models A$ für jedes $u\in U$ gelten. Weitere Prämisse
+ist ein $I$ mit $I\models\Gamma$. Die Allaussage wird mit diesem $I$
+und mit $u:=I(t)$ spezialisiert. Zu zeigen verbleibt%
+\[(I[x:=I(t)]\models A)\cond (I\models A[x:=t]).\]
+Diese gilt gemäß Satz \ref{interpretation-lemma}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Aus $\Gamma\models A[x:=t]$ folgt $\Gamma\models\exists x\colon A$.
+\end{Satz}
+\begin{Beweis}
+Laut der Prämisse muss zu jedem $I$ mit $I\models\Gamma$ auch
+$I\models A[x:=t]$ gelten. Weitere Prämisse ist ein $I$ mit
+$I\models\Gamma$. Die Allaussage wird mit diesem $I$ spezialisiert.
+Zu zeigen verbleibt%
+\[(I\models A[x:=t])\cond \exists u\in U\colon (I[x:=u]\models A).\]
+Gewählt wird $u:=I(t)$. Nun greift wieder Satz
+\ref{interpretation-lemma}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Aus $\Gamma\models A$ und $x\notin\mathrm{FV}(\Gamma)$
+folgt $\Gamma\models\forall x\colon A$.
+\end{Satz}
+\begin{Beweis}
+Laut der Prämisse muss zu jedem $I$ mit $I\models\Gamma$ auch
+$I\models A$ gelten. Weitere Prämisse ist ein $I$ mit
+$I\models\Gamma$. Wegen $x\notin\mathrm{FV}(\Gamma)$ ist
+$I\models\Gamma$ äquivalent zu $I[x:=u]\models\Gamma$. Demnach
+lässt sich die Allaussage mit $I[x:=u]$ spezialisieren, womit
+man $I[x:=u]\models A$ erhält. Ergo gilt%
+\[\forall u\in U\colon (I[x:=u]\models A),\;\text{also}\;
+I\models\forall x\colon A.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Aus $\Gamma\models\exists x\colon A$ und $\Gamma\cup\{A\}\models B$
+mit $x\notin\mathrm{FV}(\Gamma\cup\{B\})$ folgt $\Gamma\models B$.
+\end{Satz}
+\begin{Beweis}
+Laut der ersten Prämisse existiert zu jedem $I$ mit $I\models\Gamma$
+ein $u\in U$ mit $I[x:=u]\models A$. Laut der zweiten Prämisse muss
+zu jedem $I$ mit $I\models\Gamma$ und $I\models A$ auch $I\models B$
+gelten. Wegen $x\notin\mathrm{FV}(\Gamma\cup\{B\})$ ist $I\models\Gamma$
+zu $I[x:=u]\models\Gamma$ sowie $I\models B$ zu $I[x:=u]\models B$
+äquivalent. Dritte Prämisse ist ein $I$ mit $I\models\Gamma$. Die erste
+Allaussage wird mit $I$ spezialisiert, die zweite mit $I[x:=u]$. 
+Mit den vorliegenden Aussagen gelingt der Schluss auf $I[x:=u]\models B$.
+Ergo gilt $I\models B$, wie gewünscht.\,\qedsymbol
+\end{Beweis}
+
+\section{Semantik der Modallogik}
+
+\subsection{Relationale Semantik der Modallogik}
+
+Mit der Entwicklung der Modallogiken ging die Frage einher, wie
+modallogische Formeln semantisch interpretiert werden können.
+Besonders wichtig sind die nach Saul Kripke benannten
+\emph{Kripke"=Semantiken}, auch \emph{relationale Semantiken} genannt.
+Die Interpretation der atomaren Aussagen wird hierbei durch eine Welt
+parametrisiert. Eine Aussage kann also in einer bestimmten Welt wahr
+sein, während sie in einer anderen falsch ist. Als Logik der Metasprache
+soll dabei die klassische Prädikatenlogik dienen.
+
+Eine \emph{Kripke"=Struktur} sei ein Tripel $M=(W,R,V)$. Hierbei
+ist $W$ eine Menge von Welten, $R$ eine zweistellige Relation auf
+$W$, und $V$ eine Wertung, die jeder atomaren Variable $a$
+parametrisiert durch die Welt $w\in W$ einen Wahrheitswert
+$V(w,a)\in\{0,1\}$ zuordnet. Man nennt $R$ die
+\emph{Zugänglichkeitsrelation}, wobei $R(w,w')$ gedeutet wird als
+»$w'$ ist von $w$ aus zugänglich«. Die Relation muss nicht unbedingt
+symmetrisch sein, womit man unter Umständen nicht mehr von
+$w'$ aus in die ursprüngliche Welt $w$ zurückgelangt.
+
+Das Paar $I=(M,w)$, bestehend aus einer Struktur und einer Welt, betrachten
+wir als Interpretation. Man legt die Erfüllung einer atomaren Variable
+$a$ bezüglich einer Interpretation fest als%
+\[(M,w\models a) :\bicond V(w,a).\]
+Die Erfüllung der Junktoren wird analog zur klassischen Semantik
+definiert, also%
+\[(I\models A\land B) :\bicond (I\models A)\land (I\models B)\]
+und so weiter, wobei die rechte Seite gemäß den herkömmlichen
+Wahrheitstafeln ausgewertet wird. Für die beiden modalen Junktoren legt
+man nun fest%
+\begin{align*}
+(M,w\models\lnec A) &:\bicond\forall w'\in W\colon R(w,w')\cond (M,w'\models A),\\
+(M,w\models\lpos A) &:\bicond\exists w'\in W\colon R(w,w')\land (M,w'\models A). 
+\end{align*}
+In Worten ist die Aussage $\lnec A$ genau dann wahr in der Welt $w$, wenn
+$A$ in jeder von $w$ aus zugänglichen möglichen Welt wahr ist.
+Es ist $\lpos A$ genau dann wahr in der Welt $w$, wenn $A$ in mindestens einer
+von $w$ aus zugänglichen möglichen Welt wahr ist.
+
+Die semantische Folgerung wird wieder in der herkömmlichen Form%
+\[(\Gamma\models A) :\bicond \forall I\colon (I\models\Gamma)\cond (I\models A)\]
+definiert. Ausgeschrieben lautet sie demnach
+\[(\Gamma\models A) :\bicond \forall M\colon\forall w\in W(M)\colon
+(M,w\models\Gamma)\cond (M,w\models A).\]
+Man spricht gelegentlich auch von der \emph{lokalen} semantischen Folgerung,
+um sie von einer weiteren, der selten diskutierten \emph{globalen} semantischen
+Folgerung abgrenzen zu können. Zur Unterscheidung will ich die globale
+Folgerung als $\models^g$ notieren. Man definiert sie als%
+\[(\Gamma\models^g A) :\bicond\forall M\colon (M\models\Gamma)\cond (M\models A),\]
+wobei $M\models A$ für $\forall w\in W(M)\colon (M,w\models A)$ stehen soll.
+
+Ist $\Gamma$ die leere Menge, koinzidieren die lokale und die globale
+Folgerung. Das heißt, $\emptyset\models A$ gilt genau dann, wenn
+$\emptyset\models^g A$. Man schreibt wieder $\models A$ als Kurzform
+von $\emptyset\models A$ und sagt dazu, die Formel $A$ sei
+\emph{allgemeingültig}.
+
+Bei der tieferen Untersuchung, welche Beziehungen zwischen Kalkül und
+Semantik bestehen, zerlegt man eine Kripke"=Struktur $M=(W,R,V)$ in
+die zwei Teile $F=(W,R)$ und $V$. Man nennt $F$ den \emph{Rahmen}.
+
+Gezeigt werden muss nun die Korrektheit des natürlichen Schließens
+für die Modallogik. Dies geschieht wieder per struktureller Induktion
+über den Formelaufbau. Bei den herkömmlichen Schlussregeln verläuft der
+Beweis identisch wie in der klassischen Semantik der Aussagenlogik.
+Zu bestätigen verbleibt insofern lediglich noch die Korrektheit der
+Nezessisierungsregel und die Allgemeingültigkeit des Axiomenschemas K.
+
+\begin{Satz}
+Aus $\models A$ folgt $\models\lnec A$.
+\end{Satz}
+\begin{Beweis}
+Gemäß der Prämisse gilt $M,w'\models A$ für jedes $w'$. Demnach gilt
+erst recht $R(w,w')\cond (M,w'\models A)$. Ergo gilt
+$\models\lnec A$. Quod erat demonstrandum.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Das Schema $\lnec(A\cond B)\cond (\lnec A\cond\lnec B)$ ist allgemeingültig.
+\end{Satz}
+\begin{Beweis}
+Seien $M,w$ fest, aber beliebig. Zu zeigen ist
+\[M,w\models\lnec(A\cond B)\cond (\lnec A\cond\lnec B),\]
+was gemäß der Definition der Erfüllung äquivalent umgeformt wird zu%
+\[(M,w\models\lnec(A\cond B))\cond (M,w\models\lnec A)\cond (M,w\models\lnec B).\]
+Zu zeigen ist daher $M,w'\models B$ unter Annahme von $R(w,w')$ und%
+\begin{gather*}
+\forall w'\colon R(w,w')\cond (M,w'\models A\cond B),\\
+\forall w'\colon R(w,w')\cond (M,w'\models A).
+\end{gather*}
+Die beiden Allaussagen werden mit $w'$ und $R(w,w')$ spezialisiert.
+Laut der ersten Aussage $M,w'\models A\cond B$ folgt
+$M,w'\models B$ aus $M,w'\models A$. Laut zweiten gilt $M,w'\models A$.
+Ergo gilt $M,w'\models B$. Quod erat demonstrandum.\,\qedsymbol
+\end{Beweis}
 

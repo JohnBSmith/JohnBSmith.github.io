@@ -30,9 +30,9 @@ Es ist ein Beutel,  der den leeren Beutel enthält.
 
 Wir schreiben kurz $x\in A$ für »$x$ ist ein Element von $A$«,
 auch »$x$ gehört zu $A$« oder »$x$ liegt in $A$«.
-Es steht $x\notin A$ für $\lnot x\in A$.
+Es steht $x\notin A$ für $\lnot x\in A$, gelesen $\lnot (x\in A)$.
 
-Für eine endliche Menge definiert man
+Für eine endliche Menge $\{x_1,\ldots,x_n\}$ definiert man
 \[x\in\{x_1,\ldots,x_n\}\defiff x=x_1\lor\ldots\lor x=x_n.\]
 
 \subsection{Gleichheit von Mengen}
@@ -51,10 +51,10 @@ Für zwei Mengen $A,B$ definiert man
 \[A = B \defiff (\forall x\colon x\in A\bicond x\in B).\]
 \end{Definition}
 Der Leser wird mühelos bestätigen, dass die Gleichheit die Axiome
-einer Äquivalenzrelation erfüllt. Wobei der Begriff der Relation
-noch zu definieren wäre. Weil die Gesamtheit aller Mengen eine
-sogenannte echte Klasse ist, handelt es sich nicht um eine
-Äquivalenzrelation im engeren Sinne.
+einer Äquivalenzrelation erfüllt. Weil die Gesamtheit aller Mengen eine
+sogenannte echte Klasse ist, müsste der Begriff der Relation dafür
+allerdings allgemein für Klassen definiert werden. Was unter einer
+Relation zu verstehen ist, wird später erklärt.
 
 Es ist zulässig, ein Element bei der aufzählenden Angabe einer Menge
 mehrmals aufzuführen. Dies ändert allerdings nichts daran, dass ein
@@ -382,7 +382,7 @@ Wie in jedem Verband ist in einer booleschen Algebra
 $(M,\wedge,\vee)$ für $a,b\in M$ eine Halbordnung $a\le b$
 definiert, indem $a\le b$ und $a\wedge b = a$ als äquivalent
 angesehen werden. Bei der Mengenalgebra entpuppt sie sich
-als die Teilmengenrelation. Das heißt, es gilt%
+als nichts anderes als die Inklusion. Das heißt, es gilt%
 \[A\subseteq B\iff A\cap B = A\iff A\cup B = B.\]
 Die Beziehung $A\setminus B = A\cap B^\compc$ ist eine recht dienliche.
 Vermöge ihr können die Operationen mit der Differenzmenge ebenfalls mit
@@ -434,21 +434,21 @@ Zu jeder logischen Verknüpfung gehört eine Mengenoperation, siehe
 Tabelle \ref{tab:op-Logik-Mengen}. Die Subjunktion $A\cond B$
 wird dabei via $\lnot A\lor B$ übersetzt, was die klassische Logik
 verlangt. Man kann nun darüber hinaus einen
-Zusammenhang zwischen der Teilmengenbeziehung und den Sequenzen
+Zusammenhang zwischen der Inklusion und den Sequenzen
 herstellen. Und zwar verhält sich die Beziehung
 \[A_1\cap\ldots\cap A_m\subseteq B_1\cup\ldots\cup B_n.\]
 analog zur allgemeinen Sequenz
 \[A_1,\ldots,A_m\vdash B_1,\ldots,B_n.\]
 Mehr noch, jede Schlussregel des natürlichen Schließens besitzt eine
 direkte Entsprechung. So verhält sich die Regel
-\[\frac{\Gamma\vdash A\land B}{\Gamma\vdash A}
-\quad\text{analog zu}\quad\Gamma\subseteq A\cap B\cond\Gamma\subseteq A.\]
-Aber Vorsicht, die Sequenz $\Gamma\cup\Gamma'\vdash A$ entspricht
-$\Gamma\cap\Gamma'\subseteq A$.
+\[\frac{C\vdash A\land B}{C\vdash A}
+\quad\text{analog zu}\quad C\subseteq A\cap B\cond C\subseteq A.\]
+Aber Vorsicht, der Sequenz $\{C_1\}\cup\{C_2\}\vdash A$ entspricht
+$C_1\cap C_2\subseteq A$.
 
 Diese Sichtweise ermöglicht es, das natürliche Schließen durch
 Eulerdiagramme zu veranschaulichen. Umgekehrt hilft die Betrachtung
-als Sequenz beim Urteilen, ob Mengen in Teilmengenbeziehung stehen.
+als Sequenz beim Urteilen, ob eine Menge Teil einer anderen ist.
 
 Für mehrere Mengen definiert man
 \[\bigcap_{i=1}^n A_i := A_1\cap A_2\cap\ldots\cap A_n,\qquad
@@ -1159,7 +1159,7 @@ es den Satz vom ausgeschlossenen Dritten.
 
 \subsection{Definite Kennzeichnung}
 
-Sofern zu einer vorgelegte Aussageform $A(x)$ nicht nur ein diese
+Sofern zu einer vorgelegten Aussageform $A(x)$ nicht nur ein diese
 erfüllendes Objekt existiert, sondern das Objekt auch eindeutig
 bestimmt ist, würden wir gerne über dieses Objekt reden können.
 Diesbezüglich stehe die Symbolik $\iota x\colon A(x)$ für
