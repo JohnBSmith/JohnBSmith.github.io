@@ -746,3 +746,88 @@ $M,w'\models B$ aus $M,w'\models A$. Laut zweiten gilt $M,w'\models A$.
 Ergo gilt $M,w'\models B$. Quod erat demonstrandum.\,\qedsymbol
 \end{Beweis}
 
+\subsection{Die Standardübersetzung}
+
+Die relationale Semantik der diskutierten Modallogiken deutet bereits
+an, dass Modallogik etwas mit der Logik erster Stufe zu tun haben müsste.
+Es scheint, dass in gewisser Weise $\lnec A$ der Allquantifizierung,
+und $\lpos A$ der Existenzquantifizierung entspricht. Die im Folgenden
+beschriebene \emph{Standardübersetzung} modallogischer Formeln in die
+Logik erster Stufe präzisiert diesen Gedankengang. Mithin stellen sich
+die diskutierten Modallogiken als Spezialfälle der Logik erster Stufe
+heraus. Auf diese Weise erhält man eine Möglichkeit, modallogische
+Theoreme mit Beweisassistenten zu formulieren, die lediglich die
+herkömmliche Logik verstehen.
+
+Die Standardübersetzung ist rekursiv definiert als
+\begin{align*}
+&\mathrm{ST}_x(a) := P_a(x),
+&& \mathrm{ST}_x(A\cond B) := \mathrm{ST}_x(A)\cond\mathrm{ST}_x(B),\\
+&\mathrm{ST}_x(\lnot A) := \lnot\mathrm{ST}_x(A),
+&& \mathrm{ST}_x(A\bicond B) := \mathrm{ST}_x(A)\bicond\mathrm{ST}_x(b),\\
+&\mathrm{ST}_x(A\land B) := \mathrm{ST}_x(A)\land\mathrm{ST}_x(B),
+&& \mathrm{ST}_x(\lnec A) := \forall y\colon R(x,y)\cond\mathrm{ST}_y(A),\\
+& \mathrm{ST}_x(A\lor B) := \mathrm{ST}_x(A)\lor\mathrm{ST}_x(B),
+&& \mathrm{ST}_x(\lpos A) := \forall y\colon R(x,y)\land\mathrm{ST}_y(A).
+\end{align*}
+Die Formeln $\bot,\top$ bleiben fix, also
+$\mathrm{ST}_x(\bot) := \bot$ und $\mathrm{ST}_x(\top) := \top$.
+
+Hierbei ist $R$ ein zweistelliges Prädikatsymbol, und $P_a$ zu
+jedem $a$ ein einstelliges Prädikatsymbol. Eine Interpretation
+$(M,w)$ mit Kripke"=Struktur $M=(W,R,V)$ und Welt $w\in W$
+lässt sich als Interpretation $(M,\beta[x:=w])$ für die übersetzten
+Formeln deuten, dergestalt dass das Symbol $P_a$ mit $w\mapsto V(w,a)$
+interpretiert wird, und das Symbol $R$ mit der Zugänglichkeitsrelation
+$R$. Demzufolge nimmt $W$ die Rolle des Diskursuniversums ein.
+Die Belegung $\beta$ spielt keine Rolle, da $x$ die einzige freie
+Variable ist. Man gelangt nun zum folgenden Resultat.
+\begin{Satz}
+Es gilt $M,w\models A$ genau dann, wenn $M,\beta[x:=w]\models\mathrm{ST}_x(A)$.
+\end{Satz}
+\begin{Beweis}
+Per struktureller Induktion über den Formelaufbau von $A$.
+Es sei $\beta\tfrac{w}{x}$ Kurzschreibweise für $\beta[x:=w]$. Den
+Induktionsanfang liefert die Umformung
+\[(M,w\models a) \iff V(w,a) \iff (M,\beta\tfrac{w}{x}\models P_a(x)).\]
+Zur Formel $A\land B$ liegt die Äquivalenz von $M,w\models C$
+und $M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(C)$ jeweils für $C=A$
+und $C=B$ als Induktionsvoraussetzung vor. Es findet sich hiermit
+die äquivalente Umformung
+\begin{align*}
+(M,w\models A\land B) &\iff (M,w\models A)\land (M,w\models B)\\
+&\iff (M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(A))\land
+(M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(B))\\
+&\iff M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(A)\land\mathrm{ST}_x(B)\\
+&\iff M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(A\land B).
+\end{align*}
+Bei den restlichen herkömmlichen Junktoren verläuft die Argumentation
+analog. Zur Formel $\lnec A$ liegt die Äquivalenz von $M,w'\models A$
+und $M,\beta\tfrac{w'}{y}\models\mathrm{ST}_y(A)$ als
+Induktionsvoraussetzung vor. Es findet sich hiermit die äquivalente
+Umformung
+\begin{align*}
+(M,w\models\lnec A) &\iff \forall w'\colon R(w,w')\cond (M,w'\models A)\\
+&\iff\forall w'\colon R(w,w')\cond (M,\beta\tfrac{w'}{y}\models\mathrm{ST}_y(A))\\
+&\iff\forall w'\colon (M,\beta\tfrac{w}{x}\tfrac{w'}{y}\models R(x,y))
+\cond (M,\beta\tfrac{w}{x}\tfrac{w'}{y}\models\mathrm{ST}_y(A))\\
+&\iff (M,\beta\tfrac{w}{x}\models\forall y\colon R(x,y)\cond\mathrm{ST}_y(A))\\
+&\iff (M,\beta\tfrac{w}{x}\models\mathrm{ST}_x(\lnec A)).
+\end{align*}
+Bei $\lpos A$ verläuft die Argumentation analog.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Mithin gilt in unmittelbarer Konsequenz der
+\begin{Satz}
+Es gilt $\Gamma\models A$ genau dann, wenn
+$\mathrm{ST}_x(\Gamma)\models\mathrm{ST}_x(A)$.
+\end{Satz}
+Vermittels dieser Äquivalenz erhält man sogleich den
+\begin{Satz}
+Aus $\vdash\mathrm{ST}_x(A)$ folgt $\models A$.
+\end{Satz}
+Kraft der Standardübersetzung in die Logik erster Stufe ergibt sich
+insofern wie gewünscht ein alternativer korrekter Kalkül für die
+diskutierten Modallogiken. Eine tiefergehende Untersuchung zur
+Standardübersetzung findet man in \cite{Blackburn}.
