@@ -1,0 +1,572 @@
+
+\chapter{Diskrete Mathematik}
+
+\section{Kombinatorik}
+
+\subsection{Endliche Summen}
+
+Problemstellungen der Kombinatorik führen oftmals zu Summen.
+Ein Grund dafür liegt darin, dass die Lösungen bestimmter
+Differenzengleichungen als Summen darstellbar sind. In der Analysis
+sind die Reihen sehr bedeutsam, das sind Summen von unendlich vielen
+Summanden. Der Wert einer Reihe wird hierbei, sofern existent, als der
+Grenzwert der Folge der Partialsummen erklärt.
+Somit bauen Reihen konzeptuell auf den endlichen Summen auf.
+Ein weiteres wichtiges Werkzeug stellen die formalen Potenzreihen bereit,
+die ohne den Grenzwertbegriff auskommen, aber analoge Rechenregeln zu
+den eigentlichen Potenzreihen aufweisen. In der linearen Algebra dienen
+Summen ebenfalls zur allgemeinen Formulierung von Rechenregeln.
+Darin einbegriffen ist das Rechnen mit Polynomen. Auch in der
+Stochastik sind Summen dienlich, zum Beispiel zur Erklärung des
+Erwartungswertes einer Zufallsgröße.
+
+Zur Einführung eine kleine Aufgabe. Man beobachtet
+\[1+3 = 2^2,\quad 1+3+5 = 3^2,\quad 1+3+5+7 = 4^2,\quad 1+3+5+7+9 = 5^2.\]
+Anscheinend besteht die Gesetzmäßigkeit
+\[1 + 3 + \ldots  + (2n-1) = n^2.\]
+In Worten ist die Summe der ersten ungeraden Zahlen eine Quadratzahl,
+genauer die Anzahl der Summanden zum Quadrat. Ein strenger Beweis dafür
+findet sich unschwer. Zuvor will ich aber die allgemeinen Gesetzmäßigkeiten
+für das Rechnen mit Summen diskutieren.
+
+Statt Summen mit drei Pünktchen zu beschreiben, verwendet man meist die
+unmissverständliche Notation
+\[\textstyle\sum_{k=1}^n a_k := a_1 + a_2 + \ldots + a_n.\]
+Beispielsweise gilt
+\[\textstyle\sum_{k=1}^3 (2k-1) =
+(2\cdot 0-1) + (2\cdot 1 -1 ) + (2\cdot 2 - 1)
+= 1 + 3 + 5.\]
+Die drei Pünktchen treten allerdings noch in der Erklärung der Summe
+auf. Wir werden sie wieder gänzlich los, indem die Summe rekursiv
+festgelegt wird.
+
+\begin{Definition}[Summe]\newlinefirst
+Für eine Folge $a\colon\Z\to\R$ ist die Summe der $a_k$ für $k=m$ bis
+$k=n$ rekursiv definiert gemäß
+\[\sum_{k=m}^{m-1} a_k := 0,\quad \sum_{k=m}^n a_k := a_n + \sum_{k=m}^{n-1} a_k.\]
+\end{Definition}
+Es darf $k$, genannt der \emph{Laufindex}, als gebundene Variable nur
+im Term $a_k$ auftreten. Die Zahlen $m,n$ nennt man die \emph{Grenzen}
+der Summierung. Ist $a$ lediglich auf $D\subseteq\Z$ definiert, können
+wir $a$ schlicht per $a_k := 0$ für $k\notin D$ auf ganz $\Z$ erweitern.
+Dies bietet sich an, wenn die Summe stets definiert sein soll,
+unabhängig davon wie die Grenzen gewählt werden.
+
+\begin{Satz}\label{Summe-Homogenitaet}
+Es gilt $\sum_{k=m}^n ca_k = c\sum_{k=m}^n a_k$ für jede Konstante $c$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Induktionsanfang $n=m-1$ gilt
+\[\textstyle\sum\limits_{k=m}^{m-1} ca_k \stackrel{\mathrm{def}}= 0 = c\cdot 0
+\stackrel{\mathrm{def}}= c\sum\limits_{k=m}^{m-1} a_k.\]
+Der Induktionsschritt ist
+\[\textstyle\sum\limits_{k=m}^n ca_k \stackrel{\mathrm{def}}= ca_n+\sum\limits_{k=m}^{n-1} ca_k
+\stackrel{\mathrm{IV}}= ca_n + c\sum\limits_{k=m}^{n-1} a_k
+= c\Big(a_n + \sum\limits_{k=m}^{n-1} a_k\Big) \stackrel{\mathrm{def}}= c\sum\limits_{k=m}^n a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{Summe-Additivitaet}
+Es gilt $\sum_{k=m}^n (a_k+b_k) = \sum_{k=m}^n a_k + \sum_{k=m}^n b_k$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Induktionsanfang $n=m-1$ reduziert sich die
+Behauptung zu $0 = 0 + 0$. Der Induktionsschritt ist%
+\begin{align*}
+\textstyle\sum_{k=m}^n (a_k + b_k) &\textstyle\stackrel{\mathrm{def}}=
+a_n + b_n + \sum_{k=m}^{n-1} (a_k + b_k)
+\stackrel{\mathrm{IV}}=
+a_n + b_n + \sum_{k=m}^{n-1} a_k + \sum_{k=m}^{n-1} b_k\\
+&\textstyle\stackrel{\mathrm{def}}= \sum_{k=m}^n a_k + \sum_{k=m}^n b_k.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+Man kann den Raum $\Abb(\Z,\R)$ auch als einen Vektorraum über dem Körper
+$\R$ deuten, wobei die Multiplikation mit einem Skalar $c\in\R$ und die
+vektorielle Addition punktweise definiert werden, das heißt,%
+\[(ca)_k := ca_k,\quad\; (a+b)_k := a_k+b_k.\]
+Dann ist $\sum_m^n a := \sum_{k=m}^n a_k$ eine lineare Abbildung,
+denn die Homogenität gilt laut Satz \ref{Summe-Homogenitaet}, und
+die Additivität laut Satz \ref{Summe-Additivitaet}.
+
+Der Differenzoperator
+\[(\Delta a)_n := a_{n+1} - a_n\]
+wird die nachfolgende Diskussion übersichtlicher halten. Es handelt
+sich ebenfalls um eine lineare Abbildung, das heißt, für jede Konstante
+$c$ und alle Folgen $a,b$ gilt $\Delta (ca) = c\Delta a$ und
+$\Delta(a+b) = \Delta a + \Delta b$, denn%
+\begin{align*}
+(\Delta (ca))_n &= ca_{n+1} - ca_n = c(a_{n+1}-a_n) = c(\Delta a)_n,\\
+(\Delta(a+b))_n &= (a_{n+1}+b_{n+1}) - (a_n + b_n)
+= a_{n+1} - a_n + b_{n+1} - b_n\\
+&= (\Delta a)_n + (\Delta b)_n.
+\end{align*}
+
+\begin{Satz}[Teleskopsumme]
+Es gilt $\sum_{k=m}^{n-1} (\Delta a)_k = a_n - a_m$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Induktionsanfang $n=m$ sieht man trivial,
+dass beide Seiten der Gleichung den Wert null haben. Der
+Induktionsschritt ist%
+\[\textstyle\sum\limits_{k=m}^n (\Delta a)_k \stackrel{\mathrm{def}}=
+(\Delta a)_n + \sum\limits_{k=m}^{n-1} (\Delta a)_k
+\stackrel{\mathrm{IV}}= a_{n+1} - a_n + a_n - a_m = a_{n+1} - a_m.\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Das Prinzip der Teleskopsummen bietet zwei wesentliche Vorteile. 
+Der erste Vorteil besteht darin, dass man damit bequem nach
+Summenformeln fischen kann, wobei man deren Beweis mit geschenkt
+bekommt. Für $s_n := (n-1)/n$ gilt zum Beispiel%
+\[(\Delta s)_n = \frac{n}{n+1} - \frac{n-1}{n}
+= \frac{n^2 - (n+1)(n-1)}{(n+1)n} = \frac{1}{(n+1)n}.\]
+Ergo findet sich die Summenformel
+\[\sum_{k=1}^n \frac{1}{(k+1)k} = \frac{n}{n+1}.\]
+Der zweite Vorteil besteht darin, dass sich der Beweis einer bereits
+ermittelten Summenformel dahingehend vereinfacht, dass nicht jedes
+mal ein Induktionsbeweis geführt werden muss, womit die unter Umständen
+schwierige Auffindung der wesentlichen Umformungen im Induktionsschritt
+erleichtert wird. Zum Beweis einer Summenformel der Form%
+\[\textstyle\sum_{k=1}^n a_k = s_{n+1} - s_1\]
+genügt es nämlich, $\Delta s = a$ zu prüfen. Zur Summenformel%
+\[\textstyle\sum_{k=1}^n (2k-1) = n^2\]
+gilt beispielsweise $a_n = 2n-1$ und $s_n = (n-1)^2$. Es bestätigt sich
+kurzerhand%
+\[(\Delta s)_n = n^2 - (n-1)^2 = n^2 - n^2 + 2n - 1  = 2n-1 = a_n.\]
+Aus der nun bewiesenen Formel ziehen sich schnell weitere Schlüsse.
+Setzt man in die Gleichung%
+\[\textstyle n^2 = \sum_{k=1}^n (2k-1) = 2\sum_{k=1}^n k - \sum_{k=1}^n 1\]
+die Vereinfachung $\sum_{k=1}^n 1 = n$ ein und stellt sie daraufhin nach
+der verbleibenden Summe um, findet sich die Summenformel%
+\[\sum_{k=1}^n k = \frac{1}{2}(n^2 + n) = \frac{n}{2}(n+1).\]
+Die Werte dieser Summe werden die \emph{Dreieckszahlen} genannt.%
+\footnote{Engl. \emph{triangular numbers}. Eintrag A000217 in OEIS.}
+
+\begin{Satz}[Aufteilung von Summen]%
+\label{Summe-Aufteilung}\newlinefirst
+Für $m\le p\le n$ gilt
+$\sum_{k=m}^n a_k = \sum_{k=m}^{p-1} a_k+\sum_{k=p}^n a_k$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Der Induktionsanfang liege in $n=p$. Die Gleichung
+ist in diesem erfüllt, weil $\sum_{k=p}^p a_k=a_p$ gilt.
+Der Induktionsschritt ist%
+\[\sum\limits_{k=m}^n a_k \stackrel{\mathrm{def}}= a_n+\sum\limits_{k=m}^{n-1} a_k
+\stackrel{\mathrm{IV}}= a_n + \sum\limits_{k=m}^{p-1} a_k + \sum\limits_{k=p}^{n-1} a_k
+\stackrel{\mathrm{def}}= \sum\limits_{k=m}^{p-1} a_k + \sum\limits_{k=p}^n a_k.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Indexverschiebung]%
+\label{Summe-Indexshift}\newlinefirst
+Für die Indexverschiebung der Distanz $d\in\Z$,
+kurz Indexshift, gilt\\
+$\sum_{k=m}^n a_k = \sum_{k=m+d}^{n+d} a_{k-d}.$
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Induktionsanfang $n=m-1$ wird unmittelbar
+ersichtlich, dass beide Seiten der Gleichung im Wert null resultieren.
+Der Induktionsschritt gilt gemäß der Umformung%
+\begin{align*}
+\sum_{k=m}^n a_k \stackrel{\mathrm{def}}= a_n+\sum_{k=m}^{n-1} a_k
+\stackrel{\mathrm{IV}}= a_{(n+d)-d}+\sum_{k=m+d}^{n+d-1} a_{k-d}
+\stackrel{\mathrm{def}}= \sum_{k=m+d}^{n+d} a_{k-d}.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\noindent
+Ich will zusätzlich noch eine alternative Herleitung aufzeigen. Bei
+dieser wird der Indexbereich als Ungleichung beschrieben, was den
+Vorteil bietet, dass die Ungleichung einer Umformung unterzogen werden
+kann. Mit der Substitution $k=k'-d$ gelingt dahingehend die Überlegung%
+\begin{align*}
+\sum_{k=m}^n a_k = \sum_{m\le k\le n} a_k
+= \!\!\sum_{m\le k'-d\le n}\!\! a_{k'-d}
+= \!\!\sum_{m+d\le k'\le n+d}\!\! a_{k'-d}
+= \sum_{k'=m+d}^{n+d} a_{k'-d}.
+\end{align*}
+
+\begin{Satz}[Umkehrung der Reihenfolge]%
+\label{Summe-Umkehrung}\newlinefirst
+Es gilt $\sum_{k=0}^n a_k = \sum_{k=0}^n a_{n-k}$.
+\end{Satz}
+\strong{Beweis.}
+Der Induktionsanfang bei $n=0$ ist trivial. Beim Induktionsschritt
+macht man sich Satz \ref{Summe-Indexshift} (Indexshift) und
+Satz \ref{Summe-Aufteilung} (Aufteilung) zunutze,%
+\begin{gather*}
+\sum_{k=0}^n a_{n-k} = a_{n-n}+\sum_{k=0}^{n-1} a_{n-k}
+= a_0+\sum_{k=0}^{n-1} a_{n-(n-1-k)}
+= a_0+\sum_{k=0}^{n-1} a_{k+1}\\
+\stackrel{[k:=k-1]}= a_0+\sum_{k=1}^n a_k
+= \sum_{k=0}^0 a_k + \sum_{k=1}^n a_k
+= \sum_{k=0}^n a_k.\,\qedsymbol
+\end{gather*}
+Dienlich ist die Umkehrung beispielsweise bei der folgenden klassischen
+Herleitung der Summenformel $\sum_{k=0}^n k = \tfrac{n}{2}(n+1)$. 
+Aufbauend auf den bereits gezeigten Regeln stellt diese Herleitung ebenfalls
+einen strengen Beweis dar. Das doppelte der Summe betrachtet man hierbei
+als Addition der Summe zu sich selbst, wobei die Reihenfolge der zweiten
+Summe umgekehrt wird. Man erhält%
+\begin{align*}
+2\sum_{k=0}^n k &= \sum_{k=0}^n k+\sum_{k=0}^n k
+= \sum_{k=0}^n k + \sum_{k=0}^n (n-k)\\
+&= \sum_{k=0}^n (k+n-k) = \sum_{k=0}^n n
+= n\sum_{k=0}^n 1 = n(n+1).
+\end{align*}
+Ganz allgemein dürfen die Summanden einer endlichen Summe beliebig
+umgeordnet werden; dies geht aus wiederholter Anwendung des Kommutativgesetzes
+und des Assoziativgesetzes hervor. Die Formalisierung dieser Tatsache
+geschieht vermittels einer frei wählbaren Permutation des Indexbereichs.
+Der zuvor diskutierte Sachverhalt stellt sich dahingehend als
+Spezialfall mit der auf der Menge $\{0,\ldots,n\}$ definierten
+Permutation $\pi(k) = n-k$ dar.
+
+\begin{Satz}[Permutation der Reihenfolge]%
+\label{Summe-Permutation-Index}\newlinefirst
+Sei $M=\{k\in\Z\mid m\le k\le n\}$. Für jede Permutation
+$\pi\colon M\to M$ gilt
+\[\sum_{k=m}^n a_k = \sum_{k=m}^n a_{\pi(k)}.\]
+\end{Satz}
+\begin{Beweis} Induktion über $n$. Sei ohne Beschränkung der Allgemeinheit $m=1$.
+Im Induktionsanfang $n=0$ und $n=1$ ist die Gleichung offenkundig erfüllt.
+
+Induktionsschritt. Induktionsvoraussetzung sei die Gültigkeit für $M$.
+Zu zeigen ist die Gültigkeit für $M\cup\{n+1\}$.
+
+Sei $t$ ein fester Parameter mit $1\le t\le n+1$.
+Im Fall $\pi(t) = n+1$ geht man wie folgt vor.
+Man setze $\sigma(k):=\pi(k)$ für $1\le k\le t-1$. Man setze
+$\sigma(k):=\pi(k+1)$ für $t\le k\le n$. Weil $n+1$ kein Wert von
+$\sigma$ ist, muss $\sigma$ eine Permutation $\sigma\colon M\to M$ sein.
+Ergo gilt
+\begin{align*}
+\sum_{k=1}^{n+1} a_{\pi(k)} &= \sum_{k=1}^{t-1} a_{\pi(k)}
++ a_{\pi(t)} + \sum_{k=t+1}^{n+1} a_{\pi(k)}
+= a_{\pi(t)} + \sum_{k=1}^{t-1} a_{\pi(k)}
++ \sum_{k=t}^n a_{\pi(k+1)}\\
+&= a_{n+1} + \sum_{k=1}^{t-1} a_{\sigma(k)}
++ \sum_{k=t}^n a_{\sigma(k)}
+= a_{n+1} + \sum_{k=1}^n a_{\sigma(k)}\\
+&\stackrel{\mathrm{IV}}= a_{n+1} + \sum_{k=1}^n a_k
+= \sum_{k=1}^{n+1} a_k.
+\end{align*}
+Man beachte, dass in den beiden Randfällen $t=1$ und $t=n+1$ die
+jeweilige Randsumme den Wert null hat und somit verschwindet.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Dass die Reihenfolge der Summierung keine Rolle spielt, gibt Anlass
+zu einer abstrakten Fassung der Summierung selbst, die von vornherein
+auf die Festlegung einer bestimmten Reihenfolge verzichtet.
+
+\begin{Satz}
+Sei $M$ eine endliche Menge, sei $a\colon M\to\R$. Die Festlegung
+\[\sum_{k\in M} a_k := \sum_{i=m}^n a_{f(i)},\;\; |M| = n-m+1,\;\;
+f\colon\{m,\ldots,n\}\to M\;\text{bijektiv}\]
+ist wohldefiniert, wobei $f$ frei gewählt werden darf.
+\end{Satz}
+\begin{Beweis}
+Es gilt zu zeigen, dass die Summe auch wirklich unabhängig von der
+gewählten Bijektion ist. Sind $f,g$ zwei solcher Bijektionen, so ist
+$\pi := g^{-1}\circ f$ ebenfalls bijektiv, also eine Permutation des
+Indexbereichs. Vermittels Satz \ref{Summe-Permutation-Index} gilt daher
+\[\sum_{i=m}^n a_{f(i)} = \sum_{i=m}^n a_{g(\pi(i))}
+= \sum_{i=m}^n a_{g(i)}.\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Im Weiteren ist man nun befähigt, die Begrenzung des Indexbereichs
+durch Ungleichungen streng zu definieren. Man legt fest
+\[\sum_{m\le k\le n} a_k := \sum_{k\in M} a_k,
+\quad M := \{k\in\Z\mid m\le k\land k\le n\}.\]
+Somit ist streng begründet, dass die Ungleichungen $m\le k$
+und $k\le n$ einer Äquivalenzumformung unterzogen werden dürfen,
+denn von diesen bleibt die Menge $M$, und somit die Summe unberührt.
+
+Ein letztes Detail darf aber nicht vergessen werden. Im Vorfeld der
+oder Anschluss an die Umformung der Ungleichungen wird ggf. eine
+Substitution der Laufvariable durchgeführt. Streng genommen muss noch
+abgeklärt werden, dass dies unter allen Umständen unverfänglich ist.
+Gewissheit schafft der
+
+\begin{Satz}[Substitutionsregel]
+Ist $\varphi\colon M'\to M$ eine Bijektion, gilt
+\[\sum_{k\in M} a_k = \sum_{k'\in M'} a_{\varphi(k')}.\]
+\end{Satz}
+\begin{Beweis}
+Zur Bijektion $f\colon\{1,\ldots,|M|\}\to M$ existiert die Bijektion
+$g$ mit $f = \varphi\circ g$, nämlich ist dies $g:=\varphi^{-1}\circ f$.
+Infolge gilt
+\[\sum_{k\in M} a_k = \sum_{i=1}^{|M|} a_{f(i)}
+= \sum_{i=1}^{|M|} a_{\varphi(g(i))}
+= \sum_{k'\in M'} a_{\varphi(k')}.\,\qedsymbol\]
+\end{Beweis}
+Für die allgemeine Form der Summierung gelten anloge Regeln. Genauer
+lassen sich die bereits bewiesenen Regeln direkt übertragen.
+Man prüft unschwer nach, dass gilt
+\[\sum_{k\in M} ca_k = c\sum_{k\in M}a_k,\qquad\sum_{k\in M} (a_k+b_k)
+= \sum_{k\in M} a_k + \sum_{k\in M} b_k.\]
+Zur Aufteilung sei $M = A\cup B$ mit $A\cap B = \emptyset$, also
+eine disjunkte Zerlegung von $M$ in $A,B$. Dann gilt
+\[\sum_{k\in M} a_k = \sum_{k\in A} a_k + \sum_{k\in B} a_k.\]
+Bezüglich der Indikatorfunktion $1_A\colon M\to\{0,1\}$
+zu $A\subseteq M$ gilt nun
+\[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} a_k,\]
+denn $M=A\cup (M\setminus A)$ ist eine disjunkte Zerlegung, so dass gilt
+\[\sum_{k\in M} 1_A(k)a_k = \sum_{k\in A} \underbrace{1_A(k)}_{=1}a_k
++ \sum_{k\in M\setminus A} \underbrace{1_A(k)}_{=0}a_k
+= \sum_{k\in A} a_k.\]
+Ist $A\subseteq\Z$ endlich, dürfen wir daher definieren
+\[\sum_k 1_A(k)a_k = \sum_{k\in\Z} 1_A(k)a_k := \sum_{k\in A} a_k,\]
+da diese Summe in Wirklichkeit endlich ist, also niemals über
+unendlich viele Indizes läuft. Diese Sichtweise bietet unter Umständen
+Vorteile bei der Umformung von Summen.
+
+\section{Zur elementaren Zahlentheorie}
+
+\subsection{Kongruenzen}
+
+Die elementare Zahlentheorie beschäftigt sich mit der Teilbarkeit von
+Zahlen, den Resten, die bei der Ganzzahldivision übrig bleiben
+und der Auffindung ganzzahliger Lösungen von Gleichungen. Lange Zeit
+als ein Gebiet der reinen Mathematik angesehen, stellte sie sich
+als bedeutsam für die praktische Informatik und die Kryptologie heraus. 
+
+Die \emph{modulare Arithmetik}, auch \emph{Restklassenarithmetik}
+genannt, ist ein wichtiges Hilfsmittel der elementaren Zahlentheorie.
+Sie geht aus der gewöhnlichen Arithmetik hervor, indem zwei ganze
+Zahlen als gleich angesehen werden, wenn sie bei Division durch eine
+vorab gewählte feste Zahl denselben Rest lassen. Diese Form der
+Gleichheit nennt man \emph{Kongruenz}, die feste Zahl den \emph{Modul}.
+Kongruenz zweier Zahlen ist damit gleichbedeutend, dass die eine
+Zahl zur anderen um ein Vielfaches des Moduls verschoben liegt, was nichts
+anderes bedeutet, als dass der Modul die Differenz der beiden Zahlen teilt.
+
+Man vermittelt das Konzept gern am Lauf von Uhrzeigern. Hierbei werden
+die Stunden $0, 12, 24, 36$ usw. als gleich angesehen. Entsprechend
+werden die Stunden $1, 13, 25, 37$ usw. als gleich angesehen. Es
+verbleiben nur noch $12$ unterschiedliche Zeitpunkte, die vollen
+Stunden $0, 1, \ldots, 11$. Ein Uhrzeiger auf $11$ Uhr trifft
+zwei Stunden später auf $1$ Uhr. Anders ausgedrückt sind die Zahlen
+$11+2$ und $1$ kongruent Modulo 12, was nach Carl Friedrich Gauß
+in der Form
+\[11 + 2\equiv 1\pmod{12}\]
+notiert wird.
+
+\begin{Definition}[Kongruenz]\index{Kongruenz}\newlinefirst
+Zwei ganze Zahlen $a,b$ heißen kongruent modulo $m$, wenn ihre Differenz
+$a-b$ durch $m$ teilbar ist,%
+\[a\equiv b\pmod{m}\;:\bicond\;\exists k\in\Z\colon a-b=km.\]
+\end{Definition}
+Statt »$(\mathrm{mod}\;m)$« schreibt man beim Rechnen meist
+kürzer »$(m)$«.
+
+\begin{Satz}
+Die Kongruenz ist eine Äquivalenzrelation, das heißt, es gilt
+\begin{align*}
+&a\equiv a\pmod{m},&&\text{(Reflexivität)}\\
+&a\equiv b\cond b\equiv a\pmod{m},&&\text{(Symmetrie)}\\
+&a\equiv b\land b\equiv c\cond a\equiv c\pmod{m}.&&\text{(Transitivität)}
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Für die Reflexivität ist ein $k$ mit $0=a-a=km$
+zu finden. Setze $k=0$.
+
+Bei der Symmetrie gibt es nach Voraussetzung
+ein $k$ mit $a-b=km$. Dann ist $b-a=-km$. Setze $k'=-k$.
+Es gibt also $k'$ mit $b-a=k'm$, somit gilt $b\equiv a$.
+
+Bei der Transitivität gibt es nach Voraussetzung ein $k$ mit
+$a-b=km$ und ein $l$ mit $b-c=lm$. Das heißt, es gilt
+$km+lm = a-c$, \text{ergo} $a-c = (k+l)m$. Setze $k'=k+l$. Es gibt also
+$k'$ mit $a-c=k'm$. Somit gilt $a\equiv c$.\;\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Kongruenz-add-sub}
+Sind $a,b,c$ ganze Zahlen, dann gilt
+\begin{align*}
+a\equiv b\pmod{m}&\iff a+c\equiv b+c\pmod{m},\\
+a\equiv b\pmod{m}&\iff a-c\equiv b-c\pmod{m}.
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Unter Beachtung von $(b+c)-(a+c)=b-a$ findet man
+\begin{gather*}
+a\equiv b\pmod{m}
+\iff (\exists k\in\Z\colon b-a=km)\\
+\iff (\exists k\in\Z\colon (b+c)-(a+c)=km)\\
+\iff a+c\equiv b+c\pmod{m}.
+\end{gather*}
+Für die Subtraktion von $c$ ist die Überlegung analog.\;\qedsymbol
+\end{Beweis}
+
+%\newpage
+\begin{Satz}\label{Kongruenz-mul}
+Sind $a,b,c$ ganze Zahlen, dann gilt
+\[a\equiv b\pmod{m} \implies ac\equiv bc\pmod{m}.\]
+\end{Satz}
+\begin{Beweis}
+Unter der Voraussetzung $a\equiv b\pmod{m}$ gibt es ein
+$k$ mit $b-a=km$. Es gilt
+\[b-a=km\iff (b-a)c=kcm \iff bc-ac=k'm\]
+mit $k':=kc$. Man hat also
+\[(\exists k'\in\Z\colon bc-ac=k'm)\iff ac\equiv bc\pmod{m}.\;\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Gilt $a\equiv a'\pmod{m}$ und
+$b\equiv b'\pmod{m}$, dann gilt auch
+\begin{align*}
+a+b&\equiv a'+b'\pmod{m},\\
+a-b&\equiv a'-b'\pmod{m},\\
+ab&\equiv a'b'\pmod{m}.
+\end{align*}
+\end{Satz}
+\strong{Beweis.} Man findet
+\begin{equation}
+\left.\begin{aligned}
+a\equiv a'&\implies a+b\equiv a'+b\\
+b\equiv b'&\implies a'+b\equiv a'+b'
+\end{aligned}\right\}
+\implies a+b\equiv a'+b\equiv a'+b'\pmod{m}.
+\end{equation}
+Für die Subtraktion ist die Überlegung analog. Für die Multiplikation
+ebenfalls:%
+\begin{equation}
+\left.\begin{aligned}
+a\equiv a'&\implies ab\equiv a'b\\
+b\equiv b'&\implies a'b\equiv a'b'
+\end{aligned}\right\}
+\implies ab\equiv a'b\equiv a'b'\pmod{m}.\;\qedsymbol
+\end{equation}
+
+\begin{Satz}
+Addition des Moduls führt auf eine kongruente Zahl:%
+\[a\equiv a+m\equiv a-m\pmod{m}.\]
+\end{Satz}
+\begin{Beweis}
+Es gilt
+\[a\equiv a+m\pmod{m}\iff (\exists k\in\Z\colon km=(a+m)-a=m).\]
+Setze $k=1$. Bei
+\[a\equiv a-m\pmod{m}\iff (\exists k\in\Z\colon km=(a-m)-a=-m)\]
+setze $k=-1$.\;\qedsymbol
+\end{Beweis}
+
+\subsection{Teilbarkeit}
+
+Die Beziehung »$m$ teilt $a$« ist definiert als
+\[m\mid a\defiff (\exists k\in\Z\colon a=km) \iff a\equiv 0\pmod{m}.\]
+Während die Kongruenz eine Äquivalenzrelation ist, stellt die
+Teilbarkeit eine Halbordnung dar, dergestalt dass sie die drei Axiome
+\begin{align*}
+&\forall a\in\Z\colon a\mid a, &&\text{(Reflexivität)}\\
+&\forall a,b\in\Z\colon a\mid b\land b\mid a\cond a = b,&&\text{(Antisymmetrie)}\\
+&\forall a,b,c\in\Z\colon a\mid b\land b\mid c\cond a\mid c.&&\text{(Transitivität)}
+\end{align*}
+erfüllt. Teilt $a$ die Zahl $b$, ist $a$ also in gewisser Weise kleiner
+als $b$.
+
+\subsection{Restklassenringe}
+
+Wir könnten nun beginnen, mit der modularen Arithmetik interessante
+Probleme zu lösen. Zunächst möchte ich aber erläutern, wie die
+modulare Arithmetik mit dem Restklassenring zusammenhängt. Unter
+diesem Blickwinkel bekommen wir ein tieferes Verständnis und können
+Mittel der Ringtheorie und Gruppentheorie anwenden.
+
+Zu einer ganzen Zahl $a$ ist die Restklasse modulo $m$ definiert als 
+\[[a]_m := \{x\mid x\equiv a\pmod m\}.\]
+Eine alternative Schreibweise für $[a]_m$ ist $a+m\Z$. Weil die
+Kongruenz eine Äquivalenzrelation ist, handelt es sich bei den
+Restklassen um Äquivalenzklassen. Wir betrachten nun die
+Quotientenmenge
+\[\Z/m\Z := \{[a]_m\mid a\in\Z\}.\]
+Nun können wir die Addition und Multiplikation von Restklassen
+definieren.
+\begin{Satz}
+Auf $\Z/m\Z$ sind die beiden Operationen
+\begin{align*}
+[a]_m + [b]_m &:= [a+b]_m,\\
+[a]_m\cdot [b]_m &:= [ab]_m
+\end{align*}
+wohldefiniert.
+\end{Satz}
+\strong{Beweis.} Zu zeigen ist, dass $a+b\equiv x+y$ gilt, sofern
+$a\equiv x$ und $b\equiv y$ ist. Gemäß Satz \ref{Kongruenz-add-sub} gilt
+\begin{align*}
+a\equiv x &\iff a+b\equiv x+b,\\
+b\equiv y &\iff x+b\equiv x+y.
+\end{align*}
+Aus den beiden Prämissen erhalten wir demzufolge
+$a+b\equiv x+b\equiv x+y$.
+Die Argumentation zur Multiplikation ist analog, wobei
+Satz \ref{Kongruenz-mul} zur Anwendung kommt.\,\qedsymbol
+
+Die Struktur $(\Z/m\Z,+,\cdot)$ nennt man den \emph{Restklassenring}
+zum Modul $m$.
+
+\begin{Satz}
+Jeder Restklassenring ist ein kommutativer unitärer Ring.
+\end{Satz}
+\begin{Beweis}
+Bereits bewiesen wurde, dass die ganzen Zahlen einen
+kommutativen unitären Ring bilden. Aufgrund der Wohldefiniertheit der
+Addition und Multiplikation ist Kongruenz modulo $m$ eine
+Kongruenzrelation. Satz \ref{Kongruenz-Ring-Quotient} zeigt somit die
+Behauptung.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Zudem ist die Quotientenabbildung
+\[\varphi\colon\Z \to \Z/m\Z,\quad \varphi(a):=[a]_m.\]
+ein Eins-erhaltender Ringhomomorphismus, wie aus dem Beweis
+von Satz \ref{Kongruenz-Ring-Quotient} hervorgeht.
+
+%\newpage
+\subsection{Euklidische Division}
+
+\begin{Satz}[Lemma zur euklidischen Division]\mbox{}\\*
+Zu je zwei ganzen Zahlen $a,b$ mit $b\ne 0$ gibt es zwei eindeutig
+bestimmte Zahlen $q,r$ mit $0\le r<|b|$, so dass $a=bq+r$. Man nennt
+$q$ den \emph{Quotient} und $r$ den \emph{Rest}.
+\end{Satz}
+\begin{Beweis}[Beweis der Existenz]
+Betrachten wir zunächst den Fall, bei dem $a\ge 0$
+und $b>0$ ist. Man kann dann sooft $b$ von $a$ abziehen, bis sich eine
+Zahl $\ge 0$ und $<b$ ergibt. Formal bilden wir die
+Folge $r_k := a-bk$. Nun muss für irgendein $k\ge 0$ schließlich
+$0\le r_k<b$ sein. Damit ist $q=k$ und $r=r_k$ gefunden.
+
+Sei nun $a<0$. Wie bereits gezeigt gibt es $q,r$ mit $-a = bq+r$.
+Für $r=0$ haben wir dann mit $q':=-q$ und $r':=0$ einen Quotient
+und einen Rest. Sei nun $r\ne 0$. Dann gilt
+\[a = -bq-r = -(q+1)b + b - r.\]
+Mit $q':=-(q+1)$ und $r':=b-r$ gibt es somit auch in diesem Fall einen
+Quotient und einen Rest. Der Rest erfüllt auch die gewünschte
+Ungleichung, denn aus $r<b$ ergibt sich $0<r'$ und aus $0<r$ ergibt
+sich $r'<b$.
+
+Sei nun $a$ beliebig und $b<0$. Dann gibt es $q,r$ mit $a=(-b)q+r$.
+Setze also $q':=-q$ und $r':=r$. Damit gilt $a=bq'+r'$, womit
+auch in diesem Fall ein Quotient und ein Rest gefunden ist.\,\qedsymbol
+\end{Beweis}
+\begin{Beweis}[Beweis der Eindeutigkeit]
+Das Paar $q,r$ erfülle
+$a=bq+r$ und $q',r'$ erfülle ebenfalls $a=bq'+r'$. Dann gilt
+\[bq+r = bq'+r',\iff b(q-q') = r'-r,\implies |b| |q-q'| = |r'-r|.\]
+Aus $0<r<|b|$ und $0<r'<|b|$ erhält man außerdem $|r'-r|<|b|$. Somit
+muss $|b| |q-q'| < |b|$ sein, also $|q-q'| < 1$. Eine nichtnegative
+ganze Zahl kann aber nur dann kleiner als eins sein, wenn sie null
+ist. Damit hat man
+\[|q-q'|=0,\iff q-q'=0,\iff q=q'.\]
+Entsprechend folgt $r=r'$.\,\qedsymbol
+\end{Beweis}
+
+Bei der euklidischen Division $a:b$ ist $(a\bmod b)$ eine geläufige
+Schreibweise für den Rest. Das Lemma zur euklidischen Division sagt uns,
+dass jede Restklasse von $\Z/m\Z$ einen kanonischen Repräsentant
+besitzt. Nämlich besitzt die Restklasse $[a]_m$ den kanonischen
+Repräsentant $r=(a\bmod m)$, denn $a=mq+r$ bedeutet dass $a-r$ durch
+$m$ teilbar ist, also
+\[a\equiv r\pmod m,\quad\text{bzw.}\quad [a]_m = [r]_m.\]
+

@@ -124,7 +124,7 @@ ist die Menge der Rhomben eine Teilmenge der Rechtecke.
 Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
 eine Teilmenge der Parallelogramme.
 
-\begin{Definition}[Teilmengenbeziehung]\label{def:Teilmenge}\newlinefirst
+\begin{Definition}[Inklusion]\label{def:Teilmenge}\newlinefirst
 Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \[A\subseteq B\defiff (\forall x\colon x\in A\cond x\in B).\]
 \end{Definition}
@@ -1203,6 +1203,9 @@ Höchst umständlich wäre es, würde man in einer längeren Rechnung jede
 Applikation einschließlich der arithmetischen Operationen durch eine
 Existenzaussage kodieren. Auf diese Weise ließe sich aber die
 Gleichheit aus der Logik herausarbeiten.
+% Zur Erklärung der Gleichheit von Mengen braucht es eine Logik
+% mit Gleichheit ja nicht, denn diese wird Extensionalität auf eine
+% logische Formel zurückgeführt, in der Gleichheit nicht vorkommt.
 
 \section{Relationen}
 
@@ -1275,8 +1278,8 @@ Seien $A$ eine Menge und seien $x,y,z\in A$. Sei $R(x,y):=(x\sim y)$ eine
 Relation. Man nennt $R$ Äquivalenzrelation, wenn gilt:
 \[\begin{array}{ll}
 x\sim x, &\text{(Reflexivität)}\\
-x\sim y \implies y\sim x, & \text{(Symmetrie)}\\
-x\sim y\land y\sim z\implies x\sim z.\quad & \text{(Transitivität)}
+x\sim y \cond y\sim x, & \text{(Symmetrie)}\\
+x\sim y\land y\sim z\cond x\sim z.\quad & \text{(Transitivität)}
 \end{array}\]
 \end{Definition}
 
@@ -1298,7 +1301,7 @@ und $c\in [b]$. Aufgrund von $c\sim a$ sowie $c\sim b$ und der
 Transitivität gilt%
 \[x\in [a]\iff x\sim a\iff x\sim c\iff x\sim b\iff x\in [b].\]
 Man hat also
-\[(\forall x\in M\colon x\in [a]\Leftrightarrow x\in [b])\iff [a]=[b].\]
+\[(\forall x\in M\colon x\in [a]\Leftrightarrow x\in [b]),\iff [a]=[b].\]
 Wenn also $[a]\ne [b]$ ist, kann nicht gleichzeitig $c\in [a]$ und $c\in [b]$
 sein.\;\qedsymbol
 
@@ -1307,7 +1310,7 @@ Sei $M$ eine Menge. Die Familie $(A_k)$ von Mengen $A_k\subseteq M$
 bilde eine Zerlegung von $M$, d.\,h. dass die Vereinigung aller
 $A_k$ die Menge $M$ überdeckt und dass paarweise $A_i\cap A_j=\emptyset$
 für $i\ne j$ ist. Dann ist%
-\[x\sim y\defiff \exists k\colon x\in A_k\land y\in A_k\]
+\[x\sim y\, :\bicond\, \exists k\colon x\in A_k\land y\in A_k\]
 eine Äquivalenzrelation auf $M$.
 \end{Satz}
 \strong{Beweis.} Da die $A_k$ die Menge $M$ überdecken,
@@ -1321,7 +1324,7 @@ Es gibt also ein $i$ mit $x\in A_i$ und $y\in A_i$. Außerdem gibt
 es ein $j$ mit $y\in A_j$ und $z\in A_j$. Somit gilt%
 \[\exists i\colon\exists j\colon x\in A_i\land y\in A_i\land y\in A_j\land z\in A_j.\]
 Wegen
-\[A_i\cap A_j = \emptyset \iff \forall y\colon (y\in A_i\land y\in A_j\Leftrightarrow 0)\]
+\[A_i\cap A_j = \emptyset\, \bicond\, \forall y\colon (y\in A_i\land y\in A_j\Leftrightarrow 0)\]
 für $i\ne j$ kann $y\in A_i\land y\in A_j$ aber nur erfüllt sein,
 wenn $i=j$ ist. Daher ergibt sich%
 \[\exists i\colon x\in A_i\land z\in A_i,\]
@@ -1370,15 +1373,15 @@ Teilmenge $A\subseteq M$ ist genau dann eine Äquivalenzklasse,
 wenn%
 \begin{align*}
 1.\;& A\ne\emptyset,\\
-2.\;& x,y\in A\implies x\sim y,\\
-3.\;& x\in A\land y\in M\land x\sim y\implies y\in A.
+2.\;& x,y\in A\cond x\sim y,\\
+3.\;& x\in A\land y\in M\land x\sim y\cond y\in A.
 \end{align*}
 \end{Satz}
 \strong{Beweis.} Angenommen, $A$ ist eine Äquivalenzklasse.
 Dann gibt es definitionsgemäß ein $a$ mit $A=[a]$. Daher ist
 mindestens $a\in A$ und somit $A\ne\emptyset$. Mit $x,y\in A$ ergibt
 sich $A=[x]=[y]$. Aufgrund von%
-\[x\sim y \iff [a]=[b]\]
+\[x\sim y\, \bicond\, [a]=[b]\]
 muss somit $x\sim y$ sein. Sei nun $x\in A$ und $y\in M$ mit
 $x\sim y$. Es folgt $A=[x]=[y]$. Daher muss $y\in A$ sein.
 
@@ -1401,7 +1404,7 @@ Demnach ist gemäß
 \[Z = X/{\sim} = \{f^{-1}(\{y\})\mid y\in f(X)\}\]
 eine Zerlegung des Definitionsbereichs $X$ gegeben und somit auch eine
 Äquivalenzrelation. Für $x_1,x_2\in X$ gilt%
-\[x_1\sim x_2 \iff f(x_1) = f(x_2).\]
+\[x_1\sim x_2\, \bicond\, f(x_1) = f(x_2).\]
 Ist $f$ zudem surjektiv, dann gehört zu jedem Element von $Y$ genau eine
 Äquivalenzklasse. Demnach definiert $f$ dann eine verallgemeinerte
 Quotientenabbildung, da die Elemente von $Y$ die Äquivalenzklassen
@@ -1454,13 +1457,13 @@ zu einem Widerspruch, liegt also eine Abbildung vor, spricht man
 von \emph{Wohldefiniertheit}. Hierfür darf der Funktionswert nicht
 vom gewählten Repräsentant abhängen, d.\,h. die Bedingung%
 \[\forall x\in [a]\colon f(x)\in [f(a)]\]
-muss erfüllt sein. Anders formuliert:
-\[x\sim a \implies f(x)\sim' f(a).\]
+muss erfüllt sein. Anders formuliert,
+\[x\sim a\, \cond\, f(x)\sim' f(a).\]
 Für mehrstellige Abbildungen ist das Vorgehen analog. Eine
 Abbildung $f\colon M^2\to M'$ induziert%
 \[f\colon (M/\sim)^2\to M'/\sim',\quad f([a],[b]):=[f(a,b)],\]
 sofern
-\[x\sim a\land y\sim b\implies f(x,y)\sim' f(a,b).\]
+\[x\sim a\land y\sim b\, \cond\, f(x,y)\sim' f(a,b).\]
 Bei den Konstruktionen kommen in der Regel zweistellige Abbildungen
 (mit $M=M'$) vor, weil die Verknüpfungen von Elementen der algebraischen
 Strukturen zweistellig sind. Diese Verknüpfungen werden im nächsten
@@ -1592,7 +1595,7 @@ bezüglich welcher Relation die Menge halbgeordnet ist.
 
 Die zu einer Halbordnung zugehörige strenge Halbordnung wird
 definiert durch%
-\[x < y \defiff x\le y\land x\ne y.\]
+\[x < y\, :\bicond\, x\le y\land x\ne y.\]
 Eine Relation $R$ auf $M$ heißt \emph{irreflexiv}, wenn
 \[\lnot\exists x\in M\colon R(x,x),\]
 in Worten, wenn kein Element zu sich selbst in Relation steht.
@@ -1610,7 +1613,7 @@ herkömmliche Ordnung der reellen Zahlen.
 
 Wie bei Halbordnungen ist die zu einer Totalordnung zugehörige
 strenge Totalordnung erklärt durch
-\[x < y \defiff x\le y\land x\ne y.\]
+\[x < y\, :\bicond\, x\le y\land x\ne y.\]
 
 \begin{Satz}
 Die strenge Totalordnung ist \emph{trichotom}\index{Trichotomie},
@@ -1619,7 +1622,7 @@ das heißt,
 \end{Satz}
 \begin{Beweis}
 Zunächst machen wir uns klar,
-\[A\oplus B\oplus C\iff (A\land\lnot B\land\lnot C)\lor
+\[A\oplus B\oplus C\,\bicond\, (A\land\lnot B\land\lnot C)\lor
 (\lnot A\land B\land\lnot C)\lor (\lnot A\land \lnot B\land C).\]
 In dem Fall, wo eine der drei Aussagen gezeigt wird, sind also
 außerdem die beiden anderen Aussagen zu widerlegen.
@@ -1654,8 +1657,8 @@ aber im Widerspruch zu $x\ne y$ steht.\,\qedsymbol
 Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Wir legen die
 Kurzschreibweisen
 \begin{gather*}
-A\le s\defiff\forall x\in A\colon x\le s,\\
-s\le A\defiff\forall x\in A\colon s\le x
+A\le s\, :\bicond\, \forall x\in A\colon x\le s,\\
+s\le A\, :\bicond\, \forall x\in A\colon s\le x
 \end{gather*}
 fest. Ein $s$ mit $A\le s$ heißt \emph{obere Schranke} von $A$. Existiert
 mindestens ein $s$ mit dieser Eigenschaft, nennt man $A$ \emph{nach oben
@@ -1666,8 +1669,8 @@ Existiert mindestens ein $s$ mit dieser Eigenschaft, nennt man $A$
 \begin{Definition}[Maximum, Minimum]\newlinefirst
 Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
 \begin{alignat*}{3}
-y = &\hspace{1.4pt}\max(A)\,&\defiff y\in A\land A\le y,\\
-y = &\hspace{2.4pt}\min(A)\,&\defiff y\in A\land y\le A.
+y = &\hspace{1.4pt}\max(A)\,\,&:\bicond\, y\in A\land A\le y,\\
+y = &\hspace{2.4pt}\min(A)\,\,&:\bicond\, y\in A\land y\le A.
 \end{alignat*}
 \end{Definition}
 
@@ -1698,15 +1701,15 @@ Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
 \end{Definition}
 Entfaltung von $\min$ und $\max$ führt zu
 \begin{alignat*}{2}
-y = &\hspace{1.4pt}\sup(A) &&\iff A\le y\land\forall s\in M\colon A\le s\cond y\le s,\\
-y = &\hspace{2.4pt}\inf(A) &&\iff y\le A\land\forall s\in M\colon s\le A\cond s\le y.
+y = &\hspace{1.4pt}\sup(A)\, &&\bicond\, A\le y\land\forall s\in M\colon A\le s\cond y\le s,\\
+y = &\hspace{2.4pt}\inf(A)\, &&\bicond\, y\le A\land\forall s\in M\colon s\le A\cond s\le y.
 \end{alignat*}
 
 \begin{Definition}[Maximales Element, Minimales Element]\newlinefirst
 Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
 \begin{alignat*}{2}
-&\text{$y$ ist ein maximales Element von $A$}&&\defiff y\in A\land\lnot\exists x\in A\colon y<x,\\
-&\text{$y$ ist ein minimales Element von $A$}&&\defiff y\in A\land\lnot\exists x\in A\colon x<y.
+&\text{$y$ ist ein maximales Element von $A$}\,&&:\bicond\, y\in A\land\lnot\exists x\in A\colon y<x,\\
+&\text{$y$ ist ein minimales Element von $A$}\,&&:\bicond\, y\in A\land\lnot\exists x\in A\colon x<y.
 \end{alignat*}
 \end{Definition}
 
@@ -2151,10 +2154,10 @@ beschriebe eine Menge. Dann hätte jede boolesche Funktion
 $\varphi\colon Y\to Y$ einen Fixpunkt. Aber die Verneinung
 $\varphi(y):=\lnot y$ besitzt keinen Fixpunkt. Das heißt, es existiert
 keine Menge $a\in X$, die die Gleichung%
-\[f(a)(a) = \varphi(f(a)(a)) \iff (a\in a) = (a\notin a),\]
+\[f(a)(a) = \varphi(f(a)(a)), \iff (a\in a) = (a\notin a),\]
 erfüllt. Wir haben hier eine gewisse Abart der russellschen Antinomie
 in leichter Umformulierung. Die Diagonalmenge $D = \{x\in X\mid d(x)\}$
-entspricht hierbei der russellschen Klasse. Demnach muss $D\notin X$ sein.
+entspricht hierbei der russellschen Klasse. Demnach muss $D\notin X$ gelten.
 
 \section{Induktive Mengen}
 
