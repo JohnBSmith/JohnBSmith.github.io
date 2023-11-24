@@ -107,7 +107,7 @@ Es gilt $\sum_{k=m}^{n-1} (\Delta a)_k = a_n - a_m$.
 Induktion über $n$. Im Induktionsanfang $n=m$ sieht man trivial,
 dass beide Seiten der Gleichung den Wert null haben. Der
 Induktionsschritt ist%
-\[\textstyle\sum\limits_{k=m}^n (\Delta a)_k \stackrel{\mathrm{def}}=
+\[\sum\limits_{k=m}^n (\Delta a)_k \stackrel{\mathrm{def}}=
 (\Delta a)_n + \sum\limits_{k=m}^{n-1} (\Delta a)_k
 \stackrel{\mathrm{IV}}= a_{n+1} - a_n + a_n - a_m = a_{n+1} - a_m.\,\qedsymbol\]
 \end{Beweis}
@@ -320,6 +320,113 @@ Ist $A\subseteq\Z$ endlich, dürfen wir daher definieren
 da diese Summe in Wirklichkeit endlich ist, also niemals über
 unendlich viele Indizes läuft. Diese Sichtweise bietet unter Umständen
 Vorteile bei der Umformung von Summen.
+
+\subsection{Endliche Produkte}
+
+Endliche Produkte weisen analoge Rechenregeln zu den endlichen Summen
+auf, kommen allerdings weit weniger häufig vor als diese. Infolgedessen
+verlaufen die Beweise ebenso analog, weshalb ich darauf verichten will,
+diese weitläufig aufzuführen. Verbreitet sind endliche Produkte von
+Zahlen vor allem in der Kombinatorik, zum Beispiel in Form von Faktoriellen
+und Binomialkoeffizienten.
+
+Für eine Folge $a\colon\Z\to\R$ definiert man rekursiv
+\[\prod_{k=m}^{m-1} a_k := 1,\quad\;
+\prod_{k=m}^n a_k := a_n\prod_{k=m}^{n-1} a_k.\]
+Sei $c\in\Z_{\ge 0}$ eine Konstante. Es gilt
+\[\prod_{k=m}^n a_k^c = \Big(\prod_{k=m}^n a_k\Big)^c,\qquad
+\prod_{k=m}^n (a_k b_k) = \Big(\prod_{k=m}^n a_k\Big)\Big(\prod_{k=m}^n b_k\Big).\]
+Die Aufteilung von Produkten geht vonstatten gemäß
+\[\prod_{k=m}^n a_k = \Big(\prod_{k=m}^{p-1} a_k\Big)
+\Big(\prod_{k=p}^n a_k\Big), \quad m\le p\le n+1.\]
+Für jede Konstante $c\in\R$ gilt
+\[\prod_{k=m}^n c = c^{n+1-m},\qquad
+\prod_{k=m}^n (ca_k) = c^{n+1-m}\prod_{k=m}^n a_k.\]
+Bei manchen Umformungen hilft das Teleskopprodukt
+\[\prod_{k=m}^n\frac{a_{k+1}}{a_k} = \frac{a_{n+1}}{a_m},\quad
+\text{sofern}\;\,\forall k\in\{m,\ldots,n\}\colon a_k\ne 0.\]
+
+\subsection{Kombinatorische Grundaufgaben}
+
+Abstrakt gesehen thematisiert die abzählende Kombinatorik die Frage
+nach der Anzahl der Elemente endlicher Mengen. Die Mengenlehre
+hilft bei der Formalisierung, und infolgedessen beim strengen Beweis
+kombinatorischer Gesetzmäßigkeiten.
+
+Zur Einführung stellt man häufig die Frage, wie viele mögliche Tupel
+eine Produktmenge enthält. Üblicherweise formuliert man diese
+unkomplizierte Aufgabe aber nicht in der Gestalt der Mengenlehre,
+sondern fragt, wie viele Zahlen eine Binärsequenz aus $k$ Bits enthält,
+oder wie viele Zeichenketten der Länge $k$ mit 26 Buchstaben
+formulierbar sind. Abstrakt gesehen geht es bei den Binärsequenzen um
+die Anzahl der Elemente von $\{0,1\}^k$. Analog geht es bei den
+Zeichenketten um die Anzahl der Elemente von
+\[\{\verb|'a'|,\verb|'b'|,\ldots,\verb|'z'|\}^k.\]
+Die Elemente sind jeweils Tupel der Länge $k$. Bezüglich $B^k$ will
+ich $|B|$ so wie bei Stellenwertsystemen als die \emph{Basis}
+bezeichnen. Dass $|A\times B| = |A|\cdot |B|$ für beliebige Mengen
+gilt, wurde bereits aufgezeigt. Demnach gilt
+\[|B^k| = |B|^k = n^k, \quad n:=|B|.\]
+Mit den $n=2$ Binärwerten sind dies 256 Binärsequenzen der Länge $k=8$.
+Oder mit $n=26$ Buchstaben sind es 676 Zeichenketten der Länge $k=2$,
+und schon 17576 Zeichenketten der Länge $k=3$.
+
+In der Vergangenheit empfahlen Dienste häufig oder erzwangen penetrant,
+Passwörter dadurch sicherer zu machen, indem neben Buchstaben auch noch
+Ziffern und kryptische Sonderzeichen eingegeben werden sollten. Man
+empfahl also, die Basis $n$ zu vergrößern, um die Länge gering zu halten.
+Nimmt man an, dass so ein Passwort rein zufällig ausgewürfelt wird, ist
+es bei bereits hinreichend großer Basis aber wesentlich sinnvoller,
+abermals den Exponenten $k$ zu erhöhen. Bei Hinzunahme der 10 Ziffern zu
+den 26 Buchstaben bekommt man mit $n=36$ für $k=3$ eine Zahl von 46656
+Zeichenketten. Unterscheidet man zudem zwischen kleinen und großen
+Buchstaben, sind es immerhin 238328. Mit $n=26$ und $k=4$ sind es aber
+bereits 456976.
+
+In der professionellen Kryptografie nennt man $n^k$ die
+Schlüsselraumgröße, die bei modernen symmetrischen Kryptosystemen
+mindestens $2^{128}$ beträgt. Und der Schlüssel wird am besten rein
+zufällig gewählt. Zur Kodierung in der Basis $n$ muss man die Gleichung
+$2^{128} = n^k$ nach $k$ umformen, das macht
+\[k = 128\,\tfrac{\mathrm{lg}(2)}{\mathrm{lg}(n)}.\]
+Das sind acht Blöcke je vier Hexadezimalziffern. Oder 22 Zeichen
+zur Basis 62. Es ist davon auszugehen, dass dies ebenso sehr ein sicheres
+Passwort darstellt.
+
+Zur Erinnerung, ein Tupel aus $B^k$ darf auch als eine endliche Folge
+interpretiert werden, das ist eine Abbildung
+$\{0,\ldots,k-1\}\to B.$
+Dahingehend ergibt sich die abstrakte Fassung
+
+\begin{Satz}[Anzahl der Abbildungen]\newlinefirst
+Seien $X,Y$ endliche Mengen mit $|X| = k$ und $|Y|=n$. Die Menge
+der Abbildungen $X\to Y$ enthält $n^k$ Elemente.
+\end{Satz}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ ist $X=\emptyset$. Es gibt genau
+eine Abbildung $\emptyset\to Y$, nämlich die leere Abbildung.
+Gleichermaßen ist $n^0=1$.
+
+Zum Induktionsschritt. Induktionsvoraussetzung sei die Gültigkeit
+für $k-1$. Es  sei $|X|=k$ und $|Y|=n$. Gesucht ist die Anzahl
+der Möglichkeiten zur Festlegung der Abbildung $f\colon X\to Y$.
+Sei $x\in X$ fest. Für die Festlegung $f(x)=y$ bestehen nun genau $n$
+Möglichkeiten, nämlich so viele, wie es Elemente $y\in Y$ gibt.
+Die Festlegung der übrigen Werte geschieht gemäß der Einschränkung
+von $f$ auf $X\setminus\{x\}$, und die Zahl dieser Abbildungen beträgt
+$n^{k-1}$ gemäß der Induktionsvoraussetzung. Man hat also $n$ mal
+$n^{k-1}$ Möglichkeiten, das sind $n^k$.\,\qedsymbol
+\end{Beweis}
+Gleichwohl die dargelegte Beweisführung recht genau erscheint,
+bezieht sie sich im Induktionsschritt an der wesentlichen Stelle
+auf rationale Überlegungen, die allerdings nicht aus bereits
+formal bewiesenen Regeln der Mengenlehre entstammen. Zur Schließung der
+Lücke muss man sich daran erinnern, dass
+\[|Y^{A\cup B}| = |Y^A\times Y^B| = |Y^A|\cdot |Y^B|,\;
+\text{sofern}\; A\cap B=\emptyset.\]
+Zusammen mit $|Y^{\{x\}}|=n$ wird der Induktionsschritt damit präzisiert zu
+\[|Y^X| = |Y^{(X\setminus\{x\})\cup\{x\}}| = |Y^{X\setminus\{x\}}|\cdot |Y^{\{x\}}|
+\stackrel{\mathrm{IV}}= n^{k-1}\cdot n = n^k.\]
 
 \section{Zur elementaren Zahlentheorie}
 
