@@ -30,7 +30,7 @@ enthält. Man schreibt $\dom(f) = X$ und $\cod(f) = Y$.
 
 Nun gut, man macht hier zunächst zwei Beobachtungen. Erstens
 erinnern die Axiome an die Monoid"=Axiome, haben aber den Unterschied,
-dass die Morphismen kompatibel sein müssen. D.\,h. um $g\circ f$
+dass die Morphismen kompatibel sein müssen. Das heißt, um $g\circ f$
 bilden zu können, muss $\cod(f)=\dom(g)$ sein.
 
 Zweitens erinnern die Axiome an die Regeln für die Verkettung
@@ -39,7 +39,7 @@ von Abbildungen. Tatsächlich bilden die Abbildungen eine Kategorie.
 \begin{Satz}[Kategorie der Mengen]\mbox{}\\*
 Sei $\Omega$ das Mengenuniversum und für $A,B\in\Omega$ sei
 $\Hom(A,B):=\Abb(A,B)$. Sei $g\circ f$ die Verkettung
-von Abbildungen. Dann bildet $\strong{Set}:=(\Omega,\Hom,\circ)$
+von Abbildungen. Dann bildet $\category{Set}:=(\Omega,\Hom,\circ)$
 eine Kategorie.
 \end{Satz}
 \strong{Beweis.} Trivial.\;\qedsymbol
@@ -48,7 +48,7 @@ eine Kategorie.
 Sei $\Omega$ die Klasse aller Gruppen und für $G,H\in\Omega$ sei
 $\Hom(G,H)$ die Klasse der Homomorphismen von $G$ nach $H$.
 Sei $g\circ f$ die Verkettung von Homomorphismen.
-Dann bildet $\strong{Group}:=(\Omega,\Hom,\circ)$
+Dann bildet $\category{Group}:=(\Omega,\Hom,\circ)$
 eine Kategorie.
 \end{Satz}
 \strong{Beweis.} Homomorphismen sind Abbildungen, die Axiome
@@ -113,7 +113,7 @@ und daher $F(\varphi_2\circ\varphi_1)
 
 \begin{Satz} Sei $P(X)=2^X$ die Potenzmenge von $X$. Dann ist
 wie folgt ein kovarianter Funktor gegeben:
-\[P\colon\strong{Set}\to\strong{Set},\quad
+\[P\colon\category{Set}\to\category{Set},\quad
 P(X):=2^X,\quad P(f)(M):=f(M),\]
 wobei $f$ eine beliebige Abbildung
 und $f(M)$ die Bildmenge von $M$ unter $f$ ist.
@@ -211,124 +211,7 @@ Die Abbildung $\eta((M,\sim)):=\pi$, die jeder Menge mit
 Äquivalenzrelation ihre kanonische Projektion zuordnet,
 ist eine natürliche Transformation.
 
-\strong{Beispiel zur Vertiefung.}
-Ein weiteres Beispiel berührt einen Grundbegriff der linearen Algebra.
-Hat man einen Vektorraum $Y$ über dem Körper $K$, ohne dass wir jetzt
-genau verstehen müssen was das bedeutet -- man stelle sich $Y:=\R$
-und $K:=\R$ vor --, dann bildet für eine beliebige Menge $X\ne\emptyset$
-auch $\Abb(X,Y)$ einen Vektorraum über diesem Körper bezüglich den
-punktweisen Operationen%
-\begin{gather*}
-(\lambda f)(x) := \lambda f(x),\\
-(f_1+f_2)(x) := f_1(x)+f_2(x),
-\end{gather*} 
-wobei $\lambda\in K$, $x\in X$, $f,f_1,f_2\in\Abb(X,Y)$. Die lineare
-Algebra handelt von \emph{linearen Abbildungen}. Seien $V,W$
-Vektorräume über dem Körper $K$, wobei auch $V=W$ sein darf. Eine
-Abbildung $\varphi\colon V\to W$ heißt linear, falls%
-\begin{gather*}
-\forall v_1,v_2\in V\colon\;\varphi(v_1+v_2) = \varphi(v_1)+\varphi(v_2),\\
-\forall \lambda\in K,v\in V\colon\;\varphi(\lambda v) = \lambda\varphi(v).
-\end{gather*}
-Man kann zeigen dass die Vektorräume mit den linearen Abbildungen
-als Morphismen auch eine Kategorie bilden, aber darauf will ich an
-dieser Stelle nicht hinaus. Hat man nun eine feste, aber beliebige
-Abbildung $g\colon X'\to X$, dann ist%
-\[\varphi\colon\Abb(X,Y)\to\Abb(X',Y),\quad \varphi(f):=f\circ g\]
-eine lineare Abbildung, man spricht auch von einem
-\emph{linearen Operator}, dem \emph{Kompositionsoperator}
-$C_g=\varphi$. Die Bestätigung ist nicht sonderlich schwer, man
-muss bloß blind die Definitionen einsetzen und dem Formalismus
-folgen. Es gilt%
-\begin{align*}
-\varphi(\lambda f)(x) &= ((\lambda f)\circ g)(x)
-= (\lambda f)(g(x)) = \lambda f(g(x))\\
-&= \lambda (f\circ g)(x) = \lambda (\varphi(f))(x)
-= (\lambda\varphi(f))(x),
-\end{align*}
-kurz $\varphi(\lambda f)=\lambda\varphi(f)$. Und es gilt
-\begin{align*}
-\varphi(f_1+f_2)(x) &= ((f_1+f_2)\circ g)(x)
-= (f_1+f_2)(g(x)) = f_1(g(x)) + f_2(g(x))\\
-&= (f_1\circ g)(x) + (f_2\circ g)(x)
-= \varphi(f_1)(x)+\varphi(f_2)(x)\\
-&= (\varphi(f_1)+\varphi(f_2))(x),
-\end{align*}
-kurz $\varphi(f_1+f_2)=\varphi(f_1)+\varphi(f_2)$.
-
-Man bemerkt nun, dass diese Rechnungen lediglich auf der Eigenschaft
-der Operationen beruhen, punktweise zu sein. Dies soll im Folgenden
-präzisiert werden. Die Formulierung wollen wir allgemein für
-Operationen beliebiger Stelligkeit haben. Sei also $p\colon Y^n\to Y$
-eine $n$-stellige Operation, man stelle sich dabei $Y:=\R$ vor. Man
-definiert nun die punktweise Anwendung von $p$ als%
-\[\eta_p\colon\Abb(X,Y)^n\to\Abb(X,Y),\quad
-\eta_p(f)(x) := p(f_1(x),\ldots,f_n(x)),\]
-wobei $f:=(f_1,\ldots,f_n)$ ein Tupel von Funktionen ist. Sei außerdem%
-\[F(\varphi)(f) := (\varphi(f_1),\ldots,\varphi(f_n)).\]
-Zeigen wollen wir für $\varphi(f):=f\circ g$ nun
-\[\varphi(\eta_p(f))(x) = \eta_p(F(\varphi)(f))(x),
-\quad\text{kurz}\quad
-\varphi\circ\eta_p = \eta_p\circ F(\varphi).\]
-Bei der Bestätigung folgt man wieder blind den Definitionen und dem
-Formalismus. Es gilt%
-\begin{align*}
-\varphi(\eta_p(f))(x)
-&= \eta_p(f)(g(x)) = p(f_1(g(x)),\ldots,f_n(g(x)))\\
-&= p(\varphi(f_1)(x),\ldots,\varphi(f_n)(x))
-= \eta_p(\varphi(f_1),\ldots,\varphi(f_n))(x)\\
-&= \label{eq:Ende-eta-punktweise}\eta_p(F(\varphi)(f))(x).
-\end{align*}
-Das bedeutet, dieses Diagramm kommutiert:
-\[\xymatrix{
-\Abb(X,Y)^n \ar[r]^{F(\varphi)} \ar[d]_{\eta_p}
-& \Abb(X',Y)^n \ar[d]^{\eta_p} \\
-\Abb(X,Y) \ar[r]_{\varphi} & \Abb(X',Y)}\]
-Aller Voraussicht nach müsste es sich bei $F$ um einen Funktor
-handeln. Dass $\eta_p$ dabei die Rolle einer natürlichen Transformation
-einnimmt, wurde soeben gezeigt.
-
-\begin{Satz}[Kategorie mit Kompositionsoperatoren als Morphismen]\mbox{}\\*
-Sei $Y\ne\emptyset$. Sei $\Omega:=\{\Abb(X,Y)\mid X\;\text{ist beliebig}\}$.
-Sei%
-\begin{gather*}\Hom(\Abb(X,Y),\Abb(X',Y))\\
-\quad := \{\varphi\mid\exists f{\in}\Abb(X,Y), g{\in}\Abb(X',X)\colon
-\varphi = f\circ g\}.
-\end{gather*}
-Sei $\psi\circ \varphi$ die gewöhnliche Verkettung. Dann bildet
-$\category{Komp}:=(\Omega,\Hom,\circ)$ eine Kategorie.
-\end{Satz}
-\strong{Beweis.}
-Zunächst müssen wir bestätigen, dass $\Hom$ bezüglich
-$\circ$ abgeschlossen ist. Sei $\varphi_1(f):=f\circ g_1$ und
-$\varphi_2(f):=f\circ g_2$ mit $\dom(\varphi_2)=\cod(\varphi_1)$, so
-dass man $\varphi:=\varphi_2\circ\varphi_1$ bilden kann.
-Gesucht ist ein $g$, so dass $\varphi = f\circ g$. Nun gilt%
-\[(\varphi_2\circ\varphi_1)(f) = (f\circ g_1)\circ g_2
-= f\circ g_1\circ g_2 = f\circ (g_1\circ g_2).\]
-Man kann also $g:=g_1\circ g_2$ setzen. Nun verbleibt bloß noch die
-Existenz fester Identitäten $\id$ zu bestätigen. Man definiert dazu
-$\id(f):=f\circ\id$. Für $\varphi(f):=f\circ g$ gilt dann%
-\begin{gather*}
-(\varphi\circ\id)(f) = (f\circ \id)\circ g = f\circ g = \varphi(f),\\
-(\id\circ\varphi)(f) = (f\circ g)\circ\id = f\circ g = \varphi(f).\;\qedsymbol
-\end{gather*}
-
-\begin{Satz}
-Bei $F(\varphi)(f):=(\varphi(f_1),\ldots,\varphi(f_n))$ für
-$f=(f_1,\ldots,f_n)$ handelt es sich um einen kovarianten Funktor.
-\end{Satz}
-\strong{Beweis.} Es gilt
-\[F(\psi\circ\varphi)(f) = (\psi(\varphi(f_1)),\ldots,\psi(\varphi(f_n)))
-= F(\psi)(F(\varphi)(f))
-= (F(\psi)\circ F(\varphi))(f),\]
-kurz $F(\psi\circ\varphi) = F(\psi)\circ F(\varphi)$. Und es gilt
-\[F(\id)(f) = (\id(f_1),\ldots,\id(f_n)) = (f_1,\ldots,f_n) = f = \id(f),\]
-kurz $F(\id) = \id$.\;\qedsymbol
-
-Jetzt haben wir so viele Funktoren kennengelernt, dass allgemeine
-Regeln betreffend Funktoren gut motiviert sind. Der folgende Satz
-durchleuchtet die Funktoren ein wenig.
+Funktoren haben einen allgemeine Eigenschaft.
 \begin{Satz}
 Wird ein Funktor auf einen Isomorphismus angewendet, ist das Resultat
 wieder ein Isomorphismus.
@@ -550,6 +433,7 @@ Infolge gilt
 = \lambda(\varepsilon\circ (\hat g\times\id_A))
 = \lambda(g) = \hat g = h.\,\qedsymbol\]
 
+\newpage
 \section{Kartesisch abgeschlossene Kategorien}
 
 \begin{Definition}[Kartesisch abgeschlossene Kategorie]\newlinefirst

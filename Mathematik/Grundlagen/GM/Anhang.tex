@@ -1,0 +1,40 @@
+
+\appendix
+\chapter{Formelsammlung}
+
+\section{Logik}
+\subsection{Natürliches Schließen}
+
+\noindent
+\begin{center}
+\begin{tabular}{cc@{\qquad}c}
+\toprule
+& \strong{Einführung} & \strong{Beseitigung}\\[2pt]
+\toprule
+$\land$
+& $\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma, \Gamma'\vdash A\land B}$
+& $\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A}\quad\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}$\\[14pt]
+$\lor$
+& $\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B}\quad\dfrac{\Gamma\vdash B}{\Gamma\vdash A\lor B}$
+& $\dfrac{\Gamma\vdash A\lor B\qquad\Gamma',A\vdash C\qquad\Gamma'',B\vdash C}{\Gamma,\Gamma',\Gamma''\vdash C}$\\[14pt]
+$\cond$
+& $\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\Rightarrow B}$
+& $\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$\\[14pt]
+$\lnot$
+& $\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\neg A}$
+& $\dfrac{\Gamma\vdash \neg A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}$\\[14pt]
+$\bicond$
+& $\dfrac{\Gamma\vdash A\Rightarrow B\qquad\Gamma'\vdash B\Rightarrow A}{\Gamma,\Gamma'\vdash A\Leftrightarrow B}$
+& $\dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash A\Rightarrow B}\quad
+   \dfrac{\Gamma\vdash A\Leftrightarrow B}{\Gamma\vdash B\Rightarrow A}$\\[14pt]
+$\forall$
+& $\dfrac{\Gamma\vdash A}{\Gamma\vdash\forall x\colon A}(x\notin\mathrm{FV}(\Gamma))$
+& $\dfrac{\Gamma\vdash\forall x\colon A}{\Gamma\vdash A[x:=t]}$\\[14pt]
+$\exists$
+& $\dfrac{\Gamma\vdash A[x:=t]}{\Gamma\vdash\exists x\colon A}$
+& $\!\!\!\!\dfrac{\Gamma\vdash\exists x\colon A\qquad\Gamma', A\vdash B}{\Gamma,\Gamma'\vdash B}
+(x\notin\mathrm{FV}(\Gamma,\Gamma',B))\!\!$\\[8pt]
+\bottomrule
+\end{tabular}
+\end{center}
+

@@ -162,9 +162,23 @@ for n in range(0, 10):
     print([bc(n, k) for k in range(0, n + 1)])
 </pre>
 
-<p>Man kann nun noch diskutieren, inwieweit sich benannte
-Argumente berücksichtigen lassen. Dies ist jedoch nur noch eine
-technische Diskussion und keine konzeptuelle mehr.
+<p>Die Berücksichtigung benannter Argumente ist ebenfalls technisch
+machbar, gleichwohl der Mechanismus dadurch abermals ineffizienter wird.
+Da Wörterbücher in Python als veränderliche Objekte nicht als
+Schlüssel oder Bestandteil der Schlüssel von Wörterbüchern auftreten
+dürfen, muss das Wörterbuch der benannten Argumente zuvor in ein
+sortiertes Tupel umgewandelt werden.
+
+<pre class="ibox python">
+def memoize(f):
+    memo = {}
+    def f_memo(*t, **d):
+        td = tuple(sorted(d.items()))
+        key = (t, td)
+        if not key in memo: memo[key] = f(*t, **d)
+        return memo[key]
+    return f_memo
+</pre>
 
 <p>In Pythons Standardbibliothek ist Memoisierung unter der
 Bezeichnung <code>cache</code> im Modul <code>functools</code>

@@ -44,14 +44,14 @@ einzig und allein durch die Wahrheitswerte ihrer Teilformeln bestimmt.
 
 \begin{Definition}[Erfüllungsrelation]\label{def:sat}\newlinefirst
 Eine Interpretation $I$ ist eine Funktion, die jede atomare logische
-Variable $v$ mit einem Wahrheitswert $I(v)\in\{0,1\}$ belegt.
+Variable $P$ mit einem Wahrheitswert $I(P)\in\{0,1\}$ belegt.
 Man definiert $I\models A$, sprich »$I$ erfüllt $A$«, rekursiv als
 \begin{align*}
 (I\models\bot) &:\Leftrightarrow 0,
 & (I\models A\land B) &:\Leftrightarrow ((I\models A)\land (I\models B)),\\
 (I\models\top) &:\Leftrightarrow 1,
 & (I\models A\lor B) &:\Leftrightarrow ((I\models A)\lor (I\models B)),\\
-(I\models v) &:\Leftrightarrow I(v),
+(I\models P) &:\Leftrightarrow I(P),
 & (I\models A\cond B) &:\Leftrightarrow ((I\models A)\cond (I\models B)),\\
 (I\models\lnot A) &:\Leftrightarrow \lnot (I\models A),
 & (I\models A\bicond B) &:\Leftrightarrow ((I\models A)\bicond (I\models B)).
@@ -83,7 +83,7 @@ $1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$\\
 
 \begin{Definition}\label{def:sat-context}
 Für einen Kontext $\Gamma = \{A_1,\ldots,A_n\}$ setzt man
-\[(I\models\Gamma)\defiff (I\models A_1)\land\ldots\land (I\models A_n).\]
+\[(I\models\Gamma)\,:\bicond\, (I\models A_1)\land\ldots\land (I\models A_n).\]
 \end{Definition}
 
 \subsection{Gültigkeit einer Formel}
@@ -106,7 +106,7 @@ ebenfalls verbreitet.
 Eine Formel $A$ heißt genau dann gültig im Kontext $\Gamma$,
 wenn jede Interpretation, die sämtliche Formeln von $\Gamma$ erfüllt,
 auch $A$ erfüllt. Metalogisch
-\[(\Gamma\models A)\defiff \forall I\colon (I\models\Gamma)\cond (I\models A).\]
+\[(\Gamma\models A)\,:\bicond\,\forall I\colon (I\models\Gamma)\cond (I\models A).\]
 \end{Definition}
 Eine im leeren Kontext gültige aussagenlogische Formel $A$ nennt man
 wie gesagt Tautologie. Statt $\emptyset\models A$ schreibt man auch
@@ -155,7 +155,7 @@ benötigen nicht viel Platz.
 
 Die Prüfung einer logischen Folgerung per Wahrheitstafel
 ermöglicht die metalogische Beziehung
-\[(A_1,\ldots,A_n\models A) \iff (\models A_1\land\ldots\land A_n\cond A).\]
+\[(A_1,\ldots,A_n\models A)\,\bicond\, (\models A_1\land\ldots\land A_n\cond A).\]
 Nämlich findet sich die äquivalente Umformung
 \begin{align*}
 (A_1,\ldots,A_n\models A)
@@ -221,14 +221,14 @@ wurden bereits diskutiert.\,\qedsymbol
 \subsection{Logische Äquivalenz}
 \begin{Definition}[Äquivalente Formeln]\newlinefirst
 Die Äquivalenz zweier Formeln $A,B$ ist definiert als
-\[(A\equiv B)\defiff (\models A\bicond B).\]
+\[(A\equiv B)\,:\bicond\, (\models A\bicond B).\]
 \end{Definition}
 
 \noindent
 Eine Äquivalenz besteht genau dann, wenn jede der beiden Formeln
 eine logische Folgerung der anderen ist. Das heißt, es besteht die
 metalogische Beziehung
-\[(\models A\bicond B)\iff (A\models B)\land (B\models A).\]
+\[(\models A\bicond B)\,\bicond\, (A\models B)\land (B\models A).\]
 Mit den semantischen Entsprechungen der Schlussregeln
 findet sich nämlich:
 \[
@@ -345,13 +345,13 @@ Absorptionsgesetze\\
 Ist die Formel $A$ allgemeingültig, so führt die simultane Ersetzung
 einiger atomarer Variablen durch Formeln bei ihr zu einer weiteren
 allgemeingültigen Formel. Metalogisch
-\[(\models A)\implies (\models A[v_1:=B_1,\ldots,v_n:=B_n]).\]
+\[(\models A)\cond (\models A[P_1:=B_1,\ldots,P_n:=B_n]).\]
 \end{Satz}
 \begin{Beweis}
 Die Bestimmung von $I\models A[\ldots]$ läuft in
-derselben Weise ab wie die von $I\models A$, außer dass $I(v_k)$ durch
+derselben Weise ab wie die von $I\models A$, außer dass $I(P_k)$ durch
 $I\models B_k$ zu ersetzen ist. Sofern $A$ allgemeingültig ist, gilt
-$I\models A$ unabhängig davon, ob $I(v_k)$ wahr oder falsch ist.
+$I\models A$ unabhängig davon, ob $I(P_k)$ wahr oder falsch ist.
 Ergo muss $I\models A[\ldots]$ unabhängig davon gelten, ob $I\models B_k$
 wahr oder falsch ist.\,\qedsymbol
 \end{Beweis}
@@ -533,7 +533,7 @@ Relationssymbol, sondern jede Applikation eines Relationssymbols und
 jede Gleichung.
 
 Die Erfüllungsrelation definiert man analog zur Aussagenlogik, also
-\[(I\models A\land B):\Leftrightarrow (I\models A)\land (I\models B)\]
+\[(I\models A\land B)\,:\bicond\,(I\models A)\land (I\models B)\]
 und so weiter. Zusätzlich setzt man%
 \begin{gather*}
 (I\models t_1 = t_2) :\Leftrightarrow I(t_1) = I(t_2),\\
@@ -542,7 +542,7 @@ und so weiter. Zusätzlich setzt man%
 (I\models\exists x\colon A) :\Leftrightarrow\exists u\in U\colon I[x{:=}u]\models A.
 \end{gather*}
 Man definiert hiermit die semantische Folgerung analog zur Aussagenlogik als
-\[(\Gamma\models A) \defiff \forall I\colon (I\models\Gamma)\cond (I\models A).\]
+\[(\Gamma\models A)\,:\bicond\,\forall I\colon (I\models\Gamma)\cond (I\models A).\]
 Wir nennen $A$ \emph{allgemeingültig}, falls $\emptyset\models A$, was
 wir wieder durch $\models A$ abkürzen wollen.
 
@@ -691,15 +691,15 @@ Es ist $\lpos A$ genau dann wahr in der Welt $w$, wenn $A$ in mindestens einer
 von $w$ aus zugänglichen möglichen Welt wahr ist.
 
 Die semantische Folgerung wird wieder in der herkömmlichen Form%
-\[(\Gamma\models A) :\bicond \forall I\colon (I\models\Gamma)\cond (I\models A)\]
+\[(\Gamma\models A)\,:\bicond\,\forall I\colon (I\models\Gamma)\cond (I\models A)\]
 definiert. Ausgeschrieben lautet sie demnach
-\[(\Gamma\models A) :\bicond \forall M\colon\forall w\in W(M)\colon
+\[(\Gamma\models A)\,:\bicond\,\forall M\colon\forall w\in W(M)\colon
 (M,w\models\Gamma)\cond (M,w\models A).\]
 Man spricht gelegentlich auch von der \emph{lokalen} semantischen Folgerung,
 um sie von einer weiteren, der selten diskutierten \emph{globalen} semantischen
 Folgerung abgrenzen zu können. Zur Unterscheidung will ich die globale
 Folgerung als $\models^g$ notieren. Man definiert sie als%
-\[(\Gamma\models^g A) :\bicond\forall M\colon (M\models\Gamma)\cond (M\models A),\]
+\[(\Gamma\models^g A)\,:\bicond\,\forall M\colon (M\models\Gamma)\cond (M\models A),\]
 wobei $M\models A$ für $\forall w\in W(M)\colon (M,w\models A)$ stehen soll.
 
 Ist $\Gamma$ die leere Menge, koinzidieren die lokale und die globale

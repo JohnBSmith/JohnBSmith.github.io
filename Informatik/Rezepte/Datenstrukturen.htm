@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Datenstrukturen</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Datenstrukturen</h1>
+
+<h2 id="Warteschlangen">Warteschlangen</h2>
+
+<h3 id="Zwei-Stapel">Mittels zweier Stapel</h3>
+
+<p>Eine Warteschlange ist, wie der Name bereits nahelegt, eine
+Datenstruktur, bei der Elemente effizient in derselben Reihenfolge
+entnommen werden können, in der sie in die Datenstruktur
+hineingebracht wurden. Ein eleganter Ansatz zur Umsetzung beruht auf der
+folgenden Idee. Bei der Entnahme der Elemente von einem Stapel dreht
+sich, wie man weiß, die Reihenfolge um, in welcher die Elemente auf den
+Stapel gelegt wurden. Durchläuft eine Reihe von Elementen diese Prozedur
+also zweimal aufeinanderfolgend, liegt danach wieder die ursprüngliche
+Reihenfolge vor.
+
+<p>Den ersten Stapel benennen wir <code>istack</code> für
+<i>input stack</i>, dt. <i>Eingangsstapel</i> und den zweiten
+<code>ostack</code> für <i>output stack</i>, dt. <i>Ausgangsstapel</i>.
+Die Operation <code>enqueue</code> soll ein Element zur Schlange
+hinzufügen, die Operation <code>dequeue</code> eines entnehmen.
+Bei <code>enqueue</code> wird das Element schlicht auf den
+Eingangsstapel gepackt. Dagegen verhält sich <code>dequeue</code> ein
+wenig komplizierter. Ist der Ausgangsstapel nichtleer, wird eines
+abgehoben. Ist der Ausgangsstapel dagegen leer, wird solange ein
+Element des Eingangsstapels entnommen und auf den Ausgangsstapel
+gelegt, bis der Eingangsstapel geleert wurde. Erst danach wird ein
+Element vom Ausgangsstapel abgehoben.
+
+<p>Zu beachten gilt, dass die Leerung des Eingangsstapels vollständig
+sein muss und nur dann erfolgen darf, wenn ein leerer Ausgangsstapel
+vorliegt. Andernfalls käme es zu einem logischen Fehler, das heißt,
+einer falschen Reihenfolge bei der Entnahme.
+
+<pre class="ibox python">
+class Queue:
+    def __init__(self):
+        self.istack = []
+        self.ostack = []
+
+    def enqueue(self, x):
+        self.istack.append(x)
+
+    def dequeue(self):
+        if len(self.ostack) == 0:
+            while len(self.istack) != 0:
+                self.ostack.append(self.istack.pop())
+        if len(self.ostack) != 0:
+            return self.ostack.pop()
+        else:
+            return None
+</pre>
+
+<p>Zur Analyse eine Testfunktion.
+
+<pre class="ibox python">
+from itertools import product
+
+def is_sorted(a):
+    return all(a[i] &lt; a[i+1] for i in range(len(a) - 1))
+
+def test(n):
+    assert isinstance(n, int) and n &gt;= 0
+    for ops in product("io", repeat = n):
+        acc = []
+        q = Queue()
+        k = 0
+        for op in ops:
+            if op == "i":
+                q.enqueue(k)
+                k += 1
+            else:
+                result = q.dequeue()
+                if not result is None:
+                    acc.append(result)
+        assert is_sorted(acc)
+</pre>
+
+</body>
+</html>

@@ -54,17 +54,18 @@ zusammen, worunter wir eine endliche Liste, oder auch eine endliche
 Menge verstehen wollen, denn man soll mit dieser Liste umgehen können
 wie mit einer Menge. Das heißt, es ist nicht von Bedeutung, wie
 oft eine Aussage vorkommt oder in welcher Reihenfolge die Aussagen
-stehen. Man bezeichnet $\Gamma$ als die \emph{Antezedenz}%
-\index{Antezedenz} oder die Liste der \emph{Antezedenzen}. Es wird
-$\Gamma$ auch der \emph{Kontext}\index{Kontext}
-oder die \emph{Umgebung}\index{Umgebung} genannt, das sind auf die
-Typentheorie zurückzuführende Sprechweisen, die einen ganz ähnlichen
-Formalismus besitzt. Wir bezeichnen die Symbolik
+stehen. Wir bezeichnen die Symbolik
 \[\Gamma\vdash A\]
 als \emph{Sequenz}\index{Sequenz}. Sie drückt das \emph{Urteil}%
 \index{Urteil} aus, dass die Aussage $A$ aus den Annahmen
 vermittels Schlussregeln ableitbar ist. Darin nennt man $A$ die
-\emph{Hinterformel} oder \emph{Sukzedenz}.
+\emph{Hinterformel} oder \emph{Sukzedenz}. Man bezeichnet $\Gamma$ als
+die \emph{Vorderformeln}, die \emph{Antezedenz},
+\index{Antezedenz} oder die Liste der \emph{Antezedenzen}. Es wird
+$\Gamma$ auch der \emph{Kontext}\index{Kontext}
+oder die \emph{Umgebung}\index{Umgebung} genannt, das sind auf die
+Typentheorie zurückzuführende Sprechweisen, die einen ganz ähnlichen
+Formalismus besitzt.
 Der Modus ponens\index{Modus ponens} wird nun in der allgemeinen Form
 \[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}\]
 beschrieben. Wir argumentieren beim Schließen also ab jetzt nicht mehr
@@ -88,6 +89,20 @@ Hierbei bedeutet $\Gamma,\Gamma'$ die Konkatenation der Listen
 $\Gamma$ und $\Gamma'$, also im Wesentlichen dasselbe wie die
 Vereinigung $\Gamma\cup\Gamma'$, insofern man die Kontexte als
 Mengen betrachtet.
+
+Der Umstand, dass mit dem Kontext umgegangen werden darf, wie mit
+einer Menge, drückt sich in zwei weiteren Regeln aus. Es gilt die
+\emph{Kontraktionsregel}
+\[\dfrac{\Gamma,A,A\vdash B}{\Gamma,A\vdash B},\;\;
+\text{oder allgemein}\;\;\dfrac{\Gamma,\Gamma',\Gamma'\vdash B}{\Gamma,\Gamma'\vdash B}\]
+und die \emph{Vertauschungsregel}
+\[\dfrac{\Gamma,A,B,\Gamma'\vdash C}{\Gamma,B,A,\Gamma'\vdash C},\]
+wobei $\Gamma,\Gamma'$ leer sein dürfen. Schließlich gelten für Mengen
+die Termumformungen
+$\Gamma\cup\Gamma'\cup\Gamma' = \Gamma\cup\Gamma'$
+und
+\[\Gamma\cup\{A\}\cup\{B\}\cup\Gamma' = \Gamma\cup\{B\}\cup\{A\}\cup\Gamma'.\]
+
 
 \subsection{Zulässige Schlussregeln}
 
@@ -153,13 +168,23 @@ spricht man von einem \emph{Axiomenschema}\index{Axiomenschema}. Wie
 eine Schablone produziert es für jede Einsetzung einer konkreten
 logischen Formel ein eigenes Axiom.
 
-Anstelle $A,B,C$ werden für metasprachliche Variablen zuweilen auch
-die griechischen Buchstaben $\varphi,\psi,\chi$ benutzt. Man muss sie
-von atomaren logischen Variablen unterscheiden, für die wir in diesem
+Statt $A,B,C$ sind für metasprachliche Variablen auch
+die griechischen Buchstaben $\varphi,\psi,\chi$ geläufig. Man muss sie
+von atomaren logischen Variablen unterscheiden, für die ich in diesem
 Buch, um Missverständnissen aus dem Weg zu gehen, kleine Buchstaben
-$a,b,c$ oder $p,q,r$ verwenden werden. Sprachlich suggestiv steht
+$a,b,c$ oder $p,q,r$ verwenden werde. Sprachlich suggestiv steht
 $\varphi$ für \emph{Formel}\index{Formel} oder \emph{formula}, $a$ für
 \emph{Aussage} und $p$ für \emph{proposition}.
+
+Streng genommen notiert man nur konkrete atomare Variablen als $p,q,r$,
+wogegen $P,Q,R$ metasprachliche Variablen sind, für die konkrete atomare
+Variablen eingesetzt werden dürfen. Hier ergibt sich allerdings eine
+Überschneidung mit der Prädikatenlogik, wo $P,Q,R$ Prädikate bezeichnen.
+Das ist aber eigentlich nicht sonderlich schlimm, da atomare Variablen
+nichts anderes als nullstellige Prädikate sind. Statt von atomaren
+Variablen wird daher auch von logischen Konstanten gesprochen, um sie
+von den Individuenvariablen zu unterscheiden, die nicht für logische
+Aussagen, sondern für Objekte wie Zahlen oder Mengen stehen.
 
 In diesem Sinne sind auch die Schlussregeln Schemata. Sofern man
 Schlussregeln mit null Prämissen gestattet, lässt sich das
@@ -181,7 +206,7 @@ Unter der Lesung, dass $A$ eine Metavariable ist, handelt es
 eigentlich nicht nur um ein Theorem, sondern um ein Schema von
 Theoremen\index{Theoremschema}. Setzt man für $A$ bspw. die konkrete
 Formel $p\cond q$ ein, bekommt man das konkrete Theorem
-\[\vdash (p\cond q)\cond (p\cond q).\]
+\[(p\cond q)\cond (p\cond q).\]
 % [todo]
 % Es ist zu bemerken, dass die Unterscheidung zwischen Metavariablen
 % und atomaren logischen Variablen später durch die Einsetzungsregel
@@ -445,7 +470,7 @@ Formeln als auch Individuenvariablen gegen Terme. Betrachten wir
 zunächst die logischen.
 
 Allgemein definiert man ihre Substitution
-\[A[v_1:=C_1,\ldots v_n:=C_n],\,\text{kurz $A[S]$ oder $S(A)$}\]
+\[A[P_1:=C_1,\ldots P_n:=C_n],\,\text{kurz $A[S]$ oder $S(A)$}\]
 rekursiv über den Formelaufbau als
 \begin{align*}
 (\lnot A)[S] &:= \lnot (A[S]), & (\forall x\colon A)[S] &:= (\forall x\colon (A[S])),\\
@@ -453,18 +478,18 @@ rekursiv über den Formelaufbau als
 \end{align*}
 wobei $\circ$ jeder der zweistelligen Junktoren
 $\land,\lor,\cond,\bicond$ ist. Die Basisfälle sind für die atomaren
-Variablen $v_1,\ldots, v_n$ und $w$ definiert gemäß
-\[w[v_1:=C_1, \ldots, v_n:=C_n] := \begin{cases}
-C_k, & \text{wenn sich $k$ mit $v_k=w$ findet},\\
-w, & \text{sonst}.
+Variablen $P_1,\ldots, P_n$ und $Q$ definiert gemäß
+\[Q[P_1:=C_1, \ldots, P_n:=C_n] := \begin{cases}
+C_k, & \text{wenn sich $k$ mit $P_k=Q$ findet},\\
+Q, & \text{sonst}.
 \end{cases}\]
 Für $n\ge 2$ spricht man von \emph{simultaner Substitution}.
 
 Für $n=1$ vereinfacht sich die Substitution zu
 \begin{align*}
-w[v:=C] := \begin{cases}
-C, & \text{wenn}\;v=w,\\
-w, & \text{wenn}\;v\ne w.
+Q[P:=C] := \begin{cases}
+C, & \text{wenn}\;P=Q,\\
+Q, & \text{wenn}\;P\ne Q.
 \end{cases}
 \end{align*}
 Beispielsweise ist
@@ -477,7 +502,7 @@ Zum Beispiel ist
 & (a\land b)[a:=b][b:=c] &&= (c\land c).
 \end{alignat*}
 Implementiert man die Substitution als Computerprogramm, bildet sie
-üblicherweise abstrakte Syntaxbäume auf abstrake Syntaxbäume ab.
+üblicherweise abstrakte Syntaxbäume auf abstrakte Syntaxbäume ab.
 
 Die Substitution von Individuenvariablen gegen Terme definiert man
 ganz analog. Hier ist allerdings hinsichtlich der Quantoren zu beachten,
@@ -927,7 +952,7 @@ Ableitung von Theoremen der intuitionistischen Logik gestatten. Sie sind
 allerdings umständlicher zu verwenden, da es sich um Einschränkungen des
 klassischen Kalküls handelt. Bereits Gentzen beschrieb so einen
 als LJ in \cite{Gentzen1935}. Eine sorgfältige Diskussion findet man
-in \cite{Mimram}.
+in \cite{Mimram}, \cite{von-Plato-Reasoning}.
 
 Alternative Formen der Regeln zur Implikation sind
 \[\dfrac{\Gamma,\lnot A\vdash\Delta\qquad\Gamma, B\vdash\Delta}
@@ -1095,14 +1120,14 @@ eine Aussage $A$ notwendig. Sie sagt aus, dass $\lnot B$ zu $\lnot A$
 führt. Falls die Bedingung verletzt ist, kann die Aussage unmöglich
 gelten. Es liegt demnach die Implikation $\lnot B\cond\lnot A$ vor.
 Sie wird im Sinne der klassischen Logik verstanden. Man hat also
-\[(A\cond B) \iff (\text{$B$ ist notwendig für $A$}).\]
+\[(A\cond B)\,\bicond\, (\text{$B$ ist notwendig für $A$}).\]
 Die Ausdrucksweise, eine Bedingung $B$ sei für $A$ hinreichend,
 sagt aus, dass $B$ die Aussage $A$ bereits nach sich zieht. Es liegt
 demnach die Implikation $B\cond A$ vor. Man hat also
-\[(B\cond A) \iff (\text{$B$ ist hinreichend für $A$}).\]
+\[(B\cond A)\,\bicond\, (\text{$B$ ist hinreichend für $A$}).\]
 Ist eine Bedingung $B$ sowohl notwendig als auch hinreichend für $A$,
 liegt eine Äquivalenz vor. Man hat also
-\[(A\bicond B) \iff (\text{$B$ ist notwendig und hinreichend für $A$}).\]
+\[(A\bicond B)\,\bicond\, (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
 \newpage
 \section{Logik mit Gleichheit}
@@ -1210,19 +1235,16 @@ nicht glaube, dass es zwei vollkommen ähnliche Blätter gebe. Ein
 geistreicher Herr, der mit auf dem Spaziergang war, glaubte, dass es
 leicht sein würde, solche zu finden; aber obwohl er viel suchte, wurde
 er durch seine Augen davon überzeugt, dass man immer einen Unterschied
-bemerken könne. Aus diesen bisher vernachlässigten Erwägungen wird
-ersichtlich, wie weit man sich in der Philosophie von den natürlichsten
-Begriffen entfernt hat und wie weit man von den großen Prinzipien der
-wahren Metaphysik entfernt war.«
+bemerken könne.«
 \end{quote}
 
 \noindent
 Formalisierung erfährt das Prinzip durch die Aussage
-\[(\forall P\colon P(x)\bicond P(y))\implies x=y.\]
+\[(\forall P\colon P(x)\bicond P(y))\cond x=y.\]
 Man sollte bedenken, dass diese Formulierung die Prädikatenlogik
 zweiter Stufe erfordert, da hier über Prädikate quantifiziert wird.
 Die Umkehrung
-\[x=y\implies (\forall P\colon P(x)\bicond P(y)).\]
+\[x=y\cond (\forall P\colon P(x)\bicond P(y)).\]
 wird als unbedenklich angesehen, so dass man das Prinzip auch als
 Äquivalenz formuliert. Die Umkehrung ist fast trivial aus den
 Axiomen ableitbar, weil es sich bereits um eine gewisse Form des
@@ -1236,6 +1258,7 @@ herleitbar ist. Hierzu wird $P(u):=(x=u)$ als Prädikat gewählt, womit
 $x=x$ als äquivalent zu $x=y$ vorausgesetzt wird. Weil $x=x$ gemäß
 Reflexivität vorliegt, erhält man wie gewünscht $x=y$.
 
+\newpage
 \subsection{Eindeutige Existenz}
 
 Gelegentlich tritt in der Mathematik eine Aussage der eindeutigen
@@ -1250,12 +1273,12 @@ logisches System enthalten muss. Zumindest brauchen wir sie für die
 folgenden Ausführungen.
 
 Formal ist die eindeutige Existenz fassbar als der Quantor
-\[(\exists! x\colon A(x)):\bicond
+\[(\exists! x\colon A(x))\,:\bicond\,
 (\exists x\colon A(x)\land\forall y\colon A(y)\cond x=y).\]
 Diese Aussage ist in Existenz und Eindeutigkeit zerlegbar gemäß
 \begin{Satz}\label{eindeutige-Existenz-separat}
 Es gilt die Äquivalenz
-\[(\exists! x\colon A(x))\bicond
+\[(\exists! x\colon A(x))\,\bicond\,
 (\exists x\colon A(x))\land(\forall x,y\colon A(x)\land A(y)\cond x=y).\]
 \end{Satz}
 \begin{Beweis}
@@ -1278,7 +1301,7 @@ $x:=u$ und $y:=y$ wird $u=y$ via $A(u)\land A(y)$ abgetrennt.\,\qedsymbol
 Vorsorglich erwähnen möchte ich
 \[(\forall x,y\colon A(x)\land A(y)\cond x=y)\bicond
 (\forall x\colon A(x)\cond\forall y\colon A(y)\cond x = y).\]
-Der Beweis sollte dem Leser nicht viel Mühe bereiten.
+Der Beweis sollte nicht viel Mühe bereiten.
 
 \newpage
 \section{Induktion}
@@ -1321,7 +1344,7 @@ wobei $A(n)$ darin die Bezeichnung \emph{Induktionsvoraussetzung}\index{Induktio
 Ein erstes Beispiel. Man definiert die Potenz einer Zahl $a$ rekursiv als
 \[a^0 := 1,\qquad a^{n+1} := aa^n.\]
 Zu beweisen sei das Potenzgesetz
-\[A(n)\defiff (ab)^n = a^n b^n.\]
+\[A(n)\,:\bicond\, (ab)^n = a^n b^n.\]
 Der Anfang $A(0)$ bestätigt sich via
 \[(ab)^0 = 1 = 1\cdot 1 = a^0 b^0.\]
 Den Induktionsschritt $(A(n)\cond A(n+1))$ bestätigt
@@ -1565,7 +1588,7 @@ Das System S4 formt sich aus den Schemata KT4, siehe Tabelle
 
 Die Übersetzung nach Gödel-McKinsey-Tarski ist
 \begin{align*}
-v' &= \lnec v, & (A\land B)' &= A'\land B', & (A\cond B)' &= \lnec (A'\cond B'),\\
+P' &= \lnec P, & (A\land B)' &= A'\land B', & (A\cond B)' &= \lnec (A'\cond B'),\\
 \bot' &= \bot, & (A\lor B)' &= A'\lor B', & (\lnot A)' &= \lnec\lnot A'.
 \end{align*}
 Man deutet $\lnec A$ als »A ist beweisbar«. Es ist $A$ genau
@@ -1592,7 +1615,7 @@ existiert, so dass die Sequenz $\Gamma_0\succ A$ ableitbar ist.
 Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash A$
 demzufolge genau dann, wenn die Sequenz $\Gamma_0\succ A$ ableitbar ist,
 symbolisch%
-\[(\Gamma_0\vdash A) \bicond (\vdash \Gamma_0\succ A).\]
+\[(\Gamma_0\vdash A)\,\bicond\, (\vdash \Gamma_0\succ A).\]
 Die Endlichkeit ist genau deshalb erfordlich, weil Sequenzen nur für
 endliche Kontexte erklärt sind. Für die Ableitbarkeit besteht damit
 verbunden Kompaktheit, dergestalt dass $\Gamma\vdash A$ genau dann gilt,
@@ -1695,19 +1718,19 @@ Zunächst zur Gleichwertigkeit der beiden Regeln:
 Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
 Die Behauptung wird hierbei in der Form
 \[\dfrac{\Gamma\vdash F\Leftrightarrow F'}{
-\Gamma,C(F)\vdash C(F')},\quad C(F) := C[X:=F],\quad C(F') := C[X:=F']\]
+\Gamma,C(F)\vdash C(F')},\quad C(F) := C[P:=F],\quad C(F') := C[P:=F']\]
 geschrieben. Weil $F,F'$ vertauscht werden dürfen, erhält man somit auch
 die umgekehrte Folgerung, so dass die Äquivalenz von $C(F)$ und $C(F')$
 hergestellt wird. Wir definieren die Abkürzungen
 \[A := C(F),\quad A' := C(F'),\quad B := D(F),\quad B' := D(F').\]
 Zunächst die Basisfälle. Die Formeln $C:=\bot$,
-$C:=\top$ und $C:=v$ mit atomarer Variable $v\ne X$
+$C:=\top$ und $C:=Q$ mit atomarer Variable $Q\ne P$
 bleiben von der Substitution unbetroffen und sind offenkundig zu sich
-selbst äquivalent. Für $C=X$ erhält man schlicht die Prämisse.
+selbst äquivalent. Für $C=P$ erhält man schlicht die Prämisse.
 
 Zum Induktionsschritt. Man hat nun
-\[(C\land D)[X{:=}F]
-\iff C[X{:=}F]\land D[X{:=}F]\iff A\land B\]
+\[(C\land D)[P:=F]
+\iff C[P:=F]\land D[P:=F]\iff A\land B\]
 usw. Induktionsvoraussetzung sei also $\Gamma\vdash A\Leftrightarrow A'$
 und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
 \begin{align*}
