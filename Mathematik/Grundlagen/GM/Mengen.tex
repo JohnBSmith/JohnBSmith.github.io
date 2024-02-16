@@ -1159,7 +1159,7 @@ die natürlichen Zahlen sind. Andererseits ist eine Folge indizierbar wie
 ein Tupel. Das bringt uns auf die Idee, Tupel wie Folgen als Funktionen
 aufzufassen.
 
-Die Ziffern der Zahl 2520 sind in Little"=Endian"=Konvention das Tupel
+Die Ziffern der Zahl $2520$ sind in Little"=Endian"=Konvention das Tupel
 \[t=(0,2,5,2)\in\N\times\N\times\N\times\N.\]
 Die Indexmenge $I:=\{0,1,2,3\}$ enthält die Stellenwerte der Ziffern.
 Es verhält sich nun so, dass die Funktion
@@ -2286,24 +2286,6 @@ induktiven Mengen enthalten ist. Wir haben es hier mit einer gewissen
 Art von Selbstbezüglichkeit zu tun, man spricht von einer
 \emph{imprädikativen} Definition.
 
-\subsection{Induktive Mengen allgemein}
-
-Allgemein sei $G$ eine Grundmenge, die die gesuchte Menge enthält.
-Es sei $B\subseteq G$ die Menge von Grundelementen.
-Es bezeichne $\Phi$ die Menge der Funktionen, die die Produktionsregeln kodieren,
-wobei $(n,f)\in\Phi$ eine Funktion $f\colon G^n\to G$ bedeuten soll.
-Die Menge der induktiven Mengen ist dann
-\[\setsystem A := \{A\subseteq G\mid B\subseteq A\land
-\forall (n,f)\in\Phi\colon\forall x\in A^n\colon f(x)\in A\}.\]
-Die Setzung $G:=\R$, $B:=\{0\}$ und $F:=\{S\}$ mit $S(x):=x+1$
-liefert wie gesagt die natürlichen Zahlen via $\bigcap\setsystem A = \N$.
-
-Es zeigt sich wieder, dass $\bigcap\setsystem A$ die kleinste
-induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$
-läuft hierbei völlig analog zu dem von Satz \ref{N-is-inductive} ab.
-Aufgrund dessen will ich darauf verzichten, diesen technischen Klimbim
-nochmals auszuführen.
-
 \subsection{Der dedekindsche Rekursionssatz}
 
 \begin{Satz}[Rekursionssatz von Dedekind]\newlinefirst
@@ -2567,6 +2549,66 @@ Stelle wieder zunutze, dass der Schnitt eine untere Schranke bezüglich
 der Inklusion ist. Dafür muss $A\in\setsystem T$ sein, was aber
 vorausgesetzt werden durfte.\,\qedsymbol
 \end{Beweis}
+
+\subsection{Induktive Mengen allgemein}
+
+Allgemein sei $G$ eine Grundmenge, die die gesuchte Menge enthält.
+Es sei $B\subseteq G$ die Menge von Grundelementen.
+Es bezeichne $\Phi$ die Menge der Funktionen, die die Produktionsregeln kodieren,
+wobei $(n,f)\in\Phi$ eine Funktion $f\colon G^n\to G$ bedeuten soll.
+Die Menge der induktiven Mengen ist dann
+\[\setsystem A := \{A\subseteq G\mid B\subseteq A\land
+\forall (n,f)\in\Phi\colon\forall x\in A^n\colon f(x)\in A\}.\]
+Die Setzung $G:=\R$, $B:=\{0\}$ und $F:=\{S\}$ mit $S(x):=x+1$
+liefert wie gesagt die natürlichen Zahlen via $\bigcap\setsystem A = \N$.
+
+Es zeigt sich wieder, dass $\bigcap\setsystem A$ die kleinste
+induktive Menge ist. Der Beweis von $\bigcap\setsystem A\in\setsystem A$
+läuft hierbei völlig analog zu dem von Satz \ref{N-is-inductive} ab.
+Aufgrund dessen will ich darauf verzichten, diesen technischen Klimbim
+nochmals auszuführen.
+
+\subsection{Frei erzeugte induktive Mengen}
+
+Wie bei den natürlichen Zahlen besteht ein wesentlicher Schritt darin,
+Funktionen rekursiv auf der kleinsten induktiven Menge zu definieren.
+Hierbei kann es allerdings zu Komplikationen kommen. Zum einen wäre
+die Rekursion nicht wohldefiniert, wenn die Funktion der jeweiligen
+Produktionsregel keine injektive ist. Zum anderen könnten sich zwei der
+Rekurrenzen des Systems widersprechen, so dass die Lösungsmenge des
+Systems leer bleiben muss.
+
+Ich will diese Umstände näher betrachten. Sei hierzu $f$ die gesuchte
+Funktion und $f_i$ die Funktion der jeweiligen Produktionsregel.
+Das System bestehe aus Rekurrenzen der Form
+\[f(f_i(x)) = \varphi_i(x, f(x)).\]
+Eine Implementierung im Computer führt die Berechnung demnach aus als
+\[f(y) := \varphi_i(x, f(x)),\quad x := f_i^{-1}(y),\]
+wofür $f_i$ aber injektiv sein muss. Angenommen, es gälte zu zwei $x_1,x_2$
+die Gleichheit $f_i(x_1)=f_j(x_2)$ zu $i\ne j$. Dies zöge nach sich
+\[\varphi_i(x_1, f(x_1)) = f(f_i(x_1)) = f(f_j(x_2))  = \varphi_j(x_2, f(x_2)).\]
+Wären die linke und rechte Seite verschieden, hätte das System keine
+Lösung. Um diese Komplikationen ausschließen zu können, wird gefordert,
+dass die $f_i$ paarweise disjunkte Bildmengen haben.
+
+Zuletzt muss man folgendes beachten. Es seien Rekursionsanfänge
+zu den $x_k\in B$ definiert als $f(x_k) := y_k$. Angenommen,
+es findet sich aber auch ein $x$ mit $x_k = f_i(x)$, dann müsste gelten
+\[y_k = f(x_k) = f(f_i(x)) = \varphi_i(x, f(x)).\]
+Wäre die linke und rechte Seite verschieden, hätte das System keine
+Lösung. Um diese Komplikationen ausschließen zu können, wird gefordert,
+dass zu jedem $f_i$ die Bildmenge disjunkt zu $B$ ist.
+
+\begin{Definition}[Frei erzeugte induktive Menge]\newlinefirst
+Es sei $G$ die Grundmenge und $A\subseteq G$ die kleinste induktive
+Menge zu $B\subseteq A$. Man nennt $A$ \emph{frei erzeugt} aus $B$,
+wenn für alle $(n,f),(m,g)\in\Phi$ gilt,
+\begin{enumerate}\setlength\itemsep{0em}
+\item die Einschränkung von $f$ auf $A^n$ ist injektiv,
+\item die Bildmengen $f(A^n)$ und $g(A^m)$ sind disjunkt, sofern $f\ne g$,
+\item die Bildmenge $f(A^n)$ ist disjunkt zu $B$.
+\end{enumerate}
+\end{Definition}
 
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel

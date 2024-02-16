@@ -434,7 +434,9 @@ Infolge gilt
 = \lambda(g) = \hat g = h.\,\qedsymbol\]
 
 \newpage
-\section{Kartesisch abgeschlossene Kategorien}
+\section{Beweise als Terme}
+
+\subsection{Kartesisch abgeschlossene Kategorien}
 
 \begin{Definition}[Kartesisch abgeschlossene Kategorie]\newlinefirst
 Eine Kategorie $\category C$ heißt genau dann kartesisch abgeschlossen,
@@ -455,4 +457,232 @@ nachgerechnet. Die Kategorie der endlichen Mengen ist ebenfalls
 kartesisch abgeschlossen. Sind $A,B$ endlich, ist ja $A\times B$
 und $B^A$ ebenfalls eine endliche Menge.
 
+\subsection{Die BHK-Interpretation}
 
+Im Bestreben, die Struktur der Schlussregeln zu ergründen, tritt
+mit der Zeit das trübe Muster zutage, dass der Aufbau von Beweisen
+gleichermaßen abläuft, wie der von Elementen bestimmter geläufiger
+Mengenkonstruktionen. Ein Beweis der Konjunktion $A\land B$ ist
+zum Beispiel erbracht, wenn ein Beweis $a$ der Aussage $A$ und
+ein Beweis $b$ der Aussage $B$ gefunden wurde. Dies gilt natürlich
+nur unter der Voraussetzung, dass der Beweis der Konjunktion durch ihre
+Einführungsregel zustande gekommen ist. Das heißt, wenn überhaupt,
+kann es sich nur um die Normalform der Beweise handeln. Wird nun die
+Evidenz für $A\land B$ vorgelegt, muss aus dieser sowohl $a$ als auch
+$b$ extrahiert werden können. Der Beweis von $A\land B$ ist demnach
+das Paar $(a,b)$. Man erkennt nun, dass sich die Einführungsregel
+\[\dfrac{\vdash A\quad\;\vdash B}{\vdash A\land B}\quad\text{analog zu}\quad
+\dfrac{a\in [A]\quad\; b\in [B]}{(a,b)\in [A]\times [B]}\]
+verhält. Hierbei bezeichne $[A]$ die Menge der Beweise der Aussage $A$,
+wobei die Gleichheit $[A\land B] = [A]\times [B]$ gefordert wird.
+
+Bei der Subjunktion tritt nun die Analogie zwischen
+\[\dfrac{\vdash A\cond B\quad\;\vdash A}{\vdash B}\quad\text{und}\quad
+\dfrac{f\in\mathrm{Abb}([A],[B])\quad\; a\in [A]}{f(a)\in [B]}\]
+in Erscheinung, wobei $[A\cond B] = \mathrm{Abb}([A],[B])$ gefordert
+wird.
+
+Ein Beweis der Disjunktion $A\lor B$ gilt bereits als erbracht,
+wenn ein Beweis zumindest einer der beiden Aussagen $A,B$ gefunden
+wurde. Wird nun die Evidenz von $A\lor B$ zur Prüfung vorgelegt, muss
+man erfahren dürfen, zu welcher der beiden Aussagen der Beweis gefunden
+wurde. Diese Unterscheidung schafft die disjunkte Vereinigung
+$[A\lor B] = [A]\sqcup [B]$. Bei der Disjunktion besteht die Analogie also zwischen
+\[\dfrac{\vdash A}{\vdash A\lor B},\;\,\dfrac{\vdash B}{\vdash A\lor B}\quad\text{und}\quad
+\dfrac{a\in [A]}{(1,a)\in [A]\sqcup [B]},\;\,\dfrac{b\in [B]}{(2,b)\in [A]\sqcup [B]}.\]
+Solange dies die einzigen Regeln zur Einführung der Disjunktion
+bleiben, wird eine Aussage auch nur dann als wahr angesehen werden
+dürfen, wenn ein Beweis zumindest einer der beiden Aussagen $A,B$
+vorgelegt wurde. Infolge stellt sich der Satz vom ausgeschlossenen
+Dritten unzulässig heraus, die Logik somit als intuitionistisch.
+
+Die gerade geschilderten Überlegungen manifestieren sich in der
+\emph{BHK"=Interpretation der intuitionistischen Logik}, benannt
+nach Luitzen Brouwer, Arend Heyting und Andrei Kolmogorow.
+
+Ein gern herangezogenes Beispiel, das erfahrbar macht, wie es sich mit
+der intuitionistischen Logik verhält, bietet die anschließende Überlegung
+zu Rechtssystemen. Betrachten wir den folgenden Fall.
+Aus dem Kühlschrank wurde ein Kuchen entwendet. Außerdem liegen
+belastbare Beweismittel vor, die belegen, dass Alice oder Bob
+dafür verantwortlich ist. Allerdings fanden sich weder Indizien,
+die eine der beiden Personen belasten, noch fand sich ein Alibi, das
+eine der beiden entlasten würde. Somit bleibt für beide die
+Unschuldsvermutung erhalten.
+Würde man nun von den beiden je einen halben Kuchen als Schadensersatz
+fordern, käme dies einer Kollektivstrafe gleich. Wird das Konzept
+von Kollektivstrafen verworfen, führt dies insofern dazu, dass dem
+Rechtssystem die intuitionistische Logik innewohnen muss.
+
+Zur Berücksichtigung von Hypothesen wird ein Urteil der Form
+$H\vdash A$ als $\vdash H\cond A$ gedacht. Zufolge dieser Überlegung
+nimmt die Regel
+\[\dfrac{H\vdash A\qquad H\vdash B}
+{H\vdash A\land B}\quad\text{die Form}\quad
+\dfrac{a\colon [H]\to [A]\qquad b\colon [H]\to [B]}
+{(x\mapsto (a(x),b(x)))\colon [H]\to [A]\times [B]}\]
+an. Mit der Einbeziehung von Hypothesen wird schließlich
+die Subjunktionseinführung fassbar. Zu
+\[\dfrac{H,A\vdash B}
+{H\vdash A\cond B}\quad\text{findet sich}\quad
+\dfrac{f\colon [H]\times [A]\to [B]}
+{(x\mapsto a\mapsto f(x, a))\colon [H]\to [A]\to [B]}\]
+Mit der Notation $x\mapsto a\mapsto f(x, a)$ ist die Funktion $g$
+gemeint, für die gilt
+\[g(x)(a) = f(x, a).\]
+Der Funktionswert von $g$ an der Stelle $x$ soll also wiederum eine
+Funktion sein, dessen Funktionswert an der Stelle $a$ der Wert
+$f(x, a)$ ist. Der Übergang von $f$ zu $g$ wird \emph{Schönfinkeln}, im
+Englischen \emph{currying}, genannt, benannt nach Moses Schönfinkel und
+Haskell Brooks Curry. Das logische Gegenstück lässt sich auch als das
+Theoremschema
+\[(H\land A\cond B)\cond (H\cond (A\cond B)),\]
+darstellen, das Schema der \emph{Exportation}.
+
+\subsection{Sequenzen als Morphismenklassen}
+
+Bislang waren Abbildungen zwischen Mengen Gegenstand der Betrachtung.
+Uns hält aber nichts davon ab, diese als Morphismen zwischen
+Objekten zu sehen. Dieser Abstraktionsschritt soll nun als nächstes
+vorgenommen werden.
+
+Mit der Idee, das Urteil $A\vdash B$ als Vorhandensein eines
+Morphismus $A\to B$ zu interpretieren, gelangt man zur kategoriellen
+Semantik. Dabei werden nur solche Sequenzen betrachtet, die eine einzige
+Vorderformel besitzen, was aber keine wesentliche Einschränkung
+darstellt, da die Vorderformeln immer zu einer Konjunktion
+zusammengefasst werden können. Ist die Ansammlung der Vorderformeln
+leer, erhält man als leere Konjunktion die tautologische Formel.
+Das heißt, ein Urteil der Form $\vdash A$ wird als $\top\vdash A$
+betrachtet.
+
+Jede Aussage wird als ein Objekt interpretiert, und Urteile sind
+Morphismen zwischen den Aussagen. Die Konjunktion $A\land B$
+wird interpretiert als Produkt $A\times B$, die Disjunktion $A\lor B$
+als Koprodukt $A\sqcup B$. Die kontradiktorische Formel $\bot$ wird als
+Anfangsobjekt $0$ interpretiert, die tautologische Formel $\top$ als
+ein Terminalobjekt $1$. Bei der Subjunktion $A\cond B$ muss man nun ein
+wenig achtsam sein. Ihr entspricht nicht etwa die Morphismenklasse
+$A\to B$, sondern wie bei allen Formeln ein Objekt, das Exponentialobjekt
+$B^A$. Die Negation $\lnot A$ wird als $A\cond\bot$ betrachtet, also
+durch $0^A$ interpretiert.
+
+Der Überlegung nach darf das Urteil $\vdash A$ genau dann gefällt
+werden, wenn ein Morphismus $1\to A$ existiert. Dieser Morphismus
+wählt ein Element aus $A$ aus, womit $A$ bewohnt sein muss.
+Allgemein stellen wir Aussagen gemäß Tabelle \ref{tab:Aussagen-zu-Objekten}
+als Objekte dar.
+
+\begin{table}
+\begin{center}
+\caption{Übersetzung von Aussagen in Objekte}%
+\label{tab:Aussagen-zu-Objekten}
+\begin{tabular}{l}
+\toprule
+$\begin{aligned}
+{}[A\land B] &:= [A]\times [B] & [\bot] &:= 0\\
+[A\lor B] &:= [A]\sqcup [B] &  [\top] &:= 1\\
+[A\cond B] &:= [B]^{[A]} & [A\bicond B] &:= [B]^{[A]}\times [A]^{[B]}\\
+[\lnot A] &:= 0^{[A]} & [\{A_1,\ldots,A_n\}] &:= [A_1]\times\ldots\times [A_n]
+\end{aligned}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{Satz}\label{Urteil-impliziert-Morphismus}
+Bildet die Übersetzung aus Tabelle \ref{tab:Aussagen-zu-Objekten} in
+eine bikartesisch abgeschlossene Kategorie ab, so gilt für die
+intuitionistische Logik die Folgerung
+\[(\Gamma\vdash A) \,\cond\, (\exists f\colon [\Gamma]\to [A]).\]
+\end{Satz}
+\begin{Beweis}
+Es wird eine strukturelle Induktion über den Aufbau von Beweisen
+durchgeführt. Zum Induktionsanfang. Die Regel
+\[\dfrac{}{A\vdash A}\quad\text{fordert}\quad\dfrac{}{\exists f\colon [A]\to [A]}.\]
+Dies zeigt sich mit der Setzung $f:=\id$. Die Abschwächungsregel
+\[\dfrac{\Gamma\vdash B}{\Gamma,A\vdash B}\quad\text{fordert}\quad
+\dfrac{\exists f\colon [\Gamma]\to [B]}{\exists g\colon [\Gamma]\times [A]\to [B]}.\]
+Mit der Prämisse, die Induktionsvoraussetzung ist, muss man zur
+Konklusion gelangen, was kurzum mit der Setzung $g:=f\circ\pi_1$
+erreicht wird, wobei $\pi_1$ gemäß der universellen Eigenschaft des
+Produktes zur Verfügung steht.
+
+Die Konjunktionseinführung
+\[\dfrac{\Gamma\vdash A\qquad\Gamma\vdash B}{\Gamma\vdash A\land B}
+\quad\text{fordert}\quad
+\dfrac{\exists f_1\colon [\Gamma]\to [A]\qquad\exists f_2\colon [\Gamma]\to [B]}
+{\exists f\colon [\Gamma]\to [A]\times [B]}.\]
+Man legt $f:=(f_1, f_2)$ vor, was gemäß der universellen
+Eigenschaft des Produktes gebildet werden darf. Die Beseitigungsregel
+\[\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A}\quad\text{fordert}\quad
+\dfrac{\exists f\colon [\Gamma]\to [A]\times [B]}
+{\exists g\colon [\Gamma]\to [A]}.\]
+Man setzt $g:=\pi_1\circ f$, wobei $\pi_1$ gemäß der universellen
+Eigenschaft des Produktes zur Verfügung steht.
+
+Die Subjunktionseinführung
+\[\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\to B}\quad\text{fordert}\quad
+\dfrac{\exists f\colon [\Gamma]\times [A]\to [B]}{\exists g\colon [\Gamma]\to [B]^{[A]}}.\]
+Man hat $g:=\lambda f$, wobei $\lambda$ der angegebene Isomorphismus zu
+Satz \ref{todo} ist. Die Beseitigungsregel
+\[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}\quad\text{fordert}\quad
+\dfrac{\exists f\colon [\Gamma]\to [B]^{[A]}\qquad\exists g\colon [\Gamma]\to [A]}
+{\exists h\colon [\Gamma]\to [B]}.\]
+Es ist $\lambda^{-1} f\colon [\Gamma]\times [A]\to [B]$. In der Kategorie
+der Mengen ginge die Setzung $h(x) := (\lambda^{-1} f)(x, g(x))$. Das
+gesuchte Abstraktum hierzu ist $h := (\lambda^{-1} f)\circ (\id, g)$.
+
+Da die Negation $\lnot A$ als Subjunktion $A\cond\bot$ definiert wird,
+brauchen wir diese nicht explizit zu betrachten. Dasselbe gilt für
+die Bijunktion $A\bicond B$, die als $(A\cond B)\land (B\cond A)$
+definiert wird.
+
+Zuletzt verbleibt noch ex falso quodlibet $\bot\vdash A$ als
+ein weiterer Induktionsanfang zu bestätigen. Dazu muss ein Morphismus
+$f\colon 0\to [A]$ existent sein, was aber gerade die Eigenschaft des
+Anfangsobjektes $0$ darstellt.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Weiterhin stellt sich heraus, dass die Schnittregel der schlichten
+Komposition von Morphismen entspricht. Genauer wird die Übersetzung des
+Schlusses
+\[\dfrac{A\vdash B\qquad B\vdash C}{A\vdash C}\;\;\text{gesichert durch}\;\;
+\dfrac{f\colon A\to B\qquad g\colon B\to C}{g\circ f\colon A\to C}.\]
+Die übersetzte allgemeine Form der Schnittregel braucht nicht mehr
+bestätigt werden, dies ist bereits als abschließender Schritt in der
+Bestätigung der übersetzten Subjunktionsbeseitigung zu finden.
+
+Die eigentliche BHK"=Interpretation soll die Struktur von Beweisen der
+intuitionistischen Logik erklären. Dafür sollte man aber am besten
+ausgehend von einem Morphismus zum zugehörigen Beweis zurückgelangen
+können. Insbesondere sollte die Umkehrung von Satz
+\ref{Urteil-impliziert-Morphismus} ebenfalls gelten.
+Es mag allerdings sein, dass zwischen den Objekten Morphismen bestehen,
+die keinem Beweis entsprechen. Betrachten wir Objekte wieder
+speziell als Mengen, kann dies ausgeschlossen werden, indem als Menge
+der erreichbaren Konstrukte, heißt formulierbaren Terme, die kleinste
+induktive Menge gewählt wird, die unter den verfügbaren
+Konstruktionsschritten abgeschlossen ist. Weil die Schritte zu
+verschiedenartigen Konstrukten führen, erhält man zudem eine frei
+erzeugte induktive Menge. Man kann nun per struktureller Rekursion über
+den Term eine Rückübersetzung zum ursprünglichen Beweis definieren.
+Die kleinste induktive Menge verhält sich demnach isomorph zur
+ursprünglichen Menge der formulierbaren Beweise.
+
+Was ist dann aber gewonnen, wenn Beweise durch die Übersetzung
+lediglich in eine andere Gestalt gebracht werden? Zum einen ermöglicht
+die Übersetzung offenbar, Beweise mit Konzepten der Kategorientheorie
+in Verbindung zu bringen. Zum anderen wurden in der gerade gemachten
+Überlegung die Beweise zusätzlich in die Übersetzung miteinbezogen.
+Das Beschriebene System zur Konstruktion von Termen stellt sich später
+als der einfach getypte Lambda"=Kalkül heraus, dem in der Informatik
+eine grundlegende Bedeutung zukommt. Der Lambda"=Kalkül verhält sich so
+ähnlich wie ein Termersetzungssystem und formalisiert im Wesentlichen
+die Konstruktion und Applikation von Funktionen.
+
+Von der BHK"=Interpretation ausgehend gelangt man somit zum
+\emph{Curry"=Howard"=Isomorphismus}, der die Übersetzung von Beweisen
+in die entsprechenden Terme des einfach getypten Lambda"=Kalküls
+beschreibt. Aussagen werden hierbei in Typen übersetzt.
