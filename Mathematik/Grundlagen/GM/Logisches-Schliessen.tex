@@ -1035,99 +1035,6 @@ muss, ergibt sich der Tableaukalkül. Man mag das Schließen von
 Sequenzen insofern als vielseitig bewerten. Die dazugewonnene Sichtweise
 schafft überdies ein tiefergründiges Verständnis des Tableaukalküls.
 
-\section{Bemerkungen zur Beweisführung}
-
-\subsection{Widerspruchsbeweise}
-
-Beim \emph{Beweis durch Widerspruch} widerlegt man eine Aussage, indem
-gezeigt wird, dass die Annahme der Aussage zu einem logischen
-Widerspruch\index{Widerspruch} führt. In manchen Situationen bietet
-diese Art der Argumentation eine große Hilfe. So schreibt der britische
-Mathematiker Godfrey Harold Hardy in seinem Essay
-\emph{A Mathematician's Apology} die Worte
-\begin{quote}
-»The proof is by \emph{reductio ad absurdum}, and \emph{reductio ad
-absurdum}, which Euclid loved so much, is one of a mathematician's
-finest weapons. It is a far finer gambit than any chess gambit: a chess
-player may offer the sacrifice of a pawn or even a piece, but a
-mathematician offers \emph{the game}.«
-\end{quote}
-Zur Schaffung von Klarheit muss man zunächst zwei inhaltlich
-verschiedene Arten des Widerspruchsbeweises unterscheiden.
-Präzisieren lässt sich diese Unterscheidung anhand
-der Regeln
-\[\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\lnot A},\qquad
-\dfrac{\Gamma,\lnot A\vdash\bot}{\Gamma\vdash A}.\]
-Die linke Regel stellt die stets verfügbare Negationseinführung dar,
-die man auch als \emph{Widerlegung durch Widerspruch} bezeichnen kann.
-In der rechten Regel, der klassischen \emph{Reductio ad absurdum},
-gelangt man zunächst per Negationseinführung von
-$\Gamma,\lnot A\vdash\bot$ zu $\Gamma\vdash\lnot\lnot A$, und daraufhin
-zu $\Gamma\vdash A$. Die Beseitigung der Doppelnegation%
-\index{Doppelnegation} ist allerdings lediglich in der klassischen
-Logik verfügbar, in der intuitionistischen gilt sie dagegen als
-unzulässig.
-
-Manche stellen die Regeln in einer Form dar, in der die Kontradiktion
-nicht explizit auftaucht. Wir erhalten sie als zulässige Regeln, indem
-der Einführung der Kontradiktion direkt ihre Beseitigung
-angeschlossen wird. Es findet sich
-\[\dfrac{\Gamma,A\vdash\lnot B\qquad\Gamma'\vdash B}
-{\Gamma,\Gamma'\vdash\lnot A},\qquad
-\dfrac{\Gamma,\lnot A\vdash\lnot B\qquad\Gamma'\vdash B}
-{\Gamma,\Gamma'\vdash A}.\]
-Wie zuvor ist die linke Form allgemein verfügbar, die rechte dagegen
-nur bei Vorhandensein der Beseitigung der Doppelnegation.
-
-\subsection{Klassische Kontraposition}
-
-Eine weitere Regel ist die umgekehrte Kontraposition
-\[\dfrac{\Gamma\vdash\lnot A\cond\lnot B}{\Gamma\vdash B\cond A}.\]
-Sie verlangt ebenfalls die klassische Logik. Mit ihr lässt sich
-nämlich die klassische Reductio ad absurdum herleiten:
-\[
-\infer[\infernote{Kürzung der Tautologie}]{\Gamma\vdash A}{
-  \infer[\infernote{Modus ponens}]{\Gamma,\top\vdash A}{
-    \infer[\infernote{bedenklich}]{\Gamma\vdash\top\cond A}{
-      \infer[\infernote{Impl-Einf.}]{\Gamma\vdash\lnot A\cond\lnot\top}{
-        \infer[\infernote{Neg-Einf.}]{\Gamma,\lnot A\vdash\lnot\top}{
-          \infer[\infernote{Abschwächung}]{\Gamma,\lnot A,\top\vdash\bot}{
-            \Gamma,\lnot A\vdash\bot}}}}
-  & \infer[\infernote{Axiom}]{\top\vdash\top}{}}}
-\]
-Weil alle anderen Schlüsse unbedenklich sind, kann die umgekehrte
-Kontraposition als der bedenkliche Schritt identifiziert werden.
-In der klassischen Logik ist sie allerdings zulässig. Die Herleitung
-unter Verwendung der Beseitigung der Doppelnegation sei dem Leser
-überlassen. Als kleiner Tipp sei aber gegeben, dass die Einführung
-der Doppelnegation unter allen Umständen zulässig ist, wie man sich
-unschwer überzeugt.
-
-Wir schreiben die Abkürzungen DNE für die Beseitigung der
-Doppelnegation, LEM für den Satz vom ausgeschlossenen Dritten
-und EFQ für ex falso quodlibet. Eine Alternative zu DNE bietet
-LEM zuzüglich EFQ. Manche Beweise verkürzen sich damit, andere
-verlängern sich. Tatsächlich lässt sich DNE aus LEM zuzüglich EFQ
-herleiten. Umgekehrt lässt sich sowohl LEM als auch EFQ aus DNE
-herleiten. Es tut sich die Frage auf, ob sich EFQ aus LEM herleiten
-lässt. Die Antwort darauf lautet nein. Eine ausführliche Untersuchung
-findet man in \cite{Diener}.
-
-\subsection{Notwendige und hinreichende Bedingungen}
-
-Manchmal trifft man auf die Ausdrucksweise, eine Bedingung $B$ sei für
-eine Aussage $A$ notwendig. Sie sagt aus, dass $\lnot B$ zu $\lnot A$
-führt. Falls die Bedingung verletzt ist, kann die Aussage unmöglich
-gelten. Es liegt demnach die Implikation $\lnot B\cond\lnot A$ vor.
-Sie wird im Sinne der klassischen Logik verstanden. Man hat also
-\[(A\cond B)\,\bicond\, (\text{$B$ ist notwendig für $A$}).\]
-Die Ausdrucksweise, eine Bedingung $B$ sei für $A$ hinreichend,
-sagt aus, dass $B$ die Aussage $A$ bereits nach sich zieht. Es liegt
-demnach die Implikation $B\cond A$ vor. Man hat also
-\[(B\cond A)\,\bicond\, (\text{$B$ ist hinreichend für $A$}).\]
-Ist eine Bedingung $B$ sowohl notwendig als auch hinreichend für $A$,
-liegt eine Äquivalenz vor. Man hat also
-\[(A\bicond B)\,\bicond\, (\text{$B$ ist notwendig und hinreichend für $A$}).\]
 
 \newpage
 \section{Logik mit Gleichheit}
@@ -1605,17 +1512,17 @@ eines formalen Systems ist. Zum anderen stellt es sich als die
 metasprachliche Aussage dar, dass $A$ aus $\Gamma$ ableitbar ist. Zur
 Schaffung von Klarheit wollen wir bei beweistheoretischen Betrachtungen
 näher zwischen den beiden Sichtweisen unterscheiden. Dazu notieren
-wir $\Gamma\succ A$ für die Sequenz als syntaktisches Konstrukt,
+wir $\Gamma\vartriangleright A$ für die Sequenz als syntaktisches Konstrukt,
 und im Unterschied dazu $\Gamma\vdash A$ für die metasprachliche Aussage.
 \begin{Definition}[Ableitbarkeit]\newlinefirst
 Man nennt $A$ aus der Formelmenge $\Gamma$ ableitbar, kurz
 $\Gamma\vdash A$, wenn ein endliche Menge $\Gamma_0\subseteq\Gamma$
-existiert, so dass die Sequenz $\Gamma_0\succ A$ ableitbar ist.
+existiert, so dass die Sequenz $\Gamma_0\vartriangleright A$ ableitbar ist.
 \end{Definition}
 Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash A$
-demzufolge genau dann, wenn die Sequenz $\Gamma_0\succ A$ ableitbar ist,
-symbolisch%
-\[(\Gamma_0\vdash A)\,\bicond\, (\vdash \Gamma_0\succ A).\]
+demzufolge genau dann, wenn die Sequenz $\Gamma_0\vartriangleright A$
+ableitbar ist, symbolisch%
+\[(\Gamma_0\vdash A)\,\bicond\, (\vdash \Gamma_0\vartriangleright A).\]
 Die Endlichkeit ist genau deshalb erfordlich, weil Sequenzen nur für
 endliche Kontexte erklärt sind. Für die Ableitbarkeit besteht damit
 verbunden Kompaktheit, dergestalt dass $\Gamma\vdash A$ genau dann gilt,
@@ -1674,7 +1581,6 @@ Nun unternimmt man der Reihe nach den Schnitt der Form
 zu den $k$ von $k=n$ bis $k=1$. Man gelangt damit schließlich zu
 $\Gamma\vdash A$, also zu der gewünschten Feststellung $A\in\Cn(\Gamma)$.
 
-\newpage
 \subsection{Die zulässige Ersetzungsregel}
 
 Mit der Äquivalenz zweier Aussagen verhält es sich in gewisser Weise
@@ -1821,3 +1727,201 @@ $\Gamma$ erweitert um:
 \end{array}
 \]
 Der Leser möge diesbezüglich zunächst Abschnitt \ref{sec:Modallogik} studieren.
+
+\section{Zur Beweisführung}
+
+\subsection{Widerspruchsbeweise}
+
+Beim \emph{Beweis durch Widerspruch} widerlegt man eine Aussage, indem
+gezeigt wird, dass die Annahme der Aussage zu einem logischen
+Widerspruch\index{Widerspruch} führt. In manchen Situationen bietet
+diese Art der Argumentation eine große Hilfe. So schreibt der britische
+Mathematiker Godfrey Harold Hardy in seinem Essay
+\emph{A Mathematician's Apology} die Worte
+\begin{quote}
+»The proof is by \emph{reductio ad absurdum}, and \emph{reductio ad
+absurdum}, which Euclid loved so much, is one of a mathematician's
+finest weapons. It is a far finer gambit than any chess gambit: a chess
+player may offer the sacrifice of a pawn or even a piece, but a
+mathematician offers \emph{the game}.«
+\end{quote}
+Zur Schaffung von Klarheit muss man zunächst zwei inhaltlich
+verschiedene Arten des Widerspruchsbeweises unterscheiden.
+Präzisieren lässt sich diese Unterscheidung anhand
+der Regeln
+\[\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\lnot A},\qquad
+\dfrac{\Gamma,\lnot A\vdash\bot}{\Gamma\vdash A}.\]
+Die linke Regel stellt die stets verfügbare Negationseinführung dar,
+die man auch als \emph{Widerlegung durch Widerspruch} bezeichnen kann.
+In der rechten Regel, der klassischen \emph{Reductio ad absurdum},
+gelangt man zunächst per Negationseinführung von
+$\Gamma,\lnot A\vdash\bot$ zu $\Gamma\vdash\lnot\lnot A$, und daraufhin
+zu $\Gamma\vdash A$. Die Beseitigung der Doppelnegation%
+\index{Doppelnegation} ist allerdings lediglich in der klassischen
+Logik verfügbar, in der intuitionistischen gilt sie dagegen als
+unzulässig.
+
+Manche stellen die Regeln in einer Form dar, in der die Kontradiktion
+nicht explizit auftaucht. Wir erhalten sie als zulässige Regeln, indem
+der Einführung der Kontradiktion direkt ihre Beseitigung
+angeschlossen wird. Es findet sich
+\[\dfrac{\Gamma,A\vdash\lnot B\qquad\Gamma'\vdash B}
+{\Gamma,\Gamma'\vdash\lnot A},\qquad
+\dfrac{\Gamma,\lnot A\vdash\lnot B\qquad\Gamma'\vdash B}
+{\Gamma,\Gamma'\vdash A}.\]
+Wie zuvor ist die linke Form allgemein verfügbar, die rechte dagegen
+nur bei Vorhandensein der Beseitigung der Doppelnegation.
+
+\subsection{Klassische Kontraposition}
+
+Eine weitere Regel ist die umgekehrte Kontraposition
+\[\dfrac{\Gamma\vdash\lnot A\cond\lnot B}{\Gamma\vdash B\cond A}.\]
+Sie verlangt ebenfalls die klassische Logik. Mit ihr lässt sich
+nämlich die klassische Reductio ad absurdum herleiten:
+\[
+\infer[\infernote{Kürzung der Tautologie}]{\Gamma\vdash A}{
+  \infer[\infernote{Modus ponens}]{\Gamma,\top\vdash A}{
+    \infer[\infernote{bedenklich}]{\Gamma\vdash\top\cond A}{
+      \infer[\infernote{Impl-Einf.}]{\Gamma\vdash\lnot A\cond\lnot\top}{
+        \infer[\infernote{Neg-Einf.}]{\Gamma,\lnot A\vdash\lnot\top}{
+          \infer[\infernote{Abschwächung}]{\Gamma,\lnot A,\top\vdash\bot}{
+            \Gamma,\lnot A\vdash\bot}}}}
+  & \infer[\infernote{Axiom}]{\top\vdash\top}{}}}
+\]
+Weil alle anderen Schlüsse unbedenklich sind, kann die umgekehrte
+Kontraposition als der bedenkliche Schritt identifiziert werden.
+In der klassischen Logik ist sie allerdings zulässig. Die Herleitung
+unter Verwendung der Beseitigung der Doppelnegation sei dem Leser
+überlassen. Als kleiner Tipp sei aber gegeben, dass die Einführung
+der Doppelnegation unter allen Umständen zulässig ist, wie man sich
+unschwer überzeugt.
+
+Wir schreiben die Abkürzungen DNE für die Beseitigung der
+Doppelnegation, LEM für den Satz vom ausgeschlossenen Dritten
+und EFQ für ex falso quodlibet. Eine Alternative zu DNE bietet
+LEM zuzüglich EFQ. Manche Beweise verkürzen sich damit, andere
+verlängern sich. Tatsächlich lässt sich DNE aus LEM zuzüglich EFQ
+herleiten. Umgekehrt lässt sich sowohl LEM als auch EFQ aus DNE
+herleiten. Es tut sich die Frage auf, ob sich EFQ aus LEM herleiten
+lässt. Die Antwort darauf lautet nein. Eine ausführliche Untersuchung
+findet man in \cite{Diener}.
+
+\subsection{Notwendige und hinreichende Bedingungen}
+
+Manchmal trifft man auf die Ausdrucksweise, eine Bedingung $B$ sei für
+eine Aussage $A$ notwendig. Sie sagt aus, dass $\lnot B$ zu $\lnot A$
+führt. Falls die Bedingung verletzt ist, kann die Aussage unmöglich
+gelten. Es liegt demnach die Implikation $\lnot B\cond\lnot A$ vor.
+Sie wird im Sinne der klassischen Logik verstanden. Man hat also
+\[(A\cond B)\,\bicond\, (\text{$B$ ist notwendig für $A$}).\]
+Die Ausdrucksweise, eine Bedingung $B$ sei für $A$ hinreichend,
+sagt aus, dass $B$ die Aussage $A$ bereits nach sich zieht. Es liegt
+demnach die Implikation $B\cond A$ vor. Man hat also
+\[(B\cond A)\,\bicond\, (\text{$B$ ist hinreichend für $A$}).\]
+Ist eine Bedingung $B$ sowohl notwendig als auch hinreichend für $A$,
+liegt eine Äquivalenz vor. Man hat also
+\[(A\bicond B)\,\bicond\, (\text{$B$ ist notwendig und hinreichend für $A$}).\]
+
+\subsection{Verneinung von Aussagen}
+
+\begin{table}
+\begin{center}
+\caption{Verneinung von Aussagen}%
+\label{tab:Verneinung-von-Aussagen}
+\begin{tabular}{l}
+\toprule
+$\begin{array}{@{}r@{\;}l@{\quad\;\;}r@{\;}lr@{\;}l@{}}
+\lnot(A\land B) &\bicond\lnot A\lor\lnot B
+& \lnot(\forall x\colon A(x)) &\bicond (\exists x\colon\lnot A(x))
+& \lnot\bot &\bicond\top\\
+\lnot(A\lor B) &\bicond\lnot A\land\lnot B
+& \lnot(\exists x\colon A(x)) &\bicond (\forall x\colon\lnot A(x))
+& \lnot\top &\bicond\bot\\
+\lnot (A\cond B) &\bicond A\land \lnot B
+& \lnot (A\bicond B) &\bicond A\oplus B
+& \lnot\lnot A &\bicond A
+\end{array}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+\caption{Zur Verneinung von All- und Existenzaussagen}%
+\label{tab:Negation-All-Ex}
+\begin{tabular}{@{}cc@{}}
+\toprule
+$\infer{\vdash (\forall x\colon\lnot A(x))\cond \lnot (\exists x\colon A(x))}{
+  \infer{2\vdash\lnot\exists x\colon A(x)}{
+    \infer{1,2\vdash\bot}{
+      \infer{1\equiv\exists x\colon A(x)}{}
+    & \infer{2,3\vdash \bot}{
+        \infer{2\vdash\lnot A(u)}{
+          \infer{2\equiv\forall x\colon\lnot A(x)}{}}
+      & \infer{3\equiv A(u)}{}}}}}$
+&
+$\infer{\vdash \lnot (\exists x\colon A(x))\cond (\forall x\colon\lnot A(x))}{
+  \infer{1\vdash\forall x\colon\lnot A(x)}{
+    \infer{1\vdash\lnot A(x)}{
+      \infer{1, 2\vdash\bot}{
+        \infer{1\equiv\lnot\exists x\colon A(x)}{}
+      & \infer{2\vdash\exists x\colon A(x)}{
+          \infer{2\equiv A(x)}{}}}}}}$\\[10pt]
+$\infer{\vdash (\exists x\colon\lnot A(x))\cond \lnot (\forall x\colon A(x))}{
+  \infer{1\vdash\lnot\forall x\colon A(x)}{
+    \infer{1, 3\vdash\bot}{
+      \infer{1\equiv\exists x\colon \lnot A(x)}{}
+    & \infer{2, 3\vdash\bot}{
+        \infer{2\equiv\lnot A(u)}{}
+      & \infer{3\vdash A(u)}{
+          \infer{3\equiv\forall x\colon A(x)}{}}}}}}$
+&
+$\infer{\vdash \lnot (\forall x\colon A(x))\cond (\exists x\colon\lnot A(x))}{
+  \infer{1\vdash\exists x\colon\lnot A(x)}{
+    \infer{1\vdash\lnot\lnot\exists x\colon\lnot A(x)}{
+      \infer{1,2\vdash\bot}{
+        \infer{1\equiv\lnot\forall x\colon A(x)}{}
+      & \infer{2 \vdash\forall x\colon A(x)}{
+          \infer{2\vdash A(x)}{
+            \infer{2\vdash\lnot\lnot A(x)}{
+              \infer{2\vdash\forall x\colon\lnot\lnot A(x)}{
+                \infer{2\equiv\lnot\exists x\colon\lnot A(x)}{}}}}}}}}}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Die Verneinung von All- und Existenzaussagen besitzt Umformungen, die
+analog zu den de morganschen Gesetzen vonstatten gehen. In Tabelle
+\ref{tab:Verneinung-von-Aussagen} ist die jeweilige Gesetzmäßigkeit
+hinter das jeweilige de morgansche Gesetz gestellt. Die Beweise sind in
+Tabelle \ref{tab:Negation-All-Ex} ausgeführt.
+
+In Worten gilt eine Aussageform $A(x)$ genau dann nicht für jedes $x$,
+wenn sich mindestens ein $x$ findet, für das $A(x)$ nicht gilt.
+Und es existiert genau dann kein $A(x)$ erfüllendes $x$, wenn
+$A(x)$ für jedes $x$ nicht gilt.
+
+In Verbindung mit der Ersetzungsregel ermöglichen die in Tabelle
+\ref{tab:Verneinung-von-Aussagen} aufgeführten Gesetze die
+äquivalente Umformung verneinter Aussagen, die solange fortgeführt
+werden kann, bis die Verneinung durch alle Junktoren und Quantoren
+der Aussage gedrungen ist. Mit der Entfaltung von Def.
+\ref{def:Beschr-Quant}, die später auf S. \pageref{def:Beschr-Quant}
+eingeführt wird, findet sich zum Beispiel die Umformung
+\begin{align*}
+\lnot(\forall x\in M\colon A(x))
+&\iff \lnot(\forall x\colon x\in M\cond A(x))\\
+&\iff (\exists x\colon\lnot (x\in M\cond A(x)))\\
+&\iff (\exists x\colon x\in M\land\lnot A(x))\\
+&\iff (\exists x\in M\colon A(x)).
+\end{align*}
+Es stellt sich somit heraus, dass die Verneinung der beschränkten
+Quantifizierung ebenfalls analog zu den de morganschen Gesetzen
+umgeformt wird. Es gilt
+\begin{align*}
+\lnot(\forall x\in M\colon A(x)) &\bicond \exists x\in M\colon \lnot A(x),\\
+\lnot(\exists x\in M\colon A(x)) &\bicond \forall x\in M\colon \lnot A(x).
+\end{align*}
+
