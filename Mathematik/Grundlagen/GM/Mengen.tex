@@ -466,6 +466,9 @@ verstanden hat. Im Wesentlichen weiten sich hier die Regeln der
 booleschen Algebra von den zweistelligen auf die mehrstelligen
 Operationen aus.
 
+Man kann Vereinigung und Schnitt aber noch wesentlich
+allgemeiner fassen.
+
 \begin{Definition}[Allgemeine Vereinigung]\newlinefirst
 Sei $\setsystem A$ eine Menge von Mengen. Die \emph{Vereinigung} der
 $A\in\setsystem A$ ist
@@ -916,6 +919,82 @@ beschrieben, nennt man auch eine \emph{implizite Funktion}. Sie sind
 in der analytischen Geometrie und der mehrdimensionalen Analysis von
 großer Bedeutung.
 
+Ich möchte noch einmal auf das Bild eingehen. Zu welchem Ausmaß die
+Bildoperation mit den Mengenoperationen Schnitt und Vereinigung
+verträglich ist, geben die folgenden Sätze aufschluss.
+
+\begin{Satz}
+Für jedes $f\colon X\to Y$ und $A,B,A_i\subseteq X$ gilt
+\[\begin{array}{@{}l@{\;}c@{\;}l@{\qquad}l@{\;}c@{\;}l@{}}
+f(A\cap B) &\subseteq& f(A)\cap f(B), & f(\bigcap_{i\in I} A_i)&\subseteq&\bigcap_{i\in I} f(A_i),\\[3pt]
+f(A\cup B) &=& f(A)\cup f(B), & f(\bigcup_{i\in I} A_i) &=& \bigcup_{i\in I} f(A_i).
+\end{array}\]
+\end{Satz}
+\begin{Beweis}
+Es gelte $y\in f(\bigcap_{i\in I} A_i)$. Somit ist ein
+$x\in\bigcap_{i\in I}A_i$ mit $f(x)=y$ vorhanden. Laut Definition
+des Schnittes gilt $x\in A_i$ zu jedem $i$, womit zu jedem $i$ ein
+$x\in A_i$ mit $f(x)=y$ vorliegt. Ergo gilt $y\in f(A_i)$ für jedes $i$,
+und somit $y\in\bigcap_{i\in I} f(A_i)$.
+
+Es gelte $y\in f(\bigcup_{i\in I} A_i)$. Somit ist ein $x\in\bigcup_{i\in I}A_i$
+mit $f(x)=y$ vorhanden. Laut Definition der Vereinigung liegt $x$ in
+mindestens einer der $A_i$, womit zu mindestens einem $i$ ein $x\in A_i$
+mit $f(x)=y$ vorliegt. Ergo gilt $y\in f(A_i)$ für mindestens ein
+$i$, und somit $y\in\bigcup_{i\in I} f(A_i)$.
+
+Umgekehrt gelte $y\in\bigcup_{i\in I} f(A_i)$. Somit gilt $y\in f(A_i)$
+für mindestens ein $i$. Zu diesem $i$ ist also ein $x\in A_i$ mit
+$y=f(x)$ vorhanden. Ergo liegt ein $x\in\bigcup_{i\in I} A_i$ mit
+$y=f(x)$ vor, womit $y\in f(\bigcup_{i\in I} A_i)$ ist.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Als kurze Folgerung der vorangegangenen Sätze ergibt sich, dass sich
+sowohl die Bild- als auch die Urbildoperation bezüglich der Inklusion
+monoton steigend verhalten. Das heißt, es gilt der
+\begin{Satz}
+Für jedes $f\colon X\to Y$ und $A,B\subseteq X$ bzw. $A',B'\subseteq Y$ gilt
+\[\begin{array}{@{}r@{\;}c@{\;}l@{\;}l@{}}
+A &\subseteq& B &\cond f(A)\subseteq f(B),\\[3pt]
+A' &\subseteq& B' &\cond f^{-1}(A')\subseteq f^{-1}(B').
+\end{array}\]
+\end{Satz}
+\begin{Beweis}
+Es ist $A\subseteq B$ äquivalent zu $B = A\cup B$. Somit gilt
+\[f(B) = f(A\cup B) = f(A)\cup f(B),\]
+womit $f(A)\subseteq f(B)$ ist. Beim Urbild verläuft
+die Argumentation analog.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Ein Beispiel mit $f(A\cap B)\ne f(A)\cap f(B)$ findet sich leicht.
+Sei dazu $X:=\{a,b\}$ eine Menge, die zwei verschiedene Elemente
+enthält und $Y:=\{y\}$ eine Einermenge. Die Abbildung $f\colon X\to Y$
+ist dadurch bereits eindeutig festgelegt. Zu $A:=\{a\}$ und $B:=\{b\}$
+gilt nun
+\[f(A\cap B) = f(\emptyset) = \emptyset \ne f(A)\cap f(B) = \{y\}\cap\{y\} = \{y\}.\]
+Die einfachst mögliche nicht"=injektive Abbildung $f$ habe ich dabei
+gezielt aus dem folgenden Grund als Gegenbeispiel gewählt.
+
+\begin{Satz}
+Es gilt $f(A)\cap f(B)\subseteq f(A\cap B)$ genau dann für alle $A,B\subseteq X$,
+wenn $f\colon X\to Y$ injektiv ist.
+\end{Satz}
+\begin{Beweis}
+Es gelte $f(a)=f(b)$. Mit den Setzungen $A:=\{a\}$ und $B:=\{b\}$ ist
+\[f(A)\cap f(B) = \{f(a)\}\cap\{f(b)\} = \{f(a)\}\cap\{f(a)\} = \{f(a)\}\ne\emptyset\]
+Laut Prämisse ist $f(A\cap B)$ eine Obermenge von $f(A)\cap f(B)$,
+also $f(A\cap B)\ne\emptyset$, womit $A\cap B\ne\emptyset$, womit
+zwingend $a=b$ sein muss.
+
+Umgekehrt sei $f$ injektiv. Es gelte $y\in f(A)\cap f(B)$, also
+$y\in f(A)$ und $y\in f(B)$. Somit existiert ein $a\in A$ mit
+$f(a)=y$ und ein $b\in B$ mit $f(b)=y$. Da $f$ injektiv ist,
+erhält man nun $a=b$ aus $y=f(a)=f(b)$. Ergo gilt $a\in A\cap B$,
+womit es die Aussage $y\in f(A\cap B)$ bezeugt.\,\qedsymbol
+\end{Beweis}
+
 \subsection{Komposition}
 
 \begin{Definition}[Komposition]\newlinefirst
@@ -994,6 +1073,7 @@ x\in (g\circ f)^{-1}(B)
 &\iff x\in f^{-1}(g^{-1}(B)).
 \end{align*}
 
+\newpage
 \subsection{Injektionen, Surjektionen, Bijektionen}
 
 \begin{Definition}[Injektion]\label{def:injektiv}\newlinefirst
@@ -1514,7 +1594,6 @@ Bei den Konstruktionen kommen in der Regel zweistellige Abbildungen
 Strukturen zweistellig sind. Diese Verknüpfungen werden im nächsten
 Abschnitt besprochen.
 
-\newpage
 \subsection{Kongruenzrelationen}
 
 \begin{Definition}[Kongruenzrelation]%
