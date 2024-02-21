@@ -3,10 +3,9 @@
 \chapter{Formelsammlung}
 
 \section{Logik}
-\subsection{Natürliches Schließen}
+\subsection*{Natürliches Schließen}
 
 \noindent
-\begin{center}
 \begin{tabular}{cc@{\qquad}c}
 \toprule
 & \strong{Einführung} & \strong{Beseitigung}\\[2pt]
@@ -35,6 +34,78 @@ $\exists$
 & $\!\!\!\!\dfrac{\Gamma\vdash\exists x\colon A\qquad\Gamma', A\vdash B}{\Gamma,\Gamma'\vdash B}
 (x\notin\mathrm{FV}(\Gamma,\Gamma',B))\!\!$\\[8pt]
 \bottomrule
+\end{tabular}\\[8pt]
+\begin{small}
+\begin{tabular}{cc@{\quad\;\;}c@{\quad\;\;}cc}
+\toprule
+\strong{Name} & \strong{Kürzel} & \strong{Regel} & \strong{Schema} & \strong{Logik}\\
+\midrule[\heavyrulewidth]
+Ex falso quodlibet
+& EFQ
+& $\dfrac{\Gamma\vdash\bot}{\Gamma\vdash A}$
+& $\bot\cond A$
+& intuitionistisch\\[14pt]
+\begin{tabular}{@{}c@{}}Satz vom ausgeschlos-\\ senen Dritten\end{tabular}
+& LEM
+& $\dfrac{}{\vdash A\lor\lnot A}$
+& $A\lor\lnot A$
+& klassisch\\[14pt]
+\begin{tabular}{@{}c@{}}Beseitigung der\\ Doppelnegation\end{tabular}
+& DNE
+& $\dfrac{\Gamma\vdash\lnot\lnot A}{\Gamma\vdash A}$
+& $\lnot\lnot A\cond A$
+& klassisch\\
+\bottomrule
 \end{tabular}
-\end{center}
+\end{small}
 
+\newpage
+\subsection*{Zulässige Regeln der klassischen Logik}
+
+\begin{small}
+\begin{tabular}{c@{\quad\;\;}c@{\quad\;\;}c}
+\toprule
+\strong{Name} & \strong{Regel} & \strong{Schema}\\
+\midrule[\heavyrulewidth]
+Modus ponens
+& $\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$
+& $(A\cond B)\land A\cond B$\\[14pt]
+Schnittregel
+& $\dfrac{\Gamma,A\vdash B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}$
+& $(A\cond B)\land A\cond B$\\[14pt]
+Kettenschluss
+& $\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash B\cond C}{\Gamma,\Gamma'\vdash A\cond C}$
+& $(A\cond B)\land (B\cond C)\cond (A\cond C)$\\[14pt]
+Modus tollens
+& $\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash\lnot B}{\Gamma,\Gamma'\vdash\lnot A}$
+& $(A\cond B)\land\lnot B\cond\lnot A$\\[14pt]
+Kontraposition
+& $\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash \lnot B\cond\lnot A}$
+& $(A\cond B)\cond (\lnot B\cond\lnot A)$\\[14pt]
+\begin{tabular}{@{}c@{}}umgekehrte\\ Kontraposition\end{tabular}
+& $\dfrac{\Gamma\vdash \lnot B\cond\lnot A}{\Gamma\vdash A\cond B}$
+& $(\lnot B\cond\lnot A)\cond (A\cond B)$\\[14pt]
+\begin{tabular}{@{}c@{}} Modus tollendo\\ ponens\end{tabular}
+& $\dfrac{\Gamma\vdash A\lor B\qquad\Gamma'\vdash\lnot A}{\Gamma,\Gamma'\vdash B}$
+& $(A\lor B)\land\lnot A\cond B$\\[14pt]
+\begin{tabular}{@{}c@{}} Modus ponendo\\ tollens\end{tabular}
+& $\dfrac{\Gamma\vdash \lnot(A\land B)\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\lnot B}$
+& $\lnot (A\land B)\land A\cond \lnot B$\\[14pt]
+Resolution
+& $\dfrac{\Gamma\vdash A\lor B\qquad\Gamma'\vdash\lnot A\lor C}{\Gamma,\Gamma'\vdash B\lor C}$
+& $(A\lor B)\land (\lnot A\lor C)\cond B\lor C$\\[14pt]
+Exportation
+& $\dfrac{\Gamma\vdash A\land B\cond C}{\Gamma\vdash A\cond (B\cond C)}$
+& $(A\land B\cond C)\bicond (A\cond (B\cond C))$\\[14pt]
+Absorption
+& $\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash A\cond A\land B}$
+& $(A\cond B)\bicond (A\cond A\land B)$\\[14pt]
+Ersetzungsregel
+& $\dfrac{\Gamma\vdash A\bicond B\qquad\Gamma'\vdash C(A)}{\Gamma,\Gamma'\vdash C(B)}$
+& $(A\bicond B)\land C(A)\cond C(B)$\\[14pt]
+\begin{tabular}{@{}c@{}}Reductio ad\\ absurdum\end{tabular}
+& $\dfrac{\Gamma,\lnot A\vdash\lnot B\qquad\Gamma',\lnot A\vdash B}{\Gamma,\Gamma'\vdash A}$
+& $(\lnot A\cond B)\land(\lnot A\cond\lnot B)\cond A$\\
+\bottomrule
+\end{tabular}
+\end{small}
