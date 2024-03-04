@@ -1,6 +1,217 @@
 
 \chapter{Zahlenbereiche}
 
+\section{Die natürlichen Zahlen}
+
+\subsection{Modelle der natürlichen Zahlen}
+
+Zahlen spielen in den Mathematik eine maßgebliche Rolle, und dies nicht
+nur bei der quantitativen Erfassung von Größen, sondern auch bei der
+logischen Klärung der Gegenstände. Zum Beispiel
+setzen wesentliche Teile der Analysis, der linearen Algebra und der
+Stochastik den Begriff der reellen Zahlen voraus. Und dies sind die
+Kerngebiete der Mathematik, die das Fundament für die Natur- und
+Ingenieurwissenschaften bilden.
+
+Den auf den Zahlenbereichen definierten arithmetischen Operationen
+wohnen bestimmte Rechenregeln inne. Anfangs mag man diese Regeln im
+Rahmen einer Theoriefindung klären und daraufhin zu Grundregeln gelangen,
+die man axiomatisch voraussetzt. Stattdessen will ich die Zahlenbereiche
+aber sogleich vermittels Mengenlehre modellieren und aufzeigen, dass
+die Modelle die Grundregeln erfüllen. Die Zahlenbereiche werden dabei
+schrittweise aufeinander aufgebaut.
+
+Wir starten mit den natürlichen Zahlen.
+
+\begin{Definition}[Peano-Axiome]\newlinefirst
+Eine Menge $\N$ ist als Struktur $(\N,0,s)$ mit $0\in\N$ und $s\colon\N\to\N$
+ein Modell der \emph{natürlichen Zahlen}, wenn gilt
+\[\begin{array}{@{}ll@{}}
+\text{(P1)} & \text{$s$ ist injektiv},\\[3pt]
+\text{(P2)} & \forall n\in\N\colon s(n)\ne 0,\\[3pt]
+\text{(P3)} & A(0)\land (\forall n\in\N\colon A(n)\cond A(s(n)))\cond (\forall n\in\N\colon A(n)).
+\end{array}\]
+\end{Definition}
+Zusätzlich muss, wie bereits diskutiert, der Rekursionssatz vorausgesetzt
+werden, um die arithmetischen Operationen definieren zu können. Das
+Axiom (P3), das das Prinzip der Induktion beschreibt, habe ich als Schema
+gefasst, um in der Logik erster Stufe verbleiben zu können.
+Es vermittelt zu jeder Aussageform $A(n)$ ein Axiom.
+Die ursprüngliche Fassung der Peano"=Axiome substituiert $A$ allerdings
+gegen eine Prädikatvariable und setzt somit die Logik zweiter
+Stufe voraus.
+
+\begin{Definition}[Addition natürlicher Zahlen]\newlinefirst
+Die \emph{Addition} zweier natürlicher Zahlen ist rekursiv definiert als
+\[a+0 := a,\qquad a+s(b) := s(a+b).\]
+\end{Definition}
+\begin{Definition}[Multiplikation natürlicher Zahlen]\newlinefirst
+Die \emph{Multiplikation} zweier natürlicher Zahlen ist rekursiv definiert als
+\[a\cdot 0 := 0,\qquad a\cdot s(b) := a\cdot b + a.\]
+\end{Definition}
+
+\noindent
+Diese rekursiven Bildungsvorschriften lassen sich direkt so im Computer
+implementieren. Gleichwohl ist das Prozedere außerordentlich
+ineffizient und somit praktisch nur für sehr kleine Zahlen brauchbar.
+
+\begin{Definition}[Ordnung der natürlichen Zahlen]\newlinefirst
+Die \emph{Ordnung} der natürlichen Zahlen ist definiert als
+\[a\le b\,:\bicond\,\exists n\in\N\colon a+n = b.\]
+\end{Definition}
+
+\noindent
+Werden die natürlichen Zahlen als formales System dargestellt, in dem
+gerechnet werden kann, entfällt der Rekursionssatz vorläufig aus der
+Betrachtung. Dafür werden Addition und Multiplikation axiomatisch erklärt.
+Man nennt dieses System die \emph{Peano"=Arithmetik}, kurz PA. Beschränkt
+man sich dabei auf die intuitionistische Logik, spricht man von der
+\emph{Heyting"=Arithmetik}, kurz HA.
+\begin{Definition}[Peano-Arithmetik]\newlinefirst
+Die Struktur $(\N,0,s,+,\cdot,\le)$ sei ein Modell der
+\emph{Peano"=Arithmetik}, wenn $(\N,0,s)$ die Peano"=Axiome
+erfüllt und zusätzlich für alle $a,b\in\N$ gilt
+\[\begin{array}{@{}l@{\quad\;\;}l@{\quad\;\;}l@{}}
+a+0 = a, & a+s(b) = s(a+b), &
+a\le b \bicond \exists n\in\N\colon a+n = b.\\[3pt]
+a\cdot 0 = 0, & a\cdot s(b) = a\cdot b + a.
+\end{array}\]
+\end{Definition}
+
+\noindent
+Für die natürlichen Zahlen finden sich diverse Modelle, darunter jenes
+bereits diskutierte, das sie als endliche Ordinalzahlen darstellt.
+Dahingehend tut sich die Frage auf, ob jedes dieser Modelle
+gleichberechtigt ist.
+
+\begin{Definition}[Isomorphismus zwischen Peano-Strukturen]%
+\label{def:Isomorphismus-Peano}\newlinefirst
+Eine Bijektion $f\colon\N\to\N'$ ist ein Isomorphismus zwischen
+zwei Peano"=Strukturen $(\N,0,s)$ und $(\N',0',s')$, wenn
+$f(0)=0'$ und $f(s(n))=s'(f(n))$ gilt.
+\end{Definition}
+
+\noindent
+Man rechnet unschwer nach, dass die Umkehrabbildung eines Isomorphismus'
+ebenfalls ein Isomorphismus ist.
+
+\begin{Satz}[Isomorphiesatz von Dedekind]\newlinefirst
+Je zwei Modelle der natürlichen Zahlen sind Isomorph.
+\end{Satz}
+\begin{Beweis}
+Es seien $(\N,0,s)$, $(\N',0',s')$ zwei Modelle der natürlichen Zahlen.
+Vermittels des Rekursionssatzes definiert man
+\[\begin{array}{lr@{\;}lr@{\;}l}
+f\colon\N\to\N', & f(0) &:= 0', & f(s(n)) &:= s'(f(n)),\\[3pt]
+g\colon\N'\to\N, & g(0') &:= 0, & g(s'(n)) &:= s(g(n)),\\[3pt]
+h\colon\N\to\N, & h(0) &:= 0, & h(s(n)) &:= s(h(n)).
+\end{array}\]
+Man rechnet unschwer nach, dass $g\circ f = h$ und $h = \id$ gilt.
+Analog erhält man $f\circ g = \id$, womit $f,g$ bijektiv sind.
+Und per Definition sind $f,g$ Isomorphismen zwischen Peano"=Strukturn.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Man macht sich außerdem klar, dass die rekursive Definition des
+Isomorphismus in Def. \ref{def:Isomorphismus-Peano} enthalten ist.
+Das heißt, der Isomorphismus ist zudem noch eindeutig bestimmt.
+Insofern es also nur einen, und somit einen ausgezeichneten Isomorphismus
+gibt, kann man sagen, dass je zwei Modelle der natürlichen Zahlen
+kanonisch isomorph sind.
+
+\begin{Satz}
+Mit $1:=s(0)$ gilt $s(a)=a+1$.
+\end{Satz}
+\begin{Beweis}
+Es findet sich $a+1 = a+s(0) = s(a+0) = s(a)$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Assoziativgesetz der Addition]\newlinefirst
+Für alle $a,b,c\in\N$ gilt $(a+b)+c = a+(b+c)$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $c$. Im Anfang $c=0$ gilt
+\[(a+b)+c = (a+b)+0 = a+b = a+(b+0) = a+(b+c).\]
+Mit der Induktionsvoraussetzung $(a+b)+c = a+(b+c)$ findet sich
+\[(a+b)+s(c) = s((a+b)+c) \stackrel{\mathrm{IV}}= s(a+(b+c))
+= a+s(b+c) = a+(b+s(c)).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Neutrales Element der Addition]%
+\label{nat-zero}\newlinefirst
+Für alle $a\in\N$ gilt $0+a = a+0 = a$.
+\end{Satz}
+\begin{Beweis}
+Per Definition gilt $a+0=a$. Zu $0+a$ per Induktion über $a$.
+Im Anfang $a=0$ ist $0+a = 0$ per Definition. Zum Schritt.
+Induktionsvoraussetzung sei $0+a=a$. Man findet
+\[0+s(a) = s(0+a) \stackrel{\mathrm{IV}}= s(a).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Kommutativgesetz der Addition]\newlinefirst
+Für alle $a,b\in\N$ gilt $a+b = b+a$.
+\end{Satz}
+\begin{Beweis}
+Zunächst $a+1 = 1+a$ per Induktion über $a$. Im Anfang $a=0$ gilt
+die Aussage gemäß Satz \ref{nat-zero}. Zum Schritt. Man findet
+\[1+s(a) = s(1+a) \stackrel{\mathrm{IV}}= s(a+1) = a+s(1).\]
+Nun $a+b=b+a$ per Induktion über $b$. Der Fall $b=0$
+gilt gemäß Satz \ref{nat-zero}. Anfang sei $b=1$. Dieser
+wurde zuvor gezeigt. Zum Schritt findet sich
+\begin{align*}
+s(b) + a &= (b+1)+a = b+(1+a) = b+(a+1) = b+s(a)\\
+&= s(b+a)\stackrel{\mathrm{IV}}= s(a+b) = a+s(b).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}[Distributivgesetz der Multiplikation]\newlinefirst
+Für alle $a,b,c\in\N$ gilt $(a+b)c = ac+bc$.
+\end{Satz}
+\begin{Beweis} Induktion über $c$. Im Anfang $c=0$ resultieren
+beide Seiten der Gleichung im Wert~$0$. Zum Schritt findet sich
+\[(a+b)s(c) = (a+b)c+(a+b) \stackrel{\mathrm{IV}}= ac+bc+a+b = ac+a+bc+b
+= as(c) + bs(c).\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{nat-mul-zero}
+Für alle $a\in\N$ gilt $0a=0$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $a$. Im Anfang $a=0$ ist per Definition $0a=0$.
+Der Schritt ist
+\[0s(a) = 0a+0 \stackrel{\mathrm{IV}}= 0+0 = 0.\]
+\end{Beweis}
+
+\begin{Satz}[Neutrales Element der Multiplikation]%
+\label{nat-mul-one}\newlinefirst
+Für alle $a\in\N$ gilt $a\cdot 1=a$ und $1\cdot a=a$.
+\end{Satz}
+\begin{Beweis}
+Die Formel $a\cdot 1 = a$ folgt unmittelbar aus der Definition
+und bereits bekannten Regeln.
+
+Die Formel $1\cdot a = a$ per Induktion über $a$. Im Anfang $a=0$ folgt
+die Regel unmittelbar aus der Definition. Der Schritt ist
+\[1s(a) = 1a+1 \stackrel{\mathrm{IV}}= a+1 = s(a).\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}[Kommutativgesetz der Multiplikation]\newlinefirst
+Für alle $a,b\in\N$ gilt $ab=ba$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $b$. Im Anfang $b=0$ gilt die Regel gemäß
+Lemma \ref{nat-mul-zero}. Der Schritt ist
+\[as(b) = ab+a \stackrel{\mathrm{IV}}= ba+a = ba + 1a = (b+1)a = s(b)a.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}
+Aus $a\le b$ folgt $a+c\le b+c$.
+\end{Satz}
+\begin{Beweis}
+Mit der Prämisse liegt ein $n$ mit $a+n = b$ vor. Somit folgt
+$a+c+n = b+c$, womit $n$ auch ein Zeuge für $a+c\le b+c$ ist.\,\qedsymbol
+\end{Beweis}
+
 \section{Die ganzen Zahlen}
 
 \subsection{Konstruktion}
