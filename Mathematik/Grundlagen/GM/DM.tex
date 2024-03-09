@@ -673,3 +673,114 @@ Repräsentant $r=(a\bmod m)$, denn $a=mq+r$ bedeutet dass $a-r$ durch
 $m$ teilbar ist, also
 \[a\equiv r\pmod m,\quad\text{bzw.}\quad [a]_m = [r]_m.\]
 
+
+\subsection{Rundung}
+
+Manche Formeln oder Rechnungen verlangen das Runden von Zahlen auf
+eine ganze Zahl oder auf eine bestimmte Zahl von Nachkommastellen.
+Im Algorithmus, der Vektorgrafiken als Rastergrafik aus Pixeln rendern
+soll, muss zum Beispiel zwangsläufig an irgendeiner Stelle gerundet
+werden. Außerdem ist Runden in vielen händischen Rechnungen
+allgegenwärtig, sei es in wissenschaftlichen, technischen, gewerblichen
+oder alltäglichen.
+
+Als nächstes will ich daher erklären, wie Funktionen zum Runden formal
+definiert werden, und welche Eigenschaften sie besitzen. Als wichtige
+Grundfunktionen treten dabei die \emph{Abrundungsfunktion}, engl.
+\emph{floor}, und die \emph{Aufrundungsfunktion}, engl. \emph{ceil},
+auf, die vereinzelt auch in der Kombinatorik und in der Zahlentheorie
+vorkommen.
+
+\begin{Definition}[Floor]\label{def:floor}\index{Floorfunktion}
+Für $x\in\R$ definiert man
+\[y = \lfloor x\rfloor\,:\Leftrightarrow\, y\in\Z\land 0\le x-y < 1.\]
+\end{Definition}
+
+\begin{Definition}[Ceil]\label{def:ceil}\index{Ceilfunktion}
+Für $x\in\R$ definiert man
+\[y = \lceil x\rceil\,:\Leftrightarrow\, y\in\Z\land 0\le y-x < 1.\]
+\end{Definition}
+
+\begin{Satz}\label{floor-add-int}
+Für jede ganze Zahl $k$ gilt $\lfloor k + x\rfloor = k + \lfloor x\rfloor$.
+\end{Satz}
+\begin{Beweis} Aufgrund der Prämisse $k\in\Z$ ist $y\in\Z$ äquivalent
+zu $y-k\in\Z$. Unter dieser Gegebenheit findet sich mit
+Def. \ref{def:floor} die äquivalente Umformung
+\begin{align*}
+y = \lfloor k+x\rfloor &\iff y\in\Z\land 0\le (k+x)-y < 1\\
+&\iff y-k\in\Z\land 0\le x-(y-k) < 1\\
+&\iff y - k = \lfloor x\rfloor \iff y = k + \lfloor x\rfloor.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\begin{Satz}\label{floor-is-zero}
+Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
+\end{Satz}
+\begin{Beweis}
+Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt
+\[\begin{array}{@{}l@{\,}c@{\,}c@{}l@{\,}c@{\,}c@{}l}
+\lfloor x\rfloor &=& \max &\{k\in\Z\mid k\le x\} &=& \min &\{k\in\Z\mid x < k + 1\},\\[2pt]
+\lceil x\rceil &=& \min &\{k\in\Z\mid x\le k\} &=& \max &\{k\in\Z\mid k - 1 < x\}.
+\end{array}\]
+\end{Satz}
+\begin{Beweis}
+Mit bezüglich $y=\lfloor x\rfloor$ entfalteten Def. \ref{def:floor},
+\ref{def:max-min} lautet die Aussage
+\[y\in\Z\land 0\le x-y<1\iff
+y\in\Z\land y\le x\land (\forall k\in\Z\colon k\le x\Rightarrow k\le y).\]
+Für die Implikation von links nach rechts ist im Wesentlichen
+\[k\in\Z, y\in\Z, k\le x, x < y+1\vdash k\le y\]
+zu zeigen. Man erhält zunächst $k < y+1$ per Transitivgesetz.
+Wegen $k,y\in\Z$ folgt daraus $k\le y$. Für die Implikation von rechts
+nach links ist im Wesentlichen
+\[y\in\Z,(\forall k\in\Z\colon k\le x\Rightarrow k\le y)\vdash x < y + 1\]
+zu zeigen. Angenommen, es wäre $y+1\le x$. Die Allaussage wird mit
+$k:=y+1$ spezialisiert. Per Modus ponens erhält man den Widerspruch
+$y+1\le y$. Ergo muss die Annahme falsch sein, was äquivalent zu
+$x<y+1$ ist. Die restlichen Beweise verlaufen analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{floor-div-floor}
+Für $x\in\R$ und $n\in\Z_{\ge 1}$ gilt
+\[\left\lfloor\frac{x}{n}\right\rfloor
+= \left\lfloor\frac{\lfloor x\rfloor}{n}\right\rfloor.\]
+\end{Satz}
+\begin{Beweis}
+Sei $a:=x-\lfloor x\rfloor$. Per Def. \ref{def:floor} gilt $0 \le a < 1$.
+Laut dem Lemma zur euklidischen Division gilt außerdem
+$\lfloor x\rfloor = qn+r$
+mit $q=\lfloor\frac{\lfloor x\rfloor}{n}\rfloor$
+und $0\le r\le n - 1$. Infolge gilt $0\le a+r<n$, also
+$0\le\frac{a+r}{n}<1$ und somit $\lfloor\frac{a+r}{n}\rfloor = 0$
+laut Satz \ref{floor-is-zero}.
+Es findet sich%
+\[\left\lfloor\frac{x}{n}\right\rfloor
+= \left\lfloor\frac{a+\lfloor x\rfloor}{n}\right\rfloor
+= \left\lfloor\frac{a+qn+r}{n}\right\rfloor
+\stackrel{\text{(1)}}= q + \left\lfloor\frac{a+r}{n}\right\rfloor
+\stackrel{\text{(2)}}= q =
+\left\lfloor\frac{\lfloor x\rfloor}{n}\right\rfloor,\]
+wobei (1) laut Satz \ref{floor-add-int} gilt, und (2)
+wie soeben ausgeführt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Für $x\in\R$ und $m,n\in\Z$ mit $n\ge 1$ gilt
+\[\left\lfloor\frac{m+x}{n}\right\rfloor
+= \left\lfloor\frac{m+\lfloor x\rfloor}{n}\right\rfloor.\]
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{floor-add-int} ist $m+\lfloor x\rfloor = \lfloor m+x\rfloor$.
+Die Aussage folgt nun als Korollar aus Satz \ref{floor-div-floor}.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Das Runden einer Zahl auf eine ganze Zahl kann vermittels floor als
+\[\mathrm{round}(x) := \mathrm{sgn}(x)\lfloor |x|+\tfrac{1}{2}\rfloor\]
+beschrieben werden. Das Runden auf die $n$-te Nachkommastelle daraufhin als
+\[\mathrm{round}(x, n) := \frac{\mathrm{round}(10^n x)}{10^n}.\]
