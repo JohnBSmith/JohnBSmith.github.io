@@ -5,6 +5,11 @@
 
 \subsection{Kategorien}
 
+Logisches Schließen weist enge Bezüge zu Typentheorien und zu
+Konstruktionen in der Mengenlehre auf. Im Folgenden wird eine
+Abstraktion erklärt, die bei der tieferen Klärung dieser
+Bezüge Hilfe leistet.
+
 \begin{Definition}[Kategorie]
 Eine \emph{Kategorie} ist ein Tripel $\category C = (\Ob,\Hom,{\circ})$,
 sofern die folgenden beiden Axiome erfüllt sind:
@@ -17,24 +22,28 @@ so dass $f\circ\id_A = \id_B\circ f=f$ für alle Objekte $A,B$
 und $f\colon A\to B$.
 \end{enumerate}
 \end{Definition}
-Die Elemente der Klasse $\Ob$ nennt man \emph{Objekte}. Die
-Elemente der Klasse $\Hom$ nennt man \emph{Morphismen}. Die
-Verknüpfung $g\circ f$, sprich $g$ nach $f$, nennt man \emph{Verkettung}
+Die Elemente der Klasse $\Ob$ nennt man \emph{Objekte}. Die Elemente der
+Klasse $\Hom$ nennt man \emph{Morphismen}.  Die Schreibweise
+$f\colon X\to Y$ ist gleichbedeutend mit $f\in\Hom(X,Y)$, wobei $X,Y\in\Ob$.
+Mit $\Hom(X,Y)$ ist die Teilklasse von $\Hom$ gemeint, die alle
+Morphismen von $X$ nach $Y$ enthält. Man schreibt $\dom(f) = X$ und
+$\cod(f) = Y$. Die Verknüpfung $g\circ f$, gelesen »$g$ nach $f$«, ist
+definiert für $\cod(f)=\dom(g)$. Man nennt sie die \emph{Verkettung}
 von $g$ und $f$.
 
-Die Schreibweise ist $f\colon X\to Y$ gleichbedeutend mit
-$f\in\Hom(X,Y)$, wobei $X,Y\in\Ob$.
-Mit $\Hom(X,Y)$ ist die Teilklasse von
-$\Hom$ gemeint, die alle Morphismen von $X$ nach $Y$
-enthält. Man schreibt $\dom(f) = X$ und $\cod(f) = Y$.
+Nun gut, man macht hier zunächst zwei Beobachtungen. Erstens erinnern
+die Axiome an die Regeln für die Verkettung von Abbildungen.
+In der Tat bilden die Mengen mit den Abbildungen als Morphismen
+eine Kategorie.
 
-Nun gut, man macht hier zunächst zwei Beobachtungen. Erstens
-erinnern die Axiome an die Monoid"=Axiome, haben aber den Unterschied,
-dass die Morphismen kompatibel sein müssen. Das heißt, um $g\circ f$
-bilden zu können, muss $\cod(f)=\dom(g)$ sein.
-
-Zweitens erinnern die Axiome an die Regeln für die Verkettung
-von Abbildungen. Tatsächlich bilden die Abbildungen eine Kategorie.
+Zweitens erinnern die Axiome an die Monoid"=Axiome, haben aber den
+Unterschied, dass die Morphismen, die verkettet werden sollen, kompatibel
+sein müssen. Wie sich unschwer herausstellt, bilden die Monoide genau
+die Kategorien, die ein einziges Objekt besitzen. Die Morphismen werden
+dabei als die Elemente des Objektes $X$ gedeutet, die Verkettung als deren
+Verknüpfung. Zwei Morphismen $f,g$ müssen hierbei zwingend kompatibel sein,
+denn $\cod(f)=X$ und $\dom(g)=X$. Hiermit liegt ein erstes Beispiel vor,
+in dem die Morphismen nicht notwendigerweise Abbildungen darstellen.
 
 \begin{Satz}[Kategorie der Mengen]\newlinefirst
 Sei $\Omega$ das Mengenuniversum und für $A,B\in\Omega$ sei
@@ -160,9 +169,11 @@ darstellen:
 F(X) \ar[r]^{F(f)} \ar[d]_{\eta(X)} & F(Y) \ar[d]^{\eta(Y)} \\
 G(X) \ar[r]_{G(f)} & G(Y)}\]
 Ein weiteres Beispiel ergibt sich bezüglich Äquivalenzrelationen
-in Erinnerung an \eqref{eq:induzierte-Abbildung}.
-Eine Abbildung $f\colon M\to M'$ heiße \emph{induzierend}, wenn%
-\[x\sim a \implies f(x)\sim' f(a).\]
+in Erinnerung an die auf S.~\pageref{wohldefiniert} erklärten
+wohldefinierten Abbildungen. Eine Abbildung $f\colon M\to M'$ heiße
+\emph{induzierend} bezüglich $(M,\sim),(M,\sim')$, wenn für alle
+$a,b\in M$ gilt%
+\[a\sim b \Rightarrow f(a)\sim' f(b).\]
 
 \begin{Satz}
 Die Paare $(M,\sim)$, bestehend aus Menge und Äquivalenzrelation,
@@ -253,8 +264,9 @@ es sowohl Anfangsobjekt als auch Endobjekt ist.
 Wir untersuchen zunächst die Kategorie der Mengen. Anfangsobjekt
 bedeutet hier eine Menge $A$, bei der es zu jeder Menge $X$ genau
 eine Abbildung $A\to X$ gibt. Betrachten wir zunächst endliche
-Mengen, dann ergibt sich aufgrund von Gleichung \eqref{eq:Anzahl-Abb}
-ja die Bedingung $|X|^{|A|}=1$. Das geht nur, wenn $|A|=0$ ist,
+Mengen, dann ergibt sich aufgrund von Satz \ref{Anzahl-Abb} auf
+S.~\pageref{Anzahl-Abb} ja die Bedingung $|X|^{|A|}=1$. Das geht nur,
+wenn $|A|=0$ ist,
 und das bedeutet $A=\emptyset$. Die einzige Abbildung in $\Abb(\emptyset,X)$
 ist die leere Abbildung, und dies bleibt auch dann richtig, wenn
 $X$ gänzlich beliebig ist. Somit haben wir die leere Menge als
@@ -262,7 +274,7 @@ einziges Anfangsobjekt identifiziert.
 
 Endobjekt bedeutet eine Menge $E$, so dass es zu jeder Menge $X$
 genau eine Abbildung $X\to E$ gibt. Wieder beschränken wir uns
-zunächst auf endliche Mengen und nutzen $\eqref{eq:Anzahl-Abb}$.
+zunächst auf endliche Mengen und nutzen Satz $\ref{Anzahl-Abb}$.
 Wir erhalten die Bedingung $|E|^{|X|}=1$. Das geht nur, wenn
 $|E|=1$ ist. Jede Menge mit einem Element ist also Endobjekt,
 denn allgemein gibt es dann nur eine einzige Abbildung, nämlich
@@ -625,7 +637,7 @@ Die Subjunktionseinführung
 \[\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\to B}\quad\text{fordert}\quad
 \dfrac{\exists f\colon [\Gamma]\times [A]\to [B]}{\exists g\colon [\Gamma]\to [B]^{[A]}}.\]
 Man hat $g:=\lambda f$, wobei $\lambda$ der angegebene Isomorphismus zu
-Satz \ref{todo} ist. Die Beseitigungsregel
+Satz \ref{Exp-Isomorphie} ist. Die Beseitigungsregel
 \[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}\quad\text{fordert}\quad
 \dfrac{\exists f\colon [\Gamma]\to [B]^{[A]}\qquad\exists g\colon [\Gamma]\to [A]}
 {\exists h\colon [\Gamma]\to [B]}.\]

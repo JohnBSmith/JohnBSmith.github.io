@@ -611,6 +611,15 @@ die aus vier heißen \emph{Quadrupel}. Analog zu den Paaren ist ihre
 Gleichheit definiert als%
 \[(x_1,\ldots,x_n) = (x_1',\ldots,x_n')
 \,:\bicond\, x_1=x_1'\land\ldots\land x_n=x_n'.\]
+Man kann Tupel folgendermaßen als Schachtelung von Paaren
+darstellen, woraufhin aber zwei unterschiedliche Arten von Paaren
+vorhanden sind. Zur Unterscheidung will ich die gewöhnlichen Paare
+als $\langle x,y\rangle$ notieren. Man legt das leere Tupel fest
+als $() := \emptyset$, die weiteren rekursiv durch
+\[(x_1,\ldots, x_n, x_{n+1}) := \langle (x_1,\ldots,x_n), x_{n+1}\rangle.\]
+Für ein Tripel ergibt sich beispielsweise
+\[(x,y,z) = \langle (x,y),z\rangle = \langle\langle (x), y\rangle, z\rangle
+= \langle\langle\langle\emptyset,x\rangle, y\rangle, z\rangle.\]
 Zu zwei Mengen $X,Y$ kann man nun die Menge aller Paare betrachten,
 deren erste Komponente $X$ entstammt, und deren zweite
 Komponente $Y$ entstammt. Sie heißt \emph{Produktmenge}\index{Produktmenge}
@@ -1575,7 +1584,7 @@ folgenden Abschnitt erklärt.
 
 Gegeben seien zwei Quotientenmengen $M/\sim$ und $M'/\sim'$.
 Eine vorhandene Abbildung $f\colon M\to M'$ induziert dann
-eventuell gemäß%
+eventuell gemäß\label{wohldefiniert}%
 \[f\colon M/\sim\to M'/\sim',\quad f([a]):=[f(a)]\]
 eine Abbildung zwischen den Quotientenmengen. Kommt es dabei nicht
 zu einem Widerspruch, liegt also eine Abbildung vor, spricht man

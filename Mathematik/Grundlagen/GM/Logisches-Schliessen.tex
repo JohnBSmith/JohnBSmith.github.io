@@ -568,6 +568,20 @@ Für die Aussagenlogik üblicherweise folgendermaßen.
 \end{enumerate}
 
 \noindent
+Hierbei bleibt allerdings die Rangfolge und Assoziativität der Junktoren
+unberücksichtigt. Um sie festzulegen, kann man eine Grammatik der Form PEG
+-- dies steht für \emph{parsing expression grammar}
+-- mit unterschiedlichen Nichtterminalsymbolen aufstellen. Die obige Regelung
+ist diesbezüglich als spezielle Grammatik betrachtbar, in der \emph{Formel}
+das einzige Nichtterminalsymbol darstellt. Daraufhin kann mit der Technik des
+rekursiven Abstiegs ein Parser programmiert werden, der Formeln in
+abstrakte Syntaxbäume umwandelt. Zur Vollendung kann der Parser ggf.
+anschließend in einen effizienteren Bottom"=up"=Parser transformiert
+werden. Ich will hier nicht darauf eingehen, zumal dies
+Grundkenntnisse in der Programmierung voraussetzt. Ausführliche
+Erklärungen zu formalen Grammatiken und Parsern finden sich in Büchern
+über Compilerbau.
+
 Schreibt man viele logische Formeln auf, drängt es, zumindest bei privaten
 Notizen und Rechnungen, nach Kurzschreibweisen. In der Logik ist für das
 Konditional $A\cond B$ auch die Schreibweise $A\rightarrow B$ gebräuchlich,
@@ -1342,6 +1356,57 @@ Ein wenig eleganter formuliert sich das Schema auch in der Form
 Weil keine natürliche Zahl kleiner als null existiert, greift hier
 das Prinzip der leeren Wahrheit, womit $A(0)$ trotzdem zu bestätigen
 ist.
+
+Aus der starken Induktion leitet sich ein Sachverhalt ab, der von
+der Anschauung her evident erscheinen mag.
+
+\begin{Satz}[Wohlordnungsprinzip]\newlinefirst
+Jede nichtleere Teilmenge von $\N$ besitzt ein
+kleinstes Element.
+\end{Satz}
+\begin{Beweis}
+Gegenstand der Betrachtung sei die Menge $M\subseteq\N$. Mit
+$A(n):\Leftrightarrow n\notin M$ ergibt sich aus dem Schema der starken
+Induktion die Aussage
+\[(\forall n\in\N\colon (\underbrace{\forall k<n\colon k\notin M)\cond n\notin M}
+_{\lnot(\forall k<n\colon k\notin M)\lor n\notin M})
+\cond (\underbrace{\forall n\in\N\colon n\notin M}_{M=\emptyset}).\]
+Deren Kontraposition ist
+\[M\ne\emptyset\cond (\exists n\in\N\colon (\forall k<n\colon k\notin M)\land n\in M).\]
+Mit $M\subseteq\N$ ergibt sich in der Konklusion die Verkürzung
+\[n\in\N\land n\in M\iff n\in\N\cap M = M.\]
+Unternimmt man des Weiteren die Umformung
+\begin{align*}
+(\forall k<n\colon k\notin M)\iff (\forall k\in M\colon n\le k),
+\end{align*}
+gelangt man schließlich zur Behauptung
+\[M\ne\emptyset\cond (\exists n\in M\colon\forall k\in M\colon n\le k).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Insofern im Beweis ausschließlich Äquivalenzumformungen unternommen
+wurden, stellt sich heraus, dass das Wohlordnungsprinzip
+zur starken Induktion gleichwertig ist. Da in die Aussageform
+$A(n)$ per se nur natürliche Zahlen $n$ eingesetzt werden, erhält man
+nämlich mit der Festlegung
+\[M := \{n\in\N\mid\lnot A(n)\}\]
+das allgemeine Schema zurück.
+
+Wird zum Wohlordnungsprinzip neuerlich die Kontraposition
+gebildet, jedoch ohne weitergehende Umformungen vorzunehmen, gelangt man zu
+\[(\forall n\in M\colon\exists k\in M\colon k<n)\cond M = \emptyset.\]
+Dieses Argument kann alternativ zur starken Induktion verwendet
+werden. In Worten betrachtet man die hypothetische Menge $M$
+der Elemente, die die Aussageform $A(n)$ nicht erfüllen. Kann gezeigt
+werden, dass zu jedem $n\in M$ ein $k\in M$ mit $k<n$ existieren würde,
+muss $M$ leer sein, da sich andernfalls ein Widerspruch ergäbe, da $M$
+als Teilmenge der natürlichen Zahlen ein kleinstes Element besäße.
+Ist $M$ leer, gilt $A(n)$ für jede natürliche Zahl $n$.
+
+Statt vom Wohlordnungsprinzip sprechen manche vom \emph{Prinzip des
+kleinsten Elements}, um eine Verwechslung mit dem \emph{Wohlordnungssatz}
+zu vermeiden, einem Satz der Mengenlehre, nach welchem jede
+Menge wohlgeordnet werden kann.
 
 \subsection{Strukturelle Induktion}
 
