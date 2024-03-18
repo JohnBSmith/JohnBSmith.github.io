@@ -346,7 +346,7 @@ Bei manchen Umformungen hilft das Teleskopprodukt
 \[\prod_{k=m}^n\frac{a_{k+1}}{a_k} = \frac{a_{n+1}}{a_m},\quad
 \text{sofern}\;\,\forall k\in\{m,\ldots,n\}\colon a_k\ne 0.\]
 
-\subsection{Kombinatorische Grundaufgaben}
+\subsection{Anzahl der Abbildungen}
 
 Abstrakt gesehen thematisiert die abzählende Kombinatorik die Frage
 nach der Anzahl der Elemente endlicher Mengen. Die Mengenlehre
@@ -428,6 +428,146 @@ Zusammen mit $|Y^{\{x\}}|=n$ wird der Induktionsschritt damit präzisiert zu
 \[|Y^X| = |Y^{(X\setminus\{x\})\cup\{x\}}| = |Y^{X\setminus\{x\}}|\cdot |Y^{\{x\}}|
 \stackrel{\mathrm{IV}}= n^{k-1}\cdot n = n^k.\]
 
+\subsection{Anzahl der Injektionen}
+
+Bei den Passwörtern durfte jedes Zeichen beliebig oft vorkommen.
+Stellt man die Aufgabe so, dass jedes Zeichen nur ein einziges
+Mal vorkommen darf, verringert sich die Anzahl der Möglichkeiten.
+Zum Beispiel wird gefragt nach der Zahl der Ketten, die aus zwei der
+vier Buchstaben $\mathrm{a,b,c,d}$ besteht. Man kann dazu ein Baumdiagramm
+aufstellen. Für den ersten Buchstaben bestehen vier Möglichkeiten,
+woraufhin für den zweiten Buchstaben jeweils noch drei Möglichkeiten
+übrig bleiben. Das macht $4\cdot 3 = 12$ Möglichkeiten.
+Die Berechnung verläuft gemäß der
+
+\begin{Definition}[Fallende Faktorielle]\newlinefirst
+Für $n\in\Z$ und $k\in\Z_{\ge 0}$ legt man rekursiv fest
+\[n^{\underline 0} := 1,\quad\;
+n^{\underline k} := n\cdot (n-1)^{\underline{k-1}}.\]
+\end{Definition}
+
+\noindent
+Zu $n=4$ Buchstaben und $k=2$ Stellen ergibt sich
+\[n^{\underline k} = 4^{\underline 2} = 4\cdot 3^{\underline 1}
+= 4\cdot 3\cdot 2^{\underline 0} = 4\cdot 3\cdot 1 = 12.\]
+Per Induktion über $k$ bestätigt man die Produktformel
+\[n^{\underline k} = \prod_{i=0}^{k-1} (n-i) = \prod_{i=1}^k (n+1-i)
+= n\cdot (n-1)\cdot\ldots\cdot (n+1-k).\]
+Der Sachverhalt kann nun wieder abstrakt gefasst werden.
+
+\begin{Satz}[Anzahl der Injektionen]\newlinefirst
+Seien $X,Y$ endliche Mengen, wobei $|X|=k$ und $|Y|=n$ gelte.
+Die Menge der Injektionen $X\to Y$ enthält $n^{\underline k}$
+Elemente.
+\end{Satz}
+\begin{Beweis}
+Induktion über $k$. Im Anfang $k=0$ ist $X=\emptyset$. Es gibt
+genau eine Injektion $\emptyset\to Y$, nämlich die leere Abbildung.
+Gleichermaßen gilt $n^{\underline 0} = 1$.
+
+Zum Schritt. Voraussetzung sei die Gültigkeit
+für $k-1$. Es sei $|X|=k$ und $|Y|=n$. Gesucht ist die Anzahl
+der Möglichkeiten zur Festlegung der Injektion $f\colon X\to Y$.
+Sei $x\in X$ fest. Für die Festlegung $f(x)=y$ bestehen genau
+$n$ Möglichkeiten, nämlich so viele, wie es Elemente $y\in Y$ gibt.
+Bei der Festlegung der übrigen entfällt $y$ aufgrund der Injektivität
+von $f$. Für die Festlegung betrachtet man $f$ daher als Injektion%
+\[f\colon X\setminus\{x\}\to Y\setminus\{y\},\]
+von denen es laut Voraussetzung $(n-1)^{\underline{k-1}}$ gibt. Es sind
+also $n$ mal $(n-1)^{\underline{k-1}}$ Möglichkeiten, was definitionsgemäß
+gleich $n^{\underline k}$ ist.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Im Spezialfall $n=k$ muss müssen die Abbildungen außerdem surjektiv, und
+damit bijektiv sein. Deren Anzahl wird gezählt durch die spezielle
+fallende Faktorielle $n^{\underline n}$, die man \emph{Fakultät} nennt
+und $n!$ notiert. Spezialisiert man die Definition der fallenden
+Faktoriellen dahingehend, ergibt sich die
+\begin{Definition}[Fakultät]\newlinefirst
+Für $n\in\Z_{\ge 0}$ legt man rekursiv fest
+\[0! := 1,\quad\; n! := n\cdot (n-1)!.\]
+\end{Definition}
+Speziell im Fall $X=Y$ sind die Bijektionen die Permutationen auf der
+Menge $X$. Somit ist $n!$ auch die Anzahl der Permutationen von $n$
+verschiedenen Objekten. In Alltagssprache formuliert lassen sich
+$n$ unterschiedliche Gegenstände in $n!$ Reihenfolgen bringen.
+
+\subsection{Anzahl der Teilmengen}
+
+Aber wie verhält es sich, wenn die Reihenfolge keine Rolle spielt?
+Dazu sei eine Menge $Y$ von $n=|Y|$ Objekten gegeben, aus der $k$ Objekte
+ausgewählt werden. Diese Auswahl nennt man eine \emph{Kombination}.
+Sie ist als Ansammlung unterschiedlicher Objekte, bei der es nicht auf
+die Reihenfolge ankommt, aber wesensmäßig nichts anderes als eine Menge.
+Gesucht ist demzufolge die Anzahl der Teilmengen von $Y$, die genau
+$k$ Elemente enthalten. Die Lösung dieser Aufgabe wird berechnet durch
+den \emph{Binomialkoeffizient} $\binom{n}{k}$, der zunächst einmal
+erklärt werden muss.
+\begin{Definition}[Binomialkoeffizent]\newlinefirst
+Für $n\in\Z$ und $k\in\Z_{\ge 0}$ setzt man
+\[\binom{n}{k} := \frac{1}{k!}n^{\underline k}.\]
+\end{Definition}
+
+\noindent
+Stellt man den Binomialkoeffizent als Funktion von $(n,k)$ tabellarisch
+dar, erkennt man früher oder später, dass dieser einer einfachen
+Rekurrenz genügt. Nämlich liegt, insofern $n$ die Zeilen und $k$ die Spalten
+durchläuft, die Summe zweier Einträge unterhalb des
+zweiten Eintrags; die graphische Darstellung dieses Sachverhaltes wird
+\emph{pascalsches Dreieck} genannt. Das heißt, es gilt der
+\begin{Satz}
+Für $n\in\Z$ und $k\ge 1$ gilt
+\[\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}.\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich die Umformung
+\begin{align*}
+\hspace{-12pt}\binom{n-1}{k-1} + \binom{n-1}{k}
+&= \frac{(n-1)^{\underline{k-1}}}{(k-1)!} + \frac{(n-1)^{\underline k}}{k!}
+= \frac{k(n-1)^{\underline{k-1}}}{k!} + \frac{(n-1)^{\underline{k-1}}(n-k)}{k!}\\
+&= \frac{(n-1)^{\underline{k-1}}}{k!}(k + n -k)
+= \frac{n(n-1)^{\underline{k-1}}}{k!}
+= \frac{n^{\underline k}}{k!} = \binom{n}{k}.\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\noindent
+Setzt man die beiden Anfangsbedingungen $\binom{n}{0} = 1$ und $\binom{n}{n}=1$
+zusätzlich voraus, wird $\binom{n}{k}$ für $0\le k\le n$ durch die
+Rekurrenz charakterisiert. Genau genommen muss dafür zudem abgesichert
+werden, dass die Rekursion zu jedem Argument $(n,k)$ durch die
+Anfangsbedingungen fundiert ist, was aber leicht ersichtlich wird.
+Da $n$ bei der Rekurrenz in jedem Argument um eins verringert
+auftritt, wird aufgrund $0\le k\le n$ irgendwann $k=0$ oder $k=n$
+sein müssen, weil sich der Abstand zwischen 0 und $n$ immer weiter vermindert.
+
+\begin{Satz}[Anzahl der Teilmengen]\newlinefirst
+Sei $Y$ eine $|Y|=n$ Elemente enthaltende endliche Menge und $C_k(Y)$
+die Menge der $k$-elementigen Teilmengen von $Y$.
+Es gilt $|C_k(Y)| = \binom{n}{k}$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $(n, k)$. Im Anfang ist $k=0$ oder $k=n$. Der abstruse
+Fall $k=0$ sucht nach Teilmengen ohne Elemente. Es existiert genau eine
+solche Menge, nämlich die leere Menge, womit $C_0(Y)=1$ ist. Der Fall
+$k=n$ sucht nach Teilmengen, die so viele Elemente haben wie $Y$.
+Dies kann nur $Y$ selbst sein, womit $C_n(Y)=1$ gilt.
+Gleichermaßen gilt $\binom{n}{0}=1$ und $\binom{n}{n}=1$.
+
+Induktionsvoraussetzung sei die Gültigkeit für $(n-1, k-1)$ und
+$(n-1, k)$. Man nimmt nun ein Element $y$ aus $Y$ heraus,
+womit darin $n-1$ verbleiben. Entscheidet man sich,
+$y$ zur Teilmenge hinzuzufügen, verbleiben noch $k-1$ Elemente
+auszuwählen. Entscheidet man sich dagegen, verbleibt die Teilmenge
+unverändert, womit nach wie vor $k$ Elemente auszuwählen sind.
+Die Anzahl der Möglichkeiten ist somit
+\[|C_k(Y)| = |C_{k-1}(Y\setminus\{y\})| + |C_k(Y\setminus\{y\})|
+\stackrel{\mathrm{IV}}=\binom{n-1}{k-1} + \binom{n-1}{k}
+= \binom{n}{k}.\,\qedsymbol\]
+\end{Beweis}
+
+\newpage
 \section{Zur elementaren Zahlentheorie}
 
 \subsection{Kongruenzen}
