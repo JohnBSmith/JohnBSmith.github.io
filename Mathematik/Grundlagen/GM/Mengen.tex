@@ -125,7 +125,8 @@ ist die Menge der Rhomben eine Teilmenge der Rechtecke.
 Allerdings ist sowohl die Menge der Rechtecke als auch die der Rhomben
 eine Teilmenge der Parallelogramme.
 
-\begin{Definition}[Inklusion]\label{def:Teilmenge}\newlinefirst
+\begin{Definition}[Inklusion]%
+\label{def:Teilmenge}\index{Inklusion}\newlinefirst
 Man definiert $A\subseteq B$, gelesen »$A$ ist eine Teilmenge von $B$«, als
 \[A\subseteq B\,:\bicond\, (\forall x\colon x\in A\cond x\in B).\]
 \end{Definition}
@@ -1297,14 +1298,14 @@ Sofern zu einer vorgelegten Aussageform $A(x)$ nicht nur ein diese
 erfüllendes Objekt existiert, sondern das Objekt auch eindeutig
 bestimmt ist, würden wir gerne über dieses Objekt reden können.
 Diesbezüglich stehe die Symbolik $\iota x\colon A(x)$ für
-»dasjenige $x$, das $A(x)$ erfüllt«. Sie enstammt der
+»dasjenige $x$, das $A(x)$ erfüllt«. Sie entstammt der
 \emph{Principia Mathematica} und wird \emph{definite Kennzeichung}
 oder \emph{definite Beschreibung} genannt. Mit den Mitteln der
 Mengenlehre ist dieses Objekt darstellbar als die Schnittmenge
 \[(\iota x\colon A(x)) := {\textstyle\bigcap}\{x\mid A(x)\}.\]
 Nämlich ist $\{x\mid A(x)\}$ im Falle der eindeutigen Existenz eine
-Einermenge. Für jede Einermenge $\{x\}$ gilt
-\[\textstyle\bigcap\{x\} = \bigcup\{x\} = x.\]
+Einermenge. Für jede Einermenge $\{a\}$ gilt
+\[\textstyle\bigcap\{a\} = \bigcup\{a\} = a.\]
 Hierfür ist allerdings eine reine Mengenlehre erforderlich, in der
 keine sogenannten Urelemente auftauchen, die selbst keine Mengen sind.
 Durchliefe die Variable $x$ Urelemente, obgleich es sich in Wirklichkeit
@@ -1312,10 +1313,10 @@ nur um ein einziges handelt, wäre die Schnittmenge nicht definiert.
 
 Näher betrachtet sind eindeutige Existenz und Reduzierung auf eine
 Einermenge bedeutungsgleich, das soll heißen, es besteht die Äquivalenz
-\[(\exists! x\colon A(x))\,\bicond\, \exists y\colon \{x\mid A(x)\} = \{y\}.\]
+\[(\exists! x\colon A(x))\,\bicond\, \exists x\colon \{y\mid A(y)\} = \{x\}.\]
 Löst man die Gleichheit darin per Extensionalität auf, findet sich die
 kurze Charakterisierung
-\[(\exists! x\colon A(x))\,\bicond\, \exists y\colon\forall x\colon (A(x)\bicond x=y).\]
+\[(\exists! x\colon A(x))\,\bicond\, \exists x\colon\forall y\colon (A(y)\bicond x=y).\]
 Sie zeigt sich bereits in der reinen Logik mit Gleichheit als beweisbar,
 ohne dafür Mengenlehre zur Verfügung stellen zu müssen.
 
@@ -1335,11 +1336,7 @@ Existenz eines $y\in B$ mit $(x,y)\in f$. Kommen mehrere Applikationen
 vor, führt dies im Allgemeinen zu geschachtelten Existenzaussagen.
 Höchst umständlich wäre es, würde man in einer längeren Rechnung jede
 Applikation einschließlich der arithmetischen Operationen durch eine
-Existenzaussage kodieren. Auf diese Weise ließe sich aber die
-Gleichheit aus der Logik herausarbeiten.
-% Zur Erklärung der Gleichheit von Mengen braucht es eine Logik
-% mit Gleichheit ja nicht, denn diese wird Extensionalität auf eine
-% logische Formel zurückgeführt, in der Gleichheit nicht vorkommt.
+Existenzaussage kodieren.
 
 \section{Relationen}
 
@@ -1393,7 +1390,7 @@ dass ein $y\in Y$ höchstens zu einem $x\in X$ in Beziehung steht. Es
 handelt sich also lediglich um eine Sprechweise für die bereits
 bekannten definierenden Eigenschaften.
 
-Relationen lassen sich in Pfeildiagrammen darstellen. Man man zweichnet
+Relationen lassen sich in Pfeildiagrammen darstellen. Man zeichnet
 hierbei einem Pfeil von einem $x\in X$ zu einem $y\in Y$, falls $x,y$
 in Relation stehen.
 
@@ -1839,7 +1836,8 @@ y = &\hspace{1.4pt}\sup(A)\, &&\bicond\, A\le y\land\forall s\in M\colon A\le s\
 y = &\hspace{2.4pt}\inf(A)\, &&\bicond\, y\le A\land\forall s\in M\colon s\le A\cond s\le y.
 \end{alignat*}
 
-\begin{Definition}[Maximales Element, Minimales Element]\newlinefirst
+\begin{Definition}[Maximales Element, Minimales Element]%
+\label{def:minimales-Element}\newlinefirst
 Sei $(M,\le)$ halbgeordnet und $A\subseteq M$. Man legt fest
 \begin{alignat*}{2}
 &\text{$y$ ist ein \emph{maximales Element} von $A$}\,&&:\bicond\,
@@ -1886,14 +1884,14 @@ unbedingt richtig sein. Nämlich kann neben dem maximalen Element
 außerdem noch ein unendlicher Aufstieg vorliegen, womit kein
 Maximum existiert. Analog kann neben dem minimalen Element außerdem
 noch ein unendlicher Abstieg vorliegen. Im Englischen sind die
-Abkürzungen ACC und DSC geläufig, die für \emph{ascending chain condition}
-und \emph{descending chain condition} stehen. Die ACC ist bei
-Abhandensein unendlicher aufsteigender Ketten
+Abkürzungen ACC und DCC geläufig, die für \emph{Ascending Chain Condition}
+und \emph{Descending Chain Condition}\index{Descending Chain Condition}
+stehen. Die ACC ist bei Abhandensein unendlicher aufsteigender Ketten
 \[x_0<x_1<x_2<\ldots\]
-erfüllt. Analog ist die DSC bei Abhandensein unendlicher absteigender
+erfüllt. Analog ist die DCC bei Abhandensein unendlicher absteigender
 Ketten
 \[x_0>x_1>x_2>\ldots\]
-erfüllt. Unter der ACC bzw. DSC ist die jeweilige Umkehrung tatsächlich
+erfüllt. Unter der ACC bzw. DCC ist die jeweilige Umkehrung tatsächlich
 richtig.
 
 Ein wichtiges Beispiel für eine Halbordnung ist die Teilmengenbeziehung.
@@ -2705,6 +2703,122 @@ wenn für alle $(n,f),(m,g)\in\Phi$ gilt,
 \item die Bildmenge $f(A^n)$ ist disjunkt zu $B$.
 \end{enumerate}
 \end{Definition}
+
+\subsection{Wohlfundierte Induktion}
+
+Aus der gewöhnlichen Induktion hatten wir bereits die starke
+Induktion hergeleitet. Wie sich herausstellt, kann diese
+abstrakter gefasst werden, was zum Begriff der
+\emph{wohlfundierten Induktion} führt. Mit ihr erhält man ein
+sehr allgemeines Induktionsprinzip, das neben der gewöhnlichen und
+der strukturellen die transfinite Induktion umfasst.
+
+Eine als Ordnungsrelation betrachtete Relation wollen wir
+\emph{wohlfundiert} nennen, wenn jede ihrer nichtleeren Teilmengen ein
+minimales Element enthält. Den Begriff des minimalen Elements
+entnehmen wir aus Def. \ref{def:minimales-Element} auf S.
+\pageref{def:minimales-Element}, obgleich die
+Relation nicht unbedingt eine Halbordnung sein muss.
+
+\begin{Definition}[Wohlfundierte Relation]%
+\label{def:wf-Relation}\index{wohlfundierte Relation}\newlinefirst
+Eine auf $M$ definierte Relation $<$ heißt \emph{wohlfundiert}, wenn
+\[\forall A\subseteq M\colon A\ne\emptyset\cond
+\exists y\in A\colon\lnot\exists x\in A\colon x<y.\]
+\end{Definition}
+
+\noindent
+Die Symbole $<,\prec$ werden gegenüber $\le,\preceq$ üblicherweise für
+Relationen mit dem Attribut \emph{streng} verwendet. Das sind
+solche, die die Diagonale ausschließen, man nennt sie \emph{irreflexiv}.
+Dass die Symbolik hier gerechtfertigt ist, zeigt der
+
+\begin{Satz}
+Jede wohlfundierte Relation ist irreflexiv.
+\end{Satz}
+\begin{Beweis}
+Sei $(M,<)$ wohlfundiert. Zu zeigen ist $\forall u\in M\colon \lnot (u<u)$.
+Als Hilfsmittel dafür dient die allgemeine Äquivalenz $E(u)\Leftrightarrow\exists x\colon x=u\land E(x)$,
+bei der $E(x)$ eine beliebige Aussageform sein darf. Sei $u$ fest, aber beliebig.
+Die Bedingung aus Def. \ref{def:wf-Relation} wird nun mit der Einermenge
+$A:=\{u\}$ spezialisiert. Daraufhin gelingt die Umformung%
+\begin{gather*}
+\exists y\in\{u\}\colon\lnot\exists x\in\{u\}\colon x<y
+\iff \exists y\colon y=u\land\lnot\exists x\colon x=u\land x<y\\
+\iff \lnot\exists x\colon x=u\land x<u
+\iff \lnot (u<u).\,\qedsymbol
+\end{gather*}
+\end{Beweis}
+
+\noindent
+Die Idee bei einer wohlfundierten Relation soll sein, dass man beim
+Herabsteigen nie in einen infiniten Regress gerät.
+Unabhängig davon, welcher Weg und welche Knotenpunkte gewählt
+werden, wird man immer zu einem minimalen Element gelangen.
+Diese minimalen Elemente werden als die Basis, als das Fundament für
+die Induktion und die Rekursion dienen.
+
+\begin{Satz}
+Ist $(M,<)$ wohlfundiert, existiert keine unendliche streng monoton
+absteigende Kette, das heißt, es gilt die \emph{Descending Chain Condition}%
+\index{Descending Chain Condition}
+\[\lnot\exists f\in\Abb(\N,M)\colon \forall n\in\N\colon f(n+1)<f(n).\]
+\end{Satz}
+\begin{Beweis}
+Angenommen, es läge eine unendlich absteigende Funktion $f$
+vor. Da das Bild $f(\N)$ eine nichtleere Teilmenge von $M$ und $M$
+wohlfundiert ist, muss ein minimales Element $y\in f(\N)$ existieren,
+wozu ein $n$ mit $y=f(n)$ gehört. Nun wäre aber $f(n+1)<y$, was im
+Widerspruch zur Minimalität von $y$ steht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Die Descending Chain Condition ist genau dann erfüllt, wenn jede
+monoton absteigende Kette ab irgendeiner Stelle stabilisiert, das heißt,
+\[\forall f\in\Abb(\N,M)\colon (\forall n\colon f(n+1)\le f(n))
+\cond\exists m\colon\forall n\ge m\colon f(m)=f(n).\]
+\end{Satz}
+\begin{Beweis}
+Es sei $f\colon\N\to M$ eine
+beliebige Folge mit $f(n+1)\le f(n)$ für jedes $n$. Angenommen, $f$
+enthielte unendlich viele Stellen $n_i$ mit $f(n_i+1)\ne f(n_i)$,
+also $f(n_i+1)< f(n_i)$. Dann ließe sich die Teilfolge
+$g\colon\N\to M$ mit $g(i):=n_i$ bilden, die der Descending
+Chain Condition widerspricht. Ergo kann es von den Stellen $n_i$
+nur endlich viele geben, womit die Folge $f$ ab einer Stelle
+stabilisieren muss.
+
+Zur Umkehrung. Angenommen, es läge $f$ mit $f(n+1)<f(n)$ für jedes $n$
+vor. Für dieses $f$ gilt erst recht $f(n+1)\le f(n)$ für jedes $n$. Laut
+Prämisse muss $f$ somit ab einem $m$ stabilisieren, womit $f(m+1)=f(m)$,
+was im Widerspruch zur strengen Monotonie von $f$ steht.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Wohlfundierte Induktion]%
+\index{wohlfundierte Induktion}\newlinefirst
+Ist $(M,<)$ wohlfundiert, gilt für jede Teilmenge $A\subseteq M$ das Prinzip
+\[(\forall x\in M\colon (\forall y\in M\colon y < x\cond y\in A)\cond x\in A)\cond A=M.\]
+\end{Satz}
+\begin{Beweis}
+Dieser wird ganz analog zum dem von Satz \ref{Wohlordnungsprinzip}
+auf S. \pageref{Wohlordnungsprinzip} geführt. Es ist genau
+dann $A=M$, wenn das Komplement $B:=A^\compc=M\setminus A$ leer ist.
+Man unternimmt die äquivalente Umformung
+\begin{align*}
+&B\ne\emptyset\cond (\exists x\in B\colon\lnot\exists y\in B\colon y<x)\\
+\iff &(\forall x\in B\colon\exists y\in B\colon y<x)\cond B=\emptyset\\
+\iff &(\forall x\in M\colon x\notin A\cond\exists y\in B\colon y<x)\cond A=M\\
+\iff &(\forall x\in M\colon (\forall y\in B\colon \lnot y<x)\cond x\in A)\cond A=M.
+\end{align*}
+Und schließlich
+\begin{align*}
+(\forall y\in B\colon \lnot y<x)&\iff (\forall y\in M\colon y\notin A\cond\lnot y<x)\\
+&\iff(\forall y\in M\colon y<x\cond y\in A).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+Da ausschließlich äquivalente Umformungen vorgenommen wurden, stellt sich
+das Induktionsprinzip sogar als äquivalent zur Wohlfundiertheit
+heraus.
 
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
