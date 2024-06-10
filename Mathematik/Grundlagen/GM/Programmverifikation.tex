@@ -1,0 +1,169 @@
+
+\chapter{Programmverifikation}
+
+\section{Programme}
+
+Zur Lösung mancher Probleme, Beantwortung mancher Fragen mag man eine
+mehr oder weniger festgelegte Methode, ein Verfahren anwenden.
+Zur Präzisierung legt man das Verfahren durch einen Algorithmus fest.
+Mit konkreten Mitteln, das Verfahren durchführen zu können, entsteht
+aus dem Algorithmus ein \emph{Programm}. Sei dem zweiten Weltkrieg kamen
+immer leistungsfähigere Rechenmaschinen auf, die immer anspruchsvollere
+Aufgaben bewältigten. Die Programme, die auf den Maschinen abliefen,
+wurden mit der Zeit immer komplexer.
+
+Reflektiert man eine Weile, kann man zur Sichtweise gelangen, dass
+Problemlösung mehr oder weniger allgemein algorithmisch stattfinden
+kann. Es scheint, als ob wir uns fast notgedrungen mit Programmen
+auseinandersetzen müssen.
+
+Die frühen Computer führten meist numerische Rechnungen aus, die den
+Bedürfnissen von Ingenieuren und Naturwissenschaftlern entsprangen.
+Leider nicht immer für friedliche Zwecke. Mit der Entwicklung ging
+die Auffindung vieler numerischer Verfahren und Ausreizung bereits
+bekannter Verfahren einher. Dazu ein kleines Beispiel. Das Programm
+\ref{lst:Heron} zeigt die iterative Berechnung der Quadratwurzel $x=\sqrt{a}$
+mit dem Heron"=Verfahren
+\[x_0 := \frac{a + 1}{2},\quad x_{n+1} := \frac{1}{2}\Big(x_n + \frac{a}{x_n}\Big).\]
+Die Folge $(x_n)$ konvergiert rasch gegen $x$.
+
+\begin{figure}
+\begin{lstlisting}[language=Python,%
+label=lst:Heron,
+caption={Programm zur iterativen Berechnung von Quadratwurzeln}]
+def sqrt(a, epsilon = 1E-12):
+    x = 0.5*(a + 1)
+    while True:
+        x = 0.5*(x + a/x)
+        if abs((x*x - a)/a) < epsilon:
+            return x
+\end{lstlisting}
+\begin{minipage}[t]{.48\textwidth}
+\begin{lstlisting}[language=Python,%
+label=lst:Potenz,%
+caption={\raggedright Programm zur iterativen Berechnung der Potenz $x^n$}]
+def power(x, n):
+    y = 1
+    while n != 0:
+        y = y*x
+        n = n - 1
+    return y
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{.48\textwidth}
+\begin{lstlisting}[language=Python,%
+caption={\raggedright Programm zur rekursiven Berechnung der Potenz $x^n$}]
+def power(x, n):
+    if n == 0:
+        return 1
+    else:
+        return x*power(x, n - 1)
+\end{lstlisting}
+\end{minipage}
+\end{figure}
+
+\section{Operationelle Semantik}
+
+Hat man bereits viele Programme geschrieben, gelesen und sich die Vorgänge
+auf der Assembler"=Ebene angeschaut, mag man ein intuitives Verständnis
+dafür bekommen haben, wie Programme ablaufen. Es hat sich allerdings
+als sehr förderlich herausgestellt, diese Abläufe formal zu präzisieren.
+Das gelingt zum Beispiel, indem eine tatsächliche oder emulierte
+Rechenmaschine festgelegt wird. Um aber nicht den Fokus auf das
+Wesentliche zu verlieren, abstrahiert man von den Details der Maschine,
+indem den syntaktischen Konstrukten der Programmiersprache direkt eine
+Semantik zugeordnet wird. Ich will näher auf die \emph{operationelle
+Semantik} eingehen.
+
+Es sei $\mathrm T$ das Symbol für einen Term und $\mathrm{Zahl}$
+das Symbol für eine Zahl. Wir legen mit der Produktionsregel
+\[\mathrm T \to \mathrm{Zahl} \mid (\mathrm T + \mathrm T)\;\;\text{bzw.}\;\;
+\mathrm T\to\mathrm{Zahl}\;\;\text{und}\;\;\mathrm T\to (\mathrm T+\mathrm T)\]
+eine sehr einfache Grammatik fest. Damit ist gemeint, dass ein
+Term entweder eine Zahl oder ein geklammerter Summenterm sein
+soll, dessen Summanden wiederum Terme sind. Ein aus dem Startsymbol
+$\mathrm T$ erzeugter Term sei grammatisch, sobald nur noch
+Terminalsymbole, das sind in diesem Fall konkrete Zahlen, vorkommen.
+In EBNF notiert, nimmt die Produktionsregel die Form
+\[\verb/T ::= Zahl | '(' T '+' T ')';/\]
+an. Bezeichnen wir mit $Z$ die Menge der Zahlen und
+mit $T$ die Menge der Terme, können wir die Grammatik
+alternativ auch durch die Inferenzregeln
+\[\dfrac{t\in Z}{t\in T},\quad\;
+\dfrac{t_1\in T\quad\; t_2\in T}{(t_1+t_2)\in T}\]
+festlegen.
+
+Die Auswertung von Termen findet statt gemäß einer Relation
+$(\to)\subseteq T\times Z$, wobei wir $t\to v$ für $(t,v)\in(\to)$
+schreiben. Damit ist gemeint, dass $t$ zu $v$ auswertet oder auswerten
+kann. Die Relation wird festgelegt durch die Regeln
+\[\dfrac{v\in Z}{v\to v},\quad\;\dfrac{t_1\to v_1\qquad t_2\to v_2}
+{(t_1+t_2)\to v'},\]
+wobei $v'$ der der Wert von $v_1+v_2$ sein soll. Zu bemerken ist, dass
+durch diese Regeln keine Auswertungsreihenfolge vorgegeben wird.
+
+Erweitern wir die Sprache nun dergestalt, dass in Ausdrücken auch
+Variablen $x,y,z\in\mathrm{Var}$ enthalten sein dürfen, stellt sich
+sogleich die Frage, welcher Wert einer Variablen bei ihrer Auswertung
+zukommen soll. Dies hängt anscheinend davon ab, in welchem \emph{Zustand}
+sich das Programm gerade befindet. Nennen wir $S$ die Menge der Zustände,
+ist mit einem Zustand $s\in S$ eine Abbildung $s\colon\mathrm{Var}\to Z$
+verbunden. Meist brauchen wir lediglich den Teilzustand betrachten, der
+gerade von Bedeutung ist. Für den Zustand $s$ mit $s(x)=7$ und $s(y)=2$
+schreibt man dann auch kurzum $s=\{x=7,y=2\}$. Die Auswertungsrelation stellt
+nun eine Teilmenge von $T\times S\times Z$ dar, wobei $\langle t,s\rangle\to v$
+bedeuten soll, dass der Term $t$ im Zustand $s$ den Wert $v$ annehmen
+kann. Die Auswertung ist entsprechend festgelegt durch die Regeln
+\[\dfrac{v\in Z}{\langle v,s\rangle\to v},\quad\;
+\dfrac{x\in\mathrm{Var}}{\langle x,s\rangle\to s(x)},\quad\;
+\dfrac{\langle t_1,s\rangle\to v_1\qquad \langle t_2,s\rangle\to v_2}
+{\langle (t_1+t_2),s\rangle\to v_1+v_2}.\]
+Die Sprache wird nun erweitert um Ausdrücke gemäß
+\[\mathrm E \to\kw{false}\mid\kw{true}\mid\mathrm T = \mathrm T\mid
+\mathrm T \le \mathrm T\mid \lnot\mathrm E\mid
+(\mathrm E\land\mathrm E)\mid (\mathrm E\lor\mathrm E).\]
+Es sei $E$ die Menge der auf diese Weise formierbaren Ausdrücke.
+Zu diesen wird ebenfalls eine Auswertungsrelation definiert,
+\[(\to)\subseteq E\times S\times\mathrm{Bool},\quad
+\mathrm{Bool} := \{\kw{false},\kw{true}\}.\]
+Wir legen die Auswertung intuitiv fest als
+\[\dfrac{}{\langle\kw{false},s\rangle\to\kw{false}},\quad
+\dfrac{}{\langle\kw{true},s\rangle\to\kw{true}},\quad
+\dfrac{\langle t_1,s\rangle\to v_1\quad\langle t_2,s\rangle\to v_2}
+{\langle t_1=t_2, s\rangle\to v'}\]
+und so weiter, wobei $v'$ der Wert $\kw{true}$ sein soll, wenn $v_1,v_2$
+übereinstimmen, sonst $\kw{false}$. Die Auswertung der Junktoren geschieht gemäß
+\[\dfrac{\langle e,s\rangle\to v}{\langle\lnot e,s\rangle\to v'},\quad
+\dfrac{\langle e_1,s\rangle\to v_1\quad\langle e_2,s\rangle\to v_2}
+{\langle (e_1\land e_2),s\rangle\to v'}\]
+und so weiter, wobei $v'$ jeweils der Wahrheitswert sein soll, der
+sich aus der Wahrheitstafel des jeweiligen Junktors ergibt.
+
+Bei if"=Anweisungen findet der Übergang nach den Regeln
+\[\dfrac{\langle e,s\rangle\to\kw{true}\quad\;\langle p_1,s\rangle\to s'}
+{\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'},\quad\;
+\dfrac{\langle e,s\rangle\to\kw{false}\quad\;\langle p_2,s\rangle\to s'}
+{\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'}\]
+statt.
+
+\section{Der Hoare-Kalkül}
+
+Die Gültigkeit eines Hoare"=Tripels wird definiert gemäß
+\[(\models\{A\}p\{B\})\;:\Leftrightarrow\;\forall s\in S\colon (s\models A)\cond\forall s'\in S\colon
+(\langle p,s\rangle\to s')\cond (s'\models B).\]
+Interessanterweise kommt darin recht direkt die Kripke"=Semantik einer
+Notwendigkeit zum Vorschein. Die Zustände nehmen hierbei die Rolle der
+Welten ein, die Übergangsrelation je Programm $p$ die Rolle der
+Zugänglichkeitsrelation. Demnach liegt eine multimodale Logik vor, da je
+Programm $p$ ein Operator $\lnec_p$ existiert, der üblicherweise $[p]$
+geschrieben wird. Setzen wir diesbezüglich
+\[(s\models [p]B)\;:\Leftrightarrow\;\forall s'\in S\colon
+(\langle p,s\rangle\to s')\cond (s'\models B),\]
+findet sich die Äquivalenz
+\[(\models\{A\}p\{B\})\Leftrightarrow (\models A\cond [p]B),\]
+die eine jähe Beziehung des Hoare"=Kalküls zur ihr, der \emph{dynamischen Logik} herstellt, auf
+die ich an dieser Stelle aber nicht näher eingehen will. Trotzdem mag der
+Leser sie später in Erinnerung rufen, um ein übersichtlicheres Bild
+von den Sachverhalten zu bekommen.
+

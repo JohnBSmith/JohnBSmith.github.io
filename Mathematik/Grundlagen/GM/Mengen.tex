@@ -2820,6 +2820,50 @@ Da ausschließlich äquivalente Umformungen vorgenommen wurden, stellt sich
 das Induktionsprinzip sogar als äquivalent zur Wohlfundiertheit
 heraus.
 
+Zu einer abstrakten Fassung des Induktionsprinzips findet man
+folgendermaßen. Das Urbild
+\[R^{-1}(y) := \{x\mid R(x,y)\} = \{x\mid x < y\}\]
+nennt man auch das \emph{Anfangsstück} bis $y$ bezüglich $R$. Wir setzen
+\[F(A) := \{x\mid R^{-1}(x)\subseteq A\}.\]
+Nun mag das Induktionsprinzip formuliert werden als
+\[\forall A\subseteq M\colon F(A)\subseteq A\cond A=M.\]
+Eine Menge wollen wir diesbezüglich wieder \emph{induktiv} nennen, wenn
+sie die Prämisse $F(A)\subseteq A$ erfüllt. Das Induktionsprinzip
+besagt damit, dass jede induktive Menge mit $M$ übereinstimmen muss,
+oder anders ausgedrückt, dass auf  $\mathcal P(M)$ keine anderen
+Präfixpunkte von $F$ als $M$ selbst vorhanden sind.
+
+\strong{Die gewöhnliche Induktion.}
+Es ist $(\N,\prec)$ mit $n\prec m :\Leftrightarrow m=S(n)$ wohlfundiert,
+wobei mit $S(n)$ wieder der Nachfolger von $n$ gemeint ist.
+Als Induktionsprinzip erhält man hierbei die gewöhnliche Induktion.
+Dies wird ersichtlich, wenn $\N$ in $\N=\{0\}\cup\N_{\ge 1}$ zerlegt
+und daraufhin die allgemeine Äquivalenz
+\[(\forall x\in A\cup B\colon E(x)) \Leftrightarrow
+(\forall x\in A\colon E(x))\land (\forall x\in B\colon E(x))\]
+herangezogen wird. Außerdem ergibt sich in diesem Fall
+$R^{-1}(m) = S^{-1}(\{m\})$ als Anfangsstück. Die Prämisse des
+Induktionsprinzips nimmt demnach die Form
+\begin{align*}
+F(A)\subseteq A \Leftrightarrow\; &(\forall m\in\{0\}\colon S^{-1}(\{m\})\subseteq A\cond m\in A)\,{\land}\\
+&(\forall m\in\N_{\ge 1}\colon S^{-1}(\{m\})\subseteq A\cond m\in A)
+\end{align*}
+an. Die linke Seite der Konjuktion vereinfacht sich zu $0\in A$,
+da $S^{-1}(\{0\})=\emptyset$ gilt, insofern $0$ keinen Vorgänger besitzt.
+Auf der rechte Seite nutzt man
+den Umstand aus, dass $m\in\N_{\ge 1}$ mit $\exists n\in\N\colon m=S(n)$
+gleichbedeutend ist. Weil $S$ injektiv ist, ergibt sich nun
+$S^{-1}(S(\{n\})) = \{n\}$, womit $S^{-1}(\{m\})\subseteq A$
+äquivalent zu $n\in A$ ist. Ergo findet sich $n\in A\cond S(n)\in A$,
+wobei dies für ein ganz allgemeines $n$ gelten muss, weil $m$ allgemein
+gehalten war. Wem diese Umformungen zu unpräzise dargelegt sind, der mag
+sie gerne zur Übung nochmals formal nachrechnen.
+
+\strong{Die starke Induktion.}
+Es ist $(\N,<)$ wohlfundiert, wobei mit $<$ die gewöhnliche Ordnung
+auf $\N$ gemeint ist. Als Induktionsprinzip erhält man unmittelbar die starke
+Induktion.
+
 % [todo]
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
 % ins Unendliche. Der Stein mit Limesordinal muss extra umfallen,

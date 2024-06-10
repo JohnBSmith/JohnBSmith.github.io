@@ -58,6 +58,10 @@
 
 \newcommand{\parspace}{\vspace{0.8em}}
 
+% \usepackage[cal = cm]{mathalpha}
+% \newcommand{\basis}[1]{\mathbcal{#1}}
+\newcommand{\basis}[1]{#1}
+
 \title{Was ist ein Basiswechsel?}
 \date{}
 
@@ -82,7 +86,7 @@ Beispielsweise $\bv v:=\icol{9\\ 5}$.\pause
 
 \begin{frame}[t]
 \vspace{3em}
-Bezüglich einer Basis $A=(\bv a_1,\bv a_2)$ besitzt der
+Bezüglich einer Basis $\basis A=(\bv a_1,\bv a_2)$ besitzt der
 Vektor eine andere Darstellung.\pause
 
 \parspace
@@ -97,18 +101,18 @@ Sei z.\,B. $\bv a_1 := \icol{4\\ 1}$ und $\bv a_2 := \icol{1\\ 3}$.%
 
 \begin{frame}[t]
 \vspace{4em}
-Bezüglich $A$ besitzt der Vektor die Darstellung
+Bezüglich $\basis A$ besitzt der Vektor die Darstellung
 \[\bv v = 2\bv a_1 + 1\bv a_2 = x\bv a_1 + y\bv a_2.
 \]\pause
-Das Tupel $\bv v_A = (x,y)$ nennen wir \emph{Koordinatenvektor}
-zum Vektor $\bv v$ bezüglich Basis $A$.\pause
+Das Tupel $\bv v_{\basis A} = (x,y)$ nennen wir \emph{Koordinatenvektor}
+zum Vektor $\bv v$ bezüglich Basis $\basis A$.\pause
 
 \parspace
-Angenommen, es gibt nun noch eine weitere Basis $B=(\bv b_1,\bv b_2)$.\\
+Angenommen, es gibt nun noch eine weitere Basis $\basis B=(\bv b_1,\bv b_2)$.\\
 Z.\,B. $\bv b_1:=\icol{7\\ 1}$ und $\bv b_2:=\icol{1\\ 2}$.\pause
 
 \vspace{1.2em}
-Wie findet man dann den Koordinatenvektor $\bv v_B=(x',y')$ mit
+Wie findet man dann den Koordinatenvektor $\bv v_{\basis B}=(x',y')$ mit
 \[\bv v = x'\bv b_1 + y'\bv b_2?\]
 \end{frame}
 
@@ -121,7 +125,7 @@ Wie findet man dann den Koordinatenvektor $\bv v_B=(x',y')$ mit
 \begin{frame}[t]
 \vspace{4em}
 Trick: Wir ordnen der Basis
-$A=(\begin{pmatrix}a_{11}\\ a_{21}\end{pmatrix},
+$\basis A=(\begin{pmatrix}a_{11}\\ a_{21}\end{pmatrix},
 \begin{pmatrix}a_{12}\\ a_{22}\end{pmatrix})$
 die Matrix
 \[A=\begin{pmatrix}a_{11} & a_{12}\\ a_{21} & a_{22}\end{pmatrix}\]
@@ -131,17 +135,17 @@ zu.\pause{} Dann gilt nämlich
 + y\begin{pmatrix}a_{12}\\ a_{22}\end{pmatrix}\\
 &= \begin{pmatrix}a_{11}x + a_{12}y\\ a_{21}x + a_{22}y\end{pmatrix}
 = \begin{pmatrix}a_{11} & a_{12}\\ a_{21} & a_{22}\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}
-= A\bv v_A.
+= A\bv v_{\basis A}.
 \end{align*}
 \end{frame}
 
 \begin{frame}
-Für die Basis $B$ gilt diese Überlegung ebenfalls. Daher ist
-\[\bv v = B\bv v_B = A\bv v_A.\]\pause
-Weil $B$ eine Basis ist, ist $\det(B)\ne 0$, womit $B$ eine
+Für die Basis $\basis B$ gilt diese Überlegung ebenfalls. Daher ist
+\[\bv v = B\bv v_{\basis B} = A\bv v_{\basis A}.\]\pause
+Weil $\basis B$ eine Basis ist, ist $\det(B)\ne 0$, womit $B$ eine
 inverse Matrix $B^{-1}$ besitzt. Multiplizieren wir beide Seiten
 der Gleichung von links mit $B^{-1}$, erhalten wir
-\[\bv v_B = B^{-1}B\bv v_B = B^{-1}A\bv v_A.\]
+\[\bv v_{\basis B} = B^{-1}B\bv v_{\basis B} = B^{-1}A\bv v_{\basis A}.\]
 Das ist der gesuchte Koordinatenvektor.
 \end{frame}
 
@@ -156,8 +160,8 @@ mit $0\ne \det(B) = b_{11}b_{22}-b_{12}b_{21}$ gibt es die Formel
 \end{frame}
 
 \begin{frame}
-Anders ausgedrückt ist $B\bv v_B = A\bv v_A$ ein lineares
-Gleichungssystem in $\bv v_B=(x',y')$.\pause{} Das ist
+Anders ausgedrückt ist $B\bv v_{\basis B} = A\bv v_{\basis A}$ ein lineares
+Gleichungssystem in $\bv v_{\basis B}=(x',y')$.\pause{} Das ist
 \[\begin{pmatrix}b_{11} & b_{12}\\ b_{21} & b_{22}\end{pmatrix}\begin{pmatrix}x'\\ y'\end{pmatrix}
 = \begin{pmatrix}a_{11} & a_{12}\\ a_{21} & a_{22}\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}.
 \]\pause{}
@@ -169,17 +173,17 @@ Das macht $x'=1$ und $y'=2$.
 \end{frame}
 
 \begin{frame}
-Woher ist eigentlich die Darstellung $\bv v_A$ bekannt?\pause
+Woher ist eigentlich die Darstellung $\bv v_{\basis A}$ bekannt?\pause
 
 \parspace
 Die bekommen wir auf die gleiche Art.  Die Gleichung
-\[\bv v = A\bv v_A\]
-müssen wir dazu bloß nach $\bv v_A$ umformen. Man erhält
-$\bv v_A = A^{-1}\bv v$.\pause
+\[\bv v = A\bv v_{\basis A}\]
+müssen wir dazu bloß nach $\bv v_{\basis A}$ umformen. Man erhält
+$\bv v_{\basis A} = A^{-1}\bv v$.\pause
 
 \parspace
 Anders ausgedrückt liegt ein lineares Gleichungssystem
-in $\bv v_A$ vor.
+in $\bv v_{\basis A}$ vor.
 \end{frame}
 
 \begin{frame}
@@ -187,12 +191,12 @@ in $\bv v_A$ vor.
 \[\bv v = \begin{pmatrix}9\\ 5\end{pmatrix} = 
 9\begin{pmatrix}1\\ 0\end{pmatrix} + 5\begin{pmatrix}0\\ 1\end{pmatrix}
 = 9\bv e_1 + 5\bv e_2.\]\pause
-Die Matrix zur Standardbasis $E=(\bv e_1,\bv e_2)$
+Die Matrix zur Standardbasis $\basis E=(\bv e_1,\bv e_2)$
 ist die Einheitsmatrix
 \[E=\begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}.
 \]\pause
-Daher gilt $\bv v = E\bv v_E = \bv v_E$. Das heißt, ein Koordinatenvektor
-ist sein eigener Koordinatenvektor. 
+Daher gilt $\bv v = E\bv v_{\basis E} = \bv v_{\basis E}$. Das heißt,
+ein Koordinatenvektor ist sein eigener Koordinatenvektor. 
 \end{frame}
 
 \begin{frame}
@@ -236,14 +240,14 @@ ihrer Basisvektoren aufgebaut sind, existieren auch diese nicht mehr.
 
 \begin{frame}
 Was allerdings existiert, ist die Matrix
-\[T_B^A := B^{-1}A.\]\pause
+\[T_{\basis B}^{\basis A} := B^{-1}A.\]\pause
 Diese Matrix nennen wir \emph{Transformationsmatrix}. Sie wandelt die
-Koordinaten von $\bv v$ bezüglich Basis $A$ in die Koordinaten
-bezüglich Basis $B$ um.\pause
+Koordinaten von $\bv v$ bezüglich Basis $\basis A$ in die Koordinaten
+bezüglich Basis $\basis B$ um.\pause
 
 \parspace
 Als Formel:
-\[\bv v_B = T_B^A \bv v_A.\]
+\[\bv v_{\basis B} = T_{\basis B}^{\basis A} \bv v_{\basis A}.\]
 \end{frame}
 
 \begin{frame}
@@ -278,7 +282,7 @@ Transposition auf beiden Seiten der Gleichung bringt
 Infolge gilt $S = B^{-1}A$.\pause
 
 \vspace{1em}
-Schließlich gelangen wir zu $T_B^A=S$.
+Schließlich gelangen wir zu $T_{\basis B}^{\basis A}=S$.
 \end{frame}
 
 \begin{frame}
@@ -287,13 +291,13 @@ nicht in den Koordinatenraum $\R^2$ eingebettet ist.\pause
 
 \vspace{1em}
 \strong{Beweis.} Laut der Beziehung zwischen den Basen gilt
-\[\bv v = \sum_{i=1}^2 (\bv v_A)_i\bv a_i
-= \sum_{i=1}^2 (\bv v_A)_i\sum_{j=1}^2 s_{ji}\bv b_j
-= \sum_{j=1}^2\bigg(\sum_{i=1}^2 s_{ji}(\bv v_A)_i\bigg)\bv b_j,\]
+\[\bv v = \sum_{i=1}^2 (\bv v_{\basis A})_i\bv a_i
+= \sum_{i=1}^2 (\bv v_{\basis A})_i\sum_{j=1}^2 s_{ji}\bv b_j
+= \sum_{j=1}^2\bigg(\sum_{i=1}^2 s_{ji}(\bv v_{\basis A})_i\bigg)\bv b_j,\]
 und somit
-\[(\bv v_B)_j = \sum_{i=1}^2 s_{ji}(\bv v_A)_i.\pause\]
-Kurz $\bv v_B = S\bv v_A$.
-Demzufolge gilt $T_B^A = S$.\,\qedsymbol
+\[(\bv v_{\basis B})_j = \sum_{i=1}^2 s_{ji}(\bv v_A)_i.\pause\]
+Kurz $\bv v_{\basis B} = S\bv v_{\basis A}$.
+Demzufolge gilt $T_{\basis B}^{\basis A} = S$.\,\qedsymbol
 \end{frame}
 
 \begin{frame}
@@ -303,16 +307,17 @@ Indexrechnungen durchführen.\pause
 
 \vspace{1em}
 Zwar gibt es die Matrizen $A,B$ nicht mehr, wir können aber dennoch
-die linearen Abbildungen $\Phi_A,\Phi_B$ mit
-\[\bv v = \Phi_B(\bv v_B) = \Phi_A(\bv v_A)\]
-betrachten. Man beachte, dass $\bv a_k = \Phi_A(\bv e_k)$
-und $\bv b_k = \Phi_B(\bv e_k)$ gilt. Die Beziehung ist damit
+die linearen Abbildungen $\Phi_{\basis A},\Phi_{\basis B}$ mit
+\[\bv v = \Phi_{\basis B}(\bv v_{\basis B}) = \Phi_{\basis A}(\bv v_{\basis A})\]
+betrachten. Man beachte, dass $\bv a_k = \Phi_{\basis A}(\bv e_k)$
+und $\bv b_k = \Phi_{\basis B}(\bv e_k)$ gilt. Die Beziehung ist damit
 kompakt notierbar als
-\[\Phi_A = \Phi_B\circ S.\]\pause
+\[\Phi_{\basis A} = \Phi_{\basis B}\circ S.\]\pause
 Demzufolge gilt
-\[\Phi_B(\bv v_B) = \Phi_A(\bv v_A) = (\Phi_B\circ S)(\bv v_A) = \Phi_B(S\bv v_A).\]
-Weil $\Phi_B$ invertierbar ist, darf man $\Phi_B^{-1}$ auf beide
-Seiten anwenden. Man erhält wieder $\bv v_B = S\bv v_A$.
+\[\Phi_{\basis B}(\bv v_{\basis B}) = \Phi_{\basis A}(\bv v_{\basis A})
+= (\Phi_{\basis B}\circ S)(\bv v_{\basis A}) = \Phi_{\basis B}(S\bv v_{\basis A}).\]
+Weil $\Phi_{\basis B}$ invertierbar ist, darf man $\Phi_{\basis B}^{-1}$ auf beide
+Seiten anwenden. Man erhält wieder $\bv v_{\basis B} = S\bv v_{\basis A}$.
 \end{frame}
 
 \begin{frame}
@@ -323,12 +328,11 @@ durchgeführt?\pause
 \strong{Das ist kein Zufall.} Bei Einbettung in den
 Koordinatenraum gilt
 \begin{align*}
-\Phi_A &= A,\\
-\Phi_B &= B.
+\Phi_{\basis A} &= A,\\
+\Phi_{\basis B} &= B.
 \end{align*}
-Das heißt, die Rechnung mit $\Phi_A,\Phi_B$ ist lediglich eine
-abstrakte Form der bereits zuvor durchgeführten Rechnung mit
-$A,B$.
+Das heißt, die Rechnung mit $\Phi_{\basis A},\Phi_{\basis B}$ ist lediglich
+eine abstrakte Form der bereits zuvor durchgeführten Rechnung mit $A,B$.
 \end{frame}
 
 \begin{frame}

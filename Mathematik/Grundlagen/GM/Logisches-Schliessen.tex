@@ -1252,7 +1252,7 @@ Die vollständige Induktion wird vermittelt durch das Axiomenschema
 \cond (\forall n\in\N\colon A(n)).\]
 Es induziert die Regel
 \[\dfrac{\Gamma\vdash A(0)\qquad\Gamma',n\in\N,A(n)\vdash A(n+1)}{
-\Gamma,\Gamma'\vdash\forall n\in\N\colon A(n)}.\]
+\Gamma,\Gamma'\vdash\forall n\in\N\colon A(n)}(n\notin\mathrm{FV}(\Gamma')).\]
 Zur Veranschaulichung wird gerne eine endlose Dominoreihe herangezogen.
 Fällt der erste Dominostein um, und ist sicher, dass mit einem
 Dominostein ebenso dessen Nachfolger umfällt, muss \emph{jeder}
@@ -1588,17 +1588,81 @@ Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash A$
 demzufolge genau dann, wenn die Sequenz $\Gamma_0\vartriangleright A$
 ableitbar ist, symbolisch%
 \[(\Gamma_0\vdash A)\,\bicond\, (\vdash \Gamma_0\vartriangleright A).\]
-Die Endlichkeit ist genau deshalb erfordlich, weil Sequenzen nur für
+Die Endlichkeit ist genau deshalb erforderlich, weil Sequenzen nur für
 endliche Kontexte erklärt sind. Für die Ableitbarkeit besteht damit
 verbunden Kompaktheit, dergestalt dass $\Gamma\vdash A$ genau dann gilt,
 wenn ein endliches $\Gamma_0\subseteq\Gamma$ mit $\Gamma_0\vdash A$
 existiert.
 
 Weiterhin sind die Schlussregeln nun als metasprachliche Aussagen
-fassbar. So ist die Einführung der Konjunktion beschrieben durch%
-\[(\Gamma\vdash A)\land (\Gamma'\vdash B)\cond (\Gamma\cup\Gamma'\vdash A\land B).\]
+fassbar. So ist die Beseitigung der Subjunktion beschrieben durch%
+\[(\Gamma\vdash A\cond B)\land (\Gamma'\vdash A)\cond (\Gamma\cup\Gamma'\vdash B).\]
 Anders als in der Regel dürfen $\Gamma,\Gamma'$ hierbei auch
-unendlich sein.
+unendlich sein. Eleganter finde ich hier aber, die Regel in der
+exportierten bzw. geschönfinkelten Form
+\[(\Gamma\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\Gamma\cup\Gamma'\vdash B)\]
+zu formulieren. Zur Anwendung einer Regel genügt daraufhin nämlich
+innerhalb des metalogischen Systems allein der Modus ponens. Außerdem
+kann eine Regel nun auch teilweise angewendet werden. So bestätigt
+der Schluss
+\[\infer[\infernote{MP}]{(\Gamma'\vdash A)\cond (\Gamma'\vdash B)}{
+  \infer{(\emptyset\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\emptyset\cup\Gamma'\vdash B)}{}
+& \emptyset\vdash A\cond B}\]
+die Regel, laut der $\Gamma'\vartriangleright B$
+aus $\Gamma'\vartriangleright A$ abgeleitet werden darf, als zulässig,
+sofern denn die Sequenz $\vartriangleright A\cond B$ ableitbar ist.
+Spinnen wir die Vorgehensweise weiter fort, hält uns nichts davon ab,
+natürliches Schließen innerhalb der Metalogik selbst zu verwenden.
+Die Subjunktionseinführung
+\[\dfrac{(\Gamma\vdash A)\vartriangleright_\text{meta} (\Gamma\vdash B)}{
+\vartriangleright_\text{meta} (\Gamma\vdash A)\cond (\Gamma\vdash B)}\]
+präzisiert nun den Gedankengang, dass die Regel
+\[\dfrac{\Gamma\vartriangleright A}{\Gamma\vartriangleright B}\]
+als zulässig erkannt wird, indem $\Gamma\vartriangleright B$ unter
+Annahme von $\Gamma\vartriangleright A$ abgeleitet wird. Damit fallen
+die metalogischen Überlegungen selbst unter die Formalisierung. Dies
+wird man spätestens dann nicht mehr leugnen können, wenn die
+Metalogik durch einen Beweisassistenten bereitgestellt wird.
+
+Insoweit dem Kalkül und der Metalogik dieselbe Logik
+zugrunde liegen soll, dürfen Schlussregeln nach ihrer Herleitung
+auch in der Metalogik Verwendung finden. Es scheint, als würde sich die
+Abgrenzung zwischen der Logik und der Metalogik ein Stück weit auflösen, was
+plausibel  sein mag, wenn es sich denn eigentlich um dieselbe Logik handelt.
+Dieser Gedankengang macht allerdings eine Aussage über die Metalogik,
+muss also in der Metametalogik stattfinden.
+
+Ich will kurz einen logischen Kalkül aufzeigen, der seine eigene
+Metalogik umfasst und mit vergleichsweise wenig Aufwand im Computer
+implementiert werden kann. Zum besseren Verständnis wird das Urteil
+$\Gamma\vdash A$ als modale Aussage
+$\lnec_\Gamma A$ gedeutet. Die einzigen beiden Schlussregeln sind
+der Modus ponens und die Nezessisierung,
+\[\dfrac{\vdash A\cond B\quad\;\vdash A}{\vdash B},\qquad
+\dfrac{\vdash A}{\vdash\lnec_\Gamma A}.\]
+Auf der obersten Ebene arbeitet der Kalkül dementsprechend allein mit
+Theoremen, gewährt nicht die Abhängigkeit von Annahmen.
+Die Regeln des natürlichen Schließens werden nun als Axiome oder
+aus den Axiomen herleitbare Theoreme formuliert. Die diesbezüglichen
+Axiome sind
+\begin{align*}
+& \lnec_\Gamma (A\cond B)\cond\lnec_\Gamma A\cond\lnec_\Gamma B,
+&& A\cond B\cond A\land B,\\
+& \lnec_{\Gamma\cup\{A\}} B\cond\lnec_\Gamma (A\cond B),
+&& A\land B\cond A
+\end{align*}
+und so weiter. Die Einführung von Grundsequenzen gestattet das
+Axiom $\lnec_{\{A\}}A$. Das zusätzliche Axiom $\lnec_\emptyset A\cond A$
+drückt den Umstand aus, dass Theoreme in die metalogische Ebene verschoben
+werden dürfen. Letztlich braucht es zur Kodierung der Abschwächungsregel
+für $\Gamma\subseteq\Delta$ noch das Axiom $\lnec_\Gamma A\cond\lnec_\Delta A$.
+Insofern $\Gamma,\Delta$ als Listen formuliert werden, gelten analoge
+Axiome auch für die Fälle, dass $\Delta$ als Umordnung oder Kontraktion
+aus $\Gamma$ hervorgeht. Möchte man nun Sequenzen unter Annahme von
+Sequenzen herleiten, muss auf der dritten Ebene gearbeitet werden.
+Dafür sind zunächst als Regeln fungierende Theoreme wie
+\[\lnec_\Delta\lnec_\Gamma (A\land B)\cond\lnec_\Delta\lnec_\Gamma A\]
+herzuleiten.
 
 Vermittels der Einführung von Grundsequenzen, der Abschwächungsregel
 und des Modus ponens gelangt man zu den drei Einsichten%
@@ -1646,6 +1710,7 @@ Nun unternimmt man der Reihe nach den Schnitt der Form
 zu den $k$ von $k=n$ bis $k=1$. Man gelangt damit schließlich zu
 $\Gamma\vdash A$, also zu der gewünschten Feststellung $A\in\Cn(\Gamma)$.
 
+\newpage
 \subsection{Die zulässige Ersetzungsregel}
 
 Mit der Äquivalenz zweier Aussagen verhält es sich in gewisser Weise
