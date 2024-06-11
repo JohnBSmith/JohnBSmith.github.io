@@ -140,12 +140,46 @@ und so weiter, wobei $v'$ der Wert $\kw{true}$ sein soll, wenn $v_1,v_2$
 und so weiter, wobei $v'$ jeweils der Wahrheitswert sein soll, der
 sich aus der Wahrheitstafel des jeweiligen Junktors ergibt.
 
+Die Produktionsregel
+\[\mathrm P \to \kw{skip}\mid \mathrm{Var} := \mathrm T \mid\mathrm P;\mathrm P\mid
+\kw{if}\;\mathrm E\;\kw{then}\;\mathrm P\;\kw{else}\;\mathrm P\;\kw{end}
+\mid\kw{while}\;\mathrm E\;\kw{do}\;\mathrm P\;\kw{end}\]
+beschreibt die Syntax einer kleinen imperativen Programmiersprache,
+die im Weiteren als Studienobjekt dienen wird. Wir definieren zunächst
+ein Semantik, die die intuitive Vorstellung vom Ablauf der Anweisungen
+und Kontrollstrukturen widerspiegelt. Dies geschieht durch Festlegung
+der Übergangsrelation $(\to)\subseteq P\times S\times S$. Mit
+$\langle p,s\rangle\to s'$ soll gemeint sein, dass der Zustand $s$ mit dem
+Durchlauf des Programms $p$ in den Zustand $s'$ übergeht oder zumindest
+übergehen kann.
+
+Zur Anweisung $\kw{skip}$ muss nicht viel gesagt werden, sie wird einfach
+übersprungen, der Zustand bleibt unberührt. Ihre Regel lautet daher
+\[\dfrac{}{\langle\kw{skip},s\rangle\to s}.\]
+Der Übergang zur Zuweisung verläuft gemäß
+\[\dfrac{\langle t,s\rangle\to v}{\langle x:=t, s\rangle \to s[x:=v]}.\]
+Zu einer Sequenz von Programmen verläuft der Übergang gemäß
+\[\dfrac{\langle p_1,s\rangle\to s'\quad\;\langle p_2,s'\rangle\to s''}
+{\langle p_1; p_2, s\rangle\to s''}.\]
 Bei if"=Anweisungen findet der Übergang nach den Regeln
 \[\dfrac{\langle e,s\rangle\to\kw{true}\quad\;\langle p_1,s\rangle\to s'}
 {\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'},\quad\;
 \dfrac{\langle e,s\rangle\to\kw{false}\quad\;\langle p_2,s\rangle\to s'}
 {\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'}\]
-statt.
+statt. Schließlich muss noch die Semantik für Schleifen festgelegt werden.
+Wertet die Schleifenbedingung zu $\kw{false}$ aus, wird der Schleifenkörper
+schlicht übersprungen, ohne eine Zustandsänderung herbeizuführen,
+\[\dfrac{\langle e,s\rangle\to\kw{false}}
+{\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s\rangle\to s}.\]
+Wertet die Schleifenbedingung zu $\kw{true}$ aus, liegt die Regel
+nicht mehr gänzlich auf der Hand. Die Überlegung ist folgende. Wurde
+bereits geklärt, dass der erste Durchlauf den Zustand $s$ in $s'$
+überführt und die restliche Schleife von $s'$ in $s''$ überführt,
+dann muss die Schleife den Zustand $s$ in $s''$ überführen. Man gelangt
+zur Regel
+\[\dfrac{\langle e,s\rangle\to\kw{true}\quad\;\langle p,s\rangle\to s'\quad\;
+\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s'\rangle\to s''}
+{\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s\rangle\to s''}.\]
 
 \section{Der Hoare-Kalkül}
 
@@ -166,4 +200,27 @@ die eine jähe Beziehung des Hoare"=Kalküls zur ihr, der \emph{dynamischen Logi
 die ich an dieser Stelle aber nicht näher eingehen will. Trotzdem mag der
 Leser sie später in Erinnerung rufen, um ein übersichtlicheres Bild
 von den Sachverhalten zu bekommen.
+
+\strong{Die Regeln zur Herleitung der Tripel.} Für Zuweisungen gilt
+\[\dfrac{}{\{A[x:=t]\}\; x := t\;\{A\}}.\]
+Zur Gültigkeit dieser Regel. Es gelte $s\models A[x:=t]$. Weiterhin
+wird $\langle x:=t,s\rangle\to s'$ angenommen. Zu zeigen ist $s'\models A$.
+Insofern die Auswertung von Termen deterministisch stattfindet, existiert
+nun genau ein $v$ mit $\langle t,s\rangle\to v$. Mithin liegt der
+Sachverhalt $s'=s[x:=v]$ vor. Letztlich gilt die Äquivalenz
+\[(s\models A[x:=t])\Leftrightarrow (s[x:=v]\models A),\]
+da man zum gleichen Resultat gelangt, wenn $x$ in $A$ direkt mit $v$
+belegt wird, oder zunächst gegen $t$ ersetzt und daraufhin $t$ den
+Wert $v$ erhält. Formal bestätigt man dies per struktureller
+Induktion über den Aufbau von $A$.
+
+Für eine Sequenz von Programmen gilt
+\[\dfrac{\{A\}p_1\{B\}\quad\;\{B\}p_2\{C\}}{\{A\}p_1; p_2\{C\}}.\]
+Zur Gültigkeit dieser Regel. Es gelte $s\models A$. Angenommen,
+es kann $s''$ erreicht werden, also $\langle s,p_1; p_2\rangle\to s''$.
+Dann muss ein Zustand $s'$ mit $\langle p_1,s\rangle\to s'$ und
+$\langle p_2,s'\rangle\to s''$ existieren. Sollte $s'$ nicht eindeutig
+bestimmt sein, betrachten wir $s'$ einfach fest, aber beliebig. Zu zeigen
+ist $s''\models C$. Vermittels der ersten Prämisse erhält man
+$s'\models B$, vermittels der zweiten daraufhin $s''\models C$.
 
