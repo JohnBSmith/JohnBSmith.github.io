@@ -567,6 +567,48 @@ Die Anzahl der Möglichkeiten ist somit
 = \binom{n}{k}.\,\qedsymbol\]
 \end{Beweis}
 
+\begin{figure}\setlength{\abovecaptionskip}{0pt}
+\begin{center}
+\includegraphics[width=125mm]{img/Gitterwege.pdf}
+\caption{Die 10 monotonen Gitterwege von $(0,0)$ nach $(3,2)$.}
+\label{fig:Gitterwege}
+\end{center}
+\end{figure}
+
+\noindent
+Kombinatorische Aufgaben tendieren dazu, sich einer bildlichen
+Anschauung zu entziehen. Um dem ein wenig entgegenzuwirken, will
+ich den folgenden Sachverhalt aufführen, der die Binomialkoeffizienten
+mit monotonen Gitterwegen in Beziehung setzt. Als Beispiel listet
+Abb. \ref{fig:Gitterwege} jeden der 10 möglichen Wege von Knoten
+$(0,0)$ nach Knoten $(3,2)$ auf.
+
+\begin{Satz}
+Ein Weg auf dem Gitter $\Z\times\Z$ heiße \emph{monoton}, wenn von $(x,y)$
+aus lediglich der Schritt nach $(x+1,y)$ oder der Schritt nach $(x,y+1)$
+gewährt ist. Die Anzahl der monotonen Gitterwege von $(0,0)$ nach
+$(x,y)$ beträgt
+\[\frac{(x+y)!}{x!y!} = \binom{x+y}{x} = \binom{x+y}{y}.\]
+\end{Satz}
+\begin{Beweis}
+Es bezeichne $f(x,y)$ die Anzahl der monotonen Wege von $(0,0)$ nach
+$(x,y)$. Zum Erreichen eines Punktes auf den Achsen besteht immer
+nur ein möglicher Weg, womit $f(x,0)=1$ und $f(0,y)=1$ gelten muss. Ein
+nicht auf den Achsen befindlicher Punkt $(x,y)$ kann von $(x-1,y)$ oder
+$(x,y-1)$ aus erreicht werden, was zur Rekurrenz
+\[f(x,y) = f(x-1,y) + f(x,y-1)\]
+führt. Die Tabellierung der Werte macht ersichtlich, dass sie
+ein gedrehtes pascalsches Dreieck erzeugt. Wir setzen daher
+$C(x+y,x):=f(x,y)$ und führen die Koordinatentransformation $x+y=n$
+und $x=k$ aus. Die Rekurrenz nimmt damit die Form
+\[C(n,k) = C(n-1,k-1) + C(n-1,k),\quad C(n,0)=1,\quad C(n,n)=1\]
+an, die aber eindeutig den Binomialkoeffizienten charakterisiert.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Ein analoger Sachverhalt besteht für Gitter in höheren Dimensionen,
+was zum Begriff des \emph{Multinomialkoeffizienten} führt.
+
 \newpage
 \section{Zur elementaren Zahlentheorie}
 
