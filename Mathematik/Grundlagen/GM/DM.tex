@@ -371,9 +371,9 @@ Mit den $n=2$ Binärwerten sind dies 256 Binärsequenzen der Länge $k=8$.
 Oder mit $n=26$ Buchstaben sind es 676 Zeichenketten der Länge $k=2$,
 und schon 17576 Zeichenketten der Länge $k=3$.
 
-In der Vergangenheit empfahlen Dienste häufig oder erzwangen penetrant,
+In der Vergangenheit empfahlen Dienste häufig oder machten es obligatorisch,
 Passwörter dadurch sicherer zu machen, indem neben Buchstaben auch noch
-Ziffern und kryptische Sonderzeichen eingegeben werden sollten. Man
+Ziffern und Sonderzeichen eingegeben werden sollten. Man
 empfahl also, die Basis $n$ zu vergrößern, um die Länge gering zu halten.
 Nimmt man an, dass so ein Passwort rein zufällig ausgewürfelt wird, ist
 es bei bereits hinreichend großer Basis aber wesentlich sinnvoller,
@@ -384,7 +384,7 @@ Buchstaben, sind es immerhin 238328. Mit $n=26$ und $k=4$ sind es aber
 bereits 456976.
 
 In der professionellen Kryptografie nennt man $n^k$ die
-Schlüsselraumgröße, die bei modernen symmetrischen Kryptosystemen
+\emph{Schlüsselraumgröße}, die bei modernen symmetrischen Kryptosystemen
 mindestens $2^{128}$ beträgt. Und der Schlüssel wird am besten rein
 zufällig gewählt. Zur Kodierung in der Basis $n$ muss man die Gleichung
 $2^{128} = n^k$ nach $k$ umformen, das macht
@@ -608,6 +608,91 @@ an, die aber eindeutig den Binomialkoeffizienten charakterisiert.\,\qedsymbol
 \noindent
 Ein analoger Sachverhalt besteht für Gitter in höheren Dimensionen,
 was zum Begriff des \emph{Multinomialkoeffizienten} führt.
+
+Man kann auch eine gruppentheoretische Sichtweise auf die Kombinationen
+einnehmen. Die Teilmengen von $Y$ mit $k$ Elementen sind wie Listen, die
+jedes der $k$ Elemente genau einmal enthalten. Der Unterschied zu diesen
+Listen besteht genau darin, dass es bei den Teilmengen nicht auf die
+Reihenfolge der Elemente ankommt. Um die Anzahl der Teilmengen zu
+zählen, müssen demzufolge Listen, die sich lediglich durch ihre
+Reihenfolge unterscheiden, als äquivalent angesehen werden. Ihre
+Äquivalenzklassen stellen somit quasi Listen dar, die die Reihenfolge
+ihrer Elemente vergessen haben.
+
+Wir verwenden eine beliebige Menge $X$ mit $|X|=k$ als Indexmenge,
+beispielsweise direkt $X:=\{0,\ldots,k-1\}$. Je zwei Listen sind damit
+gegeben durch Injektionen $f,g\colon X\to Y$. Die beiden Listen werden
+als äquivalent angesehen, sofern sie sich lediglich durch eine
+Permutation $\pi$ ihrer Indizes unterscheiden, also
+\[f\sim g\,:\Leftrightarrow\,\exists\pi\in S_k\colon f = g\circ\pi.\]
+Es sei ferner $\mathrm{Inj}(X,Y)$ die Menge der Injektionen $X\to Y$
+und $\mathrm{Inj}(X,Y)/S_k$ die Quotientenmenge bezüglich der
+Äquivalenzrelation bzw. der Gruppe $S_k$.
+\begin{Satz}\label{Bij-Inj-Teilmengen}
+Es sei $C_k(Y)$ die Menge der $k$-elementigen Teilmengen von $Y$.
+Zwischen $\mathrm{Inj}(X,Y)/S_k$ und $C_k(Y)$ besteht eine
+kanonische Bijektion.
+\end{Satz}
+\begin{Beweis}
+Wir definieren diese Bijektion als
+\[\varphi\colon\mathrm{Inj}(X,Y)/S_k\to C_k(Y),\quad\varphi([f]) := f(X),\]
+wobei $[f]=f\circ S_k$ die Äquivalenzklasse des Repräsentanten $f$
+bezeichne. Die Abbildung $\varphi$ ist wohldefiniert, denn für je zwei $f,g$
+mit $f\sim g$ ist eine Permutation $\pi$ vorhanden, so dass gilt
+\[f(X) = (g\circ\pi)(X) = g(\pi(X)) = g(X).\]
+Zum Nachweis der Injektivität von $\varphi$ muss $[f]=[g]$ aus
+$f(X)=g(X)$ gewonnen werden. Gesucht ist also eine Permutation
+$\pi$ mit $f=g\circ\pi$. Weil $g$ injektiv ist, existiert eine
+Linksinverse $g^{-1}$, so dass $\pi := g^{-1}\circ f$ gewählt werden
+kann. Es verbleibt die Gleichheit $f = g\circ g^{-1}\circ f$ zu
+bestätigen. Zwar ist $g^{-1}$ im Allgemeinen keine Rechtsinverse von $g$,
+ihre Einschränkung auf $g(X)$ aber schon. Wegen $f(X)=g(X)$ hebt sich
+$g\circ g^{-1}$ daher auf $f(X)$ weg.
+
+Zur Surjektivität von $\varphi$. Hier ist zu zeigen, dass es zu jeder
+Menge $B\in C_k(Y)$ eine Injektion $f\colon X\to Y$ mit $f(X)=B$ gibt.
+Weil $X$ und $B$ gleichmächtig sind, existiert eine Bijektion $f_0\colon X\to B$,
+womit man die gesuchte Injektion mit der Setzung $f(x):=f_0(x)$ erhält.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Bezüglich $|X|=k$ tut sich nun die Umformung
+\[|C_k(Y)| \stackrel{\text{(1)}}= |\mathrm{Inj}(X,Y)/S_k|
+\stackrel{\text{(2)}}= \frac{|\mathrm{Inj}(X,Y)|}{|S_k|} =
+\frac{n^{\underline k}}{k!} = \binom{n}{k}\]
+auf. Der Schritt (1) wurde bereits durch Satz
+\ref{Bij-Inj-Teilmengen} abgeklärt. Die Einsicht in (2) erhält man
+folgendermaßen. Für jede Gruppe $G$ gilt die Bahnformel
+$|G| = |f\circ G|\cdot |G_f|$. Bei trivialer Fixgruppe $G_f$ gilt
+$|G_f| = 1$, mithin $|f\circ G| = |G|$. Namentlich bei der symmetrischen
+Gruppe $G=S_k$ tritt dieser Umstand ein. Aus diesem Grund enthält jede
+Bahn $f\circ S_k$ gleich viele Elemente, $|S_k|$ an der Zahl. Weil
+die Bahnen außerdem paarweise disjunkt sind, ergibt sich deshalb
+die Faktorisierung
+\[|\mathrm{Inj}(X,Y)| = |S_k|\cdot |\mathrm{Inj}(X,Y)/S_k|.\]
+Der gemachte Gedankengang kann auch unter anderen Umständen vorgenommen
+werden, dergestalt dass statt den Injektionen die Surjektionen oder sämtliche
+Abbildungen betrachtet werden. Es entsteht der \emph{zwölffaltige Weg},
+-- wenn man so will, ein kleines Periodensystem der Kombinatorik.
+
+\begin{table}
+\begin{center}
+\caption{Der zwölffaltige Weg}
+\begin{tabular}{c|ccc}
+\toprule
+& $f\in\Abb(X,Y)$ & $f\in\mathrm{Inj}(X,Y)$ & $f\in\mathrm{Sur}(X,Y)$\\
+\midrule[\heavyrulewidth]
+$f$ & $n^k$ & $n^{\underline k}$ & $n!\big\{\!\begin{smallmatrix}k\\ n\end{smallmatrix}\!\big\}$\\[4pt]
+$f\circ S_k$ & $\big(\!\begin{smallmatrix}n+k-1\\ k\end{smallmatrix}\!\big)$
+& $\big(\!\begin{smallmatrix}n\\ k\end{smallmatrix}\!\big)$
+& $\big(\!\begin{smallmatrix}k-1\\ k-n\end{smallmatrix}\!\big)$\\[4pt]
+$S_n\circ f$ & $\sum_{i=0}^n \big\{\!\begin{smallmatrix}k\\ i\end{smallmatrix}\!\big\}$
+& $[k\le n]$ & $\big\{\!\begin{smallmatrix}k\\ n\end{smallmatrix}\!\big\}$\\[4pt]
+$S_n\circ f\circ S_k$ & $p_n(n+k)$ & $[k\le n]$ & $p_n(k)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
 
 \newpage
 \section{Zur elementaren Zahlentheorie}

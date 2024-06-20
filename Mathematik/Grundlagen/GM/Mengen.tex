@@ -37,24 +37,38 @@ Für eine endliche Menge $\{x_1,\ldots,x_n\}$ definiert man
 
 \subsection{Gleichheit von Mengen}
 
-Es wurde gesagt, eine Menge ist dadurch charakterisiert, welche
-Elemente sie enthält. Um diesen Gedanke näher zu erfassen, sollten
-wir klären, wie es sich mit der Gleichheit von Mengen verhält.
-Insofern Mengen durch ihre Elemente bestimmt sind, darf man doch sagen,
-zwei Mengen $A,B$ sind genau dann gleich, falls $A,B$ ein Objekt
-gemeinsam enthalten oder gemeinsam nicht enthalten. Das heißt, betrachtet
-man ein beliebiges Objekt $x$, so ist $x$ genau dann in $A$ enthalten,
-wenn $x$ in $B$ enthalten ist.
-\begin{Definition}[Gleichheit von Mengen]\label{def:Mengen-Gleichheit}%
-\newlinefirst
-Für zwei Mengen $A,B$ definiert man
-\[A = B\,:\bicond\, (\forall x\colon x\in A\bicond x\in B).\]
-\end{Definition}
-Der Leser wird mühelos bestätigen, dass die Gleichheit die Axiome
-einer Äquivalenzrelation erfüllt. Weil die Gesamtheit aller Mengen eine
-sogenannte echte Klasse ist, müsste der Begriff der Relation dafür
-allerdings allgemein für Klassen definiert werden. Was unter einer
-Relation zu verstehen ist, wird später erklärt.
+Es wurde gesagt, eine Menge sei dadurch charakterisiert, welche
+Elemente sie enthält. Um diesen Sachverhalt näher zu erfassen, muss
+geklärt werden, wie es sich mit der Gleichheit von Mengen verhält.
+Intuitiv sieht man zwei Mengen als gleich an, wenn sie exakt dieselben
+Elemente enthalten. Allerdings stellt sich die Frage, wie dies als
+logische Aussage wiedergegeben wird, weil man die Elemente der beiden
+Mengen nicht einfach auflisten und paarweise vergleichen kann, da die
+Auflistungen eine unterschiedliche Reihenfolge der Elemente aufweisen
+mögen. Die Antwort darauf lautet, man verlangt, dass jedes Element der
+einen Menge auch in der anderen zu finden sein wird und umgekehrt.
+
+Es werden die Axiome der Logik mit Gleichheit gefordert, laut denen
+die Gleichheit reflexiv ist und eine Ersetzungsregel besitzt. Ihnen
+hinzugefügt wird das%
+\begin{Axiom}[Extensionalität]\newlinefirst
+Für je zwei Mengen $A,B$ soll gelten
+\[(\forall x\colon x\in A\bicond x\in B)\Rightarrow A=B.\]
+\end{Axiom}
+
+\noindent
+Die Umkehrung des Axioms braucht nicht unbedingt gefordert werden, da sie
+bereits aus den beiden allgemeinen Axiomen der Gleichheit hervorgeht.
+Alternativ kann man die Gleichheit per Äquivalenz
+\[A = B\,:\bicond\, (\forall x\colon x\in A\bicond x\in B)\]
+definieren. Der Leser wird mühelos bestätigen, dass die Gleichheit dahingehend
+die Reflexivität, mehr noch, die Axiome einer Äquivalenzrelation
+erfüllt. Allerdings kann ein Teil des Schemas zur Ersetzungsregel nun
+anscheinend nicht mehr hergeleitet werden. Dieses sollte
+zumindest für atomare Formeln bestehen, also für jedes Argument der
+Relation $\in$. Was bei näherer Betrachtung fehlt, ist die Aussage
+\[A=B\Rightarrow (\forall M\colon A\in M\cond B\in M).\]
+Dieser Sachverhalt wird dahingehend zusätzlich als Axiom gefordert.
 
 Es ist zulässig, ein Element bei der aufzählenden Angabe einer Menge
 mehrmals aufzuführen. Dies ändert allerdings nichts daran, dass ein
@@ -137,13 +151,21 @@ Gleichheit zweier Mengen. Man zeigt $x\in A\cond x\in B$ und
 $x\in B\cond x\in A$ für festes, aber beliebiges $x$. Und damit ist
 bereits klar, dass $A = B$ sein muss.
 
+Die Symbolik $A\subset B$ soll den Umstand ausdrücken, dass $A$ eine
+\emph{echte} Teilmenge von $B$ ist, also sowohl $A\subseteq B$
+als auch $A\ne B$ gilt. Außerhalb dieses Buches sollte man dafür
+aber besser $A\subsetneq B$ notieren, da $A\subset B$ leider auch
+in der Bedeutung von $A\subseteq B$ geläufig ist. Ich bin davon
+nicht so begeistert, weil die Harmonie mit der Notation für
+Halbordnungen dadurch verloren geht.
+
 \subsection{Komprehension}
 
 Es wird $\{x\mid A(x)\}$ gelesen als »die Klasse der $x$, für die
 $A(x)$ gilt« oder »die Menge der $x$, für die $A(x)$ gilt«.
 \begin{Definition}[Komprehension]%
 \label{def:Komprehension}\newlinefirst
-Zu einer Aussageform $A(x)$ definiert man die Klasse
+Zu einer Eigenschaft $A(x)$ definiert man die Klasse
 $\{x\mid A(x)\}$ gemäß
 \[u\in\{x\mid A(x)\}\,:\bicond\, A(u).\]
 \end{Definition}
@@ -179,14 +201,15 @@ auch das Lügner"=Paradoxon hervorgeht. In dürren Worten geht es so:
 \emph{Pinocchio sagt, »Meine Nase wächst jetzt.«}
 
 Man begegnet der Problematik, indem man $R$ als eine echte
-Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formuliert
-werden. Ich will sogleich näher auf Klassen eingehen, zuvor aber eine
-weniger allgemeine Form der Komprehension, die \emph{Aussonderung}%
-\index{Aussonderung}, aufführen. Sie verhält sich gutartig, da sie nicht
-mehr ermöglicht, als das Ausfiltern von Elementen aus einer gegebenen Menge.
+Klasse ansieht. Für sie darf die Aussage $R\in M$ nicht formulierbar, oder
+zumindest nicht ableitbar sein. Ich will sogleich näher auf
+Klassen eingehen, zuvor aber eine weniger allgemeine Form der Komprehension,
+die \emph{Aussonderung}\index{Aussonderung}, aufführen. Sie verhält sich
+gutartig, dergestalt dass sie nicht mehr ermöglicht, als das Ausfiltern
+von Elementen aus einer gegebenen Menge.
 
 \begin{Definition}[Aussonderung]\label{def:Aussonderung}\newlinefirst
-Zu einer Menge $M$ und einer Aussageform $A(x)$ definiert man
+Zu einer Menge $M$ und einer Eigenschaft $A(x)$ definiert man
 \[u\in\{x\in M\mid A(x)\}\,:\bicond\, u\in M\land A(u).\]
 \end{Definition}
 
@@ -224,7 +247,7 @@ sei genau dann eine Menge, wenn sie Element irgendeiner Klasse ist.
 Es wird nun eine gutartige Komprehension festgelegt.
 
 \begin{Definition}[Klassenkomprehension]\newlinefirst
-Zu jeder Aussageform $A(x)$ ist die Klasse $\{x\mid A(x)\}$
+Zu jeder Eigenschaft $A(x)$ ist die Klasse $\{x\mid A(x)\}$
 definiert gemäß
 \[u\in \{x\mid A(x)\}\,:\bicond\, u\in\setsystem U\land A(u).\]
 \end{Definition}
