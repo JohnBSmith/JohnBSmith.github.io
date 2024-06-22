@@ -51,7 +51,8 @@ einen Menge auch in der anderen zu finden sein wird und umgekehrt.
 Es werden die Axiome der Logik mit Gleichheit gefordert, laut denen
 die Gleichheit reflexiv ist und eine Ersetzungsregel besitzt. Ihnen
 hinzugefügt wird das%
-\begin{Axiom}[Extensionalität]\newlinefirst
+\begin{Axiom}[Extensionalität]\label{Extension}%
+\index{Extensionalitaet@Extensionalität}\newlinefirst
 Für je zwei Mengen $A,B$ soll gelten
 \[(\forall x\colon x\in A\bicond x\in B)\Rightarrow A=B.\]
 \end{Axiom}
@@ -157,10 +158,28 @@ als auch $A\ne B$ gilt. Außerhalb dieses Buches sollte man dafür
 aber besser $A\subsetneq B$ notieren, da $A\subset B$ leider auch
 in der Bedeutung von $A\subseteq B$ geläufig ist. Ich bin davon
 nicht so begeistert, weil die Harmonie mit der Notation für
-Halbordnungen dadurch verloren geht.
+Halbordnungen dadurch verloren geht. Man überzeugt sich nämlich unschwer
+davon, dass die Inklusion die Axiome einer Halbordnung erfüllt. Für die
+Mengenlehre ist dieser Umstand aber von großer Bedeutung.
 
 \subsection{Komprehension}
 
+Es wäre an der Zeit, die Wege der Mengenbildung zu erkunden, auf denen
+eine Vielzahl unterschiedlicher Mengen erreicht werden kann. Zunächst
+steht die Komprehension als allgemeines Mittel zur Verfügung. Aus ihr
+gliedern sich im Fortgang verschiedene Mengenoperationen aus.
+
+Die Abgrenzung einer Menge durch Aufzählung ihrer Elemente kommt
+lediglich für hinreichend kleine endliche Mengen infrage. Um sich von
+dieser Einengung zu befreien, beschreibt man Mengen allgemeiner durch
+Eigenschaften. Zu einer Eigenschaft denkt man sich hierbei die Menge der
+Elemente, die diese Eigenschaft erfüllen. Zur Eigenschaft
+\emph{ist eine gerade ganze Zahl},
+\[A(x)\,:\Leftrightarrow\,\text{$x$ ist eine gerade ganze Zahl}\,
+\Leftrightarrow\,\exists k\in\Z\colon x=2k,\]
+erhält man zum Beispiel die Menge der geraden Zahlen. Diesbezüglich wird
+ihre Ausformung symbolisiert durch die Notation
+\[\{x\mid A(x)\} = \{\ldots,-4,-2,0,2,4,\ldots\}.\]
 Es wird $\{x\mid A(x)\}$ gelesen als »die Klasse der $x$, für die
 $A(x)$ gilt« oder »die Menge der $x$, für die $A(x)$ gilt«.
 \begin{Definition}[Komprehension]%
@@ -212,6 +231,13 @@ von Elementen aus einer gegebenen Menge.
 Zu einer Menge $M$ und einer Eigenschaft $A(x)$ definiert man
 \[u\in\{x\in M\mid A(x)\}\,:\bicond\, u\in M\land A(u).\]
 \end{Definition}
+
+\noindent
+Bekräftigt wird die Gutartigkeit durch das
+
+\begin{Axiom}[Schema der Aussonderung]\newlinefirst
+Ist $M$ eine Menge, so auch $\{x\in M\mid A(x)\}$ für jede Eigenschaft $A(x)$.
+\end{Axiom}
 
 \noindent
 Aussonderung schränkt das Argumentieren mehr ein als nötig. Einen
@@ -317,15 +343,31 @@ unpragmatisch? Dem ist nicht Fall. Zwar ist sie ein wenig umständlicher
 auszuarbeiten als die zur Abgrenzung als naiv bezeichnete Mengenlehre,
 es hält sich meines Erachtens aber sehr in Grenzen.
 
+Um sich präzisier auszudrücken, kann man sich bei der Notation dazu
+zwingen, jede Variable, die in einer Formel frei vorkommen darf,
+explizit aufzuführen. Dahingehend soll $A(x_1,\ldots,x_n)$ eine
+Eigenschaft sein, in der ausschließlich die Variablen $x_1,\ldots,x_n$
+frei vorkommen dürfen. Man mag dies gern als $A(\vec x)$, auch
+in der Variante $A(\mathbf x)$ oder $A(\underline x)$, abkürzen. Diesbezüglich
+notiert man
+\[\{x\in M\mid A(x,\vec y)\} = \{x\in M\mid A(x,y_1,\ldots,y_n)\}\]
+für die Menge der $x\in M$, die $A(x,\vec y)$ erfüllen, wobei die freien
+Variablen $y_1,\ldots, y_n$ als Parameter bezeichnet werden, die natürlich
+selbst Mengen darstellen, insofern in der reinen Mengenlehre allein Mengen als
+Objekte auftreten.
+
+\newpage
+\subsection{Mengenoperationen}
+
 \begin{Definition}[Potenzmenge]\newlinefirst
 Die \emph{Potenzmenge}\index{Potenzmenge} einer Menge $M$ ist definiert als
-\[\mathcal P(M) := \{A\mid A\subseteq M\}.\]
+\[\powerset(M) := \{A\mid A\subseteq M\}.\]
 \end{Definition}
-Zum Beispiel ist $\mathcal P(\emptyset) = \{\emptyset\}$ und
-$\mathcal P(\{0\}) = \{\emptyset, \{0\}\}$. Des Weiteren
+Zum Beispiel ist $\powerset(\emptyset) = \{\emptyset\}$ und
+$\powerset(\{0\}) = \{\emptyset, \{0\}\}$. Des Weiteren
 \begin{gather*}
-\mathcal P(\{0,1\}) = \{\emptyset, \{0\}, \{1\}, \{0,1\}\},\\
-\mathcal P(\{0,1,2\}) = \{\emptyset, \{0\}, \{1\}, \{2\}, \{0,1\}, \{0,2\}, \{1,2\}, \{0,1,2\}\}.
+\powerset(\{0,1\}) = \{\emptyset, \{0\}, \{1\}, \{0,1\}\},\\
+\powerset(\{0,1,2\}) = \{\emptyset, \{0\}, \{1\}, \{2\}, \{0,1\}, \{0,2\}, \{1,2\}, \{0,1,2\}\}.
 \end{gather*}
 Die Teilmengenbeziehung darf als eine Art Ordnung zwischen Mengen
 betrachtet werden, jedoch nicht als eine Totalordnung, das heißt,
@@ -336,15 +378,20 @@ Rhomben, noch umgekehrt.
 Die Potenzmenge einer Grundmenge $G$ bildet mit der Teilmengenbeziehung
 eine halbgeordnete Menge, engl. \emph{poset} für
 \emph{partially ordered set}. Das heißt, alle Mengen
-$A,B,C\in\mathcal P(G)$ erfüllen die drei Axiome
+$A,B,C\in\powerset(G)$ erfüllen die drei Axiome
 \begin{align*}
 & A\subseteq A, &&\text{(Reflexivität)}\\
 & A\subseteq B\land B\subseteq A\cond A = B, &&\text{(Antisymmetrie)}\\
 & A\subseteq B\land B\subseteq C\cond A\subseteq C. &&\text{(Transitivität)}
 \end{align*}
-
-\newpage
-\subsection{Mengenoperationen}
+Weil die Potenzmenge keine Aussonderung ist, bedarf es eines extra
+Axioms, um sie als Menge begreifen zu können.
+\begin{Axiom}[Potenzmenge]\newlinefirst
+Ist $M$ eine Menge, so auch $\powerset(M)$.
+\end{Axiom}
+Zusammen mit dem Axiom der Vereinigung bietet es einen Weg, um größere
+Menge aus kleineren zu erzeugen. Später wird sich ihnen diesbezüglich
+noch das Axiom der Ersetzung hinzugesellen.
 
 \begin{Definition}[Schnitt, Vereinigung, Differenz]\newlinefirst
 Zu zwei Mengen $A,B$ definiert man
@@ -1065,7 +1112,7 @@ Es gilt $(g\circ f)(A) = g(f(A))$ für jede Menge $A\subseteq\dom(f)$.
 \end{Satz}
 \begin{Beweis}
 Mit der Entfaltung von Def. \ref{def:Bild}, \ref{def:Komprehension},
-\ref{def:Mengen-Gleichheit} nimmt die Aussage die Form
+und der Anwendung von Axiom \ref{Extension} nimmt die Aussage die Form
 \[(\exists x\in A\colon z=(g\circ f)(x))\,\bicond\,
 (\exists y\in f(A)\colon z = g(y))\]
 an. Angenommen, die linke Seite gilt. Dann liegt ein $x\in A$ mit
@@ -1122,7 +1169,7 @@ der Terme $t,t'$ definierte Injektion $f$ gilt die Äquivalenz%
 \[t=t'\, \bicond\, f(t)=f(t').\]
 Die Injektionen vermitteln somit genau die \emph{Äquivalenzumformungen}%
 \index{Aequivalenzumformung@Äquivalenzumforumung} von Gleichungen.
-Wie sich aus Def. \ref{def:Mengen-Gleichheit} in Verbindung mit
+Wie sich aus Axiom \ref{Extension} in Verbindung mit
 Def. \ref{def:Aussonderung} ergibt, erfährt die Lösungsmenge einer
 Bestimmungsgleichung durch sie keine Veränderung. Man notiert%
 \[L := \{x\in G\mid t=t'\} = \{x\in G\mid f(t)=f(t')\}\]
@@ -2172,13 +2219,13 @@ Indikatorfunktion\index{Indikatorfunktion}
 \end{cases}\]
 Sie vermitteln die kanonische Bijektion
 \[\varphi\colon\mathcal P(X)\to\Abb(X,\{0,1\}),\quad \varphi(A):=1_A.\]
-Zur Injektivität. Definition \ref{def:injektiv} verlangt die Bestätigung von%
+Zur Injektivität. Def. \ref{def:injektiv} verlangt die Bestätigung von%
 \[\varphi(A)=\varphi(B)\Rightarrow A=B,\;\text{das heißt}\;
 1_A=1_B \Rightarrow A=B.\]
-Die linke seite enfaltet sich damit, dass zwei Abbildungen genau dann
+Die linke Seite enfaltet sich damit, dass zwei Abbildungen genau dann
 gleich sind, wenn sie in jedem ihrer Funktionswerte
-übereinstimmen. Die rechte Seite entfaltet sich per Extensionalität,
-das ist Def. \ref{def:Mengen-Gleichheit}. Dies führt zu
+übereinstimmen. Die rechte Seite gewinnt man per Extensionalität,
+das ist Axiom \ref{Extension}. Dies führt zu
 \[(\forall x\colon 1_A(x)=1_B(x))\Rightarrow
 (\forall x\colon x\in A\Leftrightarrow x\in B).\]
 Die Aussage stimmt, denn man darf umformen
