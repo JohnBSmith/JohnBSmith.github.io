@@ -294,6 +294,105 @@ Die Regel setzt sich zusammen aus den beiden Spezialfällen
 \dfrac{\vdash\{A\}\,p\,\{B\}\quad\;\;\vdash B\cond B'}
 {\vdash\{A\}\,p\,\{B'\}}.\]
 
+\begin{figure}
+\begin{center}
+\begin{minipage}[t]{.48\textwidth}
+\begin{lstlisting}[language=Python,caption={Schnelles Potenzieren},%
+label=lst:Potenz-schnell]
+def power(x, n):
+    y = 1
+    while n > 1:
+        if n%2 == 1: y = y*x
+        n //= 2; x = x*x
+    if n == 1: y = y*x
+    return y
+\end{lstlisting}
+\end{minipage}
+\begin{minipage}[t]{.48\textwidth}
+\begin{lstlisting}[language=Python,caption={Mit Hilfsvariablen},%
+label=lst:Potenz-schnell-Hilfsvariablen]
+def power(x, n):
+    y = 1; a = x; i = n
+    while i > 1:
+        if i%2 == 1: y = y*a
+        i //= 2; a = a*a
+    if i == 1: y = y*a
+    return y
+\end{lstlisting}
+\end{minipage}
+\end{center}
+\end{figure}
+
+\noindent\strong{Beispiel.}
+Das Listing \ref{lst:Potenz-schnell} zeigt den Algorithmus zum schnellen
+Potenzieren. Wie \ref{lst:Potenz} berechnet dieser die Potenz $x^n$,
+benötigt dafür aber weniger Multiplikationen. Soll beispielsweise $x^{100}$
+berechnet werden, kann dies auf $(x^{50})^2$ zurückgeführt werden. Dafür
+dass am Ende einmal quadriert wird, wurden $50$ Multiplikationen
+eingespart. Der Algorithmus stellt ein allgemeines Verfahren hierfür
+dar.
+
+Allerdings ist nicht mehr auf den ersten Blick ersichtlich, ob der
+Algorithmus korrekt arbeitet. Zur Analyse werden zunächst die
+Hilfsvariablen $a,i$ eingeführt, damit $x,n$ konstant bleiben, siehe
+Listing \ref{lst:Potenz-schnell-Hilfsvariablen}. Nach dem Durchlaufen
+des Programms soll die Nachbedingung $y=x^n$ bestehen. Zunächst findet
+sich das Tripel
+\[\begin{array}{l}
+\{y = x^n\land i = 0 \lor y\cdot a = x^n\land i = 1\}\\
+\text{\texttt{\textbf{if} i == 1: y = y*a}}\\
+\{y = x^n\}.
+\end{array}\]
+Im Fall $i=1$ reduziert sich die Vorbedingung nämlich zu $y\cdot a=x^n$,
+die bedingte Anweisung wird ausgeführt und das Resultat ist $y=x^n$ laut
+Zuweisungsregel. Im Fall $i\ne 1$ muss $i=0$ sein, denn nach der
+Schleife wird $0\le i\le 1$ gelten. In diesem Fall reduziert sich die
+Vorbedingung zu $y=x^n$, die bedingte Anweisung wird nicht ausgeführt,
+das Resultat ist somit ebenfalls $y=x^n$.
+
+Nun kommt ein kritischer Schritt, dessen Auffindung ohne Übung schwierig
+sein mag. Vor der Schleife gilt $a^i=x^n$, was etwas mit der
+Schleifeninvariante zu tun haben könnte. Betrachten wir nun die Vorbedingung
+\[y = x^n\land i = 0\lor y\cdot a = x^n\land i = 1.\]
+Ist $a^i=x^n$ so modifizierbar, dass diese gilt? Ja, nämlich zu
+$y\cdot a^i=x^n$, denn
+\begin{gather*}
+\text{im Fall $i = 0$ gilt $y\cdot a^i = y\cdot a^0 = y$},\\
+\text{im Fall $i = 1$ gilt $y\cdot a^i = y\cdot a^1 = y\cdot a$}.
+\end{gather*}
+Die Gleichung $y\cdot a^i=x^n$ gilt ebenfalls vor der Schleife, denn
+dort ist $y=1$. Zudem kommen in der Gleichung alle drei Variablen vor,
+die sich in der Schleife verändern. Tatsächlich stellt diese Gleichung eine
+zielführende Schleifeninvariante dar.
+
+Nun zum Schleifenrump. Das Tripel zur ersten Anweisung ist
+\[\begin{array}{l}
+\{y\cdot a^i = x^n\}\\
+\text{\texttt{\textbf{if} i\%2 == 1: y = y*a}}\\
+\{y\cdot a^{i-1} = x^n\land i\operatorname{mod} 2 = 1
+\lor y\cdot a^i = x^n\land i\operatorname{mod}2 = 0\}.
+\end{array}\]
+Die lange Nachbedingung kann man kompakter schreiben als
+\[y\cdot a^{i-i\operatorname{mod}2} = x^n.\]
+Außerdem gilt $i-i\operatorname{mod}2 = 2\lfloor\frac{i}{2}\rfloor$,
+wobei $\lfloor\frac{i}{2}\rfloor$ mit dem Programmterm \texttt{i//2}
+gleichbedeutend ist. Mit dieser Vorbereitung stellt die restliche
+Argumentation nur mehr eine Leichtigkeit dar. Gemäß der Zuweisungsregel
+sind die Tripel
+\[\begin{array}{l}
+\{y\cdot a^{2\lfloor i/2\rfloor} = x^n\}\\
+\text{\texttt{i //= 2;}}\\
+\{y\cdot a^{2i} = x^n\}
+\end{array}
+\quad\;\;\text{und}\quad\;\;
+\begin{array}{l}
+\{y\cdot a^{2i} = x^n\}\\
+\text{\texttt{a = a*a;}}\\
+\{y\cdot a^i = x^n\}
+\end{array}\]
+erfüllt. Damit gilt die Invariante als bewiesen. Weil nichts weiter zu
+beweisen verbleibt, gilt auch der gesamte Algorithmus als bewiesen.
+
 \section{Zum Kalkül der schwächsten Vorbedingung}
 
 Zu einem Programm $p$ mag man zu einer Nachbedingung $B$ mehr als eine

@@ -62,6 +62,109 @@ r_{n,a}(A\cup B) &= \tfrac{1}{n}|a^{-1}(A\cup B)|
 &= \tfrac{1}{n}|a^{-1}(A)| + \tfrac{1}{n}|a^{-1}(B)|
 = r_{n,a}(A) + r_{n,a}(B).
 \end{align*}
+Weil $\Omega$ die Zielmenge von $a$ ist, muss $a_i\in\Omega$
+für jedes $i\in\Omega$ gelten, also $|a^{-1}(\Omega)|=n$. Somit gilt
+\[r_{n,a}(\Omega) = 1,\]
+unabhängig davon, wie groß die Zahl $n$ ist. Und weil sich aus der
+Definition von $a$ unmittelbar $0\le |a^{-1}(A)|\le n$ ergibt, besteht der
+Sachverhalt
+\[0\le r_{n,a}(A)\le 1.\]
+Weiterhin ergibt sich, dass sich die Häufigkeit monoton bezüglich der
+Inklusion verhält, das heißt, es besteht die Implikation
+\[A\subseteq B\Rightarrow r_{n,a}(A)\le r_{n,b}(B).\]
+Laut Satz \ref{Monotonie-Bild-Urbild} folgt nämlich $a^{-1}(A)\subseteq a^{-1}(B)$
+aus $A\subseteq B$. Daraufhin ergibt sich $|a^{-1}(A)|\le |a^{-1}(B)|$.
+
+Die Vorstellung von der Wahrscheinlichkeit besteht darin, dass sich
+die relative Häufigkeit ihr mit steigender Anzahl der Versuche immer
+weiter nähert. Dies bedeutet, es wird meistens $P(A)\approx r_{n,a}(A)$
+für hinreichend großes $n$ gelten. Die bisher erläuterten Eigenschaften
+von $r_{r,a}$ sollten diesbezüglich für $P$ bestehen bleiben, da diese
+nicht von $n$ abhängen.
+
+Untermauert wird diese Überlegung durch das \emph{Gesetz der großen
+Zahlen}. Es zu diskutieren, würde an dieser Stelle aber zu weit führen.
+Zum einem müsste dafür zunächst der Begriff des Grenzwertes eingeführt werden.
+Zum anderen ist der Grenzwertbegriff der Analysis nicht in direkter
+Weise auf den Sachverhalt anwendbar. Auf dessen Basis müssten zunächst
+die Konvergenzbegriffe für Zufallsgrößen erörtert werden.
+
+Stattdessen wird der Begriff des Wahrscheinlichkeitsmaßes erst einmal
+axiomatisch eingeführt. Darauf aufbauend, was unter einer Zufallsgröße
+zu verstehen sei.
+
+\begin{Definition}[Endlicher Wahrscheinlichkeitsraum]\newlinefirst
+Sei $\Omega$ eine nichtleere endliche Menge. Das Paar $(\Omega,P)$ nennt
+man einen \emph{endlichen Wahrscheinlichkeitsraum}, wenn
+\[P\colon\powerset(\Omega)\to\R,\quad P(A) := \sum_{\omega\in A}P(\{\omega\})\]
+die Eigenschaften $\mathrm{Bild}(P) = [0,1]$ und $P(\Omega)=1$ besitzt.
+\end{Definition}
+
+\noindent
+Ein endlicher Wahrscheinlichkeitsraum kann alternativ auch durch die
+kolmogorowschen Axiome charakterisiert werden. Der Vorteil besteht darin,
+dass diese später auch unter allgemeineren Umständen gültig bleiben.
+
+\begin{Satz}[Axiome von Kolmogorow]\newlinefirst
+Sei $\Omega$ eine nichtleere endliche Menge und
+$P\colon\powerset(\Omega)\to\R$. Es ist $(\Omega,P)$ genau dann
+ein endlicher Wahrscheinlichkeitsraum, wenn
+\begin{align*}
+& P(A) \ge 0\;\text{für}\;A\in\Omega,\\
+& P(\Omega) = 1,\\
+& P(A\cup B) = P(A) + P(B)\;\text{für}\;A,B\in\Omega\;
+\text{mit}\;A\cap B=\emptyset.
+\end{align*}
+\end{Satz}
+\begin{Beweis}
+Es sei $(\Omega,P)$ ein endlicher Wahrscheinlichkeitsraum.
+Mit $A\cap B=\emptyset$ gilt für die Indikatorfunktionen die Gleichung
+\[1_{A\cup B}(\omega) = 1_A(\omega) + 1_B(\omega).\]
+Somit gelingt die Rechnung
+\begin{gather*}
+P(A\cup B) = \sum_{\omega\in A\cup B}P(\{\omega\})
+= \sum_{\omega\in\Omega}P(\{\omega\})1_{A\cup B}(\omega)\\
+= \sum_{\omega\in\Omega}P(\{\omega\})(1_A(\omega)+1_B(\omega))
+= \sum_{\omega\in\Omega}P(\{\omega\})1_A(\omega)+
+\sum_{\omega\in\Omega}P(\{\omega\})1_B(\omega)\\
+= \sum_{\omega\in A}P(\{\omega\}) + \sum_{\omega\in B}P(\{\omega\})
+= P(A) + P(B).
+\end{gather*}
+Umgekehrt erfülle $(\Omega,P)$ die kolmogorowschen Axiome. Da die
+elementaren Ereignisse $\{\omega\}$ paarweise disjunkt sind, ergibt sich
+\[P(A) = P(\bigcup_{\omega\in A}\{\omega\})
+= \sum_{\omega\in A} P(\{\omega\}).\]
+Mit dieser Summenformel erhält man die Aussage $P(A)\le 1$ nun als Korollar
+aus Satz \ref{Monotonie-P} mit $A:=A$ und $B:=\Omega$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Monotonie-P}
+Gilt $A\subseteq B$, so ist $P(A)\le P(B)$.
+\end{Satz}
+\begin{Beweis}
+Mit $A\subseteq B$ ist $1_A(\omega)\le 1_B(\omega)$ für jedes $\omega\in\Omega$.
+Ergo gilt
+\[P(A) = \sum_{\omega\in\Omega} P(\{\omega\})1_A(\omega)
+\le \sum_{\omega\in\Omega} P(\{\omega\})1_B(\omega) = P(B).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Die Vorstellung von der Wahrscheinlichkeit als Chance oder Risiko
+mag aufgrund ihres Charakters als Unwägbarkeit schwierig fassbar sein.
+Der frequentistische Wahrscheinlichkeitsbegriff wird hingegen mit seiner
+Erklärung von Wahrscheinlichkeit als relative Häufigkeit bei großer
+Zahl der Versuche schon greifbarer. Mir fällt dazu eine Sichtweise ein,
+die sich dem zufälligen Charakter so weit entzieht wie es nur geht.
+Lässt man die große Zahl der Versuche parallel ablaufen, gibt die
+die Wahrscheinlichkeit den \emph{Anteil} der Ergebnisse an, die in
+der jeweiligen Teilmenge enthalten sind. Werdem zum Beispiel eine
+Million Spielwürfel auf einmal geworfen, wird jede der Augenzahlen
+voraussichtlich näherungsweise mit dem Anteil $\frac{1}{6}$ vorkommen.
+Oder denkt man sich eine Population von unzählig vielen Individuen,
+und erhält jedes die gleiche Wahrscheinlichkeit $P(A)$, ein
+bestimmtes Merkmal $A$ zu besitzen, wird man in der Population einen
+Anteil von näherungsweise $P(A)$ Individuen mit dem Merkmal $A$ vorfinden.
+
 
 \subsection{Zufallsgrößen}
 
