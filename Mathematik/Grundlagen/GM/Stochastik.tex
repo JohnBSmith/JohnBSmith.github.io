@@ -105,7 +105,7 @@ Ein endlicher Wahrscheinlichkeitsraum kann alternativ auch durch die
 kolmogorowschen Axiome charakterisiert werden. Der Vorteil besteht darin,
 dass diese später auch unter allgemeineren Umständen gültig bleiben.
 
-\begin{Satz}[Axiome von Kolmogorow]\newlinefirst
+\begin{Satz}[Axiome von Kolmogorow]\label{Axiome-Kolmogorow}\newlinefirst
 Sei $\Omega$ eine nichtleere endliche Menge und
 $P\colon\powerset(\Omega)\to\R$. Es ist $(\Omega,P)$ genau dann
 ein endlicher Wahrscheinlichkeitsraum, wenn
@@ -165,6 +165,57 @@ und erhält jedes die gleiche Wahrscheinlichkeit $P(A)$, ein
 bestimmtes Merkmal $A$ zu besitzen, wird man in der Population einen
 Anteil von näherungsweise $P(A)$ Individuen mit dem Merkmal $A$ vorfinden.
 
+Das Wahrscheinlichkeitsmaß $P$ erfüllt einige Gesetzmäßigkeiten, die
+elementar aus den Axiomen ableitbar sind.
+
+\begin{Satz}
+Allgemein gilt $P(A^\compc) = 1 - P(A)$.
+\end{Satz}
+\begin{Beweis}
+Da $\Omega = A\cup A^\compc$ eine Zerlegung von $\Omega$ in zwei
+disjunkte Mengen ist, erhält man $P(\Omega)=P(A)+P(A^\compc)$.
+Die Gleichung $P(\Omega)=1$ wird daraufhin kurzum nach $P(A^\compc)$
+umgeformt.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Inklusion-Exklusion-zwei}
+Allgemein gilt $P(A\cup B) = P(A) + P(B) - P(A\cap B)$.
+\end{Satz}
+\begin{Beweis}
+Wir erinnern uns daran, dass man für Indikatorfunktionen vermittels
+einer Wahrheitstafel den Sachverhalt%
+\[1_{A\cup B}(\omega) = 1_A(\omega) + 1_B(\omega) - 1_{A\cap B}(\omega)\]
+bestätigen kann. Hiermit formt man wieder wie im Beweis von Satz
+\ref{Axiome-Kolmogorow} die Summenformel für $P(A\cup B)$ um.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Alternativ kann die Identität folgendermaßen direkt aus dem dritten
+kolmogorowschen Axiom abgeleitet werden, ohne den Weg über die Summenformel
+zu gehen. Man überzeugt sich mühelos davon, dass $A$ via%
+\[A = A\cap\Omega = A\cap(B\cup B^\compc) = (A\cap B)\cup (A\cap B^\compc)\]
+als Vereinigung disjunkter Mengen dargestellt werden kann. Ergo gilt%
+\[P(A) = P(A\cap B) + P(A\cap B^\compc).\]
+Analog bekommt man
+\[A\cup B = (A\cup B)\cap (B\cup B^\compc) =
+((A\cup B)\cap B)\cup ((A\cup B)\cap B^\compc)\]
+als Vereinigung disjunkter Mengen. Der letzte Term vereinfacht sich
+mit dem Absorptionsgesetz $(A\cup B)\cap B = B$ und $(A\cup B)\cap B^\compc
+= A\cap B^\compc$ via Distributivgesetz, Komplementärgesetz und
+Neutralitätsgesetz. Demzufolge gilt%
+\[P(A\cup B) = P(B) + P(A\cap B^\compc).\]
+Löst man die vorherige Gleichung nun nach $P(A\cap B^\compc)$ auf
+und setzt sie in diese ein, findet sich schließlich Satz
+\ref{Inklusion-Exklusion-zwei}.
+
+Vermittels Satz \ref{Inklusion-Exklusion-zwei} wird unschwer die Formel
+\[P(A\cup B\cup C) = P(A) + P(B) + P(C)
+- P(A\cap B) - P(A\cap C) - P(B\cap C) + P(A\cap B\cap C)\]
+gewonnen. Umgekehrt kann Satz \ref{Inklusion-Exklusion-zwei} unmittelbar
+aus ihr zurückgewonnen werden, indem einfach $C:=\emptyset$ gesetzt
+wird. Diese Formeln folgen einem allgemeinen Prinzip, das
+allgemein für Vereinigungen endlich vieler Mengen gilt, -- man spricht
+vom \emph{Prinzip der Inklusion und Exklusion}.
 
 \subsection{Zufallsgrößen}
 
