@@ -267,9 +267,9 @@ zu definieren, genannt die \emph{Wahrscheinlichkeitsfunktion} der
 Zufallsgröße $X$.
 
 \newpage
-\section{Mehrstufige Experimente}
+\section{Bedingte Wahrscheinlichkeiten}
 
-\subsection{Bedingte Wahrscheinlichkeiten}
+\subsection{Mehrstufige Experimente}
 
 Es findet ein zweistufiges Experiment statt, welches sich sich
 aus einem ersten und einem zweiten Wurf eines Spielwürfels
@@ -355,3 +355,80 @@ ist, dass eine gerade Zahl geworfen wurde, verbleiben nur noch drei
 Möglichkeiten für das Ergebnis, womit jedes der drei zugehörigen
 elementaren Ereignisse, die anscheinend gleichberechtigt sind, die
 Wahrscheinlichkeit $\frac{1}{3}$ besitzen muss.
+
+Bei einem mehrstufigen Zufallsexperiment stellt das \emph{Baumdiagramm} ein
+Hilfsmittel zur Schaffung von Übersicht dar. An ihm wird die erste
+und zweite Pfadregel ersichtlich gemacht. Wir betrachten dazu zunächst
+ein zweistufiges Experiment mit der Ergebnismenge $\Omega =
+\Omega_1\times\Omega_2$. Ist $a\in\Omega$ mit $a=(a_1,a_2)$ das Ergebnis
+des Experiments, so ist $a_1\in\Omega$ das erste Teilergebnis. Es stellt
+sich zunächst einmal die Frage, wie die Wahrscheinlichkeit zu diesem
+ausgedrückt wird, wo $P$ eigentlich auf $\Omega$ definiert ist,
+nicht aber auf $\Omega_1$. Sie muss gleich $P(\{a_1\}\times\Omega_2)$
+sein, insofern das zweite Ergebnis noch unbekannt verbleibt, also
+keine Rolle spielen darf. Nun würde man analog sagen, das zweite Ergebnis
+besäße die Wahrscheinlichkeit $P(\Omega_1\times\{a_2\})$, aber das
+kann so nicht allgemein stimmen, denn die Wahrscheinlichkeit zu $a_2$
+ist unter Umständen vom Ausgang des ersten Teilexperiments abhängig.
+Zur Abkürzung sei $B:=\{a_1\}\times\Omega_2$ und $A:=\Omega_1\times\{a_2\}$.
+Wenn die Wahrscheinlichkeit vom Ausgang zu $a_2$ gewünscht ist, bei
+der $a_1$ bereits eingetreten ist, handelt es sich nicht um $P(A)$,
+sondern um $P(A\mid B)$. Man rechnet diesbezüglich
+\[P(\{a\}) = P(B\cap A) = P(B)P(A\mid B).\]
+Die ist die \emph{erste Pfadregel}. Sie besagt, dass die
+Wahrscheinlichkeit eines elementaren Ereignisses gleich dem Produkt
+der Wahrscheinlichkeiten entlang des Pfades ist, der zu diesem
+Ereignis führt.
+
+\strong{Beispiel.} In einer Urne befinden sich eine weiße und
+drei schwarze Kugeln. Es werden zwei Kugeln gezogen, wobei ihre
+Reihenfolge von Belang sei. Gesucht ist die Wahrscheinlichkeit der
+elementaren Ereignisse. Die Abb. \ref{fig:Baumdiagramm-Urne} zeigt das
+Baumdiagramm zu diesem Experiment. Wir haben hier die Erbebnismenge
+\[\Omega = \Omega_1\times\Omega_2 = \{\bullet,\circ\}\times\{\bullet,\circ\}
+= \{(\bullet,\bullet),(\bullet,\circ),(\circ,\bullet),(\circ,\circ)\}.\]
+Zu $B := \{\bullet\}\times\Omega_2$ und $A := \Omega_1\times\{\circ\}$
+ergibt sich
+\[P(\{(\bullet,\circ)\}) = P(B)P(A\mid B) = \tfrac{3}{4}\cdot\tfrac{1}{3} = \tfrac{1}{4}.\]
+
+\begin{figure}\setlength{\abovecaptionskip}{0pt}
+\begin{center}
+\includegraphics[width=50mm]{img/Baumdiagramm-Urne.pdf}
+\caption{Baumdiagramm zur Ziehung aus der Urne}
+\label{fig:Baumdiagramm-Urne}
+\end{center}
+\end{figure}
+
+\noindent
+Um die erste Pfadregel für Experimente mit mehr als zwei Stufen bestätigen
+zu können, müssen wir zunächst ein paar Vorbetrachtungen machen.
+Zunächst wird sich die Frage auftun, wie man bedingte Wahrscheinlichkeiten
+von bedingten Wahrscheinlichkeiten bildet. Bei fester Bedingung $B$
+bildet die bedingte Wahrscheinlichkeit wiederum ein Wahrscheinlichkeitsmaß,%
+\[P_B\colon\Omega\to\R,\quad P_B(A) := P(A\mid B).\]
+Diesbezüglich kann man nun von $P_B(A\mid C)$ reden. Allerdings findet
+sich hierzu die Umformung%
+\[P_B(A\mid C) = \frac{P_B(A\cap C)}{P_B(C)}
+= \frac{\frac{P(A\cap B\cap C)}{P(B)}}{\frac{P(B\cap C)}{P(B)}}
+= \frac{P(A\cap B\cap C)}{P(B\cap C)} = P(A\mid B\cap C).\]
+Das heißt, die Schachtelung von bedingten Wahrscheinlichkeiten stimmt
+mit der bedingten Wahrscheinlichkeit unter konjunktiver Verbindung der
+Bedingungen, ausgedrückt als Schnittmenge, überein. Für $P(A\mid B\cap C)$
+ist auch die Schreibweise $P(A\mid B,C)$ geläufig.
+
+\subsection{Gesetz der totalen Wahrscheinlichkeit}
+
+\begin{Satz}[Gesetz der totalen Wahrscheinlichkeit]\newlinefirst
+Es sei $\setsystem Z$ eine Zerlegung der Ergebnismenge $\Omega$ in
+paarweise disjunkte Mengen $B\in\setsystem Z$. Dann gilt
+\[P(A) = \sum_{B\in\setsystem Z}P(A\mid B)P(B).\]
+\end{Satz}
+\begin{Beweis}
+Es findet sich die Umformung
+\begin{align*}
+P(A) &= \textstyle P(A\cap\Omega) = P(A\cap\bigcup_{B\in\setsystem Z} B)
+= P(\bigcup_{B\in\setsystem Z} (A\cap B))\\
+&=\textstyle\sum_{B\in\setsystem Z} P(A\cap B)
+= \sum_{B\in\setsystem Z} P(A\mid B)P(B).\,\qedsymbol
+\end{align*}
+\end{Beweis}
