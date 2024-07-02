@@ -1,0 +1,62 @@
+
+\chapter{Maschinengestütztes Beweisen}
+
+\section{Terme und Typen}
+
+\subsection{Zur Aussagenlogik}
+
+\begin{table}
+\begin{center}
+\caption{Funktionen für die Konjunktion und die Disjunktion}
+\label{tab:Funktionen-Konjunktion-Disjunktion}
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{Junktor} & \textbf{Einführung} & \textbf{Beseitigung}\\
+\midrule[\heavyrulewidth]
+Konjunktion & $\code{conj}\,A\;B\colon A \to B \to A\land B$
+& $\code{proj1}\;A\;B\colon A\land B\to A$\\
+& & $\code{proj2}\;A\;B\colon A\land B\to B$\\
+\midrule[\heavyrulewidth]
+Disjunktion & $\code{or\_introl}\,A\;B\colon A\to A\lor B$
+& $\code{or\_elim}\,A\;B\colon (A\to C)\to (A\to C)$\\
+& $\code{or\_intror}\,A\;B\colon A\to B\lor A$
+& $\phantom{\code{or\_elim}\,A\;B\colon}\to (A\lor B\to C)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Tabelle \ref{tab:Funktionen-Konjunktion-Disjunktion} zeigt die Funktionen,
+mit denen Terme für die Konjunktion und die Disjunktion konstruiert
+werden können.
+
+Ein kurzes Beispiel. Mit der Herleitung
+\[\infer{\Gamma\vdash B\land A}{
+  \infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
+& \infer{\Gamma\vdash A}{\Gamma\vdash A\land B}}
+\;\rightsquigarrow\quad
+\infer{\Gamma\vdash\code{conj} (\code{proj2}(h)) (\code{proj1}(h))\colon B\land A}{
+  \infer{\Gamma\vdash\code{proj2}(h)\colon B}{\Gamma\vdash h\colon A\land B}
+& \infer{\Gamma\vdash\code{proj1}(h)\colon A}{\Gamma\vdash h\colon A\land B}}\]
+kommt man bezüglich $\Gamma:=[h\colon A\land B]$ zum Term
+\[(h\mapsto\code{conj} (\code{proj2}(h)) (\code{proj1}(h)))\colon A\land B\to B\land A.\]
+Der Quelltext hierzu:
+
+\noindent
+\begin{lstlisting}[escapechar=`]
+`\kw{Theorem}` conj_commutes A B:
+  A `$\land$` B `$\to$` B `$\land$` A.
+`\kw{Proof.}`
+  exact (`\kw{fun}` h => conj (proj2 h) (proj1 h)).
+`\kw{Qed.}`
+\end{lstlisting}
+
+\section{Taktiken}
+
+Statt Terme zu schreiben, nutzt man lieber Taktiken. Sie bieten den
+Vorteil, dass die Schlussregeln mit ihnen rückwerts angewendet werden
+können. Man gibt dabei das zu beweisende Theorem als \emph{Ziel}
+vor. Vermittels den Taktiken, die zu den Schlussregeln des natürlichen
+Schließens gehören, kann das Ziel auf ein oder mehrere
+\emph{Unterziele} zurückgeführt werden. Das geht bis zum Erreichen
+von Grundsequenzen so weiter.

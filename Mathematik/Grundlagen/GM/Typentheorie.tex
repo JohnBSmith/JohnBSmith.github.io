@@ -1,0 +1,104 @@
+
+\chapter{Typentheorie}
+
+Mit der Zeit hielt die Typentheorie Einzug in die Grundlagen der Mathematik
+und gesellte sich neben die Mengenlehre. Viele Theorembeweisassistenten
+arbeiten mit einer Typentheorie, die eine Logik höherer Stufe kodiert.
+Um nicht nur oberflächlich mit diesen Assistenten arbeiten zu können, sondern
+auch ein gewissen Verständnis zu erhalten, wie sie funktionieren, müssen wir
+uns notgedrungen mit diesen Systemen auseinandersetzen. Darüber hinaus
+bestehen enge Bezüge zu den Typsystemen in der Informatik.
+
+Wir müssen hier zwischen zwei Begriffen unterscheiden. Die \emph{Typentheorien}
+sind ideale Typsysteme, denen vom Wesen her ein logisches System innewohnt.
+\emph{Die Typentheorie}, eine Teildisziplin der Beweistheorie, studiert
+diese Typsysteme und klärt ihre Konsistenz und Korrektheit ab.
+
+\section{Abhängige Typentheorie}
+
+\subsection{Begrifflichkeiten}
+
+Ich will in den Darlegungen den sorgfältigen Ausführungen von
+\cite{Avigad}, \cite{Mimram} und \cite{HoTT} folgen. So wie es mehrere
+Systeme der Mengenlehre gibt, haben sich auch mehrere Systeme der
+abhängigen Typentheorie herausgebildet. Ich werde mich im Folgenden
+auf den \emph{induktiven Konstruktionenkalkül} beziehen.
+
+Im formalen System der Mengenlehre gibt es erstens Terme, die für Mengen
+stehen, zweitens Formeln, die für Aussagen stehen und drittens Beweise.
+Das sind drei syntaktische Systeme, die voneinander getrennt definiert
+werden. In der einfachen Typentheorie gibt es gleichermaßen Terme, Typen und
+Beweise. Dagegen fallen Terme, Typen und Beweise in der abhängigen
+Typentheorie, sofern sie reiner Art ist, syntaktisch zum \emph{Ausdruck}
+zusammen.
+
+Dafür gibt es aber drei unterschiedliche Formen von Urteilen. Dies sind
+
+1.\;das Urteil $\Gamma\;\mathrm{ctx}$, laut dem $\Gamma$ ein
+wohlgeformter Kontext sei,
+
+2.\;das Urteil $\Gamma\vdash a\colon A$, laut dem der Ausdruck
+$a$ im Kontext $\Gamma$ vom Typ $A$ sei,
+
+3.\;das Urteil $a\equiv b$, laut dem die Ausdrücke
+$a,b$ urteilmäßig gleich seien.
+
+\subsection{Formuierungsregeln}
+
+Von den Schlussregeln der abhängigen Typentheorie gruppieren sich
+zunächst einmal die \emph{Formierungsregeln}, die der Aufstellung
+wohlgeformter Typen dienen. Dem Formalismus nach wird ausschließlich
+mit auf diese Weise geformten Typen gearbeitet.
+
+Jedem Ausdruck kommt ein \emph{Typ} zu, auch den Typen selbst. Hierfür
+dient eine Abfolge von Konstantensymbolen
+\[U_0,U_1,U_2,\ldots,\]
+die wir \emph{Typuniversen} nennen wollen. Statt $U_i$ ist auch die
+längere Schreibweise $\mathrm{Type}_i$ geläufig. Hat ein Ausdruck $A$ den
+Typ $U_i$ für ein $i$, so wollen wir $A$ selbst als einen \emph{Typ}
+betrachten. Ein Ausdruck, der kein Typ ist, heißt \emph{Term}.
+Es verhält sich so ähnlich wie mit einer Mengenlehre, in der Klassen
+die einzige Sorte sind. Die Abgrenzung der Mengen von den echten Klassen
+geschieht dahingehend nicht syntaktisch, sondern kommt inhaltlich aus
+den Regeln des formalen Systems zum Vorschein.
+
+Da stellt sich die Frage, warum nicht ein Universum, nennen wir es $U$,
+genügt. Da diesem selbst ein Typ zukommen müsste, würden wir $U\colon U$
+festsetzen, wie es Per Martin"=Löf in der ursprünglichen Fassung seiner
+Typentheorie tat. Allerdings entdeckte Jean-Yves Girard kurz darauf, das
+das System damit inkonsistent wird, wir also einen Widerspruch ableiten
+können. Dieser Umstand, den man nun \emph{girardsches Paradoxon}
+nennt, verhält sich analog zum russellschen Paradoxon.
+
+Für Typuniversen $U_i$ bestehen die Regeln 
+\[
+\dfrac{\Gamma\;\mathrm{ctx}}{\Gamma\vdash\typeuniv_i\colon\typeuniv_{i+1}}\;\text{univ-intro},
+\qquad\dfrac{\Gamma\vdash A\colon\typeuniv_i}{\Gamma\vdash A\colon\typeuniv_{i+1}}\;\text{univ-cumul}.
+\]
+Es dürfen Grundsequenzen der Form $A\colon\typeuniv_0\vdash A\colon\typeuniv_0$ eingeführt werden, denn:
+\[
+\infer[\infernote{var}]{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{
+  \infer[\infernote{ctx-ext}]{A\colon\typeuniv_0\;\mathrm{ctx}}{
+    \infer[\infernote{univ-intro}]{\vdash\typeuniv_0\colon\typeuniv_1}{}}}
+\]
+Der Typ abhängiger Funktionen wird formiert gemäß
+\[\dfrac{\Gamma\vdash A\colon\typeuniv_i\qquad\Gamma,x\colon A\vdash B\colon\typeuniv_i}{
+  \Gamma\vdash\Pi(x\colon A).\,B\colon\typeuniv_i}\;\text{Pi-form}.\]
+Der Typ $A\to A$ der Funktionen von $A$ zu $A$ wird als
+$\Pi(x\colon A).\, A$ dargestellt. Wir würden diesen Typ nun gerne
+formieren. Hierbei muss aber klargestellt werden, was $A$ sein soll.
+Formiert werden kann zum Beispiel $\Pi(A\colon\typeuniv_0).\,A\to A$.
+Das geht wie folgt:
+\[
+\infer[\infernote{Pi-form}]{\vdash\Pi(A\colon\typeuniv_0).\, \Pi(x\colon A).\, A\colon\typeuniv_1}{
+  \infer[\infernote{univ-intro}]{\vdash\typeuniv_0\colon\typeuniv_1}{}
+  & \infer[\infernote{univ-cumul}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_1}{
+      \infer[\infernote{Pi-form}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_0}{
+        \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}
+      & \infer[\infernote{wk}]{A\colon\typeuniv_0,x\colon A\vdash A\colon\typeuniv_0}{
+          \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}}}}}
+\]
+Man beachte, dass $A$ hier, anders als in der Regel Pi-form, lediglich
+für eine Typvariable steht, also atomar ist. Dies wird durch die
+Kontexte klar, die nur Variablen enthalten dürfen.
+
