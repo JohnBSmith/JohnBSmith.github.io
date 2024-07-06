@@ -42,7 +42,21 @@ wohlgeformter Kontext sei,
 $a$ im Kontext $\Gamma$ vom Typ $A$ sei,
 
 3.\;das Urteil $a\equiv b$, laut dem die Ausdrücke
-$a,b$ urteilmäßig gleich seien.
+$a,b$ urteilsmäßig gleich seien.
+
+Ein Kontext $\Gamma$ ist eine Liste der Form
+\[\Gamma = [x_1\colon A_1,x_2\colon A_2,\ldots,x_n\colon A_n],\]
+die kodiert, dass die jeweilige Variable $x_i$ vom Typ $A_i$ sei. Die $x_i$
+stehen hierbei für paarweise verschiedene Variablen, nicht aber für
+Metavariablen, für die zusammengesetzte Ausdrücke eingesetzt werden
+dürften. Anders als in den herkömmlichen Sequenzen muss der Kontext
+eine Liste sein, da es auf die Reihenfolge der Elemente ankommt, denn
+im Ausdruck $A_j$ dürfen nur die Variablen $x_i$ mit $i<j$ auftauchen.
+
+Es darf auch $n=0$ sein, was bedeuten soll, dass der leere Kontext
+$\Gamma=[]$ ebenfalls ein wohlgeformter ist. Die Schreibweise
+$\Gamma,x\colon A$ steht analog zu den herkömmlichen Sequenzen für die
+Konkatenation der Listen $\Gamma$ und $[x\colon A]$.
 
 \subsection{Formuierungsregeln}
 
@@ -70,36 +84,106 @@ Typentheorie tat. Allerdings entdeckte Jean-Yves Girard kurz darauf, das
 das System damit inkonsistent wird, wir also einen Widerspruch ableiten
 können. Dieser Umstand, den man nun \emph{girardsches Paradoxon}
 nennt, verhält sich analog zum russellschen Paradoxon.
+\cite{Coquand-Type-Theory}
 
 Für Typuniversen $U_i$ bestehen die Regeln 
-\[
-\dfrac{\Gamma\;\mathrm{ctx}}{\Gamma\vdash\typeuniv_i\colon\typeuniv_{i+1}}\;\text{univ-intro},
-\qquad\dfrac{\Gamma\vdash A\colon\typeuniv_i}{\Gamma\vdash A\colon\typeuniv_{i+1}}\;\text{univ-cumul}.
-\]
-Es dürfen Grundsequenzen der Form $A\colon\typeuniv_0\vdash A\colon\typeuniv_0$ eingeführt werden, denn:
-\[
-\infer[\infernote{var}]{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{
-  \infer[\infernote{ctx-ext}]{A\colon\typeuniv_0\;\mathrm{ctx}}{
-    \infer[\infernote{univ-intro}]{\vdash\typeuniv_0\colon\typeuniv_1}{}}}
-\]
+\[\dfrac{\Gamma\;\mathrm{ctx}}{\Gamma\vdash\typeuniv_i\colon\typeuniv_{i+1}}\;\text{univ-intro},
+\qquad\dfrac{\Gamma\vdash A\colon\typeuniv_i}{\Gamma\vdash A\colon\typeuniv_{i+1}}\;\text{univ-cumul}.\]
+Kontexte werden eingeführt, erweitert gemäß
+\[\dfrac{}{[]\;\mathrm{ctx}}\;\text{ctx-empty},\qquad
+\dfrac{\Gamma\vdash A\colon U_i}{\Gamma,x\colon A\;\mathrm{ctx}}\;\text{ctx-ext},\]
+mit der Nebenbedingung, dass $x$ nicht bereits in $\Gamma$ vorkommt.
+
+Eine Grundsequenz wird eingeführt via
+\[\dfrac{[x_1\colon A_1, \ldots, x_n\colon A_n]\;\mathrm{ctx}}{
+x_1\colon A_1, \ldots, x_n\colon A_n\vdash x_i\colon A_i}\;\mathrm{var},\;\;\text{oder kurz}\;\;
+\dfrac{\Gamma\;\mathrm{ctx}}{\Gamma\vdash x\colon A}((x\colon A)\in\Gamma).\]
 Der Typ abhängiger Funktionen wird formiert gemäß
 \[\dfrac{\Gamma\vdash A\colon\typeuniv_i\qquad\Gamma,x\colon A\vdash B\colon\typeuniv_i}{
   \Gamma\vdash\Pi(x\colon A).\,B\colon\typeuniv_i}\;\text{Pi-form}.\]
+Beim Typ $\mathrm{Prop}:=U_0$ genügt es aber bereits, wenn $B$ vom Typ $U_0$ ist,
+\[\dfrac{\Gamma,x\colon A\vdash B\colon\typeuniv_0}{
+  \Gamma\vdash\Pi(x\colon A).\,B\colon\typeuniv_0}\;\text{Pi-form0}.\]
 Der Typ $A\to A$ der Funktionen von $A$ zu $A$ wird als
 $\Pi(x\colon A).\, A$ dargestellt. Wir würden diesen Typ nun gerne
 formieren. Hierbei muss aber klargestellt werden, was $A$ sein soll.
-Formiert werden kann zum Beispiel $\Pi(A\colon\typeuniv_0).\,A\to A$.
-Das geht wie folgt:
+Formiert werden kann zum Beispiel der Typ $\Pi(A\colon\typeuniv_0).\,A\to A$,
+womit $\Pi(A\colon\typeuniv_0).\,(A\to A)$ gemeint ist.
+Zuvor wird kurz festgestellt, dass die Einführung von Grundsequenzen der
+Form $A\colon\typeuniv_i\vdash A\colon\typeuniv_i$ eine zulässige Regel ist.
+Es finden sich die Bäume:
 \[
-\infer[\infernote{Pi-form}]{\vdash\Pi(A\colon\typeuniv_0).\, \Pi(x\colon A).\, A\colon\typeuniv_1}{
-  \infer[\infernote{univ-intro}]{\vdash\typeuniv_0\colon\typeuniv_1}{}
-  & \infer[\infernote{univ-cumul}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_1}{
-      \infer[\infernote{Pi-form}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_0}{
-        \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}
-      & \infer[\infernote{wk}]{A\colon\typeuniv_0,x\colon A\vdash A\colon\typeuniv_0}{
-          \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}}}}}
+\begin{array}{l@{\qquad}l}
+\infer[\infernote{var}]{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}{
+  \infer[\infernote{ctx-ext}]{A\colon\typeuniv_i\;\mathrm{ctx}}{
+    \infer[\infernote{univ-intro}]{\vdash\typeuniv_i\colon\typeuniv_{i+1}}{
+      \infer[\infernote{ctx-empty}]{[]\;\mathrm{ctx}}{}}}}
+&
+\infer[\infernote{Pi-form0}]{\vdash\Pi(A\colon\typeuniv_0).\, \Pi(x\colon A).\, A\colon\typeuniv_0}{
+  \infer[\infernote{Pi-form0}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_0}{
+    \infer[\infernote{var}]{A\colon\typeuniv_0,x\colon A\vdash A\colon\typeuniv_0}{
+      \infer[\infernote{ctx-ext}]{A\colon\typeuniv_0,x\colon A\;\mathrm{ctx}}{
+        \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}}}}}
+\end{array}
+\]
+Für $i\ge 1$ liegt der Typ allerdings in einem höhergestuften Universum:
+\[
+\infer[\infernote{Pi-form}]{\vdash\Pi(A\colon\typeuniv_i).\, \Pi(x\colon A).\, A\colon\typeuniv_{i+1}}{
+  \infer{\vdash\typeuniv_i\colon\typeuniv_{i+1}}{}
+  & \infer[\infernote{univ-cumul}]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_{i+1}}{
+      \infer[\infernote{Pi-form}]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_i}{
+        \infer{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}{}
+      & \infer{A\colon\typeuniv_i,x\colon A\vdash A\colon\typeuniv_i}{}}}}
 \]
 Man beachte, dass $A$ hier, anders als in der Regel Pi-form, lediglich
 für eine Typvariable steht, also atomar ist. Dies wird durch die
 Kontexte klar, die nur Variablen enthalten dürfen.
 
+\subsection{Einführungs- und Beseitigungsregeln}
+
+Die Regeln zur Einführung, Beseitigung abhängiger Funktionen lauten
+\[\dfrac{\Gamma,x\colon A\vdash b\colon B}
+{\Gamma\vdash (x\mapsto b)\colon\Pi(x\colon A).\, B}\,\text{Pi-intro},\quad\;
+\dfrac{\Gamma\vdash f\colon\Pi(x\colon A).\,B\quad\;\;\Gamma\vdash a\colon A}
+{\Gamma\vdash f(a)\colon B[x:=a]}\,\text{Pi-elim}.\]
+Hierbei sind $a,b,A,B$ Ausdrücke.
+
+Speziell für von $x$ unabhängiges $B$ ergibt sich daraus entsprechend
+\[\dfrac{\Gamma,x\colon A\vdash b\colon B}
+{\Gamma\vdash (x\mapsto b)\colon A\to B},\quad\;\;
+\dfrac{\Gamma\vdash f\colon A\to B\quad\;\;\Gamma\vdash a\colon A}
+{\Gamma\vdash f(a)\colon B}.\]
+Wie bei jedem lambda"=Kalkül ist auch $\lambda x.\,b$ statt $x\mapsto b$
+geläufig, wobei dies Kurzschreibweisen für $\lambda(x\colon A).\,b$ und
+$(x\colon A)\mapsto b$ sind. Die Klammern dürfen hierbei entfallen, ich
+will sie aber zur besseren Lesbarkeit beibehalten.
+
+Beispielsweise ist $\Pi(A\colon U_i).\, A\to A$ bewohnt, denn es findet sich der Baum:
+\[\infer[\infernote{Pi-intro}]{\vdash (A\mapsto x\mapsto x)\colon\Pi(A\colon U_i).\,A\to A}{
+  \infer[\infernote{Pi-intro}]{A\colon U_i\vdash (x\mapsto x)\colon A\to A}{
+    \infer{A\colon U_i,x\colon A\vdash x\colon A}{}}}\]
+
+\subsection{Bezug zur Logik}
+
+Den Typ $\Pi(x\colon A).\, B$ deuten wir als die logische Aussage
+$\forall (x\colon A).\, B$. Weiterhin deuten wir den Typ $A\to B$ als die
+Aussage $A\cond B$.
+
+Für $A,B\colon U_0$ kann man die Konjunktion, in analoger Weise wie das
+schon in der Logik zweiter Stufe möglich ist, kodieren als
+\[A\land B := \Pi(X\colon U_0).\, (A\to B\to X)\to X.\]
+Dahingehend ist unschwer feststellbar, dass die drei Funktionen
+\begin{align*}
+\mathrm{conj}&\colon \Pi(A\colon U_0).\,\Pi(B\colon U_0).\,A\to B\to A\land B,\\
+\mathrm{proj}_1&\colon \Pi(A\colon U_0).\,\Pi(B\colon U_0).\, A\land B\to A,\\
+\mathrm{proj}_2&\colon \Pi(A\colon U_0).\,\Pi(B\colon U_0).\, A\land B\to B
+\end{align*}
+konstruierbar sind. Nämlich findet sich
+\begin{gather*}
+\mathrm{conj} := A\mapsto B\mapsto (a\colon A)\mapsto (b\colon B)\mapsto X\mapsto (f\colon A\to B\to X)\mapsto f(a)(b),\\
+\mathrm{proj}_1 := A\mapsto B\mapsto (c\colon A\land B)\mapsto c(A)((a\colon A)\mapsto (b\colon B)\mapsto a),\\
+\mathrm{proj}_2 := A\mapsto B\mapsto (c\colon A\land B)\mapsto c(B)((a\colon A)\mapsto (b\colon B)\mapsto b).
+\end{gather*}
+Sollte nicht klar sein, wie diese Terme zustande kommen, kann man zunächst
+die Herleitungsbäume für die logischen Aussagen erstellen und daraufhin
+die Beweisterme ergänzen.
