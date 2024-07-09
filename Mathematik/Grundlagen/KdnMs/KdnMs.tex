@@ -1,0 +1,360 @@
+\documentclass[9pt,fleqn,aspectratio=169]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% \usepackage{arev}
+\usepackage{fouriernc}
+\usefonttheme{serif}
+
+% Patch punctuation to be upright for arev (Bitstream Vera Sans)
+% \DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+% \DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ebproof}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{fgcolor0}{rgb}{1.0,1.0,1.0}
+\definecolor{bgcolor0}{rgb}{0.05,0.1,0.05}
+\setbeamercolor{palette primary}{fg=fgcolor0,bg=bgcolor0}
+\setbeamercolor{palette secondary}{fg=fgcolor0,bg=bgcolor0}
+\setbeamercolor{palette tertiary}{fg=fgcolor0,bg=bgcolor0}
+\setbeamercolor{palette quaternary}{fg=fgcolor0,bg=bgcolor0}
+\setbeamercolor{itemize item}{fg=fgcolor0}
+\setbeamercolor{background canvas}{bg=bgcolor0}
+\setbeamercolor{normal text}{fg=fgcolor0}
+% \hypersetup{colorlinks,urlcolor=magenta}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamersize{text margin left=6em}
+\setbeamersize{text margin right=6em}
+
+\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\headline}[1]{\begin{center}\strong{#1}\end{center}}
+\newcommand{\lnec}{\Box}
+\newcommand{\inote}[1]{{\!\footnotesize #1}}
+
+\ebproofset{rule thickness=0.4608pt}
+% Thickness of fraction rules, i.e.
+% \the\fontdimen8\textfont3
+
+\begin{document}
+
+\begin{frame}
+\begin{center}
+{\LARGE Natürliches Metaschließen}
+
+\vspace{1em}
+{\large Juli 2024}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\headline{Motivation}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+Das Beweisen von Theoremen geschieht vermittels Schlussregeln. Darüber
+hinaus erweisen sie sich aber auch zur Ableitung neuer Schlussregeln
+als dienlich.\pause
+
+\parspace
+\strong{Beispiel.} Als gegeben vorausgesetzt seien die beiden Regeln
+\[\dfrac{\Gamma\vdash A\quad\;\;\Gamma\!,\,A\vdash B}{\Gamma\vdash B}
+\;\text{(Schnitt)},\qquad
+\dfrac{}{A,B\vdash A\land B}.
+\]\pause
+Nun wird man die Regel
+\[\dfrac{\Gamma\vdash A\quad\;\;\Gamma\vdash B}{\Gamma\vdash A\land B}\]
+unschwer als zulässig befinden, denn\pause{} es findet sich der Herleitungsbaum
+\only<4-5>{%
+\[\begin{prooftree}
+  \hypo{\Gamma\vdash A}
+    \hypo{\Gamma\vdash B}\infer0{A,B\vdash A\land B}
+  \infer2[Schnitt]{\Gamma,\,A\vdash A\land B}
+\infer2[Schnitt.]{\Gamma\vdash A\land B}
+\end{prooftree}\]}%
+\only<6>{%
+\[\begin{prooftree}
+  \hypo{\color{cyan}\Gamma\vdash A}
+    \hypo{\color{cyan}\Gamma\vdash B}\infer0{A,B\vdash A\land B}
+  \infer2[Schnitt]{\Gamma,\,A\vdash A\land B}
+\infer2[Schnitt.]{\color{magenta}\Gamma\vdash A\land B}
+\end{prooftree}\]}%
+\only<5-6>{%
+Allerdings besteht hierbei ein technisches Problem:\\
+\emph{Es wurde aus {\color{cyan}Prämissen} eine {\color{magenta}Konklusion} hergeleitet.}}
+\end{frame}
+
+\begin{frame}
+\emph{Die Herleitung findet eigentlich innerhalb der Metalogik statt.}\pause
+
+\parspace
+Warum dies ein Problem darstellen sollte?\pause{}
+\emph{Wenn wir einen Theorembeweisverifizierer verwenden, der lediglich die Gegenstandslogik
+versteht, bleibt uns die metalogische Ebene verwehrt.}\pause
+
+\parspace
+Klären wir zunächst kurz ab, was bislang unausgesprochen blieb.
+\end{frame}
+
+\begin{frame}
+Um die Metalogik als natürliches Schließen zu formalisieren,
+notieren wir
+\[S_1,\ldots,S_n\Vdash S\]
+als Metasequenz, womit das Urteil gemeint sei, dass die Sequenz $S$ aus
+den Sequenzen $S_1$ bis $S_n$ ableitbar ist.\pause
+
+\parspace
+Die eigentliche Gestalt der Herleitung klärt sich nun als
+\[\begin{prooftree}
+  \infer0{{\color{cyan}(\Gamma\vdash A)}\Vdash (\Gamma\vdash A)}
+    \infer0{{\color{cyan}(\Gamma\vdash B)}\Vdash (\Gamma\vdash B)}
+    \infer0{\Vdash (A,B\vdash A\land B)}
+  \infer2[Schnitt]{{\color{cyan}(\Gamma\vdash B)}\Vdash (\Gamma,\,A\vdash A\land B)}
+\infer2[Schnitt.]{{\color{cyan}(\Gamma\vdash A)},{\color{cyan}(\Gamma\vdash B)}\Vdash
+  \color{magenta}(\Gamma\vdash A\land B)}
+\end{prooftree}\]
+\end{frame}
+
+\begin{frame}
+Infolgedessen muss aber jede der Schlussregeln eine Entsprechung
+in der Metalogik induzieren. Das heißt, liegt eine Schlussregel
+\[\dfrac{S_1\qquad S_2\qquad\ldots\qquad S_n}{S}\]
+vor, muss in der Metalogik die entsprechende Regel
+\[\dfrac{\Delta\Vdash S_1\qquad\Delta\Vdash S_2\qquad\ldots\qquad\Delta\Vdash S_n}
+{\Delta\Vdash S}\]
+zur Verfügung stehen.\pause
+
+\parspace
+\begin{footnotesize}
+\strong{Bemerkung.} Bei Einbeziehung der Abschwächungsregel nimmt sie die Form
+\[\dfrac{\Delta_1\Vdash S_1\qquad\Delta_2\Vdash S_2\qquad\ldots\qquad\Delta_n\Vdash S_n}
+{\Delta_1,\Delta_2,\ldots,\Delta_n\Vdash S}\]
+an, wie sie gerade genutzt wurde.
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}
+\headline{Ein logischer Kalkül}
+\end{frame}
+
+\begin{frame}
+Folgende Idee: Angenommen, das metalogische System beschreibt dieselbe
+Logik wie die Gegenstandslogik, dann erscheint es zielführend,
+das metalogische System in die Gegenstandslogik zu verschieben.\pause{}
+
+\parspace
+Zu den herkömmlichen Junktoren wird $\lnec_\Gamma A$ hinzugefügt,
+mit der Bedeutung $\Gamma\vdash A$. Die klassische Semantik wird daraufhin
+entsprechend erweitert um
+\[\begin{array}{r@{}l}
+(\mathcal I\models\lnec_\Gamma A)\;: &\Leftrightarrow\;
+(\forall\mathcal I'\colon (\mathcal I'\models\Gamma)\to (\mathcal I'\models A))\\[2pt]
+\; &\Leftrightarrow\; (\Gamma\models A).
+\end{array}\]\pause
+Die einzigen beiden Schlussregeln seien
+\[\dfrac{\vdash A\to B\quad\;\;\vdash A}{\vdash B},\qquad\dfrac{\vdash A}{\vdash\lnec_\Gamma A}.\]
+\end{frame}
+
+\begin{frame}
+Wir notieren nun die herkömmlichen Schlussregeln als Axiomenschemata. Das wären
+\[\begin{array}{@{}l@{\qquad}l}
+\lnec_{\Gamma,\,A} B \to \lnec_\Gamma (A\to B), & \text{(SE: Subjunktionseinführung)}\\[2pt]
+\lnec_\Gamma(A\to B) \to \lnec_\Gamma A\to \lnec_\Gamma B. & \text{(SB: Subjunktionsbeseitigung)}
+\end{array}\]\pause
+Außerdem zur steht zur Verfügung,
+\[\begin{array}{@{}l@{\qquad}l}
+\lnec_A A, & \text{(GS: Grundsequenz)}\\[2pt]
+\lnec_{\Gamma} A\to\lnec_{\Gamma,\Gamma'} A, & \text{(Abs: Abschwächung)}\\[2pt]
+\lnec_\emptyset A\to A. & \text{(Lift)}
+\end{array}\]\pause
+Zunächst einmal benötigen wir die metalogischen Entsprechungen der
+»Schlussregeln«. Ist $A\to B$ eine »Schlussregel«, benötigen wir
+$\lnec_\Delta A\to\lnec_\Delta B$. Dies bereitet keine großen
+Schwierigkeiten. Die Herleitung ist\pause{}
+\[\begin{prooftree}
+\hypo{\vdash A\to B}
+\infer1{\vdash\lnec_\Delta (A\to B)}
+\infer0{\vdash\lnec_\Delta (A\to B)\to\lnec_\Delta A\to\lnec_\Delta B}
+\infer2[\!\!.]{\vdash\lnec_\Delta A\to\lnec_\Delta B}
+\end{prooftree}\]
+\end{frame}
+
+\begin{frame}
+Für »Schlussregeln« mit zwei Prämissen würden wir aber gerne das Theorem
+\[\lnec_\Gamma (A\to B\to C)\to\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma C
+\qquad\text{(SBB)}\]
+zur Verfügung haben.\pause{} Dazu wird zunächst der Hilfssatz
+\[\lnec_\Delta \lnec_\Gamma (A\to B) \to \lnec_\Delta (\lnec_\Gamma A\to \lnec_\Gamma B)
+\qquad\text{(HSB)}\]
+abgeleitet. Die Herleitung ist\pause{}
+\[\begin{prooftree}
+    \infer0{\vdash\lnec_\Gamma (A\to B)\to \lnec_\Gamma A\to \lnec_\Gamma B}
+  \infer1{\vdash\lnec_\Delta (\lnec_\Gamma (A\to B)\to \lnec_\Gamma A\to \lnec_\Gamma B)}
+  \infer0{\vdash\lnec_\Delta (A'\to B')\to \lnec_\Delta A'\to \lnec_\Delta B'}
+\infer2{\vdash\lnec_\Delta \lnec_\Gamma (A\to B) \to \lnec_\Delta (\lnec_\Gamma A\to \lnec_\Gamma B)}
+\end{prooftree}\]
+mit
+\begin{gather*}
+A' := \lnec_\Gamma (A\to B),\\
+B' := (\lnec_\Gamma A\to \lnec_\Gamma B).
+\end{gather*}
+\end{frame}
+
+\begin{frame}
+Insofern $A,B$ ausschweifend werden, bietet es sich an, die Schreibweise
+\[\dfrac{\vdash A}{\vdash B}\;\text{\footnotesize T}
+\quad\text{als Abkürzung für}\quad
+\dfrac{\begin{prooftree}[center=false]\infer0{\vdash A\to B}\end{prooftree}\quad\;\;\vdash A}{\vdash B}\]
+zu nutzen, wobei T den Name des Theoremschemas meint, aus dem das Theorem
+$A\to B$ hervorgeht.\pause{} Analog
+\[\dfrac{\vdash A\quad\;\;\vdash B}{\vdash C}\;\text{\footnotesize T}\quad
+\text{für}\quad
+\begin{prooftree}
+    \infer0{\vdash A\to B\to C}
+    \hypo{\vdash A}
+  \infer2{\vdash B\to C}
+  \hypo{\vdash B}
+\infer2{\vdash C}
+\end{prooftree}\]
+wobei T das Schema meint, aus dem $A\to B\to C$ hervorgeht.
+\end{frame}
+
+\begin{frame}
+Es findet sich
+\[\begin{prooftree}
+                \infer0[\inote{GS}]{\lnec_{A'} \lnec_\Gamma (A\to B\to C)}
+              \infer1[\inote{Abs}]{\lnec_{A'\!,\,B'} \lnec_\Gamma (A\to B\to C)}
+            \infer1[\inote{HSB}]{\lnec_{A'\!,\,B'} (\lnec_\Gamma A\to\lnec_\Gamma (B\to C))}
+          \infer1[\inote{SB}]{\lnec_{A'\!,\,B'} \lnec_\Gamma A\to\lnec_{A'\!,\,B'}\lnec_\Gamma (B\to C)}
+            \infer0[\inote{GS}]{\lnec_{B'} \lnec_\Gamma A}
+          \infer1[\inote{Abs}]{\lnec_{A'\!,\,B'} \lnec_\Gamma A}
+        \infer2{\vdash\lnec_{A'\!,\,B'}\lnec_\Gamma (B\to C)}
+      \infer1[\inote{HSB}]{\vdash\lnec_{A'\!,\,B'}(\lnec_\Gamma B\to\lnec_\Gamma C)}
+    \infer1[\inote{SE}]{\vdash\lnec_{A'}(\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma C)}
+  \infer1[\inote{SE}]{\vdash\lnec_\emptyset(\lnec_\Gamma (A\to B\to C)\to\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma C)}
+\infer1[\inote{Lift}]{\vdash\lnec_\Gamma (A\to B\to C)\to\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma C}
+\end{prooftree}\]
+mit
+\begin{gather*}
+A' := \lnec_\Gamma (A\to B\to C),\\
+B' := \lnec_\Gamma A.
+\end{gather*}
+\end{frame}
+
+\begin{frame}
+Zu jeder »Schlussregel« der Form $A\to B\to C$ gelingt nun die Herleitung
+\[\begin{prooftree}
+    \hypo{\vdash A\to B\to C}
+  \infer1{\vdash\lnec_\Delta (A\to B\to C)}
+\infer1[\inote{SBB}.]{\vdash\lnec_\Delta A\to \lnec_\Delta B\to \lnec_\Delta C}
+\end{prooftree}\]\pause
+Folgende Konvention. Ist T der Name des als Schlussregel aufgefassten
+Theoremschemas $A\to B$, so sei MT der Name des Theoremschemas
+$\lnec_\Delta A\to\lnec_\Delta B$.
+
+\parspace
+Ist T entsprechend der Name für $A\to B\to C$, so sei MT der Name für
+$\lnec_\Delta A\to\lnec_\Delta B\to\lnec_\Delta C$.
+\end{frame}
+
+\begin{frame}
+Übrigens können wir diese zulässigen Regeln
+\[\dfrac{\vdash A\to B}{\vdash\lnec_\Delta A\to\lnec_\Delta B},\qquad
+\dfrac{\vdash A\to B\to C}{\vdash\lnec_\Delta A\to\lnec_\Delta B\to\lnec_\Delta C}\]
+nun ebenfalls als Theoremschemata ausdrücken. Hierzu findet sich 
+\[\begin{array}{@{}l@{\quad}l@{}}
+\lnec_\emptyset (A\to B) \to\lnec_\Delta A\to\lnec_\Delta B, & \text{(ME1: Metaregeleinführung, 1 Prämisse)}\\
+\lnec_\emptyset (A\to B\to C) \to\lnec_\Delta A\to\lnec_\Delta B\to\lnec_\Delta C. & \text{(ME2: Metaregeleinführung, 2 Prämissen)}
+\end{array}\]\pause
+Die Herleitung von ME1 ist zum Beispiel\pause
+\[\begin{prooftree}
+        \infer0[\!\footnotesize GS\!\!]{\vdash\lnec_{\lnec_\emptyset (A\to B)}\lnec_\emptyset (A\to B)}
+      \infer1[\inote{MAbs}]{\vdash\lnec_{\lnec_\emptyset (A\to B)}\lnec_\Delta (A\to B)}
+    \infer1[\inote{MSB}]{\vdash\lnec_{\lnec_\emptyset (A\to B)}(\lnec_\Delta A\to\lnec_\Delta B)}
+  \infer1[\inote{SE}]{\vdash\lnec_\emptyset(\lnec_\emptyset (A\to B)\to\lnec_\Delta A\to\lnec_\Delta B)}
+\infer1[\inote{Lift}.]{\vdash\lnec_\emptyset (A\to B)\to\lnec_\Delta A\to\lnec_\Delta B}
+\end{prooftree}\]
+\end{frame}
+
+\begin{frame}
+Wir können nun die Schnittregel als Theoremschema
+\[\lnec_{\Gamma\!,\,\,A}B\to\lnec_\Gamma A\to\lnec_\Gamma B\]
+herleiten. Es findet sich\pause{}
+\[\begin{prooftree}
+        \infer0[\!\footnotesize GS\!\!]{\vdash\lnec_{\lnec_{\Gamma\!,\,\,A}B}\lnec_{\Gamma\!,\,\,A}B}
+      \infer1[\inote{MSE}]{\vdash\lnec_{\lnec_{\Gamma\!,\,\,A}B}\lnec_\Gamma (A\to B)}
+    \infer1[\inote{MSB}]{\vdash\lnec_{\lnec_{\Gamma\!,\,\,A}B}(\lnec_\Gamma A\to\lnec_\Gamma B)}
+  \infer1[\inote{SE}]{\vdash\lnec_\emptyset(\lnec_{\Gamma\!,\,\,A}B\to\lnec_\Gamma A\to\lnec_\Gamma B)}
+\infer1[\inote{Lift}.]{\vdash\lnec_{\Gamma\!,\,\,A}B\to\lnec_\Gamma A\to\lnec_\Gamma B}
+\end{prooftree}\]
+\end{frame}
+
+\begin{frame}
+Nun sind wir befähigt, die am Anfang beschriebene Herleitung zu formalisieren.
+Aus dem Axiom $\lnec_{A,B} (A\land B)$ soll mithilfe der »Schnittregel« die »Regel«
+\[\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma (A\land B)\]
+abgeleitet werden. Es findet sich der Herleitungsbaum\pause
+\[\begin{prooftree}
+              \infer0{\vdash\lnec_{A,B}(A\land B)}
+            \infer1[\inote{Abs}]{\vdash\lnec_{\Gamma,A,B}(A\land B)}
+          \infer1{\vdash\lnec_\Delta\lnec_{\Gamma,A,B}(A\land B)}
+              \infer0[\inote{GS}]{\vdash\lnec_{\lnec_\Gamma B}\lnec_\Gamma B}
+            \infer1[\inote{MAbs}]{\vdash\lnec_{\lnec_\Gamma B}\lnec_{\Gamma,A} B}
+          \infer1[\inote{Abs}]{\vdash\lnec_\Delta\lnec_{\Gamma,A} B}
+        \infer2[\inote{MSchnitt}]{\vdash\lnec_\Delta\lnec_{\Gamma\!,\,\,A}(A\land B)}
+          \infer0[\inote{GS}]{\vdash\lnec_{\lnec_\Gamma A}\lnec_\Gamma A}
+        \infer1[\inote{Abs}]{\vdash\lnec_\Delta\lnec_\Gamma A}
+      \infer2[\inote{MSchnitt}]{\vdash\lnec_\Delta\lnec_\Gamma (A\land B)}
+    \infer1[\inote{SE}]{\vdash\lnec_{\lnec_\Gamma A}(\lnec_\Gamma B\to\lnec_\Gamma (A\land B))}
+  \infer1[\inote{SE}]{\vdash\lnec_\emptyset(\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma (A\land B))}
+\infer1[\inote{Lift}]{\vdash\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma (A\land B)}
+\end{prooftree}\]
+mit $\Delta:=\{\lnec_\Gamma A,\lnec_\Gamma B\}$.
+\end{frame}
+
+\begin{frame}
+Da ist schon ein wenig umständlich. Wo die restlichen »Regeln« des
+natürlichen Schließens zur Verfügung stehen, kann man alternativ
+\[\lnec_\emptyset(A\to B\to A\land B)\]
+herleiten, und gelangt damit via ME2 kurzerhand zu
+\[\lnec_\Gamma A\to\lnec_\Gamma B\to\lnec_\Gamma (A\land B).\]
+\end{frame}
+
+\begin{frame}
+\headline{Bilanz}
+\end{frame}
+
+\begin{frame}
+Ist dies nicht ein wenig umständlich?\pause{} Es mag auf den ersten
+Blick so erscheinen. Dagegen spricht allerdings folgendes.
+\begin{itemize}
+\item Der Aufwand konzentriert sich eigentlich nur auf die Herleitung
+  einer Reihe von Hilfssätzen. Der Rest läuft ab wie zuvor im
+  herkömmlichen natürlichen Schließen.
+\item Der Verifizierer wird eleganter, da die Zahl der Schlussregeln
+  auf zwei reduziert wird. Gleichzeitig wird ermöglicht, durch die
+  Wahl unterschiedlicher Axiomenschemata alternative Systeme von
+  »Schlussregeln« aufzustellen.
+\end{itemize}\pause
+Allerdings ist diese Metalogik recht schwach. Es können nur ableitbare
+Schlussregeln hergeleitet werden, nicht aber andere denkbare zulässige.
+Eine Regel wird zulässig genannt, wenn es ein Verfahren gibt, dass
+diese auf die Anwendung der verfügbaren Regeln zurückführt. Zur Konstruktion
+so eines Verfahrens müsste aber strukturelle Induktion über den Aufbau von
+Formeln und Beweisen zur Verfügung stehen. Damit einhergehend wäre wohl
+zudem ein Rattenschwanz an Hilfsbegriffen und Mechanismen erforderlich.
+\end{frame}
+
+\end{document}
