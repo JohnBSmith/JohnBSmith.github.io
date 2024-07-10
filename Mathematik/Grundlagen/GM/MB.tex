@@ -31,13 +31,21 @@ mit denen Terme für die Konjunktion und die Disjunktion konstruiert
 werden können.
 
 Ein kurzes Beispiel. Mit der Herleitung
-\[\infer{\Gamma\vdash B\land A}{
-  \infer{\Gamma\vdash B}{\Gamma\vdash A\land B}
-& \infer{\Gamma\vdash A}{\Gamma\vdash A\land B}}
-\;\rightsquigarrow\quad
-\infer{\Gamma\vdash\code{conj} (\code{proj2}(h)) (\code{proj1}(h))\colon B\land A}{
-  \infer{\Gamma\vdash\code{proj2}(h)\colon B}{\Gamma\vdash h\colon A\land B}
-& \infer{\Gamma\vdash\code{proj1}(h)\colon A}{\Gamma\vdash h\colon A\land B}}\]
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\land B}
+  \infer1{\Gamma\vdash B}
+    \hypo{\Gamma\vdash A\land B}
+  \infer1{\Gamma\vdash A}
+\infer2{\Gamma\vdash B\land A}
+\end{prooftree}
+\;\rightsquigarrow\;\;
+\begin{prooftree}
+    \hypo{\Gamma\vdash h\colon A\land B}
+  \infer1{\Gamma\vdash\code{proj2}(h)\colon B}
+    \hypo{\Gamma\vdash h\colon A\land B}
+  \infer1{\Gamma\vdash\code{proj1}(h)\colon A}
+\infer2{\Gamma\vdash\code{conj} (\code{proj2}(h)) (\code{proj1}(h))\colon B\land A}
+\end{prooftree}\]
 kommt man bezüglich $\Gamma:=[h\colon A\land B]$ zum Term
 \[(h\mapsto\code{conj} (\code{proj2}(h)) (\code{proj1}(h)))\colon A\land B\to B\land A.\]
 Der Quelltext hierzu:
@@ -45,7 +53,7 @@ Der Quelltext hierzu:
 \noindent
 \begin{lstlisting}[escapechar=`]
 `\kw{Theorem}` conj_commutes A B:
-  A `$\land$` B `$\to$` B `$\land$` A.
+  A /\ B -> B /\ A.
 `\kw{Proof.}`
   exact (`\kw{fun}` h => conj (proj2 h) (proj1 h)).
 `\kw{Qed.}`
@@ -60,3 +68,42 @@ vor. Vermittels den Taktiken, die zu den Schlussregeln des natürlichen
 Schließens gehören, kann das Ziel auf ein oder mehrere
 \emph{Unterziele} zurückgeführt werden. Das geht bis zum Erreichen
 von Grundsequenzen so weiter.
+
+Mit $\Gamma:=[A\colon\mathrm{Prop},B\colon\mathrm{Prop}]$ gilt
+\[\begin{prooftree}
+        \infer0{\Gamma,g\colon\lnot B\vdash g\colon\lnot B}
+          \infer0{\Gamma,f\colon A\to B\vdash f\colon A\to B}
+          \infer0[exact $a$]{\Gamma,a\colon A\vdash a\colon A}
+        \infer2[apply $f$]{\Gamma,f\colon A\to B, a\colon A\vdash f(a)\colon B}
+      \infer2[apply $g$]{\Gamma, f\colon A\to B, g\colon\lnot B, a\colon A\vdash g(f(a))\colon\bot}
+    \infer1[intro $a$]{\Gamma, f\colon A\to B, g\colon\lnot B\vdash a\mapsto g(f(a))\colon \lnot A}
+  \infer1[intro $g$]{\Gamma, f\colon A\to B\vdash g\mapsto a\mapsto g(f(a))\colon \lnot B\to\lnot A}
+\infer1[intro $f${\normalsize .}]{\Gamma\vdash f\mapsto g\mapsto a\mapsto g(f(a))\colon (A\to B)\to (\lnot B\to\lnot A)}
+\end{prooftree}\]
+Man beachte, dass der konstruierte Term $f\mapsto g\mapsto a\mapsto g(f(a))$ am Anfang noch
+unbekannt ist. Bekannt sind im jeweiligen Schritt lediglich die zur
+Verfügung stehenden Variablen und der Typ, dessen Term zu konstruieren
+ist. Erst nachdem man sich rückwärts von der Wurzel aus zu den
+Blättern hin durchgearbeitet hat, kann man den Weg zur Wurzel hin
+zurücklaufen und dabei schrittweise den Terme konstruieren.
+In der Praxis gibt man sich in der Regel zufrieden, bei den Blättern
+angekommen zu sein. Der tatsächliche Verlauf sieht also so aus:
+\[\begin{prooftree}
+        \infer0{\Gamma,g\colon\lnot B\vdash g\colon\lnot B}
+          \infer0{\Gamma,f\colon A\to B\vdash f\colon A\to B}
+          \infer0[exact $a$]{\Gamma,a\colon A\vdash {?}\colon A}
+        \infer2[apply $f$]{\Gamma,f\colon A\to B, a\colon A\vdash {?}\colon B}
+      \infer2[apply $g$]{\Gamma, f\colon A\to B, g\colon\lnot B, a\colon A\vdash {?}\colon\bot}
+    \infer1[intro $a$]{\Gamma, f\colon A\to B, g\colon\lnot B\vdash {?}\colon \lnot A}
+  \infer1[intro $g$]{\Gamma, f\colon A\to B\vdash {?}\colon \lnot B\to\lnot A}
+\infer1[intro $f$]{\Gamma\vdash {?}\colon (A\to B)\to (\lnot B\to\lnot A)}
+\end{prooftree}\]
+Der Quelltext hierzu:
+\begin{lstlisting}[escapechar=`]
+`\kw{Theorem}` contraposition (A B: Prop):
+  (A -> B) -> (~B -> ~A).
+`\kw{Proof.}`
+  intro f. intro g. intro a.
+  apply g. apply f. exact a.
+`\kw{Qed.}`
+\end{lstlisting}

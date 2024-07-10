@@ -1,4 +1,5 @@
 
+export TEXINPUTS=~/.local/share/tex0:
 name=Grundlagen
 path=/tmp/$name-bf41
 

@@ -120,10 +120,13 @@ Mit den bisherigen Regeln ist bereits die zulässige Regel
 ableitbar, die eine allgemeinere Form des Modus ponens darstellt. Man
 erhält sie kurzerhand, indem den Prämissen des Modus
 ponens jeweils die Abschwächungsregel vorgesetzt wird:
-\[\infer{\Gamma,\Gamma'\vdash B}{
-  \infer{\Gamma,\Gamma'\vdash A\cond B}{\Gamma\vdash A\cond B}
-& \infer{\Gamma,\Gamma'\vdash A}{\Gamma'\vdash A}}
-\]
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\cond B}
+  \infer1{\Gamma,\Gamma'\vdash A\cond B}
+    \hypo{\Gamma'\vdash A}
+  \infer1{\Gamma,\Gamma'\vdash A}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
 Die einfache Form des Modus ponens erhält man mit $\Gamma':=\Gamma$ als
 Spezialfall unter Anwendung der Kontraktionsregel.
 
@@ -189,7 +192,7 @@ Aussagen, sondern für Objekte wie Zahlen oder Mengen stehen.
 In diesem Sinne sind auch die Schlussregeln Schemata. Sofern man
 Schlussregeln mit null Prämissen gestattet, lässt sich das
 Axiomenschema auch als Regel
-\[\dfrac{}{A\vdash A}\]
+\[\begin{prooftree}\infer0{A\vdash A}\end{prooftree}\]
 auffassen. In dieser Weise wollen wir die Anwendung von Axiomen in den
 Beweisbäumen darstellen.
 
@@ -198,10 +201,10 @@ Axiome in der Form von Sequenzen heißen auch
 
 Wir haben nun die Mittel in der Hand, um erste Theoreme beweisen
 zu können. Es ist $A\cond A$ ein Theorem. Der Beweisbaum ist:
-\[
-\infer[\infernote{Implikationseinführung}]{\vdash A\cond A}{
-  \infer[\infernote{Axiom}]{A\vdash A}{}}
-\]
+\[\begin{prooftree}
+  \infer0[Axiom]{A\vdash A}
+\infer1[Subjunktionseinführung]{\vdash A\cond A}
+\end{prooftree}\]
 Unter der Lesung, dass $A$ eine Metavariable ist, handelt es
 eigentlich nicht nur um ein Theorem, sondern um ein Schema von
 Theoremen\index{Theoremschema}. Setzt man für $A$ bspw. die konkrete
@@ -249,33 +252,33 @@ von Schnee ableitbar. So sind diese Sequenzen zu verstehen.
 Die Einführung der Konjunktion geschieht mit der Regel
 \[\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma,\Gamma'\vdash A\land B}.\]
 Denn es findet sich der Beweisbaum:
-\[
-\infer[\infernote{MP}]{\Gamma,\Gamma'\vdash A\land B}{
-  \infer[\infernote{MP}]{\Gamma\vdash B\cond A\land B}{
-    \infer[\infernote{Impl-Einf.}]{\vdash A\cond (B\cond A\land B)}{
-      \infer[\infernote{Impl-Einf.}]{A\vdash B\cond A\land B}{
-        \infer[\infernote{Axiom}]{A,B\vdash A\land B}{}}}
-  & \Gamma\vdash A}
-& \Gamma'\vdash B}
-\]
-Es steht MP als Abkürzung für Modus ponens, und Impl-Einf. für
-Implikationseinführung. Man schreibt alternativ auch das Kürzel
-$\cond$E anstelle Impl-Einf. und das Kürzel $\cond$B anstelle
-von MP. Hierbei steht E offenkundig für \emph{Einführung} und
-B für \emph{Beseitigung}. Aber Vorsicht, in der englischsprachigen
-Literatur sind das I für \emph{introduction} und E für
-\emph{elimination}.
+\[\begin{prooftree}
+        \infer0[Axiom]{A,B\vdash A\land B}
+      \infer1[Subj-Einf.]{A\vdash B\cond A\land B}
+    \infer1[Subj-Einf.]{\vdash A\cond (B\cond A\land B)}
+    \hypo{\Gamma\vdash A}
+  \infer2[MP]{\Gamma\vdash B\cond A\land B}
+  \hypo{\Gamma'\vdash B}
+\infer2[MP]{\Gamma,\Gamma'\vdash A\land B}
+\end{prooftree}\]
+Es steht MP als Abkürzung für Modus ponens, und Sub-Einf. für
+Subjunktionseinführung. Man schreibt alternativ auch das Kürzel
+$\cond$E statt Subj-Einf. und $\cond$B statt MP. Hierbei steht E
+offenkundig für \emph{Einführung} und B für \emph{Beseitigung}. Aber
+Vorsicht, in der englischsprachigen Literatur sind das I für
+\emph{introduction} und E für \emph{elimination}.
+Unmissverständlich wären subj-intro und subj-elim.
 
 Die beiden Regeln zur Beseitigung der Konjunktion sind
 \[\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A},
 \qquad\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}.\]
 Denn es findet sich:
-\[
-\infer[\infernote{MP}]{\Gamma\vdash A}{
-  \infer[\infernote{Impl-Einf.}]{\vdash A\land B\cond A}{
-    \infer[\infernote{Axiom}]{A\land B\vdash A}{}}
-& \Gamma\vdash A\land B}
-\]
+\[\begin{prooftree}
+    \infer0[Axiom]{A\land B\vdash A}
+  \infer1[Subj-Einf.]{\vdash A\land B\cond A}
+  \hypo{\Gamma\vdash A\land B}
+\infer2[MP]{\Gamma\vdash A}
+\end{prooftree}\]
 Die Disjunktion\index{Disjunktion} $A\lor B$, auch Oder"=Verknüpfung
 genannt, sprich »$A$ oder $B$«, ist charakterisiert durch die Sequenzen
 \[A\vdash A\lor B;\qquad B\vdash A\lor B;\qquad
@@ -430,37 +433,42 @@ Bei der Beseitigung müssen wir nun gewissermaßen eine Fallunterscheidung
 in die vier Fälle vornehmen und bestätigen, dass jeder Fall dieselbe
 Aussage $B$ impliziert. Dies soll allerdings parametrisch in einer
 einzigen Ableitung stattfinden. Man gelangt zu
-\[\dfrac{\Gamma\vdash\exists x\colon A(x)\qquad\Gamma',A(a)\vdash B}
-{\Gamma,\Gamma'\vdash B}(a\notin\mathrm{FV}(\Gamma,\Gamma',B,\exists x\colon A(x))).\]
+\[\dfrac{\Gamma\vdash\exists x\colon A(x)\qquad\Gamma',A(u)\vdash B}
+{\Gamma,\Gamma'\vdash B}(u\notin\mathrm{FV}(\Gamma,\Gamma',B,\exists x\colon A(x))).\]
 Diese Regel wird wie folgt interpretiert. Mit der Existenzaussage
-$\exists x\colon A(x)$ liegt ein Zeuge $a$ mit $A(a)$ vor. Unter
-Verwendung von $A(a)$ wird nun eine Aussage $B$ abgeleitet, in der $a$
+$\exists x\colon A(x)$ liegt ein Zeuge $u$ mit $A(u)$ vor. Unter
+Verwendung von $A(u)$ wird nun eine Aussage $B$ abgeleitet, in der $u$
 nicht frei vorkommt. Somit gilt $B$ unabhängig vom gewählten Zeugen,
-was notwendig ist, da unbekannt bleibt, welcher der Zahlen von eins
+was notwendig ist, da unbekannt bleibt, welche der Zahlen von eins
 bis vier als Zeuge vorliegt.
 
-Ohne die Bedingung an $a$ ließe sich leicht Schabernack vollführen.
+Ohne die Bedingung an $u$ ließe sich leicht Schabernack vollführen.
 Man könnte beispielsweise kurzerhand eine Existenzaussage zu einer
 Allaussage machen:
-\[\infer{\vdash\forall x\colon A(x)}{
-  \infer{\vdash A(a)}{
-    \vdash \exists x\colon A(x)
-  & \infer{A(a)\vdash A(a)}{}}}\]
+\[\begin{prooftree}
+    \hypo{\vdash\exists x\colon A(x)}
+    \infer0{A(u)\vdash A(u)}
+  \infer2{\vdash A(u)}
+\infer1{\vdash\forall x\colon A(x)}
+\end{prooftree}\]
 Abschließend verbleibt noch näher zu erläutern, wie Substitution
 vonstatten geht. Ersetzt wird nur jedes freie Vorkommen einer
 Variablen. Ein durch einen Quantor gebundenes Vorkommen der Variable
 bleibt dagegen erhalten. So resultiert die Substitution
-\[(A(x)\land\forall x: B(x))[x:=y]\quad\text{in}\quad
-A(y)\land\forall x\colon B(x).\]
+\[(P(x)\land\forall x: Q(x))[x:=y]\quad\text{in}\quad
+P(y)\land\forall x\colon Q(x).\]
 Außerdem darf es bei einer Substitution nicht zu einer Überschattung
-durch eine gebundene Variable kommen. Die Substitution
-\[(\forall y\colon A(x)\land B(y))[x:=y]\]
+durch eine Variablenbindung kommen, engl. \emph{capture-avoiding substitution},
+was bedeuten soll, dass bei $A[x:=t]$ keine der freien Variablen des Terms $t$
+durch eine in $A$ befindliche Variablenbindung eingefangen wird. Die
+Substitution
+\[(\forall y\colon P(x)\land Q(y))[x:=y]\]
 darf beispielsweise nicht direkt ausgeführt werden. Man geht der
 Überschattung aus dem Weg, indem die gebundene Variable $y$ zuerst
 in eine frische, nehmen wir $z$, umbenannt wird. Das Resultat der
 Substitution ist also
-\[\forall z\colon A(y)\land B(z),\quad\text{nicht}\quad
-\forall y\colon A(y)\land B(y).\]
+\[\forall z\colon P(y)\land Q(z),\quad\text{nicht}\quad
+\forall y\colon P(y)\land Q(y).\]
 
 \subsection{Substitution}
 
@@ -613,41 +621,43 @@ azyklischer Graph, die bei einigen Beweisen ein wenig den
 Schreibaufwand reduzieren würde.
 
 Der Beweisbaum des genannten Theorems ist:
-\[
-\infer[\infernote{$\cond$E}]{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
-  \infer[\infernote{$\cond$E}]{A\cond B\vdash \lnot B\cond\lnot A}{
-    \infer[\infernote{$\lnot$E}]{A\cond B, \lnot B\vdash\lnot A}{
-      \infer[\infernote{$\lnot$B}]{A\cond B, \lnot B, A\vdash\bot}{
-        \infer[\infernote{Axiom}]{\lnot B\vdash\lnot B}{}
-      & \infer[\infernote{$\cond$B}]{A\cond B, A\vdash B}{
-          \infer[\infernote{Axiom}]{A\cond B\vdash A\cond B}{}
-        & \infer[\infernote{Axiom}]{A\vdash A}{}}}}}}
-\]
+\[\begin{prooftree}
+        \infer0[Axiom]{\lnot B\vdash\lnot B}
+          \infer0[Axiom]{A\cond B\vdash A\cond B}
+          \infer0[Axiom]{A\vdash A}
+        \infer2[$\cond$B]{A\cond B, A\vdash B}
+      \infer2[$\lnot$B]{A\cond B, \lnot B, A\vdash\bot}
+    \infer1[$\lnot$E]{A\cond B, \lnot B\vdash\lnot A}
+  \infer1[$\cond$E]{A\cond B\vdash \lnot B\cond\lnot A}
+\infer1[$\cond$E]{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}
+\end{prooftree}\]
 Die Ausformulierung der Sequenzen verlangt langwieriges erneutes
 Aufschreiben der Antezedenzen. Sobald man das Prozedere einmal
 verstanden hat, erscheint es überausführlich. Man kann sich daher
 verkürzte Darstellungen der Beweisbäume überlegen:
-\[
-\begin{tabular}{@{}l@{\qquad\quad}l}
-\infer{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
-  \infer{2\vdash \lnot B\cond\lnot A}{
-    \infer{1, 2\vdash\lnot A}{
-      \infer{1, 2, 3\vdash\bot}{
-        \infer{1\equiv\lnot B}{}
-      & \infer{2, 3\vdash B}{
-          \infer{2\equiv A\cond B}{}
-        & \infer{3\equiv A}{}}}}}}
+\[\begin{array}{@{}l@{\qquad\quad}l}
+\begin{prooftree}[center=false]
+        \infer0{1\equiv\lnot B}
+          \infer0{2\equiv A\cond B}
+          \infer0{3\equiv A}
+        \infer2{2, 3\vdash B}
+      \infer2{1, 2, 3\vdash\bot}
+    \infer1{1, 2\vdash\lnot A}
+  \infer1{2\vdash \lnot B\cond\lnot A}
+\infer1{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}
+\end{prooftree}
 &
-\infer[\infernote{$\sim$2}]{(A\cond B)\cond (\lnot B\cond\lnot A)}{
-  \infer[\infernote{$\sim$1}]{\lnot B\cond\lnot A}{
-    \infer[\infernote{$\sim$3}]{\lnot A}{
-      \infer{\bot}{
-        \infer[\infernote{1}]{\lnot B}{}
-      & \infer{B}{
-          \infer[\infernote{2}]{A\cond B}{}
-        & \infer[\infernote{3}]{A}{}}}}}}
-\end{tabular}
-\]
+\begin{prooftree}[center=false]
+        \infer0[1]{\lnot B}
+          \infer0[2]{A\cond B}
+          \infer0[3]{A}
+        \infer2{B}
+      \infer2{\bot}
+    \infer1[$\sim$3]{\lnot A}
+  \infer1[$\sim$1]{\lnot B\cond\lnot A}
+\infer1[$\sim$2]{(A\cond B)\cond (\lnot B\cond\lnot A)}
+\end{prooftree}
+\end{array}\]
 Die linke Form kürzt die Antezedenzen durch Nummern ab. In der rechten
 Form entfallen die Antezedenzen vollständig. Stattdessen tauchen sie
 als in den Blättern gemachte nummerierte \emph{Annahmen} auf, die im
