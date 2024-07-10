@@ -101,13 +101,13 @@ Die Aussage $\forall x\in\emptyset\colon A(x)$ ist allgemeingültig, man
 spricht von der \emph{leeren Wahrheit}\index{leere Wahrheit}, engl.
 \emph{vacuous truth}\index{vacuous truth}. Via ex falso quodlibet
 erhält man nämlich:
-\[
-\infer{\vdash\forall x\colon x\in\emptyset\cond A(x)}{
-  \infer[\infernote{EFQ}]{x\in\emptyset\vdash A(x)}{
-    \infer{x\in\emptyset\vdash\bot}{
-      \infer{\vdash\lnot x\in\emptyset}{}
-    & \infer{x\in\emptyset\vdash x\in\emptyset}{}}}}
-\]
+\[\begin{prooftree}
+      \infer0{\vdash\lnot x\in\emptyset}
+      \infer0{x\in\emptyset\vdash x\in\emptyset}
+    \infer2{x\in\emptyset\vdash\bot}
+  \infer1[EFQ]{x\in\emptyset\vdash A(x)}
+\infer1{\vdash\forall x\colon x\in\emptyset\cond A(x)}
+\end{prooftree}\]
 Viele Regeln zur beschränkten Quantifizierung sind analog zu den
 Regeln der unbeschränkten. Beispielsweise gilt%
 \[(\forall x\in M\colon A(x)\land B(x))\,\bicond\, (\forall x\in M\colon A(x))
@@ -406,32 +406,38 @@ Sind $A,B$ Teilmengen einer Grundmenge $G$, so sind auch
 $A\cap B$, $A\cup B$ und $A\setminus B$ Teilmengen der Grundmenge.
 Der Beweis zu $A\cap B\subseteq G$ ist:
 \[
-\infer{A\subseteq G\vdash A\cap B\subseteq G}{
-  \infer{A\subseteq G\vdash\forall x\colon x\in A\cap B\cond x\in G}{
-    \infer{A\subseteq G, x\in A\cap B\vdash x\in G}{
-      \infer{x\in A\cap B\vdash x\in A}{
-        \infer{x\in A\cap B\vdash x\in A\land x\in B}{
-          \infer{x\in A\cap B\vdash x\in A\cap B}{}}}
-    & \infer{A\subseteq G\vdash x\in A\cond x\in G}{
-        \infer{A\subseteq G\vdash \forall x\colon x\in A\cond x\in G}{
-          \infer{A\subseteq G\vdash A\subseteq G}{}}}}}}
+\begin{prooftree}
+          \infer0{x\in A\cap B\vdash x\in A\cap B}
+        \infer1{x\in A\cap B\vdash x\in A\land x\in B}
+      \infer1{x\in A\cap B\vdash x\in A}
+          \infer0{A\subseteq G\vdash A\subseteq G}
+        \infer1{A\subseteq G\vdash \forall x\colon x\in A\cond x\in G}
+      \infer1{A\subseteq G\vdash x\in A\cond x\in G}
+    \infer2{A\subseteq G, x\in A\cap B\vdash x\in G}
+  \infer1{A\subseteq G\vdash\forall x\colon x\in A\cap B\cond x\in G}
+\infer1{A\subseteq G\vdash A\cap B\subseteq G}
+\end{prooftree}
 \]
 In so pedantischer Ausführlichkeit findet man Beweise in Büchern
 nicht vor. Erstens wird man stillschweigend zulässige Schlussregeln zur
 Verkürzung aufstellen. So nimmt der Baum die konzise Form
 \[
-\begin{array}{@{}l@{\qquad\quad}l}
-\infer{A\subseteq G\vdash A\cap B\subseteq G}{
-  \infer{A\subseteq G,x\in A\cap B\vdash x\in G}{
-    \infer{x\in A\cap B\vdash x\in A}{
-      \infer{x\in A\cap B\vdash x\in A\cap B}{}}
-  & \infer{A\subseteq G\vdash A\subseteq G}{}}}
+\begin{array}{@{}l@{\qquad\;}l}
+\begin{prooftree}[center = false]
+      \infer0{x\in A\cap B\vdash x\in A\cap B}
+    \infer1{x\in A\cap B\vdash x\in A}
+    \infer0{A\subseteq G\vdash A\subseteq G}
+  \infer2{A\subseteq G,x\in A\cap B\vdash x\in G}
+\infer1{A\subseteq G\vdash A\cap B\subseteq G}
+\end{prooftree}
 &
-\infer[\infernote{$\sim$1}]{A\cap B\subseteq G}{
-  \infer{x\in G}{
-    \infer{x\in A}{
-      \infer[\infernote{1}]{x\in A\cap B}{}}
-  & A\subseteq G}}
+\begin{prooftree}[center = false]
+      \infer0[1]{x\in A\cap B}
+    \infer1{x\in A}
+    \hypo{A\subseteq G}
+  \infer2{x\in G}
+\infer1[$\sim$1]{A\cap B\subseteq G}
+\end{prooftree}
 \end{array}
 \]
 an. Zweitens formuliert der Mathematiker den Beweis meist in Worten:

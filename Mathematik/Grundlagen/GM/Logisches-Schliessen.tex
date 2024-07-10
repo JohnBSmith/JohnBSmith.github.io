@@ -781,23 +781,27 @@ Zur Implikation von links nach rechts findet sich der Baum:
 \begin{small}
 \[
 \begin{array}{@{}l@{\qquad}l}
-\infer[\infernote{$\sim$1}]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}{
-  \infer{\forall x\colon A\land B(x)}{
-    \infer{A\land B(x)}{
-      \infer{A}{
-        \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}
-    & \infer{B(x)}{
-        \infer{\forall x\colon B(x)}{
-          \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}}}}}
+\begin{prooftree}[center=false]
+        \infer0[1]{A\land\forall x\colon B(x)}
+      \infer1{A}
+          \infer0[1]{A\land\forall x\colon B(x)}
+        \infer1{\forall x\colon B(x)}
+      \infer1{B(x)}
+    \infer2{A\land B(x)}
+  \infer1{\forall x\colon A\land B(x)}
+\infer1[$\sim$1]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}
+\end{prooftree}
 &
-\infer[\infernote{$\sim$1}]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}{
-  \infer{\forall x\colon A\land B(x)}{
-    \infer{A\land B(u)}{
-      \infer{A}{
-        \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}
-    & \infer{B(u)}{
-        \infer{\forall x\colon B(x)}{
-          \infer[\infernote{1}]{A\land\forall x\colon B(x)}{}}}}}}
+\begin{prooftree}[center=false]
+        \infer0[1]{A\land\forall x\colon B(x)}
+      \infer1{A}
+          \infer0[1]{A\land\forall x\colon B(x)}
+        \infer1{\forall x\colon B(x)}
+      \infer1{B(u)}
+    \infer2{A\land B(u)}
+  \infer1{\forall x\colon A\land B(x)}
+\infer1[$\sim$1]{(A\land\forall x\colon B(x))\cond (\forall x\colon A\land B(x))}
+\end{prooftree}
 \end{array}
 \]
 \end{small}%
@@ -813,25 +817,29 @@ Zur Implikation von rechts nach links findet sich:
 \begin{small}
 \[
 \begin{array}{@{}l@{\qquad}l}
-\infer[\infernote{$\sim$1}]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}{
-  \infer{A\land\forall x\colon B(x)}{
-    \infer{A}{
-      \infer{A\land B(x)}{
-        \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}
-  & \infer{\forall x\colon B(x)}{
-      \infer{B(x)}{
-        \infer{A\land B(x)}{
-          \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}}}}
+\begin{prooftree}[center=false]
+        \infer0[1]{\forall x\colon A\land B(x)}
+      \infer1{A\land B(x)}
+    \infer1{A}
+          \infer0[1]{\forall x\colon A\land B(x)}
+        \infer1{A\land B(x)}
+      \infer1{B(x)}
+    \infer1{\forall x\colon B(x)}
+  \infer2{A\land\forall x\colon B(x)}
+\infer1[$\sim$1]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}
+\end{prooftree}
 &
-\infer[\infernote{$\sim$1}]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}{
-  \infer{A\land\forall x\colon B(x)}{
-    \infer{A}{
-      \infer{A\land B(u)}{
-        \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}
-  & \infer{\forall x\colon B(x)}{
-      \infer{B(u)}{
-        \infer{A\land B(u)}{
-          \infer[\infernote{1}]{\forall x\colon A\land B(x)}{}}}}}}
+\begin{prooftree}[center=false]
+        \infer0[1]{\forall x\colon A\land B(x)}
+      \infer1{A\land B(u)}
+    \infer1{A}
+          \infer0[1]{\forall x\colon A\land B(x)}
+        \infer1{A\land B(u)}
+      \infer1{B(u)}
+    \infer1{\forall x\colon B(x)}
+  \infer2{A\land\forall x\colon B(x)}
+\infer1[$\sim$1]{(\forall x\colon A\land B(x))\cond (A\land\forall x\colon B(x))}
+\end{prooftree}
 \end{array}
 \]
 \end{small}%
@@ -923,54 +931,60 @@ setzen, für den Menschen entstünde dadurch aber umständlicher
 Schreibaufwand. Exemplarisch soll die linke Regel zur Disjunktion als
 zulässig bestätigt werden. Für sie findet sich der Baum:
 \[
-\infer{\Gamma,\Gamma',A\lor B\vdash \Delta,\Delta'}{
-  \infer{\Gamma,\Gamma',A\lor B\vdash C}{
-    \infer{A\lor B\vdash A\lor B}{}
-  & \infer{\Gamma,A\vdash C}{
-      \infer{\Gamma,A\vdash\Delta,\Delta'}{
-        \Gamma,A\vdash\Delta}}
-  & \infer{\Gamma',B\vdash C}{
-      \infer{\Gamma',B\vdash\Delta,\Delta'}{
-        \Gamma',B\vdash\Delta'}}}}
+\begin{prooftree}
+    \infer0{A\lor B\vdash A\lor B}
+        \hypo{\Gamma,A\vdash\Delta}
+      \infer1{\Gamma,A\vdash\Delta,\Delta'}
+    \infer1{\Gamma,A\vdash C}
+        \hypo{\Gamma',B\vdash\Delta'}
+      \infer1{\Gamma',B\vdash\Delta,\Delta'}
+    \infer1{\Gamma',B\vdash C}
+  \infer3{\Gamma,\Gamma',A\lor B\vdash C}
+\infer1{\Gamma,\Gamma',A\lor B\vdash \Delta,\Delta'}
+\end{prooftree}
 \]
 Hierbei soll $C$ die Disjunktion der Aussagen von $\Delta,\Delta'$ sein.
 
 Es folgt am Beispiel des Theoremschemas zur Kontraposition, wie das
 Schließen vonstatten geht. Die Beweisbäume wären von unten nach oben
 zu lesen, weil das, was weiter oben steht, eigentlich noch unbekannt ist:
-\[
-\begin{array}{@{}l@{\qquad\quad}l}
-\infer{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
-  \infer{A\cond B\vdash\lnot B\cond\lnot A}{
-    \infer{A\cond B, \lnot B\vdash\lnot A}{
-      \infer{\vdash A, \lnot A}{
-        \infer{A\vdash A}{}}
-    & \infer{B, \lnot B\vdash}{
-        \infer{B\vdash B}{}}}}}
+\[\begin{array}{@{}l@{\qquad\quad}l}
+\begin{prooftree}
+        \infer0{A\vdash A}
+      \infer1{\vdash A, \lnot A}
+        \infer0{B\vdash B}
+      \infer1{B, \lnot B\vdash}
+    \infer2{A\cond B, \lnot B\vdash\lnot A}
+  \infer1{A\cond B\vdash\lnot B\cond\lnot A}
+\infer1{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}
+\end{prooftree}
 &
-\infer{\vdash (\lnot B\cond\lnot A)\cond (A\cond B)}{
-  \infer{\lnot B\cond\lnot A\vdash A\cond B}{
-    \infer{\lnot B\cond\lnot A, A\vdash B}{
-      \infer{\vdash \lnot B, B}{
-        \infer{B\vdash B}{}}
-    & \infer{\lnot A, A\vdash}{
-        \infer{A\vdash A}{}}}}}
-\end{array}
-\]
+\begin{prooftree}
+        \infer0{B\vdash B}
+      \infer1{\vdash \lnot B, B}
+        \infer0{A\vdash A}
+      \infer1{\lnot A, A\vdash}
+    \infer2{\lnot B\cond\lnot A, A\vdash B}
+  \infer1{\lnot B\cond\lnot A\vdash A\cond B}
+\infer1{\vdash (\lnot B\cond\lnot A)\cond (A\cond B)}
+\end{prooftree}
+\end{array}\]
 Der Kalkül muss ein klassischer sein, sonst wäre die Kontraposition
 nicht rückgängig zu machen. Noch drastischere Einsicht diesbezüglich
 schaffen die Bäume:
-\[
-\begin{array}{l@{\qquad}l}
-\infer[\infernote{$\lor$L}]{\vdash A\lor\lnot A}{
-  \infer[\infernote{$\lnot$R}]{\vdash A,\lnot A}{
-    \infer{A\vdash A}{}}}
+\[\begin{array}{l@{\qquad}l}
+\begin{prooftree}
+    \infer0{A\vdash A}
+  \infer1[$\lnot$R]{\vdash A,\lnot A}
+\infer1[$\lor$L]{\vdash A\lor\lnot A}
+\end{prooftree}
 &
-\infer[\infernote{$\lnot$R}]{\lnot\lnot A\vdash A}{
-  \infer[\infernote{$\lnot$L}]{\vdash\lnot A, A}{
-    \infer{A\vdash A}{}}}
-\end{array}
-\]
+\begin{prooftree}
+    \infer0{A\vdash A}
+  \infer1[$\lnot$L]{\vdash\lnot A, A}
+\infer1[$\lnot$R]{\lnot\lnot A\vdash A}
+\end{prooftree}
+\end{array}\]
 Es gibt auch Varianten des Sequenzenkalküls, die ausschließlich die
 Ableitung von Theoremen der intuitionistischen Logik gestatten. Sie sind
 allerdings umständlicher zu verwenden, da es sich um Einschränkungen des
@@ -1045,18 +1059,31 @@ Grundsequenz einnehmen darf.
 
 Ein Beispiel. Mit den aufgestellten Regeln ergibt sich für die
 Kontraposition der folgende Beweisbaum:
-\[
-\infer{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}{
-  \infer{\lnot ((A\cond B)\cond (\lnot B\cond\lnot A))\vdash}{
-    \infer{A\cond B, \lnot(\lnot B\cond\lnot A)\vdash}{
-      \infer{A\cond B, \lnot B, \lnot\lnot A\vdash }{
-        \infer{\lnot A, \lnot B, \lnot\lnot A\vdash}{}
-      & \infer{B, \lnot B, \lnot\lnot A\vdash}{}}}}}
-\]
+\[\begin{array}{@{}l@{\qquad}l}
+\begin{prooftree}
+        \infer0{\lnot A, \lnot B, \lnot\lnot A\vdash}
+        \infer0{B, \lnot B, \lnot\lnot A\vdash}
+      \infer2{A\cond B, \lnot B, \lnot\lnot A\vdash}
+    \infer1{A\cond B, \lnot(\lnot B\cond\lnot A)\vdash}
+  \infer1{\lnot ((A\cond B)\cond (\lnot B\cond\lnot A))\vdash}
+\infer1{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}
+\end{prooftree}
+&
+\begin{prooftree}[proof style = downwards, separation = 2em, rule margin = 0.7ex]
+          \hypo{\lnot A\,\checkmark}
+          \hypo{B\,\checkmark}
+        \infer2{\lnot\lnot A}
+      \infer[rule style = no rule]1{\lnot B}
+    \infer[rule style = no rule]1{\lnot(\lnot B\cond\lnot A)}
+  \infer[rule style = no rule]1{A\cond B}
+\infer[rule style = no rule]1{\lnot ((A\cond B)\cond (\lnot B\cond\lnot A))}
+\end{prooftree}
+\end{array}\]
 Wird dieser Baum nun auf den Kopf gestellt und die Notation dergestalt
 verkürzt, dass jede der Formeln nur einmal aufgeschrieben werden
-muss, ergibt sich der Tableaukalkül. Man mag das Schließen von
-Sequenzen insofern als vielseitig bewerten. Die dazugewonnene Sichtweise
+braucht, findet sich die übliche Notation des Tableaukalküls wieder. Die
+rechte Darstellung zeigt das Resultat dieser Umgestaltung. Man mag das Schließen
+von Sequenzen insofern als vielseitig bewerten. Die dazugewonnene Sichtweise
 schafft überdies ein tiefergründiges Verständnis des Tableaukalküls.
 
 
@@ -1089,9 +1116,11 @@ der Gleichheit lässt sich aus den beiden Regeln ableiten. Sei hierzu
 $A(u):\bicond (u=x)$. Nun ist $A(x)\bicond (x=x)$ und
 $A(y)\bicond (y=x)$. Man setze $t:=x$ und $t':=y$. Es findet sich:
 \[
-\infer{x=y\vdash y=x}{
-  \infer{x=y\vdash x=y}{}
-& \infer{\vdash x=x}{}}
+\begin{prooftree}
+  \infer0{x=y\vdash x=y}
+  \infer0{\vdash x=x}
+\infer2{x=y\vdash y=x}
+\end{prooftree}
 \]
 Aus dieser Sequenz erhält man anschließend
 \[\vdash\forall x\colon\forall y\colon x=y\cond y=x.\]
@@ -1125,24 +1154,24 @@ frei in $s$ vorkommt und
 wobei $s(x)=s[u:=x]$ und $s(y)=s[u:=y]$ ist. Der Schluss
 \[\dfrac{\Gamma\vdash x=y\quad\vdash A[h:=x]}{\Gamma\vdash A[h:=y]}\]
 vereinfacht sich nun zu
-\[\dfrac{\Gamma\vdash x=y\quad\overline{\vdash s[u:=x]=s[u:=x]}}{\Gamma\vdash s[u:=x]=s[u:=y]},
-\;\;\text{kurz}\;\;\dfrac{\Gamma\vdash x=y\quad\overline{\vdash s(x)=s(x)}}{\Gamma\vdash s(x)=s(y)}.\]
+\[\dfrac{\Gamma\vdash x=y\quad\;\overline{\vdash s[u:=x]=s[u:=x]}}{\Gamma\vdash s[u:=x]=s[u:=y]},
+\;\;\text{kurz}\;\;\dfrac{\Gamma\vdash x=y\quad\;\overline{\vdash s(x)=s(x)}}{\Gamma\vdash s(x)=s(y)}.\]
 Es genügt übrigens, das Ersetzungsaxiom für atomare Aussageformen zu fordern.
 Seien hierzu $P,Q$ Prädikate. Sei $A(x)$ zum Beispiel die Formel $P(x)\land Q(x)$.
 Dann ist die Regel
 \[\dfrac{\Gamma\vdash x=y\qquad \Gamma'\vdash A(x)}{\Gamma,\Gamma'\vdash A(y)}\]
 zulässig, denn:
-\[
-\infer{\Gamma,\Gamma'\vdash P(y)\land Q(y)}{
-  \infer{\Gamma,\Gamma'\vdash P(y)}{
-    \Gamma\vdash x=y
-  & \infer{\Gamma'\vdash P(x)}{
-      \Gamma'\vdash P(x)\land Q(x)}}
-& \infer{\Gamma,\Gamma'\vdash Q(y)}{
-    \Gamma\vdash x=y
-  & \infer{\Gamma'\vdash Q(x)}{
-      \Gamma'\vdash P(x)\land Q(x)}}}
-\]
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash x=y}
+      \hypo{\Gamma'\vdash P(x)\land Q(x)}
+    \infer1{\Gamma'\vdash P(x)}
+  \infer2{\Gamma,\Gamma'\vdash P(y)}
+    \hypo{\Gamma\vdash x=y}
+      \hypo{\Gamma'\vdash P(x)\land Q(x)}
+    \infer1{\Gamma'\vdash Q(x)}
+  \infer2{\Gamma,\Gamma'\vdash Q(y)}
+\infer2{\Gamma,\Gamma'\vdash P(y)\land Q(y)}
+\end{prooftree}\]
 Für die anderen Junktoren klappt es analog. Per struktureller Induktion
 über den Formelaufbau bestätigt sich die Regel daraufhin in allgemeiner
 Weise als zulässig.
@@ -1532,12 +1561,14 @@ Man beweist die Regel per Induktion über $n$ als zulässig. Im Anfang $n=0$
 nimmt sie schlicht die Form der Nezessisierungsregel an. Der
 Induktionsschritt wird durch den Beweisbaum
 \[
-\infer[\infernote{Modus ponens}]{\lnec A_1,\ldots,\lnec A_n,\lnec A_{n+1}\vdash\lnec B}{
-  \infer[\infernote{K}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec A_{n+1}\cond\lnec B}{
-    \infer[\infernote{IV}]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec (A_{n+1}\cond B)}{
-      \infer{A_1,\ldots,A_n\vdash A_{n+1}\cond B}{
-        A_1,\ldots,A_n,A_{n+1}\vdash B}}}
-& \infer{\lnec A_{n+1}\vdash\lnec A_{n+1}}{}}
+\begin{prooftree}
+        \hypo{A_1,\ldots,A_n,A_{n+1}\vdash B}
+      \infer1{A_1,\ldots,A_n\vdash A_{n+1}\cond B}
+    \infer1[IV]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec (A_{n+1}\cond B)}
+  \infer1[K]{\lnec A_1,\ldots,\lnec A_n\vdash\lnec A_{n+1}\cond\lnec B}
+  \infer0{\lnec A_{n+1}\vdash\lnec A_{n+1}}
+\infer2[Modus ponens]{\lnec A_1,\ldots,\lnec A_n,\lnec A_{n+1}\vdash\lnec B}
+\end{prooftree}
 \]
 bestätigt.
 
@@ -1616,9 +1647,11 @@ zu formulieren. Zur Anwendung einer Regel genügt daraufhin nämlich
 innerhalb des metalogischen Systems allein der Modus ponens. Außerdem
 kann eine Regel nun auch teilweise angewendet werden. So bestätigt
 der Schluss
-\[\infer[\infernote{MP}]{(\Gamma'\vdash A)\cond (\Gamma'\vdash B)}{
-  \infer{(\emptyset\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\emptyset\cup\Gamma'\vdash B)}{}
-& \emptyset\vdash A\cond B}\]
+\[\begin{prooftree}
+  \infer0{(\emptyset\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\emptyset\cup\Gamma'\vdash B)}
+  \hypo{\emptyset\vdash A\cond B}
+\infer2[MP]{(\Gamma'\vdash A)\cond (\Gamma'\vdash B)}
+\end{prooftree}\]
 die Regel, laut der $\Gamma'\vartriangleright B$
 aus $\Gamma'\vartriangleright A$ abgeleitet werden darf, als zulässig,
 sofern denn die Sequenz $\vartriangleright A\cond B$ ableitbar ist.
@@ -1742,25 +1775,27 @@ Es gelten die beiden gleichwertigen Regeln
 \begin{Beweis}
 Zunächst zur Gleichwertigkeit der beiden Regeln:
 \begin{small}
-\[
-\begin{array}{@{}l@{\;\;}l}
-\infer{\Gamma,\Gamma'\vdash C(B)}{
-  \infer{\Gamma\vdash C(A)\cond C(B)}{
-    \infer{\Gamma\vdash C(A)\bicond C(B)}{
-      \Gamma\vdash A\bicond B}}
-& \Gamma'\vdash C(A)}
+\[\begin{array}{@{}l@{\;\;}l}
+\begin{prooftree}[separation = 1em, center = false]
+      \hypo{\Gamma\vdash A\bicond B}
+    \infer1{\Gamma\vdash C(A)\bicond C(B)}
+  \infer1{\Gamma\vdash C(A)\cond C(B)}
+  \hypo{\Gamma'\vdash C(A)}
+\infer2{\Gamma,\Gamma'\vdash C(B)}
+\end{prooftree}
 &
-\infer{\Gamma\vdash C(A)\bicond C(B)}{
-  \infer{\Gamma\vdash C(A)\cond C(B)}{
-    \infer{\Gamma, C(A)\vdash C(B)}{
-      \Gamma\vdash A\bicond B
-    & \infer{C(A)\vdash C(A)}{}}}
-& \infer{\Gamma\vdash C(B)\cond C(A)}{
-    \infer{\Gamma, C(B)\vdash C(A)}{
-      \Gamma\vdash A\bicond B
-    & \infer{C(B)\vdash C(B)}{}}}}
-\end{array}
-\]
+\begin{prooftree}[separation = 1em, center = false]
+      \hypo{\Gamma\vdash A\bicond B}
+      \infer0{C(A)\vdash C(A)}
+    \infer2{\Gamma, C(A)\vdash C(B)}
+  \infer1{\Gamma\vdash C(A)\cond C(B)}
+      \hypo{\Gamma\vdash A\bicond B}
+      \infer0{C(B)\vdash C(B)}
+    \infer2{\Gamma, C(B)\vdash C(A)}
+  \infer1{\Gamma\vdash C(B)\cond C(A)}
+\infer2{\Gamma\vdash C(A)\bicond C(B)}
+\end{prooftree}
+\end{array}\]
 \end{small}%
 Wir führen nun eine strukturelle Induktion über den Formelaufbau durch.
 Die Behauptung wird hierbei in der Form
@@ -1790,43 +1825,53 @@ und $\Gamma\vdash B\Leftrightarrow B'$. Zu zeigen ist
 \end{align*}
 und $\Gamma,\lnot A\vdash\lnot A'$. Es findet sich:
 \begin{small}
-\[
-\begin{array}{@{}l@{\quad\;\;}l}
-\infer{\Gamma,\lnot A\vdash\lnot A'}{
-  \infer{\Gamma,\lnot A,A'\vdash\bot}{
-    \infer{\Gamma,A'\vdash A}{\Gamma\vdash A\bicond A'}
-  & \infer{\lnot A\vdash\lnot A}{}}}
+\[\begin{array}{@{}l@{\quad\;\;}l}
+\begin{prooftree}[separation = 1em, center = false]
+      \hypo{\Gamma\vdash A\bicond A'}
+    \infer1{\Gamma,A'\vdash A}
+    \infer0{\lnot A\vdash\lnot A}
+  \infer2{\Gamma,\lnot A,A'\vdash\bot}
+\infer1{\Gamma,\lnot A\vdash\lnot A'}
+\end{prooftree}
 &
-\infer{\Gamma,A\land B\vdash A'\land B'}{
-  \infer{\Gamma,A\land B\vdash A'}{
-    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{A\land B\vdash A}{
-      \infer{A\land B\vdash A\land B}{}}}
-& \infer{\Gamma,A\land B\vdash B'}{
-    \infer{\Gamma\vdash B\cond B'}{\Gamma\vdash B\bicond B'}
-  & \infer{A\land B\vdash B}{
-      \infer{A\land B\vdash A\land B}{}}}}
-\end{array}
-\]
+\begin{prooftree}[separation = 1em, center = false]
+      \hypo{\Gamma\vdash A\bicond A'}
+    \infer1{\Gamma\vdash A\cond A'}
+      \infer0{A\land B\vdash A\land B}
+    \infer1{A\land B\vdash A}
+  \infer2{\Gamma,A\land B\vdash A'}
+      \hypo{\Gamma\vdash B\bicond B'}
+    \infer1{\Gamma\vdash B\cond B'}
+      \infer0{A\land B\vdash A\land B}
+    \infer1{A\land B\vdash B}
+  \infer2{\Gamma,A\land B\vdash B'}
+\infer2{\Gamma,A\land B\vdash A'\land B'}
+\end{prooftree}
+\end{array}\]
 \end{small}%
 Die Erstellung der restlichen Bäume sei dem Leser überlassen.
 
 Für die Quantoren findet sich:
 \[
-\begin{array}{@{}l@{\quad\;\;}l}
-\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\forall x\colon A\vdash\forall x\colon A'}{
-  \infer{\Gamma,\forall x\colon A\vdash A'}{
-    \infer{\Gamma\vdash A\cond A'}{\Gamma\vdash A\bicond A'}
-  & \infer{\forall x\colon A\vdash A}{
-      \infer{\forall x\colon A\vdash\forall x\colon A}{}}}}
+\begin{array}{@{}l@{\quad\;\;}l@{}}
+\begin{prooftree}[separation = 1em, center = false]
+      \hypo{\Gamma\vdash A\bicond A'}
+    \infer1{\Gamma\vdash A\cond A'}
+      \infer0{\forall x\colon A\vdash\forall x\colon A}
+    \infer1{\forall x\colon A\vdash A}
+  \infer2{\Gamma,\forall x\colon A\vdash A'}
+\infer1[$x\notin\mathrm{FV}(\Gamma)$]{\Gamma,\forall x\colon A\vdash\forall x\colon A'}
+\end{prooftree}
 &
-\infer[\infernote{$x\notin\mathrm{FV}(\Gamma)$}]{\Gamma,\exists x\colon A\vdash\exists x\colon A'}{
-  \infer{\exists x\colon A\vdash\exists x\colon A}{}\hspace{-12pt}
-& \infer{\Gamma, A\vdash\exists x\colon A'}{
-    \infer{\Gamma, A\vdash A'}{
-      \infer{\Gamma\vdash A\cond A'}{
-        \Gamma\vdash A\bicond A'}
-    & \infer{A\vdash A}{}}}}
+\begin{prooftree}[separation = 1em, center = false]
+  \infer0{\exists x\colon A\vdash\exists x\colon A}
+        \hypo{\Gamma\vdash A\bicond A'}
+      \infer1{\Gamma\vdash A\cond A'}
+      \infer0{A\vdash A}
+    \infer2{\Gamma, A\vdash A'}
+  \infer1{\Gamma, A\vdash\exists x\colon A'}
+\infer2[$x\notin\mathrm{FV}(\Gamma)$]{\Gamma,\exists x\colon A\vdash\exists x\colon A'}
+\end{prooftree}
 \end{array}
 \]
 Es darf hierbei $x\notin\mathrm{FV}(\Gamma)$ vorausgesetzt werden, weil
@@ -1852,19 +1897,25 @@ selbst in der Modallogik. Der Induktionsbeweis wird hierzu für leeres
 $\Gamma$ erweitert um:
 \[
 \begin{array}{@{}l@{\qquad}l}
-\infer{\vdash\lnec A\bicond\lnec A'}{
-  \infer{\vdash\lnec A\cond\lnec A'}{
-    \infer{\vdash\lnec(A\cond A')}{
-      \infer{\vdash A\cond A'}{\vdash A\bicond A'}}}
-& \infer{\vdash\lnec A'\cond\lnec A}{
-    \infer{\vdash\lnec(A'\cond A)}{
-      \infer{\vdash A'\cond A}{\vdash A\bicond A'}}}}
+\begin{prooftree}
+        \hypo{\vdash A\bicond A'}
+      \infer1{\vdash A\cond A'}
+    \infer1{\vdash\lnec(A\cond A')}
+  \infer1{\vdash\lnec A\cond\lnec A'}
+        \hypo{\vdash A\bicond A'}
+      \infer1{\vdash A'\cond A}
+    \infer1{\vdash\lnec(A'\cond A)}
+  \infer1{\vdash\lnec A'\cond\lnec A}
+\infer2{\vdash\lnec A\bicond\lnec A'}
+\end{prooftree}
 &
-\infer{\vdash\lpos A\bicond\lpos A'}{
-  \infer{\vdash\lnot\lnec\lnot A\bicond\lnot\lnec\lnot A'}{
-    \infer{\vdash\lnec\lnot A\bicond\lnec\lnot A'}{
-      \infer{\vdash\lnot A\bicond\lnot A'}{
-        \vdash A\bicond A'}}}}
+\begin{prooftree}
+        \hypo{\vdash A\bicond A'}
+      \infer1{\vdash\lnot A\bicond\lnot A'}
+    \infer1{\vdash\lnec\lnot A\bicond\lnec\lnot A'}
+  \infer1{\vdash\lnot\lnec\lnot A\bicond\lnot\lnec\lnot A'}
+\infer1{\vdash\lpos A\bicond\lpos A'}
+\end{prooftree}
 \end{array}
 \]
 Der Leser möge diesbezüglich zunächst Abschnitt \ref{sec:Modallogik} studieren.
@@ -1920,14 +1971,16 @@ Eine weitere Regel ist die umgekehrte Kontraposition
 Sie verlangt ebenfalls die klassische Logik. Mit ihr lässt sich
 nämlich die klassische Reductio ad absurdum herleiten:
 \[
-\infer[\infernote{Kürzung der Tautologie}]{\Gamma\vdash A}{
-  \infer[\infernote{Modus ponens}]{\Gamma,\top\vdash A}{
-    \infer[\infernote{bedenklich}]{\Gamma\vdash\top\cond A}{
-      \infer[\infernote{Impl-Einf.}]{\Gamma\vdash\lnot A\cond\lnot\top}{
-        \infer[\infernote{Neg-Einf.}]{\Gamma,\lnot A\vdash\lnot\top}{
-          \infer[\infernote{Abschwächung}]{\Gamma,\lnot A,\top\vdash\bot}{
-            \Gamma,\lnot A\vdash\bot}}}}
-  & \infer[\infernote{Axiom}]{\top\vdash\top}{}}}
+\begin{prooftree}
+            \hypo{\Gamma,\lnot A\vdash\bot}
+          \infer1[Abschwächung]{\Gamma,\lnot A,\top\vdash\bot}
+        \infer1[Neg-Einf.]{\Gamma,\lnot A\vdash\lnot\top}
+      \infer1[Subj-Einf.]{\Gamma\vdash\lnot A\cond\lnot\top}
+    \infer1[bedenklich]{\Gamma\vdash\top\cond A}
+    \infer0[Axiom]{\top\vdash\top}
+  \infer2[Modus ponens]{\Gamma,\top\vdash A}
+\infer1[Kürzung der Tautologie]{\Gamma\vdash A}
+\end{prooftree}
 \]
 Weil alle anderen Schlüsse unbedenklich sind, kann die umgekehrte
 Kontraposition als der bedenkliche Schritt identifiziert werden.
@@ -1993,41 +2046,49 @@ $\begin{array}{@{}r@{\;}l@{\quad\;\;}r@{\;}lr@{\;}l@{}}
 \label{tab:Negation-All-Ex}
 \begin{tabular}{@{}cc@{}}
 \toprule
-$\infer{\vdash (\forall x\colon\lnot A(x))\cond \lnot (\exists x\colon A(x))}{
-  \infer{2\vdash\lnot\exists x\colon A(x)}{
-    \infer{1,2\vdash\bot}{
-      \infer{1\equiv\exists x\colon A(x)}{}
-    & \infer{2,3\vdash \bot}{
-        \infer{2\vdash\lnot A(u)}{
-          \infer{2\equiv\forall x\colon\lnot A(x)}{}}
-      & \infer{3\equiv A(u)}{}}}}}$
+$\begin{prooftree}[center = false, separation = 1em]
+      \infer0{1\equiv\exists x\colon A(x)}
+          \infer0{2\equiv\forall x\colon\lnot A(x)}
+        \infer1{2\vdash\lnot A(u)}
+        \infer0{3\equiv A(u)}
+      \infer2{2,3\vdash \bot}
+    \infer2{1,2\vdash\bot}
+  \infer1{2\vdash\lnot\exists x\colon A(x)}
+\infer1{\vdash (\forall x\colon\lnot A(x))\cond \lnot (\exists x\colon A(x))}
+\end{prooftree}$
 &
-$\infer{\vdash \lnot (\exists x\colon A(x))\cond (\forall x\colon\lnot A(x))}{
-  \infer{1\vdash\forall x\colon\lnot A(x)}{
-    \infer{1\vdash\lnot A(x)}{
-      \infer{1, 2\vdash\bot}{
-        \infer{1\equiv\lnot\exists x\colon A(x)}{}
-      & \infer{2\vdash\exists x\colon A(x)}{
-          \infer{2\equiv A(x)}{}}}}}}$\\[10pt]
-$\infer{\vdash (\exists x\colon\lnot A(x))\cond \lnot (\forall x\colon A(x))}{
-  \infer{1\vdash\lnot\forall x\colon A(x)}{
-    \infer{1, 3\vdash\bot}{
-      \infer{1\equiv\exists x\colon \lnot A(x)}{}
-    & \infer{2, 3\vdash\bot}{
-        \infer{2\equiv\lnot A(u)}{}
-      & \infer{3\vdash A(u)}{
-          \infer{3\equiv\forall x\colon A(x)}{}}}}}}$
+$\begin{prooftree}[center = false, separation = 1em]
+        \infer0{1\equiv\lnot\exists x\colon A(x)}
+          \infer0{2\equiv A(x)}
+        \infer1{2\vdash\exists x\colon A(x)}
+      \infer2{1, 2\vdash\bot}
+    \infer1{1\vdash\lnot A(x)}
+  \infer1{1\vdash\forall x\colon\lnot A(x)}
+\infer1{\vdash \lnot (\exists x\colon A(x))\cond (\forall x\colon\lnot A(x))}
+\end{prooftree}$\\[10pt]
+$\begin{prooftree}[center = false, separation = 1em]
+      \infer0{1\equiv\exists x\colon \lnot A(x)}
+        \infer0{2\equiv\lnot A(u)}
+          \infer0{3\equiv\forall x\colon A(x)}
+        \infer1{3\vdash A(u)}
+      \infer2{2, 3\vdash\bot}
+    \infer2{1, 3\vdash\bot}
+  \infer1{1\vdash\lnot\forall x\colon A(x)}
+\infer1{\vdash (\exists x\colon\lnot A(x))\cond \lnot (\forall x\colon A(x))}
+\end{prooftree}$
 &
-$\infer{\vdash \lnot (\forall x\colon A(x))\cond (\exists x\colon\lnot A(x))}{
-  \infer{1\vdash\exists x\colon\lnot A(x)}{
-    \infer{1\vdash\lnot\lnot\exists x\colon\lnot A(x)}{
-      \infer{1,2\vdash\bot}{
-        \infer{1\equiv\lnot\forall x\colon A(x)}{}
-      & \infer{2 \vdash\forall x\colon A(x)}{
-          \infer{2\vdash A(x)}{
-            \infer{2\vdash\lnot\lnot A(x)}{
-              \infer{2\vdash\forall x\colon\lnot\lnot A(x)}{
-                \infer{2\equiv\lnot\exists x\colon\lnot A(x)}{}}}}}}}}}$\\
+$\begin{prooftree}[center = false, separation = 1em]
+        \infer0{1\equiv\lnot\forall x\colon A(x)}
+                \infer0{2\equiv\lnot\exists x\colon\lnot A(x)}
+              \infer1{2\vdash\forall x\colon\lnot\lnot A(x)}
+            \infer1{2\vdash\lnot\lnot A(x)}
+          \infer1{2\vdash A(x)}
+        \infer1{2 \vdash\forall x\colon A(x)}
+      \infer2{1,2\vdash\bot}
+    \infer1{1\vdash\lnot\lnot\exists x\colon\lnot A(x)}
+  \infer1{1\vdash\exists x\colon\lnot A(x)}
+\infer1{\vdash \lnot (\forall x\colon A(x))\cond (\exists x\colon\lnot A(x))}
+\end{prooftree}$\\
 \bottomrule
 \end{tabular}
 \end{center}

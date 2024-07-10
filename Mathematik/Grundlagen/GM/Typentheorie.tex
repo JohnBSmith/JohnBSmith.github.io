@@ -114,27 +114,31 @@ Form $A\colon\typeuniv_i\vdash A\colon\typeuniv_i$ eine zulässige Regel ist.
 Es finden sich die Bäume:
 \[
 \begin{array}{l@{\qquad}l}
-\infer[\infernote{var}]{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}{
-  \infer[\infernote{ctx-ext}]{A\colon\typeuniv_i\;\mathrm{ctx}}{
-    \infer[\infernote{univ-intro}]{\vdash\typeuniv_i\colon\typeuniv_{i+1}}{
-      \infer[\infernote{ctx-empty}]{[]\;\mathrm{ctx}}{}}}}
+\begin{prooftree}[center=false]
+      \infer0[ctx-empty]{[]\;\mathrm{ctx}}
+    \infer1[univ-intro]{\vdash\typeuniv_i\colon\typeuniv_{i+1}}
+  \infer1[ctx-ext]{A\colon\typeuniv_i\;\mathrm{ctx}}
+\infer1[var]{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}
+\end{prooftree}
 &
-\infer[\infernote{Pi-form0}]{\vdash\Pi(A\colon\typeuniv_0).\, \Pi(x\colon A).\, A\colon\typeuniv_0}{
-  \infer[\infernote{Pi-form0}]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_0}{
-    \infer[\infernote{var}]{A\colon\typeuniv_0,x\colon A\vdash A\colon\typeuniv_0}{
-      \infer[\infernote{ctx-ext}]{A\colon\typeuniv_0,x\colon A\;\mathrm{ctx}}{
-        \infer{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}{}}}}}
+\begin{prooftree}[center=false]
+        \infer0{A\colon\typeuniv_0\vdash A\colon\typeuniv_0}
+      \infer1[ctx-ext]{A\colon\typeuniv_0,x\colon A\;\mathrm{ctx}}
+    \infer1[var]{A\colon\typeuniv_0,x\colon A\vdash A\colon\typeuniv_0}
+  \infer1[Pi-form0]{A\colon\typeuniv_0\vdash\Pi(x\colon A).\, A\colon\typeuniv_0}
+\infer1[Pi-form0]{\vdash\Pi(A\colon\typeuniv_0).\, \Pi(x\colon A).\, A\colon\typeuniv_0}
+\end{prooftree}
 \end{array}
 \]
 Für $i\ge 1$ liegt der Typ allerdings in einem höhergestuften Universum:
-\[
-\infer[\infernote{Pi-form}]{\vdash\Pi(A\colon\typeuniv_i).\, \Pi(x\colon A).\, A\colon\typeuniv_{i+1}}{
-  \infer{\vdash\typeuniv_i\colon\typeuniv_{i+1}}{}
-  & \infer[\infernote{univ-cumul}]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_{i+1}}{
-      \infer[\infernote{Pi-form}]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_i}{
-        \infer{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}{}
-      & \infer{A\colon\typeuniv_i,x\colon A\vdash A\colon\typeuniv_i}{}}}}
-\]
+\[\begin{prooftree}
+  \infer0{\vdash\typeuniv_i\colon\typeuniv_{i+1}}
+      \infer0{A\colon\typeuniv_i\vdash A\colon\typeuniv_i}
+      \infer0{A\colon\typeuniv_i,x\colon A\vdash A\colon\typeuniv_i}
+    \infer2[Pi-form]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_i}
+  \infer1[univ-cumul]{A\colon\typeuniv_i\vdash\Pi(x\colon A).\, A\colon\typeuniv_{i+1}}
+\infer2[Pi-form]{\vdash\Pi(A\colon\typeuniv_i).\, \Pi(x\colon A).\, A\colon\typeuniv_{i+1}}
+\end{prooftree}\]
 Man beachte, dass $A$ hier, anders als in der Regel Pi-form, lediglich
 für eine Typvariable steht, also atomar ist. Dies wird durch die
 Kontexte klar, die nur Variablen enthalten dürfen.
@@ -159,9 +163,11 @@ $(x\colon A)\mapsto b$ sind. Die Klammern dürfen hierbei entfallen, ich
 will sie aber zur besseren Lesbarkeit beibehalten.
 
 Beispielsweise ist $\Pi(A\colon U_i).\, A\to A$ bewohnt, denn es findet sich der Baum:
-\[\infer[\infernote{Pi-intro}]{\vdash (A\mapsto x\mapsto x)\colon\Pi(A\colon U_i).\,A\to A}{
-  \infer[\infernote{Pi-intro}]{A\colon U_i\vdash (x\mapsto x)\colon A\to A}{
-    \infer{A\colon U_i,x\colon A\vdash x\colon A}{}}}\]
+\[\begin{prooftree}
+    \infer0{A\colon U_i,x\colon A\vdash x\colon A}
+  \infer1[Pi-intro]{A\colon U_i\vdash (x\mapsto x)\colon A\to A}
+\infer1[Pi-intro]{\vdash (A\mapsto x\mapsto x)\colon\Pi(A\colon U_i).\,A\to A}
+\end{prooftree}\]
 
 \subsection{Bezug zur Logik}
 

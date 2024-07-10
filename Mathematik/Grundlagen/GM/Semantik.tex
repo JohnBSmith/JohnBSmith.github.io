@@ -181,19 +181,23 @@ mag.
 Zu den Grundsequenzen und zur Abschwächungsregel findet sich:
 \[
 \begin{array}{@{}l@{\qquad}l}
-\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\cup\{A\}\models A}{
-  \infer[\infernote{$\sim$1}]{(I\models \Gamma\cup\{A\})\cond (I\models A)}{
-    \infer{I\models A}{
-      \infer[\infernote{Def. \ref{def:sat-context}}]{(I\models\Gamma)\land (I\models A)}{
-        \infer[\infernote{1}]{I\models\Gamma\cup\{A\}}{}}}}}
+\begin{prooftree}[center = false, separation = 1em]
+        \infer0[1]{I\models\Gamma\cup\{A\}}
+      \infer1[Def. \ref{def:sat-context}]{(I\models\Gamma)\land (I\models A)}
+    \infer1{I\models A}
+  \infer1[$\sim$1]{(I\models \Gamma\cup\{A\})\cond (I\models A)}
+\infer1[Def. \ref{def:valid}]{\Gamma\cup\{A\}\models A}
+\end{prooftree}
 &
-\infer[\infernote{Def. \ref{def:valid}}]{\Gamma\cup\Gamma'\models A}{
-  \infer[\infernote{$\sim$1}]{(I\models\Gamma\cup\Gamma')\cond (I\models A)}{
-    \infer{I\models A}{
-      \infer[\infernote{Def. \ref{def:valid}}]{(I\models\Gamma)\cond (I\models A)}{
-        \Gamma\models A}
-    & \infer[\infernote{Def. \ref{def:sat-context}}]{I\models\Gamma}{
-        \infer[\infernote{1}]{I\models\Gamma\cup\Gamma'}{}}}}}
+\begin{prooftree}[center = false, separation = 1em]
+        \hypo{\Gamma\models A}
+      \infer1[Def. \ref{def:valid}]{(I\models\Gamma)\cond (I\models A)}
+        \infer0[1]{I\models\Gamma\cup\Gamma'}
+      \infer1[Def. \ref{def:sat-context}]{I\models\Gamma}
+    \infer2{I\models A}
+  \infer1[$\sim$1]{(I\models\Gamma\cup\Gamma')\cond (I\models A)}
+\infer1[Def. \ref{def:valid}]{\Gamma\cup\Gamma'\models A}
+\end{prooftree}
 \end{array}
 \]
 Die Prüfung der restlichen Entsprechungen sei dem Leser überlassen.
@@ -233,16 +237,20 @@ Mit den semantischen Entsprechungen der Schlussregeln
 findet sich nämlich:
 \[
 \begin{array}{@{}l@{\qquad\quad}l}
-\infer{A\models B}{
-  \infer{\models A\cond B}{
-    \models A\bicond B}
-& \infer{A\models A}{}}
+\begin{prooftree}[center = false]
+    \hypo{\models A\bicond B}
+  \infer1{\models A\cond B}
+  \infer0{A\models A}
+\infer2{A\models B}
+\end{prooftree}
 &
-\infer{\models A\bicond B}{
-  \infer{\models A\cond B}{
-    A\models B}
-& \infer{\models B\cond A}{
-    B\models A}}
+\begin{prooftree}[center = false]
+    \hypo{A\models B}
+  \infer1{\models A\cond B}
+    \hypo{B\models A}
+  \infer1{\models B\cond A}
+\infer2{\models A\bicond B}
+\end{prooftree}
 \end{array}
 \]
 \begin{Satz}\label{log-Aeq-ist-Aeqrel}
