@@ -56,10 +56,15 @@ footskip=10mm, headsep=6mm}
 
 \newcommand{\strong}[1]{\textbf{#1}}
 
+\newcommand{\narrowdisplaymath}{%
+  \setlength{\abovedisplayskip}{5.0pt plus 1.25pt minus 2.5pt}%
+  \setlength{\belowdisplayskip}{5.0pt plus 1.25pt minus 2.5pt}%
+  \setlength{\mathindent}{22pt minus 22pt}}
+
 \newtheoremstyle{rmbox}%
   {0pt}% space above
   {0pt}% space below
-  {}% bodyfont
+  {\narrowdisplaymath}% bodyfont
   {}% indent
   {\normalfont\bfseries}% head font
   {~}% punctuation between head and body
@@ -70,8 +75,6 @@ footskip=10mm, headsep=6mm}
 \newtheorem{Definition}{Definition}
 \newtheorem{Satz}{Satz}
 \newtheorem{Axiom}[Satz]{Axiom}
-% \newtheorem{Lemma}[Satz]{Lemma}
-\newtheorem{Korollar}[Satz]{Korollar}
 
 \numberwithin{Definition}{chapter}
 \numberwithin{Satz}{chapter}
@@ -80,31 +83,10 @@ footskip=10mm, headsep=6mm}
   {\par\noindent\strong{#1.}\;\ignorespaces}%
   {\par\addvspace{\topsep}}
 
-\definecolor{greenblue}{rgb}{0.0,0.42,0.3}
-\definecolor{grayblue}{rgb}{0.1,0.2,0.4}
-\definecolor{bgreen}{rgb}{0.94,0.94,0.84}
-\definecolor{bblue}{rgb}{0.9,0.92,0.94}
-\definecolor{hltext}{rgb}{0.7,0,0.6}
-
-% Muss je nach Einstellung des Drucksystems neu justiert werden.
-\definecolor{bordercolor}{rgb}{0.5,0.5,0.5}
-
-\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=bordercolor, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=0pt, innerbottommargin=1pt,%
-  innerrightmargin=6pt%
-]{Definition}
-
-\newcommand{\framedtheorem}[1]{%
-\surroundwithmdframed[topline=false,rightline=false,bottomline=false,%
-  linecolor=bordercolor, linewidth=3.5pt, innerleftmargin=6pt,%
-  innertopmargin=0pt, innerbottommargin=1pt,%
-  innerrightmargin=6pt%
-]{#1}}
+% \input{style/print.tex}
+\input{style/screen.tex}
 
 \framedtheorem{Satz}
-\framedtheorem{Lemma}
-\framedtheorem{Korollar}
 \framedtheorem{Axiom}
 
 \newcommand{\N}{\mathbb N}

@@ -228,7 +228,8 @@ die \emph{Aussonderung}\index{Aussonderung}, aufführen. Sie verhält sich
 gutartig, dergestalt dass sie nicht mehr ermöglicht, als das Ausfiltern
 von Elementen aus einer gegebenen Menge.
 
-\begin{Definition}[Aussonderung]\label{def:Aussonderung}\newlinefirst
+\begin{Definition}[Aussonderung]%
+\label{def:Aussonderung}\newlinefirst
 Zu einer Menge $M$ und einer Eigenschaft $A(x)$ definiert man
 \[u\in\{x\in M\mid A(x)\}\,:\bicond\, u\in M\land A(u).\]
 \end{Definition}
@@ -394,7 +395,8 @@ Zusammen mit dem Axiom der Vereinigung bietet es einen Weg, um größere
 Menge aus kleineren zu erzeugen. Später wird sich ihnen diesbezüglich
 noch das Axiom der Ersetzung hinzugesellen.
 
-\begin{Definition}[Schnitt, Vereinigung, Differenz]\newlinefirst
+\begin{Definition}[Schnitt, Vereinigung, Differenz]%
+\newlinefirst
 Zu zwei Mengen $A,B$ definiert man
 \begin{align*}
 A\cap B &:= \{x\mid x\in A\land x\in B\}, && \text{(\emph{Schnittmenge})}\\
@@ -1746,7 +1748,8 @@ kommutative Ringe und kommutative unitäre Ringe, sofern die
 Relation eine Kongruenzrelation sowohl bezüglich der additiven
 als auch der multiplikativen Verknüpfung ist.
 \end{Satz}
-\strong{Beweis.} Sei $(R,+,\cdot)$ der Ring und $\equiv$ die
+\begin{Beweis}
+Sei $(R,+,\cdot)$ der Ring und $\equiv$ die
 Kongruenzrelation. Gemäß Satz \ref{Kongruenz-Quotient} ist
 $(R/\equiv,+)$ eine kommutative Gruppe und $(R/\equiv,\cdot)$
 eine Halbgruppe. Bei einem unitären Ring ist $(R/\equiv,\cdot)$
@@ -1767,6 +1770,62 @@ Damit ist der Satz gezeigt, und ferner ist gezeigt dass $\varphi$ ein
 Ringhomomorphismus ist. Und für einen unitären Ring ist $\varphi$
 Eins-erhaltend, wie bereits aus Satz \ref{Kongruenz-Quotient}
 hervorgeht.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Zur Klärung des Wesens von Kongruenzrelationen hilft es, diese Begrifflichkeit
+in voller Allgemeinheit zu diskutieren. Dazu betrachten wir eine allgemeine
+Struktur, die neben Operationen auch Relationen besitzen mag.
+Dahingehend tut sich der folgende Sachverhalt auf.
+
+\begin{Satz}
+Sei $(M,\mathcal F,\mathcal R)$ eine Struktur, wobei $(n,f)\in\mathcal F$
+eine Funktion $f\colon M^n\to M$ bedeute und $(n,R)\in\mathcal R$ eine
+Relation $R\colon M^n\to\{0,1\}$. Ist $\equiv$ eine
+Kongruenzrelation auf $M$, dann gilt das Substitutionsprinzip
+\[\forall x,y\in M\colon x\equiv y\land A(x)\cond A(y).\]
+\end{Satz}
+\begin{Beweis}
+Es genügt, das Prinzip für alle atomaren Formeln zu zeigen, da es sich
+dann, analog wie das bereits bei der Gleichheit diskutiert wurde, auf
+alle Formeln fortsetzt. Zu jeder Funktion $f$ und jeder Relation $R$
+hat $\equiv$ als Kongruenzrelation per Definition die Eigenschaften
+\[\begin{array}{ll}
+\text{(K1)} & (\forall i\colon x_i\equiv y_i)\cond f(x_1,\ldots,x_n)\equiv f(y_1,\ldots, y_n),\\
+\text{(K2)} & (\forall i\colon x_i\equiv y_i)\land R(x_1,\ldots,x_n)\cond R(y_1,\ldots, y_n).
+\end{array}\]
+Es stehe $A\tfrac{x}{u}$ als Abkürzung für die Substitution $A[x:=u]$.
+Sei also $(n,R)\in\mathcal R$ fest, aber beliebig. Zu zeigen verbleibt
+\[R(t_1,\ldots,t_n)\tfrac{x}{u}\cond R(t_1,\ldots,t_n)\tfrac{y}{u},\,
+\text{also}\;R(t_1\tfrac{x}{u},\ldots,t_n\tfrac{x}{u})\cond R(t_1\tfrac{y}{u},\ldots,t_n\tfrac{y}{u}).\]
+Laut (K2) ist dies gegeben, sobald $t_i\tfrac{x}{u}\equiv t_i\tfrac{y}{u}$
+für jedes $i$ gilt. Nun bestätigen wir daher das Schema
+\[\forall x,y\in M\colon x\equiv y\cond t\tfrac{x}{u}\equiv t\tfrac{y}{u}\]
+via struktureller Induktion über den Termaufbau. Für eine Variable
+gilt entweder $v\ne u$, womit sich $v\tfrac{x}{u}\equiv v\tfrac{y}{u}$
+zu $v\equiv v$ reduziert, was aus $v=v$ folgt. Oder es gilt $v=u$, womit
+sich $v\tfrac{x}{u}\equiv v\tfrac{y}{u}$ zu $x\equiv y$ reduziert, was
+vorausgesetzt wurde. Ein Term ist entweder eine Variable $t=v$ oder eine
+Applikation $t=f(t_1,\ldots,t_n)$ mit $(n,f)\in\mathcal F$. Zu bestätigen verbleibt
+\[f(t_1,\ldots,t_n)\tfrac{x}{u}\equiv f(t_1,\ldots,t_n)\tfrac{y}{u},\,
+\text{also}\;f(t_1\tfrac{x}{u},\ldots,t_n\tfrac{x}{u})\equiv f(t_1\tfrac{y}{u},\ldots,t_n\tfrac{y}{u}),\]
+was laut (K1) geht, sobald $t_i\tfrac{x}{u}\equiv t_i\tfrac{y}{u}$
+für jedes $i$, was aber gerade die Induktionsannahme ist.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Auf eine Struktur bezogen erfüllt eine Kongruenzrelation demgemäß die
+Axiome der Gleichheit bzw. das leibnizsche Prinzip, das die Gleichheit
+charakterisiert. Es läuft natürlich aufs Gleiche hinaus, die induzierten
+Operationen und Relationen für die Äquivalenzklassen zu betrachten,
+deren Wohldefiniertheit durch (K1) und (K2) zugesichert wird. Dann
+liegt die Gleichheit auf der Quotientenstruktur direkt vor, ohne die
+Kongruenz als weiteren Gleichheitsbegriff denken zu müssen.
+
+Die Kongruenzrelation einer Struktur stellt sich somit als der für die
+Struktur eigentümliche Gleichheitsbegriff heraus, und die
+Quotientenstruktur dient dazu, diesen mit dem herkömmlichen
+Gleichheitsbegriff zusammenzuführen.
 
 \subsection{Ordnungsrelationen}
 
