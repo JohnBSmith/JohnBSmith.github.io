@@ -5,6 +5,53 @@
 
 \subsection{Zur Aussagenlogik}
 
+Der Einführung einer Subjunktion entspricht die Einführung einer
+$\lambda$"=Abstraktion, also einer anonymen Funktion. Der aus der Herleitung
+\[\begin{prooftree}
+    \infer0{A,B\vdash A}
+  \infer1{A\vdash B\cond A}
+\infer1{\vdash A\cond B\cond A}
+\end{prooftree}
+\;\rightsquigarrow\;\;
+\begin{prooftree}
+    \infer0{\Gamma, a\colon A, b\colon B\vdash a\colon A}
+  \infer1{\Gamma, a\colon A\vdash (b\mapsto a)\colon B\to A}
+\infer1{\Gamma\vdash a\mapsto (b\mapsto a)\colon A\to B\to A}
+\end{prooftree}\]
+mit $\Gamma:=[A\colon\mathrm{Prop}, B\colon\mathrm{Prop}]$ entstandene
+Term wird zum Beispiel abgefasst als
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` Beispiel1 (A B: Prop):
+  A -> B -> A.
+`\kw{Proof}`
+  `\kw{fun}` a => `\kw{fun}` b => a.
+\end{lstlisting}
+Der Beseitigung der Subjunktion entspricht die Applikation einer
+Funktion. Betrachten wir dazu die Herleitung
+\[\begin{prooftree}
+      \infer0{A\cond B\vdash A\cond B}
+      \infer0{A\vdash A}
+    \infer2{A,A\cond B\vdash B}
+  \infer1{A\vdash (A\cond B)\cond B}
+\infer1{\vdash A\cond (A\cond B)\cond B}
+\end{prooftree}
+\;\rightsquigarrow\;\;
+\begin{prooftree}
+      \infer0{\Gamma,f\colon A\to B\vdash f\colon A\to B}
+      \infer0{\Gamma,a\colon A\vdash a\colon A}
+    \infer2{\Gamma,a\colon A, f\colon A\to B\vdash f(a)\colon B}
+  \infer1{\Gamma,a\colon A\vdash (f\mapsto f(a))\colon (A\to B)\to B}
+\infer1{\Gamma\vdash (a\mapsto f\mapsto f(a))\colon A\to (A\to B)\to B}
+\end{prooftree}\]
+mit $\Gamma:=[A\colon\mathrm{Prop}, B\colon\mathrm{Prop}]$.
+Der Beweis wird demnach implementiert als
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` Beispiel2 (A B: Prop):
+  A -> (A -> B) -> B.
+`\kw{Proof}`
+  `\kw{fun}` a => `\kw{fun}` f => f a.
+\end{lstlisting}
+
 \begin{table}
 \begin{center}
 \caption{Funktionen für die Konjunktion und die Disjunktion}
@@ -26,6 +73,7 @@ Disjunktion & $\code{or\_introl}\,A\;B\colon A\to A\lor B$
 \end{center}
 \end{table}
 
+\noindent
 Tabelle \ref{tab:Funktionen-Konjunktion-Disjunktion} zeigt die Funktionen,
 mit denen Terme für die Konjunktion und die Disjunktion konstruiert
 werden können.
@@ -51,12 +99,54 @@ kommt man bezüglich $\Gamma:=[h\colon A\land B]$ zum Term
 Der Quelltext hierzu:
 
 \noindent
-\begin{lstlisting}[escapechar=`]
-`\kw{Theorem}` conj_commutes A B:
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` conj_commutativity (A B: Prop):
   A /\ B -> B /\ A.
-`\kw{Proof.}`
-  exact (`\kw{fun}` h => conj (proj2 h) (proj1 h)).
-`\kw{Qed.}`
+`\kw{Proof}`
+  `\kw{fun}` h => conj (proj2 h) (proj1 h).
+\end{lstlisting}
+Dieser Beweis ist allerdings für \texttt{Prop} spezifisch. Für Typen
+allgemeiner Art findet sich aber ein analoger Beweis. Der
+Curry"=Howard"=Korrespondenz entsprechend betrifft dies die Produkttypen
+$A\times B$, die \verb|prod A B| oder \verb|A*B| geschrieben werden. Die
+zweite Schreibweise wird aber nur gestattet, wenn keine Zweideutigkeit
+mit der Multiplikation von Zahlen besteht. Die Analoga zu
+\texttt{proj1}, \texttt{proj2} und \texttt{conj} sind
+\texttt{fst}, \texttt{scd} und \texttt{pair}, wobei dies für
+first, second steht und man \verb|(x, y)| statt \verb|pair x y|
+schreiben darf. Es ergibt sich also der folgende Quelltext:
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` prod_commutativity (A B: Type):
+  A * B -> B * A.
+`\kw{Proof}`
+  `\kw{fun}` h => (snd h, fst h).
+\end{lstlisting}
+Statt die Projektionen zu nutzen, kann der Term auch via
+Musterabgleich als
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{fun}` h => `\kw{match}` h `\kw{with}` (a, b) => (b, a) `\kw{end}`
+\end{lstlisting}
+abgefasst werden, wobei hierfür zudem die Kurzschreibweise
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{fun}` '(a, b) => (b, a) `\textrm{bzw.}` `\kw{fun}` '(pair a b) => (pair b a)
+\end{lstlisting}
+existiert.
+
+Für den Beweis von $A\lor B\cond B\lor A$ findet sich
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` disj_commutativity (A B: Prop):
+  A \/ B -> B \/ A.
+`\kw{Proof}`
+  or_elim
+    (`\kw{fun}` a => or_intror a)
+    (`\kw{fun}` b => or_introl b).
+\end{lstlisting}
+Alternativ wird der Term via Musterabgleich abgefasst:
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{fun}` h => `\kw{match}` h `\kw{with}`
+| or_introl a => or_intror a
+| or_intror b => or_introl b
+`\kw{end}`
 \end{lstlisting}
 
 \section{Taktiken}
@@ -99,7 +189,7 @@ angekommen zu sein. Der tatsächliche Verlauf sieht also so aus:
 \infer1[intro $f$]{\Gamma\vdash {?}\colon (A\to B)\to (\lnot B\to\lnot A)}
 \end{prooftree}\]
 Der Quelltext hierzu:
-\begin{lstlisting}[escapechar=`]
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
 `\kw{Theorem}` contraposition (A B: Prop):
   (A -> B) -> (~B -> ~A).
 `\kw{Proof.}`
@@ -107,3 +197,9 @@ Der Quelltext hierzu:
   apply g. apply f. exact a.
 `\kw{Qed.}`
 \end{lstlisting}
+Die Entwicklungsumgebung ermöglicht es hierbei, auf dem Verlauf der
+Taktiken zu wandern. Zwischen den Schritten wird das aktuelle Ziel und
+dessen Kontext gezeigt, so dass man die Übersicht darüber behält,
+was zu beweisen verbleibt und welche Mittel dafür verfügbar sind.
+
+

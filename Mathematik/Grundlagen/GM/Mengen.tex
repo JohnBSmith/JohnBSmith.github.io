@@ -2394,7 +2394,8 @@ auf Mengen beschränkt bleiben soll. Für die allgemeine Fassung
 müssten wir zunächst die Begrifflichkeiten der Kategorientheorie
 einführen, was an dieser Stelle aber den Rahmen sprengen würde.
 
-\begin{Satz}[Fixpunktsatz von Lawvere für Mengen]\newlinefirst
+\begin{Satz}[Fixpunktsatz von Lawvere für Mengen]%
+\label{Fixpunktsatz-Lawvere}\newlinefirst
 Existiert eine Surjektion $X\to\Abb(X,Y)$, muss jede Abbildung
 $Y\to Y$ mindestens einen Fixpunkt besitzen.
 \end{Satz}
@@ -2931,7 +2932,7 @@ was im Widerspruch zur strengen Monotonie von $f$ steht.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}[Wohlfundierte Induktion]%
-\index{wohlfundierte Induktion}\newlinefirst
+\label{wf-Induktion}\index{wohlfundierte Induktion}\newlinefirst
 Ist $(M,<)$ wohlfundiert, gilt für jede Teilmenge $A\subseteq M$ das Prinzip
 \[(\forall x\in M\colon (\forall y\in M\colon y < x\cond y\in A)\cond x\in A)\cond A=M.\]
 \end{Satz}
@@ -3005,3 +3006,149 @@ Induktion.
 % ins Unendliche. Der Stein mit Limesordinal muss extra umfallen,
 % zu ihm gibt es keinen Vorgänger.
 
+\section{Ordinalzahlen}
+
+\subsection{Transfinite Induktion}
+
+\begin{Satz}[Schema der transfiniten Induktion]\newlinefirst
+Für jede wohlgeordnete Menge $(M,<)$ und jede Eigenschaft $A(x)$ gilt
+\[(\forall x\in M\colon (\forall y\in M\colon y<x\cond A(y))\cond A(x))
+\cond (\forall x\in M\colon A(x)).\]
+\end{Satz}
+\begin{Beweis}
+Weil jede wohlgeordnete Menge eine wohlfundierte ist, folgt der
+Sachverhalt als Korollar aus Satz \ref{wf-Induktion}.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Gleichwohl die Klasse der Ordinalzahlen eine echte ist, gilt das Prinzip
+auch für sie. Insofern die Variablen $\alpha,\beta$ für Ordinalzahlen stehen
+sollen, kürzen wir eine Formel der Form $\forall\alpha\in\mathrm{On}\colon A(\alpha)$
+als $\forall\alpha\colon A(\alpha)$ ab. Das Schema nimmt diesbezüglich
+die konzise Form%
+\[(\forall\alpha\colon (\forall\beta < \alpha\colon A(\beta))
+\cond A(\alpha))\cond (\forall\alpha\colon A(\alpha))\]
+an. Zum Beweis der Prämisse kann diese in drei Teile aufgetrennt
+werden, so wie die Prämisse der herkömmlichen Induktion in zwei
+Teile, den Induktionsanfang und den Induktionsschritt, aufgetrennt wird.
+Hier sind es
+\[\begin{array}{@{}l@{\quad\;\;}l}
+A(0), & \text{(Anfang)}\\[2pt]
+\forall\alpha\colon A(\alpha)\cond A(\alpha+1), & \text{(Schritt auf den Nachfolger)}\\[2pt]
+\forall\lambda\colon (\forall\beta<\lambda\colon A(\beta))\cond A(\lambda). & \text{(Schritt
+aufs nächste Limes-Ordinal)}
+\end{array}\]
+Laut dem Fundierungsaxiom ist die Relation $\in$ auf der Klasse der
+Mengen wohlfundiert. So ergibt das Schema der $\in$-Induktion,
+\[(\forall x\colon (\forall y\in x\colon B(y))
+\cond B(x))\cond (\forall x\colon B(x)).\]
+Insofern $\beta<\alpha$ mit $\beta\in\alpha$ gleichbedeutend ist,
+geht die transfiniten Induktion über die Ordinalzahlen also
+aus der $\in$-Induktion hervor, indem man sich auf die Ordinalzahlen
+beschränkt. Man braucht lediglich $B(x):=(x\in\mathrm{On}\cond A(x))$
+setzen.
+
+\subsection{Transfiniter Rekursionssatz}
+
+Analog zu den natürlichen Zahlen gilt für Ordinalzahlen ein
+Rekursionssatz, der es gestattet, eine Funktion rekursiv für alle
+Ordinalzahlen zu definieren.
+
+\subsection{Kumulative Hierarchie}
+
+\begin{Definition}[Kumulative Hierarchie]\newlinefirst
+Man definiert $V_\alpha$ für Ordinalzahlen $\alpha$ rekursiv als
+\begin{align*}
+V_0 &:= \emptyset,\\
+V_{\alpha+1} &:= \powerset(V_\alpha),\\
+V_\lambda &:= {\textstyle\bigcup_{\alpha<\lambda} V_\alpha}.\qquad\text{($\lambda$ ein Limes-Ordinal)}
+\end{align*}
+\end{Definition}
+
+\subsection{Grothendieck-Universen}
+
+Die Systeme ZFC und NBG/MK sind mit einer störenden Beschränkung
+behaftet, die freies Argumentieren unnötig einschränkt. Und zwar
+mag die Vorstellung, dass man ein Universum haben kann, das alle
+denkbaren Mengen enthält, irrig sein. Stattdessen benötigen wir
+anscheinend eine Hierarchie von Universen, so dass jedes Universum
+wiederum Element eines Universums höherer Stufe sein wird. Es tun sich
+nämlich die folgenden Probleme auf.
+
+1. Als wir die russellsche Antinomie aus Satz \ref{Fixpunktsatz-Lawvere}
+auf S. \pageref{Fixpunktsatz-Lawvere}, dem Fixpunktsatz von Lawvere folgern
+wollten, wurde freies Argumentieren dahingehend eingeschränkt,
+dass die Zusammenfassung $\Abb(X,Y)$ nicht zu einer echten Klasse $X$
+gebildet werden kann, da die Graphen der Abbildungen echte Klassen sind,
+und somit nicht als Element einer Klasse auftreten dürfen.
+
+2. Eine entsprechende Einschränkung tritt in der Kategorientheorie
+auf. Dort mag es für gewisse Argumentationen außerdem erforderlich sein,
+dass Auswahlaxiom für ein größeres Universum verfügbar zu haben.
+
+3. In der Typentheorie besteht ein Bedarf an einer gestuften
+Hierarchie von Typuniversen. Will man Typen durch Mengen modellieren,
+genügen Mengen und Klassen lediglich für die anfänglichen Stufen.
+
+Statt nun ein etwaiges System für »Hyperklassen« zu ersinnen, greifen wir
+auf das Konzept der Grothendieck"=Universen zurück, das diesen
+Sachverhalt adäquat beschreibt.
+
+\newpage
+\begin{Definition}[Grothendieck-Universum]\newlinefirst
+Eine nichtleere Menge $U$ heißt \emph{Grothendieck-Universun}, wenn
+\[\begin{array}{@{}r@{\quad}l}
+\text{(1)} & \forall x\in U\colon x\subseteq U,\\[2pt]
+\text{(2)} & \forall x,y\in U\colon \{x,y\}\in U,\\[2pt]
+\text{(3)} & \forall x\in U\colon\powerset(x)\in U,\\[2pt]
+\text{(4)} & \forall I\in U\colon\forall x\in\operatorname{Abb}(I,U)\colon
+  {\textstyle\bigcup_{i\in I}} x_i\in U.
+\end{array}\]
+\end{Definition}
+
+\noindent
+Die Grothendieck"=Universen stehen im engen Bezug zur kumulativen
+Hierarchie. So ist $V_\lambda$ ein Grothendieck"=Universum, wenn
+$\lambda$ nicht mehr mit Mengenoperationen von kleineren Ordinalzahlen
+aus erreichbar ist. Das betrifft zunächst $V_\omega$ zur ersten unendlichen
+Ordinalzahl $\omega$. Daraufhin kommt allerdings erst mit $V_\kappa$
+wieder eines, wo $\kappa$ die nächste als Ordinalzahl betrachtete stark
+unerreichbare Kardinalzahl ist. Im Folgenden wird näher darauf
+eingegangen.
+
+\begin{Satz}
+Für jedes Limes-Ordinal $\lambda$ erfüllt $U:=V_\lambda$
+die Axiome (1), (2), (3).
+\end{Satz}
+\begin{Beweis}
+Zu (1). Es wird $\forall x\in V_\alpha\colon x\subseteq V_\alpha$ für jedes
+Ordinal bestätigt per transfiniter Induktion über alle Ordinalzahlen.
+Bei $\alpha=0$ gilt die Aussage trivial. Sie gelte für $\alpha$ als
+Induktionsannahme IA. Zu folgern ist
+\[\text{IA}, x\in V_{\alpha+1}\vdash x\subseteq V_{\alpha+1},\quad
+\text{also}\;\;
+\text{IA}, x\subseteq V_\alpha, u\in x\vdash u\subseteq V_\alpha.\]
+Ist nun $u\in x$, so auch $u\in V_\alpha$, per Induktionsannahme
+also $u\subseteq V_\alpha$.
+
+Letztlich verbleibt für jedes Limes-Ordinal $\lambda$ zu bestätigen
+\[(\forall \beta<\lambda\colon \forall x\in V_\beta\colon x\subseteq V_\beta),
+x\in V_\lambda, u\in x\vdash u\in V_\lambda.\]
+Mit $x\in V_\lambda$ existiert ein $\beta<\lambda$ mit $x\in V_\beta$,
+und somit $x\subseteq V_\beta$. Mit $u\in x$ erhält man daraufhin
+$u\in V_\beta$. Ergo existiert $\beta<\lambda$ mit $u\in V_\beta$,
+womit $u\in V_\lambda$ gilt.
+
+Zu (2). Mit $x,y\in V_\lambda$ liegen ein $\alpha<\lambda$ mit
+$x\in V_\alpha$ und ein $\beta<\lambda$ mit $y\in V_\beta$ vor. Bezüglich
+$\gamma:=\max(\alpha,\beta)$ gilt dann $x,y\in V_\gamma$,
+ergo $\{x,y\}\subseteq V_\gamma$. Man hat $\gamma+1<\lambda$ mit
+$\{x,y\}\in V_{\gamma+1}$, womit $\{x,y\}\in V_\lambda$.
+
+Zu (3). Mit $x\in V_\lambda$ liegt ein $\alpha<\lambda$ mit $x\in V_\alpha$ vor.
+Wie zuvor gezeigt, folgt $x\subseteq V_\alpha$, und somit
+$\powerset(x)\subseteq\powerset(V_\alpha)$, also $\powerset(x)\in
+\powerset(\powerset(V_\alpha)=V_{\alpha+2}$. Mit $\beta:=\alpha+2$ existiert
+daher ein $\beta<\lambda$ mit $\powerset(x)\in V_\beta$, womit
+$\powerset(x)\in V_\lambda$.\,\qedsymbol
+\end{Beweis}
