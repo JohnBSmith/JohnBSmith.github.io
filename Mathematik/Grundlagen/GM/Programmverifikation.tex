@@ -74,7 +74,7 @@ Rechenmaschine festgelegt wird. Um aber nicht den Fokus auf das
 Wesentliche zu verlieren, abstrahiert man von den Details der Maschine,
 indem den syntaktischen Konstrukten der Programmiersprache direkt eine
 Semantik zugeordnet wird. Ich will näher auf die \emph{operationelle
-Semantik} eingehen.
+Semantik}\index{operationelle Semantik} eingehen.
 
 Es sei $\mathrm T$ das Symbol für einen Term und $\mathrm{Zahl}$
 das Symbol für eine Zahl. Wir legen mit der Produktionsregel
@@ -166,9 +166,10 @@ Bei if"=Anweisungen findet der Übergang nach den Regeln
 {\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'},\quad\;
 \dfrac{\langle e,s\rangle\to\kw{false}\quad\;\langle p_2,s\rangle\to s'}
 {\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'}\]
-statt. Schließlich muss noch die Semantik für Schleifen festgelegt werden.
-Wertet die Schleifenbedingung zu $\kw{false}$ aus, wird der Schleifenkörper
-schlicht übersprungen, ohne eine Zustandsänderung herbeizuführen,
+statt. Schließlich muss noch die Semantik für Schleifen\index{Schleife}
+festgelegt werden. Wertet die Schleifenbedingung zu $\kw{false}$ aus,
+wird der Schleifenkörper schlicht übersprungen, ohne eine Zustandsänderung
+herbeizuführen,
 \[\dfrac{\langle e,s\rangle\to\kw{false}}
 {\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s\rangle\to s}.\]
 Wertet die Schleifenbedingung zu $\kw{true}$ aus, liegt die Regel
@@ -183,14 +184,16 @@ zur Regel
 
 \section{Der Hoare-Kalkül}
 
-Ein Hoare"=Tripel $\{A\}\,p\,\{B\}$ soll die logische Aussage ausdrücken,
-dass nach dem Durchlaufen des Programms $p$ die Aussage $B$ gilt,
-sofern zuvor die Aussage $A$ galt. Hierbei bezeichnet man $A$ als
-\emph{Vorbedingung} und $B$ als \emph{Nachbedingung}. Das Tripel macht
+Ein Hoare"=Tripel\index{Hoare-Tripel} $\{A\}\,p\,\{B\}$ soll die logische
+Aussage ausdrücken, dass nach dem Durchlaufen des Programms $p$ die Aussage
+$B$ gilt, sofern zuvor die Aussage $A$ galt. Hierbei bezeichnet man $A$ als
+\emph{Vorbedingung}\index{Vorbedingung} und $B$ als
+\emph{Nachbedingung}\index{Nachbedingung}. Das Tripel macht
 allerdings keine Aussage darüber, ob das Programm $p$ tatsächlich
 terminiert. Ist das Tripel erfüllt, nennt man das Programm in Bezug auf
-die Vor- und Nachbedingung \emph{partiell korrekt}. Terminiert das Programm
-zudem, spricht man von \emph{totaler Korrektheit}.
+die Vor- und Nachbedingung \emph{partiell korrekt}.\index{partiell korrekt}
+Terminiert das Programm zudem, spricht man von \emph{totaler Korrektheit}.%
+\index{total Korrekt}
 
 Bei $A,B$ soll es sich um prädikatenlogische Formeln handeln, mit der
 Besonderheit, dass in ihr die Terme und Ausdrücke der Programmiersprache
@@ -201,20 +204,21 @@ Die Gültigkeit eines Hoare"=Tripels wird definiert gemäß
 \[(\models\{A\}\,p\,\{B\})\,:\Leftrightarrow\,
 \forall s\in S\colon (s\models A)\cond\forall s'\in S\colon
 (\langle p,s\rangle\to s')\cond (s'\models B).\]
-Interessanterweise kommt darin recht direkt die Kripke"=Semantik einer
-Notwendigkeit zum Vorschein. Die Zustände nehmen hierbei die Rolle der
-Welten ein, die Übergangsrelation je Programm $p$ die Rolle der
-Zugänglichkeitsrelation. Demnach liegt eine multimodale Logik vor, da je
-Programm $p$ ein Operator $\lnec_p$ existiert, der üblicherweise $[p]$
-geschrieben wird. Setzen wir diesbezüglich
+Interessanterweise kommt darin recht direkt die Kripke"=Semantik%
+\index{Kripke-Semantik} einer Notwendigkeit zum Vorschein. Die Zustände
+nehmen hierbei die Rolle der Welten ein, die Übergangsrelation je
+Programm $p$ die Rolle der Zugänglichkeitsrelation. Demnach liegt eine
+multimodale Logik vor, da je Programm $p$ ein Operator $\lnec_p$ existiert,
+der üblicherweise $[p]$ geschrieben wird. Setzen wir diesbezüglich
 \[(s\models [p]B)\;:\Leftrightarrow\;\forall s'\in S\colon
 (\langle p,s\rangle\to s')\cond (s'\models B),\]
 findet sich die Äquivalenz
 \[(\models\{A\}\,p\,\{B\})\Leftrightarrow (\models A\cond [p]B),\]
-die eine jähe Beziehung des Hoare"=Kalküls zur ihr, der \emph{dynamischen Logik} herstellt, auf
-die ich an dieser Stelle aber nicht näher eingehen will. Trotzdem mag der
-Leser sie später in Erinnerung rufen, um ein übersichtlicheres Bild
-von den Sachverhalten zu bekommen.
+die eine jähe Beziehung des Hoare"=Kalküls zur ihr, der
+\emph{dynamischen Logik}\index{dynamische Logik}
+herstellt, auf die ich an dieser Stelle aber nicht näher eingehen will.
+Trotzdem mag der Leser sie später in Erinnerung rufen, um ein
+übersichtlicheres Bild von den Sachverhalten zu bekommen.
 
 \strong{Die Regeln zur Herleitung der Tripel.} Für Zuweisungen gilt
 \[\dfrac{}{\vdash\{A[x:=t]\}\; x := t\;\{A\}}.\]
