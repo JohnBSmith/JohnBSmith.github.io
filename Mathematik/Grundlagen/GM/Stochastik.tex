@@ -34,6 +34,60 @@ eingetreten. Zwei Ereignisse, die niemals gleichzeitig eintreten,
 heißen \emph{disjunkt}. So sind die $A,C$ disjunkt, weil ihre
 Schnittmenge leer ist.
 
+\subsection{Nochmals Indikatorfunktionen}
+
+In diesem Abschnitt will ich nochmals näher auf Indikatorfunktionen
+eingehen. Sie bieten in der Kombinatorik und in der
+Wahrscheinlichkeitsrechnung beim Rechnen mit Summen ein Hilfsmittel,
+das bestimmte Umformungen leichter verständlich macht.
+
+\begin{table}
+\centering
+\caption{Regeln für die Iverson-Klammerung}
+\label{tab:Iverson}
+\begin{tabular}{r@{\;}l@{\qquad}r@{\;}l}
+\toprule
+$[\bot]$ & $= 0$ & $[a\land b]$ & $= [a]\cdot [b]$\\
+$[\top]$ & $= 1$ & $[a\lor b]$ & $= [a] + [b] - [a]\cdot [b]$\\
+$[\lnot a]$ & $= 1 - [a]$ & $[a\oplus b]$ & $= |[a] - [b]|$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Wir rekapitulieren nochmals die Iverson"=Klammerung, die Wahrheitswerte
+in die Menge der Zahlen einbettet. Für jede Aussage $E$ ist
+\[[A] := \begin{cases}
+0, & \text{wenn $A$ falsch ist,}\\
+1, & \text{wenn $A$ wahr ist.}
+\end{cases}\]
+Hiermit wird zu jeder Menge $M\subseteq\Omega$ die Indikatorfunktion als
+\[1_M\colon\Omega\to\{0,1\},\quad 1_M(\omega) := [\omega\in M]\]
+festgelegt. Für die Iverson"=Klammerung gelten die Regeln in Tabelle
+\ref{tab:Iverson}, die man leicht per Wahrheitstafel nachrechnen kann.
+Es wäre zu bemerken, dass man damit genau die Einbettung der
+Aussagenlogik in die gewöhnliche Algebra erhält, wie Boole sie
+darstellte.
+\begin{Satz}\label{Indikatorf-Vereinigung2}
+Für jedes $\omega$ gilt
+\[1_{A\cup B}(\omega) = 1_A(\omega) + 1_B(\omega) - 1_{A\cap B}(\omega).\]
+\end{Satz}
+\begin{Beweis}
+Laut Definition ist die Gleichung äquivalent zur Gleichung
+\begin{align*}
+&[\omega\in A\cup B] = [\omega\in A] + [\omega\in B] - [\omega\in A\cap B]\\
+\iff & [\omega\in A\lor\omega\in B] = [\omega\in A] + [\omega\in B] - [\omega\in A\land\omega\in B].
+\end{align*}
+Diese gilt aber gerade laut Tabelle \ref{tab:Iverson}.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Die Indikatorfunktion einer endlichen Mengen ermöglicht es, die
+Anzahl ihrer Elemente als eine Summe darzustellen. Man sieht sofort ein,
+dass $|A| = \sum_{\omega\in\Omega} 1_A(\omega)$ für eine Menge $A\subseteq\Omega$
+gelten muss, was recht trivial erscheinen mag. Infolge erhält man aber aus
+Satz \ref{Indikatorf-Vereinigung2} unverzüglich den Korollar
+\[|A\cup B| = |A|+|B|-|A\cap B|.\]
+
 \subsection{Wahrscheinlichkeiten}
 
 Man kann nicht voraussagen, wie ein Experiment ausgehen wird. Das
@@ -118,7 +172,8 @@ ein endlicher Wahrscheinlichkeitsraum, wenn
 \end{Satz}
 \begin{Beweis}
 Es sei $(\Omega,P)$ ein endlicher Wahrscheinlichkeitsraum.
-Mit $A\cap B=\emptyset$ gilt für die Indikatorfunktionen die Gleichung
+Mit $A\cap B=\emptyset$ gilt für die Indikatorfunktionen
+gemäß Satz \ref{Indikatorf-Vereinigung2} die Gleichung
 \[1_{A\cup B}(\omega) = 1_A(\omega) + 1_B(\omega).\]
 Somit gelingt die Rechnung
 \begin{gather*}
@@ -182,11 +237,9 @@ umgeformt.\,\qedsymbol
 Allgemein gilt $P(A\cup B) = P(A) + P(B) - P(A\cap B)$.
 \end{Satz}
 \begin{Beweis}
-Wir erinnern uns daran, dass man für Indikatorfunktionen vermittels
-einer Wahrheitstafel den Sachverhalt%
-\[1_{A\cup B}(\omega) = 1_A(\omega) + 1_B(\omega) - 1_{A\cap B}(\omega)\]
-bestätigen kann. Hiermit formt man wieder wie im Beweis von Satz
-\ref{Axiome-Kolmogorow} die Summenformel für $P(A\cup B)$ um.\,\qedsymbol
+Vermittels Satz \ref{Indikatorf-Vereinigung2} formt man wie im Beweis
+von Satz \ref{Axiome-Kolmogorow} die Summenformel für
+$P(A\cup B)$ um.\,\qedsymbol
 \end{Beweis}
 
 \noindent
