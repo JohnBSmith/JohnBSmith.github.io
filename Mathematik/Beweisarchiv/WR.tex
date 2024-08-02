@@ -379,6 +379,33 @@ E(g(X,Y)) = \sum_{\omega\in\Omega} g(X,Y)(\omega)P(\{\omega\})
 Diese Rechnung ist anlog zu der im Beweis von Satz \ref{prob-transform}.\,\qedsymbol
 \end{Beweis}
 
+\begin{Satz}[Siebformel]\newlinefirst
+Es gilt $\displaystyle P(\bigcup_{i=1}^n A_i)
+= \sum_{\mathclap{{\scriptstyle J\subseteq\{1,\ldots,n\}}\atop{\scriptstyle J\ne\emptyset}}}
+(-1)^{|J|+1}P(\bigcap_{j\in J} A_j)$.
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{prod-1-minus} gilt
+\[\prod_{i=1}^n 1_{\Omega\setminus A_i}(\omega)
+= \prod_{i=1}^n (1-1_{A_i}(\omega))
+= \sum_{J\subseteq\{1,\ldots,n\}}(-1)^{|J|}\prod_{j\in J}1_{A_j}(\omega),\]
+also
+\[1_{\Omega\setminus\bigcup_{i=1}^n A_i}(\omega)
+= 1_{\bigcap_{i=1}^n\Omega\setminus A_i}(\omega)
+= \sum_{J\subseteq\{1,\ldots,n\}}(-1)^{|J|}1_{\bigcap_{j\in J} A_j}(\omega).\]
+Ergo gilt
+\begin{align*}
+1 - P(\bigcup_{i=1}^n A_i) &= P(\Omega\setminus\bigcup_{i=1}^n A_i)
+= \sum_{\omega\in\Omega}P(\{\omega\})1_{\Omega\setminus\bigcup_{i=1}^n A_i}\\
+&= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}\sum_{\omega\in\Omega}
+P(\{\omega\})1_{\bigcap_{j\in J} A_j}(\omega)
+= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}P(\bigcap_{j\in J} A_j).
+\end{align*}
+Im Fall $J=\emptyset$ gilt $\bigcap_{j\in J} A_j = \Omega$, dessen
+Wahrscheinlichkeit eins ist. Man subtrahiert nun eins auf beiden
+Seiten, und multipliziert daraufhin beide Seiten mit $-1$.\,\qedsymbol
+\end{Beweis}
+
 \newpage
 \section{Allgemeine Wahrscheinlichkeitsräume}
 

@@ -255,7 +255,8 @@ bestimmt, womit
 gelten muss.\,\qedsymbol
 \end{Beweis}
 
-\begin{Satz}[Rekursionsformel der Potenzmengenabbildung]\newlinefirst
+\begin{Satz}[Rekursionsformel der Potenzmengenabbildung]%
+\label{Potenzmenge-rekursiv}\newlinefirst
 Für $x\notin M$ gilt $\mathcal P(M\cup\{x\}) = \mathcal P(M)\cup\{A\cup\{x\}\mid A\in\mathcal P(M)\}$.
 \end{Satz}
 \begin{Beweis}
@@ -786,7 +787,8 @@ explizit betrachten, sonst aber auf dieselbe Weise vorgehen.\,\qedsymbol
 \end{Beweis}
 
 \newpage
-\begin{Satz} Es gilt
+\begin{Satz}
+Es gilt
 \[\sum_{k=1}^n (-1)^k k = (-1)^n\left\lfloor\frac{n+1}{2}\right\rfloor.\]
 \end{Satz}
 \begin{Beweis}
@@ -811,6 +813,38 @@ Im ungeraden Fall $n=2k+1$ bestätigt sich
 = k + k + 1 = 2k + 1.\,\qedsymbol\]
 \end{Beweis}
 
+\begin{Satz}\label{prod-1-plus}
+Es gilt $\prod_{i=1}^n (1+a_i) = \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ gilt $\{1,\ldots,n\}=\emptyset$,
+womit $J=\emptyset$ die einzige Teilmenge ist. Auf beiden Seiten steht
+also das leere Produkt, dessen Wert eins ist.
+
+Zum Schritt rechnet man
+\begin{align*}
+\prod_{i=1}^{n+1} (1+a_i) &= (1+a_{n+1})\prod_{i=1}^n (1+a_i)
+\stackrel{\mathrm{IV}}= (1+a_{n+1})\sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j\\
+&= \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j
++ \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J\cup\{n+1\}} a_j
+= \sum_{J\subseteq\{1,\ldots,n+1\}}\prod_{j\in J} a_j.
+\end{align*}
+Die letzte Umformung ergibt sich daraus, dass laut Satz
+\ref{Potenzmenge-rekursiv} gilt
+\[J\subseteq\{1,\ldots,n+1\} \;\Leftrightarrow\;\,
+J\in\mathcal P(\{1,\ldots,n\})\uplus\{A\cup\{n+1\}\mid A\subseteq\{1,\ldots,n\}\}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{prod-1-minus}
+Es gilt $\prod_{i=1}^n (1-a_i) = \sum_{J\subseteq\{1,\ldots,n\}}(-1)^{|J|}\prod_{j\in J} a_j$.
+\end{Satz}
+\begin{Beweis}
+Ergibt sich als Korollar aus Satz \ref{prod-1-plus}
+mit $\prod_{j\in J} (ca_j) = c^{|J|}\prod_{j\in J} a_j$
+für jede Konstante $c$, wobei mit $|J|$ die Anzahl der Elemente von $J$ gemeint ist.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \section{Funktionen}
 
 \subsection{Floor und Ceil}
@@ -846,7 +880,6 @@ Für $0\le x < 1$ gilt $\lfloor x\rfloor = 0$.
 Dies folgt unmittelbar aus Def. \ref{def:floor}.\,\qedsymbol
 \end{Beweis}
 
-\newpage
 \begin{Definition}[Maximum, Minimum]\label{def:max-min}\newlinefirst
 Für eine Menge $M\subseteq\R$ definiert man
 \[\begin{array}{@{}l@{\;}c@{\,}l@{}}

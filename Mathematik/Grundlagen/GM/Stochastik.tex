@@ -268,7 +268,49 @@ gewonnen. Umgekehrt kann Satz \ref{Inklusion-Exklusion-zwei} unmittelbar
 aus ihr zurückgewonnen werden, indem einfach $C:=\emptyset$ gesetzt
 wird. Diese Formeln folgen einem allgemeinen Prinzip, das
 allgemein für Vereinigungen endlich vieler Mengen gilt, -- man spricht
-vom \emph{Prinzip der Inklusion und Exklusion}.
+von der \emph{Siebformel}, auch als \emph{Prinzip der Inklusion und Exklusion}
+geläufig.
+
+\subsection{Gleichverteilungen}
+
+Viele Zufallsexperimente entstehen aus einer Zusammensetzung vermittels
+Gegenständen, die einer Gleichverteilung unterliegen, wo also jedes der
+elementaren Ereignisse gleich wahrscheinlich ist. Zum Beispiel ist dies
+beim Wurf einer idealen Münze, beim Wurf eines idealen Würfels, bei
+der Ziehung einer Karte aus einem gut durchmischten Stapel nummerierter
+Karten oder bei der Ziehung einer Kugel aus einer Ansammlung nummerierter
+Kugeln der Fall. Auch ein Zufallszahlgenerator mit einer bestimmten Verteilung
+lässt sich vermittels bestimmter Algorithmen aus einem gleichverteilten
+Generator aufbauen.
+
+Wir nehmen nun für eine Weile die Position ein, dass auf unterster Ebene
+immer eine Gleichverteilung herrscht. Wie sich herausstellt, ist diese
+These unhaltbar. Das ist aber nicht weiter schlimm, denn auch dieser
+eingeschränkte Wahrscheinlichkeitsbegriff zeigt sich bisweilen recht
+vielfältig.
+
+\begin{Definition}[Laplace-Experiment]\newlinefirst
+Ein \emph{Laplace-Experiment} ist ein Zufallsexperiment, bei dem die
+elementaren Ereignisse alle gleich wahrscheinlich sind.
+\end{Definition}
+
+\noindent
+Der Wahrscheinlichkeitsraum $(\Omega,P)$ eines Laplace"=Experiments
+hat also die Eigenschaft $P(\{\omega\})=c$ für jedes $\omega\in\Omega$,
+wobei $c$ eine Konstante ist.
+
+\begin{Satz}
+Herrscht in $(\Omega,P)$ Gleichverteilung, gilt $P(A) = \frac{|A|}{|\Omega|}$.
+\end{Satz}
+\begin{Beweis}
+Man stellt das Ereignis $A$ als Vereinigung der disjunkten elementaren
+Ereignisse dar. Diesbezüglich ergibt sich die Umformung
+\[P(A) = P(\bigcup_{\omega\in A}\{\omega\})
+= \sum_{\omega\in A}P(\{\omega\}) = \sum_{\omega\in A} c
+= c\sum_{\omega\in A} 1 = c\cdot |A|.\]
+Speziell gilt $1=P(\Omega)=c\cdot |\Omega|$, womit
+$c=\frac{1}{|\Omega|}$ sein muss.\,\qedsymbol
+\end{Beweis}
 
 \subsection{Zufallsgrößen}
 
