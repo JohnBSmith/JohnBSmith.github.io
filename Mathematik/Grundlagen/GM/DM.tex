@@ -673,11 +673,13 @@ die Faktorisierung
 Der gemachte Gedankengang kann auch unter anderen Umständen vorgenommen
 werden, dergestalt dass statt den Injektionen die Surjektionen oder sämtliche
 Abbildungen betrachtet werden. Es entsteht der \emph{zwölffaltige Weg},
--- wenn man so will, ein kleines Periodensystem der Kombinatorik. \cite{Stanley}
+-- wenn man so will, ein kleines Periodensystem der Kombinatorik, 
+siehe Tabelle \ref{tab:twelvefold-way}. \cite{Stanley}
 
 \begin{table}
 \begin{center}
 \caption{Der zwölffaltige Weg}
+\label{tab:twelvefold-way}
 \begin{tabular}{c|ccc}
 \toprule
 & $f\in\Abb(X,Y)$ & $f\in\mathrm{Inj}(X,Y)$ & $f\in\mathrm{Sur}(X,Y)$\\
@@ -694,7 +696,62 @@ $S_n\circ f\circ S_k$ & $p_n(n+k)$ & $[k\le n]$ & $p_n(k)$\\
 \end{center}
 \end{table}
 
-\newpage
+Der Term $\big\{\!\begin{smallmatrix}k\\ n\end{smallmatrix}\!\big\}$
+steht dabei für die Stirlingzahlen zweiter Art, das ist die Anzahl der
+Möglichkeiten, wie eine Menge von $k$ Elementen in $n$ disjunkte nichtleere
+Teilmengen zerlegt werden kann. Der Term $p_n(k)$ steht für die Anzahl
+der Partitionen der Zahl $k$ in $n$ Teile. Der Term $[k\le n]$ steht
+für »$1$ falls $k\le n$, sonst $0$«.
+
+\subsection{Anzahl der Multimengen}
+
+Aus der Frage nach der Anzahl Kombinationen geht als abgewandelte
+Problemstellung die Frage nach der Anzahl Kombinationen mit
+Wiederholung einher. Das heißt, während bei einer Kombination von
+$k$ aus $n$ unterschiedlichen Objekten jedes der $k$ Objekte höchstens
+einmal auftreten darf, kann bei einer Kombination mit Wiederholung
+jedes der $n$ Objekte beliebig häufig, also bis zu $k$ mal auftreten.
+Während eine Kombinationen eine Menge von $k$ aus einer Menge von $n$
+Elementen darstellt, handelt es sich bei einer Kombination mit
+Wiederholung um eine Multimenge von $k$ aus der Menge von $n$ Elementen.
+
+Eine gute Veranschaulichung bietet die folgende Aufgabe.
+Aus einem Sack mit unerschöpflich vielen Bauklötzen der Farben rot, grün,
+blau und gelb werden gleichzeitig fünf Stück gezogen. Zur Frage steht,
+wie viele unterschiedliche Farbkombinationen es gibt.
+
+\begin{figure}\setlength{\abovecaptionskip}{0pt}
+\begin{center}
+\includegraphics[width=38mm]{img/Kloetze.pdf}
+\caption{Eine Kombination von fünf Klötzen in vier Farben.}
+\label{fig:Kloetze}
+\end{center}
+\end{figure}
+
+Diese Aufgabe kann als die Frage nach der Anzahl monotoner Gitterwege
+umgedeutet werden. Ein Schritt nach rechts fügt dabei einen Klotz zur
+Sammlung hinzu. Ein Schritt nach oben wechselt dagegen in die nächste Farbe,
+ohne die bisherige Sammlung von Klötzen zu vergrößern.
+Siehe Abb. \ref{fig:Kloetze}. Es stellt sich heraus, dass sich diese Sichtweise
+zur Methodik \emph{Stars and Bars} gleichbedeutend verhält. Dabei wird
+ein Sternchen für einen Klotz gesetzt und ein Stab als Abgrenzung
+zwischen zwei Farben. Man setzt ein Sternchen also gerade für einen
+Schritt nach rechts und einen Stab suggestiv für einen Schritt
+nach oben.
+
+Man muss hier vorsichtig sein, keinen Off-by-one-Fehler zu machen.
+Zwar gibt es vier Farben, diese werden allerdings mit $0$, $1$, $2$, $3$
+nummeriert. Eine Sammlung von $k$ Klötzen aus einem Sack mit $n$ Farben
+entspricht also einem Gitterweg von $(0,0)$ zu $(k,n-1)$. Die Anzahl
+der Farbkombinationen beträgt somit
+\[\left(\!\left(\begin{matrix}n\\ k\end{matrix}\right)\!\right) :=
+\binom{k+n-1}{k} = \binom{k+n-1}{n-1} = \binom{5+4-1}{4-1} = \binom{8}{3} = 56.\]
+Das doppelt geklammerte Analogon zum Binomialkoeffizienten wird also als
+die Anzahl der $k$-elementigen Multimengen mit Elementen aus einer Menge
+von $n$ Elementen interpretiert. Wie es scheint, stimmt sie mit der Anzahl
+der $k$-elementigen Teilmengen aus einer Menge von $k+n-1$ Elementen
+überein.
+
 \section{Zur elementaren Zahlentheorie}
 
 \subsection{Kongruenzen}
