@@ -1504,8 +1504,46 @@ durch $m$ parametrisiert, was nichts Schlimmes ist, denn
 parametrisierte Argumentation kennzeichnet ja das übliche Vorgehen
 zur Bestätigung allquantifizierter Aussagen.
 
-% #todo Ist dies nicht lediglich fundierte?
-% Anderes Beispiel wählen.
+Das folgende Beispiel zeigt den typischen Charakter struktureller
+Induktion besser. Es sei $A$ ein Alphabet von Symbolen. Die Menge $L$
+der \emph{einfach verketteten Listen}
+von Symbolen sei wie folgt als induktive Struktur definiert. Es sei
+$\emptyset\in L$ und mit $a\in L$ und einem Symbol $x\in A$ auch
+$f_x(a)\in L$ mit $f_x(a):=(x,a)$. Nichts anderes sei eine Liste. Bei
+einer Liste der Form des geordneten Paars $(x,a)$ stellt $x$ das
+anfängliche Element dar und $a$ die restliche Liste. Konstruktionen
+dieser Art sind in den Grundzügen der Informatik geläufig. Zwar mögen sie
+ohne Verfügbarkeit von weitgehenden Optimierungen ineffizient sein, dafür
+stellen sie aber wichtige Hilfsmittel für die Theorie dar. In der
+Programmiersprache Scheme schreibt man beispielsweise \verb|'()| statt
+$\emptyset$ und \verb|(cons x a)| statt $f_x(a)$.
+
+Die Länge $l(a)$ einer Symbolliste $a$ definieren wir nun rekursiv als
+\[l(a) := \begin{cases}
+0, & \text{wenn}\; a=\emptyset,\\
+l(a_1)+1, & \text{wenn}\; a = (a_0,a_1).
+\end{cases}\]
+Genau genommen muss die induktive Struktur $L$ diesbezüglich, damit diese Funktion
+unbestreitbar wohldefiniert ist, durch $\emptyset$ und die $f_x$ frei
+erzeugt sein, siehe Def. \ref{def:frei-erzeugt} auf S. \pageref{def:frei-erzeugt},
+was sich aber unschwer bestätigen lässt. Die Konkatenation zweier Listen $a,b$
+definieren wir auf dieselbe Weise rekursiv als
+\[a\circ b := \begin{cases}
+b, & \text{wenn}\; a=\emptyset,\\
+(a_0, (a_1\circ b)), & \text{wenn}\; a=(a_0,a_1).
+\end{cases}\]
+Es sollte klar sein, dass für je zwei Listen $a,b$ gilt
+\[l(a\circ b) = l(a) + l(b).\]
+Der strenge Beweis wird nun aber via struktureller Induktion über den
+Aufbau von $a$ geführt. Im Induktionsanfang $a=\emptyset$ erhält man
+\[l(\emptyset\circ b) = l(b) = 0 + l(b) = l(\emptyset) + l(b).\]
+Zum jeweiligen Induktionsschritt bezüglich $x\in A$ findet sich die
+Rechnung
+\begin{align*}
+l((x, a)\circ b) &= l((x, a\circ b)) = l(a\circ b) + 1
+\stackrel{\text{IV}}= l(a) + l(b) + 1\\
+&= l((x, a)) + l(b).
+\end{align*}
 
 \newpage
 \section{Modallogik}\label{sec:Modallogik}
