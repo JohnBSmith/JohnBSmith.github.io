@@ -723,7 +723,7 @@ wie viele unterschiedliche Farbkombinationen es gibt.
 \begin{figure}\setlength{\abovecaptionskip}{0pt}
 \begin{center}
 \includegraphics[width=38mm]{img/Kloetze.pdf}
-\caption{Eine Kombination von fünf Klötzen in vier Farben.}
+\caption{Eine Kombination von fünf Klötzen in bis zu vier Farben.}
 \label{fig:Kloetze}
 \end{center}
 \end{figure}
@@ -752,6 +752,88 @@ von $n$ Elementen interpretiert. Wie es scheint, stimmt sie mit der Anzahl
 der $k$-elementigen Teilmengen aus einer Menge von $k+n-1$ Elementen
 überein.
 
+\subsection{Gesamtzahl der Teilmengen}
+
+Die Zählung der Teilmengen beschränkte sich zuvor auf Teilmengen fester
+Größe. Nun würden wir gerne auch in Erfahrung bringen, wie viele mögliche
+Teilmengen einer Menge $M$ es insgesamt gibt, also wie groß die
+Potenzmenge von $M$ ist.
+
+Zunächst kurz ein leichter Hilfssatz.
+
+\begin{Satz}\label{ohne-ist-monoton}
+Aus $A\subseteq B$ folgt $A\setminus C\subseteq B\setminus C$.
+\end{Satz}
+\begin{Beweis}
+Es gelte $x\in A\setminus C$. Das bedeutet, $x\in A$ und $x\notin C$.
+Laut der Voraussetzung folgt $x\in B$ aus $x\in A$. Somit gilt sowohl
+$x\in B$ als auch $x\notin C$, also $x\in B\setminus C$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Als nächstes klären wir die Rekurrenz der Potenzmengenoperation ab,
+die daraufhin in einem Induktionsbeweis Verwendung findet. Auf Basis
+ihrer lässt sich außerdem ein Algorithmus zur Aufzählung der Potenzmenge
+erstellen.
+
+\begin{Satz}[Rekurrenz der Potenzmengenoperation]%
+\label{Potenzmenge-rekursiv}\newlinefirst
+Für $x\notin M$ gilt $\powerset(M\cup\{x\})
+= \powerset(M)\cup\{A\cup\{x\}\mid A\in\powerset(M)\}$.
+\end{Satz}
+\begin{Beweis}
+Die Gleichung ist äquivalent zu
+\[T\subseteq M\cup\{x\}\,\Leftrightarrow\, T\subseteq M\lor\exists A\subseteq M\colon T=A\cup\{x\}.\]
+Die rechte Seite gelte. Im Fall $T\subseteq M$ gilt erst
+recht $T\subseteq M\cup\{x\}$. Im anderen Fall liegt ein $A\subseteq M$
+vor, womit $A\cup\{x\}\subseteq M\cup\{x\}$ gilt. Wegen $T=A\cup\{x\}$
+gilt also ebenfalls $T\subseteq M\cup\{x\}$.
+
+Die linke Seite gelte. Mit $T\subseteq M\cup\{x\}$ und
+$x\notin M$ folgt per Satz \ref{ohne-ist-monoton}
+\[T\setminus\{x\}\subseteq (M\cup\{x\})\setminus\{x\} = M,
+\;\text{also}\; T\setminus\{x\}\subseteq M.\]
+Im Fall $x\notin T$ ist
+$T=T\setminus\{x\}$, womit man $T\subseteq M$
+erhält. Im gegenteiligen Fall $x\in T$ wird $A:=T\setminus\{x\}$
+als Zeuge der Existenzaussage gewählt.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Es verhält sich dergestalt, dass \emph{sämtliche} in der Rekurrenz
+auftretende Vereinigungen solche disjunkter Mengen sind. Man darf
+die Rekurrenz somit auch als
+\[\powerset(M\uplus\{x\})
+= \powerset(M)\uplus\biguplus_{\mathclap{A\in\powerset(M)}}
+\{A\uplus\{x\}\}\]
+notieren. Nun zur gesuchten Anzahl.
+
+\begin{Satz}\label{Anzahl-Potenzmenge}
+Mit $|M|=n$ gilt $|\powerset(M)| = 2^n$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ muss $M=\emptyset$ sein, also
+$\powerset(M)=\{\emptyset\}$, das macht $|\powerset(M)| = 1 = 2^0$.
+
+Zum Schritt. Es gelte $|M|=n$ und es sei $x\notin M$. Vermittels Satz
+\ref{Potenzmenge-rekursiv}, wo man es außerdem mit Vereinigungen
+disjunkter Mengen zu tun hat, erhält man
+\[|\powerset(M\cup\{x\})| = |\powerset(M)| + |\{A\cup\{x\}\mid A\in\powerset(M)\}|
+\stackrel{\text{IV}}= 2^n + 2^n = 2^{n+1}.\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Einen kürzeren Beweis erhalten wir, wenn ihr uns daran erinnern, dass
+$\powerset(M)$ und $\Abb(M,\{0,1\})$ gleichmächtig sind. Demnach gilt
+\[|\powerset(M)| = |\Abb(M,\{0,1\})| = |\{0,1\}|^{|M|} = 2^{|M|}.\]
+Als Korollar ergibt sich kurzerhand die Beziehung
+\[\sum_{k=0}^n\binom{n}{k} = 2^n,\]
+denn summiert man die Anzahl der $k$"=elementigen Teilmengen über $k$,
+erhält man die Anzahl sämtlicher Teilmengen einer Menge von $n$ Elementen.
+Und führt man einen unabhängigen Induktionsbeweis dieser Beziehung,
+erhält man umgekehrt einen dritten Beweis von Satz \ref{Anzahl-Potenzmenge}.
+
+\newpage
 \section{Zur elementaren Zahlentheorie}
 
 \subsection{Kongruenzen}
