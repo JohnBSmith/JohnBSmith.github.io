@@ -271,6 +271,70 @@ allgemein für Vereinigungen endlich vieler Mengen gilt, -- man spricht
 von der \emph{Siebformel}, auch als \emph{Prinzip der Inklusion und Exklusion}
 geläufig.
 
+Zur gründlicheren Erfassung des Prinzips will ich einen Beweis
+der Siebformel aufzeigen, der allerdings ein wenig kompliziert ausfällt.
+Zunächst benötigen wir einen Hilfssatz für die Handhabung der
+Indikatorfunktionen.
+
+\begin{Satz}\label{prod-1-plus}
+Es gilt $\prod_{i=1}^n (1+a_i) = \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j$.
+\end{Satz}
+\begin{Beweis}
+Induktion über $n$. Im Anfang $n=0$ gilt $\{1,\ldots,n\}=\emptyset$,
+womit $J=\emptyset$ die einzige Teilmenge ist. Auf beiden Seiten steht
+also das leere Produkt, dessen Wert eins ist.
+
+Zum Schritt rechnet man
+\begin{align*}
+\prod_{i=1}^{n+1} (1+a_i) &= (1+a_{n+1})\prod_{i=1}^n (1+a_i)
+\stackrel{\mathrm{IV}}= (1+a_{n+1})\sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j\\
+&= \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J} a_j
++ \sum_{J\subseteq\{1,\ldots,n\}}\prod_{j\in J\cup\{n+1\}} a_j
+= \sum_{J\subseteq\{1,\ldots,n+1\}}\prod_{j\in J} a_j.
+\end{align*}
+Die letzte Umformung ergibt sich daraus, dass laut Satz
+\ref{Potenzmenge-rekursiv} gilt
+\[J\subseteq\{1,\ldots,n+1\} \;\Leftrightarrow\;\,
+J\in\mathcal P(\{1,\ldots,n\})\uplus\{A\cup\{n+1\}\mid A\subseteq\{1,\ldots,n\}\}.\,\qedsymbol\]
+\end{Beweis}
+
+\begin{Satz}\label{prod-1-minus}
+Es gilt $\prod_{i=1}^n (1-a_i) = \sum_{J\subseteq\{1,\ldots,n\}}(-1)^{|J|}\prod_{j\in J} a_j$.
+\end{Satz}
+\begin{Beweis}
+Ergibt sich als Korollar aus Satz \ref{prod-1-plus}
+mit $\prod_{j\in J} (ca_j) = c^{|J|}\prod_{j\in J} a_j$
+für jede Konstante $c$, wobei mit $|J|$ die Anzahl der Elemente von $J$ gemeint ist.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Siebformel]\newlinefirst
+Es gilt $\displaystyle P(\bigcup_{i=1}^n A_i)
+= \sum_{\mathclap{\substack{J\subseteq\{1,\ldots,n\}\\ J\ne\emptyset}}}
+(-1)^{|J|+1}P(\bigcap_{j\in J} A_j)$.
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{prod-1-minus} gilt
+\[\prod_{i=1}^n 1_{\Omega\setminus A_i}(\omega)
+= \prod_{i=1}^n (1-1_{A_i}(\omega))
+= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}\prod_{j\in J}1_{A_j}(\omega),\]
+also
+\[1_{\Omega\setminus\bigcup_{i=1}^n A_i}(\omega)
+= 1_{\bigcap_{i=1}^n\Omega\setminus A_i}(\omega)
+= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}1_{\bigcap_{j\in J} A_j}(\omega).\]
+Ergo gilt
+\begin{align*}
+1 - P(\bigcup_{i=1}^n A_i) &= P(\Omega\setminus\bigcup_{i=1}^n A_i)
+= \sum_{\omega\in\Omega}P(\{\omega\})1_{\Omega\setminus\bigcup_{i=1}^n A_i}\\
+&= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}\sum_{\omega\in\Omega}
+P(\{\omega\})1_{\bigcap_{j\in J} A_j}(\omega)
+= \sum_{\mathclap{J\subseteq\{1,\ldots,n\}}}(-1)^{|J|}P(\bigcap_{j\in J} A_j).
+\end{align*}
+Im Fall $J=\emptyset$ gilt $\bigcap_{j\in J} A_j = \Omega$, deren
+Wahrscheinlichkeit eins ist. Man subtrahiert nun eins auf beiden
+Seiten, und multipliziert daraufhin beide Seiten mit $-1$.\,\qedsymbol
+\end{Beweis}
+
+\newpage
 \subsection{Gleichverteilungen}
 
 Viele Zufallsexperimente entstehen aus einer Zusammensetzung vermittels
