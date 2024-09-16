@@ -1082,3 +1082,84 @@ Per Substitution $\ln(1/x)=t$ erhält man
 = n!.\,\qedsymbol
 \]
 \end{Beweis}
+
+\newpage
+\section{Maßtheorie}
+
+\subsection{Grundlagen}
+
+\begin{Definition}[Sigma-Algebra]\label{def:sigma-algebra}\newlinefirst
+Ein Mengensystem $\setsystem A\subseteq\powerset(X)$ heißt $\sigma$"=Algebra auf
+$X$, wenn gilt,
+\begin{enumerate}\setlength{\parskip}{0pt}
+\item $\emptyset\in\setsystem A$,
+\item aus $A\in\setsystem A$ folgt $A^\comp\in\setsystem A$ mit $A^\comp := X\setminus A$,
+\item aus $(\forall n\in\N\colon A_n\in\setsystem A)$ folgt
+$\bigcup_{n\in\N} A_n\in\setsystem A$.
+\end{enumerate}
+\end{Definition}
+
+\begin{Satz}
+Sei $\setsystem A$ eine $\sigma$"=Algebra auf $X$. Gilt $\forall n\in\N\colon A_n\in\setsystem A$,
+so gilt auch $\bigcap_{n\in\N} A_n\in\setsystem A$. Gilt $A,B\in\setsystem A$,
+so gilt auch $A\cup B\in\setsystem A$, $A\cap B\in\setsystem A$,
+$A\setminus B\in\setsystem A$.
+\end{Satz}
+\begin{Beweis}
+Sei $n\in\N$ und $A_n\in\setsystem A$. Laut Axiom 2 gilt $(A_n)^\comp\in\setsystem A$, laut Axiom 3 also
+\[\textstyle (\bigcap_{n\in\N} A_n)^\comp = \bigcup_{n\in\N} (A_n)^\comp\in\setsystem A.\]
+Laut Axiom 1 folgt somit $\bigcap_{n\in\N} A_n = (\bigcap_{n\in\N} A_n)^{\comp\comp}\in\setsystem A$.
+
+Sei nun $A_0:=A$, $A_1:=B$ und $A_n:=\emptyset$ für $n\ge 2$. Dann gilt
+\[\textstyle A\cup B = \bigcup_{n\in\N} A_n\in\setsystem A.\]
+Sei nun $A_0:=A$, $A_1:=B$ und $A_n:=X$ für $n\ge 2$. Dann gilt
+\[\textstyle A\cap B = \bigcap_{n\in\N} A_n\in\setsystem A.\]
+Die letzte Aussage $A\setminus B\in\setsystem A$ folgt hiermit schließlich aus
+$A\setminus B = A\cap B^\comp$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{sigma-algebras-intersection}
+Ist $\setsystem A_i$ für jedes $i\in I\ne\emptyset$ eine $\sigma$"=Algebra,
+so ist auch $\setsystem A := \bigcap_{i\in I}\setsystem A_i$ eine.
+\end{Satz}
+\begin{Beweis}
+Via Nachweis der drei Axiome aus Def. \ref{def:sigma-algebra}.
+
+Zum ersten Axiom. Laut Voraussetzung ist $\emptyset\in A_i$ für jedes $i\in I$,
+und somit laut Def. \ref{def:intersection} auch $\emptyset\in\setsystem A$.
+
+Zum zweiten Axiom. Es gelte $A\in\setsystem A$. Laut Def.
+\ref{def:intersection} muss somit $A\in\setsystem A_i$ für jedes $i\in I$.
+Ergo gilt $A^\comp\in\setsystem A_i$ für jedes $i\in I$ laut der
+Voraussetzung. Mit nochmaliger Anwendung von Def. \ref{def:intersection}
+erhält man folglich $A^\comp\in\setsystem A$.
+
+Zum dritten Axiom. Es gelte $A_n\in\setsystem A$ für jedes $n\in\N$.
+Laut Def. \ref{def:intersection} gilt daher $A_n\in\setsystem A_i$
+und laut Voraussetzung somit $\bigcup_{n\in\N}\in\setsystem A_i$ für
+jedes $i\in I$. Mit nochmaliger Anwendung von Def. \ref{def:intersection}
+folgt also $\bigcup_{n\in\N}\in\setsystem A$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es sei $\varphi_X(\setsystem A)$ die Aussage »$\setsystem A$ ist eine
+$\sigma$"=Algebra auf $X$«. Zu
+\[H\colon\powerset(\powerset(X))\to\powerset(\powerset(X)),\quad
+H(\setsystem B) := \bigcap\{\setsystem A\mid
+\setsystem B\subseteq\setsystem A\land\varphi_X(\setsystem A)\}\]
+gilt $\varphi_X(H(\setsystem B))$ für jedes $\setsystem B\subseteq\powerset(X)$,
+und $H$ ist ein Hüllenoperator.
+\end{Satz}
+\begin{Beweis}
+Man erhält $\varphi_X(H(\setsystem B))$ kurzum als Spezialisierung
+aus Satz \ref{sigma-algebras-intersection}.
+
+Man kann $H(\setsystem B)$ als $H(\setsystem B) =
+\bigcap\{\setsystem A\in S\mid\setsystem B\subseteq\setsystem A\}$
+mit $S := \{\setsystem A\mid\varphi_X(\setsystem A)\}$
+abstrakt fassen. Wegen $\varphi_X(\setsystem P(X))$ gilt
+$\setsystem P(X)\in S$. Es sei $T\subseteq S$ mit $T\ne\emptyset$.
+Vermittels Satz \ref{sigma-algebras-intersection} ergibt sich
+$\bigcap T\in S$. Also ist $S$ ein Hüllensystem auf $\powerset(X)$,
+und $H$ damit ein Hüllenoperator.\,\qedsymbol
+\end{Beweis}
