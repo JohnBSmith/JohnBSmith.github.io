@@ -151,10 +151,79 @@ Alternativ wird der Term via Musterabgleich abgefasst:
 `\kw{end}`
 \end{lstlisting}
 
+\noindent
+Die Negation $\lnot A$ wird als $A\cond\bot$ definiert, weshalb sie
+unter die Regeln der Subjunktion fällt, und daher keine eigenen benötigt.
+Die Syntax für $\bot$ ist \code{False}, und die für $\lnot A$ ist
+\verb|~A|. Ein kurzes Beispiel. Zum Beweis von $A\cond\lnot\lnot A$
+braucht man ja lediglich aus $A$ und $\lnot A$ einen Widerspruch
+herstellen. Es liegt also ein $a\colon A$ und eine Funktion
+$f\colon\lnot A$ bzw. $f\colon A\to\bot$ vor, woraus nur
+noch $f(a)$ geformt werden braucht. Der Satz und dessen Beweisterm sind
+demnach formalisiert als
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` double_negation_intro (A: Prop):
+  A -> ~~A.
+`\kw{Proof}`
+  `\kw{fun}` a: A => `\kw{fun}` f: ~A => f a.
+\end{lstlisting}
+
+\noindent
+Der Beweis der Umkehrung ist nicht möglich, insofern das System auf
+intuitionistischer Logik basiert. Wir können die Beseitigung der
+Doppelnegation allerdings axiomatisch voraussetzen via
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Axiom}` ax_dne: `\kw{forall}` (A: Prop), ~~A -> A.
+\end{lstlisting}
+
+\noindent
+Zur pedantischen Schaffung von Klarheit gäbe es alternativ auch noch
+die Möglichkeit, DNE in sämtlichen Sätzen, deren Beweis von DNE abhängt,
+explizit als Prämisse aufzuführen. Zur Abkürzung kann man DNE dabei
+verpacken mit der
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Definition}` DNE := `\kw{forall}` (A: Prop), ~~A -> A.
+\end{lstlisting}
+
+\noindent
+Zum Beispiel gelingt der Beweis von ex falso quodlibet vermittels DNE als
+\[\begin{prooftree}
+    \infer0{\bot,\lnot A\vdash\bot}
+  \infer1{\bot\vdash\lnot\lnot A}
+\infer1[DNE]{\bot\vdash A}
+\end{prooftree}
+\;\rightsquigarrow\;\;
+\begin{prooftree}
+    \infer0{\Gamma,x\colon \bot,f\colon \lnot A\vdash x\colon \bot}
+  \infer1{\Gamma,x\colon\bot\vdash (f\mapsto x)\colon \lnot\lnot A}
+\infer1[DNE]{\Gamma,x\colon\bot\vdash \mathrm{dne}(A)(f\mapsto x)\colon A}
+\end{prooftree}\]
+Die diesbezügliche Implementierung ist
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` efq (dne: DNE) (A: Prop): False -> A.
+`\kw{Proof}` `\kw{fun}` x: False => dne A (`\kw{fun}` f: ~A => x).
+\end{lstlisting}
+
+\noindent
+Man kann EFQ aber auch ohne Weiteres erhalten, da das logische System
+bereits ein intuitionistisches ist. Später werden wir sehen, dass
+$\bot$ als leerer induktiver Typ gedeutet werden darf. Infolge erhält man
+einen Beweis von EFQ vermittels leerem Musterabgleich, so sonderbar das
+auch erscheinen mag.
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` efq (A: Prop): False -> A.
+`\kw{Proof}` `\kw{fun}` x: False => `\kw{match}` x `\kw{with}` `\kw{end}`.
+\end{lstlisting}
+
 \section{Taktiken}
 
 Statt Terme zu schreiben, nutzt man lieber Taktiken. Sie bieten den
-Vorteil, dass die Schlussregeln mit ihnen rückwerts angewendet werden
+Vorteil, dass die Schlussregeln mit ihnen rückwärts angewendet werden
 können. Man gibt dabei das zu beweisende Theorem als \emph{Ziel}\index{Ziel}
 vor. Vermittels den Taktiken, die zu den Schlussregeln des natürlichen
 Schließens gehören, kann das Ziel auf ein oder mehrere \emph{Unterziele}%
@@ -203,3 +272,20 @@ Die Entwicklungsumgebung ermöglicht es hierbei, auf dem Verlauf der
 Taktiken zu wandern. Zwischen den Schritten wird das aktuelle Ziel und
 dessen Kontext gezeigt, so dass man die Übersicht darüber behält,
 was zu beweisen verbleibt und welche Mittel dafür verfügbar sind.
+
+Es ist üblich, verfügbare Aussagen, die als Annahmen gemacht
+oder aus diesen abgeleitet wurden, als \emph{Hypothesen} zu bezeichnen
+und deren Variablen bzw. Termbezeichnern diesbezüglich ein \code{h} oder
+ein \code{H} voranzustellen. Fällt keine sinnvolle Benennung ein,
+oder wäre diese zu umständlich, kann man lokale Hypothesen auch
+einfach \code{h1}, \code{h2}, \code{h3} usw. nennen. Für den letzten
+Beweis ginge beispielsweise
+
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` contraposition (A B: Prop):
+  (A -> B) -> (~B -> ~A).
+`\kw{Proof.}`
+  intro hAB. intro hnB. intro hA.
+  apply hnB. apply hAB. exact hA.
+`\kw{Qed.}`
+\end{lstlisting}
