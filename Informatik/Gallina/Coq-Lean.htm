@@ -75,6 +75,10 @@ table.bt th{
   <li><a href="#Konjunktionen">Konjunktionen</a>
   <li><a href="#Disjunktionen">Disjunktionen</a>
   </ol>
+<li><a href="#Praedikatenlogik">Prädikatenlogik</a>
+  <ol>
+  <li><a href="#Allq">Allquantifizierungen</a>
+  </ol>
 </ol>
 
 <h2 id="Allgemeines">Allgemeines</h2>
@@ -432,6 +436,90 @@ table.bt th{
     apply hAC; exact hl
   case inr hr =&gt;
     apply hBC; exact hr
+</pre>
+</table>
+
+<h2 id="Praedikatenlogik">Prädikatenlogik</h2>
+
+<h3 id="Allq">Allquantifizierungen</h3>
+
+<h4>Beweisterme für Allquantifizierungen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> uq_id (X: Type) (P: X -&gt; Prop):
+  <b>forall</b> x: X, P x -&gt; P x.
+<b>Proof</b>
+  <b>fun</b> x =&gt; <b>fun</b> hx =&gt; hx.
+</pre>
+<td><pre>
+<b>theorem</b> uq_id (X: Type) (P: X → Prop):
+  ∀x: X, P x → P x
+:=
+  <b>fun</b> _x =&gt; <b>fun</b> hx =&gt; hx
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> uq_mp (X: Type) (P Q: X -&gt; Prop):
+  (<b>forall</b> x: X, P x -&gt; Q x) -&gt;
+  (<b>forall</b> x: X, P x) -&gt;
+  (<b>forall</b> x: X, Q x).
+<b>Proof</b>
+  <b>fun</b> hPQ hP x =&gt; (hPQ x) (hP x).
+</pre>
+<td><pre>
+<b>theorem</b> uq_mp (X: Type) (P Q: X → Prop):
+  (∀x: X, P x → Q x) →
+  (∀x: X, P x) →
+  (∀x: X, Q x)
+:=
+  <b>fun</b> hPQ hP x =&gt; (hPQ x) (hP x)
+</pre>
+</table>
+
+<h4>Taktiken für Allquantifizierungen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> uq_id (X: Type) (P: X -&gt; Prop):
+  <b>forall</b> x: X, P x -&gt; P x.
+<b>Proof.</b>
+  intros x hx. exact hx.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> uq_id (X: Type) (P: X → Prop):
+  ∀x: X, P x → P x
+:= <b>by</b>
+  intro x hx; exact hx
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> uq_mp (X: Type) (P Q: X -&gt; Prop):
+  (<b>forall</b> x: X, P x -&gt; Q x) -&gt;
+  (<b>forall</b> x: X, P x) -&gt;
+  (<b>forall</b> x: X, Q x).
+<b>Proof.</b>
+  intros hPQ hP. intro x.
+  apply (hPQ x). exact (hP x).
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> uq_mp (X: Type) (P Q: X → Prop):
+  (∀x: X, P x → Q x) →
+  (∀x: X, P x) →
+  (∀x: X, Q x)
+:= <b>by</b>
+  intro hPQ hP; intro x
+  apply hPQ x; exact hP x
 </pre>
 </table>
 
