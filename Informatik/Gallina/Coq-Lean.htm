@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Coq-Lean</title>
+  <style>
+body{
+  font-family: "DejaVu Sans", "Verdana", sans-serif;
+  color: #30302a;
+  line-height: 1.5;
+  max-width: 54em;
+  margin-top: 2em;
+  margin-left: 10%;
+  margin-bottom: 10em;
+  padding-left: 4%;
+  padding-right: 4%;
+}
+pre, code{
+  font-family: "DejaVu Sans Mono", "Menlo", "Consolas", monospace;
+}
+body{margin-left: auto; margin-right: auto;}
+h2{
+  font-weight: normal;
+  border-bottom: 2px solid #b4b4b0;
+}
+a{color: #20506a; text-decoration: none;}
+a:hover{color: #102a40; text-decoration: underline;}
+table.bt{border-collapse: collapse;}
+table.bt td, table.bt th{
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  text-align: left;
+  vertical-align: top;
+}
+table.bt td{
+  border-bottom: 2px solid #d0d0c0;
+  border-left: 2px solid #d0d0c0;
+  border-right: 2px solid #d0d0c0;
+  background-color: #fafaf0;
+}
+table.bt th{
+  border-top: 2px solid #c0c0b0;
+  border-bottom: 2px solid #c0c0b0;
+  border-left: 2px solid #d0d0c0;
+  border-right: 2px solid #d0d0c0;
+  background-color: #eaeada;
+}
+.indent {
+  margin-left: 1.6em;
+}
+.comment {
+  color: #802060;
+}
+  </style>
+</head>
+<body>
+
+<h1>Vergleich von Coq mit Lean</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+
+<ol>
+<li><a href="#Allgemeines">Allgemeines</a>
+  <ol>
+  <li><a href="#Konstanten">Konstanten</a>
+  <li><a href="#Funktionen">Funktionen</a>
+  <li><a href="#Rekursion">Rekursiv definierte Funktionen</a>
+  </ol>
+<li><a href="#Aussagenlogik">Aussagenlogik</a>
+  <ol>
+  <li><a href="#Subjunktionen">Subjunktionen</a>
+  <li><a href="#Negationen">Negationen</a>
+  <li><a href="#Konjunktionen">Konjunktionen</a>
+  <li><a href="#Disjunktionen">Disjunktionen</a>
+  </ol>
+</ol>
+
+<h2 id="Allgemeines">Allgemeines</h2>
+
+<h3 id="Konstanten">Konstanten</h3>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Definition</b> zero: nat := 0.
+<b>Check</b> zero.
+<b>Compute</b> zero + 1.
+</pre>
+<td><pre>
+<b>def</b> zero: Nat := 0
+<b>#check</b> zero
+<b>#eval</b> zero + 1
+</pre>
+</table>
+
+<h3 id="Funktionen">Funktionen</h3>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Definition</b> f: ∀T: Type, T → T :=
+  <b>fun</b> T (x: T) =&gt; x.
+</pre>
+<td><pre>
+<b>def</b> f: ∀T: Type, T → T :=
+  <b>fun</b> T (x: T) =&gt; x
+</pre>
+<tr>
+<td><pre>
+<b>Definition</b> f (T: Type) (x: T): T := x.
+</pre>
+<td><pre>
+<b>def</b> f (T: Type) (x: T): T := x
+</pre>
+</table>
+
+<h3 id="Rekursion">Rekursiv definierte Funktionen</h3>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Fixpoint</b> f (n: nat): nat :=
+  <b>match</b> n <b>with</b>
+  | 0 =&gt; 1
+  | S n =&gt; (S n)*(f n)
+  <b>end</b>.
+
+<b>Compute</b> f 4.
+</pre>
+<td><pre>
+<b>def</b> f (n: Nat): Nat :=
+  <b>match</b> n <b>with</b>
+  | 0 =&gt; 1
+  | Nat.succ n =&gt; (Nat.succ n)*(f n)
+
+<b>#eval</b> f 4
+</pre>
+</table>
+
+<h2 id="Aussagenlogik">Aussagenlogik</h2>
+
+<h3 id="Subjunktionen">Subjunktionen</h3>
+
+<h4>Beweisterme für Subjunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> subj_id (A B: Prop): A -&gt; A.
+<b>Proof</b> <b>fun</b> h =&gt; h.
+</pre>
+<td><pre>
+<b>theorem</b> subj_id (A B: Prop): A → A :=
+  <b>fun</b> h =&gt; h
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> subj_elim (A B: Prop):
+  A -&gt; (A -&gt; B) -&gt; B.
+<b>Proof</b>
+  <b>fun</b> hA =&gt; <b>fun</b> hAB =&gt; hAB hA.
+</pre>
+<td><pre>
+<b>theorem</b> subj_elim (A B: Prop):
+  A → (A → B) → B
+:=
+  <b>fun</b> hA =&gt; <b>fun</b> hAB =&gt; hAB hA
+</pre>
+</table>
+
+<h4>Taktiken für Subjunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> subj_id (A: Prop):
+  A -&gt; A.
+<b>Proof.</b>
+  intro h.
+  exact h.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> subj_id (A: Prop):
+  A → A
+:= <b>by</b>
+  intro h
+  exact h
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> subj_id (A: Prop): A -&gt; A.
+<b>Proof.</b>
+  intro h. exact h.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> subj_id (A: Prop): A → A := <b>by</b>
+  intro h; exact h
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> subj_elim (A B: Prop):
+  A -&gt; (A -&gt; B) -&gt; B.
+<b>Proof.</b>
+  intros hA hAB. apply hAB.
+  exact hA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> subj_elim (A B: Prop):
+  A → (A → B) → B
+:= <b>by</b>
+  intro hA hAB; apply hAB
+  exact hA
+</pre>
+</table>
+
+<h3 id="Negationen">Negationen</h3>
+
+<h4>Beweisterme für Negationen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> neg_intro (A: Prop):
+  (A -&gt; False) -&gt; ~A.
+<b>Proof</b>
+  <b>fun</b> h =&gt; <b>fun</b> hA =&gt; h hA.
+</pre>
+<td><pre>
+<b>theorem</b> neg_intro (A: Prop):
+  (A → False) → ¬A
+:=
+  <b>fun</b> h =&gt; <b>fun</b> hA =&gt; h hA
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> neg_elim (A: Prop):
+  A -&gt; ~A -&gt; False.
+<b>Proof</b>
+  <b>fun</b> hA => <b>fun</b> hnA => hnA hA.
+</pre>
+<td><pre>
+<b>theorem</b> neg_elim (A: Prop):
+  A → ¬A → False
+:=
+  <b>fun</b> hA =&gt; <b>fun</b> hnA =&gt; hnA hA
+</pre>
+</table>
+
+<h4>Taktiken für Negationen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> neg_intro (A: Prop):
+  (A -&gt; False) -&gt; ~A.
+<b>Proof.</b>
+  intro h. intro hA.
+  apply h. exact hA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> neg_intro (A: Prop):
+  (A → False) → ¬A
+:= <b>by</b>
+  intro h; intro hA
+  apply h; exact hA
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> neg_elim (A: Prop):
+  A -&gt; ~A -&gt; False.
+<b>Proof.</b>
+  intros hA hnA. apply hnA. exact hA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> neg_elim (A: Prop):
+  A → ¬A → False
+:= <b>by</b>
+  intro hA hnA; apply hnA; exact hA
+</pre>
+</table>
+
+<h3 id="Konjunktionen">Konjunktionen</h3>
+
+<h4>Beweisterme für Konjunktionen</h4>
+
+<table class="bt">
+<tr>
+<th>Coq
+<th>Lean
+<tr>
+<td><code>conj: ∀{A B: Prop}, A → B → A ∧ B</code>
+<td><code>And.intro {a b: Prop} (left: a) (right: b): a ∧ b</code>
+<tr>
+<td><code>proj1: ∀{A B: Prop}, A ∧ B → A</code>
+<td><code>And.left {a b: Prop} (self: a ∧ b): a</code>
+<tr>
+<td><code>proj2: ∀{A B: Prop}, A ∧ B → B</code>
+<td><code>And.right {a b: Prop} (self: a ∧ b): b</code>
+</table>
+
+<h4>Taktiken für Konjunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> conj_intro (A B: Prop):
+  A -&gt; B -&gt; A /\ B.
+<b>Proof.</b>
+  intros hA hB.
+  split.
+  * exact hA.
+  * exact hB.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> conj_intro (A B: Prop):
+  A → B → A ∧ B
+:= <b>by</b>
+  intro hA hB
+  apply And.intro
+  . exact hA
+  . exact hB
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> conj_eliml (A B: Prop):
+  A /\ B -&gt; A.
+<b>Proof.</b>
+  intro h.
+  destruct h as (hA, _). exact hA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> conj_eliml (A B: Prop):
+  A ∧ B → A
+:= <b>by</b>
+  intro h
+  cases h with
+  | intro hA _ =&gt; exact hA
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> conj_eliml (A B: Prop):
+  A /\ B -&gt; A.
+<b>Proof.</b>
+  intro h.
+  assert (hA := proj1 h).
+  exact hA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> conj_eliml (A B: Prop):
+  A ∧ B → A
+:= <b>by</b>
+  intro h
+  have hA := And.left h
+  exact hA
+</pre>
+</table>
+
+<h3 id="Disjunktionen">Disjunktionen</h3>
+
+<h4>Taktiken für Disjunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> disj_introl (A B: Prop):
+  A -&gt; A \/ B.
+<b>Proof.</b>
+  intro h. left. exact h.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> disj_introl (A B: Prop):
+  A → A ∨ B
+:= <b>by</b>
+  intro h; left; exact h
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> disj_elim (A B C: Prop):
+  A \/ B -&gt; (A -&gt; C) -&gt; (B -&gt; C) -&gt; C.
+<b>Proof.</b>
+  intros h hAC hBC.
+  destruct h as [hl | hr].
+  * apply hAC. exact hl.
+  * apply hBC. exact hr.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> disj_elim (A B C: Prop):
+  A ∨ B → (A → C) →  (B → C) → C
+:= <b>by</b>
+  intro h hAC hBC
+  cases h
+  case inl hl =&gt;
+    apply hAC; exact hl
+  case inr hr =&gt;
+    apply hBC; exact hr
+</pre>
+</table>
+
+</body>
+</html>
