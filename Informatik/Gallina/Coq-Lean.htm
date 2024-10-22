@@ -74,6 +74,7 @@ table.bt th{
   <li><a href="#Negationen">Negationen</a>
   <li><a href="#Konjunktionen">Konjunktionen</a>
   <li><a href="#Disjunktionen">Disjunktionen</a>
+  <li><a href="#Bijunktionen">Bijunktionen</a>
   </ol>
 <li><a href="#Praedikatenlogik">Prädikatenlogik</a>
   <ol>
@@ -388,7 +389,7 @@ table.bt th{
   A ∧ B → A
 := <b>by</b>
   intro h
-  have hA := And.left h
+  have hA := h.left
   exact hA
 </pre>
 </table>
@@ -436,6 +437,88 @@ table.bt th{
     apply hAC; exact hl
   case inr hr =&gt;
     apply hBC; exact hr
+</pre>
+</table>
+
+<h3 id="Bijunktionen">Bijunktionen</h3>
+
+<h4>Beweisterme für Bijunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> bij_intro (A B: Prop):
+  (A -&gt; B) -&gt; (B -&gt; A) -&gt; (A &lt;-&gt; B).
+<b>Proof</b>
+  <b>fun</b> hAB =&gt; <b>fun</b> hBA =&gt; conj hAB hBA.
+</pre>
+<td><pre>
+<b>theorem</b> bij_intro (A B: Prop):
+  (A → B) → (B → A) → (A ↔ B)
+:=
+  <b>fun</b> hAB ↦ <b>fun</b> hBA ↦ Iff.intro hAB hBA
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> bij_eliml (A B: Prop):
+  (A &lt;-&gt; B) -&gt; (A -&gt; B).
+<b>Proof</b>
+  fun h =&gt; proj1 h.
+</pre>
+<td><pre>
+<b>theorem</b> bij_eliml (A B: Prop):
+  (A ↔ B) → (A → B)
+:=
+  <b>fun</b> h ↦ h.1
+</pre>
+</table>
+
+<h4>Taktiken für Bijunktionen</h4>
+
+<table class="bt">
+<tr>
+<th style="width:25em">Coq
+<th style="width:25em">Lean
+<tr>
+<td><pre>
+<b>Theorem</b> bij_intro (A B: Prop):
+  (A -&gt; B) -&gt; (B -&gt; A) -&gt; (A &lt;-&gt; B).
+<b>Proof.</b>
+  intros hAB hBA.
+  split.
+  * exact hAB.
+  * exact hBA.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> bij_intro (A B: Prop):
+  (A → B) → (B → A) → (A ↔ B)
+:= <b>by</b>
+  intro hAB hBA
+  apply Iff.intro
+  . exact hAB
+  . exact hBA
+</pre>
+<tr>
+<td><pre>
+<b>Theorem</b> bij_eliml (A B: Prop):
+  (A &lt;-&gt; B) -&gt; (A -&gt; B).
+<b>Proof.</b>
+  intro h.
+  assert (hAB := proj1 h).
+  exact hAB.
+<b>Qed.</b>
+</pre>
+<td><pre>
+<b>theorem</b> bij_eliml (A B: Prop):
+  (A ↔ B) → (A → B)
+:= <b>by</b>
+  intro h
+  have hAB := h.1
+  exact hAB
 </pre>
 </table>
 

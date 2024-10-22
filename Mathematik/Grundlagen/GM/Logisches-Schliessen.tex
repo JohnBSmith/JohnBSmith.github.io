@@ -1658,115 +1658,95 @@ Theorem im System S4 ist.
 \subsection{Ableitbarkeit}
 
 Auf das Urteil $\Gamma\vdash A$ blickt man aus zwei Sichtweisen. Zum
-einen ein stellt es sich als syntaktisches Konstrukt dar, das Gegenstand
-eines formalen Systems ist. Zum anderen stellt es sich als die
-metasprachliche Aussage dar, dass $A$ aus $\Gamma$ ableitbar ist. Zur
-Schaffung von Klarheit wollen wir bei beweistheoretischen Betrachtungen
-näher zwischen den beiden Sichtweisen unterscheiden. Dazu notieren
-wir $\Gamma\vartriangleright A$ für die Sequenz als syntaktisches Konstrukt,
-und im Unterschied dazu $\Gamma\vdash A$ für die metasprachliche Aussage.
+einen stellt es als Sequenz zunächst ein syntaktisches Konstrukt dar,
+das Gegenstand eines formalen Systems ist. Zum anderen kommt darin ja die
+metasprachliche Aussage zum Ausdruck, dass $A$ aus $\Gamma$ ableitbar sei.
+Zur Schaffung von Klarheit wollen wir näher zwischen den beiden Sichtweisen
+unterscheiden. Dazu wird die metalogische Aussage mit einem Index versehen,
+der darüber informiert, welches logische System betrachtet wird.
+Wir notieren zum Beispiel $\Gamma\vdash_\mathrm{M} A$ sowie $\Gamma\vdash_\mathrm{I} A$
+und $\Gamma\vdash_\mathrm{C} A$ für die jeweilige Aussage bezüglich der
+minimalen, intuitionistischen und klassischen Logik. Insofern Sequenzen
+allerdings lediglich für endliche Kontexte erklärt sind, wird die
+folgende Erklärung vorgenommmen.
+
 \begin{Definition}[Ableitbarkeit]\newlinefirst
-Man nennt $A$ aus der Formelmenge $\Gamma$ ableitbar, kurz
-$\Gamma\vdash A$, wenn ein endliche Menge $\Gamma_0\subseteq\Gamma$
-existiert, so dass die Sequenz $\Gamma_0\vartriangleright A$ ableitbar ist.
+Man nennt $A$ im System $S$ aus der Formelmenge $\Gamma$
+ableitbar, kurz $\Gamma\vdash_S A$, wenn eine endliche Menge
+$\Gamma_0\subseteq\Gamma$ existiert, so dass die Sequenz $\Gamma_0'\vdash A$
+ableitbar ist, wobei mit $\Gamma_0'$ die syntaktische Entsprechung von
+$\Gamma_0$ gemeint sei.
 \end{Definition}
-Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash A$
-demzufolge genau dann, wenn die Sequenz $\Gamma_0\vartriangleright A$
+
+\noindent
+Sofern Kontexte Listen sind, stellt $\Gamma_0'$ die Umwandlung von
+$\Gamma_0$ in eine Liste mit denselben Elementen dar. Im Folgenden
+soll nicht weiter pedantisch zwischen $\Gamma_0$ und $\Gamma_0'$
+unterschieden werden, da unzweideutig aus dem Zusammenhang hervorgeht,
+was gemeint ist.
+
+Zu einer endlichen Formelmenge $\Gamma_0$ gilt $\Gamma_0\vdash_S A$
+demzufolge genau dann, wenn die Sequenz $\Gamma_0\vdash A$
 ableitbar ist, symbolisch%
-\[(\Gamma_0\vdash A)\,\bicond\, (\vdash \Gamma_0\vartriangleright A).\]
-Die Endlichkeit ist genau deshalb erforderlich, weil Sequenzen nur für
-endliche Kontexte erklärt sind. Für die Ableitbarkeit besteht damit
-verbunden Kompaktheit, dergestalt dass $\Gamma\vdash A$ genau dann gilt,
-wenn ein endliches $\Gamma_0\subseteq\Gamma$ mit $\Gamma_0\vdash A$
-existiert.
+\[(\Gamma_0\vdash_S A)\,\bicond\, (\vdash_S \Gamma_0\vdash A).\]
+Für die Ableitbarkeit besteht damit verbunden Kompaktheit, dergestalt
+dass $\Gamma\vdash_S A$ genau dann gilt, wenn ein endliches
+$\Gamma_0\subseteq\Gamma$ mit $\Gamma_0\vdash_S A$ existiert.
 
 Weiterhin sind die Schlussregeln nun als metasprachliche Aussagen
 fassbar. So ist die Beseitigung der Subjunktion beschrieben durch%
-\[(\Gamma\vdash A\cond B)\land (\Gamma'\vdash A)\cond (\Gamma\cup\Gamma'\vdash B).\]
+\[(\Gamma\vdash_{\mathrm C} A\cond B)\land (\Gamma'\vdash_{\mathrm C} A)
+\cond (\Gamma\cup\Gamma'\vdash_{\mathrm C} B).\]
 Anders als in der Regel dürfen $\Gamma,\Gamma'$ hierbei auch
 unendlich sein. Eleganter finde ich hier aber, die Regel in der
 exportierten bzw. geschönfinkelten Form
-\[(\Gamma\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\Gamma\cup\Gamma'\vdash B)\]
+\[(\Gamma\vdash_{\mathrm C} A\cond B)\cond (\Gamma'\vdash_{\mathrm C} A)\cond
+(\Gamma\cup\Gamma'\vdash_{\mathrm C} B)\]
 zu formulieren. Zur Anwendung einer Regel genügt daraufhin nämlich
 innerhalb des metalogischen Systems allein der Modus ponens. Außerdem
 kann eine Regel nun auch teilweise angewendet werden. So bestätigt
 der Schluss
 \[\begin{prooftree}
-  \infer0{(\emptyset\vdash A\cond B)\cond (\Gamma'\vdash A)\cond (\emptyset\cup\Gamma'\vdash B)}
-  \hypo{\emptyset\vdash A\cond B}
-\infer2[MP]{(\Gamma'\vdash A)\cond (\Gamma'\vdash B)}
+  \infer0{(\emptyset\vdash_{\mathrm C} A\cond B)\cond (\Gamma'\vdash_{\mathrm C} A)
+    \cond(\emptyset\cup\Gamma'\vdash_{\mathrm C} B)}
+  \hypo{\emptyset\vdash_{\mathrm C} A\cond B}
+\infer2[MP]{(\Gamma'\vdash_{\mathrm C} A)\cond (\Gamma'\vdash_{\mathrm C} B)}
 \end{prooftree}\]
-die Regel, laut der $\Gamma'\vartriangleright B$
-aus $\Gamma'\vartriangleright A$ abgeleitet werden darf, als zulässig,
-sofern denn die Sequenz $\vartriangleright A\cond B$ ableitbar ist.
-Spinnen wir die Vorgehensweise weiter fort, hält uns nichts davon ab,
-natürliches Schließen innerhalb der Metalogik selbst zu verwenden.
+die Regel, laut der $\Gamma'\vdash B$
+aus $\Gamma'\vdash A$ abgeleitet werden darf, als zulässig,
+sofern denn die Sequenz $\vdash A\cond B$ ableitbar ist.
+Spinnen wir diese Vorgehensweise weiter fort, hält uns nichts davon ab,
+natürliches Schließen als metalogisches System selbst zu verwenden.
 Die Subjunktionseinführung
-\[\dfrac{(\Gamma\vdash A)\vartriangleright_\text{meta} (\Gamma\vdash B)}{
-\vartriangleright_\text{meta} (\Gamma\vdash A)\cond (\Gamma\vdash B)}\]
-präzisiert nun den Gedankengang, dass die Regel
-\[\dfrac{\Gamma\vartriangleright A}{\Gamma\vartriangleright B}\]
-als zulässig erkannt wird, indem $\Gamma\vartriangleright B$ unter
-Annahme von $\Gamma\vartriangleright A$ abgeleitet wird. Damit fallen
+\[\dfrac{(\Gamma\vdash_{\mathrm C} A)\vdash (\Gamma\vdash_{\mathrm C} B)}{
+\vdash (\Gamma\vdash_{\mathrm C} A)\cond (\Gamma\vdash_{\mathrm C} B)}\]
+präzisiert für endliches $\Gamma$ nun den Gedankengang, dass die Regel
+\[\dfrac{\Gamma\vdash A}{\Gamma\vdash B}\]
+als zulässig erkannt wird, indem $\Gamma\vdash_{\mathrm C} B$ unter
+Annahme von $\Gamma\vdash_{\mathrm C} A$ abgeleitet wird. Damit fallen
 die metalogischen Überlegungen selbst unter die Formalisierung. Dies
 wird man spätestens dann nicht mehr leugnen können, wenn die
 Metalogik durch einen Beweisassistenten bereitgestellt wird.
 
-Insoweit dem Kalkül und der Metalogik dieselbe Logik
-zugrunde liegen soll, dürfen Schlussregeln nach ihrer Herleitung
-auch in der Metalogik Verwendung finden. Es scheint, als würde sich die
-Abgrenzung zwischen der Logik und der Metalogik ein Stück weit auflösen, was
-plausibel  sein mag, wenn es sich denn eigentlich um dieselbe Logik handelt.
-Dieser Gedankengang macht allerdings eine Aussage über die Metalogik,
-muss also in der Metametalogik stattfinden.
-
-Ich will kurz einen logischen Kalkül aufzeigen, der seine eigene
-Metalogik umfasst und mit vergleichsweise wenig Aufwand im Computer
-implementiert werden kann. Zum besseren Verständnis wird das Urteil
-$\Gamma\vdash A$ als modale Aussage
-$\lnec_\Gamma A$ gedeutet. Die einzigen beiden Schlussregeln sind
-der Modus ponens und die Nezessisierung,
-\[\dfrac{\vdash A\cond B\quad\;\vdash A}{\vdash B},\qquad
-\dfrac{\vdash A}{\vdash\lnec_\Gamma A}.\]
-Auf der obersten Ebene arbeitet der Kalkül dementsprechend allein mit
-Theoremen, gewährt nicht die Abhängigkeit von Annahmen.
-Die Regeln des natürlichen Schließens werden nun als Axiome oder
-aus den Axiomen herleitbare Theoreme formuliert. Die diesbezüglichen
-Axiome sind
-\begin{align*}
-& \lnec_\Gamma (A\cond B)\cond\lnec_\Gamma A\cond\lnec_\Gamma B,
-&& A\cond B\cond A\land B,\\
-& \lnec_{\Gamma\cup\{A\}} B\cond\lnec_\Gamma (A\cond B),
-&& A\land B\cond A
-\end{align*}
-und so weiter. Die Einführung von Grundsequenzen gestattet das
-Axiom $\lnec_{\{A\}}A$. Das zusätzliche Axiom $\lnec_\emptyset A\cond A$
-drückt den Umstand aus, dass Theoreme in die metalogische Ebene verschoben
-werden dürfen. Letztlich braucht es zur Kodierung der Abschwächungsregel
-für $\Gamma\subseteq\Delta$ noch das Axiom $\lnec_\Gamma A\cond\lnec_\Delta A$.
-Insofern $\Gamma,\Delta$ als Listen formuliert werden, gelten analoge
-Axiome auch für die Fälle, dass $\Delta$ als Umordnung oder Kontraktion
-aus $\Gamma$ hervorgeht. Möchte man nun Sequenzen unter Annahme von
-Sequenzen herleiten, muss auf der dritten Ebene gearbeitet werden.
-Dafür sind zunächst als Regeln fungierende Theoreme wie
-\[\lnec_\Delta\lnec_\Gamma (A\land B)\cond\lnec_\Delta\lnec_\Gamma A\]
-herzuleiten.
-
 Vermittels der Einführung von Grundsequenzen, der Abschwächungsregel
 und des Modus ponens gelangt man zu den drei Einsichten%
 \begin{align*}
-&A\in\Gamma\cond (\Gamma\vdash A), &&\text{(Extensivität)}\\
-&\Gamma\subseteq\Gamma'\land (\Gamma\vdash A)\cond (\Gamma'\vdash A), &&\text{(Monotonie)}\\
-&(\Gamma\cup\{A\}\vdash B)\land (\Gamma\vdash A)\cond (\Gamma\vdash B). &&\text{(Schnittregel)}
+&A\in\Gamma\cond (\Gamma\vdash_{\mathrm C} A),
+  &&\text{(Extensivität)}\\
+&\Gamma\subseteq\Gamma'\land (\Gamma\vdash_{\mathrm C} A)\cond
+  (\Gamma'\vdash_{\mathrm C} A), &&\text{(Monotonie)}\\
+&(\Gamma\cup\{A\}\vdash_{\mathrm C} B)\land (\Gamma\vdash_{\mathrm C} A)\cond
+  (\Gamma\vdash_{\mathrm C} B). &&\text{(Schnittregel)}
 \end{align*}
 Eine Darstellung aus der Sichtweise der Mengenlehre fördert die Einordnung
 dieser Sachverhalte. Als Hilfsmittel dient hierbei der
 \emph{tarskische Konsequenzoperator}%
-\[\Cn(\Gamma) := \{A\mid \Gamma\vdash A\},\]
+\[\Cn_S(\Gamma) := \{A\mid \Gamma\vdash_S A\},\]
 der $\Gamma$ die Menge aller Formeln zuordnet,
 die aus $\Gamma$ ableitbar sind. Man spricht auch vom
 \emph{Inferenzoperator} oder vom \emph{deduktiven Abschluss}.
-Dieser genügt den drei Axiomen
+Wir schreiben kurz $\Cn$ statt $\Cn_{\mathrm C}$. Dieser genügt den
+drei Axiomen
 \begin{align*}
 &\Gamma\subseteq\Cn(\Gamma), &&\text{(Extensivität)}\\
 &\Gamma\subseteq\Gamma'\cond \Cn(\Gamma)\subseteq\Cn(\Gamma'), &&\text{(Monotonie)}\\
@@ -1787,16 +1767,16 @@ Laut Monotonie und Idempotenz folgt%
 \[\Cn(\Gamma\cup\{A\})\subseteq\Cn(\Cn(\Gamma)) = \Cn(\Gamma).\]
 Obgleich die Abgeschlossenheit intuitiv klar erscheint, ist sie
 umgekehrt aus der Schnittregel zu gewinnen. Prämisse sei also
-$A\in\Cn(\Cn(\Gamma)$, womit $\Cn(\Gamma)\vdash A$. Das heißt aber,
+$A\in\Cn(\Cn(\Gamma)$, womit $\Cn(\Gamma)\vdash_{\mathrm C} A$. Das heißt aber,
 es existiert eine endliche Teilmenge
 \[\{A_1,\ldots,A_n\}\subseteq\Cn(\Gamma)\;\text{mit}\;
-\{A_1,\ldots,A_n\}\vdash A.\]
-Mithin gilt $\Gamma\vdash A_k$ zu jedem $k$.
+\{A_1,\ldots,A_n\}\vdash_{\mathrm C} A.\]
+Mithin gilt $\Gamma\vdash_{\mathrm C} A_k$ zu jedem $k$.
 Nun unternimmt man der Reihe nach den Schnitt der Form
-\[\dfrac{\Gamma\cup\{A_1,\ldots,A_k\}\vdash A\qquad\Gamma\vdash A_k}
-{\Gamma\cup\{A_1,\ldots,A_{k-1}\}\vdash A}\]
+\[\dfrac{\Gamma\cup\{A_1,\ldots,A_k\}\vdash_{\mathrm C} A\qquad\Gamma\vdash_{\mathrm C} A_k}
+{\Gamma\cup\{A_1,\ldots,A_{k-1}\}\vdash_{\mathrm C} A}\]
 zu den $k$ von $k=n$ bis $k=1$. Man gelangt damit schließlich zu
-$\Gamma\vdash A$, also zu der gewünschten Feststellung $A\in\Cn(\Gamma)$.
+$\Gamma\vdash_{\mathrm C} A$, also zu der gewünschten Feststellung $A\in\Cn(\Gamma)$.
 
 \newpage
 \subsection{Die zulässige Ersetzungsregel}
