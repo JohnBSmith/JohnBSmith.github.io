@@ -439,6 +439,104 @@ da die Problemstellung der Vereinfachung als NP"=vollständig befunden
 wurde. Für die Formeln mit sehr vielen Variablen liegt das Wissen über
 die beste Vereinfachung somit im Schleier der Dunkelheit.
 
+\subsection{Logisches Schließen vermittels boolescher Algebra}
+
+Boole gelang es, vermittels seiner Algebra Schlussfolgerungen zu führen.
+Es stellt sich hierbei die Frage, wie dies vonstattengeht, genauer,
+in welcher Verbindung die boolesche Algebra zum natürlichen Schließen
+steht. Die Herleitung ihrer Regeln stellt mehr eine kleine Übung dar,
+als dass sie Schwierigkeiten bereitet. Uns interessiert daher die
+Umkehrung, also ob und wie natürliches Schließen aus der booleschen
+Algebra heraus gewonnen werden kann. Den Übergang schafft die folgende
+Überlegung.
+
+Insofern wir uns mit der booleschen Algebra auf der semantischen Ebene
+bewegen, werden wir uns auf die semantische Folgerung statt der
+syntaktischen Herleitbarkeit beziehen. Wir stellen $\models A$ hierbei
+in der Form $A\equiv\top$ dar. Hierzu will ich unbedingt noch ein paar
+Bemerkungen machen. Die semantische Folgerung $A\models B$ mag als
+eine Art Ordnung gedeutet werden, wonach $A$ als kleiner oder gleich groß
+$B$ angesehen wird. Allerdings handelt es sich lediglich um eine
+Quasiordnung, nicht aber um eine Halbordnung, weil zwei Formeln nicht
+gleich sein müssen, nur weil sie semantisch gegenseitig auseinander
+folgen. Da $\equiv$ aber eine Äquivalenzrelation ist, kann die
+Quotientenmenge bezüglich dieser gebildet werden.
+Zwei äquivalente Formeln werden dahingehend als gleich
+angesehen, wobei dies in gewisser Weise seltsam erscheinen mag, da
+die Formeln durch diesen Schritt immerhin ihre eigentliche Bedeutung
+verlieren. Die als gleichbedeutend mit $A\models B$ definierte
+Ordnung $[A]\le [B]$ stellt nun wirklich eine Halbordnung dar,
+wonach $[A]=[B]$, also $A\equiv B$, bereits aus $[A]\le [B]$ zusammen
+mit $[B]\le [A]$ folgt. Mit $1:=[\top]$ ist $[A]\le 1$ allgemeingültig,
+also $1$ das größte Element, wonach $[A]=1$ und $1\le [A]$ äquivalent sind.
+Außerdem nimmt die Quotientenmenge die Gestalt einer algebraischen
+Struktur an, indem%
+\[\lnot [A] := [\lnot A],\quad [A]\land [B] := [A\land B]\]
+usw. erklärt wird. Laut der Ersetzungsregel sind diese wohldefiniert,
+womit $\equiv$ die Rolle einer Kongruenzrelation einnimmt.
+
+So weit das gerade Gesagte geklärt ist, können wir die eckigen
+Klammern nun fortlassen, ohne dass Verwirrung aufkommen sollte.
+Es spielt keine wesentliche Rolle, ob man bezüglich $\equiv$ mit den
+Formeln, oder bezüglich $=$ mit den Klassen rechnet. Es bleibt trotzdem
+von Bedeutung, auf welche Formeln wir uns beziehen. Zwei unterschiedliche
+äquivalente Formeln entsprechen dabei direkt zwei unterschiedlichen
+Darstellungen derselben Klasse. Beim üblichen Rechnen mit Termen
+werden zwei unterschiedliche Darstellungen desselben Elements ja auch
+auseinandergehalten.
+
+Der Modus ponens nimmt nun die Form%
+\[\dfrac{(A\cond B)=1\quad\;\; A=1}{B=1}\]
+an. Gesucht ist eine Herleitung der Konklusion aus den beiden Prämissen,
+bei der ausschließlich boolesche Algebra zur Anwendung kommt. Keine
+schwierige Aufgabe. Mit $A=1$ gilt die Umformung%
+\[1 = (A\cond B) = (\lnot A\lor B) = (\lnot 1\lor B) = (0\lor B) = B.\]
+Die Konklusion $B=1$ konnte also tatsächlich \emph{ausgerechnet} werden.
+Diese Vorgehensweise müssen wir noch auf die allgemeine Form des Modus
+ponens und der restlichen Schlussregeln übertragen.
+
+Die Abhängigkeit von Annahmen lässt sich folgendermaßen beschreiben.
+Wir fassen die Annahmen $H_1,\ldots,H_n$ zunächst zur Hypothese
+$H:=(H_1\land\ldots\land H_n)$ zusammen. Die Folgerung
+$H_1,\ldots,H_n\models A$ ist daraufhin mit $H\le A$ gleichbedeutend.
+Die allgemeine Form des Modus ponens nimmt diesbezüglich die Gestalt
+\[\dfrac{H\le (A\cond B)\quad\;\; H\le A}{H\le B}\]
+an. Mit der Einsicht, dass $H\le A$ zu $(H\land A)=H$ äquivalent ist,
+findet sich zunächst die Umformung%
+\[(H\land\lnot A) = (H\land A\land\lnot A) = (H\land 0) = 0.\]
+Weil auch $H\le (A\cond B)$ zu $(H\land (A\cond B))=H$ äquivalent ist,
+gelingt daraufhin die Umformung%
+\begin{align*}
+H &= (H\land (A\cond B)) = (H\land (\lnot A\lor B))
+= ((H\land\lnot A)\lor (H\land B))\\
+&= (0\lor (H\land B)) = (H\land B).
+\end{align*}
+Und die Gleichung $H = (H\land B)$ ist schließlich wieder zur
+gesuchten Konklusion $H\le B$ äquivalent.
+
+Die Subjunktionseinführung nimmt die Gestalt
+\[\dfrac{(H\land A)\le B}{H\le (A\cond B)}\]
+an. Zu ihrer Bestätigung wendet man dieses mal die allgemeine Äquivalenz
+von $X\le Y$ und $X\lor Y = Y$ auf die Prämisse an, was zu
+$((H\land A)\lor B) = B$ führt. Hiermit findet sich die
+Umformung%
+\begin{align*}
+(H\land (A\cond B)) &= (H\land (\lnot A\lor B))
+= (H\land (\lnot A\lor (H\land A)\lor B))\\
+&= ((H\land\lnot A)\lor (H\land H\land A)\lor (H\land B))\\
+&= (H\land (\lnot A\lor A)\lor (H\land B))
+= (H\lor (H\land B)) = H.
+\end{align*}
+Und diese Gleichung ist zur Konklusion äquivalent. Ich denke, die Bestätigung
+der restlichen Schlussregeln brauche ich nicht weiter ausführen, -- dies
+stellt nunmehr eine Übung dar. Bemerkt werden darf aber noch, dass $H\le A$
+auch zu $(\lnot H\lor A)=1$ äquivalent ist. Anders als bei $H\land A=H$
+tauchen $H,A$ darin nur einmal auf. Jedenfalls lassen sich alle Prämissen
+und Konklusionen auch immer als Gleichungen darstellen. Und so ergibt sich,
+dass das natürliche Schließen unter den gemachten Beziehungen allein aus
+dem Rechnen mit Gleichungen vermittels der Gesetze der booleschen
+Algebra entspringt.
+
 \section{Die klassische Semantik der Logik erster Stufe}
 
 \subsection{Strukturen}
