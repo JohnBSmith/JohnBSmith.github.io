@@ -1,6 +1,282 @@
 
 \chapter{Logisches Schließen}
 
+\section{Auf dem Weg zur formalen Logik}
+
+\subsection{Argumente}
+
+Die Logik befasst sich damit, nach welchen Prinzipien stimmiges Denken
+abläuft, wobei an erster Stelle steht, wie geklärt wird, ob ein
+Gedankengang von Irrtümern befreit ist. Eine umfassende Antwort darauf
+besteht zumindest für die Art von Schlussfolgerungen, die in den exakten
+Wissenschaften geführt werden. Hierbei hat es sich als förderlich
+herausgestellt, künstliche symbolische Sprachen festzulegen und
+Schlussfolgerungen daraufhin in mechanischer Weise nach haargenauen
+Regeln zu führen. Man spricht von einem \emph{formalen System}, wobei
+die künstliche Sprache, mit der dieses arbeitet, als \emph{formale Sprache}
+bezeichnet wird. Daraus ging die formale Logik, speziell die
+mathematische Logik hervor. Wir streben ebenfalls an, diesen Pfad zu
+verfolgen, weil er uns ein großes Maß an Klarheit und Sicherheit bietet.
+Besonders wichtig finde ich diesbezüglich die Reduzierung der kognitiven
+Belastung. Durch die Mechanisierung müssen wir uns nämlich nicht mehr
+damit befassen, ob die gemachten Überlegungen möglicherweise unbedachten
+Irrtümern unterliegen oder mit Flüchtigkeitsfehlern behaftet sind.
+
+Statt die Logik direkt einer vollständigen Formalisierung zu unterziehen,
+wollen wir uns dem aus einem allgemeinen Bezugspunkt heraus etappenweise
+nähern. Auf diese Weise bekommt man ein besseres Gefühl dafür, wie die
+formale im Bezug zur traditionellen Logik steht.
+
+Zunächst besteht der wesentliche Ansatz zur Klärung des Denkens darin,
+den Gedankengang in Schritte aufzuteilen, die \emph{Argumente} heißen.
+Man mag dies als Durchführung einer Analyse sehen, bei der ein Gegenstand,
+um diesen verstehen zu können, in Bestandteile zerlegt wird. Zum Beispiel
+gelingt es unter Umständen, ein Problem in Teilprobleme zu zerlegen,
+oder ein Programm in Prozeduren.
+
+Ein Argument artikuliert die Ableitung einer \emph{Konklusion} aus
+einer oder mehreren \emph{Prämissen}. Dieser Begriff von Argument
+unterscheidet sich vom umgangssprachlichen durch seine starre Form, bleibt
+zu diesem aber zumindest in einem gewissen Bezug. Die Notwendigkeit für
+die Verengung des Begriffs besteht darin, dass umgangssprachliche Argumente
+zu komplex werden mögen, als dass sie noch vernünftig analysierbar bleiben.
+
+Man mag ein Argument mit zwei Prämissen in einer der Schreibweisen
+\[\begin{array}{@{}l@{}}
+\text{Prämisse 1}\\
+\text{Prämisse 2}\\
+\midrule[\inferrulewidth]
+\therefore\text{Konklusion}
+\end{array}
+\qquad\quad
+\begin{array}{@{}l@{}}
+\text{Prämisse 1}\\
+\text{Prämisse 2}\\
+\midrule[\inferrulewidth]
+\text{Konklusion}
+\end{array}
+\qquad\quad
+\begin{array}{@{}l@{}}
+\text{Prämisse 1}\\
+\text{Prämisse 2}\\
+\therefore\text{Konklusion}
+\end{array}
+\]
+notieren. Das Zeichen $\therefore$ wird hierbei als \emph{also} oder
+\emph{folglich} gelesen. Die zweite und dritte Schreibweise darf man
+als nachlässige Form der ersten sehen.
+
+Ein Beispiel für ein Argument:
+\[\begin{array}{@{}l@{}}
+\text{Alice oder Bob entwendete gestern Kuchen aus dem Kühlschrank.}\\
+\text{Bob war gestern den gesamten Tag bei jemand anderem.}\\
+\midrule[\inferrulewidth]
+\text{Also entwendete Alice gestern Kuchen aus dem Kühlschrank.}
+\end{array}\]
+Die Konklusion und jede der Prämissen muss ein wahrheitswertfähiges
+sprachliches Gebilde sein, das wir \emph{Aussage} oder \emph{Satz}
+nennen, wobei ich die zweite Bezeichnung vermeiden möchte, um nicht
+mit den Begrifflichkeiten der Linguistik durcheinander zu kommen. Es
+spielt hierbei keine Rolle, ob der Wahrheitswert der Aussage jemandem
+bekannt oder auf irgendeine Weise ermittelbar ist.
+Außerdem hält uns nichts davon ab, unterschiedliche fiktive Wirklichkeiten
+zu betrachten. In der einen mag die Aussage wahr sein, während sie in der
+anderen falsch ist. Keine Aussage wäre die Frage »Wie spät ist es?«, oder
+»Pfui!«, -- ein Satz, der aus einer einzigen Interjektion
+besteht.
+
+\subsection{Arten von Argumenten}
+
+Unterschieden wird zwischen \emph{deduktiven} und \emph{nichtdeduktiven}
+Argumenten.
+
+Bei einem \emph{deduktiven} Argument, stellt die Konklusion eine logische
+Konsequenz der Prämissen dar. Damit ist gemeint, dass die Wahrheit der
+Konklusion zwangsläufig aus der Wahrheit der Prämissen folgt. Hier liegt
+die Information, zu der man gelangen möchte, bereits in den Prämissen
+verborgen.
+
+Bei einem \emph{nichtdeduktiven} Argument erscheint die Konklusion
+plausibel, folgt aber nicht mehr zwangsläufig aus den Prämissen. Dies
+wird zum zum Beispiel zum Ausdruck gebracht, indem gesagt wird, die
+Konklusion sei vermutlich, wahrscheinlich oder höchstwahrscheinlich wahr.
+Innerhalb der nichtdeduktiven Argumente gibt es noch feinere Abgrenzungen,
+unter Anderem von induktiven. Ein \emph{induktives} Argument stellt
+Schließen vom Speziellen aufs Allgemeine dar. Zum Beispiel mag man
+aus dem Umstand heraus, bislang nur weiße Schwäne beobachtet zu haben,
+die Existenz schwarzer Schwäne ausschließen.
+
+Gegenstand aller weiteren Studien werden ausschließlich deduktive
+Argumente sein. Zur Klärung nichtdeduktiver Argumente mag es förderlich
+sein, zunächst Grundbegriffe der Wahrscheinlichkeitsrechnung
+zu erläutern, was auf später verschoben werden muss.
+
+\subsection{Gültigkeit}
+
+Ein deduktives Argument wird als \emph{gültig} angesehen, wenn die
+Konklusion inhaltlich aus den Prämissen folgt. Dies bedeutet, dass es
+unmöglich ist, aus wahren Prämissen eine falsche Konklusion zu ziehen.
+Der Blick auf die Gültigkeit hilft uns, fehlerhafte Argumente zu
+identifizieren und auszuschließen.
+
+Ein deduktives Argument heißt \emph{korrekt}, wenn es gültig ist und
+zudem sämtliche Prämissen wahr sind. Entsprechend nennt man eine
+Argumentation korrekt, wenn alle ihre Argumente gültig und alle
+ursprünglichen Prämissen wahr sind. Eine korrekte Argumentation setzt
+sich somit sukzessive aus korrekten Argumenten zusammen.
+
+Einige Argumente sind ihrer \emph{Form} nach gültig. Dies bedeutet,
+dass das Argument unabhängig davon gültig ist, was die Aussagen
+inhaltlich bedeuten. Häufig treten Argumente wie
+\[\begin{array}{@{}l@{}}
+\text{Wenn es regnet, dann wird die Straße nass.}\\
+\text{Es regnet.}\\
+\midrule[\inferrulewidth]
+\text{Also wird die Straße nass.}
+\end{array}\]
+auf. Diese Argumente sind von der Form des \emph{Modus ponens}:
+\[\begin{array}{@{}l@{}}
+\text{Wenn $A$, dann $B$}\\
+\text{$A$}\\
+\midrule[\inferrulewidth]
+\therefore\text{$B$}
+\end{array}\]
+Hierbei stehen $A,B$ für Platzhalter, für die beliebige Aussagen
+eingesetzt werden dürfen. Zu jeder Setzung ergibt sich ein gültiges
+Argument. Hierbei spielt es keine Rolle, welche inhaltliche Bedeutung
+$A,B$ zugemessen wird.
+
+Anders verhält es sich mit diesem Argument:
+\[\begin{array}{@{}l@{}}
+\text{Draußen liegt seit gestern Schnee.}\\
+\midrule[\inferrulewidth]
+\text{Folglich ist es draußen kalt.}
+\end{array}\]
+Um es als gültig zu erkennen, muss die Bedeutung der Prämisse und der
+Konklusion inhaltlich verstanden werden. Zwar ist es gültig,
+aber nicht der Form nach.
+
+Darf man solchen Argumenten zweifellos vertrauen? Wenn man Logik
+einsetzt, um Aussagen über Sachverhalte in der Wirklichkeit zu machen,
+muss man eigentlich zwangsläufig, auch wenn dies wortlos passiert,
+ein vereinfachtes Modell der Wirklichkeit aufstellen oder sich auf
+einen Teilbereich ihrer beschränken, in dem Argumente als allgemeingültig
+befunden werden können. Es kann ja sein, dass draußen aufgrund eines
+Unwetters zwei Meter Schnee liegen, die bei einer milden Temperatur
+stetig am schmelzen sind. Wie wird kalt überhaupt von mild abgegrenzt?
+Gehört eine überdachte Terrasse zu draußen? In welchem Umkreis endet
+draußen?
+
+Die Modellierung der Wirklichkeit scheint mit Schwierigkeiten
+verbunden. Es lässt sich mutmaßen, dass sich in der Ferne bereits
+philosophische Untiefen auftun. Daher werden wir uns aus der Affäre
+ziehen, indem wir uns zunächst auf die Untersuchung mathematischer
+Strukturen beschränken. Dies soll jedoch nicht den Eindruck einer
+Umgehung erwecken, denn zur Entwicklung guter Modelle benötigt man nicht
+nur Logik, sondern auch mathematische Mittel.
+
+\subsection{Aussagenlogik}
+
+Natürliche Sprachen schaffen eine große Ausdrucksfähigkeit. Dafür ist
+ihre Struktur aber auch komplex, -- bezogen sowohl auf die Grammatik als
+auch auf die inhaltliche Bedeutung von Sätzen.  Wir definieren daher
+im Fortgang eine einfache künstliche Sprache, die \emph{aussagenlogische}
+Sprache. In ihr kommt, anders als in der natürlichen, jedem Satz ein
+Wahrheitswert zu. Daraufhin können wir die Schemata von Argumenten klar
+identifizieren, die ihrer Form nach gültig sind. Im Weiteren werden
+wir diese Sprache abschließend zur prädikatenlogischen erweitern. Es stellt
+sich heraus, dass sie, obwohl recht klein, zur Darstellung sämtlicher
+mathematischer Aussagen und ihrer Beweise genügt.
+
+Mit $p,q,r$ bezeichnen wir eine Reihe von atomaren Aussagen, die so
+heißen, weil sie im Rahmen der Aussagenlogik nicht weiter zerlegbar
+sind. Vermittels Junktoren lassen sich aus diesen zusammengesetzte
+Aussagen formen. Es stehe zum Beispiel $p$ für »Es regnet« und $q$ für
+»Die Straße wird nass«. Dann soll $p\cond q$ bedeuten, »Wenn es regnet,
+wird die Straße wird nass«. Weiterhin notieren wir $p\land q$ für
+»Es regnet und die Straße wird nass«. Entsprechend steht
+$p\land q\cond p$, was als $(p\land q)\cond q$ gelesen wird, für
+»Wenn es regnet und die Straße nass wird, dann regnet es«.
+Mit den Junktoren lassen sich aus Aussagen nach belieben sukzessive
+immer kompliziertere Zusammensetzungen formen. Damit erhält man
+allerdings bereits alle aussagenlogischen Formeln, die möglich sind.
+
+Der Modus ponens ist nun in folgender verkürzter Form darstellbar.
+Sind $P,Q$ beliebige atomare Aussagen, gilt das Schema:
+\[\begin{array}{@{}l@{}}
+P\cond Q\\
+P\\
+\midrule[\inferrulewidth]
+\therefore Q
+\end{array}\]
+Etwa erhält man für die Setzung $P:=p$ und $Q:=q$ ein gültiges
+Argument. Der Modus ponens lässt sich aber noch allgemeiner fassen.
+Stehen nun $A,B$ für beliebige Aussagen, atomar oder zusammengesetzt,
+gilt er in der Form:
+\[\begin{array}{@{}l@{}}
+A\cond B\\
+B\\
+\midrule[\inferrulewidth]
+\therefore A
+\end{array}\]
+Beispielsweise stehe $p$ für »Es regnet«, $q$ für »Die Temperatur
+der Straßenoberfläche liegt unter null Grad« und $r$ für
+»Die Straße wird glatt«. Mit der Setzung $A:=p\land q$ und
+$B:=r$ erhält man ein gültiges Argument, obgleich $A$ keine atomare
+Aussage mehr ist.
+
+Wir werden die Prämissen später nebeneinander statt untereinander
+schreiben, um Argumente zu Beweisbäumen zusammensetzen zu
+können.
+
+\subsection{Prädikatenlogik}
+
+Im Rahmen der Aussagenlogik ist es nicht möglich, das Argument
+\[\begin{array}{@{}l@{}}
+\text{Alle Enten quaken.}\\
+\text{Dagobert ist eine Ente.}\\
+\midrule[\inferrulewidth]
+\text{Also quakt Dagobert.}
+\end{array}\]
+als Instanz eines Schemas zu sehen, obwohl es den Anschein macht,
+sich nach einem ähnlichen Muster wie der Modus ponens zu verhalten.
+
+Um die gewünschte Überlegung fassen zu können, müssen wir die
+aussagenlogische Sprache erst zur prädikatenlogischen erweitern.
+Zunächst stehe $p$ für »ist eine Ente« und $q$ für »quakt«. Dies sind
+nun keine Aussagen, sondern Prädikatsymbole. Man erhält erst mit
+$p(x)$ für »$x$ ist eine Ente« und $q(x)$ für »$x$ quakt« atomare
+Formeln, die aber streng genommen immer noch keine Aussagen, sondern
+Aussageformen sind. Erst wenn der Variable $x$, zum Beispiel mit der
+Setzung $x:=\text{Dagobert}$, eine Konstante zugewiesen wird, die inhaltlich
+für ein Objekt steht, entsteht eine Aussage.
+
+Außerdem entsteht eine Aussage, indem die Aussageform über die Variable
+all- oder existenzquantifiziert wird. Zum Beispiel
+steht $\forall x\colon p(x)\cond q(x)$ für die Aussage »Für alle $x$
+gilt: Wenn $x$ eine Ente ist, dann quakt $x$«, also für
+»Alle Enten quaken«.
+
+Das obige Argument ist nun als Instanz des Schemas
+\[\begin{array}{@{}l@{}}
+\forall x\colon P(x)\cond Q(x)\\
+P(u)\\
+\midrule[\inferrulewidth]
+\therefore Q(u)
+\end{array}\]
+verstehbar. Dazu wird $P:=p$ und $Q:=q$ gesetzt und dem Parameter
+$u$ die Konstante $u:=\text{Dagobert}$ zugewiesen.
+
+In der prädikatenlogischen Sprache liegt der Schlüssel zur Formalisierung
+mathematischer Aussagen. Zum Beispiel ist das Kommutativgesetz der
+Addition als die Aussage
+\[\forall x\colon\forall y\colon x+y=y+x\]
+darstellbar. Genau genommen muss man auch noch sagen, über welches
+Diskursuniversum sich die Allquantifizierung erstrecken soll. Sagen wir,
+hier will es eins sein, das aus ganzen Zahlen besteht. Das heißt, in
+die Variablen $x,y$ sollen ganze Zahlen eingesetzt werden dürfen,
+bzw. Terme, die für solche stehen.
+
 \section{Grundbegriffe}
 
 \subsection{Schlussregeln}
@@ -149,7 +425,7 @@ explizit enthalten. Sie tritt dennoch als \emph{Deduktionstheorem} in
 Erscheinung, ein metalogisches Theorem, dessen Beweis erst erbracht
 werden muss. Ich möchte diesen Weg allerdings aus einem bestimmten Grund
 nicht gehen. Nämlich ist beim Beweis eigentlich natürliches Schließen
-auf der metalogischen Ebene zu verwenden, wenn dies auch in informaler
+auf der metalogischen Ebene zu verwenden, obgleich dies nicht in formaler
 Weise stattfinden mag. Aber nicht jeder Leser weiß zu diesem Zeitpunkt,
 wie akkurates logisches Schließen geht. Der Leser benötigt am Anfang
 etwas, um sich an den eigenen Haaren aus dem Sumpf zu ziehen.
