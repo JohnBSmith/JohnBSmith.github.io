@@ -220,6 +220,109 @@ auch erscheinen mag.
 `\kw{Proof}` `\kw{fun}` x: False => `\kw{match}` x `\kw{with}` `\kw{end}`.
 \end{lstlisting}
 
+\subsection{Zur Prädikatenlogik}
+
+Der \strong{Allquantifizierung} $\forall x\in X\colon A(x)$ entspricht
+$\prod_{x\colon X} A(x)$, ein Typ abhängiger Funktionen. Einen Bezug auf
+diese Beziehung herstellend, bekam der Typ die Syntax
+\code{\kw{forall} x: X, A x}. Ein Beweis der Allaussage der ist also eine
+Funktion $f$, die jedem Individuum $x$ vom Typ $X$ einen Wert $f(x)$ vom
+Typ $A(x)$ zuordnet, womit $A(x)$ zu jedem $x$ bewohnt sein muss.
+Einfaches Beispiel. Gezeigt werden soll
+\[A\land (\forall x\in X\colon B(x))\cond\forall x\in X\colon A\land B(x)).\]
+Konstruiert werden muss eine Funktion, die jedem $x\colon X$ einen
+Wert vom Typ $A\times B(x)$ zuordnet, unter der Annahme, es sei ein Paar $(a,f)$
+mit $a\colon A$ und $f(x)\colon B(x)$ zu jedem $x\colon X$ verfügbar.
+Dies schafft
+\[\textstyle (a,f)\colon A\times\prod_{x\in X} B(x)\mapsto
+x\colon X\mapsto (a, f(x)).\]
+Die Implementierung ist
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` const_factor (X A: Type) (B: X -> Type):
+  A * (forall x: X, B x) -> forall x: X, A * B x.
+`\kw{Proof}`
+  `\kw{fun}` '(a, f) => `\kw{fun}` x => (a, f x).
+\end{lstlisting}
+Für Aussagen vom Typ \code{Prop} braucht man aber die Modifizierung
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Theorem}` const_factor (X: Type) (A: Prop) (B: X -> Prop):
+  A /\ (forall x: X, B x) -> forall x: X, A /\ B x.
+`\kw{Proof}`
+  `\kw{fun}` '(conj a f) => `\kw{fun}` x => conj a (f x).
+\end{lstlisting}
+
+\subsection{Induktive Typen}
+
+Die induktiven Typen entsprechen den frei erzeugten induktiven Mengen.
+Im Zuge dessen stehen strukturelle Induktion und Rekursion bezüglich
+solcher Typen zur Verfügung. Im Bezug auf die kategorielle Semantik
+versteht sich ein induktiver Typ als \emph{initiale Algebra}, worauf ich
+an dieser Stelle aber nicht weiter eingehen will.
+
+Das Schlüsselwort \kw{Inductive} leitet die Definition eines neuen
+induktiven Typen ein, die sich aus der Festlegung von
+\emph{Konstruktorfunktionen} zusammensetzt. Kommt es hierbei zu keiner
+Selbstbezüglichkeit, erhält man als Spezialfall ein Mittel zur Festlegung
+einer Summe, auch Enumeration genannt, die der disjunkten Vereinigung
+von Mengen entspricht.
+
+Während die Konstruktorfunktionen der Einführung von Termen dienen,
+steht eine Rekursorfunktion zur deren Beseitigung zur Verfügung.
+Statt direkt auf den Rekursor zugreifen zu müssen, bietet die Sprache
+darüber hinaus das Mittel des Musterabgleichs, der mit dem Schlüsselwort
+\kw{match} eingeleitet wird.
+
+Beispiel. Der Typ \code{N} der natürlichen Zahlen mit den beiden
+Konstruktoren \code{zero} und \code{succ} wird eingeführt mit
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Inductive}` N := zero: N | succ: N -> N.
+\end{lstlisting}
+Hierbei ist \code{zero} eine Konstante, die man als Konstruktorfunktion
+ohne Argumente deuten kann. Man kann die Signaturen alternativ auch in
+der kurzen Form
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Inductive}` N := zero | succ (n: N).
+\end{lstlisting}
+notieren, -- die ausgelassenen Typenangaben werden dabei abgeleitet.
+
+\begin{figure}[t]
+\begin{lstlisting}[%
+caption={Beispiel zur strukturellen Induktion und Rekursion},%
+label=lst:Liste, escapechar=`]
+`\kw{Require}` `\kw{Import}` Arith.PeanoNat.
+`\kw{Definition}` Symbol := nat.
+`\kw{Inductive}` List := nil | cons (x: Symbol) (a: List).
+
+`\kw{Fixpoint}` len (a: List): nat :=
+  `\kw{match}` a `\kw{with}` nil => 0 | cons a0 a1 => len a1 + 1 `\kw{end}`.
+
+`\kw{Fixpoint}` concat (a b: List): List :=
+  `\kw{match}` a `\kw{with}` nil => b | cons a0 a1 => cons a0 (concat a1 b) `\kw{end}`.
+
+`\kw{Theorem}` len_concat (a b: List):
+  len (concat a b) = len a + len b.
+`\kw{Proof}`.
+  induction a as [| x a ih].
+  * simpl. reflexivity.
+  * simpl. rewrite ih. rewrite <- Nat.add_assoc.
+    rewrite (Nat.add_comm _ 1). rewrite Nat.add_assoc. reflexivity.
+`\kw{Qed}`.
+\end{lstlisting}
+\end{figure}
+
+Das Beispiel zu der Liste von Symbolen, das wir ursprünglich in Abschnitt
+\ref{sec:Strukturelle-Induktion} gerechnet haben, wird nochmals in
+Listing \ref{lst:Liste} aufgeführt. Den Typ der Symbole kodieren wir hierbei
+als Synonym zu den natürlichen Zahlen, um uns erst einmal nicht damit
+auseiandersetzen zu müssen, wie denn ein Symbol beschaffen sei. Es ist
+auch machbar, den Typ der Liste parametrisch über den Typ der Elemente
+zu definieren. Bei dem, was wir zeigen wollen, spielt der Typ der Elemente
+nämlich keine Rolle. Parametrisch über den Typ \code{T} lautet die
+Festlegung
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Inductive}` List T := nil | cons (x: T) (a: List T).
+\end{lstlisting}
+
 \section{Taktiken}
 
 Statt Terme zu schreiben, nutzt man lieber Taktiken. Sie bieten den
