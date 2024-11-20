@@ -283,7 +283,76 @@ der kurzen Form
 \begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
 `\kw{Inductive}` N := zero | succ (n: N).
 \end{lstlisting}
-notieren, -- die ausgelassenen Typenangaben werden dabei abgeleitet.
+notieren, -- die ausgelassenen Typangaben werden dabei abgeleitet.
+
+Die rekursive Festlegung einer Funktion wird in der geläufigen Weise
+notiert, wie Funktionen definiert werden, muss allerdings mit dem
+Schlüsselwort \kw{Fixpoint} statt \kw{Definition} eingeleitet
+werden. Der Compiler prüft, ob die Berechnungsvorschrift
+einen strukturellen Abstieg zustande bringt, womit gemeint ist, dass
+jeder rekursive Aufruf entsprechend der induktiven Struktur den Vorgänger
+des aktuellen Arguments als Argument bekommt. Der Vorgänger wird hierbei
+mit dem Musterabgleich in Erfahrung gebracht, was mit einer
+Fallunterscheidung einhergeht. Existiert kein Vorgänger, liegt also ein
+Basisfall vor, muss ein Rekursionsanfang stattfinden.
+
+Die Prüfung schließt Konstruktionen aus, bei denen nicht erkennbar ist,
+ob sie die Bedingungen des Rekursionssatzes erfüllen. Somit wird
+abgesichert, dass jede Funktion wohldefiniert ist, bzw. jede Berechnung
+terminiert, sich also nicht in einer endlosen Schleife verfängt.
+
+Beispiel. Def. \ref{def:N-Addition} auf S. \pageref{def:N-Addition} wird
+implementiert als
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Fixpoint}` add (a b: N): N :=
+  `\kw{match}` b `\kw{with}` zero => a | succ b => succ (add a b) `\kw{end}`.
+\end{lstlisting}
+Alternativ zum Musterabgleich kann die Funktion auch mit dem Rekursor
+\code{N\_rec} festgelegt werden, der allerdings eine Funktion in einem
+Argument liefert, nämlich dem, über das die Rekursion läuft. Ein
+Hindernis entsteht dadurch aber nur scheinbar, weil wir die Konstruktion
+über das erste Argument \code{a} parametrisieren können. Die Funktion
+\code{add} liegt damit in geschönfinkelter Form vor, was aber zuvor
+bereits der Fall war, weil dies per se so ist, sofern man nicht explizit
+Paare oder Tupel ins Spiel bringt. Der Rekursor hat die Signatur
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+N_rec: `\kw{forall}` P: N -> Set, P zero ->
+  (`\kw{forall}` n: N, P n -> P (succ n)) -> `\kw{forall}` n: N, P n.
+\end{lstlisting}
+Demnach bekommt \code{N\_rec} drei Argumente. Das erste Argument
+\code{P} bestimmt den Typ der Werts in Abhängigkeit der natürlichen
+Zahl, für uns konstant \code{N}. Das zweite Argument stellt den
+Anfangswert dar, und das dritte kodiert die Rekursionsgleichung.
+Das heißt, will man eine Funktion $f\colon N\to X$ rekursiv festlegen
+gemäß
+\[f(\mathrm{zero}) := x_0,\quad f(\mathrm{succ}(n)) := \varphi(n,f(n)),\]
+hat man $f=N_\mathrm{rec}(P,x_0,\varphi)$ mit $P(n):=X$. Die Addition
+erhalten wir damit als
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Definition}` add (a: N): N -> N :=
+  N_rec (`\kw{fun}` b => N) a (`\kw{fun}` b y => succ y).
+\end{lstlisting}
+Ich will noch ein weiteres Beispiel aufführen, bei dem die Konstruktion
+durchsichtiger sein mag. Statt \code{N} benutzen wir nun den bereits
+verfügbaren Typ \code{nat} für die natürlichen Zahlen $\N$, der die
+Nomenklatur \code{O} statt \code{zero} und \code{S} statt \code{succ}
+besitzt. Weiterhin steht nun die übliche mathematische Notation
+einschließlich des Dezimalsystems zur Verfügung.
+
+Die Fakultätsfunktion wird gemäß
+\[f(0) := 1,\quad f(n+1) := (n+1)f(n)\]
+rekursiv festgelegt. Wir haben also $f=\N_\mathrm{rec}(P,1,\varphi)$
+mit $P(n):=\N$ und $\varphi(n,x)=(n+1)x$. Damit ergibt sich die
+Implementierung
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Definition}` f: nat -> nat :=
+  nat_rec (`\kw{fun}` n => nat) 1 (`\kw{fun}` n x => (n + 1)*x).
+\end{lstlisting}
+Dass dies völlig analog zum Musterabgleich ist, sieht man an
+\begin{lstlisting}[escapechar=`, xleftmargin=\mathindent]
+`\kw{Fixpoint}` f (n: nat): nat :=
+  `\kw{match}` n `\kw{with}` O => 1 | S n => (n + 1)*f n `\kw{end}`.
+\end{lstlisting}
 
 \begin{figure}[t]
 \begin{lstlisting}[%
@@ -314,7 +383,7 @@ Das Beispiel zu der Liste von Symbolen, das wir ursprünglich in Abschnitt
 \ref{sec:Strukturelle-Induktion} gerechnet haben, wird nochmals in
 Listing \ref{lst:Liste} aufgeführt. Den Typ der Symbole kodieren wir hierbei
 als Synonym zu den natürlichen Zahlen, um uns erst einmal nicht damit
-auseiandersetzen zu müssen, wie denn ein Symbol beschaffen sei. Es ist
+auseinandersetzen zu müssen, wie denn ein Symbol beschaffen sei. Es ist
 auch machbar, den Typ der Liste parametrisch über den Typ der Elemente
 zu definieren. Bei dem, was wir zeigen wollen, spielt der Typ der Elemente
 nämlich keine Rolle. Parametrisch über den Typ \code{T} lautet die
