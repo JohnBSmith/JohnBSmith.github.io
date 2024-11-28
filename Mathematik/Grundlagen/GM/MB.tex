@@ -354,6 +354,96 @@ Dass dies völlig analog zum Musterabgleich ist, sieht man an
   `\kw{match}` n `\kw{with}` O => 1 | S n => (n + 1)*f n `\kw{end}`.
 \end{lstlisting}
 
+\noindent
+Zur Vorführung, wie die Implementierung von Induktionsbeweisen ausschaut,
+will ich den kurzen Beweis von Satz \ref{nat-zero} nutzen.
+
+Es gibt Berechnungsregeln zur automatischen Vereinfachung von Ausdrücken.
+Dies verhält sich analog zur Auswertung von Termen, die auf dem Papier
+oder im Quelltext eines Programms stehen. Allerdings resultiert die
+Vereinfachung nicht unbedingt in einem Wert, weil in Ausdrücken auch
+Variablen vorkommen dürfen, deren Wert unbekannt gelassen wird.
+
+Betrachten wir \code{add a zero}. Dies vereinfacht sich entsprechend
+der Definition zu \code{a}, was auch ginge, wenn statt der Variable
+\code{a} irgendein Term stehen würde. Insofern der Wert von \code{a}
+unbekannt verbleibt, endet die Vereinfachung hiermit.
+
+Die Gleichung \code{a = add a zero} vereinfacht sich mithin zu \code{a = a},
+denn Vereinfachungen finden auch innerhalb von Ausdrücken statt.
+Zum Beweis dieser Aussage genügt daher der Beweis von \code{a = a},
+der aber direkt aus Reflexivität der Gleichheit hervorgeht, die mit
+\code{eq\_refl} benannt wird.
+
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem zero_neutral_right (a: N): a = add a zero.
+Proof eq_refl a.
+\end{lstlisting}
+
+\noindent
+Bei \code{add zero a} ist jedoch keine Vereinfachung möglich. Hier müssen
+wir eine Induktion über \code{a} durchführen. Aus der genaueren Betrachtung
+des Beweises von Satz \ref{nat-zero} wird sichtbar, dass darin eine Termersetzung
+stattfindet. Wir benötigen als Hilfsmittel das Ersetzungsschema zur
+Gleichheit, das nun, unter veränderter Reihenfolge, als \code{eq\_ind}
+zur Verfügung steht, dazu später mehr. Wir bringen es kurz in die
+gewohnte Reihenfolge:
+
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem eq_subst (A: Type) (P: A -> Prop):
+  forall x y: A, x = y -> P x -> P y.
+Proof fun x y h hx => eq_ind x P hx y h.
+\end{lstlisting}
+
+\noindent
+Im Weiteren ist das Induktionsprinzip verfügbar als
+
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+N_ind: forall P: N -> Prop, P zero ->
+  (forall n: N, P n -> P (succ n)) -> forall n: N, P n.
+\end{lstlisting}
+
+\noindent
+Es liegt nun alles Rüstzeug vor, was wir zur Implementierung des Beweises
+benötigen. Die Induktionsannahme sei darin mit \code{ih} für \emph{induction
+hypothesis} bezeichnet.
+
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem zero_neutral_left (a: N): a = add zero a.
+Proof N_ind (fun a => a = add zero a)
+  (eq_refl zero)
+  (fun a ih => eq_subst N (fun n => succ a = succ n)
+    a (add zero a) ih (eq_refl (succ a))) a.
+\end{lstlisting}
+
+\noindent
+An dieser Stelle muss man sich ernstlich fragen, ob ein Beweis immer
+in so einer verklausulierten Weise kodiert werden muss, was mit zunehmender
+Länge des Beweises in mehr oder weniger schwer durchsichtigen Termsalat
+mündet. Zwar sind wie bei Programmiersprachen Hilfsbezeichner für
+Teilterme einführbar, die entsprechend für Teilbeweise stehen. Es verbleibt
+allerdings das Problem, dass die Prüfung des Beweises erst nach dessen
+Vervollständigung möglich ist. Zur Auflösung dieser Problematik stehen
+\emph{Taktiken} zur Verfügung, mit denen wir uns bald eingehend
+beschäftigen wollen. Sie führen Ziele gemäß den Schlussregeln auf
+Unterziele zurück, wonach der Aufbau von Beweisen rückwärts stattfindet.
+Der gerade geführte Beweis bekommt beispielsweise die Gestalt:
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem zero_neutral_left (a: N):
+  a = add zero a.
+Proof.
+  induction a as [| a ih].
+  * simpl. reflexivity.
+  * simpl. rewrite <- ih. reflexivity.
+Qed.
+\end{lstlisting}
+Im Beweis kommen die Taktiken \code{induction}, \code{simpl}, \code{rewrite}
+und \code{reflexivity} vor. Es führt \code{simpl} für \emph{simplify}
+eine Vereinfachung durch, und \code{rewrite} nimmt Ersetzungen gemäß
+\code{eq\_subst} vor. Erwartungsgemäß steht \code{induction} für die
+vollständige Induktion mittels \code{N\_ind} und \code{reflexivity} für
+die Anwendung von \code{eq\_refl}.
+
 \begin{figure}[t]
 \begin{lstlisting}[%
 caption={Beispiel zur strukturellen Induktion und Rekursion},%
