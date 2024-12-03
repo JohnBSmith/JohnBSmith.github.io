@@ -551,3 +551,184 @@ Beweis ginge beispielsweise
   apply hnB. apply hAB. exact hA.
 `\kw{Qed.}`
 \end{lstlisting}
+
+\newpage
+\section{Rückkehr zum Anfang}
+
+\subsection{Pedantische Erklärung der Aussagenlogik}
+
+Mit dem Verständnis der essentiellen Grundlagen des maschinengestützten
+Beweisens wäre es an der Zeit, einmal eine umfänglichere Argumentation zu
+formalisieren. Statt zu den Grundbegriffen irgendeiner beliebigen Theorie
+will ich zurück zur Aussagenlogik und ihrer Semantik kommen. Mit der
+Implementierung des natürlichen Schließens gewinnen wir nämlich ein
+verlässlicheres Verständnis der logischen Grundlagen, frei von potentiell
+vorhandenen Ungenauigkeiten, Flüchtigkeitsfehlern oder Fehldeutungen.
+
+Zunächst legen wir die aussagenlogische Sprache mit dem Typ der Formeln
+als induktive Struktur fest. Vermittels der Konstruktoren wird direkt ein
+abstrakter Syntaxbaum kodiert, so dass wir keinen Parser betrachten brauchen,
+dessen weitläufige Konstruktion uns vom Wesentlichen ablenken würde.
+Weiterhin legen wir $\lnot A$ und $A\bicond B$
+als Abkürzungen für $A\cond\bot$ und $(A\cond B)\land (B\cond A)$ fest,
+womit sich die Induktion über den Formelaufbau verkürzt und die Schlussregeln
+für diese Junktoren entfallen dürfen. Die aussagenlogischen Variablen
+nummerieren wir kurzum mit den natürlichen Zahlen, so dass wir keine
+Zeichenketten betrachten brauchen. Listing \ref{lst:Aussagenlogik}
+zeigt die Implementierung.
+
+Als nächstes die klassische Semantik. Wir könnten für Wahrheitswerte
+pauschal den Typ \code{Prop} vorsehen; dies wäre so auch durchführbar, wie
+der Leser ausprobieren mag. Allerdings wird dadurch der Wahrheitsbegriff
+mit dem der Metalogik vermischt. Dies wird gut daran erkennbar, dass die
+Metalogik als Typentheorie eine intuitionistische ist. Wir müssten
+den Satz vom ausgeschlossenen Dritten holzschnittartig als Axiom hinzufügen,
+um aus ihr eine klassische zu machen. Gerade für die Beweistheorie wird
+eine solche unnötige Verwässerung als problematisch angesehen. Außerdem lassen
+sich Terme vom Typ \code{Prop} nicht ausrechnen. Man legt daher für die
+Wahrheitswerte eine Menge $\B$ fest, deren zwei Elemente als die beiden
+Wahrheitswerte gedeutet werden. Wie diese beiden Elemente lauten, ist
+an sich unwichtig, wir können zum Beispiel wie zuvor $\B:=\{0,1\}$ oder auch
+$\B:=\{\mathrm F,\mathrm T\}$ haben. Mit dem Präludium der Standardbibliothek
+liegt $\B$ bereits als Typ \code{bool} mit den Werten \code{false}
+und \code{true} vor, genauer als
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Inductive bool: Set := true: bool | false: bool.
+\end{lstlisting}
+Da wir die aussagenlogischen Variablen mit den natürlichen Zahlen abzählen,
+können wir eine Interpretation als Funktion $I\colon\N\to\B$ sehen.
+Die Erfüllung $I\models A$ notieren wir als \code{sat I A} für
+\emph{satisfies}. Sie wird getreu Def. \ref{def:sat} rekursiv über den
+Formelaufbau festgelegt, siehe Listing \ref{lst:Aussagenlogik}.
+
+\begin{figure}[t]
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:Aussagenlogik, caption={Die aussagenlogische Sprache und ihre
+klassische Semantik}]
+Inductive Formula: Set :=
+| var: nat -> Formula
+| falsum: Formula
+| conj: Formula -> Formula -> Formula
+| disj: Formula -> Formula -> Formula
+| subj: Formula -> Formula -> Formula.
+
+Definition neg A := subj A falsum.
+Definition bij A B := conj (subj A B) (subj B A).
+
+Fixpoint sat (I: nat -> bool) (A: Formula): bool :=
+  match A with
+  | var a => I a
+  | falsum => false
+  | conj A B => andb (sat I A) (sat I B)
+  | disj A B => orb (sat I A) (sat I B)
+  | subj A B => orb (negb (sat I A)) (sat I B)
+  end.
+
+Definition sat_all (I: nat -> bool) (`Γ`: Ensemble Formula) :=
+  forall A, In Formula `Γ` A -> sat I A = true.
+
+Definition valid `Γ` A: Prop :=
+  forall (I: nat -> bool), sat_all I `Γ` -> sat I A = true.
+\end{lstlisting}
+\end{figure}
+
+Nun zur logischen Folgerung. Weil im Kalkül des natürlichen Schließens
+lediglich endliche Ansammlungen von Formeln auftreten, könnten wir uns
+auf endliche Listen beschränken. Ich will die logische Folgerung aber
+sogleich für allgemeine Mengen definieren,
+um innerhalb der üblichen Terminologie zu bleiben. Dies zieht nach
+sich, dass die Erfüllung $I\models\Gamma$ einer Formelmenge $\Gamma$ aufgrund
+deren potenzieller Unendlichkeit, und damit Unberechenbarkeit, nicht
+mehr Werte in \code{bool} annehmen kann, weshalb sie als metasprachliche
+Aussage vom Typ \code{Prop} kodiert werden muss, siehe
+\code{sat\_all I Γ} in Listing \ref{lst:Aussagenlogik}.
+Die logische Folgerung $\Gamma\models A$ wird daraufhin getreu
+Def. \ref{def:valid} mit der Bezeichnung \code{valid Γ A} festgelegt.
+
+Um die weiteren Ausführungen nicht übermäßig weitläufig werden zu lassen,
+betrachten wir das kleine Fragment des natürlichen Schließens, das lediglich
+aus der Einführung von Grundsequenzen und der Beseitigungsregel der
+Konjunktion besteht. Die Regeln werden als die Konstruktoren des Typs
+\code{Prf Γ A} kodiert, der als Typ der Beweise der Sequenz
+$\Gamma\vdash A$ in Erscheinung treten soll, siehe Listing \ref{lst:KdnS}.
+Die Ableitbarkeit \code{provable} wird getreu Def. \ref{def:Ableitbarkeit}
+festgelegt. Als Hilfsmittel benötigen wir daher noch die Funktion
+\code{as\_set}, die eine endliche Liste von Formeln in eine Menge umwandelt.
+
+\begin{figure}[t]
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:KdnS, caption={Fragment des natürliches Schließens und Ableitbarkeit}]
+Inductive Formulas: Set :=
+| nil: Formulas
+| cons: Formulas -> Formula -> Formulas.
+
+Inductive Prf: Formulas -> Formula -> Set :=
+| basic_sequent A: Prf (cons nil A) A
+| conj_eliml `Γ` A B: Prf `Γ` (conj A B) -> Prf `Γ` A.
+
+Fixpoint as_set (`Γ`: Formulas): Ensemble Formula :=
+  match `Γ` with
+  | nil => Empty_set Formula
+  | cons `Γ` A => Add Formula (as_set `Γ`) A
+  end.
+
+Definition provable `Γ` A: Prop :=
+  exists `Γ`0, Included Formula (as_set `Γ`0) `Γ` /\
+    exists p: Prf `Γ`0 A, True.
+\end{lstlisting}
+\end{figure}
+
+Nun verbleibt die Korrektheit des Fragments zu bestätigen. Drei
+Hilfssätze zerlegen dies in kleine Schritte, siehe Listing
+\ref{lst:Korrektheit-KdnS}. Zunächst wird die Gültigkeit der
+Beseitigungsregel zur Konjunktion bestätigt,
+also dass $\Gamma\models A$ aus $\Gamma\models A\land B$ folgt. Daraufhin
+zeigt das Lemma zur Korrektheit auf, dass $\Gamma\models A$ aus einem
+vorliegenden Beweis $p$ der Sequenz $\Gamma\vdash A$ folgt. Dies ist
+der wesentliche Teil der Argumentation, der vermittels struktureller
+Induktion über den Aufbau von $p$ geführt wird. Das Lemma zur
+Erfüllung von Mengen bestätigt noch kurz, dass $I\models\Gamma$
+aus $\Gamma\subseteq\Delta$ und $I\models\Delta$ folgt. Schließlich
+kommen die Hilfssätze im Hauptbeweis zur Anwendung.
+
+\begin{figure}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:Korrektheit-KdnS, caption={Korrektheit des natürliches Schließens}]
+Lemma conj_eliml_is_valid `Γ` A B:
+  valid `Γ` (conj A B) -> valid `Γ` A.
+Proof.
+  intro h. unfold valid. intro I. intro hI.
+  unfold valid in h. assert (h := h I hI). clear hI.
+  simpl in h. apply andb_prop in h. exact (proj1 h).
+Qed.
+
+Lemma soundness_lemma `Γ` A:
+  (exists p: Prf `Γ` A, True) -> valid (as_set `Γ`) A.
+Proof.
+  intro h. destruct h as (p, _).
+  induction p as [| `Γ` A B p ih].
+  * unfold valid. intros I hI. unfold sat_all in hI.
+    apply hI. simpl. unfold Add.
+    apply Union_intror. apply In_singleton.
+  * exact (conj_eliml_is_valid (as_set `Γ`) A B ih).
+Qed.
+
+Lemma sat_set_lemma I `Γ` `Δ`:
+  Included Formula `Γ` `Δ` -> (sat_all I `Δ`) -> (sat_all I `Γ`).
+Proof.
+  intros h hI. unfold sat_all. intros A hA.
+  unfold sat_all in hI. apply hI. apply h. exact hA.
+Qed.
+
+Theorem natural_deduction_is_sound `Γ` A:
+  provable `Γ` A -> valid `Γ` A.
+Proof.
+  intro h. unfold provable in h.
+  destruct h as (`Γ`0, (h0, (p, _))).
+  assert (h_valid: valid (as_set `Γ`0) A).
+  { apply soundness_lemma. exists p. trivial. }
+  unfold valid. intros I hI. apply h_valid.
+  exact (sat_set_lemma I (as_set `Γ`0) `Γ` h0 hI).
+Qed.
+\end{lstlisting}
+\end{figure}
