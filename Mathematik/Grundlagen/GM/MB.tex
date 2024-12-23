@@ -732,3 +732,214 @@ Proof.
 Qed.
 \end{lstlisting}
 \end{figure}
+
+\subsection{Ein System der axiomatischen Mengenlehre}
+
+Der Beweisassistent schafft bereits die Mittel zur Klärung logischer
+Gesetzmäßigkeiten. Vermittels induktiver Typen gelingt außerdem die
+Konstruktion mathematischer Strukturen in ergonomischer Art und Weise,
+was die Darlegung mathematischer Theorien auf typentheoretischer Basis
+ermöglicht. Dienlich ist dieser Ansatz auch zum maschinengestützten
+Verifizieren von Computerprogrammen. Am Anfang wurde allerdings die
+Mengenlehre als Fundament für die mathematischen Grundlagen beschrieben.
+Deshalb wollen wir nochmals zurück zur Mengenlehre kommen, auch um sie
+besser mit der Typentheorie vergleichen zu können.
+
+Zunächst einmal sollte die Mengenlehre reichhaltig genug sein, dass
+alle mathematischen Objekte und Sachverhalte ohne Umwege in ihr
+ausgedrückt werden können. Die reine ZFC erweist sich dabei als zu
+minimalistisch, was ihre praktische Handhabung erschwert. So fehlt in ihr
+sogar ein Konstantensymbol für die leere Menge. Es besteht diesbezüglich
+Bedarf an Erweiterungen durch Definition, die es ermöglichen,
+Konstanten und Mengenoperationen auf gewohnte Art und Weise zu nutzen.
+Weiterhin erscheint es uns als wünschenswert, über Klassen sprechen
+zu können. In Bezug auf diese Anforderungen erscheinen die Mengenlehren
+NBG, MK oder auch die Tarski"=Grothendieck"=Mengenlehre als besonders
+dienlich. Im Weiteren wird eine Implementierung der MK"=Mengenlehre nach
+der in \cite{Kelly} und \cite{Tianyu-Sun} ausgeführten Axiomatik
+vorgenommen, weil diese annehmlich kurz gefasst ist, also ohne
+umständliche technische Erklärungen auskommt.
+
+Man kann auf die im vorherigen Abschnitt beschriebene Art das gesamte
+formale System konstruieren, das aus der Logik erster Stufe und dem
+Axiomensystem der Mengenlehre besteht; geläufig ist diese Methodik
+als \emph{tiefe Einbettung}. Hiermit wäre es möglich, innerhalb der
+Typentheorie, die diesbezüglich die Rolle der Metalogik einnimmt,
+Aussagen über das System zu machen. Da dies aber recht umständlich
+ist und wir mehr an der pragmatischen Anwendung interessiert sind, wollen
+wir das Axiomensystem direkt in der bereits zur Verfügung stehenden Logik
+höherer Stufe abfassen, was als \emph{flache Einbettung} bezeichnet wird.
+Man muss hierbei selbst darauf acht geben, allenfalls Quantifizierungen
+über Prädikate zu nutzen, wenn sie einem Schema in der Logik erster Stufe
+entsprechen.
+
+Ich will darauf hinweisen, dass wir die Prädikate der Logik und die
+Relationen der Mengenlehre unbedingt auseinanderhalten müssen. Im Axiom
+\code{comp} zum Schema der Klassenkomprehension, siehe Listing
+\ref{lst:MK-Axiome}, taucht bspw. eine Allquantifizierung über eine
+Prädikatvariable auf, für die bei der Spezialisierung eine beliebige
+Formel eingesetzt werden darf. Eine Relation innerhalb der Mengenlehre
+ist dagegen eine Menge bzw. Klasse, also ein Objekt des Diskursuniversums.
+Ein Beispiel, an dem der Zwiespalt in dramatischer Weise ersichtlich wird,
+bietet der dedekindsche Rekursionssatz. Dieser spricht über die Existenz
+einer Funktion, verlangt also bereits zu seiner Formulierung eine Logik
+mindestens zweiter Stufe. Trotzdem ist der Satz problemlos in der Mengenlehre
+in Logik erster Stufe fassbar, insofern hierbei über die Existenz einer
+Funktion in Form einer Menge gesprochen wird. Das ist ein motivierendes
+Beispiel für die Idee, dass die Mengenlehre in gewisser Weise eine Logik
+höherer Stufe innerhalb der Logik erster Stufe beschreibt.
+
+Wir legen zunächst drei Parameter fest, siehe Listing
+\ref{lst:MK-Definitionen}. Mit \code{Class} bezeichnen wir den Typ der
+Klassen; dieser unterscheidet sich von der Allklasse, die wir im Weiteren
+via Komprehension definieren. Mit \code{In} bezeichnen wir das zweistellige
+Prädikat $\in$, führen für \code{In x A} aber sogleich die übliche Notation
+$x\in A$ ein. Die Operation \code{Comp} bezeichnet die Komprehension, die
+zu einem einstelligen Prädikat die Klasse der Mengen beschreibt, die das
+Prädikat erfüllen.
+
+Als nächstes folgen einige Definitionen. Das einstellige Prädikat
+\code{set} prüft, ob eine Klasse eine Menge ist. Zu erwähnen wäre,
+dass $\forall x\colon A(x)$ bzw. $\exists x\colon A(x)$ gerne als
+Kurzschreibweise für $\forall X\colon\mathrm{set}(X)\cond A(X)$ bzw.
+$\exists X\colon\mathrm{set}(X)\land A(X)$ genutzt wird. Man einigt
+sich also darauf, dass sich eine Quantifizierung bezüglich einer groß
+geschriebenen Variable über alle Klassen erstreckt, wogegen eine bezüglich
+einer klein geschriebenen nur über alle Mengen läuft. Ich will mich dieser
+Konvention aber im Folgenden nicht anschließen, zumal sie nicht ohne
+Weiteres vom Beweisassistenten unterstützt wird. Wir fahren stattdessen
+mit den gewohnten Schreibweisen fort.
+
+Die Einermenge $\{x\}$ kommt in den beiden Varianten \code{sg x} und
+\code{Sg x}, die für eine Menge $x$ übereinstimmen. Sollte $x$ aber eine
+echte Klasse sein, so wird $\mathrm{sg}(x)$ die leere Menge sein, während sich
+für $\mathrm{Sg}(x)$ die Allklasse ergibt. Man kann das so verstehen, dass der
+eigentliche Definitionsbereich dieser Operation die Allklasse ist. Liegt
+die Klasse $x$ nun außerhalb von diesem, ist also eine echte Klasse, muss
+man sich überlegen, welchen Wert $\{x\}$ man $x$ zuordnen will, weil eine
+jede Operation auf dem gesamten Diskursuniversum definiert ist, das alle
+Klassen umfasst. Hier gibt es zwei natürliche Varianten; entweder die
+Zuordnung der leeren Menge oder aber die Zuordnung der Allklasse.
+
+Im Weiteren will ich statt $\mathrm{sg}$ von $\mathrm{Sg}$ Gebrauch machen,
+da sich dieses ein wenig gutartiger verhält. Zwar sind beide Varianten
+auf der Allklasse injektiv. Setzt man aber nur $x$ als Menge voraus,
+könen wir aus $\mathrm{sg}(x)=\mathrm{sg}(y)$ nicht mehr $x=y$ folgern,
+denn die Gleichung ist auch für $x=\emptyset$ und $y$ eine echte Klasse
+erfüllt. Es handelt sich also mehr um eine technische Spielerei, um in
+Sachverhalten weniger Voraussetzungen schreiben zu müssen.
+
+\begin{figure}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:MK-Definitionen, caption={Begrifflichkeiten der Mengenlehre}]
+Parameter Class: Type.
+Parameter In: Class -> Class -> Prop.
+Parameter Comp: (Class -> Prop) -> Class.
+Notation "x `$\in$` A" := (In x A) (at level 70).
+Notation "x `$\notin$` A" := (~In x A) (at level 70).
+Notation "{ x | P }" := (Comp (fun x: Class => P)).
+
+Definition set x := exists C, x `$\in$` C.
+Definition Inclusion A B := forall x, x `$\in$` A -> x `$\in$` B.
+Definition EmptySet := {x | False}.
+Definition UnivCl := {x | True}.
+Definition DiagCl := {x | x `$\notin$` x}.
+Notation "`$\emptyset$`" := EmptySet (at level 0).
+Notation "A `$\subseteq$` B" := (Inclusion A B) (at level 70).
+
+Definition intersection A B := {x | x `$\in $` A /\ x `$\in$` B}.
+Definition union A B := {x | x `$\in$` A \/ x `$\in$` B}.
+Definition diff A B := {x | x `$\in$` A /\ x `$\notin$` B}.
+Definition Intersection M := {x | forall A, A `$\in$` M -> x `$\in$` A}.
+Definition Union M := {x | exists A, A `$\in$` M /\ x `$\in$` A}.
+Definition Power M := {A | A `$\subseteq$` M}.
+Definition sg x := {y | x = y}.
+Definition Sg x := {y | set x -> x = y}.
+Definition PairSet x y := union (Sg x) (Sg y).
+Definition Pair x y := PairSet (Sg x) (PairSet x y).
+Definition Prod X Y := {t |
+  exists x y, x `$\in$` X /\ y `$\in$` Y /\ t = Pair x y}.
+Notation "A `$\cap$` B" := (intersection A B) (at level 45).
+Notation "A `$\cup$` B" := (union A B) (at level 50).
+Notation "A \ B" := (diff A B) (at level 50).
+Notation "( x , y )" := (Pair x y) (at level 0).
+Notation "A `$\times$` B" := (Prod A B) (at level 40).
+Notation "`$\bigcap$` M" := (Intersection M) (at level 0, M at level 30).
+Notation "`$\bigcup$` M" := (Union M) (at level 0, M at level 30).
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+caption={Begrifflichkeiten im Bezug auf Relationen und Funktionen}]
+Definition dom R := {x | exists y, (x, y) `$\in$` R}.
+Definition rng R := {y | exists x, (x, y) `$\in$` R}.
+Definition img R A := {y | exists x, x `$\in$` A /\ (x, y) `$\in$` R}.
+Definition inv_img R B := {x | exists y, y `$\in$` B /\ (x, y) `$\in$` R}.
+Definition app f x := `$\bigcap$`{y | (x, y) `$\in$` f}.
+
+Definition relation R :=
+  forall t, t `$\in$` R -> exists x y, t = (x, y).
+
+Definition function f := relation f /\
+  forall x y y`\ttq`, (x, y) `$\in$` f -> (x, y`\ttq`) `$\in$` f -> y = y`\ttq`.
+
+Definition choice_function f :=
+  function f /\ forall x, x `$\in$` dom f -> app f x `$\in$` x.
+
+Definition fn f X Y := function f /\ dom f = X /\ rng f `$\subseteq$` Y.
+
+Definition inj f X Y := fn f X Y /\ forall x x`\ttq`,
+  x `$\in$` X -> x`\ttq` `$\in$` X -> app f x = app f x`\ttq` -> x = x`\ttq`.
+
+Definition sur f X Y := fn f X Y /\ rng f = Y.
+
+Definition bij f X Y := inj f X Y /\ sur f X Y.
+
+Definition inv f := {t | exists x y,
+  t = (y, x) /\ (x, y) `$\in$` f}.
+
+Definition restr f A := f `$\cap$` (A `$\times$` UnivCl).
+
+Definition composition g f := {t | exists x y z,
+  t = (x, z) /\ (x, y) `$\in$` f /\ (y, z) `$\in$` g}.
+\end{lstlisting}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:MK-Axiome, caption={Axiome der Mengenlehre}]
+Axiom lem: forall (A: Prop),
+  A \/ ~A.
+
+Axiom ext: forall (A B: Class),
+  (forall x, x `$\in$` A <-> x `$\in$` B) -> A = B.
+
+Axiom comp: forall (P: Class -> Prop),
+  forall u, u `$\in$` {x | P x} <-> set u /\ P u.
+
+Axiom pairing: forall {x y: Class},
+  set x -> set y -> set (PairSet x y).
+
+Axiom subset: forall {A B: Class},
+  A `$\subseteq$` B -> set B -> set A.
+
+Axiom power: forall {M: Class},
+  set M -> set (Power M).
+
+Axiom unions: forall {M: Class},
+  set M -> set (`$\bigcup\,$`M).
+
+Axiom regularity: forall (A: Class),
+  ~(A = `$\emptyset$`) -> exists x, x `$\in$` A /\ x `$\cap$` A = `$\emptyset$`.
+
+Axiom infinity: exists (A: Class),
+  `$\emptyset$` `$\in$` A /\ forall x, x `$\in$` A -> x `$\cup$` (Sg x) `$\in$` A.
+
+Axiom substitution: forall (f: Class),
+  function f -> set (dom f) -> set (rng f).
+
+Axiom choice: exists (f: Class),
+  choice_function f /\ dom f = UnivCl \ (Sg `$\emptyset$`).
+\end{lstlisting}
+\end{figure}
