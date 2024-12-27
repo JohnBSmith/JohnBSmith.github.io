@@ -7,8 +7,8 @@
 
 Der Einführung einer Subjunktion\index{Subjunktion} entspricht die
 Einführung einer $\lambda$"=Abstraktion,\index{Abstraktion}%
-\index{Lambda-Abstraktion} also einer anonymen Funktion.%
-\index{anonyme Funktion} Der aus der Herleitung
+\index{Lambda-Abstraktion@$\lambda$-Abstraktion} also einer anonymen
+Funktion.\index{anonyme Funktion} Der aus der Herleitung
 \[\begin{prooftree}
     \infer0{A,B\vdash A}
   \infer1{A\vdash B\cond A}
@@ -755,10 +755,11 @@ Konstanten und Mengenoperationen auf gewohnte Art und Weise zu nutzen.
 Weiterhin erscheint es uns als wünschenswert, über Klassen sprechen
 zu können. In Bezug auf diese Anforderungen erscheinen die Mengenlehren
 NBG, MK oder auch die Tarski"=Grothendieck"=Mengenlehre als besonders
-dienlich. Im Weiteren wird eine Implementierung der MK"=Mengenlehre nach
-der in \cite{Kelly} und \cite{Tianyu-Sun} ausgeführten Axiomatik
-vorgenommen, weil diese annehmlich kurz gefasst ist, also ohne
-umständliche technische Erklärungen auskommt.
+dienlich. Im Weiteren wird eine Implementierung der MK"=Mengenlehre%
+\index{Morse-Kelly-Mengenlehre} nach der in \cite{Kelly} und
+\cite{Tianyu-Sun} ausgeführten Axiomatik vorgenommen, weil diese
+annehmlich kurz gefasst ist, also ohne umständliche technische
+Erklärungen auskommt.
 
 Man kann auf die im vorherigen Abschnitt beschriebene Art das gesamte
 formale System konstruieren, das aus der Logik erster Stufe und dem
@@ -780,6 +781,12 @@ Relationen der Mengenlehre unbedingt auseinanderhalten müssen. Im Axiom
 Prädikatvariable auf, für die bei der Spezialisierung eine beliebige
 Formel eingesetzt werden darf. Eine Relation innerhalb der Mengenlehre
 ist dagegen eine Menge bzw. Klasse, also ein Objekt des Diskursuniversums.
+
+Dieselbe Unterscheidung gilt für Funktionen. So werden wir die
+Mengenoperationen als Funktionen auf dem Diskursuniversum festlegen.
+Der Versuch, diese als Klassen darzustellen, läuft unmittelbar in die
+Komplikation, dass sich der Definitionsbereich auf die Allklasse reduzierte.
+Damit wären die Operationen nicht mehr für echte Klassen definiert.
 Ein Beispiel, an dem der Zwiespalt in dramatischer Weise ersichtlich wird,
 bietet der dedekindsche Rekursionssatz. Dieser spricht über die Existenz
 einer Funktion, verlangt also bereits zu seiner Formulierung eine Logik
@@ -791,12 +798,12 @@ höherer Stufe innerhalb der Logik erster Stufe beschreibt.
 
 Wir legen zunächst drei Parameter fest, siehe Listing
 \ref{lst:MK-Definitionen}. Mit \code{Class} bezeichnen wir den Typ der
-Klassen; dieser unterscheidet sich von der Allklasse, die wir im Weiteren
-via Komprehension definieren. Mit \code{In} bezeichnen wir das zweistellige
-Prädikat $\in$, führen für \code{In x A} aber sogleich die übliche Notation
-$x\in A$ ein. Die Operation \code{Comp} bezeichnet die Komprehension, die
-zu einem einstelligen Prädikat die Klasse der Mengen beschreibt, die das
-Prädikat erfüllen.
+Klassen;\index{Klasse} dieser unterscheidet sich von der Allklasse, die
+wir im Weiteren via Komprehension definieren. Mit \code{In} bezeichnen
+wir das zweistellige Prädikat $\in$, führen für \code{In x A} aber sogleich
+die übliche Notation $x\in A$ ein. Die Operation \code{Comp} bezeichnet
+die Komprehension, die zu einem einstelligen Prädikat die Klasse der
+Mengen beschreibt, die das Prädikat erfüllen.
 
 Als nächstes folgen einige Definitionen. Das einstellige Prädikat
 \code{set} prüft, ob eine Klasse eine Menge ist. Zu erwähnen wäre,

@@ -868,7 +868,7 @@ notiert wird.
 \begin{Definition}[Kongruenz]\index{Kongruenz}\newlinefirst
 Zwei ganze Zahlen $a,b$ heißen kongruent modulo $m$, wenn ihre Differenz
 $a-b$ durch $m$ teilbar ist,%
-\[a\equiv b\pmod{m}\;:\bicond\;\exists k\in\Z\colon a-b=km.\]
+\[a\equiv b\pmod{m}\;:\Leftrightarrow\;\exists k\in\Z\colon a-b=km.\]
 \end{Definition}
 Statt »$(\mathrm{mod}\;m)$« schreibt man beim Rechnen meist
 kürzer »$(m)$«.
@@ -896,34 +896,34 @@ $k'$ mit $a-c=k'm$. Somit gilt $a\equiv c$.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{Kongruenz-add-sub}
-Sind $a,b,c$ ganze Zahlen, dann gilt
+Für ganze Zahlen $a,b,c$ gelten die Äquivalenzen
 \begin{align*}
-a\equiv b\pmod{m}&\iff a+c\equiv b+c\pmod{m},\\
-a\equiv b\pmod{m}&\iff a-c\equiv b-c\pmod{m}.
+a\equiv b\pmod{m}&\;\Leftrightarrow\; a+c\equiv b+c\pmod{m},\\
+a\equiv b\pmod{m}&\;\Leftrightarrow\; a-c\equiv b-c\pmod{m}.
 \end{align*}
 \end{Satz}
 \begin{Beweis}
 Unter Beachtung von $(b+c)-(a+c)=b-a$ findet man
-\begin{gather*}
+\begin{align*}
 a\equiv b\pmod{m}
-\iff (\exists k\in\Z\colon b-a=km)\\
-\iff (\exists k\in\Z\colon (b+c)-(a+c)=km)\\
-\iff a+c\equiv b+c\pmod{m}.
-\end{gather*}
-Für die Subtraktion von $c$ ist die Überlegung analog.\;\qedsymbol
+&\iff (\exists k\in\Z\colon b-a=km)\\
+&\iff (\exists k\in\Z\colon (b+c)-(a+c)=km)\\
+&\iff a+c\equiv b+c\pmod{m}.
+\end{align*}
+Bei der Subtraktion von $c$ verläuft die Überlegung analog.\;\qedsymbol
 \end{Beweis}
 
 %\newpage
 \begin{Satz}\label{Kongruenz-mul}
-Sind $a,b,c$ ganze Zahlen, dann gilt
-\[a\equiv b\pmod{m} \implies ac\equiv bc\pmod{m}.\]
+Für ganze Zahlen $a,b,c$ gilt die Implikation
+\[a\equiv b\pmod{m} \;\Rightarrow\; ac\equiv bc\pmod{m}.\]
 \end{Satz}
 \begin{Beweis}
 Unter der Voraussetzung $a\equiv b\pmod{m}$ gibt es ein
-$k$ mit $b-a=km$. Es gilt
+$k$ mit $b-a=km$. Es gilt im Weiteren die Umformung
 \[b-a=km\iff (b-a)c=kcm \iff bc-ac=k'm\]
-mit $k':=kc$. Man hat also
-\[(\exists k'\in\Z\colon bc-ac=k'm)\iff ac\equiv bc\pmod{m}.\;\qedsymbol\]
+mit $k':=kc$. Man hat also $\exists k'\in\Z\colon bc-ac=k'm$, was
+definitionsgemäß äquivalent zu $ac\equiv bc\pmod{m}$ ist.\;\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
@@ -935,19 +935,26 @@ a-b&\equiv a'-b'\pmod{m},\\
 ab&\equiv a'b'\pmod{m}.
 \end{align*}
 \end{Satz}
-\strong{Beweis.} Man findet
-\[\left.\begin{aligned}
-a\equiv a'&\implies a+b\equiv a'+b\\
-b\equiv b'&\implies a'+b\equiv a'+b'
-\end{aligned}\right\}
-\implies a+b\equiv a'+b\equiv a'+b'\pmod{m}.\]
-Für die Subtraktion ist die Überlegung analog. Für die Multiplikation
-ebenfalls:%
-\[\left.\begin{aligned}
-a\equiv a'&\implies ab\equiv a'b\\
-b\equiv b'&\implies a'b\equiv a'b'
-\end{aligned}\right\}
-\implies ab\equiv a'b\equiv a'b'\pmod{m}.\;\qedsymbol\]
+\strong{Beweis.} Es findet sich:
+\[\begin{array}{@{}l@{\qquad\quad}l@{}}
+\begin{prooftree}
+    \hypo{a\equiv a'}
+  \infer1{a+b\equiv a'+b}
+    \hypo{b\equiv b'}
+  \infer1{a'+b\equiv a'+b'}
+\infer2{a+b\equiv a'+b'}
+\end{prooftree}
+&
+\begin{prooftree}
+    \hypo{a\equiv a'}
+  \infer1{ab\equiv a'b}
+    \hypo{b\equiv b'}
+  \infer1{a'b\equiv a'b'}
+\infer2{ab\equiv a'b'}
+\end{prooftree}
+\end{array}\]
+Alle Kongruenzen sind hier modulo $m$ für $m$ fest, aber beliebig. Für
+die Subtraktion verläuft die Überlegung analog.\qedsymbol
 
 \begin{Satz}
 Addition des Moduls führt auf eine kongruente Zahl:%
@@ -956,15 +963,16 @@ Addition des Moduls führt auf eine kongruente Zahl:%
 \begin{Beweis}
 Es gilt
 \[a\equiv a+m\pmod{m}\iff (\exists k\in\Z\colon km=(a+m)-a=m).\]
-Setze $k=1$. Bei
+Man setze $k=1$. Bei
 \[a\equiv a-m\pmod{m}\iff (\exists k\in\Z\colon km=(a-m)-a=-m)\]
-setze $k=-1$.\;\qedsymbol
+setze man $k=-1$.\;\qedsymbol
 \end{Beweis}
 
 \subsection{Teilbarkeit}
 
 Die Beziehung »$m$ teilt $a$« ist definiert als
-\[m\mid a\defiff (\exists k\in\Z\colon a=km) \iff a\equiv 0\pmod{m}.\]
+\[m\mid a\;:\Leftrightarrow\; (\exists k\in\Z\colon a=km)
+\;\Leftrightarrow\; a\equiv 0\pmod{m}.\]
 Während die Kongruenz eine Äquivalenzrelation ist, stellt die
 Teilbarkeit eine Halbordnung dar, dergestalt dass sie die drei Axiome
 \begin{align*}
@@ -973,7 +981,7 @@ Teilbarkeit eine Halbordnung dar, dergestalt dass sie die drei Axiome
 &\forall a,b,c\in\Z\colon a\mid b\land b\mid c\cond a\mid c.&&\text{(Transitivität)}
 \end{align*}
 erfüllt. Teilt $a$ die Zahl $b$, ist $a$ also in gewisser Weise kleiner
-als $b$.
+als oder gleich $b$.
 
 \subsection{Restklassenringe}
 
@@ -983,7 +991,8 @@ modulare Arithmetik mit dem Restklassenring zusammenhängt. Unter
 diesem Blickwinkel bekommen wir ein tieferes Verständnis und können
 Mittel der Ringtheorie und Gruppentheorie anwenden.
 
-Zu einer ganzen Zahl $a$ ist die Restklasse modulo $m$ definiert als 
+Zu einer ganzen Zahl $a$ ist die \emph{Restklasse}\index{Restklasse}
+modulo $m$ definiert als 
 \[[a]_m := \{x\mid x\equiv a\pmod m\}.\]
 Eine alternative Schreibweise für $[a]_m$ ist $a+m\Z$. Weil die
 Kongruenz eine Äquivalenzrelation ist, handelt es sich bei den
@@ -1011,8 +1020,8 @@ $a+b\equiv x+b\equiv x+y$.
 Die Argumentation zur Multiplikation ist analog, wobei
 Satz \ref{Kongruenz-mul} zur Anwendung kommt.\,\qedsymbol
 
-Die Struktur $(\Z/m\Z,+,\cdot)$ nennt man den \emph{Restklassenring}
-zum Modul $m$.
+Die Struktur $(\Z/m\Z,+,\cdot)$ nennt man den \emph{Restklassenring}%
+\index{Restklassenring} zum Modul $m$.
 
 \begin{Satz}
 Jeder Restklassenring ist ein kommutativer unitärer Ring.
@@ -1137,14 +1146,14 @@ Es gilt
 \begin{Beweis}
 Mit bezüglich $y=\lfloor x\rfloor$ entfalteten Def. \ref{def:floor},
 \ref{def:max-min} lautet die Aussage
-\[y\in\Z\land 0\le x-y<1\iff
-y\in\Z\land y\le x\land (\forall k\in\Z\colon k\le x\Rightarrow k\le y).\]
+\[y\in\Z\land 0\le x-y<1\;\Leftrightarrow\;
+y\in\Z\land y\le x\land (\forall k\in\Z\colon k\le x\cond k\le y).\]
 Für die Implikation von links nach rechts ist im Wesentlichen
 \[k\in\Z, y\in\Z, k\le x, x < y+1\vdash k\le y\]
 zu zeigen. Man erhält zunächst $k < y+1$ per Transitivgesetz.
 Wegen $k,y\in\Z$ folgt daraus $k\le y$. Für die Implikation von rechts
 nach links ist im Wesentlichen
-\[y\in\Z,(\forall k\in\Z\colon k\le x\Rightarrow k\le y)\vdash x < y + 1\]
+\[y\in\Z,(\forall k\in\Z\colon k\le x\cond k\le y)\vdash x < y + 1\]
 zu zeigen. Angenommen, es wäre $y+1\le x$. Die Allaussage wird mit
 $k:=y+1$ spezialisiert. Per Modus ponens erhält man den Widerspruch
 $y+1\le y$. Ergo muss die Annahme falsch sein, was äquivalent zu
