@@ -1,0 +1,462 @@
+\documentclass[8pt,fleqn,aspectratio=169]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+% \documentclass[8pt,aspectratio=169]{beamer}
+\setbeamersize{text margin left=6em}
+\setbeamersize{text margin right=6em}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+\lstdefinelanguage{IMP}{sensitive=true, keywords={
+  true, false, skip, if, then, else, end, while, do, not, and, or}}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\kw}[1]{\textbf{\texttt{#1}}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\qb}[1]{[\!\![#1]\!\!]}
+\newcommand{\Bool}{\mathrm{Bool}}
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\Loc}{\mathrm{Loc}}
+\newcommand{\Aexp}{\mathrm{Aexp}}
+\newcommand{\Bexp}{\mathrm{Bexp}}
+\newcommand{\Com}{\mathrm{Com}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Abb}{\mathrm{Abb}}
+
+\title{Programmverifikation}
+% \subtitle{Untertitel}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}
+\centerheadline{Die Sprache IMP}
+\end{frame}
+
+\begin{frame}
+Grundlegende Aspekte der Semantik von Programmiersprachen klären wir
+anhand von IMP, einer minimalistischen imperativen Programmiersprache,
+die uns als Studienobjekt dienen wird.
+\end{frame}
+
+\begin{frame}[fragile]
+
+Beispiel für ein Programm in IMP:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent]
+y := 1;
+while not n = 0 do
+   y := y*x;
+   n := n - 1
+end
+\end{lstlisting}\pause
+Es berechnet zu ganzen Zahlen $\code{x},\code{n}$ mit $\code{n}\ge 0$
+die Potenz $\code{y} = \code{x}^{\code{n}}$. Klar ersichtlich.\pause
+
+\parspace
+Das \emph{schnelle Exponentiation} genannte Programm
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent]
+y := 1;
+while 2 <= n do
+   q := n/2; r := n - 2*q;
+   if r = 1 then y := y*x else skip end;
+   n := q; x := x*x
+end;
+if n = 1 then y := y*x else skip end
+\end{lstlisting}
+berechnet die Potenz ebenfalls. Immer noch klar ersichtlich?
+
+\parspace
+Wir würden dies gern \emph{beweisen}.
+\end{frame}
+
+\begin{frame}
+Zunächst wird eine formale Definition der Sprache IMP unternommen.\pause
+
+\parspace
+Es sei $\Int$ die Menge der ganzen Zahlen im Dezimalsystem. Während also
+$\Z$ die Menge der ganzen Zahlen bezeichnet, besteht $\Int$ aus konkreten
+syntaktischen Darstellungen der Zahlen aus $\Z$.\pause
+
+\parspace
+Entsprechend sei $\Bool:=\{\kw{false},\kw{true}\}$, wobei die
+Symbole \kw{false} und \kw{true} syntaktische Darstellungen der
+Wahrheitswerte seien.
+\end{frame}
+
+\begin{frame}
+Ein \strong{arithmetischer Ausdruck} $a$, kurz \strong{Term}, sei durch die
+folgenden Produktionsregeln festgelegt.
+\begin{itemize}
+\item Eine ganze Zahl aus $\Int$ ist ein Term.
+\item Eine Variable aus $\Loc$ ist ein Term.
+\item Sind $a,a'$ Terme, so sind auch $a+a'$, $a-a'$, $a*a'$, $a\,/\,a'$ Terme.
+\item Nichts anderes ist ein Term.
+\end{itemize}
+{\footnotesize Wir fassen die Terme hierbei als abstrakte Syntaxbäume auf.
+Auf die genaue Grammatik und die Konstruktion eines Parsers will ich
+an dieser Stelle nicht näher eingehen, damit der Fokus auf die
+eigentliche Problemstellung nicht verloren geht. Die Operationen sollen
+auf die gewöhnliche Art geschrieben werden, die Operatoren dabei die
+gewöhnliche Rangfolge besitzen.}
+\end{frame}
+
+\begin{frame}
+Ein \strong{boolescher Ausdruck} $b$, kurz \strong{Ausdruck}, sei durch
+die folgenden Produktionsregeln festgelegt.
+\begin{itemize}
+\item Die Symbole \kw{false} und \kw{true} sind Ausdrücke.
+\item Sind $a,a'$ Terme, so sind $a=a'$ und $a <= a'$ Ausdrücke.
+\item Ist $b$ ein Ausdruck, so ist auch $\kw{not}\;b$ ein Ausdruck.
+\item Sind $b,b'$ Ausdrücke, so sind auch $b\;\kw{and}\;b$ und $b\;\kw{or}\;b$ Ausdrücke.
+\item Nichts anderes ist ein Ausdruck.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ein \strong{Kommando} $c$, auch \strong{Programm} genannt, sei durch die
+folgenden Produktionsregeln festgelegt.
+\begin{itemize}
+\item Das Symbol \kw{skip} ist ein Kommando.
+\item Ist $X$ eine Variable und $a$ ein Term, so ist $X:=a$ ein Kommando.
+\item Sind $c,c'$ Kommandos, so ist auch $c$; $c'$ ein Kommando.
+\item Ist $b$ ein Ausdruck und sind $c,c'$ Kommandos, so ist auch\\
+  \kw{if} $b$ \kw{then} $c_1$ \kw{else} $c_2$ \kw{end} ein Kommando.
+\item Ist $b$ ein Ausdruck und $c$ ein Kommando, so ist auch\\
+  \kw{while} $b$ \kw{do} $c$ \kw{end} ein Kommando.
+\item Nichts anderes ist ein Kommando.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Denotationelle Semantik}
+\end{frame}
+
+\begin{frame}
+Wir bezeichnen
+\begin{itemize}
+\item mit $\Aexp$ die Menge der arithmetischen Ausdrücke,
+\item mit $\Bexp$ die Menge der booleschen Ausdrücke
+\item mit $\Com$ die Menge der Kommandos.
+\end{itemize}\pause
+Will man nun einen arithmetischen Ausdruck auswerten, denkt
+man sich dafür eine Funktion $A\colon\Aexp\to\Int$. Es ist
+\[A\qb{(1+2)} = 3\]
+usw. Nun kann ein arithmetischer Ausdruck aber auch Variablen enthalten,
+womit bspw. auch der Wert $A\qb{(\code{x}+1)}$ bezüglich $\code{x}\in\Loc$
+bestimmt sein muss.
+\end{frame}
+
+\begin{frame}
+Die Auswertungsfunktion $A$ wird daher parametrisiert durch den aktuellen
+Zustand $s$. Wir haben also $A\colon\Aexp\to (S\to\Int)$
+bzw. $A\colon\Aexp\times S\to Z$.\pause
+
+\parspace
+Einen \strong{Zustand} $s$ modellieren wir schlicht als die Belegung
+der verfügbaren Variablen, also als eine Funktion $s\in S$ mit
+$S:=\Abb(\Loc,\Int)$.\pause
+
+\parspace
+Zum Beispiel
+\[s(X) := \begin{cases}
+1, & \text{wenn $X=\code{x}$},\\
+2, & \text{wenn $X=\code{y}$},\\
+0 & \text{sonst}. 
+\end{cases}\]
+\end{frame}
+
+\begin{frame}
+Wir legen $A\colon\Aexp\to (S\to\Int)$ rekursiv fest gemäß
+\begin{gather*}
+A\qb{n}(s) := n,\\
+A\qb{X}(s) := s(X),\\
+A\qb{(a+a')}(s) := A\qb{a}(s) + A\qb{a'}(s),\\
+A\qb{(a-a')}(s) := A\qb{a}(s) - A\qb{a'}(s),\\
+A\qb{(a*a')}(s) := A\qb{a}(s) \cdot A\qb{a'}(s),\\
+A\qb{(a\,/\,a')}(s) := A\qb{a}(s)\,/\, A\qb{a'}(s).
+\end{gather*}
+bezüglich $n\in\Int$, $X\in\Loc$ und $a,a'\in\Aexp$.
+Die Operationen auf der rechten Seite sind hierbei auf die übliche
+Art und Weise berechnet. Wir verwenden euklidische Ganzzahldivision
+und setzen $n\,/\,0:=0$ für jedes $n\in\Int$.
+\end{frame}
+
+\begin{frame}
+Wir legen $B\colon\Bexp\to (S\to\Bool)$ rekursiv fest gemäß
+\begin{gather*}
+B\qb{\kw{false}}(s) := \kw{false},\\
+B\qb{\kw{true}}(s) := \kw{true},\\
+B\qb{a \;\code{=}\; a'}(s) := (A\qb{a}(s) = A\qb{a'}(s)),\\
+B\qb{a \;\code{<=}\; a'}(s) := (A\qb{a}(s)\le A\qb{a'}(s)),\\
+B\qb{(\kw{not}\;b)} := \lnot B\qb{b}(s),\\
+B\qb{(b\;\kw{and}\;b')} := B\qb{b}(s)\land B\qb{b'}(s),\\
+B\qb{(b\;\kw{or}\;b')} := B\qb{b}(s)\lor B\qb{b'}(s),
+\end{gather*}
+bezüglich $a,a'\in\Aexp$ und $b,b'\in\Bexp$. Die Relationen bzw. Verknüpfungen
+auf der rechten Seite werden hierbei auf die übliche Art und Weise berechnet.
+\end{frame}
+
+\begin{frame}
+Wir legen $C\colon\Com\to (S\rightharpoonup S)$ rekursiv fest gemäß
+\begin{gather*}
+C\qb{\kw{skip}}(s) := s,\\
+C\qb{X:=a}(s) := s[X:=A\qb{a}(s)],\\
+C\qb{c; c'}(s) := C\qb{c'}(C\qb{c}(s)) = (C\qb{c'}\circ C\qb{c})(s),\\
+C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) := \begin{cases}
+C\qb{c}(s),& \text{wenn $B\qb{b}(s)=\kw{true}$},\\
+C\qb{c'}(s)& \text{sonst}.
+\end{cases}\\
+C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) := \begin{cases}
+\varphi_{b,c}(C\qb{c}(s)),& \text{wenn $B\qb{b}(s)=\kw{true}$},\\
+s & \text{sonst}
+\end{cases}
+\end{gather*}
+mit $\varphi_{b,c}(s) := C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s)$.\pause
+
+\parspace
+Bei $C\qb{c}$ handelt es sich um eine partielle Funktion, da die rekursive Auswertung
+der while"=Schleife unter Umständen nicht terminiert -- zum Beispiel bei
+\[\texttt{\kw{while} \kw{true} \kw{do} \kw{skip} \kw{end}}.\]
+\end{frame}
+
+\begin{frame}
+\centerheadline{Die Zusicherungssprache}
+\end{frame}
+
+\begin{frame}
+\emph{Zusicherungen} sind Aussagen, die man in einem bestimmten Zustand als
+erfüllt sehen will. Zum Beispiel ist nach der Ausführung des Kommandos
+$\code{y := x*x}$ die Zusicherung $\code{y}\ge 0$
+erfüllt.\pause
+
+\parspace
+Zusicherungen sind logische Formeln, die der Sprache der einsortigen Logik
+erster Stufe enstammen sollen. Die logische Sprache wird passend zur
+Programmiersprache IMP definiert, dergestalt dass das Diskursuniversum
+$\Int$ sei und die Variablen aus $\Loc$ in den Termen auftauchen dürfen.
+Benötigte Funktionssymbole der Signatur $\Int^n\to\Int$ und
+Relationssymbole der Signatur $\Int^n\to\Bool$ zu $n\in\N_{\ge 0}$ kann man
+je nach Bedarf in ihrer üblichen Bedeutung hinzufügen; die Operatoren
+von IMP sollen dabei aber mindestens verfügbar sein.\pause
+
+\parspace
+Wir müssen nun allerdings zwischen Variablen $x,y,z$ und Variablen
+$\code{x},\code{y},\code{z}\in\Loc$ unterscheiden. Die kursiven tauchen
+als freie und gebundene Variablen in den Formeln auf. Die aufrechten
+verhalten sich dagegen wie Konstantensymbole, über sie kann nicht
+quantifiziert werden.
+\end{frame}
+
+\begin{frame}
+Die Notation $I,s\models A$ stehe für die Aussage, dass
+die Interpretation $I=(\mathcal M,\beta)$ und der Zustand $s$
+die Formel $A$ erfüllen. Hierbei ist $\mathcal M$ eine Struktur, die
+die Bedeutung der Funktions- und Relationssymbole festlegt,
+und $\beta$ eine Belegung der kursiven Variablen. Der Zustand $s$
+belegt die aufrechten Variablen. {\footnotesize Die Definition der
+Erfüllung geschieht analog zur gewöhnlichen Logik erster Stufe, weshalb
+ich sie hier nicht näher ausführen will.}\pause
+
+\parspace
+Wir betrachten nur das Modell $\mathcal M_0$, das die Symbole mit ihrer üblichen
+Bedeutung versieht. Daher sei $\mathcal I_0:=\{(\mathcal M,\beta)\mid\mathcal M=\mathcal M_0\}$,
+das heißt, $\mathcal I_0$ sei die Menge der Interpretationen, deren Struktur
+$\mathcal M_0$ ist.\pause
+
+\parspace
+Wir schreiben später $s\models A$ als Abkürzung für $I,s\models A$,
+sofern sich dadurch keine Zweideutigkeiten ergeben.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Der Hoare-Kalkül}
+\end{frame}
+
+\begin{frame}[fragile]
+An ein Kommando $c$ können wir Zusicherungen machen. Wir notieren
+$\{A\}c\{B\}$ für die Aussage, dass die Aussage $B$ unter allen Umständen
+nach der Ausführung von $c$ erfüllt ist, sofern die Aussage $A$ zuvor
+erfüllt war. Man nennt $A$ diesbezüglich eine \emph{Vorbedingung}
+und $B$ eine \emph{Nachbedingung} von $c$.\pause
+
+\parspace
+Beispiel für ein allgemeingültiges Tripel:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\kw{true}\}$
+y := x*x
+$\{\code{y}\ge 0\}$
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+Die Allgemeingültigkeit des Tripels $\{A\}c\{B\}$ wird dahingehend
+definiert als
+\[(\models\{A\}c \{B\}) \;:\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
+(I,s\models A)\Rightarrow\forall s'\in S\colon C\qb{c}(s)=s'\Rightarrow (I,s'\models B).\]\pause
+{\footnotesize In Bezug auf IMP ist der Wert $s'$,
+sofern $C\qb{c}(s)$ existiert, eindeutig bestimmt.
+Denken wir uns nun den ungültigen Zustand $\bot$, der sich ergeben soll,
+wenn $c$ eine nicht terminierende Schleife ist, bekommt man eine totale Funktion
+$C\qb{c}\colon S\cup\{\bot\}\to S\cup\{\bot\}$, wobei $C\qb{c}(\bot):=\bot$
+gesetzt wird. Diesbezüglich verkürzt sich die Allgemeingültigkeit zu
+\[(\models\{A\}c \{B\}) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
+(I,s\models A)\Rightarrow (I,C\qb{c}(s)\models B).\]
+Hierbeit verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.}
+\end{frame}
+
+\begin{frame}
+\strong{Bemerkung.}
+Wir können die Zusicherungssprache erweitern um eine modale Operation
+$\Box_c B$ je Kommando $c$, üblicherweise $[c]B$ geschrieben.\pause{} Deren Semantik sei
+\[(I,s\models [c]B) \;:\Leftrightarrow\; \forall s'\in S\colon R_c(s,s')\Rightarrow (I,s'\models B)\]
+mit der Zugänglichkeitsrelation $R_c(s,s')\,:\Leftrightarrow\, C\qb{c}(s)=s'$.\pause
+
+\parspace
+Diesbezüglich sind $\{A\}c\{B\}$ und $A\to [c]B$ semantisch äquivalent.\pause
+
+\parspace
+Die so erweiterte Logik nennt man die \emph{dynamische Logik} von IMP.
+Die denotationelle Semantik nimmt hierbei die Rolle einer Kripke"=Semantik
+ein, wobei die Zustände die Kripke"=Welten sind.
+\end{frame}
+
+\begin{frame}[fragile]
+Wir diskutieren nun die \strong{Schlussregeln} des Kalküls.\pause
+
+\parspace
+Für Zuweisungen gilt
+\[\dfrac{}{\vdash\{A[X:=a]\}X:=a\{A\}},\]
+eine Schlussregel ohne Prämissen. Mit $A[X:=a]$ ist hierbei die
+Formel gemeint, die aus $A$ hervorgeht, indem jedes Vorkommen von
+$X$ in $A$ durch den Term $a$ ersetzt wird.\pause
+
+\parspace
+Zum Beispiel erkennt man das Tripel
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\code{x}\ge 0\}$
+x := x + 1
+$\{\code{x}\ge 1\}$
+\end{lstlisting}
+unschwer als allgemeingültig. Dieses fällt unter die Fittiche der
+Regel, indem $X:=\code{x}$, $a:=\code{x}+1$ und $A:=(\code{x}\ge 1)$
+gesetzt wird. Damit ergibt sich $A[X:=a]$ zu $\code{x} + 1\ge 1$,
+was logisch äquivalent zu $\code{x}\ge 0$ ist.
+\end{frame}
+
+\begin{frame}
+Zur Gültigkeit der Regel. Wir wollen also
+\[\models\{A[X:=a]\}X:=a\{A\}\]
+zeigen.\pause{} Sei dazu $s$ fest, aber beliebig. Es gelte $s\models A[X:=a]$.
+Des Weiteren gelte $C\qb{X:=a}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
+
+\parspace
+Gemäß der denotationellen Semantik gilt $C\qb{X:=a}(s)=s[X:=a]$, womit
+wir $s'=s[X:=a]$ haben. Schließlich folgt die Behauptung vermittels
+der Äquivalenz
+\[(s\models A[X:=a])\;\Leftrightarrow\; (s[X:=a]\models A),\]
+die man unschwer als richtig erkennt oder pedantisch per struktureller
+Induktion über den Aufbau von $A$ beweisen kann.
+\end{frame}
+
+\begin{frame}
+Die Regel zu \kw{skip} lautet
+\[\dfrac{}{\vdash\{A\}\kw{skip}\{A\}}.\]\pause
+Zur Gültigkeit der Regel. Wir wollen $\models\{A\}\kw{skip}\{B\}$ zeigen.
+Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
+gelte $C\qb{\kw{skip}}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
+
+\parspace
+Gemäß der denotationellen Semantik gilt $C\qb{\kw{skip}}(s)=s$, womit
+wir $s'=s$ und somit bereits die Behauptung haben.
+\end{frame}
+
+\begin{frame}
+Die Regel für Sequenzen von Kommandos lautet
+\[\dfrac{\vdash\{A\}c\{B\}\qquad \vdash\{B\}c'\{C\}}{\vdash\{A\}c; c'\{C\}}.\]\pause
+Zur Gültigkeit der Regel. Wir wollen $\models\{A\} c; c'\{C\}$ zeigen.
+Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
+gelte $C\qb{c;c'}(s)=s''$. Zu zeigen ist $s''\models C$.\\
+{\footnotesize Die letzten beiden C's stehen für Unterschiedliches; aber eine
+Verwechslung ist ausgeschlossen, denke ich.}\pause
+
+\parspace
+Gemäß der denotationellen Semantik existiert $s'=C\qb{c}(s)$ mit
+\[C\qb{c;c'}(s) = C\qb{c'}(s')=s''.\]
+Aus $s\models A$ und $\models\{A\}c\{B\}$ folgt nun zunächst $s'\models B$.
+Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus $s'\models B$.
+\end{frame}
+
+\begin{frame}
+\strong{Literatur}
+\begin{itemize}
+\item Glynn Winskel:
+  \emph{The Formal Semantics of Programming Languages: An Introduction}.
+  The MIT Press, 1993.
+\item David Harel, Dexter Kozen, Jerzy Tiuryn:
+  \emph{Dynamic Logic}. The MIT Press, 2000.
+\item Benjamin C. Pierce u.\,a.:
+  \href{https://softwarefoundations.cis.upenn.edu/}{\emph{Software Foundations}}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\strong{Anlage}
+
+\parspace
+\href{https://github.com/JohnBSmith/JohnBSmith.github.io/tree/master/Informatik/Programmverifikation/imp}{%
+IMP-Interpreter} -- Führt ein IMP-Programm gemäß der denotationellen
+Semantik aus. In Python verfasst, unter 300 Zeilen Quelltext.
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{Dezember 2024}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+\end{document}
