@@ -1,4 +1,5 @@
 
+export TEXINPUTS=~/.local/share/tex0:
 name=Programmverifikation
 path=/tmp/$name-eabc
 

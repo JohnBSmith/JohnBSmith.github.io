@@ -58,6 +58,15 @@ def scan(s):
         elif s[i] == ':' and i + 1 < n and s[i+1] == '=':
             tokens.append(Token(SYMBOL, ":=", line, col))
             i += 2; col += 2
+        elif s[i] == '{':
+            count = 1; i += 1
+            while i < n and count != 0:
+                if s[i] == '{': count += 1
+                elif s[i] == '}': count -= 1
+                if s[i] == '\n':
+                    i += 1; line +=1; col = 0
+                else:
+                    i += 1; col += 1
         else:
             tokens.append(Token(SYMBOL, s[i], line, col))
             i += 1; col += 1
@@ -182,11 +191,17 @@ def parse(tokens):
             "Expected ';' or end of input")
     return x
 
+def sgn(x):
+    return 0 if x == 0 else -1 if x < 0 else 1
+
+def div(x, y):
+    return 0 if y == 0 else sgn(y)*(x//abs(y))
+
 def A(a, s):
     if type(a) is int:
         return a
     elif type(a) is str:
-        return s[a]
+        return s[a] if a in s else 0
     else:
         op = a[0]; x = A(a[1], s); y = A(a[2], s)
         if op == "+":
@@ -196,7 +211,7 @@ def A(a, s):
         elif op == "*":
             return x*y
         elif op == "/":
-            return 0 if y == 0 else x//y
+            return div(x, y)
     raise ValueError("unreachable")
 
 def B(b, s):
@@ -239,12 +254,13 @@ def C(c, s):
         raise ValueError("unreachable")
 
 def main():
-    s = read(argv[1])
+    source_code = read(argv[1])
     try:
-        tokens = scan(s)
+        tokens = scan(source_code)
         c = parse(tokens)
         s = C(c, {})
     except SyntaxError as e:
-        print(f"Syntax error in line {e.line + 1}, col {e.col + 1}:\n{e.text}.")
+        print(f"Syntax error in line {e.line + 1}, col {e.col + 1}:")
+        print(f"{e.text}.")
 
 main()

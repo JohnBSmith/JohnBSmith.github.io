@@ -41,6 +41,13 @@
 \lstdefinelanguage{IMP}{sensitive=true, keywords={
   true, false, skip, if, then, else, end, while, do, not, and, or}}
 
+\newcommand{\inferrulewidth}{0.4608pt}
+\usepackage{ebproof}
+\ebproofset{rule margin = 0.5ex}
+\ebproofset{label separation = 0.3em}
+\ebproofset{right label template={\scriptsize\inserttext}}
+\ebproofset{rule thickness=\inferrulewidth}
+
 \newcommand{\unit}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
@@ -52,7 +59,7 @@
 \newcommand{\parspace}{\vspace{0.8em}}
 \newcommand{\cond}{\rightarrow}
 \newcommand{\kw}[1]{\textbf{\texttt{#1}}}
-\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\qb}[1]{[\!\![#1]\!\!]}
 \newcommand{\Bool}{\mathrm{Bool}}
 \newcommand{\Int}{\mathrm{Int}}
@@ -88,25 +95,25 @@ die uns als Studienobjekt dienen wird.
 
 Beispiel für ein Programm in IMP:
 \begin{lstlisting}[language=IMP, xleftmargin=\mathindent]
-y := 1;
-while not n = 0 do
+y := 1; k := n;
+while not k = 0 do
    y := y*x;
-   n := n - 1
+   k := k - 1
 end
 \end{lstlisting}\pause
 Es berechnet zu ganzen Zahlen $\code{x},\code{n}$ mit $\code{n}\ge 0$
-die Potenz $\code{y} = \code{x}^{\code{n}}$. Klar ersichtlich.\pause
+die Potenz $\code{y} = \code{x}^\code{n}$. Klar ersichtlich.\pause
 
 \parspace
 Das \emph{schnelle Exponentiation} genannte Programm
 \begin{lstlisting}[language=IMP, xleftmargin=\mathindent]
-y := 1;
-while 2 <= n do
-   q := n/2; r := n - 2*q;
-   if r = 1 then y := y*x else skip end;
-   n := q; x := x*x
+y := 1; a := x; k := n;
+while 2 <= k do
+   q := k/2; r := k - 2*q;
+   if r = 1 then y := y*a else skip end;
+   k := q; a := a*a
 end;
-if n = 1 then y := y*x else skip end
+if k = 1 then y := y*a else skip end
 \end{lstlisting}
 berechnet die Potenz ebenfalls. Immer noch klar ersichtlich?
 
@@ -165,7 +172,7 @@ folgenden Produktionsregeln festgelegt.
 \item Ist $X$ eine Variable und $a$ ein Term, so ist $X:=a$ ein Kommando.
 \item Sind $c,c'$ Kommandos, so ist auch $c$; $c'$ ein Kommando.
 \item Ist $b$ ein Ausdruck und sind $c,c'$ Kommandos, so ist auch\\
-  \kw{if} $b$ \kw{then} $c_1$ \kw{else} $c_2$ \kw{end} ein Kommando.
+  \kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end} ein Kommando.
 \item Ist $b$ ein Ausdruck und $c$ ein Kommando, so ist auch\\
   \kw{while} $b$ \kw{do} $c$ \kw{end} ein Kommando.
 \item Nichts anderes ist ein Kommando.
@@ -276,7 +283,7 @@ erfüllt.\pause
 
 \parspace
 Zusicherungen sind logische Formeln, die der Sprache der einsortigen Logik
-erster Stufe enstammen sollen. Die logische Sprache wird passend zur
+erster Stufe entstammen sollen. Die logische Sprache wird passend zur
 Programmiersprache IMP definiert, dergestalt dass das Diskursuniversum
 $\Int$ sei und die Variablen aus $\Loc$ in den Termen auftauchen dürfen.
 Benötigte Funktionssymbole der Signatur $\Int^n\to\Int$ und
@@ -346,7 +353,7 @@ $C\qb{c}\colon S\cup\{\bot\}\to S\cup\{\bot\}$, wobei $C\qb{c}(\bot):=\bot$
 gesetzt wird. Diesbezüglich verkürzt sich die Allgemeingültigkeit zu
 \[(\models\{A\}c \{B\}) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
 (I,s\models A)\Rightarrow (I,C\qb{c}(s)\models B).\]
-Hierbeit verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.}
+Hierbei verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.}
 \end{frame}
 
 \begin{frame}
@@ -369,9 +376,10 @@ ein, wobei die Zustände die Kripke"=Welten sind.
 Wir diskutieren nun die \strong{Schlussregeln} des Kalküls.\pause
 
 \parspace
-Für Zuweisungen gilt
-\[\dfrac{}{\vdash\{A[X:=a]\}X:=a\{A\}},\]
-eine Schlussregel ohne Prämissen. Mit $A[X:=a]$ ist hierbei die
+\begin{block}{Regel zur Zuweisung}
+\[\dfrac{}{\vdash\{A[X:=a]\}X:=a\{A\}}\]
+\end{block}
+Eine Schlussregel ohne Prämissen. Mit $A[X:=a]$ ist hierbei die
 Formel gemeint, die aus $A$ hervorgeht, indem jedes Vorkommen von
 $X$ in $A$ durch den Term $a$ ersetzt wird.\pause
 
@@ -389,7 +397,12 @@ was logisch äquivalent zu $\code{x}\ge 0$ ist.
 \end{frame}
 
 \begin{frame}
-Zur Gültigkeit der Regel. Wir wollen also
+Ob die Rechnung stimmt, prüft man so: Man betrachtet die Nachbedingung,
+wendet auf diese die mit der Zuweisung übereinstimmende Substitution an,
+und dies muss dann in der Vorbedingung resultieren.\pause
+
+\parspace
+\strong{Beweis der Gültigkeit der Regel.} Wir wollen
 \[\models\{A[X:=a]\}X:=a\{A\}\]
 zeigen.\pause{} Sei dazu $s$ fest, aber beliebig. Es gelte $s\models A[X:=a]$.
 Des Weiteren gelte $C\qb{X:=a}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
@@ -400,25 +413,28 @@ wir $s'=s[X:=a]$ haben. Schließlich folgt die Behauptung vermittels
 der Äquivalenz
 \[(s\models A[X:=a])\;\Leftrightarrow\; (s[X:=a]\models A),\]
 die man unschwer als richtig erkennt oder pedantisch per struktureller
-Induktion über den Aufbau von $A$ beweisen kann.
+Induktion über den Aufbau von $A$ beweisen kann.\,\qedsymbol
 \end{frame}
 
 \begin{frame}
-Die Regel zu \kw{skip} lautet
-\[\dfrac{}{\vdash\{A\}\kw{skip}\{A\}}.\]\pause
-Zur Gültigkeit der Regel. Wir wollen $\models\{A\}\kw{skip}\{B\}$ zeigen.
+\begin{block}{Regel zum leeren Kommando}
+\[\dfrac{}{\vdash\{A\}\kw{skip}\{A\}}\]
+\end{block}\pause
+\strong{Beweis ihrer Gültigkeit.}
+Wir wollen $\models\{A\}\kw{skip}\{B\}$ zeigen.
 Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
 gelte $C\qb{\kw{skip}}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
 
 \parspace
 Gemäß der denotationellen Semantik gilt $C\qb{\kw{skip}}(s)=s$, womit
-wir $s'=s$ und somit bereits die Behauptung haben.
+wir $s'=s$ und somit bereits die Behauptung haben.\,\qedsymbol
 \end{frame}
 
 \begin{frame}
-Die Regel für Sequenzen von Kommandos lautet
-\[\dfrac{\vdash\{A\}c\{B\}\qquad \vdash\{B\}c'\{C\}}{\vdash\{A\}c; c'\{C\}}.\]\pause
-Zur Gültigkeit der Regel. Wir wollen $\models\{A\} c; c'\{C\}$ zeigen.
+\begin{block}{Regel zur Sequenz von Kommandos}
+\[\dfrac{\vdash\{A\}c\{B\}\qquad \vdash\{B\}c'\{C\}}{\vdash\{A\}c; c'\{C\}}\]
+\end{block}\pause
+\strong{Beweis ihrer Gültigkeit.} Wir wollen $\models\{A\} c; c'\{C\}$ zeigen.
 Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
 gelte $C\qb{c;c'}(s)=s''$. Zu zeigen ist $s''\models C$.\\
 {\footnotesize Die letzten beiden C's stehen für Unterschiedliches; aber eine
@@ -428,7 +444,156 @@ Verwechslung ist ausgeschlossen, denke ich.}\pause
 Gemäß der denotationellen Semantik existiert $s'=C\qb{c}(s)$ mit
 \[C\qb{c;c'}(s) = C\qb{c'}(s')=s''.\]
 Aus $s\models A$ und $\models\{A\}c\{B\}$ folgt nun zunächst $s'\models B$.
-Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus $s'\models B$.
+Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus
+$s'\models B$.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\begin{block}{Regel zur Verzweigung}
+\[\dfrac{\vdash\{A\land b\}c\{C\}\qquad\vdash\{A\land\lnot b\}c'\{C\}}{
+\vdash\{A\}\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}\{C\}}\]
+\end{block}\pause
+\strong{Beweis ihrer Gültigkeit.} Sei $s$ fest, aber beliebig.
+Es gelte $s\models A$. Des Weiteren gelte
+\[C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = s'.\]
+Zu zeigen ist $s'\models C$.\pause{} Fallunterscheidung. Im Fall
+$B\qb{b}(s)=\kw{true}$ gilt $s\models b$, also $s\models A\land b$.
+Außerdem ergibt sich in diesem Fall die Vereinfachung
+\[C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = C\qb{c}(s).\]
+Vermittels $\models\{A\land b\}c\{C\}$ erhalten wir somit $s'\models C$.
+Die Argumentation im Fall $B\qb{b}(s)=\kw{false}$ verläuft analog.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\begin{block}{Regel zur Schleife}
+\[\dfrac{\vdash\{A\land b\}c\{A\}}{
+\vdash\{A\}\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}\{A\land\lnot b\}}\]
+\end{block}\pause
+Sofern $A$ also sowohl vor der Schleife gilt, als auch vor und hinter
+dem Schleifenrumpf, muss $A$ auch hinter der Schleife gelten. Man nennt
+$A$ hierbei eine \emph{Schleifeninvariante}. Die Auffindung einer
+zielführenden Invariante stellt eine wesentliche Schwierigkeit bei der
+Programmverifikation dar.
+\end{frame}
+
+\begin{frame}
+\strong{Beweis ihrer Gültigkeit.} Sei $s$ fest, aber beliebig.
+Es gelte $s\models A$. Des Weiteren gelte
+\[C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) = s''.\]
+Zu zeigen ist $s''\models A\land\lnot b$.\pause{} Induktion über die
+Anzahl der Durchläufe. Im Anfang findet kein Durchlauf statt. Das
+geht aber nur, wenn $B\qb{b}(s)=\kw{false}$, also $s\models\lnot b$.
+Da dem Zustand $s$ nach der Semantik der Schleife in diesem Fall keine Änderung
+widerfährt, gilt $s=s''$. Demnach gilt $s''\models A$ und $s''\models\lnot b$,
+also $s''\models A\land\lnot b$.\pause
+
+\parspace
+Zum Induktionsschritt. Da die Schleife durchlaufen wird, existiert
+$s'$ mit $C\qb{c}(s)=s'$. Die restlichen null der mehr Schleifendurchläufe
+führen dann zum Zustand $s''$, das heißt, $\varphi_{b,c}(s')=s''$.
+Die Induktionsvoraussetzung ist, dass $s''\models A\land\lnot b$
+aus $s'\models A$ folgt. Es verbleibt also $s'\models A$ zu zeigen.
+Weil der erste Durchlauf stattfindet, muss des Weiteren $B\qb{b}(s)=\kw{true}$,
+also $s\models b$ gelten, womit wir $s\models A\land b$ haben.
+Vermittels $\models\{A\land b\}c\{A\}$, was ja Kraft der Prämisse der Regel
+zur Verfügung steht, erhält man schließlich $s'\models A$.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\begin{block}{Regel zur Verstärkung der Vorbedingung}
+\[\dfrac{\vdash A'\Rightarrow A\qquad\vdash\{A\}c\{B\}}{
+\vdash\{A'\}c\{B\}}\]
+\end{block}\pause
+\strong{Beweis ihrer Gültigkeit.} Es gelte $s\models A'$.
+Des Weiteren gelte $C\qb{c}(s)=s'$. Zu zeigen ist $s'\models B$.\pause{}
+Mit $\models A'\Rightarrow A$ erhält man zunächst $s\models A$.
+Mit $\models\{A\}c\{B\}$ daraufhin $s'\models B$.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\begin{block}{Regel zur Abschwächung der Nachbedingung}
+\[\dfrac{\vdash\{A\}c\{B\}\qquad\vdash B\Rightarrow B'}{
+\vdash\{A\}c\{B'\}}\]
+\end{block}\pause
+\strong{Beweis ihrer Gültigkeit.} Es gelte $s\models A$.
+Des Weiteren gelte $C\qb{c}(s)=s'$. Zu zeigen ist $s'\models B'$.\pause{}
+Mit $\models\{A\}c\{B\}$ erhält man zunächst $s'\models B$. Mit
+$\models B\Rightarrow B'$ erhält man daraufhin $s'\models B'$.\,\qedsymbol.
+\end{frame}
+
+\begin{frame}
+\begin{block}{Ersetzungsregeln}
+\[\dfrac{\vdash A\Leftrightarrow A'\qquad\vdash\{A\}c\{B\}}{
+  \vdash\{A'\}c\{B\}},\qquad
+\dfrac{\vdash B\Leftrightarrow B'\qquad\vdash\{A\}c\{B\}}{
+  \vdash\{A\}c\{B'\}}\]
+\end{block}\pause
+\strong{Beweis.} Folgt unmittelbar aus der Regel zur Verstärkung der
+Vorbedingung bzw. Abschwächung der Nachbedingung.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+\centerheadline{Verfikation des ersten Programms}
+\end{frame}
+
+\begin{frame}[fragile]
+Gesucht ist ein Beweis des Tripels:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\code{n}\ge 0\}$
+y := 1; k := n;
+while not k = 0 do
+   y := y*x;
+   k := k - 1
+end
+$\{\code{y} = \code{x}^\code{n}\}$
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Vermittels der Regel zur Zuweisung -- zuzüglich Reflexivität der
+Gleichheit und der Ersetzungsregel -- ergibt sich erst einmal die Ableitung:
+\[\begin{prooftree}
+  \infer0{\vdash \code{n}\ge 0\,\Leftrightarrow\,\code{n}\ge 0\land 1 = 1}
+  \infer0{\vdash\{\code{n}\ge 0\land 1 = 1\}\;\code{y := 1}\;\{\code{n}\ge 0\land\code{y} = 1\}}
+\infer2{\vdash\{\code{n}\ge 0\}\;\code{y := 1}\;\{\code{n}\ge 0\land\code{y} = 1\}}
+\end{prooftree}\]\pause
+Wir fügen bereits ermittelte Zusicherungen in den Quelltext ein:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\code{n}\ge 0\}$
+y := 1; k := n;
+$\{\code{k}\ge 0\land\code{y} = 1\}$
+while not k = 0 do
+   y := y*x;
+   k := k - 1
+end
+$\color{gray}\{\code{y} = \code{x}^\code{n}\}?$
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Die Zielführende Schleifeninvariante ist hier $\code{y} =
+\code{x}^{\code{n}-\code{k}}$. Vor der Schleife gilt ja $\code{n}=\code{k}$.
+Mit $\code{x}^0 = 1$ kommt man somit auf $\code{y} = 1$.
+{\footnotesize Bezüglich $0^0:=1$ gilt dies auch im Fall $\code{x}=0$.}\pause{}
+
+\parspace
+Wir durchziehen das Programm nun gemäß der Regeln sukzessive mit
+Zusicherungen und gelangen daraufhin zum Abschluss der Verifikation:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\code{n}\ge 0\}$
+y := 1; k := n;
+$\{\code{k}\ge 0\land\code{y} = 1\land\code{y} = \code{x}^{\code{n}-\code{k}}\}$
+while not k = 0 do
+   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\}$
+   $\{\code{y}\cdot\code{x} = \code{x}^{\code{n}-\code{k}}\cdot\code{x}\}$
+   y := y*x;
+   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\cdot\code{x} = \code{x}^{\code{n}-(\code{k} - 1)}\}$
+   k := k - 1
+   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\}$
+end
+$\{\code{y} = \code{x}^{\code{n}-\code{k}}\land\code{k}=0\}$
+$\{\code{y} = \code{x}^{\code{n}}\}$
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -441,6 +606,11 @@ Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus $s'\models B$.
   \emph{Dynamic Logic}. The MIT Press, 2000.
 \item Benjamin C. Pierce u.\,a.:
   \href{https://softwarefoundations.cis.upenn.edu/}{\emph{Software Foundations}}.
+\item Krzysztof R. Apt, Ernst-Rüdiger Olderog:
+  \emph{Fifty years of Hoare’s logic}.\\
+  In: \emph{Formal Aspects of Computing}.
+  Band 31, Nr. 6, 2019, S. 751--807.\\
+  \href{https://doi.org/10.1007/s00165-019-00501-3}{doi:10.1007/s00165-019-00501-3}.
 \end{itemize}
 \end{frame}
 
@@ -450,7 +620,7 @@ Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus $s'\models B$.
 \parspace
 \href{https://github.com/JohnBSmith/JohnBSmith.github.io/tree/master/Informatik/Programmverifikation/imp}{%
 IMP-Interpreter} -- Führt ein IMP-Programm gemäß der denotationellen
-Semantik aus. In Python verfasst, unter 300 Zeilen Quelltext.
+Semantik aus. In Python verfasst, in unter 300 Zeilen Quelltext.
 \end{frame}
 
 \begin{frame}
