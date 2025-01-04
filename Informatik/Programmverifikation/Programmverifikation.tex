@@ -157,7 +157,7 @@ Ein \strong{boolescher Ausdruck} $b$, kurz \strong{Ausdruck}, sei durch
 die folgenden Produktionsregeln festgelegt.
 \begin{itemize}
 \item Die Symbole \kw{false} und \kw{true} sind Ausdrücke.
-\item Sind $a,a'$ Terme, so sind $a=a'$ und $a <= a'$ Ausdrücke.
+\item Sind $a,a'$ Terme, so sind $a\;\code{=}\;a'$ und $a \;\code{<=}\; a'$ Ausdrücke.
 \item Ist $b$ ein Ausdruck, so ist auch $\kw{not}\;b$ ein Ausdruck.
 \item Sind $b,b'$ Ausdrücke, so sind auch $b\;\kw{and}\;b$ und $b\;\kw{or}\;b$ Ausdrücke.
 \item Nichts anderes ist ein Ausdruck.
@@ -169,7 +169,7 @@ Ein \strong{Kommando} $c$, auch \strong{Programm} genannt, sei durch die
 folgenden Produktionsregeln festgelegt.
 \begin{itemize}
 \item Das Symbol \kw{skip} ist ein Kommando.
-\item Ist $X$ eine Variable und $a$ ein Term, so ist $X:=a$ ein Kommando.
+\item Ist $X$ eine Variable aus $\mathrm{Loc}$ und $a$ ein Term, so ist $X:=a$ ein Kommando.
 \item Sind $c,c'$ Kommandos, so ist auch $c$; $c'$ ein Kommando.
 \item Ist $b$ ein Ausdruck und sind $c,c'$ Kommandos, so ist auch\\
   \kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end} ein Kommando.
@@ -192,9 +192,9 @@ Wir bezeichnen
 \end{itemize}\pause
 Will man nun einen arithmetischen Ausdruck auswerten, denkt
 man sich dafür eine Funktion $A\colon\Aexp\to\Int$. Es ist
-\[A\qb{(1+2)} = 3\]
+\[A\qb{1+2} = 3\]
 usw. Nun kann ein arithmetischer Ausdruck aber auch Variablen enthalten,
-womit bspw. auch der Wert $A\qb{(\code{x}+1)}$ bezüglich $\code{x}\in\Loc$
+womit bspw. auch der Wert $A\qb{\code{x}+1}$ bezüglich $\code{x}\in\Loc$
 bestimmt sein muss.
 \end{frame}
 
@@ -228,7 +228,7 @@ A\qb{(a*a')}(s) := A\qb{a}(s) \cdot A\qb{a'}(s),\\
 A\qb{(a\,/\,a')}(s) := A\qb{a}(s)\,/\, A\qb{a'}(s).
 \end{gather*}
 bezüglich $n\in\Int$, $X\in\Loc$ und $a,a'\in\Aexp$.
-Die Operationen auf der rechten Seite sind hierbei auf die übliche
+Die Operationen auf der rechten Seite werden hierbei auf die übliche
 Art und Weise berechnet. Wir verwenden euklidische Ganzzahldivision
 und setzen $n\,/\,0:=0$ für jedes $n\in\Int$.
 \end{frame}
@@ -244,8 +244,9 @@ B\qb{(\kw{not}\;b)} := \lnot B\qb{b}(s),\\
 B\qb{(b\;\kw{and}\;b')} := B\qb{b}(s)\land B\qb{b'}(s),\\
 B\qb{(b\;\kw{or}\;b')} := B\qb{b}(s)\lor B\qb{b'}(s),
 \end{gather*}
-bezüglich $a,a'\in\Aexp$ und $b,b'\in\Bexp$. Die Relationen bzw. Verknüpfungen
-auf der rechten Seite werden hierbei auf die übliche Art und Weise berechnet.
+bezüglich $a,a'\in\Aexp$ und $b,b'\in\Bexp$. Der Wahrheitswert der
+Relationen bzw. Verknüpfungen auf der rechten Seite wird hierbei auf die
+übliche Art und Weise berechnet.
 \end{frame}
 
 \begin{frame}
@@ -364,12 +365,58 @@ $\Box_c B$ je Kommando $c$, üblicherweise $[c]B$ geschrieben.\pause{} Deren Sem
 mit der Zugänglichkeitsrelation $R_c(s,s')\,:\Leftrightarrow\, C\qb{c}(s)=s'$.\pause
 
 \parspace
-Diesbezüglich sind $\{A\}c\{B\}$ und $A\to [c]B$ semantisch äquivalent.\pause
+Diesbezüglich sind $\{A\}c\{B\}$ und $A\Rightarrow [c]B$ semantisch äquivalent.\pause
 
 \parspace
 Die so erweiterte Logik nennt man die \emph{dynamische Logik} von IMP.
 Die denotationelle Semantik nimmt hierbei die Rolle einer Kripke"=Semantik
 ein, wobei die Zustände die Kripke"=Welten sind.
+\end{frame}
+
+\begin{frame}
+Ein Tripel $\{A\}c\{B\}$ fordert allerdings nicht, dass $c$ terminiert;
+lediglich dass $B$ gilt, \emph{falls} $c$ terminiert. Man nennt ein
+solches Programm \emph{partiell korrekt} in Bezug auf $A,B$.\pause
+
+\parspace
+Terminiert das Programm zusätzlich, nennen wir es \emph{total korrekt}
+in Bezug auf $A,B$ und notieren dies $[A]c[B]$.\pause
+
+\parspace
+Da die Semantik von IMP eine deterministische ist, ist der Zustand $s'=C\qb{c}(s)$,
+sofern dieser existiert, eindeutig bestimmt; es gibt also keine weiteren Zustände,
+an die wir $B$ fordern müssten. Daher ergibt sich
+\[(\models [A]c [B]) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
+(I,s\models A)\Rightarrow\exists s'\in S\colon C\qb{c}(s)=s'\land (I,s'\models B).\]\pause
+In Bezug auf die Modaloperation $\Diamond_c B$ bzw. $\langle c\rangle B$ mit der Semantik
+\[(s\models\langle c\rangle B)\;:\Leftrightarrow\; \exists s'\in S\colon R_c(s,s')\land (s'\models B).\]
+sind nun $[A]c[B]$ und $A\Rightarrow\langle c\rangle B$ semantisch äquivalent.
+
+\parspace
+{\footnotesize Außerdem bestehen die Äquivalenzen
+$\langle c\rangle B \Leftrightarrow \lnot [c]\lnot B$
+und $[c]B\Leftrightarrow\lnot\langle c\rangle\lnot B$.}
+\end{frame}
+
+\begin{frame}
+Die Formalismen stehen im engen Bezug zum dijkstraschen wp-Kalkül.
+Dijkstra notiert $\mathrm{wp}(c,B)$ für die schwächste Vorbedingung,
+engl. \emph{weakest precondition}, unter der das Programm $c$ in einem
+Zustand terminiert, in dem $B$ erfüllt ist. Für jede Vorbedingung $A$
+gilt daher $A\Rightarrow\mathrm{wp}(c,B)$.\pause
+
+\parspace
+Analog steht $\mathrm{wlp}(c,B)$ für die schwächste liberale
+Vorbedingung, die lediglich $B$ fordert, falls das Programm terminiert.
+Demnach sind $[c]B$ und $\mathrm{wlp}(c,B)$ bedeutungsgleich.
+Entsprechend drücken $\{A\}c\{B\}$ und $A\Rightarrow\mathrm{wlp}(c,B)$
+dasselbe aus.\pause
+
+\parspace
+Aufgrund der deterministischen Natur von IMP sind des Weiteren
+$\langle c\rangle B$ und $\mathrm{wp}(c,B)$ bedeutungsgleich.
+Entsprechend drücken $[A]c[B]$ und $A\Rightarrow\mathrm{wp(c,B)}$
+dasselbe aus.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -539,13 +586,13 @@ Vorbedingung bzw. Abschwächung der Nachbedingung.\,\qedsymbol
 \begin{frame}[fragile]
 Gesucht ist ein Beweis des Tripels:
 \begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
-$\{\code{n}\ge 0\}$
+$\{\mathtt n\ge 0\}$
 y := 1; k := n;
 while not k = 0 do
    y := y*x;
    k := k - 1
 end
-$\{\code{y} = \code{x}^\code{n}\}$
+$\{\mathtt{y = x^n}\}$
 \end{lstlisting}
 \end{frame}
 
@@ -553,47 +600,127 @@ $\{\code{y} = \code{x}^\code{n}\}$
 Vermittels der Regel zur Zuweisung -- zuzüglich Reflexivität der
 Gleichheit und der Ersetzungsregel -- ergibt sich erst einmal die Ableitung:
 \[\begin{prooftree}
-  \infer0{\vdash \code{n}\ge 0\,\Leftrightarrow\,\code{n}\ge 0\land 1 = 1}
-  \infer0{\vdash\{\code{n}\ge 0\land 1 = 1\}\;\code{y := 1}\;\{\code{n}\ge 0\land\code{y} = 1\}}
-\infer2{\vdash\{\code{n}\ge 0\}\;\code{y := 1}\;\{\code{n}\ge 0\land\code{y} = 1\}}
+  \infer0{\vdash \mathtt n\ge 0\,\Leftrightarrow\,\mathtt n\ge 0\land 1 = 1}
+  \infer0{\vdash\{\mathtt n\ge 0\land 1 = 1\}\;\code{y := 1}\;\{\mathtt n\ge 0\land\mathtt y = 1\}}
+\infer2{\vdash\{\mathtt n\ge 0\}\;\code{y := 1}\;\{\mathtt n\ge 0\land\mathtt y = 1\}}
 \end{prooftree}\]\pause
 Wir fügen bereits ermittelte Zusicherungen in den Quelltext ein:
 \begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
-$\{\code{n}\ge 0\}$
+$\{\mathtt n\ge 0\}$
 y := 1; k := n;
-$\{\code{k}\ge 0\land\code{y} = 1\}$
+$\{\mathtt k\ge 0\land\mathtt y = 1\}$
 while not k = 0 do
    y := y*x;
    k := k - 1
 end
-$\color{gray}\{\code{y} = \code{x}^\code{n}\}?$
+$\color{gray}\{\mathtt{y = x^n}\}?$
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-Die Zielführende Schleifeninvariante ist hier $\code{y} =
-\code{x}^{\code{n}-\code{k}}$. Vor der Schleife gilt ja $\code{n}=\code{k}$.
-Mit $\code{x}^0 = 1$ kommt man somit auf $\code{y} = 1$.
+Die Zielführende Schleifeninvariante ist hier $\mathtt{y =
+x^{n-k}}$. Vor der Schleife gilt ja $\mathtt{n=k}$.
+Mit $\mathtt{x}^0 = 1$ kommt man somit auf $\mathtt y = 1$.
 {\footnotesize Bezüglich $0^0:=1$ gilt dies auch im Fall $\code{x}=0$.}\pause{}
 
 \parspace
-Wir durchziehen das Programm nun gemäß der Regeln sukzessive mit
+Wir durchziehen das Programm nun gemäß den Regeln sukzessive mit
 Zusicherungen und gelangen daraufhin zum Abschluss der Verifikation:
 \begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
-$\{\code{n}\ge 0\}$
+$\{\mathtt n\ge 0\}$
 y := 1; k := n;
-$\{\code{k}\ge 0\land\code{y} = 1\land\code{y} = \code{x}^{\code{n}-\code{k}}\}$
+$\{\mathtt{k\ge \mathrm 0\land y = \mathrm 1\land y = x^{n-k}}\}$
 while not k = 0 do
-   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\}$
-   $\{\code{y}\cdot\code{x} = \code{x}^{\code{n}-\code{k}}\cdot\code{x}\}$
+   $\{\mathtt{y = x^{n-k}}\}$
+   $\{\mathtt{y\cdot x = x^{n-k}\cdot x}\}$
    y := y*x;
-   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\cdot\code{x} = \code{x}^{\code{n}-(\code{k} - 1)}\}$
+   $\{\mathtt{y = x^{n-k}\cdot x = x^{n-(k - 1)}}\}$
    k := k - 1
-   $\{\code{y} = \code{x}^{\code{n}-\code{k}}\}$
+   $\{\mathtt{y = x^{n-k}}\}$
 end
-$\{\code{y} = \code{x}^{\code{n}-\code{k}}\land\code{k}=0\}$
-$\{\code{y} = \code{x}^{\code{n}}\}$
+$\{\mathtt{y = x^{n-k}\land k=\mathrm 0}\}$
+$\{\mathtt{y = x^n}\}$
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Verifikation des zweiten Programms}
+\end{frame}
+
+\begin{frame}[fragile]
+Gesucht ist der Beweis von:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt n\ge 0\}$
+y := 1; a := x; k := n;
+while 2 <= k do
+   q := k/2; r := k - 2*q;
+   if r = 1 then y := y*a else skip end;
+   k := q; a := a*a
+end;
+if k = 1 then y := y*a else skip end
+$\{\mathtt{y = x^n}\}$
+\end{lstlisting}\pause
+
+Wir betrachten das Programm zunächst vom Ende aus. Dort findet sich das Tripel
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{(y = x^n\land k = \mathrm 0)\lor (y\cdot a = x^n\land k = \mathrm 1)}\}$
+if k = 1 then y := y*a else skip end
+$\{\mathtt{y = x^n}\}.$
+\end{lstlisting}
+Nimmt man bei der Vorbedingung nämlich die Fallunterscheidung in die
+beiden Seiten der Disjunktion vor, gelangt man in beiden Fällen
+zur Nachbedingung.
+\end{frame}
+
+\begin{frame}[fragile]
+Am Anfang der Schleife gilt $\mathtt{a^k = x^n}$, was etwas mit der
+Schleifeninvariante zu tun haben könnte. Ist diese Gleichung so
+modifizierbar, dass unter ihr die Zusicherung
+\[\mathtt{(y = x^n\land k = \mathrm 0)\lor (y\cdot a = x^n\land k = \mathrm 1)}\]
+gilt?\pause{} Ja, nämlich zu $\mathtt{y\cdot a^k = x^n}$, denn
+\begin{gather*}
+\text{im Fall $\mathtt k=0$ gilt $\mathtt{y\cdot a^k = y}$},\\
+\text{im Fall $\mathtt k=1$ gilt $\mathtt{y\cdot a^k = y\cdot a}$}.
+\end{gather*}\pause
+Die Gleichung $\mathtt{y\cdot a^k = x^n}$ gilt ebenfalls vor der
+Schleife, da dort $\mathtt y = 1$ ist. Tatsächlich stellt sie eine
+zielführende Schleifeninvariante dar. Es verbleibt also zu bestätigen,
+dass sie auch am Ende des Schleifenrumpfs gilt.\pause
+
+\parspace
+Zunächst ergibt sich
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^k = x^n}\}$
+q := k/2; r := k - 2*q
+$\{\mathtt{y\cdot a^k = x^n\land q = \big\lfloor\frac{k}{\mathrm 2}\big\rfloor
+\land r = k - \mathrm{2}q}\}.$
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Wegen $r\in\{0,1\}$ findet sich bei der Verzweigung nun
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^k = x^n\land q = \big\lfloor\frac{k}{2}\big\rfloor
+\land r = k - \mathrm 2q}\}$
+if r = 1 then y := y*a else skip end
+$\{\mathtt{((y\cdot a^{k-\mathrm 1} = x^n\land r = \mathrm 1)\lor
+(y\cdot a^k = x^n\land r = \mathrm 0))
+\land r = k - \mathrm 2q}\}.$
+\end{lstlisting}\pause
+Die lange Nachbedingung kann man kompakter fassen als
+\[\mathtt{y\cdot a^{k - r} = x^n\land r = k - \mathrm 2q},\]
+wobei sich des Weiteren $\mathtt{k - r = \mathrm 2q}$ ergibt.\pause
+
+\parspace
+Zum Rest des Schleifenrumpfs findet sich somit schließlich
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^{\mathrm 2q} = x^n}\}$
+k := q
+$\{\mathtt{y\cdot a^{\mathrm 2k} = x^n}\}$
+a := a*a
+$\{\mathtt{y\cdot a^k = x^n}\}.$
+\end{lstlisting}
+Quod erat demonstrandum.
 \end{frame}
 
 \begin{frame}
@@ -602,15 +729,20 @@ $\{\code{y} = \code{x}^{\code{n}}\}$
 \item Glynn Winskel:
   \emph{The Formal Semantics of Programming Languages: An Introduction}.
   The MIT Press, 1993.
-\item David Harel, Dexter Kozen, Jerzy Tiuryn:
-  \emph{Dynamic Logic}. The MIT Press, 2000.
-\item Benjamin C. Pierce u.\,a.:
-  \href{https://softwarefoundations.cis.upenn.edu/}{\emph{Software Foundations}}.
 \item Krzysztof R. Apt, Ernst-Rüdiger Olderog:
   \emph{Fifty years of Hoare’s logic}.\\
   In: \emph{Formal Aspects of Computing}.
   Band 31, Nr. 6, 2019, S. 751--807.\\
   \href{https://doi.org/10.1007/s00165-019-00501-3}{doi:10.1007/s00165-019-00501-3}.
+\item Edsger W. Dijkstra:
+  \emph{A Discipline of Programming}. Prentice Hall, 1976.
+\item Benjamin C. Pierce u.\,a.:
+  \href{https://softwarefoundations.cis.upenn.edu/}{\emph{Software Foundations}}.
+\item Nicolas Troquard, Philippe Balbiani:
+  \href{https://plato.stanford.edu/entries/logic-dynamic/}{\emph{Propositional Dynamic Logic}}.
+  In: \emph{The Stanford Encyclopedia of Philosophy}.
+\item David Harel, Dexter Kozen, Jerzy Tiuryn:
+  \emph{Dynamic Logic}. The MIT Press, 2000.
 \end{itemize}
 \end{frame}
 
@@ -618,14 +750,14 @@ $\{\code{y} = \code{x}^{\code{n}}\}$
 \strong{Anlage}
 
 \parspace
-\href{https://github.com/JohnBSmith/JohnBSmith.github.io/tree/master/Informatik/Programmverifikation/imp}{%
+\href{https://github.com/JohnBSmith/misc/tree/master/cs/imp}{%
 IMP-Interpreter} -- Führt ein IMP-Programm gemäß der denotationellen
 Semantik aus. In Python verfasst, in unter 300 Zeilen Quelltext.
 \end{frame}
 
 \begin{frame}
 Ende.
-\vfill\hfill\modest{Dezember 2024}\\
+\vfill\hfill\modest{Januar 2025}\\
 \hfill\modest{Creative Commons CC0 1.0}
 \end{frame}
 
