@@ -1,0 +1,233 @@
+\documentclass[8pt,fleqn,aspectratio=169]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+% \documentclass[8pt,aspectratio=169]{beamer}
+\setbeamersize{text margin left=6em}
+\setbeamersize{text margin right=6em}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+\lstdefinelanguage{IMP}{sensitive=true, keywords={
+  true, false, skip, if, then, else, end, while, do, not, and, or}}
+
+\newcommand{\inferrulewidth}{0.4608pt}
+\usepackage{ebproof}
+\ebproofset{rule margin = 0.5ex}
+\ebproofset{label separation = 0.3em}
+\ebproofset{right label template={\scriptsize\inserttext}}
+\ebproofset{rule thickness=\inferrulewidth}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\kw}[1]{\textbf{\texttt{#1}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\qb}[1]{[\!\![#1]\!\!]}
+\newcommand{\Bool}{\mathrm{Bool}}
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\Loc}{\mathrm{Loc}}
+\newcommand{\Aexp}{\mathrm{Aexp}}
+\newcommand{\Bexp}{\mathrm{Bexp}}
+\newcommand{\Com}{\mathrm{Com}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Abb}{\mathrm{Abb}}
+
+\title{Verifikation probalistischer Programme}
+% \subtitle{Untertitel}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\begin{frame}[fragile]
+Im Folgenden sei $\mathtt{random}(a,b)$ ein Zufallszahlengenerator, 
+der auf $\{a,\ldots,b\}$ gleichverteilte Zufallszahlen liefert.\pause
+
+\parspace
+Betrachten wir hierzu nun das Programm:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent]
+while not x <= 2 do
+   x := random(1, 6)
+end
+\end{lstlisting}
+Bei Terminierung des Programms haben wir $P(\mathtt x=1)=\tfrac{1}{2}$
+und $P(\mathtt x=2)=\tfrac{1}{2}$.
+
+\parspace
+\emph{Aber wie wird dies formal bewiesen?} Es mag ja Programme geben,
+die so kompliziert sind, dass nicht mehr klar ersichtlich ist, welche
+Verteilung ihre Ausgaben haben.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Probalistische denotationelle Semantik}
+\end{frame}
+
+\begin{frame}
+Bei einem gewöhnlichen Kommando $c$ gab es einen deterministischen
+Übergang vom Zustand $s\in S$ in den Zustand $s'=C\qb{c}(s)$. Bei der
+Zuweisung einer zufällig gewählten Zahl trennt sich der Pfad nun aber
+auf, wobei den erreichbaren Zielzuständen eine positive Wahrscheinlichkeit
+zukommt. Ziel des Übergangs ist so gesehen eine Zufallsgröße $Y$, wobei
+ein Zustand $s'$ mit der Wahrscheinlichkeit $P(Y=s')$ erreicht wird.\pause
+
+\parspace
+Sagen wir, bereits der Startzustand $X_0$ sei eine Zufallsgröße, die zunächst
+die Einheitsmasse in einem Zustand $s\in S$ haben kann. Zu einem gewöhnlichen
+Kommando $c$ gehört die Funktion $f\colon S\to S$ mit $f(s):=C\qb{c}(s)$,
+das die Transformation $Y=f(X)$ für Zufallsgrößen $X,Y$ induziert.\pause
+
+\parspace
+Wir definieren daher die Menge der Massefunktionen als
+\[M := \{p\colon S\cup\{\bot\}\to\R\mid \sum_{s\in S\cup\{\bot\}} p(s) = 1\}.\]
+Der probalistische Übergang zu einem Kommando erklärt sich nun als Funktion
+\[D\colon\mathrm{Com}\to (M\to M),\]
+die die Transformation der Massefunktion durch das Kommando beschreibt.
+\end{frame}
+
+\begin{frame}
+Zur Transformation einer Zufallsgröße $X$ gilt die allgemeine Beziehung
+\[P(f(X)=y) = \sum_{x\in f^{-1}(\{y\})} P(X=x) = \sum_{x\colon f(x)=y} P(X=x).\]\pause
+Demnach ergibt sich für jedes Kommando $c$ mit deterministischer Übergangsfunktion
+$C\qb{c}$ bezüglich $p(s)=P(X=s)$ der induzierte probalistische Übergang
+\[D\qb{c}(p)(s') = P(C\qb{c}(X)=s') = \sum_{s\colon C\qb{c}(s)=s'} P(X=s)
+= \sum_{s\colon C\qb{c}(s)=s'} p(s).\]\pause
+Die Beziehung gilt, wie gesagt, allerdings nur für die Kommandos,
+die \code{random} nicht enthalten. Wir müssen daher noch den
+Übergang bei allgemeinen Kommandos klären.
+\end{frame}
+
+\begin{frame}
+Zu einer Sequenz $c;c'$ gilt offenbar analog
+\[D\qb{c;c'}(p) = D\qb{c'}(D\qb{c}(p)).\]\pause
+Wir können nachrechnen, dass dies nicht der zuvor gemachten
+Feststellung im Fall deterministischer Kommandos $c,c'$ widerspricht.
+
+\parspace
+Dazu sei $f := C\qb{c}$ und $g := C\qb{c'}$. Zu zeigen gilt
+\[D\qb{c;c'}(p)(s'') \stackrel{\text{def}}=
+\hspace{-1.4em}\sum_{s\in (g\circ f)^{-1}(\{s''\})}\hspace{-1.4em} p(s) = 
+\!\!\sum_{s'\in g^{-1}(\{s''\})}\;\sum_{s\in f^{-1}(\{s'\})}\hspace{-0.5em} p(s)
+\stackrel{\text{def}}= D\qb{c'}(D\qb{c}(p))(s'').\]
+\end{frame}
+
+\begin{frame}
+Es findet sich
+\begin{gather*}
+\sum_{s\in (g\circ f)^{-1}(\{s''\})}\hspace{-1em} p(s) = P((g\circ f)(X)=s'')
+= P_X((g\circ f)^{-1}(\{s''\})) = P_X(f^{-1}(g^{-1}(\{s''\})))\\
+= P_X(f^{-1}(\bigcup\nolimits_{s'\in g^{-1}(\{s''\})}\{s'\}))
+= P_X(\bigcup\nolimits_{s'\in g^{-1}(\{s''\})}f^{-1}(\{s'\}))
+= \hspace{-1em}\sum_{s'\in g^{-1}(\{s''\})}\hspace{-1em} P_X(f^{-1}(\{s'\})),
+\end{gather*}
+weil Urbilder disjunkter Zerlegungen wieder solche sind. Und weiter
+\[P_X(f^{-1}(\{s'\})) = P_X(\bigcup\nolimits_{s\in f^{-1}(\{s'\})}\{s\})
+= \sum_{s\in f^{-1}(\{s'\})} P_X(\{s\})\]
+mit $P_X(\{s\}) = P(X^{-1}(\{s\})) = P(X=s) = p(s)$.
+\end{frame}
+
+\begin{frame}
+Bezüglich einem booleschen Ausdruck $b$ sei
+\[(b?p)(s) := [B\qb{b}(s)]p(s) = \begin{cases}
+p(s), & \text{wenn $B\qb{b}(s)=\kw{true}$},\\
+0 & \text{sonst}.
+\end{cases}\]
+Es sollte gelten
+\[D\qb{\kw{if}\; b\;\kw{then}\;c\;\kw{else}\;c'\;\kw{end}}(p)
+= D\qb{c}(b?p) + D\qb{c'}(\lnot b?p).\]\pause
+Rechnen wir wieder nach, dass dies nicht dem Sachverhalt für deterministische
+Kommandos $c,c'$ widerspricht. Zu zeigen ist also
+\[\sum_{s\in f^{-1}(\{s'\})}p(s) = \sum_{s\in C\qb{c}^{-1}(\{s'\})}[B\qb{b}(s)]p(s)
++ \sum_{s\in C\qb{c'}^{-1}(\{s'\})}[B\qb{\lnot b}(s)]p(s)\]
+bezüglich $f(s) := C\qb{\kw{if}\; b\;\kw{then}\;c\;\kw{else}\;c'\;\kw{end}}(s)$.
+\end{frame}
+
+\begin{frame}
+Es findet sich
+\begin{align*}
+&\sum_{s\in f^{-1}(s')}p(s) = \sum_s [f(s)=s']p(s)\\
+= &\sum_s \bigg[(C\qb{c}(s)=s'\land B\qb{b}(s))\lor (C\qb{c'}(s)=s'\land\lnot B\qb{b}(s))\bigg]p(s)\\
+= &\sum_s \bigg([C\qb{c}(s)=s'][B\qb{b}(s)] + [C\qb{c'}(s)=s'][\lnot B\qb{b}(s)]\bigg)p(s)\\
+= &\sum_s [C\qb{c}(s)=s'][B\qb{b}(s)]p(s) + \sum_s [C\qb{c'}(s)=s'][\lnot B\qb{b}(s)]p(s)\\
+= &\sum_{s\in C\qb{c}^{-1}(\{s'\})}[B\qb{b}(s)]p(s) + \sum_{s\in C\qb{c'}^{-1}(\{s'\})} [\lnot B\qb{b}(s)]p(s).
+\end{align*}
+\end{frame}
+
+\begin{frame}
+Zur randomisierten Zuweisung überlegt man sich
+\[D\qb{X:=\mathtt{random}(a,b)}(p) = \frac{1}{b-a+1}\sum_{k=a}^b D\qb{X:=k}(p).\]\pause
+Wir prüfen, ob dies plausibel ist. Ist $p$ die Einheitsmasse im Zustand
+$s_0$, also $p(s):=[s=s_0]$, muss sich die Massefunktion der
+Gleichverteilung auf den möglichen Zuweisungen ergeben.\pause{} Es findet sich
+\begin{align*}
+&\frac{1}{b-a+1}\sum_{k=a}^b D\qb{X:=k}(p)(s')
+= \frac{1}{b-a+1}\sum_{k=a}^b\sum_s [C\qb{X:=k}(s)=s']p(s)\\
+=& \frac{1}{b-a+1}\sum_{k=a}^b [C\qb{X:=k}(s_0)=s']
+= \frac{1}{b-a+1}\sum_{k=a}^b [s_0[X:=k]=s']\\
+=& \frac{1}{b-a+1}[s'\in \{s_0[X:=k]\mid a\le k\le b\}].
+\end{align*}
+\end{frame}
+
+\begin{frame}[fragile]
+Die while-Schleife mag man als iterierte if-Anweisung auffassen, also
+\[\kw{while}\; b\; \kw{do}\; c\; \kw{end}\]
+als Lösung $c'$ der Rekurrenz
+\[c' = \kw{if}\; b\; \kw{then}\; c; c'\;
+\kw{else}\;\; \kw{skip}\;\; \kw{end}.\]\pause
+Diesbezüglich erhält man die Rekurrenz
+\begin{align*}
+D\qb{c'}(p) &= D\qb{c; c'}(b?p) + D\qb{\kw{skip}}(\lnot b?p)\\
+&= D\qb{c'}(D\qb{c}(b?p)) + (\lnot b?p).
+\end{align*}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{Januar 2025}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+\end{document}
