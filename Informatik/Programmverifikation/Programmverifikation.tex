@@ -40,6 +40,10 @@
 \lstset{basicstyle=\ttfamily}
 \lstdefinelanguage{IMP}{sensitive=true, keywords={
   true, false, skip, if, then, else, end, while, do, not, and, or}}
+\lstdefinelanguage{Coq}{sensitive=true, keywords={
+  Require, Import, Definition, Inductive, Fixpoint, Theorem, Proof, Qed,
+  Goal, Module, End, Open, Scope,
+  forall, fun, match, with, end, if, then, else}}
 
 \newcommand{\inferrulewidth}{0.4608pt}
 \usepackage{ebproof}
@@ -48,6 +52,7 @@
 \ebproofset{right label template={\scriptsize\inserttext}}
 \ebproofset{rule thickness=\inferrulewidth}
 
+\newcommand{\ttq}{\textquotesingle}
 \newcommand{\unit}[1]{\mathrm{#1}}
 \newcommand{\strong}[1]{\textsf{\textbf{#1}}}
 \newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
@@ -724,6 +729,377 @@ Quod erat demonstrandum.
 \end{frame}
 
 \begin{frame}
+\centerheadline{Maschinengestützte Formalisierung des Kalküls}
+\end{frame}
+
+\begin{frame}
+Im Anschluss will ich noch eine Formalisierung der Überlegungen in Coq
+ausführen. Dies setzt allerdings Grundwissen über die Sprache Gallina
+voraus, und wie logisches Schließen vermittels Taktiken abläuft.
+
+\parspace
+Der vollständige Quelltext findet sich im Anhang. Um den Ablauf der
+Beweise zu betrachten, muss CoqIDE genutzt werden.
+\end{frame}
+
+\begin{frame}[fragile]
+Wir indizieren die Programmvariablen durch die natürlichen Zahlen.\\
+Hierbei steht \code{loc 0}, \code{loc 1}, \code{loc 2} usw. für
+$\mathtt{x}_0,\mathtt{x}_1,\mathtt{x}_2$ usw.
+
+\parspace
+Ein Zustand stellt sich daher schlicht als Funktion $s\colon\N\to\mathrm{Int}$
+dar. Für die ganzen Zahlen $\mathrm{Int}$ verwenden wir hierbei den Typ
+\code{Z} aus \code{ZArith}.
+
+\parspace
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Require Import ZArith.ZArith.
+Require Import Bool.Bool.
+
+Definition Loc := nat.
+Definition State := Loc -> Z.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Als nächstes erfolgt die Erklärung der Sprache IMP vermittels
+induktiver Tyen.\\
+{\footnotesize Die Division will ich der Prägnanz halber erst einmal
+entfallen lassen. Wir können sie später ggf. nachtragen.}
+
+\begin{tabular}{@{\hspace{\mathindent}}l@{\qquad\qquad}l@{}}
+\vtop{\null\hbox{
+\begin{lstlisting}[language=Coq]
+Inductive Aexpr :=
+| int (n: Z)
+| loc (X: Loc)
+| add (a1 a2: Aexpr)
+| sub (a1 a2: Aexpr)
+| mul (a1 a2: Aexpr).
+
+Inductive Bexpr :=
+| btrue
+| bfalse
+| beq (a1 a2: Aexpr)
+| ble (a1 a2: Aexpr)
+| bnot (b: Bexpr)
+| band (b1 b2: Bexpr)
+| bor (b1 b2: Bexpr).
+\end{lstlisting}
+}}
+&
+\vtop{\null\hbox{
+\begin{lstlisting}[language=Coq]
+Inductive Com :=
+| Skip
+| Assign (X: Loc) (a: Aexpr)
+| Seq (c1 c2: Com)
+| If (b: Bexpr) (c1 c2: Com)
+| While (b: Bexpr) (c: Com).
+\end{lstlisting}
+}}
+\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+Nun die Auswertungsfunktionen $A$, $B$. Für die Werte von $B$ nehmen wir
+\code{bool} statt \code{Bexpr}, weil dieses bereits Funktionalität zum
+Argumentieren mit sich bringt.
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Fixpoint evA (a: Aexpr) (s: State): Z :=
+  match a with
+  | int n => n
+  | loc X => s X
+  | add a1 a2 => evA a1 s + evA a2 s
+  | sub a1 a2 => evA a1 s - evA a2 s
+  | mul a1 a2 => evA a1 s * evA a2 s
+  end.
+
+Fixpoint evB (b: Bexpr) (s: State): bool :=
+  match b with
+  | btrue => true
+  | bfalse => false
+  | beq a1 a2 => Z.eqb (evA a1 s) (evA a2 s)
+  | ble a1 a2 => Z.leb (evA a1 s) (evA a2 s)
+  | bnot b => negb (evB b s)
+  | band b1 b2 => andb (evB b1 s) (evB b2 s)
+  | bor b1 b2 => orb (evB b1 s) (evB b2 s)
+  end.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+Es wäre nun denkbar, die Terme und Formeln der Zusicherungssprache
+ebenfalls vermittels induktiver Typen zu erklären. Dies führt allerdings
+zu einem Rattenschwanz von Umständlichkeiten, da es zu einer
+sogenannten \emph{tiefen Einbettung} des logischen Systems führt.
+Wir müssten, wie für jede neue logische Sprache, einen Kalkül des natürlichen
+Schließens formulieren und streng genommen auch noch dessen Korrektheit
+beweisen.\pause
+
+\parspace
+Wir unternehmen stattdessen den Ansatz, die Zusicherungen als
+Prädikate darzustellen, die Zustände als Argument bekommen. Eine
+Zusicherung $A$ sei also eine Funktion
+\[A\colon\texttt{State}\to\texttt{Prop}.\]\pause
+Die Variante des Zustandes $s$ wird auf die übliche Weise erklärt.
+Im Folgenden steht \code{variant s X n} also für $s[X:=n]$ bzw. $s[n/X]$.
+
+\parspace
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Definition variant (s: State) (X: Loc) (n: Z): State :=
+  fun Y => if Nat.eqb X Y then n else s Y.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+Die Auswertungsfunktion $C$ ist wie gesagt eine partielle. Als Folge
+dessen tut sich das Problem auf, dass ihre Implementierung unmöglich
+wird, da in der Typentheorie nur solche Rekursionen fassbar
+sind, deren Terminierung geklärt ist.
+
+\parspace
+Wir lösen dieses Problem in zwei Schritten. Erstens wird die partielle
+Funktion $C$ als Relation formuliert. Statt $C\qb{c}(s)=s'$ notieren
+wir also $C\qb{c}(s)(s')$ bzw. \code{evC c s s\ttq}. Zweitens beschränken
+wir die rekursive Auswertung der Schleife über eine rekursive
+Konstruktion \code{iter} auf eine maximale Tiefe $N$. Da nicht klar
+ist, wie groß $N$ bei
+\[C\qb{\kw{while}\; b\; \kw{do}\; c\; \kw{end}}(s)(s')\]
+mindestens sein muss, wird lediglich die Existenz von $N$ gefordert.
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Fixpoint iter (ev: State -> State -> Prop)
+(N: nat) (b: Bexpr) (s s1: State): Prop :=
+  match N with
+  | 0 => False
+  | S N => if evB b s then
+      exists s0, ev s s0 /\ iter ev N b s0 s1
+    else s1 = s
+  end.
+
+Fixpoint evC (c: Com) (s s1: State): Prop :=
+  match c with
+  | Skip => s1 = s
+  | Assign X a => s1 = variant s X (evA a s)
+  | Seq c1 c2 => exists s0, evC c1 s s0 /\ evC c2 s0 s1
+  | If b c1 c2 => if evB b s then evC c1 s s1 else evC c2 s s1
+  | While b c => exists N, iter (evC c) N b s s1
+  end.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Nun kommen die Erklärungen zur Gültigkeit von Zusicherungen.
+
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Definition Assertion := State -> Prop.
+Definition sat (s: State) (A: Assertion): Prop := A s.
+
+Definition valid (A: Assertion) (c: Com) (B: Assertion) :=
+  forall s, sat s A -> forall s1, evC c s s1 -> sat s1 B.
+
+Definition subst (A: Assertion) (X: Loc) (a: Aexpr): Assertion :=
+  fun s => A (variant s X (evA a s)).
+\end{lstlisting}
+
+Diese Festlegungen sind folgendermaßen zu verstehen:
+\begin{itemize}
+\item Es steht \code{sat s A} für die Erfüllung $s\models A$.
+\item Es steht \code{valid A c B} für die Gültigkeit des Tripels $\{A\}c\{B\}$.
+\item Es steht \code{subst A X a} für die Substitution $A[X:=a]$, die direkt
+als $s\mapsto A(s[X:=A\qb{a}(s)])$ definiert wird, insofern die Formel
+von $A$ verborgen bleibt und das Substitutionslemma somit entfallen muss.
+{\footnotesize Die beiden $A$ sind von unterschiedlicher Bedeutung --
+das zweite steht für \code{evA}, siehe oben.}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+Die Formalisierung des Beweises der Gültigkeit der jeweiligen Schlussregel
+kann nun unternommen werden.
+
+\parspace
+Zum leeren Kommando findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem skip_intro_is_valid A:
+  valid A Skip A.
+Proof.
+  unfold valid. intros s hs. intros s1 hs1.
+  simpl evC in hs1. rewrite hs1. exact hs.
+Qed.
+\end{lstlisting}
+\end{small}
+
+Zur Zuweisung findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem assign_intro_is_valid A X a:
+  valid (subst A X a) (Assign X a) A.
+Proof.
+  unfold valid. intros s hs. intros s1 hs1.
+  simpl evC in hs1.
+  unfold sat in hs. unfold subst in hs.
+  rewrite hs1. exact hs.
+Qed.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+Zur Sequenz von Kommandos findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem seq_intro_is_valid A B C c1 c2:
+  valid A c1 B -> valid B c2 C -> valid A (Seq c1 c2) C.
+Proof.
+  intros h1 h2. unfold valid. intros s hs. intros s2 hs2.
+  simpl evC in hs2.
+  destruct hs2 as (s1, (h11, h12)).
+  unfold valid in h1. unfold valid in h2.
+  assert (h1 := h1 s hs s1 h11).
+  exact (h2 s1 h1 s2 h12).
+Qed.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+Zur Verzweigung findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Definition Conj (A: Assertion) (b: Bexpr) :=
+  fun s => sat s A /\ evB b s = true.
+
+Theorem if_intro_is_valid A b C c1 c2:
+  valid (Conj A b) c1 C -> valid (Conj A (bnot b)) c2 C ->
+  valid A (If b c1 c2) C.
+Proof.
+  intros h1 h2. unfold valid. intros s hs s1 hs1.
+  simpl evC in hs1.
+  destruct (evB b s) eqn:heq.
+  * unfold valid in h1. apply (h1 s).
+    - unfold sat. unfold Conj. rewrite heq.
+      exact (conj hs (eq_refl true)).
+    - exact hs1.
+  * unfold valid in h2. apply (h2 s).
+    - unfold sat. unfold Conj.
+      simpl evB. rewrite heq. simpl.
+      exact (conj hs (eq_refl true)).
+    - exact hs1.
+Qed.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+Zur Schleife findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem while_intro_is_valid A b c:
+  valid (Conj A b) c A -> valid A (While b c) (Conj A (bnot b)).
+Proof.
+  intro h. unfold valid. intros s hs. intros s2 hs2.
+  simpl evC in hs2. destruct hs2 as (N, hiter).
+  revert s s2 hs hiter.
+  induction N as [| N ih].
+  * intros s s2 hs hiter. simpl iter in hiter.
+    exfalso. exact hiter.
+  * intros s s2 hs hiter. simpl iter in hiter.
+    destruct (evB b s) eqn:heq.
+    - destruct hiter as (s1, (h11, h12)).
+      apply (ih s1 s2). clear ih.
+      -- unfold valid in h. apply (h s). clear h.
+         --- unfold sat. unfold Conj. exact (conj hs heq).
+         --- exact h11.
+      -- exact h12.
+    - rewrite hiter. unfold sat. unfold Conj. split.
+      -- exact hs.
+      -- simpl evB. rewrite heq. simpl. reflexivity.
+Qed.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+Zur Verstärkung der Vorbedingung findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem strengthen_precondition_is_valid {A1 A2 B c}:
+  (forall s, A2 s -> A1 s) -> valid A1 c B -> valid A2 c B.
+Proof.
+  intros h1 h2. unfold valid. intros s hs s1 hs1.
+  unfold sat in hs. apply (h1 s) in hs. clear h1.
+  unfold valid in h2. apply (h2 s).
+  * unfold sat. exact hs.
+  * exact hs1.
+Qed.
+\end{lstlisting}
+\end{small}
+
+Zur Abschwächung der Nachbedingung findet sich:
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Theorem weaken_postcondition_is_valid {A B1 B2 c}:
+  (forall s, B1 s -> B2 s) -> valid A c B1 -> valid A c B2.
+Proof.
+  intros h1 h2. unfold valid. intros s hs s1 hs1.
+  unfold sat. apply (h1 s1). clear h1.
+  fold (sat s1 B1). unfold valid in h2. apply (h2 s).
+  * exact hs.
+  * exact hs1.
+Qed.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}[fragile]
+\strong{Kurzes Anwendungsbeispiel}
+
+\parspace
+Beweis der Gültigkeit des Tripels
+$\{\mathtt x = 0\}\; \code{x := x + 1}\; \{\mathtt x = 1\}$.\pause
+
+\begin{small}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Module Example1.
+  Open Scope Z_scope.
+  Definition x: nat := 0.
+
+  Goal valid
+    (fun s => s x = 0)
+    (Assign x (add (loc x) (int 1)))
+    (fun s => s x = 1).
+  Proof.
+    assert (h1 := assign_intro_is_valid
+      (fun s => s x = 1) x (add (loc x) (int 1))).
+    unfold subst in h1. unfold variant in h1. simpl in h1.
+    assert (h2: forall s, s x = 0 -> s x + 1 = 1). {
+      intros s heq. rewrite <- (Z.add_cancel_r _ _ 1) in heq.
+      simpl in heq. exact heq.
+    }
+    exact (strengthen_precondition_is_valid h2 h1).
+  Qed.
+End Example1.
+\end{lstlisting}
+\end{small}
+\end{frame}
+
+\begin{frame}
 \strong{Literatur}
 \begin{itemize}
 \item Glynn Winskel:
@@ -747,12 +1123,16 @@ Quod erat demonstrandum.
 \end{frame}
 
 \begin{frame}
-\strong{Anlage}
+\strong{Anlagen}
 
-\parspace
-\href{https://github.com/JohnBSmith/misc/tree/master/cs/imp}{%
+\begin{itemize}
+\item\href{https://github.com/JohnBSmith/misc/tree/master/cs/imp}{%
 IMP-Interpreter} -- Führt ein IMP-Programm gemäß der denotationellen
 Semantik aus. In Python verfasst, in unter 300 Zeilen Quelltext.
+
+\item\href{https://github.com/JohnBSmith/misc/tree/master/cs/imp/proofs}{%
+Quelltext der formalisierten Beweise}.
+\end{itemize}
 \end{frame}
 
 \begin{frame}

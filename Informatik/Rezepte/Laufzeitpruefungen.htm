@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Laufzeitprüfungen</title>
+  <link href="css/main.css" rel="stylesheet">
+  <script src="js/main.js"></script>
+  <script src="js/py.js"></script>
+</head>
+<body>
+
+<p>&uparrow;<a href="home.htm">Rezepte</a>
+<h1>Laufzeitprüfungen</h1>
+
+<h2>Inhaltsverzeichnis</h2>
+<ol>
+<li><a href="#Zusicherungen">Zusicherungen
+  <ol>
+  <li><a href="#Zusicherungen-innen">Zusicherungen innen</a>
+  <li><a href="#Zusicherungen-aussen">Zusicherungen außen</a>
+  </ol>
+</ol>
+
+<h2 id="Zusicherungen">Zusicherungen</h2>
+
+<h3 id="Zusicherungen-innen">Zusicherungen innen</h3>
+
+<p>Die einfachste Möglichkeit zur Schaffung von Laufzeitprüfungen besteht
+darin, die Vor- und Nachbedingungen mit <code class="python">assert</code>
+in die Funktion einzufügen. Allgemeiner lassen sich Zusicherungen in
+dieser Weise an beliebigen Stellen einfügen. Die Vorbedingung, laut der
+Potenzen nur für nichtnegative Exponenten berechenbar sind, wird bspw.
+folgendermaßen notiert:
+
+<pre class="ibox python">
+def pow(x, n):
+    assert n >= 0
+    return 1 if n == 0 else x*pow(x, n - 1)
+</pre>
+
+<p>Zusicherungen entfallen, wenn das Programm mit der Option <code>-O</code>
+ausgeführt wird. In diesem Fall ist auch das Flag <code>__debug__</code>
+auf <code class="python">False</code> gesetzt.
+
+<h3 id="Zusicherungen-aussen">Zusicherungen außen</h3>
+
+<pre class="ibox python">
+# Datei runtime_checks.py
+debug_mode = __debug__
+
+def check(require = None, ensure = None):
+    def checked(cb):
+        if not debug_mode: return cb
+        def cb_checked(*args):
+            if require:
+                assert require(*args), (
+                    f"{cb.__name__}: failed precondition")
+            value = cb(*args)
+            if ensure:
+                assert ensure(value), (
+                    f"{cb.__name__}: failed postcondition")
+            return value
+        cb_checked.__name__ = cb.__name__
+        return cb_checked
+    return checked
+
+def load_checks(module, checks):
+    if debug_mode:
+        for (key, c) in checks.items():
+            setattr(module, key, c(getattr(module, key)))
+</pre>
+
+<p>Vermittels <code>check</code> werden Funktionen nun mit Vor- und
+Nachbedingungen versehen.
+
+<pre class="ibox python">
+from runtime_checks import check
+
+@check(require = lambda x, n: n >= 0)
+def pow(x, n):
+    return 1 if n == 0 else x*pow(x, n - 1)
+</pre>
+
+<p>Unter Umständen möchte oder kann man das ursprüngliche Modul
+nicht antasten. In diesem Fall bietet es sich an, das Laden der Prüfungen
+auf die spätere Verwendung des Moduls zu verschieben. Diesbezüglich
+zunächst das Modul ohne Prüfungen:
+
+<pre class="ibox python">
+# Datei m1.py
+def pow(x, n):
+    return 1 if n == 0 else x*pow(x, n - 1)
+</pre>
+
+<p>Nun laden wir die Prüfungen an einer späteren Stelle:
+
+<pre class="ibox python">
+from runtime_checks import check, load_checks
+import m1
+
+load_checks(m1, {
+    "pow": check(require = lambda x, n: n >= 0)
+})
+</pre>
+
+</body>
+</html>
