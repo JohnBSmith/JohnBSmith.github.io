@@ -20,7 +20,7 @@ auseinandersetzen müssen.
 Die frühen Computer führten meist numerische Rechnungen aus, die den
 Bedürfnissen von Ingenieuren und Naturwissenschaftlern entsprangen.
 Leider nicht immer für friedliche Zwecke. Mit der Entwicklung ging
-die Auffindung vieler numerischer Verfahren und Ausreizung bereits
+die Auffindung vieler numerischer Verfahren und Ausreizen bereits
 bekannter Verfahren einher. Dazu ein kleines Beispiel. Das Programm
 \ref{lst:Heron} zeigt die iterative Berechnung der Quadratwurzel $x=\sqrt{a}$
 mit dem Heron"=Verfahren
@@ -63,7 +63,85 @@ def power(x, n):
 \end{minipage}
 \end{figure}
 
-\section{Operationelle Semantik}
+\section{Die Programmiersprache IMP}
+
+Jede Programmiersprache sollte ihre eigene Semantik besitzen, die bestimmt,
+was beim Ablauf der Programme passiert. Und selbst wenn die Semantik nie
+explizit erklärt wurde, besteht zumindest eine implizite Semantik durch
+den Compiler und die Maschine bzw. den Interpreter in ihrer jeweiligen
+Version. Nun verhält es sich aber so, dass die Gültigkeit der später
+aufgeführten Regeln empfindlich von der Semantik abhängen kann. Daher
+sollten wir uns auf eine feste Sprache mit einer festen Semantik einigen.
+
+Vollumfängliche Programmiersprachen sind in der Regel zu kompliziert, zu
+verwickelt, als dass ihre Konzepte in Kürze beschrieben werden könnten.
+Deshalb betrachten wir erst einmal IMP, eine minimalistische imperative
+Programmiersprache, die uns als Studienobjekt dienen wird. Sie enthält
+nur die ganz grundlegenden Konzepte der Algorithmik, und ihre Programme
+verarbeiten lediglich ganze Zahlen. Insbesondere bleibt das Konzept der
+Unterprogramme außenvor, wenngleich dieses eines der ersprießlichsten
+und interessantesten sein mag.
+
+Wir grenzen zunächst die beiden Wertemengen ab, deren Elemente als Literale
+in der Syntax und als Werte bei der Auswertung von Ausdrücken auftauchen.
+
+Es sei $\mathrm{Int}$ die Menge der ganzen Zahlen im Dezimalsystem. Während
+also $\Z$ die Menge der ganzen Zahlen bezeichnet, besteht $\mathrm{Int}$
+aus konkreten Darstellungen der Zahlen aus $\Z$. Prinzipiell wäre auch
+eine andere Darstellung wie das Dualsystem möglich; beim Parsen des
+Quelltextes müsste dann vom Dezimalsystem ins Dualsystem umgerechnet werden.
+
+Entsprechend sei $\mathrm{Bool}:=\{\kw{false},\kw{true}\}$, wobei die
+Symbole \kw{false} und \kw{true} syntaktische Darstellungen der
+Wahrheitswerte seien. An sich ginge es auch, die Wahrheitswerte als
+$0$, $1$ in den ganzen Zahlen unterzubringen, was ich hier aber nicht weiter
+verfolgen will. Übrigens benötigt IMP per se kein Typsystem, weil Zahlen
+und Wahrheitswerte bereits in der Syntax nicht gemeinsam auftauchen
+dürfen, wie im Weiteren klar werden wird.
+
+Es erfolgt nun die genaue Beschreibung der abstrakten Syntax von IMP.
+
+Ein \strong{arithmetischer Ausdruck} $a$, kurz \strong{Term}, sei durch die
+folgenden Produktionsregeln festgelegt.
+\begin{itemize}[nosep]
+\item Eine ganze Zahl aus $\mathrm{Int}$ ist ein Term.
+\item Eine Variable aus $\mathrm{Loc}$ ist ein Term.
+\item Sind $a,a'$ Terme, so sind auch $a\,\code{+}\,a'$, $a\,\code{-}\,a'$,
+  $a\,\code{*}\,a'$, $a\,\code{/}\,a'$ Terme.
+\item Nichts anderes ist ein Term.
+\end{itemize}
+Wir fassen die Terme hierbei als abstrakte Syntaxbäume auf.
+Auf die genaue Grammatik und die Konstruktion eines Parsers will ich
+an dieser Stelle nicht näher eingehen, damit der Fokus auf die
+eigentliche Problemstellung nicht verloren geht. Die Operationen sollen
+auf die gewöhnliche Art geschrieben werden, die Operatoren dabei die
+gewöhnliche Rangfolge besitzen.
+
+Ein \strong{boolescher Ausdruck} $b$, kurz \strong{Ausdruck}, sei durch
+die folgenden Produktionsregeln festgelegt.
+\begin{itemize}[nosep]
+\item Die Symbole \kw{false} und \kw{true} sind Ausdrücke.
+\item Sind $a,a'$ Terme, so sind $a\;\code{=}\;a'$ und $a \;\code{<=}\; a'$ Ausdrücke.
+\item Ist $b$ ein Ausdruck, so ist auch $\kw{not}\;b$ ein Ausdruck.
+\item Sind $b,b'$ Ausdrücke, so sind auch $b\;\kw{and}\;b$ und $b\;\kw{or}\;b$ Ausdrücke.
+\item Nichts anderes ist ein Ausdruck.
+\end{itemize}
+
+Ein \strong{Kommando} $c$, auch \strong{Programm} genannt, sei durch die
+folgenden Produktionsregeln festgelegt.
+\begin{itemize}[nosep]
+\item Das Symbol \kw{skip} ist ein Kommando.
+\item Ist $X$ eine Variable aus $\mathrm{Loc}$ und $a$ ein Term,
+  so ist $X\,\code{:=}\;a$ ein Kommando.
+\item Sind $c,c'$ Kommandos, so ist auch $c$; $c'$ ein Kommando.
+\item Ist $b$ ein Ausdruck und sind $c,c'$ Kommandos, so ist auch\\
+  \kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end} ein Kommando.
+\item Ist $b$ ein Ausdruck und $c$ ein Kommando, so ist auch\\
+  \kw{while} $b$ \kw{do} $c$ \kw{end} ein Kommando.
+\item Nichts anderes ist ein Kommando.
+\end{itemize}
+
+\section{Denotationelle Semantik}
 
 Hat man bereits viele Programme geschrieben, gelesen und sich die Vorgänge
 auf der Assembler"=Ebene angeschaut, mag man ein intuitives Verständnis
@@ -73,392 +151,576 @@ Das gelingt zum Beispiel, indem eine tatsächliche oder emulierte
 Rechenmaschine festgelegt wird. Um aber nicht den Fokus auf das
 Wesentliche zu verlieren, abstrahiert man von den Details der Maschine,
 indem den syntaktischen Konstrukten der Programmiersprache direkt eine
-Semantik zugeordnet wird. Ich will näher auf die \emph{operationelle
-Semantik}\index{operationelle Semantik} eingehen.
+Semantik zugeordnet wird. Ich will näher auf die \emph{denotationelle
+Semantik}\index{denotationelle Semantik} eingehen.
 
-Es sei $\mathrm T$ das Symbol für einen Term und $\mathrm{Zahl}$
-das Symbol für eine Zahl. Wir legen mit der Produktionsregel
-\[\mathrm T \to \mathrm{Zahl} \mid (\mathrm T + \mathrm T)\;\;\text{bzw.}\;\;
-\mathrm T\to\mathrm{Zahl}\;\;\text{und}\;\;\mathrm T\to (\mathrm T+\mathrm T)\]
-eine sehr einfache Grammatik fest. Damit ist gemeint, dass ein
-Term entweder eine Zahl oder ein geklammerter Summenterm sein
-soll, dessen Summanden wiederum Terme sind. Ein aus dem Startsymbol
-$\mathrm T$ erzeugter Term sei grammatisch, sobald nur noch
-Terminalsymbole, das sind in diesem Fall konkrete Zahlen, vorkommen.
-In EBNF notiert, nimmt die Produktionsregel die Form
-\[\verb/T ::= Zahl | '(' T '+' T ')';/\]
-an. Bezeichnen wir mit $Z$ die Menge der Zahlen und
-mit $T$ die Menge der Terme, können wir die Grammatik
-alternativ auch durch die Inferenzregeln
-\[\dfrac{t\in Z}{t\in T},\quad\;
-\dfrac{t_1\in T\quad\; t_2\in T}{(t_1+t_2)\in T}\]
-festlegen.
+Wir bezeichnen
+\begin{itemize}[nosep]
+\item mit $\mathrm{Aexp}$ die Menge der arithmetischen Ausdrücke,
+\item mit $\mathrm{Bexp}$ die Menge der booleschen Ausdrücke,
+\item mit $\mathrm{Com}$ die Menge der Kommandos.
+\end{itemize}
+Will man nun einen arithmetischen Ausdruck auswerten, denkt
+man sich dafür eine Funktion $\evA\colon\mathrm{Aexp}\to\mathrm{Int}$.
+Es ist%
+\[\evA\qb{1+2} = 3\]
+usw. Nun kann ein arithmetischer Ausdruck aber auch Variablen enthalten,
+womit bspw. auch der Wert $\evA\qb{\code{x}+1}$ bezüglich $\code{x}\in\mathrm{Loc}$
+bestimmt sein muss.
 
-Die Auswertung von Termen findet statt gemäß einer Relation
-$(\to)\subseteq T\times Z$, wobei wir $t\to v$ für $(t,v)\in(\to)$
-schreiben. Damit ist gemeint, dass $t$ zu $v$ auswertet oder auswerten
-kann. Die Relation wird festgelegt durch die Regeln
-\[\dfrac{v\in Z}{v\to v},\quad\;\dfrac{t_1\to v_1\qquad t_2\to v_2}
-{(t_1+t_2)\to v'},\]
-wobei $v'$ der der Wert von $v_1+v_2$ sein soll. Zu bemerken ist, dass
-durch diese Regeln keine Auswertungsreihenfolge vorgegeben wird.
+Die Auswertungsfunktion $\evA$ wird daher parametrisiert durch den aktuellen
+Zustand $s$. Wir haben also $\evA\colon\mathrm{Aexp}\to (S\to\mathrm{Int})$
+bzw. $\evA\colon\mathrm{Aexp}\times S\to\mathrm{Int}$.
 
-Erweitern wir die Sprache nun dergestalt, dass in Ausdrücken auch
-Variablen $x,y,z\in\mathrm{Var}$ enthalten sein dürfen, stellt sich
-sogleich die Frage, welcher Wert einer Variablen bei ihrer Auswertung
-zukommen soll. Dies hängt anscheinend davon ab, in welchem \emph{Zustand}
-sich das Programm gerade befindet. Nennen wir $S$ die Menge der Zustände,
-ist mit einem Zustand $s\in S$ eine Abbildung $s\colon\mathrm{Var}\to Z$
-verbunden. Meist brauchen wir lediglich den Teilzustand betrachten, der
-gerade von Bedeutung ist. Für den Zustand $s$ mit $s(x)=7$ und $s(y)=2$
-schreibt man dann auch kurzum $s=\{x=7,y=2\}$. Die Auswertungsrelation stellt
-nun eine Teilmenge von $T\times S\times Z$ dar, wobei $\langle t,s\rangle\to v$
-bedeuten soll, dass der Term $t$ im Zustand $s$ den Wert $v$ annehmen
-kann. Die Auswertung ist entsprechend festgelegt durch die Regeln
-\[\dfrac{v\in Z}{\langle v,s\rangle\to v},\quad\;
-\dfrac{x\in\mathrm{Var}}{\langle x,s\rangle\to s(x)},\quad\;
-\dfrac{\langle t_1,s\rangle\to v_1\qquad \langle t_2,s\rangle\to v_2}
-{\langle (t_1+t_2),s\rangle\to v_1+v_2}.\]
-Die Sprache wird nun erweitert um Ausdrücke gemäß
-\[\mathrm E \to\kw{false}\mid\kw{true}\mid\mathrm T = \mathrm T\mid
-\mathrm T \le \mathrm T\mid \lnot\mathrm E\mid
-(\mathrm E\land\mathrm E)\mid (\mathrm E\lor\mathrm E).\]
-Es sei $E$ die Menge der auf diese Weise formierbaren Ausdrücke.
-Zu diesen wird ebenfalls eine Auswertungsrelation definiert,
-\[(\to)\subseteq E\times S\times\mathrm{Bool},\quad
-\mathrm{Bool} := \{\kw{false},\kw{true}\}.\]
-Wir legen die Auswertung intuitiv fest als
-\[\dfrac{}{\langle\kw{false},s\rangle\to\kw{false}},\quad
-\dfrac{}{\langle\kw{true},s\rangle\to\kw{true}},\quad
-\dfrac{\langle t_1,s\rangle\to v_1\quad\langle t_2,s\rangle\to v_2}
-{\langle t_1=t_2, s\rangle\to v'}\]
-und so weiter, wobei $v'$ der Wert $\kw{true}$ sein soll, wenn $v_1,v_2$
-übereinstimmen, sonst $\kw{false}$. Die Auswertung der Junktoren geschieht gemäß
-\[\dfrac{\langle e,s\rangle\to v}{\langle\lnot e,s\rangle\to v'},\quad
-\dfrac{\langle e_1,s\rangle\to v_1\quad\langle e_2,s\rangle\to v_2}
-{\langle (e_1\land e_2),s\rangle\to v'}\]
-und so weiter, wobei $v'$ jeweils der Wahrheitswert sein soll, der
-sich aus der Wahrheitstafel des jeweiligen Junktors ergibt.
+Einen \emph{Zustand} $s$ modellieren wir schlicht als die Belegung
+der verfügbaren Variablen, also als eine Funktion $s\in S$ mit
+$S:=\Abb(\mathrm{Loc},\mathrm{Int})$.
 
-Die Produktionsregel
-\[\mathrm P \to \kw{skip}\mid \mathrm{Var} := \mathrm T \mid\mathrm P;\mathrm P\mid
-\kw{if}\;\mathrm E\;\kw{then}\;\mathrm P\;\kw{else}\;\mathrm P\;\kw{end}
-\mid\kw{while}\;\mathrm E\;\kw{do}\;\mathrm P\;\kw{end}\]
-beschreibt die Syntax einer kleinen imperativen Programmiersprache,
-die im Weiteren als Studienobjekt dienen wird. Wir definieren zunächst
-ein Semantik, die die intuitive Vorstellung vom Ablauf der Anweisungen
-und Kontrollstrukturen widerspiegelt. Dies geschieht durch Festlegung
-der Übergangsrelation $(\to)\subseteq P\times S\times S$. Mit
-$\langle p,s\rangle\to s'$ soll gemeint sein, dass der Zustand $s$ mit dem
-Durchlauf des Programms $p$ in den Zustand $s'$ übergeht oder zumindest
-übergehen kann.
+Ein möglicher Zustand $s$ mit $s(\mathtt x)=1$ und $s(\mathtt y)=2$
+ist zum Beispiel
+\[s(X) := \begin{cases}
+1, & \text{wenn $X=\mathtt x$},\\
+2, & \text{wenn $X=\mathtt y$},\\
+0 & \text{sonst}. 
+\end{cases}\]
+Die Notation $s[X:=n]$ stehe für die \emph{Variante} des Zustands $s$,
+erklärt als derjenige Zustand, der $X$ auf $n$ abbildet, aber sonst
+mit $s$ übereinstimmt. Bezüglich $s_0(X):=0$ ist das zuvor genannte
+Beispiel somit beschreibbar als $s:=s_0[\mathtt x := 1][\mathtt y := 2]$.
 
-Zur Anweisung $\kw{skip}$ muss nicht viel gesagt werden, sie wird einfach
-übersprungen, der Zustand bleibt unberührt. Ihre Regel lautet daher
-\[\dfrac{}{\langle\kw{skip},s\rangle\to s}.\]
-Der Übergang zur Zuweisung verläuft gemäß
-\[\dfrac{\langle t,s\rangle\to v}{\langle x:=t, s\rangle \to s[x:=v]}.\]
-Zu einer Sequenz von Programmen verläuft der Übergang gemäß
-\[\dfrac{\langle p_1,s\rangle\to s'\quad\;\langle p_2,s'\rangle\to s''}
-{\langle p_1; p_2, s\rangle\to s''}.\]
-Bei if"=Anweisungen findet der Übergang nach den Regeln
-\[\dfrac{\langle e,s\rangle\to\kw{true}\quad\;\langle p_1,s\rangle\to s'}
-{\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'},\quad\;
-\dfrac{\langle e,s\rangle\to\kw{false}\quad\;\langle p_2,s\rangle\to s'}
-{\langle\kw{if}\;e\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\rangle\to s'}\]
-statt. Schließlich muss noch die Semantik für Schleifen\index{Schleife}
-festgelegt werden. Wertet die Schleifenbedingung zu $\kw{false}$ aus,
-wird der Schleifenkörper schlicht übersprungen, ohne eine Zustandsänderung
-herbeizuführen,
-\[\dfrac{\langle e,s\rangle\to\kw{false}}
-{\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s\rangle\to s}.\]
-Wertet die Schleifenbedingung zu $\kw{true}$ aus, liegt die Regel
-nicht mehr gänzlich auf der Hand. Die Überlegung ist folgende. Wurde
-bereits geklärt, dass der erste Durchlauf den Zustand $s$ in $s'$
-überführt und die restliche Schleife von $s'$ in $s''$ überführt,
-dann muss die Schleife den Zustand $s$ in $s''$ überführen. Man gelangt
-zur Regel
-\[\dfrac{\langle e,s\rangle\to\kw{true}\quad\;\langle p,s\rangle\to s'\quad\;
-\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s'\rangle\to s''}
-{\langle\kw{while}\;e\;\kw{do}\;p\;\kw{end},s\rangle\to s''}.\]
+Wir legen $\evA\colon\mathrm{Aexp}\to (S\to\mathrm{Int})$ rekursiv fest gemäß
+\begin{gather*}
+\evA\qb{n}(s) := n,\\
+\evA\qb{X}(s) := s(X),\\
+\evA\qb{a\,\code{+}\,a'}(s) := \evA\qb{a}(s) + \evA\qb{a'}(s),\\
+\evA\qb{a\,\code{-}\,a'}(s) := \evA\qb{a}(s) - \evA\qb{a'}(s),\\
+\evA\qb{a\,\code{*}\,a'}(s) := \evA\qb{a}(s) \cdot \evA\qb{a'}(s),\\
+\evA\qb{a\,\code{/}\,a'}(s) := \evA\qb{a}(s)\,/\, \evA\qb{a'}(s).
+\end{gather*}
+bezüglich $n\in\mathrm{Int}$, $X\in\mathrm{Loc}$ und $a,a'\in\mathrm{Aexp}$.
+Die Operationen auf der rechten Seite werden hierbei auf die übliche
+Art und Weise berechnet. Wir verwenden die euklidische Ganzzahldivision
+und setzen $n\,/\,0:=0$ für jedes $n\in\mathrm{Int}$.
+
+Wir legen $\evB\colon\mathrm{Bexp}\to (S\to\mathrm{Bool})$ rekursiv fest gemäß
+\begin{gather*}
+\evB\qb{\kw{false}}(s) := \kw{false},\\
+\evB\qb{\kw{true}}(s) := \kw{true},\\
+\evB\qb{a \;\code{=}\; a'}(s) := (\evA\qb{a}(s) = A\qb{a'}(s)),\\
+\evB\qb{a \;\code{<=}\; a'}(s) := (\evA\qb{a}(s)\le A\qb{a'}(s)),\\
+\evB\qb{\kw{not}\;b} := \lnot\evB\qb{b}(s),\\
+\evB\qb{b\;\kw{and}\;b'} := \evB\qb{b}(s)\land\evB\qb{b'}(s),\\
+\evB\qb{(b\;\kw{or}\;b'} := \evB\qb{b}(s)\lor\evB\qb{b'}(s),
+\end{gather*}
+bezüglich $a,a'\in\mathrm{Aexp}$ und $b,b'\in\mathrm{Bexp}$. Der Wahrheitswert
+der Relationen bzw. Verknüpfungen auf der rechten Seite wird hierbei auf die
+übliche Art und Weise bestimmt.
+
+Wir legen $\evC\colon\mathrm{Com}\to (S\rightharpoonup S)$ rekursiv fest gemäß
+\begin{gather*}
+\evC\qb{\kw{skip}}(s) := s,\\
+\evC\qb{X:=a}(s) := s[X:=\evA\qb{a}(s)],\\
+\evC\qb{c; c'}(s) := \evC\qb{c'}(\evC\qb{c}(s)) = (\evC\qb{c'}\circ\evC\qb{c})(s),\\
+\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) := \begin{cases}
+\evC\qb{c}(s),& \text{wenn $B\qb{b}(s)=\kw{true}$},\\
+\evC\qb{c'}(s)& \text{sonst}.
+\end{cases}\\
+\evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) := \begin{cases}
+\varphi_{b,c}(\evC\qb{c}(s)),& \text{wenn $\evB\qb{b}(s)=\kw{true}$},\\
+s & \text{sonst}
+\end{cases}
+\end{gather*}
+mit $\varphi_{b,c}(s) := \evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s)$.
+
+Bei $\evC\qb{c}$ handelt es sich um eine partielle Funktion, da die rekursive Auswertung
+der while"=Schleife unter Umständen nicht terminiert -- zum Beispiel bei
+\[\texttt{\kw{while} \kw{true} \kw{do} \kw{skip} \kw{end}}.\]
+
+\section{Die Zusicherungssprache}
+
+\emph{Zusicherungen} sind Aussagen, die man in einem bestimmten Zustand als
+erfüllt sehen will. Zum Beispiel ist nach der Ausführung des Kommandos
+$\code{y := x*x}$ die Zusicherung $\texttt{y}\ge 0$
+erfüllt.
+
+Zusicherungen sind logische Formeln, die der Sprache der einsortigen Logik
+erster Stufe entstammen sollen. Die logische Sprache wird passend zur
+Programmiersprache IMP definiert, dergestalt dass das Diskursuniversum
+$\mathrm{Int}$ sei und die Variablen aus $\mathrm{Loc}$ in den Termen auftauchen dürfen.
+Benötigte Funktionssymbole der Signatur $\mathrm{Int}^n\to\mathrm{Int}$ und
+Relationssymbole der Signatur $\mathrm{Int}^n\to\mathrm{Bool}$ zu $n\in\N_{\ge 0}$
+kann man je nach Bedarf in ihrer üblichen Bedeutung hinzufügen; die Operatoren
+von IMP sollen dabei aber mindestens verfügbar sein.
+
+Wir müssen nun allerdings zwischen Variablen $x,y,z$ und Variablen
+$\code{x},\code{y},\code{z}\in\mathrm{Loc}$ unterscheiden. Die kursiven tauchen
+als freie und gebundene Variablen in den Formeln auf. Die aufrechten
+verhalten sich dagegen wie Konstantensymbole, über sie kann nicht
+quantifiziert werden.
+
+Die Notation $I,s\models A$ stehe für die Aussage, dass
+die Interpretation $I=(\mathcal M,\beta)$ und der Zustand $s$
+die Formel $A$ erfüllen. Hierbei ist $\mathcal M$ eine Struktur, die
+die Bedeutung der Funktions- und Relationssymbole festlegt,
+und $\beta$ eine Belegung der kursiven Variablen. Der Zustand $s$
+belegt die aufrechten Variablen. Die Definition der Erfüllung geschieht
+analog wie bei der gewöhnlichen Logik erster Stufe, weshalb ich sie hier
+nicht näher ausführen will.
+
+Wir betrachten nur das Modell $\mathcal M_0$, das die Symbole mit ihrer üblichen
+Bedeutung versieht. Daher sei $\mathcal I_0:=\{(\mathcal M,\beta)\mid\mathcal M=\mathcal M_0\}$,
+das heißt, $\mathcal I_0$ sei die Menge der Interpretationen, deren Struktur
+$\mathcal M_0$ ist.
+
+Es stehe später $s\models A$ als Abkürzung für $I,s\models A$,
+sofern sich dadurch keine Zweideutigkeiten ergeben.
 
 \section{Der Hoare-Kalkül}
 
-Ein Hoare"=Tripel\index{Hoare-Tripel} $\{A\}\,p\,\{B\}$ soll die logische
-Aussage ausdrücken, dass nach dem Durchlaufen des Programms $p$ die Aussage
-$B$ gilt, sofern zuvor die Aussage $A$ galt. Hierbei bezeichnet man $A$ als
-\emph{Vorbedingung}\index{Vorbedingung} und $B$ als
-\emph{Nachbedingung}\index{Nachbedingung}. Das Tripel macht
-allerdings keine Aussage darüber, ob das Programm $p$ tatsächlich
-terminiert. Ist das Tripel erfüllt, nennt man das Programm in Bezug auf
-die Vor- und Nachbedingung \emph{partiell korrekt}.\index{partiell korrekt}
-Terminiert das Programm zudem, spricht man von \emph{totaler Korrektheit}.%
-\index{total Korrekt}
+Ein Hoare"=Tripel\index{Hoare-Tripel} $\{A\}\,c\,\{B\}$ soll die logische
+Aussage ausdrücken, dass nach dem Durchlaufen des Programms $c$ die Zusicherung
+$B$ erfüllt ist, sofern zuvor die Zusicherung $A$ erfüllt war. Hierbei
+bezeichnet man $A$ als die \emph{Vorbedingung}\index{Vorbedingung} und $B$
+als die \emph{Nachbedingung}\index{Nachbedingung} von $c$. Das Tripel fordert
+allerdings keineswegs, dass das Programm $c$ tatsächlich terminiert; lediglich,
+dass $B$ erfüllt ist, \emph{falls} $c$ terminiert. Ist das Tripel allgemeingültig,
+nennt man das Programm \emph{partiell korrekt}\index{partiell korrekt}
+in Bezug auf $A,B$. Terminiert das Programm zusätzlich, nennen wir es
+\emph{total korrekt}\index{total korrekt} in Bezug auf $A,B$ und
+notieren dies $[A]\,c\,[B]$.
 
-Bei $A,B$ soll es sich um prädikatenlogische Formeln handeln, mit der
-Besonderheit, dass in ihr die Terme und Ausdrücke der Programmiersprache
-auftreten dürfen. Dazu kann formal die \emph{Zusicherungssprache}
-festgelegt werden, aus der die Zusicherungen $A,B$ entstammen sollen.
+Beispiel für ein allgemeingültiges Tripel:
 
-Die Gültigkeit eines Hoare"=Tripels wird definiert gemäß
-\[(\models\{A\}\,p\,\{B\})\,:\Leftrightarrow\,
-\forall s\in S\colon (s\models A)\cond\forall s'\in S\colon
-(\langle p,s\rangle\to s')\cond (s'\models B).\]
-Interessanterweise kommt darin recht direkt die Kripke"=Semantik%
-\index{Kripke-Semantik} einer Notwendigkeit zum Vorschein. Die Zustände
-nehmen hierbei die Rolle der Welten ein, die Übergangsrelation je
-Programm $p$ die Rolle der Zugänglichkeitsrelation. Demnach liegt eine
-multimodale Logik vor, da je Programm $p$ ein Operator $\lnec_p$ existiert,
-der üblicherweise $[p]$ geschrieben wird. Setzen wir diesbezüglich
-\[(s\models [p]B)\;:\Leftrightarrow\;\forall s'\in S\colon
-(\langle p,s\rangle\to s')\cond (s'\models B),\]
-findet sich die Äquivalenz
-\[(\models\{A\}\,p\,\{B\})\Leftrightarrow (\models A\cond [p]B),\]
-die eine jähe Beziehung des Hoare"=Kalküls zur ihr, der
-\emph{dynamischen Logik}\index{dynamische Logik}
-herstellt, auf die ich an dieser Stelle aber nicht näher eingehen will.
-Trotzdem mag der Leser sie später in Erinnerung rufen, um ein
-übersichtlicheres Bild von den Sachverhalten zu bekommen.
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\kw{true}\}$ y := x*x $\{\code{y}\ge 0\}$
+\end{lstlisting}
 
-\strong{Die Regeln zur Herleitung der Tripel.} Für Zuweisungen gilt
-\[\dfrac{}{\vdash\{A[x:=t]\}\; x := t\;\{A\}}.\]
-Zur Gültigkeit dieser Regel. Es gelte $s\models A[x:=t]$. Weiterhin
-wird $\langle x:=t,s\rangle\to s'$ angenommen. Zu zeigen ist $s'\models A$.
-Insofern die Auswertung von Termen deterministisch stattfindet, existiert
-nun genau ein $v$ mit $\langle t,s\rangle\to v$. Mithin liegt der
-Sachverhalt $s'=s[x:=v]$ vor. Letztlich gilt die Äquivalenz
-\[(s\models A[x:=t])\Leftrightarrow (s[x:=v]\models A),\]
-da man zum gleichen Resultat gelangt, wenn $x$ in $A$ direkt mit $v$
-belegt wird, oder zunächst gegen $t$ ersetzt und daraufhin $t$ den
-Wert $v$ erhält. Formal bestätigt man dies per struktureller
-Induktion über den Aufbau von $A$.
+\noindent
+Die Allgemeingültigkeit des Tripels $\{A\}\,c\,\{B\}$ wird dahingehend
+definiert als%
+\[(\models\{A\}c \{B\}) \,:\Leftrightarrow\, \forall I{\in}\mathcal I_0\colon\forall s{\in}S\colon
+(I,s\models A)\Rightarrow\forall s'{\in}S\colon \evC\qb{c}(s)=s'\Rightarrow (I,s'\models B).\]
+\strong{Bemerkung 1.} In Bezug auf IMP ist der Wert $s'$, sofern $\evC\qb{c}(s)$ existiert,
+eindeutig bestimmt. Denken wir uns nun den ungültigen Zustand $\bot$,
+der sich ergeben soll, wenn $c$ eine nicht terminierende Schleife ist,
+bekommt man eine totale Funktion $\evC\qb{c}\colon S\cup\{\bot\}\to S\cup\{\bot\}$,
+wobei $\evC\qb{c}(\bot):=\bot$ gesetzt wird. Diesbezüglich verkürzt sich
+die Allgemeingültigkeit zu%
+\[(\models\{A\}c \{B\}) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
+(I,s\models A)\Rightarrow (I,\evC\qb{c}(s)\models B).\]
+Hierbei verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.
 
-Für eine Sequenz von Programmen gilt
-\[\dfrac{\vdash\{A\}p_1\{B\}\quad\;\;\vdash\{B\}p_2\{C\}}{\vdash\{A\}p_1; p_2\{C\}}.\]
-Zur Gültigkeit dieser Regel. Es gelte $s\models A$. Angenommen,
-es kann $s''$ erreicht werden, also $\langle s,p_1; p_2\rangle\to s''$.
-Dann muss ein Zustand $s'$ mit $\langle p_1,s\rangle\to s'$ und
-$\langle p_2,s'\rangle\to s''$ existieren. Sollte $s'$ nicht eindeutig
-bestimmt sein, betrachten wir $s'$ einfach fest, aber beliebig. Zu zeigen
-ist $s''\models C$. Vermittels der ersten Prämisse erhält man
-$s'\models B$, vermittels der zweiten daraufhin $s''\models C$.
+\strong{Bemerkung 2.}
+Die Zusicherungssprache ist erweiterbar um eine modale Operation
+$\Box_c B$ je Kommando $c$, üblicherweise $[c]B$ geschrieben. Deren Semantik sei
+\[(I,s\models [c]B) \;:\Leftrightarrow\; \forall s'\in S\colon R_c(s,s')\Rightarrow (I,s'\models B)\]
+mit der Zugänglichkeitsrelation $R_c(s,s')\,:\Leftrightarrow\, \evC\qb{c}(s)=s'$.
 
-Die Regel für Verzweigungen lautet
-\[\dfrac{\vdash\{A\land B\}\,p_1\,\{C\}\quad\;\;\vdash\{A\land\lnot B\}\,p_2\,\{C\}}
-{\vdash\{A\}\;\kw{if}\;B\;\kw{then}\;p_1\;\kw{else}\;p_2\;\kw{end}\;\{C\}}.\]
-Zur Gültigkeit dieser Regel. Sei $s$ der Zustand vor, und $s'$ der
-Zustand nach Durchlaufen der Verzweigung. Es gelte $s\models A$, zu
-zeigen ist $s'\models C$. Fallunterscheidung. Im Fall
-$\langle B,s\rangle\to\kw{true}$
-gilt $s\models B$, also $s\models A\land B$. Es wird $p_1$ ausgeführt,
-also muss $\langle p_1,s\rangle\to s'$ gelten. Laut der ersten Prämisse
-gilt dann $s'\models C$. Im Fall $\langle B,s\rangle\to\kw{false}$
-gilt $s\models\lnot B$, also $s\models A\land\lnot B$. Es wird $p_2$
-ausgeführt, also muss $\langle p_2,s\rangle\to s'$ gelten. Laut der
-zweiten Prämisse gilt dann $s'\models C$.
+Diesbezüglich sind $\{A\}c\{B\}$ und $A\Rightarrow [c]B$ semantisch äquivalent.
 
-Die Regel für Schleifen lautet
-\[\dfrac{\vdash\{I\land B\}\,p\,\{I\}}
-{\vdash\{I\}\;\kw{while}\;B\;\kw{do}\;p\;\kw{end}\;\{I\land\lnot B\}}.\]
-Zur Gültigkeit dieser Regel. Sei $s$ der Zustand vor, und $s''$
-der Zustand nach dem Durchlaufen der Schleife. Es gelte $s\models I$.
-Induktion über die Anzahl der Durchläufe. Im Induktionsanfang wird findet
-kein Durchlauf von  $p$ statt, womit $\langle B,s\rangle\to\kw{false}$
-gilt, also $s\models\lnot B$. Da dem Zustand keine Änderung widerfährt,
-gilt $s''=s$, also $s''\models I\land\lnot B$.
-Nun zum Induktionsschritt. Da $p$ durchlaufen wird, gilt
-$\langle B,s\rangle\to\kw{true}$, also $s\models B$,
-ergo $s\models I\land B$. Mit dem Durchlauf von $p$ existiert
-$s'$ mit $\langle p,s\rangle\to s'$. Laut der Prämisse gilt
-$s'\models I$. Mit dem Durchlaufen der restlichen Schleife geht $s'$
-in $s''$ über. Vermittels der Induktionsvoraussetzung erhält man
-$s''\models I\land\lnot B$.
+Die so erweiterte Logik nennt man die \emph{dynamische Logik} von IMP.
+Die denotationelle Semantik nimmt hierbei die Rolle einer Kripke"=Semantik
+ein, wobei die Zustände die Kripke"=Welten sind.
 
-Eine Aussage $I$, welche sowohl vor als auch nach dem Durchlauf des
-Schleifenrumpfs und somit der Schleife als Ganzes gültig ist, bezeichnet
-man als \emph{Schleifeninvariante}. Die Auffindung einer zielführenden
-Schleifeninvariante ist nicht immer einfach.
+Da die Semantik von IMP eine deterministische ist, muss der vom Zustand
+$s$ aus via $c$ erreichbare Zustand $s'$, sofern dieser existiert,
+gemäß $s'=\evC\qb{c}(s)$ eindeutig bestimmt sein; es gibt also keine weiteren
+Zustände, an die wir $B$ fordern müssten. Insofern ergibt sich die Klärung
+\[(\models [A]c [B]) \,\Leftrightarrow\, \forall I{\in}\mathcal I_0\colon\forall s{\in}S\colon
+(I,s\models A)\Rightarrow\exists s'{\in}S\colon \evC\qb{c}(s)=s'\land (I,s'\models B).\]
+In Bezug auf die Modaloperation $\Diamond_c B$ bzw. $\langle c\rangle B$ mit der Semantik
+\[(s\models\langle c\rangle B)\;:\Leftrightarrow\; \exists s'\in S\colon R_c(s,s')\land (s'\models B).\]
+sind nun $[A]c[B]$ und $A\Rightarrow\langle c\rangle B$ semantisch äquivalent.
 
-Gilt ein Tripel als bestätigt, kann man intuitiv die Vorbedingung beliebig
-verstärken und die Nachbedingung beliebig abschwächen. Man erhält ein
-Tripel mit weniger Aussagekraft, das aber für die Beschreibung des
-Sachverhaltes genügen mag. Diese Überlegung wird formalisiert durch
-die Regel
-\[\dfrac{\vdash A'\cond A\quad\;\;\vdash\{A\}\,p\,\{B\}\quad\;\;\vdash B\cond B'}
-{\vdash\{A'\}\,p\,\{B'\}}.\]
-Zur Gültigkeit dieser Regel. Aus $s\models A'$ und
-$\langle p,s\rangle\to s'$ ist $s'\models B$ abzuleiten.
-Vermittels $\models A'\cond A$ erhält man zunächst $s\models A$,
-vermittels $\models\{A\}\,p\,\{B\}$ daraufhin $s'\models B$,
-und vermittels $\models B\cond B'$ daraufhin schließlich $s'\models B'$.
+Außerdem bestehen die Äquivalenzen
+$\langle c\rangle B \Leftrightarrow \lnot [c]\lnot B$ und
+$[c]B\Leftrightarrow\lnot\langle c\rangle\lnot B$. Sie bestätigen,
+dass $\langle c\rangle B$ in Bezug auf die Theorie der Modallogiken
+als die \emph{Möglichkeitsoperation} gedeutet werden kann, die zur
+\emph{Notwendigkeitsoperation} $[c]B$ gehört.
 
-Die Regel setzt sich zusammen aus den beiden Spezialfällen
-\[\dfrac{\vdash A'\cond A\quad\;\;\vdash\{A\}\,p\,\{B\}}
-{\vdash\{A'\}\,p\,\{B\}},\quad\;\;
-\dfrac{\vdash\{A\}\,p\,\{B\}\quad\;\;\vdash B\cond B'}
-{\vdash\{A\}\,p\,\{B'\}}.\]
+Die Formalismen stehen im engen Bezug zum dijkstraschen wp-Kalkül.
+Dijkstra notiert $\mathrm{wp}(c,B)$ für die schwächste Vorbedingung,
+engl. \emph{weakest precondition}, unter der das Programm $c$ in einem
+Zustand terminiert, in dem $B$ erfüllt ist. Für jede Vorbedingung $A$
+gilt daher $A\Rightarrow\mathrm{wp}(c,B)$. Die Aussagen $[A]\,c\,[B]$
+und $A\Rightarrow\mathrm{wp}(c,B)$ drücken dasselbe aus.
+
+Analog steht $\mathrm{wlp}(c,B)$ für die schwächste liberale
+Vorbedingung, die lediglich $B$ fordert, falls das Programm terminiert.
+Demnach sind $[c]B$ und $\mathrm{wlp}(c,B)$ bedeutungsgleich.
+Entsprechend drücken $\{A\}c\{B\}$ und $A\Rightarrow\mathrm{wlp}(c,B)$
+dasselbe aus.
+
+Aufgrund der deterministischen Natur der Semantik von IMP sind des Weiteren
+$\langle c\rangle B$ und $\mathrm{wp}(c,B)$ bedeutungsgleich. In anderen
+Programmiersprachen mit anderen Semantiken mag diese Äquivalenz allerdings
+verloren gehen.
+
+Wir diskutieren nun die \strong{Schlussregeln} des Kalküls.
+
+\begin{Satz}[Regel zum leeren Kommando]\newlinefirst
+Die Regel $\dfrac{}{\vdash\{A\}\kw{skip}\{A\}}$ ist gültig.
+\end{Satz}
+\begin{Beweis}
+Wir wollen $\models\{A\}\kw{skip}\{B\}$ zeigen.
+Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
+gelte $\evC\qb{\kw{skip}}(s)=s'$. Zu zeigen ist $s'\models A$.
+
+Gemäß der denotationellen Semantik gilt $\evC\qb{\kw{skip}}(s)=s$, womit
+wir $s'=s$ und somit bereits die Behauptung haben.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Zuweisung]\newlinefirst
+Die Regel $\dfrac{}{\vdash\{A[X:=a]\}X:=a\{A\}}$ ist gültig.
+\end{Satz}
+Eine Schlussregel ohne Prämissen. Mit $A[X:=a]$ ist hierbei die
+Formel gemeint, die aus $A$ hervorgeht, indem jedes Vorkommen von
+$X$ in $A$ durch den Term $a$ ersetzt wird.
+
+Zum Beispiel erkennt man das Tripel
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\code{x}\ge 0\}$
+x := x + 1
+$\{\code{x}\ge 1\}$
+\end{lstlisting}
+unschwer als allgemeingültig. Dieses fällt unter die Fittiche der
+Regel, indem $X:=\code{x}$, $a:=\code{x}+1$ und $A:=(\code{x}\ge 1)$
+gesetzt wird. Damit ergibt sich $A[X:=a]$ zu $\code{x} + 1\ge 1$,
+was logisch äquivalent zu $\code{x}\ge 0$ ist. Streng genommen muss
+hierbei von Satz \ref{HK-Ersetzung} Gebrauch gemacht werden.
+
+Ob die Rechnung stimmt, prüft man so: Man betrachtet die Nachbedingung,
+wendet auf diese die mit der Zuweisung übereinstimmende Substitution an,
+und dies muss dann in der Vorbedingung resultieren.
+
+\begin{Beweis}
+Wir wollen
+\[\models\{A[X:=a]\}X:=a\{A\}\]
+zeigen. Sei dazu $s$ fest, aber beliebig. Es gelte $s\models A[X:=a]$.
+Des Weiteren gelte $\evC\qb{X:=a}(s)=s'$. Zu zeigen ist $s'\models A$.
+
+Gemäß der denotationellen Semantik gilt $\evC\qb{X:=a}(s)=s[X:=a]$, womit
+wir $s'=s[X:=a]$ haben. Schließlich folgt die Behauptung vermittels
+der Äquivalenz
+\[(s\models A[X:=a])\;\Leftrightarrow\; (s[X:=a]\models A),\]
+die man unschwer als richtig erkennt oder pedantisch per struktureller
+Induktion über den Aufbau von $A$ beweisen kann.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Sequenz von Kommandos]\mbox{}\\[4pt]
+Die Regel $\dfrac{\vdash\{A\}c\{B\}\qquad \vdash\{B\}c'\{C\}}{\vdash\{A\}c; c'\{C\}}$
+ist gültig.
+\end{Satz}
+\begin{Beweis}
+Wir wollen $\models\{A\} c; c'\{C\}$ zeigen.
+Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
+gelte $\evC\qb{c;c'}(s)=s''$. Zu zeigen ist $s''\models C$.
+
+Gemäß der denotationellen Semantik existiert $s'=\evC\qb{c}(s)$ mit
+\[\evC\qb{c;c'}(s) = \evC\qb{c'}(s')=s''.\]
+Aus $s\models A$ und $\models\{A\}c\{B\}$ folgt nun zunächst $s'\models B$.
+Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus
+$s'\models B$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Verzweigung]\mbox{}\\[4pt]
+Die Regel $\dfrac{\vdash\{A\land b\}c\{C\}\qquad\vdash\{A\land\lnot b\}c'\{C\}}{
+\vdash\{A\}\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}\{C\}}$
+ist gültig.
+\end{Satz}
+\begin{Beweis}
+Sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren gelte
+\[\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = s'.\]
+Zu zeigen ist $s'\models C$. Fallunterscheidung. Im Fall
+$\evB\qb{b}(s)=\kw{true}$ gilt $s\models b$, also $s\models A\land b$.
+Außerdem ergibt sich in diesem Fall die Vereinfachung
+\[\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = \evC\qb{c}(s).\]
+Vermittels $\models\{A\land b\}c\{C\}$ erhalten wir somit $s'\models C$.
+Die Argumentation im Fall $\evB\qb{b}(s)=\kw{false}$ verläuft analog.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Schleife]\mbox{}\\[4pt]
+Die Regel $\dfrac{\vdash\{A\land b\}c\{A\}}{
+\vdash\{A\}\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}\{A\land\lnot b\}}$
+ist gültig.
+\end{Satz}
+Sofern $A$ also sowohl vor der Schleife gilt, als auch vor und hinter
+dem Schleifenrumpf, muss $A$ auch hinter der Schleife gelten. Man nennt
+$A$ hierbei eine \emph{Schleifeninvariante}. Die Auffindung einer
+zielführenden Invariante stellt eine wesentliche Schwierigkeit bei der
+Programmverifikation dar.
+
+\begin{Beweis}[Beweis]
+Sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren gelte
+\[\evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) = s''.\]
+Zu zeigen ist $s''\models A\land\lnot b$. Induktion über die
+Anzahl der Durchläufe. Im Anfang findet kein Durchlauf statt. Das
+geht aber nur, wenn $\evB\qb{b}(s)=\kw{false}$, also $s\models\lnot b$.
+Da dem Zustand $s$ nach der Semantik der Schleife in diesem Fall keine Änderung
+widerfährt, gilt $s=s''$. Demnach gilt $s''\models A$ und $s''\models\lnot b$,
+also $s''\models A\land\lnot b$.
+
+Zum Induktionsschritt. Da die Schleife durchlaufen wird, existiert
+$s'$ mit $\evC\qb{c}(s)=s'$. Die restlichen null der mehr Schleifendurchläufe
+führen dann zum Zustand $s''$, das heißt, $\varphi_{b,c}(s')=s''$.
+Die Induktionsvoraussetzung ist, dass $s''\models A\land\lnot b$
+aus $s'\models A$ folgt. Es verbleibt also $s'\models A$ zu zeigen.
+Weil der erste Durchlauf stattfindet, muss des Weiteren $\evB\qb{b}(s)=\kw{true}$,
+also $s\models b$ gelten, womit wir $s\models A\land b$ haben.
+Vermittels $\models\{A\land b\}c\{A\}$, was ja Kraft der Prämisse der Regel
+zur Verfügung steht, erhält man schließlich $s'\models A$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Verstärkung der Vorbedingung]\mbox{}\\[4pt]
+Die Regel $\dfrac{\vdash A'\Rightarrow A\qquad\vdash\{A\}c\{B\}}{
+\vdash\{A'\}c\{B\}}$ ist gültig.
+\end{Satz}
+\begin{Beweis}
+Es gelte $s\models A'$. Des Weiteren gelte $\evC\qb{c}(s)=s'$. Zu zeigen
+ist $s'\models B$. Mit $\models A'\Rightarrow A$ erhält man zunächst
+$s\models A$. Mit $\models\{A\}c\{B\}$ daraufhin $s'\models B$.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Regel zur Abschwächung der Nachbedingung]\mbox{}\\[4pt]
+Die Regel $\dfrac{\vdash\{A\}c\{B\}\qquad\vdash B\Rightarrow B'}{
+\vdash\{A\}c\{B'\}}$ ist gültig.
+\end{Satz}
+\begin{Beweis}
+Es gelte $s\models A$. Des Weiteren gelte $\evC\qb{c}(s)=s'$.
+Zu zeigen ist $s'\models B'$. Mit $\models\{A\}c\{B\}$ erhält man
+zunächst $s'\models B$. Mit $\models B\Rightarrow B'$ erhält man
+daraufhin $s'\models B'$.\,\qedsymbol.
+\end{Beweis}
+
+\begin{Satz}[Ersetzungsregeln]\label{HK-Ersetzung}\mbox{}\\[4pt]
+Die Regeln
+$\dfrac{\vdash A\Leftrightarrow A'\quad\vdash\{A\}c\{B\}}{
+  \vdash\{A'\}c\{B\}}$,\,
+$\dfrac{\vdash B\Leftrightarrow B'\quad\vdash\{A\}c\{B\}}{
+  \vdash\{A\}c\{B'\}}$ sind gültig.
+\end{Satz}
+\begin{Beweis}
+Folgt unmittelbar aus der Regel zur Verstärkung der
+Vorbedingung bzw. Abschwächung der Nachbedingung.\,\qedsymbol
+\end{Beweis}
+
+\noindent\strong{Beispiel 1.}
+Wir betrachten nochmals den Algorithmus zur Exponentiation, also den
+zur Berechnung der Potenz $\mathtt{x^n}$ zu gegebenen Zahlen $\mathtt{x,n}$.
+Dazu wird das Programm aus Listing \ref{lst:Potenz} auf S. \pageref{lst:Potenz}
+in IMP übersetzt und mit einer Hilfsvariable versehen, so dass $\mathtt n$
+konstant bleibt.\footnote{Alternativ gäbe es auch die Möglichkeit,
+Gebrauch von einer mathematischen Hilfsvariable in den Zusicherungen zu
+machen, statt das Programm zu modifizieren; dann bliebe die Hilfsvariable
+konstant, während sich $\mathtt n$ ändert.} Des Weiteren sei $\mathtt n\ge 0$
+als Vorbedingung verlangt. Gesucht ist also ein Beweis des mit Listing
+\ref{lst:IMP-Exp} aufgeführten Tripels.
 
 \begin{figure}
-\begin{center}
-\begin{minipage}[t]{.48\textwidth}
-\begin{lstlisting}[language=Python,caption={Schnelles Potenzieren},%
-label=lst:Potenz-schnell]
-def power(x, n):
-    y = 1
-    while n > 1:
-        if n%2 == 1: y = y*x
-        n //= 2; x = x*x
-    if n == 1: y = y*x
-    return y
+\begin{minipage}[t]{.40\textwidth}
+\begin{lstlisting}[language=IMP, mathescape, label=lst:IMP-Exp,
+caption={\raggedright Berechnung von $x^n$}]
+$\{\mathtt n\ge 0\}$
+y := 1; k := n;
+while not k = 0 do
+   y := y*x;
+   k := k - 1
+end
+$\{\mathtt{y = x^n}\}$
 \end{lstlisting}
 \end{minipage}
-\begin{minipage}[t]{.48\textwidth}
-\begin{lstlisting}[language=Python,caption={Mit Hilfsvariablen},%
-label=lst:Potenz-schnell-Hilfsvariablen]
-def power(x, n):
-    y = 1; a = x; i = n
-    while i > 1:
-        if i%2 == 1: y = y*a
-        i //= 2; a = a*a
-    if i == 1: y = y*a
-    return y
+\hfill
+\begin{minipage}[t]{.56\textwidth}
+\begin{lstlisting}[language=IMP, mathescape, label=lst:IMP-ExpBin,
+caption={\raggedright Binäre Exponentiation}]
+$\{\mathtt n\ge 0\}$
+y := 1; a := x; k := n;
+while 2 <= k do
+   q := k/2; r := k - 2*q;
+   if r = 1 then y := y*a else skip end;
+   k := q; a := a*a
+end;
+if k = 1 then y := y*a else skip end
+$\{\mathtt{y = x^n}\}$
 \end{lstlisting}
 \end{minipage}
-\end{center}
 \end{figure}
 
-\noindent\strong{Beispiel.}
-Das Listing \ref{lst:Potenz-schnell} zeigt den Algorithmus zum schnellen
-Potenzieren. Wie \ref{lst:Potenz} berechnet dieser die Potenz $x^n$,
-benötigt dafür aber weniger Multiplikationen. Soll beispielsweise $x^{100}$
-berechnet werden, kann dies auf $(x^{50})^2$ zurückgeführt werden. Dafür
-dass am Ende einmal quadriert wird, wurden $50$ Multiplikationen
-eingespart. Der Algorithmus stellt ein allgemeines Verfahren hierfür
-dar.
+Vermittels der Regel zur Zuweisung -- zuzüglich Reflexivität der
+Gleichheit und der Ersetzungsregel -- ergibt sich erst einmal die Ableitung:
+\[\begin{prooftree}
+  \infer0{\vdash \mathtt n\ge 0\,\Leftrightarrow\,\mathtt n\ge 0\land 1 = 1}
+  \infer0{\vdash\{\mathtt n\ge 0\land 1 = 1\}\;\code{y := 1}\;\{\mathtt n\ge 0\land\mathtt y = 1\}}
+\infer2{\vdash\{\mathtt n\ge 0\}\;\code{y := 1}\;\{\mathtt n\ge 0\land\mathtt y = 1\}}
+\end{prooftree}\]
+Wir fügen bereits ermittelte Zusicherungen in den Quelltext ein:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt n\ge 0\}$
+y := 1; k := n;
+$\{\mathtt k\ge 0\land\mathtt y = 1\}$
+while not k = 0 do
+   y := y*x;
+   k := k - 1
+end
+$\{\mathtt{y = x^n}\}?$
+\end{lstlisting}
 
-Allerdings ist nicht mehr auf den ersten Blick ersichtlich, ob der
-Algorithmus korrekt arbeitet. Zur Analyse werden zunächst die
-Hilfsvariablen $a,i$ eingeführt, damit $x,n$ konstant bleiben, siehe
-Listing \ref{lst:Potenz-schnell-Hilfsvariablen}. Nach dem Durchlaufen
-des Programms soll die Nachbedingung $y=x^n$ bestehen. Zunächst findet
-sich das Tripel
-\[\begin{array}{l}
-\{y = x^n\land i = 0 \lor y\cdot a = x^n\land i = 1\}\\
-\text{\texttt{\textbf{if} i == 1: y = y*a}}\\
-\{y = x^n\}.
-\end{array}\]
-Im Fall $i=1$ reduziert sich die Vorbedingung nämlich zu $y\cdot a=x^n$,
-die bedingte Anweisung wird ausgeführt und das Resultat ist $y=x^n$ laut
-Zuweisungsregel. Im Fall $i\ne 1$ muss $i=0$ sein, denn nach der
-Schleife wird $0\le i\le 1$ gelten. In diesem Fall reduziert sich die
-Vorbedingung zu $y=x^n$, die bedingte Anweisung wird nicht ausgeführt,
-das Resultat ist somit ebenfalls $y=x^n$.
+\noindent
+Die Zielführende Schleifeninvariante ist hier $\mathtt{y =
+x^{n-k}}$. Vor der Schleife gilt ja $\mathtt{n=k}$.
+Mit $\mathtt{x}^0 = 1$ kommt man somit auf $\mathtt y = 1$, was
+bezüglich $0^0:=1$ auch im Fall $\mathtt x = 0$ gilt.
+Wir durchziehen das Programm nun gemäß den Regeln sukzessive mit
+Zusicherungen und gelangen daraufhin bereits zum Abschluss der Verifikation:
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt n\ge 0\}$
+y := 1; k := n;
+$\{\mathtt{k\ge \mathrm 0\land y = \mathrm 1\land y = x^{n-k}}\}$
+while not k = 0 do
+   $\{\mathtt{y = x^{n-k}}\}$
+   $\{\mathtt{y\cdot x = x^{n-k}\cdot x}\}$
+   y := y*x;
+   $\{\mathtt{y = x^{n-k}\cdot x = x^{n-(k - 1)}}\}$
+   k := k - 1
+   $\{\mathtt{y = x^{n-k}}\}$
+end
+$\{\mathtt{y = x^{n-k}\land k=\mathrm 0}\}$
+$\{\mathtt{y = x^n}\}$
+\end{lstlisting}
 
-Nun kommt ein kritischer Schritt, dessen Auffindung ohne Übung schwierig
-sein mag. Vor der Schleife gilt $a^i=x^n$, was etwas mit der
-Schleifeninvariante zu tun haben könnte. Betrachten wir nun die Vorbedingung
-\[y = x^n\land i = 0\lor y\cdot a = x^n\land i = 1.\]
-Ist $a^i=x^n$ so modifizierbar, dass diese gilt? Ja, nämlich zu
-$y\cdot a^i=x^n$, denn
+\noindent\strong{Beispiel 2}.
+Das Listing \ref{lst:IMP-ExpBin} zeigt die effiziente \emph{Binäre
+Exponentiation}. Wie \ref{lst:IMP-Exp} berechnet dieses Programm die
+Potenz $\mathtt{x^n}$, benötigt dafür aber weniger Multiplikationen. Soll
+beispielsweise $\mathtt x^{100}$ berechnet werden, kann dies auf
+$(\mathtt x^{50})^2$ zurückgeführt werden. Dafür dass am Ende einmal
+quadriert wird, wurden $50$ Multiplikationen eingespart. Der Algorithmus
+stellt ein allgemeines Verfahren hierfür dar.
+
+Allerdings ist nicht mehr auf den ersten Blick ersichtlich, ob das
+Programm korrekt arbeitet. Zur Analyse wurden wieder die
+Hilfsvariablen $\mathtt{a,k}$ eingeführt, damit $\mathtt{x,n}$ konstant
+bleiben. Nach dem Durchlaufen des Programms mit der Vorbedingung
+$\mathtt n\ge 0$ soll wieder die Nachbedingung $\mathtt{y=x^n}$ bestehen.
+Gesucht ist wider ein Beweis des aufgeführten Tripels. Wir betrachten das
+Programm zunächst vom Ende aus. Dort findet sich das Tripel
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{(y = x^n\land k = \mathrm 0)\lor (y\cdot a = x^n\land k = \mathrm 1)}\}$
+if k = 1 then y := y*a else skip end
+$\{\mathtt{y = x^n}\}.$
+\end{lstlisting}
+Nimmt man bei der Vorbedingung nämlich die Fallunterscheidung in die
+beiden Seiten der Disjunktion vor, gelangt man in beiden Fällen
+zur Nachbedingung.
+
+Am Anfang der Schleife gilt $\mathtt{a^k = x^n}$, was etwas mit der
+Schleifeninvariante zu tun haben könnte. Ist diese Gleichung so
+modifizierbar, dass unter ihr die Zusicherung
+\[\mathtt{(y = x^n\land k = \mathrm 0)\lor (y\cdot a = x^n\land k = \mathrm 1)}\]
+gilt? Ja, nämlich zu $\mathtt{y\cdot a^k = x^n}$, denn
 \begin{gather*}
-\text{im Fall $i = 0$ gilt $y\cdot a^i = y\cdot a^0 = y$},\\
-\text{im Fall $i = 1$ gilt $y\cdot a^i = y\cdot a^1 = y\cdot a$}.
+\text{im Fall $\mathtt k=0$ gilt $\mathtt{y\cdot a^k = y}$},\\
+\text{im Fall $\mathtt k=1$ gilt $\mathtt{y\cdot a^k = y\cdot a}$}.
 \end{gather*}
-Die Gleichung $y\cdot a^i=x^n$ gilt ebenfalls vor der Schleife, denn
-dort ist $y=1$. Zudem kommen in der Gleichung alle drei Variablen vor,
-die sich in der Schleife verändern. Tatsächlich stellt diese Gleichung eine
-zielführende Schleifeninvariante dar.
+Die Gleichung $\mathtt{y\cdot a^k = x^n}$ gilt ebenfalls vor der
+Schleife, da dort $\mathtt y = 1$ ist. Tatsächlich stellt sie eine
+zielführende Schleifeninvariante dar. Es verbleibt also zu bestätigen,
+dass sie auch am Ende des Schleifenrumpfs gilt.
 
-Nun zum Schleifenrumpf. Das Tripel zur ersten Anweisung ist
-\[\begin{array}{l}
-\{y\cdot a^i = x^n\}\\
-\text{\texttt{\textbf{if} i\%2 == 1: y = y*a}}\\
-\{y\cdot a^{i-1} = x^n\land i\operatorname{mod} 2 = 1
-\lor y\cdot a^i = x^n\land i\operatorname{mod}2 = 0\}.
-\end{array}\]
-Die lange Nachbedingung kann man kompakter schreiben als
-\[y\cdot a^{i-i\operatorname{mod}2} = x^n.\]
-Außerdem gilt $i-i\operatorname{mod}2 = 2\lfloor\frac{i}{2}\rfloor$,
-wobei $\lfloor\frac{i}{2}\rfloor$ mit dem Programmterm \texttt{i//2}
-gleichbedeutend ist. Mit dieser Vorbereitung stellt die restliche
-Argumentation nur mehr eine Leichtigkeit dar. Gemäß der Zuweisungsregel
-sind die Tripel
-\[\begin{array}{l}
-\{y\cdot a^{2\lfloor i/2\rfloor} = x^n\}\\
-\text{\texttt{i //= 2;}}\\
-\{y\cdot a^{2i} = x^n\}
-\end{array}
-\quad\;\;\text{und}\quad\;\;
-\begin{array}{l}
-\{y\cdot a^{2i} = x^n\}\\
-\text{\texttt{a = a*a;}}\\
-\{y\cdot a^i = x^n\}
-\end{array}\]
-erfüllt. Damit gilt die Invariante als bewiesen. Weil nichts weiter zu
-beweisen verbleibt, gilt auch der gesamte Algorithmus als bewiesen.
+Zunächst ergibt sich
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^k = x^n}\}$
+q := k/2; r := k - 2*q
+$\{\mathtt{y\cdot a^k = x^n\land q = \big\lfloor\frac{k}{\mathrm 2}\big\rfloor
+\land r = k - \mathrm{2}q}\}.$
+\end{lstlisting}
+
+Wegen $r\in\{0,1\}$ findet sich bei der Verzweigung nun
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^k = x^n\land q = \big\lfloor\frac{k}{\mathrm 2}\big\rfloor
+\land r = k - \mathrm 2q}\}$
+if r = 1 then y := y*a else skip end
+$\{\mathtt{((y\cdot a^{k-\mathrm 1} = x^n\land r = \mathrm 1)\lor
+(y\cdot a^k = x^n\land r = \mathrm 0))
+\land r = k - \mathrm 2q}\}.$
+\end{lstlisting}
+Die lange Nachbedingung kann man kompakter fassen als
+\[\mathtt{y\cdot a^{k - r} = x^n\land r = k - \mathrm 2q},\]
+wobei sich des Weiteren $\mathtt{k - r = \mathrm 2q}$ ergibt.
+
+Zum Rest des Schleifenrumpfs findet sich somit schließlich
+\begin{lstlisting}[language=IMP, xleftmargin=\mathindent, mathescape]
+$\{\mathtt{y\cdot a^{\mathrm 2q} = x^n}\}$
+k := q
+$\{\mathtt{y\cdot a^{\mathrm 2k} = x^n}\}$
+a := a*a
+$\{\mathtt{y\cdot a^k = x^n}\}.$
+\end{lstlisting}
+Quod erat demonstrandum.
 
 \section{Zum Kalkül der schwächsten Vorbedingung}
 
-Zu einem Programm $p$ mag man zu einer Nachbedingung $B$ mehr als eine
-Vorbedingung $A$ finden, so dass $\{A\}\,p\,\{B\}$ gilt. Dahingehend
+Zu einem Programm $c$ mag man zu einer Nachbedingung $B$ mehr als eine
+Vorbedingung $A$ finden, so dass $\{A\}\,c\,\{B\}$ gilt. Dahingehend
 gelangt man zur Überlegung, ob man $A$ nicht zu einer Vorbedingung $A'$
-mit $A\cond A'$ abschwächen kann, so dass $\{A'\}\,p\,\{B\}$ erfüllt
+mit $A\cond A'$ abschwächen kann, so dass $\{A'\}\,c\,\{B\}$ gültig
 bleibt. Wir nennen $A_0$ \emph{schwächste liberale Vorbedingung},
 wenn für jede andere Vorbedingung $A$ die Äquivalenz
-\[\{A\}\,p\,\{B\}\bicond (A\cond A_0)\]
-besteht. Man schreibt $\mathrm{wlp}(p,B):=A_0$, wobei $\mathrm{wlp}$ für
+\[\{A\}\,c\,\{B\}\bicond (A\cond A_0)\]
+besteht. Man schreibt $\mathrm{wlp}(c,B):=A_0$, wobei $\mathrm{wlp}$ für
 \emph{weakest liberal precondition} steht. Wie bei Erörterung der
 Semantik des Hoare"=Tripels bereits festgestellt wurde, handelt es sich
-bei $\mathrm{wlp}(p,B)$ um nichts anderes als die modale Aussage $[p]B$.
+bei $\mathrm{wlp}(c,B)$ um nichts anderes als die modale Aussage $[c]B$.
 
 \begin{Satz}
-Es gilt $[p_1;p_2]B\equiv [p_1][p_2]B$.
+Es gilt $[c_1;c_2]B\equiv [c_1][c_2]B$.
 \end{Satz}
 \begin{Beweis}
-Zur Abkürzung sei $\varphi_1:\equiv(\langle p_1,s\rangle\to s')$ sowie
-$\varphi_2:\equiv(\langle p_2,s'\rangle\to s'')$ und $\psi:\equiv (s''\models B)$.
+Zur Abkürzung sei $\varphi_1:\equiv(\evC\qb{c_1}(s)=s')$ sowie
+$\varphi_2:\equiv(\evC\qb{c_2}(s')=s'')$ und $\psi:\equiv (s''\models B)$.
 Es findet sich die äquivalente Umformung
 \begin{align*}
-&(s\models [p_1][p_2]B) \iff (\forall s'\colon\varphi_1\cond \forall s''\colon\varphi_2\cond\psi)\\
+&(s\models [c_1][c_2]B) \iff (\forall s'\colon\varphi_1\cond \forall s''\colon\varphi_2\cond\psi)\\
 \iff &(\forall s'\colon\forall s''\colon\varphi_1\land\varphi_2\cond\psi)
 \iff (\forall s''\colon\forall s'\colon\varphi_1\land\varphi_2\cond\psi)\\
 \iff &(\forall s''\colon (\exists s'\colon\varphi_1\land\varphi_2)\cond\psi)
-\iff (s\models [p_1;p_2]B).
+\iff (s\models [c_1;c_2]B).
 \end{align*}
 Der letzte Schritt gelingt hierbei aufgrund der Äquivalenz
 \[(\exists s'\colon\varphi_1\land\varphi_2)\Leftrightarrow
-(\langle p_1;p_2,s\rangle\to s'').\,\qedsymbol\]
+\evC\qb{c_1;c_2}(s)=s''.\,\qedsymbol\]
 \end{Beweis}
 
 \begin{Satz}
-Es gilt $[x:=t]B\equiv B[x:=t]$.
+Es gilt $[X:=a]B\equiv B[X:=a]$.
 \end{Satz}
 \begin{Beweis}
-Es gelte $s\models [x:=t]B$, womit $s'\models B$ für jedes $s'$ mit
-$\langle x:=t,s\rangle\to s'$ gelten muss. Es existiert aber genau ein
-solches $s'$, und für dieses gilt $s'=s[x:=v]$ mit
-$\langle t,s\rangle\to v$. Diesbezüglich ist $s'\models B$ gleichbedeutend
-mit $s\models B[x:=t]$. Diese Argumentation kann auch
+Es gelte $s\models [X:=a]B$, womit $s'\models B$ für jedes $s'$ mit
+$\evC\qb{X:=a}(s)=s'$ gelten muss. Es existiert aber genau ein
+solches $s'$, und für dieses gilt $s'=s[X:=n]$ mit
+$\evA\qb{a}(s)=n$. Diesbezüglich ist $s'\models B$ gleichbedeutend
+mit $s\models B[X:=a]$. Diese Argumentation kann auch
 unschwer umgekehrt werden.\,\qedsymbol
 \end{Beweis}
 
 Der Umstand, dass man einfach die Symbolik verdrehen kann, ist natürlich
 eine glückliche Fügung in Form einer syntaktischen Koinzidenz. Wählt man
-eine andere Notation, etwa $\lnec_{x:=t} B\equiv B[t/x]$, geht sie verloren.
+eine andere Notation, etwa $\lnec_{X:=a} B\equiv B[a/X]$, geht sie verloren.
 
 \begin{Satz}\label{dl-nec}
-Aus $\models A$ folgt $\models [p]A$.
+Aus $\models A$ folgt $\models [c]A$.
 \end{Satz}
 \begin{Beweis}
-Unter der Annahme $\langle p,s\rangle\to s'$ muss $s'\models A$ bestätigt
+Unter der Annahme $\evC\qb{c}(s)=s'$ muss $s'\models A$ bestätigt
 werden. Laut der Prämisse ist $s'\models A$ aber per se erfüllt.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}\label{dl-K}
-Es gilt $[p](A\cond B)\cond ([p]A\cond [p]B)$.
+Es gilt $[c](A\cond B)\cond ([c]A\cond [c]B)$.
 \end{Satz}
 \begin{Beweis}
-Unter der Annahme $\langle p,s\rangle\to s'$ muss $s'\models B$ bestätigt
+Unter der Annahme $\evC\qb{c}(s)=s'$ muss $s'\models B$ bestätigt
 werden. Vermittels der ersten Prämisse erhält man $s'\models A$ aus
 der Annahme. Vermittels der zweiten Prämisse erhält man
 $s'\models A\cond B$ aus der Annahme, was definitionsgemäß zu
@@ -467,36 +729,36 @@ folgt somit $s'\models B$.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Es gilt $[p](A\land B)\equiv [p]A\land [p]B$.
+Es gilt $[c](A\land B)\equiv [c]A\land [c]B$.
 \end{Satz}
 \begin{Beweis}
 Dies ist ein allgemeiner Umstand der Modallogik K, die
-laut Satz \ref{dl-nec} und Satz \ref{dl-K} je fixem Programm $p$
+laut Satz \ref{dl-nec} und Satz \ref{dl-K} je fixem Programm $c$
 vorliegt.\,\qedsymbol
 \end{Beweis}
 
 \begin{Satz}
-Es gilt $[\kw{if}\,B\,\kw{then}\,p_1\,\kw{else}\,p_2\,\kw{end}]C\equiv
-(B\cond [p_1]C)\land (\lnot B\cond [p_2]C)$.
+Es gilt $[\kw{if}\,b\,\kw{then}\,c_1\,\kw{else}\,c_2\,\kw{end}]C\equiv
+(b\cond [c_1]C)\land (\lnot b\cond [c_2]C)$.
 \end{Satz}
 \begin{Beweis}
 Es gelte die linke Seite der Äquivalenz. Zum ersten Teil der Konjunktion.
-Aus der Annahme von $s\models B$ und $\langle p_1,s\rangle\to s'$ ist
-$s'\models C$ abzuleiten. Wegen $\langle B,s\rangle\to\kw{true}$ erhält man
-\[\langle\kw{if}\,B\,\kw{then}\,p_1\,\kw{else}\,p_2\,\kw{end},s\rangle\to s',\]
+Aus der Annahme von $s\models b$ und $\evC\qb{c_1}(s) = s'$ ist
+$s'\models C$ abzuleiten. Wegen $\evB\qb{b}(s) = \kw{true}$ erhält man
+\[\evC\qb{\kw{if}\,b\,\kw{then}\,c_1\,\kw{else}\,c_2\,\kw{end}}(s) = s',\]
 woraus $s'\models C$ vermittels der linken Seite folgt. Die Argumentation
 zum zweiten Teil der Konjunktion verläuft analog.
 
 Es gelte die rechte Seite der Äquivalenz. Es ist $s'\models C$
-abzuleiten. Fallunterscheidung. Im Fall $\langle B,s\rangle\to\kw{true}$
-gilt $s\models B$ und außerdem $\langle p_1,s\rangle\to s'$. Mit
+abzuleiten. Fallunterscheidung. Im Fall $\evB\qb{b}(s) = \kw{true}$
+gilt $s\models b$ und außerdem $\evC\qb{c_1}(s) = s'$. Mit
 diesen erhält man $s'\models C$ vermittels des ersten Teils der
-Konjunktion. Im Fall $\langle B,s\rangle\to\kw{false}$ verläuft
+Konjunktion. Im Fall $\evB\qb{b}(s) = \kw{false}$ verläuft
 die Argumentation analog.\,\qedsymbol
 \end{Beweis}
 
 \noindent
-Ich möchte bemerken, dass in klassischer Logik die allgemeine Äquivalenz
+Es wäre zu bemerken, dass in klassischer Logik die allgemeine Äquivalenz
 \[(B\cond A_1)\land (\lnot B\cond A_2)\Leftrightarrow
 (B\land A_1)\lor (\lnot B\land A_2)\]
 besteht.

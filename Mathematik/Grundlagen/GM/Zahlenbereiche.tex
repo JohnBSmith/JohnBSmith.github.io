@@ -678,3 +678,37 @@ Also unterbietet die Folge $xy-x'y'$ jedes $\varepsilon'\in\Q_{>0}$
 bezüglich $\varepsilon:=\tfrac{\varepsilon'}{2s}$, womit sie ebenfalls
 gegen null konvergiert.\,\qedsymbol
 \end{Beweis}
+
+\noindent
+Im Weiteren gilt es zu prüfen, dass die gemachte Konstruktion der
+reellen Zahlen die Körperaxiome erfüllt. Hierzu muss gezeigt werden,
+dass jede reelle Zahl ungleich null einen Kehrwert besitzt.
+
+\begin{Satz}
+Jede reelle Zahl ungleich null besitzt ein multiplikatives Inverses.
+\end{Satz}
+\begin{Beweis}
+Es sei $a\in\R$ mit $a\ne 0$. Also existiert eine Cauchy"=Folge $x$
+mit $[x] = a$. Wegen $a\ne 0$ muss $x_n\ne 0$ ab einem $n_0$ gelten.
+Wir würden nun gerne die Folge der Kehrwerte bezüglich $x$ betrachten.
+Allerdings kann $x$ Nullstellen haben. Wir setzen daher
+\[u_n := \begin{cases}
+1, & \text{wenn $n<n_0$},\\
+x_n, & \text{sonst}.
+\end{cases}\]
+Es gilt $u_n\ne 0$ für jedes $n$.
+Wir setzen $b:=[y]$ mit $y_n := \tfrac{1}{u_n}$. Es ergibt sich
+\[x_n y_n = \tfrac{x_n}{1}[n<n_0] + \tfrac{x_n}{x_n}[n\ge n_0]
+= 1[n\ge n_0].\]
+Ergo gilt $ab = [xy] = 1$. Also ist $b$ ein multiplikatives Inverses
+von $a$. Es verbleibt zu bestätigen, dass $y$ eine Cauchy"=Folge ist.
+Es sei $\varepsilon\in\Q_{>0}$ beliebig. Wegen $u_n\ne 0$ und
+$\lim_{n\to\infty}u_n \ne 0$ existiert ein $\delta>0$ mit $|u_n|>\delta$.
+Weil $u$ eine Cauchy"=Folge ist, existiert $k$ mit
+$|u_m-u_n|<\delta^2\varepsilon$ für alle $m,n\ge k$. Wir wählen dieses
+$k$ für die Existenzaussage. Mit $\frac{1}{|u_m|}<\frac{1}{\delta}$ und
+$\frac{1}{|u_n|}<\frac{1}{\delta}$ erhält man nämlich
+\[|y_m-y_n| = \Big|\frac{1}{u_m}-\frac{1}{u_n}\Big|
+= \frac{|u_m-u_n|}{|u_m u_n|}
+< \frac{\delta^2\varepsilon}{\delta^2} = \varepsilon.\,\qedsymbol\]
+\end{Beweis}

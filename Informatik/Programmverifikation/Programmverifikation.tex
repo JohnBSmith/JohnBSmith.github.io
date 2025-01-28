@@ -63,6 +63,7 @@
   \begin{center}\strong{#1}\end{center}}
 \newcommand{\parspace}{\vspace{0.8em}}
 \newcommand{\cond}{\rightarrow}
+
 \newcommand{\kw}[1]{\textbf{\texttt{#1}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\qb}[1]{[\!\![#1]\!\!]}
@@ -72,6 +73,10 @@
 \newcommand{\Aexp}{\mathrm{Aexp}}
 \newcommand{\Bexp}{\mathrm{Bexp}}
 \newcommand{\Com}{\mathrm{Com}}
+\newcommand{\evA}{\mathcal A}
+\newcommand{\evB}{\mathcal B}
+\newcommand{\evC}{\mathcal C}
+
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\Abb}{\mathrm{Abb}}
@@ -192,21 +197,21 @@ folgenden Produktionsregeln festgelegt.
 Wir bezeichnen
 \begin{itemize}
 \item mit $\Aexp$ die Menge der arithmetischen Ausdrücke,
-\item mit $\Bexp$ die Menge der booleschen Ausdrücke
+\item mit $\Bexp$ die Menge der booleschen Ausdrücke,
 \item mit $\Com$ die Menge der Kommandos.
 \end{itemize}\pause
 Will man nun einen arithmetischen Ausdruck auswerten, denkt
-man sich dafür eine Funktion $A\colon\Aexp\to\Int$. Es ist
-\[A\qb{1+2} = 3\]
+man sich dafür eine Funktion $\evA\colon\Aexp\to\Int$. Es ist
+\[\evA\qb{1+2} = 3\]
 usw. Nun kann ein arithmetischer Ausdruck aber auch Variablen enthalten,
-womit bspw. auch der Wert $A\qb{\code{x}+1}$ bezüglich $\code{x}\in\Loc$
+womit bspw. auch der Wert $\evA\qb{\code{x}+1}$ bezüglich $\code{x}\in\Loc$
 bestimmt sein muss.
 \end{frame}
 
 \begin{frame}
-Die Auswertungsfunktion $A$ wird daher parametrisiert durch den aktuellen
-Zustand $s$. Wir haben also $A\colon\Aexp\to (S\to\Int)$
-bzw. $A\colon\Aexp\times S\to Z$.\pause
+Die Auswertungsfunktion $\evA$ wird daher parametrisiert durch den aktuellen
+Zustand $s$. Wir haben also $\evA\colon\Aexp\to (S\to\Int)$
+bzw. $\evA\colon\Aexp\times S\to\Int$.\pause
 
 \parspace
 Einen \strong{Zustand} $s$ modellieren wir schlicht als die Belegung
@@ -223,14 +228,14 @@ Zum Beispiel
 \end{frame}
 
 \begin{frame}
-Wir legen $A\colon\Aexp\to (S\to\Int)$ rekursiv fest gemäß
+Wir legen $\evA\colon\Aexp\to (S\to\Int)$ rekursiv fest gemäß
 \begin{gather*}
-A\qb{n}(s) := n,\\
-A\qb{X}(s) := s(X),\\
-A\qb{(a+a')}(s) := A\qb{a}(s) + A\qb{a'}(s),\\
-A\qb{(a-a')}(s) := A\qb{a}(s) - A\qb{a'}(s),\\
-A\qb{(a*a')}(s) := A\qb{a}(s) \cdot A\qb{a'}(s),\\
-A\qb{(a\,/\,a')}(s) := A\qb{a}(s)\,/\, A\qb{a'}(s).
+\evA\qb{n}(s) := n,\\
+\evA\qb{X}(s) := s(X),\\
+\evA\qb{a+a'}(s) := \evA\qb{a}(s) + \evA\qb{a'}(s),\\
+\evA\qb{a-a'}(s) := \evA\qb{a}(s) - \evA\qb{a'}(s),\\
+\evA\qb{a*a'}(s) := \evA\qb{a}(s) \cdot \evA\qb{a'}(s),\\
+\evA\qb{a\,/\,a'}(s) := \evA\qb{a}(s)\,/\, \evA\qb{a'}(s).
 \end{gather*}
 bezüglich $n\in\Int$, $X\in\Loc$ und $a,a'\in\Aexp$.
 Die Operationen auf der rechten Seite werden hierbei auf die übliche
@@ -239,15 +244,15 @@ und setzen $n\,/\,0:=0$ für jedes $n\in\Int$.
 \end{frame}
 
 \begin{frame}
-Wir legen $B\colon\Bexp\to (S\to\Bool)$ rekursiv fest gemäß
+Wir legen $\evB\colon\Bexp\to (S\to\Bool)$ rekursiv fest gemäß
 \begin{gather*}
-B\qb{\kw{false}}(s) := \kw{false},\\
-B\qb{\kw{true}}(s) := \kw{true},\\
-B\qb{a \;\code{=}\; a'}(s) := (A\qb{a}(s) = A\qb{a'}(s)),\\
-B\qb{a \;\code{<=}\; a'}(s) := (A\qb{a}(s)\le A\qb{a'}(s)),\\
-B\qb{(\kw{not}\;b)} := \lnot B\qb{b}(s),\\
-B\qb{(b\;\kw{and}\;b')} := B\qb{b}(s)\land B\qb{b'}(s),\\
-B\qb{(b\;\kw{or}\;b')} := B\qb{b}(s)\lor B\qb{b'}(s),
+\evB\qb{\kw{false}}(s) := \kw{false},\\
+\evB\qb{\kw{true}}(s) := \kw{true},\\
+\evB\qb{a \;\code{=}\; a'}(s) := (\evA\qb{a}(s) = \evA\qb{a'}(s)),\\
+\evB\qb{a \;\code{<=}\; a'}(s) := (\evA\qb{a}(s)\le \evA\qb{a'}(s)),\\
+\evB\qb{\kw{not}\;b} := \lnot\evB\qb{b}(s),\\
+\evB\qb{b\;\kw{and}\;b'} := \evB\qb{b}(s)\land\evB\qb{b'}(s),\\
+\evB\qb{b\;\kw{or}\;b'} := \evB\qb{b}(s)\lor\evB\qb{b'}(s),
 \end{gather*}
 bezüglich $a,a'\in\Aexp$ und $b,b'\in\Bexp$. Der Wahrheitswert der
 Relationen bzw. Verknüpfungen auf der rechten Seite wird hierbei auf die
@@ -255,24 +260,24 @@ Relationen bzw. Verknüpfungen auf der rechten Seite wird hierbei auf die
 \end{frame}
 
 \begin{frame}
-Wir legen $C\colon\Com\to (S\rightharpoonup S)$ rekursiv fest gemäß
+Wir legen $\evC\colon\Com\to (S\rightharpoonup S)$ rekursiv fest gemäß
 \begin{gather*}
-C\qb{\kw{skip}}(s) := s,\\
-C\qb{X:=a}(s) := s[X:=A\qb{a}(s)],\\
-C\qb{c; c'}(s) := C\qb{c'}(C\qb{c}(s)) = (C\qb{c'}\circ C\qb{c})(s),\\
-C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) := \begin{cases}
-C\qb{c}(s),& \text{wenn $B\qb{b}(s)=\kw{true}$},\\
-C\qb{c'}(s)& \text{sonst}.
+\evC\qb{\kw{skip}}(s) := s,\\
+\evC\qb{X:=a}(s) := s[X:=A\qb{a}(s)],\\
+\evC\qb{c; c'}(s) := \evC\qb{c'}(\evC\qb{c}(s)) = (\evC\qb{c'}\circ \evC\qb{c})(s),\\
+\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) := \begin{cases}
+\evC\qb{c}(s),& \text{wenn $\evB\qb{b}(s)=\kw{true}$},\\
+\evC\qb{c'}(s)& \text{sonst}.
 \end{cases}\\
-C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) := \begin{cases}
-\varphi_{b,c}(C\qb{c}(s)),& \text{wenn $B\qb{b}(s)=\kw{true}$},\\
+\evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) := \begin{cases}
+\varphi_{b,c}(\evC\qb{c}(s)),& \text{wenn $\evB\qb{b}(s)=\kw{true}$},\\
 s & \text{sonst}
 \end{cases}
 \end{gather*}
-mit $\varphi_{b,c}(s) := C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s)$.\pause
+mit $\varphi_{b,c}(s) := \evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s)$.\pause
 
 \parspace
-Bei $C\qb{c}$ handelt es sich um eine partielle Funktion, da die rekursive Auswertung
+Bei $\evC\qb{c}$ handelt es sich um eine partielle Funktion, da die rekursive Auswertung
 der while"=Schleife unter Umständen nicht terminiert -- zum Beispiel bei
 \[\texttt{\kw{while} \kw{true} \kw{do} \kw{skip} \kw{end}}.\]
 \end{frame}
@@ -350,15 +355,15 @@ $\{\code{y}\ge 0\}$
 Die Allgemeingültigkeit des Tripels $\{A\}c\{B\}$ wird dahingehend
 definiert als
 \[(\models\{A\}c \{B\}) \;:\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
-(I,s\models A)\Rightarrow\forall s'\in S\colon C\qb{c}(s)=s'\Rightarrow (I,s'\models B).\]\pause
+(I,s\models A)\Rightarrow\forall s'\in S\colon \evC\qb{c}(s)=s'\Rightarrow (I,s'\models B).\]\pause
 {\footnotesize In Bezug auf IMP ist der Wert $s'$,
-sofern $C\qb{c}(s)$ existiert, eindeutig bestimmt.
+sofern $\evC\qb{c}(s)$ existiert, eindeutig bestimmt.
 Denken wir uns nun den ungültigen Zustand $\bot$, der sich ergeben soll,
 wenn $c$ eine nicht terminierende Schleife ist, bekommt man eine totale Funktion
-$C\qb{c}\colon S\cup\{\bot\}\to S\cup\{\bot\}$, wobei $C\qb{c}(\bot):=\bot$
+$\evC\qb{c}\colon S\cup\{\bot\}\to S\cup\{\bot\}$, wobei $\evC\qb{c}(\bot):=\bot$
 gesetzt wird. Diesbezüglich verkürzt sich die Allgemeingültigkeit zu
 \[(\models\{A\}c \{B\}) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
-(I,s\models A)\Rightarrow (I,C\qb{c}(s)\models B).\]
+(I,s\models A)\Rightarrow (I,\evC\qb{c}(s)\models B).\]
 Hierbei verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.}
 \end{frame}
 
@@ -367,7 +372,7 @@ Hierbei verlangt man, dass $I,\bot\models A$ für jede Formel $A$ gilt.}
 Wir können die Zusicherungssprache erweitern um eine modale Operation
 $\Box_c B$ je Kommando $c$, üblicherweise $[c]B$ geschrieben.\pause{} Deren Semantik sei
 \[(I,s\models [c]B) \;:\Leftrightarrow\; \forall s'\in S\colon R_c(s,s')\Rightarrow (I,s'\models B)\]
-mit der Zugänglichkeitsrelation $R_c(s,s')\,:\Leftrightarrow\, C\qb{c}(s)=s'$.\pause
+mit der Zugänglichkeitsrelation $R_c(s,s')\,:\Leftrightarrow\, \evC\qb{c}(s)=s'$.\pause
 
 \parspace
 Diesbezüglich sind $\{A\}c\{B\}$ und $A\Rightarrow [c]B$ semantisch äquivalent.\pause
@@ -388,11 +393,11 @@ Terminiert das Programm zusätzlich, nennen wir es \emph{total korrekt}
 in Bezug auf $A,B$ und notieren dies $[A]c[B]$.\pause
 
 \parspace
-Da die Semantik von IMP eine deterministische ist, ist der Zustand $s'=C\qb{c}(s)$,
+Da die Semantik von IMP eine deterministische ist, ist der Zustand $s'=\evC\qb{c}(s)$,
 sofern dieser existiert, eindeutig bestimmt; es gibt also keine weiteren Zustände,
 an die wir $B$ fordern müssten. Daher ergibt sich
 \[(\models [A]c [B]) \;\Leftrightarrow\; \forall I\in\mathcal I_0\colon\forall s\in S\colon
-(I,s\models A)\Rightarrow\exists s'\in S\colon C\qb{c}(s)=s'\land (I,s'\models B).\]\pause
+(I,s\models A)\Rightarrow\exists s'\in S\colon \evC\qb{c}(s)=s'\land (I,s'\models B).\]\pause
 In Bezug auf die Modaloperation $\Diamond_c B$ bzw. $\langle c\rangle B$ mit der Semantik
 \[(s\models\langle c\rangle B)\;:\Leftrightarrow\; \exists s'\in S\colon R_c(s,s')\land (s'\models B).\]
 sind nun $[A]c[B]$ und $A\Rightarrow\langle c\rangle B$ semantisch äquivalent.
@@ -457,10 +462,10 @@ und dies muss dann in der Vorbedingung resultieren.\pause
 \strong{Beweis der Gültigkeit der Regel.} Wir wollen
 \[\models\{A[X:=a]\}X:=a\{A\}\]
 zeigen.\pause{} Sei dazu $s$ fest, aber beliebig. Es gelte $s\models A[X:=a]$.
-Des Weiteren gelte $C\qb{X:=a}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
+Des Weiteren gelte $\evC\qb{X:=a}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
 
 \parspace
-Gemäß der denotationellen Semantik gilt $C\qb{X:=a}(s)=s[X:=a]$, womit
+Gemäß der denotationellen Semantik gilt $\evC\qb{X:=a}(s)=s[X:=a]$, womit
 wir $s'=s[X:=a]$ haben. Schließlich folgt die Behauptung vermittels
 der Äquivalenz
 \[(s\models A[X:=a])\;\Leftrightarrow\; (s[X:=a]\models A),\]
@@ -475,10 +480,10 @@ Induktion über den Aufbau von $A$ beweisen kann.\,\qedsymbol
 \strong{Beweis ihrer Gültigkeit.}
 Wir wollen $\models\{A\}\kw{skip}\{B\}$ zeigen.
 Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
-gelte $C\qb{\kw{skip}}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
+gelte $\evC\qb{\kw{skip}}(s)=s'$. Zu zeigen ist $s'\models A$.\pause
 
 \parspace
-Gemäß der denotationellen Semantik gilt $C\qb{\kw{skip}}(s)=s$, womit
+Gemäß der denotationellen Semantik gilt $\evC\qb{\kw{skip}}(s)=s$, womit
 wir $s'=s$ und somit bereits die Behauptung haben.\,\qedsymbol
 \end{frame}
 
@@ -488,13 +493,13 @@ wir $s'=s$ und somit bereits die Behauptung haben.\,\qedsymbol
 \end{block}\pause
 \strong{Beweis ihrer Gültigkeit.} Wir wollen $\models\{A\} c; c'\{C\}$ zeigen.
 Dazu sei $s$ fest, aber beliebig. Es gelte $s\models A$. Des Weiteren
-gelte $C\qb{c;c'}(s)=s''$. Zu zeigen ist $s''\models C$.\\
+gelte $\evC\qb{c;c'}(s)=s''$. Zu zeigen ist $s''\models C$.\\
 {\footnotesize Die letzten beiden C's stehen für Unterschiedliches; aber eine
 Verwechslung ist ausgeschlossen, denke ich.}\pause
 
 \parspace
-Gemäß der denotationellen Semantik existiert $s'=C\qb{c}(s)$ mit
-\[C\qb{c;c'}(s) = C\qb{c'}(s')=s''.\]
+Gemäß der denotationellen Semantik existiert $s'=\evC\qb{c}(s)$ mit
+\[\evC\qb{c;c'}(s) = \evC\qb{c'}(s')=s''.\]
 Aus $s\models A$ und $\models\{A\}c\{B\}$ folgt nun zunächst $s'\models B$.
 Mit $\models\{B\}c'\{C\}$ folgt daraufhin $s''\models C$ aus
 $s'\models B$.\,\qedsymbol
@@ -507,13 +512,13 @@ $s'\models B$.\,\qedsymbol
 \end{block}\pause
 \strong{Beweis ihrer Gültigkeit.} Sei $s$ fest, aber beliebig.
 Es gelte $s\models A$. Des Weiteren gelte
-\[C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = s'.\]
+\[\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = s'.\]
 Zu zeigen ist $s'\models C$.\pause{} Fallunterscheidung. Im Fall
-$B\qb{b}(s)=\kw{true}$ gilt $s\models b$, also $s\models A\land b$.
+$\evB\qb{b}(s)=\kw{true}$ gilt $s\models b$, also $s\models A\land b$.
 Außerdem ergibt sich in diesem Fall die Vereinfachung
-\[C\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = C\qb{c}(s).\]
+\[\evC\qb{\text{\kw{if} $b$ \kw{then} $c$ \kw{else} $c'$ \kw{end}}}(s) = \evC\qb{c}(s).\]
 Vermittels $\models\{A\land b\}c\{C\}$ erhalten wir somit $s'\models C$.
-Die Argumentation im Fall $B\qb{b}(s)=\kw{false}$ verläuft analog.\,\qedsymbol
+Die Argumentation im Fall $\evB\qb{b}(s)=\kw{false}$ verläuft analog.\,\qedsymbol
 \end{frame}
 
 \begin{frame}
@@ -531,21 +536,21 @@ Programmverifikation dar.
 \begin{frame}
 \strong{Beweis ihrer Gültigkeit.} Sei $s$ fest, aber beliebig.
 Es gelte $s\models A$. Des Weiteren gelte
-\[C\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) = s''.\]
+\[\evC\qb{\text{\kw{while} $b$ \kw{do} $c$ \kw{end}}}(s) = s''.\]
 Zu zeigen ist $s''\models A\land\lnot b$.\pause{} Induktion über die
 Anzahl der Durchläufe. Im Anfang findet kein Durchlauf statt. Das
-geht aber nur, wenn $B\qb{b}(s)=\kw{false}$, also $s\models\lnot b$.
+geht aber nur, wenn $\evB\qb{b}(s)=\kw{false}$, also $s\models\lnot b$.
 Da dem Zustand $s$ nach der Semantik der Schleife in diesem Fall keine Änderung
 widerfährt, gilt $s=s''$. Demnach gilt $s''\models A$ und $s''\models\lnot b$,
 also $s''\models A\land\lnot b$.\pause
 
 \parspace
 Zum Induktionsschritt. Da die Schleife durchlaufen wird, existiert
-$s'$ mit $C\qb{c}(s)=s'$. Die restlichen null der mehr Schleifendurchläufe
+$s'$ mit $\evC\qb{c}(s)=s'$. Die restlichen null der mehr Schleifendurchläufe
 führen dann zum Zustand $s''$, das heißt, $\varphi_{b,c}(s')=s''$.
 Die Induktionsvoraussetzung ist, dass $s''\models A\land\lnot b$
 aus $s'\models A$ folgt. Es verbleibt also $s'\models A$ zu zeigen.
-Weil der erste Durchlauf stattfindet, muss des Weiteren $B\qb{b}(s)=\kw{true}$,
+Weil der erste Durchlauf stattfindet, muss des Weiteren $\evB\qb{b}(s)=\kw{true}$,
 also $s\models b$ gelten, womit wir $s\models A\land b$ haben.
 Vermittels $\models\{A\land b\}c\{A\}$, was ja Kraft der Prämisse der Regel
 zur Verfügung steht, erhält man schließlich $s'\models A$.\,\qedsymbol
@@ -557,7 +562,7 @@ zur Verfügung steht, erhält man schließlich $s'\models A$.\,\qedsymbol
 \vdash\{A'\}c\{B\}}\]
 \end{block}\pause
 \strong{Beweis ihrer Gültigkeit.} Es gelte $s\models A'$.
-Des Weiteren gelte $C\qb{c}(s)=s'$. Zu zeigen ist $s'\models B$.\pause{}
+Des Weiteren gelte $\evC\qb{c}(s)=s'$. Zu zeigen ist $s'\models B$.\pause{}
 Mit $\models A'\Rightarrow A$ erhält man zunächst $s\models A$.
 Mit $\models\{A\}c\{B\}$ daraufhin $s'\models B$.\,\qedsymbol
 \end{frame}
@@ -568,7 +573,7 @@ Mit $\models\{A\}c\{B\}$ daraufhin $s'\models B$.\,\qedsymbol
 \vdash\{A\}c\{B'\}}\]
 \end{block}\pause
 \strong{Beweis ihrer Gültigkeit.} Es gelte $s\models A$.
-Des Weiteren gelte $C\qb{c}(s)=s'$. Zu zeigen ist $s'\models B'$.\pause{}
+Des Weiteren gelte $\evC\qb{c}(s)=s'$. Zu zeigen ist $s'\models B'$.\pause{}
 Mit $\models\{A\}c\{B\}$ erhält man zunächst $s'\models B$. Mit
 $\models B\Rightarrow B'$ erhält man daraufhin $s'\models B'$.\,\qedsymbol.
 \end{frame}
@@ -857,19 +862,19 @@ Definition variant (s: State) (X: Loc) (n: Z): State :=
 \end{frame}
 
 \begin{frame}
-Die Auswertungsfunktion $C$ ist wie gesagt eine partielle. Als Folge
+Die Übergangsfunktion $\evC$ ist wie gesagt eine partielle. Als Folge
 dessen tut sich das Problem auf, dass ihre Implementierung unmöglich
 wird, da in der Typentheorie nur solche Rekursionen fassbar
 sind, deren Terminierung geklärt ist.
 
 \parspace
 Wir lösen dieses Problem in zwei Schritten. Erstens wird die partielle
-Funktion $C$ als Relation formuliert. Statt $C\qb{c}(s)=s'$ notieren
-wir also $C\qb{c}(s)(s')$ bzw. \code{evC c s s\ttq}. Zweitens beschränken
+Funktion $\evC$ als Relation formuliert. Statt $\evC\qb{c}(s)=s'$ notieren
+wir also $\evC\qb{c}(s)(s')$ bzw. \code{evC c s s\ttq}. Zweitens beschränken
 wir die rekursive Auswertung der Schleife über eine rekursive
 Konstruktion \code{iter} auf eine maximale Tiefe $N$. Da nicht klar
 ist, wie groß $N$ bei
-\[C\qb{\kw{while}\; b\; \kw{do}\; c\; \kw{end}}(s)(s')\]
+\[\evC\qb{\kw{while}\; b\; \kw{do}\; c\; \kw{end}}(s)(s')\]
 mindestens sein muss, wird lediglich die Existenz von $N$ gefordert.
 \end{frame}
 
@@ -914,7 +919,7 @@ Diese Festlegungen sind folgendermaßen zu verstehen:
 \item Es steht \code{sat s A} für die Erfüllung $s\models A$.
 \item Es steht \code{valid A c B} für die Gültigkeit des Tripels $\{A\}c\{B\}$.
 \item Es steht \code{subst A X a} für die Substitution $A[X:=a]$, die direkt
-als $s\mapsto A(s[X:=A\qb{a}(s)])$ definiert wird, insofern die Formel
+als $s\mapsto A(s[X:=\evA\qb{a}(s)])$ definiert wird, insofern die Formel
 von $A$ verborgen bleibt und das Substitutionslemma somit entfallen muss.
 {\footnotesize Die beiden $A$ sind von unterschiedlicher Bedeutung --
 das zweite steht für \code{evA}, siehe oben.}
