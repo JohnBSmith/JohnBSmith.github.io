@@ -11,7 +11,8 @@ var gallina_keyword = {
     "Admitted":0, "Check":0, "Compute":0, "Defined":0, "Definition":0,
     "end":0, "fix":0, "forall":0, "fun":0, "Goal":0, "Import":0, "in":0,
     "Inductive":0, "let":0, "Local":0, "match":0, "Open":0, "Proof":0,
-    "Qed":0, "Record":0, "Require":0, "Scope":0, "Theorem":0, "with":0
+    "Qed":0, "Record":0, "Require":0, "Scope":0, "Theorem":0, "with":0,
+    "Fixpoint":0
 };
 
 function node_syntax(s){

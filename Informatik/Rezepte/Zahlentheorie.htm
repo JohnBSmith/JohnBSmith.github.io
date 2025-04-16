@@ -30,6 +30,7 @@ werden daraufhin effizientere Algorithmen entwickelt.
   <li><a href="#Teilerfunktion">Teilerfunktion</a>
   <li><a href="#ggT">Größter gemeinsamer Teiler</a>
   <li><a href="#kgV">Kleinstes gemeinsames Vielfaches</a>
+  <li><a href="#ggT-erweitert">Erweiterter euklidischer Algorithmus</a>
   </ol>
 <li><a href="#Primzahlen">Primzahlen</a>
   <ol>
@@ -295,6 +296,40 @@ def lcm(*t):
 
 <p>In Pythons Standardbibliothek ist <code>lcm</code> im
 Modul <code>math</code> zu finden.
+
+<h3 id="ggT-erweitert">Erweiterter euklidischer Algorithmus</h3>
+
+<p>Gesucht ist ein Tripel (<var>g</var>,&nbsp;<var>x</var>,&nbsp;<var>y</var>),
+so dass <var>g</var> = gcd(<var>a</var>,&nbsp;<var>b</var>) und
+<var>a</var><var>x</var>&nbsp;+ <var>b</var><var>y</var> =&nbsp;<var>g</var>.
+Dies schafft der erweiterte euklidische Algorithmus. Dessen rekursive
+Formulierung ist:
+
+<pre class="ibox python">
+def gcd_ext(a, b):
+    if b == 0:
+        return (a, 1, 0)
+    else:
+        g, x1, y1 = gcd_ext(b, a%b)
+        x = y1
+        y = x1 - (a//b) * y1
+        return (g, x, y)
+</pre>
+
+<p>Die entsprechende iterative Formulierung ist:
+
+<pre class="ibox python">
+def gcd_ext(a, b):
+    g, r = a, b
+    x, s = 1, 0
+    y, t = 0, 1
+    while r != 0:
+        q = g//r
+        g, r = r, g - q*r
+        x, s = s, x - q*s
+        y, t = t, y - q*t
+    return g, x, y
+</pre>
 
 <h2 id="Primzahlen">Primzahlen</h2>
 
@@ -766,6 +801,7 @@ def inv(x, n):
     e = 1 if n != 1 else 0
     for y in range(0, n):
         if (x*y)%n == e: return y
+    raise ValueError("x und n sind nicht teilerfremd")
 </pre>
 
 <p>berechnet. Das folgende Programm erstellt die Gruppentafel der
@@ -779,6 +815,33 @@ def print_group_table(n, space = 2):
     print("─"*(space + 2 + (space + 1)*len(G)))
     for x in G:
         print(fmt(x) + " | " + " ".join(fmt((x*y)%n) for y in G))
+</pre>
+
+<p>Die schnelle Berechnung der Inverse schafft der erweiterte
+euklidische Algorithmus:
+
+<pre class="ibox python">
+def inv(a, m):
+    g, x, _ = gcd_ext(a, m)
+    if g != 1:
+        raise ValueError("a und m sind nicht teilerfremd")
+    return x%m
+</pre>
+
+<p>Händisches Inlining von <code>gcd_ext</code> führt zu:
+
+<pre class="ibox python">
+def inv(a, m):
+    if m == 1: return 0
+    m0 = m
+    x, y = 0, 1
+    while m != 0:
+        q = a//m
+        a, m = m, a%m
+        x, y = y - q*x, x
+    if a != 1:
+        raise ValueError("a und m sind nicht teilerfremd")
+    return y%m0
 </pre>
 
 <h3 id="Primitivwurzeln">Primitivwurzeln</h3>

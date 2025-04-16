@@ -15,6 +15,7 @@
 <h2>Inhaltsverzeichnis</h2>
 <ol>
 <li><a href="#Induktive-Typen">Induktive Typen</a>
+<li><a href="#Rekursion">Rekursion</a>
 </ol>
 
 <h2 id="Induktive-Typen">Induktive Typen</h2>
@@ -112,6 +113,69 @@ Definition sq '(Build_Point x y) :=
 <p>zeigt. Man darf dies allerdings als bedenklich erachten, weil
 es nun, da die Projektionen vom selben Typ sind, auf die
 Reihenfolge ankommt.
+
+<h2 id="Rekursion">Rekursion</h2>
+
+<h3>Einfache Rekursion</h3>
+
+<p>Zur rekursiven Festlegung einer Funktion nutzt man statt
+<code class="keyword">Definition</code> das Schlüsselwort
+<code class="keyword">Fixpoint</code>.
+
+<pre class="ibox gallina">
+Fixpoint pow (x n: nat): nat :=
+  match n with
+  | 0 =&gt; 1
+  | S n =&gt; x*(pow x n)
+  end.
+
+Compute pow 2 10.
+</pre>
+
+
+<p>Diese Festlegung entspricht der folgenden Anwendung des Rekursors
+<code>nat_rec</code>. Jeder induktive Typ induziert einen Rekursor,
+der automatisch definiert wird.
+
+<pre class="ibox gallina">
+Definition pow x: nat -&gt; nat :=
+  nat_rec (fun n =&gt; nat) 1 (fun n y =&gt; x*y).
+</pre>
+
+
+<h3>Wechselseitige Rekursion</h3>
+
+<p>Zur wechselseitigen Rekursion fügt man die weitere rekursive
+Erklärung mit dem Schlüsselwort <code class="keyword">with</code> hinzu.
+
+<pre class="ibox gallina">
+Fixpoint even (n: nat) :=
+  match n with
+  | 0 =&gt; true
+  | S n =&gt; odd n
+  end
+with odd (n: nat) :=
+  match n with
+  | 0 =&gt; false
+  | S n =&gt; even n
+  end.
+</pre>
+
+<p>Alternativ geht es auch mit einem let-Ausdruck.
+
+<pre class="ibox gallina">
+Fixpoint even (n: nat) :=
+  let fix odd (n: nat) :=
+    match n with
+    | 0 =&gt; false
+    | S n =&gt; even n
+    end
+  in
+    match n with
+    | 0 =&gt; true
+    | S n =&gt; odd n
+    end.
+</pre>
 
 </body>
 </html>

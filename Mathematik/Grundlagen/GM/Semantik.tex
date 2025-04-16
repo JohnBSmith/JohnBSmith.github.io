@@ -475,8 +475,14 @@ Struktur an, indem%
 usw. erklärt wird. Laut der Ersetzungsregel sind diese wohldefiniert,
 womit $\equiv$ die Rolle einer Kongruenzrelation einnimmt.
 
-So weit das gerade Gesagte geklärt ist, können wir die eckigen
-Klammern nun fortlassen, ohne dass Verwirrung aufkommen sollte.
+Besteht über die Semantik noch Unklarheit, kann man die gerade aufgezeigte
+Konstruktion auch über die Ableitbarkeitsrelation statt der semantischen
+Folgerung vornehmen. Hierbei spricht man, sofern sie aufgeht, von der
+\emph{Lindenbaum"=Tarski"=Algebra}\index{Lindenbaum-Tarski-Algebra} des
+jeweiligen logischen Systems. Während bei der klassischen Aussagenlogik
+tatsächlich eine boolesche Algebra herauskommt, führt die intuitionistische
+zu einer Heyting"=Algebra.
+
 Es spielt keine wesentliche Rolle, ob man bezüglich $\equiv$ mit den
 Formeln, oder bezüglich $=$ mit den Klassen rechnet. Es bleibt trotzdem
 von Bedeutung, auf welche Formeln wir uns beziehen. Zwei unterschiedliche
@@ -485,58 +491,349 @@ Darstellungen derselben Klasse. Beim üblichen Rechnen mit Termen
 werden zwei unterschiedliche Darstellungen desselben Elements ja auch
 auseinandergehalten.
 
-Der Modus ponens nimmt nun die Form%
-\[\dfrac{(A\cond B)=1\quad\;\; A=1}{B=1}\]
+Der Modus ponens nimmt nun bzgl. $a:=[A]$ und $b:=[B]$ die Form%
+\[\dfrac{(a\cond b)=1\quad\;\; a=1}{b=1}\]
 an. Gesucht ist eine Herleitung der Konklusion aus den beiden Prämissen,
 bei der ausschließlich boolesche Algebra zur Anwendung kommt. Keine
-schwierige Aufgabe. Mit $A=1$ gilt die Umformung%
-\[1 = (A\cond B) = (\lnot A\lor B) = (\lnot 1\lor B) = (0\lor B) = B.\]
-Die Konklusion $B=1$ konnte also tatsächlich \emph{ausgerechnet} werden.
+schwierige Aufgabe. Mit $a=1$ gilt die Umformung%
+\[1 = (a\cond b) = (\lnot a\lor b) = (\lnot 1\lor b) = (0\lor b) = b.\]
+Die Konklusion $b=1$ konnte also tatsächlich \emph{ausgerechnet} werden.
 Diese Vorgehensweise müssen wir noch auf die allgemeine Form des Modus
 ponens und der restlichen Schlussregeln übertragen.
 
 Die Abhängigkeit von Annahmen lässt sich folgendermaßen beschreiben.
 Wir fassen die Annahmen $H_1,\ldots,H_n$ zunächst zur Hypothese
 $H:=(H_1\land\ldots\land H_n)$ zusammen. Die Folgerung
-$H_1,\ldots,H_n\models A$ ist daraufhin mit $H\le A$ gleichbedeutend.
-Die allgemeine Form des Modus ponens nimmt diesbezüglich die Gestalt
-\[\dfrac{H\le (A\cond B)\quad\;\; H\le A}{H\le B}\]
-an. Mit der Einsicht, dass $H\le A$ zu $(H\land A)=H$ äquivalent ist,
+$H_1,\ldots,H_n\models A$ ist daraufhin bzgl. $h:=[H]$ mit $h\le a$
+gleichbedeutend. Die allgemeine Form des Modus ponens nimmt
+diesbezüglich die Gestalt
+\[\dfrac{h\le (a\cond b)\quad\;\; h\le a}{h\le b}\]
+an. Mit der Einsicht, dass $h\le a$ zu $(h\land a)=h$ äquivalent ist,
 findet sich zunächst die Umformung%
-\[(H\land\lnot A) = (H\land A\land\lnot A) = (H\land 0) = 0.\]
-Weil auch $H\le (A\cond B)$ zu $(H\land (A\cond B))=H$ äquivalent ist,
+\[(h\land\lnot a) = (h\land a\land\lnot a) = (h\land 0) = 0.\]
+Weil auch $h\le (a\cond b)$ zu $(h\land (a\cond b))=h$ äquivalent ist,
 gelingt daraufhin die Umformung%
 \begin{align*}
-H &= (H\land (A\cond B)) = (H\land (\lnot A\lor B))
-= ((H\land\lnot A)\lor (H\land B))\\
-&= (0\lor (H\land B)) = (H\land B).
+h &= (h\land (a\cond b)) = (h\land (\lnot a\lor b))
+= ((h\land\lnot a)\lor (h\land b))\\
+&= (0\lor (h\land b)) = (h\land b).
 \end{align*}
-Und die Gleichung $H = (H\land B)$ ist schließlich wieder zur
-gesuchten Konklusion $H\le B$ äquivalent.
+Und die Gleichung $h = (h\land b)$ ist schließlich wieder zur
+gesuchten Konklusion $h\le b$ äquivalent.
 
 Die Subjunktionseinführung nimmt die Gestalt
-\[\dfrac{(H\land A)\le B}{H\le (A\cond B)}\]
-an. Zu ihrer Bestätigung wendet man dieses mal die allgemeine Äquivalenz
-von $X\le Y$ und $X\lor Y = Y$ auf die Prämisse an, was zu
-$((H\land A)\lor B) = B$ führt. Hiermit findet sich die
+\[\dfrac{(h\land a)\le b}{h\le (a\cond b)}\]
+an. Zu ihrer Bestätigung wendet man dieses Mal die allgemeine Äquivalenz
+von $x\le y$ und $(x\lor y) = y$ auf die Prämisse an, was zu
+$((h\land a)\lor b) = b$ führt. Hiermit findet sich die
 Umformung%
 \begin{align*}
-(H\land (A\cond B)) &= (H\land (\lnot A\lor B))
-= (H\land (\lnot A\lor (H\land A)\lor B))\\
-&= ((H\land\lnot A)\lor (H\land H\land A)\lor (H\land B))\\
-&= (H\land (\lnot A\lor A)\lor (H\land B))
-= (H\lor (H\land B)) = H.
+(h\land (a\cond b)) &= (h\land (\lnot a\lor b))
+= (h\land (\lnot a\lor (h\land a)\lor b))\\
+&= ((h\land\lnot a)\lor (h\land h\land a)\lor (h\land b))\\
+&= (h\land (\lnot a\lor a)\lor (h\land b))
+= (h\lor (h\land b)) = h.
 \end{align*}
 Und diese Gleichung ist zur Konklusion äquivalent. Ich denke, die Bestätigung
 der restlichen Schlussregeln brauche ich nicht weiter ausführen, -- dies
-stellt nunmehr eine Übung dar. Bemerkt werden darf aber noch, dass $H\le A$
-auch zu $(\lnot H\lor A)=1$ äquivalent ist. Anders als bei $H\land A=H$
-tauchen $H,A$ darin nur einmal auf. Jedenfalls lassen sich alle Prämissen
+stellt nunmehr eine Übung dar. Bemerkt werden darf aber noch, dass $h\le a$
+auch zu $(\lnot h\lor a)=1$ äquivalent ist. Anders als bei $h\land a=h$
+tauchen $h,a$ darin nur einmal auf. Jedenfalls lassen sich alle Prämissen
 und Konklusionen auch immer als Gleichungen darstellen. Und so ergibt sich,
 dass das natürliche Schließen unter den gemachten Beziehungen allein aus
 dem Rechnen mit Gleichungen vermittels der Gesetze der booleschen
 Algebra entspringt.
 
+\newpage
+\subsection{Vollständigkeit des natürlichen Schließens}
+
+Der Beweis der Korrektheit eines vorgelegten Kalküls versichert,
+dass jede Schlussregel und jedes Axiom die inhaltliche Wahrheit
+bewahrt. Eine Aussage als wahr zu befinden bezieht sich aber immer
+auf eine bestimmte, zuvor festgelete Semantik. Woher wissen wir denn
+eigentlich, dass diese Semantik die Logik adäquat beschreibt? Es wäre
+eine Semantik denkbar, die viel mehr Aussagen als wahr befindet, als
+aus den Regeln und Axiomen folgen, was Zweifel an der Semantik sähte.
+Was verschafft uns also die Sicherheit, die »richtige« Semantik in den
+Händen zu halten? Oder aber die Semantik erscheint nur zu weitgehend,
+weil nicht bemerkt wurde, dass der Kalkül schlicht zu schwach ist.
+Tappen wir im Dunkeln?
+
+Idealerweise sollte jede wahre Aussage auch ableitbar sein, was als
+\emph{Vollständigkeit} des Kalküls bezeichnet wird. Das heißt, aus
+$\Gamma\models A$ sollte $\Gamma\vdash_S A$ folgen. Zusammen mit der
+Korrektheit stellt sich damit nämlich eine Charakterisierung des
+Kalküls bzw. der Logik her, dergestalt dass $\Gamma\vdash_S A$ als zu
+$\Gamma\models A$ äquivalent befunden wird. Zumindest weiß man dann,
+dass ein bestimmter Kalkül und eine bestimmte Semantik zusammen gehören
+bzw. einander entsprechen. Man mag daraufhin weiter argwöhnisch fragen,
+ob das gefundene Duo aus Kalkül und Semantik die wirklichen Umstände
+adäquat erfasst, wie auch immer diese Wirklichkeit genau beschaffen
+sei. In der Tat existieren unterschiedliche Logiken, und welche davon
+geeignet ist, wird letztlich Gegenstand von pragmatischen, über
+beweistheoretische, bishin zu epistemiologischen Erwägungen, siehe bspw.
+\cite{George}.
+
+Im Folgenden wird die Vollständigkeit des natürlichen Schließens für
+die klassische Aussagenlogik bezüglich der klassischen Semantik gezeigt.
+Wir benötigen ein paar Hilfssätze.
+
+Eine Formel $A$ wollen wir \emph{erfüllbar} nennen, wenn eine
+Interpretation $I$ mit $I\models A$ existiert, andernfalls
+\emph{unerfüllbar}. Entsprechend heiße ein Formelmenge $\Gamma$
+\emph{erfüllbar}, wenn $I$ mit $I\models\Gamma$ existiert.
+
+\begin{Satz}\label{gueltig-unerf}
+Gilt $\Gamma\models A$, so ist $\Gamma\cup\{\lnot A\}$ unerfüllbar.
+\end{Satz}
+\begin{Beweis}
+Es gelte $\Gamma\models A$. Also folgt $I\models A$ aus $I\models\Gamma$
+für jede Interpretation $I$. Angenommen, es existierte eine
+Interpretation $J$ mit $J\models\Gamma\cup\{\lnot A\}$, also
+$J\models\Gamma$ und $J\models\lnot A$. Mit der Spezialisierung $I:=J$
+folgern wir $J\models A$ aus $J\models\Gamma$. Nun bedeutet
+$J\models\lnot A$ definitionsgemäß $\lnot(J\models A)$, was im
+Widerspruch zu $J\models A$ steht.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Die Umkehrung dieses Sachverhaltes bestätigt sich ebenfalls leicht,
+wird im Weiteren aber nicht benötigt.
+
+Das syntaktische Analogon der Erfüllbarkeit ist die Konsistenz.
+Eine Formelmenge $\Gamma$ heiße \emph{inkonsistent}, wenn
+$\Gamma\vdash_S\bot$, andernfalls \emph{konsistent}. Zumindest sollte
+speziell $\Gamma:=\emptyset$ konsistent sein, was nichts anderes als die
+Widerspruchsfreiheit des Kalküls bedeutet. Andernfalls ließe sich
+vermittels ex falso quodlibet jede beliebige Aussage ableiten, was den
+Kalkül sinnlos machte.
+
+\begin{Satz}\label{inkon-ableitbar}
+Ist $\Gamma\cup\{\lnot A\}$ inkonsistent, so gilt $\Gamma\vdash_{\mathrm C} A$.
+\end{Satz}
+\begin{Beweis}
+Es gelte $\Gamma\cup\{\lnot A\}\vdash_{\mathrm C}\bot$. Somit folgt
+$\Gamma\vdash_{\mathrm C}\lnot\lnot A$ via Implikationseinführung beim
+natürlichen Schließen bzw. Deduktionstheorem beim Hilbertkalkül. Mit der
+Beseitigung der Doppelnegation ergibt sich daraufhin
+$\Gamma\vdash_{\mathrm C} A$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Man beachte, dass der Beweis die klassische Logik als Gegenstand
+voraussetzt. Zur intuitionistischen Logik ist dieser Beweis nicht
+durchführbar.
+
+Der nächste Satz stellt eher ein allgemeines Resultat der Mengenlehre
+dar. Der Leser mag den Beweis gerne zunächst überspringen, und
+nach Bewältigung des Kapitels über Mengenlehre hierher zurückkommen.
+
+\begin{Satz}\label{endliche-Teilmenge-von-lim-sup}
+Die Mengenfolge $(\Gamma_i)_{i\in\N}$ sei monoton steigend.
+Sei $\Gamma':=\bigcup_{i\in\N}\Gamma_i$. Ist $\Delta\subseteq\Gamma'$
+endlich, dann existiert $j\in\N$ mit $\Delta\subseteq\Gamma_j$.
+\end{Satz}
+\begin{Beweis}
+Für $\Delta=\emptyset$ ist der Beweis trivial. Wir setzen im Weiteren
+also $\Delta\ne\emptyset$ voraus. Aufgrund der Endlichkeit
+besitzt $\Delta$ die Form $\Delta = \{A_1,\ldots,A_n\}$. Wegen
+$\Delta\subseteq\Gamma'$ gilt $A_k\in\Gamma'$ zu jedem der $k$. Folglich
+existiert jeweils ein Index $i(k)$ mit $A_k\in\Gamma_{i(k)}$, denn
+andernfalls läge $A_k$ nicht in der Vereinigung $\Gamma'$. Sei $j$ das
+Maximum der Indizes $i(1)$ bis $i(n)$. Sei nun $A\in\Delta$ fest,
+aber beliebig. Also ist $A=A_k$ für ein $k$, und somit
+$A\in\Gamma_{i(k)}$. Wir haben $i(k)\le j$, daher $\Gamma_{i(k)}\subseteq\Gamma_j$
+aufgrund der Monotonie, womit $A\in\Gamma_j$. Ergo haben wir ein $j$
+mit $\Delta\subseteq\Gamma_j$ konstruiert.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Formeln-abzaehlbar}
+Die Menge der logischen Formeln ist abzählbar.
+\end{Satz}
+\begin{Beweis}
+Jede Formel lässt sich auf die übliche Art als endliche Zeichenkette
+darstellen. Wir ordnen daher die Zeichenketten nach ihrer Länge. Zu
+jeder Länge gibt es nur endlich viele Zeichenketten, aus denen die
+wohlgeformten Formeln extrahiert und lexikographisch geordnet werden.
+Somit erhält man eine Abzählung aller Formeln, die darüber hinaus
+bijektiv ist.
+\end{Beweis}
+
+\begin{Definition}
+Eine Formelmenge $\Gamma$ heißt \emph{maximalkonsistent}, wenn sie
+konsistent ist, aber $\Gamma\cup\{A\}$ inkonsistent für jede Formel
+$A\notin\Gamma$.
+\end{Definition}
+
+\noindent
+Der nächste Satz versichert, dass sich eine konsistente Formelmenge
+stets zu einer maximalkonsistenten erweitern lässt.
+
+\begin{Satz}[Lemma von Lindenbaum]\label{Lemma-Lindenbaum}\newlinefirst
+Zu jedem konsistenten $\Gamma$ existiert ein maximalkonsitentes
+$\Gamma'$ mit $\Gamma\subseteq\Gamma'$.
+\end{Satz}
+\begin{Beweis}
+Laut Satz \ref{Formeln-abzaehlbar} ist die Menge sämtlicher Formeln
+abzählbar. Somit liegt eine Abzählung $(A_i)_{i\in\N}$ vor, die jede
+Formel mindestens einmal aufzählt. Die Folge $(\Gamma_i)_{i\in\N}$
+legen wir rekursiv fest als
+\[\Gamma_0 := \Gamma,\qquad \Gamma_{i+1} := \begin{cases}
+\Gamma_i\cup\{A_i\}, & \text{falls konsistent},\\
+\Gamma_i, & \text{sonst}.
+\end{cases}\]
+Sei nun $\Gamma':=\bigcup_{i\in\N}\Gamma_i$. Zunächst ist jedes
+$\Gamma_i$ konsistent, weil die Folge genau auf diese Weise erklärt
+wurde. Angenommen, $\Gamma'$ wäre inkonsistent, dann existierte aufgrund
+der Kompaktheit eine endliche Teilmenge $\Delta\subseteq\Gamma'$, die
+bereits inkonsistent ist. Zu dieser existiert laut Satz
+\ref{endliche-Teilmenge-von-lim-sup} ein $j$ mit $\Delta\subseteq\Gamma_j$,
+was aber absurd ist, weil folglich $\Gamma_j$ erst recht inkonsistent wäre.
+Ergo muss $\Gamma'$ konsistent sein.
+
+Nun zur Maximalität von $\Gamma'$. Es gelte $A\notin\Gamma'$. Da
+mindestens ein $i$ mit $A=A_i$ existiert, muss $A\notin\Gamma_{i+1}$
+gelten, denn $\Gamma_{i+1}\subseteq\Gamma'$. Das geht aber nur, wenn
+$\Gamma_{i+1}=\Gamma_i$, also wenn $\Gamma_i\cup\{A\}$ inkonsistent ist.
+Wegen $\Gamma_i\cup\{A\}\subseteq\Gamma'\cup\{A\}$ ist dann
+$\Gamma'\cup\{A\}$ erst recht inkonsistent.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{maxkon-abgeschlossen}
+Eine maximalkonsistente Menge $\Gamma$ ist deduktiv abgeschlossen.
+Das heißt, es gilt $\Cn(\Gamma)=\Gamma$, also
+\[(\Gamma\vdash_{\mathrm C} A)\cond A\in\Gamma.\]
+\end{Satz}
+\begin{Beweis}
+Es gelte $\Gamma\vdash_{\mathrm C} A$. Angenommen, $\Gamma\cup\{A\}$
+wäre inkonsistent. Dann gölte $\Gamma\vdash_{\mathrm C}\lnot A$
+via Negationseinführung, ergo $\Gamma\vdash_{\mathrm C}\bot$ via
+Negationsbeseitigung. Also wäre $\Gamma$ inkonsistent, was aber der
+Konsistenz von $\Gamma$ widerspricht. Ergo muss $\Gamma\cup\{A\}$
+konsistent sein. Wäre $A\notin\Gamma$, wäre $\Gamma\cup\{A\}$
+inkonsistent aufgrund der Maximalkonsistenz von $\Gamma$, was der
+gerade gemachten Feststellung widerspricht.
+Ergo gilt $A\in\Gamma$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Der nächste Satz zeigt auf, dass eine maximalkonsistente Formelmenge
+die Rekursionsschritte in der Erklärung der Erfüllungsrelation
+reflektiert.
+
+\begin{Satz}\label{maxkon-refl-sat}
+Eine maximalkonsistente Menge $\Gamma$ besitzt die Eigenschaften:
+\[\begin{array}{@{}ll}
+1. & \bot\notin\Gamma.\\
+2. & (\lnot A)\in\Gamma\bicond A\notin\Gamma,\\
+3. & (A\cond B)\in\Gamma\bicond A\notin\Gamma\lor B\in\Gamma,\\
+4. & (A\land B)\in\Gamma\bicond A\in\Gamma\land B\in\Gamma,\\
+5. & (A\lor B)\in\Gamma\bicond A\in\Gamma\lor B\in\Gamma,\\
+6. & (A\bicond B)\in\Gamma\bicond
+  (A\cond B)\in\Gamma\land (B\cond A)\in\Gamma.
+\end{array}\]
+\end{Satz}
+\begin{Beweis}
+Zu 1. Dies gilt, weil $\Gamma$ konsistent ist.
+
+Zu 2. Es gelte $\lnot A\in\Gamma$, ergo $\Gamma_{\mathrm C} A$.
+Angenommen, $A\in\Gamma$. Dann $\Gamma_{\mathrm C} A$, also
+$\Gamma_{\mathrm C}\bot$ via Negationsbeseitigung, was aber der
+Konsistenz von $\Gamma$ widerspricht. Ergo $A\notin\Gamma$.
+Umgekehrt gelte $A\notin\Gamma$. Aufgrund der Maximalkonsistenz
+von $\Gamma$ bedeutet dies $\Gamma\cup\{A\}\vdash_{\mathrm C}\bot$,
+also $\Gamma\vdash_{\mathrm C}\lnot A$ via Negationseinführung,
+ergo $\lnot A\in\Gamma$ vermittels Satz \ref{maxkon-abgeschlossen}.
+
+Zu 3. Es gelte $A\cond B\in\Gamma$, ergo $\Gamma\vdash_{\mathrm C}A\cond B$.
+Fallunterscheidung. Im Fall $A\notin\Gamma$ folgt die Disjunktion
+unmittelbar. Im Fall $A\in\Gamma$ gilt $\Gamma\vdash_{\mathrm C} A$,
+also $\Gamma\vdash_{\mathrm C}B$ via Implikationsbeseitigung.
+Und somit $B\in\Gamma$ vermittels Satz \ref{maxkon-abgeschlossen}.
+Ergo die Disjunktion. Umgekehrt gelte $A\notin\Gamma\lor B\in\Gamma$.
+Fallunterscheidung. Im Fall $A\notin\Gamma$ gilt $(\lnot A)\in\Gamma$
+gemäß 2. Ergo $\Gamma\vdash_{\mathrm C}\lnot A$. Zusammen mit
+$A\vdash_{\mathrm C} A$ folgt $\Gamma,A\vdash_{\mathrm C}\bot$
+via Negationsbeseitigung, also $\Gamma,A\vdash_{\mathrm C}B$ via
+ex falso quodlibet. Im Fall $B\in\Gamma$ gilt $\Gamma\vdash_{\mathrm C}B$,
+womit man via Abschwächung zu $\Gamma,A\vdash_{\mathrm C} B$ gelangt.
+Es folgt $\Gamma\vdash_{\mathrm C}A\cond B$ via Implikationseinführung,
+ergo $(A\cond B)\in\Gamma$ vermittels Satz \ref{maxkon-abgeschlossen}.
+
+Zu 4. Es gelte $(A\land B)\in\Gamma$, ergo $\Gamma\vdash_{\mathrm C}A\land B$.
+Via Konjunktionsbeseitigung folgt $\Gamma\vdash_{\mathrm C}A$ sowie
+$\Gamma\vdash_{\mathrm C}B$. Vermittels Satz \ref{maxkon-abgeschlossen}
+folgt daraus $A\in\Gamma$ sowie $B\in\Gamma$. Umgekehrt gelte
+$A\in\Gamma$ und $B\in\Gamma$, ergo $\Gamma\vdash_{\mathrm C}A$
+und $\Gamma\vdash_{\mathrm C}B$, also $\Gamma\vdash_{\mathrm C}A\land B$
+via Konjunktionseinführung. Ergo $A\land B\in\Gamma$ vermittels Satz
+\ref{maxkon-abgeschlossen}. Ergo folgt die Disjunktion. Umgekehrt
+gelte diese Disjunktion $A\in\Gamma\lor B\in\Gamma$. Fallunterscheidung.
+Im Fall $A\in\Gamma$ gilt $\Gamma\vdash_{\mathrm C} A$, also
+$\Gamma\vdash_{\mathrm C} A\lor B$ via Disjunktionseinführung.
+Im Fall $B\in\Gamma$ gelangt man analog zu $\Gamma\vdash_{\mathrm C} A\lor B$.
+Ergo folgt $(A\lor B)\in\Gamma$ vermittels Satz \ref{maxkon-abgeschlossen}.
+
+Zu 5. Es gelte $(A\lor B)\in\Gamma$, ergo
+$\Gamma\vdash_{\mathrm C}A\lor B$. Fallunterscheidung. Im Fall
+$A\in\Gamma$ folgt die Disjunktion unmittelbar. Im Fall $A\notin\Gamma$
+ist $\Gamma\cup\{A\}$ inkonsistent, ergo $\Gamma\cup\{A\}\vdash_{\mathrm C} B$
+via ex falso quodlibet. Weiterhin folgt $\Gamma\cup\{B\}\vdash_{\mathrm C} B$
+via Abschwächung aus $B\vdash_{\mathrm C} B$. Via Disjunktionsbeseitigung
+erhält man somit $\Gamma\vdash_{\mathrm C} B$, ergo $B\in\Gamma$
+vermittels Satz \ref{maxkon-abgeschlossen}.
+
+Der Beweis von 6. verläuft analog zu dem von 4.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{maxkon-sat}
+Eine maximalkonsistente Formelmenge ist stets erfüllbar.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma$ maximalkonsistent. Die Interpretation $I$ sei definiert
+als $I(P):=1$, wenn $P\in\Gamma$, sonst $I(P):=0$. Es gelte $F\in\Gamma$.
+Zu zeigen ist $I\models F$. Induktion über den Aufbau von $F$. Ist $F$
+atomar, gilt die gemäß der gerade gemachten Definition. In allen anderen
+Fällen wird der jeweilige Bestandteil von Satz \ref{maxkon-refl-sat}
+verwendet. Beispiel $F=(A\land B)$. Die Induktionsannahmen sind
+Mit $A\land B\in\Gamma$ haben wir $A\in\Gamma$ sowie $B\in\Gamma$
+gemäß Sat \ref{maxkon-refl-sat}. Daraus folgt $I\models A$ sowie
+$I\models B$ vermittels den Induktionsannahmen. Also
+$I\models A\land B$ laut Definition der Erfüllbarkeit. Die anderen
+Fälle verlaufen analog.\,\qedsymbol
+\end{Beweis}
+
+Im Abschluss des Beweisen kommen nun die Hilfssätze der Reihe nach
+zur Anwendung.
+
+\begin{Satz}\label{kon-sat}
+Eine konsistente Formelmenge ist stets erfüllbar.
+\end{Satz}
+\begin{Beweis}
+Sei $\Gamma$ konsistent. Laut Satz \ref{Lemma-Lindenbaum} existiert ein
+maximalkonsistentes $\Gamma'$ mit $\Gamma\subseteq\Gamma'$. Laut Satz
+\ref{maxkon-sat} ist $\Gamma'$ erfüllbar, folglich $\Gamma$ als
+Teilmenge erst recht erfüllbar.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}[Vollständigkeit des natürlichen Schließens]\newlinefirst
+Aus $\Gamma\models A$ folgt $\Gamma\vdash_{\mathrm C} A$.
+\end{Satz}
+\begin{Beweis}
+Es gelte $\Gamma\models A$. Laut Satz \ref{gueltig-unerf} ist
+$\Gamma\cup\{\lnot A\}$ also unerfüllbar, laut Kontraposition von Satz
+\ref{kon-sat} somit inkonsistent. Laut Satz \ref{inkon-ableitbar} folgt
+daher $\Gamma\vdash_{\mathrm C} A$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Gleichwohl wurden nur die ersten Schritte unternommen. Die Argumentation
+wäre im Weiteren auf die Logik erster Stufe zu übertragen; das Resultat
+ist als der \emph{gödelsche Vollständigkeitssatz} bekannt. Zudem besteht
+der Wunsch, auch die Vollständigkeit der jeweiligen Kalküle zu anderen
+Logiken -- wie bspw. der intuitionistischen Logik -- zu versichern.
+
+\newpage
 \section{Die klassische Semantik der Logik erster Stufe}
 
 \subsection{Strukturen}

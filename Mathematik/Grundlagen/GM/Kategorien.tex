@@ -292,57 +292,118 @@ $f\circ x = y$ beschreiben.
 
 \subsection{Produkt und Koprodukt}
 
-Ein wichtiger Begriff der Theorie ist das Produkt von
-Objekten. Weil es sich dabei um eine Verallgemeinerung des
-kartesischen Produktes von Mengen handelt, möchte ich die
-Zusammenhänge zunächst am vertrauten Schauplatz der Mengen
-betrachten.
+Bei Def. \ref{def:Produktmenge} auf S. \pageref{def:Produktmenge} erfolgte
+die Erklärung des Produktes aufbauend auf der Konstruktion der Paare nach
+einer Idee von Kuratowski. Daneben gibt es gleichwohl viele andere
+Möglichkeiten zur Konstruktion von Paaren. Überlegt man sich aber, was
+Paare eigentlich ausmacht, fällt das Charakteristikum ein, dass $x=x'$
+und $y=y'$ aus $(x,y)=(x',y')$ folgen sollen. Feiner aufgedröselt sollen
+die Projektionen $\pi_1,\pi_2$ mit $\pi_1((x,y))=x$ und $\pi_2((x,y))=y$
+vorliegen, die man daraufhin nur kurz auf beide Seiten der Gleichung
+anwenden braucht. Das heißt, zu je zwei Elementen will man diese
+jeweils wieder aus dem konstruierten Paar herausprojizieren können.
 
-Zu zwei Mengen $A_1, A_2$ können wir das Produkt
-$A_1\times A_2$ bilden. Man definiert die Projektionen
-auf die Komponenten als
-\begin{align*}
-&\pi_1\colon A_1\times A_2\to A_1,\quad\pi_1((x,y)) := x,\\
-&\pi_2\colon A_1\times A_2\to A_2,\quad\pi_2((x,y)) := y.
-\end{align*}
-Nun betrachten wir Abbildungen $f_1\colon X\to A_1$ und
-$f_2\colon X\to A_2$. Zunächst sei $X:=\{\emptyset\}$. Die jeweilige
-Abbildung pickt dann ein Element aus der jeweiligen Menge heraus,
-das sind $a_1:=f_1(\emptyset)$ und $a_2:=f_2(\emptyset)$. Nun
-ist eine Abbildung $f$ gesucht, sodass das Diagramm
-\[\xymatrix{
-& X\ar[dl]_{f_1}\ar[dr]^{f_2}\ar[d]^f & \\
-A_1 & A_1\times A_2 \ar[l]^{\pi_1}\ar[r]_{\pi_2} & A_2
-}\]
-kommutiert. Die Bedingungen an $f$ sind also
-$\pi_i\circ f = f_i$ für $i\in\{1,2\}$. Damit ist aber eindeutig
-festgelegt, dass $f(\emptyset)=(a_1,a_2)$ sein muss, denn ein
-Tupel ist durch die Komponenten festgelegt, und die sind
-$\pi_i(f(\emptyset)) = f_i(\emptyset) = a_i$ für $i\in\{1,2\}$.
-Somit ist $f$ eindeutig bestimmt.
+Wir halten die folgende Überlegung fest. \emph{Das Produkt $X\times Y$
+ist so zu verstehen, dass je zwei Elementen $x\in X$, $y\in Y$
+genau ein Paar $(x,y)\in X\times Y$ zugeordnet ist, und Projektionen
+$\pi_1\colon X\times Y\to X$ sowie $\pi_2\colon X\times Y\to Y$
+vorliegen mit $\pi_1((x,y))=x$ sowie $\pi_2((x,y))=y$. Keine
+andersartigen Elemente liegen in $X\times Y$.}
 
-Die Betrachtung kann man genauso für eine allgemeine Menge $X$ führen,
-weil die Argumentation dann jeweils für jedes Element von $X$ gilt.
-Wieder ist $f$ eindeutig bestimmt.
+Wir kodieren das Element $x\in X$ nun als Abbildung
+$f_x\colon\{\emptyset\}\to X$ mit $f_x(\emptyset) := x$. Analog $y\in Y$
+als $f_y\colon\{\emptyset\}\to Y$ mit $f_y(\emptyset) := y$. Zum Paar
+$(x,y)$ erklärt sich die entsprechende Abbildung als
+\[\langle f_1,f_2\rangle(u) := (f_1(u),f_2(u)),\]
+womit $\langle f_x,f_y\rangle$ genau das Paar $(x,y)$ kodiert, denn
+$\langle f_x,f_y\rangle(\emptyset) = (x,y)$. In der Überlegung
+formulieren wir damit um: \emph{Je zwei $f_x,f_y$ ist genau ein
+$f:=\langle f_x,f_y\rangle$ zugeordnet, so dass $\pi_1\circ f = f_x$
+sowie $\pi_2\circ f = f_y$.}
 
-Gelegentlich wird $f$ als $f=f_1\times f_2$ notiert.
+Als weitere Umformulierung fließt die Forderung \emph{keine andersartigen
+Elemente} in impliziter Weise direkt ein, indem die Einermenge $\{\emptyset\}$
+gegen Quantifizierung über die Variable $U$ ersetzt wird. Warum dies die
+Forderung durchsetzt, erklärt sich sogleich. Zunächst erhalten wir hiermit
+die \emph{universelle Eigenschaft des Produktes},
 
 \begin{Definition}[Produkt]\newlinefirst
-Sei $\category C$ eine Kategorie und seien $Y_1,Y_2$ Objekte von
-$\category C$. Ein Objekt $Y$ von $\category C$ mit Projektionen
-$\pi_1\colon Y\to Y_1$ und $\pi_2\colon Y\to Y_2$ heißt \emph{Produkt},
-wenn zu jedem Objekt $X$ von $\category C$ und allen Morphismen
-$f_1\colon X\to Y_1$ und $f_2\colon X\to Y_2$ genau ein Morphismus
-$f\colon X\to Y$ existiert, so dass $f_1=\pi_1\circ f$ und
-$f_2=\pi_2\circ f$.
+Sei $\category C$ eine Kategorie und seien $X,Y$ Objekte von
+$\category C$. Ein Objekt $P$ von $\category C$ mit Projektionen
+$\pi_1\colon P\to X$ und $\pi_2\colon P\to Y$ heißt \emph{Produkt},
+wenn zu jedem Objekt $U$ von $\category C$ und allen Morphismen
+$f_1\colon U\to X$ und $f_2\colon U\to Y$ genau ein Morphismus
+$f\colon U\to P$ existiert, so dass $\pi_1\circ f = f_1$ sowie
+$\pi_2\circ f = f_2$.
 \end{Definition}
 
 \noindent
-Das kartesische Produkt $Y:=Y_1\times Y_2$ ist ein Produkt in
-der Kategorie der Mengen. Wir schreiben $f(x)=y$ mit $y=(y_1,y_2)$.
-Nun ist $\pi_1(y)=y_1$ und $\pi_2(y)=y_2$, laut Forderung soll also
-$y_1=f_1(x)$ und $y_2=f_2(x)$ sein. Dadurch ist $f$ mit
-$f(x):=(f_1(x),f_2(x))$ eindeutig festgelegt.
+Die universelle Eigenschaft fordert also, dass das Diagramm
+\[\xymatrix{
+& U\ar[dl]_{f_1}\ar[dr]^{f_2}\ar[d]^f & \\
+X & P \ar[l]^{\pi_1}\ar[r]_{\pi_2} & Y
+}\]
+für jedes Tripel $(U,f_1,f_2)$ kommutiert, wobei $f$ jeweils eindeutig
+bestimmt ist.
+
+Wir rechnen kurz nach, dass in der Kategorie der Mengen das gewöhnliche
+Produkt $X\times Y$ nach Def. \ref{def:Produktmenge}, bestehend aus Paaren nach
+Kuratowski, der universellen Eigenschaft genügt. Seien $f_1,f_2$ fest,
+aber beliebig. Mit $f:=\langle f_1,f_2\rangle$ existiert die fragliche
+Abbildung schon einmal, denn für jedes $u\in U$ gilt die Rechnung
+\[(\pi_i\circ\langle f_1,f_2\rangle)(u) = \pi_i((f_1(u),f_2(u))) = f_i(u),\]
+womit $\pi_i\circ\langle f_1,f_2\rangle = f_i$ zu jedem
+$i\in\{1,2\}$ gilt. Sei nun $g$ eine beliebige weitere Funktion mit
+$\pi_i\circ g = f_i$. Zu zeigen ist $f=g$, also $f(u)=g(u)$ für jedes
+$u\in U$. Wegen $g(u)\in X\times Y$ existieren laut Def. \ref{def:Produktmenge}
+$x,y$ mit $g(u)=(x,y)$. Nach Voraussetzung gilt außerdem
+$x = \pi_1(g(u)) = f_1(u)$ sowie $y = \pi_2(g(u)) = f_2(u)$. Ergo findet sich
+\[f(u) = \langle f_1,f_2\rangle(u) = (f_1(u),f_2(u)) = (x,y) = g(u).\]
+Weil also jede weitere Funktion $g$, die den genannten Eigenschaften
+genügt, mit $f$ übereinstimmt, muss $f$ eindeutig bestimmt sein.
+
+Im Weiteren dient als Hilfssatz der
+\begin{Satz}
+Je zwei Produkte $(P,\pi_1,\pi_2)$ und $(P',\pi_1',\pi_2')$ von $X,Y$
+sind isomorph.
+\end{Satz}
+\begin{Beweis}
+Laut der universellen Eigenschaft existiert insbesondere genau ein
+$\varphi\colon P\to P'$ mit $\pi_1'\circ\varphi=\pi_1$
+und $\pi_2'\circ\varphi=\pi_2$. Entsprechend existiert genau
+ein $\psi\colon P'\to P$ mit $\pi_1\circ\psi = \pi_1'$
+und $\pi_2\circ\psi = \pi_2'$. Daraus ergeben sich die vier Rechnungen
+\begin{align*}
+\pi_1\circ(\psi\circ\varphi) = (\pi_1\circ\psi)\circ\varphi = \pi_1'\circ\varphi = \pi_1,\\
+\pi_2\circ(\psi\circ\varphi) = (\pi_2\circ\psi)\circ\varphi = \pi_2'\circ\varphi = \pi_2,\\
+\pi_1'\circ(\varphi\circ\psi) = (\pi_1'\circ\varphi)\circ\psi = \pi_1\circ\psi = \pi_1',\\
+\pi_2'\circ(\varphi\circ\psi) = (\pi_2'\circ\varphi)\circ\psi = \pi_2\circ\psi = \pi_2'.
+\end{align*}
+Infolge sind auch $\psi\circ\varphi\colon P\to P$ und $\varphi\circ\psi\colon P'\to P'$
+unter abermaliger Heranziehung der universellen Eigenschaft eindeutig
+bestimmt. Dieselben Eigenschaften besitzen aber auch die beiden
+identischen Abbildungen $\id_P,\id_{P'}$, wonach $\psi\circ\varphi=\id_P$
+und $\varphi\circ\psi = \id_{P'}$ gelten muss. Ergo sind $\varphi,\psi$
+zueinander inverse Isomorphismen.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Da wir nun wissen, dass das gewöhnliche Produkt $P=X\times Y$, das aus
+Kuratowski"=Paaren besteht, die universelle Eigenschaft erfüllt,
+liegt laut dem Satz bezüglich jedem anderen Produkt $(P',\pi_1',\pi_2')$
+also die Bijektion $\varphi\colon X\times Y\to P'$ vor, die bezüglich
+den Projektionen die genannten Gleichungen erfüllt. Zu jedem $t\in P'$
+existiert also genau ein gewöhnliches Paar $(x,y)\in X\times Y$ mit
+$t=\varphi((x,y))$ und
+\begin{align*}
+\pi_1'(t) &= (\pi_1'\circ\varphi)((x,y)) = \pi_1((x,y)) = x,\\
+\pi_2'(t) &= (\pi_2'\circ\varphi)((x,y)) = \pi_2((x,y)) = y.
+\end{align*}
+Das heißt, in $P'$ liegen tatsächlich keine andersartigen Elemente.
+Und $\varphi$ ist genau die Paarbildung zu $P'$. In geschönfinkelter
+Form $\bar\varphi$ benötigt $\varphi$ keinen Rückgriff mehr auf die »gewöhnlichen«
+Paare. Zu je zwei $x,y$ ist $\bar\varphi(x)(y)$ also das Paar in $P'$,
+in gleicher Weise wie $(x,y)$ das Paar in $X\times Y$ ist.
 
 Zu zwei Mengen können wir weiterhin die disjunkte Vereinigung
 $X_1\sqcup X_2$ bilden. Wir rekapitulieren, dass zu ihr die beiden
