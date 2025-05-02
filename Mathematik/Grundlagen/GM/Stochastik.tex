@@ -23,7 +23,7 @@ abzählbar unendliche Ergebnismenge voraussetzen. Bei überabzählbaren
 Ergebnismengen kommt es zu Unwägbarkeiten, deren Klärung Gegenstand der
 Maßtheorie ist.
 
-Ein schlichtes Experiment bietet der Wurf des Spielwüfels, eines mit
+Ein schlichtes Experiment bietet der Wurf des Spielwürfels, eines mit
 Augenzahlen beschrifteten regelmäßigen Hexaeders. Die Ergebnismenge
 wird als
 \[\Omega := \{1, 2, 3, 4, 5, 6\}\]
@@ -578,7 +578,8 @@ ist auch die Schreibweise $P(A\mid B,C)$ geläufig.
 
 \subsection{Gesetz der totalen Wahrscheinlichkeit}
 
-\begin{Satz}[Gesetz der totalen Wahrscheinlichkeit]\newlinefirst
+\begin{Satz}[Gesetz der totalen Wahrscheinlichkeit]%
+\label{Gesetz-der-totalen-Wkt}\newlinefirst
 Es sei $\setsystem Z$ eine Zerlegung der Ergebnismenge $\Omega$ in
 paarweise disjunkte Mengen $B\in\setsystem Z$. Dann gilt
 \[P(A) = \sum_{B\in\setsystem Z}P(A\mid B)P(B).\]
@@ -592,3 +593,83 @@ P(A) &= \textstyle P(A\cap\Omega) = P(A\cap\bigcup_{B\in\setsystem Z} B)
 = \sum_{B\in\setsystem Z} P(A\mid B)P(B).\,\qedsymbol
 \end{align*}
 \end{Beweis}
+
+\subsection{Satz von Bayes}
+
+\begin{Satz}[Satz von Bayes]\label{Satz-von-Bayes}\newlinefirst
+Es gilt $P(A\mid B) = \frac{P(A)}{P(B)}P(B\mid A)$, sofern $P(A)\ne 0$ und $P(B)\ne 0$.
+\end{Satz}
+\begin{Beweis}
+Bestätigt sich mit der kurzen Rechnung
+\[P(A\mid B) = \frac{P(A)}{P(A)}\frac{P(A\cap B)}{P(B)}
+= \frac{P(A)}{P(B)}\frac{P(A\cap B)}{P(A)}
+= \frac{P(A)}{P(B)}P(B\mid A)\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+\strong{Anwendungsbeispiel: Beurteilung diagnostischer Tests.}
+Zu einer bestimmten Krankheit wurde ein Testverfahren entwickelt.
+Es weist eine \emph{Sensitivität} von 98\,\% auf. Das heißt, würde man
+eine sehr große Zahl von ausschließlich tatsächlich erkrankten
+Individuen testen, würde dieser Anteil als krank erkannt.
+Weiterhin weist es eine \emph{Spezifität} von 97\,\% auf. Das heißt, würde
+man eine sehr große Zahl von ausschließlich gesunden Individuen testen,
+würde dieser Anteil als gesund erkannt. Aufgrund sowohl hoher Sensitivität
+als auch hoher Spezifität darf man das Verfahren als recht zuverlässig
+befinden.
+
+Die Krankheit habe nun in der Bevölkerung eine Prävalenz von
+1\,\%. Es wird ein zufälliges Individuum getestet. Das Ereignis $K$, dass
+dieses Individuum krank ist, besitzt also die Wahrscheinlichkeit
+$P(K)=0.01$. Es bezeichne $T^+$ bzw. $T^-$ das Ereignis, dass der Test
+positiv bzw. negativ ausfällt. Es gilt $P(T^+\mid K)=0.98$ gemäß
+der Sensitivität und $P(T^-\mid K^\compc)=0.97$ gemäß der Spezifität
+des Tests.
+
+Gesucht ist die Wahrscheinlichkeit $P(K\mid T^+)$, dass das Individuum
+bei positivem Testergebnis in Wirklichkeit krank ist.
+
+Im Zuge der disjunkten Zerlegung $\Omega = K\cup K^\compc$ gilt zunächst
+\begin{align*}
+P(T^+) &= P(T^+\mid K)P(K) + P(T^+\mid K^\compc)P(K^\compc)
+\end{align*}
+gemäß Satz \ref{Gesetz-der-totalen-Wkt}. Im Zuge der disjunkten
+Zerlegung $\Omega = T^+\cup T^-$ gilt außerdem
+\[P(\Omega\mid K^c) = P(T^+\mid K^\compc)+P(T^-\mid K^\compc)=1.\]
+Via Satz \ref{Satz-von-Bayes} findet sich somit allgemein
+\[P(K\mid T^+) = \frac{P(K)}{P(T^+)}P(T^+\mid K) =
+\dfrac{1}{1+\dfrac{(1-P(T^-\mid K^\compc))(1-P(K))}{P(T^+\mid K)P(K)}}.\]
+Wir berechnen speziell $P(K\mid T^+)\approx 0.25$. Obgleich der
+Test recht genau erscheint, ist $P(K\mid T^+)$ aufgrund der
+geringen Prävalenz recht niedrig.
+
+Angenommen, bei der Krankheit handelt es sich um eine Infektionskrankheit.
+In Bezug auf einen Hotspot, von dem man die lokale Prävalenz von
+10\,\% in Erfahrung gebracht hat, ergibt sich immerhin $P(K\mid T^+)\approx 0.78$.
+Das Testergebnis ist also nicht für sich allein aussagekräftig, sondern
+wesentlich von der Prävalenz der Krankheit in der betrachteten Gruppe abhängig.
+
+\subsection{Bayessche Inferenz}
+
+Ich möchte im Fortgang noch eine dem subjektiven Wahrscheinlichkeitsbegriff
+entstammende Sichtweise auf die Umstände einnehmen. Unter dieser berechnen
+wir, wie sich die Wahrscheinlichkeit einer Hypothese bei Erhalt neuer
+Information aktualisiert.
+
+Wir haben eine \emph{Hypothese} $H$, von der wir nicht wissen, ob sie
+stimmt. Allerdings ist bekannt, dass diese mit $P(H)$ eintritt, die man
+die \emph{a-priori}"=Wahrscheinlichkeit nennt. Nun liegt eine neue
+Information vor, die die \emph{Evidenz} $E$ schafft. Das heißt,
+wir befinden uns in einer Situation, in der $E$ bereits beobachtet wurde,
+was aber nur im Anteil $P(E)$ der Fälle passiert. Gefragt ist nun,
+wie man $P(H)$ aktualisieren muss, um zu $P(H\mid E)$ zu gelangen,
+die man die \emph{a-posteriori}"=Wahrscheinlichkeit nennt. Die
+Aktualisierung vermittelt der Faktor $\beta_P(E,H)$ mit
+\[P(H\mid E) = \beta_P(E,H)P(H).\]
+Nämlich geht dies gemäß dem Satz von Bayes auf, wobei wir
+\[\beta_P(E,H) := \frac{P(E\mid H)}{P(E)} = \frac{P(E\cap H)}{P(E)P(H)}\]
+erhalten.
+
+Im zuvor diskutierten Beispiel zur Beurteilung diagnostischer Tests
+war $H:=K$ die Hypothese und $E:=T^+$ die Evidenz.
+
