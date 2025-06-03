@@ -1266,3 +1266,197 @@ Kraft der Standardübersetzung in die Logik erster Stufe ergibt sich
 insofern wie gewünscht ein alternativer korrekter Kalkül für die
 diskutierten Modallogiken. Eine tiefergehende Untersuchung zur
 Standardübersetzung findet man in \cite{Blackburn}.
+
+\section{Semantik der intuitionistischen Logik}
+
+\subsection{Die relationale Semantik der intuitionistischen Logik}
+
+Wir erinnern uns, dass sich die intuitionistische Logik ergibt, indem
+beim natürlichen Schließen auf die Beseitigung der Doppelnegation
+verzichtet wird. Dies verdeutlicht, wie ein Beweis eines intuitionistischen
+Theorems beschaffen sein muss. Schwierig bleibt jedoch der Nachweis, dass
+eine Formel kein solches Theorem sein kann. Hier leistet die Semantik
+Aufschluss.
+
+Mit der Zeit fand man recht viele verschiedene Semantiken der
+intuitionistischen Logik.\cite{Artemov} Im Rahmen der algebraischen
+Semantik wird sie durch Heyting"=Algebren statt boolescher Algebren
+beschrieben. Weiterhin gibt es die topologische Semantik, die
+Realisierer nach Kleene, die Beth"=Semantik, die Kripke"=Semantik
+und die kategorielle Semantik. Streng genommen sollten wir all diese
+Semantiken aufführen, und daraufhin mit einem Ringschluss aufzeigen,
+dass sie in Bezug auf die Allgemeingültigkeit einer Formel alle äquivalent
+sind. Für eine solche Unternehmung bleibt hier aber leider nicht
+genügend Zeit und Raum. Ich werde mich insofern auf Grundzüge beschränken.
+
+Zur intuitionistischen Logik gehört eine spezielle Kripke"=Semantik,
+deren Erfüllung auf eine eigensinnige Art beschaffen ist. Eine
+intuitionistische Kripke"=Struktur ist ein Tripel $(W,\le,V)$, wobei
+$W$ wieder eine Menge von Welten, $\le$ eine Quasiordnung auf ihr und
+$V$ eine monotone Wertung ist, das heißt,
+\[\forall w\in W\colon\forall w'\in W\colon w\le w'\land V(w,P)\Rightarrow V(w',P),\]
+wobei $V$ jeder Welt $w$ und jeder atomaren Variable $P$ einen
+Wahrheitswert $V(w,P)\in\{0,1\}$ zuordnet.
+
+Das Paar $I=(M,w)$, bestehen aus einer Struktur und einer Welt, betrachten
+wir wieder als Interpretation. Die Erfüllung einer atomaren Variable $P$
+ist wieder erklärt als
+\[(M,w\models P)\;:\Leftrightarrow\; V(w,P).\]
+Die Erfüllung der Junktoren ist daraufhin rekursiv erklärt als
+\begin{align*}
+(M,w\models A\land B) &\;:\Leftrightarrow\; (M,w\models A)\land (M,w\models B),\\
+(M,w\models A\lor B) &\;:\Leftrightarrow\; (M,w\models A)\lor (M,w\models B),\\
+(M,w\models A\cond B) &\;:\Leftrightarrow\;
+  \forall w'{\in}W\colon w\le w'\land (M,w'\models A)\cond (M,w'\models B).
+\end{align*}
+Der jeweilige Junktor auf der rechten Seite ist hierbei abermals
+als die boolesche Funktion bezüglich ihrer gewöhnlichen Wahrheitstafel
+eklärt. Weiterhin setzt man $(M,w\models\bot) :\Leftrightarrow 0$, wie
+gewöhnlich. Die Negation $\lnot A$ erhält die Semantik von
+$A\cond\bot$. Die Bijunktion $A\bicond B$ erhält die Semantik
+von $(A\cond B)\land (B\cond A)$.
+
+Die Gültigkeit von $A$ unter $\Gamma$ ist wieder erklärt als
+\[(\Gamma\models A)\;:\Leftrightarrow\; \forall M\colon\forall w\in W(M)\colon
+(M,w\models \Gamma)\Rightarrow (M,w\models A).\]
+Der Beweis Korrektheit verläuft fast analog wie bei der klassischen
+Semantik. Wir müssen lediglich bei der Subjunktion bzw. Negation aufpassen,
+die eine veränderte Erfüllung besitzt. Zu bestätigen wäre also die Gültigkeit der
+Einführung und Beseitigung der Subjunktion. Zunächst zur Beseitigung
+\[(\Gamma\models A\cond B)\land (\Gamma\models A)\Rightarrow (\Gamma\models B).\]
+Aus $M,w\models\Gamma$ ist $M,w\models B$ abzuleiten. Vermittels
+$\Gamma\models A$ erhält man zunächst $M,w\models A$. Nun entfaltet sich
+$\Gamma\models A\cond B$ zu
+\[(M,w\models\Gamma)\Rightarrow\forall w'\colon w\le w'\land
+(M,w'\models A)\Rightarrow (M,w'\models B).\]
+Wir spezialisieren $w':=w$, denn $w\le w$ gilt aufgrund der Reflexivität
+von $\le$.
+
+Nun zur Einführung
+\[(\Gamma, A\models B)\Rightarrow (\Gamma\models A\cond B).\]
+Aus $M,w\models\Gamma$ ist $M,w\models A\cond B$ abzleiten, also
+$M,w'\models B$ für jedes $w'$ mit $w\le w'$ und $M,w'\models A$.
+Via Spezialisierung von $\Gamma,A\models B$ mit $w'$ erhält man
+$M,w'\models B$ aus $M,w'\models\Gamma$ und $M,w'\models A$. Zu zeigen
+verbleibt also $M,w'\models\Gamma$. Um den Beweis abzuschließen,
+müssen wir $M,w'\models\Gamma$ aus $w\le w'$ und $M,w\models\Gamma$
+ableiten. Hierfür ist allerdings ein Hilfssatz erforderlich, laut dem
+sich die Monotonie von der Wertung auf die Erfüllung vererbt.
+
+\begin{Satz}
+Aus $w\le w'$ und $M,w\models A$ folgt $M,w'\models A$ zu jeder Formel
+$A$, jeder intuitionistischen Struktur $M=(W,\le,V)$ und allen Welten $w,w'\in W$.
+\end{Satz}
+\begin{Beweis}[Beweisskizze]
+Strukturelle Induktion über den Aufbau von $A$.
+
+Im Induktionsanfang in der atomaren Variable $P$ gilt dies aufgrund
+der Monotonie von $V$. Der Induktionsanfang in $\bot$ ist trivial.
+
+Der jeweilige Induktionsschritt zu $A\land B$, $A\lor B$, $A\cond B$
+verläuft unkompliziert unter Anwendung der beiden Induktionsvoraussetzungen,
+dass $M,w'\models A$ aus $M,w\models A$ sowie $M,w'\models B$ aus
+$M,w\models B$ für $w\le w'$ folgt. Bei $A\cond B$ ist
+allerdings zusätzlich die Transitivität von $\le$ erforderlich.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Die Übersetzung nach Gödel-McKinsey-Tarski bettet eine Formel
+der intuitionistischen Logik in die Modallogik S4 ein. Sie ist
+rekursiv erklärt als
+\begin{align*}
+T(P) &:= \lnec P, & T(A\land B) &:= T(A)\land T(B), & T(A\cond B) &:= \lnec T(A\cond B),\\
+T(\bot) &:= \bot, & T(A\lor B) &:= T(A)\lor T(B), & T(\lnot A) &:= \lnec\lnot T(A).
+\end{align*}
+Es soll $A$ genau dann ein Theorem der intuitionistischen Logik sein,
+wenn $T(A)$ ein Theorem der Modallogik S4 ist. Im Folgen wollen wir
+dies als Übung semantisch bestätigen.
+
+Bei Kripke"=Semantiken ist für die Erfüllung auch die Schreibweise
+$w\Vdash A$ statt $w\models A$ geläufig. Zur Unterscheidung notieren wir
+-- von dieser Freiheit pragmatisch Gebrauch machend -- im Folgenden
+$w\Vdash A$ für die Erfüllung in der intuitionistischen Logik und
+$w\models T(A)$ für die Erfüllung in der S4, jeweils im Bezug auf die
+jeweilige Kripke"=Semantik.
+
+Der Beweis umfasst die Nutzung zweier Hilfssätze.
+
+\begin{Satz}\label{Erf-Modell-S4-aus-Int}
+Es liege ein inutitionistisches Kripke"=Modell $(W,\le,V)$ vor.
+Dieses bietet sich unverändert als S4"=Kripke"=Modell an. Zu jeder Formel $A$
+und jeder Welt $w$ ist dann $w\Vdash A$ zu $w\models T(A)$ äquivalent.
+\end{Satz}
+\begin{Beweis}[Beweisskizze]
+Strukturelle Induktion über den Aufbau von $A$.
+
+Zum Induktionsanfang in der atomaren Variable $P$. Es gelte $w\Vdash P$,
+also $V(w,P)$. Zu zeigen ist $w\models\lnec P$, also $V(w',P)$
+für jedes $w'$ mit $w\le w'$, was aber mit $V(w,P)$ aus der Monotonie
+von $V$ folgt. Umgekehrt gelte $w\models\lnec P$. Zu zeigen ist
+$V(w,P)$, was sofort aus $w\models\lnec P$ mit $w\le w$ folgt,
+denn $\le$ ist reflexiv.
+
+Der Induktionsanfang in $\bot$ ist trivial.
+
+Die Induktionsschritte zu $A\land B$, $A\lor B$ und $A\cond B$ verlaufen
+geradlinig unter Anwendung der beiden Induktionsannahmen, dass $w\Vdash A$
+zu $w\models T(A)$ sowie $w\Vdash B$ zu $w\models T(B)$ äquivalent ist.
+Der Umstand $T(A\cond B)=\lnec(A\cond B)$ schafft dabei
+erstaunlicherweise keine sonderliche Komplikation, die den Gebrauch einer
+der anderen Voraussetzungen erfordern würde.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}\label{Erf-Modell-Int-aus-S4}
+Es liege ein S4"=Kripke"=Modell $(W,\le,V)$ vor. Zu diesem ist
+$(W,\le,V_i)$ mit $V_i(w,P):\Leftrightarrow (w\models\lnec P)$ ein
+intuitionistisches Kripke"=Modell, so dass zu jeder Formel $A$ und jeder
+Welt $w$ die Erfüllung $w\Vdash A$ zu $w\models T(A)$ äquivalent ist.
+\end{Satz}
+\begin{Beweis}[Beweisskizze]
+Zunächst ist die Monotonie von $V_i$ zu bestätigen. Es seien $x,y,P$
+beliebig, und es gelte $x\le y$ und $V_i(x,P)$. Zu zeigen ist
+$V_i(y,P)$, also $V(z,P)$ für jedes $z$ mit $y\le z$. Zunächst
+folgt $x\le z$, da $\le$ transitiv ist. Entfaltung von $V_i(x,P)$
+bringt $x\models\lnec P$, also $V(w,P)$ für jedes $w$ mit $x\le w$.
+Ergo erhält man $V(z,P)$ mit $w:=z$.
+
+Nun wieder strukturelle Induktion über den Aufbau von $A$.
+
+Der Beweis des Induktionsanfangs in der atomaren Variable $P$ verläuft
+unkompliziert.
+
+Der Beweis des Induktionsanfangs in $\bot$ ist trivial.
+
+Die Induktionsschritte zu $A\land B$, $A\lor B$ und $A\cond B$ verlaufen
+abermals geradlinig, jeweils unter Anwendung der beiden
+Induktionsannahmen.\,\qedsymbol
+\end{Beweis}
+
+\begin{Satz}
+Es gilt genau dann $\models_\text{Int} A$, wenn $\models_\text{S4} T(A)$.
+Das heißt, eine Formel $A$ ist genau dann bezüglich intuitionistischer
+Kripke"=Semantik gültig, wenn $T(A)$ bezüglich der Kripke"=Semantik von
+S4 gültig ist.
+\end{Satz}
+\begin{Beweis}
+Es gelte $\models_\text{Int} A$. Es sei $M=(W,\le,V)$ ein beliebiges
+S4"=Kripke"=Modell. Es sei $w$ eine beliebige Welt. Nach Satz
+\ref{Erf-Modell-Int-aus-S4}
+hat man ein intuitionistisches Modell $M_i:=(W,\le,V_i)$, so dass
+$M_i,w\Vdash A$ laut Prämisse, und somit $M,w\models T(A)$. Und dies
+bedeutet $\models_\text{S4} T(A)$, da $M,w$ beliebig sind.
+
+Umgekehrt gelte $\models_\text{S4} T(A)$. Es sei $M_i=(W,\le,V)$ ein
+beliebiges intuitionistisches Kripke"=Modell. Nach Satz
+\ref{Erf-Modell-S4-aus-Int} hat man
+ein S4"=Kripke"=Modell $M:=M_i$, so dass $M,w\models T(A)$ laut
+Prämisse, und somit $M,w\Vdash A$. Und dies bedeutet
+$\models_\text{Int} A$, da $M_i,w$ beliebig sind.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Infolge muss $A$ genau dann ein intuitionistisches Theorem sein,
+wenn $T(A)$ ein Theorem in S4 ist. Die Brücke dazu ergibt sich
+unter Hinzuziehung von Korrektheit und Vollständigkeit des jeweiligen
+Kalküls. Die Übersetzung $T$ leistet also wirklich, was postuliert
+wurde.

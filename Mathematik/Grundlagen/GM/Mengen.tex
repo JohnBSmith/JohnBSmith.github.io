@@ -3280,6 +3280,55 @@ Induktion.
 
 \section{Ordinalzahlen}
 
+\subsection{Wohlgeordnete Mengen}
+
+\begin{Axiom}[Auswahlaxiom]\newlinefirst
+Zu jedem Mengensystem $X$ mit $\emptyset\notin X$ existiert eine
+Auswahlfunktion $f$ mit $\dom(f)=X$, das ist eine Funktion mit
+$f(x)\in x$ für jedes $x\in X$.
+\end{Axiom}
+
+\noindent
+Eine Mengenlehre mit Auswahlaxiom ist keine konstruktive, sondern
+notwendig klassisch. Zuerst bestätigt wurde dies in kategorieller Form
+von Diaconescu, später dann von Goodman und Myhill für die Mengenlehre.
+Der super elegante, sehr kurze Beweis verblüfft zudem darin, nicht mit
+unermesslich großen Mengen zu arbeiten. Ich will hier die moderne Fassung
+wiedergeben.
+
+\begin{Satz}[Satz von Diaconescu-Goodman-Myhill]\newlinefirst
+Das Auswahlaxiom impliziert den Satz vom ausgeschlossenen Dritten.
+\end{Satz}
+\begin{Beweis}
+Es sei $A$ eine beliebige Aussage.\footnote{$A$ darf auch eine Aussageform
+sein, wobei allerdings $x,y$ nicht frei in $A$ vorkommen dürfen.}
+Wir betrachten die beiden Mengen
+\[X := \{x\in\{0,1\}\mid A\lor (x = 0)\},\quad Y := \{y\in\{0,1\}\mid A\lor (y = 1)\},\]
+die wegen $0\in X$ bzw. $1\in Y$ beide nichtleer sind. Demnach
+existiert laut Auswahlaxiom eine Auswahlfunktion
+$f\colon\{X,Y\}\to X\cup Y$ mit $f(X)\in X$ sowie $f(Y)\in Y$.
+Wegen $f(X)\in\{0,1\}$ sowie $f(Y)\in\{0,1\}$ treten insgesamt nur
+vier Fälle für die Funktionswerte auf. Wir nehmen eine Fallunterscheidung vor.
+
+In den beiden Fällen mit $f(X)=1$ gilt $1\in X$, was sich zu $A\lor (1 = 0)$, also zu $A$ vereinfacht.
+Mit $A$ gilt erst recht $A\lor\lnot A$.
+
+In den beiden Fällen mit $f(Y)=0$ gilt $0\in Y$, was sich zu $A\lor (0 = 1)$, also zu $A$ vereinfacht.
+Mit $A$ gilt erst recht $A\lor\lnot A$.
+
+Im Fall $f(X)=0, f(Y)=1$ muss $\lnot A$ gelten, denn unter Annahme $A$
+wäre $f(X)=f(Y)$, also $0=1$, was absurd ist. Mit $\lnot A$ gilt erst recht $A\lor\lnot A$.
+
+Somit ist $A\lor\lnot A$ in jedem der Fälle gezeigt.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Dieser Satz verdeutlicht, dass die Beschränkung auf intuitionistische
+Logik keineswegs ausreicht, um eine Theorie der konstruktiven Mathematik
+zu schaffen. Die Entwicklung eines diesbezüglichen Axiomensystems erfordert
+große Sorgfalt, da sich die Theorie durch Unachtsamkeit allzu leicht wieder
+ins Klassische verliert.
+
 \subsection{Transfinite Induktion}
 
 \begin{Satz}[Schema der transfiniten Induktion]%
