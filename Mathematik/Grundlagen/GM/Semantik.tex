@@ -160,13 +160,13 @@ wird ermöglicht durch die metalogische Beziehung
 Nämlich findet sich die äquivalente Umformung
 \begin{align*}
 (A_1,\ldots,A_n\models A)
-&\;\Longleftrightarrow_{\text{(1)}}\;
+&\;\Leftrightarrow_{\text{(1)}}\;
 (\forall I\colon (I\models A_1)\land\ldots\land (I\models A_n)\cond (I\models A))\\
-&\;\Longleftrightarrow_{\text{(2)}}\;
+&\;\Leftrightarrow_{\text{(2)}}\;
 (\forall I\colon (I\models A_1\land\ldots\land A_n)\cond (I\models A))\\
-&\;\Longleftrightarrow_{\text{(3)}}\;
+&\;\Leftrightarrow_{\text{(3)}}\;
 (\forall I\colon I\models A_1\land\ldots\land A_n\cond A)\\
-&\;\Longleftrightarrow_{\text{(4)}}\;
+&\;\Leftrightarrow_{\text{(4)}}\;
 (\models A_1\land\ldots\land A_n\cond A).
 \end{align*}
 Hierbei gilt (1), (4) gemäß Def. \ref{def:valid}, \ref{def:sat-context}
@@ -1289,10 +1289,10 @@ dass sie in Bezug auf die Allgemeingültigkeit einer Formel alle äquivalent
 sind. Für eine solche Unternehmung bleibt hier aber leider nicht
 genügend Zeit und Raum. Ich werde mich insofern auf Grundzüge beschränken.
 
-Zur intuitionistischen Logik gehört eine spezielle Kripke"=Semantik,
-deren Erfüllung auf eine eigensinnige Art beschaffen ist. Eine
-intuitionistische Kripke"=Struktur ist ein Tripel $(W,\le,V)$, wobei
-$W$ wieder eine Menge von Welten, $\le$ eine Quasiordnung auf ihr und
+Zur intuitionistischen Logik gehört eine Kripke"=Semantik,
+deren Erfüllung auf eine eigensinnige Art beschaffen ist.\cite{Kripke-IL}
+Eine \emph{intuitionistische Kripke"=Struktur} ist ein Tripel $(W,\le,V)$,
+wobei $W$ wieder eine Menge von Welten, $\le$ eine Quasiordnung auf ihr und
 $V$ eine monotone Wertung ist, das heißt,
 \[\forall w\in W\colon\forall w'\in W\colon w\le w'\land V(w,P)\Rightarrow V(w',P),\]
 wobei $V$ jeder Welt $w$ und jeder atomaren Variable $P$ einen
@@ -1361,6 +1361,70 @@ allerdings zusätzlich die Transitivität von $\le$ erforderlich.\,\qedsymbol
 \end{Beweis}
 
 \noindent
+Für die Gültigkeit macht es keinen Unterschied, wenn die Erfüllung
+lediglich für Halb- statt Quasiordnungen gefordert wird. Dies erklärt,
+warum die entsprechend modifizierte Definition der Semantik ebenfalls
+verbreitet ist. Wir wollen dies noch kurz verifizieren. Den Hauptteil
+übernimmt der folgende Hilfssatz.
+
+\begin{Satz}\label{Modell-quasi-halb}
+Zu jedem intuitionistischen Kripke"=Modell $M=(W,R,V)$ existiert ein
+intuitionistisches Kripke"=Modell $M' = (W',R',V')$ mit Halbordnung
+$R'$, das genau dieselben Formeln erfüllt.
+\end{Satz}
+\begin{Beweis}
+Mit $x\sim y:\Leftrightarrow R(x,y)\land R(y,x)$ ist eine
+Äquivalenzrelation festgelegt, wie man unschwer nachrechnet.
+Die Quotientenmenge $W' := W/{\sim}$ wird das \emph{Skelett} von $W$
+genannt, ihre Elemente heißen \emph{Cluster}. Auf $W'$ definieren wir
+\[R'([x],[y]) :\Leftrightarrow R(x,y),\quad\; V'([x],P):\Leftrightarrow V(x,P).\]
+Man rechnet unschwer nach, dass $R',V'$ wohldefiniert sind, $R'$ eine
+Halbordnung ist, und $V'$ monoton ist. Für jede Formel $A$ gilt nun
+\[\forall x\in W\colon (M,x\models A)\bicond (M',[x]\models A),\]
+was per struktureller Induktion über den Aufbau von $A$ bestätigt wird.
+
+Zum Induktionsanfang in der atomaren Variable $P$ findet sich die äquivalente Umformung
+\[(x\models P)\iff V(x,P)\iff V([x],P)\iff ([x]\models P).\]
+Der Induktionsanfang in $\bot$ ist trivial.
+
+Im Induktionsschritt zu $A\land B$ liegen die Induktionsvoraussetzungen
+$\forall x\colon (x\models A)\Leftrightarrow ([x]\models A)$ und
+$\forall x\colon (x\models B)\Leftrightarrow ([x]\models B)$ vor.
+Mit diesen rechnet man
+\[(x\models A\land B)\iff (x\models A)\land (x\models B)
+\iff ([x]\models A)\land ([x]\models B)
+\iff ([x]\models A\land B).\]
+Der Schritt zu $A\lor B$ verläuft analog. Im Schritt zu $A\cond B$ rechnet man
+\begin{align*}
+(x\models A\cond B)&\iff \big(\forall y\in W\colon R(x,y)\land (y\models A)\cond (y\models B)\big)\\
+&\iff \big(\forall y\in W\colon R'([x],[y])\land ([y]\models A)\cond ([y]\models B)\big)\\
+&\iff \big(\forall y'\in W'\colon R'([x],y')\land (y'\models A)\cond (y'\models B)\big)\\
+&\iff ([x]\models A\cond B),
+\end{align*}
+insofern dank der Surjektivität der kanonischen Projektion $y\mapsto [y]$
+zu jedem $y'$ ein $y$ mit $y'=[y]$ existiert.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Mit der geleisteten Vorarbeit ergibt sich der
+
+\begin{Satz}\label{Gueltigkeit-halb-quasi}
+Aus $\Gamma\models' A$ folgt $\Gamma\models A$, wobei Ersteres die
+Gültigkeit in Bezug auf lediglich alle Halb- statt Quasiordnungen meine.
+\end{Satz}
+\begin{Beweis}
+Aus $M,w\models\Gamma$ ist $M,w\models A$ zu folgern. Zu $M$ erhält man
+$M'=(W',R',V')$ mit Halbordnung $R'$ vermittels Satz
+\ref{Modell-quasi-halb}. Laut der Äquivalenz von Satz \ref{Modell-quasi-halb}
+folgt $M',[w]\models\Gamma$ aus $M,w\models\Gamma$. Daraufhin folgt
+$M',[w]\models A$ laut Voraussetzung $\Gamma\models' A$. Unter nochmaliger
+Anwendung der Äquivalenz folgt schließlich $M,w\models A$.\,\qedsymbol
+\end{Beweis}
+
+\noindent
+Die Umkehrung von Satz \ref{Gueltigkeit-halb-quasi} stellt natürlich
+eine Trivialität dar, weil jede Halb- auch immer eine Quasiordnung ist.
+
 Die Übersetzung nach Gödel-McKinsey-Tarski bettet eine Formel
 der intuitionistischen Logik in die Modallogik S4 ein. Sie ist
 rekursiv erklärt als
