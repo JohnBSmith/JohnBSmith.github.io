@@ -1524,3 +1524,126 @@ wenn $T(A)$ ein Theorem in S4 ist. Die Brücke dazu ergibt sich
 unter Hinzuziehung von Korrektheit und Vollständigkeit des jeweiligen
 Kalküls. Die Übersetzung $T$ leistet also wirklich, was postuliert
 wurde.
+
+\subsection{Zur Auffindung von Kontramodellen}
+
+Mit der Widerlegung der Allgemeingültigkeit einer Formel verhält es sich
+in der intuitionistischen Logik komplizierter als in der klassischen,
+da ein Gefüge von Welten gefunden werden muss, auf denen sich die
+Wertung unterscheiden darf. Zurück zur klassischen Logik bzw. Semantik
+kommt man bei Begrenzung dieses Gefüges auf eine einzige Welt.
+Damit ist auch schon klar, wie eine Formel widerlegt wird, die bereits
+in der klassischen Logik nicht allgemeingültig ist. Im Folgenden
+interessieren uns also ausschließlich klassische Tautologien, die
+vermutlich keine intuitionistischen sind.
+
+Wir notieren kurz $w\refutes A$ für $\lnot (w\models A$).
+Definitionsgemäß gilt $w\models A\land B$ genau dann, wenn
+$w\models A$ und $w\models B$. Als Kontraposition ergibt sich also,
+dass $w\refutes A\land B$ genau dann, wenn $w\refutes A$ oder
+$w\refutes B$. Demnach erhalten wir die beiden Regeln
+\[\dfrac{w\refutes A}{w\refutes A\land B},\quad \dfrac{w\refutes B}{w\refutes A\land B}.\]
+Analog findet sich zur Widerlegung der Disjunktion die Regel
+\[\dfrac{w\refutes A\quad\; w\refutes B}{w\refutes A\lor B}.\]
+Bei Subjunktion verhält es sich wieder ein wenig komplizierter.
+Definitionsgemäß gilt $w\models A\cond B$ genau dann, wenn
+$\forall w'\ge w\colon (w'\models A)\Rightarrow (w'\models B)$. In
+Kontraposition gilt $w\refutes A\cond B$ genau dann,
+wenn $\exists w'\ge w\colon (w'\models A)\land (w'\refutes B)$. Dies
+führt uns also zur Regel
+\[\frac{w\le w'\quad\; w'\models A\quad\; w'\refutes B}{w\refutes A\cond B}.\]
+Die Negation $\lnot A$ ist hier als Spezialfall $B:=\bot$ enthalten.
+Beachtet man, dass $w\refutes\bot$ allgemeingültig ist, vereinfacht sich
+die Regel zu
+\[\frac{w\le w'\quad\; w'\models A}{w\refutes\lnot A}.\]
+Die Regeln erleichtern die Auffindung zielführender Welten und
+Wertung.
+
+\strong{Beispiel 1.} Die Allgemeingültigkeit von $A\lor\lnot A$, dem
+Satz vom ausgeschlossenen Dritten, ist zu widerlegen. Wir machen dies
+bei der Instanz zu $A:=p$. Unter Rückwärtsschließen vermittels der Regeln
+ergibt sich die Ableitung:
+\[\begin{prooftree}
+    \hypo{V(w,p)=0}
+  \infer1{w\refutes p}
+    \hypo{w\le w'}
+      \hypo{V(w',p)=1}
+    \infer1{w'\models p}
+  \infer2{w\refutes\lnot p}
+\infer2{w\refutes p\lor\lnot p}
+\end{prooftree}\]
+Zu den drei Hypothesen findet sich das Kontramodell
+\[W:=\{w,w'\},\;R := \{(w,w),(w,w'),(w',w')\},\;V(w,p):=0,\;V(w',p):=1\]
+mit $w\le w'$ als Notation für $R(w,w')$. Dieses widerspricht nicht der
+Monotonieforderung an $V$, die besagt, dass zu je zwei Welten $w,w'$
+mit $w\le w'$ und $V(w,p)$ auch $V(w',p)$ gilt, bzw. $\lnot V(w,p)$
+oder $V(w',p)$ gelten muss.
+
+\strong{Beispiel 2.} Die Allgemeingültigkeit von $\lnot\lnot A\cond A$,
+der Beseitigung der Doppelnegation, ist zu widerlegen. Hierfür genügt die
+Instanz zu $A:=p$. Kunstloses Rückwärtsschließen führt uns zur Ableitung:
+\[\begin{prooftree}
+  \hypo{w_1\le w_2}
+      \hypo{w_2\le x}
+        \hypo{x\le w_3}
+          \hypo{V(w_3,p)=1}
+        \infer1{w_3\models p}
+      \infer2{x\refutes\lnot p}
+    \infer2{\forall x\ge w_2\colon x\refutes\lnot p}
+  \infer1{w_2\models\lnot\lnot p}
+    \hypo{V(w_2,p)=0}
+  \infer1{w_2\refutes p}
+\infer3{w_1\refutes\lnot\lnot p\cond p}
+\end{prooftree}\]
+Zu den fünf Hypothesen findet sich nochmals das Kontramodell
+\[W:=\{w,w'\},\;R := \{(w,w),(w,w'),(w',w')\},\;V(w,p):=0,\;V(w',p):=1\]
+bei Vornahme der Setzungen $w_1:=w$, $w_2:=w$, $w_3:=w'$.
+
+Die Auffindung eines Kontramodells braucht man bei diesen kleinen
+Formeln nicht unbedingt händisch rechnen. Insofern die Modelle selbst
+klein sind, schafft es der Computer Brute"=Force durch kombinatorische
+Aufzählung der Modelle, wenngleich die kombinatorische Komplexität
+rasch zunimmt. Da $W$ endlich ist, werden die ominösen
+Allquantifizierungen bei der Berechnung der Erfüllung selbst endlich.
+In der obigen Ableitung ist bspw. $x\in W$, womit nach Festlegung von $W$
+nur noch $x=w$ und $x=w'$ übrig bleiben. Dass jede widerlegbare Formel
+ein endliches Kontramodell besitzt, engl. \emph{finite model property},
+müsste man streng genommen beweisen. Gerne würde man auch eine Schranke
+zur Komplexität in Bezug auf die, noch zu definierende, Komplexität der
+Formel haben.
+
+\strong{Beispiel 3.}
+Die Allgemeingültigkeit von $(A\cond B\lor C)\cond (A\cond B)\lor (A\cond C)$
+ist zu widerlegen. Hierfür genügt die Instanz $A:=p$, $B:=q$, $C:=r$.
+Es findet sich die Ableitung:
+\[\begin{prooftree}
+  \hypo{w_1\le w_2}
+    \hypo{\forall x\ge w_2\colon (x\models p)\Rightarrow (x\models q\lor r)}
+  \infer1{w_2\models p\cond q\lor r}
+  \hypo{w_2\refutes (p\cond q)\lor (p\cond r)}
+\infer3{w_1\refutes (p\cond q\lor r)\cond (p\cond q)\lor (p\cond r)}
+\end{prooftree}\]
+mit dem Teilbaum
+\[\begin{prooftree}
+    \hypo{w_2\le w_3}
+    \hypo{w_3\models p}
+    \hypo{w_3\refutes q}
+  \infer3{w_2\refutes (p\cond q)}
+    \hypo{w_2\le w_4}
+    \hypo{w_4\models p}
+    \hypo{w_4\refutes r}
+  \infer3{w_2\refutes (p\cond r)}
+\infer2{w_2\refutes (p\cond q)\lor (p\cond r)}
+\end{prooftree}\]
+Man beachte hier nun die Allaussage. Näher betrachtet schließt diese
+den Umstand $w_3=w_4$ aus, denn wegen $w_3\models p$ zieht sie
+$w_3\models q\lor r$ nach sich, aber wir hätten sowohl $w_3\refutes p$
+als auch $w_3\refutes r$. Die Lösung besteht darin, die Wertung
+bezüglich $q,r$ wechselhaft erfüllt zu haben. Dies erfordert insgesamt
+drei unterschiedliche Welten. Zur Verkürzung notieren wir $w\in V(P)$
+statt $V(w,P)=1$. Es findet sich das Kontramodell
+\begin{gather*}
+W:=\{w,w',w''\},\; R := \{(w,w'),(w,w'')\}\cup\text{Reflexivität}(W),\\
+V(p):=\{w',w''\},\; V(q):=\{w'\},\; V(r):=\{w''\}
+\end{gather*}
+bei Vornahme der Setzungen $w_1:=w$, $w_2:=w$, $w_3:=w''$, $w_4:=w'$.
