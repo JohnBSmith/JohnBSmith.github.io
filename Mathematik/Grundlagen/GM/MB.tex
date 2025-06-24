@@ -225,7 +225,7 @@ auch erscheinen mag.
 Der \strong{Allquantifizierung} $\forall x\in X\colon A(x)$ entspricht
 $\prod_{x\colon X} A(x)$, ein Typ abhängiger Funktionen. Einen Bezug auf
 diese Beziehung herstellend, bekam der Typ die Syntax
-\code{\kw{forall} x: X, A x}. Ein Beweis der Allaussage der ist also eine
+\code{\kw{forall} x: X, A x}. Ein Beweis der Allaussage ist also eine
 Funktion $f$, die jedem Individuum $x$ vom Typ $X$ einen Wert $f(x)$ vom
 Typ $A(x)$ zuordnet, womit $A(x)$ zu jedem $x$ bewohnt sein muss.
 Einfaches Beispiel. Gezeigt werden soll
@@ -550,6 +550,140 @@ Beweis ginge beispielsweise
   intro hAB. intro hnB. intro hA.
   apply hnB. apply hAB. exact hA.
 `\kw{Qed.}`
+\end{lstlisting}
+
+\newpage
+\section{Setoide als Ersatz für Quotiententypen}
+
+Die Beschreibung von Quotientenmengen erfordert eigentlich eine
+Typentheorie, die Quotiententypen umfasst. Mit diesen verhält es sich
+allerdings schwierig, dergestalt dass die naive Erweiterung einer
+Typentheorie um solche zuzüglich zugehöriger Regeln unter Umständen mit
+dem Verlust von bestimmten meta- bzw. beweistheoretischen Eigenschaften
+einhergeht, dabei geht es in der Regel um Reduktion bzw. Berechnung und
+deren Zusammenspiel mit dem Typsystem. In jedem Fall muss man natürlich
+zumindest aufpassen, dass die Konsistenz und Korrektheit des logischen
+Kalküls erhalten bleibt.
+
+Um sich nicht näher damit auseinandersetzen zu müssen, mag man versuchen,
+Quotiententypen zu simulieren bzw. zu umgehen. Einen gängiger Weg
+besteht im Gebrauch von Setoiden. Zu einer Menge $M$ mit einer auf ihr
+definierten Äquivalenzrelation $\sim$ ist ein \emph{Setoid} die Struktur
+$(M,\sim)$, die statt dem Quotienten $M/{\sim}$ betrachtet wird. Kurzum
+rechnet man mit den Repräsentanten statt mit den Äquivalenzklassen.
+Statt der Gleichheit auf $M/{\sim}$ greift man auf die ursprüngliche
+Äquivalenzrelation auf $M$ zurück. Worin besteht nun
+das pragmatische Problem, das wir lösen wollen? Wir erinnern uns daran,
+dass das Konzept der Gleichheit eine Ersetzungsregel umfasst, die es
+gestattet, einen Term gegen einen gleichen ersetzen zu dürfen. Will man
+hierbei über Repräsentanten definierte Relationen bzw. Funktionen in die
+Termbildung einbeziehen, muss unweigerlich erst ihre Wohldefiniertheit
+gezeigt werden. Eine entsprechende Ersetzungsregel wollen wir nun direkt
+bezüglich der Äquivalenzrelation auf $M$ statt der Gleichheit auf
+$M/{\sim}$ haben. Liegt diese nicht in allgemeiner Weise vor, müssten
+die Beweise jeweils manuell erbracht werden.
+
+Zur automatischen und transparenten Erzeugung nötiger Boilerplate"=Beweise
+stehen in Coq bereits entsprechende Mechanismen zur Verfügung, die durch
+den Gebrauch der Module \code{Setoid} und \code{Morphisms} sichtbar
+gemacht werden.
+
+\begin{figure}
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent, escapechar=`,
+label=lst:Quotiententypen, caption={Setoid zum Restklassenring}]
+Require Import Setoids.Setoid.
+Require Import Classes.Morphisms.
+Require Import ZArith.ZArith.
+Open Scope Z_scope.
+
+Definition R a b := exists k: Z, a - b = 2*k.
+
+Instance R_equi: Equivalence R.
+Proof.
+  split.
+  * unfold Reflexive. intro x. unfold R.
+    exists 0. ring.
+  * unfold Symmetric. intros x y. unfold R.
+    intros (k, h). exists (-k). rewrite Z.mul_opp_r.
+    rewrite <- h. ring.
+  * unfold Transitive. intros x y z. unfold R.
+    intros (k1, h1) (k2, h2). exists (k1 + k2).
+    apply (f_equal (fun t => t + (y - z))) in h1.
+    rewrite h2 in h1 at 2. ring_simplify in h1.
+    rewrite Z.mul_add_distr_l. exact h1.
+Qed.
+
+Instance add_proper:
+  Proper (R ==> R ==> R) (fun x y => x + y).
+Proof.
+  unfold Proper. unfold respectful. unfold R.
+  intros x y. intros (k1, h1). intros a b.
+  intros (k2, h2). exists (k1 + k2).
+  assert (h: x + a - (y + b) = (x - y) + (a - b)) by ring.
+  rewrite h. rewrite h1. rewrite h2. ring.
+Qed.
+
+Theorem add_even_even_is_even (a b: Z):
+  R a 0 -> R b 0 -> R (a + b) 0.
+Proof.
+  intros ha hb. rewrite ha. rewrite hb.
+  simpl. reflexivity.
+Qed.
+\end{lstlisting}
+\end{figure}
+
+Dazu ein einfaches Beispiel. Wir wollen beweisen, dass die Summe
+zweier gerader Zahlen abermals gerade ist. Dazu betrachten wir
+\[a\sim b\,:\Leftrightarrow \exists k\in\Z\colon a - b = 2k,\]
+die Kongruenz modulo $2$. Die Addition $[a]+[b]:=[a+b]$ ist
+wohldefiniert. Eine Zahl $a$ ist genau dann gerade, wenn $[a]=[0]$.
+Wenn also $a,b$ gerade sind, gilt $[a]=[0]$ sowie $[b]=[0]$. Via
+Ersetzung erhält man somit
+\[[a+b] = [a]+[b] = [0]+[0] = [0+0] = [0].\]
+Nun nochmals die gleiche Argumentation bei entfernter kanonischer
+Projektion. Wenn $a,b$ gerade sind, gilt $a\sim 0$ sowie $b\sim 0$.
+Via Ersetzung erhält man somit
+\[a+b\sim 0+0 = 0.\]
+
+Das Listing \ref{lst:Quotiententypen} zeigt die Implementierung
+der Überlegung. Darin wird die Relation $a\sim b$ zunächst unter
+der Bezeichnung \code{R a b} erklärt. Der Beweis von \code{R\_equi}
+zeigt daraufhin, dass es sich bei \code{R} um eine Äquivalenzrelation
+handelt. Erstmalig kommen dabei die Taktiken \code{ring} und
+\code{ring\_simplify} zum Einsatz, um die fast trivialen Umformungen
+von Termen bzw. Gleichen nicht mehr gänzlich händisch durchführen zu
+müssen. Der Beweis von \code{add\_proper} bestätigt als nächstes die
+Wohldefiniertheit der Addition. Schließlich wird die zuvor beschriebene
+Argumentation mit den Ersetzungen unternommen. Der wesentliche Punkt ist
+hierbei, dass \code{rewrite} unter diesen Umständen keine gewöhnliche
+Ersetzung darstellt, sondern sich in aller Stille aufs Setoid bezieht,
+also nur aufgrund der geleisteten Vorarbeiten verfügbar ist.
+
+Weiterhin bietet \code{Setoid} den Mechanismus zur Unternehmung
+äquivalenter Umformungen in Bezug auf die zulässige Ersetzungsregel,
+insofern es sich auch bei der logischen Äquivalenz um eine
+Kongruenzrelation bezüglich den logischen Verknüpfungen handelt, wie
+wir früher in Bezug auf die Lindenbaum"=Tarski"=Algebra festgestellt haben.
+Die Aussage $A\cond (B\cond A)$ lässt sich zum Beispiel vermittels
+boolescher Algebra mit der Umformung
+\[(A\cond B\cond A)\equiv \lnot A\lor (\lnot B\lor A)\equiv
+(A\lor\lnot A)\lor\lnot B\equiv \top\lor\lnot B\equiv\top\]
+beweisen. Die Implementierung hierzu:
+\begin{lstlisting}[language=Coq, xleftmargin=\mathindent]
+Require Import Setoids.Setoid.
+
+Axiom impl_equi: forall A B, (A -> B) <-> ~A \/ B.
+Axiom or_compl: forall A, A \/ ~A <-> True.
+Axiom or_extremal: forall A, A \/ True <-> True.
+
+Theorem K (A B C: Prop):
+  A -> B -> A.
+Proof.
+  rewrite impl_equi. rewrite impl_equi.
+  rewrite (or_comm _ A). rewrite <- or_assoc.
+  rewrite (or_comm _ A). rewrite or_compl.
+  rewrite or_comm. rewrite or_extremal. exact I.
+Qed.
 \end{lstlisting}
 
 \newpage
