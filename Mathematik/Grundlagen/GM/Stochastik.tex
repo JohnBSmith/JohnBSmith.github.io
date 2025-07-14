@@ -679,12 +679,66 @@ wir befinden uns in einer Situation, in der $E$ bereits beobachtet wurde,
 was aber nur im Anteil $P(E)$ der Fälle passiert. Gefragt ist nun,
 wie man $P(H)$ aktualisieren muss, um zu $P(H\mid E)$ zu gelangen,
 die man die \emph{a-posteriori}"=Wahrscheinlichkeit nennt. Die
-Aktualisierung vermittelt der Faktor $\beta_P(E,H)$ mit
-\[P(H\mid E) = \beta_P(E,H)P(H).\]
-Nämlich geht dies gemäß dem Satz von Bayes auf, wobei wir
-\[\beta_P(E,H) := \frac{P(E\mid H)}{P(E)} = \frac{P(E\cap H)}{P(E)P(H)}\]
-erhalten.
+Aktualisierung vermittelt der Faktor $\frac{P(E\mid H)}{P(E)}$, so
+dass sich der Satz von Bayes in der Form
+\[P(H\mid E) = \frac{P(E\mid H)}{P(E)}P(H)\]
+darstellt. Im zuvor diskutierten Beispiel zur Beurteilung diagnostischer
+Tests war $H:=K$ die Hypothese und $E:=T^+$ die Evidenz.
 
-Im zuvor diskutierten Beispiel zur Beurteilung diagnostischer Tests
-war $H:=K$ die Hypothese und $E:=T^+$ die Evidenz.
+In komplizierteren Situationen kann die Handhabung von Wahrscheinlichkeiten
+bei bayesschen Rechnungen umständlich werden. Eine dienliche Alternative
+besteht darin, mit \emph{Chancen} statt Wahrscheinlichkeiten zu arbeiten.
 
+\begin{Definition}[Chance]\newlinefirst
+Zu einer Wahrscheinlichkeit $P(A)\ne 1$ heißt $R(A):=\frac{P(A)}{1-P(A)}$,
+also das \emph{Ratio} aus Wahrscheinlichkeit und Gegenwahrscheinlichkeit,
+die \emph{Chance}, engl. \emph{odds}, des Ereignisses $A$.
+\end{Definition}
+
+\noindent
+Insofern diese Gleichung zu $P(A)=\frac{R(A)}{1+R(A)}$ äquivalent umformbar
+ist, gehört zu jeder Wahrscheinlichkeit genau eine Chance und umgekehrt.
+
+Im näheren Blick auf die Regel von Bayes fällt auf, dass die
+A"=priori"=Wahrscheinlichkeit in die Berechnung des Aktualisierungsfaktors
+einfließt, was man als verwickelt empfinden mag. Wie man unschwer
+nachrechnet, lässt sich die Regel von Bayes nun aber auch in der Form
+\[R(H\mid E) = \frac{P(E\mid H)}{P(E\mid H^\compc)}R(H) = \frac{P(E\mid H)}{1-P(E^\compc\mid H^\compc)}R(H)\]
+fassen, genannt die \emph{Chancen"=Form}, engl. \emph{odds form}.
+In Bezug auf die diagnostischen Tests stellt sich dieser Sachverhalt dar als
+\[R(H\mid E) = \frac{\text{Sensitivität}}{1-\text{Spezifität}}R(H).\]
+Die A"=posteriori"=Chance $R(H\mid E)$ ergibt sich hier ebenfalls über
+einen Aktualisierungsfaktor, genannt \emph{Bayes"=Faktor}, aus der
+A"=priori"=Chance $R(H)$, der aber im Unterschied zur ursprünglichen
+Fassung nicht mehr selbst abhängig von dieser ist. Als weiterer
+Vorteil ergibt sich hierbei, dass sequentielles Aktualisieren in Bezug
+auf eine Reihe Evidenzen durch simples Multiplizieren mit den jeweiligen
+Bayes"=Faktoren vorgenommen werden darf. Hat man nämlich zwei
+Evidenzen $E_1,E_2$ gesammelt, die sowohl unter $H$ als auch unter $H^\compc$
+stochastisch unabhängig sind, also nichts miteinander zu tun haben,
+ergibt sich unmittelbar die Umformung
+\[R(H\mid E_2\cap E_1) = \frac{P(E_2\cap E_1\mid H)}{P(E_2\cap E_1\mid H^\compc)}R(H)
+= \frac{P(E_2\mid H)}{P(E_2\mid H^\compc)}
+\frac{P(E_1\mid H)}{P(E_1\mid H^\compc)}R(H).\]
+Es ist aber Obacht geboten, $E_1,E_2$ nicht irrtümlich für sich allein
+als stochastisch unabhängig zu befinden. Frequentistisch gesehen darf man
+sich den Sachverhalt wie ein dreistufiges Zufallsexperiment vorstellen.
+Zum Beispiel mit $H$ für \emph{ist krank} und $E_i$ für \emph{Test $i$ ist
+positiv}. Im ersten Teilexperiment wird ein zufälliges Individuum aus der
+Population ausgewählt, im zweiten der erste Test, im dritten der zweite
+Test durchgeführt. Weiterhin sind $E_1,E_2$ allem Wissen nach unter $H$
+unabhängig. Ohne Bedingung $H$ hat man es aber sowohl mit kranken
+als auch gesunden Individuen zu tun. Betrachten wir dazu eine Population
+von einer Mio. Individuen. Der erste Test siebt aus dieser eine gewisse
+Zahl aus, die sich in $E_1$ versammeln. Diese Gruppe besitzt aber einen
+höheren relativen Anteil an Kranken, so dass sich unter dieser die
+Wahrscheinlichkeit für $E_2$ erhöht. Wir haben also $P(E_2\mid E_1) > P(E_2)$.
+Wären $E_1,E_2$ unabhängig, müsste aber $P(E_2\mid E_1)=P(E_2)$ gelten.
+
+Formal ist die zweite Pfadregel bzw. das Gesetz der totalen
+Wahrscheinlichkeit anzuwenden, das macht
+\[P(E_i) = P(E_i\mid H)P(H) + P(E_i\mid H^\compc)P(H^\compc).\]
+Diese Gleichung verdeutlicht, wie $P(H)$ sowie $P(H^\compc)$ mit
+in die Berechnung einfließen. Letztlich lässt sich damit ein konkretes
+Beispiel rechnen, das als Gegenbeispiel die Unabhängigkeit von $E_1,E_2$
+widerlegt.
