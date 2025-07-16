@@ -742,3 +742,75 @@ Diese Gleichung verdeutlicht, wie $P(H)$ sowie $P(H^\compc)$ mit
 in die Berechnung einfließen. Letztlich lässt sich damit ein konkretes
 Beispiel rechnen, das als Gegenbeispiel die Unabhängigkeit von $E_1,E_2$
 widerlegt.
+
+\subsection{Bayessche Parameterschätzung}
+
+Die bayessche Statistik ist ebenfalls zur Parameterschätzung dienlich.
+Hierbei stellt man sich einen unbekannten Parameter vor, der aufgrund
+von Unkenntnis anfangs zum Beispiel durch die Gleichverteilung
+beschrieben wird. Das heißt, alle infrage kommenden Parameterwerte
+seien gleich wahrscheinlich. Via neuer empirischer Evidenz wird nun
+gemäß Bayes die Aktualisierung der Verteilung vorgenommen. Nun sollte
+der wahre Parameter bei hinreichend starker Evidenz dort liegen, wo
+sich die Verteilung konzentriert. Ich will den Sachverhalt anhand eines
+vergleichsweise einfachen Beispiels näher erklären.
+
+Es liege eine gut durchmischte Urne mit $s$ schwarzen und $w$ weißen
+Kugeln vor. Aus der Urne wird eine zufällige Kugel gezogen. Es stehe
+$X$ für das Ergebnis der Ziehung, mit $X=0$ für \emph{schwarz}, und
+$X=1$ für \emph{weiß}. Insofern $s$ von insgesamt $s+w$ Kugeln für
+$X=0$ günstig sind, bzw. $w$ für $X=1$, ergibt sich
+\[P(X=0)=\frac{s}{s+w},\quad P(X=1)=\frac{w}{s+w}.\]
+Alice teilt Bob die Anzahl $s$ der schwarzen Kugeln mit. Sie offenbart
+ihm jedoch nicht die wahre Anzahl $w_0\in\{0,\ldots,N-1\}$ der
+weißen. Nun darf Bob einmal aus der Urne ziehen, erhält damit die
+Evidenz $X=x$, mit $x\in\{0,1\}$, bspw. konkret $X=0$. Wie verändert
+sich dadurch Bobs Einschätzung, wie Wahrscheinlich eine bestimmte Anzahl
+$w$ von weißen Kugeln ist?
+
+Bob nimmt die Anzahl der weißen Kugeln aus seiner Sicht als Zufallsgröße
+$W$ an. Da bei Bob anfangs völlige Unkenntnis herrscht, nimmt
+er die Gleichverteilung $P(W=w)=\frac{1}{N}$ als A"=priori"=Verteilung
+an. Unter Voraussetzung $W=w$ weiß Bob die Wahrscheinlichkeit für
+$X=0$, denn dann berechnet sich diese so, als wäre $w$ bekannt.
+Das heißt, man hat $P(X=0\mid W=w)=\frac{s}{s+w}$. Hiermit bestimmt
+Bob die aktualisierte Verteilung mit der Regel von Bayes zu
+\[P(W=w\mid X=0) = \frac{P(X=0\mid W=w)}{P(X=0)}P(W=w).\]
+Der Nenner des Aktualisierungsfaktors berechnet sich hierbei wieder mit
+dem Gesetz der totalen Wahrscheinlichkeit als
+\[P(X=0) = \sum_{k=0}^{N-1}P(X=0\mid W=k)P(W=k).\]
+Die Kodierung der gezogenen Kugelfarbe als Zahl $x\in\{0,1\}$ gestattet
+im Weiteren die geschickte Zusammenfassung
+\[P(W=w\mid X=x) = \frac{(1-x)s+xw}{s+w}
+= \Big(\frac{s}{s+w}\Big)^{1-x}\Big(\frac{w}{s+w}\Big)^x.\]
+Sehr dienlich sein wird uns hierbei die letzte Form.
+
+Nun ist die einzelne Ziehung nicht sonderlich Aufschluss gebend über die
+wahre Anzahl. Daher sei es Bob im Weiteren gestattet, $n$ mal eine
+Kugel mit zurücklegen zu ziehen, womit er den Stichprobenvektor
+$x=(x_1,\ldots,x_n)$ erhält. Wir notieren zur Abkürzung
+$E_i:=\{X_i=x_i\}$. Aufgrund der stochastischen Unabhängigkeit von
+$E_1,E_2$ unter der Bedingung $W=w$ ergibt sich die Umformung
+\begin{gather*}
+P(W=w\mid E_1\cap E_2) = \frac{P(E_1\cap E_2\mid W=w)}{P(E_1\cap E_2)}P(W=w)\\
+= \frac{P(E_2\mid W=w)P(E_1\mid W=w)}{\sum_{k=0}^{N-1} P(E_2\mid W=k)P(E_1\mid W=k)P(W=k)}P(W=w).
+\end{gather*}
+Darin nutzen wir die Umformung
+\[P(E_1\mid W=k) = \frac{P(W=k\mid E_1)}{P(W=k)}P(E_1).\]
+Der Faktor $P(W=k)$ kürzt sich somit raus, und der Faktor $P(E_1)$
+hängt nicht von $k$ ab, darf also aus der Summe ausgeklammert werden.
+Daraufhin gelangen wir mit der Vereinfachung $\frac{P(E_1\mid W=w)}{P(E_1)}P(W=w)
+= P(W=w\mid E_1)$ zu
+\[P(W=w\mid E_1\cap E_2)
+= \frac{P(E_2\mid W=w)}{\sum_{k=0}^{N-1} P(E_2\mid W=k)P(W=k\mid E_1)}P(W=w\mid E_1).\]
+Letztlich gilt noch $P(E_2\mid W=k)=P(E_2\mid E_1,W=k)$ aufgrund der
+Unabhängigkeit von $E_1,E_2$. Diese Umformung ermöglicht die Vereinfachung
+der Summe als totale Wahrscheinlichkeit
+\[P(E_2\mid E_1) = \sum_{k=0}^{N-1}P(E_2\mid E_1,W=k)P(W=k\mid E_1).\]
+Somit finden wir schließlich zu
+\[P(W=w\mid E_1\cap E_2)
+= \frac{P(E_2\mid W=w)}{P(E_2\mid E_1)}P(W=w\mid E_1).\]
+Demnach darf das Aktualisieren der Wahrscheinlichkeit sequentiell
+unternommen werden. Hierbei nimmt die im ersten Schritt ermittelte
+A"=posteriori"=Verteilung im zweiten Schritt die Rolle der
+A"=priori"=Verteilung ein.
