@@ -791,26 +791,118 @@ Kugel mit zurücklegen zu ziehen, womit er den Stichprobenvektor
 $x=(x_1,\ldots,x_n)$ erhält. Wir notieren zur Abkürzung
 $E_i:=\{X_i=x_i\}$. Aufgrund der stochastischen Unabhängigkeit von
 $E_1,E_2$ unter der Bedingung $W=w$ ergibt sich die Umformung
-\begin{gather*}
-P(W=w\mid E_1\cap E_2) = \frac{P(E_1\cap E_2\mid W=w)}{P(E_1\cap E_2)}P(W=w)\\
-= \frac{P(E_2\mid W=w)P(E_1\mid W=w)}{\sum_{k=0}^{N-1} P(E_2\mid W=k)P(E_1\mid W=k)P(W=k)}P(W=w).
-\end{gather*}
-Darin nutzen wir die Umformung
-\[P(E_1\mid W=k) = \frac{P(W=k\mid E_1)}{P(W=k)}P(E_1).\]
-Der Faktor $P(W=k)$ kürzt sich somit raus, und der Faktor $P(E_1)$
-hängt nicht von $k$ ab, darf also aus der Summe ausgeklammert werden.
-Daraufhin gelangen wir mit der Vereinfachung $\frac{P(E_1\mid W=w)}{P(E_1)}P(W=w)
-= P(W=w\mid E_1)$ zu
-\[P(W=w\mid E_1\cap E_2)
-= \frac{P(E_2\mid W=w)}{\sum_{k=0}^{N-1} P(E_2\mid W=k)P(W=k\mid E_1)}P(W=w\mid E_1).\]
-Letztlich gilt noch $P(E_2\mid W=k)=P(E_2\mid E_1,W=k)$ aufgrund der
-Unabhängigkeit von $E_1,E_2$. Diese Umformung ermöglicht die Vereinfachung
-der Summe als totale Wahrscheinlichkeit
-\[P(E_2\mid E_1) = \sum_{k=0}^{N-1}P(E_2\mid E_1,W=k)P(W=k\mid E_1).\]
-Somit finden wir schließlich zu
+\begin{align*}
+P(W=w\mid E_1\cap E_2) &= \frac{P(E_1\cap E_2\mid W=w)}{P(E_1\cap E_2)}P(W=w)\\
+&= \frac{P(E_2\mid W=w)P(E_1\mid W=w)}{P(E_2\mid E_1)P(E_1)}P(W=w).
+\end{align*}
+Via $P(W=w\mid E_1) = \frac{P(E_1\mid W=w)}{P(E_1)}P(W=w)$
+vereinfacht sich dies zu
 \[P(W=w\mid E_1\cap E_2)
 = \frac{P(E_2\mid W=w)}{P(E_2\mid E_1)}P(W=w\mid E_1).\]
 Demnach darf das Aktualisieren der Wahrscheinlichkeit sequentiell
 unternommen werden. Hierbei nimmt die im ersten Schritt ermittelte
 A"=posteriori"=Verteilung im zweiten Schritt die Rolle der
 A"=priori"=Verteilung ein.
+
+Zur Berechnung ist auf den Nenner wieder das Gesetz der totalen
+Wahrscheinlichkeit anzuwenden, das macht
+\[P(E_2\mid E_1) = \sum_{k=0}^{N-1}P(E_2\mid E_1,W=k)P(W=k\mid E_1).\]
+Letztlich gilt noch $P(E_2\mid E_1,W=k)=P(E_2\mid W=k)$ aufgrund der
+Unabhängigkeit von $E_1,E_2$ unter $W=k$.
+
+In ganz analoger Überlegung findet sich allgemeiner die Rekurrenz
+\[P(W=w\mid A_i) = \frac{P(E_i\mid W=w)}{P(E_i\mid A_{i-1})}P(W=w\mid A_{i-1})\]
+mit $A_0:=\Omega$ und $A_i := E_i\cap A_{i-1}$.
+
+Indessen verhält es sich so, dass das Ziehen der Kugeln ein $n$"=stufiges
+Bernoulli"=Experiment darstellt. Die Summe $Y:=\sum_{i=1}^n X_i$ ist
+somit unter $W=w$ binomialverteilt, das heißt,
+\[P(Y=y\mid W=w) = \binom{n}{y}p^y(1-p)^{n-y}\]
+mit $p:=\frac{w}{s+w}$. Es tut sich jetzt die Frage auf, welcher der
+beiden Ansätze, $X=x$ oder $Y=y$, besser schätzt. Die Antwort darauf
+lautet \emph{keiner}. Beide führen exakt zur selben Verteilung.
+
+Statt der sequentiellen Rechnung lässt sich die A"=posteriori"=Verteilung
+nämlich auch in einem Rutsch berechnen. Dazu formen wir die
+Likelihood um zu
+\begin{gather*}
+\textstyle P(X=x\mid W=w) = P(\bigcap_{i=1}^n E_i\mid W=w)
+= \prod_{i=1}^n P(E_i\mid W=w)\\
+= \textstyle\prod_{i=1}^n p^{x_i}(1-p)^{1-x_i}
+= p^{\sum_{i=1}^n x_i}(1-p)^{\sum_{i=1}^n (1-x_i)}
+= p^y (1-p)^{n-y}.
+\end{gather*}
+Demgemäß berechnet sich die Verteilung zu
+\begin{align*}
+P(W=w\mid X=x) &= \frac{P(X=x\mid W=w)}{P(X=x)}P(W=w)\\
+&= \frac{p^y (1-p)^{n-y}}{\sum_{k=0}^{N-1} p_k^y (1-p_k)^{n-y}P(W=k)}P(W=w)
+\end{align*}
+mit $p:=\frac{w}{s+w}$ sowie $p_k:=\frac{k}{s+k}$. Es bestätigt sich nun
+\[P(W=w\mid Y=y) = P(W=w\mid X=x),\]
+da sich der Binomialkoeffizient herauskürzt.
+
+Bislang blieb vage, welche ontologische Bedeutung der Zufallsgröße $W$
+zukommt, zumal die wahre Anzahl weißer Kugeln eine feste, wenn auch
+unbekannte Größe ist. Aus Bobs subjektivistischer Perspektive liegt
+darin kein Widerspruch. Für ihn modelliert die A"=priori"=Verteilung die
+anfängliche Unsicherheit über die wahre Anzahl. Die A"=posteriori"=Verteilung
+stellt dahingehend seine verringerte Unsicherheit, sein aktualisiertes,
+durch Evidenz informiertes Wissen dar.
+
+Eine andere Deutung, die ohne subjektive Glaubensgrade auskommt,
+ergibt sich durch einen Perspektivwechsel. Stellen wir uns Sofie -- Deus ex
+Machina -- als übergeordnete Instanz vor, die das gesamte Szenario als zweistufiges
+Zufallsexperiment entworfen hat. Im ersten Schritt wählt Sofie für Alice
+eine zufällige Urne, indem sie die Anzahl der weißen Kugeln als
+gleichverteilte Zufallszahl erzeugt. Im zweiten Schritt lässt sie Bob die
+Stichprobe ziehen.
+
+In diesem frequentistischen Rahmen ist $W$ eine »echte« Zufallsgröße.
+Sofie sieht sich an ihrem Computer dazu befähigt, den gesamten Vorgang
+beliebig oft  zu wiederholen, und die berechneten bedingten
+Wahrscheinlichkeiten besitzen eine klare Häufigkeitsdeutung.
+
+Als adäquate Ergebnismenge des Experiments haben wir
+\[\Omega = \{0,\ldots, N-1\}\times\{0,1\}^n.\]
+Die Zufallsgrößen deuten sich dahingehend als die Projektionen
+\[\begin{array}{@{}c@{}l@{\quad}c@{}l@{}}
+W&\colon\Omega\to\{0,\ldots,N-1\}, & W(w,x) &{}:= w,\\[3pt]
+X&\colon\Omega\to\{0,1\}^n, & X(w,x) &{}:= x.
+\end{array}\]
+Alle Rechnungen bleiben hierbei natürlich unverändert gültig.
+
+Sofie führt das Experiment eine Million mal durch. Mit einer
+Häufigkeit $H_w$ wird eine Urne mit $w$ Kugeln gezogen, mit einer
+Häufigkeit $H_y$ kommt die Summe $y=\sum_{i=1}^n x_i$ vor, und mit
+einer Häufigkeit $H_{wy}$ tritt beides gleichzeitig ein. Sofern nicht
+gerade $H_y=0$ ist, sollte gelten
+\[\frac{H_{wy}}{H_y}\approx P(W=w\mid Y=y).\]
+Zugleich konzentriert sich die Verteilung für eine große Stichprobenlänge
+$n$ jeweils um die wahre Anzahl weißer Kugeln.
+
+Eine bedeutsame Beobachtung ist hier, dass Bobs subjektive Sichtweise und
+Sofies frequentistisches Experiment zu exakt derselben mathematischen
+Berechnung führen. Die Debatte, welche Interpretation die »richtige« ist,
+tritt in den Hintergrund. Stattdessen rückt der formale Modellcharakter
+in den Vordergrund.
+
+Wir haben es hier mit einem \emph{statistischen Modell} zu tun, dessen
+Modellannahmen der Parameterraum, die A"=priori"=Verteilung und die
+Likelihood"=Funktion sind. Im gegebenen Beispiel wirken sie durch die
+Problemstellung natürlich, in der Praxis müssen sie jedoch sorgfältig
+begründet werden.
+
+Sofies übergeordnete Sicht stellt somit keine »objektive Wahrheit« dar,
+sondern geht selbst mit den Modellannahmen einher -- sie ist eine
+konstruierte Geschichte, die eine frequentistische Rechtfertigung für
+den bayesschen Ansatz liefern soll.
+
+Wir wollen diesbezüglich eine moderne Position einnehmen. Zur Ideenfindung
+für den Modellansatz sei es uns gestattet, nach Belieben zwischen der
+subjektivistischen und der frequentistischen Sichtweise hin und her
+zu wechseln. Daraufhin behandeln wir das aufgestellte Modell aber als
+formalen Gegenstand, der mit den Mitteln der axiomatisch fundierten
+Wahrscheinlichkeitsrechnung auf seine Eigenschaften untersucht wird.
+Später wählen wir dann denjenigen Ansatz aus dem Werkzeugkasten, von dem wir
+annehmen, er liefere unter den gegebenen Umständen die beste Schätzung.
+
