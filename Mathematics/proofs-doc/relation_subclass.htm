@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>relation_subclass</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem relation_subclass</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> relation_subclass<br> R ⊆ Q → relation Q → relation R</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ R ⊆ Q, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ relation Q, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ t ∈ R, <a href='hypo.htm'>hypo</a>.
+04. 1, 3 ⊢ t ∈ Q, <a href='incl_elim.htm'>incl_elim</a> 1 3.
+05. 2 ⊢ ∀t. t ∈ Q → ∃x. ∃y. t = (x, y), <a href='relation_unfold.htm'>relation_unfold</a> 2.
+06. 2 ⊢ t ∈ Q → ∃x. ∃y. t = (x, y), <a href='uq_elim.htm'>uq_elim</a> 5.
+07. 1, 2, 3 ⊢ ∃x. ∃y. t = (x, y), <a href='subj_elim.htm'>subj_elim</a> 6 4.
+08. 1, 2 ⊢ t ∈ R → ∃x. ∃y. t = (x, y), <a href='subj_intro.htm'>subj_intro</a> 7.
+09. 1, 2 ⊢ ∀t. t ∈ R → ∃x. ∃y. t = (x, y), <a href='uq_intro.htm'>uq_intro</a> 8.
+10. 1, 2 ⊢ relation R, <a href='relation_fold.htm'>relation_fold</a> 9.
+relation_subclass. ⊢ R ⊆ Q → relation Q → relation R, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 10.
+</pre>
+</body>

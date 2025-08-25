@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>prod_intro</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem prod_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> prod_intro<br> x ∈ X → y ∈ Y → (x, y) ∈ X × Y</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ X, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ y ∈ Y, <a href='hypo.htm'>hypo</a>.
+03. 1, 2 ⊢ x ∈ X ∧ y ∈ Y, <a href='conj_intro.htm'>conj_intro</a> 1 2.
+04. ⊢ (x, y) = (x, y), <a href='eq_refl.htm'>eq_refl</a>.
+05. 1, 2 ⊢ x ∈ X ∧ y ∈ Y ∧ (x, y) = (x, y), <a href='conj_intro.htm'>conj_intro</a> 3 4.
+06. 1, 2 ⊢ ∃b. x ∈ X ∧ b ∈ Y ∧ (x, y) = (x, b), <a href='ex_intro.htm'>ex_intro</a> 5.
+07. 1, 2 ⊢ ∃a. ∃b. a ∈ X ∧ b ∈ Y ∧ (x, y) = (a, b), <a href='ex_intro.htm'>ex_intro</a> 6.
+08. 1 ⊢ set x, <a href='set_intro.htm'>set_intro</a> 1.
+09. 2 ⊢ set y, <a href='set_intro.htm'>set_intro</a> 2.
+10. 1, 2 ⊢ set (x, y), <a href='set_pair.htm'>set_pair</a> 8 9.
+11. 1, 2 ⊢ (x, y) ∈ {t | ∃a. ∃b. a ∈ X ∧ b ∈ Y ∧ t = (a, b)},
+  <a href='comp_intro.htm'>comp_intro</a> 10 7, P u ↔ (∃a. ∃b. a ∈ X ∧ b ∈ Y ∧ u = (a, b)).
+12. ⊢ X × Y = {t | ∃a. ∃b. a ∈ X ∧ b ∈ Y ∧ t = (a, b)}, <a href='prod_eq.htm'>prod_eq</a>.
+13. 1, 2 ⊢ (x, y) ∈ X × Y, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 12 11, P u ↔ (x, y) ∈ u.
+prod_intro. ⊢ x ∈ X → y ∈ Y → (x, y) ∈ X × Y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 13.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on six axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='pairing.htm'>pairing</a>, <a href='union.htm'>union</a>.</p>
+</body>

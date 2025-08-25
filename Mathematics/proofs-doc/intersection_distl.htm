@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>intersection_distl</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem intersection_distl</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> intersection_distl<br> A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ A ∩ (B ∪ C), <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ x ∈ A, <a href='intersection_eliml.htm'>intersection_eliml</a> 1.
+03. 1 ⊢ x ∈ B ∪ C, <a href='intersection_elimr.htm'>intersection_elimr</a> 1.
+04. 1 ⊢ x ∈ B ∨ x ∈ C, <a href='union_elim.htm'>union_elim</a> 3.
+05. 5 ⊢ x ∈ B, <a href='hypo.htm'>hypo</a>.
+06. 1, 5 ⊢ x ∈ A ∩ B, <a href='intersection_intro.htm'>intersection_intro</a> 2 5.
+07. 1, 5 ⊢ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='union_introl.htm'>union_introl</a> 6.
+08. 8 ⊢ x ∈ C, <a href='hypo.htm'>hypo</a>.
+09. 1, 8 ⊢ x ∈ A ∩ C, <a href='intersection_intro.htm'>intersection_intro</a> 2 8.
+10. 1, 8 ⊢ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='union_intror.htm'>union_intror</a> 9.
+11. 1 ⊢ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='disj_elim.htm'>disj_elim</a> 4 7 10.
+12. ⊢ x ∈ A ∩ (B ∪ C) → x ∈ (A ∩ B) ∪ (A ∩ C), <a href='subj_intro.htm'>subj_intro</a> 11.
+13. 13 ⊢ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='hypo.htm'>hypo</a>.
+14. 13 ⊢ x ∈ A ∩ B ∨ x ∈ A ∩ C, <a href='union_elim.htm'>union_elim</a> 13.
+15. 15 ⊢ x ∈ A ∩ B, <a href='hypo.htm'>hypo</a>.
+16. 15 ⊢ x ∈ A, <a href='intersection_eliml.htm'>intersection_eliml</a> 15.
+17. 15 ⊢ x ∈ B, <a href='intersection_elimr.htm'>intersection_elimr</a> 15.
+18. 15 ⊢ x ∈ B ∪ C, <a href='union_introl.htm'>union_introl</a> 17.
+19. 15 ⊢ x ∈ A ∩ (B ∪ C), <a href='intersection_intro.htm'>intersection_intro</a> 16 18.
+20. 20 ⊢ x ∈ A ∩ C, <a href='hypo.htm'>hypo</a>.
+21. 20 ⊢ x ∈ A, <a href='intersection_eliml.htm'>intersection_eliml</a> 20.
+22. 20 ⊢ x ∈ C, <a href='intersection_elimr.htm'>intersection_elimr</a> 20.
+23. 20 ⊢ x ∈ B ∪ C, <a href='union_intror.htm'>union_intror</a> 22.
+24. 20 ⊢ x ∈ A ∩ (B ∪ C), <a href='intersection_intro.htm'>intersection_intro</a> 21 23.
+25. 13 ⊢ x ∈ A ∩ (B ∪ C), <a href='disj_elim.htm'>disj_elim</a> 14 19 24.
+26. ⊢ x ∈ (A ∩ B) ∪ (A ∩ C) → x ∈ A ∩ (B ∪ C), <a href='subj_intro.htm'>subj_intro</a> 25.
+27. ⊢ x ∈ A ∩ (B ∪ C) ↔ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='bij_intro.htm'>bij_intro</a> 12 26.
+28. ⊢ ∀x. x ∈ A ∩ (B ∪ C) ↔ x ∈ (A ∩ B) ∪ (A ∩ C), <a href='uq_intro.htm'>uq_intro</a> 27.
+intersection_distl. ⊢ A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C), <a href='ext.htm'>ext</a> 28.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on four axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>.</p>
+</body>

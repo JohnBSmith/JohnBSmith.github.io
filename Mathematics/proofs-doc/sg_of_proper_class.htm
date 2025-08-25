@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>sg_of_proper_class</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem sg_of_proper_class</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> sg_of_proper_class<br> ¬set A → {A} = UnivCl</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ ¬set A, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ set A, <a href='hypo.htm'>hypo</a>.
+03. 1, 2 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> 1 2.
+04. 1, 2 ⊢ x = A, <a href='efq.htm'>efq</a> 3.
+05. 1 ⊢ set A → x = A, <a href='subj_intro.htm'>subj_intro</a> 4.
+06. 6 ⊢ x ∈ UnivCl, <a href='hypo.htm'>hypo</a>.
+07. 6 ⊢ set x, <a href='set_intro.htm'>set_intro</a> 6.
+08. 1, 6 ⊢ x ∈ {x | set A → x = A}, <a href='comp_intro.htm'>comp_intro</a> 7 5.
+09. ⊢ {A} = {x | set A → x = A}, <a href='sg_eq.htm'>sg_eq</a>.
+10. 1, 6 ⊢ x ∈ {A}, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 9 8, P u ↔ x ∈ u.
+11. 1 ⊢ x ∈ UnivCl → x ∈ {A}, <a href='subj_intro.htm'>subj_intro</a> 10.
+12. 1 ⊢ ∀x. x ∈ UnivCl → x ∈ {A}, <a href='uq_intro.htm'>uq_intro</a> 11.
+13. 1 ⊢ UnivCl ⊆ {A}, <a href='incl_intro.htm'>incl_intro</a> 12.
+14. ⊢ {A} ⊆ UnivCl, <a href='UnivCl_is_greatest.htm'>UnivCl_is_greatest</a>.
+15. 1 ⊢ {A} = UnivCl, <a href='incl_antisym.htm'>incl_antisym</a> 14 13.
+sg_of_proper_class. ⊢ ¬set A → {A} = UnivCl, <a href='subj_intro.htm'>subj_intro</a> 15.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on five axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>.</p>
+</body>

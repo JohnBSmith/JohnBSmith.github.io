@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>sg_intro</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem sg_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> sg_intro<br> set a → x = a → x ∈ {a}</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ set a, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ {a}, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ x ∈ {x | set a → x = a}, <a href='eq_subst.htm'>eq_subst</a> <a href='sg_eq.htm'>sg_eq</a> 2, P u ↔ x ∈ u.
+04. 2 ⊢ set a → x = a, <a href='comp_elim.htm'>comp_elim</a> 3.
+05. 1, 2 ⊢ x = a, <a href='subj_elim.htm'>subj_elim</a> 4 1.
+06. 1 ⊢ x ∈ {a} → x = a, <a href='subj_intro.htm'>subj_intro</a> 5.
+sg_elim. ⊢ set a → x ∈ {a} → x = a, <a href='subj_intro.htm'>subj_intro</a> 6.
+07. 7 ⊢ set a, <a href='hypo.htm'>hypo</a>.
+08. 8 ⊢ x = a, <a href='hypo.htm'>hypo</a>.
+09. 7, 8 ⊢ set x, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 8 7, P u ↔ set u.
+10. 8, 7 ⊢ x = a, <a href='wk.htm'>wk</a> 8.
+11. 8 ⊢ set a → x = a, <a href='subj_intro.htm'>subj_intro</a> 10.
+12. 7, 8 ⊢ x ∈ {x | set a → x = a}, <a href='comp_intro.htm'>comp_intro</a> 9 11.
+13. 7, 8 ⊢ x ∈ {a}, <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='sg_eq.htm'>sg_eq</a> 12, P u ↔ x ∈ u.
+14. 7 ⊢ x = a → x ∈ {a}, <a href='subj_intro.htm'>subj_intro</a> 13.
+sg_intro. ⊢ set a → x = a → x ∈ {a}, <a href='subj_intro.htm'>subj_intro</a> 14.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on three axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>

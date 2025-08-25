@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>family_union_intro</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem family_union_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> family_union_intro<br> set (A i) → i ∈ I → x ∈ A i →
+  x ∈ ⋃{B | ∃i. i ∈ I ∧ B = A i}</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ set (A i), <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ i ∈ I, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ x ∈ A i, <a href='hypo.htm'>hypo</a>.
+04. ⊢ A i = A i, <a href='eq_refl.htm'>eq_refl</a>.
+05. 2 ⊢ i ∈ I ∧ A i = A i, <a href='conj_intro.htm'>conj_intro</a> 2 4.
+06. 2 ⊢ ∃j. j ∈ I ∧ A i = A j, <a href='ex_intro.htm'>ex_intro</a> 5.
+07. 1, 2 ⊢ A i ∈ {B | ∃j. j ∈ I ∧ B = A j},
+  <a href='comp_intro.htm'>comp_intro</a> 1 6, P u ↔ (∃j. j ∈ I ∧ u = A j).
+08. 1, 2, 3 ⊢ x ∈ ⋃{B | ∃j. j ∈ I ∧ B = A j}, <a href='Union_intro.htm'>Union_intro</a> 7 3.
+family_union_intro. ⊢ set (A i) → i ∈ I → x ∈ A i →
+  x ∈ ⋃{B | ∃i. i ∈ I ∧ B = A i}, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 8.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on three axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>

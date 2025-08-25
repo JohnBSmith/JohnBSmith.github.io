@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>inv_img_dist_union</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem inv_img_dist_union</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> inv_img_dist_union<br> inv_img R (A ∪ B) = inv_img R A ∪ inv_img R B</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ inv_img R (A ∪ B), <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ ∃y. y ∈ A ∪ B ∧ (x, y) ∈ R, <a href='inv_img_elim.htm'>inv_img_elim</a> 1.
+03. 3 ⊢ y ∈ A ∪ B ∧ (x, y) ∈ R, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ (x, y) ∈ R, <a href='conj_elimr.htm'>conj_elimr</a> 3.
+05. 3 ⊢ y ∈ A ∪ B, <a href='conj_eliml.htm'>conj_eliml</a> 3.
+06. 3 ⊢ y ∈ A ∨ y ∈ B, <a href='union_elim.htm'>union_elim</a> 5.
+07. 7 ⊢ y ∈ A, <a href='hypo.htm'>hypo</a>.
+08. 3, 7 ⊢ x ∈ inv_img R A, <a href='inv_img_intro.htm'>inv_img_intro</a> 7 4.
+09. 3, 7 ⊢ x ∈ inv_img R A ∪ inv_img R B, <a href='union_introl.htm'>union_introl</a> 8.
+10. 10 ⊢ y ∈ B, <a href='hypo.htm'>hypo</a>.
+11. 3, 10 ⊢ x ∈ inv_img R B, <a href='inv_img_intro.htm'>inv_img_intro</a> 10 4.
+12. 3, 10 ⊢ x ∈ inv_img R A ∪ inv_img R B, <a href='union_intror.htm'>union_intror</a> 11.
+13. 3 ⊢ x ∈ inv_img R A ∪ inv_img R B, <a href='disj_elim.htm'>disj_elim</a> 6 9 12.
+14. 1 ⊢ x ∈ inv_img R A ∪ inv_img R B, <a href='ex_elim.htm'>ex_elim</a> 2 13.
+15. ⊢ x ∈ inv_img R (A ∪ B) → x ∈ inv_img R A ∪ inv_img R B,
+  <a href='subj_intro.htm'>subj_intro</a> 14.
+16. 16 ⊢ x ∈ inv_img R A ∪ inv_img R B, <a href='hypo.htm'>hypo</a>.
+17. 16 ⊢ x ∈ inv_img R A ∨ x ∈ inv_img R B, <a href='union_elim.htm'>union_elim</a> 16.
+18. 18 ⊢ x ∈ inv_img R A, <a href='hypo.htm'>hypo</a>.
+19. 18 ⊢ ∃y. y ∈ A ∧ (x, y) ∈ R, <a href='inv_img_elim.htm'>inv_img_elim</a> 18.
+20. 20 ⊢ y ∈ A ∧ (x, y) ∈ R, <a href='hypo.htm'>hypo</a>.
+21. 20 ⊢ y ∈ A, <a href='conj_eliml.htm'>conj_eliml</a> 20.
+22. 20 ⊢ y ∈ A ∪ B, <a href='union_introl.htm'>union_introl</a> 21.
+23. 20 ⊢ (x, y) ∈ R, <a href='conj_elimr.htm'>conj_elimr</a> 20.
+24. 20 ⊢ x ∈ inv_img R (A ∪ B), <a href='inv_img_intro.htm'>inv_img_intro</a> 22 23.
+25. 18 ⊢ x ∈ inv_img R (A ∪ B), <a href='ex_elim.htm'>ex_elim</a> 19 24.
+26. 26 ⊢ x ∈ inv_img R B, <a href='hypo.htm'>hypo</a>.
+27. 26 ⊢ ∃y. y ∈ B ∧ (x, y) ∈ R, <a href='inv_img_elim.htm'>inv_img_elim</a> 26.
+28. 28 ⊢ y ∈ B ∧ (x, y) ∈ R, <a href='hypo.htm'>hypo</a>.
+29. 28 ⊢ y ∈ B, <a href='conj_eliml.htm'>conj_eliml</a> 28.
+30. 28 ⊢ y ∈ A ∪ B, <a href='union_intror.htm'>union_intror</a> 29.
+31. 28 ⊢ (x, y) ∈ R, <a href='conj_elimr.htm'>conj_elimr</a> 28.
+32. 28 ⊢ x ∈ inv_img R (A ∪ B), <a href='inv_img_intro.htm'>inv_img_intro</a> 30 31.
+33. 26 ⊢ x ∈ inv_img R (A ∪ B), <a href='ex_elim.htm'>ex_elim</a> 27 32.
+34. 16 ⊢ x ∈ inv_img R (A ∪ B), <a href='disj_elim.htm'>disj_elim</a> 17 25 33.
+35. ⊢ x ∈ inv_img R A ∪ inv_img R B → x ∈ inv_img R (A ∪ B),
+  <a href='subj_intro.htm'>subj_intro</a> 34.
+36. ⊢ x ∈ inv_img R (A ∪ B) ↔ x ∈ inv_img R A ∪ inv_img R B,
+  <a href='bij_intro.htm'>bij_intro</a> 15 35.
+37. ⊢ ∀x. x ∈ inv_img R (A ∪ B) ↔ x ∈ inv_img R A ∪ inv_img R B,
+  <a href='uq_intro.htm'>uq_intro</a> 36.
+inv_img_dist_union. ⊢ inv_img R (A ∪ B) = inv_img R A ∪ inv_img R B,
+  <a href='ext.htm'>ext</a> 37.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
+</body>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>union_compl</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem union_compl</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> union_compl<br> A ∪ compl A = UnivCl</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ UnivCl, <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ set x, <a href='set_intro.htm'>set_intro</a> 1.
+03. ⊢ x ∈ A ∨ ¬x ∈ A, <a href='lem.htm'>lem</a>.
+04. 4 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ x ∈ A ∪ compl A, <a href='union_introl.htm'>union_introl</a> 4.
+06. 6 ⊢ ¬x ∈ A, <a href='hypo.htm'>hypo</a>.
+07. 1, 6 ⊢ x ∈ compl A, <a href='compl_intro.htm'>compl_intro</a> 2 6.
+08. 1, 6 ⊢ x ∈ A ∪ compl A, <a href='union_intror.htm'>union_intror</a> 7.
+09. 1 ⊢ x ∈ A ∪ compl A, <a href='disj_elim.htm'>disj_elim</a> 3 5 8.
+10. ⊢ x ∈ UnivCl → x ∈ A ∪ compl A, <a href='subj_intro.htm'>subj_intro</a> 9.
+11. ⊢ ∀x. x ∈ UnivCl → x ∈ A ∪ compl A, <a href='uq_intro.htm'>uq_intro</a> 10.
+12. ⊢ UnivCl ⊆ A ∪ compl A, <a href='incl_intro.htm'>incl_intro</a> 11.
+13. ⊢ A ∪ compl A ⊆ UnivCl, <a href='UnivCl_is_greatest.htm'>UnivCl_is_greatest</a>.
+union_compl. ⊢ A ∪ compl A = UnivCl, <a href='incl_antisym.htm'>incl_antisym</a> 13 12.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on five axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>.</p>
+</body>

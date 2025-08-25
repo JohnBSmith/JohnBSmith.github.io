@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>fn_app_exists</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem fn_app_exists</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> fn_app_exists<br> function f → x ∈ dom f → ∃y. y ∈ rng f ∧ y = app f x</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ function f, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ dom f, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ ∃y. (x, y) ∈ f, <a href='dom_elim.htm'>dom_elim</a> 2.
+04. 4 ⊢ (x, y) ∈ f, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ y ∈ rng f, <a href='rng_intro.htm'>rng_intro</a> 4.
+06. 1, 4 ⊢ y = app f x, <a href='app_intro.htm'>app_intro</a> 1 4.
+07. 1, 4 ⊢ y ∈ rng f ∧ y = app f x, <a href='conj_intro.htm'>conj_intro</a> 5 6.
+08. 1, 4 ⊢ ∃y. y ∈ rng f ∧ y = app f x, <a href='ex_intro.htm'>ex_intro</a> 7.
+09. 1, 2 ⊢ ∃y. y ∈ rng f ∧ y = app f x, <a href='ex_elim.htm'>ex_elim</a> 3 8.
+fn_app_exists. ⊢ function f → x ∈ dom f → ∃y. y ∈ rng f ∧ y = app f x,
+  <a href='subj_intro_ii.htm'>subj_intro_ii</a> 9.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
+</body>

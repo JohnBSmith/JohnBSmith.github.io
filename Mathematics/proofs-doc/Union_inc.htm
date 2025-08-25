@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Union_inc</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem Union_inc</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> Union_inc<br> A ⊆ B → ⋃A ⊆ ⋃B</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ A ⊆ B, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ ⋃A, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ ∃y. y ∈ A ∧ x ∈ y, <a href='Union_elim.htm'>Union_elim</a> 2.
+04. 4 ⊢ y ∈ A ∧ x ∈ y, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ y ∈ A, <a href='conj_eliml.htm'>conj_eliml</a> 4.
+06. 4 ⊢ x ∈ y, <a href='conj_elimr.htm'>conj_elimr</a> 4.
+07. 1, 4 ⊢ y ∈ B, <a href='incl_elim.htm'>incl_elim</a> 1 5.
+08. 1, 4 ⊢ y ∈ B ∧ x ∈ y, <a href='conj_intro.htm'>conj_intro</a> 7 6.
+09. 1, 4 ⊢ ∃y. y ∈ B ∧ x ∈ y, <a href='ex_intro.htm'>ex_intro</a> 8.
+10. 1, 4 ⊢ x ∈ ⋃B, <a href='Union_intro_ex.htm'>Union_intro_ex</a> 9.
+11. 1, 2 ⊢ x ∈ ⋃B, <a href='ex_elim.htm'>ex_elim</a> 3 10.
+12. 1 ⊢ x ∈ ⋃A → x ∈ ⋃B, <a href='subj_intro.htm'>subj_intro</a> 11.
+13. 1 ⊢ ∀x. x ∈ ⋃A → x ∈ ⋃B, <a href='uq_intro.htm'>uq_intro</a> 12.
+14. 1 ⊢ ⋃A ⊆ ⋃B, <a href='incl_intro.htm'>incl_intro</a> 13.
+Union_inc. ⊢ A ⊆ B → ⋃A ⊆ ⋃B, <a href='subj_intro.htm'>subj_intro</a> 14.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on three axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>

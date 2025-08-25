@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>ex_uniq_set_intro</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem ex_uniq_set_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> ex_uniq_set_intro<br> (∃x. S x ∧ P x) → (∀x. ∀y. P x → P y → x = y) →
+  (∃x. S x ∧ ∀y. x = y ↔ P y)</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ ∃x. S x ∧ P x, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ∀x. ∀y. P x → P y → x = y, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ S x ∧ P x, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ S x, <a href='conj_eliml.htm'>conj_eliml</a> 3.
+05. 3 ⊢ P x, <a href='conj_elimr.htm'>conj_elimr</a> 3.
+06. 6 ⊢ x = y, <a href='hypo.htm'>hypo</a>.
+07. 3, 6 ⊢ P y, <a href='eq_subst.htm'>eq_subst</a> 6 5.
+08. 3 ⊢ x = y → P y, <a href='subj_intro.htm'>subj_intro</a> 7.
+09. 2 ⊢ ∀y. P x → P y → x = y, <a href='uq_elim.htm'>uq_elim</a> 2.
+10. 2 ⊢ P x → P y → x = y, <a href='uq_elim.htm'>uq_elim</a> 9.
+11. 2, 3 ⊢ P y → x = y, <a href='subj_elim.htm'>subj_elim</a> 10 5.
+12. 2, 3 ⊢ x = y ↔ P y, <a href='bij_intro.htm'>bij_intro</a> 8 11.
+13. 2, 3 ⊢ ∀y. x = y ↔ P y, <a href='uq_intro.htm'>uq_intro</a> 12.
+14. 2, 3 ⊢ S x ∧ ∀y. x = y ↔ P y, <a href='conj_intro.htm'>conj_intro</a> 4 13.
+15. 2, 3 ⊢ ∃x. S x ∧ ∀y. x = y ↔ P y, <a href='ex_intro.htm'>ex_intro</a> 14.
+16. 1, 2 ⊢ ∃x. S x ∧ ∀y. x = y ↔ P y, <a href='ex_elim.htm'>ex_elim</a> 1 15.
+ex_uniq_set_intro. ⊢ (∃x. S x ∧ P x) → (∀x. ∀y. P x → P y → x = y) →
+  (∃x. S x ∧ ∀y. x = y ↔ P y), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 16.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on one axiom:<br><a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>

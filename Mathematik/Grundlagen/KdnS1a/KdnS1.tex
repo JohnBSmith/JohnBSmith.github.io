@@ -1,0 +1,1278 @@
+\documentclass[8pt]{beamer}
+\usetheme{Antibes}
+\useinnertheme{rectangles}
+\useoutertheme{infolines}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Patch the look of +, = in arev
+\usefonttheme{serif}
+
+\usepackage{arev}
+% Patch punctuation to be upright
+\DeclareMathSymbol{.}{\mathpunct}{operators}{`.}
+\DeclareMathSymbol{,}{\mathpunct}{operators}{`,}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ebproof}
+\usepackage{booktabs}
+\usepackage{fitch}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+
+\newcommand{\inferrulewidth}{0.4608pt}
+\ebproofset{rule thickness=\inferrulewidth}
+% \the\fontdimen8\textfont3
+\newcommand{\inote}[1]{{\small #1}}
+
+\setbeamertemplate{footline}{%
+\begin{beamercolorbox}[ht=3.0ex,dp=1ex]{title in head/foot}
+\hfill\footnotesize\insertpagenumber\enspace\enspace\end{beamercolorbox}}
+
+\definecolor{bluegreen1}{rgb}{0.0,0.20,0.28}
+\definecolor{bluegreen2}{rgb}{0.0,0.20,0.28}
+\setbeamercolor*{palette primary}{fg=white,bg=bluegreen1}
+\setbeamercolor*{palette secondary}{fg=white,bg=bluegreen2}
+\setbeamercolor*{palette tertiary}{fg=white,bg=bluegreen2}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{block title}{bg=bluegreen2}
+\newcommand{\modest}[1]{{\small\color{gray}#1}}
+\hypersetup{colorlinks,urlcolor=magenta}
+
+% highlight colors
+% \definecolor{chla}{RGB}{220,0,90}
+% \definecolor{chlb}{RGB}{0,180,220}
+% \definecolor{chlg}{RGB}{255,190,0}
+% \definecolor{chlh}{RGB}{20,20,160}
+
+\definecolor{chla}{RGB}{100,143,255}
+\definecolor{chlb}{RGB}{255,176,0}
+\definecolor{chlg}{RGB}{160,0,120}
+\definecolor{chlh}{RGB}{240,40,140}
+
+\newcommand{\hla}[1]{{\color{chla}#1}}
+\newcommand{\hlb}[1]{{\color{chlb}#1}}
+\newcommand{\hlg}[1]{{\color{chlg}#1}}
+\newcommand{\hlh}[1]{{\color{chlh}#1}}
+
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\strong}[1]{\textsf{\textbf{#1}}}
+\newcommand{\defiff}{\quad:\Longleftrightarrow\quad}
+\newcommand{\infernote}[1]{\!\text{\footnotesize #1}}
+\renewcommand{\qedsymbol}{\ensuremath{\Box}}
+\newcommand{\discharge}[1]{$\sim$#1}
+\newcommand{\centerheadline}[1]{%
+  \begin{center}\strong{#1}\end{center}}
+\newcommand{\parspace}{\vspace{0.8em}}
+\newcommand{\cond}{\rightarrow}
+\newcommand{\bicond}{\leftrightarrow}
+
+\title{Natürliches Schließen}
+\subtitle{Teil 1: Aussagenlogik}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+%\begin{frame}
+%\hla{\rule{1cm}{1cm}}\hlb{\rule{1cm}{1cm}}\hlg{\rule{1cm}{1cm}}\hlh{\rule{1cm}{1cm}}
+%\end{frame}
+
+\begin{frame}
+\centerheadline{Deduktive Argumente}
+\end{frame}
+
+\begin{frame}
+Zur Klärung, wie logisches Denken vonstatten gehen sollte, teilen
+wir den Gedankengang in kleine Schritte auf, die wir \emph{Argumente}
+nennen.\pause
+
+\parspace
+Wir notieren ein Argument in der Form
+\[\begin{array}{@{}l@{}}
+\text{Prämisse}\\[2pt]
+\therefore\text{Konklusion}\end{array}\]
+oder auch als
+\[\dfrac{\text{Prämisse}}{\text{Konklusion}}.\]
+Dies liest sich: \emph{Die Prämisse gilt, also gilt die Konklusion.}\pause
+
+\parspace
+Besitzt das Argument zwei Prämissen, notiert man:
+\[\begin{array}{@{}l@{}}
+\text{Prämisse 1}\\[2pt]
+\text{Prämisse 2}\\
+\midrule[\inferrulewidth]
+\text{Konklusion}
+\end{array}\]
+\end{frame}
+
+\begin{frame}
+Ein Argument heißt \emph{gültig}, wenn die Wahrheit der Prämissen die
+Wahrheit der Konklusion nach sich zieht.
+
+\parspace
+Ein Argument heißt \emph{korrekt}, wenn es gültig ist und seine
+Prämisse tatsächlich wahr sind.\pause
+
+\parspace
+Betrachten wir nun dieses Argument:
+\[\frac{\text{Es regnet.}}{\text{Die Straße wird nass.}}\]
+Die gültigkeit dieses Arguments hängt vom Kontext ab, von der Welt, über
+die die Aussagen reden. Das Weltmodell muss hier zugegebenermaßen ein sehr
+einfaches sein, damit der Schluss exakt in dieser Weise gültig ist.
+Man darf sich dabei etwa ein Computerspiel vorstellen, in dem es eine Straße
+gibt, die bei Regen ausnahmslos nass wird.
+\end{frame}
+
+\begin{frame}
+Anders verhält es sich mit diesem Argument:
+\[\begin{array}{@{}l@{}}
+\text{Wenn es regnet, wird die Straße nass.}\\[2pt]
+\text{Es regnet.}\\
+\midrule[\inferrulewidth]
+\text{Die Straße wird nass.}
+\end{array}\]
+Es hängt nicht von der Welt ab, über die die Aussagen reden, sondern
+gilt aufgrund seiner Struktur, aufgrund seiner \emph{Form}.\pause
+
+\parspace
+Diese Form besteht anscheinend in dem Schema
+\[\begin{array}{@{}l@{}}
+\text{Wenn $A$, dann $B$}\\[2pt]
+\text{$A$}\\
+\midrule[\inferrulewidth]
+\text{$B$}
+\end{array}\]
+Es ist eine als \emph{Modus ponens} bekannte Schlussform.
+\end{frame}
+
+\begin{frame}
+Natürliche Sprachen sind außerordentlich komplex bzw. ermöglichen
+übermäßig reichhaltige Ausdrucksformen. Um ein klares Bild von den
+möglichen einfachen Schlussformen zu bekommen, möchte man sich daher
+auf eine möglichst einfache Sprache beschränken. Es hat sich
+herausgestellt, dass die \emph{aussagenlogische Sprache} dafür genügt,
+die in der Mathematik auftretenden Schlussformen zu ermöglichen.\pause
+
+\parspace
+Weiterhin bildet die Aussagenlogik ein wichtiges Studienobjekt, das
+das Verständnis komplizierterer Logiken fördert.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Aussagenlogische Sprache}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Formeln der Aussagenlogik}
+Die Menge der Formeln sei in folgender Weise induktiv definiert.
+\begin{itemize}
+\item Jede der aussagenlogischen Variablen $p_0,p_1,p_2,\ldots$ ist eine Formel,
+genannt \emph{Primformel} oder \emph{atomare Formel}.
+\item Die Symbole $\bot, \top$ sind Formeln.
+\item Ist $A$ eine Formel, so ist auch $(\lnot A)$ eine Formel.
+\item Sind $A,B$ Formeln, so sind auch $(A\land B), (A\lor B), (A\cond B), (A\bicond B)$ Formeln.
+\item Nichts anderes ist eine Formel.
+\end{itemize}
+\end{block}\pause
+
+Wie bei Punkt- vor Strichrechnung führen wir für die Junktoren zur
+Einsparung von Klammern eine Rangfolge ein. Diese ist
+\[\lnot, \land, \lor, \cond, \bicond.\]
+Die induktive Erklärung der Formeln lässt sich so modifizieren, dass
+sie die Rangfolge berücksichtigt. Ich will dies hier allerdings nicht
+näher ausführen, da es vom Wesentlichen ablenkt. Es führt in die
+Thematik der formalen Grammatiken und des Parserbaus.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Bemerkung zur Nomenklatur}
+
+\vspace{4em}
+Es stehen $p, q, r$ alternativ zu $p_0, p_1, p_2$ für Primformeln.
+
+\parspace
+Es stehen $P, Q, R$ für Schemavariablen, für die Primformeln
+eingesetzt werden dürfen.
+
+\parspace
+Es stehen $A, B, C$ oder alternativ $\varphi, \psi, \chi$ für
+Schemavariablen, für die beliebige Formeln eingesetzt werden dürfen.
+
+\parspace
+Es stehen $\Gamma, \Delta$ für Schemavariablen, für die Ansammlungen
+von Formeln eingesetzt werden dürfen.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Die Schlussregeln}
+\end{frame}
+
+\begin{frame}
+Zum Beweisen von Aussagen wollen wir nun gern Argumente in formalisierter
+Form führen. Wir notieren die Prämissen ab jetzt nebeneinander statt
+untereinander. Der Modus ponens sollte insofern lauten
+\[\frac{A\cond B\qquad A}{B}.\]\pause
+Es verhält sich aber so, dass wir auch Aussagen unter Annahmen ableiten
+wollen. Klarheit schafft hierbei die Idee, die gemachten Annahmen
+mit der abgeleiteten Aussage mitzutragen. Dies wird notiert als
+\emph{Sequenz}
+\[A_1,\ldots,A_n\vdash A.\]
+Sie drückt aus, dass $A$ unter den Annahmen $A_1,\ldots,A_n$
+ableitbar sei.\pause
+
+\parspace
+Zur Abkürzung notieren wir $\Gamma\vdash A$ zu einer Ansammlung
+$\Gamma$ von Annahmen. Der Modus ponens lässt sich nun allgemein fassen als
+\[\frac{\Gamma\vdash A\cond B\qquad\Gamma\vdash A}{\Gamma\vdash B}.\]
+In Worten: \emph{Wenn sowohl $A\cond B$ als auch $A$ unter der den
+Annahmen $\Gamma$ ableitbar sind, so ist es auch $B$.}
+\end{frame}
+
+\begin{frame}
+Die Ansammlung $\Gamma$ in der Sequenz $\Gamma\vdash A$ ist eine endliche
+Menge, oder sollte sich verhalten wie eine. Die Notation $\Gamma,A\vdash B$
+besitzt dahingehend die Bedeutung $\Gamma\cup\{A\}\vdash B$. Entsprechend
+besitzt $\Gamma,\Gamma'\vdash A$ die Bedeutung $\Gamma\cup\Gamma'\vdash A$.\pause
+
+\parspace
+Die Sequenzen $\Gamma,\Gamma'\vdash A$ und $\Gamma',\Gamma\vdash A$
+sind demzufolge gleich.\pause
+
+\parspace
+Kodiert man die Ansammlung alternativ als Liste, sollten, insofern sie
+sich wie eine Menge verhalten soll, die folgenden
+strukturellen Schlussregeln bestehen.
+
+\begin{block}{Vertauschungsregel}
+\[\dfrac{\Gamma\vdash A}{\sigma(\Gamma)\vdash A}\quad\text{($\sigma$ sei eine beliebige Permutation)}\]
+\end{block}
+
+\begin{block}{Kontraktionsregel}
+\[\dfrac{\Gamma,A,A\vdash B}{\Gamma,A\vdash B}\]
+\end{block}
+
+Die Umkehrung der Kontraktionsregel wird nicht benötigt, da sie mit
+der sogleich erläuterten Abschwächungsregel einhergeht.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{2em}
+Ist eine Aussage aus bestimmten Annahmen ableitbar, sollte dies bei
+Hinzufügung weiterer Annahmen erst recht möglich sein. Man sagt, die
+klassische Logik wäre \emph{monoton}. Insofern gilt die
+\begin{block}{Abschwächungsregel}
+\[\dfrac{\Gamma\vdash A}{\Gamma,\Gamma'\vdash A}\]
+\end{block}\pause
+
+Vermittels dieser unternehmen wir die folgende Überlegung.
+
+\only<3>{
+\[\begin{prooftree}
+\hypo{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+}
+\only<4>{
+\[\begin{prooftree}
+\hypo{\hlg{\Gamma,\Gamma'}\vdash\hlb{B}}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}\qquad
+\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma}\vdash\hlb{B}}$
+}
+\only<5>{
+\[\begin{prooftree}
+  \hypo{\hlg{\Gamma,\Gamma'}\vdash\hla{A}\to\hlb{B}}
+  \hypo{\hlg{\Gamma,\Gamma'}\vdash\hlb{B}}
+\infer2{\hlg{\Gamma,\Gamma'}\vdash\hlb{B}}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}\qquad
+\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma}\vdash\hlb{B}}$
+}
+\only<6>{
+\[\begin{prooftree}
+  \hypo{\Gamma,\Gamma'\vdash A\to B}
+  \hypo{\Gamma,\Gamma'\vdash B}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+}
+\only<7>{
+\[\begin{prooftree}
+  \hypo{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A\to B}}
+  \hypo{\Gamma,\Gamma'\vdash B}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A}}$
+}
+\only<8>{
+\[\begin{prooftree}
+    \hypo{\hlg{\Gamma}\vdash\hla{A\to B}}
+  \infer1{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A\to B}}
+  \hypo{\Gamma,\Gamma'\vdash B}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A}}$
+}
+\only<9>{
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\to B}
+  \infer1{\Gamma,\Gamma'\vdash A\to B}
+  \hypo{\Gamma,\Gamma'\vdash B}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+}
+\only<10>{
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\to B}
+  \infer1{\Gamma,\Gamma'\vdash A\to B}
+  \hypo{\hlh{\Gamma},\hlg{\Gamma'}\vdash\hla{B}}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A}}$
+}
+\only<11>{
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\to B}
+  \infer1{\Gamma,\Gamma'\vdash A\to B}
+    \hypo{\hlg{\Gamma'}\vdash\hla{B}}
+  \infer1{\hlh{\Gamma},\hlg{\Gamma'}\vdash\hla{B}}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+\mbox{}\hfill $\dfrac{\hlg{\Gamma}\vdash\hla{A}}{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hla{A}}$
+}
+\only<12>{
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\to B}
+  \infer1{\Gamma,\Gamma'\vdash A\to B}
+     \hypo{\Gamma'\vdash B}
+  \infer1{\Gamma,\Gamma'\vdash B}
+\infer2{\Gamma,\Gamma'\vdash B}
+\end{prooftree}\]
+}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln zur Subjunktion}
+
+\parspace
+Ergo gilt der Modus ponens in der folgenden allgemeinen Form, die
+wir Subjunktionsbeseitigung nennen wollen.
+
+\begin{block}{Subjunktionsbeseitigung}
+\[\dfrac{\Gamma\vdash A\to B\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash B}\]
+\end{block}\pause
+
+Wie verläuft nun der Beweis einer Subjunktion $A\cond B$? Mit ihr
+möchte man wie gesagt von $A$ zu $B$ gelangen dürfen. Aber genau dies
+erreicht man, indem man $B$ unter Annahme von $A$ ableitet.\pause
+
+\parspace
+Dies motiviert die
+
+\begin{block}{Subjunktionseinführung}
+\[\dfrac{\Gamma,A\vdash B}{\Gamma\vdash A\cond B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln zur Negation}
+
+\parspace
+Die Negation $\lnot A$ versteht sich als gleichbedeutend zu $A\cond\bot$,
+oder darf auch als Abkürzung dafür stehen. Insofern ergeben sich Regeln
+analog zu denen der Subjunktion.
+
+\begin{block}{Negationsbeseitigung}
+\[\dfrac{\Gamma\vdash\lnot A\qquad\Gamma'\vdash A}{\Gamma,\Gamma'\vdash\bot}\]
+\end{block}
+
+\begin{block}{Negationseinführung}
+\[\dfrac{\Gamma,A\vdash\bot}{\Gamma\vdash\lnot A}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln zur Konjunktion}
+
+\parspace
+Der Umgang mit der Konjunktion $A\land B$ sollte intuitiv verständlich
+sein. Aus $A\land B$ will sich sowohl $A$ als auch $B$ ableiten lassen.
+Gelten umgekehrt sowohl $A$ als auch $B$, soll auch $A\land B$ gelten.
+
+\begin{block}{Konjunktionsbeseitigung}
+\[\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash A},\quad
+\dfrac{\Gamma\vdash A\land B}{\Gamma\vdash B}\]
+\end{block}
+
+\begin{block}{Konjunktionseinführung}
+\[\dfrac{\Gamma\vdash A\qquad\Gamma'\vdash B}{\Gamma,\Gamma'\vdash A\land B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln zur Disjunktion}
+
+\parspace
+Der Umgang mit der Disjunktion $A\lor B$ ist ein wenig schwieriger.
+Ihre Beseitigungsregel kodiert eine Fallunterscheidung. Ist $C$
+nämlich sowohl aus $A$ als auch aus $B$ ableitbar, will $C$ auch aus
+$A\lor B$ ableitbar sein.
+
+\begin{block}{Disjunktionsbeseitigung}
+\[\dfrac{\Gamma\vdash A\lor B\qquad\Gamma',A\vdash C\qquad\Gamma'',B\vdash C}
+{\Gamma,\Gamma',\Gamma''\vdash C}
+\quad\text{bzw.}\quad
+\dfrac{\Gamma',A\vdash C\qquad\Gamma'',B\vdash C}
+{\Gamma',\Gamma'',A\lor B\vdash C}\]
+\end{block}
+
+Mit der Einführung verhält es sich einfacher. Gilt $A$, so gilt erst
+recht $A\lor B$. Gilt $B$, so gilt erst recht $A\lor B$.
+
+\begin{block}{Disjunktionseinführung}
+\[\dfrac{\Gamma\vdash A}{\Gamma\vdash A\lor B},\quad
+\dfrac{\Gamma\vdash B}{\Gamma\vdash A\lor B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln zur Bijunktion}
+
+\parspace
+Die Bijunktion $A\bicond B$ versteht sich als bleichbedeutend zu
+$(A\cond B)\land (B\cond A)$, oder darf als Abkürzung dafür stehen.
+Die Regeln ergeben sich somit analog zu denen der Konjunktion.
+
+\begin{block}{Bijunktionsbeseitigung}
+\[\dfrac{\Gamma\vdash A\bicond B}{\Gamma\vdash A\cond B},\quad
+\dfrac{\Gamma\vdash A\bicond B}{\Gamma\vdash B\cond A}\]
+\end{block}
+
+\begin{block}{Bijunktionseinführung}
+\[\dfrac{\Gamma\vdash A\cond B\qquad\Gamma'\vdash B\cond A}
+{\Gamma,\Gamma'\vdash A\bicond B}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regel für Annahmen}
+
+\parspace
+Die Besonderheit des natürlichen Schließens liegt in der Machbarkeit,
+Aussagen unter Annahmen abzuleiten. Die Abhängigkeit von einer
+Annahme wird hierbei im Zuge der Subjunktions- sowie Negationseinführung
+wieder getilgt. Bislang fehlt aber noch eine Regel für Annahmen.\pause
+
+\parspace
+Zweifelsfrei als richtig erkennt man den trivialen Sachverhalt an, dass
+eine Aussage unter ihrer eigenen Annahme gilt. Das heißt, zu jeder
+Aussage $A$ will die Sequenz $A\vdash A$ ex nihilo eingeführt werden
+dürfen.
+
+\begin{block}{Grundsequenzenregel}
+\[\dfrac{}{A\vdash A}\]
+\end{block}
+
+Die Notation drückt eine Regel ohne Prämissen aus.
+
+\parspace
+In den Grundsequenzen und ggf. Axiomen beginnt ein Beweis. Alle anderen
+Regeln führen eine Sequenz sukzessive auf Grundsequenzen oder Axiome
+bzw. bereits bewiesene Theoreme zurück.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln der intuitionistischen Logik}
+
+\parspace
+Die bislang aufgeführten Regeln charakterisieren die \emph{Minimallogik}.
+Sie wird zur \emph{intuitionistischen Logik} bei Hinzunahme der Regel
+
+\begin{block}{EFQ: Ex falso quodlibet}
+\[\dfrac{\Gamma\vdash\bot}{\Gamma\vdash A}\]
+\end{block}
+
+In Worten besagt sie, dass aus einem Widerspruch jede beliebige
+Aussage folgt.
+
+\parspace
+Intuitionistische Logik dient als Basis der konstruktiven Mathematik.
+In ihr müssen alle mathematischen Objekte konstruiert werden, statt sie
+aus einem einfach so als existent angenommenen Universum aussondern
+zu dürfen.
+
+\parspace
+\begin{small}
+Die bislang aufgestellten Regeln lassen sich über die
+Curry-Howard-Korrespondenz in Bezug zum einfach getypten $\lambda$-Kalkül
+stellen, dergestalt dass jeder Aussage ein Typ und ihrem Beweis ein
+Term des Typs entspricht. Die Schlussregeln drücken dabei aus, auf
+welche Arten Terme konstruiert werden dürfen. Die $\beta$-Reduktion
+entspricht der Normalisierung von Beweisen.
+
+\parspace
+Die kategorielle Semantik ordnet jedem Typ daraufhin ein Objekt und jedem
+Term einen Morphismus innerhalb einer kartesisch abgeschlossenen Kategorie
+zu. Speziell mit der Kategorie der Mengen erhält man das volle
+mengentheoretische Modell.
+\end{small}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Regeln der klassischen Logik}
+
+\parspace
+Von der intuitionistischen Logik aus gelangt man letztlich zur
+klassischen, indem der Satz vom ausgeschlossenen Dritten
+hinzugenommen wird.
+
+\begin{block}{LEM: Law of excluded middle (TND: Tertium non datur)}
+\[\dfrac{}{\vdash A\lor\lnot A}\]
+\end{block}
+
+Alternativ gelangt man direkt von der minimalen zur klassischen
+durch Hinzunahme der Regel zur Beseitigung der Doppelnegation.
+
+\begin{block}{DNE: Double negation elimination}
+\[\dfrac{\Gamma\vdash\lnot\lnot A}{\Gamma\vdash A}\]
+\end{block}
+
+Die Regeln LEM, DNE sind in der intuitionistischen Logik nicht gültig.
+Sie besitzt eine andere Semantik als die klassische.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Logisches Schließen}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{1em}
+Ein Beweis wird erbracht, indem vermittels der Schlussregeln ein
+\emph{Beweisbaum} konstruiert wird, auch \emph{Herleitungs-} oder
+\emph{Ableitungsbaum} genannt. Ich will dies anhand eines Beispiels
+verdeutlichen.
+
+\parspace
+Wir wollen den Beweis von $(A\to B)\to (\lnot B\to\lnot A)$ führen.
+
+\parspace
+Wir bauen den Beweis rückwärts, lassen den Baum also von der Wurzel
+bis zu den Blättern wachsen. Zur Verdeutlichung werden die Schemavariablen
+der genutzten Schlussregeln bunt eingefärbt, wobei der jeweiligen
+Einsetzung an der Fortführung des Baums die entsprechende
+Farbe zukommt.
+
+\only<2>{
+\[\begin{prooftree}
+\hypo{\vdash (A\to B)\to (\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<3>{
+\[\begin{prooftree}
+\hypo{\vdash \hla{(A\to B)}\to \hlb{(\lnot B\to\lnot A)}}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\hlb{B}}
+{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}}$
+}
+\only<4>{
+\[\begin{prooftree}
+  \hypo{\hla{A\to B}\vdash\hlb{\lnot B\to\lnot A}}
+\infer1{\vdash\hla{(A\to B)}\to \hlb{(\lnot B\to\lnot A)}}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\hlb{B}}
+{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}}$
+}
+\only<5>{
+\[\begin{prooftree}
+  \hypo{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<6>{
+\[\begin{prooftree}
+  \hypo{\hlg{A\to B}\vdash\hla{\lnot B}\to\hlb{\lnot A}}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\hlb{B}}
+{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}}$
+}
+\only<7>{
+\[\begin{prooftree}
+    \hypo{\hlg{A\to B},\hla{\lnot B}\vdash\hlb{\lnot A}}
+  \infer1{\hlg{A\to B}\vdash\hla{\lnot B}\to\hlb{\lnot A}}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\hlb{B}}
+{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}}$
+}
+\only<8>{
+\[\begin{prooftree}
+    \hypo{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<9>{
+\[\begin{prooftree}
+    \hypo{\hlg{A\to B,\lnot B}\vdash\lnot\hla{A}}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\bot}
+{\hlg{\Gamma}\vdash\lnot\hla{A}}$
+}
+\only<10>{
+\[\begin{prooftree}
+      \hypo{\hlg{A\to B,\lnot B},\hla{A}\vdash\bot}
+    \infer1{\hlg{A\to B,\lnot B}\vdash\lnot\hla{A}}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma},\hla{A}\vdash\bot}
+{\hlg{\Gamma}\vdash\lnot\hla{A}}$
+}
+\only<11>{
+\[\begin{prooftree}
+      \hypo{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<12>{
+\[\begin{prooftree}
+      \hypo{\hlh{A\to B},\hlg{\lnot B},\hlh{A}\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma}\vdash\lnot\hla{A}\qquad\hlh{\Gamma'}\vdash\hla{A}}
+{\hlg{\Gamma},\hlh{\Gamma'}\vdash\bot}$
+}
+\only<13>{
+\[\begin{prooftree}
+        \hypo{\hlg{\lnot B}\vdash\lnot\hla{B}}
+        \hypo{\hlh{A\to B, A}\vdash\hla{B}}
+      \infer2{\hlh{A\to B},\hlg{\lnot B},\hlh{A}\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma}\vdash\lnot\hla{A}\qquad\hlh{\Gamma'}\vdash\hla{A}}
+{\hlg{\Gamma},\hlh{\Gamma'}\vdash\bot}$
+}
+\only<14>{
+\[\begin{prooftree}
+        \hypo{\lnot B\vdash\lnot B}
+        \hypo{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<15>{
+\[\begin{prooftree}
+        \hypo{\hla{\lnot B}\vdash\hla{\lnot B}}
+        \hypo{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<16>{
+\[\begin{prooftree}
+        \infer0{\hla{\lnot B}\vdash\hla{\lnot B}}
+        \hypo{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<17>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+        \hypo{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<18>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+        \hypo{\hlg{A\to B}, \hlh{A}\vdash\hlb{B}}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}\qquad\hlh{\Gamma'}\vdash\hla{A}}
+{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hlb{B}}$
+}
+\only<19>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \hypo{\hlg{A\to B}\vdash\hla{A}\to\hlb{B}}
+          \hypo{\hlh{A}\vdash\hla{A}}
+        \infer2{\hlg{A\to B}, \hlh{A}\vdash\hlb{B}}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{\hlg{\Gamma}\vdash\hla{A}\to\hlb{B}\qquad\hlh{\Gamma'}\vdash\hla{A}}
+{\hlg{\Gamma},\hlh{\Gamma'}\vdash\hlb{B}}$
+}
+\only<20>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \hypo{A\to B\vdash A\to B}
+          \hypo{A\vdash A}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<21>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \hypo{\hla{A\to B}\vdash\hla{A\to B}}
+          \hypo{A\vdash A}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<22>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \infer0{\hla{A\to B}\vdash\hla{A\to B}}
+          \hypo{A\vdash A}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<23>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \infer0{A\to B\vdash A\to B}
+          \hypo{A\vdash A}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+}
+\only<24>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \infer0{A\to B\vdash A\to B}
+          \hypo{\hla{A}\vdash\hla{A}}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<25>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \infer0{A\to B\vdash A\to B}
+          \infer0{\hla{A}\vdash\hla{A}}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+\mbox{}\hfill $\displaystyle\frac{}{\hla{A}\vdash\hla{A}}$
+}
+\only<26>{
+\[\begin{prooftree}
+        \infer0{\lnot B\vdash\lnot B}
+          \infer0{A\to B\vdash A\to B}
+          \infer0{A\vdash A}
+        \infer2{A\to B, A\vdash B}
+      \infer2{A\to B,\lnot B,A\vdash\bot}
+    \infer1{A\to B,\lnot B\vdash\lnot A}
+  \infer1{A\to B\vdash\lnot B\to\lnot A}
+\infer1{\vdash (A\to B)\to(\lnot B\to\lnot A)}
+\end{prooftree}\]
+Quod erat demonstrandum.
+}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Darstellung: Gentzen-Style}
+
+\parspace
+Die Ausführung des Beweisbaums führt zu einem hohen Schreibaufwand,
+insofern dieselben Antezedenzen bis zu ihrer Tilgung wieder und wieder
+notiert werden müssen. Dementsprechend überlegt man sich Kurzformen.
+
+\parspace
+\begin{center}
+\begin{tabular}{l@{\qquad\quad}l}
+$\begin{prooftree}
+        \infer0{1\vdash\neg B}
+          \infer0{2\vdash A\cond B}
+          \infer0{3\vdash A}
+        \infer2{2, 3\vdash B}
+      \infer2{1, 2, 3\vdash \bot}
+    \infer1{1, 2\vdash \neg A}
+  \infer1{2\vdash \neg B\cond\neg A}
+\infer1{\vdash (A\cond B)\cond (\neg B\cond\neg A)}
+\end{prooftree}$
+&
+$\begin{prooftree}
+        \infer0[\infernote{1}]{\neg B}
+          \infer0[\infernote{2}]{A\cond B}
+          \infer0[\infernote{3}]{A}
+        \infer2{B}
+      \infer2{\bot}
+    \infer1[\infernote{\discharge 3}]{\neg A}
+  \infer1[\infernote{\discharge 1}]{\neg B\cond\neg A}
+ \infer1[\infernote{\discharge 2}]{(A\cond B)\cond (\neg B\cond\neg A)}
+\end{prooftree}$
+\end{tabular}
+\end{center}
+
+\parspace
+Die linke Form kürzt die Antezedenzen durch Nummern ab. In der rechten
+entfallen sie gänzlich, ihre Nummern erscheinen dafür einmal bei ihrer
+Annahme und einmal bei ihrer Tilgung.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Darstellung: Suppes-Style}
+
+\parspace
+Eine weitere, sehr systematische Darstellung setzt den Beweis aus
+einer Liste von Tabellenzeilen zusammen.
+
+\begin{center}
+\begin{tabular}{cclcl}
+\toprule
+\strong{\small Nr.} & \strong{\small Abh.}
+& \strong{\small Aussage} & \strong{\small Regel}
+& \strong{\small auf}\\
+\midrule
+1 & 1 & $\neg B$ & hypo &\\
+2 & 2 & $(A\cond B)$ & hypo &\\
+3 & 3 & $A$ & hypo &\\
+4 & 2, 3 & $B$ & subj elim & 2, 3\\
+5 & 1, 2, 3 & $\bot$ & neg elim & 1, 4\\
+6 & 1, 2 & $\neg A$ & neg intro & 5\\
+7 & 2 & $\neg B\cond\neg A$ & subj intro & 6\\
+8 & $\emptyset$ & $(A\cond B)\cond (\neg B\cond\neg A)$ & subj intro & 7\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+Jede Zeile enthält eine Aussage zuzüglich der Information, wie und woraus
+sie abgeleitet wurde. Vor der Aussage befinden sich die
+Zeilennummern der Annahmen, von denen sie abhängt. Der Vergleich mit dem
+Beweisbaum verrät, dass in jeder Zeile eine Sequenz aufgeführt ist, die
+Abhängigkeiten dabei nichts anderes als ihre Antezedenzen sind.
+
+\end{frame}
+
+\begin{frame}[t,fragile]
+
+\vspace{0.5em}
+\strong{Maschinengestützes Beweisen}
+
+\vspace{2em}
+Zum Ausschließen von Flüchtigkeitsfehlern nutzen wir
+\emph{maschinengestütztes Beweisen}.
+Das Programm \texttt{nd.py}, ein minimalistischer
+Beweisprüfer, erhält die folgende ASCII-Eingabe, die den Beweis
+im Suppes"=Style wiedergibt.
+
+\begin{lstlisting}[xleftmargin=4em]
+1. 1 |- ~B, hypo.
+2. 2 |- A -> B, hypo.
+3. 3 |- A, hypo.
+4. 2, 3 |- B, subj_elim 2 3.
+5. 1, 2, 3 |- false, neg_elim 1 4.
+6. 2, 1 |- ~A, neg_intro 5.
+7. 2 |- ~B -> ~A, subj_intro 6.
+8. |- (A -> B) -> (~B -> ~A), subj_intro 7.
+\end{lstlisting}
+
+Diese wird dazu mit einem Texteditor in eine Datei \texttt{Beweise.txt}
+geschrieben. Der anschließende Programmaufruf
+
+\begin{lstlisting}[xleftmargin=4em]
+nd.py Beweise.txt
+\end{lstlisting}
+
+prüft den Beweis daraufhin.
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Darstellung: Fitch-Style}
+
+\parspace
+Einige bevorzugen die Darstellung nach Fitch, engl.
+\emph{Fitch notation} oder \emph{Fitch-style proof} genannt.
+Bei dieser wird durch jede Annahme ein neuer, von einer senkrechten
+Linie umfasster Bereich eröffnet, in dem sie zur Verfügung steht. Die
+Annahme steht am Anfang des Bereichs über einer waagerechten Linie. Der
+Bereich endet mit der Tilgung der Annahme.
+
+\[\begin{nd}
+\open
+  \hypo {1} {A\cond B}
+  \open
+    \hypo {2} {\neg B}
+    \open
+    \hypo {3} {A}
+    \have {4} {B} \ie{1,3}
+    \have {5} {\bot} \ne{2,4}
+    \close
+  \have {6} {\neg A} \ni{5}
+  \close
+\have {7} {\neg B\cond\neg A} \ii{6}
+\close
+\have {8} {(A\cond B)\cond (\neg B\cond\neg A)} \ii{7}
+\end{nd}\]
+\end{frame}
+
+\begin{frame}[t]
+\vspace{0.5em}
+\strong{Darstellung: In Worten}
+
+\parspace
+Zu guter Letzt verbleibt die klassische Darstellung der Beweisführung
+aufzuführen. Die in Worten. Sie zeichnet sich durch die Auslassung mühseliger
+technischer Details und blumige Formulierungen aus, soll aber genug Information
+enthalten, dass man im Zweifel die zuvor gezeigte Formalisierung des Beweises
+erstellen und verifizieren kann.
+
+\parspace
+\strong{Satz.} \emph{Es gilt $(A\cond B)\cond (\lnot B\cond\lnot A)$ für
+beliebige Aussagen $A,B$.}
+
+\parspace
+\strong{Beweis.}
+Unter der Annahme $A\cond B$ ist $\lnot B\cond\lnot A$ zu zeigen,
+unter der weiteren Annahme $\lnot B$ also $\lnot A$. Dazu leiten wir
+aus $A$ einen Widerspruch ab. Aus $A\cond B$ und $A$ folgt zunächst $B$.
+Aus $\lnot B$ und $B$ folgt daraufhin bereits der Widerspruch.\,\qedsymbol\pause
+
+\parspace
+Streng genommen handelt es sich hier um ein Theoremschema. Erst mit
+der Einsetzung konkreter Formeln für die Schemavariablen $A,B$ entsteht
+ein eigentliches Theorem. Mit den Setzungen $A:=(p\land q)$ und $B:=q$
+erhält man bpsw.
+\[(p\land q\cond p)\cond (\lnot p\cond\lnot (p\land q)).\]
+Und weil $p\land q\cond p$ ebenfalls beweisbar ist, folgt sogleich
+\[\lnot p\cond\lnot (p\land q).\]
+\end{frame}
+
+\begin{frame}
+\centerheadline{Zulässige Regeln}
+\end{frame}
+
+\begin{frame}
+Natürliches Schließen zeigt sich nicht nur für den Beweis von Aussagen
+dienlich. Bewegt man sich auf der metalogischen Ebene, kann es auch
+zur Ableitung neuer Regeln Verwendung finden. Eine Schlussregel, die
+man durch eine metalogische Überlegung zeigt, wollen wir als
+\emph{zulässig} bezeichnen. Ein Beispiel dafür ist die
+
+\begin{block}{Kontraposition}
+\[\dfrac{\Gamma\vdash A\cond B}{\Gamma\vdash\lnot B\cond\lnot A}\]
+\end{block}
+
+Nämlich findet sich der kurze Beweisbaum:
+
+\[\begin{prooftree}
+  \hypo{\Gamma\vdash A\cond B}
+  \infer0[\inote{bereits gezeigt}]{\vdash (A\cond B)\cond (\lnot B\cond\lnot A)}
+\infer2[\inote{subj elim}]{\Gamma\vdash\lnot B\cond\lnot A}
+\end{prooftree}\]
+
+Die Überlegung fällt unter das folgende allgemeine Prinzip.
+\begin{block}{Lemma}
+Wenn $\vdash A\cond B$ ableitbar ist, dann ist $\dfrac{\Gamma\vdash A}{\Gamma\vdash B}$ zulässig.
+\end{block}
+\end{frame}
+
+\begin{frame}
+Deraufhin erhält man sogleich den
+
+\begin{block}{Modus tollens}
+\[\dfrac{\Gamma\vdash A\to B\qquad\Gamma'\vdash\lnot B}{\Gamma,\Gamma'\vdash\lnot A}\]
+\end{block}
+
+Dies bestätigt sich durch den kurzen Beweisbaum:
+\[\begin{prooftree}
+    \hypo{\Gamma\vdash A\cond B}
+  \infer1{\Gamma\vdash\lnot B\cond\lnot A}
+  \hypo{\Gamma'\vdash\lnot B}
+\infer2{\Gamma,\Gamma'\vdash\lnot A}
+\end{prooftree}\]
+
+Summa summarum steht eine Vorgehensweise zur Ableitung der klassischen
+Schlussformen zur Verfügung.
+\end{frame}
+
+\begin{frame}
+\centerheadline{Klassische Semantik der Aussagenlogik}
+\end{frame}
+
+\begin{frame}
+Bislang trat Logik als syntaktisches System auf. Um die Wahrheit
+von Aussagen bzw. die Gültigkeit von Argumenten beurteilen zu können,
+muss den Formeln eine inhaltlichte Bedeutung zukommen.\pause
+
+\begin{block}{Definition. (Wertung)}
+Eine \emph{Wertung} V, engl. \emph{valuation}, ordnet jeder
+Aussagenvariable (Primformel) $P$ einen Wahrheitswert $V(P)\in\{0,1\}$ zu.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Definition. (Interpretation)}
+Wir definieren die \emph{Interpretation} $I = (V)$ als Erweiterung der
+Wertung $V$ auf sämtliche Formeln rekursiv gemäß
+\[\begin{array}{@{}r@{}l@{\qquad}r@{}l@{}}
+I(P) &{}:= V(P), & I(A\land B) &{}:= I(A)\;\texttt{and}\; I(B)\\[2pt]
+I(\lnot A) &{}:= \texttt{not}\; I(A), & I(A\lor B) &{}:= I(A)\;\texttt{or}\; I(B)\\[2pt]
+I(\bot) &{}:= 0, & I(A\cond B) &{}:= (\texttt{not}\; I(A))\;\texttt{or}\; I(B),\\[2pt]
+I(\top) &{}:= 1, & I(A\bicond B) &{}:=  I(A\cond B)\;\texttt{and}\; I(B\cond A),
+\end{array}\]
+wobei \texttt{not}, \texttt{and}, \texttt{or}
+die mit der Wahrheitstafel
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$a$ & $b$ & $\texttt{not}\;a$ & $a\;\texttt{and}\;b$ & $a\;\texttt{or}\;b$\\
+\midrule[\heavyrulewidth]
+0 & 0 & 1 & 0 & 0 \\
+0 & 1 & 1 & 0 & 1 \\
+1 & 0 & 0 & 0 & 1 \\
+1 & 1 & 0 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+festgelegten Wahrheitsfunktionen seien.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Definition. (Erfüllung)}
+Eine Interpretation $I$ \emph{erfüllt} eine Formel $A$, kurz
+$I\models A$, wenn $I(A)=1$ ist. Des Weiteren \emph{erfüllt} $I$ einen
+Kontext $\Gamma$, kurz $I\models\Gamma$, wenn $I(A)=1$ für jede Formel
+$A\in\Gamma$.
+\end{block}\pause
+
+\begin{block}{Definition. (Gültigkeit einer Sequenz)}
+Eine Sequenz $\Gamma\vdash A$ heißt \emph{gültig}, wenn
+\[\forall I\colon (I\models\Gamma)\Rightarrow (I\models A),\]
+also wenn jede Interpretation, die $\Gamma$ erfüllt, auch $A$ erfüllt.
+\end{block}\pause
+
+\begin{block}{Definition. (Gültigkeit einer Regel)}
+Eine Schlussregel
+\[\dfrac{\Gamma_1\vdash A_1\qquad\ldots\qquad\Gamma_n\vdash A_n}{\Gamma_1,\ldots,\Gamma_n\vdash B}\]
+heißt \emph{gültig}, wenn
+\[(\Gamma_1\models A_1)\land\ldots\land (\Gamma_n\models A_n)\Rightarrow (\Gamma_1\ldots,\Gamma_n\models B).\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centerheadline{Korrektheit des natürlichen Schließens}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Satz. (Korrektheit des natürlichen Schließens)}
+\emph{Ist die Sequenz $\Gamma\vdash A$ ableitbar, folgt $\Gamma\models A$.}
+\end{block}
+
+\strong{Beweisskizze.} Zu zeigen gilt, dass sämtliche Schlussregeln
+gültig sind. Dann ergibt sich per struktureller Induktion über den Aufbau
+des Beweises, dass alle ableitbaren Sequenzen gültig sind. Die
+Induktionsanfänge ergeben sich hierbei durch die Regeln ohne Prämissen,
+also die Regel zur Einführung der Grundsequenzen.\pause
+
+\parspace
+Zur Einführung von Grundsequzen. Es ist $A\models A$ zu zeigen,
+also $(I\models A)\Rightarrow (I\models A)$ für jede Interpretation $I$.
+Unter der Annahme $I\models A$ gilt $I\models A$ aber breits trivial.\pause
+
+\parspace
+Zur Beseitigung der Konjunktion. Zu zeigen ist, dass $\Gamma\models A$
+aus $\Gamma\models A\land B$ folgt. Sei $J$ fest, aber beliebig.
+Es gelte $J\models\Gamma$. Zu zeigen ist $J\models A$. Laut Prämisse
+gilt
+\[\forall I\colon (I\models\Gamma)\Rightarrow (I\models A\land B).\]
+Wir spezialisieren $I:=J$, und folgern damit $J\models A\land B$.
+Laut Semantik bedeutet dies $J(A\land B)=1$, also
+$(J(A)\;\texttt{and}\;J(B))=1$, womit sowohl $J(A)=1$ als auch $J(B)=1$
+gilt. Ergo gilt $J\models A$.\pause
+
+\parspace
+Die Gültigkeit der restlichen Regeln zu bestätigen, bleibt der Leserin
+als Übung überlassen.\,\qedsymbol
+\end{frame}
+
+\begin{frame}
+Sobald die später erläuterten Regeln für Quantoren zur Verfügung stehen,
+lassen sich die Beweise übrigens ebenfalls im natürlichen Schließens
+formalisieren, was allerdings in der metalogischen Ebene stattfindet.\pause
+
+\parspace
+Bspw. findet sich der Beweisbaum:
+\[\begin{prooftree}
+                      \infer0[\inote{hypo}]{1\vdash (\Gamma\models A\land B)}
+                    \infer1[\inote{laut Def. Gültigkeit}]{1\vdash\forall I\colon (I\models\Gamma)\Rightarrow (I\models A\land B)}
+                  \infer1[\inote{uq elim}]{1\vdash (J\models\Gamma)\Rightarrow (J\models A\land B)}
+                  \infer0[\inote{hypo}]{2\vdash (J\models\Gamma)}
+               \infer2[\inote{subj elim}]{1, 2\vdash (J\models A\land B)}
+             \infer1[\inote{laut Semantik}]{1, 2\vdash J(A)=1\land J(B)=1}
+           \infer1[\inote{conj elim}]{1, 2\vdash J(A)=1}
+         \infer1[\inote{laut Def. Erfüllung}]{1, 2\vdash (J\models A)}
+       \infer1[\inote{subj intro}]{1\vdash (J\models\Gamma)\Rightarrow (J\models A)}
+     \infer1[\inote{uq intro}]{1\vdash\forall I\colon (I\models\Gamma)\Rightarrow (I\models A)}
+  \infer1[\inote{laut Def. Gültigkeit}]{1\vdash (\Gamma\models A)}
+\infer1[\inote{subj intro}]{\vdash (\Gamma\models A\land B)\Rightarrow (\Gamma\models A)}
+\end{prooftree}\]
+\end{frame}
+
+\begin{frame}
+\centerheadline{Übungsaufgaben}
+\end{frame}
+
+\begin{frame}[t,fragile]
+\vspace{3em}
+\strong{Aufgabe 1.}
+Der Beweis von $A\land B\cond A$ ist gesucht.\pause
+
+\parspace
+Beweisbaum:
+
+\[\begin{prooftree}
+    \infer0[\inote{hypo}]{A\land B\vdash A\land B}
+  \infer1[\inote{conj eliml}]{A\land B\vdash A}
+\infer1[\inote{subj intro}]{\vdash A\land B\cond A}
+\end{prooftree}\]
+
+\vspace{1em}
+Eingabe für den Beweisprüfer:
+
+\begin{lstlisting}[xleftmargin=4em]
+1. 1 |- A /\ B, hypo.
+2. 1 |- A, conj_eliml 1.
+3. |- A /\ B -> A, subj_intro 2.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]
+\vspace{3em}
+\strong{Aufgabe 2.}
+Der Beweis von $A\lor B\cond B\lor A$ ist gesucht.\pause
+
+\parspace
+Beweisbaum:
+
+\[\begin{prooftree}
+    \infer0[\inote{hypo}]{A\lor B\vdash A\lor B}
+      \infer0[\inote{hypo}]{A\vdash A}
+    \infer1[\inote{disj intror}]{A\vdash B\lor A}
+      \infer0[\inote{hypo}]{B\vdash B}
+    \infer1[\inote{disj introl}]{B\vdash B\lor A}
+  \infer3[\inote{disj elim}]{A\lor B\vdash B\lor A}
+\infer1[\inote{subj intro}]{\vdash A\lor B\cond B\lor A}
+\end{prooftree}\]
+
+\vspace{1em}
+Eingabe für den Beweisprüfer:
+
+\begin{lstlisting}[xleftmargin=4em]
+1. 1 |- A \/ B, hypo.
+2. 2 |- A, hypo.
+3. 2 |- B \/ A, disj_intror 2.
+4. 4 |- B, hypo.
+5. 4 |- B \/ A, disj_introl 4.
+6. 1 |- B \/ A, disj_elim 1 3 5.
+7. |- A \/ B -> B \/ A, subj_intro 6.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t]
+\vspace{3em}
+\strong{Literatur}
+\begin{itemize}
+\item Gerhard Gentzen: \emph{Untersuchungen über das logische Schließen}.\\
+In: \emph{Mathematische Zeitschrift}. Band 39, 1935, S. 176--210, S. 405--431.
+\href{https://gdz.sub.uni-goettingen.de/id/PPN266833020_0039}{Band 39 online via GDZ}.
+\item Gerhard Gentzen: \emph{Die Widerspruchsfreiheit der reinen
+Zahlentheorie}.\\
+In: \emph{Mathematische Annalen}. Band 112, 1936, S. 493--565.
+\href{https://gdz.sub.uni-goettingen.de/id/PPN235181684_0112}{Band 112 online via GDZ}.
+---Zum KdnS von Sequenzen.
+\item Samuel Mimram: \emph{Program = Proof}.
+\href{https://www.lix.polytechnique.fr/Labo/Samuel.Mimram/publications/}{Link (Open Access)}.
+\item Ingebrigt Johansson: \emph{Der Minimalkalkül, ein reduzierter
+intuitionistischer Formalismus}. In: \emph{Compositio Mathematica}.
+Band 4, 1937, S. 119--136.
+\item Andrzej Indrzejczak: \href{https://iep.utm.edu/natural-deduction/}{\emph{Natural Deduction}}.
+In: \emph{The Internet Encyclopedia of Philosophy}.
+\item Francis Jeffry Pelletier, Allen Hazen:
+\href{https://plato.stanford.edu/entries/natural-deduction/}{\emph{Natural Deduction Systems in Logic}}.
+In: \emph{The Stanford Encyclopedia of Philosophy}.
+\item Eckart Menzler-Trott: \emph{Gentzens Problem. Mathematische Logik
+  im nationalsozialistischen Deutschland}. Birkhäuser, Basel 2001.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ende.
+\vfill\hfill\modest{August 2025}\\
+\hfill\modest{Creative Commons CC0 1.0}
+\end{frame}
+
+
+\end{document}
+
+

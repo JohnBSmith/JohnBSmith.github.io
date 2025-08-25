@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>neg_uq_bounded</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem neg_uq_bounded</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> neg_uq_bounded<br> (¬∀x. P x → Q x) → (∃x. P x ∧ ¬Q x)</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ ¬∀x. P x → Q x, <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ ∃x. ¬(P x → Q x), <a href='neg_uq.htm'>neg_uq</a> 1.
+03. 3 ⊢ ¬(P x → Q x), <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ P x ∧ ¬Q x, <a href='neg_subj.htm'>neg_subj</a> 3.
+05. 3 ⊢ ∃x. P x ∧ ¬Q x, <a href='ex_intro.htm'>ex_intro</a> 4.
+06. 1 ⊢ ∃x. P x ∧ ¬Q x, <a href='ex_elim.htm'>ex_elim</a> 2 5.
+neg_uq_bounded. ⊢ (¬∀x. P x → Q x) → (∃x. P x ∧ ¬Q x), <a href='subj_intro.htm'>subj_intro</a> 6.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on two axioms:<br><a href='efq.htm'>efq</a>, <a href='lem.htm'>lem</a>.</p>
+</body>

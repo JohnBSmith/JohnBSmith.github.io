@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>ex_neg</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem ex_neg</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> ex_neg<br> (∃x. ¬P x) → (¬∀x. P x)</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ ∃x. ¬P x, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ¬P u, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ ∀x. P x, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ P u, <a href='uq_elim.htm'>uq_elim</a> 3.
+05. 3, 2 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> 2 4.
+06. 1, 3 ⊢ ⊥, <a href='ex_elim.htm'>ex_elim</a> 1 5.
+07. 1 ⊢ ¬∀x. P x, <a href='neg_intro.htm'>neg_intro</a> 6.
+ex_neg. ⊢ (∃x. ¬P x) → (¬∀x. P x), <a href='subj_intro.htm'>subj_intro</a> 7.
+</pre>
+</body>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>sg_elim</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem sg_elim</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> sg_elim<br> set a → x ∈ {a} → x = a</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ set a, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ {a}, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ x ∈ {x | set a → x = a}, <a href='eq_subst.htm'>eq_subst</a> <a href='sg_eq.htm'>sg_eq</a> 2, P u ↔ x ∈ u.
+04. 2 ⊢ set a → x = a, <a href='comp_elim.htm'>comp_elim</a> 3.
+05. 1, 2 ⊢ x = a, <a href='subj_elim.htm'>subj_elim</a> 4 1.
+06. 1 ⊢ x ∈ {a} → x = a, <a href='subj_intro.htm'>subj_intro</a> 5.
+sg_elim. ⊢ set a → x ∈ {a} → x = a, <a href='subj_intro.htm'>subj_intro</a> 6.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on two axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>

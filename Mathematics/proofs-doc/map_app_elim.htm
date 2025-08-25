@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>map_app_elim</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem map_app_elim</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> map_app_elim<br> map f X Y → x ∈ X → y = app f x → (x, y) ∈ f</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ map f X Y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ X, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ y = app f x, <a href='hypo.htm'>hypo</a>.
+04. 1 ⊢ function f ∧ dom f = X ∧ rng f ⊆ Y, <a href='map_unfold.htm'>map_unfold</a> 1.
+05. 1 ⊢ function f ∧ dom f = X, <a href='conj_eliml.htm'>conj_eliml</a> 4.
+06. 1 ⊢ function f, <a href='conj_eliml.htm'>conj_eliml</a> 5.
+07. 1 ⊢ dom f = X, <a href='conj_elimr.htm'>conj_elimr</a> 5.
+08. 1, 2 ⊢ x ∈ dom f, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 7 2, P u ↔ x ∈ u.
+09. 1, 2, 3 ⊢ (x, y) ∈ f, <a href='app_elim.htm'>app_elim</a> 6 8 3.
+map_app_elim. ⊢ map f X Y → x ∈ X → y = app f x → (x, y) ∈ f,
+  <a href='subj_intro_iii.htm'>subj_intro_iii</a> 9.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
