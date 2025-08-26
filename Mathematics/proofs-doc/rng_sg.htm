@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>rng_sg</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem rng_sg</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> rng_sg<br> set a → set b → rng {(a, b)} = {b}</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ set a, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ set b, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ y ∈ rng {(a, b)}, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ ∃x. (x, y) ∈ {(a, b)}, <a href='rng_elim.htm'>rng_elim</a> 3.
+05. 5 ⊢ (x, y) ∈ {(a, b)}, <a href='hypo.htm'>hypo</a>.
+06. 1, 2 ⊢ set (a, b), <a href='set_pair.htm'>set_pair</a> 1 2.
+07. 1, 2, 5 ⊢ (x, y) = (a, b), <a href='sg_elim.htm'>sg_elim</a> 6 5.
+08. 1, 2, 5 ⊢ (a, b) = (x, y), <a href='eq_symm.htm'>eq_symm</a> 7.
+09. 1, 2, 5 ⊢ a = x ∧ b = y, <a href='pair_property.htm'>pair_property</a> 1 2 8.
+10. 1, 2, 5 ⊢ b = y, <a href='conj_elimr.htm'>conj_elimr</a> 9.
+11. 1, 2, 5 ⊢ y = b, <a href='eq_symm.htm'>eq_symm</a> 10.
+12. 1, 2, 3 ⊢ y = b, <a href='ex_elim.htm'>ex_elim</a> 4 11.
+13. 1, 2, 3 ⊢ y ∈ {b}, <a href='sg_intro.htm'>sg_intro</a> 2 12.
+14. 1, 2 ⊢ y ∈ rng {(a, b)} → y ∈ {b}, <a href='subj_intro.htm'>subj_intro</a> 13.
+15. 15 ⊢ y ∈ {b}, <a href='hypo.htm'>hypo</a>.
+16. 2, 15 ⊢ y = b, <a href='sg_elim.htm'>sg_elim</a> 2 15.
+17. ⊢ (a, b) = (a, b), <a href='eq_refl.htm'>eq_refl</a>.
+18. 2, 15 ⊢ (a, y) = (a, b), <a href='eq_subst_rev.htm'>eq_subst_rev</a> 16 17, P u ↔ (a, u) = (a, b).
+19. 1, 2, 15 ⊢ (a, y) ∈ {(a, b)}, <a href='sg_intro.htm'>sg_intro</a> 6 18.
+20. 1, 2, 15 ⊢ y ∈ rng {(a, b)}, <a href='rng_intro.htm'>rng_intro</a> 19.
+21. 1, 2 ⊢ y ∈ {b} → y ∈ rng {(a, b)}, <a href='subj_intro.htm'>subj_intro</a> 20.
+22. 1, 2 ⊢ y ∈ rng {(a, b)} ↔ y ∈ {b}, <a href='bij_intro.htm'>bij_intro</a> 14 21.
+23. 1, 2 ⊢ ∀y. y ∈ rng {(a, b)} ↔ y ∈ {b}, <a href='uq_intro.htm'>uq_intro</a> 22.
+24. 1, 2 ⊢ rng {(a, b)} = {b}, <a href='ext.htm'>ext</a> 23.
+rng_sg. ⊢ set a → set b → rng {(a, b)} = {b}, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 24.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>
+</body>

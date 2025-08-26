@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>relation_union</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem relation_union</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> relation_union<br> relation R → relation Q → relation (R ∪ Q)</div></div>
+
+<pre><b>Proof</b>
+01. 1 ⊢ relation R, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ relation Q, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ ∀t. t ∈ R → ∃x. ∃y. t = (x, y), <a href='relation_unfold.htm'>relation_unfold</a> 1.
+04. 2 ⊢ ∀t. t ∈ Q → ∃x. ∃y. t = (x, y), <a href='relation_unfold.htm'>relation_unfold</a> 2.
+05. 1 ⊢ t ∈ R → ∃x. ∃y. t = (x, y), <a href='uq_elim.htm'>uq_elim</a> 3.
+06. 2 ⊢ t ∈ Q → ∃x. ∃y. t = (x, y), <a href='uq_elim.htm'>uq_elim</a> 4.
+07. 7 ⊢ t ∈ R ∪ Q, <a href='hypo.htm'>hypo</a>.
+08. 7 ⊢ t ∈ R ∨ t ∈ Q, <a href='union_elim.htm'>union_elim</a> 7.
+09. 9 ⊢ t ∈ R, <a href='hypo.htm'>hypo</a>.
+10. 1, 9 ⊢ ∃x. ∃y. t = (x, y), <a href='subj_elim.htm'>subj_elim</a> 5 9.
+11. 11 ⊢ t ∈ Q, <a href='hypo.htm'>hypo</a>.
+12. 2, 11 ⊢ ∃x. ∃y. t = (x, y), <a href='subj_elim.htm'>subj_elim</a> 6 11.
+13. 1, 2, 7 ⊢ ∃x. ∃y. t = (x, y), <a href='disj_elim.htm'>disj_elim</a> 8 10 12.
+14. 1, 2 ⊢ t ∈ R ∪ Q → ∃x. ∃y. t = (x, y), <a href='subj_intro.htm'>subj_intro</a> 13.
+15. 1, 2 ⊢ ∀t. t ∈ R ∪ Q → ∃x. ∃y. t = (x, y), <a href='uq_intro.htm'>uq_intro</a> 14.
+16. 1, 2 ⊢ relation (R ∪ Q), <a href='relation_fold.htm'>relation_fold</a> 15.
+relation_union. ⊢ relation R → relation Q → relation (R ∪ Q),
+  <a href='subj_intro_ii.htm'>subj_intro_ii</a> 16.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on two axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>
