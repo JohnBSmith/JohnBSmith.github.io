@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>subsets_of_sg</title>
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem subsets_of_sg</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> subsets_of_sg<br>
+set a → x ⊆ {a} → x = ∅ ∨ x = {a}</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ set a, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ⊆ {a}, <a href='hypo.htm'>hypo</a>.
+03. ⊢ a ∈ x ∨ ¬a ∈ x, <a href='lem.htm'>lem</a>.
+04. 4 ⊢ a ∈ x, <a href='hypo.htm'>hypo</a>.
+05. 5 ⊢ u ∈ {a}, <a href='hypo.htm'>hypo</a>.
+06. 1, 5 ⊢ u = a, <a href='sg_elim.htm'>sg_elim</a> 1 5.
+07. 1, 4, 5 ⊢ u ∈ x, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 6 4, P u ↔ u ∈ x.
+08. 1, 4 ⊢ u ∈ {a} → u ∈ x, <a href='subj_intro.htm'>subj_intro</a> 7.
+09. 1, 4 ⊢ ∀u. u ∈ {a} → u ∈ x, <a href='uq_intro.htm'>uq_intro</a> 8.
+10. 1, 4 ⊢ {a} ⊆ x, <a href='incl_intro.htm'>incl_intro</a> 9.
+11. 1, 2, 4 ⊢ x = {a}, <a href='incl_antisym.htm'>incl_antisym</a> 2 10.
+12. 1, 2, 4 ⊢ x = ∅ ∨ x = {a}, <a href='disj_intror.htm'>disj_intror</a> 11.
+13. 13 ⊢ ¬a ∈ x, <a href='hypo.htm'>hypo</a>.
+14. 14 ⊢ u ∈ x, <a href='hypo.htm'>hypo</a>.
+15. 2, 14 ⊢ u ∈ {a}, <a href='incl_elim.htm'>incl_elim</a> 2 14.
+16. 1, 2, 14 ⊢ u = a, <a href='sg_elim.htm'>sg_elim</a> 1 15.
+17. 1, 2, 14 ⊢ a ∈ x, <a href='eq_subst.htm'>eq_subst</a> 16 14, P u ↔ u ∈ x.
+18. 1, 2, 13, 14 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> 13 17.
+19. 1, 2, 13, 14 ⊢ u ∈ ∅, <a href='efq.htm'>efq</a> 18.
+20. 1, 2, 13 ⊢ u ∈ x → u ∈ ∅, <a href='subj_intro.htm'>subj_intro</a> 19.
+21. 1, 2, 13 ⊢ ∀u. u ∈ x → u ∈ ∅, <a href='uq_intro.htm'>uq_intro</a> 20.
+22. 1, 2, 13 ⊢ x ⊆ ∅, <a href='incl_intro.htm'>incl_intro</a> 21.
+23. ⊢ ∅ ⊆ x, <a href='empty_set_is_least.htm'>empty_set_is_least</a>.
+24. 1, 2, 13 ⊢ x = ∅, <a href='incl_antisym.htm'>incl_antisym</a> 22 23.
+25. 1, 2, 13 ⊢ x = ∅ ∨ x = {a}, <a href='disj_introl.htm'>disj_introl</a> 24.
+26. 1, 2 ⊢ x = ∅ ∨ x = {a}, <a href='disj_elim.htm'>disj_elim</a> 3 12 25.
+subsets_of_sg. ⊢ set a → x ⊆ {a} → x = ∅ ∨ x = {a}, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 26.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on six axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>.</p>
+</body>
+</html>
