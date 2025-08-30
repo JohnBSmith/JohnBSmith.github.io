@@ -3289,6 +3289,122 @@ Es ist $(\N,<)$ wohlfundiert, wobei mit $<$ die gewöhnliche Ordnung
 auf $\N$ gemeint ist. Als Induktionsprinzip erhält man unmittelbar die starke
 Induktion.
 
+\subsection{Wohlfundierter Rekursionssatz}
+
+Auf einer wohlfundierten Menge $(X,R)$ würden wir eine Abbildung
+$f\colon X\to Y$ gern rekursiv festlegen dürfen. Man darf sich dabei
+die starke Rekursion vorstellen, wenngleich sie hier abstrakter ist. An
+der Stelle $x\in X$ ließe sich der Funktionswert $f(x)$ berechnen durch
+einen Term, in den nur $x$ und die zuvor bereits bekannten Werte $f(u)$
+zu den $u\in X$ mit $R(u,x)$ eingehen.
+
+Wir müssen uns kurz darüber Gedanken machen, wie wir diesen Term formal
+ausdrücken. Es muss $f(u)$ in Abhängigkeit von $u$ ausgewählt werden
+können. Diese Information enthält aber gerade die Einschränkung von $f$
+auf das Anfangsstück $R^{-1}(x)$. Demnach lässt sich die Rekurrenz
+ausdrücken als
+\[f(x) = \varphi(x,f_{|R^{-1}(x)}),\]
+wobei $\varphi\colon X\times\setsystem U\to Y$. Man mag sich fragen,
+warum $\varphi$ hier im zweiten Argument auf dem gesamten
+Mengenuniversum definiert ist. Dies tun wir schlicht, um den tatsächlichen
+Definitionsbereich nicht umständlich notieren zu müssen. Man darf sich
+$\varphi$ dabei um irgendeinen Wert fortgesetzt denken, wo sie keine
+Menge von Gestalt einer Abbildung auf einem Anfangsstück als Argument
+bekommt, was sogar automatisch geschieht, da in der formalen
+Mengenlehre alle Operationen auf dem gesamten Klassenuniversum definiert
+sind. Im Allgemeinen kommt natürlich nichts Sinnvolles bei heraus, wenn
+$g$ im Term $\varphi(x,g)$ eine beliebige Menge ist. Darin besteht aber
+kein wirkliches Problem, da die rekursive Berechnung dafür Sorge trägt,
+dass $g$ immer eine Abbildung auf dem jeweiligen Anfangsstück sein wird.
+
+\begin{Satz}[Wohlfundierter Rekursionssatz]\newlinefirst
+Es sei $(X,R)$ wohlfundiert. Zu festgelegtem
+$\varphi\colon X\times\setsystem U\to Y$ von ganz beliebiger Beschaffenheit
+besitzt die Rekurrenz
+\[\forall x\in X\colon f(x) = \varphi(x,f_{|R^{-1}(x)})\]
+immer genau eine Lösung $f\colon X\to Y$.
+\end{Satz}
+
+\begin{Beweis}
+Zur Eindeutigkeit. Seien $f,g$ zwei Lösungen. Induktion über $x$.
+Die Induktionsvoraussetzung ist der äquivalenten Umformung
+\begin{align*}
+(\forall u\in X\colon R(u,x)\cond f(u)=g(u))
+&\iff (\forall u\in R^{-1}(x)\colon f(u)=g(u))\\
+&\iff f|_{R^{-1}(x)} = g|_{R^{-1}(x)}.
+\end{align*}
+zugänglich. Diese Gleichheit ermöglicht nun die Termumformung
+\[f(x) = \varphi(x,f_{|R^{-1}(x)}) = \varphi(x,g_{|R^{-1}(x)}) = g(x),\]
+die bereits den Abschluss des Induktionsschrittes schafft.
+
+Zur Existenz. Analog wie beim Beweis des dedekindschen Rekursionssatzes
+betrachtet man das Mengensystem
+\[\begin{array}{@{}r@{}l@{}}
+\setsystem A := \{& A\subseteq X\times Y\mid \forall x\in X\colon
+\forall g\colon g|_{R^{-1}(x)}\in\Abb(R^{-1}(x),Y)\cond\\
+&\quad (\forall u\in R^{-1}(x)\colon (u,g(u))\in A)\cond (x,\varphi(x,g|_{R^{-1}(x)}))\in A\},
+\end{array}\]
+das aus allen unter dem Rekursionsschritt abgeschlossenen Relationen
+besteht. Die Lösung der Rekurrenz erhält man dahingehend als den Schnitt
+$f:=\bigcap\setsystem A$. Sie ist die kleinste unter den Relationen,
+denn $\setsystem A$ ist nichtleer, weil $X\times Y\in\setsystem A$,
+woraufhin man sich auch von $f\in\setsystem A$ überzeugt.
+Nun wird bestätigt, dass $f$ der Graph einer Abbildung $X\to Y$
+sein muss. Dazu wird
+\[\forall x\in X\colon\exists!y\in Y\colon (x,y)\in f\]
+vermittels Induktion über $x$ gezeigt. Induktionsvoraussetzung ist
+die Existenz genau eines $f(u)$ mit $(u,f(u))\in f$ für jedes $u\in R^{-1}(x)$.
+Wegen $f\in\setsystem A$ gilt somit auch $(x,y)\in f$ mit
+$y:=\varphi(x,f|_{R^{-1}(x)})$. Angenommen, es gäbe $y'\ne y$ mit $(x,y')\in f$.
+Sei $A:=f\setminus\{(x,y')\}$. Es wäre nun $A\in\setsystem A$ im
+Widerspruch dazu, dass $f$ die kleinste Menge ist. Für jedes $a\in X$
+und $g$ mit $g|_{R^{-1}(X)}\in\Abb(R^{-1}(X),Y)$ gilt nämlich
+\[(\forall u\in R^{-1}(a)\colon (u,g(u))\in A)\cond
+(a,b)\in A,\quad b := \varphi(a,g|_{R^{-1}(a)}).\]
+Dafür muss im Wesentlichen $(a,b)\ne (x,y')$ gezeigt werden.
+Angenommen, es gilt $(a,b) = (x,y')$, dann ist $a=x$ und $b=y'$.
+Aus der Prämisse, der Allaussage über die $u$, ergibt sich, dass
+$f(u)=g(u)$ für jedes $u\in R^{-1}(x)$, und somit
+$f|_{R^{-1}(x)}=g|_{R^{-1}(x)}$ per Extensionalität. Dies gelingt
+gerade deshalb, weil die Einschränkungen von $f,g$ auf $R^{-1}(x)$ bereits
+als Abbildungen gelten, weshalb $(u,g(u))\in f$ auch mit $g(u)=f(u)$
+gleichbedeutend ist. Infolge ergibt sich $y=b$, also $y'=y$ im
+Widerspruch zur ersten Annahme.
+
+Letztlich verbleibt zu bestätigen, dass $f$ auch die Rekurrenz erfüllt.
+Im Zuge der Entfaltung von $f\in\setsystem A$ taucht $(u,f(u))\in f$ bzw.
+$f(u)=f(u)$ als Prämisse auf. Da diese aufgrund der Reflexivität der Gleichheit
+wahr sein muss, gelangt man zur Konklusion $(x,\varphi(x,f|_{R^{-1}(x)}))\in f$,
+also zu
+\[\forall x\in X\colon f(x) = \varphi(x,f|_{R^{-1}(x)}).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Ich habe den Beweis kurz gehalten. Ausführen aller technischen Details
+würde ihn recht weitläufig machen.
+
+Es ist anzumerken, dass hiermit bislang lediglich die \emph{lokale}
+Variante des Rekursionssatzes bewiesen wurde, wie man so sagt. Dies meint,
+dass die Lösung $f\colon X\to Y$ auf einer Menge $X$, also nur
+\emph{lokal} definiert ist. Eine \emph{globale} Funktion erhielte man,
+wenn für $X$ die Allklasse eingesetzt würde. Dies ist allerdings nicht
+möglich, da $f$ im Beweis per se als Element einer Klasse vorkommt, also
+keine echte Klasse sein darf. Man kann sich sich nun eine Konstruktion
+zur globalen Variante des Satzes überlegen, worauf ich hier aber nicht
+näher eingehen will.
+
+Wir schaffen die globale Variante des Satzes stattdessen kurzum herbei,
+indem wir die Allkasse als Grothendieck"=Universum modellieren, das
+als Menge für $X$ eingesetzt werden darf. Insofern erhalten wir die
+globale Variante in gewisser Weise als Spezialfall der lokalen, so
+absurd das auch erscheinen mag.
+
+Die rekursive Festlegung globaler Funktionen wird im nächsten Abschnitt
+benötigt, um als Definitionsbereich die Ordinalzahlen haben zu können,
+die eine echte Klasse bilden. Bspw. ist die kumulative Hierarchie durch
+die Ordinalzahlen indiziert. Wir spezialisieren den wohlfundierten
+Rekursionssatz dazu zum wohlgeordneten bzw. transfiniten.
+
 % #todo
 % Ordinalzahlen. Eine Dominoreihe verläuft sich in einer Schachtel
 % ins Unendliche. Der Stein mit Limesordinal muss extra umfallen,
@@ -3345,6 +3461,7 @@ zu schaffen. Die Entwicklung eines diesbezüglichen Axiomensystems erfordert
 große Sorgfalt, da sich die Theorie durch Unachtsamkeit allzu leicht wieder
 ins Klassische verliert.
 
+\newpage
 \subsection{Transfinite Induktion}
 
 \begin{Satz}[Schema der transfiniten Induktion]%
@@ -3393,6 +3510,7 @@ Analog zu den natürlichen Zahlen gilt für Ordinalzahlen ein
 Rekursionssatz,\index{Rekursionssatz!transfiniter} der es gestattet,
 eine Funktion rekursiv für alle Ordinalzahlen zu definieren.
 
+\newpage
 \subsection{Kumulative Hierarchie}
 
 \begin{Definition}[Kumulative Hierarchie]%
