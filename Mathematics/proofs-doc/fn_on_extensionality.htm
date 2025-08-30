@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>fn_on_extensionality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem fn_on_extensionality</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> fn_on_extensionality<br>
+fn_on f A → fn_on g A →
+  (∀x. x ∈ A → app f x = app g x) →
+  restr f A = restr g A</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ fn_on f A, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ fn_on g A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ ∀x. x ∈ A → app f x = app g x, <a href='hypo.htm'>hypo</a>.
+04. 4 ⊢ t ∈ restr f A, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ t ∈ f ∩ (A × UnivCl), <a href='eq_subst.htm'>eq_subst</a> <a href='restr_eq.htm'>restr_eq</a> 4, P u ↔ t ∈ u.
+06. 4 ⊢ t ∈ f, <a href='intersection_eliml.htm'>intersection_eliml</a> 5.
+07. 4 ⊢ t ∈ A × UnivCl, <a href='intersection_elimr.htm'>intersection_elimr</a> 5.
+08. 1 ⊢ relation f, <a href='relation_from_fn_on.htm'>relation_from_fn_on</a> 1.
+09. 1 ⊢ ∀t. t ∈ f → ∃x. ∃y. t = (x, y), <a href='relation_unfold.htm'>relation_unfold</a> 8.
+10. 1, 4 ⊢ ∃x. ∃y. t = (x, y), <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 9 6.
+11. 11 ⊢ ∃y. t = (x, y), <a href='hypo.htm'>hypo</a>.
+12. 12 ⊢ t = (x, y), <a href='hypo.htm'>hypo</a>.
+13. 4, 12 ⊢ (x, y) ∈ A × UnivCl, <a href='eq_subst.htm'>eq_subst</a> 12 7.
+14. 4, 12 ⊢ x ∈ A ∧ y ∈ UnivCl, <a href='prod_elim_pair.htm'>prod_elim_pair</a> 13.
+15. 4, 12 ⊢ x ∈ A, <a href='conj_eliml.htm'>conj_eliml</a> 14.
+16. 4, 12 ⊢ y ∈ UnivCl, <a href='conj_elimr.htm'>conj_elimr</a> 14.
+17. 4, 12 ⊢ (x, y) ∈ f, <a href='eq_subst.htm'>eq_subst</a> 12 6.
+18. 1, 4, 12 ⊢ y = app f x, <a href='fn_on_app_intro.htm'>fn_on_app_intro</a> 1 15 17.
+19. 3, 4, 12 ⊢ app f x = app g x, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 3 15.
+20. 1, 3, 4, 12 ⊢ y = app g x, <a href='eq_subst.htm'>eq_subst</a> 19 18, P u ↔ y = u.
+21. 1, 2, 3, 4, 12 ⊢ (x, y) ∈ g, <a href='fn_on_app_elim.htm'>fn_on_app_elim</a> 2 15 20.
+22. 1, 2, 3, 4, 12 ⊢ (x, y) ∈ g ∩ (A × UnivCl), <a href='intersection_intro.htm'>intersection_intro</a> 21 13.
+23. ⊢ restr g A = g ∩ (A × UnivCl), <a href='restr_eq.htm'>restr_eq</a>.
+24. 1, 2, 3, 4, 12 ⊢ (x, y) ∈ restr g A, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 23 22, P u ↔ (x, y) ∈ u.
+25. 1, 2, 3, 4, 12 ⊢ t ∈ restr g A, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 12 24, P u ↔ u ∈ restr g A.
+26. 1, 2, 3, 4, 11 ⊢ t ∈ restr g A, <a href='ex_elim.htm'>ex_elim</a> 11 25.
+27. 1, 2, 3, 4 ⊢ t ∈ restr g A, <a href='ex_elim.htm'>ex_elim</a> 10 26.
+28. 1, 2, 3 ⊢ t ∈ restr f A → t ∈ restr g A, <a href='subj_intro.htm'>subj_intro</a> 27.
+29. 1, 2, 3 ⊢ ∀t. t ∈ restr f A → t ∈ restr g A, <a href='uq_intro.htm'>uq_intro</a> 28.
+30. 1, 2, 3 ⊢ restr f A ⊆ restr g A, <a href='incl_intro.htm'>incl_intro</a> 29.
+31. ⊢ fn_on f A → fn_on g A →
+  (∀x. x ∈ A → app f x = app g x) →
+  restr f A ⊆ restr g A, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 30.
+32. 32 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+33. 3, 32 ⊢ app f x = app g x, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 3 32.
+34. 3, 32 ⊢ app g x = app f x, <a href='eq_symm.htm'>eq_symm</a> 33.
+35. 3 ⊢ x ∈ A → app g x = app f x, <a href='subj_intro.htm'>subj_intro</a> 34.
+36. 3 ⊢ ∀x. x ∈ A → app g x = app f x, <a href='uq_intro.htm'>uq_intro</a> 35.
+37. 1, 2, 3 ⊢ restr g A ⊆ restr f A, 31 2 1 36.
+38. 1, 2, 3 ⊢ restr f A = restr g A, <a href='incl_antisym.htm'>incl_antisym</a> 30 37.
+fn_on_extensionality. ⊢ fn_on f A → fn_on g A →
+  (∀x. x ∈ A → app f x = app g x) →
+  restr f A = restr g A, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 38.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>
+</body>
+</html>

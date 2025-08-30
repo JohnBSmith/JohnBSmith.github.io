@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>fn_on_intro_cod</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem fn_on_intro_cod</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> fn_on_intro_cod<br>
+relation f →
+  (∀x. x ∈ A → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
+  fn_on f A</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ relation f, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ∀x. x ∈ A → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+04. 2, 3 ⊢ ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 2 3.
+05. ⊢ z ∈ Y → set z, <a href='set_intro.htm'>set_intro</a>.
+06. ⊢ ∀z. z ∈ Y → set z, <a href='uq_intro.htm'>uq_intro</a> 5.
+07. 2, 3 ⊢ ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='ex_weaken_conj.htm'>ex_weaken_conj</a> 6 4.
+08. 2 ⊢ x ∈ A → ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='subj_intro.htm'>subj_intro</a> 7.
+09. 2 ⊢ ∀x. x ∈ A → ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='uq_intro.htm'>uq_intro</a> 8.
+10. 1, 2 ⊢ fn_on f A, <a href='fn_on_intro.htm'>fn_on_intro</a> 1 9.
+fn_on_intro_cod. ⊢ relation f →
+  (∀x. x ∈ A → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
+  fn_on f A, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 10.
+</pre>
+</body>
+</html>

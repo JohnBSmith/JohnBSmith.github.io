@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>fn_on_app_intro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem fn_on_app_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> fn_on_app_intro<br>
+fn_on f A → x ∈ A → (x, y) ∈ f →
+  y = app f x</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ fn_on f A, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ (x, y) ∈ f, <a href='hypo.htm'>hypo</a>.
+04. 1 ⊢ ∀x. x ∈ A → ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='ex_uniq_from_fn_on.htm'>ex_uniq_from_fn_on</a> 1.
+05. 1, 2 ⊢ ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 4 2.
+06. 1, 2 ⊢ ∃z. set z ∧ {z} = {y | (x, y) ∈ f}, <a href='sg_eq_from_ex_uniq.htm'>sg_eq_from_ex_uniq</a> 5.
+07. 1, 2, 3 ⊢ y = app f x, <a href='app_intro_lemma.htm'>app_intro_lemma</a> 6 3.
+fn_on_app_intro. ⊢ fn_on f A → x ∈ A → (x, y) ∈ f →
+  y = app f x, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 7.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

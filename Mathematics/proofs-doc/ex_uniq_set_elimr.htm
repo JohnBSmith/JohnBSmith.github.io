@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ex_uniq_set_elimr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem ex_uniq_set_elimr</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> ex_uniq_set_elimr<br>
+(∃x. S x ∧ ∀y. x = y ↔ P y) → P x → P y → x = y</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ ∃x. S x ∧ ∀y. x = y ↔ P y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ S u ∧ ∀y. u = y ↔ P y, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ ∀y. u = y ↔ P y, <a href='conj_elimr.htm'>conj_elimr</a> 2.
+04. 4 ⊢ P x, <a href='hypo.htm'>hypo</a>.
+05. 5 ⊢ P y, <a href='hypo.htm'>hypo</a>.
+06. 2 ⊢ u = x ↔ P x, <a href='uq_elim.htm'>uq_elim</a> 3.
+07. 2 ⊢ u = y ↔ P y, <a href='uq_elim.htm'>uq_elim</a> 3.
+08. 2 ⊢ P x → u = x, <a href='bij_elimr.htm'>bij_elimr</a> 6.
+09. 2 ⊢ P y → u = y, <a href='bij_elimr.htm'>bij_elimr</a> 7.
+10. 4, 2 ⊢ u = x, <a href='subj_elim.htm'>subj_elim</a> 8 4.
+11. 5, 2 ⊢ u = y, <a href='subj_elim.htm'>subj_elim</a> 9 5.
+12. 4, 2 ⊢ x = u, <a href='eq_symm.htm'>eq_symm</a> 10.
+13. 4, 5, 2 ⊢ x = y, <a href='eq_trans.htm'>eq_trans</a> 12 11.
+14. 1, 4, 5 ⊢ x = y, <a href='ex_elim.htm'>ex_elim</a> 1 13.
+ex_uniq_set_elimr. ⊢ (∃x. S x ∧ ∀y. x = y ↔ P y) → P x → P y → x = y,
+  <a href='subj_intro_iii.htm'>subj_intro_iii</a> 14.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on two axioms:<br><a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>.</p>
+</body>
+</html>
