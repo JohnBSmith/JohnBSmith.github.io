@@ -47,89 +47,58 @@ b.rule{color: #900060;}
 <h1>Formal theorems and proofs</h1>
 <h2>Table of contents</h2>
 <ol>
-<li><a href='#1'>Inference rules</a>
-<li><a href='#2'>Morse-Kelley set theory</a><ol>
-<li><a href='#2.1'>Definitions</a>
-<li><a href='#2.2'>Axioms</a>
+<li><a href='#1'>Morse-Kelley set theory</a><ol>
+<li><a href='#1.1'>Definitions</a>
+<li><a href='#1.2'>Axioms</a>
 </ol>
-<li><a href='#3'>Logic</a><ol>
-<li><a href='#3.1'>Propositional logic</a>
-<li><a href='#3.2'>Projections</a>
-<li><a href='#3.3'>Predicate logic</a>
-<li><a href='#3.4'>Logic with equality</a>
-<li><a href='#3.5'>Distributing negations</a>
-<li><a href='#3.6'>Unique existence</a>
+<li><a href='#2'>Classical logic</a><ol>
+<li><a href='#2.1'>Inference rules</a>
+<li><a href='#2.2'>Propositional logic</a><ol>
+<li><a href='#2.2.1'>The relationship of EFQ, LEM, DNE</a>
+<li><a href='#2.2.2'>Useful theorems</a>
+<li><a href='#2.2.3'>De Morgan's laws</a>
+<li><a href='#2.2.4'>Projections</a>
 </ol>
-<li><a href='#4'>Basic results</a><ol>
-<li><a href='#4.1'>Inclusion</a>
-<li><a href='#4.2'>Class comprehension</a>
-<li><a href='#4.3'>Binary operations on sets</a>
-<li><a href='#4.4'>The empty set</a>
-<li><a href='#4.5'>Operations on systems of sets</a>
-<li><a href='#4.6'>The universal class and Russell's paradox</a>
-<li><a href='#4.7'>Singletons, pair sets and pairs</a>
-<li><a href='#4.8'>Operations on families of sets</a>
+<li><a href='#2.3'>First order logic</a><ol>
+<li><a href='#2.3.1'>Bounded quantification</a>
+<li><a href='#2.3.2'>De Morgan's laws</a>
 </ol>
-<li><a href='#5'>Relations</a>
-<li><a href='#6'>Functions</a><ol>
-<li><a href='#6.1'>Basic results</a>
-<li><a href='#6.2'>Partly functional relations</a>
+<li><a href='#2.4'>First order logic with equality</a><ol>
+<li><a href='#2.4.1'>Useful theorems</a>
+<li><a href='#2.4.2'>Unique existence</a>
 </ol>
-<li><a href='#7'>Power sets</a>
-<li><a href='#8'>Well-founded relations</a>
-<li><a href='#9'>Grothendieck universes</a>
 </ol>
-<h2 id='1'>Inference rules</h2>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/hypo.htm'>hypo</a><br>
-(⊤ ∧ A ⊢ A)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_intro.htm'>conj_intro</a><br>
-(H1 ⊢ A) → (H2 ⊢ B) → (H1 ∧ H2 ⊢ A ∧ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_eliml.htm'>conj_eliml</a><br>
-(H ⊢ A ∧ B) → (H ⊢ A)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_elimr.htm'>conj_elimr</a><br>
-(H ⊢ A ∧ B) → (H ⊢ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_introl.htm'>disj_introl</a><br>
-(H ⊢ A) → (H ⊢ A ∨ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_intror.htm'>disj_intror</a><br>
-(H ⊢ B) → (H ⊢ A ∨ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_elim.htm'>disj_elim</a><br>
-(H1 ⊢ A ∨ B) → (H2 ∧ A ⊢ C) → (H3 ∧ B ⊢ C) →
-  (H1 ∧ H2 ∧ H3 ⊢ C)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro.htm'>subj_intro</a><br>
-(H ∧ A ⊢ B) → (H ⊢ A → B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_elim.htm'>subj_elim</a><br>
-(H1 ⊢ A → B) → (H2 ⊢ A) → (H1 ∧ H2 ⊢ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/neg_intro.htm'>neg_intro</a><br>
-(H ∧ A ⊢ ⊥) → (H ⊢ ¬A)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/neg_elim.htm'>neg_elim</a><br>
-(H1 ⊢ ¬A) → (H2 ⊢ A) → (H1 ∧ H2 ⊢ ⊥)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_intro.htm'>bij_intro</a><br>
-(H1 ⊢ A → B) → (H2 ⊢ B → A) → (H1 ∧ H2 ⊢ A ↔ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_eliml.htm'>bij_eliml</a><br>
-(H ⊢ A ↔ B) → (H ⊢ A → B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_elimr.htm'>bij_elimr</a><br>
-(H ⊢ A ↔ B) → (H ⊢ B → A)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/wk.htm'>wk</a><br>
-(H ⊢ B) → (H ∧ A ⊢ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/exch.htm'>exch</a><br>
-(H ⊢ A) → (H ⊢ A)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_intro.htm'>uq_intro</a><br>
-(nf u (H ∧ ∀x. A x)) → (H ⊢ A u) → (H ⊢ ∀x. A x)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_elim.htm'>uq_elim</a><br>
-(H ⊢ ∀x. A x) → (H ⊢ A t)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_intro.htm'>ex_intro</a><br>
-(H ⊢ A t) → (H ⊢ ∃x. A x)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_elim.htm'>ex_elim</a><br>
-(nf u (H1 ∧ H2 ∧ B ∧ ∃x. A x)) →
-  (H1 ⊢ ∃x. A x) → (H2 ∧ A u ⊢ B) → (H1 ∧ H2 ⊢ B)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_ii.htm'>subj_intro_ii</a><br>
-(H ∧ A ∧ B ⊢ C) → (H ⊢ A → B → C)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_iii.htm'>subj_intro_iii</a><br>
-(H ∧ A ∧ B ∧ C ⊢ D) → (H ⊢ A → B → C → D)</div></div>
-<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_iv.htm'>subj_intro_iv</a><br>
-(H ∧ A ∧ B ∧ C ∧ D ⊢ E) → (H ⊢ A → B → C → D → E)</div></div>
-<h2 id='2'>Morse-Kelley set theory</h2>
-<h3 id='2.1'>Definitions</h3>
+<li><a href='#3'>Basic results</a><ol>
+<li><a href='#3.1'>Inclusion</a>
+<li><a href='#3.2'>Class comprehension</a>
+<li><a href='#3.3'>Binary operations on sets</a>
+<li><a href='#3.4'>The empty set</a>
+<li><a href='#3.5'>Operations on systems of sets</a>
+<li><a href='#3.6'>The universal class and Russell's paradox</a>
+<li><a href='#3.7'>Singletons, pair sets and pairs</a>
+<li><a href='#3.8'>Operations on families of sets</a>
+</ol>
+<li><a href='#4'>Relations</a><ol>
+<li><a href='#4.1'>Relationhood</a>
+<li><a href='#4.2'>Domains and ranges</a>
+<li><a href='#4.3'>Images and inverse images</a>
+<li><a href='#4.4'>Special relations</a>
+</ol>
+<li><a href='#5'>Functions</a><ol>
+<li><a href='#5.1'>Functionhood</a>
+<li><a href='#5.2'>Function application</a>
+<li><a href='#5.3'>Function composition</a>
+<li><a href='#5.4'>Restricted functions</a>
+<li><a href='#5.5'>Special functions</a>
+<li><a href='#5.6'>Partly functional relations</a>
+<li><a href='#5.7'>Choice functions</a>
+</ol>
+<li><a href='#6'>Power sets</a>
+<li><a href='#7'>Well-founded relations</a>
+<li><a href='#8'>Grothendieck universes</a>
+</ol>
+<h2 id='1'>Morse-Kelley set theory</h2>
+<h3 id='1.1'>Definitions</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/incl_equi.htm'>incl_equi</a><br>
 A ⊆ B ↔ ∀x. x ∈ A → x ∈ B</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/set_equi.htm'>set_equi</a><br>
@@ -199,11 +168,13 @@ choice_function f ↔
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/composition_eq.htm'>composition_eq</a><br>
 composition g f = {t | ∃x. ∃y. ∃z.
   t = (x, z) ∧ (x, y) ∈ f ∧ (y, z) ∈ g}</div></div>
-<h3 id='2.2'>Axioms</h3>
+<h3 id='1.2'>Axioms</h3>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/efq.htm'>efq</a><br>
 ⊥ → A</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/lem.htm'>lem</a><br>
 A ∨ ¬A</div></div>
+<div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/equi_subst.htm'>equi_subst</a><br>
+(A ↔ B) → P A → P B</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/eq_refl.htm'>eq_refl</a><br>
 x = x</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/eq_subst.htm'>eq_subst</a><br>
@@ -228,14 +199,65 @@ set M → set (⋃M)</div></div>
 function f → set (dom f) → set (rng f)</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/choice.htm'>choice</a><br>
 ∃f. choice_function f ∧ dom f = UnivCl \ {∅}</div></div>
-<h2 id='3'>Logic</h2>
-<h3 id='3.1'>Propositional logic</h3>
+<h2 id='2'>Classical logic</h2>
+<h3 id='2.1'>Inference rules</h3>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/hypo.htm'>hypo</a><br>
+(⊤ ∧ A ⊢ A)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_intro.htm'>conj_intro</a><br>
+(H1 ⊢ A) → (H2 ⊢ B) → (H1 ∧ H2 ⊢ A ∧ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_eliml.htm'>conj_eliml</a><br>
+(H ⊢ A ∧ B) → (H ⊢ A)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/conj_elimr.htm'>conj_elimr</a><br>
+(H ⊢ A ∧ B) → (H ⊢ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_introl.htm'>disj_introl</a><br>
+(H ⊢ A) → (H ⊢ A ∨ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_intror.htm'>disj_intror</a><br>
+(H ⊢ B) → (H ⊢ A ∨ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/disj_elim.htm'>disj_elim</a><br>
+(H1 ⊢ A ∨ B) → (H2 ∧ A ⊢ C) → (H3 ∧ B ⊢ C) →
+  (H1 ∧ H2 ∧ H3 ⊢ C)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro.htm'>subj_intro</a><br>
+(H ∧ A ⊢ B) → (H ⊢ A → B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_elim.htm'>subj_elim</a><br>
+(H1 ⊢ A → B) → (H2 ⊢ A) → (H1 ∧ H2 ⊢ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/neg_intro.htm'>neg_intro</a><br>
+(H ∧ A ⊢ ⊥) → (H ⊢ ¬A)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/neg_elim.htm'>neg_elim</a><br>
+(H1 ⊢ ¬A) → (H2 ⊢ A) → (H1 ∧ H2 ⊢ ⊥)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_intro.htm'>bij_intro</a><br>
+(H1 ⊢ A → B) → (H2 ⊢ B → A) → (H1 ∧ H2 ⊢ A ↔ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_eliml.htm'>bij_eliml</a><br>
+(H ⊢ A ↔ B) → (H ⊢ A → B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/bij_elimr.htm'>bij_elimr</a><br>
+(H ⊢ A ↔ B) → (H ⊢ B → A)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/wk.htm'>wk</a><br>
+(H ⊢ B) → (H ∧ A ⊢ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/exch.htm'>exch</a><br>
+(H ⊢ A) → (H ⊢ A)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_intro.htm'>uq_intro</a><br>
+(nf u (H ∧ ∀x. A x)) → (H ⊢ A u) → (H ⊢ ∀x. A x)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_elim.htm'>uq_elim</a><br>
+(H ⊢ ∀x. A x) → (H ⊢ A t)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_intro.htm'>ex_intro</a><br>
+(H ⊢ A t) → (H ⊢ ∃x. A x)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_elim.htm'>ex_elim</a><br>
+(nf u (H1 ∧ H2 ∧ B ∧ ∃x. A x)) →
+  (H1 ⊢ ∃x. A x) → (H2 ∧ A u ⊢ B) → (H1 ∧ H2 ⊢ B)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_ii.htm'>subj_intro_ii</a><br>
+(H ∧ A ∧ B ⊢ C) → (H ⊢ A → B → C)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_iii.htm'>subj_intro_iii</a><br>
+(H ∧ A ∧ B ∧ C ⊢ D) → (H ⊢ A → B → C → D)</div></div>
+<div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_iv.htm'>subj_intro_iv</a><br>
+(H ∧ A ∧ B ∧ C ∧ D ⊢ E) → (H ⊢ A → B → C → D → E)</div></div>
+<h3 id='2.2'>Propositional logic</h3>
+<h4 id='2.2.1'>The relationship of EFQ, LEM, DNE</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dne.htm'>dne</a><br>
 ¬¬A → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/efq_from_dne.htm'>efq_from_dne</a><br>
-⊥ → A</div></div>
+(¬¬A → A) → (⊥ → A)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lem_from_dne.htm'>lem_from_dne</a><br>
 A ∨ ¬A</div></div>
+<h4 id='2.2.2'>Useful theorems</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diag_contra.htm'>diag_contra</a><br>
 ¬(A ↔ ¬A)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dn_intro.htm'>dn_intro</a><br>
@@ -246,7 +268,16 @@ A → ¬¬A</div></div>
 (¬A → ¬B) → (B → A)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subj_from_disj.htm'>subj_from_disj</a><br>
 (¬A ∨ B) → (A → B)</div></div>
-<h3 id='3.2'>Projections</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/tollendo_ponens_left.htm'>tollendo_ponens_left</a><br>
+A ∨ B → ¬B → A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/tollendo_ponens_right.htm'>tollendo_ponens_right</a><br>
+A ∨ B → ¬A → B</div></div>
+<h4 id='2.2.3'>De Morgan's laws</h4>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_conj.htm'>neg_conj</a><br>
+¬(A ∧ B) → ¬A ∨ ¬B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_subj.htm'>neg_subj</a><br>
+¬(A → B) → A ∧ ¬B</div></div>
+<h4 id='2.2.4'>Projections</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimll.htm'>conj_elimll</a><br>
 A ∧ B ∧ C → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimlr.htm'>conj_elimlr</a><br>
@@ -271,25 +302,11 @@ A ∧ B ∧ C ∧ D → B</div></div>
 (E ↔ A ∧ B ∧ C ∧ D) → E → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lsubj_conj_elimllr.htm'>lsubj_conj_elimllr</a><br>
 (E ↔ A ∧ B ∧ C ∧ D) → E → B</div></div>
-<h3 id='3.3'>Predicate logic</h3>
+<h3 id='2.3'>First order logic</h3>
+<h4 id='2.3.1'>Bounded quantification</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/uq_bounded_elim.htm'>uq_bounded_elim</a><br>
 (∀x. E x → P x) → E u → P u</div></div>
-<h3 id='3.4'>Logic with equality</h3>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_symm.htm'>eq_symm</a><br>
-x = y → y = x</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_subst_rev.htm'>eq_subst_rev</a><br>
-y = x → P x → P y</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/f_equal.htm'>f_equal</a><br>
-x = y → f x = f y</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans.htm'>eq_trans</a><br>
-x = y → y = z → x = z</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neq_symm.htm'>neq_symm</a><br>
-¬x = y → ¬y = x</div></div>
-<h3 id='3.5'>Distributing negations</h3>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_subj.htm'>neg_subj</a><br>
-¬(A → B) → A ∧ ¬B</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_conj.htm'>neg_conj</a><br>
-¬(A ∧ B) → ¬A ∨ ¬B</div></div>
+<h4 id='2.3.2'>De Morgan's laws</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_ex.htm'>neg_ex</a><br>
 (¬∃x. P x) → (∀x. ¬P x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_uq.htm'>neg_uq</a><br>
@@ -302,7 +319,21 @@ x = y → y = z → x = z</div></div>
 (¬∀x. P x → Q x) → (∃x. P x ∧ ¬Q x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_ex_bounded.htm'>neg_ex_bounded</a><br>
 (¬∃x. P x ∧ Q x) → (∀x. P x → ¬Q x)</div></div>
-<h3 id='3.6'>Unique existence</h3>
+<h3 id='2.4'>First order logic with equality</h3>
+<h4 id='2.4.1'>Useful theorems</h4>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_symm.htm'>eq_symm</a><br>
+x = y → y = x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_subst_rev.htm'>eq_subst_rev</a><br>
+y = x → P x → P y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/f_equal.htm'>f_equal</a><br>
+x = y → f x = f y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans.htm'>eq_trans</a><br>
+x = y → y = z → x = z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neq_symm.htm'>neq_symm</a><br>
+¬x = y → ¬y = x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/disused_eq.htm'>disused_eq</a><br>
+(∀x. x = y → A) → A</div></div>
+<h4 id='2.4.2'>Unique existence</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_uniq_intro.htm'>ex_uniq_intro</a><br>
 (∃x. P x) → (∀x. ∀y. P x → P y → x = y) →
   (∃x. ∀y. x = y ↔ P y)</div></div>
@@ -321,8 +352,8 @@ x = y → y = z → x = z</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_weaken_conj.htm'>ex_weaken_conj</a><br>
 (∀x. P x → Q x) → (∃x. P x ∧ R x) →
   (∃x. Q x ∧ R x)</div></div>
-<h2 id='4'>Basic results</h2>
-<h3 id='4.1'>Inclusion</h3>
+<h2 id='3'>Basic results</h2>
+<h3 id='3.1'>Inclusion</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_intro.htm'>incl_intro</a><br>
 (∀x. x ∈ A → x ∈ B) → A ⊆ B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_elim.htm'>incl_elim</a><br>
@@ -337,7 +368,7 @@ A ⊆ B → B ⊆ A → A = B</div></div>
 A = B → A ⊆ B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_from_eq_rev.htm'>incl_from_eq_rev</a><br>
 A = B → B ⊆ A</div></div>
-<h3 id='4.2'>Class comprehension</h3>
+<h3 id='3.2'>Class comprehension</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/comp_elim.htm'>comp_elim</a><br>
 u ∈ {x | P x} → P u</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/comp_intro.htm'>comp_intro</a><br>
@@ -347,8 +378,10 @@ x ∈ A → set x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/comp_intro_from.htm'>comp_intro_from</a><br>
 u ∈ A → P u → u ∈ {x | P x}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sep_is_subclass.htm'>sep_is_subclass</a><br>
-{x | x ∈ X ∧ P x} ⊆ X</div></div>
-<h3 id='4.3'>Binary operations on sets</h3>
+{x | x ∈ A ∧ P x} ⊆ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sep_is_set.htm'>sep_is_set</a><br>
+set A → set {x | x ∈ A ∧ P x}</div></div>
+<h3 id='3.3'>Binary operations on sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_elim.htm'>intersection_elim</a><br>
 x ∈ A ∩ B → x ∈ A ∧ x ∈ B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_eliml.htm'>intersection_eliml</a><br>
@@ -397,6 +430,10 @@ A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</div></div>
 A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_distr.htm'>union_distr</a><br>
 (A ∩ B) ∪ C = (A ∪ C) ∩ (B ∪ C)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_assocl.htm'>intersection_assocl</a><br>
+(A ∩ B) ∩ C = A ∩ (B ∩ C)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_assocr.htm'>intersection_assocr</a><br>
+A ∩ (B ∩ C) = (A ∩ B) ∩ C</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_incl_in_union.htm'>union_incl_in_union</a><br>
 A1 ⊆ B1 → A2 ⊆ B2 → A1 ∪ A2 ⊆ B1 ∪ B2</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_incl_in.htm'>union_incl_in</a><br>
@@ -417,13 +454,19 @@ x ∈ compl A → ¬x ∈ A</div></div>
 A \ B = A ∩ compl B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_incl.htm'>diff_incl</a><br>
 A \ B ⊆ A</div></div>
-<h3 id='4.4'>The empty set</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_dist_inter.htm'>diff_dist_inter</a><br>
+(A ∩ B) \ C = (A \ C) ∩ (B \ C)</div></div>
+<h3 id='3.4'>The empty set</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_contra.htm'>empty_contra</a><br>
+x ∈ ∅ → ⊥</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_efq.htm'>empty_efq</a><br>
 x ∈ ∅ → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_set_is_least.htm'>empty_set_is_least</a><br>
 ∅ ⊆ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_diff.htm'>empty_diff</a><br>
 A \ B = ∅ → A ⊆ B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_disjoint.htm'>diff_disjoint</a><br>
+A ∩ B = ∅ → A \ B = A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_neutl.htm'>union_neutl</a><br>
 ∅ ∪ A = A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_neutr.htm'>union_neutr</a><br>
@@ -434,7 +477,7 @@ A ∩ B = ∅ → x ∈ A → x ∈ B → ⊥</div></div>
 (∀x. ¬x ∈ A) → A = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/non_empty.htm'>non_empty</a><br>
 ¬A = ∅ → ∃x. x ∈ A</div></div>
-<h3 id='4.5'>Operations on systems of sets</h3>
+<h3 id='3.5'>Operations on systems of sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_intro.htm'>Intersection_intro</a><br>
 set x → (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_elim.htm'>Intersection_elim</a><br>
@@ -457,7 +500,7 @@ y ∈ M →
   (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a><br>
 A = ⋂M → B ∈ M → A ⊆ B</div></div>
-<h3 id='4.6'>The universal class and Russell's paradox</h3>
+<h3 id='3.6'>The universal class and Russell's paradox</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/UnivCl_intro.htm'>UnivCl_intro</a><br>
 set x → x ∈ UnivCl</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/UnivCl_elim.htm'>UnivCl_elim</a><br>
@@ -476,7 +519,7 @@ UnivCl ∩ A = A</div></div>
 A ∩ compl A = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_compl.htm'>union_compl</a><br>
 A ∪ compl A = UnivCl</div></div>
-<h3 id='4.7'>Singletons, pair sets and pairs</h3>
+<h3 id='3.7'>Singletons, pair sets and pairs</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_elim.htm'>sg_elim</a><br>
 set a → x ∈ {a} → x = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_intro.htm'>sg_intro</a><br>
@@ -551,28 +594,26 @@ set a → set b → ¬a = b → {a} ∩ {b} = ∅</div></div>
 set a → ¬a ∈ X → X ∩ {a} = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subsets_of_sg.htm'>subsets_of_sg</a><br>
 set a → x ⊆ {a} → x = ∅ ∨ x = {a}</div></div>
-<h3 id='4.8'>Operations on families of sets</h3>
+<h3 id='3.8'>Operations on families of sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/family_union_intro.htm'>family_union_intro</a><br>
 set (A i) → i ∈ I → x ∈ A i →
   x ∈ ⋃{B | ∃i. i ∈ I ∧ B = A i}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/family_union_elim.htm'>family_union_elim</a><br>
 x ∈ ⋃{B | ∃i. i ∈ I ∧ B = A i} →
   ∃i. i ∈ I ∧ x ∈ A i ∧ set (A i)</div></div>
-<h2 id='5'>Relations</h2>
+<h2 id='4'>Relations</h2>
+<h3 id='4.1'>Relationhood</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_unfold.htm'>relation_unfold</a><br>
 relation R → ∀t. t ∈ R → ∃x. ∃y. t = (x, y)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_fold.htm'>relation_fold</a><br>
 (∀t. t ∈ R → ∃x. ∃y. t = (x, y)) → relation R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_from_incl.htm'>relation_from_incl</a><br>
 R ⊆ X × Y → relation R</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_intro.htm'>img_intro</a><br>
-x ∈ A → (x, y) ∈ R → y ∈ img R A</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_elim.htm'>img_elim</a><br>
-y ∈ img R A → ∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_intro.htm'>inv_img_intro</a><br>
-y ∈ B → (x, y) ∈ R → x ∈ inv_img R B</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_elim.htm'>inv_img_elim</a><br>
-x ∈ inv_img R B → ∃y. y ∈ B ∧ (x, y) ∈ R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_subclass.htm'>relation_subclass</a><br>
+R ⊆ Q → relation Q → relation R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_union.htm'>relation_union</a><br>
+relation R → relation Q → relation (R ∪ Q)</div></div>
+<h3 id='4.2'>Domains and ranges</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_intro.htm'>dom_intro</a><br>
 (x, y) ∈ R → x ∈ dom R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_elim.htm'>dom_elim</a><br>
@@ -583,6 +624,8 @@ R ⊆ X × Y → dom R ⊆ X</div></div>
 (x, y) ∈ R → y ∈ rng R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_elim.htm'>rng_elim</a><br>
 y ∈ rng R → ∃x. (x, y) ∈ R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_subclass.htm'>rng_subclass</a><br>
+R ⊆ Q → rng R ⊆ rng Q</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_of_subclass_prod.htm'>dom_of_subclass_prod</a><br>
 R ⊆ X × Y → dom R ⊆ X</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_of_subclass_prod.htm'>rng_of_subclass_prod</a><br>
@@ -590,6 +633,19 @@ R ⊆ X × Y → rng R ⊆ Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_incl_prod.htm'>relation_incl_prod</a><br>
 relation R →
   dom R ⊆ X → rng R ⊆ Y → R ⊆ X × Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_union.htm'>dom_union</a><br>
+dom (R ∪ Q) = dom R ∪ dom Q</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_union.htm'>rng_union</a><br>
+rng (R ∪ Q) = rng R ∪ rng Q</div></div>
+<h3 id='4.3'>Images and inverse images</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_intro.htm'>img_intro</a><br>
+x ∈ A → (x, y) ∈ R → y ∈ img R A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_elim.htm'>img_elim</a><br>
+y ∈ img R A → ∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_intro.htm'>inv_img_intro</a><br>
+y ∈ B → (x, y) ∈ R → x ∈ inv_img R B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_elim.htm'>inv_img_elim</a><br>
+x ∈ inv_img R B → ∃y. y ∈ B ∧ (x, y) ∈ R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_dist_union.htm'>img_dist_union</a><br>
 img R (A ∪ B) = img R A ∪ img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_dist_inter.htm'>img_dist_inter</a><br>
@@ -602,39 +658,30 @@ inv_img R (A ∩ B) ⊆ inv_img R A ∩ inv_img R B</div></div>
 inv_img R (A ∪ B) = inv_img R A ∪ inv_img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_incl.htm'>inv_img_incl</a><br>
 A ⊆ B → inv_img R A ⊆ inv_img R B</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_relation.htm'>empty_relation</a><br>
-relation ∅</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_subclass.htm'>relation_subclass</a><br>
-R ⊆ Q → relation Q → relation R</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_subclass.htm'>rng_subclass</a><br>
-R ⊆ Q → rng R ⊆ rng Q</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_incl_in_dom.htm'>inv_img_incl_in_dom</a><br>
 inv_img R B ⊆ dom R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_union.htm'>img_union</a><br>
+img (R ∪ Q) A = img R A ∪ img Q A</div></div>
+<h3 id='4.4'>Special relations</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_relation.htm'>empty_relation</a><br>
+relation ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_empty_set.htm'>dom_empty_set</a><br>
 dom ∅ = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_empty_set.htm'>rng_empty_set</a><br>
 rng ∅ = ∅</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_union.htm'>dom_union</a><br>
-dom (R ∪ Q) = dom R ∪ dom Q</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_union.htm'>rng_union</a><br>
-rng (R ∪ Q) = rng R ∪ rng Q</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_union.htm'>relation_union</a><br>
-relation R → relation Q → relation (R ∪ Q)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_relation.htm'>sg_relation</a><br>
 set a → set b → relation {(a, b)}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_sg.htm'>dom_sg</a><br>
 set a → set b → dom {(a, b)} = {a}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_sg.htm'>rng_sg</a><br>
 set a → set b → rng {(a, b)} = {b}</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_union.htm'>img_union</a><br>
-img (R ∪ Q) A = img R A ∪ img Q A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_sg_sg.htm'>img_sg_sg</a><br>
 set a → set b → img {(a, b)} {a} = {b}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_sg_sg_neq.htm'>img_sg_sg_neq</a><br>
 set a → set b → set x → ¬a = x →
   img {(a, b)} {x} = ∅</div></div>
-<h2 id='6'>Functions</h2>
-<h3 id='6.1'>Basic results</h3>
+<h2 id='5'>Functions</h2>
+<h3 id='5.1'>Functionhood</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_unfold.htm'>function_unfold</a><br>
 function f → relation f ∧
   (∀x. ∀y1. ∀y2. (x, y1) ∈ f → (x, y2) ∈ f → y1 = y2)</div></div>
@@ -652,6 +699,26 @@ function f → (x, y1) ∈ f → (x, y2) ∈ f → y1 = y2</div></div>
 map f X Y → function f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_is_relation.htm'>map_is_relation</a><br>
 map f X Y → relation f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_intro.htm'>map_intro</a><br>
+function f → dom f = X → rng f ⊆ Y → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_is_map.htm'>fn_is_map</a><br>
+function f → dom f = X → map f X UnivCl</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_subclass.htm'>function_subclass</a><br>
+f ⊆ g → function g → function f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_union.htm'>function_union</a><br>
+function f → function g → dom f ∩ dom g = ∅ →
+  function (f ∪ g)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_union.htm'>map_union</a><br>
+map f X1 Y1 → map g X2 Y2 → X1 ∩ X2 = ∅ →
+  map (f ∪ g) (X1 ∪ X2) (Y1 ∪ Y2)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_union_eq_rngs.htm'>map_union_eq_rngs</a><br>
+map f X1 Y → map g X2 Y → X1 ∩ X2 = ∅ →
+  map (f ∪ g) (X1 ∪ X2) Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subclass_dom_from_ex_uniq.htm'>subclass_dom_from_ex_uniq</a><br>
+
+  (∀x. x ∈ X → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
+  X ⊆ dom f</div></div>
+<h3 id='5.2'>Function application</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_uniq.htm'>sg_eq_from_uniq</a><br>
 set x → (∀y. x = y ↔ P y) → {x} = {y | P y}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_ex_uniq.htm'>sg_eq_from_ex_uniq</a><br>
@@ -674,22 +741,30 @@ function f → x ∈ dom f → y = app f x → (x, y) ∈ f</div></div>
 map f X Y → (x, y) ∈ f → y = app f x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_elim.htm'>map_app_elim</a><br>
 map f X Y → x ∈ X → y = app f x → (x, y) ∈ f</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_from_term.htm'>fn_from_term</a><br>
-f = {t | ∃x. t = (x, y x)} → function f</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_intro.htm'>map_intro</a><br>
-function f → dom f = X → rng f ⊆ Y → map f X Y</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_is_map.htm'>fn_is_map</a><br>
-function f → dom f = X → map f X UnivCl</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_extensionality_lemma.htm'>map_extensionality_lemma</a><br>
 map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = app g x) → f ⊆ g</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_extensionality.htm'>map_extensionality</a><br>
 map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = app g x) → f = g</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_subclass.htm'>function_subclass</a><br>
-f ⊆ g → function g → function f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_exists.htm'>fn_app_exists</a><br>
+function f → x ∈ dom f → ∃y. y ∈ rng f ∧ y = app f x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_exists.htm'>map_app_exists</a><br>
+map f X Y → x ∈ X → ∃y. y ∈ Y ∧ y = app f x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_is_set.htm'>fn_app_is_set</a><br>
+function f → x ∈ dom f → set (app f x)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/app_is_set.htm'>app_is_set</a><br>
+map f X Y → x ∈ X → set (app f x)</div></div>
+<h3 id='5.3'>Function composition</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_from_term.htm'>fn_from_term</a><br>
+f = {t | ∃x. t = (x, y x)} → function f</div></div>
+<h3 id='5.4'>Restricted functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_subclass.htm'>restr_is_subclass</a><br>
 restr f A ⊆ f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_intro.htm'>restr_intro</a><br>
+(x, y) ∈ f → x ∈ A → (x, y) ∈ restr f A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_function.htm'>restr_is_function</a><br>
+function f → function (restr f A)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_restr.htm'>dom_restr</a><br>
 dom (restr f A) = dom f ∩ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_restr_subclass.htm'>dom_restr_subclass</a><br>
@@ -697,23 +772,11 @@ map f X Y → A ⊆ X →
   dom (restr f A) = A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_restr.htm'>map_restr</a><br>
 map f X Y → A ⊆ X → map (restr f A) A Y</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_exists.htm'>fn_app_exists</a><br>
-function f → x ∈ dom f → ∃y. y ∈ rng f ∧ y = app f x</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_exists.htm'>map_app_exists</a><br>
-map f X Y → x ∈ X → ∃y. y ∈ Y ∧ y = app f x</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/app_is_set.htm'>app_is_set</a><br>
-map f X Y → x ∈ X → set (app f x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/app_restr.htm'>app_restr</a><br>
 map f X Y → A ⊆ X → x ∈ A → app f x = app (restr f A) x</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_union.htm'>function_union</a><br>
-function f → function g → dom f ∩ dom g = ∅ →
-  function (f ∪ g)</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_union.htm'>map_union</a><br>
-map f X1 Y1 → map g X2 Y2 → X1 ∩ X2 = ∅ →
-  map (f ∪ g) (X1 ∪ X2) (Y1 ∪ Y2)</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_union_eq_rngs.htm'>map_union_eq_rngs</a><br>
-map f X1 Y → map g X2 Y → X1 ∩ X2 = ∅ →
-  map (f ∪ g) (X1 ∪ X2) Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_restr.htm'>fn_app_restr</a><br>
+function f → x ∈ dom f → x ∈ A → app f x = app (restr f A) x</div></div>
+<h3 id='5.5'>Special functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_function.htm'>empty_function</a><br>
 function ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_map.htm'>empty_map</a><br>
@@ -724,12 +787,8 @@ set a → set b → function {(a, b)}</div></div>
 set a → b ∈ Y → map {(a, b)} {a} Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_graph2.htm'>img_graph2</a><br>
 set x → set y → img {(∅, x), ({∅}, y)} {∅, {∅}} = {x, y}</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subclass_dom_from_ex_uniq.htm'>subclass_dom_from_ex_uniq</a><br>
-
-  (∀x. x ∈ X → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
-  X ⊆ dom f</div></div>
-<h3 id='6.2'>Partly functional relations</h3>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/fn_on_eq.htm'>fn_on_eq</a><br>
+<h3 id='5.6'>Partly functional relations</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/fn_on_equi.htm'>fn_on_equi</a><br>
 fn_on f A ↔ relation f ∧ ∀x. x ∈ A →
   ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_on_intro.htm'>fn_on_intro</a><br>
@@ -761,7 +820,27 @@ fn_on f A → x ∈ A → y = app f x →
 fn_on f A → fn_on g A →
   (∀x. x ∈ A → app f x = app g x) →
   restr f A = restr g A</div></div>
-<h2 id='7'>Power sets</h2>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_on_char.htm'>fn_on_char</a><br>
+A ⊆ dom f →
+  (fn_on f A ↔ relation f ∧ function (restr f A))</div></div>
+<h3 id='5.7'>Choice functions</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/choice_fn_unfold.htm'>choice_fn_unfold</a><br>
+choice_function f →
+  function f ∧ ∀x. x ∈ dom f → app f x ∈ x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/choice_function_intro.htm'>choice_function_intro</a><br>
+function f →
+  (∀x. x ∈ dom f → app f x ∈ x) →
+  choice_function f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_choice_fn.htm'>restr_is_choice_fn</a><br>
+choice_function f →
+  choice_function (restr f A)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/choice_on_class.htm'>choice_on_class</a><br>
+∃f. choice_function f ∧ dom f = A \ {∅}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Diaconescu_Goodman_Myhill_theorem.htm'>Diaconescu_Goodman_Myhill_theorem</a><br>
+
+  (∀M. ∃f. choice_function f ∧ dom f = M \ {∅}) →
+  A ∨ ¬A</div></div>
+<h2 id='6'>Power sets</h2>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/power_intro.htm'>power_intro</a><br>
 set x → x ⊆ y → x ∈ power y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/power_elim.htm'>power_elim</a><br>
@@ -778,7 +857,7 @@ power ∅ = {∅}</div></div>
 set a → power {a} = {∅, {a}}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_incl_in_power.htm'>sg_incl_in_power</a><br>
 set x → {x} ⊆ power x</div></div>
-<h2 id='8'>Well-founded relations</h2>
+<h2 id='7'>Well-founded relations</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/wf_equi.htm'>wf_equi</a><br>
 wf M R ↔ ∀A. A ⊆ M → ¬A = ∅ →
   ∃y. y ∈ A ∧ ¬∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
@@ -801,7 +880,7 @@ wf X R → dom R = X → map f X Y → map g X Y →
 set X → set Y → wf X R →
   dom R = X → (∀x. ∀g. φ x g ∈ Y) → ∃f. set f ∧ map f X Y ∧
   ∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))</div></div>
-<h2 id='9'>Grothendieck universes</h2>
+<h2 id='8'>Grothendieck universes</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/univ_equi.htm'>univ_equi</a><br>
 univ U ↔ ∅ ∈ U ∧
   (∀x. x ∈ U → x ⊆ U) ∧
@@ -830,10 +909,10 @@ univ U → x ∈ U → y ∈ U → (x, y) ∈ U</div></div>
 <p><b>Statistics</b>
 <pre>
   35 definitions
-  14 axioms
- 261 theorems
+  15 axioms
+ 280 theorems
 ────────────────
- 310 items total
+ 330 items total
 </pre>
 </body>
 </html>

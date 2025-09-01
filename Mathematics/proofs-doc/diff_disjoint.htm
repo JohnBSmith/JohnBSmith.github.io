@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>diff_disjoint</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem diff_disjoint</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> diff_disjoint<br>
+A ∩ B = ∅ → A \ B = A</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ A ∩ B = ∅, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ u ∈ A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ u ∈ B, <a href='hypo.htm'>hypo</a>.
+04. 2, 3 ⊢ u ∈ A ∩ B, <a href='intersection_intro.htm'>intersection_intro</a> 2 3.
+05. 1, 2, 3 ⊢ u ∈ ∅, <a href='eq_subst.htm'>eq_subst</a> 1 4, P x ↔ u ∈ x.
+06. 1, 2, 3 ⊢ ⊥, <a href='empty_contra.htm'>empty_contra</a> 5.
+07. 1, 2 ⊢ ¬u ∈ B, <a href='neg_intro.htm'>neg_intro</a> 6.
+08. 1, 2 ⊢ u ∈ A \ B, <a href='diff_intro.htm'>diff_intro</a> 2 7.
+09. 1 ⊢ u ∈ A → u ∈ A \ B, <a href='subj_intro.htm'>subj_intro</a> 8.
+10. 1 ⊢ ∀u. u ∈ A → u ∈ A \ B, <a href='uq_intro.htm'>uq_intro</a> 9.
+11. 1 ⊢ A ⊆ A \ B, <a href='incl_intro.htm'>incl_intro</a> 10.
+12. ⊢ A \ B ⊆ A, <a href='diff_incl.htm'>diff_incl</a>.
+13. 1 ⊢ A \ B = A, <a href='incl_antisym.htm'>incl_antisym</a> 12 11.
+diff_disjoint. ⊢ A ∩ B = ∅ → A \ B = A, <a href='subj_intro.htm'>subj_intro</a> 13.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on four axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>.</p>
+</body>
+</html>

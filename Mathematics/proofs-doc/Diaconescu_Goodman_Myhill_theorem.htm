@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Diaconescu_Goodman_Myhill_theorem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem Diaconescu_Goodman_Myhill_theorem</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> Diaconescu_Goodman_Myhill_theorem<br>
+
+  (∀M. ∃f. choice_function f ∧ dom f = M \ {∅}) →
+  A ∨ ¬A</div></div>
+<pre><b>Proof</b>
+001. 1 ⊢ X = {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)}, <a href='hypo.htm'>hypo</a>.
+002. 2 ⊢ Y = {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})}, <a href='hypo.htm'>hypo</a>.
+003. ⊢ set ∅, <a href='empty_set_is_set.htm'>empty_set_is_set</a>.
+004. ⊢ set {∅}, <a href='set_sg.htm'>set_sg</a> 3.
+005. ⊢ ∅ ∈ {∅, {∅}}, <a href='in21.htm'>in21</a> 3.
+006. ⊢ {∅} ∈ {∅, {∅}}, <a href='in22.htm'>in22</a> 4.
+007. ⊢ u = u, <a href='eq_refl.htm'>eq_refl</a>.
+008. ⊢ A ∨ u = u, <a href='disj_intror.htm'>disj_intror</a> 7.
+009. ⊢ A ∨ ∅ = ∅, 8.
+010. ⊢ A ∨ {∅} = {∅}, 8.
+011. ⊢ ∅ ∈ {∅, {∅}} ∧ (A ∨ ∅ = ∅), <a href='conj_intro.htm'>conj_intro</a> 5 9.
+012. ⊢ {∅} ∈ {∅, {∅}} ∧ (A ∨ {∅} = {∅}), <a href='conj_intro.htm'>conj_intro</a> 6 10.
+013. ⊢ ∅ ∈ {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)}, <a href='comp_intro.htm'>comp_intro</a> 3 11,
+  P x ↔ x ∈ {∅, {∅}} ∧ (A ∨ x = ∅).
+014. ⊢ {∅} ∈ {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})}, <a href='comp_intro.htm'>comp_intro</a> 4 12,
+  P y ↔ y ∈ {∅, {∅}} ∧ (A ∨ y = {∅}).
+015. 1 ⊢ ∅ ∈ X, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 1 13, P u ↔ ∅ ∈ u.
+016. 2 ⊢ {∅} ∈ Y, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 14, P u ↔ {∅} ∈ u.
+017. ⊢ set {{∅}}, <a href='set_sg.htm'>set_sg</a> 4.
+018. ⊢ set {∅, {∅}}, <a href='set_union.htm'>set_union</a> 4 17.
+019. ⊢ set {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)}, <a href='sep_is_set.htm'>sep_is_set</a> 18.
+020. ⊢ set {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})}, <a href='sep_is_set.htm'>sep_is_set</a> 18.
+021. 1 ⊢ set X, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 1 19, P u ↔ set u.
+022. 2 ⊢ set Y, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 20, P u ↔ set u.
+023. 23 ⊢ u ∈ {X, Y} ∩ {∅}, <a href='hypo.htm'>hypo</a>.
+024. 23 ⊢ u ∈ {∅}, <a href='intersection_elimr.htm'>intersection_elimr</a> 23.
+025. 23 ⊢ u = ∅, <a href='sg_elim.htm'>sg_elim</a> 3 24.
+026. 23 ⊢ u ∈ {X, Y}, <a href='intersection_eliml.htm'>intersection_eliml</a> 23.
+027. 23 ⊢ u ∈ {X} ∨ u ∈ {Y}, <a href='union_elim.htm'>union_elim</a> 26.
+028. 28 ⊢ u ∈ {X}, <a href='hypo.htm'>hypo</a>.
+029. 1, 28 ⊢ u = X, <a href='sg_elim.htm'>sg_elim</a> 21 28.
+030. 1, 28 ⊢ X = u, <a href='eq_symm.htm'>eq_symm</a> 29.
+031. 1, 23, 28 ⊢ X = ∅, <a href='eq_trans.htm'>eq_trans</a> 30 25.
+032. 1, 23, 28 ⊢ ∅ ∈ ∅, <a href='eq_subst.htm'>eq_subst</a> 31 15.
+033. 1, 23, 28 ⊢ u ∈ ∅, <a href='empty_efq.htm'>empty_efq</a> 32.
+034. 34 ⊢ u ∈ {Y}, <a href='hypo.htm'>hypo</a>.
+035. 2, 34 ⊢ u = Y, <a href='sg_elim.htm'>sg_elim</a> 22 34.
+036. 2, 34 ⊢ Y = u, <a href='eq_symm.htm'>eq_symm</a> 35.
+037. 2, 23, 34 ⊢ Y = ∅, <a href='eq_trans.htm'>eq_trans</a> 36 25.
+038. 2, 23, 34 ⊢ {∅} ∈ ∅, <a href='eq_subst.htm'>eq_subst</a> 37 16.
+039. 2, 23, 34 ⊢ u ∈ ∅, <a href='empty_efq.htm'>empty_efq</a> 38.
+040. 1, 2, 23 ⊢ u ∈ ∅, <a href='disj_elim.htm'>disj_elim</a> 27 33 39.
+041. 1, 2 ⊢ u ∈ {X, Y} ∩ {∅} → u ∈ ∅, <a href='subj_intro.htm'>subj_intro</a> 40.
+042. 1, 2 ⊢ ∀u. u ∈ {X, Y} ∩ {∅} → u ∈ ∅, <a href='uq_intro.htm'>uq_intro</a> 41.
+043. 1, 2 ⊢ {X, Y} ∩ {∅} ⊆ ∅, <a href='incl_intro.htm'>incl_intro</a> 42.
+044. ⊢ ∅ ⊆ {X, Y} ∩ {∅}, <a href='empty_set_is_least.htm'>empty_set_is_least</a>.
+045. 1, 2 ⊢ {X, Y} ∩ {∅} = ∅, <a href='incl_antisym.htm'>incl_antisym</a> 43 44.
+046. 1, 2 ⊢ {X, Y} \ {∅} = {X, Y}, <a href='diff_disjoint.htm'>diff_disjoint</a> 45.
+047. 47 ⊢ ∀M. ∃f. choice_function f ∧ dom f = M \ {∅}, <a href='hypo.htm'>hypo</a>.
+048. 47 ⊢ ∃f. choice_function f ∧ dom f = {X, Y} \ {∅}, <a href='uq_elim.htm'>uq_elim</a> 47.
+049. 49 ⊢ choice_function f ∧ dom f = {X, Y} \ {∅}, <a href='hypo.htm'>hypo</a>.
+050. 49 ⊢ choice_function f, <a href='conj_eliml.htm'>conj_eliml</a> 49.
+051. 49 ⊢ dom f = {X, Y} \ {∅}, <a href='conj_elimr.htm'>conj_elimr</a> 49.
+052. 1, 2, 49 ⊢ dom f = {X, Y}, <a href='eq_trans.htm'>eq_trans</a> 51 46.
+053. 49 ⊢ function f ∧ ∀x. x ∈ dom f → app f x ∈ x,
+  <a href='choice_fn_unfold.htm'>choice_fn_unfold</a> 50.
+054. 49 ⊢ function f, <a href='conj_eliml.htm'>conj_eliml</a> 53.
+055. 49 ⊢ ∀x. x ∈ dom f → app f x ∈ x, <a href='conj_elimr.htm'>conj_elimr</a> 53.
+056. ⊢ {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)} ⊆ {∅, {∅}}, <a href='sep_is_subclass.htm'>sep_is_subclass</a>.
+057. ⊢ {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})} ⊆ {∅, {∅}}, <a href='sep_is_subclass.htm'>sep_is_subclass</a>.
+058. 1 ⊢ X ⊆ {∅, {∅}}, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 1 56, P u ↔ u ⊆ {∅, {∅}}.
+059. 2 ⊢ Y ⊆ {∅, {∅}}, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 57, P u ↔ u ⊆ {∅, {∅}}.
+060. 1 ⊢ X ∈ {X, Y}, <a href='in21.htm'>in21</a> 21.
+061. 2 ⊢ Y ∈ {X, Y}, <a href='in22.htm'>in22</a> 22.
+062. 1, 2, 49 ⊢ X ∈ dom f, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 52 60, P u ↔ X ∈ u.
+063. 1, 2, 49 ⊢ Y ∈ dom f, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 52 61, P u ↔ Y ∈ u.
+064. 1, 2, 49 ⊢ app f X ∈ X, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 55 62.
+065. 1, 2, 49 ⊢ app f Y ∈ Y, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 55 63.
+066. 1, 2, 49 ⊢ app f X ∈ {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)},
+  <a href='eq_subst.htm'>eq_subst</a> 1 64, P u ↔ app f X ∈ u.
+067. 1, 2, 49 ⊢ app f Y ∈ {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})},
+  <a href='eq_subst.htm'>eq_subst</a> 2 65, P u ↔ app f Y ∈ u.
+068. 1, 2, 49 ⊢ app f X ∈ {∅, {∅}} ∧ (A ∨ app f X = ∅), <a href='comp_elim.htm'>comp_elim</a> 66.
+069. 1, 2, 49 ⊢ app f Y ∈ {∅, {∅}} ∧ (A ∨ app f Y = {∅}), <a href='comp_elim.htm'>comp_elim</a> 67.
+070. 1, 2, 49 ⊢ A ∨ app f X = ∅, <a href='conj_elimr.htm'>conj_elimr</a> 68.
+071. 1, 2, 49 ⊢ A ∨ app f Y = {∅}, <a href='conj_elimr.htm'>conj_elimr</a> 69.
+072. 1, 2, 49 ⊢ app f X ∈ {∅, {∅}}, <a href='conj_eliml.htm'>conj_eliml</a> 68.
+073. 1, 2, 49 ⊢ app f Y ∈ {∅, {∅}}, <a href='conj_eliml.htm'>conj_eliml</a> 69.
+074. 1, 2, 49 ⊢ app f X ∈ {∅} ∨ app f X ∈ {{∅}}, <a href='union_elim.htm'>union_elim</a> 72.
+075. 1, 2, 49 ⊢ app f Y ∈ {∅} ∨ app f Y ∈ {{∅}}, <a href='union_elim.htm'>union_elim</a> 73.
+076. 76 ⊢ app f Y ∈ {∅}, <a href='hypo.htm'>hypo</a>.
+077. 76 ⊢ app f Y = ∅, <a href='sg_elim.htm'>sg_elim</a> 3 76.
+078. 1, 2, 49, 76 ⊢ A ∨ ∅ = {∅}, <a href='eq_subst.htm'>eq_subst</a> 77 71, P u ↔ A ∨ u = {∅}.
+079. 1, 2, 49, 76 ⊢ A, <a href='tollendo_ponens_left.htm'>tollendo_ponens_left</a> 78 <a href='empty_set_neq_sg_empty_set.htm'>empty_set_neq_sg_empty_set</a>.
+080. 1, 2, 49, 76 ⊢ A ∨ ¬A, <a href='disj_introl.htm'>disj_introl</a> 79.
+081. 81 ⊢ app f Y ∈ {{∅}}, <a href='hypo.htm'>hypo</a>.
+082. 81 ⊢ app f Y = {∅}, <a href='sg_elim.htm'>sg_elim</a> 4 81.
+083. 83 ⊢ app f X ∈ {∅}, <a href='hypo.htm'>hypo</a>.
+084. 83 ⊢ app f X = ∅, <a href='sg_elim.htm'>sg_elim</a> 3 83.
+085. 85 ⊢ A, <a href='hypo.htm'>hypo</a>.
+086. 86 ⊢ u ∈ X, <a href='hypo.htm'>hypo</a>.
+087. 1, 86 ⊢ u ∈ {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)}, <a href='eq_subst.htm'>eq_subst</a> 1 86.
+088. 1, 86 ⊢ u ∈ {∅, {∅}} ∧ (A ∨ u = ∅), <a href='comp_elim.htm'>comp_elim</a> 87.
+089. 1, 86 ⊢ u ∈ {∅, {∅}}, <a href='conj_eliml.htm'>conj_eliml</a> 88.
+090. 85 ⊢ A ∨ u = {∅}, <a href='disj_introl.htm'>disj_introl</a> 85.
+091. 1, 85, 86 ⊢ u ∈ {∅, {∅}} ∧ (A ∨ u = {∅}), <a href='conj_intro.htm'>conj_intro</a> 89 90.
+092. 1, 86 ⊢ set u, <a href='set_intro.htm'>set_intro</a> 89.
+093. 1, 85, 86 ⊢ u ∈ {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})}, <a href='comp_intro.htm'>comp_intro</a> 92 91.
+094. 1, 2, 85, 86 ⊢ u ∈ Y, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 93, P t ↔ u ∈ t.
+095. 1, 2, 85 ⊢ u ∈ X → u ∈ Y, <a href='subj_intro.htm'>subj_intro</a> 94.
+096. 96 ⊢ u ∈ Y, <a href='hypo.htm'>hypo</a>.
+097. 2, 96 ⊢ u ∈ {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})}, <a href='eq_subst.htm'>eq_subst</a> 2 96.
+098. 2, 96 ⊢ u ∈ {∅, {∅}} ∧ (A ∨ u = {∅}), <a href='comp_elim.htm'>comp_elim</a> 97.
+099. 2, 96 ⊢ u ∈ {∅, {∅}}, <a href='conj_eliml.htm'>conj_eliml</a> 98.
+100. 85 ⊢ A ∨ u = ∅, <a href='disj_introl.htm'>disj_introl</a> 85.
+101. 2, 85, 96 ⊢ u ∈ {∅, {∅}} ∧ (A ∨ u = ∅), <a href='conj_intro.htm'>conj_intro</a> 99 100.
+102. 2, 96 ⊢ set u, <a href='set_intro.htm'>set_intro</a> 99.
+103. 2, 85, 96 ⊢ u ∈ {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)}, <a href='comp_intro.htm'>comp_intro</a> 102 101.
+104. 1, 2, 85, 96 ⊢ u ∈ X, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 1 103, P t ↔ u ∈ t.
+105. 1, 2, 85 ⊢ u ∈ Y → u ∈ X, <a href='subj_intro.htm'>subj_intro</a> 104.
+106. 1, 2, 85 ⊢ u ∈ X ↔ u ∈ Y, <a href='bij_intro.htm'>bij_intro</a> 95 105.
+107. 1, 2, 85 ⊢ ∀u. u ∈ X ↔ u ∈ Y, <a href='uq_intro.htm'>uq_intro</a> 106.
+108. 1, 2, 85 ⊢ X = Y, <a href='ext.htm'>ext</a> 107.
+109. 1, 2, 85 ⊢ app f X = app f Y, <a href='f_equal.htm'>f_equal</a> 108, g x = app f x.
+110. 83 ⊢ ∅ = app f X, <a href='eq_symm.htm'>eq_symm</a> 84.
+111. 1, 2, 83, 85 ⊢ ∅ = app f Y, <a href='eq_trans.htm'>eq_trans</a> 110 109.
+112. 1, 2, 81, 83, 85 ⊢ ∅ = {∅}, <a href='eq_trans.htm'>eq_trans</a> 111 82.
+113. 1, 2, 81, 83, 85 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> <a href='empty_set_neq_sg_empty_set.htm'>empty_set_neq_sg_empty_set</a> 112.
+114. 1, 2, 81, 83 ⊢ ¬A, <a href='neg_intro.htm'>neg_intro</a> 113.
+115. 1, 2, 81, 83 ⊢ A ∨ ¬A, <a href='disj_intror.htm'>disj_intror</a> 114.
+116. 116 ⊢ app f X ∈ {{∅}}, <a href='hypo.htm'>hypo</a>.
+117. 116 ⊢ app f X = {∅}, <a href='sg_elim.htm'>sg_elim</a> 4 116.
+118. 1, 2, 49, 116 ⊢ A ∨ {∅} = ∅, <a href='eq_subst.htm'>eq_subst</a> 117 70, P u ↔ A ∨ u = ∅.
+119. ⊢ ¬{∅} = ∅, <a href='neq_symm.htm'>neq_symm</a> <a href='empty_set_neq_sg_empty_set.htm'>empty_set_neq_sg_empty_set</a>.
+120. 1, 2, 49, 116 ⊢ A, <a href='tollendo_ponens_left.htm'>tollendo_ponens_left</a> 118 119.
+121. 1, 2, 49, 116 ⊢ A ∨ ¬A, <a href='disj_introl.htm'>disj_introl</a> 120.
+122. 1, 2, 49, 81 ⊢ A ∨ ¬A, <a href='disj_elim.htm'>disj_elim</a> 74 115 121.
+123. 1, 2, 49 ⊢ A ∨ ¬A, <a href='disj_elim.htm'>disj_elim</a> 75 80 122.
+124. 47, 1, 2 ⊢ A ∨ ¬A, <a href='ex_elim.htm'>ex_elim</a> 48 123.
+125. 47, 1 ⊢ Y = {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})} → A ∨ ¬A,
+  <a href='subj_intro.htm'>subj_intro</a> 124.
+126. 47, 1 ⊢ ∀Y. Y = {y | y ∈ {∅, {∅}} ∧ (A ∨ y = {∅})} → A ∨ ¬A,
+  <a href='uq_intro.htm'>uq_intro</a> 125.
+127. 47, 1 ⊢ A ∨ ¬A, <a href='disused_eq.htm'>disused_eq</a> 126.
+128. 47 ⊢ X = {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)} → A ∨ ¬A,
+  <a href='subj_intro.htm'>subj_intro</a> 127.
+129. 47 ⊢ ∀X. X = {x | x ∈ {∅, {∅}} ∧ (A ∨ x = ∅)} → A ∨ ¬A,
+  <a href='uq_intro.htm'>uq_intro</a> 128.
+130. 47 ⊢ A ∨ ¬A, <a href='disused_eq.htm'>disused_eq</a> 129.
+Diaconescu_Goodman_Myhill_theorem. ⊢
+  (∀M. ∃f. choice_function f ∧ dom f = M \ {∅}) →
+  A ∨ ¬A, <a href='subj_intro.htm'>subj_intro</a> 130.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='infinity.htm'>infinity</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>
+</body>
+</html>
