@@ -9,18 +9,18 @@
 <body>
 <h3>Theorem app_is_set</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> app_is_set<br>
-map f X Y → x ∈ X → set (app f x)</div></div>
+function f → x ∈ dom f → set (app f x)</div></div>
 <pre><b>Proof</b>
-01. 1 ⊢ map f X Y, <a href='hypo.htm'>hypo</a>.
-02. 2 ⊢ x ∈ X, <a href='hypo.htm'>hypo</a>.
-03. 1, 2 ⊢ ∃y. y ∈ Y ∧ y = app f x, <a href='map_app_exists.htm'>map_app_exists</a> 1 2.
-04. 4 ⊢ y ∈ Y ∧ y = app f x, <a href='hypo.htm'>hypo</a>.
-05. 4 ⊢ y ∈ Y, <a href='conj_eliml.htm'>conj_eliml</a> 4.
+01. 1 ⊢ function f, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ dom f, <a href='hypo.htm'>hypo</a>.
+03. 1, 2 ⊢ ∃y. y ∈ rng f ∧ y = app f x, <a href='fn_app_exists.htm'>fn_app_exists</a> 1 2.
+04. 4 ⊢ y ∈ rng f ∧ y = app f x, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ y ∈ rng f, <a href='conj_eliml.htm'>conj_eliml</a> 4.
 06. 4 ⊢ y = app f x, <a href='conj_elimr.htm'>conj_elimr</a> 4.
 07. 4 ⊢ set y, <a href='set_intro.htm'>set_intro</a> 5.
 08. 4 ⊢ set (app f x), <a href='eq_subst.htm'>eq_subst</a> 6 7, P u ↔ set u.
 09. 1, 2 ⊢ set (app f x), <a href='ex_elim.htm'>ex_elim</a> 3 8.
-app_is_set. ⊢ map f X Y → x ∈ X → set (app f x), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 9.
+app_is_set. ⊢ function f → x ∈ dom f → set (app f x), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 9.
 </pre>
 <p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
 </body>

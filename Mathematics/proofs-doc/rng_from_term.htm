@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>rng_from_term</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem rng_from_term</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> rng_from_term<br>
+f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → y x ∈ Y) → rng f ⊆ Y</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ f = {t | ∃x. x ∈ X ∧ t = (x, y x)}, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ∀x. x ∈ X → y x ∈ Y, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ b ∈ rng f, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ ∃a. (a, b) ∈ f, <a href='rng_elim.htm'>rng_elim</a> 3.
+05. 5 ⊢ (a, b) ∈ f, <a href='hypo.htm'>hypo</a>.
+06. 1, 5 ⊢ (a, b) ∈ {t | ∃x. x ∈ X ∧ t = (x, y x)},
+  <a href='eq_subst.htm'>eq_subst</a> 1 5, P u ↔ (a, b) ∈ u.
+07. 1, 5 ⊢ ∃x. x ∈ X ∧ (a, b) = (x, y x), <a href='comp_elim.htm'>comp_elim</a> 6.
+08. 8 ⊢ x ∈ X ∧ (a, b) = (x, y x), <a href='hypo.htm'>hypo</a>.
+09. 8 ⊢ x ∈ X, <a href='conj_eliml.htm'>conj_eliml</a> 8.
+10. 8 ⊢ (a, b) = (x, y x), <a href='conj_elimr.htm'>conj_elimr</a> 8.
+11. 5 ⊢ set (a, b), <a href='set_intro.htm'>set_intro</a> 5.
+12. 5 ⊢ set a, <a href='setl_from_pair.htm'>setl_from_pair</a> 11.
+13. 5 ⊢ set b, <a href='setr_from_pair.htm'>setr_from_pair</a> 11.
+14. 5, 8 ⊢ a = x ∧ b = y x, <a href='pair_property.htm'>pair_property</a> 12 13 10.
+15. 5, 8 ⊢ b = y x, <a href='conj_elimr.htm'>conj_elimr</a> 14.
+16. 2, 8 ⊢ y x ∈ Y, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 2 9.
+17. 2, 5, 8 ⊢ b ∈ Y, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 15 16, P u ↔ u ∈ Y.
+18. 1, 2, 5 ⊢ b ∈ Y, <a href='ex_elim.htm'>ex_elim</a> 7 17.
+19. 1, 2, 3 ⊢ b ∈ Y, <a href='ex_elim.htm'>ex_elim</a> 4 18.
+20. 1, 2 ⊢ b ∈ rng f → b ∈ Y, <a href='subj_intro.htm'>subj_intro</a> 19.
+21. 1, 2 ⊢ ∀y. y ∈ rng f → y ∈ Y, <a href='uq_intro.htm'>uq_intro</a> 20.
+22. 1, 2 ⊢ rng f ⊆ Y, <a href='incl_intro.htm'>incl_intro</a> 21.
+rng_from_term. ⊢ f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → y x ∈ Y) → rng f ⊆ Y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 22.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>
+</body>
+</html>

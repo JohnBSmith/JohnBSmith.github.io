@@ -20,6 +20,7 @@ body{
 pre{font-size: 12pt;}
 a{color: #00304a; text-decoration: none;}
 a:hover{color: #d00090; text-decoration: underline;}
+p a{text-decoration: underline;}
 div.box{
   border-top: 2px solid #cacac2;
   border-bottom: 2px solid #cacac2;
@@ -96,6 +97,8 @@ b.rule{color: #900060;}
 <li><a href='#6'>Power sets</a>
 <li><a href='#7'>Well-founded relations</a>
 <li><a href='#8'>Grothendieck universes</a>
+<li><a href='#9'>The natural numbers as ordinals</a>
+<li><a href='#10'>Closure operators</a>
 </ol>
 <h2 id='1'>Morse-Kelley set theory</h2>
 <h3 id='1.1'>Definitions</h3>
@@ -194,7 +197,7 @@ set M → set (⋃M)</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/regularity.htm'>regularity</a><br>
 ¬A = ∅ → ∃x. x ∈ A ∧ x ∩ A = ∅</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/infinity.htm'>infinity</a><br>
-∃A. ∅ ∈ A ∧ ∀x. x ∈ A → x ∪ {x} ∈ A</div></div>
+∃A. set A ∧ (∅ ∈ A ∧ ∀x. x ∈ A → x ∪ {x} ∈ A)</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/substitution.htm'>substitution</a><br>
 function f → set (dom f) → set (rng f)</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/choice.htm'>choice</a><br>
@@ -235,14 +238,14 @@ function f → set (dom f) → set (rng f)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/exch.htm'>exch</a><br>
 (H ⊢ A) → (H ⊢ A)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_intro.htm'>uq_intro</a><br>
-(nf u (H ∧ ∀x. A x)) → (H ⊢ A u) → (H ⊢ ∀x. A x)</div></div>
+(nf u (H ∧ ∀x. P x)) → (H ⊢ P u) → (H ⊢ ∀x. P x)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/uq_elim.htm'>uq_elim</a><br>
-(H ⊢ ∀x. A x) → (H ⊢ A t)</div></div>
+(H ⊢ ∀x. P x) → (H ⊢ P t)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_intro.htm'>ex_intro</a><br>
-(H ⊢ A t) → (H ⊢ ∃x. A x)</div></div>
+(H ⊢ P t) → (H ⊢ ∃x. P x)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/ex_elim.htm'>ex_elim</a><br>
-(nf u (H1 ∧ H2 ∧ B ∧ ∃x. A x)) →
-  (H1 ⊢ ∃x. A x) → (H2 ∧ A u ⊢ B) → (H1 ∧ H2 ⊢ B)</div></div>
+(nf u (H1 ∧ H2 ∧ B ∧ ∃x. P x)) →
+  (H1 ⊢ ∃x. P x) → (H2 ∧ P u ⊢ B) → (H1 ∧ H2 ⊢ B)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_ii.htm'>subj_intro_ii</a><br>
 (H ∧ A ∧ B ⊢ C) → (H ⊢ A → B → C)</div></div>
 <div class='box'><div class='rule'><b class='rule'>Rule.</b> <a href='proofs-doc/subj_intro_iii.htm'>subj_intro_iii</a><br>
@@ -282,6 +285,10 @@ A ∨ B → ¬A → B</div></div>
 A ∧ B ∧ C → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimlr.htm'>conj_elimlr</a><br>
 A ∧ B ∧ C → B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimrl.htm'>conj_elimrl</a><br>
+A ∧ (B ∧ C) → B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimrr.htm'>conj_elimrr</a><br>
+A ∧ (B ∧ C) → C</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimlll.htm'>conj_elimlll</a><br>
 A ∧ B ∧ C ∧ D → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimllr.htm'>conj_elimllr</a><br>
@@ -519,6 +526,8 @@ UnivCl ∩ A = A</div></div>
 A ∩ compl A = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/union_compl.htm'>union_compl</a><br>
 A ∪ compl A = UnivCl</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_empty_set.htm'>Intersection_empty_set</a><br>
+⋂∅ = UnivCl</div></div>
 <h3 id='3.7'>Singletons, pair sets and pairs</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_elim.htm'>sg_elim</a><br>
 set a → x ∈ {a} → x = a</div></div>
@@ -751,13 +760,26 @@ map f X Y → map g X Y →
 function f → x ∈ dom f → ∃y. y ∈ rng f ∧ y = app f x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_exists.htm'>map_app_exists</a><br>
 map f X Y → x ∈ X → ∃y. y ∈ Y ∧ y = app f x</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_is_set.htm'>fn_app_is_set</a><br>
-function f → x ∈ dom f → set (app f x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/app_is_set.htm'>app_is_set</a><br>
+function f → x ∈ dom f → set (app f x)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_in_cod.htm'>map_app_in_cod</a><br>
+map f X Y → x ∈ X → app f x ∈ Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_is_set.htm'>map_app_is_set</a><br>
 map f X Y → x ∈ X → set (app f x)</div></div>
 <h3 id='5.3'>Function composition</h3>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_from_term.htm'>fn_from_term</a><br>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_from_term_plain.htm'>fn_from_term_plain</a><br>
 f = {t | ∃x. t = (x, y x)} → function f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_from_term.htm'>fn_from_term</a><br>
+f = {t | ∃x. P x ∧ t = (x, y x)} → function f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_from_term.htm'>dom_from_term</a><br>
+f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → set (y x)) → dom f = X</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_from_term.htm'>rng_from_term</a><br>
+f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → y x ∈ Y) → rng f ⊆ Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_from_term.htm'>map_from_term</a><br>
+f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → y x ∈ Y) → map f X Y</div></div>
 <h3 id='5.4'>Restricted functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_subclass.htm'>restr_is_subclass</a><br>
 restr f A ⊆ f</div></div>
@@ -906,13 +928,51 @@ univ U → x ∈ U → {x} ∈ U</div></div>
 univ U → x ∈ U → y ∈ U → {x, y} ∈ U</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_pair.htm'>univ_closed_pair</a><br>
 univ U → x ∈ U → y ∈ U → (x, y) ∈ U</div></div>
+<h2 id='9'>The natural numbers as ordinals</h2>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/onat_inductive_sets_eq.htm'>onat_inductive_sets_eq</a><br>
+onat_inductive_sets =
+  {A | ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/onat_eq.htm'>onat_eq</a><br>
+onat = ⋂onat_inductive_sets</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/succ_eq.htm'>succ_eq</a><br>
+succ n = n ∪ {n}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/onat_is_set.htm'>onat_is_set</a><br>
+set onat</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/succ_is_set.htm'>succ_is_set</a><br>
+set n → set (succ n)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/zero_in_onat.htm'>zero_in_onat</a><br>
+∅ ∈ onat</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/succ_in_onat.htm'>succ_in_onat</a><br>
+n ∈ onat → succ n ∈ onat</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/onat_induction_sets.htm'>onat_induction_sets</a><br>
+A ⊆ onat →
+  (∅ ∈ A ∧ ∀n. n ∈ A → succ n ∈ A) → A = onat</div></div>
+<h2 id='10'>Closure operators</h2>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/clop_equi.htm'>clop_equi</a><br>
+closure_operator H U ↔
+  set U ∧ map H (power U) (power U) ∧
+  (∀X. X ⊆ U → X ⊆ app H X) ∧
+  (∀X. ∀Y. X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y) ∧
+  (∀X. X ⊆ U → app H (app H X) ⊆ app H X)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_app_in_cod.htm'>clop_app_in_cod</a><br>
+closure_operator H U → X ⊆ U →
+  app H X ⊆ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_extensivity.htm'>clop_extensivity</a><br>
+closure_operator H U →
+  X ⊆ U → X ⊆ app H X</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_monotony.htm'>clop_monotony</a><br>
+closure_operator H U →
+  X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_idem.htm'>clop_idem</a><br>
+closure_operator H U →
+  X ⊆ U → app H (app H X) = app H X</div></div>
 <p><b>Statistics</b>
 <pre>
-  35 definitions
+  39 definitions
   15 axioms
- 280 theorems
+ 297 theorems
 ────────────────
- 330 items total
+ 351 items total
 </pre>
 </body>
 </html>
