@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>map_rng_weaken</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem map_rng_weaken</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> map_rng_weaken<br>
+map f X Y → Y ⊆ Z → map f X Z</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ map f X Y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ Y ⊆ Z, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ function f ∧ dom f = X ∧ rng f ⊆ Y, <a href='map_unfold.htm'>map_unfold</a> 1.
+04. 1 ⊢ function f, <a href='conj_elimll.htm'>conj_elimll</a> 3.
+05. 1 ⊢ dom f = X, <a href='conj_elimlr.htm'>conj_elimlr</a> 3.
+06. 1 ⊢ rng f ⊆ Y, <a href='conj_elimr.htm'>conj_elimr</a> 3.
+07. 1, 2 ⊢ rng f ⊆ Z, <a href='incl_trans.htm'>incl_trans</a> 6 2.
+08. 1, 2 ⊢ map f X Z, <a href='map_intro.htm'>map_intro</a> 4 5 7.
+map_rng_weaken. ⊢ map f X Y → Y ⊆ Z → map f X Z, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 8.
+</pre>
+</body>
+</html>

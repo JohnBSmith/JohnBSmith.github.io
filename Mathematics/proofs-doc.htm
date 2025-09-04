@@ -96,9 +96,9 @@ b.rule{color: #900060;}
 </ol>
 <li><a href='#6'>Power sets</a>
 <li><a href='#7'>Well-founded relations</a>
-<li><a href='#8'>Grothendieck universes</a>
-<li><a href='#9'>The natural numbers as ordinals</a>
-<li><a href='#10'>Closure operators</a>
+<li><a href='#8'>The natural numbers as ordinals</a>
+<li><a href='#9'>Closure operators</a>
+<li><a href='#10'>Grothendieck universes</a>
 </ol>
 <h2 id='1'>Morse-Kelley set theory</h2>
 <h3 id='1.1'>Definitions</h3>
@@ -375,6 +375,8 @@ A ⊆ B → B ⊆ A → A = B</div></div>
 A = B → A ⊆ B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_from_eq_rev.htm'>incl_from_eq_rev</a><br>
 A = B → B ⊆ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_ext.htm'>incl_ext</a><br>
+(∀X. X ⊆ A ↔ X ⊆ B) → A = B</div></div>
 <h3 id='3.2'>Class comprehension</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/comp_elim.htm'>comp_elim</a><br>
 u ∈ {x | P x} → P u</div></div>
@@ -661,6 +663,8 @@ img R (A ∪ B) = img R A ∪ img R B</div></div>
 img R (A ∩ B) ⊆ img R A ∩ img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_incl.htm'>img_incl</a><br>
 A ⊆ B → img R A ⊆ img R B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_incl_in_rng.htm'>img_incl_in_rng</a><br>
+img R A ⊆ rng R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_dist_inter.htm'>inv_img_dist_inter</a><br>
 inv_img R (A ∩ B) ⊆ inv_img R A ∩ inv_img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_dist_union.htm'>inv_img_dist_union</a><br>
@@ -727,6 +731,8 @@ map f X1 Y → map g X2 Y → X1 ∩ X2 = ∅ →
 
   (∀x. x ∈ X → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
   X ⊆ dom f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_rng_weaken.htm'>map_rng_weaken</a><br>
+map f X Y → Y ⊆ Z → map f X Z</div></div>
 <h3 id='5.2'>Function application</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_uniq.htm'>sg_eq_from_uniq</a><br>
 set x → (∀y. x = y ↔ P y) → {x} = {y | P y}</div></div>
@@ -780,6 +786,9 @@ f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_from_term.htm'>map_from_term</a><br>
 f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
   (∀x. x ∈ X → y x ∈ Y) → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_from_term_app.htm'>map_from_term_app</a><br>
+f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
+  (∀x. x ∈ X → y x ∈ Y) → x ∈ X → app f x = y x</div></div>
 <h3 id='5.4'>Restricted functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_subclass.htm'>restr_is_subclass</a><br>
 restr f A ⊆ f</div></div>
@@ -803,6 +812,14 @@ function f → x ∈ dom f → x ∈ A → app f x = app (restr f A) x</div></di
 function ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_map.htm'>empty_map</a><br>
 map ∅ ∅ Y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/id_eq.htm'>id_eq</a><br>
+id X = {t | ∃x. x ∈ X ∧ t = (x, x)}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_is_map.htm'>id_is_map</a><br>
+map (id X) X X</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_app.htm'>id_app</a><br>
+x ∈ X → app (id X) x = x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_img.htm'>id_img</a><br>
+A ⊆ X → img (id X) A = A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_function.htm'>sg_function</a><br>
 set a → set b → function {(a, b)}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_map.htm'>sg_map</a><br>
@@ -902,33 +919,7 @@ wf X R → dom R = X → map f X Y → map g X Y →
 set X → set Y → wf X R →
   dom R = X → (∀x. ∀g. φ x g ∈ Y) → ∃f. set f ∧ map f X Y ∧
   ∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))</div></div>
-<h2 id='8'>Grothendieck universes</h2>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/univ_equi.htm'>univ_equi</a><br>
-univ U ↔ ∅ ∈ U ∧
-  (∀x. x ∈ U → x ⊆ U) ∧
-  (∀x. x ∈ U → power x ∈ U) ∧
-  (∀I. ∀x. I ∈ U → map x I U → ⋃(img x I) ∈ U)</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_contains_empty_set.htm'>univ_contains_empty_set</a><br>
-univ U → ∅ ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_trans.htm'>univ_trans</a><br>
-univ U → x ∈ U → x ⊆ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_power.htm'>univ_closed_power</a><br>
-univ U → x ∈ U → power x ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_Union.htm'>univ_closed_Union</a><br>
-univ U → I ∈ U → map x I U → ⋃(img x I) ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_subset.htm'>univ_closed_subset</a><br>
-univ U → y ⊆ x → x ∈ U → y ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_intersection.htm'>univ_closed_intersection</a><br>
-univ U → x ∈ U → x ∩ y ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_union.htm'>univ_closed_union</a><br>
-univ U → x ∈ U → y ∈ U → x ∪ y ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_sg.htm'>univ_closed_sg</a><br>
-univ U → x ∈ U → {x} ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_pair_set.htm'>univ_closed_pair_set</a><br>
-univ U → x ∈ U → y ∈ U → {x, y} ∈ U</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_pair.htm'>univ_closed_pair</a><br>
-univ U → x ∈ U → y ∈ U → (x, y) ∈ U</div></div>
-<h2 id='9'>The natural numbers as ordinals</h2>
+<h2 id='8'>The natural numbers as ordinals</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/onat_inductive_sets_eq.htm'>onat_inductive_sets_eq</a><br>
 onat_inductive_sets =
   {A | ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A}</div></div>
@@ -945,9 +936,12 @@ set n → set (succ n)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/succ_in_onat.htm'>succ_in_onat</a><br>
 n ∈ onat → succ n ∈ onat</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/onat_induction_sets.htm'>onat_induction_sets</a><br>
-A ⊆ onat →
-  (∅ ∈ A ∧ ∀n. n ∈ A → succ n ∈ A) → A = onat</div></div>
-<h2 id='10'>Closure operators</h2>
+A ⊆ onat → ∅ ∈ A →
+  (∀n. n ∈ A → succ n ∈ A) → A = onat</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/onat_induction.htm'>onat_induction</a><br>
+P ∅ → (∀n. n ∈ onat → P n → P (succ n)) →
+  (∀n. n ∈ onat → P n)</div></div>
+<h2 id='9'>Closure operators</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/clop_equi.htm'>clop_equi</a><br>
 closure_operator H U ↔
   set U ∧ map H (power U) (power U) ∧
@@ -966,13 +960,61 @@ closure_operator H U →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_idem.htm'>clop_idem</a><br>
 closure_operator H U →
   X ⊆ U → app H (app H X) = app H X</div></div>
+<h2 id='10'>Grothendieck universes</h2>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/univ_equi.htm'>univ_equi</a><br>
+univ U ↔ ∅ ∈ U ∧
+  (∀x. x ∈ U → x ⊆ U) ∧
+  (∀x. x ∈ U → power x ∈ U) ∧
+  (∀I. ∀x. I ∈ U → map x I U → ⋃(img x I) ∈ U)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/least_univ_eq.htm'>least_univ_eq</a><br>
+least_univ A = ⋂{U | univ U ∧ A ∈ U}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/Univ_eq.htm'>Univ_eq</a><br>
+Univ = least_univ onat</div></div>
+<div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/universes.htm'>universes</a><br>
+set x → ∃U. set U ∧ univ U ∧ x ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_contains_empty_set.htm'>univ_contains_empty_set</a><br>
+univ U → ∅ ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_trans.htm'>univ_trans</a><br>
+univ U → x ∈ U → x ⊆ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_power.htm'>univ_closed_power</a><br>
+univ U → x ∈ U → power x ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_family_union.htm'>univ_closed_family_union</a><br>
+univ U → I ∈ U → map x I U →
+  ⋃(img x I) ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_subset.htm'>univ_closed_subset</a><br>
+univ U → y ⊆ x → x ∈ U → y ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_intersection.htm'>univ_closed_intersection</a><br>
+univ U → x ∈ U → x ∩ y ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_union.htm'>univ_closed_union</a><br>
+univ U → x ∈ U → y ∈ U → x ∪ y ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_sg.htm'>univ_closed_sg</a><br>
+univ U → x ∈ U → {x} ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_pair_set.htm'>univ_closed_pair_set</a><br>
+univ U → x ∈ U → y ∈ U → {x, y} ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_pair.htm'>univ_closed_pair</a><br>
+univ U → x ∈ U → y ∈ U → (x, y) ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_sep.htm'>univ_closed_sep</a><br>
+univ U → A ∈ U → {x | x ∈ A ∧ P x} ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_prod.htm'>univ_closed_prod</a><br>
+univ U → A ∈ U → B ∈ U → A × B ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_Intersection.htm'>univ_closed_Intersection</a><br>
+univ U → M ∈ U → ¬M = ∅ → ⋂M ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/univ_closed_Union.htm'>univ_closed_Union</a><br>
+univ U → M ∈ U → ⋃M ∈ U</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/least_univ_is_univ.htm'>least_univ_is_univ</a><br>
+set A →
+  set (least_univ A) ∧ univ (least_univ A)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Univ_is_set.htm'>Univ_is_set</a><br>
+set Univ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Univ_is_univ.htm'>Univ_is_univ</a><br>
+univ Univ</div></div>
 <p><b>Statistics</b>
 <pre>
-  39 definitions
-  15 axioms
- 297 theorems
+  42 definitions
+  16 axioms
+ 312 theorems
 ────────────────
- 351 items total
+ 370 items total
 </pre>
 </body>
 </html>
