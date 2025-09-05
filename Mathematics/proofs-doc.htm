@@ -83,7 +83,8 @@ b.rule{color: #900060;}
 <li><a href='#4.1'>Relationhood</a>
 <li><a href='#4.2'>Domains and ranges</a>
 <li><a href='#4.3'>Images and inverse images</a>
-<li><a href='#4.4'>Special relations</a>
+<li><a href='#4.4'>Composition of relations</a>
+<li><a href='#4.5'>Special relations</a>
 </ol>
 <li><a href='#5'>Functions</a><ol>
 <li><a href='#5.1'>Functionhood</a>
@@ -169,7 +170,7 @@ restr f A = f ∩ (A × UnivCl)</div></div>
 choice_function f ↔
   function f ∧ ∀x. x ∈ dom f → app f x ∈ x</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/composition_eq.htm'>composition_eq</a><br>
-composition g f = {t | ∃x. ∃y. ∃z.
+g ∘ f = {t | ∃x. ∃y. ∃z.
   t = (x, z) ∧ (x, y) ∈ f ∧ (y, z) ∈ g}</div></div>
 <h3 id='1.2'>Axioms</h3>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/efq.htm'>efq</a><br>
@@ -486,6 +487,8 @@ A ∩ B = ∅ → x ∈ A → x ∈ B → ⊥</div></div>
 (∀x. ¬x ∈ A) → A = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/non_empty.htm'>non_empty</a><br>
 ¬A = ∅ → ∃x. x ∈ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/non_empty_from_witness.htm'>non_empty_from_witness</a><br>
+x ∈ A → ¬A = ∅</div></div>
 <h3 id='3.5'>Operations on systems of sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_intro.htm'>Intersection_intro</a><br>
 set x → (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
@@ -675,7 +678,22 @@ A ⊆ B → inv_img R A ⊆ inv_img R B</div></div>
 inv_img R B ⊆ dom R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_union.htm'>img_union</a><br>
 img (R ∪ Q) A = img R A ∪ img Q A</div></div>
-<h3 id='4.4'>Special relations</h3>
+<h3 id='4.4'>Composition of relations</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_is_relation.htm'>composition_is_relation</a><br>
+relation (S ∘ R)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_elimr.htm'>composition_elimr</a><br>
+(a, c) ∈ S ∘ R → ∃y. (a, y) ∈ R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_eliml.htm'>composition_eliml</a><br>
+(a, c) ∈ S ∘ R → ∃y. (y, c) ∈ S</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_elim.htm'>composition_elim</a><br>
+(a, c) ∈ S ∘ R → ∃y. (a, y) ∈ R ∧ (y, c) ∈ S</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_intro.htm'>composition_intro</a><br>
+(a, b) ∈ R → (b, c) ∈ S → (a, c) ∈ S ∘ R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_composition.htm'>dom_composition</a><br>
+dom (S ∘ R) ⊆ dom R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_composition.htm'>rng_composition</a><br>
+rng (S ∘ R) ⊆ rng S</div></div>
+<h3 id='4.5'>Special relations</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_relation.htm'>empty_relation</a><br>
 relation ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dom_empty_set.htm'>dom_empty_set</a><br>
@@ -789,6 +807,11 @@ f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_from_term_app.htm'>map_from_term_app</a><br>
 f = {t | ∃x. x ∈ X ∧ t = (x, y x)} →
   (∀x. x ∈ X → y x ∈ Y) → x ∈ X → app f x = y x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_is_map.htm'>composition_is_map</a><br>
+map f X Y → map g Y Z → map (g ∘ f) X Z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_app_composition.htm'>map_app_composition</a><br>
+map f X Y → map g Y Z → x ∈ X →
+  app (g ∘ f) x = app g (app f x)</div></div>
 <h3 id='5.4'>Restricted functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_is_subclass.htm'>restr_is_subclass</a><br>
 restr f A ⊆ f</div></div>
@@ -948,6 +971,9 @@ closure_operator H U ↔
   (∀X. X ⊆ U → X ⊆ app H X) ∧
   (∀X. ∀Y. X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y) ∧
   (∀X. X ⊆ U → app H (app H X) ⊆ app H X)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/closure_system_equi.htm'>closure_system_equi</a><br>
+closure_system M U ↔
+  M ⊆ power U ∧ U ∈ M ∧ ∀T. T ⊆ M → ¬T=∅ → ⋂T ∈ M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_app_in_cod.htm'>clop_app_in_cod</a><br>
 closure_operator H U → X ⊆ U →
   app H X ⊆ U</div></div>
@@ -960,6 +986,10 @@ closure_operator H U →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_idem.htm'>clop_idem</a><br>
 closure_operator H U →
   X ⊆ U → app H (app H X) = app H X</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/clop_from_closure_system.htm'>clop_from_closure_system</a><br>
+closure_system M U →
+  H = {t | ∃X. X ∈ power U ∧ t = (X, ⋂{A | A ∈ M ∧ X ⊆ A})} →
+  closure_operator H U</div></div>
 <h2 id='10'>Grothendieck universes</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/univ_equi.htm'>univ_equi</a><br>
 univ U ↔ ∅ ∈ U ∧
@@ -1010,11 +1040,11 @@ set Univ</div></div>
 univ Univ</div></div>
 <p><b>Statistics</b>
 <pre>
-  42 definitions
+  43 definitions
   16 axioms
- 312 theorems
+ 323 theorems
 ────────────────
- 370 items total
+ 382 items total
 </pre>
 </body>
 </html>
