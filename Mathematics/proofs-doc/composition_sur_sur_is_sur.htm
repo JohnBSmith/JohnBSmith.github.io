@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>composition_sur_sur_is_sur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem composition_sur_sur_is_sur</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> composition_sur_sur_is_sur<br>
+sur f X Y → sur g Y Z →
+  sur (g ∘ f) X Z</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ sur f X Y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ sur g Y Z, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ map f X Y, <a href='sur_is_map.htm'>sur_is_map</a> 1.
+04. 2 ⊢ map g Y Z, <a href='sur_is_map.htm'>sur_is_map</a> 2.
+05. 1, 2 ⊢ map (g ∘ f) X Z, <a href='composition_is_map.htm'>composition_is_map</a> 3 4.
+06. 1 ⊢ rng f = Y, <a href='sur_elim.htm'>sur_elim</a> 1.
+07. 2 ⊢ rng g = Z, <a href='sur_elim.htm'>sur_elim</a> 2.
+08. 8 ⊢ z ∈ Z, <a href='hypo.htm'>hypo</a>.
+09. 2, 8 ⊢ z ∈ rng g, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 7 8.
+10. 2, 8 ⊢ ∃y. (y, z) ∈ g, <a href='rng_elim.htm'>rng_elim</a> 9.
+11. 11 ⊢ (y, z) ∈ g, <a href='hypo.htm'>hypo</a>.
+12. 11 ⊢ y ∈ dom g, <a href='dom_intro.htm'>dom_intro</a> 11.
+13. 2 ⊢ function g ∧ dom g = Y ∧ rng g ⊆ Z, <a href='map_unfold.htm'>map_unfold</a> 4.
+14. 2 ⊢ dom g = Y, <a href='conj_elimlr.htm'>conj_elimlr</a> 13.
+15. 2, 11 ⊢ y ∈ Y, <a href='eq_subst.htm'>eq_subst</a> 14 12, P u ↔ y ∈ u.
+16. 1, 2, 11 ⊢ y ∈ rng f, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 6 15.
+17. 1, 2, 11 ⊢ ∃x. (x, y) ∈ f, <a href='rng_elim.htm'>rng_elim</a> 16.
+18. 18 ⊢ (x, y) ∈ f, <a href='hypo.htm'>hypo</a>.
+19. 11, 18 ⊢ (x, z) ∈ g ∘ f, <a href='composition_intro.htm'>composition_intro</a> 18 11.
+20. 11, 18 ⊢ z ∈ rng (g ∘ f), <a href='rng_intro.htm'>rng_intro</a> 19.
+21. 1, 2, 11 ⊢ z ∈ rng (g ∘ f), <a href='ex_elim.htm'>ex_elim</a> 17 20.
+22. 1, 2, 8 ⊢ z ∈ rng (g ∘ f), <a href='ex_elim.htm'>ex_elim</a> 10 21.
+23. 1, 2 ⊢ z ∈ Z → z ∈ rng (g ∘ f), <a href='subj_intro.htm'>subj_intro</a> 22.
+24. 1, 2 ⊢ ∀z. z ∈ Z → z ∈ rng (g ∘ f), <a href='uq_intro.htm'>uq_intro</a> 23.
+25. 1, 2 ⊢ Z ⊆ rng (g ∘ f), <a href='incl_intro.htm'>incl_intro</a> 24.
+26. 1, 2 ⊢ sur (g ∘ f) X Z, <a href='sur_intro.htm'>sur_intro</a> 5 25.
+composition_sur_sur_is_sur. ⊢ sur f X Y → sur g Y Z →
+  sur (g ∘ f) X Z, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 26.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>
+</body>
+</html>

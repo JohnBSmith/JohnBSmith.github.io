@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>inj_intro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem inj_intro</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> inj_intro<br>
+map f X Y →
+  (∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b) →
+  inj f X Y</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ map f X Y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b, <a href='hypo.htm'>hypo</a>.
+03. 1, 2 ⊢ map f X Y ∧
+  ∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b, <a href='conj_intro.htm'>conj_intro</a> 1 2.
+04. 1, 2 ⊢ inj f X Y, <a href='rsubj_elim.htm'>rsubj_elim</a> <a href='inj_equi.htm'>inj_equi</a> 3.
+inj_intro. ⊢ map f X Y →
+  (∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b) →
+  inj f X Y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 4.
+</pre>
+</body>
+</html>

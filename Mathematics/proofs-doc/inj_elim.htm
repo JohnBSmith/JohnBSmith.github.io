@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>inj_elim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem inj_elim</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> inj_elim<br>
+inj f X Y →
+  a ∈ X → b ∈ X → app f a = app f b → a = b</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ inj f X Y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ a ∈ X, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ b ∈ X, <a href='hypo.htm'>hypo</a>.
+04. 1 ⊢ ∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b,
+  <a href='lsubj_conj_elimr.htm'>lsubj_conj_elimr</a> <a href='inj_equi.htm'>inj_equi</a> 1.
+05. 1 ⊢ ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b, <a href='uq_elim.htm'>uq_elim</a> 4.
+06. 1 ⊢ a ∈ X → b ∈ X → app f a = app f b → a = b, <a href='uq_elim.htm'>uq_elim</a> 5.
+07. 1, 2 ⊢ b ∈ X → app f a = app f b → a = b, <a href='subj_elim.htm'>subj_elim</a> 6 2.
+08. 1, 2, 3 ⊢ app f a = app f b → a = b, <a href='subj_elim.htm'>subj_elim</a> 7 3.
+inj_elim. ⊢ inj f X Y →
+  a ∈ X → b ∈ X → app f a = app f b → a = b, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 8.
+</pre>
+</body>
+</html>

@@ -93,7 +93,8 @@ b.rule{color: #900060;}
 <li><a href='#5.4'>Restricted functions</a>
 <li><a href='#5.5'>Special functions</a>
 <li><a href='#5.6'>Partly functional relations</a>
-<li><a href='#5.7'>Choice functions</a>
+<li><a href='#5.7'>Injections, surjections, bijections</a>
+<li><a href='#5.8'>Choice functions</a>
 </ol>
 <li><a href='#6'>Power sets</a>
 <li><a href='#7'>Well-founded relations</a>
@@ -693,6 +694,10 @@ relation (S ∘ R)</div></div>
 dom (S ∘ R) ⊆ dom R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rng_composition.htm'>rng_composition</a><br>
 rng (S ∘ R) ⊆ rng S</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_composition.htm'>img_composition</a><br>
+img (S ∘ R) A = img S (img R A)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_composition.htm'>inv_img_composition</a><br>
+inv_img (S ∘ R) B = inv_img R (inv_img S B)</div></div>
 <h3 id='4.5'>Special relations</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_relation.htm'>empty_relation</a><br>
 relation ∅</div></div>
@@ -885,7 +890,42 @@ fn_on f A → fn_on g A →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_on_char.htm'>fn_on_char</a><br>
 A ⊆ dom f →
   (fn_on f A ↔ relation f ∧ function (restr f A))</div></div>
-<h3 id='5.7'>Choice functions</h3>
+<h3 id='5.7'>Injections, surjections, bijections</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_is_map.htm'>inj_is_map</a><br>
+inj f X Y → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_elim.htm'>inj_elim</a><br>
+inj f X Y →
+  a ∈ X → b ∈ X → app f a = app f b → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_intro.htm'>inj_intro</a><br>
+map f X Y →
+  (∀a. ∀b. a ∈ X → b ∈ X → app f a = app f b → a = b) →
+  inj f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sur_is_map.htm'>sur_is_map</a><br>
+sur f X Y → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sur_elim.htm'>sur_elim</a><br>
+sur f X Y → rng f = Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sur_intro.htm'>sur_intro</a><br>
+map f X Y → Y ⊆ rng f → sur f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/bij_is_map.htm'>bij_is_map</a><br>
+bij f X Y → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/bij_is_inj.htm'>bij_is_inj</a><br>
+bij f X Y → inj f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/bij_is_sur.htm'>bij_is_sur</a><br>
+bij f X Y → sur f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/bij_from_inj_sur.htm'>bij_from_inj_sur</a><br>
+inj f X Y → sur f X Y → bij f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_inj_inj_is_inj.htm'>composition_inj_inj_is_inj</a><br>
+inj f X Y → inj g Y Z → inj (g ∘ f) X Z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_sur_sur_is_sur.htm'>composition_sur_sur_is_sur</a><br>
+sur f X Y → sur g Y Z →
+  sur (g ∘ f) X Z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/composition_bij_bij_is_bij.htm'>composition_bij_bij_is_bij</a><br>
+bij f X Y → bij g Y Z →
+  bij (g ∘ f) X Z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_from_left_inv.htm'>inj_from_left_inv</a><br>
+map f X Y → (∃g. map g Y X ∧ g ∘ f = id X) →
+  inj f X Y</div></div>
+<h3 id='5.8'>Choice functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/choice_fn_unfold.htm'>choice_fn_unfold</a><br>
 choice_function f →
   function f ∧ ∀x. x ∈ dom f → app f x ∈ x</div></div>
@@ -1042,9 +1082,9 @@ univ Univ</div></div>
 <pre>
   43 definitions
   16 axioms
- 323 theorems
+ 339 theorems
 ────────────────
- 382 items total
+ 398 items total
 </pre>
 </body>
 </html>
