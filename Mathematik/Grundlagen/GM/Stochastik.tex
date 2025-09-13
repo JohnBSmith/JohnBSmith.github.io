@@ -429,6 +429,98 @@ zu definieren, genannt die \emph{Wahrscheinlichkeitsfunktion} der
 Zufallsgröße $X$.
 
 \newpage
+\subsection{Erwartungswert einer Zufallsgröße}
+
+Es sei $\Omega:=\{\omega_1,\ldots,\omega_n\}$. Die Zufallsgröße
+$X\colon\Omega\to\R$ ordnet jedem $\omega\in\Omega$ einen reellen
+Wert $x=X(\omega)$ zu. Wir stellen uns die reelle Zahlengerade nun als
+einen Stab vor. An der Stelle $x_i=X(\omega_i)$ steht auf dem Stab die
+die Masse $m_i=P(\{\omega_i\})$. Gefragt ist nun nach dem Schwerpunkt
+$s$, also dem Punkt, auf dem der Stab in Waage steht. Der klassischen
+Mechanik nach ist es hierfür nötig, dass die Summe über alle Momente
+verschwindet. Gefordert ist also $0=\sum_{i=1}^n M_i$ mit dem Moment
+$M_i=r_i F_i$, wobei $r_i=x_i-s$ der signierte Abstand und $F_i = m_ig$
+die durch die Masse $m_i$ und Fallbeschleunigung $g$ verursachte Kraft
+ist. Unter $\sum_{i=1}^n m_i = 1$ ergibt sich die Umformung
+\[\textstyle 0 = \sum_{i=1}^n (x_i-s)m_i g\iff s = \sum_{i=1}^n x_im_i.\]
+Der Schwerpunkt berechnet sich also als
+\[\textstyle s = \sum_{i=1}^n X(\omega_i)P(\{\omega_i\})
+= \sum_{\omega\in\Omega} X(\omega)P(\{\omega\}).\]
+Dieses Gedankenspiel motiviert die
+\begin{Definition}[Erwartungswert]\newlinefirst
+Eine Zufallsgröße $X\colon\Omega\to\R$ besitzt den \emph{Erwartungswert}
+\[E(X) := \sum_{\omega\in\Omega}X(\omega)P(\{\omega\}).\]
+\end{Definition}
+Es verhält sich so, dass die Menge $V=\Abb(\Omega,\R)$ bezüglich
+der vektoriellen Addition $(X+Y)(\omega):=X(\omega)+Y(\omega)$ und
+der skalaren Multiplikation $(\lambda\cdot X)(\omega):=\lambda\cdot X(\omega)$
+mit $\lambda\in\R$ einen Vektorraum bildet, den wir als Funktionenraum
+begreifen. Die Erwartungswertoperation $E\colon V\to\R$ stellt dahingehend eine
+lineare Abbildung dar, denn es gilt
+\begin{gather*}
+E(X+Y) = E(X) + E(Y),\\
+E(\lambda\cdot X) = \lambda\cdot E(X),
+\end{gather*}
+wie man mühelos nachrechnet.
+
+Weiterhin stellt sich heraus, dass man Wahrscheinlichkeiten als
+Erwartungswerte der Indikatorfunktionen betrachten kann, denn
+\[E(1_A) = \sum_{\omega\in\Omega}1_A(\omega)P(\{\omega\})
+= \sum_{\omega\in A} P(\{\omega\})
+= P(\bigcup_{\omega\in A}\{\omega\}) = P(A).\]
+Zu einer Zufallsgröße $X\colon\Omega\to\R$ und einer Funktion
+$f\colon\R\to\R$ lässt sich die Verkettung $f\circ X$ wiederum
+als Zufallsgröße betrachten. Für $f\circ X$ notiert man dabei gern
+$f(X)$ bzw. den $f$ definierenden Funktionsterm in Abhängigkeit von $X$.
+So steht bspw. die Notation $2X+1$ für $f\circ X$ mit $f(x):=2x+1$.
+
+\begin{Satz}
+Ist $X\colon\Omega\to\R$ eine Zufallsgröße, und $f\colon\R\to\R$, gilt
+\[E(f\circ X) = \sum_{x\in X(\Omega)}f(x)P(X=x).\]
+\end{Satz}
+\begin{Beweis}
+Zunächst gilt
+\[P(X=x)=P(X^{-1}(\{x\}))=P(\bigcup_{\omega\in X^{-1}(\{x\})}\{\omega\})
+= \sum_{\omega\in X^{-1}(\{x\})}P(\{\omega\}).\]
+Damit unternimmt man die Umformung
+\begin{align*}
+P(f\circ X) &= \sum_{\omega\in\Omega}f(X(\omega))P(\{\omega\})
+= \sum_{x\in X(\Omega)}\sum_{\omega\in X^{-1}(\{x\})}f(x)P(\{\omega\})\\
+&= \sum_{x\in X(\Omega)}f(x)\sum_{\omega\in X^{-1}(\{x\})} P(\{\omega\})
+= \sum_{x\in X(\Omega)}f(x)P(X=x).\,\qedsymbol
+\end{align*}
+\end{Beweis}
+
+\noindent
+Speziell für $f:=\id$ ergibt sich
+\[E(X) = \sum_{x\in X(\Omega)}xP(X=x) = \sum_{x\in X(\Omega)}xp_X(x).\]
+Demzufolge hängt der Erwartungswert allein von der Verteilung bzw.
+Wahrscheinlichkeitsfunktion $p_X$ der Zufallsgröße ab. Zwei Zufallsgrößen
+mit identischer Verteilung besitzen den gleichen Erwartungswert.
+
+Wir erkunden am besten noch kurz, wie es sich mit der Verteilung der
+transformierten Zufallsgröße verhält.
+
+\begin{Satz}
+Ist $X\colon\Omega\to\R$ eine Zufallsgröße, und $f\colon\R\to\R$, gilt
+\[P_{f\circ X}(B) = P_X(f^{-1}(B)),\,\text{also kurz}\; P_{f\circ X}
+= P_X\circ f^{-1}.\]
+\end{Satz}
+\begin{Beweis}
+Vermittels $(f\circ X)^{-1}(B) = X^{-1}(f^{-1}(B))$, siehe Satz
+\ref{Urbild-unter-Komposition} auf S. \pageref{Urbild-unter-Komposition},
+gelingt die kurze Umformung
+\[P_{f\circ X}(B) = P((f\circ X)^{-1}(B))
+= P(X^{-1}(f^{-1}(B))) = P_X(f^{-1}(B)).\,\qedsymbol\]
+\end{Beweis}
+
+\noindent
+Für die Wahrscheinlichkeitsfunktion von $f\circ X$ ergibt sich somit
+\[p_{f\circ X}(y) = P_X(f^{-1}(\{y\})) = \sum_{x\in f^{-1}(\{y\})}p_X(x).\]
+Bei einer Injektion $f$ und $y\in f(\R)$ vereinfacht sich dies zu
+\[p_{f\circ X}(y) = p_X(f^{-1}(y)).\]
+
+\newpage
 \section{Bedingte Wahrscheinlichkeiten}
 
 \subsection{Mehrstufige Experimente}
