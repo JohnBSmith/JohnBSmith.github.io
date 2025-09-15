@@ -9,7 +9,7 @@
 <body>
 <h3>Theorem wf_induction_set</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> wf_induction_set<br>
-wf M R → A ⊆ M →
+wf R M → A ⊆ M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → y ∈ A) → x ∈ A) → A = M</div></div>
 <pre><b>Proof</b>
 01. 1 ⊢ A ⊆ M, <a href='hypo.htm'>hypo</a>.
@@ -20,7 +20,7 @@ wf M R → A ⊆ M →
 06. 1 ⊢ ¬A = M → ¬M \ A = ∅, <a href='contraposition.htm'>contraposition</a> 5.
 07. 7 ⊢ ¬A = M, <a href='hypo.htm'>hypo</a>.
 08. 1, 7 ⊢ ¬M \ A = ∅, <a href='subj_elim.htm'>subj_elim</a> 6 7.
-09. 9 ⊢ wf M R, <a href='hypo.htm'>hypo</a>.
+09. 9 ⊢ wf R M, <a href='hypo.htm'>hypo</a>.
 10. 9 ⊢ ∀A. A ⊆ M → ¬A = ∅ → ∃y. y ∈ A ∧ ¬∃x. x ∈ A ∧ (x, y) ∈ R,
   <a href='wf_unfold.htm'>wf_unfold</a> 9.
 11. 9 ⊢ M \ A ⊆ M → ¬M \ A = ∅ → ∃y. y ∈ M \ A ∧ ¬∃x. x ∈ M \ A ∧ (x, y) ∈ R,
@@ -56,7 +56,7 @@ wf M R → A ⊆ M →
 38. 9, 1, 21, 7 ⊢ ⊥, <a href='ex_elim.htm'>ex_elim</a> 14 37.
 39. 9, 1, 21 ⊢ ¬¬A = M, <a href='neg_intro.htm'>neg_intro</a> 38.
 40. 9, 1, 21 ⊢ A = M, <a href='dne.htm'>dne</a> 39.
-wf_induction_set. ⊢ wf M R → A ⊆ M →
+wf_induction_set. ⊢ wf R M → A ⊆ M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → y ∈ A) → x ∈ A) → A = M,
   <a href='subj_intro_iii.htm'>subj_intro_iii</a> 40.
 </pre>

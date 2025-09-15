@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>On_is_transitive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem On_is_transitive</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> On_is_transitive<br>
+β ∈ On → β ⊆ On</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ β ∈ On, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ α ∈ β, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ β ∈ Univ ∩ {α | transitive α ∧ ∀x. x ∈ α → transitive x},
+  <a href='eq_subst.htm'>eq_subst</a> <a href='On_eq.htm'>On_eq</a> 1.
+04. 1 ⊢ β ∈ Univ, <a href='intersection_eliml.htm'>intersection_eliml</a> 3.
+05. 1 ⊢ β ∈ {α | transitive α ∧ ∀x. x ∈ α → transitive x},
+  <a href='intersection_elimr.htm'>intersection_elimr</a> 3.
+06. 1 ⊢ transitive β ∧ ∀x. x ∈ β → transitive x, <a href='comp_elim.htm'>comp_elim</a> 5.
+07. 1 ⊢ transitive β, <a href='conj_eliml.htm'>conj_eliml</a> 6.
+08. 1 ⊢ ∀x. x ∈ β → transitive x, <a href='conj_elimr.htm'>conj_elimr</a> 6.
+09. 1, 2 ⊢ transitive α, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 8 2.
+10. 10 ⊢ x ∈ α, <a href='hypo.htm'>hypo</a>.
+11. 1, 2 ⊢ α ⊆ β, <a href='transitive_elim.htm'>transitive_elim</a> 7 2.
+12. 1, 2, 10 ⊢ x ∈ β, <a href='incl_elim.htm'>incl_elim</a> 11 10.
+13. 1, 2, 10 ⊢ transitive x, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 8 12.
+14. 1, 2 ⊢ x ∈ α → transitive x, <a href='subj_intro.htm'>subj_intro</a> 13.
+15. 1, 2 ⊢ ∀x. x ∈ α → transitive x, <a href='uq_intro.htm'>uq_intro</a> 14.
+16. 1, 2 ⊢ transitive α ∧ ∀x. x ∈ α → transitive x, <a href='conj_intro.htm'>conj_intro</a> 9 15.
+17. 2 ⊢ set α, <a href='set_intro.htm'>set_intro</a> 2.
+18. 1, 2 ⊢ α ∈ {α | transitive α ∧ ∀x. x ∈ α → transitive x},
+  <a href='comp_intro.htm'>comp_intro</a> 17 16.
+19. 1 ⊢ β ⊆ Univ, <a href='univ_trans.htm'>univ_trans</a> <a href='Univ_is_univ.htm'>Univ_is_univ</a> 4.
+20. 1, 2 ⊢ α ∈ Univ, <a href='incl_elim.htm'>incl_elim</a> 19 2.
+21. 1, 2 ⊢ α ∈ Univ ∩ {α | transitive α ∧ ∀x. x ∈ α → transitive x},
+  <a href='intersection_intro.htm'>intersection_intro</a> 20 18.
+22. 1, 2 ⊢ α ∈ On, <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='On_eq.htm'>On_eq</a> 21, P t ↔ α ∈ t.
+23. 1 ⊢ α ∈ β → α ∈ On, <a href='subj_intro.htm'>subj_intro</a> 22.
+24. 1 ⊢ ∀α. α ∈ β → α ∈ On, <a href='uq_intro.htm'>uq_intro</a> 23.
+25. 1 ⊢ β ⊆ On, <a href='incl_intro.htm'>incl_intro</a> 24.
+On_is_transitive. ⊢ β ∈ On → β ⊆ On, <a href='subj_intro.htm'>subj_intro</a> 25.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 11 axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='infinity.htm'>infinity</a>, <a href='lem.htm'>lem</a>, <a href='power.htm'>power</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>, <a href='universes.htm'>universes</a>.</p>
+</body>
+</html>

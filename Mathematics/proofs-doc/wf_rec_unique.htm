@@ -9,12 +9,23 @@
 <body>
 <h3>Theorem wf_rec_unique</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> wf_rec_unique<br>
-wf X R → dom R = X → map f X Y → map g X Y →
+wf R X → dom R ⊆ X → map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))) →
   (∀x. x ∈ X → app g x = φ x (restr g (inv_img R {x}))) →
   f = g</div></div>
-<pre><b>Proof</b>
-01. 1 ⊢ wf X R, <a href='hypo.htm'>hypo</a>.
+<p>This theorem states that the solution to a <a href='wf_equi.htm'>well-founded</a> recursion must be unique.<br>
+<br>
+<b>Proof sketch</b><br>
+Let f, g be two solutions of the recurrence. We want to show f&nbsp;=&nbsp;g.
+By <a href='map_extensionality.htm'>function extensionality</a> it suffices to show ∀x&nbsp;∈&nbsp;X. f&nbsp;x = g&nbsp;x.
+<a href='wf_induction.htm'>Induction</a> over&nbsp;x. The induction hypothesis has the
+equivalent transformation<br>
+&nbsp;&nbsp;∀u ∈ X. (u, x) ∈ R → f u = g u<br>
+↔ ∀u ∈ R⁻¹ {x}. f u = g u<br>
+↔ f|<sub>R⁻¹ {x}</sub>  = g|<sub>R⁻¹ {x}</sub>.<br>
+We need to show f x = g x. Now, by the given recurrences we obtain<br>
+&nbsp;&nbsp;f x = φ x (f|<sub>R⁻¹ {x}</sub>) = φ x (g|<sub>R⁻¹ {x}</sub>) = g x. q.e.d.</p><pre><b>Proof</b>
+01. 1 ⊢ wf R X, <a href='hypo.htm'>hypo</a>.
 02. 2 ⊢ ∀u. u ∈ X → (u, x) ∈ R → app f u = app g u, <a href='hypo.htm'>hypo</a>.
 03. 2 ⊢ u ∈ X → (u, x) ∈ R → app f u = app g u, <a href='uq_elim.htm'>uq_elim</a> 2.
 04. 4 ⊢ u ∈ inv_img R {x}, <a href='hypo.htm'>hypo</a>.
@@ -27,15 +38,15 @@ wf X R → dom R = X → map f X Y → map g X Y →
 11. 6 ⊢ (u, y) ∈ R, <a href='conj_elimr.htm'>conj_elimr</a> 6.
 12. 8, 6 ⊢ (u, x) ∈ R, <a href='eq_subst.htm'>eq_subst</a> 10 11, P x ↔ (u, x) ∈ R.
 13. 8, 4 ⊢ (u, x) ∈ R, <a href='ex_elim.htm'>ex_elim</a> 5 12.
-14. 14 ⊢ dom R = X, <a href='hypo.htm'>hypo</a>.
+14. 14 ⊢ dom R ⊆ X, <a href='hypo.htm'>hypo</a>.
 15. 8, 4 ⊢ u ∈ dom R, <a href='dom_intro.htm'>dom_intro</a> 13.
-16. 14, 8, 4 ⊢ u ∈ X, <a href='eq_subst.htm'>eq_subst</a> 14 15, P x ↔ u ∈ x.
+16. 14, 8, 4 ⊢ u ∈ X, <a href='incl_elim.htm'>incl_elim</a> 14 15.
 17. 14, 2, 8, 4 ⊢ (u, x) ∈ R → app f u = app g u, <a href='subj_elim.htm'>subj_elim</a> 3 16.
 18. 14, 2, 8, 4 ⊢ app f u = app g u, <a href='subj_elim.htm'>subj_elim</a> 17 13.
 19. 19 ⊢ map f X Y, <a href='hypo.htm'>hypo</a>.
 20. 20 ⊢ map g X Y, <a href='hypo.htm'>hypo</a>.
 21. ⊢ inv_img R {x} ⊆ dom R, <a href='inv_img_incl_in_dom.htm'>inv_img_incl_in_dom</a>.
-22. 14 ⊢ inv_img R {x} ⊆ X, <a href='eq_subst.htm'>eq_subst</a> 14 21, P u ↔ inv_img R {x} ⊆ u.
+22. 14 ⊢ inv_img R {x} ⊆ X, <a href='incl_trans.htm'>incl_trans</a> 21 14.
 23. 19, 14, 4 ⊢ app f u = app (restr f (inv_img R {x})) u, <a href='app_restr.htm'>app_restr</a> 19 22 4.
 24. 20, 14, 4 ⊢ app g u = app (restr g (inv_img R {x})) u, <a href='app_restr.htm'>app_restr</a> 20 22 4.
 25. 19, 14, 2, 8, 4 ⊢ app (restr f (inv_img R {x})) u = app g u,
@@ -79,7 +90,7 @@ wf X R → dom R = X → map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))) →
   (∀x. x ∈ X → app g x = φ x (restr g (inv_img R {x}))) →
   f = g, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 44.
-wf_rec_unique. ⊢ wf X R → dom R = X → map f X Y → map g X Y →
+wf_rec_unique. ⊢ wf R X → dom R ⊆ X → map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))) →
   (∀x. x ∈ X → app g x = φ x (restr g (inv_img R {x}))) →
   f = g, <a href='subj_intro_iv.htm'>subj_intro_iv</a> 45.

@@ -101,6 +101,13 @@ b.rule{color: #900060;}
 <li><a href='#8'>The natural numbers as ordinals</a>
 <li><a href='#9'>Closure operators</a>
 <li><a href='#10'>Grothendieck universes</a>
+<li><a href='#11'>Cardinal numbers</a><ol>
+<li><a href='#11.1'>Equinumerousities</a>
+</ol>
+<li><a href='#12'>Ordinal numbers</a><ol>
+<li><a href='#12.1'>Transitive sets</a>
+<li><a href='#12.2'>Ordinal numbers</a>
+</ol>
 </ol>
 <h2 id='1'>Morse-Kelley set theory</h2>
 <h3 id='1.1'>Definitions</h3>
@@ -338,6 +345,8 @@ y = x → P x → P y</div></div>
 x = y → f x = f y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans.htm'>eq_trans</a><br>
 x = y → y = z → x = z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_symm_trans.htm'>eq_symm_trans</a><br>
+y = x → y = z → x = z</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neq_symm.htm'>neq_symm</a><br>
 ¬x = y → ¬y = x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/disused_eq.htm'>disused_eq</a><br>
@@ -490,6 +499,8 @@ A ∩ B = ∅ → x ∈ A → x ∈ B → ⊥</div></div>
 ¬A = ∅ → ∃x. x ∈ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/non_empty_from_witness.htm'>non_empty_from_witness</a><br>
 x ∈ A → ¬A = ∅</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_rel_compl.htm'>intersection_rel_compl</a><br>
+A ∩ (B \ A) = ∅</div></div>
 <h3 id='3.5'>Operations on systems of sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_intro.htm'>Intersection_intro</a><br>
 set x → (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
@@ -513,6 +524,8 @@ y ∈ M →
   (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a><br>
 A = ⋂M → B ∈ M → A ⊆ B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lower_bound_incl_in_Intersection.htm'>lower_bound_incl_in_Intersection</a><br>
+(∀x. x ∈ M → u ⊆ x) → u ⊆ ⋂M</div></div>
 <h3 id='3.6'>The universal class and Russell's paradox</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/UnivCl_intro.htm'>UnivCl_intro</a><br>
 set x → x ∈ UnivCl</div></div>
@@ -534,6 +547,10 @@ A ∩ compl A = ∅</div></div>
 A ∪ compl A = UnivCl</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_empty_set.htm'>Intersection_empty_set</a><br>
 ⋂∅ = UnivCl</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_union.htm'>diff_union</a><br>
+(A \ B) ∪ B = A ∪ B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_union_subclass.htm'>diff_union_subclass</a><br>
+A ⊆ X → (X \ A) ∪ A = X</div></div>
 <h3 id='3.7'>Singletons, pair sets and pairs</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_elim.htm'>sg_elim</a><br>
 set a → x ∈ {a} → x = a</div></div>
@@ -601,7 +618,7 @@ t ∈ X × Y → fst t ∈ X</div></div>
 t ∈ X × Y → scd t ∈ Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_set_is_set.htm'>empty_set_is_set</a><br>
 set ∅</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_set_neq_sg_empty_set.htm'>empty_set_neq_sg_empty_set</a><br>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/zero_neq_one.htm'>zero_neq_one</a><br>
 ¬∅ = {∅}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/disjoint_sg_from_neq.htm'>disjoint_sg_from_neq</a><br>
 set a → set b → ¬a = b → {a} ∩ {b} = ∅</div></div>
@@ -622,6 +639,8 @@ x ∈ ⋃{B | ∃i. i ∈ I ∧ B = A i} →
 relation R → ∀t. t ∈ R → ∃x. ∃y. t = (x, y)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_fold.htm'>relation_fold</a><br>
 (∀t. t ∈ R → ∃x. ∃y. t = (x, y)) → relation R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_elim.htm'>relation_elim</a><br>
+relation R → t ∈ R → ∃x. ∃y. t = (x, y)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_from_incl.htm'>relation_from_incl</a><br>
 R ⊆ X × Y → relation R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/relation_subclass.htm'>relation_subclass</a><br>
@@ -756,6 +775,8 @@ map f X1 Y → map g X2 Y → X1 ∩ X2 = ∅ →
   X ⊆ dom f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_rng_weaken.htm'>map_rng_weaken</a><br>
 map f X Y → Y ⊆ Z → map f X Z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_incl_in_prod.htm'>map_incl_in_prod</a><br>
+map f X Y → f ⊆ X × Y</div></div>
 <h3 id='5.2'>Function application</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_uniq.htm'>sg_eq_from_uniq</a><br>
 set x → (∀y. x = y ↔ P y) → {x} = {y | P y}</div></div>
@@ -848,6 +869,10 @@ map (id X) X X</div></div>
 x ∈ X → app (id X) x = x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_img.htm'>id_img</a><br>
 A ⊆ X → img (id X) A = A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_neutl.htm'>id_neutl</a><br>
+map f X Y → id Y ∘ f = f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/id_neutr.htm'>id_neutr</a><br>
+map f X Y → f ∘ id X = f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_function.htm'>sg_function</a><br>
 set a → set b → function {(a, b)}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_map.htm'>sg_map</a><br>
@@ -959,28 +984,34 @@ power ∅ = {∅}</div></div>
 set a → power {a} = {∅, {a}}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_incl_in_power.htm'>sg_incl_in_power</a><br>
 set x → {x} ⊆ power x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_is_set.htm'>function_is_set</a><br>
+function f → set (dom f) → set f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_is_set.htm'>map_is_set</a><br>
+map f X Y → set X → set f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_is_set_dom_cod.htm'>map_is_set_dom_cod</a><br>
+map f X Y → set X → set Y → set f</div></div>
 <h2 id='7'>Well-founded relations</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/wf_equi.htm'>wf_equi</a><br>
-wf M R ↔ ∀A. A ⊆ M → ¬A = ∅ →
+wf R M ↔ ∀A. A ⊆ M → ¬A = ∅ →
   ∃y. y ∈ A ∧ ¬∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/wf_unfold.htm'>wf_unfold</a><br>
-wf M R → ∀A. A ⊆ M → ¬A = ∅ →
+wf R M → ∀A. A ⊆ M → ¬A = ∅ →
   ∃y. y ∈ A ∧ ¬∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/wf_induction_set.htm'>wf_induction_set</a><br>
-wf M R → A ⊆ M →
+wf R M → A ⊆ M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → y ∈ A) → x ∈ A) → A = M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/wf_induction.htm'>wf_induction</a><br>
-wf M R →
+wf R M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → P y) → P x) →
   (∀x. x ∈ M → P x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/wf_rec_unique.htm'>wf_rec_unique</a><br>
-wf X R → dom R = X → map f X Y → map g X Y →
+wf R X → dom R ⊆ X → map f X Y → map g X Y →
   (∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))) →
   (∀x. x ∈ X → app g x = φ x (restr g (inv_img R {x}))) →
   f = g</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/wf_rec_existence.htm'>wf_rec_existence</a><br>
-set X → set Y → wf X R →
-  dom R = X → (∀x. ∀g. φ x g ∈ Y) → ∃f. set f ∧ map f X Y ∧
+set X → set Y → wf R X →
+  dom R ⊆ X → (∀x. ∀g. φ x g ∈ Y) → ∃f. set f ∧ map f X Y ∧
   ∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))</div></div>
 <h2 id='8'>The natural numbers as ordinals</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/onat_inductive_sets_eq.htm'>onat_inductive_sets_eq</a><br>
@@ -1078,13 +1109,75 @@ set A →
 set Univ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Univ_is_univ.htm'>Univ_is_univ</a><br>
 univ Univ</div></div>
+<h2 id='11'>Cardinal numbers</h2>
+<h3 id='11.1'>Equinumerousities</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/equinum_equi.htm'>equinum_equi</a><br>
+equinum X Y ↔ ∃f. bij f X Y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/Map_eq.htm'>Map_eq</a><br>
+Map X Y = {f | map f X Y}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/indicator_eq.htm'>indicator_eq</a><br>
+χ A X =
+  {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)} ∪
+  {t | ∃x. x ∈ A ∧ t = (x, {∅})}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equinum_intro.htm'>equinum_intro</a><br>
+(∃f. bij f X Y) → equinum X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Map_intro.htm'>Map_intro</a><br>
+map f X Y → set X → f ∈ Map X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Map_elim.htm'>Map_elim</a><br>
+f ∈ Map X Y → map f X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/indicator_is_map.htm'>indicator_is_map</a><br>
+A ⊆ X → map (χ A X) X {∅, {∅}}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/indicator_app_is_zero.htm'>indicator_app_is_zero</a><br>
+A ⊆ X → x ∈ X \ A → app (χ A X) x = ∅</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/indicator_app_is_one.htm'>indicator_app_is_one</a><br>
+A ⊆ X → x ∈ A → app (χ A X) x = {∅}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/from_indicator_app_is_one.htm'>from_indicator_app_is_one</a><br>
+A ⊆ X → x ∈ X →
+  app (χ A X) x = {∅} → x ∈ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/power_equinum_indicators.htm'>power_equinum_indicators</a><br>
+set X →
+  equinum (power X) (Map X {∅, {∅}})</div></div>
+<h2 id='12'>Ordinal numbers</h2>
+<h3 id='12.1'>Transitive sets</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/transitive_equi.htm'>transitive_equi</a><br>
+transitive x ↔ ∀u. u ∈ x → u ⊆ x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_elim.htm'>transitive_elim</a><br>
+transitive x → u ∈ x → u ⊆ x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_intro.htm'>transitive_intro</a><br>
+(∀u. u ∈ x → u ⊆ x) → transitive x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_closed_succ.htm'>transitive_closed_succ</a><br>
+set x → transitive x →
+  transitive (x ∪ {x})</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_closed_Intersection.htm'>transitive_closed_Intersection</a><br>
+
+  (∀x. x ∈ M → transitive x) → transitive (⋂M)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_closed_Union.htm'>transitive_closed_Union</a><br>
+(∀x. x ∈ M → transitive x) →
+  transitive (⋃M)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_closed_power.htm'>transitive_closed_power</a><br>
+transitive x →
+  transitive (power x)</div></div>
+<h3 id='12.2'>Ordinal numbers</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/well_order_equi.htm'>well_order_equi</a><br>
+well_order R M ↔ wf R M ∧
+  (∀x. ∀y. ∀z. (x, y) ∈ R → (y, z) ∈ R → (x, z) ∈ R) ∧
+  (∀x. ∀y. ¬(¬((x, y) ∈ R ↔ x = y) ↔ (y, x) ∈ R))</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/diag_rl_eq.htm'>diag_rl_eq</a><br>
+diag_rl = {t | ∃x. ∃y. t = (x, y) ∧ x ∈ y}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/On_eq.htm'>On_eq</a><br>
+On = Univ ∩ {α | transitive α ∧ ∀x. x ∈ α → transitive x}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/on_lt_equi.htm'>on_lt_equi</a><br>
+on_lt = {t | ∃α. ∃β.
+  α ∈ On ∧ β ∈ On ∧ α ∈ β ∧ t = (α, β)}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/On_is_transitive.htm'>On_is_transitive</a><br>
+β ∈ On → β ⊆ On</div></div>
 <p><b>Statistics</b>
 <pre>
-  43 definitions
+  51 definitions
   16 axioms
- 339 theorems
+ 366 theorems
 ────────────────
- 398 items total
+ 433 items total
 </pre>
 </body>
 </html>

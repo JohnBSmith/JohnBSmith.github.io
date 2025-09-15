@@ -9,11 +9,11 @@
 <body>
 <h3>Theorem wf_induction</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> wf_induction<br>
-wf M R →
+wf R M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → P y) → P x) →
   (∀x. x ∈ M → P x)</div></div>
 <pre><b>Proof</b>
-01. 1 ⊢ wf M R, <a href='hypo.htm'>hypo</a>.
+01. 1 ⊢ wf R M, <a href='hypo.htm'>hypo</a>.
 02. 2 ⊢ A = {x | x ∈ M ∧ P x}, <a href='hypo.htm'>hypo</a>.
 03. 3 ⊢ ∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → P y) → P x, <a href='hypo.htm'>hypo</a>.
 04. 3 ⊢ x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → P y) → P x, <a href='uq_elim.htm'>uq_elim</a> 3.
@@ -58,7 +58,7 @@ wf M R →
 43. 1, 3 ⊢ {x | x ∈ M ∧ P x} = {x | x ∈ M ∧ P x} → ∀x. x ∈ M → P x, 42.
 44. ⊢ {x | x ∈ M ∧ P x} = {x | x ∈ M ∧ P x}, <a href='eq_refl.htm'>eq_refl</a>.
 45. 1, 3 ⊢ ∀x. x ∈ M → P x, <a href='subj_elim.htm'>subj_elim</a> 43 44.
-wf_induction. ⊢ wf M R →
+wf_induction. ⊢ wf R M →
   (∀x. x ∈ M → (∀y. y ∈ M → (y, x) ∈ R → P y) → P x) →
   (∀x. x ∈ M → P x), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 45.
 </pre>
