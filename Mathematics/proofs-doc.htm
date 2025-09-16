@@ -102,7 +102,7 @@ b.rule{color: #900060;}
 <li><a href='#9'>Closure operators</a>
 <li><a href='#10'>Grothendieck universes</a>
 <li><a href='#11'>Cardinal numbers</a><ol>
-<li><a href='#11.1'>Equinumerousities</a>
+<li><a href='#11.1'>Numerousities</a>
 </ol>
 <li><a href='#12'>Ordinal numbers</a><ol>
 <li><a href='#12.1'>Transitive sets</a>
@@ -271,7 +271,7 @@ function f → set (dom f) → set (rng f)</div></div>
 A ∨ ¬A</div></div>
 <h4 id='2.2.2'>Useful theorems</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diag_contra.htm'>diag_contra</a><br>
-¬(A ↔ ¬A)</div></div>
+(A ↔ ¬A) → ⊥</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/dn_intro.htm'>dn_intro</a><br>
 A → ¬¬A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/contraposition.htm'>contraposition</a><br>
@@ -284,6 +284,14 @@ A → ¬¬A</div></div>
 A ∨ B → ¬B → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/tollendo_ponens_right.htm'>tollendo_ponens_right</a><br>
 A ∨ B → ¬A → B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/hypothetical_syllogism.htm'>hypothetical_syllogism</a><br>
+(A → B) → (B → C) → (A → C)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equi_refl.htm'>equi_refl</a><br>
+A ↔ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equi_symm.htm'>equi_symm</a><br>
+(A ↔ B) → (B ↔ A)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equi_trans.htm'>equi_trans</a><br>
+(A ↔ B) → (B ↔ C) → (A ↔ C)</div></div>
 <h4 id='2.2.3'>De Morgan's laws</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_conj.htm'>neg_conj</a><br>
 ¬(A ∧ B) → ¬A ∨ ¬B</div></div>
@@ -564,7 +572,7 @@ set y → ¬x = y → ¬x ∈ {y}</div></div>
 x ∈ A → {x} ⊆ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_sg.htm'>Intersection_sg</a><br>
 set a → ⋂{a} = a</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_inj.htm'>sg_inj</a><br>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_is_inj.htm'>sg_is_inj</a><br>
 set x → set y → {x} = {y} → x = y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_of_proper_class.htm'>sg_of_proper_class</a><br>
 ¬set A → {A} = UnivCl</div></div>
@@ -688,6 +696,8 @@ img R (A ∩ B) ⊆ img R A ∩ img R B</div></div>
 A ⊆ B → img R A ⊆ img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_incl_in_rng.htm'>img_incl_in_rng</a><br>
 img R A ⊆ rng R</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_of_dom_is_rng.htm'>img_of_dom_is_rng</a><br>
+img R (dom R) = rng R</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_dist_inter.htm'>inv_img_dist_inter</a><br>
 inv_img R (A ∩ B) ⊆ inv_img R A ∩ inv_img R B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inv_img_dist_union.htm'>inv_img_dist_union</a><br>
@@ -758,6 +768,8 @@ map f X Y → relation f</div></div>
 function f → dom f = X → rng f ⊆ Y → map f X Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_is_map.htm'>fn_is_map</a><br>
 function f → dom f = X → map f X UnivCl</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_dom.htm'>map_dom</a><br>
+map f X Y → dom f = X</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_subclass.htm'>function_subclass</a><br>
 f ⊆ g → function g → function f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/function_union.htm'>function_union</a><br>
@@ -856,6 +868,11 @@ map f X Y → A ⊆ X → map (restr f A) A Y</div></div>
 map f X Y → A ⊆ X → x ∈ A → app f x = app (restr f A) x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_restr.htm'>fn_app_restr</a><br>
 function f → x ∈ dom f → x ∈ A → app f x = app (restr f A) x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_img_of_dom_is_rng.htm'>map_img_of_dom_is_rng</a><br>
+map f X Y → img f X = rng f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_rng_elim.htm'>map_rng_elim</a><br>
+map f X Y → y ∈ rng f →
+  ∃x. x ∈ X ∧ y = app f x</div></div>
 <h3 id='5.5'>Special functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_function.htm'>empty_function</a><br>
 function ∅</div></div>
@@ -1110,17 +1127,25 @@ set Univ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Univ_is_univ.htm'>Univ_is_univ</a><br>
 univ Univ</div></div>
 <h2 id='11'>Cardinal numbers</h2>
-<h3 id='11.1'>Equinumerousities</h3>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/equinum_equi.htm'>equinum_equi</a><br>
-equinum X Y ↔ ∃f. bij f X Y</div></div>
+<h3 id='11.1'>Numerousities</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/num_eq_equi.htm'>num_eq_equi</a><br>
+num_eq X Y ↔ ∃f. bij f X Y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/num_le_equi.htm'>num_le_equi</a><br>
+num_le X Y ↔ ∃f. inj f X Y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/num_lt_equi.htm'>num_lt_equi</a><br>
+num_lt X Y ↔ num_le X Y ∧ ¬∃f. sur f X Y</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/Map_eq.htm'>Map_eq</a><br>
 Map X Y = {f | map f X Y}</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/indicator_eq.htm'>indicator_eq</a><br>
 χ A X =
   {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)} ∪
   {t | ∃x. x ∈ A ∧ t = (x, {∅})}</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equinum_intro.htm'>equinum_intro</a><br>
-(∃f. bij f X Y) → equinum X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/num_eq_intro.htm'>num_eq_intro</a><br>
+(∃f. bij f X Y) → num_eq X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/num_le_intro.htm'>num_le_intro</a><br>
+(∃f. inj f X Y) → num_le X Y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/num_lt_intro.htm'>num_lt_intro</a><br>
+num_le X Y → (¬∃f. sur f X Y) → num_lt X Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Map_intro.htm'>Map_intro</a><br>
 map f X Y → set X → f ∈ Map X Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Map_elim.htm'>Map_elim</a><br>
@@ -1136,7 +1161,9 @@ A ⊆ X → x ∈ X →
   app (χ A X) x = {∅} → x ∈ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/power_equinum_indicators.htm'>power_equinum_indicators</a><br>
 set X →
-  equinum (power X) (Map X {∅, {∅}})</div></div>
+  num_eq (power X) (Map X {∅, {∅}})</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Cantor%27s_theorem.htm'>Cantor's_theorem</a><br>
+set X → num_lt X (power X)</div></div>
 <h2 id='12'>Ordinal numbers</h2>
 <h3 id='12.1'>Transitive sets</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/transitive_equi.htm'>transitive_equi</a><br>
@@ -1173,11 +1200,11 @@ on_lt = {t | ∃α. ∃β.
 β ∈ On → β ⊆ On</div></div>
 <p><b>Statistics</b>
 <pre>
-  51 definitions
+  53 definitions
   16 axioms
- 366 theorems
+ 377 theorems
 ────────────────
- 433 items total
+ 446 items total
 </pre>
 </body>
 </html>
