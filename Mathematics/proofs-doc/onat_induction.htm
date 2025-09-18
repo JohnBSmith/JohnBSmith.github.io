@@ -12,12 +12,13 @@
 P ∅ → (∀n. n ∈ onat → P n → P (succ n)) →
   (∀n. n ∈ onat → P n)</div></div>
 <pre><b>Proof</b>
+let M = {n | n ∈ onat ∧ P n}.
 01. 1 ⊢ P ∅, <a href='hypo.htm'>hypo</a>.
 02. 2 ⊢ ∀n. n ∈ onat → P n → P (succ n), <a href='hypo.htm'>hypo</a>.
-03. ⊢ {n | n ∈ onat ∧ P n} ⊆ onat, <a href='sep_is_subclass.htm'>sep_is_subclass</a>.
+03. ⊢ M ⊆ onat, <a href='sep_is_subclass.htm'>sep_is_subclass</a>.
 04. 1 ⊢ ∅ ∈ onat ∧ P ∅, <a href='conj_intro.htm'>conj_intro</a> <a href='zero_in_onat.htm'>zero_in_onat</a> 1.
-05. 1 ⊢ ∅ ∈ {n | n ∈ onat ∧ P n}, <a href='comp_intro.htm'>comp_intro</a> <a href='empty_set_is_set.htm'>empty_set_is_set</a> 4.
-06. 6 ⊢ n ∈ {n | n ∈ onat ∧ P n}, <a href='hypo.htm'>hypo</a>.
+05. 1 ⊢ ∅ ∈ M, <a href='comp_intro.htm'>comp_intro</a> <a href='empty_set_is_set.htm'>empty_set_is_set</a> 4.
+06. 6 ⊢ n ∈ M, <a href='hypo.htm'>hypo</a>.
 07. 6 ⊢ n ∈ onat ∧ P n, <a href='comp_elim.htm'>comp_elim</a> 6.
 08. 6 ⊢ n ∈ onat, <a href='conj_eliml.htm'>conj_eliml</a> 7.
 09. 6 ⊢ P n, <a href='conj_elimr.htm'>conj_elimr</a> 7.
@@ -26,15 +27,12 @@ P ∅ → (∀n. n ∈ onat → P n → P (succ n)) →
 12. 6 ⊢ succ n ∈ onat, <a href='succ_in_onat.htm'>succ_in_onat</a> 8.
 13. 6 ⊢ set (succ n), <a href='set_intro.htm'>set_intro</a> 12.
 14. 2, 6 ⊢ succ n ∈ onat ∧ P (succ n), <a href='conj_intro.htm'>conj_intro</a> 12 11.
-15. 2, 6 ⊢ succ n ∈ {n | n ∈ onat ∧ P n},
-  <a href='comp_intro.htm'>comp_intro</a> 13 14, P n ↔ n ∈ onat ∧ P n.
-16. 2 ⊢ n ∈ {n | n ∈ onat ∧ P n} →
-  succ n ∈ {n | n ∈ onat ∧ P n}, <a href='subj_intro.htm'>subj_intro</a> 15.
-17. 2 ⊢ ∀n. n ∈ {n | n ∈ onat ∧ P n} →
-  succ n ∈ {n | n ∈ onat ∧ P n}, <a href='uq_intro.htm'>uq_intro</a> 16.
-18. 1, 2 ⊢ {n | n ∈ onat ∧ P n} = onat, <a href='onat_induction_sets.htm'>onat_induction_sets</a> 3 5 17.
+15. 2, 6 ⊢ succ n ∈ M, <a href='comp_intro.htm'>comp_intro</a> 13 14, P n ↔ n ∈ onat ∧ P n.
+16. 2 ⊢ n ∈ M → succ n ∈ M, <a href='subj_intro.htm'>subj_intro</a> 15.
+17. 2 ⊢ ∀n. n ∈ M → succ n ∈ M, <a href='uq_intro.htm'>uq_intro</a> 16.
+18. 1, 2 ⊢ M = onat, <a href='onat_induction_sets.htm'>onat_induction_sets</a> 3 5 17.
 19. 19 ⊢ n ∈ onat, <a href='hypo.htm'>hypo</a>.
-20. 1, 2, 19 ⊢ n ∈ {n | n ∈ onat ∧ P n}, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 18 19.
+20. 1, 2, 19 ⊢ n ∈ M, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 18 19.
 21. 1, 2, 19 ⊢ n ∈ onat ∧ P n, <a href='comp_elim.htm'>comp_elim</a> 20.
 22. 1, 2, 19 ⊢ P n, <a href='conj_elimr.htm'>conj_elimr</a> 21.
 23. 1, 2 ⊢ n ∈ onat → P n, <a href='subj_intro.htm'>subj_intro</a> 22.

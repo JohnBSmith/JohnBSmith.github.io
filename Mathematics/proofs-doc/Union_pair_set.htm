@@ -14,41 +14,50 @@ set x ∧ set y → ⋃{x, y} = x ∪ y</div></div>
 01. 1 ⊢ set x ∧ set y, <a href='hypo.htm'>hypo</a>.
 02. 1 ⊢ set x, <a href='conj_eliml.htm'>conj_eliml</a> 1.
 03. 1 ⊢ set y, <a href='conj_elimr.htm'>conj_elimr</a> 1.
+
 04. 4 ⊢ u ∈ ⋃{x, y}, <a href='hypo.htm'>hypo</a>.
 05. 4 ⊢ ∃a. a ∈ {x, y} ∧ u ∈ a, <a href='Union_elim.htm'>Union_elim</a> 4.
 06. 6 ⊢ a ∈ {x, y} ∧ u ∈ a, <a href='hypo.htm'>hypo</a>.
 07. 6 ⊢ a ∈ {x, y}, <a href='conj_eliml.htm'>conj_eliml</a> 6.
 08. 6 ⊢ u ∈ a, <a href='conj_elimr.htm'>conj_elimr</a> 6.
 09. 6 ⊢ a ∈ {x} ∨ a ∈ {y}, <a href='union_elim.htm'>union_elim</a> 7.
+
 10. 10 ⊢ a ∈ {x}, <a href='hypo.htm'>hypo</a>.
 11. 1, 10 ⊢ a = x, <a href='sg_elim.htm'>sg_elim</a> 2 10.
 12. 1, 6, 10 ⊢ u ∈ x, <a href='eq_subst.htm'>eq_subst</a> 11 8, P x ↔ u ∈ x.
 13. 1, 6, 10 ⊢ u ∈ x ∪ y, <a href='union_introl.htm'>union_introl</a> 12.
+
 14. 14 ⊢ a ∈ {y}, <a href='hypo.htm'>hypo</a>.
 15. 1, 14 ⊢ a = y, <a href='sg_elim.htm'>sg_elim</a> 3 14.
 16. 1, 6, 14 ⊢ u ∈ y, <a href='eq_subst.htm'>eq_subst</a> 15 8, P x ↔ u ∈ x.
 17. 1, 6, 14 ⊢ u ∈ x ∪ y, <a href='union_intror.htm'>union_intror</a> 16.
+
 18. 1, 6 ⊢ u ∈ x ∪ y, <a href='disj_elim.htm'>disj_elim</a> 9 13 17.
 19. 1, 4 ⊢ u ∈ x ∪ y, <a href='ex_elim.htm'>ex_elim</a> 5 18.
 20. 1 ⊢ u ∈ ⋃{x, y} → u ∈ x ∪ y, <a href='subj_intro.htm'>subj_intro</a> 19.
 21. 1 ⊢ ∀u. u ∈ ⋃{x, y} → u ∈ x ∪ y, <a href='uq_intro.htm'>uq_intro</a> 20.
 22. 1 ⊢ ⋃{x, y} ⊆ x ∪ y, <a href='incl_intro.htm'>incl_intro</a> 21.
+
 23. 23 ⊢ u ∈ x ∪ y, <a href='hypo.htm'>hypo</a>.
 24. 23 ⊢ u ∈ x ∨ u ∈ y, <a href='union_elim.htm'>union_elim</a> 23.
+
 25. 25 ⊢ u ∈ x, <a href='hypo.htm'>hypo</a>.
 26. 1 ⊢ x ∈ {x, y}, <a href='in21.htm'>in21</a> 2.
 27. 1, 25 ⊢ x ∈ {x, y} ∧ u ∈ x, <a href='conj_intro.htm'>conj_intro</a> 26 25.
 28. 1, 25 ⊢ ∃a. a ∈ {x, y} ∧ u ∈ a, <a href='ex_intro.htm'>ex_intro</a> 27.
 29. 1, 25 ⊢ u ∈ ⋃{x, y}, <a href='Union_intro_ex.htm'>Union_intro_ex</a> 28.
+
 30. 30 ⊢ u ∈ y, <a href='hypo.htm'>hypo</a>.
 31. 1 ⊢ y ∈ {x, y}, <a href='in22.htm'>in22</a> 3.
 32. 1, 30 ⊢ y ∈ {x, y} ∧ u ∈ y, <a href='conj_intro.htm'>conj_intro</a> 31 30.
 33. 1, 30 ⊢ ∃a. a ∈ {x, y} ∧ u ∈ a, <a href='ex_intro.htm'>ex_intro</a> 32.
 34. 1, 30 ⊢ u ∈ ⋃{x, y}, <a href='Union_intro_ex.htm'>Union_intro_ex</a> 33.
+
 35. 1, 23 ⊢ u ∈ ⋃{x, y}, <a href='disj_elim.htm'>disj_elim</a> 24 29 34.
 36. 1 ⊢ u ∈ x ∪ y → u ∈ ⋃{x, y}, <a href='subj_intro.htm'>subj_intro</a> 35.
 37. 1 ⊢ ∀u. u ∈ x ∪ y → u ∈ ⋃{x, y}, <a href='uq_intro.htm'>uq_intro</a> 36.
 38. 1 ⊢ x ∪ y ⊆ ⋃{x, y}, <a href='incl_intro.htm'>incl_intro</a> 37.
+
 39. 1 ⊢ ⋃{x, y} = x ∪ y, <a href='incl_antisym.htm'>incl_antisym</a> 22 38.
 Union_pair_set. ⊢ set x ∧ set y → ⋃{x, y} = x ∪ y, <a href='subj_intro.htm'>subj_intro</a> 39.
 </pre>

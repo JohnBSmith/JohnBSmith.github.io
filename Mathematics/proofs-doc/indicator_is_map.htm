@@ -11,38 +11,34 @@
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> indicator_is_map<br>
 A ⊆ X → map (χ A X) X {∅, {∅}}</div></div>
 <pre><b>Proof</b>
+let χ0 = {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)}.
+let χ1 = {t | ∃x. x ∈ A ∧ t = (x, {∅})}.
+let Y = {∅, {∅}}.
 01. ⊢ set ∅, <a href='empty_set_is_set.htm'>empty_set_is_set</a>.
 02. ⊢ set {∅}, <a href='set_sg.htm'>set_sg</a> 1.
-03. ⊢ ∅ ∈ {∅, {∅}}, <a href='in21.htm'>in21</a> 1.
-04. ⊢ {∅} ∈ {∅, {∅}}, <a href='in22.htm'>in22</a> 2.
+03. ⊢ ∅ ∈ Y, <a href='in21.htm'>in21</a> 1.
+04. ⊢ {∅} ∈ Y, <a href='in22.htm'>in22</a> 2.
 05. 5 ⊢ x ∈ X \ A, <a href='hypo.htm'>hypo</a>.
 06. 6 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
-07. 5 ⊢ ∅ ∈ {∅, {∅}}, <a href='wk.htm'>wk</a> 3.
-08. 6 ⊢ {∅} ∈ {∅, {∅}}, <a href='wk.htm'>wk</a> 4.
-09. ⊢ x ∈ X \ A → ∅ ∈ {∅, {∅}}, <a href='subj_intro.htm'>subj_intro</a> 7.
-10. ⊢ x ∈ A → {∅} ∈ {∅, {∅}}, <a href='subj_intro.htm'>subj_intro</a> 8.
-11. ⊢ ∀x. x ∈ X \ A → ∅ ∈ {∅, {∅}}, <a href='uq_intro.htm'>uq_intro</a> 9.
-12. ⊢ ∀x. x ∈ A → {∅} ∈ {∅, {∅}}, <a href='uq_intro.htm'>uq_intro</a> 10.
-13. ⊢ {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)}
-  = {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)}, <a href='eq_refl.htm'>eq_refl</a>.
-14. ⊢ {t | ∃x. x ∈ A ∧ t = (x, {∅})}
-  = {t | ∃x. x ∈ A ∧ t = (x, {∅})}, <a href='eq_refl.htm'>eq_refl</a>.
-15. ⊢ map {t | ∃x. x ∈ X \ A ∧ t = (x, ∅)} (X \ A) {∅, {∅}},
-  <a href='map_from_term.htm'>map_from_term</a> 13 11.
-16. ⊢ map {t | ∃x. x ∈ A ∧ t = (x, {∅})} A {∅, {∅}},
-  <a href='map_from_term.htm'>map_from_term</a> 14 12.
+07. 5 ⊢ ∅ ∈ Y, <a href='wk.htm'>wk</a> 3.
+08. 6 ⊢ {∅} ∈ Y, <a href='wk.htm'>wk</a> 4.
+09. ⊢ x ∈ X \ A → ∅ ∈ Y, <a href='subj_intro.htm'>subj_intro</a> 7.
+10. ⊢ x ∈ A → {∅} ∈ Y, <a href='subj_intro.htm'>subj_intro</a> 8.
+11. ⊢ ∀x. x ∈ X \ A → ∅ ∈ Y, <a href='uq_intro.htm'>uq_intro</a> 9.
+12. ⊢ ∀x. x ∈ A → {∅} ∈ Y, <a href='uq_intro.htm'>uq_intro</a> 10.
+13. ⊢ χ0 = χ0, <a href='eq_refl.htm'>eq_refl</a>.
+14. ⊢ χ1 = χ1, <a href='eq_refl.htm'>eq_refl</a>.
+15. ⊢ map χ0 (X \ A) Y, <a href='map_from_term.htm'>map_from_term</a> 13 11.
+16. ⊢ map χ1 A Y, <a href='map_from_term.htm'>map_from_term</a> 14 12.
 17. ⊢ A ∩ (X \ A) = ∅, <a href='intersection_rel_compl.htm'>intersection_rel_compl</a>.
 18. ⊢ (X \ A) ∩ A = A ∩ (X \ A), <a href='intersection_comm.htm'>intersection_comm</a>.
 19. ⊢ (X \ A) ∩ A = ∅, <a href='eq_trans.htm'>eq_trans</a> 18 17.
-20. ⊢ map ({t | ∃x. x ∈ X \ A ∧ t = (x, ∅)} ∪
-  {t | ∃x. x ∈ A ∧ t = (x, {∅})}) ((X \ A) ∪ A) {∅, {∅}},
-  <a href='map_union_eq_rngs.htm'>map_union_eq_rngs</a> 15 16 19.
-21. ⊢ map (χ A X) ((X \ A) ∪ A) {∅, {∅}},
-  <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='indicator_eq.htm'>indicator_eq</a> 20, P t ↔ map t ((X \ A) ∪ A) {∅, {∅}}.
+20. ⊢ map (χ0 ∪ χ1) ((X \ A) ∪ A) Y, <a href='map_union_eq_rngs.htm'>map_union_eq_rngs</a> 15 16 19.
+21. ⊢ map (χ A X) ((X \ A) ∪ A) Y,
+  <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='indicator_eq.htm'>indicator_eq</a> 20, P t ↔ map t ((X \ A) ∪ A) Y.
 22. 22 ⊢ A ⊆ X, <a href='hypo.htm'>hypo</a>.
 23. 22 ⊢ (X \ A) ∪ A = X, <a href='diff_union_subclass.htm'>diff_union_subclass</a> 22.
-24. 22 ⊢ map (χ A X) X {∅, {∅}},
-  <a href='eq_subst.htm'>eq_subst</a> 23 21, P t ↔ map (χ A X) t {∅, {∅}}.
+24. 22 ⊢ map (χ A X) X Y, <a href='eq_subst.htm'>eq_subst</a> 23 21, P t ↔ map (χ A X) t Y.
 indicator_is_map. ⊢ A ⊆ X → map (χ A X) X {∅, {∅}}, <a href='subj_intro.htm'>subj_intro</a> 24.
 </pre>
 <p><b>Dependencies</b><br>The given proof depends on 10 axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='infinity.htm'>infinity</a>, <a href='lem.htm'>lem</a>, <a href='pairing.htm'>pairing</a>, <a href='subset.htm'>subset</a>, <a href='union.htm'>union</a>.</p>

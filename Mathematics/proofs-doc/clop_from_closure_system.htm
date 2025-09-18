@@ -13,30 +13,28 @@ closure_system M U →
   H = {t | ∃X. X ∈ power U ∧ t = (X, ⋂{A | A ∈ M ∧ X ⊆ A})} →
   closure_operator H U</div></div>
 <pre><b>Proof</b>
+let HX = ⋂{A | A ∈ M ∧ X ⊆ A}.
+let HY = ⋂{A | A ∈ M ∧ Y ⊆ A}.
 01. 1 ⊢ closure_system M U, <a href='hypo.htm'>hypo</a>.
-02. 2 ⊢ H = {t | ∃X. X ∈ power U ∧
-  t = (X, ⋂{A | A ∈ M ∧ X ⊆ A})}, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ H = {t | ∃X. X ∈ power U ∧ t = (X, HX)}, <a href='hypo.htm'>hypo</a>.
 03. 1 ⊢ U ∈ M, <a href='lsubj_conj_elimlr.htm'>lsubj_conj_elimlr</a> <a href='closure_system_equi.htm'>closure_system_equi</a> 1.
 04. 4 ⊢ X ∈ power U, <a href='hypo.htm'>hypo</a>.
 05. 4 ⊢ X ⊆ U, <a href='power_elim.htm'>power_elim</a> 4.
 06. 1, 4 ⊢ U ∈ M ∧ X ⊆ U, <a href='conj_intro.htm'>conj_intro</a> 3 5.
 07. 1, 4 ⊢ U ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='comp_intro_from.htm'>comp_intro_from</a> 3 6.
-08. ⊢ ⋂{A | A ∈ M ∧ X ⊆ A} = ⋂{A | A ∈ M ∧ X ⊆ A}, <a href='eq_refl.htm'>eq_refl</a>.
-09. 1, 4 ⊢ ⋂{A | A ∈ M ∧ X ⊆ A} ⊆ U,
-  <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> 8 7.
+08. ⊢ HX = HX, <a href='eq_refl.htm'>eq_refl</a>.
+09. 1, 4 ⊢ HX ⊆ U, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> 8 7.
 10. 1 ⊢ set U, <a href='set_intro.htm'>set_intro</a> 3.
-11. 1, 4 ⊢ set (⋂{A | A ∈ M ∧ X ⊆ A}), <a href='subset.htm'>subset</a> 9 10.
-12. 1, 4 ⊢ ⋂{A | A ∈ M ∧ X ⊆ A} ∈ power U, <a href='power_intro.htm'>power_intro</a> 11 9.
-13. 1 ⊢ X ∈ power U →
-  ⋂{A | A ∈ M ∧ X ⊆ A} ∈ power U, <a href='subj_intro.htm'>subj_intro</a> 12.
-14. 1 ⊢ ∀X. X ∈ power U →
-  ⋂{A | A ∈ M ∧ X ⊆ A} ∈ power U, <a href='uq_intro.htm'>uq_intro</a> 13.
+11. 1, 4 ⊢ set HX, <a href='subset.htm'>subset</a> 9 10.
+12. 1, 4 ⊢ HX ∈ power U, <a href='power_intro.htm'>power_intro</a> 11 9.
+13. 1 ⊢ X ∈ power U → HX ∈ power U, <a href='subj_intro.htm'>subj_intro</a> 12.
+14. 1 ⊢ ∀X. X ∈ power U → HX ∈ power U, <a href='uq_intro.htm'>uq_intro</a> 13.
 15. 1, 2 ⊢ map H (power U) (power U), <a href='map_from_term.htm'>map_from_term</a> 2 14.
+
 16. 16 ⊢ X ⊆ U, <a href='hypo.htm'>hypo</a>.
 17. 1, 16 ⊢ set X, <a href='subset.htm'>subset</a> 16 10.
 18. 1, 16 ⊢ X ∈ power U, <a href='power_intro.htm'>power_intro</a> 17 16.
-19. 1, 2, 16 ⊢ app H X = ⋂{A | A ∈ M ∧ X ⊆ A},
-  <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 18.
+19. 1, 2, 16 ⊢ app H X = HX, <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 18.
 20. 20 ⊢ x ∈ X, <a href='hypo.htm'>hypo</a>.
 21. 21 ⊢ A ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='hypo.htm'>hypo</a>.
 22. 21 ⊢ A ∈ M ∧ X ⊆ A, <a href='comp_elim.htm'>comp_elim</a> 21.
@@ -45,8 +43,7 @@ closure_system M U →
 25. 20 ⊢ A ∈ {A | A ∈ M ∧ X ⊆ A} → x ∈ A, <a href='subj_intro.htm'>subj_intro</a> 24.
 26. 20 ⊢ ∀A. A ∈ {A | A ∈ M ∧ X ⊆ A} → x ∈ A, <a href='uq_intro.htm'>uq_intro</a> 25.
 27. 20 ⊢ set x, <a href='set_intro.htm'>set_intro</a> 20.
-28. 20 ⊢ x ∈ ⋂{A | A ∈ M ∧ X ⊆ A},
-  <a href='Intersection_intro.htm'>Intersection_intro</a> 27 26.
+28. 20 ⊢ x ∈ HX, <a href='Intersection_intro.htm'>Intersection_intro</a> 27 26.
 29. 1, 2, 16, 20 ⊢ x ∈ app H X,
   <a href='eq_subst_rev.htm'>eq_subst_rev</a> 19 28, P t ↔ x ∈ t.
 30. 1, 2, 16 ⊢ x ∈ X → x ∈ app H X, <a href='subj_intro.htm'>subj_intro</a> 29.
@@ -54,48 +51,45 @@ closure_system M U →
 32. 1, 2, 16 ⊢ X ⊆ app H X, <a href='incl_intro.htm'>incl_intro</a> 31.
 33. 1, 2 ⊢ X ⊆ U → X ⊆ app H X, <a href='subj_intro.htm'>subj_intro</a> 32.
 34. 1, 2 ⊢ ∀X. X ⊆ U → X ⊆ app H X, <a href='uq_intro.htm'>uq_intro</a> 33.
+
 35. 35 ⊢ Y ⊆ U, <a href='hypo.htm'>hypo</a>.
 36. 1, 35 ⊢ set Y, <a href='subset.htm'>subset</a> 35 10.
 37. 1, 35 ⊢ Y ∈ power U, <a href='power_intro.htm'>power_intro</a> 36 35.
-38. 1, 2, 35 ⊢ app H Y = ⋂{A | A ∈ M ∧ Y ⊆ A},
-  <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 37.
+38. 1, 2, 35 ⊢ app H Y = HY, <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 37.
 39. 39 ⊢ X ⊆ Y, <a href='hypo.htm'>hypo</a>.
 40. 35, 39 ⊢ X ⊆ U, <a href='incl_trans.htm'>incl_trans</a> 39 35.
 41. 1, 35, 39 ⊢ set X, <a href='subset.htm'>subset</a> 40 10.
 42. 1, 35, 39 ⊢ X ∈ power U, <a href='power_intro.htm'>power_intro</a> 41 40.
-43. 1, 2, 35, 39 ⊢ app H X = ⋂{A | A ∈ M ∧ X ⊆ A},
-  <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 42.
+43. 1, 2, 35, 39 ⊢ app H X = HX, <a href='map_from_term_app.htm'>map_from_term_app</a> 2 14 42.
 44. 44 ⊢ A ∈ {A | A ∈ M ∧ Y ⊆ A}, <a href='hypo.htm'>hypo</a>.
 45. 44 ⊢ A ∈ M ∧ Y ⊆ A, <a href='comp_elim.htm'>comp_elim</a> 44.
 46. 44 ⊢ A ∈ M, <a href='conj_eliml.htm'>conj_eliml</a> 45.
 47. 44 ⊢ Y ⊆ A, <a href='conj_elimr.htm'>conj_elimr</a> 45.
 48. 39, 44 ⊢ X ⊆ A, <a href='incl_trans.htm'>incl_trans</a> 39 47.
 49. 39, 44 ⊢ A ∈ M ∧ X ⊆ A, <a href='conj_intro.htm'>conj_intro</a> 46 48.
-50. 39, 44 ⊢ A ∈ {A | A ∈ M ∧ X ⊆ A},
-  <a href='comp_intro_from.htm'>comp_intro_from</a> 46 49.
+50. 39, 44 ⊢ A ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='comp_intro_from.htm'>comp_intro_from</a> 46 49.
 51. 39 ⊢ A ∈ {A | A ∈ M ∧ Y ⊆ A} →
   A ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='subj_intro.htm'>subj_intro</a> 50.
 52. 39 ⊢ ∀A. A ∈ {A | A ∈ M ∧ Y ⊆ A} →
   A ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='uq_intro.htm'>uq_intro</a> 51.
 53. 39 ⊢ {A | A ∈ M ∧ Y ⊆ A} ⊆ {A | A ∈ M ∧ X ⊆ A}, <a href='incl_intro.htm'>incl_intro</a> 52.
-54. 39 ⊢ ⋂{A | A ∈ M ∧ X ⊆ A} ⊆ ⋂{A | A ∈ M ∧ Y ⊆ A},
-  <a href='Intersection_dec.htm'>Intersection_dec</a> 53.
-55. 1, 2, 35, 39 ⊢ app H X ⊆ ⋂{A | A ∈ M ∧ Y ⊆ A},
-  <a href='eq_subst_rev.htm'>eq_subst_rev</a> 43 54, P t ↔ t ⊆ ⋂{A | A ∈ M ∧ Y ⊆ A}.
+54. 39 ⊢ HX ⊆ HY, <a href='Intersection_dec.htm'>Intersection_dec</a> 53.
+55. 1, 2, 35, 39 ⊢ app H X ⊆ HY,
+  <a href='eq_subst_rev.htm'>eq_subst_rev</a> 43 54, P t ↔ t ⊆ HY.
 56. 1, 2, 39, 35 ⊢ app H X ⊆ app H Y,
   <a href='eq_subst_rev.htm'>eq_subst_rev</a> 38 55, P t ↔ app H X ⊆ t.
 57. 1, 2 ⊢ X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 56.
 58. 1, 2 ⊢ ∀Y. X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y, <a href='uq_intro.htm'>uq_intro</a> 57.
 59. 1, 2 ⊢ ∀X. ∀Y. X ⊆ Y → Y ⊆ U → app H X ⊆ app H Y, <a href='uq_intro.htm'>uq_intro</a> 58.
+
 60. 1 ⊢ ∀T. T ⊆ M → ¬T=∅ → ⋂T ∈ M,
   <a href='lsubj_conj_elimr.htm'>lsubj_conj_elimr</a> <a href='closure_system_equi.htm'>closure_system_equi</a> 1.
 61. ⊢ {A | A ∈ M ∧ X ⊆ A} ⊆ M, <a href='sep_is_subclass.htm'>sep_is_subclass</a>.
 62. 1, 16 ⊢ U ∈ M ∧ X ⊆ U, <a href='conj_intro.htm'>conj_intro</a> 3 16.
 63. 1, 16 ⊢ U ∈ {A | A ∈ M ∧ X ⊆ A}, <a href='comp_intro_from.htm'>comp_intro_from</a> 3 62.
 64. 1, 16 ⊢ ¬{A | A ∈ M ∧ X ⊆ A} = ∅, <a href='non_empty_from_witness.htm'>non_empty_from_witness</a> 63.
-65. 1 ⊢ ¬{A | A ∈ M ∧ X ⊆ A} = ∅ → ⋂{A | A ∈ M ∧ X ⊆ A} ∈ M,
-  <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 60 61.
-66. 1, 16 ⊢ ⋂{A | A ∈ M ∧ X ⊆ A} ∈ M, <a href='subj_elim.htm'>subj_elim</a> 65 64.
+65. 1 ⊢ ¬{A | A ∈ M ∧ X ⊆ A} = ∅ → HX ∈ M, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 60 61.
+66. 1, 16 ⊢ HX ∈ M, <a href='subj_elim.htm'>subj_elim</a> 65 64.
 67. 1, 2, 16 ⊢ app H X ∈ M, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 19 66, P t ↔ t ∈ M.
 68. ⊢ app H X ⊆ app H X, <a href='incl_refl.htm'>incl_refl</a>.
 69. 1, 2, 16 ⊢ app H X ∈ M ∧ app H X ⊆ app H X, <a href='conj_intro.htm'>conj_intro</a> 67 68.
@@ -111,6 +105,7 @@ closure_system M U →
   <a href='eq_subst_rev.htm'>eq_subst_rev</a> 74 72, P t ↔ t ⊆ app H X.
 76. 1, 2 ⊢ X ⊆ U → app H (app H X) ⊆ app H X, <a href='subj_intro.htm'>subj_intro</a> 75.
 77. 1, 2 ⊢ ∀X. X ⊆ U → app H (app H X) ⊆ app H X, <a href='uq_intro.htm'>uq_intro</a> 76.
+
 78. 1, 2 ⊢ set U ∧ map H (power U) (power U), <a href='conj_intro.htm'>conj_intro</a> 10 15.
 79. 1, 2 ⊢ set U ∧ map H (power U) (power U) ∧
   (∀X. X ⊆ U → X ⊆ app H X), <a href='conj_intro.htm'>conj_intro</a> 78 34.
