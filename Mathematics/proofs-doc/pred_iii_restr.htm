@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>pred_iii_restr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem pred_iii_restr</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> pred_iii_restr<br>
+A ⊆ B → (x ∈ B → y ∈ B → z ∈ B → P x y z) →
+  (x ∈ A → y ∈ A → z ∈ A → P x y z)</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ y ∈ A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ z ∈ A, <a href='hypo.htm'>hypo</a>.
+04. 4 ⊢ A ⊆ B, <a href='hypo.htm'>hypo</a>.
+05. 1, 4 ⊢ x ∈ B, <a href='incl_elim.htm'>incl_elim</a> 4 1.
+06. 2, 4 ⊢ y ∈ B, <a href='incl_elim.htm'>incl_elim</a> 4 2.
+07. 3, 4 ⊢ z ∈ B, <a href='incl_elim.htm'>incl_elim</a> 4 3.
+08. 8 ⊢ x ∈ B → y ∈ B → z ∈ B → P x y z, <a href='hypo.htm'>hypo</a>.
+09. 4, 8, 1 ⊢ y ∈ B → z ∈ B → P x y z, <a href='subj_elim.htm'>subj_elim</a> 8 5.
+10. 4, 8, 1, 2 ⊢ z ∈ B → P x y z, <a href='subj_elim.htm'>subj_elim</a> 9 6.
+11. 4, 8, 1, 2, 3 ⊢ P x y z, <a href='subj_elim.htm'>subj_elim</a> 10 7.
+12. 4, 8 ⊢ x ∈ A → y ∈ A → z ∈ A → P x y z, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 11.
+pred_iii_restr. ⊢ A ⊆ B → (x ∈ B → y ∈ B → z ∈ B → P x y z) →
+  (x ∈ A → y ∈ A → z ∈ A → P x y z), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 12.
+</pre>
+</body>
+</html>

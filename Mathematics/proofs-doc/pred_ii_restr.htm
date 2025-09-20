@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>pred_ii_restr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem pred_ii_restr</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> pred_ii_restr<br>
+A ⊆ B → (x ∈ B → y ∈ B → P x y) →
+  (x ∈ A → y ∈ A → P x y)</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ A, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ y ∈ A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ A ⊆ B, <a href='hypo.htm'>hypo</a>.
+04. 1, 3 ⊢ x ∈ B, <a href='incl_elim.htm'>incl_elim</a> 3 1.
+05. 2, 3 ⊢ y ∈ B, <a href='incl_elim.htm'>incl_elim</a> 3 2.
+06. 6 ⊢ x ∈ B → y ∈ B → P x y, <a href='hypo.htm'>hypo</a>.
+07. 3, 6, 1 ⊢ y ∈ B → P x y, <a href='subj_elim.htm'>subj_elim</a> 6 4.
+08. 3, 6, 1, 2 ⊢ P x y, <a href='subj_elim.htm'>subj_elim</a> 7 5.
+pred_ii_restr. ⊢ A ⊆ B → (x ∈ B → y ∈ B → P x y) →
+  (x ∈ A → y ∈ A → P x y), <a href='subj_intro_iv.htm'>subj_intro_iv</a> 8.
+</pre>
+</body>
+</html>

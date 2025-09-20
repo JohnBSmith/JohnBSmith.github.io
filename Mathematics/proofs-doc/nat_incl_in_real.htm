@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nat_incl_in_real</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nat_incl_in_real</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_incl_in_real<br>
+ℕ ⊆ ℝ</div></div>
+<pre><b>Proof</b>
+let inductive A ↔ A ⊆ ℝ ∧ 0 ∈ A ∧ (∀n. n ∈ A → n + 1 ∈ A).
+01. ⊢ ℝ ⊆ ℝ, <a href='incl_refl.htm'>incl_refl</a>.
+02. ⊢ 0 ∈ ℝ, <a href='calc.htm'>calc</a>.
+03. 3 ⊢ n ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+04. ⊢ 1 ∈ ℝ, <a href='calc.htm'>calc</a>.
+05. 3 ⊢ n + 1 ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 3 4.
+06. ⊢ n ∈ ℝ → n + 1 ∈ ℝ, <a href='subj_intro.htm'>subj_intro</a> 5.
+07. ⊢ ∀n. n ∈ ℝ → n + 1 ∈ ℝ, <a href='uq_intro.htm'>uq_intro</a> 6.
+08. ⊢ ℝ ⊆ ℝ ∧ 0 ∈ ℝ, <a href='conj_intro.htm'>conj_intro</a> 1 2.
+09. ⊢ inductive ℝ, <a href='conj_intro.htm'>conj_intro</a> 8 7.
+10. ⊢ ℝ ∈ {A | inductive A},
+  <a href='comp_intro.htm'>comp_intro</a> <a href='real_is_set.htm'>real_is_set</a> 9, P A ↔ inductive A.
+nat_incl_in_real. ⊢ ℕ ⊆ ℝ, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> <a href='nat_eq.htm'>nat_eq</a> 10.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on four axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='real_is_set.htm'>real_is_set</a>.</p>
+</body>
+</html>

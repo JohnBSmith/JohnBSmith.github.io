@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nadd_closed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nadd_closed</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nadd_closed<br>
+a ∈ ℕ → b ∈ ℕ → a + b ∈ ℕ</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ b ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ 0 + b = b, <a href='nadd_neutl.htm'>nadd_neutl</a> 1.
+03. 1 ⊢ 0 + b ∈ ℕ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 1, P t ↔ t ∈ ℕ.
+04. 4 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+05. 5 ⊢ n + b ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+06. 5 ⊢ n + b + 1 ∈ ℕ, <a href='succ_in_nat.htm'>succ_in_nat</a> 5.
+07. 4 ⊢ n ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 4.
+08. 1 ⊢ b ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 1.
+09. ⊢ 1 ∈ ℝ, <a href='calc.htm'>calc</a>.
+10. 1, 4 ⊢ n + b + 1 = n + (b + 1), <a href='radd_assoc.htm'>radd_assoc</a> 7 8 9.
+11. 1 ⊢ b + 1 = 1 + b, <a href='radd_comm.htm'>radd_comm</a> 8 9.
+12. 1, 4 ⊢ n + b + 1 = n + (1 + b),
+  <a href='eq_subst.htm'>eq_subst</a> 11 10, P t ↔ n + b + 1 = n + t.
+13. 1, 4 ⊢ n + 1 + b = n + (1 + b), <a href='radd_assoc.htm'>radd_assoc</a> 7 9 8.
+14. 1, 4 ⊢ n + (1 + b) = n + 1 + b, <a href='eq_symm.htm'>eq_symm</a> 13.
+15. 1, 4 ⊢ n + b + 1 = n + 1 + b, <a href='eq_trans.htm'>eq_trans</a> 12 14.
+16. 1, 4, 5 ⊢ n + 1 + b ∈ ℕ, <a href='eq_subst.htm'>eq_subst</a> 15 6, P t ↔ t ∈ ℕ.
+17. 1 ⊢ n ∈ ℕ → n + b ∈ ℕ → n + 1 + b ∈ ℕ, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 16.
+18. 1 ⊢ ∀n. n ∈ ℕ → n + b ∈ ℕ → n + 1 + b ∈ ℕ, <a href='uq_intro.htm'>uq_intro</a> 17.
+19. 1 ⊢ ∀n. n ∈ ℕ → n + b ∈ ℕ,
+  <a href='nat_induction.htm'>nat_induction</a> 3 18, P n ↔ n + b ∈ ℕ.
+20. 20 ⊢ a ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+21. 20, 1 ⊢ a + b ∈ ℕ, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 19 20.
+nadd_closed. ⊢ a ∈ ℕ → b ∈ ℕ → a + b ∈ ℕ, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 21.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 10 axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>
