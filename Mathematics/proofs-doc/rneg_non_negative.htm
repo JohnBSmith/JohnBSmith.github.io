@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>rneg_non_negative</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem rneg_non_negative</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> rneg_non_negative<br>
+x ∈ ℝ → 0 ≤ x → -x ≤ 0</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ x ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ 0 ≤ x, <a href='hypo.htm'>hypo</a>.
+03. ⊢ 0 ∈ ℝ, <a href='calc.htm'>calc</a>.
+04. 1, 2 ⊢ 0 - x ≤ x - x, <a href='rle_compat_sub.htm'>rle_compat_sub</a> 3 1 1 2.
+05. 1 ⊢ 0 - x = -x, <a href='rsub_from_zero.htm'>rsub_from_zero</a> 1.
+06. 1, 2 ⊢ -x ≤ x - x, <a href='eq_subst.htm'>eq_subst</a> 5 4, P t ↔ t ≤ x - x.
+07. ⊢ x - x = x + -x, <a href='rsub_eq.htm'>rsub_eq</a>.
+08. 1 ⊢ x + -x = 0, <a href='radd_inv.htm'>radd_inv</a> 1.
+09. 1 ⊢ x - x = 0, <a href='eq_trans.htm'>eq_trans</a> 7 8.
+10. 1, 2 ⊢ -x ≤ 0, <a href='le_eq_trans.htm'>le_eq_trans</a> 6 9.
+rneg_non_negative. ⊢ x ∈ ℝ → 0 ≤ x → -x ≤ 0,
+  <a href='subj_intro_ii.htm'>subj_intro_ii</a> 10.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='rle_compat_add.htm'>rle_compat_add</a>, <a href='rneg_closed.htm'>rneg_closed</a>.</p>
+</body>
+</html>

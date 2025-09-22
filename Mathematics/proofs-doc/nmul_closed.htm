@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nmul_closed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nmul_closed</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nmul_closed<br>
+a ∈ ℕ → b ∈ ℕ → a⋅b ∈ ℕ</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ a ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ a⋅0 = 0, <a href='nmul_rzero.htm'>nmul_rzero</a> 1.
+03. 1 ⊢ a⋅0 ∈ ℕ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 2 <a href='zero_in_nat.htm'>zero_in_nat</a>,
+  P t ↔ t ∈ ℕ.
+04. 4 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+05. 5 ⊢ a⋅n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+06. 1, 5 ⊢ a⋅n + a ∈ ℕ, <a href='nadd_closed.htm'>nadd_closed</a> 5 1.
+07. 1 ⊢ a⋅1 = a, <a href='nmul_neutr.htm'>nmul_neutr</a> 1.
+08. 1 ⊢ a⋅n + a⋅1 = a⋅n + a, <a href='f_equal.htm'>f_equal</a> 7, f t = a⋅n + t.
+09. ⊢ 1 ∈ ℕ, <a href='calc.htm'>calc</a>.
+10. 1, 4 ⊢ a⋅(n + 1) = a⋅n + a⋅1, <a href='nmul_distl_add.htm'>nmul_distl_add</a> 1 4 9.
+11. 1, 4 ⊢ a⋅(n + 1) = a⋅n + a, <a href='eq_trans.htm'>eq_trans</a> 10 8.
+12. 1, 4, 5 ⊢ a⋅(n + 1) ∈ ℕ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 11 6, P t ↔ t ∈ ℕ.
+13. 1 ⊢ n ∈ ℕ → a⋅n ∈ ℕ → a⋅(n + 1) ∈ ℕ, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 12.
+14. 1 ⊢ ∀n. n ∈ ℕ → a⋅n ∈ ℕ → a⋅(n + 1) ∈ ℕ, <a href='uq_intro.htm'>uq_intro</a> 13.
+15. 1 ⊢ ∀n. n ∈ ℕ → a⋅n ∈ ℕ,
+  <a href='nat_induction.htm'>nat_induction</a> 3 14, P n ↔ a⋅n ∈ ℕ.
+16. 16 ⊢ b ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+17. 1, 16 ⊢ a⋅b ∈ ℕ, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 15 16.
+nmul_closed. ⊢ a ∈ ℕ → b ∈ ℕ → a⋅b ∈ ℕ, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 17.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 15 axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='rmul_closed.htm'>rmul_closed</a>, <a href='rmul_distl_add.htm'>rmul_distl_add</a>, <a href='rmul_neutr.htm'>rmul_neutr</a>, <a href='rneg_closed.htm'>rneg_closed</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

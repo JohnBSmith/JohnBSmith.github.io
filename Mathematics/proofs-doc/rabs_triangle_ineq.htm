@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>rabs_triangle_ineq</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem rabs_triangle_ineq</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> rabs_triangle_ineq<br>
+x ∈ ℝ → y ∈ ℝ →
+  abs (x + y) ≤ abs x + abs y</div></div>
+<p>The "triangle inequality" for <a href='abs_eq.htm'>absolute values</a>.<br>
+<br>
+<b>Proof sketch</b><br>
+In general, we have x ≤ |x| and y ≤ |y|, thus x&nbsp;+&nbsp;y ≤ |x|&nbsp;+&nbsp;|y|.
+Furthermore, in general, we have -x ≤ |x| and -y ≤ |y|, thus -|x| ≤ x
+and -|y| ≤ y, and therefore<br>
+&nbsp;&nbsp;-(|x| + |y|) ≤ x + y.<br>
+Thus |x + y| ≤ |x| + |y| by <a href='rabs_bounded.htm'>rabs_bounded</a>. q.e.d.</p><pre><b>Proof</b>
+01. 1 ⊢ x ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ y ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ abs x ∈ ℝ, <a href='rabs_closed.htm'>rabs_closed</a> 1.
+04. 2 ⊢ abs y ∈ ℝ, <a href='rabs_closed.htm'>rabs_closed</a> 2.
+05. 1 ⊢ x ≤ abs x, <a href='rabs_ge_arg.htm'>rabs_ge_arg</a> 1.
+06. 2 ⊢ y ≤ abs y, <a href='rabs_ge_arg.htm'>rabs_ge_arg</a> 2.
+07. 1, 2 ⊢ x + y ≤ abs x + abs y, <a href='rle_add.htm'>rle_add</a> 1 2 3 4 5 6.
+09. 1 ⊢ -x ≤ abs x, <a href='rabs_ge_neg_arg.htm'>rabs_ge_neg_arg</a> 1.
+10. 2 ⊢ -y ≤ abs y, <a href='rabs_ge_neg_arg.htm'>rabs_ge_neg_arg</a> 2.
+11. 1 ⊢ -x ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 1.
+12. 2 ⊢ -y ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 2.
+13. 1 ⊢ -abs x ≤ -(-x), <a href='rle_neg_swaps.htm'>rle_neg_swaps</a> 11 3 9.
+14. 2 ⊢ -abs y ≤ -(-y), <a href='rle_neg_swaps.htm'>rle_neg_swaps</a> 12 4 10.
+15. 1 ⊢ -(-x) = x, <a href='rneg_involution.htm'>rneg_involution</a> 1.
+16. 2 ⊢ -(-y) = y, <a href='rneg_involution.htm'>rneg_involution</a> 2.
+17. 1 ⊢ -abs x ≤ x, <a href='le_eq_trans.htm'>le_eq_trans</a> 13 15.
+18. 2 ⊢ -abs y ≤ y, <a href='le_eq_trans.htm'>le_eq_trans</a> 14 16.
+19. 1 ⊢ -abs x ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 3.
+20. 2 ⊢ -abs y ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 4.
+21. 1, 2 ⊢ -abs x + -abs y ≤ x + y, <a href='rle_add.htm'>rle_add</a> 19 20 1 2 17 18.
+22. 1, 2 ⊢ -(abs x + abs y) = -abs x + -abs y, <a href='rneg_dist_add.htm'>rneg_dist_add</a> 3 4.
+23. 1, 2 ⊢ -(abs x + abs y) ≤ x + y, <a href='eq_le_trans.htm'>eq_le_trans</a> 22 21.
+24. 1, 2 ⊢ abs x + abs y ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 3 4.
+25. 1, 2 ⊢ x + y ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 1 2.
+26. 1, 2 ⊢ abs (x + y) ≤ abs x + abs y, <a href='rabs_bounded.htm'>rabs_bounded</a> 24 25 23 7.
+rabs_triangle_ineq. ⊢ x ∈ ℝ → y ∈ ℝ →
+  abs (x + y) ≤ abs x + abs y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 26.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 20 axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='rle_compat_add.htm'>rle_compat_add</a>, <a href='rle_refl.htm'>rle_refl</a>, <a href='rle_total.htm'>rle_total</a>, <a href='rle_trans.htm'>rle_trans</a>, <a href='rmul_closed.htm'>rmul_closed</a>, <a href='rmul_comm.htm'>rmul_comm</a>, <a href='rmul_distl_add.htm'>rmul_distl_add</a>, <a href='rmul_neutr.htm'>rmul_neutr</a>, <a href='rneg_closed.htm'>rneg_closed</a>.</p>
+</body>
+</html>

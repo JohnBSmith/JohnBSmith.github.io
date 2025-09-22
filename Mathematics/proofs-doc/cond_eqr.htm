@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>cond_eqr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem cond_eqr</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> cond_eqr<br>
+set y → ¬A → if A x y = y</div></div>
+<p>Given ¬A we have (<a href='cond_eq.htm'>if</a> A then x else y) = y.</p><pre><b>Proof</b>
+let M = {u | A ∧ u = x ∨ ¬A ∧ u = y}.
+01. 1 ⊢ set y, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ ¬A, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ u ∈ M, <a href='hypo.htm'>hypo</a>.
+04. 3 ⊢ A ∧ u = x ∨ ¬A ∧ u = y, <a href='comp_elim.htm'>comp_elim</a> 3.
+05. 5 ⊢ A ∧ u = x, <a href='hypo.htm'>hypo</a>.
+06. 5 ⊢ A, <a href='conj_eliml.htm'>conj_eliml</a> 5.
+07. 2, 5 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> 2 6.
+08. 2, 5 ⊢ u = y, <a href='efq.htm'>efq</a> 7.
+09. 9 ⊢ ¬A ∧ u = y, <a href='hypo.htm'>hypo</a>.
+10. 9 ⊢ u = y, <a href='conj_elimr.htm'>conj_elimr</a> 9.
+11. 2, 3 ⊢ u = y, <a href='disj_elim.htm'>disj_elim</a> 4 8 10.
+12. 1, 2, 3 ⊢ u ∈ {y}, <a href='sg_intro.htm'>sg_intro</a> 1 11.
+13. 1, 2 ⊢ u ∈ M → u ∈ {y}, <a href='subj_intro.htm'>subj_intro</a> 12.
+14. 14 ⊢ u ∈ {y}, <a href='hypo.htm'>hypo</a>.
+15. 1, 14 ⊢ u = y, <a href='sg_elim.htm'>sg_elim</a> 1 14.
+16. 1, 2, 14 ⊢ ¬A ∧ u = y, <a href='conj_intro.htm'>conj_intro</a> 2 15.
+17. 1, 2, 14 ⊢ A ∧ u = x ∨ ¬A ∧ u = y, <a href='disj_intror.htm'>disj_intror</a> 16.
+18. 14 ⊢ set u, <a href='set_intro.htm'>set_intro</a> 14.
+19. 1, 2, 14 ⊢ u ∈ M, <a href='comp_intro.htm'>comp_intro</a> 18 17.
+20. 1, 2 ⊢ u ∈ {y} → u ∈ M, <a href='subj_intro.htm'>subj_intro</a> 19.
+21. 1, 2 ⊢ u ∈ M ↔ u ∈ {y}, <a href='bij_intro.htm'>bij_intro</a> 13 20.
+22. 1, 2 ⊢ ∀u. u ∈ M ↔ u ∈ {y}, <a href='uq_intro.htm'>uq_intro</a> 21.
+23. 1, 2 ⊢ M = {y}, <a href='ext.htm'>ext</a> 22.
+24. 1, 2 ⊢ ⋂M = ⋂{y}, <a href='f_equal.htm'>f_equal</a> 23, f t = ⋂t.
+25. 1 ⊢ ⋂{y} = y, <a href='Intersection_sg.htm'>Intersection_sg</a> 1.
+26. 1, 2 ⊢ ⋂M = y, <a href='eq_trans.htm'>eq_trans</a> 24 25.
+27. 1, 2 ⊢ if A x y = y, <a href='eq_trans.htm'>eq_trans</a> <a href='cond_eq.htm'>cond_eq</a> 26.
+cond_eqr. ⊢ set y → ¬A → if A x y = y, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 27.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on five axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>.</p>
+</body>
+</html>

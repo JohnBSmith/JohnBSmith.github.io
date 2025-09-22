@@ -11,17 +11,16 @@
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> onat_is_set<br>
 set onat</div></div>
 <pre><b>Proof</b>
-01. ⊢ ∃A. set A ∧ (∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A), <a href='infinity.htm'>infinity</a>.
-02. 2 ⊢ set A ∧ (∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A), <a href='hypo.htm'>hypo</a>.
+let inductive A ↔ ∅ ∈ A ∧ (∀n. n ∈ A → n ∪ {n} ∈ A).
+01. ⊢ ∃A. set A ∧ inductive A, <a href='infinity.htm'>infinity</a>.
+02. 2 ⊢ set A ∧ inductive A, <a href='hypo.htm'>hypo</a>.
 03. 2 ⊢ set A, <a href='conj_eliml.htm'>conj_eliml</a> 2.
-04. 2 ⊢ ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A, <a href='conj_elimr.htm'>conj_elimr</a> 2.
-05. 2 ⊢ A ∈ {A | ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A}, <a href='comp_intro.htm'>comp_intro</a> 3 4.
-06. 2 ⊢ A ∈ onat_inductive_sets,
-  <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='onat_inductive_sets_eq.htm'>onat_inductive_sets_eq</a> 5, P x ↔ A ∈ x.
-07. 2 ⊢ onat ⊆ A, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> <a href='onat_eq.htm'>onat_eq</a> 6.
-08. 2 ⊢ set onat, <a href='subset.htm'>subset</a> 7 3.
-onat_is_set. ⊢ set onat, <a href='ex_elim.htm'>ex_elim</a> 1 8.
+04. 2 ⊢ inductive A, <a href='conj_elimr.htm'>conj_elimr</a> 2.
+05. 2 ⊢ A ∈ {A | inductive A}, <a href='comp_intro.htm'>comp_intro</a> 3 4.
+06. 2 ⊢ onat ⊆ A, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> <a href='onat_eq.htm'>onat_eq</a> 5.
+07. 2 ⊢ set onat, <a href='subset.htm'>subset</a> 6 3.
+onat_is_set. ⊢ set onat, <a href='ex_elim.htm'>ex_elim</a> 1 7.
 </pre>
-<p><b>Dependencies</b><br>The given proof depends on five axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='infinity.htm'>infinity</a>, <a href='subset.htm'>subset</a>.</p>
+<p><b>Dependencies</b><br>The given proof depends on four axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='infinity.htm'>infinity</a>, <a href='subset.htm'>subset</a>.</p>
 </body>
 </html>

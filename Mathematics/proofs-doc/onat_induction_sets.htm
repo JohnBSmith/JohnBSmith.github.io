@@ -12,6 +12,7 @@
 A ⊆ onat → ∅ ∈ A →
   (∀n. n ∈ A → succ n ∈ A) → A = onat</div></div>
 <pre><b>Proof</b>
+let inductive A ↔ ∅ ∈ A ∧ (∀n. n ∈ A → n ∪ {n} ∈ A).
 01. 1 ⊢ A ⊆ onat, <a href='hypo.htm'>hypo</a>.
 02. 2 ⊢ ∅ ∈ A, <a href='hypo.htm'>hypo</a>.
 03. 3 ⊢ ∀n. n ∈ A → succ n ∈ A, <a href='hypo.htm'>hypo</a>.
@@ -20,17 +21,15 @@ A ⊆ onat → ∅ ∈ A →
 06. 3, 4 ⊢ n ∪ {n} ∈ A, <a href='eq_subst.htm'>eq_subst</a> <a href='succ_eq.htm'>succ_eq</a> 5, P x ↔ x ∈ A.
 07. 3 ⊢ n ∈ A → n ∪ {n} ∈ A, <a href='subj_intro.htm'>subj_intro</a> 6.
 08. 3 ⊢ ∀n. n ∈ A → n ∪ {n} ∈ A, <a href='uq_intro.htm'>uq_intro</a> 7.
-09. 2, 3 ⊢ ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A, <a href='conj_intro.htm'>conj_intro</a> 2 8.
+09. 2, 3 ⊢ inductive A, <a href='conj_intro.htm'>conj_intro</a> 2 8.
 10. 1 ⊢ set A, <a href='subset.htm'>subset</a> 1 <a href='onat_is_set.htm'>onat_is_set</a>.
-11. 1, 2, 3 ⊢ A ∈ {A | ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A},
+11. 1, 2, 3 ⊢ A ∈ {A | inductive A},
   <a href='comp_intro.htm'>comp_intro</a> 10 09.
-12. 1, 2, 3 ⊢ A ∈ onat_inductive_sets,
-  <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='onat_inductive_sets_eq.htm'>onat_inductive_sets_eq</a> 11, P x ↔ A ∈ x.
-13. 1, 2, 3 ⊢ onat ⊆ A, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> <a href='onat_eq.htm'>onat_eq</a> 12.
-14. 1, 2, 3 ⊢ A = onat, <a href='incl_antisym.htm'>incl_antisym</a> 1 13.
+12. 1, 2, 3 ⊢ onat ⊆ A, <a href='Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a> <a href='onat_eq.htm'>onat_eq</a> 11.
+13. 1, 2, 3 ⊢ A = onat, <a href='incl_antisym.htm'>incl_antisym</a> 1 12.
 onat_induction_sets. ⊢ A ⊆ onat → ∅ ∈ A →
-  (∀n. n ∈ A → succ n ∈ A) → A = onat, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 14.
+  (∀n. n ∈ A → succ n ∈ A) → A = onat, <a href='subj_intro_iii.htm'>subj_intro_iii</a> 13.
 </pre>
-<p><b>Dependencies</b><br>The given proof depends on six axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='infinity.htm'>infinity</a>, <a href='subset.htm'>subset</a>.</p>
+<p><b>Dependencies</b><br>The given proof depends on five axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='infinity.htm'>infinity</a>, <a href='subset.htm'>subset</a>.</p>
 </body>
 </html>

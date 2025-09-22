@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>radd_cancel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem radd_cancel</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> radd_cancel<br>
+a ∈ ℝ → b ∈ ℝ → a + b - b = a</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ a ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ b ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+03. 1, 2 ⊢ a + b ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 1 2.
+04. 2 ⊢ -b ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 2.
+05. ⊢ a + b - b = a + b + -b, <a href='rsub_eq.htm'>rsub_eq</a>.
+06. 1, 2 ⊢ a + b + -b = a + (b + -b), <a href='radd_assoc.htm'>radd_assoc</a> 1 2 4.
+07. 1, 2 ⊢ a + b - b = a + (b + -b), <a href='eq_trans.htm'>eq_trans</a> 5 6.
+08. 2 ⊢ b + -b = 0, <a href='radd_inv.htm'>radd_inv</a> 2.
+09. 1, 2 ⊢ a + b - b = a + 0, <a href='eq_subst.htm'>eq_subst</a> 8 7,
+  P t ↔ a + b - b = a + t.
+10. 1 ⊢ a + 0 = a, <a href='radd_neutr.htm'>radd_neutr</a> 1.
+11. 1, 2 ⊢ a + b - b = a, <a href='eq_trans.htm'>eq_trans</a> 9 10.
+radd_cancel. ⊢ a ∈ ℝ → b ∈ ℝ → a + b - b = a,
+  <a href='subj_intro_ii.htm'>subj_intro_ii</a> 11.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='rneg_closed.htm'>rneg_closed</a>.</p>
+</body>
+</html>
