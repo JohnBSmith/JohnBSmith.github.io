@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nat_incl_in_int</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nat_incl_in_int</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_incl_in_int<br>
+ℕ ⊆ ℤ</div></div>
+<pre><b>Proof</b>
+let is_diff n ↔ (∃a. ∃b. a ∈ ℕ ∧ b ∈ ℕ ∧ n = a - b).
+01. 1 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+02. 1 ⊢ n - 0 = n, <a href='nsub_zero.htm'>nsub_zero</a> 1.
+03. 1 ⊢ n = n - 0, <a href='eq_symm.htm'>eq_symm</a> 2.
+04. ⊢ 0 ∈ ℕ, <a href='zero_in_nat.htm'>zero_in_nat</a>.
+05. 1 ⊢ n ∈ ℕ ∧ 0 ∈ ℕ, <a href='conj_intro.htm'>conj_intro</a> 1 4.
+06. 1 ⊢ n ∈ ℕ ∧ 0 ∈ ℕ ∧ n = n - 0, <a href='conj_intro.htm'>conj_intro</a> 5 3.
+07. 1 ⊢ ∃b. n ∈ ℕ ∧ b ∈ ℕ ∧ n = n - b, <a href='ex_intro.htm'>ex_intro</a> 6.
+08. 1 ⊢ is_diff n, <a href='ex_intro.htm'>ex_intro</a> 7.
+09. 1 ⊢ n ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 1.
+10. 1 ⊢ n ∈ ℝ ∧ is_diff n, <a href='conj_intro.htm'>conj_intro</a> 9 8.
+11. 1 ⊢ set n, <a href='set_intro.htm'>set_intro</a> 1.
+12. 1 ⊢ n ∈ {z | z ∈ ℝ ∧ is_diff z}, <a href='comp_intro.htm'>comp_intro</a> 11 10.
+13. 1 ⊢ n ∈ ℤ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='int_eq.htm'>int_eq</a> 12, P t ↔ n ∈ t.
+14. ⊢ n ∈ ℕ → n ∈ ℤ, <a href='subj_intro.htm'>subj_intro</a> 13.
+15. ⊢ ∀n. n ∈ ℕ → n ∈ ℤ, <a href='uq_intro.htm'>uq_intro</a> 14.
+nat_incl_in_int. ⊢ ℕ ⊆ ℤ, <a href='incl_intro.htm'>incl_intro</a> 15.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on six axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>.</p>
+</body>
+</html>

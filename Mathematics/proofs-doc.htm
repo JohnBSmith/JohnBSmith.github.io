@@ -98,28 +98,34 @@ b.rule{color: #900060;}
 <li><a href='#5.8'>Choice functions</a>
 </ol>
 <li><a href='#6'>Power sets</a>
-<li><a href='#7'>Well-founded relations</a>
-<li><a href='#8'>The natural numbers as ordinals</a>
-<li><a href='#9'>Closure operators</a>
-<li><a href='#10'>Grothendieck universes</a>
-<li><a href='#11'>Cardinal numbers</a><ol>
-<li><a href='#11.1'>Numerousities</a>
+<li><a href='#7'>Orders</a><ol>
+<li><a href='#7.1'>General concepts</a>
+<li><a href='#7.2'>Partial orders</a>
 </ol>
-<li><a href='#12'>Ordinal numbers</a><ol>
-<li><a href='#12.1'>Transitive sets</a>
-<li><a href='#12.2'>Ordinal numbers</a>
+<li><a href='#8'>Well-founded relations</a>
+<li><a href='#9'>The natural numbers as ordinals</a>
+<li><a href='#10'>Closure operators</a>
+<li><a href='#11'>Grothendieck universes</a>
+<li><a href='#12'>Cardinal numbers</a><ol>
+<li><a href='#12.1'>Numerousities</a>
 </ol>
-<li><a href='#13'>The real numbers</a><ol>
-<li><a href='#13.1'>Axiomatic definition</a>
-<li><a href='#13.2'>Basic results</a>
-<li><a href='#13.3'>Basic inequalities</a>
-<li><a href='#13.4'>Absolute value</a>
+<li><a href='#13'>Ordinal numbers</a><ol>
+<li><a href='#13.1'>Transitive sets</a>
+<li><a href='#13.2'>Ordinal numbers</a>
 </ol>
-<li><a href='#14'>The natural numbers</a><ol>
-<li><a href='#14.1'>Basic results</a>
+<li><a href='#14'>The real numbers</a><ol>
+<li><a href='#14.1'>Axiomatic definition</a>
+<li><a href='#14.2'>Basic results</a>
+<li><a href='#14.3'>Useful lemmata</a>
+<li><a href='#14.4'>Basic inequalities</a>
+<li><a href='#14.5'>Absolute value</a>
 </ol>
-<li><a href='#15'>The integers</a><ol>
+<li><a href='#15'>The natural numbers</a><ol>
 <li><a href='#15.1'>Basic results</a>
+</ol>
+<li><a href='#16'>The integers</a><ol>
+<li><a href='#16.1'>Basic results</a>
+<li><a href='#16.2'>Elementary number theory</a>
 </ol>
 </ol>
 <h2 id='1'>Morse-Kelley set theory</h2>
@@ -364,10 +370,14 @@ x = y → y = x</div></div>
 y = x → P x → P y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/f_equal.htm'>f_equal</a><br>
 x = y → f x = f y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/f_equal_ii.htm'>f_equal_ii</a><br>
+x = a → y = b → f x y = f a b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans.htm'>eq_trans</a><br>
 x = y → y = z → x = z</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_symm_trans.htm'>eq_symm_trans</a><br>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans_ll.htm'>eq_trans_ll</a><br>
 y = x → y = z → x = z</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_trans_rr.htm'>eq_trans_rr</a><br>
+x = y → z = y → x = z</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neq_symm.htm'>neq_symm</a><br>
 ¬x = y → ¬y = x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/disused_eq.htm'>disused_eq</a><br>
@@ -1038,7 +1048,35 @@ function f → set (dom f) → set f</div></div>
 map f X Y → set X → set f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_is_set_dom_cod.htm'>map_is_set_dom_cod</a><br>
 map f X Y → set X → set Y → set f</div></div>
-<h2 id='7'>Well-founded relations</h2>
+<h2 id='7'>Orders</h2>
+<h3 id='7.1'>General concepts</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_max_equi.htm'>is_max_equi</a><br>
+is_max R y A ↔ y ∈ A ∧ ∀x. x ∈ A → R x y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_min_equi.htm'>is_min_equi</a><br>
+is_min R y A ↔ y ∈ A ∧ ∀x. x ∈ A → R y x</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_sup_equi.htm'>is_sup_equi</a><br>
+is_sup R M y A ↔
+  (∀x. x ∈ A → R x y) ∧
+  (∀b. b ∈ M → (∀x. x ∈ A → R x b) → R y b)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_inf_equi.htm'>is_inf_equi</a><br>
+is_inf R M y A ↔
+  (∀x. x ∈ A → R y x) ∧
+  (∀b. b ∈ M → (∀x. x ∈ A → R b x) → R b y)</div></div>
+<h3 id='7.2'>Partial orders</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/po_equi.htm'>po_equi</a><br>
+partial_order R M ↔
+  (∀x. x ∈ M → R x x) ∧
+  (∀x. ∀y. x ∈ M → y ∈ M → R x y → R y x → x = y) ∧
+  (∀x. ∀y. ∀z. x ∈ M → y ∈ M → z ∈ M → R x y → R y z → R x z)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/po_refl.htm'>po_refl</a><br>
+partial_order R M → x ∈ M → R x x</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/po_antisym.htm'>po_antisym</a><br>
+partial_order R M → x ∈ M → y ∈ M →
+  R x y → R y x → x = y</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/po_trans.htm'>po_trans</a><br>
+partial_order R M → x ∈ M → y ∈ M → z ∈ M →
+  R x y → R y z → R x z</div></div>
+<h2 id='8'>Well-founded relations</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/wf_equi.htm'>wf_equi</a><br>
 wf R M ↔ ∀A. A ⊆ M → ¬A = ∅ →
   ∃y. y ∈ A ∧ ¬∃x. x ∈ A ∧ (x, y) ∈ R</div></div>
@@ -1061,7 +1099,7 @@ wf R X → dom R ⊆ X → map f X Y → map g X Y →
 set X → set Y → wf R X →
   dom R ⊆ X → (∀x. ∀g. φ x g ∈ Y) → ∃f. set f ∧ map f X Y ∧
   ∀x. x ∈ X → app f x = φ x (restr f (inv_img R {x}))</div></div>
-<h2 id='8'>The natural numbers as ordinals</h2>
+<h2 id='9'>The natural numbers as ordinals</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/onat_eq.htm'>onat_eq</a><br>
 onat = ⋂{A | ∅ ∈ A ∧ ∀n. n ∈ A → n ∪ {n} ∈ A}</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/succ_eq.htm'>succ_eq</a><br>
@@ -1080,7 +1118,7 @@ A ⊆ onat → ∅ ∈ A →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/onat_induction.htm'>onat_induction</a><br>
 P ∅ → (∀n. n ∈ onat → P n → P (succ n)) →
   (∀n. n ∈ onat → P n)</div></div>
-<h2 id='9'>Closure operators</h2>
+<h2 id='10'>Closure operators</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/clop_equi.htm'>clop_equi</a><br>
 closure_operator H U ↔
   set U ∧ map H (power U) (power U) ∧
@@ -1106,7 +1144,7 @@ closure_operator H U →
 closure_system M U →
   H = {t | ∃X. X ∈ power U ∧ t = (X, ⋂{A | A ∈ M ∧ X ⊆ A})} →
   closure_operator H U</div></div>
-<h2 id='10'>Grothendieck universes</h2>
+<h2 id='11'>Grothendieck universes</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/univ_equi.htm'>univ_equi</a><br>
 univ U ↔ ∅ ∈ U ∧
   (∀x. x ∈ U → x ⊆ U) ∧
@@ -1158,8 +1196,8 @@ univ Univ</div></div>
 univ U → x ∈ U → U ∩ power x ∈ U</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/truncated_power_idem.htm'>truncated_power_idem</a><br>
 univ U → U ∩ power U = U</div></div>
-<h2 id='11'>Cardinal numbers</h2>
-<h3 id='11.1'>Numerousities</h3>
+<h2 id='12'>Cardinal numbers</h2>
+<h3 id='12.1'>Numerousities</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/num_eq_equi.htm'>num_eq_equi</a><br>
 num_eq X Y ↔ ∃f. bij f X Y</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/num_le_equi.htm'>num_le_equi</a><br>
@@ -1196,8 +1234,8 @@ set X →
   num_eq (power X) (Map X {∅, {∅}})</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Cantor%27s_theorem.htm'>Cantor's_theorem</a><br>
 set X → num_lt X (power X)</div></div>
-<h2 id='12'>Ordinal numbers</h2>
-<h3 id='12.1'>Transitive sets</h3>
+<h2 id='13'>Ordinal numbers</h2>
+<h3 id='13.1'>Transitive sets</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/transitive_equi.htm'>transitive_equi</a><br>
 transitive x ↔ ∀u. u ∈ x → u ⊆ x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_elim.htm'>transitive_elim</a><br>
@@ -1216,7 +1254,7 @@ set x → transitive x →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/transitive_closed_power.htm'>transitive_closed_power</a><br>
 transitive x →
   transitive (power x)</div></div>
-<h3 id='12.2'>Ordinal numbers</h3>
+<h3 id='13.2'>Ordinal numbers</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/well_order_equi.htm'>well_order_equi</a><br>
 well_order R M ↔ wf R M ∧
   (∀x. ∀y. ∀z. (x, y) ∈ R → (y, z) ∈ R → (x, z) ∈ R) ∧
@@ -1230,8 +1268,8 @@ on_lt = {t | ∃α. ∃β.
   α ∈ On ∧ β ∈ On ∧ α ∈ β ∧ t = (α, β)}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/On_is_transitive.htm'>On_is_transitive</a><br>
 β ∈ On → β ⊆ On</div></div>
-<h2 id='13'>The real numbers</h2>
-<h3 id='13.1'>Axiomatic definition</h3>
+<h2 id='14'>The real numbers</h2>
+<h3 id='14.1'>Axiomatic definition</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/rsub_eq.htm'>rsub_eq</a><br>
 a - b = a + (-b)</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/lt_eq.htm'>lt_eq</a><br>
@@ -1279,13 +1317,27 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rle_compat_mul.htm'>rle_compat_mul</a><br>
 a ∈ ℝ → b ∈ ℝ →
   0 ≤ a → 0 ≤ b → 0 ≤ a⋅b</div></div>
-<h3 id='13.2'>Basic results</h3>
+<h3 id='14.2'>Basic results</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_closed.htm'>rsub_closed</a><br>
 a ∈ ℝ → b ∈ ℝ → a - b ∈ ℝ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_neutl.htm'>radd_neutl</a><br>
 a ∈ ℝ → 0 + a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_neutl.htm'>rmul_neutl</a><br>
 a ∈ ℝ → 1⋅a = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel.htm'>radd_cancel</a><br>
+a ∈ ℝ → b ∈ ℝ → a + b - b = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel_rr.htm'>radd_cancel_rr</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + c = b + c → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel_ll.htm'>radd_cancel_ll</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  c + a = c + b → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel_lr.htm'>radd_cancel_lr</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  c + a = b + c → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel_rl.htm'>radd_cancel_rl</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + c = c + b → a = b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_distr_add.htm'>rmul_distr_add</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   (a + b)⋅c = a⋅c + b⋅c</div></div>
@@ -1303,12 +1355,12 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_distr_sub.htm'>rmul_distr_sub</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   (a - b)⋅c = a⋅c - b⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_zero.htm'>rsub_zero</a><br>
+a ∈ ℝ → a - 0 = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_self.htm'>rsub_self</a><br>
 a ∈ ℝ → a - a = 0</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_from_zero.htm'>rsub_from_zero</a><br>
 a ∈ ℝ → 0 - a = -a</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel.htm'>radd_cancel</a><br>
-a ∈ ℝ → b ∈ ℝ → a + b - b = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rneg_involution.htm'>rneg_involution</a><br>
 x ∈ ℝ → -(-x) = x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_minus_one.htm'>rmul_minus_one</a><br>
@@ -1318,7 +1370,42 @@ a ∈ ℝ → b ∈ ℝ →
   (-a)⋅(-b) = a⋅b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rneg_dist_add.htm'>rneg_dist_add</a><br>
 a ∈ ℝ → b ∈ ℝ → -(a + b) = -a + -b</div></div>
-<h3 id='13.3'>Basic inequalities</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_neg.htm'>rsub_neg</a><br>
+a ∈ ℝ → b ∈ ℝ → -(a - b) = b - a</div></div>
+<h3 id='14.3'>Useful lemmata</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_expand_add_add.htm'>rmul_expand_add_add</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
+  (a + b)⋅(c + d) = a⋅c + b⋅c + a⋅d + b⋅d</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_assoc_llloolo.htm'>radd_assoc_llloolo</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + b + c + d = a + (b + c) + d</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_assoc_llloloo.htm'>radd_assoc_llloloo</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
+  a + b + c + d = a + (b + c + d)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_assoc_llllooo.htm'>radd_assoc_llllooo</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
+  a + b + c + d = a + (b + (c + d))</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_assoc_llolloo.htm'>radd_assoc_llolloo</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
+  a + b + c + d = (a + b) + (c + d)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_213.htm'>radd_perm_213</a><br>
+a ∈ ℝ → b ∈ ℝ → a + b + c = b + a + c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_132.htm'>radd_perm_132</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + b + c = a + c + b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_231.htm'>radd_perm_231</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + b + c = b + c + a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_312.htm'>radd_perm_312</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + b + c = c + a + b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_321.htm'>radd_perm_321</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + b + c = c + b + a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_perm_1423.htm'>radd_perm_1423</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
+  a + b + c + d = a + d + b + c</div></div>
+<h3 id='14.4'>Basic inequalities</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/le_eq_trans.htm'>le_eq_trans</a><br>
 a ≤ b → b = c → a ≤ c</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_le_trans.htm'>eq_le_trans</a><br>
@@ -1347,7 +1434,7 @@ a ∈ ℝ → b ∈ ℝ →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_np_np.htm'>rmul_np_np</a><br>
 a ∈ ℝ → b ∈ ℝ →
   a ≤ 0 → b ≤ 0 → 0 ≤ a⋅b</div></div>
-<h3 id='13.4'>Absolute value</h3>
+<h3 id='14.5'>Absolute value</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/abs_eq.htm'>abs_eq</a><br>
 abs x = if (0 ≤ x) x (-x)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rabs_eql.htm'>rabs_eql</a><br>
@@ -1373,8 +1460,8 @@ x ∈ ℝ → y ∈ ℝ →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rabs_dist_mul.htm'>rabs_dist_mul</a><br>
 x ∈ ℝ → y ∈ ℝ →
   abs (x⋅y) = (abs x)⋅(abs y)</div></div>
-<h2 id='14'>The natural numbers</h2>
-<h3 id='14.1'>Basic results</h3>
+<h2 id='15'>The natural numbers</h2>
+<h3 id='15.1'>Basic results</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/nat_eq.htm'>nat_eq</a><br>
 ℕ = ⋂{A | A ⊆ ℝ ∧ 0 ∈ A ∧ ∀n. n ∈ A → n + 1 ∈ A}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_incl_in_real.htm'>nat_incl_in_real</a><br>
@@ -1395,6 +1482,8 @@ P 0 → (∀n. n ∈ ℕ → P n → P (n + 1)) →
 a ∈ ℕ → 0 + a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nadd_neutr.htm'>nadd_neutr</a><br>
 a ∈ ℕ → a + 0 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nsub_zero.htm'>nsub_zero</a><br>
+a ∈ ℕ → a - 0 = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nmul_neutl.htm'>nmul_neutl</a><br>
 a ∈ ℕ → 1⋅a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nmul_neutr.htm'>nmul_neutr</a><br>
@@ -1425,18 +1514,71 @@ a ∈ ℕ → b ∈ ℕ → -(a⋅b) = a⋅(-b)</div></div>
 a ∈ ℕ → b ∈ ℕ → a + b ∈ ℕ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nmul_closed.htm'>nmul_closed</a><br>
 a ∈ ℕ → b ∈ ℕ → a⋅b ∈ ℕ</div></div>
-<h2 id='15'>The integers</h2>
-<h3 id='15.1'>Basic results</h3>
+<h2 id='16'>The integers</h2>
+<h3 id='16.1'>Basic results</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/int_eq.htm'>int_eq</a><br>
 ℤ = {z | z ∈ ℝ ∧
   ∃a. ∃b. a ∈ ℕ ∧ b ∈ ℕ ∧ z = a - b}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/int_incl_in_real.htm'>int_incl_in_real</a><br>
+ℤ ⊆ ℝ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_incl_in_int.htm'>nat_incl_in_int</a><br>
+ℕ ⊆ ℤ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ineg_closed.htm'>ineg_closed</a><br>
+a ∈ ℤ → -a ∈ ℤ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iadd_closed.htm'>iadd_closed</a><br>
+a ∈ ℤ → b ∈ ℤ → a + b ∈ ℤ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/isub_closed.htm'>isub_closed</a><br>
+a ∈ ℤ → b ∈ ℤ → a - b ∈ ℤ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_closed.htm'>imul_closed</a><br>
+a ∈ ℤ → b ∈ ℤ → a⋅b ∈ ℤ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iadd_neutl.htm'>iadd_neutl</a><br>
+a ∈ ℤ → 0 + a = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iadd_neutr.htm'>iadd_neutr</a><br>
+a ∈ ℤ → a + 0 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/isub_zero.htm'>isub_zero</a><br>
+a ∈ ℤ → a - 0 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_neutl.htm'>imul_neutl</a><br>
+a ∈ ℤ → 1⋅a = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_neutr.htm'>imul_neutr</a><br>
+a ∈ ℤ → a⋅1 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_lzero.htm'>imul_lzero</a><br>
+a ∈ ℤ → 0⋅a = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_rzero.htm'>imul_rzero</a><br>
+a ∈ ℤ → a⋅0 = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iadd_comm.htm'>iadd_comm</a><br>
+a ∈ ℤ → b ∈ ℤ → a + b = b + a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_comm.htm'>imul_comm</a><br>
+a ∈ ℤ → b ∈ ℤ → a⋅b = b⋅a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iadd_assoc.htm'>iadd_assoc</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → (a + b) + c = a + (b + c)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_distl_add.htm'>imul_distl_add</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → a⋅(b + c) = a⋅b + a⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_distr_add.htm'>imul_distr_add</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → (a + b)⋅c = a⋅c + b⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_distl_sub.htm'>imul_distl_sub</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → a⋅(b - c) = a⋅b - a⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_distr_sub.htm'>imul_distr_sub</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → (a - b)⋅c = a⋅c - b⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_compatl_neg.htm'>imul_compatl_neg</a><br>
+a ∈ ℤ → b ∈ ℤ → -(a⋅b) = (-a)⋅b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_compatr_neg.htm'>imul_compatr_neg</a><br>
+a ∈ ℤ → b ∈ ℤ → -(a⋅b) = a⋅(-b)</div></div>
+<h3 id='16.2'>Elementary number theory</h3>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/divides_equi.htm'>divides_equi</a><br>
+divides m a ↔ ∃k. k ∈ ℤ ∧ a = m⋅k</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/eq_mod_equi.htm'>eq_mod_equi</a><br>
+eq_mod a b m ↔ divides m (a - b)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/divisors_eq.htm'>divisors_eq</a><br>
+divisors a = {d | d ∈ ℕ ∧ divides d a}</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/prime_equi.htm'>prime_equi</a><br>
+prime a ↔ 2 ≤ a ∧ divisors a = {1, a}</div></div>
 <p><b>Statistics</b>
 <pre>
-  58 definitions
+  67 definitions
   34 axioms
- 446 theorems
+ 491 theorems
 ────────────────
- 538 items total
+ 592 items total
 </pre>
 </body>
 </html>

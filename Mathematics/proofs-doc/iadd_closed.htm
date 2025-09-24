@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>iadd_closed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem iadd_closed</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> iadd_closed<br>
+a ∈ ℤ → b ∈ ℤ → a + b ∈ ℤ</div></div>
+<pre><b>Proof</b>
+let is_diff z ↔ (∃m. ∃n. m ∈ ℕ ∧ n ∈ ℕ ∧ z = m - n).
+01. 1 ⊢ a ∈ ℤ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ b ∈ ℤ, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ a ∈ {z | z ∈ ℝ ∧ is_diff z},
+  <a href='eq_subst.htm'>eq_subst</a> <a href='int_eq.htm'>int_eq</a> 1, P t ↔ a ∈ t.
+04. 2 ⊢ b ∈ {z | z ∈ ℝ ∧ is_diff z},
+  <a href='eq_subst.htm'>eq_subst</a> <a href='int_eq.htm'>int_eq</a> 2, P t ↔ b ∈ t.
+05. 1 ⊢ a ∈ ℝ ∧ is_diff a, <a href='comp_elim.htm'>comp_elim</a> 3.
+06. 2 ⊢ b ∈ ℝ ∧ is_diff b, <a href='comp_elim.htm'>comp_elim</a> 4.
+07. 1 ⊢ is_diff a, <a href='conj_elimr.htm'>conj_elimr</a> 5.
+08. 2 ⊢ is_diff b, <a href='conj_elimr.htm'>conj_elimr</a> 6.
+09. 9 ⊢ ∃n. m ∈ ℕ ∧ n ∈ ℕ ∧ a = m - n, <a href='hypo.htm'>hypo</a>.
+10. 10 ⊢ ∃n. m' ∈ ℕ ∧ n ∈ ℕ ∧ b = m' - n, <a href='hypo.htm'>hypo</a>.
+11. 11 ⊢ m ∈ ℕ ∧ n ∈ ℕ ∧ a = m - n, <a href='hypo.htm'>hypo</a>.
+12. 12 ⊢ m' ∈ ℕ ∧ n' ∈ ℕ ∧ b = m' - n', <a href='hypo.htm'>hypo</a>.
+13. 11 ⊢ a = m - n, <a href='conj_elimr.htm'>conj_elimr</a> 11.
+14. 12 ⊢ b = m' - n', <a href='conj_elimr.htm'>conj_elimr</a> 12.
+15. ⊢ m - n = m + -n, <a href='rsub_eq.htm'>rsub_eq</a>.
+16. ⊢ m' - n' = m' + -n', <a href='rsub_eq.htm'>rsub_eq</a>.
+17. 11 ⊢ a = m + -n, <a href='eq_trans.htm'>eq_trans</a> 13 15.
+18. 12 ⊢ b = m' + -n', <a href='eq_trans.htm'>eq_trans</a> 14 16.
+19. 11, 12 ⊢ a + b = (m + -n) + (m' + -n'),
+  <a href='f_equal_ii.htm'>f_equal_ii</a> 17 18, f x y = x + y.
+20. 11 ⊢ m ∈ ℕ, <a href='conj_elimll.htm'>conj_elimll</a> 11.
+21. 11 ⊢ n ∈ ℕ, <a href='conj_elimlr.htm'>conj_elimlr</a> 11.
+22. 12 ⊢ m' ∈ ℕ, <a href='conj_elimll.htm'>conj_elimll</a> 12.
+23. 12 ⊢ n' ∈ ℕ, <a href='conj_elimlr.htm'>conj_elimlr</a> 12.
+24. 11 ⊢ m ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 20.
+25. 11 ⊢ n ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 21.
+26. 12 ⊢ m' ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 22.
+27. 12 ⊢ n' ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 23.
+28. 11 ⊢ -n ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 25.
+29. 12 ⊢ -n' ∈ ℝ, <a href='rneg_closed.htm'>rneg_closed</a> 27.
+30. 11 ⊢ m + -n ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 24 28.
+31. 11, 12 ⊢ m + -n + m' + -n' = m + -n + (m' + -n'),
+  <a href='radd_assoc.htm'>radd_assoc</a> 30 26 29.
+32. 11, 12 ⊢ a + b = m + -n + m' + -n', <a href='eq_trans_rr.htm'>eq_trans_rr</a> 19 31.
+33. 11, 12 ⊢ m + -n + m' = m + (-n + m'), <a href='radd_assoc.htm'>radd_assoc</a> 24 28 26.
+34. 11, 12 ⊢ -n + m' = m' + -n, <a href='radd_comm.htm'>radd_comm</a> 28 26.
+35. 11, 12 ⊢ m + -n + m' = m + (m' + -n),
+  <a href='eq_subst.htm'>eq_subst</a> 34 33, P t ↔ m + -n + m' = m + t.
+36. 11, 12 ⊢ m + m' + -n = m + (m' + -n), <a href='radd_assoc.htm'>radd_assoc</a> 24 26 28.
+37. 11, 12 ⊢ m + -n + m' = m + m' + -n, <a href='eq_trans_rr.htm'>eq_trans_rr</a> 35 36.
+38. 11, 12 ⊢ a + b = m + m' + -n + -n',
+  <a href='eq_subst.htm'>eq_subst</a> 37 32, P t ↔ a + b = t + -n'.
+39. 11, 12 ⊢ m + m' ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 24 26.
+40. 11, 12 ⊢ m + m' + -n + -n' = (m + m') + (-n + -n'),
+  <a href='radd_assoc.htm'>radd_assoc</a> 39 28 29.
+41. 11, 12 ⊢ a + b = (m + m') + (-n + -n'), <a href='eq_trans.htm'>eq_trans</a> 38 40.
+42. 11, 12 ⊢ -(n + n') = -n + -n', <a href='rneg_dist_add.htm'>rneg_dist_add</a> 25 27.
+43. 11, 12 ⊢ a + b = (m + m') + -(n + n'),
+  <a href='eq_subst_rev.htm'>eq_subst_rev</a> 42 41, P t ↔ a + b = (m + m') + t.
+44. ⊢ (m + m') - (n + n') = (m + m') + -(n + n'), <a href='rsub_eq.htm'>rsub_eq</a>.
+45. 11, 12 ⊢ a + b = (m + m') - (n + n'), <a href='eq_trans_rr.htm'>eq_trans_rr</a> 43 44.
+46. 11, 12 ⊢ m + m' ∈ ℕ, <a href='nadd_closed.htm'>nadd_closed</a> 20 22.
+47. 11, 12 ⊢ n + n' ∈ ℕ, <a href='nadd_closed.htm'>nadd_closed</a> 21 23.
+48. 11, 12 ⊢ m + m' ∈ ℕ ∧ n + n' ∈ ℕ, <a href='conj_intro.htm'>conj_intro</a> 46 47.
+49. 11, 12 ⊢ m + m' ∈ ℕ ∧ n + n' ∈ ℕ ∧
+  a + b = (m + m') - (n + n'), <a href='conj_intro.htm'>conj_intro</a> 48 45.
+50. 11, 12 ⊢ ∃n. m + m' ∈ ℕ ∧ n ∈ ℕ ∧
+  a + b = (m + m') - n, <a href='ex_intro.htm'>ex_intro</a> 49.
+51. 11, 12 ⊢ is_diff (a + b), <a href='ex_intro.htm'>ex_intro</a> 50.
+52. 12 ⊢ m' + -n' ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 26 29.
+53. 11 ⊢ a ∈ ℝ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 17 30, P t ↔ t ∈ ℝ.
+54. 12 ⊢ b ∈ ℝ, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 18 52, P t ↔ t ∈ ℝ.
+55. 11, 12 ⊢ a + b ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 53 54.
+56. 11, 12 ⊢ set (a + b), <a href='set_intro.htm'>set_intro</a> 55.
+57. 11, 12 ⊢ a + b ∈ ℝ ∧ is_diff (a + b), <a href='conj_intro.htm'>conj_intro</a> 55 51.
+58. 11, 12 ⊢ a + b ∈ {z | z ∈ ℝ ∧ is_diff z},
+  <a href='comp_intro.htm'>comp_intro</a> 56 57, P z ↔ z ∈ ℝ ∧ is_diff z.
+59. 11, 12 ⊢ a + b ∈ ℤ,
+  <a href='eq_subst_rev.htm'>eq_subst_rev</a> <a href='int_eq.htm'>int_eq</a> 58, P t ↔ a + b ∈ t.
+60. 10, 11 ⊢ a + b ∈ ℤ, <a href='ex_elim.htm'>ex_elim</a> 10 59.
+61. 9, 10 ⊢ a + b ∈ ℤ, <a href='ex_elim.htm'>ex_elim</a> 9 60.
+62. 2, 9 ⊢ a + b ∈ ℤ, <a href='ex_elim.htm'>ex_elim</a> 8 61.
+63. 1, 2 ⊢ a + b ∈ ℤ, <a href='ex_elim.htm'>ex_elim</a> 7 62.
+iadd_closed. ⊢ a ∈ ℤ → b ∈ ℤ → a + b ∈ ℤ, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 63.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 16 axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='rmul_closed.htm'>rmul_closed</a>, <a href='rmul_comm.htm'>rmul_comm</a>, <a href='rmul_distl_add.htm'>rmul_distl_add</a>, <a href='rmul_neutr.htm'>rmul_neutr</a>, <a href='rneg_closed.htm'>rneg_closed</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>
