@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nat_rec_uniqueness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nat_rec_uniqueness</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_rec_uniqueness<br>
+
+  app f 0 = x0 ∧ (∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)) →
+  app g 0 = x0 ∧ (∀n. n ∈ ℕ → app g (n + 1) = φ n (app g n)) →
+  ∀n. n ∈ ℕ → app f n = app g n</div></div>
+<pre><b>Proof</b>
+let rec f ↔ (∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)).
+01. 1 ⊢ app f 0 = x0 ∧ rec f, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ app g 0 = x0 ∧ rec g, <a href='hypo.htm'>hypo</a>.
+03. 1 ⊢ app f 0 = x0, <a href='conj_eliml.htm'>conj_eliml</a> 1.
+04. 2 ⊢ app g 0 = x0, <a href='conj_eliml.htm'>conj_eliml</a> 2.
+05. 1, 2 ⊢ app f 0 = app g 0, <a href='eq_trans_rr.htm'>eq_trans_rr</a> 3 4.
+06. 6 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+07. 7 ⊢ app f n = app g n, <a href='hypo.htm'>hypo</a>.
+08. 1 ⊢ rec f, <a href='conj_elimr.htm'>conj_elimr</a> 1.
+09. 2 ⊢ rec g, <a href='conj_elimr.htm'>conj_elimr</a> 2.
+10. 1, 6 ⊢ app f (n + 1) = φ n (app f n), <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 8 6.
+11. 2, 6 ⊢ app g (n + 1) = φ n (app g n), <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 9 6.
+12. 1, 6, 7 ⊢ app f (n + 1) = φ n (app g n),
+  <a href='eq_subst.htm'>eq_subst</a> 7 10, P t ↔ app f (n + 1) = φ n t.
+13. 1, 2, 6, 7 ⊢ app f (n + 1) = app g (n + 1), <a href='eq_trans_rr.htm'>eq_trans_rr</a> 12 11.
+14. 1, 2 ⊢ n ∈ ℕ → app f n = app g n →
+  app f (n + 1) = app g (n + 1), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 13.
+15. 1, 2 ⊢ ∀n. n ∈ ℕ → app f n = app g n →
+  app f (n + 1) = app g (n + 1), <a href='uq_intro.htm'>uq_intro</a> 14.
+16. 1, 2 ⊢ ∀n. n ∈ ℕ → app f n = app g n,
+  <a href='nat_induction.htm'>nat_induction</a> 5 15, P n ↔ app f n = app g n.
+nat_rec_uniqueness. ⊢
+  app f 0 = x0 ∧ (∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)) →
+  app g 0 = x0 ∧ (∀n. n ∈ ℕ → app g (n + 1) = φ n (app g n)) →
+  ∀n. n ∈ ℕ → app f n = app g n, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 16.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

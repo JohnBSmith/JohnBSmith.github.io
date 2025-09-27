@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nat_non_negative</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nat_non_negative</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_non_negative<br>
+n ∈ ℕ → 0 ≤ n</div></div>
+<pre><b>Proof</b>
+01. ⊢ 0 ≤ 0, <a href='calc.htm'>calc</a>.
+02. 2 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ 0 ≤ n, <a href='hypo.htm'>hypo</a>.
+04. ⊢ 0 ∈ ℝ, <a href='calc.htm'>calc</a>.
+05. 2 ⊢ n ∈ ℝ, <a href='incl_elim.htm'>incl_elim</a> <a href='nat_incl_in_real.htm'>nat_incl_in_real</a> 2.
+06. ⊢ 1 ∈ ℝ, <a href='calc.htm'>calc</a>.
+07. 2, 3 ⊢ 0 + 1 ≤ n + 1, <a href='rle_compat_add.htm'>rle_compat_add</a> 4 5 6 3.
+08. ⊢ 0 ≤ 0 + 1, <a href='calc.htm'>calc</a>.
+09. ⊢ 0 + 1 ∈ ℝ, <a href='calc.htm'>calc</a>.
+10. 2 ⊢ n + 1 ∈ ℝ, <a href='radd_closed.htm'>radd_closed</a> 5 6.
+11. 2, 3 ⊢ 0 ≤ n + 1, <a href='rle_trans.htm'>rle_trans</a> 4 9 10 8 7.
+12. ⊢ n ∈ ℕ → 0 ≤ n → 0 ≤ n + 1, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 11.
+13. ⊢ ∀n. n ∈ ℕ → 0 ≤ n → 0 ≤ n + 1, <a href='uq_intro.htm'>uq_intro</a> 12.
+14. ⊢ ∀n. n ∈ ℕ → 0 ≤ n,
+  <a href='nat_induction.htm'>nat_induction</a> 1 13, P n ↔ 0 ≤ n.
+nat_non_negative. ⊢ n ∈ ℕ → 0 ≤ n, <a href='uq_elim.htm'>uq_elim</a> 14.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on nine axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='rle_compat_add.htm'>rle_compat_add</a>, <a href='rle_trans.htm'>rle_trans</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

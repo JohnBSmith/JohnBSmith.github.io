@@ -396,6 +396,9 @@ x = y → z = y → x = z</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_uniq_set_elimr.htm'>ex_uniq_set_elimr</a><br>
 (∃x. S x ∧ ∀y. x = y ↔ P y) → P x → P y → x = y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_uniq_from_mixed_form.htm'>ex_uniq_from_mixed_form</a><br>
+(∃x. P x ∧ ∀y. P y → x = y) →
+  (∃x. ∀y. x = y ↔ P y)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_uniq_set_from_mixed_form.htm'>ex_uniq_set_from_mixed_form</a><br>
 (∃x. S x ∧ P x ∧ ∀y. P y → x = y) →
   (∃x. S x ∧ ∀y. x = y ↔ P y)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ex_weaken_conj.htm'>ex_weaken_conj</a><br>
@@ -666,6 +669,8 @@ set a → set b → ¬a = b → {a} ∩ {b} = ∅</div></div>
 set a → ¬a ∈ X → X ∩ {a} = ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subsets_of_sg.htm'>subsets_of_sg</a><br>
 set a → x ⊆ {a} → x = ∅ ∨ x = {a}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_sg_contra.htm'>diff_sg_contra</a><br>
+x ∈ A \ {x} → ⊥</div></div>
 <h3 id='3.8'>Operations on families of sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/family_union_intro.htm'>family_union_intro</a><br>
 set (A i) → i ∈ I → x ∈ A i →
@@ -822,8 +827,15 @@ map f X1 Y → map g X2 Y → X1 ∩ X2 = ∅ →
   map (f ∪ g) (X1 ∪ X2) Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subclass_dom_from_ex_uniq.htm'>subclass_dom_from_ex_uniq</a><br>
 
+  (∀x. x ∈ X → ∃z. ∀y. z = y ↔ (x, y) ∈ f) →
+  X ⊆ dom f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/subclass_dom_from_ex_uniq_in_cod.htm'>subclass_dom_from_ex_uniq_in_cod</a><br>
+
   (∀x. x ∈ X → ∃z. z ∈ Y ∧ ∀y. z = y ↔ (x, y) ∈ f) →
   X ⊆ dom f</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_from_ex_uniq.htm'>map_from_ex_uniq</a><br>
+f ⊆ X × Y →
+  (∀x. x ∈ X → ∃b. ∀y. b = y ↔ (x, y) ∈ f) → map f X Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_rng_weaken.htm'>map_rng_weaken</a><br>
 map f X Y → Y ⊆ Z → map f X Z</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_incl_in_prod.htm'>map_incl_in_prod</a><br>
@@ -1478,6 +1490,25 @@ A ⊆ ℕ → 0 ∈ A →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_induction.htm'>nat_induction</a><br>
 P 0 → (∀n. n ∈ ℕ → P n → P (n + 1)) →
   (∀n. n ∈ ℕ → P n)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_non_negative.htm'>nat_non_negative</a><br>
+n ∈ ℕ → 0 ≤ n</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_succ_non_zero.htm'>nat_succ_non_zero</a><br>
+n ∈ ℕ → ¬(n + 1 = 0)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_succ_inj.htm'>nat_succ_inj</a><br>
+a ∈ ℕ → b ∈ ℕ → a + 1 = b + 1 → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_rec_uniqueness.htm'>nat_rec_uniqueness</a><br>
+
+  app f 0 = x0 ∧ (∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)) →
+  app g 0 = x0 ∧ (∀n. n ∈ ℕ → app g (n + 1) = φ n (app g n)) →
+  ∀n. n ∈ ℕ → app f n = app g n</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_rec_existence.htm'>nat_rec_existence</a><br>
+set X → x0 ∈ X →
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃f. map f ℕ X ∧
+  (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n))</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_recursion.htm'>nat_recursion</a><br>
+set X → x0 ∈ X →
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. ∀f. g = f ↔ map f ℕ X ∧
+  (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n))</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nadd_neutl.htm'>nadd_neutl</a><br>
 a ∈ ℕ → 0 + a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nadd_neutr.htm'>nadd_neutr</a><br>
@@ -1576,9 +1607,9 @@ prime a ↔ 2 ≤ a ∧ divisors a = {1, a}</div></div>
 <pre>
   67 definitions
   34 axioms
- 491 theorems
+ 501 theorems
 ────────────────
- 592 items total
+ 602 items total
 </pre>
 </body>
 </html>
