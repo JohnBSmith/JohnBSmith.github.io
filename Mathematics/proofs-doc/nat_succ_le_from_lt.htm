@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>nat_succ_le_from_lt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem nat_succ_le_from_lt</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_succ_le_from_lt<br>
+n ∈ ℕ → k ∈ ℕ → n &lt; k → n + 1 ≤ k</div></div>
+<pre><b>Proof</b>
+let A n ↔ (∀k. k ∈ ℕ → n &lt; k → n + 1 ≤ k).
+01. 1 ⊢ k ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ 0 &lt; k, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ ¬0 = k, <a href='neq_from_lt.htm'>neq_from_lt</a> 2.
+04. 2 ⊢ ¬k = 0, <a href='neq_symm.htm'>neq_symm</a> 3.
+05. 1, 2 ⊢ ∃m. m ∈ ℕ ∧ k = m + 1, <a href='nat_non_zero_is_succ.htm'>nat_non_zero_is_succ</a> 1 4.
+06. 6 ⊢ m ∈ ℕ ∧ k = m + 1, <a href='hypo.htm'>hypo</a>.
+07. 6 ⊢ m ∈ ℕ, <a href='conj_eliml.htm'>conj_eliml</a> 6.
+08. 6 ⊢ k = m + 1, <a href='conj_elimr.htm'>conj_elimr</a> 6.
+09. 6 ⊢ 0 ≤ m, <a href='nat_non_negative.htm'>nat_non_negative</a> 7.
+10. ⊢ 0 ∈ ℕ, calc.
+11. ⊢ 1 ∈ ℕ, calc.
+12. 6 ⊢ 0 + 1 ≤ m + 1, <a href='nle_compat_add.htm'>nle_compat_add</a> 10 7 11 9.
+13. 6 ⊢ m + 1 = k, <a href='eq_symm.htm'>eq_symm</a> 8.
+14. 6 ⊢ 0 + 1 ≤ k, <a href='le_eq_trans.htm'>le_eq_trans</a> 12 13.
+15. 1, 2 ⊢ 0 + 1 ≤ k, <a href='ex_elim.htm'>ex_elim</a> 5 14.
+16. ⊢ k ∈ ℕ → 0 &lt; k → 0 + 1 ≤ k, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 15.
+17. ⊢ A 0, <a href='uq_intro.htm'>uq_intro</a> 16.
+
+18. 18 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+19. 19 ⊢ A n, <a href='hypo.htm'>hypo</a>.
+20. 20 ⊢ k ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+21. 21 ⊢ n + 1 &lt; k, <a href='hypo.htm'>hypo</a>.
+22. 18 ⊢ 0 ≤ n, <a href='nat_non_negative.htm'>nat_non_negative</a> 18.
+23. 18 ⊢ 0 + 1 ≤ n + 1, <a href='nle_compat_add.htm'>nle_compat_add</a> 10 18 11 22.
+24. ⊢ 1 = 0 + 1, calc.
+25. 18 ⊢ 1 ≤ n + 1, <a href='eq_le_trans.htm'>eq_le_trans</a> 24 23.
+26. 18 ⊢ n + 1 ∈ ℕ, <a href='succ_in_nat.htm'>succ_in_nat</a> 18.
+27. 18, 20, 21 ⊢ 1 &lt; k, <a href='nle_lt_trans.htm'>nle_lt_trans</a> 11 26 20 25 21.
+28. ⊢ 0 &lt; 1, calc.
+29. 18, 20, 21 ⊢ 0 &lt; k, <a href='nlt_lt_trans.htm'>nlt_lt_trans</a> 10 11 20 28 27.
+30. 18, 20, 21 ⊢ ¬0 = k, <a href='neq_from_lt.htm'>neq_from_lt</a> 29.
+31. 18, 20, 21 ⊢ ¬k = 0, <a href='neq_symm.htm'>neq_symm</a> 30.
+32. 18, 20, 21 ⊢ ∃m. m ∈ ℕ ∧ k = m + 1, <a href='nat_non_zero_is_succ.htm'>nat_non_zero_is_succ</a> 20 31.
+33. 33 ⊢ m ∈ ℕ ∧ k = m + 1, <a href='hypo.htm'>hypo</a>.
+34. 33 ⊢ m ∈ ℕ, <a href='conj_eliml.htm'>conj_eliml</a> 33.
+35. 33 ⊢ k = m + 1, <a href='conj_elimr.htm'>conj_elimr</a> 33.
+36. 19, 33 ⊢ n &lt; m → n + 1 ≤ m, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 19 34.
+37. 21, 33 ⊢ n + 1 &lt; m + 1, <a href='eq_subst.htm'>eq_subst</a> 35 21, P t ↔ n + 1 &lt; t.
+38. 18, 21, 33 ⊢ n &lt; m, <a href='nlt_add_cancel_rr.htm'>nlt_add_cancel_rr</a> 18 34 11 37.
+39. 18, 19, 21, 33 ⊢ n + 1 ≤ m, <a href='subj_elim.htm'>subj_elim</a> 36 38.
+40. 18 ⊢ n + 1 ∈ ℕ, <a href='succ_in_nat.htm'>succ_in_nat</a> 18.
+41. 18, 19, 21, 33 ⊢ n + 1 + 1 ≤ m + 1, <a href='nle_compat_add.htm'>nle_compat_add</a> 40 34 11 39.
+42. 18, 19, 21, 33 ⊢ n + 1 + 1 ≤ k,
+  <a href='eq_subst_rev.htm'>eq_subst_rev</a> 35 41, P t ↔ n + 1 + 1 ≤ t.
+43. 18, 19, 20, 21 ⊢ n + 1 + 1 ≤ k, <a href='ex_elim.htm'>ex_elim</a> 32 42.
+44. 18, 19 ⊢ k ∈ ℕ → n + 1 &lt; k → n + 1 + 1 ≤ k, <a href='subj_intro_ii.htm'>subj_intro_ii</a> 43.
+45. 18, 19 ⊢ A (n + 1), <a href='uq_intro.htm'>uq_intro</a> 44.
+46. ⊢ n ∈ ℕ → A n → A (n + 1), <a href='subj_intro_ii.htm'>subj_intro_ii</a> 45.
+47. ⊢ ∀n. n ∈ ℕ → A n → A (n + 1), <a href='uq_intro.htm'>uq_intro</a> 46.
+
+48. ⊢ ∀n. n ∈ ℕ → A n, <a href='nat_induction.htm'>nat_induction</a> 17 47, P n ↔ A n.
+49. 49 ⊢ n ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+50. 50 ⊢ k ∈ ℕ, <a href='hypo.htm'>hypo</a>.
+51. 49 ⊢ A n, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 48 49.
+52. 49, 50 ⊢ n &lt; k → n + 1 ≤ k, <a href='uq_bounded_elim.htm'>uq_bounded_elim</a> 51 50.
+nat_succ_le_from_lt. ⊢ n ∈ ℕ → k ∈ ℕ → n &lt; k → n + 1 ≤ k,
+  <a href='subj_intro_ii.htm'>subj_intro_ii</a> 52.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 15 axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='rle_antisym.htm'>rle_antisym</a>, <a href='rle_compat_add.htm'>rle_compat_add</a>, <a href='rle_trans.htm'>rle_trans</a>, <a href='rneg_closed.htm'>rneg_closed</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

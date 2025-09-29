@@ -122,10 +122,13 @@ b.rule{color: #900060;}
 </ol>
 <li><a href='#15'>The natural numbers</a><ol>
 <li><a href='#15.1'>Basic results</a>
+<li><a href='#15.2'>Basic inequalities</a>
+<li><a href='#15.3'>Strong induction</a>
 </ol>
 <li><a href='#16'>The integers</a><ol>
 <li><a href='#16.1'>Basic results</a>
-<li><a href='#16.2'>Elementary number theory</a>
+<li><a href='#16.2'>Basic inequalities</a>
+<li><a href='#16.3'>Elementary number theory</a>
 </ol>
 </ol>
 <h2 id='1'>Morse-Kelley set theory</h2>
@@ -345,6 +348,8 @@ A ∧ B ∧ C ∧ D → B</div></div>
 (E ↔ A ∧ B ∧ C ∧ D) → E → A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lsubj_conj_elimllr.htm'>lsubj_conj_elimllr</a><br>
 (E ↔ A ∧ B ∧ C ∧ D) → E → B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsubj_tollens.htm'>rsubj_tollens</a><br>
+(A ↔ B) → ¬A → ¬B</div></div>
 <h3 id='2.3'>First order logic</h3>
 <h4 id='2.3.1'>Bounded quantification</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/uq_bounded_elim.htm'>uq_bounded_elim</a><br>
@@ -1066,12 +1071,12 @@ map f X Y → set X → set Y → set f</div></div>
 is_max R y A ↔ y ∈ A ∧ ∀x. x ∈ A → R x y</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_min_equi.htm'>is_min_equi</a><br>
 is_min R y A ↔ y ∈ A ∧ ∀x. x ∈ A → R y x</div></div>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_sup_equi.htm'>is_sup_equi</a><br>
-is_sup R M y A ↔
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_supremum_equi.htm'>is_supremum_equi</a><br>
+is_supremum R M y A ↔
   (∀x. x ∈ A → R x y) ∧
   (∀b. b ∈ M → (∀x. x ∈ A → R x b) → R y b)</div></div>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_inf_equi.htm'>is_inf_equi</a><br>
-is_inf R M y A ↔
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_infimum_equi.htm'>is_infimum_equi</a><br>
+is_infimum R M y A ↔
   (∀x. x ∈ A → R y x) ∧
   (∀b. b ∈ M → (∀x. x ∈ A → R b x) → R b y)</div></div>
 <h3 id='7.2'>Partial orders</h3>
@@ -1284,8 +1289,15 @@ on_lt = {t | ∃α. ∃β.
 <h3 id='14.1'>Axiomatic definition</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/rsub_eq.htm'>rsub_eq</a><br>
 a - b = a + (-b)</div></div>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/lt_eq.htm'>lt_eq</a><br>
-x &lt; y ↔ x ≤ y ∧ ¬x = y</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/rdiv_eq.htm'>rdiv_eq</a><br>
+a/b = a⋅(/b)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/lt_equi.htm'>lt_equi</a><br>
+a &lt; b ↔ a ≤ b ∧ ¬a = b</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/upper_bound_equi.htm'>upper_bound_equi</a><br>
+upper_bound b A ↔ ∀x. x ∈ A → x ≤ b</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/is_sup_equi.htm'>is_sup_equi</a><br>
+is_sup s A ↔
+  upper_bound s A ∧ (∀b. b ∈ ℝ → upper_bound b A → s ≤ b)</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/real_is_set.htm'>real_is_set</a><br>
 set ℝ</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/radd_closed.htm'>radd_closed</a><br>
@@ -1294,6 +1306,8 @@ a ∈ ℝ → b ∈ ℝ → a + b ∈ ℝ</div></div>
 a ∈ ℝ → b ∈ ℝ → a⋅b ∈ ℝ</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rneg_closed.htm'>rneg_closed</a><br>
 a ∈ ℝ → -a ∈ ℝ</div></div>
+<div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rinv_closed.htm'>rinv_closed</a><br>
+a ∈ ℝ → ¬a = 0 → /a ∈ ℝ</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/radd_comm.htm'>radd_comm</a><br>
 a ∈ ℝ → b ∈ ℝ →
   a + b = b + a</div></div>
@@ -1306,6 +1320,8 @@ a ∈ ℝ → a + 0 = a</div></div>
 a ∈ ℝ → a + (-a) = 0</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rmul_neutr.htm'>rmul_neutr</a><br>
 a ∈ ℝ → a⋅1 = a</div></div>
+<div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rmul_inv.htm'>rmul_inv</a><br>
+a ∈ ℝ → ¬a = 0 → a⋅(/a) = 1</div></div>
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/radd_assoc.htm'>radd_assoc</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   (a + b) + c = a + (b + c)</div></div>
@@ -1329,15 +1345,24 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
 <div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/rle_compat_mul.htm'>rle_compat_mul</a><br>
 a ∈ ℝ → b ∈ ℝ →
   0 ≤ a → 0 ≤ b → 0 ≤ a⋅b</div></div>
+<div class='box'><div class='ax'><b class='ax'>Axiom.</b> <a href='proofs-doc/lub_property.htm'>lub_property</a><br>
+A ⊆ ℝ → ¬A = ∅ → (∃b. b ∈ ℝ ∧ upper_bound b A) →
+  (∃s. s ∈ ℝ ∧ is_sup s A)</div></div>
 <h3 id='14.2'>Basic results</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_closed.htm'>rsub_closed</a><br>
 a ∈ ℝ → b ∈ ℝ → a - b ∈ ℝ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_closed.htm'>rdiv_closed</a><br>
+a ∈ ℝ → b ∈ ℝ → ¬b = 0 → a/b ∈ ℝ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rreci_closed.htm'>rreci_closed</a><br>
+a ∈ ℝ → ¬a = 0 → 1/a ∈ ℝ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_neutl.htm'>radd_neutl</a><br>
 a ∈ ℝ → 0 + a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_neutl.htm'>rmul_neutl</a><br>
 a ∈ ℝ → 1⋅a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel.htm'>radd_cancel</a><br>
 a ∈ ℝ → b ∈ ℝ → a + b - b = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_cancel.htm'>rsub_cancel</a><br>
+a ∈ ℝ → b ∈ ℝ → a - b + b = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/radd_cancel_rr.htm'>radd_cancel_rr</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   a + c = b + c → a = b</div></div>
@@ -1384,6 +1409,28 @@ a ∈ ℝ → b ∈ ℝ →
 a ∈ ℝ → b ∈ ℝ → -(a + b) = -a + -b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsub_neg.htm'>rsub_neg</a><br>
 a ∈ ℝ → b ∈ ℝ → -(a - b) = b - a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_closed.htm'>rdiv_closed</a><br>
+a ∈ ℝ → b ∈ ℝ → ¬b = 0 → a/b ∈ ℝ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rreci_closed.htm'>rreci_closed</a><br>
+a ∈ ℝ → ¬a = 0 → 1/a ∈ ℝ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_reci.htm'>rdiv_reci</a><br>
+a ∈ ℝ → ¬a = 0 → 1/a = /a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_self.htm'>rdiv_self</a><br>
+a ∈ ℝ → ¬a = 0 → a/a = 1</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rinv_one.htm'>rinv_one</a><br>
+1 = /1</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_neut.htm'>rdiv_neut</a><br>
+a ∈ ℝ → a/1 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_reci_cancel.htm'>rmul_reci_cancel</a><br>
+a ∈ ℝ → ¬a = 0 → a⋅(1/a) = 1</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rreci_non_zero.htm'>rreci_non_zero</a><br>
+a ∈ ℝ → ¬a = 0 → ¬1/a = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_dist_add.htm'>rdiv_dist_add</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  ¬c = 0 → (a + b)/c = a/c + b/c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_dist_sub.htm'>rdiv_dist_sub</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  ¬c = 0 → (a - b)/c = a/c - b/c</div></div>
 <h3 id='14.3'>Useful lemmata</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_expand_add_add.htm'>rmul_expand_add_add</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
@@ -1422,6 +1469,12 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
 a ≤ b → b = c → a ≤ c</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/eq_le_trans.htm'>eq_le_trans</a><br>
 a = b → b ≤ c → a ≤ c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neq_from_lt.htm'>neq_from_lt</a><br>
+a &lt; b → ¬a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/le_from_lt.htm'>le_from_lt</a><br>
+a &lt; b → a ≤ b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lt_intro.htm'>lt_intro</a><br>
+a ≤ b → ¬a = b → a &lt; b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_neg.htm'>rle_neg</a><br>
 a ∈ ℝ → b ∈ ℝ → ¬a ≤ b → b ≤ a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_compat_addl.htm'>rle_compat_addl</a><br>
@@ -1446,6 +1499,35 @@ a ∈ ℝ → b ∈ ℝ →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_np_np.htm'>rmul_np_np</a><br>
 a ∈ ℝ → b ∈ ℝ →
   a ≤ 0 → b ≤ 0 → 0 ≤ a⋅b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_lt_trans.htm'>rle_lt_trans</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a ≤ b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rlt_lt_trans.htm'>rlt_lt_trans</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a &lt; b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rlt_compat_add.htm'>rlt_compat_add</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a &lt; b → a + c &lt; b + c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rlt_compat_sub.htm'>rlt_compat_sub</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a &lt; b → a - c &lt; b - c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rlt_add_cancel_rr.htm'>rlt_add_cancel_rr</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a + c &lt; b + c → a &lt; b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_lt_tricho.htm'>rle_lt_tricho</a><br>
+a ∈ ℝ → b ∈ ℝ → a ≤ b ∨ b &lt; a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_as_diff.htm'>rle_as_diff</a><br>
+a ∈ ℝ → b ∈ ℝ → a ≤ b → 0 ≤ b - a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_from_diff.htm'>rle_from_diff</a><br>
+a ∈ ℝ → b ∈ ℝ → 0 ≤ b - a → a ≤ b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_compat_mulr.htm'>rle_compat_mulr</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a ≤ b → 0 ≤ c → a⋅c ≤ b⋅c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_compat_mull.htm'>rle_compat_mull</a><br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a ≤ b → 0 ≤ c → c⋅a ≤ c⋅b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rreci_positive.htm'>rreci_positive</a><br>
+a ∈ ℝ → 0 &lt; a → 0 &lt; 1/a</div></div>
 <h3 id='14.5'>Absolute value</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/abs_eq.htm'>abs_eq</a><br>
 abs x = if (0 ≤ x) x (-x)</div></div>
@@ -1545,6 +1627,43 @@ a ∈ ℕ → b ∈ ℕ → -(a⋅b) = a⋅(-b)</div></div>
 a ∈ ℕ → b ∈ ℕ → a + b ∈ ℕ</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nmul_closed.htm'>nmul_closed</a><br>
 a ∈ ℕ → b ∈ ℕ → a⋅b ∈ ℕ</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_zero_or_succ.htm'>nat_zero_or_succ</a><br>
+n ∈ ℕ → n = 0 ∨ ∃m. m ∈ ℕ ∧ n = m + 1</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_non_zero_is_succ.htm'>nat_non_zero_is_succ</a><br>
+n ∈ ℕ → ¬n = 0 → ∃m. m ∈ ℕ ∧ n = m + 1</div></div>
+<h3 id='15.2'>Basic inequalities</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_refl.htm'>nle_refl</a><br>
+a ∈ ℕ → a ≤ a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_antisym.htm'>nle_antisym</a><br>
+a ∈ ℕ → b ∈ ℕ → a ≤ b → b ≤ a → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_trans.htm'>nle_trans</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ → a ≤ b → b ≤ c → a ≤ c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_total.htm'>nle_total</a><br>
+a ∈ ℕ → b ∈ ℕ → a ≤ b ∨ b ≤ a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_compat_addl.htm'>nle_compat_addl</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ → a ≤ b → c + a ≤ c + b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_compat_add.htm'>nle_compat_add</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ → a ≤ b → a + c ≤ b + c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_lt_trans.htm'>nle_lt_trans</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ →
+  a ≤ b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nlt_lt_trans.htm'>nlt_lt_trans</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ →
+  a &lt; b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nlt_add_cancel_rr.htm'>nlt_add_cancel_rr</a><br>
+a ∈ ℕ → b ∈ ℕ → c ∈ ℕ →
+  a + c &lt; b + c → a &lt; b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_lt_tricho.htm'>nle_lt_tricho</a><br>
+a ∈ ℕ → b ∈ ℕ → a ≤ b ∨ b &lt; a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_succ_le_from_lt.htm'>nat_succ_le_from_lt</a><br>
+n ∈ ℕ → k ∈ ℕ → n &lt; k → n + 1 ≤ k</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nle_succ_split.htm'>nle_succ_split</a><br>
+k ∈ ℕ → n ∈ ℕ → k ≤ n + 1 → k ≤ n ∨ k = n + 1</div></div>
+<h3 id='15.3'>Strong induction</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_strong_induction.htm'>nat_strong_induction</a><br>
+P 0 →
+  (∀n. n ∈ ℕ → (∀k. k ∈ ℕ → k ≤ n → P k) → P (n + 1)) →
+  (∀n. n ∈ ℕ → P n)</div></div>
 <h2 id='16'>The integers</h2>
 <h3 id='16.1'>Basic results</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/int_eq.htm'>int_eq</a><br>
@@ -1568,6 +1687,8 @@ a ∈ ℤ → 0 + a = a</div></div>
 a ∈ ℤ → a + 0 = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/isub_zero.htm'>isub_zero</a><br>
 a ∈ ℤ → a - 0 = a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/isub_self.htm'>isub_self</a><br>
+a ∈ ℤ → a - a = 0</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_neutl.htm'>imul_neutl</a><br>
 a ∈ ℤ → 1⋅a = a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_neutr.htm'>imul_neutr</a><br>
@@ -1594,22 +1715,50 @@ a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → (a - b)⋅c = a⋅c - b⋅c</div></div
 a ∈ ℤ → b ∈ ℤ → -(a⋅b) = (-a)⋅b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/imul_compatr_neg.htm'>imul_compatr_neg</a><br>
 a ∈ ℤ → b ∈ ℤ → -(a⋅b) = a⋅(-b)</div></div>
-<h3 id='16.2'>Elementary number theory</h3>
+<h3 id='16.2'>Basic inequalities</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_refl.htm'>ile_refl</a><br>
+a ∈ ℤ → a ≤ a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_antisym.htm'>ile_antisym</a><br>
+a ∈ ℤ → b ∈ ℤ → a ≤ b → b ≤ a → a = b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_trans.htm'>ile_trans</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → a ≤ b → b ≤ c → a ≤ c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_total.htm'>ile_total</a><br>
+a ∈ ℤ → b ∈ ℤ → a ≤ b ∨ b ≤ a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_compat_addl.htm'>ile_compat_addl</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → a ≤ b → c + a ≤ c + b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_compat_add.htm'>ile_compat_add</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → a ≤ b → a + c ≤ b + c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_lt_trans.htm'>ile_lt_trans</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ →
+  a ≤ b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ilt_lt_trans.htm'>ilt_lt_trans</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ →
+  a &lt; b → b &lt; c → a &lt; c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ilt_add_cancel_rr.htm'>ilt_add_cancel_rr</a><br>
+a ∈ ℤ → b ∈ ℤ → c ∈ ℤ →
+  a + c &lt; b + c → a &lt; b</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/ile_lt_tricho.htm'>ile_lt_tricho</a><br>
+a ∈ ℤ → b ∈ ℤ → a ≤ b ∨ b &lt; a</div></div>
+<h3 id='16.3'>Elementary number theory</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/divides_equi.htm'>divides_equi</a><br>
 divides m a ↔ ∃k. k ∈ ℤ ∧ a = m⋅k</div></div>
-<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/eq_mod_equi.htm'>eq_mod_equi</a><br>
-eq_mod a b m ↔ divides m (a - b)</div></div>
+<div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/cong_equi.htm'>cong_equi</a><br>
+cong a b m ↔ divides m (a - b)</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/divisors_eq.htm'>divisors_eq</a><br>
 divisors a = {d | d ∈ ℕ ∧ divides d a}</div></div>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/prime_equi.htm'>prime_equi</a><br>
 prime a ↔ 2 ≤ a ∧ divisors a = {1, a}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/cong_intro.htm'>cong_intro</a><br>
+k ∈ ℤ → a - b = m⋅k → cong a b m</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/cong_refl.htm'>cong_refl</a><br>
+a ∈ ℤ → m ∈ ℤ → cong a a m</div></div>
 <p><b>Statistics</b>
 <pre>
-  67 definitions
-  34 axioms
- 501 theorems
+  70 definitions
+  37 axioms
+ 557 theorems
 ────────────────
- 602 items total
+ 664 items total
 </pre>
 </body>
 </html>

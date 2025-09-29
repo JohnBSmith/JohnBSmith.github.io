@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>rlt_compat_add</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem rlt_compat_add</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> rlt_compat_add<br>
+a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a &lt; b → a + c &lt; b + c</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ a ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ b ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ c ∈ ℝ, <a href='hypo.htm'>hypo</a>.
+04. 4 ⊢ a &lt; b, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ a ≤ b, <a href='le_from_lt.htm'>le_from_lt</a> 4.
+06. 1, 2, 3, 4 ⊢ a + c ≤ b + c, <a href='rle_compat_add.htm'>rle_compat_add</a> 1 2 3 5.
+07. 7 ⊢ a + c = b + c, <a href='hypo.htm'>hypo</a>.
+08. 1, 2, 3, 7 ⊢ a = b, <a href='radd_cancel_rr.htm'>radd_cancel_rr</a> 1 2 3 7.
+09. 4 ⊢ ¬a = b, <a href='neq_from_lt.htm'>neq_from_lt</a> 4.
+10. 1, 2, 3, 4, 7 ⊢ ⊥, <a href='neg_elim.htm'>neg_elim</a> 9 8.
+11. 1, 2, 3, 4 ⊢ ¬a + c = b + c, <a href='neg_intro.htm'>neg_intro</a> 10.
+12. 1, 2, 3, 4 ⊢ a + c &lt; b + c, <a href='lt_intro.htm'>lt_intro</a> 6 11.
+rlt_compat_add. ⊢ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
+  a &lt; b → a + c &lt; b + c, <a href='subj_intro_iv.htm'>subj_intro_iv</a> 12.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on eight axioms:<br><a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='rle_compat_add.htm'>rle_compat_add</a>, <a href='rneg_closed.htm'>rneg_closed</a>.</p>
+</body>
+</html>
