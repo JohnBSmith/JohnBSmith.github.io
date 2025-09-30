@@ -10,7 +10,7 @@
 <h3>Theorem nat_recursion</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> nat_recursion<br>
 set X → x0 ∈ X →
-  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. ∀f. g = f ↔ map f ℕ X ∧
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. set g ∧ ∀f. g = f ↔ map f ℕ X ∧
   (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n))</div></div>
 <p>The Dedekind recursion theorem. It states that there exists
 exactly one <a href='map_equi.htm'>mapping</a> f:&nbsp;ℕ&nbsp;→&nbsp;X that satisfies the
@@ -29,7 +29,7 @@ let rec f ↔ app f 0 = x0 ∧
 01. 1 ⊢ set X, <a href='hypo.htm'>hypo</a>.
 02. 2 ⊢ x0 ∈ X, <a href='hypo.htm'>hypo</a>.
 03. 3 ⊢ ∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X, <a href='hypo.htm'>hypo</a>.
-04. 1, 2, 3 ⊢ ∃f. map f ℕ X ∧ rec f, <a href='nat_rec_existence.htm'>nat_rec_existence</a> 1 2 3.
+04. 1, 2, 3 ⊢ ∃f. set f ∧ (map f ℕ X ∧ rec f), <a href='nat_rec_existence.htm'>nat_rec_existence</a> 1 2 3.
 05. 5 ⊢ map f ℕ X ∧ rec f, <a href='hypo.htm'>hypo</a>.
 06. 6 ⊢ map g ℕ X ∧ rec g, <a href='hypo.htm'>hypo</a>.
 07. 5 ⊢ map f ℕ X, <a href='conj_eliml.htm'>conj_eliml</a> 5.
@@ -45,9 +45,9 @@ let rec f ↔ app f 0 = x0 ∧
   <a href='uq_intro.htm'>uq_intro</a> 13.
 15. ⊢ ∀f. ∀g. map f ℕ X ∧ rec f → map g ℕ X ∧ rec g → f = g,
   <a href='uq_intro.htm'>uq_intro</a> 14.
-16. 1, 2, 3 ⊢ ∃g. ∀f. g = f ↔ map f ℕ X ∧ rec f, <a href='ex_uniq_intro.htm'>ex_uniq_intro</a> 4 15.
+16. 1, 2, 3 ⊢ ∃g. set g ∧ ∀f. g = f ↔ map f ℕ X ∧ rec f, <a href='ex_uniq_set_intro.htm'>ex_uniq_set_intro</a> 4 15.
 nat_recursion. ⊢ set X → x0 ∈ X →
-  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. ∀f. g = f ↔ map f ℕ X ∧
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. set g ∧ ∀f. g = f ↔ map f ℕ X ∧
   (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)),
   <a href='subj_intro_iii.htm'>subj_intro_iii</a> 16.
 </pre>

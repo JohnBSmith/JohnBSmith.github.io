@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>fn_inv_img_dist_inter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem fn_inv_img_dist_inter</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> fn_inv_img_dist_inter<br>
+function f →
+  inv_img f (A ∩ B) = inv_img f A ∩ inv_img f B</div></div>
+<p>Distribution law for the <a href='inv_img_eq.htm'>inverse image</a> operation
+with respect to <a href='intersection_eq.htm'>intersection</a>.<br>
+<br>
+<b>Proof sketch</b><br>
+The inclusion f<sup>−1</sup>[A ∩ B] ⊆ f<sup>−1</sup>[A] ∩ f<sup>−1</sup>[B]
+is universally valid for any relation&nbsp;f. Thus it suffices to show the
+converse inclusion<br>
+&nbsp;&nbsp;f<sup>−1</sup>[A] ∩ f<sup>−1</sup>[B] ⊆ f<sup>−1</sup>[A ∩ B].<br>
+So let x ∈ f<sup>−1</sup>[A] ∩ f<sup>−1</sup>[B], thus
+x&nbsp;∈&nbsp;f<sup>−1</sup>[A] as well as x&nbsp;∈&nbsp;f<sup>−1</sup>[B].
+In this respect, a ∈ A with (x, a) ∈ f and b&nbsp;∈&nbsp;B with (x,&nbsp;b)&nbsp;∈&nbsp;f exist.
+However, because f is a function, a&nbsp;=&nbsp;b follows from (x,&nbsp;a)&nbsp;∈&nbsp;f and
+(x,&nbsp;b)&nbsp;∈&nbsp;f, since a functions's argument has a unique value. Accordingly,
+a&nbsp;∈&nbsp;B holds, meaning that a&nbsp;∈&nbsp;A&nbsp;∩&nbsp;B with (x,&nbsp;a)&nbsp;∈&nbsp;f, which
+witnesses that x&nbsp;∈&nbsp;f<sup>−1</sup>[A&nbsp;∩&nbsp;B]. q.e.d.</p><pre><b>Proof</b>
+01. 1 ⊢ function f, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ x ∈ inv_img f A ∩ inv_img f B, <a href='hypo.htm'>hypo</a>.
+03. 2 ⊢ x ∈ inv_img f A, <a href='intersection_eliml.htm'>intersection_eliml</a> 2.
+04. 2 ⊢ x ∈ inv_img f B, <a href='intersection_elimr.htm'>intersection_elimr</a> 2.
+05. 2 ⊢ ∃a. a ∈ A ∧ (x, a) ∈ f, <a href='inv_img_elim.htm'>inv_img_elim</a> 3.
+06. 2 ⊢ ∃b. b ∈ B ∧ (x, b) ∈ f, <a href='inv_img_elim.htm'>inv_img_elim</a> 4.
+07. 7 ⊢ a ∈ A ∧ (x, a) ∈ f, <a href='hypo.htm'>hypo</a>.
+08. 8 ⊢ b ∈ B ∧ (x, b) ∈ f, <a href='hypo.htm'>hypo</a>.
+09. 7 ⊢ a ∈ A, <a href='conj_eliml.htm'>conj_eliml</a> 7.
+10. 8 ⊢ b ∈ B, <a href='conj_eliml.htm'>conj_eliml</a> 8.
+11. 7 ⊢ (x, a) ∈ f, <a href='conj_elimr.htm'>conj_elimr</a> 7.
+12. 8 ⊢ (x, b) ∈ f, <a href='conj_elimr.htm'>conj_elimr</a> 8.
+13. 1, 7, 8 ⊢ a = b, <a href='fn_unique_value.htm'>fn_unique_value</a> 1 11 12.
+14. 1, 7, 8 ⊢ a ∈ B, <a href='eq_subst_rev.htm'>eq_subst_rev</a> 13 10, P t ↔ t ∈ B.
+15. 1, 7, 8 ⊢ a ∈ A ∩ B, <a href='intersection_intro.htm'>intersection_intro</a> 9 14.
+16. 1, 7, 8 ⊢ x ∈ inv_img f (A ∩ B), <a href='inv_img_intro.htm'>inv_img_intro</a> 15 11.
+17. 1, 2, 7 ⊢ x ∈ inv_img f (A ∩ B), <a href='ex_elim.htm'>ex_elim</a> 6 16.
+18. 1, 2 ⊢ x ∈ inv_img f (A ∩ B), <a href='ex_elim.htm'>ex_elim</a> 5 17.
+19. 1 ⊢ x ∈ inv_img f A ∩ inv_img f B →
+  x ∈ inv_img f (A ∩ B), <a href='subj_intro.htm'>subj_intro</a> 18.
+20. 1 ⊢ ∀x. x ∈ inv_img f A ∩ inv_img f B →
+  x ∈ inv_img f (A ∩ B), <a href='uq_intro.htm'>uq_intro</a> 19.
+21. 1 ⊢ inv_img f A ∩ inv_img f B ⊆ inv_img f (A ∩ B),
+  <a href='incl_intro.htm'>incl_intro</a> 20.
+22. ⊢ inv_img f (A ∩ B) ⊆ inv_img f A ∩ inv_img f B,
+  <a href='inv_img_dist_inter.htm'>inv_img_dist_inter</a>.
+23. 1 ⊢ inv_img f (A ∩ B) = inv_img f A ∩ inv_img f B,
+  <a href='incl_antisym.htm'>incl_antisym</a> 22 21.
+fn_inv_img_dist_inter. ⊢ function f →
+  inv_img f (A ∩ B) = inv_img f A ∩ inv_img f B,
+  <a href='subj_intro.htm'>subj_intro</a> 23.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on seven axioms:<br><a href='comp.htm'>comp</a>, <a href='efq.htm'>efq</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='ext.htm'>ext</a>, <a href='lem.htm'>lem</a>, <a href='subset.htm'>subset</a>.</p>
+</body>
+</html>

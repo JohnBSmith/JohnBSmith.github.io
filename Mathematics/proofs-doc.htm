@@ -92,10 +92,11 @@ b.rule{color: #900060;}
 <li><a href='#5.2'>Function application</a>
 <li><a href='#5.3'>Function composition</a>
 <li><a href='#5.4'>Restricted functions</a>
-<li><a href='#5.5'>Special functions</a>
-<li><a href='#5.6'>Partly functional relations</a>
-<li><a href='#5.7'>Injections, surjections, bijections</a>
-<li><a href='#5.8'>Choice functions</a>
+<li><a href='#5.5'>Images and inverse images</a>
+<li><a href='#5.6'>Special functions</a>
+<li><a href='#5.7'>Partly functional relations</a>
+<li><a href='#5.8'>Injections, surjections, bijections</a>
+<li><a href='#5.9'>Choice functions</a>
 </ol>
 <li><a href='#6'>Power sets</a>
 <li><a href='#7'>Orders</a><ol>
@@ -314,11 +315,15 @@ A ↔ A</div></div>
 (A ↔ B) → (B ↔ A)</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equi_trans.htm'>equi_trans</a><br>
 (A ↔ B) → (B ↔ C) → (A ↔ C)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/equi_trans_rr.htm'>equi_trans_rr</a><br>
+(A ↔ C) → (B ↔ C) → (A ↔ B)</div></div>
 <h4 id='2.2.3'>De Morgan's laws</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_conj.htm'>neg_conj</a><br>
 ¬(A ∧ B) → ¬A ∨ ¬B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/neg_subj.htm'>neg_subj</a><br>
 ¬(A → B) → A ∧ ¬B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/contraposition_rev_ii.htm'>contraposition_rev_ii</a><br>
+(¬A → ¬B → ¬C) → C → A ∨ B</div></div>
 <h4 id='2.2.4'>Projections</h4>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/conj_elimll.htm'>conj_elimll</a><br>
 A ∧ B ∧ C → A</div></div>
@@ -445,10 +450,15 @@ set u → P u → u ∈ {x | P x}</div></div>
 x ∈ A → set x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/comp_intro_from.htm'>comp_intro_from</a><br>
 u ∈ A → P u → u ∈ {x | P x}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/separation.htm'>separation</a><br>
+u ∈ {x | x ∈ A ∧ P x} ↔ u ∈ A ∧ P u</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sep_is_subclass.htm'>sep_is_subclass</a><br>
 {x | x ∈ A ∧ P x} ⊆ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sep_is_set.htm'>sep_is_set</a><br>
 set A → set {x | x ∈ A ∧ P x}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/separation_is_unique.htm'>separation_is_unique</a><br>
+(∃B. ∀x. x ∈ B ↔ x ∈ A ∧ P x) →
+  (∃C. ∀B. C = B ↔ ∀x. x ∈ B ↔ x ∈ A ∧ P x)</div></div>
 <h3 id='3.3'>Binary operations on sets</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/intersection_elim.htm'>intersection_elim</a><br>
 x ∈ A ∩ B → x ∈ A ∧ x ∈ B</div></div>
@@ -851,6 +861,8 @@ set x → (∀y. x = y ↔ P y) → {x} = {y | P y}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_ex_uniq.htm'>sg_eq_from_ex_uniq</a><br>
 (∃b. set b ∧ ∀y. b = y ↔ P y) →
   (∃b. set b ∧ {b} = {y | P y})</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iota_property.htm'>iota_property</a><br>
+x = ⋂{y |P y} → (∃x. set x ∧ ∀y. x = y ↔ P y) → P x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_img_lemma.htm'>fn_img_lemma</a><br>
 function f → x ∈ dom f →
   ∃y. set y ∧ {y} = {y | (x, y) ∈ f}</div></div>
@@ -924,12 +936,22 @@ map f X Y → A ⊆ X → map (restr f A) A Y</div></div>
 map f X Y → A ⊆ X → x ∈ A → app f x = app (restr f A) x</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_app_restr.htm'>fn_app_restr</a><br>
 function f → x ∈ dom f → x ∈ A → app f x = app (restr f A) x</div></div>
+<h3 id='5.5'>Images and inverse images</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_img_of_dom_is_rng.htm'>map_img_of_dom_is_rng</a><br>
 map f X Y → img f X = rng f</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/map_rng_elim.htm'>map_rng_elim</a><br>
 map f X Y → y ∈ rng f →
   ∃x. x ∈ X ∧ y = app f x</div></div>
-<h3 id='5.5'>Special functions</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_inv_img_dist_inter.htm'>fn_inv_img_dist_inter</a><br>
+function f →
+  inv_img f (A ∩ B) = inv_img f A ∩ inv_img f B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/restr_img_self.htm'>restr_img_self</a><br>
+img f A ⊆ img (restr f A) A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/replacement.htm'>replacement</a><br>
+function f → A ⊆ dom f → set A → set (img f A)</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/replacement_strong.htm'>replacement_strong</a><br>
+function f → set A → set (img f A)</div></div>
+<h3 id='5.6'>Special functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_function.htm'>empty_function</a><br>
 function ∅</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/empty_map.htm'>empty_map</a><br>
@@ -952,7 +974,7 @@ set a → set b → function {(a, b)}</div></div>
 set a → b ∈ Y → map {(a, b)} {a} Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/img_graph2.htm'>img_graph2</a><br>
 set x → set y → img {(∅, x), ({∅}, y)} {∅, {∅}} = {x, y}</div></div>
-<h3 id='5.6'>Partly functional relations</h3>
+<h3 id='5.7'>Partly functional relations</h3>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/fn_on_equi.htm'>fn_on_equi</a><br>
 fn_on f A ↔ relation f ∧ ∀x. x ∈ A →
   ∃z. set z ∧ ∀y. z = y ↔ (x, y) ∈ f</div></div>
@@ -988,7 +1010,7 @@ fn_on f A → fn_on g A →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_on_char.htm'>fn_on_char</a><br>
 A ⊆ dom f →
   (fn_on f A ↔ relation f ∧ function (restr f A))</div></div>
-<h3 id='5.7'>Injections, surjections, bijections</h3>
+<h3 id='5.8'>Injections, surjections, bijections</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_is_map.htm'>inj_is_map</a><br>
 inj f X Y → map f X Y</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_elim.htm'>inj_elim</a><br>
@@ -1023,7 +1045,7 @@ bij f X Y → bij g Y Z →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/inj_from_left_inv.htm'>inj_from_left_inv</a><br>
 map f X Y → (∃g. map g Y X ∧ g ∘ f = id X) →
   inj f X Y</div></div>
-<h3 id='5.8'>Choice functions</h3>
+<h3 id='5.9'>Choice functions</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/choice_fn_unfold.htm'>choice_fn_unfold</a><br>
 choice_function f →
   function f ∧ ∀x. x ∈ dom f → app f x ∈ x</div></div>
@@ -1431,6 +1453,16 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rdiv_dist_sub.htm'>rdiv_dist_sub</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   ¬c = 0 → (a - b)/c = a/c - b/c</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsq_non_zero.htm'>rsq_non_zero</a><br>
+a ∈ ℝ → ¬a = 0 → ¬a⋅a = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsq_is_zero_impl.htm'>rsq_is_zero_impl</a><br>
+a ∈ ℝ → a⋅a = 0 → a = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_non_zero.htm'>rmul_non_zero</a><br>
+a ∈ ℝ → b ∈ ℝ →
+  ¬a = 0 → ¬b = 0 → ¬a⋅b = 0</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/zero_product_property.htm'>zero_product_property</a><br>
+a ∈ ℝ → b ∈ ℝ →
+  a⋅b = 0 → a = 0 ∨ b = 0</div></div>
 <h3 id='14.3'>Useful lemmata</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rmul_expand_add_add.htm'>rmul_expand_add_add</a><br>
 a ∈ ℝ → b ∈ ℝ → c ∈ ℝ → d ∈ ℝ →
@@ -1516,6 +1548,10 @@ a ∈ ℝ → b ∈ ℝ → c ∈ ℝ →
   a + c &lt; b + c → a &lt; b</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_lt_tricho.htm'>rle_lt_tricho</a><br>
 a ∈ ℝ → b ∈ ℝ → a ≤ b ∨ b &lt; a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsq_is_non_negative.htm'>rsq_is_non_negative</a><br>
+a ∈ ℝ → 0 ≤ a⋅a</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rsq_is_positive.htm'>rsq_is_positive</a><br>
+a ∈ ℝ → ¬a = 0 → 0 &lt; a⋅a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_as_diff.htm'>rle_as_diff</a><br>
 a ∈ ℝ → b ∈ ℝ → a ≤ b → 0 ≤ b - a</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/rle_from_diff.htm'>rle_from_diff</a><br>
@@ -1585,11 +1621,11 @@ a ∈ ℕ → b ∈ ℕ → a + 1 = b + 1 → a = b</div></div>
   ∀n. n ∈ ℕ → app f n = app g n</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_rec_existence.htm'>nat_rec_existence</a><br>
 set X → x0 ∈ X →
-  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃f. map f ℕ X ∧
-  (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n))</div></div>
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃f. set f ∧ (map f ℕ X ∧
+  (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n)))</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nat_recursion.htm'>nat_recursion</a><br>
 set X → x0 ∈ X →
-  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. ∀f. g = f ↔ map f ℕ X ∧
+  (∀n. n ∈ ℕ → ∀x. x ∈ X → φ n x ∈ X) → ∃g. set g ∧ ∀f. g = f ↔ map f ℕ X ∧
   (app f 0 = x0 ∧ ∀n. n ∈ ℕ → app f (n + 1) = φ n (app f n))</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/nadd_neutl.htm'>nadd_neutl</a><br>
 a ∈ ℕ → 0 + a = a</div></div>
@@ -1756,9 +1792,9 @@ a ∈ ℤ → m ∈ ℤ → cong a a m</div></div>
 <pre>
   70 definitions
   37 axioms
- 557 theorems
+ 572 theorems
 ────────────────
- 664 items total
+ 679 items total
 </pre>
 </body>
 </html>
