@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>cong_symm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+<h3>Theorem cong_symm</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> cong_symm<br>
+a ∈ ℤ → b ∈ ℤ → m ∈ ℤ →
+  cong a b m → cong b a m</div></div>
+<pre><b>Proof</b>
+01. 1 ⊢ a ∈ ℤ, <a href='hypo.htm'>hypo</a>.
+02. 2 ⊢ b ∈ ℤ, <a href='hypo.htm'>hypo</a>.
+03. 3 ⊢ m ∈ ℤ, <a href='hypo.htm'>hypo</a>.
+04. 4 ⊢ cong a b m, <a href='hypo.htm'>hypo</a>.
+05. 4 ⊢ ∃k. k ∈ ℤ ∧ (a - b) = m⋅k, <a href='cong_elim.htm'>cong_elim</a> 4.
+06. 6 ⊢ k ∈ ℤ ∧ (a - b) = m⋅k, <a href='hypo.htm'>hypo</a>.
+07. 6 ⊢ k ∈ ℤ, <a href='conj_eliml.htm'>conj_eliml</a> 6.
+08. 6 ⊢ (a - b) = m⋅k, <a href='conj_elimr.htm'>conj_elimr</a> 6.
+09. 6 ⊢ -(a - b) = -(m⋅k), <a href='eq_cong.htm'>eq_cong</a> 8, f t = -t.
+10. 1, 2 ⊢ -(a - b) = b - a, <a href='isub_neg.htm'>isub_neg</a> 1 2.
+11. 3, 6 ⊢ -(m⋅k) = m⋅(-k), <a href='imul_compatr_neg.htm'>imul_compatr_neg</a> 3 7.
+12. 1, 2, 6 ⊢ b - a = -(m⋅k), <a href='eq_trans_ll.htm'>eq_trans_ll</a> 10 9.
+13. 1, 2, 3, 6 ⊢ b - a = m⋅(-k), <a href='eq_trans.htm'>eq_trans</a> 12 11.
+14. 6 ⊢ -k ∈ ℤ, <a href='ineg_closed.htm'>ineg_closed</a> 7.
+16. 1, 2, 3, 6 ⊢ cong b a m, <a href='cong_intro.htm'>cong_intro</a> 14 13.
+17. 1, 2, 3, 4 ⊢ cong b a m, <a href='ex_elim.htm'>ex_elim</a> 5 16.
+cong_symm. ⊢ a ∈ ℤ → b ∈ ℤ → m ∈ ℤ →
+  cong a b m → cong b a m, <a href='subj_intro_iv.htm'>subj_intro_iv</a> 17.
+</pre>
+<p><b>Dependencies</b><br>The given proof depends on 14 axioms:<br><a href='comp.htm'>comp</a>, <a href='eq_refl.htm'>eq_refl</a>, <a href='eq_subst.htm'>eq_subst</a>, <a href='radd_assoc.htm'>radd_assoc</a>, <a href='radd_closed.htm'>radd_closed</a>, <a href='radd_comm.htm'>radd_comm</a>, <a href='radd_inv.htm'>radd_inv</a>, <a href='radd_neutr.htm'>radd_neutr</a>, <a href='real_is_set.htm'>real_is_set</a>, <a href='rmul_closed.htm'>rmul_closed</a>, <a href='rmul_comm.htm'>rmul_comm</a>, <a href='rmul_distl_add.htm'>rmul_distl_add</a>, <a href='rmul_neutr.htm'>rmul_neutr</a>, <a href='rneg_closed.htm'>rneg_closed</a>.</p>
+</body>
+</html>
