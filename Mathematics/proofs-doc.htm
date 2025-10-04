@@ -104,6 +104,7 @@ b.rule{color: #900060;}
 <li><a href='#7'>Orders</a><ol>
 <li><a href='#7.1'>General concepts</a>
 <li><a href='#7.2'>Partial orders</a>
+<li><a href='#7.3'>Power set lattice</a>
 </ol>
 <li><a href='#8'>Well-founded relations</a>
 <li><a href='#9'>The natural numbers as ordinals</a>
@@ -536,6 +537,8 @@ x ∈ compl A → ¬x ∈ A</div></div>
 A \ B = A ∩ compl B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_incl.htm'>diff_incl</a><br>
 A \ B ⊆ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_contraposition.htm'>incl_contraposition</a><br>
+A ⊆ B → X \ B ⊆ X \ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_dist_inter.htm'>diff_dist_inter</a><br>
 (A ∩ B) \ C = (A \ C) ∩ (B \ C)</div></div>
 <h3 id='3.4'>The empty set</h3>
@@ -586,6 +589,8 @@ y ∈ M →
   (∀y. y ∈ M → x ∈ y) → x ∈ ⋂M</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Intersection_is_lower_bound.htm'>Intersection_is_lower_bound</a><br>
 A = ⋂M → B ∈ M → A ⊆ B</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/Union_is_upper_bound.htm'>Union_is_upper_bound</a><br>
+A = ⋃M → B ∈ M → B ⊆ A</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/lower_bound_incl_in_Intersection.htm'>lower_bound_incl_in_Intersection</a><br>
 (∀x. x ∈ M → u ⊆ x) → u ⊆ ⋂M</div></div>
 <h3 id='3.6'>The universal class and Russell's paradox</h3>
@@ -613,6 +618,10 @@ A ∪ compl A = UnivCl</div></div>
 (A \ B) ∪ B = A ∪ B</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/diff_union_subclass.htm'>diff_union_subclass</a><br>
 A ⊆ X → (X \ A) ∪ A = X</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/compl_as_diff.htm'>compl_as_diff</a><br>
+compl A = UnivCl \ A</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_contraposition_compl.htm'>incl_contraposition_compl</a><br>
+A ⊆ B → compl B ⊆ compl A</div></div>
 <h3 id='3.7'>Singletons, pair sets and pairs</h3>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_elim.htm'>sg_elim</a><br>
 set a → x ∈ {a} → x = a</div></div>
@@ -865,7 +874,10 @@ set x → (∀y. x = y ↔ P y) → {x} = {y | P y}</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/sg_eq_from_ex_uniq.htm'>sg_eq_from_ex_uniq</a><br>
 (∃b. set b ∧ ∀y. b = y ↔ P y) →
   (∃b. set b ∧ {b} = {y | P y})</div></div>
-<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iota_property.htm'>iota_property</a><br>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iota_intro.htm'>iota_intro</a><br>
+ P u → (∃a. set a ∧ ∀x. a = x ↔ P x) →
+  u = ⋂{x | P x}</div></div>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/iota_elim.htm'>iota_elim</a><br>
 u = ⋂{x |P x} → (∃a. set a ∧ ∀x. a = x ↔ P x) → P u</div></div>
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/fn_img_lemma.htm'>fn_img_lemma</a><br>
 function f → x ∈ dom f →
@@ -1119,6 +1131,11 @@ partial_order R M → x ∈ M → y ∈ M →
 <div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/po_trans.htm'>po_trans</a><br>
 partial_order R M → x ∈ M → y ∈ M → z ∈ M →
   R x y → R y z → R x z</div></div>
+<h3 id='7.3'>Power set lattice</h3>
+<div class='box'><div class='thm'><b class='thm'>Theorem.</b> <a href='proofs-doc/incl_Knaster_Tarski_least.htm'>incl_Knaster_Tarski_least</a><br>
+set a → map f (power a) (power a) →
+  (∀x. ∀y. y ⊆ a → x ⊆ y → app f x ⊆ app f y) →
+  ∃u. app f u = u ∧ (∀x. x ⊆ a → app f x = x → u ⊆ x)</div></div>
 <h2 id='8'>Well-founded relations</h2>
 <div class='box'><div class='def'><b class='def'>Definition.</b> <a href='proofs-doc/wf_equi.htm'>wf_equi</a><br>
 wf R M ↔ ∀A. A ⊆ M → ¬A = ∅ →
@@ -1824,9 +1841,9 @@ a ∈ ℤ → b ∈ ℤ → c ∈ ℤ → m ∈ ℤ →
 <pre>
   70 definitions
   37 axioms
- 578 theorems
+ 584 theorems
 ────────────────
- 685 items total
+ 691 items total
 </pre>
 </body>
 </html>
